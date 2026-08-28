@@ -16,6 +16,11 @@ const LABELS = {
   mute: 'Silenciar',
   unmute: 'Ativar o som',
   seek: 'Posição da reprodução',
+  rate: 'Velocidade de reprodução',
+  enterFullscreen: 'Tela cheia',
+  exitFullscreen: 'Sair da tela cheia',
+  enterPip: 'Janela flutuante',
+  exitPip: 'Sair da janela flutuante',
 };
 
 /** WAV PCM 8 bits, mono, 8 kHz, silencioso, com a duração pedida. */
@@ -192,6 +197,31 @@ export const Audio: Story = {
       await expect(formatTime(Number.NaN)).toBe('--:--');
     });
 
+    await step('A velocidade é um seletor nativo, e muda a reprodução', async () => {
+      const seletor = canvas.getByRole('combobox', { name: LABELS.rate });
+      await expect(seletor).toBeInTheDocument();
+      // `1×`, e não `1`: o número sozinho não diz de que grandeza se fala.
+      await expect(seletor.textContent).toContain('1×');
+
+      await userEvent.selectOptions(seletor, '1.5');
+      await expect(media.playbackRate).toBe(1.5);
+
+      // E a barra segue o ELEMENTO, como no botão de tocar: mudar a taxa por
+      // fora tem de repintar o seletor sem passar por ele.
+      media.playbackRate = 0.5;
+      await until(() => (seletor as HTMLSelectElement).value === '0.5');
+      await expect((seletor as HTMLSelectElement).value).toBe('0.5');
+      media.playbackRate = 1;
+    });
+
+    await step('Áudio não oferece tela cheia nem janela flutuante', async () => {
+      // Os dois são de vídeo. Num player de áudio o botão não teria o que
+      // mostrar, e botão que não faz nada é ruído — a mesma regra que fez os
+      // controles de tabela do editor serem contextuais.
+      await expect(canvas.queryByRole('button', { name: LABELS.enterFullscreen })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: LABELS.enterPip })).toBeNull();
+    });
+
     await step('Os controles alcançam o mínimo de alvo de toque', async () => {
       for (const nome of [LABELS.play, LABELS.mute]) {
         const botao = canvas.queryByRole('button', { name: nome });
@@ -244,6 +274,57 @@ export const Video: Story = {
       const estilo = getComputedStyle(root.media);
       await expect(estilo.display).toBe('block');
       await expect(root.dataset.kind).toBe('video');
+    });
+
+    await step('Tela cheia e janela flutuante aparecem, por DETECÇÃO', async () => {
+      const canvas = within(canvasElement);
+      // A detecção é em tempo de execução: a resposta muda com o navegador e
+      // com a política de permissão do iframe que hospeda a página. Medido no
+      // navegador da suíte — `fullscreenEnabled` e `pictureInPictureEnabled`
+      // ambos verdadeiros, e o iframe do Storybook com `allowfullscreen`.
+      const podeTela = document.fullscreenEnabled;
+      const podeJanela =
+        document.pictureInPictureEnabled && !(root.media as HTMLVideoElement)
+          .disablePictureInPicture;
+
+      const botaoTela = canvas.queryByRole('button', { name: LABELS.enterFullscreen });
+      const botaoJanela = canvas.queryByRole('button', { name: LABELS.enterPip });
+
+      // O que se afirma é a CORRESPONDÊNCIA, não a presença: onde o navegador
+      // não oferece, o botão não pode existir; onde oferece, tem de existir.
+      await expect(Boolean(botaoTela)).toBe(podeTela);
+      await expect(Boolean(botaoJanela)).toBe(podeJanela);
+
+      // A tela cheia é pedida na MOLDURA, não no vídeo — pedindo no `<video>` o
+      // navegador desenha os controles dele e a nossa barra desaparece
+      // justamente quando a tela é maior.
+      await expect(typeof root.requestFullscreen).toBe('function');
+    });
+
+    await step('O que a suíte NÃO consegue provar, e por quê', async () => {
+      // Medido: o clique sintético do driver não concede ativação do usuário
+      // (`navigator.userActivation.hasBeenActive` = false), e tela cheia e PiP a
+      // exigem — as duas recusam com `TypeError` e `NotAllowedError`. Então a
+      // suíte alcança a detecção, a fiação e o tratamento da recusa; não alcança
+      // a entrada de fato. Registrado aqui para ninguém ler o verde como prova
+      // do que ele não mede.
+      const ativacao = (
+        navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }
+      ).userActivation;
+      if (ativacao) await expect(ativacao.hasBeenActive).toBe(false);
+
+      // O tratamento da recusa É verificável: o botão não pode ficar prometendo
+      // um estado que não aconteceu.
+      const botaoTela = within(canvasElement).queryByRole('button', {
+        name: LABELS.enterFullscreen,
+      });
+      if (botaoTela) {
+        await userEvent.click(botaoTela);
+        await new Promise((r) => setTimeout(r, 80));
+        await expect(document.fullscreenElement).toBeNull();
+        // Continua dizendo "entrar", porque não entrou.
+        await expect(botaoTela).toHaveAttribute('aria-label', LABELS.enterFullscreen);
+      }
     });
   },
 };

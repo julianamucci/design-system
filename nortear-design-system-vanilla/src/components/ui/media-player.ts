@@ -4,17 +4,25 @@
 // que decide se o design system constrói o player em vez de adotar uma lib.
 //
 // Por que o elemento nativo. Ele já entrega, de graça: legenda por `<track>`,
-// teclado, Media Session (o controle da tela de bloqueio e do fone), Picture-in
-// -Picture e TODOS os eventos de reprodução. O que falta é a aparência — e
-// aparência é o que um design system tem. É a mesma divisão do editor: a lib é
-// o motor, a barra é nossa.
+// teclado, Media Session (o controle da tela de bloqueio e do fone),
+// Picture-in-Picture, tela cheia e TODOS os eventos de reprodução. O que falta é
+// a aparência — e aparência é o que um design system tem. É a mesma divisão do
+// editor: a lib é o motor, a barra é nossa.
 //
 // A consequência boa dessa divisão é que o motor fica substituível. Se o
 // `@videojs/core` (hoje em beta, GA prevista para meados de 2026) amadurecer e
-// resolver qualidade adaptativa melhor do que o elemento nativo, troca-se o
-// motor sem redesenhar a barra.
+// resolver qualidade adaptativa melhor que o elemento nativo, troca-se o motor
+// sem redesenhar a barra.
 
-import { Pause, Play, Volume2, VolumeX } from 'lucide';
+import {
+  Maximize,
+  Minimize,
+  Pause,
+  PictureInPicture2,
+  Play,
+  Volume2,
+  VolumeX,
+} from 'lucide';
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
@@ -43,6 +51,12 @@ export type MediaPlayerLabels = {
   unmute: string;
   /** Rótulo da barra de progresso. */
   seek: string;
+  /** Rótulo do seletor de velocidade. */
+  rate: string;
+  enterFullscreen: string;
+  exitFullscreen: string;
+  enterPip: string;
+  exitPip: string;
 };
 
 /**
@@ -73,14 +87,23 @@ export type MediaPlayerOptions = {
    * vídeo e a lista vem vazia, ele avisa no console em desenvolvimento.
    */
   tracks?: MediaPlayerTrack[];
+  /**
+   * Velocidades oferecidas, na ordem em que aparecem.
+   *
+   * MEDIDO: `playbackRate` vale para mídia de ARQUIVO e é IGNORADO em stream ao
+   * vivo — escrever 1.5 num `srcObject` de `MediaStream` lê de volta 1. Quem
+   * montar o player sobre stream deve passar lista vazia para o seletor sumir:
+   * controle que não faz nada é pior que controle ausente.
+   */
+  rates?: number[];
   labels: MediaPlayerLabels;
   /**
    * Disparado quando a reprodução COMEÇA de fato.
    *
    * Ligado a `playing`, e não a `play`: `play` avisa que a reprodução foi
-   * PEDIDA, e entre o pedido e o primeiro quadro há o buffer. Numa mídia
-   * grande os dois se separam por segundos, e contar `play` como início infla
-   * a métrica com tentativas que nunca saíram do lugar.
+   * PEDIDA, e entre o pedido e o primeiro quadro há o buffer. Numa mídia grande
+   * os dois se separam por segundos, e contar `play` como início infla a
+   * métrica com tentativas que nunca saíram do lugar.
    */
   onPlay?: () => void;
   /** Disparado em toda parada — inclusive no fim. Ver `MediaPauseInfo.ended`. */
@@ -90,7 +113,7 @@ export type MediaPlayerOptions = {
 };
 
 export type MediaPlayerRoot = DestroyableElement<HTMLDivElement> & {
-  /** O elemento nativo. Quem consome precisa dele para volume, taxa, faixas. */
+  /** O elemento nativo. Quem consome precisa dele para volume, faixas, taxa. */
   media: HTMLMediaElement;
 };
 
@@ -135,6 +158,7 @@ function controlButton(label: string, icon: LucideIconNode[]): HTMLButtonElement
 
 export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot {
   const { kind = 'video', labels, tracks = [] } = options;
+  const isVideo = kind === 'video';
 
   const root = document.createElement('div');
   root.dataset.slot = 'media-player';
@@ -154,7 +178,7 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   // SEM `controls`: os controles nativos apareceriam junto dos nossos. O
   // elemento continua acessível porque quem o opera é a barra abaixo, e ele
   // segue fora da ordem de tabulação por não ter `controls`.
-  if (kind === 'video' && options.poster) (media as HTMLVideoElement).poster = options.poster;
+  if (isVideo && options.poster) (media as HTMLVideoElement).poster = options.poster;
 
   for (const t of tracks) {
     const track = document.createElement('track');
@@ -166,7 +190,7 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     media.appendChild(track);
   }
 
-  if (kind === 'video' && tracks.length === 0 && import.meta.env?.DEV) {
+  if (isVideo && tracks.length === 0 && import.meta.env?.DEV) {
     // Aviso, não exceção: quebrar a página por falta de legenda esconderia o
     // conteúdo de todo mundo para punir a falta de acesso de alguns.
     console.warn(
@@ -201,9 +225,50 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   time.dataset.slot = 'media-player-time';
   time.textContent = '--:-- / --:--';
 
+  // ─── Velocidade ────────────────────────────────────────────────────────────
+  //
+  // Um `<select>` nativo, e não um menu desenhado: ele já é operável por
+  // teclado, já anuncia opção e valor, e já se comporta como a plataforma manda
+  // em toque. Um menu próprio significaria reimplementar tudo isso à mão — a
+  // mesma razão que fez a barra de progresso ser um `<input type="range">`.
+  const rates = options.rates ?? [0.5, 0.75, 1, 1.25, 1.5, 2];
+  const rateSelect = document.createElement('select');
+  rateSelect.className = 'nds-media-player-rate';
+  rateSelect.dataset.slot = 'media-player-rate';
+  rateSelect.setAttribute('aria-label', labels.rate);
+  rateSelect.hidden = rates.length === 0;
+  for (const r of rates) {
+    const opt = document.createElement('option');
+    opt.value = String(r);
+    // `1×`, e não `1`: sozinho o número não diz de que grandeza se fala.
+    opt.textContent = `${r}×`;
+    if (r === 1) opt.selected = true;
+    rateSelect.appendChild(opt);
+  }
+
   const muteButton = controlButton(labels.mute, ico(Volume2));
 
-  controls.append(playButton, seek, time, muteButton);
+  controls.append(playButton, seek, time, rateSelect, muteButton);
+
+  // ─── Tela cheia e Picture-in-Picture ───────────────────────────────────────
+  //
+  // Só existem em vídeo, e só quando o navegador de fato os oferece. A detecção
+  // é em tempo de EXECUÇÃO porque a resposta muda com o navegador, com a
+  // política de permissão do iframe que hospeda a página e com o próprio
+  // elemento (`disablePictureInPicture`). Botão que não faz nada é ruído.
+  const canFullscreen =
+    isVideo && document.fullscreenEnabled && typeof root.requestFullscreen === 'function';
+  const canPip =
+    isVideo
+    && document.pictureInPictureEnabled
+    && typeof (media as HTMLVideoElement).requestPictureInPicture === 'function'
+    && !(media as HTMLVideoElement).disablePictureInPicture;
+
+  const pipButton = canPip ? controlButton(labels.enterPip, ico(PictureInPicture2)) : null;
+  const fsButton = canFullscreen ? controlButton(labels.enterFullscreen, ico(Maximize)) : null;
+  if (pipButton) controls.appendChild(pipButton);
+  if (fsButton) controls.appendChild(fsButton);
+
   root.append(media, controls);
 
   // ─── Estado: a BARRA reflete o elemento, nunca o próprio clique ────────────
@@ -235,6 +300,23 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     }
   }
 
+  function paintRate(): void {
+    rateSelect.value = String(media.playbackRate);
+  }
+
+  function paintFullscreen(): void {
+    if (!fsButton) return;
+    const on = document.fullscreenElement === root;
+    fsButton.setAttribute('aria-label', on ? labels.exitFullscreen : labels.enterFullscreen);
+    fsButton.replaceChildren(iconSvg(ico(on ? Minimize : Maximize)));
+  }
+
+  function paintPip(): void {
+    if (!pipButton) return;
+    const on = document.pictureInPictureElement === media;
+    pipButton.setAttribute('aria-label', on ? labels.exitPip : labels.enterPip);
+  }
+
   media.addEventListener('playing', () => {
     paintPlay();
     options.onPlay?.();
@@ -256,13 +338,13 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   media.addEventListener('timeupdate', paintTime);
   media.addEventListener('loadedmetadata', paintTime);
   media.addEventListener('volumechange', paintMute);
+  media.addEventListener('ratechange', paintRate);
 
   playButton.addEventListener('click', () => {
     if (media.paused || media.ended) {
       // A promessa PODE ser recusada — a política de autoplay nega `play()` sem
-      // gesto do usuário, e há navegador que nega mesmo com gesto. Engolir a
-      // recusa em silêncio deixaria o botão mentindo; repintar devolve o estado
-      // verdadeiro.
+      // ativação do usuário. Engolir a recusa em silêncio deixaria o botão
+      // mentindo; repintar devolve o estado verdadeiro.
       void media.play().catch(paintPlay);
     } else {
       media.pause();
@@ -277,9 +359,45 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     media.muted = !media.muted;
   });
 
+  rateSelect.addEventListener('change', () => {
+    media.playbackRate = Number(rateSelect.value);
+  });
+
+  if (fsButton) {
+    // A tela cheia é da MOLDURA, não do vídeo.
+    //
+    // Pedindo no `<video>`, o navegador passa a desenhar os controles dele — ou
+    // nenhum — e a nossa barra desaparece justamente quando a tela é maior. Na
+    // moldura, vídeo e controles crescem juntos.
+    fsButton.addEventListener('click', () => {
+      if (document.fullscreenElement === root) void document.exitFullscreen().catch(paintFullscreen);
+      else void root.requestFullscreen().catch(paintFullscreen);
+    });
+    document.addEventListener('fullscreenchange', paintFullscreen);
+  }
+
+  if (pipButton) {
+    const video = media as HTMLVideoElement;
+    pipButton.addEventListener('click', () => {
+      // Recusa é caminho comum, não excepcional: sem ativação do usuário o
+      // navegador nega com `NotAllowedError` — medido. Repintar devolve a
+      // verdade ao botão em vez de deixá-lo prometendo o que não aconteceu.
+      if (document.pictureInPictureElement === video) {
+        void document.exitPictureInPicture().catch(paintPip);
+      } else {
+        void video.requestPictureInPicture().catch(paintPip);
+      }
+    });
+    media.addEventListener('enterpictureinpicture', paintPip);
+    media.addEventListener('leavepictureinpicture', paintPip);
+  }
+
   paintPlay();
   paintMute();
   paintTime();
+  paintRate();
+  paintFullscreen();
+  paintPip();
 
   const raiz = tornarDestruivel(root, root, () => {
     // Parar e soltar a fonte: um elemento removido do documento continua
@@ -287,6 +405,10 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     media.pause();
     media.removeAttribute('src');
     media.load();
+    // `fullscreenchange` mora no DOCUMENTO, e sobrevive à remoção da moldura:
+    // sem soltar aqui, cada player montado e descartado deixa um ouvinte para
+    // trás, e o fecho dele segura a moldura inteira na memória.
+    document.removeEventListener('fullscreenchange', paintFullscreen);
   }) as MediaPlayerRoot;
   raiz.media = media;
   return raiz;

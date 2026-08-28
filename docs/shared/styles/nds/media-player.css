@@ -179,3 +179,46 @@
   font-variant-numeric: tabular-nums;
   color: hsl(var(--muted-foreground));
 }
+
+/* O seletor de velocidade.
+ *
+ * Um `<select>` nativo, e não um menu desenhado: ele já é operável por teclado,
+ * já anuncia opção e valor, e já se comporta como a plataforma manda no toque.
+ * O que se estiliza é a caixa — a mesma razão que fez a barra de progresso ser
+ * um `<input type="range">`. */
+.nds-media-player-rate {
+  flex-shrink: 0;
+  block-size: var(--spacing-6);
+  padding-inline: var(--spacing-2);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.nds-media-player-rate:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Em tela cheia é a MOLDURA que cresce, e não o vídeo.
+ *
+ * Pedindo tela cheia no `<video>`, o navegador passa a desenhar os controles
+ * dele — ou nenhum — e a nossa barra desaparece justamente quando a tela é
+ * maior. Com a moldura em tela cheia, o vídeo ocupa o espaço que sobra da
+ * barra, e `object-fit: contain` o mantém inteiro em vez de cortar. */
+.nds-media-player:fullscreen {
+  block-size: 100%;
+  border: 0;
+  border-radius: 0;
+  background-color: hsl(var(--foreground));
+}
+
+.nds-media-player:fullscreen .nds-media-player-surface {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  object-fit: contain;
+}
