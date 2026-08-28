@@ -237,12 +237,39 @@ export const Audio: Story = {
   },
 };
 
+/**
+ * Um vídeo de verdade, desenhado num canvas e capturado como MediaStream.
+ *
+ * A versão anterior desta story alimentava um `<video>` com o WAV — e um
+ * elemento de vídeo sem FAIXA de vídeo passa por toda a detecção de capacidade e
+ * depois recusa o Picture-in-Picture com `InvalidStateError` (`videoWidth=0`,
+ * medido). Era o botão que "não fazia nada" na tela.
+ *
+ * Como é stream ao vivo, o seletor de velocidade sai de cena: `playbackRate` é
+ * ignorado em stream — também medido.
+ */
+function canvasStream(): MediaStream {
+  const canvas = document.createElement('canvas');
+  canvas.width = 320;
+  canvas.height = 180;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.fillStyle = '#22333b';
+    ctx.fillRect(0, 0, 320, 180);
+    ctx.fillStyle = '#8ecae6';
+    ctx.fillRect(20, 20, 120, 60);
+  }
+  return canvas.captureStream(10);
+}
+
 export const Video: Story = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
   render: (args) =>
     createMediaPlayer({
       kind: 'video',
-      src: silentWav(0.6),
+      stream: canvasStream(),
+      // Stream ao vivo ignora `playbackRate` — sem lista, sem seletor.
+      rates: [],
       labels: LABELS,
       // Uma faixa de legenda, ainda que vazia: vídeo com áudio SEM legenda
       // reprova em WCAG 1.2.2 (nível A), e a story não pode ensinar o contrário.
@@ -274,6 +301,32 @@ export const Video: Story = {
       const estilo = getComputedStyle(root.media);
       await expect(estilo.display).toBe('block');
       await expect(root.dataset.kind).toBe('video');
+    });
+
+    await step('A janela flutuante exige FAIXA de vídeo, não só um <video>', async () => {
+      const canvas = within(canvasElement);
+      const video = root.media as HTMLVideoElement;
+
+      // Este é o defeito que a dona encontrou clicando: a story alimentava um
+      // `<video>` com o WAV. O elemento passava por TODA a detecção de
+      // capacidade — `pictureInPictureEnabled` responde pelo documento, não pelo
+      // conteúdo — e o pedido recusava com `InvalidStateError`, engolido pelo
+      // `catch`. Na tela: clico e nada acontece.
+      //
+      // Medido, os dois casos se distinguem pelo nome do erro:
+      //   videoWidth=0   → InvalidStateError (sem faixa de vídeo)
+      //   videoWidth=160 → NotAllowedError   (só falta ativação do usuário)
+      const temQuadro = await until(() => video.videoWidth > 0, 5000);
+      await expect(temQuadro).toBe(true);
+
+      const botao = canvas.queryByRole('button', { name: LABELS.enterPip });
+      if (document.pictureInPictureEnabled && !video.disablePictureInPicture) {
+        // Com faixa de vídeo, o botão tem de estar visível de verdade — não
+        // basta existir no DOM, porque ele NASCE escondido e só é revelado
+        // quando os metadados chegam.
+        await expect(botao).not.toBeNull();
+        await expect(getComputedStyle(botao as HTMLElement).display).not.toBe('none');
+      }
     });
 
     await step('Tela cheia e janela flutuante aparecem, por DETECÇÃO', async () => {

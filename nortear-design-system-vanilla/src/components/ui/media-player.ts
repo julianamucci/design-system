@@ -76,7 +76,17 @@ export type MediaPauseInfo = {
 
 export type MediaPlayerOptions = {
   kind?: MediaPlayerKind;
-  src: string;
+  /** Endereço da mídia. Use `stream` no lugar quando a fonte for ao vivo. */
+  src?: string;
+  /**
+   * Fonte ao vivo — câmera, compartilhamento de tela, canvas.
+   *
+   * Não é conveniência de teste: stream é caso real, e muda o comportamento de
+   * duas coisas. `playbackRate` é ignorado (medido: 1.5 escrito lê de volta 1),
+   * e `duration` é infinita, então a barra de progresso não tem o que
+   * representar.
+   */
+  stream?: MediaStream;
   /** Imagem de capa. Só o vídeo a usa. */
   poster?: string;
   /**
@@ -173,7 +183,8 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   // ─── O motor ───────────────────────────────────────────────────────────────
   const media = document.createElement(kind) as HTMLMediaElement;
   media.className = 'nds-media-player-surface';
-  media.src = options.src;
+  if (options.stream) media.srcObject = options.stream;
+  else if (options.src) media.src = options.src;
   media.preload = 'metadata';
   // SEM `controls`: os controles nativos apareceriam junto dos nossos. O
   // elemento continua acessível porque quem o opera é a barra abaixo, e ele
@@ -265,6 +276,18 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     && !(media as HTMLVideoElement).disablePictureInPicture;
 
   const pipButton = canPip ? controlButton(labels.enterPip, ico(PictureInPicture2)) : null;
+  if (pipButton) {
+    // Nasce escondido, e aparece quando se souber que HÁ faixa de vídeo.
+    //
+    // A detecção de capacidade não basta: `pictureInPictureEnabled` responde
+    // pelo documento, não pelo conteúdo. Um `<video>` alimentado com áudio passa
+    // por toda a detecção e recusa o pedido com `InvalidStateError` — medido,
+    // `videoWidth=0`. Era o botão que "não fazia nada".
+    //
+    // Escondido primeiro e revelado depois, e não o contrário: mostrar para
+    // depois esconder faria a barra saltar assim que os metadados chegassem.
+    pipButton.hidden = true;
+  }
   const fsButton = canFullscreen ? controlButton(labels.enterFullscreen, ico(Maximize)) : null;
   if (pipButton) controls.appendChild(pipButton);
   if (fsButton) controls.appendChild(fsButton);
@@ -313,6 +336,9 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
 
   function paintPip(): void {
     if (!pipButton) return;
+    // `videoWidth` só é confiável depois dos metadados; antes disso vale 0 e o
+    // botão fica escondido, que é o certo — ainda não se sabe se há vídeo.
+    pipButton.hidden = (media as HTMLVideoElement).videoWidth === 0;
     const on = document.pictureInPictureElement === media;
     pipButton.setAttribute('aria-label', on ? labels.exitPip : labels.enterPip);
   }
@@ -336,7 +362,17 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   });
 
   media.addEventListener('timeupdate', paintTime);
-  media.addEventListener('loadedmetadata', paintTime);
+  // `loadedmetadata` é quando o conteúdo passa a ser conhecido — é ali que
+  // `videoWidth` deixa de ser 0 e se descobre se HÁ faixa de vídeo. Sem
+  // repintar o PiP aqui, o botão nasce escondido e nunca mais é revisto: foi
+  // exatamente o que fez o botão sumir depois da primeira metade da correção.
+  media.addEventListener('loadedmetadata', () => {
+    paintTime();
+    paintPip();
+  });
+  // Stream ao vivo pode trocar de dimensão sem novo `loadedmetadata` — a
+  // câmera que gira, a janela compartilhada que muda de tamanho.
+  media.addEventListener('resize', paintPip);
   media.addEventListener('volumechange', paintMute);
   media.addEventListener('ratechange', paintRate);
 
@@ -378,14 +414,26 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
 
   if (pipButton) {
     const video = media as HTMLVideoElement;
+    // A recusa não pode ser SILENCIOSA.
+    //
+    // Engolir o erro é o que transforma um pedido negado em "clico e nada
+    // acontece" — e o nome do erro diz exatamente o que houve:
+    //   InvalidStateError → o elemento não tem faixa de vídeo
+    //   NotAllowedError   → faltou ativação do usuário
+    // Repintar devolve a verdade ao botão; o aviso em desenvolvimento devolve a
+    // causa a quem está construindo.
+    const recusou = (erro: unknown): void => {
+      paintPip();
+      if (import.meta.env?.DEV) {
+        console.warn(`[nds-media-player] Picture-in-Picture recusado: ${(erro as Error).name}`);
+      }
+    };
+
     pipButton.addEventListener('click', () => {
-      // Recusa é caminho comum, não excepcional: sem ativação do usuário o
-      // navegador nega com `NotAllowedError` — medido. Repintar devolve a
-      // verdade ao botão em vez de deixá-lo prometendo o que não aconteceu.
       if (document.pictureInPictureElement === video) {
-        void document.exitPictureInPicture().catch(paintPip);
+        void document.exitPictureInPicture().catch(recusou);
       } else {
-        void video.requestPictureInPicture().catch(paintPip);
+        void video.requestPictureInPicture().catch(recusou);
       }
     });
     media.addEventListener('enterpictureinpicture', paintPip);
@@ -403,6 +451,14 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     // Parar e soltar a fonte: um elemento removido do documento continua
     // baixando, e um áudio removido continua TOCANDO.
     media.pause();
+    // Fonte ao vivo se solta pelo `srcObject`, e as trilhas param uma a uma:
+    // `removeAttribute('src')` não alcança stream, e uma câmera aberta
+    // continuaria gravando com o player já fora da tela.
+    const stream = media.srcObject as MediaStream | null;
+    if (stream) {
+      for (const trilha of stream.getTracks()) trilha.stop();
+      media.srcObject = null;
+    }
     media.removeAttribute('src');
     media.load();
     // `fullscreenchange` mora no DOCUMENTO, e sobrevive à remoção da moldura:
