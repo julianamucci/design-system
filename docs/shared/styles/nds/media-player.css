@@ -260,3 +260,47 @@
   min-block-size: 0;
   object-fit: contain;
 }
+
+/* ── A barra some quando a tela cheia fica parada ─────────────────────────────
+ *
+ * Em tela cheia a imagem é o conteúdo, e a barra sobre ela é andaime: todo
+ * player a esconde depois de um tempo sem atividade. Fora da tela cheia ela
+ * NUNCA some — ali a moldura é pequena e a barra é a única forma de operar.
+ *
+ * O gancho são atributos NOSSOS (`data-fullscreen`, `data-idle`), e não a
+ * pseudo-classe `:fullscreen`. Não é preferência: `:fullscreen` só existe com
+ * tela cheia de verdade, que exige ativação do usuário — e o clique sintético
+ * do driver não a concede (medido). Uma regra pendurada nela seria invisível
+ * para qualquer suíte; pendurada nos atributos, ela é exercitável.
+ *
+ * `opacity`, e não `display: none`: o segundo tira os controles da ordem de
+ * foco, e quem navega por teclado ficaria sem como chegar neles. */
+.nds-media-player[data-fullscreen="true"] .nds-media-player-controls {
+  transition: opacity var(--duration-moderate) var(--ease-exit);
+}
+
+.nds-media-player[data-fullscreen="true"][data-idle="true"] .nds-media-player-controls {
+  opacity: 0;
+  /* Barra invisível que ainda recebe clique é armadilha: o ponteiro passa
+   * direto, e o primeiro movimento já a traz de volta. */
+  pointer-events: none;
+}
+
+/* Com FOCO dentro, nunca. Esconder a barra enquanto alguém está nela pelo
+ * teclado faria a pessoa perder o elemento focado sem ter feito nada. */
+.nds-media-player[data-fullscreen="true"] .nds-media-player-controls:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* O cursor acompanha a barra: deixá-lo aceso sobre a imagem limpa é o mesmo
+ * andaime, com outro pixel. */
+.nds-media-player[data-fullscreen="true"][data-idle="true"] {
+  cursor: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-media-player[data-fullscreen="true"] .nds-media-player-controls {
+    transition: none;
+  }
+}

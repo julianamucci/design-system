@@ -221,6 +221,8 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
 
   const root = document.createElement('div');
   root.dataset.slot = 'media-player';
+  root.dataset.fullscreen = 'false';
+  root.dataset.idle = 'false';
   root.dataset.kind = embed ? embed.provider : kind;
   root.className = cn('nds-media-player', options.class);
   // `group` e não `region`: o player é um agrupamento de controles, e `region`
@@ -369,6 +371,49 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
 
   root.append(surface, controls);
 
+  // ─── Ociosidade da tela cheia ──────────────────────────────────────────────
+  //
+  // Em tela cheia a imagem é o conteúdo e a barra é andaime: some depois de um
+  // tempo sem atividade e volta ao primeiro sinal de vida. Fora da tela cheia
+  // NUNCA some — ali a moldura é pequena e a barra é a única forma de operar.
+  //
+  // Quem esconde é o CSS, por `[data-fullscreen][data-idle]`; aqui só se decide
+  // QUANDO. A separação é o que torna a regra exercitável: a pseudo-classe
+  // `:fullscreen` exige tela cheia de verdade, que exige ativação do usuário —
+  // e o clique sintético do driver não a concede (medido).
+
+  /** Quanto tempo parado até a barra sair de cena. */
+  const IDLE_MS = 3000;
+  let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function clearIdle(): void {
+    if (idleTimer !== null) clearTimeout(idleTimer);
+    idleTimer = null;
+    root.dataset.idle = 'false';
+  }
+
+  function markActive(): void {
+    if (idleTimer !== null) clearTimeout(idleTimer);
+    idleTimer = null;
+    root.dataset.idle = 'false';
+    // O relógio só corre em tela cheia: fora dela não há o que esconder, e um
+    // temporizador por player aberto na página seria custo sem uso.
+    if (root.dataset.fullscreen !== 'true') return;
+    idleTimer = setTimeout(() => {
+      idleTimer = null;
+      root.dataset.idle = 'true';
+    }, IDLE_MS);
+  }
+
+  // `focusin` está na lista por acessibilidade, e não por simetria: chegar num
+  // controle pelo teclado é atividade, e a barra tem de estar visível quando o
+  // foco pousa nela. A folha ainda garante isso por `:focus-within`, e as duas
+  // guardas se cobrem — a de CSS vale enquanto o foco fica, esta reinicia a
+  // contagem.
+  for (const name of ['pointermove', 'pointerdown', 'keydown', 'focusin'] as const) {
+    root.addEventListener(name, markActive);
+  }
+
   // ─── Pintura: lê o ESTADO, nunca o motor ───────────────────────────────────
   function paintPlay(): void {
     const playing = state.playing && !state.ended;
@@ -420,8 +465,16 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   }
 
   function paintFullscreen(): void {
-    if (!fsButton) return;
     const on = document.fullscreenElement === root;
+    // O atributo é o gancho do CSS que esconde a barra parada. Ele existe
+    // mesmo sem o botão de tela cheia: quem entra por atalho do navegador
+    // (F11 não, mas a API dá outros caminhos) tem o mesmo comportamento.
+    root.dataset.fullscreen = on ? 'true' : 'false';
+    // Saindo, a barra volta imediatamente — e o temporizador para.
+    if (!on) clearIdle();
+    else markActive();
+
+    if (!fsButton) return;
     fsButton.setAttribute('aria-label', on ? labels.exitFullscreen : labels.enterFullscreen);
     fsButton.replaceChildren(iconSvg(ico(on ? Minimize : Maximize)));
   }
@@ -666,6 +719,8 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     // num quadro que já foi.
     handshake?.stop();
     clock?.stop();
+    // O temporizador de ociosidade sobrevive à remoção do nó.
+    if (idleTimer !== null) clearTimeout(idleTimer);
   }) as MediaPlayerRoot;
 
   playerRoot.media = media;

@@ -44,6 +44,9 @@ import {
   type EmbedSource,
 } from './media-embed';
 
+/** Quanto tempo parado até a barra sair de cena, em tela cheia. */
+const IDLE_MS = 3000;
+
 export type MediaPlayerKind = 'video' | 'audio';
 
 /** Faixa de legenda. Vídeo com áudio EXIGE ao menos uma — WCAG 1.2.2, nível A. */
@@ -491,6 +494,19 @@ export function MediaPlayer({
    */
   const clockRef = useRef<ReturnType<typeof createEmbedClock> | null>(null);
 
+  /**
+   * Em tela cheia a barra some depois de um tempo sem atividade, e volta ao
+   * primeiro sinal de vida. Fora da tela cheia NUNCA some — ali a moldura é
+   * pequena e a barra é a única forma de operar.
+   *
+   * Quem esconde é a folha compartilhada, por `[data-fullscreen][data-idle]`;
+   * aqui só se decide QUANDO. A separação é o que torna a regra exercitável: a
+   * pseudo-classe `:fullscreen` exige tela cheia de verdade, que exige ativação
+   * do usuário — e o clique sintético do driver não a concede (medido).
+   */
+  const [idle, setIdle] = useState(false);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     const frame = frameRef.current;
     if (!frame || !provider) return;
@@ -575,6 +591,31 @@ export function MediaPlayer({
     },
     [],
   );
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || !state.fullscreen) {
+      setIdle(false);
+      return;
+    }
+    const markActive = () => {
+      setIdle(false);
+      if (idleTimerRef.current !== null) clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = setTimeout(() => setIdle(true), IDLE_MS);
+    };
+    // `focusin` está na lista por acessibilidade, e não por simetria: chegar num
+    // controle pelo teclado é atividade, e a barra tem de estar visível quando o
+    // foco pousa nela. A folha ainda garante isso por `:focus-within`, e as duas
+    // guardas se cobrem.
+    const events = ['pointermove', 'pointerdown', 'keydown', 'focusin'] as const;
+    for (const name of events) root.addEventListener(name, markActive);
+    markActive();
+    return () => {
+      for (const name of events) root.removeEventListener(name, markActive);
+      if (idleTimerRef.current !== null) clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = null;
+    };
+  }, [state.fullscreen]);
 
   // ─── Tela cheia ────────────────────────────────────────────────────────────
 
@@ -717,6 +758,8 @@ export function MediaPlayer({
       data-slot="media-player"
       data-kind={embed ? embed.provider : kind}
       data-live={live ? 'true' : 'false'}
+      data-fullscreen={state.fullscreen ? 'true' : 'false'}
+      data-idle={idle ? 'true' : 'false'}
       className={cn('nds-media-player', className)}
       // `group` e não `region`: o player é um agrupamento de controles, e
       // `region` entraria na lista de marcos da página — um player por artigo

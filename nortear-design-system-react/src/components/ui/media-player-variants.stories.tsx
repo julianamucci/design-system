@@ -18,7 +18,7 @@ import {
   silentWav,
   DEMO_SECONDS,
 } from './media-player.fixtures';
-import { clockText, until } from './media-player.play-helpers';
+import { firstControl, clockText, until } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
 
 /** O WAV das stories de áudio, resolvido uma vez: o mesmo texto a cada desenho. */
@@ -152,6 +152,41 @@ export const Video: Story = {
         await expect(getComputedStyle(button).display).not.toBe('none');
       }
       video.pause();
+    });
+
+    await step('Em tela cheia a barra some parada — e nunca com foco dentro', async () => {
+      // Tela cheia de VERDADE exige ativação do usuário, que o clique sintético
+      // do driver não concede (medido). Por isso a regra pende de atributos
+      // NOSSOS: aqui eles são postos à mão, e o que se afirma é a folha — que é
+      // a metade que ninguém veria quebrar.
+      const controls = root.querySelector(
+        '[data-slot="media-player-controls"]',
+      ) as HTMLElement;
+      await expect(getComputedStyle(controls).opacity).toBe('1');
+
+      root.dataset['fullscreen'] = 'true';
+      root.dataset['idle'] = 'true';
+      // A espera é pela TRANSIÇÃO, não pelo atributo: `getComputedStyle`
+      // devolve o valor animado do instante, e medir logo depois de trocar o
+      // atributo pega a barra no meio do desaparecimento.
+      await expect(await until(() => getComputedStyle(controls).opacity === '0', 3000)).toBe(true);
+      // Barra invisível que ainda recebe clique é armadilha.
+      await expect(getComputedStyle(controls).pointerEvents).toBe('none');
+
+      // A guarda que importa: com o foco dentro, a barra NÃO some. Quem navega
+      // por teclado perderia o elemento focado sem ter feito nada.
+      const playButton = firstControl(root);
+      playButton.focus();
+      await expect(document.activeElement).toBe(playButton);
+      await expect(await until(() => getComputedStyle(controls).opacity === '1', 3000)).toBe(true);
+      await expect(getComputedStyle(controls).pointerEvents).not.toBe('none');
+      playButton.blur();
+
+      // E fora da tela cheia a barra nunca some, mesmo parada: ali a moldura é
+      // pequena e a barra é a única forma de operar.
+      root.dataset['fullscreen'] = 'false';
+      await expect(await until(() => getComputedStyle(controls).opacity === '1', 3000)).toBe(true);
+      root.dataset['idle'] = 'false';
     });
 
     await step('Tela cheia e janela flutuante aparecem por DETECÇÃO', async () => {

@@ -60,6 +60,9 @@ import {
   type EmbedSource,
 } from './media-embed';
 
+/** Quanto tempo parado até a barra sair de cena, em tela cheia. */
+const IDLE_MS = 3000;
+
 type LucideIconNode = [string, Record<string, string>];
 
 export type MediaPlayerKind = 'video' | 'audio';
@@ -230,6 +233,15 @@ const DEFAULT_RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
     '[attr.data-slot]': '"media-player"',
     '[attr.data-kind]': 'dataKind()',
     '[attr.data-live]': 'live()',
+    '[attr.data-fullscreen]': 'fullscreenOn()',
+    '[attr.data-idle]': 'idle()',
+    // `focusin` está na lista por acessibilidade, e não por simetria: chegar
+    // num controle pelo teclado é atividade, e a barra tem de estar visível
+    // quando o foco pousa nela.
+    '(pointermove)': 'markActive()',
+    '(pointerdown)': 'markActive()',
+    '(keydown)': 'markActive()',
+    '(focusin)': 'markActive()',
     // `group` e não `region`: o player é um agrupamento de controles, e `region`
     // entraria na lista de marcos da página — um player por artigo poluiria a
     // navegação por marco de quem usa leitor de tela.
@@ -470,7 +482,31 @@ export class MediaPlayerComponent implements OnDestroy {
   private readonly rate = signal(1);
   /** Há faixa de vídeo? Só o nativo sabe responder; no quadro é uma aposta. */
   private readonly hasVideoTrackState = signal(false);
-  private readonly fullscreenOn = signal(false);
+  // `protected`, e não `private`: o host binding `[attr.data-fullscreen]` é
+  // expressão de TEMPLATE, e template não enxerga membro privado.
+  protected readonly fullscreenOn = signal(false);
+
+  /**
+   * Em tela cheia a barra some depois de um tempo sem atividade, e volta ao
+   * primeiro sinal de vida. Fora da tela cheia NUNCA some — ali a moldura é
+   * pequena e a barra é a única forma de operar.
+   *
+   * Quem esconde é a folha compartilhada, por `[data-fullscreen][data-idle]`;
+   * aqui só se decide QUANDO. A separação é o que torna a regra exercitável: a
+   * pseudo-classe `:fullscreen` exige tela cheia de verdade, que exige ativação
+   * do usuário — e o clique sintético do driver não a concede (medido).
+   */
+  protected readonly idle = signal(false);
+  private idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+  protected markActive(): void {
+    this.idle.set(false);
+    if (this.idleTimer !== null) clearTimeout(this.idleTimer);
+    this.idleTimer = null;
+    // O relógio só corre em tela cheia: fora dela não há o que esconder.
+    if (!this.fullscreenOn()) return;
+    this.idleTimer = setTimeout(() => this.idle.set(true), IDLE_MS);
+  }
   private readonly pipOn = signal(false);
   /** O elemento aceita Picture-in-Picture? Só se sabe com ele montado. */
   private readonly pipSupported = signal(false);

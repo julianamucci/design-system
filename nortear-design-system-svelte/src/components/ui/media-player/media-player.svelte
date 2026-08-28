@@ -164,6 +164,9 @@
     type EmbedCommand,
   } from './media-embed';
 
+  /** Quanto tempo parado até a barra sair de cena, em tela cheia. */
+  const IDLE_MS = 3000;
+
   let {
     kind = 'video',
     src,
@@ -198,6 +201,28 @@
   /** Há faixa de vídeo? Só o nativo sabe responder; no quadro é uma aposta. */
   let hasVideoTrack = $state(false);
   let fullscreenActive = $state(false);
+
+  /**
+   * Em tela cheia a barra some depois de um tempo sem atividade, e volta ao
+   * primeiro sinal de vida. Fora da tela cheia NUNCA some — ali a moldura é
+   * pequena e a barra é a única forma de operar.
+   *
+   * Quem esconde é a folha compartilhada, por `[data-fullscreen][data-idle]`;
+   * aqui só se decide QUANDO. A separação é o que torna a regra exercitável: a
+   * pseudo-classe `:fullscreen` exige tela cheia de verdade, que exige ativação
+   * do usuário — e o clique sintético do driver não a concede (medido).
+   */
+  let idle = $state(false);
+  let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function markActive(): void {
+    idle = false;
+    if (idleTimer !== null) clearTimeout(idleTimer);
+    idleTimer = null;
+    // O relógio só corre em tela cheia: fora dela não há o que esconder.
+    if (!fullscreenActive) return;
+    idleTimer = setTimeout(() => { idle = true; }, IDLE_MS);
+  }
   let pipActive = $state(false);
 
   const isVideo = $derived(kind === 'video' || Boolean(embed));
@@ -418,6 +443,7 @@
     if (!canFullscreen) return;
     const sync = (): void => {
       fullscreenActive = document.fullscreenElement === rootEl;
+      markActive();
     };
     document.addEventListener('fullscreenchange', sync);
     // O ouvinte mora no `document` e sobrevive à remoção da moldura.
@@ -574,6 +600,8 @@
   data-slot="media-player"
   data-kind={embed ? embed.provider : kind}
   data-live={String(live)}
+  data-fullscreen={String(fullscreenActive)}
+  data-idle={String(idle)}
   class={cn('nds-media-player', className)}
   role="group"
   aria-label={labels.player}

@@ -52,6 +52,9 @@ import {
 
 // ─── Contrato do componente ─────────────────────────────────────────────────
 
+/** Quanto tempo parado até a barra sair de cena, em tela cheia. */
+const IDLE_MS = 3000;
+
 const props = withDefaults(
   defineProps<{
     kind?: MediaPlayerKind;
@@ -125,6 +128,28 @@ const rate = ref(1);
 /** Há faixa de vídeo? Só o nativo sabe responder; no quadro é uma aposta. */
 const hasVideoTrack = ref(false);
 const fullscreenOn = ref(false);
+
+/**
+ * Em tela cheia a barra some depois de um tempo sem atividade, e volta ao
+ * primeiro sinal de vida. Fora da tela cheia NUNCA some — ali a moldura é
+ * pequena e a barra é a única forma de operar.
+ *
+ * Quem esconde é a folha compartilhada, por `[data-fullscreen][data-idle]`;
+ * aqui só se decide QUANDO. A separação é o que torna a regra exercitável: a
+ * pseudo-classe `:fullscreen` exige tela cheia de verdade, que exige ativação
+ * do usuário — e o clique sintético do driver não a concede (medido).
+ */
+const idle = ref(false);
+let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+function markActive(): void {
+  idle.value = false;
+  if (idleTimer !== null) clearTimeout(idleTimer);
+  idleTimer = null;
+  // O relógio só corre em tela cheia: fora dela não há o que esconder.
+  if (!fullscreenOn.value) return;
+  idleTimer = setTimeout(() => { idle.value = true; }, IDLE_MS);
+}
 const pipOn = ref(false);
 
 const rootRef = ref<HTMLDivElement | null>(null);
@@ -371,6 +396,7 @@ function onRateSelect(event: Event): void {
 
 function syncFullscreen(): void {
   fullscreenOn.value = document.fullscreenElement === rootRef.value;
+  markActive();
 }
 
 /**
@@ -542,6 +568,8 @@ defineExpose({ media: mediaRef, frame: frameRef });
     data-slot="media-player"
     :data-kind="kindAttr"
     :data-live="String(live)"
+    :data-fullscreen="String(fullscreenOn)"
+    :data-idle="String(idle)"
     role="group"
     :aria-label="props.labels.player"
     :class="cn('nds-media-player', props.class)"
