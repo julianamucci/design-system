@@ -255,6 +255,19 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* Texto secundário DENTRO de um item preenchido com accent.
+ *
+ * O accent é o laranja da marca, e não mais um quase-branco: `--muted-foreground`
+ * ali mede 2,64:1 — o axe reprovou no `command`, e o defeito é o mesmo em todo
+ * segundo texto que mora dentro de um item destacado. A cor de texto de uma
+ * superfície de accent é `--accent-foreground`; o ar de secundário vem da
+ * opacidade, e 0.85 é o PISO medido — a 0.80 a razão cai para 4,34:1. */
+.nds-dropdown-menu-item:hover .nds-dropdown-menu-shortcut,
+.nds-dropdown-menu-item:focus .nds-dropdown-menu-shortcut,
+.nds-dropdown-menu-item[data-highlighted] .nds-dropdown-menu-shortcut {
+  color: hsl(var(--accent-foreground) / 0.85);
+}
+
 /* ── Enter/exit do painel — fade + zoom com leve drift (escada: fast).
       base-ui/reka emitem data-open/data-closed; bits usa data-state. ──────── */
 @keyframes nds-menu-in {

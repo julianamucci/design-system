@@ -179,6 +179,19 @@
   overflow: hidden;
 }
 
+/* Texto secundário DENTRO de um item preenchido com accent.
+ *
+ * O accent é o laranja da marca, e não mais um quase-branco: `--muted-foreground`
+ * ali mede 2,64:1 — o axe reprovou no `command`, e o defeito é o mesmo em todo
+ * segundo texto que mora dentro de um item destacado. A cor de texto de uma
+ * superfície de accent é `--accent-foreground`; o ar de secundário vem da
+ * opacidade, e 0.85 é o PISO medido — a 0.80 a razão cai para 4,34:1. */
+.nds-navigation-menu-child:hover .nds-navigation-menu-child-description,
+.nds-navigation-menu-child:focus .nds-navigation-menu-child-description,
+.nds-navigation-menu-child:focus-visible .nds-navigation-menu-child-description {
+  color: hsl(var(--accent-foreground) / 0.85);
+}
+
 /*
  * ─── nds-navigation-menu composite (positioner/popup/viewport) ──────────────
  * Libs headless renderizam o dropdown num portal com positioner dimensionado

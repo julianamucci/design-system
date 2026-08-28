@@ -96,11 +96,11 @@
  * Pares mais apertados, todos sobre `--muted`, que é a pior das duas:
  *   claro  — destructive  4.84:1  (min 4.5)
  *   claro  — success      5.32:1  (min 4.5)
- *   claro  — warning      3.62:1  (min 3)
+ *   claro  — warning      3.10:1  (min 3)
  *   claro  — info         3.62:1  (min 3)
  *   escuro — destructive  4.67:1  (min 4.5)
  *   escuro — success      4.65:1  (min 4.5)
- *   escuro — warning      6.22:1  (min 3)
+ *   escuro — warning      6.18:1  (min 3)
  *   escuro — info         4.05:1  (min 3)
  *
  * `info` do modo escuro é o valor original do brand book: eu o havia clareado
@@ -114,9 +114,24 @@
  *
  * A razão de luminância entre eles NÃO melhora, e o motivo é estrutural: as
  * duas precisam limpar o mesmo piso contra o mesmo fundo, então as duas têm de
- * ser escuras no claro e claras no escuro. O ganho tinha de vir do MATIZ, e a
- * marca não tinha um amarelo para dar — daí um ouro desvinculado dela, no matiz
- * 52. A distância virou 60 graus no claro e 54 no escuro.
+ * ser escuras no claro e claras no escuro. O ganho tinha de vir da COR, e a
+ * marca não tinha amarelo para dar — daí um âmbar desvinculado dela.
+ *
+ * A primeira tentativa foi um ouro no matiz 52, e ela trocou de vizinho: ficou
+ * a 60 graus do `destructive` e a 103 do `success`, o que parecia resolvido —
+ * mas matiz sozinho não descreve o que o olho vê. Amarelo ESCURO vira oliva, e
+ * oliva mora perto do verde escuro em claridade e croma. Medido em ΔE de Lab,
+ * que enxerga os três eixos juntos:
+ *
+ *   claro   laranja antigo (22)   ΔE 30 do vermelho   ΔE 76 do verde
+ *   claro   ouro    (52 70% 30%)  ΔE 68               ΔE 47   ← encostou no verde
+ *   claro   âmbar   (44 85% 34%)  ΔE 61               ΔE 60
+ *   escuro  âmbar   (48 95% 58%)  ΔE 75               ΔE 77
+ *
+ * O critério passou a ser o PIOR dos dois vizinhos, e não a distância a um só:
+ * 47 virou 60 no claro e 63 virou 77 no escuro. A saturação alta é o preço de
+ * um amarelo que não vira oliva ao escurecer — fica na faixa do `destructive`,
+ * que é 80%.
  *
  * A borda `hsl(var(--cor) / 0.3)` NÃO entra na conta: é linha de 1px e não
  * compõe o fundo do texto. Incluí-la empurrava o escuro para quase branco.
@@ -163,7 +178,7 @@
   --secondary-foreground: 201 22% 18%;
   --muted: 36 16% 93%;
   --muted-foreground: 195 10% 40%;
-  --accent: 36 24% 94%;
+  --accent: 22 70% 70%;
   --accent-foreground: 201 22% 18%;
 
   /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
@@ -180,7 +195,7 @@
   --destructive-foreground: var(--foreground);
   --success: 155 37% 28%;
   --success-foreground: var(--foreground);
-  --warning: 52 70% 30%;
+  --warning: 44 85% 34%;
   --warning-foreground: var(--foreground);
   --info: 190 55% 36%;
   --info-foreground: var(--foreground);
@@ -257,8 +272,8 @@
   --secondary-foreground: 24 100% 99%;
   --muted: 200 18% 22%;
   --muted-foreground: 197 12% 68%;
-  --accent: 199 20% 26%;
-  --accent-foreground: 24 100% 99%;
+  --accent: 22 70% 70%;
+  --accent-foreground: 201 22% 18%;
 
   /* 79.5% e não 78%: a 78% a lavagem sobre `--muted` dava 4.52 contra piso de
      4.5, e dois centésimos de folga é o mesmo que não ter. Aqui são 4.67. */
@@ -266,7 +281,7 @@
   --destructive-foreground: var(--foreground);
   --success: 155 45% 60%;
   --success-foreground: var(--foreground);
-  --warning: 52 80% 62%;
+  --warning: 48 95% 58%;
   --warning-foreground: var(--foreground);
   --info: 190 50% 56%;
   --info-foreground: var(--foreground);
