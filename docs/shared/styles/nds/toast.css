@@ -190,7 +190,7 @@ svg.nds-toast-icon {
  * pessoa perder o alvo antes de o cronômetro acabar.
  */
 .nds-toast-action:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--popover)), 0 0 0 5px hsl(var(--ring));
 }
 
 /* ── Close button ────────────────────────────────────────────────────────── */
@@ -220,7 +220,7 @@ svg.nds-toast-icon {
 }
 
 .nds-toast-close:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--popover)), 0 0 0 5px hsl(var(--ring));
 }
 
 .nds-toast-close > svg {

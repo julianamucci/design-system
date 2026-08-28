@@ -143,7 +143,7 @@
 
 .nds-dialog-close:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
 }
 
 .nds-dialog-close > svg {

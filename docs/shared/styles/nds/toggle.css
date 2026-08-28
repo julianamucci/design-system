@@ -49,7 +49,7 @@
 }
 
 .nds-toggle:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
 }
 
 .nds-toggle:disabled {
@@ -117,7 +117,7 @@
  * Valor repetido de propósito em vez de custom property — uma variável aqui
  * viraria superfície pública de customização e teria de ser documentada. */
 .nds-toggle[data-variant="outline"]:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5), 0 1px 2px hsl(0 0% 0% / 0.05);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring)), 0 1px 2px hsl(0 0% 0% / 0.05);
 }
 
 /* Mesma história no estado inválido: o anel destrutivo é declarado depois do

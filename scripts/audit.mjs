@@ -4794,6 +4794,119 @@ function auditFocusRingSobrescrito() {
 }
 
 /**
+ * Anel de foco cujo ÚNICO sinal visual é uma banda TRANSLÚCIDA.
+ *
+ * MEDIDO no botão, e escrito no comentário de `button.css`: com
+ * `hsl(var(--ring) / 0.5)` a banda compõe 1.87:1 a 2.42:1 contra a superfície
+ * do app, nos três temas e nos dois modos. WCAG 1.4.11 (Non-text Contrast, AA)
+ * pede 3:1 para indicador de estado, e a meia opacidade sozinha responde por
+ * toda a perda: `--ring` cheio dá 3.7:1 a 5.6:1 nas mesmas seis combinações.
+ *
+ * POR QUE NENHUM PORTÃO PEGAVA, e é o motivo de esta regra existir:
+ *
+ *   - o `axe` não avalia contraste de indicador de FOCO — 1.4.11 para anel não
+ *     é automatizado por ele;
+ *   - as sondas de contraste por componente medem TEXTO
+ *     (`contrastDeTextFailures`), não o anel;
+ *   - as asserções das stories mediam PRESENÇA (`matches(':focus-visible')`,
+ *     `boxShadow !== 'none'`), e a forma antiga satisfaz as duas.
+ *
+ * O defeito é de RAZÃO, não de presença: o anel existe e é bem visível para
+ * quem enxerga bem. Foi corrigido uma vez, no botão e em mais quinze regras, e
+ * nunca propagado — as outras 27 ficaram porque não havia quem notasse.
+ *
+ * O que conta como indicador OPACO, e por isso não é achado:
+ *
+ *   - uma camada de `box-shadow` com cor sem alfa (a forma nova: vão em
+ *     `--background` mais banda cheia);
+ *   - `border-color` sem alfa DENTRO do bloco de foco — é a forma antiga
+ *     correta do `input` e do `checkbox`, onde a borda muda no foco e o halo
+ *     translúcido só a acompanha;
+ *   - `outline` com cor sem alfa.
+ *
+ * Borda declarada na regra BASE não conta: ela está lá em todos os estados, e
+ * indicador de foco é o que MUDA quando o foco chega.
+ */
+function auditFocusRingTranslucido() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  if (!existsSync(dir)) return violations;
+
+  /**
+   * Dívida DECLARADA, e não silenciada.
+   *
+   * As variantes de estado inválido são um lote próprio: ali convivem dois
+   * anéis — o destrutivo, que é PERMANENTE, e o de foco, que é transitório — e
+   * a conta de contraste tem de ser feita para os dois juntos, contra a
+   * superfície e entre si. Corrigi-las junto com as demais seria trocar uma
+   * forma que ninguém mediu por outra que ninguém mediu.
+   *
+   * Declarar em vez de omitir é o que mantém a dívida visível: sair desta lista
+   * exige medir, e entrar exige escrever o motivo.
+   */
+  const PENDENTES = new Set([
+    'checkbox.css :: .nds-checkbox[aria-invalid="true"]:focus-visible',
+    'input-group.css :: .nds-input-group:has([aria-invalid="true"]):has([data-slot="input-group-control"]:focus-visible)',
+    'input-otp.css :: .nds-input-otp-slot[aria-invalid="true"]:focus, .nds-input-otp-container:has(input[aria-invalid="true"]) .nds-input-otp-slot[data-active]:not([data-active="false"])',
+    'input.css :: .nds-input[aria-invalid="true"]:focus-visible',
+    'select.css :: .nds-native-select-input[aria-invalid="true"]:focus-visible',
+    'select.css :: .nds-select-trigger[aria-invalid="true"]:focus-visible',
+    'switch.css :: .nds-switch[aria-invalid="true"]:focus-visible',
+    'textarea.css :: .nds-textarea[aria-invalid="true"]:focus-visible',
+    'toggle.css :: .nds-toggle[aria-invalid="true"]:focus-visible',
+  ]);
+
+  /** Cor de token SEM alfa — `hsl(var(--x))`, e não `hsl(var(--x) / 0.5)`. */
+  const OPACA = /hsl\(\s*var\(--[\w-]+\)\s*\)/;
+
+  for (const file of walkDir(dir, ['.css'])) {
+    const src = readFile(file);
+    if (!src) continue;
+    const rel = relative(ROOT, file);
+    const nome = basename(file);
+
+    for (const m of src.matchAll(/([^{}]*):focus-visible([^{}]*)\{([^}]*)\}/g)) {
+      // O seletor é a última linha do trecho antes da chave: o que vem acima é
+      // comentário ou a regra anterior.
+      const sel = `${m[1]}:focus-visible${m[2]}`
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .trim()
+        .split('\n')
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .join(' ');
+      const corpo = m[3];
+
+      const sombra = (corpo.match(/box-shadow\s*:\s*([^;]+)/) || [])[1];
+      if (!sombra) continue;
+      // `box-shadow: none` não é banda fraca, é REMOÇÃO deliberada. O caso real
+      // é `.nds-input-group-control`, que zera o próprio anel porque quem o
+      // desenha é o grupo em volta. Anel apagado por engano é assunto da regra
+      // irmã (`focus_ring_sobrescrito`), que mede sobrescrita; esta mede forma.
+      if (sombra.trim() === 'none') continue;
+
+      const bordaOpaca = /border(-color)?\s*:[^;]*/.test(corpo)
+        && OPACA.test((corpo.match(/border(-color)?\s*:([^;]+)/) || [])[2] || '');
+      const contornoOpaco = /outline\s*:[^;]*/.test(corpo)
+        && OPACA.test((corpo.match(/outline\s*:([^;]+)/) || [])[1] || '');
+      if (OPACA.test(sombra) || bordaOpaca || contornoOpaco) continue;
+
+      const chave = `${nome} :: ${sel}`;
+      if (PENDENTES.has(chave)) continue;
+
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: rel,
+        line: src.slice(0, m.index).split('\n').length,
+        rule: 'focus_ring_translucido',
+        message: `"${sel}" só tem banda translúcida como indicador de foco — 1.87:1 a 2.42:1 medido, contra os 3:1 que a WCAG 1.4.11 pede. A forma correta é vão em --background mais banda opaca, como em .nds-button`,
+      });
+    }
+  }
+  return violations;
+}
+
+/**
  * `@keyframes` de mesmo nome definido em mais de um arquivo.
  *
  * Nome de keyframes é global e NÃO colide com aviso: o último a ser importado
@@ -5349,7 +5462,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditKeyframesDuplicado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

@@ -194,7 +194,7 @@
 }
 
 .nds-sidebar-menu-button:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--sidebar)), 0 0 0 5px hsl(var(--sidebar-ring));
 }
 
 .nds-sidebar-menu-button:disabled {
@@ -497,7 +497,7 @@
 }
 
 .nds-sidebar-group-action:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--sidebar)), 0 0 0 5px hsl(var(--sidebar-ring));
 }
 
 .nds-sidebar-group-action > svg {
@@ -590,7 +590,7 @@
 }
 
 .nds-sidebar-menu-action:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--sidebar)), 0 0 0 5px hsl(var(--sidebar-ring));
 }
 
 .nds-sidebar-menu-action > svg {
@@ -735,7 +735,7 @@
 }
 
 .nds-sidebar-menu-sub-button:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--sidebar)), 0 0 0 5px hsl(var(--sidebar-ring));
 }
 
 .nds-sidebar-menu-sub-button[aria-disabled="true"],

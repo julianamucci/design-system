@@ -91,7 +91,7 @@
 }
 
 .nds-pagination-link:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
 }
 
 /*
