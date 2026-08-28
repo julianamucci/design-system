@@ -219,9 +219,16 @@
  * vista, e o critério 1.4.1 dependia de a stack usar uma lib.
  * `:not([data-active="false"])` porque a lib emite o atributo com valor em
  * TODOS os itens: sem o filtro, a barra inteira ficaria destacada. */
+/* Esta era a ÚNICA das quatro superfícies de accent que pintava o fundo sem
+ * declarar a cor do texto: a base do link é `color: inherit`, então ele herdava
+ * o `--foreground` da página. Sobrevivia por acidente — enquanto o composto
+ * fosse escuro o bastante para o branco herdado passar. A regra que faltava é a
+ * mesma das outras três: quem pinta fundo de accent declara o texto que vai em
+ * cima. Com ela, 7,47:1 no claro e 4,66:1 no escuro. */
 .nds-navigation-menu-link[aria-current="page"],
 .nds-navigation-menu-link[data-active]:not([data-active="false"]) {
-  background-color: hsl(var(--accent) / 0.5);
+  background-color: hsl(var(--accent) / 0.8);
+  color: hsl(var(--accent-foreground));
   font-weight: var(--font-weight-semibold, 600);
 }
 

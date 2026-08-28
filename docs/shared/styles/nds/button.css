@@ -271,9 +271,18 @@
  * 35%, quem delimita o controle e a LINHA, nao um degrau de fundo que media
  * menos de 1.1 de contraste contra a pagina e so existia para compensar uma
  * borda fraca. */
+/* 0.8, e não 0.5.
+ *
+ * O accent deixou de ser um quase-branco e virou o laranja da marca, e com ele
+ * `--accent-foreground` do escuro passou a ser ESCURO — sobre o laranja opaco o
+ * quase-branco media 2,04:1. A 50% o composto fica em tom médio (#866b5a), que
+ * é onde texto sofre dos dois lados: o escuro media 2,71:1 aqui. A 80% o fundo
+ * clareia o bastante e a razão vai a 4,66:1.
+ *
+ * Nenhum portão viu: o axe mede o estado em REPOUSO, e isto é `:hover`. */
 .dark .nds-button-outline:hover,
 .dark .nds-button-outline[aria-pressed="true"] {
-  background-color: hsl(var(--accent) / 0.5);
+  background-color: hsl(var(--accent) / 0.8);
 }
 
 /* Ghost */
@@ -286,9 +295,10 @@
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
+/* Mesma conta do outline logo acima. */
 .dark .nds-button-ghost:hover,
 .dark .nds-button-ghost[aria-pressed="true"] {
-  background-color: hsl(var(--accent) / 0.5);
+  background-color: hsl(var(--accent) / 0.8);
 }
 
 /* Link */
