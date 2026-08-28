@@ -217,10 +217,88 @@ export function createEmbedHandshake(
       }, HANDSHAKE_INTERVAL_MS);
     },
     observe(data: unknown) {
-      if (isHandshakeAck(provider, data)) stop();
+      if (!isHandshakeAck(provider, data)) return;
+      stop();
+      // Confirmada a inscrição, PERGUNTA a duração — o Vimeo não a empurra, e
+      // sem ela a barra de progresso não tem o que representar.
+      //
+      // Só ao Vimeo. MEDIDO: o mesmo pedido ao YouTube ficou quinze segundos sem
+      // resposta com o vídeo parado — ele entrega a duração sozinho, por
+      // `infoDelivery`, quando o player engata. Perguntar ali seria uma mensagem
+      // que nunca é respondida.
+      if (provider === 'vimeo') post(embedRequest(provider, 'duration'));
     },
     stop,
   };
+}
+
+/** De quanto em quanto tempo perguntar a posição, enquanto estiver tocando. */
+const CLOCK_INTERVAL_MS = 250;
+
+/**
+ * O relógio que PERGUNTA a posição enquanto o vídeo toca.
+ *
+ * Só o Vimeo precisa. O YouTube empurra `infoDelivery` sozinho, e perguntar
+ * também seria tráfego sem notícia nova — no YouTube isto é um objeto que não
+ * faz nada, de propósito.
+ *
+ * Existe porque a posição do Vimeo não estava chegando: `play` e `pause` sim, e
+ * a barra saltava para o instante da pausa em vez de acompanhar. O `timeupdate`
+ * está inscrito e é evento válido — o próprio Vimeo o lista, e recusa nome
+ * inventado —, mas nesta máquina não há como observar reprodução de verdade
+ * para saber por que ele não chega. O que dá para observar é a pergunta:
+ * `{method:'getCurrentTime'}` responde, e é sobre esse mecanismo que a barra
+ * passa a andar. Se o `timeupdate` chegar, ele continua sendo lido, e a
+ * pergunta vira redundância barata.
+ *
+ * 250ms é o passo do `timeupdate` do elemento nativo — a barra anda igual nos
+ * dois motores, que é o ponto do componente.
+ */
+export function createEmbedClock(
+  provider: EmbedProvider,
+  post: (message: string) => void,
+): { start(): void; stop(): void } {
+  let timer: ReturnType<typeof setInterval> | null = null;
+
+  const stop = (): void => {
+    if (timer !== null) clearInterval(timer);
+    timer = null;
+  };
+
+  return {
+    start() {
+      if (provider !== 'vimeo' || timer !== null) return;
+      post(embedRequest(provider, 'currentTime'));
+      timer = setInterval(
+        () => post(embedRequest(provider, 'currentTime')),
+        CLOCK_INTERVAL_MS,
+      );
+    },
+    stop,
+  };
+}
+
+/**
+ * O que o Vimeo só entrega quando PERGUNTAM.
+ *
+ * MEDIDO: o Vimeo não empurra a duração. O evento `loaded` traz só o
+ * identificador do vídeo, e `durationchange` / `loadedmetadata` não chegaram na
+ * janela observada. Já `{method:'getDuration'}` respondeu `{value: 62}` sem o
+ * vídeo tocar um quadro.
+ *
+ * Isso explica o defeito inteiro: a barra de progresso só se move quando a
+ * duração é conhecida, então ela ficava parada em `--:--` e SALTAVA no clique da
+ * pausa — porque o `pause` é o primeiro evento que traz a duração junto.
+ *
+ * O YouTube não precisa disto: ele empurra tudo em `infoDelivery`, e pedir de
+ * novo seria tráfego sem notícia nova.
+ */
+export function embedRequest(provider: EmbedProvider, field: 'duration' | 'currentTime'): string {
+  if (provider === 'youtube') {
+    const func = field === 'duration' ? 'getDuration' : 'getCurrentTime';
+    return JSON.stringify({ event: 'command', func, args: [] });
+  }
+  return JSON.stringify({ method: field === 'duration' ? 'getDuration' : 'getCurrentTime' });
 }
 
 export type EmbedCommand =
@@ -317,6 +395,17 @@ export function parseEmbedMessage(provider: EmbedProvider, data: unknown): Embed
 
   // O eco da própria inscrição, que o Vimeo devolve. Não é notícia do vídeo.
   if (payload.method === 'addEventListener') return [];
+
+  // A RESPOSTA a uma pergunta — `{method:'getDuration', value: 62}`. É por aqui
+  // que a duração do Vimeo chega, porque ele não a empurra.
+  if (payload.method === 'getDuration') {
+    const time = timeEvent(undefined, payload.value);
+    return time ? [time] : [];
+  }
+  if (payload.method === 'getCurrentTime') {
+    const time = timeEvent(payload.value, undefined);
+    return time ? [time] : [];
+  }
 
   const events: EmbedEvent[] = [];
 

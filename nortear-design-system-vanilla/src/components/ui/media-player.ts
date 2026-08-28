@@ -29,6 +29,7 @@ import {
   buildEmbedUrl,
   EMBED_ALLOW,
   embedCommand,
+  createEmbedClock,
   createEmbedHandshake,
   isFromFrame,
   parseEmbedMessage,
@@ -426,6 +427,9 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     state.playing = true;
     state.ended = false;
     paintPlay();
+    // No provedor a posição é PERGUNTADA enquanto toca; no motor nativo isto
+    // não faz nada. Ver `createEmbedClock`.
+    clock?.start();
     options.onPlay?.();
   }
 
@@ -433,6 +437,7 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     state.playing = false;
     state.ended = ended;
     paintPlay();
+    clock?.stop();
     options.onPause?.({ ended, currentTime: state.currentTime });
   }
 
@@ -440,6 +445,7 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     state.ended = true;
     state.playing = false;
     paintPlay();
+    clock?.stop();
     options.onEnded?.();
   }
 
@@ -478,11 +484,14 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   /** Só existe no motor de quadro; guardado para soltar na limpeza. */
   let onMessage: ((e: MessageEvent) => void) | null = null;
   let handshake: ReturnType<typeof createEmbedHandshake> | null = null;
+  let clock: ReturnType<typeof createEmbedClock> | null = null;
 
   if (frame && embed) {
-    handshake = createEmbedHandshake(embed.provider, (message) => {
+    const toFrame = (message: string): void => {
       frame.contentWindow?.postMessage(message, '*');
-    });
+    };
+    handshake = createEmbedHandshake(embed.provider, toFrame);
+    clock = createEmbedClock(embed.provider, toFrame);
 
     onMessage = (event: MessageEvent) => {
       // A página recebe `message` de QUALQUER origem — outro embed, uma
@@ -630,6 +639,7 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     // removido antes de o provedor responder deixaria um temporizador batendo
     // num quadro que já foi.
     handshake?.stop();
+    clock?.stop();
   }) as MediaPlayerRoot;
 
   playerRoot.media = media;

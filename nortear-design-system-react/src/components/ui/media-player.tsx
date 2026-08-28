@@ -36,6 +36,7 @@ import {
   buildEmbedUrl,
   EMBED_ALLOW,
   embedCommand,
+  createEmbedClock,
   createEmbedHandshake,
   isFromFrame,
   parseEmbedMessage,
@@ -474,6 +475,14 @@ export function MediaPlayer({
 
   /** O aperto de mão em curso — guardado para observar e para parar. */
   const handshakeRef = useRef<ReturnType<typeof createEmbedHandshake> | null>(null);
+  /**
+   * O relógio que pergunta a posição enquanto o provedor toca.
+   *
+   * Só o Vimeo precisa — ver `createEmbedClock`. A posição dele não estava
+   * chegando: `play` e `pause` sim, e a barra saltava para o instante da pausa
+   * em vez de acompanhar.
+   */
+  const clockRef = useRef<ReturnType<typeof createEmbedClock> | null>(null);
 
   useEffect(() => {
     const frame = frameRef.current;
@@ -491,12 +500,15 @@ export function MediaPlayer({
       for (const parsed of parseEmbedMessage(provider, event.data)) {
         if (parsed.type === 'playing') {
           patch({ playing: true, ended: false });
+          clockRef.current?.start();
           callbacks.current.onPlay?.();
         } else if (parsed.type === 'paused') {
           patch({ playing: false, ended: false });
+          clockRef.current?.stop();
           callbacks.current.onPause?.({ ended: false, currentTime: currentTimeRef.current });
         } else if (parsed.type === 'ended') {
           patch({ playing: false, ended: true });
+          clockRef.current?.stop();
           callbacks.current.onEnded?.();
         } else {
           // Só o que VEIO. O provedor avisa o que mudou, não o estado
@@ -537,16 +549,25 @@ export function MediaPlayer({
    */
   const startHandshake = useCallback(() => {
     if (!provider) return;
-    handshakeRef.current?.stop();
-    handshakeRef.current = createEmbedHandshake(provider, (message) => {
+    const toFrame = (message: string): void => {
       frameRef.current?.contentWindow?.postMessage(message, '*');
-    });
+    };
+    handshakeRef.current?.stop();
+    clockRef.current?.stop();
+    handshakeRef.current = createEmbedHandshake(provider, toFrame);
+    clockRef.current = createEmbedClock(provider, toFrame);
     handshakeRef.current.start();
   }, [provider]);
 
   // Insiste por dez segundos: um player desmontado antes de o provedor responder
   // deixaria um temporizador batendo num quadro que já foi.
-  useEffect(() => () => handshakeRef.current?.stop(), []);
+  useEffect(
+    () => () => {
+      handshakeRef.current?.stop();
+      clockRef.current?.stop();
+    },
+    [],
+  );
 
   // ─── Tela cheia ────────────────────────────────────────────────────────────
 

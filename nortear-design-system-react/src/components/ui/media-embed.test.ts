@@ -7,9 +7,11 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import {
   buildEmbedUrl,
+  createEmbedClock,
   createEmbedHandshake,
   EMBED_ALLOW,
   embedCommand,
+  embedRequest,
   embedHandshake,
   isFromFrame,
   isHandshakeAck,
@@ -189,6 +191,71 @@ describe('createEmbedHandshake', () => {
   });
 });
 
+describe('embedRequest', () => {
+  it('Vimeo pergunta por `method`; YouTube por comando', () => {
+    expect(JSON.parse(embedRequest('vimeo', 'duration'))).toEqual({ method: 'getDuration' });
+    expect(JSON.parse(embedRequest('vimeo', 'currentTime'))).toEqual({ method: 'getCurrentTime' });
+    expect(JSON.parse(embedRequest('youtube', 'duration')))
+      .toEqual({ event: 'command', func: 'getDuration', args: [] });
+  });
+});
+
+describe('createEmbedClock', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it('Vimeo: PERGUNTA a posição enquanto toca', () => {
+    // A posição do Vimeo não estava chegando: `play` e `pause` sim, e a barra
+    // saltava para o instante da pausa em vez de acompanhar.
+    const sent: string[] = [];
+    const clock = createEmbedClock('vimeo', (m) => sent.push(m));
+
+    clock.start();
+    expect(sent).toHaveLength(1);
+    vi.advanceTimersByTime(1000);
+    expect(sent.length).toBeGreaterThan(3);
+    clock.stop();
+  });
+
+  it('para de perguntar quando para de tocar', () => {
+    const sent: string[] = [];
+    const clock = createEmbedClock('vimeo', (m) => sent.push(m));
+    clock.start();
+    vi.advanceTimersByTime(1000);
+    const atStop = sent.length;
+    clock.stop();
+    vi.advanceTimersByTime(5000);
+    expect(sent).toHaveLength(atStop);
+  });
+
+  it('`start` duas vezes não abre dois relógios', () => {
+    const sent: string[] = [];
+    const clock = createEmbedClock('vimeo', (m) => sent.push(m));
+    clock.start();
+    clock.start();
+    vi.advanceTimersByTime(1000);
+    const single = sent.length;
+    clock.stop();
+
+    const other: string[] = [];
+    const one = createEmbedClock('vimeo', (m) => other.push(m));
+    one.start();
+    vi.advanceTimersByTime(1000);
+    one.stop();
+    expect(single).toBe(other.length);
+  });
+
+  it('YouTube: não pergunta nada, porque ele já empurra', () => {
+    // Perguntar ali seria tráfego sem notícia nova — o `infoDelivery` chega
+    // sozinho.
+    const sent: string[] = [];
+    const clock = createEmbedClock('youtube', (m) => sent.push(m));
+    clock.start();
+    vi.advanceTimersByTime(5000);
+    expect(sent).toEqual([]);
+  });
+});
+
 describe('embedCommand', () => {
   it('YouTube: comando é `event: command` com nome de função', () => {
     expect(JSON.parse(embedCommand('youtube', { kind: 'play' })))
@@ -302,6 +369,20 @@ describe('parseEmbedMessage', () => {
     expect(parseEmbedMessage('vimeo', JSON.stringify({
       event: 'play', data: { seconds: 3, duration: 90 },
     }))).toEqual([{ type: 'playing' }, { type: 'time', currentTime: 3, duration: 90 }]);
+  });
+
+  it('Vimeo: a RESPOSTA a uma pergunta também move o relógio', () => {
+    // MEDIDO: o Vimeo não empurra a duração — `loaded` traz só o identificador
+    // do vídeo. `{method:'getDuration'}` respondeu `{value: 62}` com o vídeo
+    // parado, e é por aqui que ela entra. Sem isto a barra ficava em `--:--` e
+    // saltava no clique da pausa, que é o primeiro evento a trazer duração.
+    expect(parseEmbedMessage('vimeo', JSON.stringify({ method: 'getDuration', value: 62 })))
+      .toEqual([{ type: 'time', duration: 62 }]);
+    expect(parseEmbedMessage('vimeo', JSON.stringify({ method: 'getCurrentTime', value: 12 })))
+      .toEqual([{ type: 'time', currentTime: 12 }]);
+    // Posição zero é posição, e não ausência de resposta.
+    expect(parseEmbedMessage('vimeo', JSON.stringify({ method: 'getCurrentTime', value: 0 })))
+      .toEqual([{ type: 'time', currentTime: 0 }]);
   });
 
   it('Vimeo: `timeupdate` move o relógio', () => {

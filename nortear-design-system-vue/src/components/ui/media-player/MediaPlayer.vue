@@ -33,6 +33,7 @@ import { cn } from '@/lib/utils';
 import {
   EMBED_ALLOW,
   buildEmbedUrl,
+  createEmbedClock,
   embedCommand,
   createEmbedHandshake,
   isFromFrame,
@@ -168,18 +169,23 @@ const seekValueText = computed(() =>
 function started(): void {
   playing.value = true;
   ended.value = false;
+  // No provedor a posição é PERGUNTADA enquanto toca; no motor nativo isto não
+  // faz nada. Ver `createEmbedClock`.
+  providerClock?.start();
   emit('play');
 }
 
 function stopped(finishedNow: boolean): void {
   playing.value = false;
   ended.value = finishedNow;
+  providerClock?.stop();
   emit('pause', { ended: finishedNow, currentTime: currentTime.value });
 }
 
 function finished(): void {
   ended.value = true;
   playing.value = false;
+  providerClock?.stop();
   emit('ended');
 }
 
@@ -281,14 +287,22 @@ function onMessage(event: MessageEvent): void {
  * volta".
  */
 let handshake: ReturnType<typeof createEmbedHandshake> | null = null;
+/**
+ * O relógio que pergunta a posição enquanto o provedor toca. Só o Vimeo
+ * precisa — ver `createEmbedClock`.
+ */
+let providerClock: ReturnType<typeof createEmbedClock> | null = null;
 
 function onFrameLoad(): void {
   const frame = frameRef.value;
   if (!frame || !props.embed) return;
-  handshake?.stop();
-  handshake = createEmbedHandshake(props.embed.provider, (message) => {
+  const toFrame = (message: string): void => {
     frame.contentWindow?.postMessage(message, '*');
-  });
+  };
+  handshake?.stop();
+  providerClock?.stop();
+  handshake = createEmbedHandshake(props.embed.provider, toFrame);
+  providerClock = createEmbedClock(props.embed.provider, toFrame);
   handshake.start();
 }
 
@@ -296,7 +310,10 @@ function onFrameLoad(): void {
  * O aperto de mão insiste por dez segundos: um player desmontado antes de o
  * provedor responder deixaria um temporizador batendo num quadro que já foi.
  */
-onBeforeUnmount(() => handshake?.stop());
+onBeforeUnmount(() => {
+  handshake?.stop();
+  providerClock?.stop();
+});
 
 // ─── Os controles falam com o motor ─────────────────────────────────────────
 

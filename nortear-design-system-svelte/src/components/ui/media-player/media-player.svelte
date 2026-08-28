@@ -150,6 +150,7 @@
     buildEmbedUrl,
     EMBED_ALLOW,
     embedCommand,
+    createEmbedClock,
     createEmbedHandshake,
     isFromFrame,
     parseEmbedMessage,
@@ -245,18 +246,23 @@
   function started(): void {
     playing = true;
     ended = false;
+    // No provedor a posição é PERGUNTADA enquanto toca; no motor nativo isto
+    // não faz nada. Ver `createEmbedClock`.
+    providerClock?.start();
     onplay?.();
   }
 
   function stopped(finished: boolean): void {
     playing = false;
     ended = finished;
+    providerClock?.stop();
     onpause?.({ ended: finished, currentTime });
   }
 
   function finish(): void {
     ended = true;
     playing = false;
+    providerClock?.stop();
     onended?.();
   }
 
@@ -306,6 +312,11 @@
   }
 
   let handshake: ReturnType<typeof createEmbedHandshake> | null = null;
+  /**
+   * O relógio que pergunta a posição enquanto o provedor toca. Só o Vimeo
+   * precisa — ver `createEmbedClock`.
+   */
+  let providerClock: ReturnType<typeof createEmbedClock> | null = null;
 
   function onFrameLoad(): void {
     // O aperto de mão: sem ele nenhum dos dois provedores envia evento algum.
@@ -317,10 +328,13 @@
     // Medido — com um envio só, o YouTube devolveu ZERO mensagens.
     const frame = frameEl;
     if (!frame || !embed) return;
-    handshake?.stop();
-    handshake = createEmbedHandshake(embed.provider, (message) => {
+    const toFrame = (message: string): void => {
       frame.contentWindow?.postMessage(message, '*');
-    });
+    };
+    handshake?.stop();
+    providerClock?.stop();
+    handshake = createEmbedHandshake(embed.provider, toFrame);
+    providerClock = createEmbedClock(embed.provider, toFrame);
     handshake.start();
   }
 
@@ -359,6 +373,7 @@
     return () => {
       window.removeEventListener('message', onMessage);
       handshake?.stop();
+      providerClock?.stop();
     };
   });
 

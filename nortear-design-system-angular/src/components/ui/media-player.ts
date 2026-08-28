@@ -52,6 +52,7 @@ import {
   buildEmbedUrl,
   EMBED_ALLOW,
   embedCommand,
+  createEmbedClock,
   createEmbedHandshake,
   isFromFrame,
   parseEmbedMessage,
@@ -677,9 +678,13 @@ export class MediaPlayerComponent implements OnDestroy {
       // não bastava: o `load` do iframe é o documento do provedor, não o player
       // dentro dele. Medido contra os quadros reais — com um envio só, o YouTube
       // devolveu ZERO mensagens e o Vimeo não aceitou nenhuma inscrição.
-      const handshake = createEmbedHandshake(source.provider, (message) => {
+      const toFrame = (message: string): void => {
         frame.contentWindow?.postMessage(message, '*');
-      });
+      };
+      const handshake = createEmbedHandshake(source.provider, toFrame);
+      // O relógio que pergunta a posição enquanto o provedor toca. Só o Vimeo
+      // precisa — ver `createEmbedClock`.
+      this.providerClock = createEmbedClock(source.provider, toFrame);
 
       const onMessage = (event: MessageEvent): void => {
         // A página recebe `message` de QUALQUER origem — outro embed, uma
@@ -717,6 +722,8 @@ export class MediaPlayerComponent implements OnDestroy {
         // e o aperto de mão insiste por dez segundos, batendo num quadro que já
         // foi se ninguém o parar.
         handshake.stop();
+        this.providerClock?.stop();
+        this.providerClock = null;
         window.removeEventListener('message', onMessage);
         frame.removeEventListener('load', onLoad);
         // Trocar o `src` por vazio é o que de fato para o vídeo do provedor: a
@@ -773,23 +780,37 @@ export class MediaPlayerComponent implements OnDestroy {
     host.frame = null;
   }
 
+  /**
+   * O relógio que pergunta a posição enquanto o provedor toca.
+   *
+   * Só o Vimeo precisa — ver `createEmbedClock`. A posição dele não estava
+   * chegando: `play` e `pause` sim, e a barra saltava para o instante da pausa
+   * em vez de acompanhar.
+   */
+  private providerClock: ReturnType<typeof createEmbedClock> | null = null;
+
   // ─── Os motores alimentam o estado ─────────────────────────────────────────
 
   private started(): void {
     this.playing.set(true);
     this.ended.set(false);
+    // No provedor a posição é PERGUNTADA enquanto toca; no motor nativo isto
+    // não faz nada. Ver `createEmbedClock`.
+    this.providerClock?.start();
     this.played.emit();
   }
 
   private stopped(ended: boolean): void {
     this.playing.set(false);
     this.ended.set(ended);
+    this.providerClock?.stop();
     this.paused.emit({ ended, currentTime: this.currentTime() });
   }
 
   private finish(): void {
     this.ended.set(true);
     this.playing.set(false);
+    this.providerClock?.stop();
     this.finished.emit();
   }
 
