@@ -17,6 +17,7 @@ import {
   mediaPlayerLabels,
   mediaPlayerRoot,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { until } from './media-player.play-helpers';
 import {
@@ -193,7 +194,7 @@ export const Audio: Story = {
     Component: MediaPlayer,
     props: {
       kind: 'audio' as const,
-      src: silentWav(0.6),
+      src: silentWav(DEMO_SECONDS),
       labels: mediaPlayerLabels(),
     },
   }),

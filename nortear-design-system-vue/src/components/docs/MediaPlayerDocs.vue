@@ -12,6 +12,7 @@ import {
   canvasStream,
   captionTrack,
   silentWav,
+  DEMO_SECONDS,
 } from '@/components/ui/media-player/media-player.fixtures';
 import {
   mediaPlayerAudioSource,
@@ -126,7 +127,7 @@ const demoOptions = computed(() => {
     case 'video':
       return { kind: 'video' as const, stream: canvasStream(), rates: [], tracks: [captionTrack()] };
     case 'audio':
-      return { kind: 'audio' as const, src: silentWav(0.6) };
+      return { kind: 'audio' as const, src: silentWav(DEMO_SECONDS) };
     case 'youtube':
       return { embed: { provider: 'youtube' as const, videoId: YOUTUBE_VIDEO_ID } };
     default:
@@ -178,7 +179,7 @@ const clickPlayer = ref<MediaPlayerInstance | null>(null);
 // trilha viva. O mesmo vale para as listas — identidade nova a cada ciclo faz o
 // componente rever a faixa de legenda sem que nada tenha mudado.
 
-const AUDIO_SRC = silentWav(0.6);
+const AUDIO_SRC = silentWav(DEMO_SECONDS);
 const CAPTIONS = [captionTrack()];
 /** O contra-exemplo do segundo par: o mesmo vídeo, sem faixa nenhuma. */
 const NO_CAPTIONS: MediaPlayerTrack[] = [];
@@ -478,7 +479,7 @@ const visualTestItems = computed(() =>
           :key="demoSource"
           v-bind="demoOptions"
           :labels="labels"
-          class="nds-w-full"
+          class="nds-w-full nds-max-w-xl"
         />
       </div>
     </DocsDemonstration>
@@ -557,7 +558,7 @@ const visualTestItems = computed(() =>
             kind="audio"
             :src="AUDIO_SRC"
             :labels="labels"
-            class="nds-w-full"
+            class="nds-w-full nds-max-w-xl"
             @play="playCounts.engine += 1"
           />
           <p class="nds-text-body nds-text-muted-foreground">
@@ -584,7 +585,7 @@ const visualTestItems = computed(() =>
             kind="audio"
             :src="AUDIO_SRC"
             :labels="labels"
-            class="nds-w-full"
+            class="nds-w-full nds-max-w-xl"
           />
           <p class="nds-text-body nds-text-muted-foreground">
             {{ tContent('doDont.countLabel') }}: {{ playCounts.click }}
@@ -608,7 +609,7 @@ const visualTestItems = computed(() =>
           :rates="[]"
           :tracks="CAPTIONS"
           :labels="labels"
-          class="nds-w-full"
+          class="nds-w-full nds-max-w-xl"
         />
       </template>
       <template #dont-preview-1>
@@ -618,7 +619,7 @@ const visualTestItems = computed(() =>
           :rates="[]"
           :tracks="NO_CAPTIONS"
           :labels="labels"
-          class="nds-w-full"
+          class="nds-w-full nds-max-w-xl"
         />
       </template>
     </DocsDoDont>
@@ -647,7 +648,7 @@ const visualTestItems = computed(() =>
           :rates="[]"
           :tracks="CAPTIONS"
           :labels="labels"
-          class="nds-w-full"
+          class="nds-w-full nds-max-w-xl"
         />
       </template>
       <template #variant-preview-1>
@@ -655,21 +656,21 @@ const visualTestItems = computed(() =>
           kind="audio"
           :src="AUDIO_SRC"
           :labels="labels"
-          class="nds-w-full"
+          class="nds-w-full nds-max-w-xl"
         />
       </template>
       <template #variant-preview-2>
         <MediaPlayer
           :embed="{ provider: 'youtube', videoId: YOUTUBE_VIDEO_ID }"
           :labels="labels"
-          class="nds-w-full"
+          class="nds-w-full nds-max-w-xl"
         />
       </template>
       <template #variant-preview-3>
         <MediaPlayer
           :embed="{ provider: 'vimeo', videoId: VIMEO_VIDEO_ID }"
           :labels="labels"
-          class="nds-w-full"
+          class="nds-w-full nds-max-w-xl"
         />
       </template>
     </DocsVariants>

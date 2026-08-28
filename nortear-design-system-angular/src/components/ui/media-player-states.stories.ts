@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn } from 'storybook/test';
 import { MediaPlayerComponent, type MediaPlayerHostElement } from './media-player';
-import { MEDIA_PLAYER_LABELS, silentWav } from './media-player.fixtures';
+import { DEMO_SECONDS, MEDIA_PLAYER_LABELS, silentWav } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
 
@@ -44,7 +44,7 @@ type Story = StoryObj;
 /** Como o player nasce: parado, no zero, sem duração conhecida ainda. */
 export const Idle: Story = {
   render: () => ({
-    props: { labels: MEDIA_PLAYER_LABELS, src: silentWav(0.6) },
+    props: { labels: MEDIA_PLAYER_LABELS, src: silentWav(DEMO_SECONDS) },
     template: '<nds-media-player kind="audio" [src]="src" [labels]="labels" />',
   }),
 

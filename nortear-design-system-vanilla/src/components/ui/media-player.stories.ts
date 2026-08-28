@@ -21,7 +21,13 @@ import {
   type MediaPlayerLabels,
   type MediaPlayerRoot,
 } from './media-player';
-import { LABELS, canvasStream, captionTrack, silentWav } from './media-player.fixtures';
+import {
+  DEMO_SECONDS,
+  LABELS,
+  canvasStream,
+  captionTrack,
+  silentWav,
+} from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerSource } from './media-player.source';
 import { createMediaPlayerDocs } from '@/components/docs/MediaPlayerDocs';
@@ -154,7 +160,7 @@ export const Playground: Story = {
       // Vídeo por canvas, áudio por WAV: os dois em memória, nada de rede.
       ...(args.kind === 'video'
         ? { stream: canvasStream(), tracks: [captionTrack()] }
-        : { src: silentWav(0.6) }),
+        : { src: silentWav(DEMO_SECONDS) }),
       rates: args.rates,
       labels: args.labels,
       onPlay: args.onPlay,

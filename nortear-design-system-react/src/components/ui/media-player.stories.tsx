@@ -21,6 +21,7 @@ import {
   mediaPlayerHandle,
   mediaPlayerLabels,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerSource } from './media-player.source';
@@ -28,7 +29,7 @@ import { MediaPlayerDocs } from '@/components/docs/MediaPlayerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 /** O WAV do Playground, resolvido uma vez: o mesmo texto a cada desenho. */
-const AUDIO_SOURCE = silentWav(0.6);
+const AUDIO_SOURCE = silentWav(DEMO_SECONDS);
 
 const meta = {
   title: 'UI/MediaPlayer',

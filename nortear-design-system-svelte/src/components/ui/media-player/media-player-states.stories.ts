@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect, fn } from 'storybook/test';
 import { MediaPlayer } from './index';
-import { mediaPlayerLabels, mediaPlayerRoot, silentWav } from './media-player.fixtures';
+import { DEMO_SECONDS, mediaPlayerLabels, mediaPlayerRoot, silentWav } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerAudioSource } from './media-player.source';
 
@@ -48,7 +48,7 @@ export const Idle: Story = {
     Component: MediaPlayer,
     props: {
       kind: 'audio' as const,
-      src: silentWav(0.6),
+      src: silentWav(DEMO_SECONDS),
       labels: mediaPlayerLabels(),
     },
   }),

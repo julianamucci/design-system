@@ -9,6 +9,7 @@ import {
   type MediaPlayerRoot,
 } from '@/components/ui/media-player';
 import {
+  DEMO_SECONDS,
   VIMEO_VIDEO_ID,
   YOUTUBE_VIDEO_ID,
   canvasStream,
@@ -93,7 +94,10 @@ function previewPlayer(
   return createMediaPlayer({
     ...options,
     labels: options.labels ?? mediaPlayerLabels(),
-    class: ['nds-w-full', options.class].filter(Boolean).join(' '),
+    // `max-w-xl` porque a largura é da PÁGINA: o componente é `width: 100%`
+    // de propósito, e sem limite um 16:9 na largura da docs page fica mais
+    // alto que a janela. 640px é a coluna em que um player mora de verdade.
+    class: ['nds-w-full', 'nds-max-w-xl', options.class].filter(Boolean).join(' '),
   });
 }
 
@@ -116,7 +120,7 @@ function sourceOptions(key: SourceKey): Omit<MediaPlayerOptions, 'labels'> {
       // controle que a pessoa mexe e não acontece nada.
       return { kind: 'video', stream: canvasStream(), rates: [], tracks: [captionTrack()] };
     case 'audio':
-      return { kind: 'audio', src: silentWav(0.6) };
+      return { kind: 'audio', src: silentWav(DEMO_SECONDS) };
     case 'youtube':
       return { embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID } };
     case 'vimeo':
@@ -189,7 +193,10 @@ function countingPlayer(listenTo: 'engine' | 'click'): HTMLElement {
 
   const player = previewPlayer({
     kind: 'audio',
-    src: silentWav(0.6),
+    // Cinco segundos: o par existe para CONTAR reproduções, e um clipe curto
+    // deixa repetir a comparação sem esperar. Não é a demonstração, onde a
+    // duração precisa dar o que a barra represente.
+    src: silentWav(5),
     onPlay: listenTo === 'engine' ? () => { plays += 1; paint(); } : undefined,
   });
   paint();

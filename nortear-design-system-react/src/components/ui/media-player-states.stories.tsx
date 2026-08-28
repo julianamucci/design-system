@@ -16,6 +16,7 @@ import {
   mediaPlayerHandle,
   mediaPlayerLabels,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
@@ -32,7 +33,7 @@ const onPause = fn();
 const onEnded = fn();
 
 /** As três durações, resolvidas uma vez: o mesmo texto a cada desenho. */
-const IDLE_SOURCE = silentWav(0.6);
+const IDLE_SOURCE = silentWav(DEMO_SECONDS);
 // Cinco segundos: tempo de a story fechar TOCANDO, que é o estado que ela nomeia
 // e o que o Chromatic vai fotografar.
 const PLAYING_SOURCE = silentWav(5);

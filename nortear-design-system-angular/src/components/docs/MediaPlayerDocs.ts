@@ -29,6 +29,7 @@ import {
   captionTrack,
   mediaPlayerLabels,
   silentWav,
+  DEMO_SECONDS,
 } from '@/components/ui/media-player.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import mediaPlayerTranslations from '@shared/content/media-player/translations.json';
@@ -193,7 +194,7 @@ function sourceSnippet(key: SourceKey): string {
 }
 
 /** Conteúdo de áudio dos quatro previews do Do & Don't, e da demonstração. */
-const DEMO_AUDIO = silentWav(0.6);
+const DEMO_AUDIO = silentWav(DEMO_SECONDS);
 
 @Component({
   selector: 'nds-media-player-docs',
@@ -226,6 +227,7 @@ const DEMO_AUDIO = silentWav(0.6);
           [src]="demoAudio"
           [labels]="labels()"
           (played)="countByEngine()"
+          class="nds-max-w-xl"
         />
         <p class="nds-text-body nds-text-muted-foreground">
           {{ t('doDont.countLabel') }}: {{ engineCount() }}
@@ -248,6 +250,7 @@ const DEMO_AUDIO = silentWav(0.6);
           [src]="demoAudio"
           [labels]="labels()"
           (click)="countByBarClick($event)"
+          class="nds-max-w-xl"
         />
         <p class="nds-text-body nds-text-muted-foreground">
           {{ t('doDont.countLabel') }}: {{ clickCount() }}
@@ -266,6 +269,7 @@ const DEMO_AUDIO = silentWav(0.6);
         [rates]="noRates"
         [tracks]="captionTracks"
         [labels]="labels()"
+        class="nds-max-w-xl"
       />
     </ng-template>
     <ng-template #tplDoDont2Dont>
@@ -275,6 +279,7 @@ const DEMO_AUDIO = silentWav(0.6);
         [rates]="noRates"
         [tracks]="noTracks"
         [labels]="labels()"
+        class="nds-max-w-xl"
       />
     </ng-template>
 
@@ -285,16 +290,17 @@ const DEMO_AUDIO = silentWav(0.6);
         [rates]="noRates"
         [tracks]="captionTracks"
         [labels]="labels()"
+        class="nds-max-w-xl"
       />
     </ng-template>
     <ng-template #tplVarAudio>
-      <nds-media-player kind="audio" [src]="demoAudio" [labels]="labels()" />
+      <nds-media-player kind="audio" [src]="demoAudio" [labels]="labels()" class="nds-max-w-xl" />
     </ng-template>
     <ng-template #tplVarYouTube>
-      <nds-media-player [embed]="youtubeEmbed" [labels]="labels()" />
+      <nds-media-player [embed]="youtubeEmbed" [labels]="labels()" class="nds-max-w-xl" />
     </ng-template>
     <ng-template #tplVarVimeo>
-      <nds-media-player [embed]="vimeoEmbed" [labels]="labels()" />
+      <nds-media-player [embed]="vimeoEmbed" [labels]="labels()" class="nds-max-w-xl" />
     </ng-template>
 
     <nds-docs-page-layout
@@ -357,16 +363,17 @@ const DEMO_AUDIO = silentWav(0.6);
                     [rates]="noRates"
                     [tracks]="captionTracks"
                     [labels]="labels()"
+                    class="nds-max-w-xl"
                   />
                 }
                 @case ('audio') {
-                  <nds-media-player kind="audio" [src]="demoAudio" [labels]="labels()" />
+                  <nds-media-player kind="audio" [src]="demoAudio" [labels]="labels()" class="nds-max-w-xl" />
                 }
                 @case ('youtube') {
-                  <nds-media-player [embed]="youtubeEmbed" [labels]="labels()" />
+                  <nds-media-player [embed]="youtubeEmbed" [labels]="labels()" class="nds-max-w-xl" />
                 }
                 @case ('vimeo') {
-                  <nds-media-player [embed]="vimeoEmbed" [labels]="labels()" />
+                  <nds-media-player [embed]="vimeoEmbed" [labels]="labels()" class="nds-max-w-xl" />
                 }
               }
             </div>

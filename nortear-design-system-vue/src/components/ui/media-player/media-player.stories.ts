@@ -19,7 +19,13 @@ import { MediaPlayer, formatTime, type MediaPlayerApi } from './index';
 import MediaPlayerDocs from '@/components/docs/MediaPlayerDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { mediaPlayerSource } from './media-player.source';
-import { LABELS, canvasStream, captionTrack, silentWav } from './media-player.fixtures';
+import {
+  DEMO_SECONDS,
+  LABELS,
+  canvasStream,
+  captionTrack,
+  silentWav,
+} from './media-player.fixtures';
 import { clockText, firstControl, playerBridge, playerRoot, until, seekValueTextPattern } from './media-player.play-helpers';
 
 /**
@@ -152,7 +158,7 @@ export const Playground: Story = {
       // chamada no template abriria um canvas novo a cada repintura.
       const source = computed(() => (args.kind === 'video'
         ? { stream: canvasStream(), tracks: [captionTrack()] }
-        : { src: silentWav(0.6) }));
+        : { src: silentWav(DEMO_SECONDS) }));
       return { args, source, playerRef };
     },
     template: `

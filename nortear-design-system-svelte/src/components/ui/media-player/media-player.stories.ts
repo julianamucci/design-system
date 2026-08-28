@@ -25,6 +25,7 @@ import {
   mediaPlayerLabels,
   mediaPlayerRoot,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 
@@ -144,7 +145,7 @@ export const Playground: Story = {
       // Vídeo por canvas, áudio por WAV: os dois em memória, nada de rede.
       ...(args.kind === 'video'
         ? { stream: canvasStream(), tracks: [captionTrack()] }
-        : { src: silentWav(0.6) }),
+        : { src: silentWav(DEMO_SECONDS) }),
       rates: args.rates,
       // O idioma CORRENTE, e não pt-BR: o nome que a play procura tem de ser o
       // mesmo que a barra desenha.

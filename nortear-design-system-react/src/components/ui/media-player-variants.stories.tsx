@@ -16,12 +16,13 @@ import {
   mediaPlayerHandle,
   mediaPlayerLabels,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { until } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
 
 /** O WAV das stories de áudio, resolvido uma vez: o mesmo texto a cada desenho. */
-const AUDIO_SOURCE = silentWav(0.6);
+const AUDIO_SOURCE = silentWav(DEMO_SECONDS);
 
 const meta = {
   title: 'UI/MediaPlayer/Variants',

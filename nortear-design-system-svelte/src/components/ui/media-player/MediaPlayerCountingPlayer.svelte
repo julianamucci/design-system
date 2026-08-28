@@ -28,7 +28,7 @@
   const labels = $derived(mediaPlayerLabelsFor($locale));
   // O WAV é montado uma vez: refazê-lo a cada troca de idioma remontaria o
   // player e zeraria o contador que o par existe para comparar.
-  const src = silentWav(0.6);
+  const src = silentWav(5);
 
   let plays = $state(0);
   let wrapEl = $state<HTMLDivElement | null>(null);

@@ -16,6 +16,7 @@ import {
   canvasStream,
   captionTrack,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { until } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
@@ -187,7 +188,7 @@ export const Video: Story = {
 export const Audio: Story = {
   parameters: { docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } } },
   render: () => ({
-    props: { labels: MEDIA_PLAYER_LABELS, src: silentWav(0.6) },
+    props: { labels: MEDIA_PLAYER_LABELS, src: silentWav(DEMO_SECONDS) },
     template: '<nds-media-player kind="audio" [src]="src" [labels]="labels" />',
   }),
 

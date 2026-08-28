@@ -28,6 +28,7 @@ import {
   canvasStream,
   captionTrack,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerSource } from './media-player.source';
@@ -163,7 +164,7 @@ export const Playground: Story = {
       // fonte é derivada AQUI, e não por control próprio, porque motor não se
       // troca em voo — quem escolhe é `kind`.
       stream: args.kind === 'video' ? canvasStream() : undefined,
-      src: args.kind === 'video' ? undefined : silentWav(0.6),
+      src: args.kind === 'video' ? undefined : silentWav(DEMO_SECONDS),
       tracks: args.kind === 'video' ? [captionTrack()] : [],
     },
     template: `

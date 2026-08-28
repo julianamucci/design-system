@@ -11,7 +11,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, fn } from 'storybook/test';
 import { MediaPlayer, type MediaPlayerApi } from './index';
-import { LABELS, silentWav } from './media-player.fixtures';
+import { DEMO_SECONDS, LABELS, silentWav } from './media-player.fixtures';
 import { clockText, firstControl, playerBridge, playerRoot, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerAudioSource } from './media-player.source';
 
@@ -64,7 +64,7 @@ export const Idle: Story = {
   render: () => ({
     components: { MediaPlayer },
     setup() {
-      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(0.6) };
+      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(DEMO_SECONDS) };
     },
     template: `
       <div class="nds-w-full">

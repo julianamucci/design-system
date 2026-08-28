@@ -46,6 +46,21 @@
   display: block;
   width: 100%;
   height: auto;
+  /*
+   * A imagem nunca passa da janela, e isto é regra do componente, não da
+   * página.
+   *
+   * A largura é de quem hospeda — `width: 100%` de propósito. Mas com altura
+   * livre, um 16:9 numa coluna larga fica mais alto que a tela, e aí a BARRA
+   * sai de vista: o componente deixa de ser operável exatamente quando a
+   * imagem ficou maior. Medido — numa área de 1200px o vídeo dava 674px de
+   * altura, e a barra caía abaixo da dobra.
+   *
+   * `contain` é o padrão do `<video>` e é o que garante que o limite recorte a
+   * CAIXA e não a imagem: sobra tarja, nunca distorção.
+   */
+  max-block-size: 70vh;
+  object-fit: contain;
   background-color: hsl(var(--foreground));
 }
 

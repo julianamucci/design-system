@@ -11,7 +11,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn } from 'storybook/test';
 import { createMediaPlayer, type MediaPlayerRoot } from './media-player';
-import { LABELS, silentWav } from './media-player.fixtures';
+import { DEMO_SECONDS, LABELS, silentWav } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
 
@@ -42,7 +42,11 @@ type Story = StoryObj;
 /** Como o player nasce: parado, no zero, sem duração conhecida ainda. */
 export const Idle: Story = {
   render: () =>
-    createMediaPlayer({ kind: 'audio', src: silentWav(0.6), labels: LABELS }),
+    createMediaPlayer({
+      kind: 'audio',
+      src: silentWav(DEMO_SECONDS),
+      labels: LABELS,
+    }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

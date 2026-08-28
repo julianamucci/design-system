@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/media-player";
 import {
   CanvasVideoPlayer,
+  DEMO_SECONDS,
   VIMEO_VIDEO_ID,
   YOUTUBE_VIDEO_ID,
   silentWav,
@@ -133,7 +134,7 @@ function sourceSnippet(key: SourceKey): string {
  * Toda mídia daqui é construída em MEMÓRIA: nada é baixado, nada depende de
  * rede. Os dois provedores são a única exceção, e é o que a fonte É.
  */
-const AUDIO_SOURCE = silentWav(0.6);
+const AUDIO_SOURCE = silentWav(DEMO_SECONDS);
 
 /**
  * O player de uma fonte, com os rótulos no idioma da página.
@@ -148,11 +149,11 @@ function SourcePlayer({ source, labels }: { source: SourceKey; labels: MediaPlay
     // `rates={[]}` porque a fonte é stream ao vivo, e nela a velocidade de
     // reprodução é ignorada — medido. Oferecer o seletor seria dar um controle
     // que a pessoa mexe e não acontece nada. É o padrão do `CanvasVideoPlayer`.
-    return <CanvasVideoPlayer labels={labels} className="nds-w-full" />;
+    return <CanvasVideoPlayer labels={labels} className="nds-w-full nds-max-w-xl" />;
   }
   if (source === "audio") {
     return (
-      <MediaPlayer kind="audio" src={AUDIO_SOURCE} labels={labels} className="nds-w-full" />
+      <MediaPlayer kind="audio" src={AUDIO_SOURCE} labels={labels} className="nds-w-full nds-max-w-xl" />
     );
   }
   return (
@@ -162,7 +163,7 @@ function SourcePlayer({ source, labels }: { source: SourceKey; labels: MediaPlay
         videoId: source === "youtube" ? YOUTUBE_VIDEO_ID : VIMEO_VIDEO_ID,
       }}
       labels={labels}
-      className="nds-w-full"
+      className="nds-w-full nds-max-w-xl"
     />
   );
 }
@@ -222,7 +223,7 @@ function CountingPlayer({
         kind="audio"
         src={AUDIO_SOURCE}
         labels={labels}
-        className="nds-w-full"
+        className="nds-w-full nds-max-w-xl"
         onPlay={listenTo === "engine" ? () => setPlays((current) => current + 1) : undefined}
       />
       <p className="nds-text-body nds-text-muted-foreground">{`${countLabel}: ${plays}`}</p>
@@ -472,9 +473,9 @@ export function MediaPlayerDocs() {
             doCaption: toPlainText(tContent("doDont.pair2.do")),
             dontCaption: toPlainText(tContent("doDont.pair2.dont")),
             // O mesmo vídeo, e a única diferença é a faixa declarada.
-            doPreview: <CanvasVideoPlayer labels={barLabels} className="nds-w-full" />,
+            doPreview: <CanvasVideoPlayer labels={barLabels} className="nds-w-full nds-max-w-xl" />,
             dontPreview: (
-              <CanvasVideoPlayer tracks={[]} labels={barLabels} className="nds-w-full" />
+              <CanvasVideoPlayer tracks={[]} labels={barLabels} className="nds-w-full nds-max-w-xl" />
             ),
           },
         ]}

@@ -10,7 +10,8 @@
     captionTrack,
     mediaPlayerLabelsFor,
     silentWav,
-  } from '@/components/ui/media-player/media-player.fixtures';
+  DEMO_SECONDS,
+} from '@/components/ui/media-player/media-player.fixtures';
   import {
     mediaPlayerAudioSource,
     mediaPlayerVideoSource,
@@ -172,7 +173,7 @@
   // Montados uma vez, fora de qualquer derivado: recriar o stream a cada troca
   // de idioma remontaria o player, e a limpeza dele para as trilhas do stream
   // anterior.
-  const audioSrc = silentWav(0.6);
+  const audioSrc = silentWav(DEMO_SECONDS);
   const variantVideoStream = canvasStream();
   const doDontVideoStream = canvasStream();
   const dontVideoStream = canvasStream();
@@ -263,7 +264,7 @@
 
       <div class="nds-w-full">
         {#key demoSource}
-          <MediaPlayer {...demoProps} labels={barLabels} class="nds-w-full" />
+          <MediaPlayer {...demoProps} labels={barLabels} class="nds-w-full nds-max-w-xl" />
         {/key}
       </div>
     </div>

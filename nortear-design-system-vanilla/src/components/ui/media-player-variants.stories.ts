@@ -9,6 +9,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createMediaPlayer, type MediaPlayerRoot } from './media-player';
 import {
+  DEMO_SECONDS,
   LABELS,
   VIMEO_VIDEO_ID,
   YOUTUBE_VIDEO_ID,
@@ -168,7 +169,7 @@ export const Audio: Story = {
   render: () =>
     createMediaPlayer({
       kind: 'audio',
-      src: silentWav(0.6),
+      src: silentWav(DEMO_SECONDS),
       labels: LABELS,
     }),
 

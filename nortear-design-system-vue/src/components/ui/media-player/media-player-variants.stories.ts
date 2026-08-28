@@ -15,6 +15,7 @@ import {
   canvasStream,
   captionTrack,
   silentWav,
+  DEMO_SECONDS,
 } from './media-player.fixtures';
 import { playerBridge, playerRoot, until } from './media-player.play-helpers';
 import {
@@ -193,7 +194,7 @@ export const Audio: Story = {
   render: () => ({
     components: { MediaPlayer },
     setup() {
-      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(0.6) };
+      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(DEMO_SECONDS) };
     },
     template: `
       <div class="nds-w-full">

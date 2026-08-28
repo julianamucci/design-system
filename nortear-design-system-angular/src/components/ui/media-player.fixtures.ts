@@ -65,6 +65,17 @@ export function mediaPlayerLabels(): MediaPlayerLabels {
 export const MEDIA_PLAYER_LABELS: MediaPlayerLabels = mediaPlayerLabels();
 
 /**
+ * Quantos segundos tem a mídia que a DEMONSTRAÇÃO mostra.
+ *
+ * A versão anterior usava 0,6s em toda parte, e o relógio da barra lia
+ * `0:00 / 0:00` — que na tela se lê como componente quebrado. Zero vírgula seis
+ * segundos servem a quem TESTA, porque a mídia acaba rápido; não servem a quem
+ * LÊ, porque não há o que a barra represente. As stories que precisam do fim da
+ * mídia continuam com clipes curtos, e cada uma diz por quê.
+ */
+export const DEMO_SECONDS = 60;
+
+/**
  * WAV PCM 8 bits, mono, 8 kHz, silencioso, com a duração pedida.
  *
  * Quarenta e quatro bytes de cabeçalho e um byte por amostra — o formato mais
@@ -72,7 +83,12 @@ export const MEDIA_PLAYER_LABELS: MediaPlayerLabels = mediaPlayerLabels();
  * roda em bloco e áudio audível em teste é ruído literal.
  */
 export function silentWav(seconds: number): string {
-  const rate = 8000;
+  // 4 kHz é o PISO, e é medido: a 2 kHz, 1 kHz e 500 Hz o navegador simplesmente
+  // não carrega o arquivo — `duration` nunca sai de `NaN`. Como a duração é
+  // bytes ÷ taxa, a taxa é quem decide quanto custa um minuto de demonstração:
+  // 4 kHz o deixa em 313 KB de `data:` contra 625 KB a 8 kHz, e nada disso vai
+  // para o pacote — é montado em memória na hora.
+  const rate = 4000;
   const samples = Math.round(rate * seconds);
   const bytes = new Uint8Array(44 + samples);
   const view = new DataView(bytes.buffer);
@@ -111,14 +127,17 @@ export function silentWav(seconds: number): string {
  */
 export function canvasStream(): MediaStream {
   const canvas = document.createElement('canvas');
-  canvas.width = 320;
-  canvas.height = 180;
+  // 1280×720, e não os 320×180 de antes: o elemento ocupa a largura do
+  // container, então uma fonte pequena é ESTICADA. Medido — 320×180 virava
+  // 1198×674 numa story de 1200px, um borrão.
+  canvas.width = 1280;
+  canvas.height = 720;
   const context = canvas.getContext('2d');
   if (context) {
     context.fillStyle = '#22333b';
-    context.fillRect(0, 0, 320, 180);
+    context.fillRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = '#8ecae6';
-    context.fillRect(20, 20, 120, 60);
+    context.fillRect(80, 80, 480, 240);
   }
   return canvas.captureStream(10);
 }
