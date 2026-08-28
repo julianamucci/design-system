@@ -1,0 +1,181 @@
+/*
+ * ─── nds-media-player ────────────────────────────────────────────────────────
+ * Player de vídeo e de áudio. O elemento nativo é o MOTOR; a barra é do design
+ * system.
+ *
+ *   <div class="nds-media-player" data-kind="video|audio">
+ *     <video class="nds-media-player-surface">  ← ou <audio>, sem `controls`
+ *     <div class="nds-media-player-controls" role="group">
+ *       <button class="nds-media-player-button">     ← tocar/pausar
+ *       <input  class="nds-media-player-seek" type="range">
+ *       <span   class="nds-media-player-time">
+ *     </div>
+ *   </div>
+ *
+ * Por que o elemento nativo e não uma lib: ele já entrega legenda por `<track>`,
+ * teclado, Media Session e TODOS os eventos de reprodução. O que falta é a
+ * aparência, e aparência é justamente o que um design system tem. Com os
+ * controles do nosso lado, o motor continua substituível — trocar por outro
+ * player não obriga a redesenhar a barra.
+ */
+
+.nds-media-player {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-md);
+  background-color: hsl(var(--background));
+  overflow: hidden;
+}
+
+/* O anel de foco vai na MOLDURA, como no editor: o que recebe foco por dentro
+ * são os controles, e um anel em cada um deles não diria que o player inteiro é
+ * a unidade. */
+.nds-media-player:focus-within {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* A superfície do vídeo.
+ *
+ * `display: block` mata o espaço de linha de base que sobra sob elemento
+ * substituído em contexto inline — sem isso aparece uma faixa do fundo entre o
+ * vídeo e a barra. */
+.nds-media-player-surface {
+  display: block;
+  width: 100%;
+  height: auto;
+  background-color: hsl(var(--foreground));
+}
+
+/* No áudio não há o que mostrar: o elemento fica no fluxo mas sem caixa, e a
+ * barra é o componente inteiro. `display: none` também serviria, e foi
+ * descartado — a lib de legenda de alguns navegadores para de expor faixas em
+ * mídia não renderizada. */
+.nds-media-player[data-kind="audio"] .nds-media-player-surface {
+  block-size: 0;
+}
+
+.nds-media-player-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
+  border-block-start: 1px solid hsl(var(--border));
+  background-color: hsl(var(--muted));
+}
+
+/* No áudio a barra é a única coisa que existe — sem vídeo acima dela, a linha
+ * separadora não separa nada. */
+.nds-media-player[data-kind="audio"] .nds-media-player-controls {
+  border-block-start: 0;
+}
+
+/* Botão de controle.
+ *
+ * 24px de lado é o mínimo de alvo de toque (WCAG 2.5.8) e vale para o alvo, não
+ * para o ícone: o `<svg>` dentro fica menor. A regra `target-size` está ligada
+ * no `preview.ts` das cinco stacks, então isto é medido, não presumido. */
+.nds-media-player-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  inline-size: var(--spacing-6);
+  block-size: var(--spacing-6);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+}
+
+.nds-media-player-button > svg {
+  inline-size: var(--spacing-4);
+  block-size: var(--spacing-4);
+}
+
+.nds-media-player-button:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-media-player-button:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.nds-media-player-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* A barra de progresso é um `<input type="range">`, e não uma barra desenhada
+ * com `div`.
+ *
+ * O elemento nativo já é operável por teclado (setas, Home, End, PageUp), já
+ * tem papel de slider e já anuncia valor — reescrever isso à mão é assumir
+ * quatro comportamentos que ninguém lembra de testar. O que se estiliza é a
+ * pista e o polegar. */
+.nds-media-player-seek {
+  flex: 1 1 8rem;
+  min-inline-size: 0;
+  appearance: none;
+  background: none;
+  cursor: pointer;
+}
+
+.nds-media-player-seek:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* A pista precisa de 3:1 contra o fundo da barra: é elemento não textual que
+ * carrega informação (WCAG 1.4.11), não decoração. */
+.nds-media-player-seek::-webkit-slider-runnable-track {
+  block-size: var(--spacing-1);
+  border-radius: var(--radius-xs);
+  background-color: hsl(var(--border));
+}
+
+.nds-media-player-seek::-moz-range-track {
+  block-size: var(--spacing-1);
+  border-radius: var(--radius-xs);
+  background-color: hsl(var(--border));
+}
+
+/* O polegar tem 16px de desenho, e o alvo de toque de quem arrasta é a pista
+ * inteira — slider é exceção conhecida do critério de tamanho de alvo, porque o
+ * controle é a linha, não o ponto. */
+.nds-media-player-seek::-webkit-slider-thumb {
+  appearance: none;
+  inline-size: var(--spacing-4);
+  block-size: var(--spacing-4);
+  margin-block-start: calc((var(--spacing-1) - var(--spacing-4)) / 2);
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+}
+
+.nds-media-player-seek::-moz-range-thumb {
+  inline-size: var(--spacing-4);
+  block-size: var(--spacing-4);
+  border: 0;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+}
+
+/* O relógio.
+ *
+ * `tabular-nums` para o número não dançar a cada segundo — sem isso a barra
+ * inteira se mexe quando o dígito muda de largura. E NÃO é região viva: um
+ * leitor de tela anunciando o tempo a cada segundo torna o player inutilizável.
+ * Quem quer saber o tempo lê o slider, que já anuncia a posição. */
+.nds-media-player-time {
+  flex-shrink: 0;
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  color: hsl(var(--muted-foreground));
+}
