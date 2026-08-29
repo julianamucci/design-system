@@ -15,7 +15,8 @@
       "toolState": {
         "running": "chamando",
         "done": "pronto",
-        "failed": "falhou"
+        "failed": "falhou",
+        "pending": "aguardando"
       }
     },
     "demonstration": {
@@ -205,6 +206,16 @@
         "label": "Ferramenta que falhou",
         "trigger": "Uma chamada de ferramenta termina em erro.",
         "behavior": "A moldura e o ícone recebem a cor de erro, e a palavra do estado aparece no texto do resumo — a cor não responde sozinha."
+      },
+      "toolPending": {
+        "label": "Ferramenta aguardando",
+        "trigger": "Uma chamada de ferramenta foi proposta e ainda não foi autorizada.",
+        "behavior": "A chamada nasce ABERTA, com a palavra do estado no resumo e espaço para os controles de quem consome. Pedir autorização dentro de uma caixa fechada é pedir sem mostrar."
+      },
+      "error": {
+        "label": "Erro de execução",
+        "trigger": "A execução falhou — a resposta não vai vir.",
+        "behavior": "Uma faixa fora da lista anuncia a falha de imediato, porque ninguém a disse: não é um turno da conversa. É coisa diferente de ferramenta que falhou, que é um passo errado dentro de uma resposta que continua de pé."
       }
     },
     "props": {
@@ -270,12 +281,26 @@
           "default": "—",
           "required": "Não",
           "description": "Classes extras na raiz. É por aqui que a página define a altura e a medida de leitura."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Endereço da mensagem. Opcional numa conversa parada, e necessário para o streaming: mensagem sem id não pode ser atualizada."
+        },
+        "error": {
+          "name": "error",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Falha da execução. É a resposta que não vem, e não um passo que deu errado dentro de uma que veio."
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "A decisão de rolagem é um módulo compartilhado e pode ser chamada direto por quem monta a própria lista — é o que garante que a regra seja a mesma nas cinco stacks.",
+      "extensibility": "A conversa em movimento entra por dois métodos da raiz: `append` para o turno novo e `update(id, patch)` para o que ainda está chegando. A decisão de rolagem é um módulo compartilhado e pode ser chamada direto por quem monta a própria lista.",
       "extensibilityCode": {
-        "web": "import { isAtBottom, onThreadMessage } from '@shared/primitives/chat-scroll';\n\n// Medir ANTES de inserir: depois, o scrollHeight já mudou.\nconst atBottom = isAtBottom(viewport);\nlist.append(node);\nif (atBottom) viewport.scrollTop = viewport.scrollHeight;"
+        "web": "// O trecho novo pousa no MESMO id; o fim desliga o streaming.\nthread.append({ id: 'm-7', role: 'assistant', content: '', streaming: true });\nfor await (const parte of resposta) {\n  acumulado += parte;\n  thread.update('m-7', { content: acumulado });\n}\nthread.update('m-7', { streaming: false });   // aqui sai o anúncio único"
       }
     },
     "tokens": {
@@ -378,7 +403,8 @@
       "item1": "A decisão de rolagem vive num módulo compartilhado pelas cinco stacks, e é testada sem navegador. Sem isso, cada stack escreveria o próprio limiar e a divergência só apareceria com a conversa em movimento.",
       "item2": "A folga para considerar que a rolagem está no fim não é zero: rolagem por roda para em número fracionário, e um pixel de margem no último item bastaria para o fim nunca ser alcançado.",
       "item3": "Os colapsáveis são elementos nativos de divulgação, e não o Collapsible do sistema: o conteúdo continua encontrável pela busca do navegador com a caixa fechada, e uma conversa longa não paga um controle com script por mensagem.",
-      "item4": "A lista não é virtualizada nesta rodada. O contrato foi desenhado para receber virtualização depois — quem rola é um elemento só, e a decisão de ancoragem não sabe se os itens existem todos."
+      "item4": "A lista não é virtualizada nesta rodada. O contrato foi desenhado para receber virtualização depois — quem rola é um elemento só, e a decisão de ancoragem não sabe se os itens existem todos.",
+      "item5": "A autorização de ferramenta é um ESPAÇO aqui, não uma política: o componente desenha os controles que recebe e não decide o que aprovar significa. O que acontece ao recusar, se há motivo e se a escolha vale para as próximas são decisões de produto, e produto envelhece em outro ritmo que o sistema."
     },
     "analytics": {
       "title": "Analytics",
@@ -432,6 +458,21 @@
           "action": "Renderizar chamada de ferramenta em cada estado",
           "result": "O estado aparece no texto do resumo, e não só na cor do ícone.",
           "priority": "high"
+        },
+        "item7": {
+          "action": "Atualizar a mensagem pelo id, com o texto crescendo",
+          "result": "O texto é trocado no lugar, sem reconstruir a mensagem: o foco de dentro dela permanece e o colapsável aberto continua aberto.",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Desligar o streaming da mensagem",
+          "result": "A marca de ocupada sai e a resposta é anunciada UMA vez — é a transição que anuncia, não a chegada.",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Declarar erro de execução",
+          "result": "A faixa aparece fora da lista de mensagens, e some quando o erro é limpo.",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -441,7 +482,8 @@
         "item2": "A lista de mensagens NÃO tem aria-live nem role=\"log\", e a mensagem em streaming tem aria-busy=\"true\"",
         "item3": "A área que rola tem tabindex=\"0\", e o anel de foco dela é visível",
         "item4": "As ações da mensagem ficam visíveis ao receber foco, e não só ao pousar o ponteiro",
-        "item5": "O botão de ir ao fim carrega a contagem no nome acessível"
+        "item5": "O botão de ir ao fim carrega a contagem no nome acessível",
+        "item6": "O erro de execução é anunciado de imediato, e é o único da conversa que interrompe"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -465,6 +507,14 @@
         },
         "item5": {
           "story": "Botão de ir ao fim, com contagem",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Ferramenta aguardando autorização",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Erro de execução",
           "priority": "high"
         }
       }
@@ -506,7 +556,8 @@
       "toolState": {
         "running": "calling",
         "done": "done",
-        "failed": "failed"
+        "failed": "failed",
+        "pending": "awaiting"
       }
     },
     "demonstration": {
@@ -696,6 +747,16 @@
         "label": "Tool that failed",
         "trigger": "A tool call ends in an error.",
         "behavior": "The frame and icon take the error colour, and the state word appears in the summary text — colour does not answer alone."
+      },
+      "toolPending": {
+        "label": "Tool awaiting",
+        "trigger": "A tool call was proposed and has not been authorised yet.",
+        "behavior": "The call is born OPEN, with the state word in the summary and space for the consumer’s controls. Asking for authorisation inside a closed box is asking without showing."
+      },
+      "error": {
+        "label": "Run error",
+        "trigger": "The run failed — the answer is not coming.",
+        "behavior": "A strip outside the list announces the failure at once, because nobody said it: it is not a turn of the conversation. It differs from a failed tool, which is a wrong step inside an answer that still stands."
       }
     },
     "props": {
@@ -761,12 +822,26 @@
           "default": "—",
           "required": "No",
           "description": "Extra classes on the root. This is where the page sets the height and the reading measure."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Address of the message. Optional in a still conversation, and required for streaming: a message without an id cannot be updated."
+        },
+        "error": {
+          "name": "error",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Failure of the run. It is the answer that does not come, not a step that went wrong inside one that did."
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "The scroll decision is a shared module and can be called directly by whoever builds their own list — it is what keeps the rule identical across the five stacks.",
+      "extensibility": "A moving conversation enters through two methods on the root: `append` for a new turn and `update(id, patch)` for what is still arriving. The scroll decision is a shared module and can be called directly by whoever builds their own list.",
       "extensibilityCode": {
-        "web": "import { isAtBottom, onThreadMessage } from '@shared/primitives/chat-scroll';\n\n// Medir ANTES de inserir: depois, o scrollHeight já mudou.\nconst atBottom = isAtBottom(viewport);\nlist.append(node);\nif (atBottom) viewport.scrollTop = viewport.scrollHeight;"
+        "web": "// O trecho novo pousa no MESMO id; o fim desliga o streaming.\nthread.append({ id: 'm-7', role: 'assistant', content: '', streaming: true });\nfor await (const parte of resposta) {\n  acumulado += parte;\n  thread.update('m-7', { content: acumulado });\n}\nthread.update('m-7', { streaming: false });   // aqui sai o anúncio único"
       }
     },
     "tokens": {
@@ -869,7 +944,8 @@
       "item1": "The scroll decision lives in a module shared by the five stacks, and is tested without a browser. Without that, each stack would write its own threshold and the divergence would only show with the conversation in motion.",
       "item2": "The tolerance for considering the scroll at the end is not zero: wheel scrolling stops at fractional numbers, and one pixel of margin on the last item would be enough for the end never to be reached.",
       "item3": "The disclosures are native elements, not the system’s Collapsible: the content stays findable by the browser’s search with the box closed, and a long conversation does not pay for a scripted control per message.",
-      "item4": "The list is not virtualised in this round. The contract was designed to receive virtualisation later — a single element scrolls, and the anchoring decision does not know whether all items exist."
+      "item4": "The list is not virtualised in this round. The contract was designed to receive virtualisation later — a single element scrolls, and the anchoring decision does not know whether all items exist.",
+      "item5": "Tool authorisation is a SLOT here, not a policy: the component draws the controls it receives and does not decide what approving means. What happens on refusal, whether there is a reason and whether the choice holds for the next ones are product decisions, and product ages at a different pace from the system."
     },
     "analytics": {
       "title": "Analytics",
@@ -923,6 +999,21 @@
           "action": "Render a tool call in each state",
           "result": "The state appears in the summary text, not only in the icon colour.",
           "priority": "high"
+        },
+        "item7": {
+          "action": "Update the message by id, with the text growing",
+          "result": "The text is swapped in place, without rebuilding the message: focus inside it stays and an open disclosure stays open.",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Turn off the message streaming",
+          "result": "The busy mark leaves and the answer is announced ONCE — the transition announces, not the arrival.",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Declare a run error",
+          "result": "The strip appears outside the message list, and leaves when the error is cleared.",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -932,7 +1023,8 @@
         "item2": "The message list has NO aria-live and no role=\"log\", and the streaming message has aria-busy=\"true\"",
         "item3": "The scrolling area has tabindex=\"0\", and its focus ring is visible",
         "item4": "The message actions become visible on focus, and not only on pointer hover",
-        "item5": "The jump-to-end button carries the count in its accessible name"
+        "item5": "The jump-to-end button carries the count in its accessible name",
+        "item6": "The run error is announced at once, and is the only one in the conversation that interrupts"
       },
       "visual": {
         "title": "Visual Regression",
@@ -956,6 +1048,14 @@
         },
         "item5": {
           "story": "Jump-to-end button, with a count",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Tool awaiting authorisation",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Run error",
           "priority": "high"
         }
       }
@@ -997,7 +1097,8 @@
       "toolState": {
         "running": "llamando",
         "done": "listo",
-        "failed": "falló"
+        "failed": "falló",
+        "pending": "esperando"
       }
     },
     "demonstration": {
@@ -1187,6 +1288,16 @@
         "label": "Herramienta que falló",
         "trigger": "Una llamada de herramienta termina en error.",
         "behavior": "El marco y el ícono toman el color de error, y la palabra del estado aparece en el texto del resumen — el color no responde solo."
+      },
+      "toolPending": {
+        "label": "Herramienta esperando",
+        "trigger": "Una llamada de herramienta fue propuesta y aún no ha sido autorizada.",
+        "behavior": "La llamada nace ABIERTA, con la palabra del estado en el resumen y espacio para los controles de quien consume. Pedir autorización dentro de una caja cerrada es pedir sin mostrar."
+      },
+      "error": {
+        "label": "Error de ejecución",
+        "trigger": "La ejecución falló — la respuesta no va a llegar.",
+        "behavior": "Una franja fuera de la lista anuncia el fallo de inmediato, porque nadie lo dijo: no es un turno de la conversación. Es distinto de una herramienta que falló, que es un paso equivocado dentro de una respuesta que sigue en pie."
       }
     },
     "props": {
@@ -1252,12 +1363,26 @@
           "default": "—",
           "required": "No",
           "description": "Clases extra en la raíz. Aquí es donde la página define la altura y la medida de lectura."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Dirección del mensaje. Opcional en una conversación quieta, y necesaria para el streaming: un mensaje sin id no puede actualizarse."
+        },
+        "error": {
+          "name": "error",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Fallo de la ejecución. Es la respuesta que no llega, y no un paso que salió mal dentro de una que sí llegó."
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "La decisión de desplazamiento es un módulo compartido y puede llamarse directamente por quien arma su propia lista — es lo que garantiza que la regla sea la misma en las cinco stacks.",
+      "extensibility": "La conversación en movimiento entra por dos métodos de la raíz: `append` para el turno nuevo y `update(id, patch)` para lo que aún está llegando. La decisión de desplazamiento es un módulo compartido y puede llamarse directamente por quien arma su propia lista.",
       "extensibilityCode": {
-        "web": "import { isAtBottom, onThreadMessage } from '@shared/primitives/chat-scroll';\n\n// Medir ANTES de inserir: depois, o scrollHeight já mudou.\nconst atBottom = isAtBottom(viewport);\nlist.append(node);\nif (atBottom) viewport.scrollTop = viewport.scrollHeight;"
+        "web": "// O trecho novo pousa no MESMO id; o fim desliga o streaming.\nthread.append({ id: 'm-7', role: 'assistant', content: '', streaming: true });\nfor await (const parte of resposta) {\n  acumulado += parte;\n  thread.update('m-7', { content: acumulado });\n}\nthread.update('m-7', { streaming: false });   // aqui sai o anúncio único"
       }
     },
     "tokens": {
@@ -1360,7 +1485,8 @@
       "item1": "La decisión de desplazamiento vive en un módulo compartido por las cinco stacks, y se prueba sin navegador. Sin eso, cada stack escribiría su propio umbral y la divergencia solo aparecería con la conversación en movimiento.",
       "item2": "La tolerancia para considerar que el desplazamiento está en el final no es cero: el desplazamiento por rueda se detiene en números fraccionarios, y un píxel de margen en el último ítem bastaría para que el final nunca se alcance.",
       "item3": "Los colapsables son elementos nativos, y no el Collapsible del sistema: el contenido sigue siendo encontrable por la búsqueda del navegador con la caja cerrada, y una conversación larga no paga un control con script por mensaje.",
-      "item4": "La lista no está virtualizada en esta ronda. El contrato se diseñó para recibir virtualización después — un solo elemento se desplaza, y la decisión de anclaje no sabe si todos los ítems existen."
+      "item4": "La lista no está virtualizada en esta ronda. El contrato se diseñó para recibir virtualización después — un solo elemento se desplaza, y la decisión de anclaje no sabe si todos los ítems existen.",
+      "item5": "La autorización de herramienta es un ESPACIO aquí, no una política: el componente dibuja los controles que recibe y no decide qué significa aprobar. Qué ocurre al rechazar, si hay motivo y si la elección vale para las próximas son decisiones de producto, y el producto envejece a otro ritmo que el sistema."
     },
     "analytics": {
       "title": "Analytics",
@@ -1414,6 +1540,21 @@
           "action": "Renderizar llamada de herramienta en cada estado",
           "result": "El estado aparece en el texto del resumen, y no solo en el color del ícono.",
           "priority": "high"
+        },
+        "item7": {
+          "action": "Actualizar el mensaje por id, con el texto creciendo",
+          "result": "El texto se cambia en el lugar, sin reconstruir el mensaje: el foco dentro de él permanece y el colapsable abierto sigue abierto.",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Desactivar el streaming del mensaje",
+          "result": "La marca de ocupado sale y la respuesta se anuncia UNA vez — es la transición la que anuncia, no la llegada.",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Declarar error de ejecución",
+          "result": "La franja aparece fuera de la lista de mensajes, y desaparece cuando el error se limpia.",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1423,7 +1564,8 @@
         "item2": "La lista de mensajes NO tiene aria-live ni role=\"log\", y el mensaje en streaming tiene aria-busy=\"true\"",
         "item3": "El área que se desplaza tiene tabindex=\"0\", y su anillo de foco es visible",
         "item4": "Las acciones del mensaje se vuelven visibles al recibir foco, y no solo al posar el puntero",
-        "item5": "El botón de ir al final lleva el conteo en su nombre accesible"
+        "item5": "El botón de ir al final lleva el conteo en su nombre accesible",
+        "item6": "El error de ejecución se anuncia de inmediato, y es el único de la conversación que interrumpe"
       },
       "visual": {
         "title": "Regresión Visual",
@@ -1447,6 +1589,14 @@
         },
         "item5": {
           "story": "Botón de ir al final, con conteo",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Herramienta esperando autorización",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Error de ejecución",
           "priority": "high"
         }
       }

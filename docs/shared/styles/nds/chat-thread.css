@@ -42,6 +42,19 @@
  *    foco em qualquer estado — por isso somem por `opacity`, e nunca por
  *    `display` ou `visibility`.
  *
+ * ONDE A APROVAÇÃO DE FERRAMENTA MORA, e por quê
+ *
+ * Aqui — mas só o ESPAÇO dela. A chamada que espera por uma pessoa recebe os
+ * controles de quem consome, e o componente não sabe o que aprovar significa.
+ *
+ * A alternativa era um vizinho, um slug próprio de aprovação. Ficou de fora
+ * porque a decisão não é de desenho, é de produto: o que acontece ao recusar,
+ * se há motivo, se a escolha vale para as próximas. Um componente que
+ * respondesse a isso traria política junto, e política envelhece por produto,
+ * não por sistema. O espaço segue o mesmo contrato de `actions` na mensagem,
+ * que já funciona assim — e se um dia existir um componente de aprovação com
+ * campo de motivo, ele entra AQUI, sem trocar nada nesta folha.
+ *
  * Tokens: --background, --foreground, --muted, --muted-foreground, --secondary,
  *         --secondary-foreground, --border, --card, --primary, --destructive,
  *         --radius-*, --spacing-*, --text-*
@@ -158,6 +171,22 @@
   overflow-wrap: break-word;
 }
 
+/* O contêiner das chamadas de ferramenta.
+ *
+ * Existe para que `update` possa trocá-las sem tocar no resto da mensagem — e
+ * é ele que separa uma chamada da outra quando há mais de uma. Vazio, não
+ * ocupa espaço: sem `:empty`, o `gap` da mensagem contaria uma caixa que não
+ * desenha nada. */
+.nds-chat-message-tools {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.nds-chat-message-tools:empty {
+  display: none;
+}
+
 /* ── Papéis ─────────────────────────────────────────────────────────────────
  * Quem escreveu ganha bolha e vai para a direita; quem responde ocupa a coluna
  * inteira, sem moldura.
@@ -238,6 +267,29 @@
   margin-inline: auto;
   inline-size: fit-content;
   z-index: 1;
+}
+
+/* ── Erro de execução ───────────────────────────────────────────────────────
+ * A resposta que não vai vir, e é coisa DIFERENTE de ferramenta que falhou:
+ * aquela é um passo que deu errado dentro de uma resposta que continua de pé.
+ * Por isso mora fora da lista — ninguém disse isto, não é um turno.
+ *
+ * Texto em `--foreground`, e não em `--destructive`: é a regra dos contêineres
+ * coloridos, e vale aqui como vale no alert. A cor semântica fica na borda e no
+ * ícone, que respondem por 3:1; texto corrido precisa de 4.5:1. */
+.nds-chat-thread-error {
+  margin: 0;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-block-start: 1px solid hsl(var(--destructive) / 0.4);
+  background-color: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--foreground));
+  font-size: var(--text-control);
+}
+
+/* A guarda de `[hidden]` outra vez: o erro nasce escondido e é revelado por
+ * quem consome, então esconder tem de esconder. */
+.nds-chat-thread-error[hidden] {
+  display: none;
 }
 
 /* ── Anunciador ─────────────────────────────────────────────────────────────
@@ -322,6 +374,25 @@
  * quem não a percebe precisa ler o mesmo no texto. */
 .nds-chat-tool-call[data-state="running"] .nds-chat-tool-call-icon {
   color: hsl(var(--muted-foreground));
+}
+
+/* A chamada que espera por uma PESSOA. Ela se parece com `running` na tela e
+ * é o oposto: ali quem deve resposta é o sistema, aqui é quem lê. A moldura em
+ * `--warning` e a palavra no resumo dizem isso — a cor não responde sozinha. */
+.nds-chat-tool-call[data-state="pending"] {
+  border-color: hsl(var(--warning) / 0.5);
+}
+
+.nds-chat-tool-call[data-state="pending"] .nds-chat-tool-call-icon {
+  color: hsl(var(--warning));
+}
+
+/* O espaço da autorização. Quem desenha os botões é quem consome. */
+.nds-chat-tool-call-approval {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-block-start: var(--spacing-3);
 }
 
 .nds-chat-tool-call[data-state="done"] .nds-chat-tool-call-icon {

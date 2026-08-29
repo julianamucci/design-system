@@ -23,15 +23,47 @@ import {
 // A decisão de rolagem vem de @shared/primitives/chat-scroll, compartilhada
 // pelas cinco stacks: sem ela, cada uma escreveria o próprio `if` e a
 // divergência só apareceria com a conversa em movimento.
+//
+// POR QUE EXISTE `id` E `update`
+//
+// Um protocolo de agente não manda mensagens prontas: manda um começo, uma
+// sequência de trechos e um fim, todos endereçados ao MESMO id. Sem endereço,
+// cada trecho só poderia virar mensagem nova, e a conversa cresceria uma linha
+// por token. `update(id, patch)` é onde o streaming pousa — e é a metade do
+// protocolo que dá razão a este componente existir.
+//
+// A primeira versão daqui só tinha `append`, e com ela o anúncio único era
+// INALCANÇÁVEL no fluxo de streaming: a mensagem entrava com `streaming: true`
+// e nada podia desligá-lo depois. A regra estava escrita e o caminho até ela,
+// não. É o defeito que `update` fecha.
 
 export type ChatRole = 'user' | 'assistant' | 'system';
-export type ToolCallState = 'running' | 'done' | 'failed';
+
+/**
+ * Estados de uma chamada de ferramenta.
+ *
+ * `pending` é a espera por uma PESSOA, e não pela máquina: a ferramenta foi
+ * proposta e ainda não foi autorizada. Ela existe separada de `running` porque
+ * as duas se parecem na tela e são coisas opostas — numa, quem está devendo
+ * resposta é o sistema; na outra, quem lê.
+ */
+export type ToolCallState = 'pending' | 'running' | 'done' | 'failed';
 
 export interface ChatToolCall {
+  /** Endereço da chamada. Sem ele, `update` não tem como alcançá-la. */
+  id?: string;
   name: string;
   state: ToolCallState;
   /** Detalhe da chamada — argumentos, resultado, erro. Texto simples. */
   detail?: string;
+  /**
+   * Controles de autorização, quando a chamada espera por uma pessoa.
+   *
+   * É um ESPAÇO, e não uma política: o componente desenha o que recebe e não
+   * decide o que aprovar significa. Ver a nota sobre aprovação no cabeçalho do
+   * `chat-thread.css`.
+   */
+  approval?: HTMLElement[];
 }
 
 export interface ChatSource {
@@ -40,6 +72,14 @@ export interface ChatSource {
 }
 
 export interface ChatMessageOptions {
+  /**
+   * Endereço da mensagem.
+   *
+   * Opcional porque uma conversa parada não precisa dele. Obrigatório na
+   * prática para quem faz streaming: mensagem sem id não pode ser atualizada,
+   * e `update` a ignora.
+   */
+  id?: string;
   role: ChatRole;
   /** O conteúdo, em Markdown. Tratado como não confiável. */
   content: string;
@@ -47,7 +87,7 @@ export interface ChatMessageOptions {
   /** Já formatada por quem consome: o componente não escolhe formato de hora. */
   time?: string;
   avatar?: HTMLElement;
-  /** Ligue enquanto o texto ainda chega. */
+  /** Ligue enquanto o texto ainda chega. Desligar é o que dispara o anúncio. */
   streaming?: boolean;
   toolCalls?: ChatToolCall[];
   reasoning?: string;
@@ -69,6 +109,15 @@ export interface ChatThreadOptions {
   messages: ChatMessageOptions[];
   labels: ChatThreadLabels;
   /**
+   * Falha da EXECUÇÃO, e não de uma ferramenta.
+   *
+   * São coisas diferentes e a distinção importa: ferramenta que falhou é um
+   * passo que deu errado dentro de uma resposta que continua de pé; erro de
+   * execução é a resposta que não vai vir. Um mora na mensagem, o outro na
+   * conversa.
+   */
+  error?: string;
+  /**
    * Altura da janela da conversa, na escada do sistema.
    *
    * Sem ela não há transbordo, e sem transbordo a ancoragem no fim não
@@ -82,8 +131,17 @@ export interface ChatThreadOptions {
 export type ChatThreadElement = HTMLDivElement & {
   /** Acrescenta uma mensagem e aplica a decisão de rolagem. */
   append: (message: ChatMessageOptions) => void;
+  /**
+   * Atualiza a mensagem daquele id. Devolve `false` se não houver nenhuma.
+   *
+   * É por aqui que o streaming pousa: o trecho novo chega como
+   * `{ content: acumulado }`, e o fim como `{ streaming: false }`.
+   */
+  update: (id: string, patch: Partial<ChatMessageOptions>) => boolean;
   /** Vai ao fim e zera a contagem, como o botão faz. */
   jumpToEnd: () => void;
+  /** Declara — ou limpa, com `null` — a falha da execução. */
+  setError: (text: string | null) => void;
 };
 
 /** Ícone de seta que gira com o estado do colapsável. */
@@ -134,6 +192,31 @@ function createDisclosure(
   return details;
 }
 
+function createToolCall(call: ChatToolCall, labels: ChatThreadLabels): HTMLDetailsElement {
+  const disclosure = createDisclosure(
+    'tool-call',
+    `${call.name} · ${labels.toolState[call.state]}`,
+    call.detail ?? '',
+  );
+  // O estado vai no atributo E no texto do resumo: cor sozinha não descreve
+  // estado para quem não a percebe.
+  disclosure.dataset.state = call.state;
+  if (call.id) disclosure.dataset.callId = call.id;
+
+  // A chamada que espera por uma pessoa nasce ABERTA: pedir autorização dentro
+  // de uma caixa fechada é pedir sem mostrar.
+  if (call.state === 'pending') disclosure.open = true;
+
+  if (call.approval?.length) {
+    const actions = document.createElement('div');
+    actions.className = 'nds-chat-tool-call-approval';
+    actions.append(...call.approval);
+    disclosure.querySelector('.nds-chat-tool-call-body')?.appendChild(actions);
+  }
+
+  return disclosure;
+}
+
 function createSources(sources: ChatSource[], title: string): HTMLElement {
   const wrapper = document.createElement('div');
 
@@ -176,6 +259,7 @@ export function createChatMessage(
   item.className = 'nds-chat-message';
   item.dataset.role = options.role;
   item.dataset.slot = 'chat-message';
+  if (options.id) item.dataset.messageId = options.id;
   // Ocupada enquanto gera, e NÃO região viva: anunciar a cada trecho tornaria a
   // conversa impossível de ouvir. Quem anuncia o resultado é o anunciador da
   // thread, uma vez, quando a mensagem termina.
@@ -214,17 +298,12 @@ export function createChatMessage(
     body.appendChild(createDisclosure('reasoning', labels.reasoning, options.reasoning));
   }
 
-  for (const call of options.toolCalls ?? []) {
-    const disclosure = createDisclosure(
-      'tool-call',
-      `${call.name} · ${labels.toolState[call.state]}`,
-      call.detail ?? '',
-    );
-    // O estado vai no atributo E no texto do resumo: cor sozinha não descreve
-    // estado para quem não a percebe.
-    disclosure.dataset.state = call.state;
-    body.appendChild(disclosure);
-  }
+  // As chamadas ficam num contêiner próprio para que `update` possa trocá-las
+  // sem tocar no resto da mensagem.
+  const tools = document.createElement('div');
+  tools.className = 'nds-chat-message-tools';
+  for (const call of options.toolCalls ?? []) tools.appendChild(createToolCall(call, labels));
+  body.appendChild(tools);
 
   const content = document.createElement('div');
   content.className = 'nds-chat-message-content';
@@ -263,10 +342,19 @@ export function createChatThread(options: ChatThreadOptions): ChatThreadElement 
 
   const list = document.createElement('ol');
   list.className = 'nds-chat-thread-list';
-  for (const message of options.messages) {
-    list.appendChild(createChatMessage(message, options.labels));
-  }
   viewport.appendChild(list);
+
+  /** As mensagens que declararam id, e o que se sabe delas. */
+  const byId = new Map<string, { item: HTMLLIElement; options: ChatMessageOptions }>();
+
+  const mount = (message: ChatMessageOptions) => {
+    const item = createChatMessage(message, options.labels);
+    list.appendChild(item);
+    if (message.id) byId.set(message.id, { item, options: { ...message } });
+    return item;
+  };
+
+  for (const message of options.messages) mount(message);
 
   const jump = document.createElement('button');
   jump.type = 'button';
@@ -276,13 +364,28 @@ export function createChatThread(options: ChatThreadOptions): ChatThreadElement 
   // onde já se está é ruído no percurso do Tab.
   jump.hidden = true;
 
-  // A ÚNICA região viva da thread.
+  /**
+   * A falha da execução.
+   *
+   * `role="alert"` — e isto NÃO contradiz a regra de que a conversa não é
+   * região viva. Aquela regra é sobre texto em streaming, que chega em cem
+   * pedaços; isto é uma frase curta, definitiva, e que quem não vê a tela
+   * precisa saber na hora. Fica FORA da lista porque não é um turno da
+   * conversa: ninguém disse isso.
+   */
+  const error = document.createElement('p');
+  error.className = 'nds-chat-thread-error';
+  error.dataset.slot = 'chat-thread-error';
+  error.setAttribute('role', 'alert');
+  error.hidden = true;
+
+  // A ÚNICA região viva de texto da thread.
   const announcer = document.createElement('div');
   announcer.className = 'nds-chat-thread-announcer';
   announcer.setAttribute('aria-live', 'polite');
   announcer.setAttribute('aria-atomic', 'true');
 
-  root.append(viewport, jump, announcer);
+  root.append(viewport, error, jump, announcer);
 
   // ── A decisão de rolagem ──────────────────────────────────────────────────
 
@@ -316,6 +419,12 @@ export function createChatThread(options: ChatThreadOptions): ChatThreadElement 
 
   jump.addEventListener('click', goToEnd);
 
+  /** Anúncio único: a resposta pronta, uma vez. */
+  const announce = (message: ChatMessageOptions) => {
+    if (message.role !== 'assistant') return;
+    announcer.textContent = message.content;
+  };
+
   root.append = ((message: ChatMessageOptions) => {
     // A ORDEM importa, e é o contrato que a função pura não pode impor sozinha:
     // decidir ANTES de inserir. Depois que a mensagem entra, o `scrollHeight`
@@ -323,19 +432,77 @@ export function createChatThread(options: ChatThreadOptions): ChatThreadElement 
     const seguir = shouldFollow(state);
     state = onThreadMessage(state);
 
-    list.appendChild(createChatMessage(message, options.labels));
+    mount(message);
 
     if (seguir) viewport.scrollTop = viewport.scrollHeight;
     paintJump();
 
-    // Anúncio único, ao terminar. Mensagem que ainda está chegando não é
-    // anunciada: o `aria-busy` dela é que diz que há algo em curso.
-    if (!message.streaming && message.role === 'assistant') {
-      announcer.textContent = message.content;
-    }
+    // Mensagem que já chega pronta é anunciada aqui; a que chega em pedaços,
+    // no `update` que desliga o streaming.
+    if (!message.streaming) announce(message);
   }) as ChatThreadElement['append'];
 
+  root.update = ((id: string, patch: Partial<ChatMessageOptions>) => {
+    const registro = byId.get(id);
+    if (!registro) return false;
+
+    const antes = registro.options;
+    const depois = { ...antes, ...patch };
+    registro.options = depois;
+
+    // Mesma ordem do `append`: medir antes de o conteúdo crescer.
+    const seguir = shouldFollow(state);
+
+    // O caminho do STREAMING é cirúrgico de propósito. Reconstruir a mensagem
+    // inteira a cada trecho tiraria o foco de dentro dela e fecharia um
+    // colapsável que a pessoa tivesse aberto — ou seja, o conteúdo que chega
+    // roubaria o foco, que é exatamente o que este componente promete não
+    // fazer.
+    const contentOnly = Object.keys(patch).every(
+      (k) => k === 'content' || k === 'streaming' || k === 'toolCalls',
+    );
+
+    if (contentOnly) {
+      if (patch.content !== undefined || patch.streaming !== undefined) {
+        const alvo = registro.item.querySelector('.nds-chat-message-content')!;
+        alvo.replaceChildren(
+          createMarkdown({ content: depois.content, streaming: depois.streaming }),
+        );
+      }
+      if (patch.toolCalls !== undefined) {
+        const tools = registro.item.querySelector('.nds-chat-message-tools')!;
+        tools.replaceChildren(
+          ...(depois.toolCalls ?? []).map((call) => createToolCall(call, options.labels)),
+        );
+      }
+      if (depois.streaming) registro.item.setAttribute('aria-busy', 'true');
+      else registro.item.removeAttribute('aria-busy');
+    } else {
+      // Mudança estrutural — autor, retrato, fontes, ações. Reconstrói, e por
+      // isso não é caminho de streaming: use antes ou depois dele.
+      const rebuilt = createChatMessage(depois, options.labels);
+      registro.item.replaceWith(rebuilt);
+      registro.item = rebuilt;
+    }
+
+    if (seguir) viewport.scrollTop = viewport.scrollHeight;
+
+    // O anúncio é da TRANSIÇÃO: estava chegando e parou de chegar. Sem isto, a
+    // mensagem que nasce em streaming nunca seria anunciada — e era esse o
+    // buraco da primeira versão, que só tinha `append`.
+    if (antes.streaming && !depois.streaming) announce(depois);
+
+    return true;
+  }) as ChatThreadElement['update'];
+
   root.jumpToEnd = goToEnd;
+
+  root.setError = ((text: string | null) => {
+    error.textContent = text ?? '';
+    error.hidden = text === null;
+  }) as ChatThreadElement['setError'];
+
+  if (options.error !== undefined) root.setError(options.error);
 
   paintJump();
   return root;

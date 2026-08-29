@@ -28,6 +28,7 @@ export function chatLabels(): ChatThreadLabels {
     reasoning: t('labels.reasoning'),
     sources: t('labels.sources'),
     toolState: {
+      pending: t('labels.toolState.pending'),
       running: t('labels.toolState.running'),
       done: t('labels.toolState.done'),
       failed: t('labels.toolState.failed'),

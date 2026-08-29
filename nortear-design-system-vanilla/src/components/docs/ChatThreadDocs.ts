@@ -274,7 +274,7 @@ export function createChatThreadDocs(): HTMLElement {
                 labels: {
                   ...chatLabels(),
                   // O contraexemplo: o estado sem palavra, só o ícone colorido.
-                  toolState: { running: '', done: '', failed: '' },
+                  toolState: { pending: '', running: '', done: '', failed: '' },
                 },
                 size: 'sm',
               }),
@@ -316,7 +316,7 @@ export function createChatThreadDocs(): HTMLElement {
             trigger: t('states.cols.trigger'),
             behavior: t('states.cols.behavior'),
           },
-          items: ['atEnd', 'away', 'streaming', 'toolFailed'].map(k => ({
+          items: ['atEnd', 'away', 'streaming', 'toolPending', 'toolFailed', 'error'].map(k => ({
             label: t(`states.${k}.label`),
             trigger: toPlainText(t(`states.${k}.trigger`)),
             behavior: toPlainText(t(`states.${k}.behavior`)),
@@ -328,12 +328,16 @@ export function createChatThreadDocs(): HTMLElement {
 export interface ChatThreadOptions {
   messages: ChatMessageOptions[];
   labels: ChatThreadLabels;
+  error?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   class?: string;
 }
 
-// A raiz devolvida aceita \`append(mensagem)\` — é por ele que a decisão de
-// rolagem acontece — e \`jumpToEnd()\`.`;
+// A raiz devolvida aceita:
+//   append(mensagem)        — turno novo, e é por ele que a rolagem decide
+//   update(id, patch)       — onde o streaming pousa
+//   setError(texto | null)  — a falha da execução
+//   jumpToEnd()`;
 
         const cols = {
           prop: t('props.table.prop'),
@@ -349,7 +353,7 @@ export interface ChatThreadOptions {
             {
               title: 'createChatThread',
               cols,
-              items: ['messages', 'labels', 'role', 'streaming', 'toolCalls', 'sources', 'actions', 'class']
+              items: ['messages', 'labels', 'id', 'role', 'streaming', 'toolCalls', 'sources', 'actions', 'error', 'class']
                 .map(k => ({
                   name: t(`props.table.${k}.name`),
                   type: t(`props.table.${k}.type`),
@@ -414,7 +418,7 @@ export interface ChatThreadOptions {
         return createDocsNotes({
           title: t('notes.title'),
           componentSlug: 'chat-thread',
-          items: [1, 2, 3, 4].map(i => ({ title: '', content: t(`notes.item${i}`) })),
+          items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: t(`notes.item${i}`) })),
         });
 
       case 'analytics':
@@ -443,7 +447,7 @@ export interface ChatThreadOptions {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => ({
               action: toPlainText(t(`testes.functional.item${i}.action`)),
               result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -459,7 +463,7 @@ export interface ChatThreadOptions {
             },
             // A lista é PLANA: cada item é um critério, e o "como verificar" é
             // o próprio addon-a11y rodando em toda story.
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               criterion: toPlainText(t(`testes.accessibility.item${i}`)),
               level: 'AA',
               how: '—',
@@ -472,7 +476,7 @@ export interface ChatThreadOptions {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
               story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
