@@ -24,6 +24,7 @@
     "@internationalized/date": "^3.12.2",
     "@internationalized/number": "^3.6.7",
     "@radix-ng/primitives": "^1.1.2",
+    "@tanstack/virtual-core": "^3.17.6",
     "@tiptap/core": "3.30.5",
     "@tiptap/extension-highlight": "3.30.5",
     "@tiptap/extension-image": "3.30.5",
