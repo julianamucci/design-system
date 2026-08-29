@@ -348,12 +348,20 @@
  * No tema default os dois tokens têm o MESMO valor e ninguém via — no warm e no
  * cold não têm: medido, a faixa saía cinza numa stack e tingida nas outras
  * (245,242,240 contra 246,236,223). Um token só para uma faixa só. */
+/* Quem pinta fundo de accent DECLARA o texto que vai em cima — a mesma regra
+ * que o link ativo do menu de navegação já segue. Aqui ela faltava: o botão do
+ * dia é `color: inherit`, então a faixa herdava o `--foreground` da página. No
+ * claro isso passava por acaso (o foreground é escuro e o accent é claro), mas
+ * no ESCURO o foreground é quase branco e o pêssego é claro: medido, 2,04:1.
+ * Com `--accent-foreground`, 6,41:1. Nenhum portão via — o axe mede a story
+ * como ela abre, e a faixa exige um intervalo já escolhido. */
 .nds-calendar-range-start,
 .nds-calendar-range-end {
   position: relative;
   isolation: isolate;
   z-index: 0;
   background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 .nds-calendar-range-start {
@@ -386,11 +394,27 @@
   z-index: -1;
 }
 
+/* Intervalo de um dia só: a mesma data é começo e fim.
+ *
+ * Aqui não há vizinho a alcançar — o botão é redondo dos quatro lados, e tanto
+ * a faixa da célula quanto a aba lateral apareceriam por fora dele. A aba sai
+ * pelo `content`, e não por largura zero: as duas regras de `::after` acima
+ * disputam o MESMO pseudo-elemento quando as duas classes se encontram, e
+ * zerar a largura deixaria a que vencesse ainda ocupando o lugar. */
+.nds-calendar-range-start.nds-calendar-range-end {
+  background-color: transparent;
+}
+
+.nds-calendar-range-start.nds-calendar-range-end::after {
+  content: none;
+}
+
 /* O miolo é pintado pela CÉLULA, que encosta na vizinha — pintar o botão deixa
  * falha entre as colunas. É o que as outras quatro stacks já faziam. */
 .nds-calendar-range-middle {
   border-radius: var(--radius-none);
   background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 /* Reto por dentro, redondo por fora — a ponta do intervalo mantinha o raio dos
@@ -596,19 +620,41 @@
   color: hsl(var(--primary-foreground));
 }
 
-.nds-calendar-day-cell:has([data-selected]) {
+/* A faixa é da CÉLULA, e só existe quando há intervalo.
+ *
+ * Sem o `.nds-calendar-range` na frente, esta regra pintava qualquer dia
+ * escolhido — inclusive na escolha de data ÚNICA, em que não há vizinho a
+ * alcançar. Ali o botão é redondo dos quatro lados e a célula é retangular:
+ * o accent sobrava para fora dele, nos quatro cantos.
+ *
+ * O gatilho é o mesmo que a regra do miolo já usa, e pelo mesmo motivo: numa
+ * data única o dia escolhido também não tem `data-selection-start/end`, então
+ * a ausência das pontas não distingue os dois casos — a classe da raiz, sim.
+ * O React não passa por aqui: lá a faixa vem da família `.nds-calendar-range-*`,
+ * e o Angular não tem intervalo. */
+.nds-calendar-range .nds-calendar-day-cell:has([data-selected]) {
   background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
   border-radius: var(--radius-none);
 }
 
-.nds-calendar-day-cell:first-child:has([data-selected]),
-.nds-calendar-day-cell:has([data-selection-start]) {
+/* Intervalo de um dia só: começo e fim na mesma data. O botão volta a ser
+ * redondo dos quatro lados, e a faixa sobraria por fora dele exatamente como
+ * na data única. */
+.nds-calendar-range .nds-calendar-day-cell:has([data-selection-start][data-selection-end]) {
+  background-color: transparent;
+}
+
+/* As pontas da faixa acompanham a faixa: mesmo escopo, senão arredondariam uma
+ * célula que não pinta nada. */
+.nds-calendar-range .nds-calendar-day-cell:first-child:has([data-selected]),
+.nds-calendar-range .nds-calendar-day-cell:has([data-selection-start]) {
   border-start-start-radius: var(--nds-cell-radius, var(--radius-md));
   border-end-start-radius: var(--nds-cell-radius, var(--radius-md));
 }
 
-.nds-calendar-day-cell:last-child:has([data-selected]),
-.nds-calendar-day-cell:has([data-selection-end]) {
+.nds-calendar-range .nds-calendar-day-cell:last-child:has([data-selected]),
+.nds-calendar-range .nds-calendar-day-cell:has([data-selection-end]) {
   border-start-end-radius: var(--nds-cell-radius, var(--radius-md));
   border-end-end-radius: var(--nds-cell-radius, var(--radius-md));
 }

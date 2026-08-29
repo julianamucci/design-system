@@ -65,6 +65,21 @@ export const Single: Story = {
       await expect(checked()).toHaveTextContent('12');
     });
 
+    await step('A célula do dia escolhido não pinta faixa por trás dele', async () => {
+      // A faixa de `--accent` é do INTERVALO: ela é retangular e encosta na
+      // célula vizinha para não deixar falha entre as colunas. Atrás de um
+      // botão redondo dos quatro lados — que é o que a escolha ÚNICA desenha —
+      // ela sobra pelos cantos.
+      //
+      // Nenhum portão via: o axe mede contraste de TEXTO, e o texto continuava
+      // legível; a cor sobrando é do fundo em volta dele.
+      const selected = canvasElement.querySelector<HTMLElement>(
+        '.nds-calendar-day-btn[data-selected], .nds-calendar-day-btn[aria-pressed="true"]',
+      )!;
+      const cell = selected.closest<HTMLElement>('.nds-calendar-day-cell') ?? selected.parentElement!;
+      await expect(getComputedStyle(cell).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    });
+
     await step('Clicar em outro dia move a marcação e reporta a data', async () => {
       // functional.item2 — a marcação é exclusiva: o dia velho tem que perder o
       // estado, senão a tela mostra duas seleções num modo que só admite uma.

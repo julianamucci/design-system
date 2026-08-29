@@ -90,6 +90,20 @@ export const Single: Story = {
       await expect(checked(canvasElement)).toEqual(["2026-04-12"]);
     });
 
+    await step("A célula do dia escolhido não pinta faixa por trás dele", async () => {
+      // A faixa de `--accent` é do INTERVALO: ela é retangular e encosta na
+      // célula vizinha para não deixar falha entre as colunas. Atrás de um
+      // botão redondo dos quatro lados — que é o que a escolha ÚNICA desenha —
+      // ela sobra pelos cantos.
+      //
+      // Nenhum portão via: o axe mede contraste de TEXTO, e o texto continuava
+      // legível; a cor sobrando é do fundo em volta dele.
+      // Nesta stack o `data-selected` fica na PRÓPRIA célula, e não no botão —
+      // por isso a busca é a mesma do `checked()` acima, e não por descendente.
+      const cell = canvasElement.querySelector<HTMLElement>("[role=gridcell][data-selected]")!;
+      await expect(getComputedStyle(cell).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    })
+
     await step("Escolher outra data substitui a marcação e reporta a escolha", async () => {
       // functional.item2 — o modo único quebra justamente aqui: se a marcação
       // antiga sobrevivesse, a tela mostraria duas datas escolhidas.
@@ -211,9 +225,9 @@ export const Range: Story = {
       const meio = canvasElement.querySelector<HTMLElement>(
         '[role=gridcell][data-day="2026-04-14"] button',
       )!;
-      const celula = meio.closest<HTMLElement>("[role=gridcell]")!;
+      const cell = meio.closest<HTMLElement>("[role=gridcell]")!;
       await expect(getComputedStyle(meio).backgroundColor).toBe("rgba(0, 0, 0, 0)");
-      await expect(getComputedStyle(celula).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+      await expect(getComputedStyle(cell).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
     });
 
     await step("As pontas do intervalo passam em contraste nos três temas e nos dois modos", async () => {
