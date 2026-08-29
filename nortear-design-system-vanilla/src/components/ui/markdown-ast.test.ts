@@ -5,7 +5,9 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  ALLOW_PRESETS,
   openConstructionAt,
+  parseForRender,
   parseMarkdown,
   type MdInline,
   type MdNode,
@@ -242,3 +244,66 @@ describe('bordas', () => {
     expect(node.children.some((c) => c.type === 'break')).toBe(true);
   });
 });
+
+describe('parseForRender — a decisão de streaming, uma vez só para as cinco', () => {
+  it('sem streaming, a cerca aberta JÁ vira bloco — é o tremor que se quer evitar', () => {
+    // Vale medir o comportamento indesejado: é ele que justifica a função.
+    const root = parseForRender('texto\n\n```ts\nconst a =');
+    expect(root.children[1].type).toBe('code');
+  });
+
+  it('com streaming, o que veio antes é documento e a cauda é texto', () => {
+    const root = parseForRender('texto\n\n```ts\nconst a =', { streaming: true });
+    expect(root.children.map((n) => n.type)).toEqual(['paragraph', 'raw']);
+    const cauda = root.children[1];
+    if (cauda.type !== 'raw') throw new Error('esperava raw');
+    expect(cauda.value).toBe('```ts\nconst a =');
+  });
+
+  it('com streaming e nada em aberto, é a árvore de sempre', () => {
+    const fonte = '# título\n\n```ts\nconst a = 1;\n```';
+    expect(parseForRender(fonte, { streaming: true })).toEqual(parseMarkdown(fonte));
+  });
+
+  it('cauda só de espaço não vira bloco vazio', () => {
+    // O texto chega caractere a caractere: entre o fim de um bloco e o começo
+    // do próximo existe um instante em que a cauda é só quebra de linha.
+    const root = parseForRender('| a | b |\n', { streaming: true });
+    expect(root.children.some((n) => n.type === 'raw' && n.value.trim() === '')).toBe(false);
+  });
+
+  it('a cauda sai como texto mesmo quando a lista branca não aceita `raw`', () => {
+    // Mesma razão do bloco de código recusado: nada some em silêncio.
+    const root = parseForRender('parágrafo\n\n| a | b |', {
+      streaming: true,
+      allow: ['paragraph'],
+    });
+    expect(root.children[root.children.length - 1].type).toBe('raw');
+  });
+})
+
+describe('ALLOW_PRESETS — as listas que a documentação nomeia', () => {
+  it('`full` é a mesma lista que o parser assume sozinho', () => {
+    // Provado por comportamento, e não por igualdade de array: é o default que
+    // a documentação chama de `full`, não uma segunda lista parecida.
+    const texto = '# t\n\n| a |\n|---|\n| 1 |';
+    expect(parseMarkdown(texto, { allow: ALLOW_PRESETS.full })).toEqual(parseMarkdown(texto));
+  });
+
+  it('`chat` não estrutura título nem tabela — que é o que a doc promete', () => {
+    const root = parseMarkdown('# título\n\n| a | b |\n|---|---|\n| 1 | 2 |', {
+      allow: ALLOW_PRESETS.chat,
+    });
+    expect(root.children.some((n) => n.type === 'heading')).toBe(false);
+    expect(root.children.some((n) => n.type === 'table')).toBe(false);
+    // E nada some: o título continua legível como parágrafo.
+    const primeiro = root.children[0];
+    if (primeiro.type !== 'paragraph') throw new Error('esperava parágrafo');
+    expect(primeiro.children.map((c) => (c.type === 'text' ? c.value : '')).join('')).toBe('título');
+  });
+
+  it('`comment` deixa passar só texto corrido', () => {
+    const root = parseMarkdown('- um\n- dois\n\n```js\nx\n```', { allow: ALLOW_PRESETS.comment });
+    expect(root.children.every((n) => n.type === 'paragraph' || n.type === 'raw')).toBe(true);
+  });
+})

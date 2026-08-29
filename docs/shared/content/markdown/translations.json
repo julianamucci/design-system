@@ -26,7 +26,10 @@
       "item3": "Bloco de código — delegado ao CodeBlock, que já traz destaque de sintaxe pelos tokens do tema.",
       "item4": "Trechos em linha — ênfase, forte, riscado, código curto e link, montados como nós e nunca como texto interpretado.",
       "item5": "Texto recusado — o que a lista branca não aceita aparece como texto simples, preservado e visível.",
-      "structureLabel": "Estrutura"
+      "structureLabel": "Estrutura",
+      "structureCode": {
+        "web": "<div class=\"nds-markdown\" aria-busy=\"true\">        <!-- ocupada enquanto gera -->\n  <h2 class=\"nds-text-h2 nds-markdown-heading\">      <!-- o nível que o texto declarou -->\n  <p class=\"nds-markdown-paragraph\">                 <!-- link e código curto vivem aqui -->\n  <ul class=\"nds-markdown-list\">                     <!-- item de tarefa traz caixa -->\n  <blockquote class=\"nds-markdown-quote\">            <!-- barra lateral é o sinal -->\n  <div class=\"nds-code-block-root\">                  <!-- delegado ao CodeBlock -->\n  <div class=\"nds-table-wrapper\">                    <!-- delegado à Table -->\n  <p class=\"nds-markdown-raw\">                       <!-- o recusado, como texto -->\n</div>"
+      }
     },
     "usage": {
       "title": "Quando usar",
@@ -72,16 +75,51 @@
         }
       },
       "do": {
-        "item1": "Restringir os blocos ao que a superfície precisa.",
-        "item2": "Tratar todo texto de fora como não confiável.",
-        "item3": "Desligar o streaming quando a resposta termina.",
-        "item4": "Deixar a largura da coluna para a página."
+        "title": "Use quando",
+        "item1": "A resposta vem de um modelo e pode trazer título, lista, tabela ou código.",
+        "item2": "O texto é escrito por pessoas em Markdown e precisa aparecer formatado.",
+        "item3": "O conteúdo chega aos poucos e a estrutura tem de se montar sem piscar.",
+        "item4": "A origem do texto não é confiável, e nada nele pode virar marcação."
       },
       "dont": {
-        "item1": "Passar o texto por um conversor de HTML antes.",
-        "item2": "Abrir a lista de esquemas para aceitar qualquer endereço.",
-        "item3": "Deixar o streaming ligado depois do fim da resposta.",
-        "item4": "Fixar largura dentro do componente."
+        "title": "Não use quando",
+        "item1": "O texto é uma frase sem formatação — um parágrafo já resolve.",
+        "item2": "Quem está ali precisa ESCREVER o texto, com barra de ferramentas.",
+        "item3": "O que se quer mostrar é só um trecho de código, sem prosa em volta.",
+        "item4": "O conteúdo já vem como marcação pronta de um sistema de confiança."
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "heading": {
+            "name": "Título dentro da resposta",
+            "format": "Nível que continua a hierarquia da página, sem saltar",
+            "good": "Dentro de uma página com H1, começar em H2",
+            "bad": "Cada resposta abrindo com o próprio H1"
+          },
+          "link": {
+            "name": "Texto do link",
+            "format": "Diz para onde vai, e faz sentido lido fora da frase",
+            "good": "\"guia de escrita\"",
+            "bad": "\"clique aqui\", \"este link\""
+          },
+          "image": {
+            "name": "Descrição da imagem",
+            "format": "O que a imagem mostra, não o nome do arquivo",
+            "good": "\"Gráfico de barras: vendas por trimestre\"",
+            "bad": "\"imagem\", \"captura-2.png\""
+          },
+          "code": {
+            "name": "Bloco de código",
+            "format": "Sempre com a linguagem declarada na cerca",
+            "good": "```ts",
+            "bad": "``` sem linguagem"
+          }
+        }
       }
     },
     "doDont": {
@@ -264,44 +302,62 @@
     "accessibility": {
       "title": "Acessibilidade",
       "summary": "O documento é montado com elementos semânticos reais — título é título, lista é lista —, então o leitor de tela navega por eles sem nada a mais. As duas decisões que exigem cuidado são o anúncio durante o streaming e o destino dos links.",
-      "item1": "Texto em streaming NÃO é região viva. Anunciar a cada trecho tornaria a leitura impossível; a resposta é anunciada uma vez, inteira, ao terminar.",
-      "item2": "Enquanto gera, a raiz é marcada como ocupada, para quem ouve saber que o conteúdo ainda muda.",
-      "item3": "Títulos preservam o nível que o texto declarou, sem saltar — a hierarquia é o que sustenta a navegação por títulos.",
-      "item4": "Imagem sem descrição não vira decoração silenciosa: a descrição ausente é visível na documentação como falha de quem escreveu o texto.",
-      "item5": "Link cujo endereço foi recusado deixa de ser link e vira texto — não fica um controle que promete navegação e não navega.",
-      "keyboardTitle": "Teclado",
+      "items": {
+        "item1": "Texto em streaming NÃO é região viva. Anunciar a cada trecho tornaria a leitura impossível; a resposta é anunciada uma vez, inteira, ao terminar.",
+        "item2": "Enquanto gera, a raiz é marcada como ocupada, para quem ouve saber que o conteúdo ainda muda.",
+        "item3": "Títulos preservam o nível que o texto declarou, sem saltar — a hierarquia é o que sustenta a navegação por títulos.",
+        "item4": "Imagem sem descrição fica decorativa, e não anuncia um endereço no lugar dela: ler um endereço em voz alta é ruído, não informação. Escrever a descrição é de quem escreveu o texto.",
+        "item5": "Link cujo endereço foi recusado deixa de ser link e vira texto — não fica um controle que promete navegação e não navega."
+      },
       "keyboard": {
-        "key": "Tecla",
-        "action": "Ação",
-        "tab": {
-          "key": "Tab",
-          "action": "Percorre os links do documento, na ordem em que aparecem."
-        },
-        "enter": {
-          "key": "Enter",
-          "action": "Segue o link em foco."
-        },
-        "arrows": {
-          "key": "Setas",
-          "action": "Rolam o documento; o componente não captura seta nenhuma."
-        }
+        "title": "Teclado",
+        "tab": "Percorre os links do documento, na ordem em que aparecem.",
+        "enter": "Segue o link em foco.",
+        "arrows": "Rolam o documento; o componente não captura seta nenhuma."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "busy": "<code>aria-busy=\"true\"</code> na raiz enquanto o texto ainda chega",
+        "live": "Nenhuma região viva: a resposta é anunciada uma vez, ao terminar, e não a cada trecho",
+        "headings": "Título usa o elemento do nível declarado, e não um <code>role</code> por cima de outro elemento",
+        "task": "Item de tarefa é uma caixa desabilitada de verdade, com o texto do item por <code>label</code> — ela anuncia o que está marcado, e não só que algo está",
+        "image": "Imagem sem descrição fica com <code>alt</code> vazio — decorativa, e não anunciada pelo endereço"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "document": "Navega por títulos, listas e tabela como em qualquer documento — a estrutura é real",
+        "streaming": "Anuncia a resposta uma vez, quando ela termina, e não a cada trecho que chega",
+        "refused": "Lê o conteúdo recusado como texto, então nada some sem que quem ouve saiba",
+        "table": "A tabela anuncia a coluna de cada célula, porque o cabeçalho declara o escopo"
       }
     },
     "related": {
-      "title": "Relacionados",
-      "alternatives": "Alternativas",
-      "usedWith": "Usado com",
-      "codeBlock": "Desenha os blocos de código deste componente.",
-      "editor": "Escreve o Markdown que este componente exibe.",
-      "table": "Desenha as tabelas do GFM.",
-      "skeleton": "Ocupa o lugar enquanto a resposta não chegou."
+      "title": "Componentes Relacionados",
+      "items": {
+        "codeBlock": {
+          "name": "CodeBlock",
+          "description": "Desenha os blocos de código deste componente, com destaque pelos tokens do tema."
+        },
+        "editor": {
+          "name": "Editor",
+          "description": "Escreve o texto que este componente exibe. É o mesmo desenho de prosa, do lado de quem escreve."
+        },
+        "table": {
+          "name": "Table",
+          "description": "Desenha as tabelas do documento, com a rolagem alcançável por teclado."
+        },
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Ocupa o lugar da resposta enquanto o primeiro trecho não chegou."
+        }
+      }
     },
     "notes": {
       "title": "Notas",
-      "tip1": "O componente não interpreta HTML, e isso é decisão e não limitação: o texto vem de fora do código, e num contexto conversacional vem de um modelo.",
-      "tip2": "A árvore é montada por um módulo compartilhado pelas cinco stacks, então o mesmo texto rende a mesma estrutura em todas — divergência aqui seria impossível por construção.",
-      "tip3": "Bloco de código é delegado ao CodeBlock, que já traz destaque de sintaxe pelos tokens do tema — não há segunda paleta a manter.",
-      "tip4": "Durante o streaming, construção ainda aberta fica como texto até fechar. Sem isso o texto vira tabela, volta a ser parágrafo e vira tabela outra vez, várias vezes por segundo."
+      "item1": "O componente não interpreta HTML, e isso é decisão e não limitação: o texto vem de fora do código, e num contexto conversacional vem de um modelo.",
+      "item2": "A árvore é montada por um módulo compartilhado pelas cinco stacks, então o mesmo texto rende a mesma estrutura em todas — divergência aqui seria impossível por construção.",
+      "item3": "Bloco de código é delegado ao CodeBlock, que já traz destaque de sintaxe pelos tokens do tema — não há segunda paleta a manter.",
+      "item4": "Durante o streaming, construção ainda aberta fica como texto até fechar. Sem isso o texto vira tabela, volta a ser parágrafo e vira tabela outra vez, várias vezes por segundo."
     },
     "analytics": {
       "title": "Analytics",
@@ -358,60 +414,36 @@
         }
       },
       "accessibility": {
-        "title": "Acessibilidade",
-        "description": "O que a suíte e o axe verificam.",
-        "item1": {
-          "action": "Sem violações do axe em todas as stories",
-          "result": "Zero violações, incluindo contraste de texto e de link.",
-          "priority": "high"
-        },
-        "item2": {
-          "action": "Ligar o streaming",
-          "result": "A raiz é marcada como ocupada e NÃO existe região viva anunciando cada trecho.",
-          "priority": "high"
-        },
-        "item3": {
-          "action": "Percorrer o documento com Tab",
-          "result": "Só os links recebem foco, na ordem em que aparecem, com anel visível.",
-          "priority": "high"
-        },
-        "item4": {
-          "action": "Renderizar títulos de níveis diferentes",
-          "result": "O nível declarado no texto é o nível do elemento, sem salto.",
-          "priority": "medium"
-        },
-        "item5": {
-          "action": "Renderizar imagem sem descrição",
-          "result": "A imagem existe com descrição vazia e o axe não a trata como decorativa por acidente.",
-          "priority": "medium"
-        }
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "aria-busy=\"true\" na raiz durante o streaming, e nenhuma região viva no documento",
+        "item3": "O nível de cada título é o que o texto declarou, sem salto na hierarquia",
+        "item4": "Só os links recebem foco, na ordem em que aparecem, com anel visível de contraste mínimo 3:1",
+        "item5": "Contraste mínimo 4.5:1 entre o texto do documento e a superfície em que ele assenta"
       },
       "visual": {
-        "title": "Visuais",
-        "description": "O que o Chromatic fotografa.",
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
         "item1": {
-          "action": "Playground",
-          "result": "Documento completo, com todos os blocos.",
+          "story": "Documento completo, com todos os blocos",
           "priority": "high"
         },
         "item2": {
-          "action": "Listas brancas",
-          "result": "O mesmo texto sob as três listas, lado a lado.",
+          "story": "O mesmo texto sob as três listas brancas",
           "priority": "high"
         },
         "item3": {
-          "action": "Em streaming",
-          "result": "Resposta parcial, com a construção aberta ainda como texto.",
+          "story": "Resposta parcial, com a construção aberta ainda como texto",
           "priority": "medium"
         },
         "item4": {
-          "action": "Conteúdo recusado",
-          "result": "HTML e endereço hostil aparecendo como texto.",
+          "story": "Conteúdo hostil aparecendo como texto",
           "priority": "high"
         },
         "item5": {
-          "action": "Documento vazio",
-          "result": "Nada desenhado, e sem caixa vazia ocupando espaço.",
+          "story": "Documento vazio, sem caixa ocupando espaço",
           "priority": "low"
         }
       }
@@ -464,7 +496,10 @@
       "item3": "Code block — delegated to CodeBlock, which already brings syntax highlighting from the theme tokens.",
       "item4": "Inline pieces — emphasis, strong, strikethrough, short code and link, built as nodes and never as interpreted text.",
       "item5": "Refused text — whatever the allow-list does not accept appears as plain text, preserved and visible.",
-      "structureLabel": "Structure"
+      "structureLabel": "Structure",
+      "structureCode": {
+        "web": "<div class=\"nds-markdown\" aria-busy=\"true\">        <!-- ocupada enquanto gera -->\n  <h2 class=\"nds-text-h2 nds-markdown-heading\">      <!-- o nível que o texto declarou -->\n  <p class=\"nds-markdown-paragraph\">                 <!-- link e código curto vivem aqui -->\n  <ul class=\"nds-markdown-list\">                     <!-- item de tarefa traz caixa -->\n  <blockquote class=\"nds-markdown-quote\">            <!-- barra lateral é o sinal -->\n  <div class=\"nds-code-block-root\">                  <!-- delegado ao CodeBlock -->\n  <div class=\"nds-table-wrapper\">                    <!-- delegado à Table -->\n  <p class=\"nds-markdown-raw\">                       <!-- o recusado, como texto -->\n</div>"
+      }
     },
     "usage": {
       "title": "When to use",
@@ -510,16 +545,51 @@
         }
       },
       "do": {
-        "item1": "Narrow the blocks to what the surface needs.",
-        "item2": "Treat all outside text as untrusted.",
-        "item3": "Turn streaming off when the answer ends.",
-        "item4": "Leave the column width to the page."
+        "title": "Use when",
+        "item1": "The answer comes from a model and may carry a heading, a list, a table or code.",
+        "item2": "The text is written by people in Markdown and needs to appear formatted.",
+        "item3": "The content arrives in pieces and the structure must build itself without flickering.",
+        "item4": "The text source is untrusted, and nothing in it may become markup."
       },
       "dont": {
-        "item1": "Run the text through an HTML converter first.",
-        "item2": "Open the scheme list to accept any address.",
-        "item3": "Leave streaming on after the answer ends.",
-        "item4": "Hard-code a width inside the component."
+        "title": "Do not use when",
+        "item1": "The text is a sentence with no formatting — a paragraph already solves it.",
+        "item2": "The person there needs to WRITE the text, with a toolbar.",
+        "item3": "What you want to show is only a code snippet, with no prose around it.",
+        "item4": "The content already arrives as finished markup from a trusted system."
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "heading": {
+            "name": "Heading inside the answer",
+            "format": "A level that continues the page hierarchy, without skipping",
+            "good": "Inside a page with an H1, start at H2",
+            "bad": "Every answer opening with its own H1"
+          },
+          "link": {
+            "name": "Link text",
+            "format": "Says where it goes, and makes sense read outside the sentence",
+            "good": "\"writing guide\"",
+            "bad": "\"click here\", \"this link\""
+          },
+          "image": {
+            "name": "Image description",
+            "format": "What the image shows, not the file name",
+            "good": "\"Bar chart: sales per quarter\"",
+            "bad": "\"image\", \"screenshot-2.png\""
+          },
+          "code": {
+            "name": "Code block",
+            "format": "Always with the language declared on the fence",
+            "good": "```ts",
+            "bad": "``` with no language"
+          }
+        }
       }
     },
     "doDont": {
@@ -702,44 +772,62 @@
     "accessibility": {
       "title": "Accessibility",
       "summary": "The document is built from real semantic elements — a heading is a heading, a list is a list — so a screen reader navigates them with nothing extra. The two decisions that need care are the announcement during streaming and the link destinations.",
-      "item1": "Streaming text is NOT a live region. Announcing each chunk would make reading impossible; the answer is announced once, whole, when it ends.",
-      "item2": "While generating, the root is marked busy, so listeners know the content is still changing.",
-      "item3": "Headings preserve the level the text declared, without skipping — the hierarchy is what supports heading navigation.",
-      "item4": "An image without a description does not become silent decoration: the missing description shows in the documentation as a fault of whoever wrote the text.",
-      "item5": "A link whose address was refused stops being a link and becomes text — no control is left promising navigation it cannot perform.",
-      "keyboardTitle": "Keyboard",
+      "items": {
+        "item1": "Streaming text is NOT a live region. Announcing each chunk would make reading impossible; the answer is announced once, whole, when it ends.",
+        "item2": "While generating, the root is marked busy, so listeners know the content is still changing.",
+        "item3": "Headings preserve the level the text declared, without skipping — the hierarchy is what supports heading navigation.",
+        "item4": "An image without a description becomes decorative rather than announcing an address in its place: reading an address aloud is noise, not information. Writing the description belongs to whoever wrote the text.",
+        "item5": "A link whose address was refused stops being a link and becomes text — no control is left promising navigation it cannot perform."
+      },
       "keyboard": {
-        "key": "Key",
-        "action": "Action",
-        "tab": {
-          "key": "Tab",
-          "action": "Moves through the document links, in the order they appear."
-        },
-        "enter": {
-          "key": "Enter",
-          "action": "Follows the focused link."
-        },
-        "arrows": {
-          "key": "Arrows",
-          "action": "Scroll the document; the component captures no arrow key."
-        }
+        "title": "Keyboard",
+        "tab": "Moves through the document links, in the order they appear.",
+        "enter": "Follows the focused link.",
+        "arrows": "Scroll the document; the component captures no arrow key."
+      },
+      "aria": {
+        "title": "ARIA attributes",
+        "busy": "<code>aria-busy=\"true\"</code> on the root while the text is still arriving",
+        "live": "No live region: the answer is announced once, when it ends, and not with each chunk",
+        "headings": "A heading uses the element of the declared level, not a <code>role</code> over another element",
+        "task": "A task item is a genuinely disabled checkbox, with the item text as its <code>label</code> — it announces what is checked, not merely that something is",
+        "image": "An image without a description keeps an empty <code>alt</code> — decorative, and not announced by its address"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "document": "Navigates headings, lists and the table as in any document — the structure is real",
+        "streaming": "Announces the answer once, when it ends, and not with each chunk that arrives",
+        "refused": "Reads refused content as text, so nothing disappears without the listener knowing",
+        "table": "The table announces each cell column, because the header declares its scope"
       }
     },
     "related": {
-      "title": "Related",
-      "alternatives": "Alternatives",
-      "usedWith": "Used with",
-      "codeBlock": "Draws the code blocks of this component.",
-      "editor": "Writes the Markdown this component displays.",
-      "table": "Draws the GFM tables.",
-      "skeleton": "Holds the place while the answer has not arrived."
+      "title": "Related Components",
+      "items": {
+        "codeBlock": {
+          "name": "CodeBlock",
+          "description": "Draws the code blocks of this component, highlighted from the theme tokens."
+        },
+        "editor": {
+          "name": "Editor",
+          "description": "Writes the text this component displays. It is the same prose design, on the writing side."
+        },
+        "table": {
+          "name": "Table",
+          "description": "Draws the document tables, with scrolling reachable by keyboard."
+        },
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Holds the answer’s place while the first chunk has not arrived."
+        }
+      }
     },
     "notes": {
       "title": "Notes",
-      "tip1": "The component does not interpret HTML, and that is a decision rather than a limitation: the text comes from outside the code, and in a conversational context it comes from a model.",
-      "tip2": "The tree is built by a module shared across the five stacks, so the same text yields the same structure in all of them — divergence here would be impossible by construction.",
-      "tip3": "A code block is delegated to CodeBlock, which already brings syntax highlighting from the theme tokens — there is no second palette to maintain.",
-      "tip4": "During streaming, a construction still open stays as text until it closes. Without that the text becomes a table, goes back to a paragraph and becomes a table again, several times per second."
+      "item1": "The component does not interpret HTML, and that is a decision rather than a limitation: the text comes from outside the code, and in a conversational context it comes from a model.",
+      "item2": "The tree is built by a module shared across the five stacks, so the same text yields the same structure in all of them — divergence here would be impossible by construction.",
+      "item3": "A code block is delegated to CodeBlock, which already brings syntax highlighting from the theme tokens — there is no second palette to maintain.",
+      "item4": "During streaming, a construction still open stays as text until it closes. Without that the text becomes a table, goes back to a paragraph and becomes a table again, several times per second."
     },
     "analytics": {
       "title": "Analytics",
@@ -796,60 +884,36 @@
         }
       },
       "accessibility": {
-        "title": "Accessibility",
-        "description": "What the suite and axe verify.",
-        "item1": {
-          "action": "No axe violations in any story",
-          "result": "Zero violations, including text and link contrast.",
-          "priority": "high"
-        },
-        "item2": {
-          "action": "Turn streaming on",
-          "result": "The root is marked busy and there is NO live region announcing each chunk.",
-          "priority": "high"
-        },
-        "item3": {
-          "action": "Move through the document with Tab",
-          "result": "Only links receive focus, in the order they appear, with a visible ring.",
-          "priority": "high"
-        },
-        "item4": {
-          "action": "Render headings at different levels",
-          "result": "The level declared in the text is the element level, without skipping.",
-          "priority": "medium"
-        },
-        "item5": {
-          "action": "Render an image without a description",
-          "result": "The image exists with an empty description and axe does not treat it as decorative by accident.",
-          "priority": "medium"
-        }
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools must confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "aria-busy=\"true\" on the root during streaming, and no live region in the document",
+        "item3": "Each heading level is the one the text declared, with no skip in the hierarchy",
+        "item4": "Only links receive focus, in the order they appear, with a visible ring of at least 3:1 contrast",
+        "item5": "At least 4.5:1 contrast between the document text and the surface it sits on"
       },
       "visual": {
-        "title": "Visual",
-        "description": "What Chromatic photographs.",
+        "title": "Visual Regression",
+        "description": "States Chromatic must capture.",
+        "required": "Required",
         "item1": {
-          "action": "Playground",
-          "result": "Complete document, with every block.",
+          "story": "Complete document, with every block",
           "priority": "high"
         },
         "item2": {
-          "action": "Allow-lists",
-          "result": "The same text under the three lists, side by side.",
+          "story": "The same text under the three allow-lists",
           "priority": "high"
         },
         "item3": {
-          "action": "Streaming",
-          "result": "Partial answer, with the open construction still as text.",
+          "story": "Partial answer, with the open construction still as text",
           "priority": "medium"
         },
         "item4": {
-          "action": "Refused content",
-          "result": "HTML and a hostile address appearing as text.",
+          "story": "Hostile content appearing as text",
           "priority": "high"
         },
         "item5": {
-          "action": "Empty document",
-          "result": "Nothing drawn, and no empty box taking space.",
+          "story": "Empty document, with no box taking space",
           "priority": "low"
         }
       }
@@ -902,7 +966,10 @@
       "item3": "Bloque de código — delegado a CodeBlock, que ya trae resaltado de sintaxis con los tokens del tema.",
       "item4": "Fragmentos en línea — énfasis, fuerte, tachado, código corto y enlace, construidos como nodos y nunca como texto interpretado.",
       "item5": "Texto rechazado — lo que la lista blanca no acepta aparece como texto simple, preservado y visible.",
-      "structureLabel": "Estructura"
+      "structureLabel": "Estructura",
+      "structureCode": {
+        "web": "<div class=\"nds-markdown\" aria-busy=\"true\">        <!-- ocupada enquanto gera -->\n  <h2 class=\"nds-text-h2 nds-markdown-heading\">      <!-- o nível que o texto declarou -->\n  <p class=\"nds-markdown-paragraph\">                 <!-- link e código curto vivem aqui -->\n  <ul class=\"nds-markdown-list\">                     <!-- item de tarefa traz caixa -->\n  <blockquote class=\"nds-markdown-quote\">            <!-- barra lateral é o sinal -->\n  <div class=\"nds-code-block-root\">                  <!-- delegado ao CodeBlock -->\n  <div class=\"nds-table-wrapper\">                    <!-- delegado à Table -->\n  <p class=\"nds-markdown-raw\">                       <!-- o recusado, como texto -->\n</div>"
+      }
     },
     "usage": {
       "title": "Cuándo usar",
@@ -948,16 +1015,51 @@
         }
       },
       "do": {
-        "item1": "Restringir los bloques a lo que la superficie necesita.",
-        "item2": "Tratar todo texto externo como no confiable.",
-        "item3": "Desactivar el streaming cuando la respuesta termina.",
-        "item4": "Dejar el ancho de la columna a la página."
+        "title": "Úsalo cuando",
+        "item1": "La respuesta viene de un modelo y puede traer título, lista, tabla o código.",
+        "item2": "El texto lo escriben personas en Markdown y necesita aparecer formateado.",
+        "item3": "El contenido llega poco a poco y la estructura debe armarse sin parpadear.",
+        "item4": "El origen del texto no es confiable, y nada en él puede volverse marcado."
       },
       "dont": {
-        "item1": "Pasar el texto por un conversor de HTML antes.",
-        "item2": "Abrir la lista de esquemas para aceptar cualquier dirección.",
-        "item3": "Dejar el streaming activo después del fin de la respuesta.",
-        "item4": "Fijar un ancho dentro del componente."
+        "title": "No uses cuando",
+        "item1": "El texto es una frase sin formato — un párrafo ya lo resuelve.",
+        "item2": "Quien está ahí necesita ESCRIBIR el texto, con barra de herramientas.",
+        "item3": "Lo que se quiere mostrar es solo un fragmento de código, sin prosa alrededor.",
+        "item4": "El contenido ya llega como marcado terminado de un sistema de confianza."
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "heading": {
+            "name": "Título dentro de la respuesta",
+            "format": "Un nivel que continúa la jerarquía de la página, sin saltar",
+            "good": "Dentro de una página con H1, empezar en H2",
+            "bad": "Cada respuesta abriendo con su propio H1"
+          },
+          "link": {
+            "name": "Texto del enlace",
+            "format": "Dice adónde va, y tiene sentido leído fuera de la frase",
+            "good": "\"guía de escritura\"",
+            "bad": "\"haz clic aquí\", \"este enlace\""
+          },
+          "image": {
+            "name": "Descripción de la imagen",
+            "format": "Lo que la imagen muestra, no el nombre del archivo",
+            "good": "\"Gráfico de barras: ventas por trimestre\"",
+            "bad": "\"imagen\", \"captura-2.png\""
+          },
+          "code": {
+            "name": "Bloque de código",
+            "format": "Siempre con el lenguaje declarado en la cerca",
+            "good": "```ts",
+            "bad": "``` sin lenguaje"
+          }
+        }
       }
     },
     "doDont": {
@@ -1140,44 +1242,62 @@
     "accessibility": {
       "title": "Accesibilidad",
       "summary": "El documento se construye con elementos semánticos reales — un título es un título, una lista es una lista —, así que el lector de pantalla navega por ellos sin nada más. Las dos decisiones que exigen cuidado son el anuncio durante el streaming y el destino de los enlaces.",
-      "item1": "El texto en streaming NO es una región viva. Anunciar cada fragmento haría imposible la lectura; la respuesta se anuncia una vez, entera, al terminar.",
-      "item2": "Mientras genera, la raíz se marca como ocupada, para que quien escucha sepa que el contenido aún cambia.",
-      "item3": "Los títulos preservan el nivel que el texto declaró, sin saltar — la jerarquía es lo que sostiene la navegación por títulos.",
-      "item4": "Una imagen sin descripción no se vuelve decoración silenciosa: la descripción ausente se muestra en la documentación como falla de quien escribió el texto.",
-      "item5": "Un enlace cuya dirección fue rechazada deja de ser enlace y se vuelve texto — no queda un control que promete navegación y no navega.",
-      "keyboardTitle": "Teclado",
+      "items": {
+        "item1": "El texto en streaming NO es una región viva. Anunciar cada fragmento haría imposible la lectura; la respuesta se anuncia una vez, entera, al terminar.",
+        "item2": "Mientras genera, la raíz se marca como ocupada, para que quien escucha sepa que el contenido aún cambia.",
+        "item3": "Los títulos preservan el nivel que el texto declaró, sin saltar — la jerarquía es lo que sostiene la navegación por títulos.",
+        "item4": "Una imagen sin descripción queda decorativa, y no anuncia una dirección en su lugar: leer una dirección en voz alta es ruido, no información. Escribir la descripción es de quien escribió el texto.",
+        "item5": "Un enlace cuya dirección fue rechazada deja de ser enlace y se vuelve texto — no queda un control que promete navegación y no navega."
+      },
       "keyboard": {
-        "key": "Tecla",
-        "action": "Acción",
-        "tab": {
-          "key": "Tab",
-          "action": "Recorre los enlaces del documento, en el orden en que aparecen."
-        },
-        "enter": {
-          "key": "Enter",
-          "action": "Sigue el enlace enfocado."
-        },
-        "arrows": {
-          "key": "Flechas",
-          "action": "Desplazan el documento; el componente no captura ninguna flecha."
-        }
+        "title": "Teclado",
+        "tab": "Recorre los enlaces del documento, en el orden en que aparecen.",
+        "enter": "Sigue el enlace enfocado.",
+        "arrows": "Desplazan el documento; el componente no captura ninguna flecha."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "busy": "<code>aria-busy=\"true\"</code> en la raíz mientras el texto aún llega",
+        "live": "Ninguna región viva: la respuesta se anuncia una vez, al terminar, y no con cada fragmento",
+        "headings": "Un título usa el elemento del nivel declarado, y no un <code>role</code> sobre otro elemento",
+        "task": "Un ítem de tarea es una casilla realmente deshabilitada, con el texto del ítem como <code>label</code> — anuncia qué está marcado, y no solo que algo lo está",
+        "image": "Una imagen sin descripción queda con <code>alt</code> vacío — decorativa, y no anunciada por su dirección"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "document": "Navega por títulos, listas y tabla como en cualquier documento — la estructura es real",
+        "streaming": "Anuncia la respuesta una vez, cuando termina, y no con cada fragmento que llega",
+        "refused": "Lee el contenido rechazado como texto, así nada desaparece sin que quien escucha lo sepa",
+        "table": "La tabla anuncia la columna de cada celda, porque el encabezado declara su ámbito"
       }
     },
     "related": {
-      "title": "Relacionados",
-      "alternatives": "Alternativas",
-      "usedWith": "Usado con",
-      "codeBlock": "Dibuja los bloques de código de este componente.",
-      "editor": "Escribe el Markdown que este componente muestra.",
-      "table": "Dibuja las tablas de GFM.",
-      "skeleton": "Ocupa el lugar mientras la respuesta no llega."
+      "title": "Componentes Relacionados",
+      "items": {
+        "codeBlock": {
+          "name": "CodeBlock",
+          "description": "Dibuja los bloques de código de este componente, resaltados con los tokens del tema."
+        },
+        "editor": {
+          "name": "Editor",
+          "description": "Escribe el texto que este componente muestra. Es el mismo diseño de prosa, del lado de quien escribe."
+        },
+        "table": {
+          "name": "Table",
+          "description": "Dibuja las tablas del documento, con el desplazamiento alcanzable por teclado."
+        },
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Ocupa el lugar de la respuesta mientras el primer fragmento no llega."
+        }
+      }
     },
     "notes": {
       "title": "Notas",
-      "tip1": "El componente no interpreta HTML, y eso es una decisión y no una limitación: el texto viene de fuera del código, y en un contexto conversacional viene de un modelo.",
-      "tip2": "El árbol lo construye un módulo compartido por las cinco stacks, así que el mismo texto rinde la misma estructura en todas — la divergencia aquí sería imposible por construcción.",
-      "tip3": "El bloque de código se delega a CodeBlock, que ya trae resaltado de sintaxis con los tokens del tema — no hay una segunda paleta que mantener.",
-      "tip4": "Durante el streaming, una construcción aún abierta queda como texto hasta cerrarse. Sin eso el texto se vuelve tabla, regresa a párrafo y vuelve a ser tabla, varias veces por segundo."
+      "item1": "El componente no interpreta HTML, y eso es una decisión y no una limitación: el texto viene de fuera del código, y en un contexto conversacional viene de un modelo.",
+      "item2": "El árbol lo construye un módulo compartido por las cinco stacks, así que el mismo texto rinde la misma estructura en todas — la divergencia aquí sería imposible por construcción.",
+      "item3": "El bloque de código se delega a CodeBlock, que ya trae resaltado de sintaxis con los tokens del tema — no hay una segunda paleta que mantener.",
+      "item4": "Durante el streaming, una construcción aún abierta queda como texto hasta cerrarse. Sin eso el texto se vuelve tabla, regresa a párrafo y vuelve a ser tabla, varias veces por segundo."
     },
     "analytics": {
       "title": "Analytics",
@@ -1234,60 +1354,36 @@
         }
       },
       "accessibility": {
-        "title": "Accesibilidad",
-        "description": "Lo que verifican la suite y axe.",
-        "item1": {
-          "action": "Sin violaciones de axe en ninguna story",
-          "result": "Cero violaciones, incluyendo contraste de texto y de enlace.",
-          "priority": "high"
-        },
-        "item2": {
-          "action": "Activar el streaming",
-          "result": "La raíz se marca como ocupada y NO existe región viva anunciando cada fragmento.",
-          "priority": "high"
-        },
-        "item3": {
-          "action": "Recorrer el documento con Tab",
-          "result": "Solo los enlaces reciben foco, en el orden en que aparecen, con anillo visible.",
-          "priority": "high"
-        },
-        "item4": {
-          "action": "Renderizar títulos de niveles distintos",
-          "result": "El nivel declarado en el texto es el nivel del elemento, sin salto.",
-          "priority": "medium"
-        },
-        "item5": {
-          "action": "Renderizar imagen sin descripción",
-          "result": "La imagen existe con descripción vacía y axe no la trata como decorativa por accidente.",
-          "priority": "medium"
-        }
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "aria-busy=\"true\" en la raíz durante el streaming, y ninguna región viva en el documento",
+        "item3": "El nivel de cada título es el que el texto declaró, sin salto en la jerarquía",
+        "item4": "Solo los enlaces reciben foco, en el orden en que aparecen, con anillo visible de contraste mínimo 3:1",
+        "item5": "Contraste mínimo 4.5:1 entre el texto del documento y la superficie sobre la que se asienta"
       },
       "visual": {
-        "title": "Visuales",
-        "description": "Lo que fotografía Chromatic.",
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
         "item1": {
-          "action": "Playground",
-          "result": "Documento completo, con todos los bloques.",
+          "story": "Documento completo, con todos los bloques",
           "priority": "high"
         },
         "item2": {
-          "action": "Listas blancas",
-          "result": "El mismo texto bajo las tres listas, lado a lado.",
+          "story": "El mismo texto bajo las tres listas blancas",
           "priority": "high"
         },
         "item3": {
-          "action": "En streaming",
-          "result": "Respuesta parcial, con la construcción abierta aún como texto.",
+          "story": "Respuesta parcial, con la construcción abierta aún como texto",
           "priority": "medium"
         },
         "item4": {
-          "action": "Contenido rechazado",
-          "result": "HTML y dirección hostil apareciendo como texto.",
+          "story": "Contenido hostil apareciendo como texto",
           "priority": "high"
         },
         "item5": {
-          "action": "Documento vacío",
-          "result": "Nada dibujado, y sin caja vacía ocupando espacio.",
+          "story": "Documento vacío, sin caja ocupando espacio",
           "priority": "low"
         }
       }

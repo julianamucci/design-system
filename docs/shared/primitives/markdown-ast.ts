@@ -155,6 +155,26 @@ const DEFAULT_ALLOW: readonly MdBlockKind[] = [
 ];
 
 /**
+ * As três listas brancas que a documentação nomeia.
+ *
+ * Vivem aqui, e não em cada stack, porque são CONTRATO: a documentação diz que
+ * `chat` não estrutura título nem tabela, e cinco cópias dessa frase em código
+ * são cinco chances de uma delas envelhecer sozinha. `full` é a mesma lista que
+ * o parser já assume por padrão, e é a mesma referência para provar isso.
+ */
+export const ALLOW_PRESETS = {
+  /** Tudo que o componente sabe desenhar. É o padrão. */
+  full: DEFAULT_ALLOW,
+  /** Bolha de conversa: sem título e sem tabela, que competem com a página. */
+  chat: ['paragraph', 'code', 'blockquote', 'list', 'thematicBreak', 'raw'],
+  /** Campo de comentário: só texto corrido, onde estrutura é ruído. */
+  comment: ['paragraph', 'raw'],
+} as const satisfies Record<string, readonly MdBlockKind[]>;
+
+/** Nome de uma lista branca nomeada. */
+export type MdAllowPreset = keyof typeof ALLOW_PRESETS;
+
+/**
  * `http`, `https` e `mailto`, e mais nada por padrão.
  *
  * `javascript:` é o vetor óbvio. `data:` fica de fora por um motivo menos óbvio:
@@ -418,4 +438,43 @@ export function openConstructionAt(source: string): number | null {
     return source.length - last.length;
   }
   return null;
+}
+
+/** O que `parseForRender` aceita além do que o parser já aceita. */
+export type RenderMarkdownOptions = ParseMarkdownOptions & {
+  /** O texto ainda está chegando. */
+  streaming?: boolean;
+};
+
+/**
+ * A árvore que as cinco stacks desenham — `parseMarkdown` mais a decisão de
+ * streaming.
+ *
+ * A decisão é uma só, e é a que faria as cinco divergirem se cada uma a
+ * tomasse: com o texto ainda chegando e uma construção em aberto, o que vem
+ * DEPOIS do ponto de abertura fica como `raw` — texto visível, nada estruturado
+ * — até a construção fechar. O que veio antes é estável e já é documento.
+ *
+ * Por que aqui e não em cada renderizador: sem isto, o mesmo texto parcial
+ * renderia cinco documentos diferentes, e a divergência só apareceria com a
+ * resposta no meio — o momento em que ninguém está olhando as cinco lado a
+ * lado.
+ *
+ * O `raw` sai mesmo quando a lista branca não o inclui, pela mesma razão que o
+ * bloco de código recusado sai como `raw`: nada some em silêncio.
+ */
+export function parseForRender(source: string, options: RenderMarkdownOptions = {}): MdRoot {
+  const text = source ?? '';
+  if (!options.streaming) return parseMarkdown(text, options);
+
+  const at = openConstructionAt(text);
+  if (at === null) return parseMarkdown(text, options);
+
+  const stable = parseMarkdown(text.slice(0, at), options);
+  // A cauda perde só o espaço do FIM: o do começo é o recuo da cerca, e ele é
+  // parte do que a pessoa está vendo ser escrito.
+  const tail = text.slice(at).replace(/\s+$/, '');
+  if (tail === '') return stable;
+
+  return { type: 'root', children: [...stable.children, { type: 'raw', value: tail }] };
 }

@@ -15,13 +15,15 @@
  *     <ul class="nds-markdown-list">
  *       <li class="nds-markdown-item">item</li>
  *       <li class="nds-markdown-item nds-markdown-task">
- *         <input type="checkbox" checked disabled> feito
+ *         <label class="nds-markdown-task-label">
+ *           <input type="checkbox" checked disabled> feito
+ *         </label>
  *       </li>
  *     </ul>
  *     <blockquote class="nds-markdown-quote">citação</blockquote>
  *     <div class="nds-code-block-root">…</div>          ← delegado ao CodeBlock
- *     <div class="nds-markdown-table-scroll">
- *       <table class="nds-table">…</table>              ← delegado à Table
+ *     <div class="nds-table-wrapper">                    ← delegado à Table
+ *       <table class="nds-table nds-markdown-table">…</table>
  *     </div>
  *     <hr class="nds-markdown-rule">
  *     <p class="nds-markdown-raw">bloco recusado, como texto</p>
@@ -118,13 +120,19 @@
  * O marcador da lista sai porque a caixa é o marcador. */
 .nds-markdown-task {
   list-style: none;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-2);
   margin-inline-start: calc(var(--spacing-6) * -1);
 }
 
-.nds-markdown-task > input[type="checkbox"] {
+/* O `<label>` é que alinha, e não o item: é ele que envolve a caixa e o texto.
+ * Ele existe para dar NOME à caixa — sem rótulo, ela é anunciada sozinha, sem
+ * dizer o que está marcado. */
+.nds-markdown-task-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+}
+
+.nds-markdown-task input[type="checkbox"] {
   /* Alinha a caixa com a PRIMEIRA linha do texto, e acompanha a fonte: em
    * `em`, ela cresce junto quando o navegador aumenta o corpo (WCAG 1.4.4). */
   inline-size: 1em;
@@ -198,21 +206,20 @@
 }
 
 /* ── Tabela ─────────────────────────────────────────────────────────────────
- * A tabela em si é a `.nds-table` do sistema. O que este componente acrescenta
- * é o recorte: tabela larga rola DENTRO da caixa, e não empurra o documento
- * para a rolagem horizontal — o defeito que o guarda de rolagem do projeto já
- * pegou uma vez, e que também não aparecia na raiz. */
-.nds-markdown-table-scroll {
-  overflow-x: auto;
-}
-
-/* Alinhamento declarado pelo texto (`|:--|--:|`). Vem em atributo porque é
- * dado da célula, não escolha de estilo. */
-.nds-markdown-table-scroll [data-align="center"] {
+ * A tabela é a `.nds-table` do sistema, dentro da `.nds-table-wrapper` que ela
+ * já traz — e o recorte vem de lá, junto com o `tabindex` que torna a região
+ * rolável alcançável por teclado (WCAG 2.1.1). Uma caixa de rolagem própria
+ * aqui repetiria o `overflow` e esqueceria o foco, que é exatamente o que o
+ * axe cobra como `scrollable-region-focusable`.
+ *
+ * O que sobra para esta folha é o alinhamento que o TEXTO declarou
+ * (`|:--|--:|`). Ele vem em atributo porque é dado da célula, e não escolha de
+ * estilo — por isso a regra casa pelo atributo, e não por classe. */
+.nds-markdown-table [data-align="center"] {
   text-align: center;
 }
 
-.nds-markdown-table-scroll [data-align="right"] {
+.nds-markdown-table [data-align="right"] {
   text-align: right;
 }
 
