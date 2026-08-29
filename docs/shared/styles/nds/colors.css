@@ -53,7 +53,10 @@
 .nds-bg-warning-soft     { background-color: hsl(var(--warning) / 0.1); }
 .nds-bg-info-soft        { background-color: hsl(var(--info) / 0.1); }
 .nds-bg-muted-soft       { background-color: hsl(var(--muted) / 0.5); }
-.nds-bg-accent-soft      { background-color: hsl(var(--accent) / 0.5); }
+/* NÃO existe `.nds-bg-accent-soft`, e a ausência é decisão: as suaves acima são
+ * cores SEMÂNTICAS lavadas a 10%, que nunca pintam superfície cheia. O accent
+ * já é superfície — no tema default ele vem na força de realce de apoio —, e
+ * uma segunda força dele só criava duas respostas para a mesma pergunta. */
 
 /* ── Border colors ─────────────────────────────────────────────────────────── */
 .nds-border-default     { border: 1px solid hsl(var(--border)); }

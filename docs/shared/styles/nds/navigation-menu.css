@@ -225,11 +225,25 @@
  * fosse escuro o bastante para o branco herdado passar. A regra que faltava é a
  * mesma das outras três: quem pinta fundo de accent declara o texto que vai em
  * cima. Com ela, 7,47:1 no claro e 4,66:1 no escuro. */
+/* O alfa saiu do CLARO e ficou só no escuro.
+ *
+ * Este era o único lugar em que o accent do modo claro aparecia a 80% enquanto
+ * o resto do sistema o usava cheio — três forças do mesmo token na mesma tela.
+ * Hoje o token do tema default já vem na força de superfície, então aqui ele
+ * entra inteiro: 10,04:1 no default, 7,60 no cold e 10,56 no warm. */
 .nds-navigation-menu-link[aria-current="page"],
 .nds-navigation-menu-link[data-active]:not([data-active="false"]) {
-  background-color: hsl(var(--accent) / 0.8);
+  background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
   font-weight: var(--font-weight-semibold, 600);
+}
+
+/* No escuro o accent é o pêssego opaco, e 80% é o que o mantém em 4,66:1 com o
+ * texto escuro por cima — a mesma conta do hover de botão e do cartão
+ * relacionado. */
+.dark .nds-navigation-menu-link[aria-current="page"],
+.dark .nds-navigation-menu-link[data-active]:not([data-active="false"]) {
+  background-color: hsl(var(--accent) / 0.8);
 }
 
 .nds-navigation-menu-link[aria-current="page"]:hover,

@@ -425,7 +425,6 @@
 /* ── estados hover (complementam os de colors.css) ───────────────────────── */
 .nds-hover-text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
 .nds-hover-bg-accent:hover { background-color: hsl(var(--accent)); }
-.nds-hover-bg-accent-50:hover { background-color: hsl(var(--accent) / 0.5); }
 .nds-hover-bg-muted-80:hover { background-color: hsl(var(--muted) / 0.8); }
 .nds-hover-bg-muted-foreground-50:hover { background-color: hsl(var(--muted-foreground) / 0.5); }
 .nds-hover-bg-destructive-90:hover { background-color: hsl(var(--destructive) / 0.9); }

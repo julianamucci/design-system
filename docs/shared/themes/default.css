@@ -178,7 +178,32 @@
   --secondary-foreground: 201 22% 18%;
   --muted: 36 16% 93%;
   --muted-foreground: 195 10% 40%;
-  --accent: 22 70% 70%;
+  /* O Pêssego #E8A47C a 40%, já composto sobre a página.
+   *
+   * O accent é SUPERFÍCIE, não cor de traço: ele pinta hover, item destacado
+   * de menu e faixa de intervalo do calendário. Opaco (`22 70% 70%`, o valor
+   * anterior) o pêssego chegava a 2,07:1 contra a página — mais forte que
+   * `--primary` em muita tela, e o realce competia com o que estava realçando.
+   *
+   * 40% do pêssego é a força pedida; o valor está COMPOSTO, e não escrito como
+   * alfa, por dois motivos. Um: `hsl(var(--accent))` aparece em 45 blocos e
+   * `hsl(var(--accent) / X)` em outros — com alfa no token, os segundos viram
+   * valor inválido e a declaração cai. Dois: superfície translúcida muda de cor
+   * conforme o que está por baixo, e o contraste passa a depender de onde ela
+   * assenta. Aqui `--background`, `--card` e `--popover` são o mesmo valor, então
+   * compor uma vez dá o mesmo resultado em todos eles — com a vantagem de ser
+   * medível sozinho.
+   *
+   * Medido: texto de `--accent-foreground` por cima vai de 6,41:1 para 10,04:1.
+   * Contra a página a superfície fica em 1,32:1 — acima de `--muted` (1,15) e
+   * de `--secondary` (1,12), que são as outras duas superfícies de apoio do
+   * tema. É realce de apoio, e é assim que ele se comporta.
+   *
+   * O ESCURO não acompanha: lá o pêssego opaco já assenta sobre um fundo
+   * escuro, dá 6,41:1 com texto escuro por cima, e clarear a página não é o
+   * problema. Onde ele precisava ceder — hover de botão, cartão relacionado,
+   * link ativo — o alfa de 0.8 continua declarado na própria folha. */
+  --accent: 22 71% 88%;
   --accent-foreground: 201 22% 18%;
 
   /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
