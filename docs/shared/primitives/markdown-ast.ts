@@ -45,6 +45,34 @@
  *
  * Para referência na mesma árvore: o DOMPurify sozinho ocupa 1,8 MB em disco.
  * A proposta dizia "~10 transitivos" — era estimativa, e estava errada.
+ *
+ * ONDE AS DEPENDÊNCIAS SÃO DECLARADAS, e por que NÃO no `@nortear/ds-core`
+ *
+ * Este é o primeiro módulo de `docs/shared/primitives/` que importa pacote npm,
+ * e isso cria um problema que os outros não tinham: a pasta mora fora de
+ * qualquer stack e não resolve `node_modules` sozinha. É por isso que o
+ * `code-highlight.ts` foi escrito sem dependência nenhuma — aquilo não era só
+ * preferência, era restrição.
+ *
+ * Os três pacotes são declarados em DOIS lugares, e em nenhum deles no
+ * `package.json` do core:
+ *
+ *   - nas cinco stacks, que são quem de fato empacota este código;
+ *   - na RAIZ do monorepo, que é o que faz o `tsc` resolver os tipos aqui —
+ *     resolução de módulo sobe o sistema de arquivos, e a raiz é o primeiro
+ *     `node_modules` acima desta pasta.
+ *
+ * No `@nortear/ds-core` eles chegaram a entrar e SAÍRAM. O pacote publicado tem
+ * um consumidor só, o repositório Flutter, e o `tool/sync-core.mjs` de lá
+ * declara o que leva: `tokens`, `content`, `guidelines`, `skill-refs`. Ele nem
+ * instala o pacote — extrai arquivos. `primitives` não está na lista, então as
+ * três dependências viajariam para dentro do `package.json` copiado sem que
+ * nada lá as usasse, e quebrariam a promessa que a descrição do próprio pacote
+ * faz: "sem dependência de framework".
+ *
+ * Se um dia `primitives` passar a ser consumido por npm de verdade, é aí que
+ * elas voltam — como `peerDependencies` opcionais, para não obrigar quem só quer
+ * os tokens.
  */
 
 import { fromMarkdown } from 'mdast-util-from-markdown';
