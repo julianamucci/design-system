@@ -1,42 +1,33 @@
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
-import { createMarkdown } from './markdown';
-import { markdownSource } from './markdown.source';
-import { createMarkdownDocs } from '@/components/docs/MarkdownDocs';
+import { Markdown } from './index';
+import MarkdownDocs from '@/components/docs/MarkdownDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { markdownSource } from './markdown.source';
 import type { MdBlockKind } from '@shared/primitives/markdown-ast';
 import { MARKDOWN_PROSE } from '@shared/primitives/markdown-examples';
-
-// ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type MarkdownArgs = {
-  content: string;
-  streaming: boolean;
-  allow: MdBlockKind[];
-  allowedProtocols: string[];
-  onLinkClick: (url: string) => void;
-  class?: string;
-};
 
 /** Todo bloco que a lista branca pode nomear, para o control marcar. */
 const BLOCKS: MdBlockKind[] = [
   'paragraph', 'heading', 'code', 'blockquote', 'list', 'thematicBreak', 'table', 'raw',
 ];
 
-const meta: Meta<MarkdownArgs> = {
+const meta = {
   title: 'UI/Markdown',
+  component: Markdown,
   tags: ['autodocs', 'conversational'],
   parameters: {
     docs: {
-      page: withAutoDocsTab(createMarkdownDocs),
-      // O renderer html imprime o `outerHTML` — aqui, o documento inteiro já
-      // desenhado. A transform devolve a chamada da fábrica com o texto, que é
-      // o que se escreve, e cascateia para todas as stories deste arquivo.
+      page: withAutoDocsTab(MarkdownDocs),
+      // Sem docgen, o gerador de source monta a tag a partir do nome interno da
+      // função compilada. O snippet vai explícito, montado a partir dos args —
+      // e o documento precisa entrar como literal, senão o que se copia perde
+      // as quebras de linha, que aqui SÃO a sintaxe.
       source: { transform: markdownSource },
     },
   },
-  // Esta stack não tem docgen (não há componente de framework para
-  // introspectar): a aba "API Reference" sai só destes argTypes.
+  // O docgen do Svelte está desligado no .storybook/main.ts: a aba
+  // "API Reference" sai só destes argTypes.
   argTypes: {
     content: {
       control: 'text',
@@ -83,12 +74,10 @@ const meta: Meta<MarkdownArgs> = {
     allowedProtocols: ['http:', 'https:', 'mailto:'],
     onLinkClick: fn(),
   },
-};
+} satisfies Meta<typeof Markdown>;
 
 export default meta;
-type Story = StoryObj<MarkdownArgs>;
-
-// ─── Playground ───────────────────────────────────────────────────────────────
+type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   parameters: {
@@ -101,15 +90,7 @@ export const Playground: Story = {
       'visual.item1',
     ],
   },
-  render: (args) =>
-    createMarkdown({
-      content: args.content,
-      streaming: args.streaming,
-      allow: args.allow,
-      allowedProtocols: args.allowedProtocols,
-      onLinkClick: args.onLinkClick,
-      class: args.class,
-    }),
+  render: (args) => ({ Component: Markdown, props: args }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="markdown"]')!;
@@ -123,8 +104,7 @@ export const Playground: Story = {
     await step('Título vira título de verdade, no nível que o texto declarou', async () => {
       // `##` no texto: dois sustenidos, nível dois. Buscar por papel e nível é
       // o que prova que o leitor de tela navega por ele.
-      const heading = canvas.getByRole('heading', { level: 2 });
-      await expect(heading).toBeVisible();
+      await expect(canvas.getByRole('heading', { level: 2 })).toBeVisible();
     });
 
     await step('Lista é lista, e citação é citação', async () => {

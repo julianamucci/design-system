@@ -123,6 +123,14 @@ export const Playground: Story = {
       await expect(root.textContent).not.toContain('`content`');
     });
 
+    await step('A ênfase não injeta espaço em volta de si', async () => {
+      // `**texto**,` no documento: o elemento termina COLADO na vírgula. Recuo
+      // do template entre a tag e o texto vira um espaço visível ali, e
+      // `toHaveTextContent` não veria — ele normaliza o espaço antes de
+      // comparar. Por isso a leitura é do `textContent` cru.
+      await expect(root.textContent).toContain('como texto, e sai como');
+    });
+
     await step('O link leva o endereço, e o clique chega a quem consome', async () => {
       const link = canvas.getByRole('link', { name: /guia de escrita/i });
       await expect(link).toHaveAttribute('href', '/guias/escrita');
