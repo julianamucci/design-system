@@ -24,7 +24,10 @@
 .nds-text-primary-foreground { color: hsl(var(--primary-foreground)); }
 .nds-text-secondary        { color: hsl(var(--secondary)); }
 .nds-text-secondary-foreground { color: hsl(var(--secondary-foreground)); }
-.nds-text-accent           { color: hsl(var(--accent)); }
+/* NÃO existe `.nds-text-accent`, e a ausência é decisão: `--accent` é
+ * SUPERFÍCIE, o fundo de hover, item destacado e faixa de intervalo. Como
+ * texto ele mede 1,3:1 contra a página no tema default — invisível. Quem quer
+ * escrever SOBRE o accent usa a linha abaixo. */
 .nds-text-accent-foreground { color: hsl(var(--accent-foreground)); }
 .nds-text-destructive      { color: hsl(var(--destructive)); }
 .nds-text-success          { color: hsl(var(--success)); }
