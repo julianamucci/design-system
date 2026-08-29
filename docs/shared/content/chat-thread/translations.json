@@ -1,0 +1,1475 @@
+{
+  "pt-BR": {
+    "title": "ChatThread",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A superfície de uma conversa: a lista de mensagens, o que cada uma mostra e o botão que devolve ao fim quem se afastou dele.",
+    "seo": {
+      "title": "ChatThread",
+      "description": "Documentação do componente ChatThread do Design System Nortear: papéis de mensagem, raciocínio e chamadas de ferramenta colapsáveis, fontes numeradas, ancoragem de rolagem e as três decisões de acessibilidade de uma conversa."
+    },
+    "labels": {
+      "jumpToEnd": "Ir para o fim · {count}",
+      "reasoning": "Raciocínio",
+      "sources": "Fontes",
+      "toolState": {
+        "running": "chamando",
+        "done": "pronto",
+        "failed": "falhou"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "conversation": "Conversa",
+        "tools": "Com raciocínio e ferramenta",
+        "streaming": "Resposta chegando",
+        "failed": "Ferramenta que falhou"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A área que rola, e é dela que sai a medida de onde a conversa está.",
+      "item2": "A lista de mensagens, com o papel de cada uma no próprio item.",
+      "item3": "O corpo da mensagem: quem falou, quando, o que respondeu e o que pode ser feito com aquilo.",
+      "item4": "O botão que devolve ao fim, com a contagem do que chegou enquanto se lia para trás.",
+      "item5": "O anunciador, única região viva da conversa: recebe a resposta uma vez, quando ela termina.",
+      "structureCode": {
+        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\">   <!-- quem ROLA -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Dê uma altura ao componente. Sem limite não há transbordo, e sem transbordo a ancoragem no fim — que é a razão dele existir — não acontece.",
+        "item2": "Acrescente mensagem pelo método do componente, e não mexendo na lista por fora: é ele que decide se a rolagem acompanha.",
+        "item3": "Ligue o streaming só enquanto o texto chega, e desligue ao terminar — é o desligar que dispara o anúncio único.",
+        "item4": "Descreva o estado da ferramenta no texto do resumo, e não só na cor: quem não percebe a cor precisa ler o mesmo.",
+        "item5": "Deixe a medida de leitura no contêiner em volta. Quem decide a largura da coluna é a página, não a mensagem."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Conversa com um modelo, com resposta em streaming",
+          "u": "ChatThread",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Histórico de mensagens entre pessoas",
+          "u": "ChatThread",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Um texto só, sem turnos",
+          "u": "Markdown",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Lista longa de registros com colunas",
+          "u": "DataTable",
+          "a": "—"
+        },
+        "item5": {
+          "s": "Sequência de eventos de sistema, sem interlocutor",
+          "u": "Item",
+          "a": "—"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "author": {
+            "name": "Nome de quem falou",
+            "format": "Como a pessoa é chamada no produto",
+            "good": "\"Você\", \"Assistente\"",
+            "bad": "\"Usuário\", \"Bot\", \"AI\""
+          },
+          "toolName": {
+            "name": "Nome da ferramenta",
+            "format": "Verbo do que ela faz, não o endpoint",
+            "good": "\"listar_componentes\"",
+            "bad": "\"GET /api/v2/components\""
+          },
+          "toolState": {
+            "name": "Estado da ferramenta",
+            "format": "Uma palavra, no texto além da cor",
+            "good": "\"chamando\", \"pronto\", \"falhou\"",
+            "bad": "só o ícone verde ou vermelho"
+          },
+          "system": {
+            "name": "Mensagem de sistema",
+            "format": "Fato curto, sem sujeito oculto",
+            "good": "\"A conversa foi retomada de um histórico salvo.\"",
+            "bad": "\"Retomado.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "A tela é uma troca de turnos, e a ordem deles importa.",
+        "item2": "A resposta chega aos poucos e quem lê pode estar em outro ponto da conversa.",
+        "item3": "A resposta traz caminho — raciocínio, chamada de ferramenta, fonte — e o caminho é conferível.",
+        "item4": "Cada turno tem ações próprias: copiar, refazer, avaliar."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "Há um texto só a mostrar — aí o componente é o Markdown.",
+        "item2": "Os itens são registros com colunas comparáveis, e não falas.",
+        "item3": "A lista não rola: sem transbordo, metade do componente não faz nada.",
+        "item4": "A ordem não importa e os itens podem ser reordenados por quem lê."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "A rolagem só acompanha o fim se já estava no fim, e o botão diz quantas mensagens chegaram.",
+        "dont": "Arrastar para o fim a cada mensagem tira do lugar quem está lendo uma resposta antiga."
+      },
+      "pair2": {
+        "do": "O estado da ferramenta aparece no texto do resumo, além do ícone colorido.",
+        "dont": "Só o ícone verde ou vermelho deixa o estado invisível para quem não percebe a cor."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "A thread recebe as mensagens e os rótulos da interface. Nada precisa ser sanitizado antes: o conteúdo passa pelo Markdown, que não interpreta HTML.",
+      "basicCode": {
+        "react": "import { ChatThread } from \"@/components/ui/chat-thread\";\n\n<ChatThread messages={messages} labels={labels} />",
+        "vue": "<script setup lang=\"ts\">\nimport { ChatThread } from '@/components/ui/chat-thread';\n</script>\n\n<template>\n  <ChatThread :messages=\"messages\" :labels=\"labels\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { ChatThread } from '$lib/components/ui/chat-thread';\n  let { messages, labels } = $props();\n</script>\n\n<ChatThread {messages} {labels} />",
+        "vanilla": "import { createChatThread } from '@/components/ui/chat-thread';\n\nconst thread = createChatThread({ messages, labels });\ndocument.querySelector('#app')?.append(thread);",
+        "angular": "<nds-chat-thread [messages]=\"messages\" [labels]=\"labels\" />"
+      },
+      "withStreaming": "Ao acrescentar uma mensagem, é o componente que decide se a rolagem acompanha — por isso ela entra pelo método, e não na lista por fora.",
+      "withStreamingCode": {
+        "react": "<ChatThread\n  messages={[...messages, { role: \"assistant\", content: partial, streaming: true }]}\n  labels={labels}\n/>",
+        "vue": "<ChatThread\n  :messages=\"[...messages, { role: 'assistant', content: partial, streaming: true }]\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<ChatThread\n  messages={[...messages, { role: 'assistant', content: partial, streaming: true }]}\n  {labels}\n/>",
+        "vanilla": "thread.append({ role: 'assistant', content: partial, streaming: true });",
+        "angular": "<nds-chat-thread\n  [messages]=\"messages()\"\n  [labels]=\"labels\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Papéis",
+      "visualTitle": "Exemplos visuais",
+      "note": "O papel decide a forma, e a assimetria é deliberada: quem escreve ganha bolha e vai para a direita; quem responde ocupa a coluna inteira, porque é dele a maior parte do texto.",
+      "items": {
+        "user": {
+          "name": "user",
+          "description": "Quem escreve. Bolha em superfície secundária, alinhada à direita e limitada a 80% da coluna."
+        },
+        "assistant": {
+          "name": "assistant",
+          "description": "Quem responde. Sem moldura e na coluna inteira: resposta longa dentro de bolha estreita dobra a margem para o mesmo texto."
+        },
+        "system": {
+          "name": "system",
+          "description": "Um aviso no meio do fluxo, não uma fala: centralizado, um degrau abaixo no tamanho e sem retrato."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "atEnd": {
+        "label": "No fim",
+        "trigger": "A conversa abre, ou a rolagem chega ao fim.",
+        "behavior": "Mensagem nova entra e a rolagem acompanha. O botão de ir ao fim não existe na tela nem no percurso do teclado."
+      },
+      "away": {
+        "label": "Lendo para trás",
+        "trigger": "A rolagem sai do fim.",
+        "behavior": "Mensagem nova NÃO move a rolagem nem o foco. O botão aparece com a contagem do que chegou, e a contagem só zera ao voltar ao fim."
+      },
+      "streaming": {
+        "label": "Resposta chegando",
+        "trigger": "A mensagem está com o streaming ligado.",
+        "behavior": "A mensagem é marcada como ocupada e NÃO é anunciada a cada trecho. O anunciador continua vazio até ela terminar."
+      },
+      "toolFailed": {
+        "label": "Ferramenta que falhou",
+        "trigger": "Uma chamada de ferramenta termina em erro.",
+        "behavior": "A moldura e o ícone recebem a cor de erro, e a palavra do estado aparece no texto do resumo — a cor não responde sozinha."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatória",
+        "description": "Descrição",
+        "messages": {
+          "name": "messages",
+          "type": "ChatMessage[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "As mensagens, em ordem. Cada uma traz papel, conteúdo e o que mais tiver a mostrar."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ChatThreadLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da interface: botão de ir ao fim, resumo do raciocínio, título das fontes e o estado de cada ferramenta."
+        },
+        "role": {
+          "name": "role",
+          "type": "'user' | 'assistant' | 'system'",
+          "default": "—",
+          "required": "Sim",
+          "description": "Quem falou. Decide a forma da mensagem."
+        },
+        "streaming": {
+          "name": "streaming",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Ligue enquanto o texto da mensagem ainda chega. Desligar é o que dispara o anúncio único."
+        },
+        "toolCalls": {
+          "name": "toolCalls",
+          "type": "ChatToolCall[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Chamadas de ferramenta da resposta, cada uma com nome, estado e detalhe."
+        },
+        "sources": {
+          "name": "sources",
+          "type": "ChatSource[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Citações da resposta. A numeração vem da lista, porque é por ela que o texto se refere à fonte."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "ação[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Botões da mensagem. Aparecem ao pousar o ponteiro E ao receber foco, e ficam na ordem do teclado sempre."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes extras na raiz. É por aqui que a página define a altura e a medida de leitura."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "A decisão de rolagem é um módulo compartilhado e pode ser chamada direto por quem monta a própria lista — é o que garante que a regra seja a mesma nas cinco stacks.",
+      "extensibilityCode": {
+        "web": "import { isAtBottom, onThreadMessage } from '@shared/primitives/chat-scroll';\n\n// Medir ANTES de inserir: depois, o scrollHeight já mudou.\nconst atBottom = isAtBottom(viewport);\nlist.append(node);\nif (atBottom) viewport.scrollTop = viewport.scrollHeight;"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Seletor",
+        "description": "Descrição",
+        "bubble": {
+          "token": "--secondary",
+          "value": ".nds-chat-message[data-role=\"user\"] .nds-chat-message-content",
+          "description": "Fundo da bolha de quem escreve."
+        },
+        "header": {
+          "token": "--muted-foreground",
+          "value": ".nds-chat-message-header",
+          "description": "Nome e hora, um grau abaixo do corpo."
+        },
+        "body": {
+          "token": "--foreground",
+          "value": ".nds-chat-message-content",
+          "description": "Cor do texto da mensagem."
+        },
+        "disclosure": {
+          "token": "--border",
+          "value": ".nds-chat-tool-call",
+          "description": "Moldura do colapsável de ferramenta e de raciocínio."
+        },
+        "failed": {
+          "token": "--destructive",
+          "value": ".nds-chat-tool-call[data-state=\"failed\"] .nds-chat-tool-call-icon",
+          "description": "Ícone da ferramenta que falhou. A cor acompanha a palavra, não a substitui."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-chat-thread-viewport:focus-visible",
+          "description": "Anel da região rolável quando ela recebe foco."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* A altura e a medida de leitura são da PÁGINA, não do componente. */\n.conversa .nds-chat-thread {\n  block-size: 32rem;\n  --nds-chat-measure: 48rem;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Três decisões governam este componente, e todas vêm de defeitos medidos: a conversa não é região viva, conteúdo que chega não rouba o foco, e ação que só aparece no ponteiro não existe para o teclado.",
+      "items": {
+        "item1": "A área da conversa NÃO é região viva. Texto em streaming numa região viva é anunciado a cada trecho, e a leitura fica impossível.",
+        "item2": "Enquanto gera, a mensagem é marcada como ocupada; ao terminar, o texto dela é anunciado uma vez por uma região educada fora do fluxo.",
+        "item3": "Mensagem nova não move o foco, e a rolagem só acompanha o fim se já estava nele.",
+        "item4": "As ações da mensagem aparecem no ponteiro E no foco, e permanecem no percurso do teclado em qualquer estado.",
+        "item5": "A área que rola é alcançável por teclado: sem isso, o que ficou fora da tela não tem como ser lido por quem não usa ponteiro."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Percorre a área de rolagem, os colapsáveis, as fontes e as ações de cada mensagem.",
+        "enter": "Abre e fecha o colapsável em foco, e aciona a ação em foco.",
+        "arrows": "Rolam a conversa quando a área de rolagem está em foco."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "busy": "<code>aria-busy=\"true\"</code> na mensagem enquanto o texto dela chega",
+        "live": "Uma única <code>aria-live=\"polite\"</code>, fora do fluxo, que recebe a resposta pronta — a lista de mensagens não tem nenhuma",
+        "list": "A conversa é uma lista ordenada de verdade, então o leitor de tela anuncia a posição de cada turno",
+        "scrollable": "A área que rola tem <code>tabindex=\"0\"</code>, porque região rolável precisa ser alcançável por teclado",
+        "jump": "O botão de ir ao fim carrega a contagem no próprio nome acessível, e desaparece do percurso quando não há para onde ir"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "turns": "Anuncia cada turno como item de lista, com a posição e o total",
+        "answer": "Anuncia a resposta uma vez, inteira, quando ela termina de chegar",
+        "tool": "Lê o estado da ferramenta no texto do resumo, sem depender da cor do ícone",
+        "jump": "Anuncia quantas mensagens chegaram enquanto se lia para trás"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "markdown": {
+          "name": "Markdown",
+          "description": "Desenha o conteúdo de cada mensagem, sem interpretar HTML."
+        },
+        "avatar": {
+          "name": "Avatar",
+          "description": "O retrato de quem falou."
+        },
+        "button": {
+          "name": "Button",
+          "description": "As ações de cada mensagem e o botão de ir ao fim."
+        },
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Ocupa o lugar da resposta enquanto o primeiro trecho não chegou."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A decisão de rolagem vive num módulo compartilhado pelas cinco stacks, e é testada sem navegador. Sem isso, cada stack escreveria o próprio limiar e a divergência só apareceria com a conversa em movimento.",
+      "item2": "A folga para considerar que a rolagem está no fim não é zero: rolagem por roda para em número fracionário, e um pixel de margem no último item bastaria para o fim nunca ser alcançado.",
+      "item3": "Os colapsáveis são elementos nativos de divulgação, e não o Collapsible do sistema: o conteúdo continua encontrável pela busca do navegador com a caixa fechada, e uma conversa longa não paga um controle com script por mensagem.",
+      "item4": "A lista não é virtualizada nesta rodada. O contrato foi desenhado para receber virtualização depois — quem rola é um elemento só, e a decisão de ancoragem não sabe se os itens existem todos."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página de documentação dispara os três eventos padrão. O componente em si não instrumenta nada: quem sabe o que uma conversa significa é quem a consome.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Após dois segundos com a seção visível.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao usar um controle da demonstração.",
+        "demoClickPayload": "component, element_id, label"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que cada story verifica.",
+        "item1": {
+          "action": "Renderizar os três papéis",
+          "result": "Cada mensagem é item de uma lista ordenada e declara o próprio papel.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Rolar para longe do fim e receber mensagem",
+          "result": "A rolagem não se move e o botão aparece com a contagem do que chegou.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Receber mensagem estando no fim",
+          "result": "A rolagem acompanha o fim e o botão continua fora da tela e do teclado.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Acionar o botão de ir ao fim",
+          "result": "A conversa volta ao fim, a contagem zera e o botão sai do percurso.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Abrir o colapsável de raciocínio",
+          "result": "Ele nasce fechado e abre por clique ou por Enter.",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar chamada de ferramenta em cada estado",
+          "result": "O estado aparece no texto do resumo, e não só na cor do ícone.",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "A lista de mensagens NÃO tem aria-live nem role=\"log\", e a mensagem em streaming tem aria-busy=\"true\"",
+        "item3": "A área que rola tem tabindex=\"0\", e o anel de foco dela é visível",
+        "item4": "As ações da mensagem ficam visíveis ao receber foco, e não só ao pousar o ponteiro",
+        "item5": "O botão de ir ao fim carrega a contagem no nome acessível"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Conversa com os três papéis",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Resposta com raciocínio, ferramenta e fontes",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Resposta chegando, com a cerca aberta",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Ferramenta que falhou",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Botão de ir ao fim, com contagem",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando usar",
+      "doDont": "Boas práticas",
+      "techRef": "Referência técnica",
+      "import": "Importação",
+      "variants": "Papéis",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "ChatThread",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The surface of a conversation: the list of messages, what each one shows, and the button that returns whoever moved away back to the end.",
+    "seo": {
+      "title": "ChatThread",
+      "description": "Documentation for the ChatThread component of the Nortear Design System: message roles, reasoning and tool calls that fold away, numbered sources, scroll anchoring and the three accessibility decisions of a conversation."
+    },
+    "labels": {
+      "jumpToEnd": "Jump to end · {count}",
+      "reasoning": "Reasoning",
+      "sources": "Sources",
+      "toolState": {
+        "running": "calling",
+        "done": "done",
+        "failed": "failed"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "conversation": "Conversation",
+        "tools": "With reasoning and a tool",
+        "streaming": "Answer arriving",
+        "failed": "Tool that failed"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The area that scrolls, and the source of the measurement of where the conversation is.",
+      "item2": "The list of messages, with each one’s role on the item itself.",
+      "item3": "The message body: who spoke, when, what they answered and what can be done with it.",
+      "item4": "The button that returns to the end, with the count of what arrived while reading back.",
+      "item5": "The announcer, the conversation’s only live region: it receives the answer once, when it ends.",
+      "structureCode": {
+        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\">   <!-- quem ROLA -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Give the component a height. Without a limit there is no overflow, and without overflow the anchoring at the end — its reason to exist — never happens.",
+        "item2": "Add a message through the component’s method, not by touching the list from outside: it is what decides whether the scroll follows.",
+        "item3": "Turn streaming on only while the text arrives, and off when it ends — turning it off is what fires the single announcement.",
+        "item4": "Describe the tool state in the summary text, not only in colour: whoever does not perceive colour needs to read the same.",
+        "item5": "Leave the reading measure to the surrounding container. The page decides the column width, not the message."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Conversation with a model, with a streaming answer",
+          "u": "ChatThread",
+          "a": "—"
+        },
+        "item2": {
+          "s": "History of messages between people",
+          "u": "ChatThread",
+          "a": "—"
+        },
+        "item3": {
+          "s": "A single text, with no turns",
+          "u": "Markdown",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Long list of records with columns",
+          "u": "DataTable",
+          "a": "—"
+        },
+        "item5": {
+          "s": "Sequence of system events, with no interlocutor",
+          "u": "Item",
+          "a": "—"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "author": {
+            "name": "Name of who spoke",
+            "format": "How the person is named in the product",
+            "good": "\"You\", \"Assistant\"",
+            "bad": "\"User\", \"Bot\", \"AI\""
+          },
+          "toolName": {
+            "name": "Tool name",
+            "format": "The verb of what it does, not the endpoint",
+            "good": "\"list_components\"",
+            "bad": "\"GET /api/v2/components\""
+          },
+          "toolState": {
+            "name": "Tool state",
+            "format": "One word, in text beyond the colour",
+            "good": "\"calling\", \"done\", \"failed\"",
+            "bad": "only the green or red icon"
+          },
+          "system": {
+            "name": "System message",
+            "format": "A short fact, without a hidden subject",
+            "good": "\"The conversation was resumed from a saved history.\"",
+            "bad": "\"Resumed.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The screen is an exchange of turns, and their order matters.",
+        "item2": "The answer arrives in pieces and the reader may be at another point of the conversation.",
+        "item3": "The answer carries its path — reasoning, tool call, source — and the path can be checked.",
+        "item4": "Each turn has its own actions: copy, retry, rate."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "There is a single text to show — then the component is Markdown.",
+        "item2": "The items are records with comparable columns, not utterances.",
+        "item3": "The list does not scroll: without overflow, half of the component does nothing.",
+        "item4": "Order does not matter and the reader can reorder the items."
+      }
+    },
+    "doDont": {
+      "title": "Good practices",
+      "pair1": {
+        "do": "The scroll follows the end only if it was already at the end, and the button says how many messages arrived.",
+        "dont": "Dragging to the end on every message displaces whoever is reading an older answer."
+      },
+      "pair2": {
+        "do": "The tool state appears in the summary text, in addition to the coloured icon.",
+        "dont": "Only the green or red icon leaves the state invisible to whoever does not perceive colour."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "The thread takes the messages and the interface labels. Nothing needs sanitising first: the content goes through Markdown, which does not interpret HTML.",
+      "basicCode": {
+        "react": "import { ChatThread } from \"@/components/ui/chat-thread\";\n\n<ChatThread messages={messages} labels={labels} />",
+        "vue": "<script setup lang=\"ts\">\nimport { ChatThread } from '@/components/ui/chat-thread';\n</script>\n\n<template>\n  <ChatThread :messages=\"messages\" :labels=\"labels\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { ChatThread } from '$lib/components/ui/chat-thread';\n  let { messages, labels } = $props();\n</script>\n\n<ChatThread {messages} {labels} />",
+        "vanilla": "import { createChatThread } from '@/components/ui/chat-thread';\n\nconst thread = createChatThread({ messages, labels });\ndocument.querySelector('#app')?.append(thread);",
+        "angular": "<nds-chat-thread [messages]=\"messages\" [labels]=\"labels\" />"
+      },
+      "withStreaming": "When adding a message, the component decides whether the scroll follows — which is why it goes in through the method, not into the list from outside.",
+      "withStreamingCode": {
+        "react": "<ChatThread\n  messages={[...messages, { role: \"assistant\", content: partial, streaming: true }]}\n  labels={labels}\n/>",
+        "vue": "<ChatThread\n  :messages=\"[...messages, { role: 'assistant', content: partial, streaming: true }]\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<ChatThread\n  messages={[...messages, { role: 'assistant', content: partial, streaming: true }]}\n  {labels}\n/>",
+        "vanilla": "thread.append({ role: 'assistant', content: partial, streaming: true });",
+        "angular": "<nds-chat-thread\n  [messages]=\"messages()\"\n  [labels]=\"labels\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Roles",
+      "visualTitle": "Visual examples",
+      "note": "The role decides the shape, and the asymmetry is deliberate: whoever writes gets a bubble on the right; whoever answers takes the whole column, because most of the text is theirs.",
+      "items": {
+        "user": {
+          "name": "user",
+          "description": "Whoever writes. A bubble on the secondary surface, aligned right and capped at 80% of the column."
+        },
+        "assistant": {
+          "name": "assistant",
+          "description": "Whoever answers. No frame and the whole column: a long answer inside a narrow bubble doubles the margin for the same text."
+        },
+        "system": {
+          "name": "system",
+          "description": "A notice in the middle of the flow, not an utterance: centred, one step smaller and with no portrait."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to trigger",
+        "behavior": "Behaviour"
+      },
+      "atEnd": {
+        "label": "At the end",
+        "trigger": "The conversation opens, or the scroll reaches the end.",
+        "behavior": "A new message enters and the scroll follows. The jump-to-end button exists neither on screen nor in the keyboard path."
+      },
+      "away": {
+        "label": "Reading back",
+        "trigger": "The scroll leaves the end.",
+        "behavior": "A new message moves neither the scroll nor the focus. The button appears with the count of what arrived, and the count only resets on returning to the end."
+      },
+      "streaming": {
+        "label": "Answer arriving",
+        "trigger": "The message has streaming turned on.",
+        "behavior": "The message is marked busy and is NOT announced with each chunk. The announcer stays empty until it ends."
+      },
+      "toolFailed": {
+        "label": "Tool that failed",
+        "trigger": "A tool call ends in an error.",
+        "behavior": "The frame and icon take the error colour, and the state word appears in the summary text — colour does not answer alone."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "messages": {
+          "name": "messages",
+          "type": "ChatMessage[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The messages, in order. Each carries a role, content and whatever else it has to show."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ChatThreadLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The interface text: jump-to-end button, reasoning summary, sources title and each tool state."
+        },
+        "role": {
+          "name": "role",
+          "type": "'user' | 'assistant' | 'system'",
+          "default": "—",
+          "required": "Yes",
+          "description": "Who spoke. It decides the message shape."
+        },
+        "streaming": {
+          "name": "streaming",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Turn on while the message text is still arriving. Turning it off is what fires the single announcement."
+        },
+        "toolCalls": {
+          "name": "toolCalls",
+          "type": "ChatToolCall[]",
+          "default": "—",
+          "required": "No",
+          "description": "Tool calls of the answer, each with a name, state and detail."
+        },
+        "sources": {
+          "name": "sources",
+          "type": "ChatSource[]",
+          "default": "—",
+          "required": "No",
+          "description": "Citations of the answer. Numbering comes from the list, because that is how the text refers to the source."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "ação[]",
+          "default": "—",
+          "required": "No",
+          "description": "Buttons of the message. They appear on pointer hover AND on focus, and stay in the keyboard order at all times."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Extra classes on the root. This is where the page sets the height and the reading measure."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "The scroll decision is a shared module and can be called directly by whoever builds their own list — it is what keeps the rule identical across the five stacks.",
+      "extensibilityCode": {
+        "web": "import { isAtBottom, onThreadMessage } from '@shared/primitives/chat-scroll';\n\n// Medir ANTES de inserir: depois, o scrollHeight já mudou.\nconst atBottom = isAtBottom(viewport);\nlist.append(node);\nif (atBottom) viewport.scrollTop = viewport.scrollHeight;"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Selector",
+        "description": "Description",
+        "bubble": {
+          "token": "--secondary",
+          "value": ".nds-chat-message[data-role=\"user\"] .nds-chat-message-content",
+          "description": "Background of the writer’s bubble."
+        },
+        "header": {
+          "token": "--muted-foreground",
+          "value": ".nds-chat-message-header",
+          "description": "Name and time, one step below the body."
+        },
+        "body": {
+          "token": "--foreground",
+          "value": ".nds-chat-message-content",
+          "description": "Colour of the message text."
+        },
+        "disclosure": {
+          "token": "--border",
+          "value": ".nds-chat-tool-call",
+          "description": "Frame of the tool and reasoning disclosures."
+        },
+        "failed": {
+          "token": "--destructive",
+          "value": ".nds-chat-tool-call[data-state=\"failed\"] .nds-chat-tool-call-icon",
+          "description": "Icon of the failed tool. Colour accompanies the word, it does not replace it."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-chat-thread-viewport:focus-visible",
+          "description": "Ring of the scrollable region when it takes focus."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": "/* A altura e a medida de leitura são da PÁGINA, não do componente. */\n.conversa .nds-chat-thread {\n  block-size: 32rem;\n  --nds-chat-measure: 48rem;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Three decisions govern this component, and all come from measured defects: the conversation is not a live region, arriving content does not steal focus, and an action that appears only on pointer does not exist for the keyboard.",
+      "items": {
+        "item1": "The conversation area is NOT a live region. Streaming text in a live region is announced with each chunk, and reading becomes impossible.",
+        "item2": "While generating, the message is marked busy; when it ends, its text is announced once by a polite region outside the flow.",
+        "item3": "A new message does not move the focus, and the scroll follows the end only if it was already there.",
+        "item4": "The message actions appear on pointer AND on focus, and remain in the keyboard path in every state.",
+        "item5": "The scrolling area is reachable by keyboard: without it, what is off screen cannot be read by whoever does not use a pointer."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Moves through the scroll area, the disclosures, the sources and each message’s actions.",
+        "enter": "Opens and closes the focused disclosure, and triggers the focused action.",
+        "arrows": "Scroll the conversation when the scroll area is focused."
+      },
+      "aria": {
+        "title": "ARIA attributes",
+        "busy": "<code>aria-busy=\"true\"</code> on the message while its text arrives",
+        "live": "A single <code>aria-live=\"polite\"</code>, outside the flow, receiving the finished answer — the message list has none",
+        "list": "The conversation is a genuine ordered list, so the screen reader announces each turn’s position",
+        "scrollable": "The scrolling area has <code>tabindex=\"0\"</code>, because a scrollable region must be keyboard reachable",
+        "jump": "The jump-to-end button carries the count in its own accessible name, and leaves the path when there is nowhere to go"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "turns": "Announces each turn as a list item, with its position and the total",
+        "answer": "Announces the answer once, whole, when it finishes arriving",
+        "tool": "Reads the tool state in the summary text, without depending on the icon colour",
+        "jump": "Announces how many messages arrived while reading back"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "markdown": {
+          "name": "Markdown",
+          "description": "Draws each message’s content, without interpreting HTML."
+        },
+        "avatar": {
+          "name": "Avatar",
+          "description": "The portrait of who spoke."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Each message’s actions and the jump-to-end button."
+        },
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Holds the answer’s place while the first chunk has not arrived."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The scroll decision lives in a module shared by the five stacks, and is tested without a browser. Without that, each stack would write its own threshold and the divergence would only show with the conversation in motion.",
+      "item2": "The tolerance for considering the scroll at the end is not zero: wheel scrolling stops at fractional numbers, and one pixel of margin on the last item would be enough for the end never to be reached.",
+      "item3": "The disclosures are native elements, not the system’s Collapsible: the content stays findable by the browser’s search with the box closed, and a long conversation does not pay for a scripted control per message.",
+      "item4": "The list is not virtualised in this round. The contract was designed to receive virtualisation later — a single element scrolls, and the anchoring decision does not know whether all items exist."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The documentation page fires the three standard events. The component itself instruments nothing: whoever consumes a conversation is who knows what it means.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "After two seconds with the section visible.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On using a demonstration control.",
+        "demoClickPayload": "component, element_id, label"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What each story verifies.",
+        "item1": {
+          "action": "Render the three roles",
+          "result": "Each message is an item of an ordered list and declares its own role.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Scroll away from the end and receive a message",
+          "result": "The scroll does not move and the button appears with the count of what arrived.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Receive a message while at the end",
+          "result": "The scroll follows the end and the button stays off screen and off the keyboard path.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Trigger the jump-to-end button",
+          "result": "The conversation returns to the end, the count resets and the button leaves the path.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Open the reasoning disclosure",
+          "result": "It is born closed and opens by click or by Enter.",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Render a tool call in each state",
+          "result": "The state appears in the summary text, not only in the icon colour.",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools must confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "The message list has NO aria-live and no role=\"log\", and the streaming message has aria-busy=\"true\"",
+        "item3": "The scrolling area has tabindex=\"0\", and its focus ring is visible",
+        "item4": "The message actions become visible on focus, and not only on pointer hover",
+        "item5": "The jump-to-end button carries the count in its accessible name"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic must capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Conversation with the three roles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Answer with reasoning, tool and sources",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Answer arriving, with the fence open",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Tool that failed",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Jump-to-end button, with a count",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to use",
+      "doDont": "Good practices",
+      "techRef": "Technical reference",
+      "import": "Import",
+      "variants": "Roles",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "ChatThread",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La superficie de una conversación: la lista de mensajes, lo que muestra cada uno y el botón que devuelve al final a quien se alejó de él.",
+    "seo": {
+      "title": "ChatThread",
+      "description": "Documentación del componente ChatThread del Design System Nortear: roles de mensaje, razonamiento y llamadas de herramienta colapsables, fuentes numeradas, anclaje de desplazamiento y las tres decisiones de accesibilidad de una conversación."
+    },
+    "labels": {
+      "jumpToEnd": "Ir al final · {count}",
+      "reasoning": "Razonamiento",
+      "sources": "Fuentes",
+      "toolState": {
+        "running": "llamando",
+        "done": "listo",
+        "failed": "falló"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "conversation": "Conversación",
+        "tools": "Con razonamiento y herramienta",
+        "streaming": "Respuesta llegando",
+        "failed": "Herramienta que falló"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El área que se desplaza, y de donde sale la medida de dónde está la conversación.",
+      "item2": "La lista de mensajes, con el rol de cada uno en el propio ítem.",
+      "item3": "El cuerpo del mensaje: quién habló, cuándo, qué respondió y qué se puede hacer con eso.",
+      "item4": "El botón que devuelve al final, con el conteo de lo que llegó mientras se leía hacia atrás.",
+      "item5": "El anunciador, única región viva de la conversación: recibe la respuesta una vez, cuando termina.",
+      "structureCode": {
+        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\">   <!-- quem ROLA -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Dale una altura al componente. Sin límite no hay desbordamiento, y sin desbordamiento el anclaje al final — su razón de existir — no ocurre.",
+        "item2": "Añade mensajes por el método del componente, y no tocando la lista desde fuera: es él quien decide si el desplazamiento acompaña.",
+        "item3": "Activa el streaming solo mientras llega el texto, y desactívalo al terminar — desactivarlo es lo que dispara el anuncio único.",
+        "item4": "Describe el estado de la herramienta en el texto del resumen, y no solo en el color: quien no percibe el color necesita leer lo mismo.",
+        "item5": "Deja la medida de lectura al contenedor alrededor. Quien decide el ancho de la columna es la página, no el mensaje."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Conversación con un modelo, con respuesta en streaming",
+          "u": "ChatThread",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Historial de mensajes entre personas",
+          "u": "ChatThread",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Un solo texto, sin turnos",
+          "u": "Markdown",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Lista larga de registros con columnas",
+          "u": "DataTable",
+          "a": "—"
+        },
+        "item5": {
+          "s": "Secuencia de eventos de sistema, sin interlocutor",
+          "u": "Item",
+          "a": "—"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "author": {
+            "name": "Nombre de quien habló",
+            "format": "Cómo se llama a la persona en el producto",
+            "good": "\"Tú\", \"Asistente\"",
+            "bad": "\"Usuario\", \"Bot\", \"AI\""
+          },
+          "toolName": {
+            "name": "Nombre de la herramienta",
+            "format": "El verbo de lo que hace, no el endpoint",
+            "good": "\"listar_componentes\"",
+            "bad": "\"GET /api/v2/components\""
+          },
+          "toolState": {
+            "name": "Estado de la herramienta",
+            "format": "Una palabra, en el texto además del color",
+            "good": "\"llamando\", \"listo\", \"falló\"",
+            "bad": "solo el ícono verde o rojo"
+          },
+          "system": {
+            "name": "Mensaje de sistema",
+            "format": "Hecho corto, sin sujeto oculto",
+            "good": "\"La conversación se retomó de un historial guardado.\"",
+            "bad": "\"Retomado.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "La pantalla es un intercambio de turnos, y su orden importa.",
+        "item2": "La respuesta llega poco a poco y quien lee puede estar en otro punto de la conversación.",
+        "item3": "La respuesta trae camino — razonamiento, llamada de herramienta, fuente — y el camino es verificable.",
+        "item4": "Cada turno tiene acciones propias: copiar, rehacer, valorar."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Hay un solo texto que mostrar — entonces el componente es Markdown.",
+        "item2": "Los ítems son registros con columnas comparables, y no habla.",
+        "item3": "La lista no se desplaza: sin desbordamiento, la mitad del componente no hace nada.",
+        "item4": "El orden no importa y quien lee puede reordenar los ítems."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "El desplazamiento sigue el final solo si ya estaba en el final, y el botón dice cuántos mensajes llegaron.",
+        "dont": "Arrastrar al final con cada mensaje desplaza a quien está leyendo una respuesta antigua."
+      },
+      "pair2": {
+        "do": "El estado de la herramienta aparece en el texto del resumen, además del ícono de color.",
+        "dont": "Solo el ícono verde o rojo deja el estado invisible para quien no percibe el color."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "El hilo recibe los mensajes y las etiquetas de la interfaz. Nada necesita saneamiento previo: el contenido pasa por Markdown, que no interpreta HTML.",
+      "basicCode": {
+        "react": "import { ChatThread } from \"@/components/ui/chat-thread\";\n\n<ChatThread messages={messages} labels={labels} />",
+        "vue": "<script setup lang=\"ts\">\nimport { ChatThread } from '@/components/ui/chat-thread';\n</script>\n\n<template>\n  <ChatThread :messages=\"messages\" :labels=\"labels\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { ChatThread } from '$lib/components/ui/chat-thread';\n  let { messages, labels } = $props();\n</script>\n\n<ChatThread {messages} {labels} />",
+        "vanilla": "import { createChatThread } from '@/components/ui/chat-thread';\n\nconst thread = createChatThread({ messages, labels });\ndocument.querySelector('#app')?.append(thread);",
+        "angular": "<nds-chat-thread [messages]=\"messages\" [labels]=\"labels\" />"
+      },
+      "withStreaming": "Al añadir un mensaje, el componente decide si el desplazamiento acompaña — por eso entra por el método, y no en la lista desde fuera.",
+      "withStreamingCode": {
+        "react": "<ChatThread\n  messages={[...messages, { role: \"assistant\", content: partial, streaming: true }]}\n  labels={labels}\n/>",
+        "vue": "<ChatThread\n  :messages=\"[...messages, { role: 'assistant', content: partial, streaming: true }]\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<ChatThread\n  messages={[...messages, { role: 'assistant', content: partial, streaming: true }]}\n  {labels}\n/>",
+        "vanilla": "thread.append({ role: 'assistant', content: partial, streaming: true });",
+        "angular": "<nds-chat-thread\n  [messages]=\"messages()\"\n  [labels]=\"labels\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Roles",
+      "visualTitle": "Ejemplos visuales",
+      "note": "El rol decide la forma, y la asimetría es deliberada: quien escribe recibe burbuja y va a la derecha; quien responde ocupa la columna entera, porque suyo es la mayor parte del texto.",
+      "items": {
+        "user": {
+          "name": "user",
+          "description": "Quien escribe. Burbuja en superficie secundaria, alineada a la derecha y limitada al 80% de la columna."
+        },
+        "assistant": {
+          "name": "assistant",
+          "description": "Quien responde. Sin marco y en la columna entera: una respuesta larga dentro de una burbuja estrecha duplica el margen para el mismo texto."
+        },
+        "system": {
+          "name": "system",
+          "description": "Un aviso en medio del flujo, no un habla: centrado, un grado más pequeño y sin retrato."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "atEnd": {
+        "label": "En el final",
+        "trigger": "La conversación se abre, o el desplazamiento llega al final.",
+        "behavior": "Un mensaje nuevo entra y el desplazamiento acompaña. El botón de ir al final no existe ni en pantalla ni en el recorrido del teclado."
+      },
+      "away": {
+        "label": "Leyendo hacia atrás",
+        "trigger": "El desplazamiento sale del final.",
+        "behavior": "Un mensaje nuevo no mueve ni el desplazamiento ni el foco. El botón aparece con el conteo de lo que llegó, y el conteo solo se reinicia al volver al final."
+      },
+      "streaming": {
+        "label": "Respuesta llegando",
+        "trigger": "El mensaje tiene el streaming activado.",
+        "behavior": "El mensaje se marca como ocupado y NO se anuncia con cada fragmento. El anunciador sigue vacío hasta que termina."
+      },
+      "toolFailed": {
+        "label": "Herramienta que falló",
+        "trigger": "Una llamada de herramienta termina en error.",
+        "behavior": "El marco y el ícono toman el color de error, y la palabra del estado aparece en el texto del resumen — el color no responde solo."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatoria",
+        "description": "Descripción",
+        "messages": {
+          "name": "messages",
+          "type": "ChatMessage[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los mensajes, en orden. Cada uno trae rol, contenido y lo que más tenga que mostrar."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ChatThreadLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la interfaz: botón de ir al final, resumen del razonamiento, título de las fuentes y el estado de cada herramienta."
+        },
+        "role": {
+          "name": "role",
+          "type": "'user' | 'assistant' | 'system'",
+          "default": "—",
+          "required": "Sí",
+          "description": "Quién habló. Decide la forma del mensaje."
+        },
+        "streaming": {
+          "name": "streaming",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Actívalo mientras el texto del mensaje aún llega. Desactivarlo es lo que dispara el anuncio único."
+        },
+        "toolCalls": {
+          "name": "toolCalls",
+          "type": "ChatToolCall[]",
+          "default": "—",
+          "required": "No",
+          "description": "Llamadas de herramienta de la respuesta, cada una con nombre, estado y detalle."
+        },
+        "sources": {
+          "name": "sources",
+          "type": "ChatSource[]",
+          "default": "—",
+          "required": "No",
+          "description": "Citas de la respuesta. La numeración viene de la lista, porque es así como el texto se refiere a la fuente."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "ação[]",
+          "default": "—",
+          "required": "No",
+          "description": "Botones del mensaje. Aparecen al posar el puntero Y al recibir foco, y permanecen en el orden del teclado siempre."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases extra en la raíz. Aquí es donde la página define la altura y la medida de lectura."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "La decisión de desplazamiento es un módulo compartido y puede llamarse directamente por quien arma su propia lista — es lo que garantiza que la regla sea la misma en las cinco stacks.",
+      "extensibilityCode": {
+        "web": "import { isAtBottom, onThreadMessage } from '@shared/primitives/chat-scroll';\n\n// Medir ANTES de inserir: depois, o scrollHeight já mudou.\nconst atBottom = isAtBottom(viewport);\nlist.append(node);\nif (atBottom) viewport.scrollTop = viewport.scrollHeight;"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Selector",
+        "description": "Descripción",
+        "bubble": {
+          "token": "--secondary",
+          "value": ".nds-chat-message[data-role=\"user\"] .nds-chat-message-content",
+          "description": "Fondo de la burbuja de quien escribe."
+        },
+        "header": {
+          "token": "--muted-foreground",
+          "value": ".nds-chat-message-header",
+          "description": "Nombre y hora, un grado por debajo del cuerpo."
+        },
+        "body": {
+          "token": "--foreground",
+          "value": ".nds-chat-message-content",
+          "description": "Color del texto del mensaje."
+        },
+        "disclosure": {
+          "token": "--border",
+          "value": ".nds-chat-tool-call",
+          "description": "Marco del colapsable de herramienta y de razonamiento."
+        },
+        "failed": {
+          "token": "--destructive",
+          "value": ".nds-chat-tool-call[data-state=\"failed\"] .nds-chat-tool-call-icon",
+          "description": "Ícono de la herramienta que falló. El color acompaña a la palabra, no la sustituye."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-chat-thread-viewport:focus-visible",
+          "description": "Anillo de la región desplazable cuando recibe foco."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* A altura e a medida de leitura são da PÁGINA, não do componente. */\n.conversa .nds-chat-thread {\n  block-size: 32rem;\n  --nds-chat-measure: 48rem;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Tres decisiones gobiernan este componente, y todas vienen de defectos medidos: la conversación no es una región viva, el contenido que llega no roba el foco, y una acción que solo aparece con el puntero no existe para el teclado.",
+      "items": {
+        "item1": "El área de la conversación NO es una región viva. El texto en streaming en una región viva se anuncia con cada fragmento, y leer se vuelve imposible.",
+        "item2": "Mientras genera, el mensaje se marca como ocupado; al terminar, su texto se anuncia una vez por una región educada fuera del flujo.",
+        "item3": "Un mensaje nuevo no mueve el foco, y el desplazamiento sigue el final solo si ya estaba en él.",
+        "item4": "Las acciones del mensaje aparecen con el puntero Y con el foco, y permanecen en el recorrido del teclado en cualquier estado.",
+        "item5": "El área que se desplaza es alcanzable por teclado: sin eso, lo que quedó fuera de pantalla no puede ser leído por quien no usa puntero."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Recorre el área de desplazamiento, los colapsables, las fuentes y las acciones de cada mensaje.",
+        "enter": "Abre y cierra el colapsable enfocado, y activa la acción enfocada.",
+        "arrows": "Desplazan la conversación cuando el área de desplazamiento está enfocada."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "busy": "<code>aria-busy=\"true\"</code> en el mensaje mientras llega su texto",
+        "live": "Una única <code>aria-live=\"polite\"</code>, fuera del flujo, que recibe la respuesta terminada — la lista de mensajes no tiene ninguna",
+        "list": "La conversación es una lista ordenada de verdad, así que el lector de pantalla anuncia la posición de cada turno",
+        "scrollable": "El área que se desplaza tiene <code>tabindex=\"0\"</code>, porque una región desplazable debe ser alcanzable por teclado",
+        "jump": "El botón de ir al final lleva el conteo en su propio nombre accesible, y sale del recorrido cuando no hay adónde ir"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "turns": "Anuncia cada turno como ítem de lista, con su posición y el total",
+        "answer": "Anuncia la respuesta una vez, entera, cuando termina de llegar",
+        "tool": "Lee el estado de la herramienta en el texto del resumen, sin depender del color del ícono",
+        "jump": "Anuncia cuántos mensajes llegaron mientras se leía hacia atrás"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "markdown": {
+          "name": "Markdown",
+          "description": "Dibuja el contenido de cada mensaje, sin interpretar HTML."
+        },
+        "avatar": {
+          "name": "Avatar",
+          "description": "El retrato de quien habló."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Las acciones de cada mensaje y el botón de ir al final."
+        },
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Ocupa el lugar de la respuesta mientras el primer fragmento no llega."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La decisión de desplazamiento vive en un módulo compartido por las cinco stacks, y se prueba sin navegador. Sin eso, cada stack escribiría su propio umbral y la divergencia solo aparecería con la conversación en movimiento.",
+      "item2": "La tolerancia para considerar que el desplazamiento está en el final no es cero: el desplazamiento por rueda se detiene en números fraccionarios, y un píxel de margen en el último ítem bastaría para que el final nunca se alcance.",
+      "item3": "Los colapsables son elementos nativos, y no el Collapsible del sistema: el contenido sigue siendo encontrable por la búsqueda del navegador con la caja cerrada, y una conversación larga no paga un control con script por mensaje.",
+      "item4": "La lista no está virtualizada en esta ronda. El contrato se diseñó para recibir virtualización después — un solo elemento se desplaza, y la decisión de anclaje no sabe si todos los ítems existen."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página de documentación dispara los tres eventos estándar. El componente en sí no instrumenta nada: quien consume una conversación es quien sabe lo que significa.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Tras dos segundos con la sección visible.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al usar un control de la demostración.",
+        "demoClickPayload": "component, element_id, label"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que verifica cada story.",
+        "item1": {
+          "action": "Renderizar los tres roles",
+          "result": "Cada mensaje es ítem de una lista ordenada y declara su propio rol.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Desplazarse lejos del final y recibir un mensaje",
+          "result": "El desplazamiento no se mueve y el botón aparece con el conteo de lo que llegó.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Recibir un mensaje estando en el final",
+          "result": "El desplazamiento sigue el final y el botón permanece fuera de pantalla y del teclado.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Activar el botón de ir al final",
+          "result": "La conversación vuelve al final, el conteo se reinicia y el botón sale del recorrido.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Abrir el colapsable de razonamiento",
+          "result": "Nace cerrado y se abre con clic o con Enter.",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar llamada de herramienta en cada estado",
+          "result": "El estado aparece en el texto del resumen, y no solo en el color del ícono.",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "La lista de mensajes NO tiene aria-live ni role=\"log\", y el mensaje en streaming tiene aria-busy=\"true\"",
+        "item3": "El área que se desplaza tiene tabindex=\"0\", y su anillo de foco es visible",
+        "item4": "Las acciones del mensaje se vuelven visibles al recibir foco, y no solo al posar el puntero",
+        "item5": "El botón de ir al final lleva el conteo en su nombre accesible"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Conversación con los tres roles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Respuesta con razonamiento, herramienta y fuentes",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Respuesta llegando, con la cerca abierta",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Herramienta que falló",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Botón de ir al final, con conteo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión general",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo usar",
+      "doDont": "Buenas prácticas",
+      "techRef": "Referencia técnica",
+      "import": "Importación",
+      "variants": "Roles",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}

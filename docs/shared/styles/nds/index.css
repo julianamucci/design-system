@@ -75,6 +75,7 @@
 @import "./editor.css";
 @import "./media-player.css";
 @import "./markdown.css";
+@import "./chat-thread.css";
 
 /*
  * As utilities entram POR ÚLTIMO, e isso é desenho, não acidente.

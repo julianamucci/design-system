@@ -1,0 +1,146 @@
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
+import { createChatThread } from './chat-thread';
+import { createButton } from './button';
+import { chatLabels, paraMensagens } from './chat-thread.fixtures';
+import { chatThreadSourceWith } from './chat-thread.source';
+import { CHAT_COM_FERRAMENTAS } from '@shared/primitives/chat-examples';
+
+// ─── Meta ─────────────────────────────────────────────────────────────────────
+//
+// O que uma resposta pode trazer além do texto: o caminho que ela percorreu e o
+// que se pode fazer com ela.
+
+const meta: Meta = {
+  tags: ['conversational'],
+  title: 'UI/ChatThread/Compositions',
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: {
+      source: { transform: chatThreadSourceWith({ messages: 'comFerramentas' }) },
+      description: {
+        component:
+          'A resposta com raciocínio, chamada de ferramenta, fontes numeradas e as ações do turno.',
+      },
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj;
+
+/** Espião de escopo de módulo: dentro do render, a play não o alcança. */
+const onCopy = fn();
+
+export const WithReasoningAndTools: Story = {
+  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item2'] },
+  render: () =>
+    createChatThread({
+      messages: paraMensagens(CHAT_COM_FERRAMENTAS),
+      labels: chatLabels(),
+      size: 'lg',
+    }),
+  play: async ({ canvasElement, step }) => {
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="chat-thread"]')!;
+
+    await step('O raciocínio nasce fechado — o destino vem antes do caminho', async () => {
+      const reasoning = root.querySelector<HTMLDetailsElement>('.nds-chat-reasoning')!;
+      await expect(reasoning.open).toBe(false);
+      // Fechado, mas no documento: a busca do navegador continua achando o
+      // texto, que é metade do motivo de ser `<details>` nativo.
+      await expect(reasoning).toHaveTextContent(/não da memória/i);
+    });
+
+    await step('O controle é alcançável por teclado, e abre', async () => {
+      const reasoning = root.querySelector<HTMLDetailsElement>('.nds-chat-reasoning')!;
+      const summary = reasoning.querySelector<HTMLElement>('summary')!;
+      // O passo estabelece a própria precondição: a play reexecuta no mesmo DOM.
+      if (reasoning.open) reasoning.open = false;
+
+      // O foco prova o alcance pelo Tab, que é o que o `list-style: none` do
+      // resumo poderia ter custado.
+      summary.focus();
+      await expect(summary).toHaveFocus();
+
+      // A ATIVAÇÃO é medida por clique, e não por `{Enter}`: a tecla sobre um
+      // `<summary>` é comportamento nativo do navegador, e o runner não o
+      // reproduz — medido, `userEvent.keyboard('{Enter}')` deixa o
+      // `<details>` fechado. Asserção com a tecla aqui não provaria o
+      // componente, provaria o simulador.
+      await userEvent.click(summary);
+      await expect(reasoning.open).toBe(true);
+    });
+
+    await step('A ferramenta diz o estado por escrito', async () => {
+      const call = root.querySelector<HTMLElement>('.nds-chat-tool-call')!;
+      await expect(call.dataset.state).toBe('done');
+      await expect(call).toHaveTextContent(/listar_componentes/);
+      await expect(call).toHaveTextContent(/pronto/i);
+    });
+
+    await step('As fontes são numeradas pela LISTA, e são links de verdade', async () => {
+      // A numeração é do conteúdo: é por ela que o texto se refere à fonte.
+      const sources = root.querySelector<HTMLElement>('.nds-chat-sources')!;
+      await expect(sources.tagName).toBe('OL');
+      const links = within(sources).getAllByRole('link');
+      await expect(links).toHaveLength(2);
+      await expect(links[0]).toHaveTextContent('1');
+      await expect(links[0]).toHaveAttribute('href');
+    });
+  },
+};
+
+export const WithActions: Story = {
+  parameters: { covers: ['accessibility.item4'] },
+  render: () => {
+    const messages = paraMensagens(CHAT_COM_FERRAMENTAS);
+    const ultima = messages[messages.length - 1];
+    ultima.actions = [
+      createButton({ label: 'Copiar', variant: 'ghost', size: 'sm', onClick: onCopy }),
+      createButton({ label: 'Refazer', variant: 'ghost', size: 'sm' }),
+    ];
+    return createChatThread({ messages, labels: chatLabels(), size: 'lg' });
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="chat-thread"]')!;
+    const actions = root.querySelector<HTMLElement>('.nds-chat-message-actions')!;
+    const copiar = canvas.getByRole('button', { name: /copiar/i });
+
+    await step('Em repouso as ações estão invisíveis — mas NO percurso do teclado', async () => {
+      // A diferença que este passo guarda: `opacity: 0` esconde sem tirar da
+      // ordem de foco. `display: none` ou `visibility: hidden` tirariam, e a
+      // ação deixaria de existir para quem não usa ponteiro.
+      await expect(getComputedStyle(actions).opacity).toBe('0');
+      // A permanência no percurso do teclado é medida pelo FOCO, e não por
+      // `toBeVisible`: para a testing-library, `opacity: 0` já é invisível — e
+      // é justamente essa a diferença que este componente explora. O que
+      // `display: none` quebraria é o foco, e é ele que se afirma.
+      copiar.focus();
+      await expect(copiar).toHaveFocus();
+    });
+
+    await step('Ao receber foco, elas aparecem', async () => {
+      // `:focus-within` é metade da regra, não um extra: sem ele os botões
+      // ficariam no Tab e invisíveis ao receber foco, que é 2.4.7 na forma mais
+      // difícil de notar — quem usa mouse nunca vê o problema.
+      copiar.focus();
+      // A espera é pela TRANSIÇÃO, não pelo foco: `getComputedStyle` devolve o
+      // valor animado do instante, e ler logo depois de focar pega a opacidade
+      // ainda perto de zero. Medido — sem a espera, reprova com
+      // `expected '0' to be '1'`.
+      //
+      // Leitura PURA dentro do `waitFor`: condição que mexe no DOM reagenda a
+      // si mesma por observador de mutação e pendura o arquivo inteiro.
+      await waitFor(() => expect(getComputedStyle(actions).opacity).toBe('1'));
+    });
+
+    await step('E acionam', async () => {
+      onCopy.mockClear();
+      await userEvent.click(copiar);
+      await expect(onCopy).toHaveBeenCalledTimes(1);
+    });
+  },
+};

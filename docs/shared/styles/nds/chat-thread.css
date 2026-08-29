@@ -1,0 +1,382 @@
+/*
+ * ─── nds-chat-thread ────────────────────────────────────────────────────────
+ * A superfície da conversa: a lista de mensagens, o que cada uma mostra e o
+ * botão que devolve quem se afastou ao fim dela.
+ *
+ * Estrutura:
+ *   <div class="nds-chat-thread">
+ *     <div class="nds-chat-thread-viewport">          ← quem ROLA
+ *       <ol class="nds-chat-thread-list">
+ *         <li class="nds-chat-message" data-role="assistant">
+ *           <div class="nds-chat-message-avatar">…</div>        ← Avatar
+ *           <div class="nds-chat-message-body">
+ *             <div class="nds-chat-message-header">Nome · 14:32</div>
+ *             <div class="nds-chat-message-content">            ← Markdown
+ *             <div class="nds-chat-message-actions">            ← Button ×N
+ *           </div>
+ *         </li>
+ *       </ol>
+ *     </div>
+ *     <button class="nds-chat-thread-jump">Ir para o fim · 3</button>
+ *     <div class="nds-chat-thread-announcer" aria-live="polite"></div>
+ *   </div>
+ *
+ * Peças de dentro da mensagem, todas opcionais:
+ *   <details class="nds-chat-tool-call" data-state="running|done|failed">
+ *   <details class="nds-chat-reasoning">
+ *   <ol class="nds-chat-sources">
+ *
+ * AS TRÊS DECISÕES DE ACESSIBILIDADE, que valem mais que o desenho:
+ *
+ * 1. A thread NÃO é região viva. Nada de `role="log"` no viewport: esse papel
+ *    traz `aria-live="polite"` embutido, e texto em streaming numa região viva
+ *    é o relógio do media player multiplicado por cem — o leitor de tela
+ *    anuncia a cada trecho e a leitura fica impossível. Enquanto gera, a
+ *    mensagem é `aria-busy="true"`; quando termina, o texto dela é escrito UMA
+ *    vez em `.nds-chat-thread-announcer`, que é a única região viva aqui.
+ * 2. Mensagem nova não move o foco, e a rolagem só acompanha o fim se já
+ *    estava no fim. A decisão vive em `@shared/primitives/chat-scroll`,
+ *    compartilhada pelas cinco; esta folha desenha o botão que ela liga.
+ * 3. Ação que só aparece no `:hover` não existe para o teclado. As ações da
+ *    mensagem aparecem no hover E no `:focus-within`, e continuam na ordem de
+ *    foco em qualquer estado — por isso somem por `opacity`, e nunca por
+ *    `display` ou `visibility`.
+ *
+ * Tokens: --background, --foreground, --muted, --muted-foreground, --secondary,
+ *         --secondary-foreground, --border, --card, --primary, --destructive,
+ *         --radius-*, --spacing-*, --text-*
+ */
+
+.nds-chat-thread {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  inline-size: 100%;
+}
+
+/* Escada de janela, a mesma do `.nds-scroll-area`.
+ *
+ * A altura é OBRIGATÓRIA e não tem padrão: sem limite não há transbordo, e sem
+ * transbordo a ancoragem no fim — que é a razão deste componente existir — não
+ * acontece. Ela entra por `data-size`, e não por pixel no `style`, porque foi
+ * exatamente o `style="height: 200px"` do comentário antigo do scroll-area que
+ * rendeu sessenta alturas cravadas em três stacks, cada uma com o próprio
+ * número. Quem precisar de uma altura fora da escada declara `--box-height` no
+ * elemento, que a folha continua governando. */
+.nds-chat-thread[data-size] { block-size: var(--box-height); }
+.nds-chat-thread[data-size="xs"] { --box-height: var(--box-height-xs); }
+.nds-chat-thread[data-size="sm"] { --box-height: var(--box-height-sm); }
+.nds-chat-thread[data-size="md"] { --box-height: var(--box-height-md); }
+.nds-chat-thread[data-size="lg"] { --box-height: var(--box-height-lg); }
+.nds-chat-thread[data-size="xl"] { --box-height: var(--box-height-xl); }
+
+/* A guarda de `[hidden]`, pelo motivo de sempre: `[hidden] { display: none }` é
+ * regra do agente de usuário, e qualquer `display` de autor a vence. */
+.nds-chat-thread[hidden],
+.nds-chat-message[hidden],
+.nds-chat-message-actions[hidden] {
+  display: none;
+}
+
+/* ── Viewport ───────────────────────────────────────────────────────────────
+ * Quem rola é ESTE elemento, e é dele que sai a medida que
+ * `@shared/primitives/chat-scroll` recebe. Uma altura tem de vir de fora — sem
+ * limite não há transbordo, e sem transbordo a conversa cresce a página
+ * inteira e a ancoragem no fim deixa de existir.
+ *
+ * `overscroll-behavior: contain` para a rolagem não escapar para a página ao
+ * chegar no topo da conversa: num chat dentro de uma página longa, esse escape
+ * é o que faz a pessoa perder o lugar. */
+.nds-chat-thread-viewport {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: var(--spacing-4);
+}
+
+/* Região rolável é alcançável por teclado — WCAG 2.1.1, regra
+ * `scrollable-region-focusable` do axe. Mesma decisão da `.nds-table-wrapper` e
+ * do bloco de código: o `tabindex` é fixo no markup, não configurável. */
+.nds-chat-thread-viewport:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+.nds-chat-thread-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* A medida de leitura é da conversa, não de cada mensagem: com ela em cada
+   * bolha, mensagens curtas e longas ganhariam larguras diferentes de coluna e
+   * o olho perderia a margem de referência. */
+  max-inline-size: var(--nds-chat-measure, 60rem);
+  margin-inline: auto;
+}
+
+/* ── Mensagem ───────────────────────────────────────────────────────────────
+ * Duas colunas: retrato e corpo. O retrato é opcional e a coluna some com ele.
+ */
+.nds-chat-message {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: flex-start;
+}
+
+.nds-chat-message-avatar {
+  flex-shrink: 0;
+}
+
+.nds-chat-message-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  min-inline-size: 0;
+  flex: 1 1 auto;
+}
+
+.nds-chat-message-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-chat-message-author {
+  font-weight: var(--font-weight-semi-bold);
+  color: hsl(var(--foreground));
+}
+
+.nds-chat-message-content {
+  color: hsl(var(--foreground));
+  overflow-wrap: break-word;
+}
+
+/* ── Papéis ─────────────────────────────────────────────────────────────────
+ * Quem escreveu ganha bolha e vai para a direita; quem responde ocupa a coluna
+ * inteira, sem moldura.
+ *
+ * A assimetria é o que distingue os dois de relance, e é deliberada: bolha dos
+ * dois lados faz a resposta longa — que é a maioria do texto de uma conversa —
+ * ser lida dentro de uma caixa estreita, com o dobro de margem para o mesmo
+ * conteúdo. */
+.nds-chat-message[data-role="user"] {
+  flex-direction: row-reverse;
+}
+
+.nds-chat-message[data-role="user"] .nds-chat-message-body {
+  align-items: flex-end;
+  flex: 0 1 auto;
+  max-inline-size: 80%;
+}
+
+.nds-chat-message[data-role="user"] .nds-chat-message-content {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+/* Mensagem de sistema: um aviso no meio do fluxo, não uma fala. Sem retrato,
+ * sem bolha, centralizada e um degrau abaixo no tamanho. */
+.nds-chat-message[data-role="system"] {
+  justify-content: center;
+}
+
+.nds-chat-message[data-role="system"] .nds-chat-message-body {
+  flex: 0 1 auto;
+  align-items: center;
+}
+
+.nds-chat-message[data-role="system"] .nds-chat-message-content {
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+}
+
+/* ── Ações da mensagem ──────────────────────────────────────────────────────
+ * Somem por OPACIDADE, e nunca por `display` ou `visibility`: as duas tirariam
+ * os botões da ordem de foco, e ação que o teclado não alcança não existe.
+ *
+ * `:focus-within` é metade da regra, não um extra — sem ele os botões estariam
+ * no percurso do Tab e invisíveis ao receber foco, que é a violação de 2.4.7
+ * na forma mais difícil de notar: quem usa mouse nunca vê o problema. */
+.nds-chat-message-actions {
+  display: flex;
+  gap: var(--spacing-1);
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+}
+
+.nds-chat-message:hover .nds-chat-message-actions,
+.nds-chat-message:focus-within .nds-chat-message-actions {
+  opacity: 1;
+}
+
+/* Sem ponteiro não existe hover, e a transição por opacidade deixaria as ações
+ * invisíveis para sempre em telas de toque. */
+@media (hover: none) {
+  .nds-chat-message-actions {
+    opacity: 1;
+  }
+}
+
+/* ── Botão de ir para o fim ─────────────────────────────────────────────────
+ * Flutua sobre o fim do viewport. Só existe quando a rolagem NÃO está no fim —
+ * quem o esconde é o consumidor, com `hidden`, e a guarda lá em cima garante
+ * que esconder esconde. */
+.nds-chat-thread-jump {
+  position: absolute;
+  inset-block-end: var(--spacing-4);
+  inset-inline: 0;
+  margin-inline: auto;
+  inline-size: fit-content;
+  z-index: 1;
+}
+
+/* ── Anunciador ─────────────────────────────────────────────────────────────
+ * A ÚNICA região viva da thread. Recebe o texto da mensagem uma vez, quando
+ * ela termina de chegar.
+ *
+ * Escondido da vista sem sair da árvore de acessibilidade: `display: none` e
+ * `visibility: hidden` tirariam o texto do leitor de tela, que é justamente
+ * quem precisa dele. */
+.nds-chat-thread-announcer {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Chamada de ferramenta ──────────────────────────────────────────────────
+ * Colapsável, fechada por padrão: o que interessa é o resultado, e o passo a
+ * passo é para quem for conferir.
+ *
+ * `<details>` nativo em vez do Collapsible do sistema porque aqui o conteúdo
+ * precisa ser encontrável pela busca do navegador com a caixa fechada, e
+ * porque a thread pode ter dezenas deles — um controle sem JavaScript por
+ * mensagem é o que mantém a conversa leve. */
+.nds-chat-tool-call,
+.nds-chat-reasoning {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-md);
+  background-color: hsl(var(--muted) / 0.4);
+  font-size: var(--text-control);
+}
+
+.nds-chat-tool-call-summary,
+.nds-chat-reasoning-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  cursor: pointer;
+  color: hsl(var(--muted-foreground));
+  /* O marcador padrão do navegador é substituído pelo ícone do sistema, que
+   * gira com o estado. */
+  list-style: none;
+}
+
+.nds-chat-tool-call-summary::-webkit-details-marker,
+.nds-chat-reasoning-summary::-webkit-details-marker {
+  display: none;
+}
+
+.nds-chat-tool-call-summary:focus-visible,
+.nds-chat-reasoning-summary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
+  border-radius: var(--radius-md);
+}
+
+.nds-chat-tool-call-icon,
+.nds-chat-reasoning-icon {
+  flex-shrink: 0;
+  transition: transform var(--duration-fast);
+}
+
+.nds-chat-tool-call[open] .nds-chat-tool-call-icon,
+.nds-chat-reasoning[open] .nds-chat-reasoning-icon {
+  transform: rotate(90deg);
+}
+
+.nds-chat-tool-call-body,
+.nds-chat-reasoning-body {
+  padding: 0 var(--spacing-3) var(--spacing-3);
+  color: hsl(var(--foreground));
+}
+
+/* O ESTADO da chamada vai no ícone e num rótulo de texto, nunca só na cor: a
+ * regra dos contêineres coloridos vale aqui — cor semântica é sinal de apoio, e
+ * quem não a percebe precisa ler o mesmo no texto. */
+.nds-chat-tool-call[data-state="running"] .nds-chat-tool-call-icon {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-chat-tool-call[data-state="done"] .nds-chat-tool-call-icon {
+  color: hsl(var(--success));
+}
+
+.nds-chat-tool-call[data-state="failed"] {
+  border-color: hsl(var(--destructive) / 0.4);
+}
+
+.nds-chat-tool-call[data-state="failed"] .nds-chat-tool-call-icon {
+  color: hsl(var(--destructive));
+}
+
+/* ── Fontes ─────────────────────────────────────────────────────────────────
+ * Citações numeradas. A numeração é do conteúdo, não do estilo: é por ela que
+ * o texto se refere à fonte, então ela vem do `<ol>` e não de um `::before`
+ * decorativo. */
+.nds-chat-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-label);
+}
+
+.nds-chat-source {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-2);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  max-inline-size: 20rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nds-chat-source:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-chat-source:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
+}
+
+.nds-chat-source-index {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: hsl(var(--foreground));
+}
