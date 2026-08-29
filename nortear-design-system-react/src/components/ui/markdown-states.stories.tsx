@@ -58,7 +58,12 @@ export const Streaming: Story = {
       const tail = root.querySelector(".nds-markdown-raw")
       await expect(tail).toHaveTextContent("const tree = parseMarkdown(answer")
       // A crase da cerca continua visível: ela ainda não significou nada.
-      await expect(tail?.textContent).toContain("```ts")
+      //
+      // `startsWith`, e não `toContain`: `.nds-markdown-raw` desenha com
+      // `white-space: pre-wrap`, então espaço no começo do texto APARECE na
+      // tela. Um recuo que o template deixasse entrar seria invisível para
+      // `toHaveTextContent`, que normaliza o espaço antes de comparar.
+      await expect(tail?.textContent?.startsWith("```ts")).toBe(true)
     })
 
     await step("O que veio ANTES da cerca já é documento", async () => {

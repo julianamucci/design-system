@@ -1,41 +1,48 @@
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, within } from 'storybook/test';
-import { createMarkdown } from './markdown';
-import { markdownSourceWith } from './markdown.source';
+import { Markdown } from './index';
+import {
+  markdownEmptySource,
+  markdownRefusedSource,
+  markdownStreamingSource,
+} from './markdown.source';
 import { MARKDOWN_STREAMING, MARKDOWN_UNSAFE } from '@shared/primitives/markdown-examples';
 
-// ─── Meta ─────────────────────────────────────────────────────────────────────
-//
 // Os estados que a docs page lista: gerando, com conteúdo recusado, e vazio. O
 // estado "pronto" é o Playground, e não se repete aqui.
 
-const meta: Meta = {
-  tags: ['conversational'],
+const meta = {
   title: 'UI/Markdown/States',
+  component: Markdown,
+  tags: ['conversational'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: markdownStreamingSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no documento.',
       },
     },
   },
-};
+} satisfies Meta<typeof Markdown>;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
+
+const render = (args: Record<string, unknown>) => ({
+  components: { Markdown },
+  setup() { return { args }; },
+  template: '<Markdown v-bind="args" />',
+});
 
 export const Streaming: Story = {
   parameters: {
     covers: ['accessibility.item2', 'visual.item3'],
-    docs: {
-      source: {
-        transform: markdownSourceWith({ content: MARKDOWN_STREAMING, streaming: true }),
-      },
-    },
+    docs: { source: { transform: markdownStreamingSource } },
   },
-  render: () => createMarkdown({ content: MARKDOWN_STREAMING, streaming: true }),
+  args: { content: MARKDOWN_STREAMING, streaming: true },
+  render,
   play: async ({ canvasElement, step }) => {
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="markdown"]')!;
 
@@ -76,9 +83,10 @@ export const Streaming: Story = {
 export const RefusedContent: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item4', 'visual.item4'],
-    docs: { source: { transform: markdownSourceWith({ content: MARKDOWN_UNSAFE }) } },
+    docs: { source: { transform: markdownRefusedSource } },
   },
-  render: () => createMarkdown({ content: MARKDOWN_UNSAFE }),
+  args: { content: MARKDOWN_UNSAFE },
+  render,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="markdown"]')!;
@@ -108,9 +116,10 @@ export const RefusedContent: Story = {
 export const Empty: Story = {
   parameters: {
     covers: ['visual.item5'],
-    docs: { source: { transform: markdownSourceWith({ content: '' }) } },
+    docs: { source: { transform: markdownEmptySource } },
   },
-  render: () => createMarkdown({ content: '   \n  ' }),
+  args: { content: '   \n  ' },
+  render,
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="markdown"]')!;
 
