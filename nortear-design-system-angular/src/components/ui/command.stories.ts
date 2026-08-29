@@ -267,6 +267,17 @@ export const Playground: Story = {
       );
     });
 
+    await step('O item em destaque mostra o anel', async () => {
+      // Aqui o item nunca recebe foco do DOM — quem o mantém é o campo, e o
+      // destaque é apontado por `aria-activedescendant`. Por isso o anel é
+      // ligado ao ATRIBUTO, e não a `:focus-visible`, que nunca dispararia.
+      const emDestaque = canvasElement.querySelector<HTMLElement>(
+        '[role="option"][aria-selected="true"], [role="option"][data-selected="true"]',
+      )!;
+      await expect(getComputedStyle(emDestaque).outlineStyle).toBe('solid');
+      await expect(getComputedStyle(emDestaque).outlineWidth).toBe('2px');
+    });
+
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {
       const antes = spy.mock.calls.length;
       await userEvent.keyboard('{Enter}');

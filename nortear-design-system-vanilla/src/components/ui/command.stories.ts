@@ -229,6 +229,21 @@ export const Playground: Story = {
       await expect(first).toHaveAttribute('aria-selected', 'true');
     });
 
+    await step('O item em destaque mostra o anel', async () => {
+      // Aqui o item nunca recebe foco do DOM — quem o mantém é o campo, e o
+      // destaque é apontado por `aria-activedescendant`. Por isso o anel é
+      // ligado ao ATRIBUTO, e não a `:focus-visible`, que nunca dispararia.
+      //
+      // O passo estabelece a própria precondição, e não herda o destaque que o
+      // anterior deixou.
+      await zerarSearch(field);
+      field.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      const emDestaque = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
+      await expect(getComputedStyle(emDestaque).outlineStyle).toBe('solid');
+      await expect(getComputedStyle(emDestaque).outlineWidth).toBe('2px');
+    });
+
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {
       // O passo estabelece a própria precondição: nada de herdar o destaque que
       // o passo anterior deixou.

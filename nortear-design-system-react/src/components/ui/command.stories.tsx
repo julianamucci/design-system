@@ -250,6 +250,17 @@ export const Playground: Story = {
       await expect(inHighlight()).toHaveAttribute("aria-selected", "true");
     });
 
+    await step("O item em destaque mostra o anel", async () => {
+      // Aqui o item nunca recebe foco do DOM — quem o mantém é o campo, e o
+      // destaque é apontado por `aria-activedescendant`. Por isso o anel é
+      // ligado ao ATRIBUTO, e não a `:focus-visible`, que nunca dispararia.
+      // `inHighlight()` é o mesmo caminho que os passos acima usam para achar o
+      // item marcado nesta stack.
+      const emDestaque = inHighlight()!;
+      await expect(getComputedStyle(emDestaque).outlineStyle).toBe("solid");
+      await expect(getComputedStyle(emDestaque).outlineWidth).toBe("2px");
+    })
+
     await step("Enter escolhe o comando em destaque, com o value dele", async () => {
       const antes = spy.mock.calls.length;
       await userEvent.keyboard("{Enter}");

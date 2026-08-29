@@ -124,6 +124,24 @@ export const Open: Story = {
       await expect(document.activeElement).toBe(items[0]);
     });
 
+    await step('O item em foco por teclado mostra o anel', async () => {
+      // Até aqui o item destacado era indicado SÓ pelo preenchimento de accent,
+      // e no tema default o texto não muda de cor: quem navega por teclado
+      // dependia da diferença entre o fundo do item e o do painel, que nunca
+      // chegou aos 3:1 da WCAG 1.4.11.
+      //
+      // A asserção lê o outline COMPUTADO, e não a classe: `:focus-visible` é
+      // decidido pelo navegador a partir da última interação, e é justamente
+      // isso que precisa ser provado — a lib move o foco por código depois da
+      // tecla, e só o navegador sabe dizer se aquilo conta como teclado.
+      const items = await menuItems();
+      items[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      const emFoco = document.activeElement as HTMLElement;
+      await expect(getComputedStyle(emFoco).outlineStyle).toBe('solid');
+      await expect(getComputedStyle(emFoco).outlineWidth).toBe('2px');
+    });
+
     await step('Home e End vão ao primeiro e ao último', async () => {
       const items = await menuItems();
       await userEvent.keyboard('{End}');

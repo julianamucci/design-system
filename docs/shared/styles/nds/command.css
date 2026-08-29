@@ -139,6 +139,31 @@
   color: hsl(var(--accent-foreground));
 }
 
+/* O anel de foco do item, e por que ele é INTERNO, em `--accent-foreground`, e
+ * ligado ao ATRIBUTO e não a `:focus-visible`.
+ *
+ * Aqui o item nunca recebe foco do DOM: quem o mantém é o campo de busca, e o
+ * item ativo é apontado por `aria-activedescendant`. `:focus-visible` não
+ * dispara nunca, então o gatilho tem de ser o mesmo atributo que a lib move com
+ * as setas. O preço é que o anel aparece também ao pousar o ponteiro — e é
+ * honesto: o item marcado É o que o Enter vai ativar, venha a marcação de onde
+ * vier.
+ *
+ * NÃO é `--ring`, e o motivo está medido: o anel é desenhado sobre o
+ * preenchimento de accent, e no escuro do tema default o `--ring` (teal) e o
+ * accent (pêssego) têm praticamente a mesma luminância — 1,38:1. O anel sumiria
+ * justamente no modo em que o problema é maior. `--accent-foreground` é, por
+ * definição, o que se lê sobre o accent: 4,66:1 no pior dos seis pares de tema
+ * e modo, contra os 3:1 que a WCAG 1.4.11 pede.
+ *
+ * INTERNO porque a lista tem `padding: 4px` e `overflow-y: auto`: anel externo
+ * é recortado nas laterais e nos itens das pontas. */
+.nds-command-item[aria-selected="true"],
+.nds-command-item[data-selected="true"] {
+  outline: 2px solid hsl(var(--accent-foreground));
+  outline-offset: -2px;
+}
+
 .nds-command-item[aria-disabled="true"],
 .nds-command-item[data-disabled]:not([data-disabled="false"]) {
   pointer-events: none;

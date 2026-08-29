@@ -265,6 +265,31 @@
   color: hsl(var(--accent-foreground));
 }
 
+/* O anel de foco do item, e por que ele é INTERNO e em `--accent-foreground`.
+ *
+ * Até aqui o item destacado era indicado SÓ pelo preenchimento de accent, e
+ * no tema default o `--accent-foreground` é igual ao `--foreground`: o texto
+ * não muda, então quem navega por teclado dependia inteiramente da diferença
+ * entre o fundo do item e o do painel. A WCAG 1.4.11 pede 3:1 para estado de
+ * componente, e essa diferença nunca chegou lá.
+ *
+ * NÃO é `--ring`, e o motivo está medido: o anel é desenhado sobre o
+ * preenchimento de accent, e no escuro do tema default o `--ring` (teal) e o
+ * accent (pêssego) têm praticamente a mesma luminância — 1,38:1, e 1,01:1
+ * onde o accent entra a 80%. O anel sumiria justamente no modo em que o
+ * problema é maior. `--accent-foreground` é, por definição, o que se lê sobre
+ * o accent: 4,66:1 no pior dos seis pares de tema e modo, contra os 3:1 que o
+ * critério pede.
+ *
+ * INTERNO (`outline-offset` negativo) porque o painel tem `padding: 4px` e
+ * `overflow-y: auto`: anel externo é recortado nas laterais e nos itens das
+ * pontas. `outline` não ocupa espaço, então a lista não se move ao receber
+ * foco. */
+.nds-select-item:focus-visible {
+  outline: 2px solid hsl(var(--accent-foreground));
+  outline-offset: -2px;
+}
+
 .nds-select-item[data-disabled] {
   pointer-events: none;
   opacity: 0.5;
