@@ -45,6 +45,13 @@
  */
 
 .nds-markdown {
+  /* `display` declarado, e não herdado do default do elemento.
+   *
+   * Em quatro stacks a raiz é um `<div>` e isto não muda nada. Na quinta ela é
+   * `<nds-markdown>`, um elemento que o navegador não conhece — e elemento
+   * desconhecido nasce `inline`. Um documento inteiro dentro de uma caixa
+   * inline perde largura, margem e a conta do intervalo entre blocos. */
+  display: block;
   color: hsl(var(--foreground));
   font-size: var(--text-p);
   /* Declarada, não herdada: altura de linha de texto corrido é decisão de
@@ -56,8 +63,24 @@
   overflow-wrap: break-word;
 }
 
+/* A guarda de `[hidden]`, pelo motivo de sempre — e esta é a SEXTA vez.
+ *
+ * `[hidden] { display: none }` é regra da folha do AGENTE DE USUÁRIO, e
+ * qualquer declaração de autor a vence: o `display: block` acima, sem esta
+ * linha, faria `hidden` deixar de esconder o documento. Nenhuma suíte pegaria
+ * — `queryByRole` honra o ATRIBUTO e enxerga o conteúdo como ausente qualquer
+ * que seja o CSS. Precedentes: `.nds-accordion-content`, `.nds-command-item`,
+ * `.nds-editor-field-row`, `.nds-editor-toolbar-context` e
+ * `.nds-media-player-button`. */
+.nds-markdown[hidden] {
+  display: none;
+}
+
 /* Documento vazio não deixa caixa ocupando espaço — sem isto a raiz continua
- * sendo um bloco e herda a margem de quem está em volta. */
+ * sendo um bloco e herda a margem de quem está em volta.
+ *
+ * `:empty` ignora comentário, e é o que faz esta regra valer no Angular, onde
+ * a raiz guarda as âncoras de `ng-template` como nós de comentário. */
 .nds-markdown:empty {
   display: none;
 }
