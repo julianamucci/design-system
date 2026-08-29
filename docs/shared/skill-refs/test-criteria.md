@@ -127,6 +127,36 @@ play: async ({ canvasElement }) => {
 
 ---
 
+## Conversacional (Markdown, e o que vier depois)
+
+A entrada vem de FORA do código — numa interface conversacional, de um modelo.
+Isso muda o que se testa: o assunto não é "renderiza", é "renderiza sem virar
+markup, e sem perder nada pelo caminho".
+
+| Critério | play function |
+|---|---|
+| HTML não vira markup | `expect(root.querySelector('script')).toBeNull()` **e** o texto dele visível no `textContent` |
+| Endereço de esquema recusado | `expect(canvas.queryByRole('link')).toBeNull()` **e** o texto do link permanece |
+| Bloco fora da lista branca | some do papel (`queryByRole('table')` nulo) e sobra como texto |
+| Sem região viva durante o streaming | `expect(root.querySelector('[aria-live]')).toBeNull()` + `aria-busy="true"` na raiz |
+| Construção ainda aberta | com a cerca sem fechar, NÃO existe `.nds-code-block-root` |
+
+Três armadilhas medidas ao escrever o Markdown, e que valem para o resto da
+categoria:
+
+1. **`toHaveTextContent` normaliza o espaço antes de comparar.** Para provar que
+   a ênfase termina colada na pontuação, ou que o texto cru não ganhou recuo, a
+   leitura tem de ser do `textContent` puro (`toContain`, `startsWith`).
+2. **O snippet do painel Code carrega o documento**, e o documento tem quebras de
+   linha que SIGNIFICAM. Todo construtor de snippet aqui precisa de teste
+   unitário próprio: recuo de uma casa muda o que a pessoa copia, e nenhuma
+   suíte de navegador alcança a saída do painel.
+3. **Caixa de item de tarefa precisa de NOME.** `<input type="checkbox" disabled>`
+   sem rótulo reprova no axe, e com razão: ela é anunciada sozinha, sem dizer o
+   que está marcado.
+
+---
+
 ## Estrutura `testes` em translations.json
 
 ```json
