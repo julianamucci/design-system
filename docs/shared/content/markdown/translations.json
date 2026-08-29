@@ -1,0 +1,1316 @@
+{
+  "pt-BR": {
+    "title": "Markdown",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Renderiza texto em Markdown como elementos do design system. Recebe o texto, devolve estrutura: título vira título, bloco de código vira CodeBlock, e nada do que chega é interpretado como HTML.",
+    "seo": {
+      "title": "Markdown — Conversacional",
+      "description": "Documentação do Markdown: renderização segura de texto vindo de modelos de IA, com lista branca de blocos, streaming e zero HTML interpretado.",
+      "aiSummary": "Componente que converte Markdown em elementos do design system sem passar por HTML. A árvore é montada por um parser compartilhado e cada stack desenha os próprios nós, então não existe innerHTML nem superfície de XSS. Aceita lista branca de blocos e modo de streaming para resposta de modelo que ainda está chegando.",
+      "aiEntities": "Markdown, GFM, renderização, streaming, XSS, lista branca, acessibilidade, interface conversacional"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "prose": "Texto",
+        "code": "Código",
+        "table": "Tabela",
+        "unsafe": "Conteúdo hostil"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "Raiz — container do documento renderizado, com a classe do componente e a medida de leitura.",
+      "item2": "Blocos — parágrafo, título, citação, lista, regra e tabela, cada um como elemento semântico próprio.",
+      "item3": "Bloco de código — delegado ao CodeBlock, que já traz destaque de sintaxe pelos tokens do tema.",
+      "item4": "Trechos em linha — ênfase, forte, riscado, código curto e link, montados como nós e nunca como texto interpretado.",
+      "item5": "Texto recusado — o que a lista branca não aceita aparece como texto simples, preservado e visível.",
+      "structureLabel": "Estrutura"
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para qualquer texto que chegue de fora do código — resposta de modelo, comentário, campo de conteúdo, documentação carregada em tempo de execução.",
+        "item2": "Restrinja a lista branca ao que aquela superfície precisa: uma bolha de conversa raramente precisa de tabela, e um campo de comentário raramente precisa de título.",
+        "item3": "Ligue o modo de streaming apenas enquanto o texto ainda está chegando, e desligue ao terminar — é o que permite anunciar a resposta inteira de uma vez.",
+        "item4": "Deixe a medida de leitura no container em volta, não no componente: quem decide a largura da coluna é a página.",
+        "item5": "Amplie a lista de esquemas de endereço só com motivo escrito; o padrão cobre http, https e mailto."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Resposta de um modelo, com código e listas",
+          "u": "Markdown",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Um trecho de código sozinho, já conhecido",
+          "u": "CodeBlock",
+          "a": "Markdown, se vier misturado com texto"
+        },
+        "item3": {
+          "s": "Texto que a pessoa escreve e formata",
+          "u": "Editor",
+          "a": "Markdown para exibir o resultado"
+        },
+        "item4": {
+          "s": "Rótulo curto, sem estrutura",
+          "u": "Texto direto",
+          "a": "—"
+        },
+        "item5": {
+          "s": "HTML pronto vindo de um serviço",
+          "u": "Sanitização no ponto de uso",
+          "a": "Markdown não interpreta HTML, de propósito"
+        }
+      },
+      "do": {
+        "item1": "Restringir os blocos ao que a superfície precisa.",
+        "item2": "Tratar todo texto de fora como não confiável.",
+        "item3": "Desligar o streaming quando a resposta termina.",
+        "item4": "Deixar a largura da coluna para a página."
+      },
+      "dont": {
+        "item1": "Passar o texto por um conversor de HTML antes.",
+        "item2": "Abrir a lista de esquemas para aceitar qualquer endereço.",
+        "item3": "Deixar o streaming ligado depois do fim da resposta.",
+        "item4": "Fixar largura dentro do componente."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "Endereço com esquema recusado perde o destino e mantém o texto: quem lê continua vendo o que foi escrito.",
+        "dont": "Apagar o link inteiro esconde que havia um ali — e, numa conversa, esconde que o modelo tentou mandá-lo."
+      },
+      "pair2": {
+        "do": "Bloco fora da lista branca vira texto simples, preservado e legível.",
+        "dont": "Bloco que simplesmente some deixa quem lê sem saber que havia conteúdo ali."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "O componente recebe o texto e cuida do resto. Nada precisa ser sanitizado antes: ele não interpreta HTML.",
+      "basicCode": {
+        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={resposta} />",
+        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"resposta\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { resposta } = $props();\n</script>\n\n<Markdown content={resposta} />",
+        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: resposta });\ndocument.querySelector('#app')?.append(view);",
+        "angular": "<nds-markdown [content]=\"resposta\" />"
+      },
+      "withStreaming": "Enquanto a resposta chega, ligue o streaming: ele evita que a estrutura pisque a cada trecho novo e segura o anúncio para o fim.",
+      "withStreamingCode": {
+        "react": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
+        "vue": "<Markdown\n  :content=\"parcial\"\n  :streaming=\"aindaGerando\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
+        "svelte": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={['paragraph', 'code', 'list']}\n/>",
+        "vanilla": "const view = createMarkdown({\n  content: parcial,\n  streaming: aindaGerando,\n  allow: ['paragraph', 'code', 'list'],\n});",
+        "angular": "<nds-markdown\n  [content]=\"parcial\"\n  [streaming]=\"aindaGerando\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Listas brancas",
+      "visualTitle": "Exemplos visuais",
+      "note": "A variação deste componente é o que ele ACEITA estruturar, não a aparência. O mesmo texto rende documentos diferentes conforme a lista, e o que fica de fora nunca some — vira texto.",
+      "items": {
+        "full": {
+          "name": "full",
+          "description": "Tudo que o componente sabe desenhar. É o padrão, e o que uma resposta de modelo costuma usar."
+        },
+        "chat": {
+          "name": "chat",
+          "description": "Sem título e sem tabela. Numa bolha de conversa, título compete com a hierarquia da página em volta."
+        },
+        "comment": {
+          "name": "comment",
+          "description": "Só parágrafo, ênfase e link. É a lista para campo de comentário, onde estrutura é ruído."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "idle": {
+        "label": "Pronto",
+        "trigger": "O texto chegou inteiro.",
+        "behavior": "O documento é montado uma vez e não muda mais. Nenhuma região viva permanece ativa."
+      },
+      "streaming": {
+        "label": "Em streaming",
+        "trigger": "O texto ainda está sendo recebido.",
+        "behavior": "A raiz é marcada como ocupada e o texto NÃO é anunciado a cada trecho. Construção ainda aberta fica como texto até fechar, para a estrutura não piscar."
+      },
+      "refused": {
+        "label": "Conteúdo recusado",
+        "trigger": "O texto traz HTML, endereço de esquema não aceito, ou bloco fora da lista branca.",
+        "behavior": "O conteúdo aparece como texto simples em vez de sumir. Link recusado mantém o texto e perde só o destino."
+      },
+      "empty": {
+        "label": "Vazio",
+        "trigger": "O texto é vazio ou só espaços.",
+        "behavior": "Nada é desenhado, e a raiz não ocupa espaço — não há caixa vazia herdando margem."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Contrato",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatória",
+        "description": "Descrição",
+        "content": {
+          "name": "content",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto em Markdown. Vem de fora do código e é tratado como não confiável."
+        },
+        "streaming": {
+          "name": "streaming",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Ligue enquanto o texto ainda chega. Segura o anúncio para o fim e evita que a estrutura pisque."
+        },
+        "allow": {
+          "name": "allow",
+          "type": "string[]",
+          "default": "full",
+          "required": "Não",
+          "description": "Quais blocos podem ser estruturados. O que fica de fora vira texto simples — nunca some."
+        },
+        "allowedProtocols": {
+          "name": "allowedProtocols",
+          "type": "string[]",
+          "default": "http, https, mailto",
+          "required": "Não",
+          "description": "Esquemas de endereço aceitos em link e imagem. Endereço recusado perde o destino e mantém o texto."
+        },
+        "onLinkClick": {
+          "name": "callback de link",
+          "type": "(url: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Chamado no clique de um link. Sem ele, o link segue o comportamento padrão do navegador."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes extras na raiz. É por aqui que a página define a medida de leitura."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "O parser é compartilhado e pode ser chamado direto quando se precisa da árvore antes de desenhar — para contar blocos, extrair o primeiro parágrafo ou decidir se vale renderizar.",
+      "extensibilityCode": {
+        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(resposta, { allow: ['paragraph', 'code'] });\nconst temCodigo = tree.children.some((n) => n.type === 'code');"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Seletor",
+        "description": "Descrição",
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-markdown",
+          "description": "Cor do texto corrido do documento inteiro."
+        },
+        "linkColor": {
+          "token": "--primary",
+          "value": ".nds-markdown-link",
+          "description": "Cor do link, que também sustenta o sublinhado."
+        },
+        "linkRing": {
+          "token": "--ring",
+          "value": ".nds-markdown-link:focus-visible",
+          "description": "Banda do anel de foco do link."
+        },
+        "quoteBar": {
+          "token": "--primary",
+          "value": ".nds-markdown-quote",
+          "description": "Barra lateral da citação. A cor fica na barra, e não no texto."
+        },
+        "ruleLine": {
+          "token": "--border",
+          "value": ".nds-markdown-rule",
+          "description": "Linha da divisória entre seções."
+        },
+        "imageRadius": {
+          "token": "--radius-md",
+          "value": ".nds-markdown-image",
+          "description": "Canto da imagem."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* A medida de leitura é da PÁGINA, não do componente. */\n.artigo .nds-markdown {\n  max-inline-size: 68ch;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O documento é montado com elementos semânticos reais — título é título, lista é lista —, então o leitor de tela navega por eles sem nada a mais. As duas decisões que exigem cuidado são o anúncio durante o streaming e o destino dos links.",
+      "item1": "Texto em streaming NÃO é região viva. Anunciar a cada trecho tornaria a leitura impossível; a resposta é anunciada uma vez, inteira, ao terminar.",
+      "item2": "Enquanto gera, a raiz é marcada como ocupada, para quem ouve saber que o conteúdo ainda muda.",
+      "item3": "Títulos preservam o nível que o texto declarou, sem saltar — a hierarquia é o que sustenta a navegação por títulos.",
+      "item4": "Imagem sem descrição não vira decoração silenciosa: a descrição ausente é visível na documentação como falha de quem escreveu o texto.",
+      "item5": "Link cujo endereço foi recusado deixa de ser link e vira texto — não fica um controle que promete navegação e não navega.",
+      "keyboardTitle": "Teclado",
+      "keyboard": {
+        "key": "Tecla",
+        "action": "Ação",
+        "tab": {
+          "key": "Tab",
+          "action": "Percorre os links do documento, na ordem em que aparecem."
+        },
+        "enter": {
+          "key": "Enter",
+          "action": "Segue o link em foco."
+        },
+        "arrows": {
+          "key": "Setas",
+          "action": "Rolam o documento; o componente não captura seta nenhuma."
+        }
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Usado com",
+      "codeBlock": "Desenha os blocos de código deste componente.",
+      "editor": "Escreve o Markdown que este componente exibe.",
+      "table": "Desenha as tabelas do GFM.",
+      "skeleton": "Ocupa o lugar enquanto a resposta não chegou."
+    },
+    "notes": {
+      "title": "Notas",
+      "tip1": "O componente não interpreta HTML, e isso é decisão e não limitação: o texto vem de fora do código, e num contexto conversacional vem de um modelo.",
+      "tip2": "A árvore é montada por um módulo compartilhado pelas cinco stacks, então o mesmo texto rende a mesma estrutura em todas — divergência aqui seria impossível por construção.",
+      "tip3": "Bloco de código é delegado ao CodeBlock, que já traz destaque de sintaxe pelos tokens do tema — não há segunda paleta a manter.",
+      "tip4": "Durante o streaming, construção ainda aberta fica como texto até fechar. Sem isso o texto vira tabela, volta a ser parágrafo e vira tabela outra vez, várias vezes por segundo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página de documentação dispara os três eventos padrão. O componente em si não instrumenta nada: ele exibe texto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Após dois segundos com a seção visível.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao trocar o exemplo da demonstração.",
+        "demoClickPayload": "component, element_id, label"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que cada story verifica.",
+        "item1": {
+          "action": "Renderizar título, lista e citação",
+          "result": "Cada um sai como o elemento semântico correspondente, com o nível declarado.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar bloco de código com linguagem",
+          "result": "O bloco é delegado ao CodeBlock e o destaque de sintaxe aparece.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar texto com HTML",
+          "result": "O HTML aparece como texto visível e nenhum elemento correspondente é criado.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar link com esquema recusado",
+          "result": "Não há link no documento, e o texto dele permanece.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Restringir a lista branca",
+          "result": "O bloco recusado aparece como texto, e nada do conteúdo se perde.",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar tabela do GFM",
+          "result": "Sai uma tabela com cabeçalho e o alinhamento que o texto declarou.",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "O que a suíte e o axe verificam.",
+        "item1": {
+          "action": "Sem violações do axe em todas as stories",
+          "result": "Zero violações, incluindo contraste de texto e de link.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Ligar o streaming",
+          "result": "A raiz é marcada como ocupada e NÃO existe região viva anunciando cada trecho.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Percorrer o documento com Tab",
+          "result": "Só os links recebem foco, na ordem em que aparecem, com anel visível.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar títulos de níveis diferentes",
+          "result": "O nível declarado no texto é o nível do elemento, sem salto.",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar imagem sem descrição",
+          "result": "A imagem existe com descrição vazia e o axe não a trata como decorativa por acidente.",
+          "priority": "medium"
+        }
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "O que o Chromatic fotografa.",
+        "item1": {
+          "action": "Playground",
+          "result": "Documento completo, com todos os blocos.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Listas brancas",
+          "result": "O mesmo texto sob as três listas, lado a lado.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Em streaming",
+          "result": "Resposta parcial, com a construção aberta ainda como texto.",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Conteúdo recusado",
+          "result": "HTML e endereço hostil aparecendo como texto.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Documento vazio",
+          "result": "Nada desenhado, e sem caixa vazia ocupando espaço.",
+          "priority": "low"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando usar",
+      "doDont": "Boas práticas",
+      "techRef": "Referência técnica",
+      "import": "Importação",
+      "variants": "Listas brancas",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Markdown",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "Renders Markdown text as design system elements. It takes text and returns structure: a heading becomes a heading, a code block becomes CodeBlock, and nothing that arrives is interpreted as HTML.",
+    "seo": {
+      "title": "Markdown — Conversational",
+      "description": "Documentation for Markdown: safe rendering of text coming from AI models, with a block allow-list, streaming and zero interpreted HTML.",
+      "aiSummary": "A component that converts Markdown into design system elements without going through HTML. The tree is built by a shared parser and each stack draws its own nodes, so there is no innerHTML and no XSS surface. It accepts a block allow-list and a streaming mode for a model response still arriving.",
+      "aiEntities": "Markdown, GFM, rendering, streaming, XSS, allow-list, accessibility, conversational interface"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "prose": "Prose",
+        "code": "Code",
+        "table": "Table",
+        "unsafe": "Hostile content"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "Root — container of the rendered document, carrying the component class and the reading measure.",
+      "item2": "Blocks — paragraph, heading, quote, list, rule and table, each as its own semantic element.",
+      "item3": "Code block — delegated to CodeBlock, which already brings syntax highlighting from the theme tokens.",
+      "item4": "Inline pieces — emphasis, strong, strikethrough, short code and link, built as nodes and never as interpreted text.",
+      "item5": "Refused text — whatever the allow-list does not accept appears as plain text, preserved and visible.",
+      "structureLabel": "Structure"
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it for any text arriving from outside the code — a model response, a comment, a content field, documentation loaded at runtime.",
+        "item2": "Narrow the allow-list to what that surface needs: a conversation bubble rarely needs a table, and a comment field rarely needs headings.",
+        "item3": "Turn streaming mode on only while the text is still arriving, and off when it ends — that is what allows announcing the whole answer at once.",
+        "item4": "Leave the reading measure to the surrounding container, not to the component: the page decides the column width.",
+        "item5": "Widen the address scheme list only with a written reason; the default covers http, https and mailto."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "A model answer, with code and lists",
+          "u": "Markdown",
+          "a": "—"
+        },
+        "item2": {
+          "s": "A single code snippet, already known",
+          "u": "CodeBlock",
+          "a": "Markdown, if it arrives mixed with prose"
+        },
+        "item3": {
+          "s": "Text that a person writes and formats",
+          "u": "Editor",
+          "a": "Markdown to display the result"
+        },
+        "item4": {
+          "s": "A short label, without structure",
+          "u": "Plain text",
+          "a": "—"
+        },
+        "item5": {
+          "s": "Ready-made HTML coming from a service",
+          "u": "Sanitisation at the call site",
+          "a": "Markdown does not interpret HTML, by design"
+        }
+      },
+      "do": {
+        "item1": "Narrow the blocks to what the surface needs.",
+        "item2": "Treat all outside text as untrusted.",
+        "item3": "Turn streaming off when the answer ends.",
+        "item4": "Leave the column width to the page."
+      },
+      "dont": {
+        "item1": "Run the text through an HTML converter first.",
+        "item2": "Open the scheme list to accept any address.",
+        "item3": "Leave streaming on after the answer ends.",
+        "item4": "Hard-code a width inside the component."
+      }
+    },
+    "doDont": {
+      "title": "Good practices",
+      "pair1": {
+        "do": "An address with a refused scheme loses its destination and keeps the text: the reader still sees what was written.",
+        "dont": "Deleting the whole link hides that there was one — and, in a conversation, hides that the model tried to send it."
+      },
+      "pair2": {
+        "do": "A block outside the allow-list becomes plain text, preserved and legible.",
+        "dont": "A block that simply disappears leaves the reader unaware that there was content there."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "The component takes the text and handles the rest. Nothing needs sanitising first: it does not interpret HTML.",
+      "basicCode": {
+        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={resposta} />",
+        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"resposta\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { resposta } = $props();\n</script>\n\n<Markdown content={resposta} />",
+        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: resposta });\ndocument.querySelector('#app')?.append(view);",
+        "angular": "<nds-markdown [content]=\"resposta\" />"
+      },
+      "withStreaming": "While the answer arrives, turn streaming on: it keeps the structure from flickering with each new chunk and holds the announcement until the end.",
+      "withStreamingCode": {
+        "react": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
+        "vue": "<Markdown\n  :content=\"parcial\"\n  :streaming=\"aindaGerando\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
+        "svelte": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={['paragraph', 'code', 'list']}\n/>",
+        "vanilla": "const view = createMarkdown({\n  content: parcial,\n  streaming: aindaGerando,\n  allow: ['paragraph', 'code', 'list'],\n});",
+        "angular": "<nds-markdown\n  [content]=\"parcial\"\n  [streaming]=\"aindaGerando\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Allow-lists",
+      "visualTitle": "Visual examples",
+      "note": "This component varies by what it ACCEPTS to structure, not by appearance. The same text yields different documents depending on the list, and whatever is left out never disappears — it becomes text.",
+      "items": {
+        "full": {
+          "name": "full",
+          "description": "Everything the component knows how to draw. It is the default, and what a model answer usually uses."
+        },
+        "chat": {
+          "name": "chat",
+          "description": "No headings and no tables. In a conversation bubble, a heading competes with the surrounding page hierarchy."
+        },
+        "comment": {
+          "name": "comment",
+          "description": "Only paragraph, emphasis and link. This is the list for a comment field, where structure is noise."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to trigger",
+        "behavior": "Behaviour"
+      },
+      "idle": {
+        "label": "Idle",
+        "trigger": "The text arrived complete.",
+        "behavior": "The document is built once and does not change again. No live region stays active."
+      },
+      "streaming": {
+        "label": "Streaming",
+        "trigger": "The text is still being received.",
+        "behavior": "The root is marked busy and the text is NOT announced with each chunk. A construction still open stays as text until it closes, so the structure does not flicker."
+      },
+      "refused": {
+        "label": "Refused content",
+        "trigger": "The text carries HTML, an address with an unaccepted scheme, or a block outside the allow-list.",
+        "behavior": "The content appears as plain text instead of disappearing. A refused link keeps its text and loses only the destination."
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "The text is empty or only whitespace.",
+        "behavior": "Nothing is drawn, and the root takes no space — there is no empty box inheriting margin."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "Contract",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "content": {
+          "name": "content",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The Markdown text. It comes from outside the code and is treated as untrusted."
+        },
+        "streaming": {
+          "name": "streaming",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Turn on while the text is still arriving. It holds the announcement until the end and keeps the structure from flickering."
+        },
+        "allow": {
+          "name": "allow",
+          "type": "string[]",
+          "default": "full",
+          "required": "No",
+          "description": "Which blocks may be structured. Whatever is left out becomes plain text — it never disappears."
+        },
+        "allowedProtocols": {
+          "name": "allowedProtocols",
+          "type": "string[]",
+          "default": "http, https, mailto",
+          "required": "No",
+          "description": "Address schemes accepted in links and images. A refused address loses its destination and keeps its text."
+        },
+        "onLinkClick": {
+          "name": "callback de link",
+          "type": "(url: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Called when a link is clicked. Without it, the link follows the browser default behaviour."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Extra classes on the root. This is where the page sets the reading measure."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "The parser is shared and can be called directly when you need the tree before drawing — to count blocks, extract the first paragraph or decide whether rendering is worth it.",
+      "extensibilityCode": {
+        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(resposta, { allow: ['paragraph', 'code'] });\nconst temCodigo = tree.children.some((n) => n.type === 'code');"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Selector",
+        "description": "Description",
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-markdown",
+          "description": "Colour of the running text across the document."
+        },
+        "linkColor": {
+          "token": "--primary",
+          "value": ".nds-markdown-link",
+          "description": "Link colour, which also carries the underline."
+        },
+        "linkRing": {
+          "token": "--ring",
+          "value": ".nds-markdown-link:focus-visible",
+          "description": "Band of the link focus ring."
+        },
+        "quoteBar": {
+          "token": "--primary",
+          "value": ".nds-markdown-quote",
+          "description": "Side bar of the quote. The colour stays on the bar, not on the text."
+        },
+        "ruleLine": {
+          "token": "--border",
+          "value": ".nds-markdown-rule",
+          "description": "Line of the rule between sections."
+        },
+        "imageRadius": {
+          "token": "--radius-md",
+          "value": ".nds-markdown-image",
+          "description": "Corner of the image."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": "/* A medida de leitura é da PÁGINA, não do componente. */\n.artigo .nds-markdown {\n  max-inline-size: 68ch;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The document is built from real semantic elements — a heading is a heading, a list is a list — so a screen reader navigates them with nothing extra. The two decisions that need care are the announcement during streaming and the link destinations.",
+      "item1": "Streaming text is NOT a live region. Announcing each chunk would make reading impossible; the answer is announced once, whole, when it ends.",
+      "item2": "While generating, the root is marked busy, so listeners know the content is still changing.",
+      "item3": "Headings preserve the level the text declared, without skipping — the hierarchy is what supports heading navigation.",
+      "item4": "An image without a description does not become silent decoration: the missing description shows in the documentation as a fault of whoever wrote the text.",
+      "item5": "A link whose address was refused stops being a link and becomes text — no control is left promising navigation it cannot perform.",
+      "keyboardTitle": "Keyboard",
+      "keyboard": {
+        "key": "Key",
+        "action": "Action",
+        "tab": {
+          "key": "Tab",
+          "action": "Moves through the document links, in the order they appear."
+        },
+        "enter": {
+          "key": "Enter",
+          "action": "Follows the focused link."
+        },
+        "arrows": {
+          "key": "Arrows",
+          "action": "Scroll the document; the component captures no arrow key."
+        }
+      }
+    },
+    "related": {
+      "title": "Related",
+      "alternatives": "Alternatives",
+      "usedWith": "Used with",
+      "codeBlock": "Draws the code blocks of this component.",
+      "editor": "Writes the Markdown this component displays.",
+      "table": "Draws the GFM tables.",
+      "skeleton": "Holds the place while the answer has not arrived."
+    },
+    "notes": {
+      "title": "Notes",
+      "tip1": "The component does not interpret HTML, and that is a decision rather than a limitation: the text comes from outside the code, and in a conversational context it comes from a model.",
+      "tip2": "The tree is built by a module shared across the five stacks, so the same text yields the same structure in all of them — divergence here would be impossible by construction.",
+      "tip3": "A code block is delegated to CodeBlock, which already brings syntax highlighting from the theme tokens — there is no second palette to maintain.",
+      "tip4": "During streaming, a construction still open stays as text until it closes. Without that the text becomes a table, goes back to a paragraph and becomes a table again, several times per second."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The documentation page fires the three standard events. The component itself instruments nothing: it displays text.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "After two seconds with the section visible.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On switching the demonstration example.",
+        "demoClickPayload": "component, element_id, label"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What each story verifies.",
+        "item1": {
+          "action": "Render heading, list and quote",
+          "result": "Each comes out as the matching semantic element, at the declared level.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render a code block with a language",
+          "result": "The block is delegated to CodeBlock and syntax highlighting appears.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass text containing HTML",
+          "result": "The HTML appears as visible text and no matching element is created.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass a link with a refused scheme",
+          "result": "There is no link in the document, and its text remains.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Narrow the allow-list",
+          "result": "The refused block appears as text, and none of the content is lost.",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Render a GFM table",
+          "result": "A table comes out with a header and the alignment the text declared.",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "What the suite and axe verify.",
+        "item1": {
+          "action": "No axe violations in any story",
+          "result": "Zero violations, including text and link contrast.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Turn streaming on",
+          "result": "The root is marked busy and there is NO live region announcing each chunk.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Move through the document with Tab",
+          "result": "Only links receive focus, in the order they appear, with a visible ring.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Render headings at different levels",
+          "result": "The level declared in the text is the element level, without skipping.",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Render an image without a description",
+          "result": "The image exists with an empty description and axe does not treat it as decorative by accident.",
+          "priority": "medium"
+        }
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "What Chromatic photographs.",
+        "item1": {
+          "action": "Playground",
+          "result": "Complete document, with every block.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Allow-lists",
+          "result": "The same text under the three lists, side by side.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Streaming",
+          "result": "Partial answer, with the open construction still as text.",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Refused content",
+          "result": "HTML and a hostile address appearing as text.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Empty document",
+          "result": "Nothing drawn, and no empty box taking space.",
+          "priority": "low"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to use",
+      "doDont": "Good practices",
+      "techRef": "Technical reference",
+      "import": "Import",
+      "variants": "Allow-lists",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Markdown",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Renderiza texto en Markdown como elementos del sistema de diseño. Recibe el texto y devuelve estructura: un título es un título, un bloque de código es CodeBlock, y nada de lo que llega se interpreta como HTML.",
+    "seo": {
+      "title": "Markdown — Conversacional",
+      "description": "Documentación del Markdown: renderizado seguro de texto proveniente de modelos de IA, con lista blanca de bloques, streaming y cero HTML interpretado.",
+      "aiSummary": "Componente que convierte Markdown en elementos del sistema de diseño sin pasar por HTML. El árbol lo construye un parser compartido y cada stack dibuja sus propios nodos, así que no hay innerHTML ni superficie de XSS. Acepta una lista blanca de bloques y modo de streaming para una respuesta de modelo que aún está llegando.",
+      "aiEntities": "Markdown, GFM, renderizado, streaming, XSS, lista blanca, accesibilidad, interfaz conversacional"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "prose": "Texto",
+        "code": "Código",
+        "table": "Tabla",
+        "unsafe": "Contenido hostil"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "Raíz — contenedor del documento renderizado, con la clase del componente y la medida de lectura.",
+      "item2": "Bloques — párrafo, título, cita, lista, regla y tabla, cada uno como su propio elemento semántico.",
+      "item3": "Bloque de código — delegado a CodeBlock, que ya trae resaltado de sintaxis con los tokens del tema.",
+      "item4": "Fragmentos en línea — énfasis, fuerte, tachado, código corto y enlace, construidos como nodos y nunca como texto interpretado.",
+      "item5": "Texto rechazado — lo que la lista blanca no acepta aparece como texto simple, preservado y visible.",
+      "structureLabel": "Estructura"
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para cualquier texto que llegue desde fuera del código — respuesta de modelo, comentario, campo de contenido, documentación cargada en tiempo de ejecución.",
+        "item2": "Restringe la lista blanca a lo que esa superficie necesita: una burbuja de conversación rara vez necesita tabla, y un campo de comentario rara vez necesita títulos.",
+        "item3": "Activa el modo de streaming solo mientras el texto aún llega, y desactívalo al terminar — es lo que permite anunciar la respuesta entera de una vez.",
+        "item4": "Deja la medida de lectura en el contenedor de alrededor, no en el componente: la página decide el ancho de la columna.",
+        "item5": "Amplía la lista de esquemas de dirección solo con un motivo escrito; el valor por defecto cubre http, https y mailto."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Respuesta de un modelo, con código y listas",
+          "u": "Markdown",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Un fragmento de código solo, ya conocido",
+          "u": "CodeBlock",
+          "a": "Markdown, si llega mezclado con texto"
+        },
+        "item3": {
+          "s": "Texto que la persona escribe y formatea",
+          "u": "Editor",
+          "a": "Markdown para mostrar el resultado"
+        },
+        "item4": {
+          "s": "Etiqueta corta, sin estructura",
+          "u": "Texto directo",
+          "a": "—"
+        },
+        "item5": {
+          "s": "HTML ya hecho que viene de un servicio",
+          "u": "Saneamiento en el punto de uso",
+          "a": "Markdown no interpreta HTML, a propósito"
+        }
+      },
+      "do": {
+        "item1": "Restringir los bloques a lo que la superficie necesita.",
+        "item2": "Tratar todo texto externo como no confiable.",
+        "item3": "Desactivar el streaming cuando la respuesta termina.",
+        "item4": "Dejar el ancho de la columna a la página."
+      },
+      "dont": {
+        "item1": "Pasar el texto por un conversor de HTML antes.",
+        "item2": "Abrir la lista de esquemas para aceptar cualquier dirección.",
+        "item3": "Dejar el streaming activo después del fin de la respuesta.",
+        "item4": "Fijar un ancho dentro del componente."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "Una dirección con esquema rechazado pierde el destino y mantiene el texto: quien lee sigue viendo lo que se escribió.",
+        "dont": "Borrar el enlace entero oculta que había uno — y, en una conversación, oculta que el modelo intentó enviarlo."
+      },
+      "pair2": {
+        "do": "Un bloque fuera de la lista blanca se convierte en texto simple, preservado y legible.",
+        "dont": "Un bloque que simplemente desaparece deja a quien lee sin saber que había contenido ahí."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "El componente recibe el texto y se encarga del resto. Nada necesita saneamiento previo: no interpreta HTML.",
+      "basicCode": {
+        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={resposta} />",
+        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"resposta\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { resposta } = $props();\n</script>\n\n<Markdown content={resposta} />",
+        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: resposta });\ndocument.querySelector('#app')?.append(view);",
+        "angular": "<nds-markdown [content]=\"resposta\" />"
+      },
+      "withStreaming": "Mientras llega la respuesta, activa el streaming: evita que la estructura parpadee con cada fragmento nuevo y retiene el anuncio hasta el final.",
+      "withStreamingCode": {
+        "react": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
+        "vue": "<Markdown\n  :content=\"parcial\"\n  :streaming=\"aindaGerando\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
+        "svelte": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={['paragraph', 'code', 'list']}\n/>",
+        "vanilla": "const view = createMarkdown({\n  content: parcial,\n  streaming: aindaGerando,\n  allow: ['paragraph', 'code', 'list'],\n});",
+        "angular": "<nds-markdown\n  [content]=\"parcial\"\n  [streaming]=\"aindaGerando\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Listas blancas",
+      "visualTitle": "Ejemplos visuales",
+      "note": "La variación de este componente es lo que ACEPTA estructurar, no la apariencia. El mismo texto rinde documentos distintos según la lista, y lo que queda fuera nunca desaparece — se vuelve texto.",
+      "items": {
+        "full": {
+          "name": "full",
+          "description": "Todo lo que el componente sabe dibujar. Es el valor por defecto, y lo que suele usar una respuesta de modelo."
+        },
+        "chat": {
+          "name": "chat",
+          "description": "Sin títulos y sin tablas. En una burbuja de conversación, un título compite con la jerarquía de la página alrededor."
+        },
+        "comment": {
+          "name": "comment",
+          "description": "Solo párrafo, énfasis y enlace. Es la lista para un campo de comentario, donde la estructura es ruido."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "idle": {
+        "label": "Listo",
+        "trigger": "El texto llegó completo.",
+        "behavior": "El documento se construye una vez y no cambia más. Ninguna región viva permanece activa."
+      },
+      "streaming": {
+        "label": "En streaming",
+        "trigger": "El texto aún se está recibiendo.",
+        "behavior": "La raíz se marca como ocupada y el texto NO se anuncia con cada fragmento. Una construcción aún abierta queda como texto hasta cerrarse, para que la estructura no parpadee."
+      },
+      "refused": {
+        "label": "Contenido rechazado",
+        "trigger": "El texto trae HTML, una dirección con esquema no aceptado, o un bloque fuera de la lista blanca.",
+        "behavior": "El contenido aparece como texto simple en vez de desaparecer. Un enlace rechazado mantiene su texto y pierde solo el destino."
+      },
+      "empty": {
+        "label": "Vacío",
+        "trigger": "El texto está vacío o solo tiene espacios.",
+        "behavior": "No se dibuja nada, y la raíz no ocupa espacio — no hay caja vacía heredando margen."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Contrato",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatoria",
+        "description": "Descripción",
+        "content": {
+          "name": "content",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto en Markdown. Viene de fuera del código y se trata como no confiable."
+        },
+        "streaming": {
+          "name": "streaming",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Actívalo mientras el texto aún llega. Retiene el anuncio hasta el final y evita que la estructura parpadee."
+        },
+        "allow": {
+          "name": "allow",
+          "type": "string[]",
+          "default": "full",
+          "required": "No",
+          "description": "Qué bloques pueden estructurarse. Lo que queda fuera se convierte en texto simple — nunca desaparece."
+        },
+        "allowedProtocols": {
+          "name": "allowedProtocols",
+          "type": "string[]",
+          "default": "http, https, mailto",
+          "required": "No",
+          "description": "Esquemas de dirección aceptados en enlace e imagen. Una dirección rechazada pierde el destino y mantiene el texto."
+        },
+        "onLinkClick": {
+          "name": "callback de link",
+          "type": "(url: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Se llama al hacer clic en un enlace. Sin él, el enlace sigue el comportamiento por defecto del navegador."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases extra en la raíz. Aquí es donde la página define la medida de lectura."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "El parser es compartido y puede llamarse directamente cuando se necesita el árbol antes de dibujar — para contar bloques, extraer el primer párrafo o decidir si vale la pena renderizar.",
+      "extensibilityCode": {
+        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(resposta, { allow: ['paragraph', 'code'] });\nconst temCodigo = tree.children.some((n) => n.type === 'code');"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Selector",
+        "description": "Descripción",
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-markdown",
+          "description": "Color del texto corrido de todo el documento."
+        },
+        "linkColor": {
+          "token": "--primary",
+          "value": ".nds-markdown-link",
+          "description": "Color del enlace, que también sostiene el subrayado."
+        },
+        "linkRing": {
+          "token": "--ring",
+          "value": ".nds-markdown-link:focus-visible",
+          "description": "Banda del anillo de foco del enlace."
+        },
+        "quoteBar": {
+          "token": "--primary",
+          "value": ".nds-markdown-quote",
+          "description": "Barra lateral de la cita. El color queda en la barra, no en el texto."
+        },
+        "ruleLine": {
+          "token": "--border",
+          "value": ".nds-markdown-rule",
+          "description": "Línea de la división entre secciones."
+        },
+        "imageRadius": {
+          "token": "--radius-md",
+          "value": ".nds-markdown-image",
+          "description": "Esquina de la imagen."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* A medida de leitura é da PÁGINA, não do componente. */\n.artigo .nds-markdown {\n  max-inline-size: 68ch;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El documento se construye con elementos semánticos reales — un título es un título, una lista es una lista —, así que el lector de pantalla navega por ellos sin nada más. Las dos decisiones que exigen cuidado son el anuncio durante el streaming y el destino de los enlaces.",
+      "item1": "El texto en streaming NO es una región viva. Anunciar cada fragmento haría imposible la lectura; la respuesta se anuncia una vez, entera, al terminar.",
+      "item2": "Mientras genera, la raíz se marca como ocupada, para que quien escucha sepa que el contenido aún cambia.",
+      "item3": "Los títulos preservan el nivel que el texto declaró, sin saltar — la jerarquía es lo que sostiene la navegación por títulos.",
+      "item4": "Una imagen sin descripción no se vuelve decoración silenciosa: la descripción ausente se muestra en la documentación como falla de quien escribió el texto.",
+      "item5": "Un enlace cuya dirección fue rechazada deja de ser enlace y se vuelve texto — no queda un control que promete navegación y no navega.",
+      "keyboardTitle": "Teclado",
+      "keyboard": {
+        "key": "Tecla",
+        "action": "Acción",
+        "tab": {
+          "key": "Tab",
+          "action": "Recorre los enlaces del documento, en el orden en que aparecen."
+        },
+        "enter": {
+          "key": "Enter",
+          "action": "Sigue el enlace enfocado."
+        },
+        "arrows": {
+          "key": "Flechas",
+          "action": "Desplazan el documento; el componente no captura ninguna flecha."
+        }
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Usado con",
+      "codeBlock": "Dibuja los bloques de código de este componente.",
+      "editor": "Escribe el Markdown que este componente muestra.",
+      "table": "Dibuja las tablas de GFM.",
+      "skeleton": "Ocupa el lugar mientras la respuesta no llega."
+    },
+    "notes": {
+      "title": "Notas",
+      "tip1": "El componente no interpreta HTML, y eso es una decisión y no una limitación: el texto viene de fuera del código, y en un contexto conversacional viene de un modelo.",
+      "tip2": "El árbol lo construye un módulo compartido por las cinco stacks, así que el mismo texto rinde la misma estructura en todas — la divergencia aquí sería imposible por construcción.",
+      "tip3": "El bloque de código se delega a CodeBlock, que ya trae resaltado de sintaxis con los tokens del tema — no hay una segunda paleta que mantener.",
+      "tip4": "Durante el streaming, una construcción aún abierta queda como texto hasta cerrarse. Sin eso el texto se vuelve tabla, regresa a párrafo y vuelve a ser tabla, varias veces por segundo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página de documentación dispara los tres eventos estándar. El componente en sí no instrumenta nada: muestra texto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Tras dos segundos con la sección visible.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al cambiar el ejemplo de la demostración.",
+        "demoClickPayload": "component, element_id, label"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que verifica cada story.",
+        "item1": {
+          "action": "Renderizar título, lista y cita",
+          "result": "Cada uno sale como el elemento semántico correspondiente, con el nivel declarado.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar bloque de código con lenguaje",
+          "result": "El bloque se delega a CodeBlock y aparece el resaltado de sintaxis.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar texto con HTML",
+          "result": "El HTML aparece como texto visible y no se crea ningún elemento correspondiente.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar un enlace con esquema rechazado",
+          "result": "No hay enlace en el documento, y su texto permanece.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Restringir la lista blanca",
+          "result": "El bloque rechazado aparece como texto, y nada del contenido se pierde.",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar tabla de GFM",
+          "result": "Sale una tabla con encabezado y la alineación que el texto declaró.",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Lo que verifican la suite y axe.",
+        "item1": {
+          "action": "Sin violaciones de axe en ninguna story",
+          "result": "Cero violaciones, incluyendo contraste de texto y de enlace.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Activar el streaming",
+          "result": "La raíz se marca como ocupada y NO existe región viva anunciando cada fragmento.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Recorrer el documento con Tab",
+          "result": "Solo los enlaces reciben foco, en el orden en que aparecen, con anillo visible.",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar títulos de niveles distintos",
+          "result": "El nivel declarado en el texto es el nivel del elemento, sin salto.",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar imagen sin descripción",
+          "result": "La imagen existe con descripción vacía y axe no la trata como decorativa por accidente.",
+          "priority": "medium"
+        }
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Lo que fotografía Chromatic.",
+        "item1": {
+          "action": "Playground",
+          "result": "Documento completo, con todos los bloques.",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Listas blancas",
+          "result": "El mismo texto bajo las tres listas, lado a lado.",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "En streaming",
+          "result": "Respuesta parcial, con la construcción abierta aún como texto.",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Contenido rechazado",
+          "result": "HTML y dirección hostil apareciendo como texto.",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Documento vacío",
+          "result": "Nada dibujado, y sin caja vacía ocupando espacio.",
+          "priority": "low"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión general",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo usar",
+      "doDont": "Buenas prácticas",
+      "techRef": "Referencia técnica",
+      "import": "Importación",
+      "variants": "Listas blancas",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}

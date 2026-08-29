@@ -74,6 +74,7 @@
 @import "./chart.css";
 @import "./editor.css";
 @import "./media-player.css";
+@import "./markdown.css";
 
 /*
  * As utilities entram POR ÚLTIMO, e isso é desenho, não acidente.

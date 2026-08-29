@@ -1,0 +1,230 @@
+/*
+ * ─── nds-markdown ───────────────────────────────────────────────────────────
+ * Documento em Markdown já convertido em elementos semânticos. O texto vem de
+ * fora do código — numa interface conversacional, de um modelo —, e por isso
+ * NADA aqui interpreta HTML: quem monta a árvore é
+ * `docs/shared/primitives/markdown-ast.ts`, que não tem nó de HTML.
+ *
+ * Estrutura:
+ *   <div class="nds-markdown" data-streaming="true" aria-busy="true">
+ *     <h2 class="nds-text-h2 nds-markdown-heading">Título</h2>
+ *     <p class="nds-markdown-paragraph">
+ *       texto com <a class="nds-markdown-link">link</a> e
+ *       <code class="nds-code-inline nds-markdown-inline-code">código</code>
+ *     </p>
+ *     <ul class="nds-markdown-list">
+ *       <li class="nds-markdown-item">item</li>
+ *       <li class="nds-markdown-item nds-markdown-task">
+ *         <input type="checkbox" checked disabled> feito
+ *       </li>
+ *     </ul>
+ *     <blockquote class="nds-markdown-quote">citação</blockquote>
+ *     <div class="nds-code-block-root">…</div>          ← delegado ao CodeBlock
+ *     <div class="nds-markdown-table-scroll">
+ *       <table class="nds-table">…</table>              ← delegado à Table
+ *     </div>
+ *     <hr class="nds-markdown-rule">
+ *     <p class="nds-markdown-raw">bloco recusado, como texto</p>
+ *   </div>
+ *
+ * PAR COM O EDITOR. `editor.css` desenha a mesma prosa do outro lado: lá se
+ * ESCREVE o markdown que aqui se LÊ, e as duas superfícies aparecem juntas num
+ * produto conversacional. Mudança de escala, de recuo ou de citação vale para
+ * as duas — mexeu numa, confira a outra. Uma diferença é deliberada e está
+ * documentada na citação, abaixo.
+ *
+ * A escala de tipos NÃO é repetida aqui: título recebe `.nds-text-h*` de
+ * `typography.css`, porque este componente monta o próprio markup e pode
+ * aplicar classe. O editor não pode — quem escreve o markup lá é a lib —, e é
+ * por isso que ele repete os valores por tag.
+ *
+ * Tokens: --foreground, --primary, --border, --ring, --background,
+ *         --radius-md, --spacing-*
+ */
+
+.nds-markdown {
+  color: hsl(var(--foreground));
+  font-size: var(--text-p);
+  /* Declarada, não herdada: altura de linha de texto corrido é decisão de
+   * design, e ficar no `normal` do navegador é não decidir. Mesma conta do
+   * editor. */
+  line-height: 1.5;
+  /* Palavra longa de resposta de modelo (URL crua, identificador) não empurra a
+   * bolha: quebra dentro dela. */
+  overflow-wrap: break-word;
+}
+
+/* Documento vazio não deixa caixa ocupando espaço — sem isto a raiz continua
+ * sendo um bloco e herda a margem de quem está em volta. */
+.nds-markdown:empty {
+  display: none;
+}
+
+/* Intervalo entre blocos de primeiro nível. `* + *` e não `margin-block` em
+ * cada bloco: assim o primeiro não empurra o topo do contêiner. */
+.nds-markdown > * + * {
+  margin-block-start: var(--spacing-3);
+}
+
+/* Título pede mais respiro acima do que o intervalo entre parágrafos — é o que
+ * separa uma seção da anterior. Abaixo não: ele já está colado no que
+ * introduz. */
+.nds-markdown > * + :is(h1, h2, h3, h4, h5, h6) {
+  margin-block-start: var(--spacing-6);
+}
+
+/* Título — o tamanho vem de `.nds-text-h*`; o que sobra para cá é só desfazer
+ * a margem que o navegador desenha por conta própria, que competiria com o
+ * intervalo declarado acima. */
+.nds-markdown-heading {
+  margin-block: 0;
+  text-wrap: balance;
+}
+
+.nds-markdown-paragraph {
+  margin-block: 0;
+}
+
+/* ── Listas ─────────────────────────────────────────────────────────────────
+ * O recuo vem do token e fica em `padding`, não em `margin`: com
+ * `list-style-position: outside` (o padrão) mais recuo em margem, o marcador
+ * escapa da caixa e desalinha do texto em volta. */
+.nds-markdown-list {
+  margin-block: 0;
+  margin-inline: 0;
+  padding-inline-start: var(--spacing-6);
+}
+
+.nds-markdown-item + .nds-markdown-item {
+  margin-block-start: var(--spacing-1);
+}
+
+/* Lista aninhada pertence ao item acima: não ganha o intervalo de bloco. */
+.nds-markdown-item > .nds-markdown-list {
+  margin-block-start: var(--spacing-1);
+}
+
+/* Parágrafo dentro de item não leva a margem do navegador — ela afastaria o
+ * texto do próprio marcador. */
+.nds-markdown-item > .nds-markdown-paragraph {
+  margin-block: 0;
+}
+
+/* Item de tarefa: a caixa é um `checkbox` desabilitado de verdade, e não um
+ * glifo. Ela não é operável — o documento é de leitura —, mas anuncia
+ * "marcada" ou "não marcada" para quem ouve, que é a informação que o texto
+ * carregava. Glifo em `::before` não anuncia nada.
+ *
+ * O marcador da lista sai porque a caixa é o marcador. */
+.nds-markdown-task {
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+  margin-inline-start: calc(var(--spacing-6) * -1);
+}
+
+.nds-markdown-task > input[type="checkbox"] {
+  /* Alinha a caixa com a PRIMEIRA linha do texto, e acompanha a fonte: em
+   * `em`, ela cresce junto quando o navegador aumenta o corpo (WCAG 1.4.4). */
+  inline-size: 1em;
+  block-size: 1em;
+  margin-block-start: 0.25em;
+  flex-shrink: 0;
+}
+
+/* ── Citação ────────────────────────────────────────────────────────────────
+ * A cor vai na BARRA e o texto fica em `--foreground`: cor semântica em texto
+ * corrido raramente alcança os 4.5:1, enquanto a barra é elemento gráfico e
+ * responde por 3:1.
+ *
+ * `border-inline-start` e `padding-inline-start`, não `left`: em árabe ou
+ * hebraico o texto começa à direita e a marca acompanha.
+ *
+ * DIVERGE DO EDITOR de propósito: lá a citação mantém os 40px de recuo externo
+ * que o navegador desenha, porque o campo ocupa a largura da página. Aqui o
+ * documento também mora dentro de bolha de conversa, e 40px de cada lado comem
+ * a medida de leitura justamente onde ela é mais curta. A barra continua sendo
+ * o sinal da citação; o recuo externo é que sai. */
+.nds-markdown-quote {
+  margin-block: 0;
+  margin-inline: 0;
+  border-inline-start: 3px solid hsl(var(--primary));
+  padding-inline-start: var(--spacing-4);
+}
+
+/* ── Divisória ──────────────────────────────────────────────────────────────
+ * Sem o entalhe 3D que o navegador ainda desenha por padrão. */
+.nds-markdown-rule {
+  border: 0;
+  border-block-start: 1px solid hsl(var(--border));
+  margin-block: var(--spacing-6);
+}
+
+/* ── Link ───────────────────────────────────────────────────────────────────
+ * Sublinhado permanente, e não só no `:hover`: dentro de texto corrido a cor
+ * sozinha não distingue link de ênfase para quem não a percebe (WCAG 1.4.1). */
+.nds-markdown-link {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  border-radius: var(--radius-xs);
+}
+
+/* Forma canônica do anel: 2px de vão em `--background` e 3px de banda em
+ * `--ring`. Igual à do botão — indicador opaco, não halo translúcido. */
+.nds-markdown-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
+}
+
+/* ── Código em linha ────────────────────────────────────────────────────────
+ * O desenho é o de `.nds-code-inline`, que o elemento também carrega. O que
+ * esta classe faz é uma coisa só: desfazer o `white-space: nowrap` dela. Numa
+ * resposta de modelo o trecho é longo (caminho de arquivo, identificador
+ * inteiro), e um que não quebra empurra a bolha para fora da tela. */
+.nds-markdown-inline-code {
+  white-space: normal;
+}
+
+/* ── Imagem ─────────────────────────────────────────────────────────────────
+ * Nunca maior que a coluna. `height: auto` preserva a proporção quando a
+ * largura é limitada. */
+.nds-markdown-image {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--radius-md);
+}
+
+/* ── Tabela ─────────────────────────────────────────────────────────────────
+ * A tabela em si é a `.nds-table` do sistema. O que este componente acrescenta
+ * é o recorte: tabela larga rola DENTRO da caixa, e não empurra o documento
+ * para a rolagem horizontal — o defeito que o guarda de rolagem do projeto já
+ * pegou uma vez, e que também não aparecia na raiz. */
+.nds-markdown-table-scroll {
+  overflow-x: auto;
+}
+
+/* Alinhamento declarado pelo texto (`|:--|--:|`). Vem em atributo porque é
+ * dado da célula, não escolha de estilo. */
+.nds-markdown-table-scroll [data-align="center"] {
+  text-align: center;
+}
+
+.nds-markdown-table-scroll [data-align="right"] {
+  text-align: right;
+}
+
+/* ── Conteúdo recusado ──────────────────────────────────────────────────────
+ * Bloco fora da lista branca, ou HTML, aparece como TEXTO em vez de sumir —
+ * bloco que desaparece deixa quem lê sem saber que havia algo ali.
+ *
+ * `pre-wrap` porque o que sobra costuma ser código ou marcação, onde a quebra
+ * de linha original é informação; e quebra mesmo assim, para não empurrar a
+ * caixa. */
+.nds-markdown-raw {
+  margin-block: 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
