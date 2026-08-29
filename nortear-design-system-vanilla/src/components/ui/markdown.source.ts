@@ -16,7 +16,7 @@ import {
 
 /** O que as stories usam da `MarkdownOptions` e que o snippet precisa mostrar. */
 export type MarkdownSnippetOptions = {
-  /** O documento. Vira o literal `resposta` acima da chamada. */
+  /** O documento. Vira o literal `answer` acima da chamada. */
   content?: string;
   streaming?: boolean;
   allow?: readonly string[];
@@ -52,7 +52,7 @@ export function markdownSnippet(opts: MarkdownSnippetOptions = {}): string {
   const content = opts.content ?? DEFAULT_DOCUMENT;
 
   const lines = options([
-    ['content', 'resposta'],
+    ['content', 'answer'],
     ['streaming', opts.streaming ? 'true' : undefined],
     ['allow', listLiteral(opts.allow)],
     ['allowedProtocols', listLiteral(opts.allowedProtocols)],
@@ -64,7 +64,7 @@ export function markdownSnippet(opts: MarkdownSnippetOptions = {}): string {
 
   return snippet(
     importing('markdown', 'createMarkdown'),
-    `const resposta = ${documentLiteral(content)};`,
+    `const answer = ${documentLiteral(content)};`,
     `const view = ${chamada('createMarkdown', lines)};`,
     montar('view'),
   );

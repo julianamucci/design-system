@@ -31,7 +31,7 @@ sim. A chave \`content\` é a única obrigatória, e o
 export const MARKDOWN_CODE = `Para desenhar uma resposta assim que ela chega:
 
 \`\`\`ts
-const view = createMarkdown({ content: parcial, streaming: true });
+const view = createMarkdown({ content: partial, streaming: true });
 \`\`\`
 
 Enquanto \`streaming\` estiver ligado, construção ainda aberta fica como texto.`;
@@ -64,7 +64,7 @@ Texto <img src=x onerror=alert(1)> no meio do parágrafo.`;
 export const MARKDOWN_STREAMING = `Claro. O caminho mais curto é este:
 
 \`\`\`ts
-const tree = parseMarkdown(resposta`;
+const tree = parseMarkdown(answer`;
 
 /** O par do Do & Don't: o mesmo texto, com e sem a lista branca apertada. */
 export const MARKDOWN_COMMENT = `Concordo com o **ponto principal**.

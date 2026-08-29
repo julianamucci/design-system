@@ -43,8 +43,8 @@ describe('markdownSnippet', () => {
     // Achatar em '\n' esconderia a forma que o Markdown usa para significar: a
     // linha em branco entre parágrafos É a sintaxe.
     const code = markdownSnippet({ content: '# título\n\nparágrafo' });
-    expect(code).toContain('const resposta = `# título\n\nparágrafo`;');
-    expect(code).toContain('content: resposta');
+    expect(code).toContain('const answer = `# título\n\nparágrafo`;');
+    expect(code).toContain('content: answer');
   });
 
   it('crase e interpolação dentro do documento não fecham o literal', () => {
@@ -61,7 +61,7 @@ describe('markdownSource', () => {
     const code = markdownSource('<div class="nds-markdown">…</div>', {
       args: { content: '# oi', streaming: true },
     });
-    expect(code).toContain('const resposta = `# oi`;');
+    expect(code).toContain('const answer = `# oi`;');
     expect(code).toContain('streaming: true');
     expect(code).not.toContain('<div');
   });

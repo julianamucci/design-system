@@ -56,7 +56,7 @@ export const Streaming: Story = {
       // some e renasce a cada trecho que chega.
       await expect(root.querySelector('.nds-code-block-root')).toBeNull();
       const tail = root.querySelector('.nds-markdown-raw');
-      await expect(tail).toHaveTextContent('const tree = parseMarkdown(resposta');
+      await expect(tail).toHaveTextContent('const tree = parseMarkdown(answer');
       // A crase da cerca continua visível: ela ainda não significou nada.
       await expect(tail?.textContent).toContain('```ts');
     });

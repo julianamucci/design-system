@@ -137,19 +137,19 @@
       "title": "Importação",
       "basic": "O componente recebe o texto e cuida do resto. Nada precisa ser sanitizado antes: ele não interpreta HTML.",
       "basicCode": {
-        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={resposta} />",
-        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"resposta\" />\n</template>",
-        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { resposta } = $props();\n</script>\n\n<Markdown content={resposta} />",
-        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: resposta });\ndocument.querySelector('#app')?.append(view);",
-        "angular": "<nds-markdown [content]=\"resposta\" />"
+        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={answer} />",
+        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"answer\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { answer } = $props();\n</script>\n\n<Markdown content={answer} />",
+        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: answer });\ndocument.querySelector('#app')?.append(view);",
+        "angular": "<nds-markdown [content]=\"answer\" />"
       },
       "withStreaming": "Enquanto a resposta chega, ligue o streaming: ele evita que a estrutura pisque a cada trecho novo e segura o anúncio para o fim.",
       "withStreamingCode": {
-        "react": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
-        "vue": "<Markdown\n  :content=\"parcial\"\n  :streaming=\"aindaGerando\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
-        "svelte": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={['paragraph', 'code', 'list']}\n/>",
-        "vanilla": "const view = createMarkdown({\n  content: parcial,\n  streaming: aindaGerando,\n  allow: ['paragraph', 'code', 'list'],\n});",
-        "angular": "<nds-markdown\n  [content]=\"parcial\"\n  [streaming]=\"aindaGerando\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
+        "react": "<Markdown\n  content={partial}\n  streaming={stillGenerating}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
+        "vue": "<Markdown\n  :content=\"partial\"\n  :streaming=\"stillGenerating\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
+        "svelte": "<Markdown\n  content={partial}\n  streaming={stillGenerating}\n  allow={['paragraph', 'code', 'list']}\n/>",
+        "vanilla": "const view = createMarkdown({\n  content: partial,\n  streaming: stillGenerating,\n  allow: ['paragraph', 'code', 'list'],\n});",
+        "angular": "<nds-markdown\n  [content]=\"partial\"\n  [streaming]=\"stillGenerating\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
       }
     },
     "variants": {
@@ -254,7 +254,7 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibility": "O parser é compartilhado e pode ser chamado direto quando se precisa da árvore antes de desenhar — para contar blocos, extrair o primeiro parágrafo ou decidir se vale renderizar.",
       "extensibilityCode": {
-        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(resposta, { allow: ['paragraph', 'code'] });\nconst temCodigo = tree.children.some((n) => n.type === 'code');"
+        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(answer, { allow: ['paragraph', 'code'] });\nconst hasCode = tree.children.some((n) => n.type === 'code');"
       }
     },
     "tokens": {
@@ -607,19 +607,19 @@
       "title": "Import",
       "basic": "The component takes the text and handles the rest. Nothing needs sanitising first: it does not interpret HTML.",
       "basicCode": {
-        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={resposta} />",
-        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"resposta\" />\n</template>",
-        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { resposta } = $props();\n</script>\n\n<Markdown content={resposta} />",
-        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: resposta });\ndocument.querySelector('#app')?.append(view);",
-        "angular": "<nds-markdown [content]=\"resposta\" />"
+        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={answer} />",
+        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"answer\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { answer } = $props();\n</script>\n\n<Markdown content={answer} />",
+        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: answer });\ndocument.querySelector('#app')?.append(view);",
+        "angular": "<nds-markdown [content]=\"answer\" />"
       },
       "withStreaming": "While the answer arrives, turn streaming on: it keeps the structure from flickering with each new chunk and holds the announcement until the end.",
       "withStreamingCode": {
-        "react": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
-        "vue": "<Markdown\n  :content=\"parcial\"\n  :streaming=\"aindaGerando\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
-        "svelte": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={['paragraph', 'code', 'list']}\n/>",
-        "vanilla": "const view = createMarkdown({\n  content: parcial,\n  streaming: aindaGerando,\n  allow: ['paragraph', 'code', 'list'],\n});",
-        "angular": "<nds-markdown\n  [content]=\"parcial\"\n  [streaming]=\"aindaGerando\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
+        "react": "<Markdown\n  content={partial}\n  streaming={stillGenerating}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
+        "vue": "<Markdown\n  :content=\"partial\"\n  :streaming=\"stillGenerating\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
+        "svelte": "<Markdown\n  content={partial}\n  streaming={stillGenerating}\n  allow={['paragraph', 'code', 'list']}\n/>",
+        "vanilla": "const view = createMarkdown({\n  content: partial,\n  streaming: stillGenerating,\n  allow: ['paragraph', 'code', 'list'],\n});",
+        "angular": "<nds-markdown\n  [content]=\"partial\"\n  [streaming]=\"stillGenerating\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
       }
     },
     "variants": {
@@ -724,7 +724,7 @@
       "extensibilityTitle": "Extensibility",
       "extensibility": "The parser is shared and can be called directly when you need the tree before drawing — to count blocks, extract the first paragraph or decide whether rendering is worth it.",
       "extensibilityCode": {
-        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(resposta, { allow: ['paragraph', 'code'] });\nconst temCodigo = tree.children.some((n) => n.type === 'code');"
+        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(answer, { allow: ['paragraph', 'code'] });\nconst hasCode = tree.children.some((n) => n.type === 'code');"
       }
     },
     "tokens": {
@@ -1077,19 +1077,19 @@
       "title": "Importación",
       "basic": "El componente recibe el texto y se encarga del resto. Nada necesita saneamiento previo: no interpreta HTML.",
       "basicCode": {
-        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={resposta} />",
-        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"resposta\" />\n</template>",
-        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { resposta } = $props();\n</script>\n\n<Markdown content={resposta} />",
-        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: resposta });\ndocument.querySelector('#app')?.append(view);",
-        "angular": "<nds-markdown [content]=\"resposta\" />"
+        "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={answer} />",
+        "vue": "<script setup lang=\"ts\">\nimport { Markdown } from '@/components/ui/markdown';\n</script>\n\n<template>\n  <Markdown :content=\"answer\" />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { Markdown } from '$lib/components/ui/markdown';\n  let { answer } = $props();\n</script>\n\n<Markdown content={answer} />",
+        "vanilla": "import { createMarkdown } from '@/components/ui/markdown';\n\nconst view = createMarkdown({ content: answer });\ndocument.querySelector('#app')?.append(view);",
+        "angular": "<nds-markdown [content]=\"answer\" />"
       },
       "withStreaming": "Mientras llega la respuesta, activa el streaming: evita que la estructura parpadee con cada fragmento nuevo y retiene el anuncio hasta el final.",
       "withStreamingCode": {
-        "react": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
-        "vue": "<Markdown\n  :content=\"parcial\"\n  :streaming=\"aindaGerando\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
-        "svelte": "<Markdown\n  content={parcial}\n  streaming={aindaGerando}\n  allow={['paragraph', 'code', 'list']}\n/>",
-        "vanilla": "const view = createMarkdown({\n  content: parcial,\n  streaming: aindaGerando,\n  allow: ['paragraph', 'code', 'list'],\n});",
-        "angular": "<nds-markdown\n  [content]=\"parcial\"\n  [streaming]=\"aindaGerando\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
+        "react": "<Markdown\n  content={partial}\n  streaming={stillGenerating}\n  allow={[\"paragraph\", \"code\", \"list\"]}\n/>",
+        "vue": "<Markdown\n  :content=\"partial\"\n  :streaming=\"stillGenerating\"\n  :allow=\"['paragraph', 'code', 'list']\"\n/>",
+        "svelte": "<Markdown\n  content={partial}\n  streaming={stillGenerating}\n  allow={['paragraph', 'code', 'list']}\n/>",
+        "vanilla": "const view = createMarkdown({\n  content: partial,\n  streaming: stillGenerating,\n  allow: ['paragraph', 'code', 'list'],\n});",
+        "angular": "<nds-markdown\n  [content]=\"partial\"\n  [streaming]=\"stillGenerating\"\n  [allow]=\"['paragraph', 'code', 'list']\"\n/>"
       }
     },
     "variants": {
@@ -1194,7 +1194,7 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibility": "El parser es compartido y puede llamarse directamente cuando se necesita el árbol antes de dibujar — para contar bloques, extraer el primer párrafo o decidir si vale la pena renderizar.",
       "extensibilityCode": {
-        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(resposta, { allow: ['paragraph', 'code'] });\nconst temCodigo = tree.children.some((n) => n.type === 'code');"
+        "web": "import { parseMarkdown } from '@shared/primitives/markdown-ast';\n\nconst tree = parseMarkdown(answer, { allow: ['paragraph', 'code'] });\nconst hasCode = tree.children.some((n) => n.type === 'code');"
       }
     },
     "tokens": {

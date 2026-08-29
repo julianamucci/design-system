@@ -8,6 +8,7 @@ import {
   createTableRow,
 } from './table';
 import {
+  isSafeUrl,
   parseForRender,
   type MdBlockKind,
   type MdInline,
@@ -49,7 +50,7 @@ export type MarkdownElement = HTMLDivElement & {
 };
 
 /** Contexto que o desenho precisa e que não está na árvore. */
-type RenderContext = Pick<MarkdownOptions, 'onLinkClick'>;
+type RenderContext = Pick<MarkdownOptions, 'onLinkClick' | 'allowedProtocols'>;
 
 /** A escada de tipos tem quatro degraus; o documento aceita seis níveis. */
 function headingClass(depth: number): string {
@@ -93,9 +94,12 @@ function renderInline(nodes: MdInline[], ctx: RenderContext): DocumentFragment {
       case 'link': {
         const el = document.createElement('a');
         el.className = 'nds-markdown-link';
-        // O endereço já passou pela lista de esquemas no parser: link que
-        // chegou até aqui é link que pode existir.
-        el.href = node.url;
+        // O parser já recusou o que não presta — link de esquema fora da
+        // lista nem chega aqui como link. A pergunta é feita de novo no ponto
+        // em que o endereço encosta no DOM: assim a garantia não depende de
+        // quem chamou o parser antes, e fica onde uma varredura de segurança
+        // consegue vê-la.
+        if (isSafeUrl(node.url, ctx.allowedProtocols)) el.href = node.url;
         if (isExternal(node.url)) el.rel = 'noreferrer';
         // `title` fica de fora de propósito: ele só aparece ao pousar o
         // ponteiro, então guardar informação ali é escondê-la de quem navega
@@ -118,7 +122,7 @@ function renderInline(nodes: MdInline[], ctx: RenderContext): DocumentFragment {
       case 'image': {
         const el = document.createElement('img');
         el.className = 'nds-markdown-image';
-        el.src = node.url;
+        if (isSafeUrl(node.url, ctx.allowedProtocols)) el.src = node.url;
         // Descrição vazia deixa a imagem decorativa, e é o certo quando não há
         // descrição: ler o endereço no lugar dela seria ruído. Escrever a
         // descrição é de quem escreveu o texto.
@@ -347,7 +351,10 @@ export function createMarkdown(options: MarkdownOptions): MarkdownElement {
       allowedProtocols: current.allowedProtocols,
     });
 
-    const ctx: RenderContext = { onLinkClick: current.onLinkClick };
+    const ctx: RenderContext = {
+      onLinkClick: current.onLinkClick,
+      allowedProtocols: current.allowedProtocols,
+    };
     for (const node of tree.children) {
       const el = renderBlock(node, ctx);
       if (el) root.appendChild(el);

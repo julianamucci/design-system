@@ -478,3 +478,21 @@ export function parseForRender(source: string, options: RenderMarkdownOptions = 
 
   return { type: 'root', children: [...stable.children, { type: 'raw', value: tail }] };
 }
+
+/**
+ * O endereço é seguro para virar `href` ou `src`?
+ *
+ * O parser já recusou o que não presta — link de esquema fora da lista nem
+ * chega à árvore como link. Esta função existe para o renderizador poder
+ * PERGUNTAR isso de novo, no ponto exato em que o endereço encosta no DOM.
+ *
+ * Não é redundância inútil, e vale escrever por quê: a garantia deixa de
+ * depender de quem chamou o parser antes. Se um dia alguém montar a árvore à
+ * mão, ou uma opção de lista branca chegar diferente entre a análise e o
+ * desenho, o `href` continua barrado — e a validação fica onde uma varredura de
+ * segurança consegue vê-la, que é o mesmo motivo pelo qual o projeto chama o
+ * `DOMPurify` no call site em vez de embrulhá-lo.
+ */
+export function isSafeUrl(url: string, protocols: readonly string[] = DEFAULT_PROTOCOLS): boolean {
+  return safeUrl(url, protocols) !== null;
+}

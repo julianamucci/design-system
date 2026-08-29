@@ -6,6 +6,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   ALLOW_PRESETS,
+  isSafeUrl,
   openConstructionAt,
   parseForRender,
   parseMarkdown,
@@ -305,5 +306,24 @@ describe('ALLOW_PRESETS — as listas que a documentação nomeia', () => {
   it('`comment` deixa passar só texto corrido', () => {
     const root = parseMarkdown('- um\n- dois\n\n```js\nx\n```', { allow: ALLOW_PRESETS.comment });
     expect(root.children.every((n) => n.type === 'paragraph' || n.type === 'raw')).toBe(true);
+  });
+})
+
+describe('isSafeUrl — a mesma pergunta, no ponto em que o endereço encosta no DOM', () => {
+  it('recusa o que o parser já recusaria', () => {
+    expect(isSafeUrl('javascript:alert(1)')).toBe(false);
+    expect(isSafeUrl('data:text/html,<script>')).toBe(false);
+    expect(isSafeUrl('  ')).toBe(false);
+  });
+
+  it('aceita o que o parser aceitaria, relativo inclusive', () => {
+    expect(isSafeUrl('https://exemplo.test')).toBe(true);
+    expect(isSafeUrl('mailto:a@b.test')).toBe(true);
+    expect(isSafeUrl('/guias/instalacao')).toBe(true);
+  });
+
+  it('respeita a lista de esquemas que quem desenha recebeu', () => {
+    expect(isSafeUrl('ftp://a.test')).toBe(false);
+    expect(isSafeUrl('ftp://a.test', ['ftp:'])).toBe(true);
   });
 })
