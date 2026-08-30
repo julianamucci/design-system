@@ -82,8 +82,13 @@
   border-color: hsl(var(--destructive));
 }
 
+/* O foco num controle inválido só acrescentava anel TRANSLÚCIDO, e translúcido
+ * sobre o fundo não alcança os 3:1 de 1.4.11 — media 1,70:1. O anel de foco
+ * passou a ser opaco; ver a nota longa em `input.css`. */
 .nds-checkbox[aria-invalid="true"]:focus-visible {
   box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.3);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
 }
 
 /* ── Indicator ───────────────────────────────────────────────────────────── */

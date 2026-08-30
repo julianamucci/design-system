@@ -58,8 +58,31 @@
   border-color: hsl(var(--destructive));
 }
 
+/* NOTA CANÔNICA do anel de foco em estado inválido — vale para checkbox,
+ * combobox, input-otp, select, switch, textarea, toggle e badge.
+ *
+ * Em repouso a borda do campo inválido JÁ é `--destructive`, e a regra
+ * `[aria-invalid="true"]` vem depois de `:focus-visible` com a mesma
+ * especificidade: ela vence. Então focar um campo com erro não mudava nada
+ * OPACO — o foco acrescentava só o halo translúcido, medido em 1,70:1 a 1,81:1
+ * sobre `--background` nos três temas e nos dois modos. É indicador de foco
+ * abaixo dos 3:1 de 1.4.11, e no campo válido isso não acontece porque lá a
+ * borda troca para `--ring` opaco.
+ *
+ * O remédio anterior — acrescentar `--ring / 0.5` por fora — melhorou e não
+ * resolveu: 1,97:1 a 3,18:1, ainda reprovando em cinco dos seis pares. O que
+ * fecha é anel OPACO, e `--ring` opaco mede 4,63:1 a 9,22:1.
+ *
+ * É `outline` com deslocamento, e não um vão de `--background` como no
+ * botão: o vão pinta a cor da página sobre o cartão onde o campo quase sempre
+ * está, e o deslocamento do outline é transparente — compõe com a superfície
+ * que estiver atrás, seja cartão, popover ou página. O halo destrutivo fica
+ * por dentro, o anel de foco por fora: quem tem erro continua parecendo quem
+ * tem erro, e o foco é a única coisa que o foco acrescenta. */
 .nds-input[aria-invalid="true"]:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.3);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
 /* File input — herda do .nds-input mas tem reset específico do button nativo */

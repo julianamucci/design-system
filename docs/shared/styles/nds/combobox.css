@@ -87,9 +87,14 @@
 /* Os dois anéis convivem: o destrutivo por dentro, o de foco por fora. Mesma
    correção já aplicada no toggle e no badge, onde o defeito foi medido: sem
    isto, focar um campo inválido não muda nada na tela. WCAG 2.4.7. */
+/* O foco num controle inválido só acrescentava anel TRANSLÚCIDO, e translúcido
+ * sobre o fundo não alcança os 3:1 de 1.4.11 — o anel de foco a 0,5 media 1,97:1. O anel de foco
+ * passou a ser opaco; ver a nota longa em `input.css`. */
 .nds-combobox-input-wrapper[aria-invalid="true"]:focus-within,
 .nds-combobox-input-wrapper:has([aria-invalid="true"]):focus-within {
-  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.4), 0 0 0 6px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.4);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
 }
 
 .nds-combobox-label {

@@ -166,9 +166,14 @@
 
 /* Halo de erro só no slot ATIVO, como em `.nds-input:focus-visible` — erro em
  * repouso é borda, erro sob o cursor é borda + halo. */
+/* O foco num controle inválido só acrescentava anel TRANSLÚCIDO, e translúcido
+ * sobre o fundo não alcança os 3:1 de 1.4.11 — media 1,70:1. O anel de foco
+ * passou a ser opaco; ver a nota longa em `input.css`. */
 .nds-input-otp-slot[aria-invalid="true"]:focus,
 .nds-input-otp-container:has(input[aria-invalid="true"]) .nds-input-otp-slot[data-active]:not([data-active="false"]) {
   box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.3);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
 /* ── Caret fake (pisca enquanto o slot ativo aguarda dígito) ─────────────── */

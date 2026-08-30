@@ -124,8 +124,13 @@
  * `:focus-visible` e com a mesma especificidade, então focar um toggle inválido
  * não mudava nada na tela. Aqui os dois anéis convivem — o destrutivo por
  * dentro, o de foco por fora. */
+/* O foco num controle inválido só acrescentava anel TRANSLÚCIDO, e translúcido
+ * sobre o fundo não alcança os 3:1 de 1.4.11 — o anel de foco a 0,5 media 1,97:1. O anel de foco
+ * passou a ser opaco; ver a nota longa em `input.css`. */
 .nds-toggle[aria-invalid="true"]:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.4), 0 0 0 4px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.4);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
 /* ── Ícones internos ─────────────────────────────────────────────────────── */

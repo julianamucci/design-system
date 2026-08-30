@@ -4833,28 +4833,26 @@ function auditFocusRingTranslucido() {
   if (!existsSync(dir)) return violations;
 
   /**
-   * Dívida DECLARADA, e não silenciada.
+   * A lista está VAZIA, e é por isso que ela continua aqui.
    *
-   * As variantes de estado inválido são um lote próprio: ali convivem dois
-   * anéis — o destrutivo, que é PERMANENTE, e o de foco, que é transitório — e
-   * a conta de contraste tem de ser feita para os dois juntos, contra a
-   * superfície e entre si. Corrigi-las junto com as demais seria trocar uma
-   * forma que ninguém mediu por outra que ninguém mediu.
+   * Eram nove regras de estado inválido, e o motivo declarado para adiá-las
+   * era honesto: ali convivem dois anéis — o destrutivo, que é PERMANENTE, e o
+   * de foco, que é transitório — e trocar sem medir seria trocar uma forma que
+   * ninguém mediu por outra que ninguém mediu.
    *
-   * Declarar em vez de omitir é o que mantém a dívida visível: sair desta lista
-   * exige medir, e entrar exige escrever o motivo.
+   * Medido em 2026-08-29, nos três temas e nos dois modos: num controle
+   * inválido a borda já é `--destructive` em repouso, e a regra
+   * `[aria-invalid="true"]` vence a de foco por vir depois com a mesma
+   * especificidade — então o foco acrescentava só o halo translúcido, 1,70:1 a
+   * 1,81:1. Onde o remédio anterior tinha posto `--ring / 0.5` por fora,
+   * 1,97:1 a 3,18:1: melhor, e ainda reprovando em cinco dos seis pares. As
+   * onze regras passaram a declarar `outline` opaco, 4,63:1 a 9,22:1.
+   *
+   * O conjunto vazio fica no lugar do array porque a dívida pode voltar, e
+   * quando voltar tem de voltar DECLARADA — com o motivo escrito, como esta
+   * esteve.
    */
-  const PENDENTES = new Set([
-    'checkbox.css :: .nds-checkbox[aria-invalid="true"]:focus-visible',
-    'input-group.css :: .nds-input-group:has([aria-invalid="true"]):has([data-slot="input-group-control"]:focus-visible)',
-    'input-otp.css :: .nds-input-otp-slot[aria-invalid="true"]:focus, .nds-input-otp-container:has(input[aria-invalid="true"]) .nds-input-otp-slot[data-active]:not([data-active="false"])',
-    'input.css :: .nds-input[aria-invalid="true"]:focus-visible',
-    'select.css :: .nds-native-select-input[aria-invalid="true"]:focus-visible',
-    'select.css :: .nds-select-trigger[aria-invalid="true"]:focus-visible',
-    'switch.css :: .nds-switch[aria-invalid="true"]:focus-visible',
-    'textarea.css :: .nds-textarea[aria-invalid="true"]:focus-visible',
-    'toggle.css :: .nds-toggle[aria-invalid="true"]:focus-visible',
-  ]);
+  const PENDENTES = new Set([]);
 
   /** Cor de token SEM alfa — `hsl(var(--x))`, e não `hsl(var(--x) / 0.5)`. */
   const OPACA = /hsl\(\s*var\(--[\w-]+\)\s*\)/;
@@ -4865,17 +4863,31 @@ function auditFocusRingTranslucido() {
     const rel = relative(ROOT, file);
     const nome = basename(file);
 
-    for (const m of src.matchAll(/([^{}]*):focus-visible([^{}]*)\{([^}]*)\}/g)) {
+    // As três pseudoclasses, e não só `:focus-visible`.
+    //
+    // O lote de estado inválido não cabia na primeira: `input-otp` acende no
+    // `:focus` do slot (a lib não entrega `:focus-visible` ali) e `combobox`
+    // acende no `:focus-within` do invólucro. As duas ESTAVAM na lista de
+    // dívida e nunca foram lidas — entrada morta numa lista de dívida é pior
+    // que dívida, porque parece coberta. Com o alcance certo, `input-otp`
+    // deixou de ser entrada fantasma e virou regra medida.
+    //
+    // Para `:focus` e `:focus-within` a regra só cobra em seletor de estado
+    // INVÁLIDO. Cobrar em todos despejaria de uma vez uma cauda que ninguém
+    // mediu, e portão que despeja backlog ensina a ignorar o portão — junto
+    // some o achado que importava. Essa cauda é lote próprio.
+    for (const m of src.matchAll(/([^{}]*)(:focus-visible|:focus-within|:focus)([^{}]*)\{([^}]*)\}/g)) {
+      if (m[2] !== ':focus-visible' && !`${m[1]}${m[3]}`.includes('[aria-invalid')) continue;
       // O seletor é a última linha do trecho antes da chave: o que vem acima é
       // comentário ou a regra anterior.
-      const sel = `${m[1]}:focus-visible${m[2]}`
+      const sel = `${m[1]}${m[2]}${m[3]}`
         .replace(/\/\*[\s\S]*?\*\//g, '')
         .trim()
         .split('\n')
         .map((l) => l.trim())
         .filter(Boolean)
         .join(' ');
-      const corpo = m[3];
+      const corpo = m[4];
 
       const sombra = (corpo.match(/box-shadow\s*:\s*([^;]+)/) || [])[1];
       if (!sombra) continue;

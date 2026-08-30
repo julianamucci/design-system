@@ -49,8 +49,13 @@
  *
  * Os dois anéis convivem: o destrutivo por dentro, o de foco por fora. Mesmo
  * remédio já aplicado no `toggle`, onde o defeito foi medido primeiro. */
+/* O anel de foco a 0,5 media 1,97:1 sobre o fundo: melhor que o halo
+ * sozinho, e ainda abaixo dos 3:1 de 1.4.11. Virou anel opaco; ver a nota
+ * canônica em `input.css`. */
 .nds-input-group:has([aria-invalid="true"]):has([data-slot="input-group-control"]:focus-visible) {
-  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2), 0 0 0 5px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
 }
 
 
