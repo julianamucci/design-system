@@ -49,9 +49,12 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import ComposerTriggerPopover from './ComposerTriggerPopover.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
+import ComposerQuoteBlock from './ComposerQuote.vue'
 import type {
   ComposerAttachmentLabels,
   ComposerLabels,
+  ComposerQuote,
+  ComposerQuoteLabels,
   ComposerSubmitOn,
   TriggerOption,
   TriggerPopoverLabels,
@@ -101,6 +104,15 @@ const props = withDefaults(
     attachments?: Attachment[]
     /** Textos da fila de anexos. Obrigatórios quando há anexo. */
     attachmentLabels?: ComposerAttachmentLabels
+    /**
+     * A mensagem que está sendo respondida.
+     *
+     * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, para
+     * quem não vê a tela saber a quem responde antes de escrever.
+     */
+    quote?: ComposerQuote
+    /** Textos da citação. Obrigatórios quando há citação. */
+    quoteLabels?: ComposerQuoteLabels
     class?: HTMLAttributes['class']
   }>(),
   {
@@ -120,6 +132,8 @@ const emit = defineEmits<{
   stop: []
   /** Alguém pediu para remover um anexo. O componente não remove nada. */
   removeAttachment: [attachment: Attachment]
+  /** Alguém pediu para tirar a citação. Tirar de verdade é de quem consome. */
+  dismissQuote: [quote: ComposerQuote]
 }>()
 
 /**
@@ -137,6 +151,18 @@ function forwardRemoveAttachment(attachment: Attachment): void {
   emit('removeAttachment', attachment)
 }
 
+/**
+ * A citação só existe quando há mensagem citada E texto para ela.
+ *
+ * Sem rótulo o botão que dispensa nasceria sem nome, e um "×" sem nome é o
+ * defeito que a peça existe para não ter.
+ */
+const hasQuote = computed(() => props.quote !== undefined && props.quoteLabels !== undefined)
+
+function forwardDismissQuote(quote: ComposerQuote): void {
+  emit('dismissQuote', quote)
+}
+
 defineSlots<{
   /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
   railStart?: () => unknown
@@ -151,6 +177,18 @@ const text = defineModel<string>('value', { default: '' })
 const fieldId = useId()
 const hintId = `${fieldId}-hint`
 const popoverId = `${fieldId}-trigger`
+const quoteId = `${fieldId}-quote`
+
+/**
+ * A dica descreve o campo — `Enter envia` é comportamento, e saber disso depois
+ * de apertar a tecla não serve para nada.
+ *
+ * Com citação, ela vem PRIMEIRO na descrição: saber a quem se responde muda o
+ * que se escreve, e a dica de teclado só muda como se envia. A citação aponta o
+ * próprio bloco, então o texto dela chega inteiro — inclusive o trecho que a
+ * folha corta por linha.
+ */
+const describedBy = computed(() => (hasQuote.value ? `${quoteId} ${hintId}` : hintId))
 
 /**
  * O campo, para o seletor poder ler onde o cursor está.
@@ -370,6 +408,18 @@ function onKeydown(event: KeyboardEvent): void {
          porque o trilho está dentro do mesmo formulário e um anel só em volta
          do texto o deixaria de fora do que está em foco. -->
     <div class="nds-composer-field">
+      <!-- A citação vem PRIMEIRO — contexto antes do que ele contextualiza. A
+           ordem do documento é a ordem de leitura: quem chega pelo teclado ou
+           por audição encontra a quem responde antes de encontrar o que
+           anexou. -->
+      <ComposerQuoteBlock
+        v-if="hasQuote && quote && quoteLabels"
+        :id="quoteId"
+        :quote="quote"
+        :labels="quoteLabels"
+        @dismiss="forwardDismissQuote"
+      />
+
       <!-- A fila vive DENTRO da moldura e ANTES do campo: os anexos fazem
            parte do que está sendo escrito, e uma fila fora da moldura
            pareceria uma lista de outra coisa. -->
@@ -389,7 +439,7 @@ function onKeydown(event: KeyboardEvent): void {
         :rows="rows"
         :placeholder="labels.placeholder"
         :aria-label="labels.input"
-        :aria-describedby="hintId"
+        :aria-describedby="describedBy"
         :aria-controls="triggerOpen ? popoverId : undefined"
         :aria-activedescendant="triggerOpen ? triggerActiveId : undefined"
         :maxlength="maxLength"

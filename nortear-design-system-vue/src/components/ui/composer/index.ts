@@ -1,5 +1,5 @@
 import type { TriggerSpec } from '@shared/primitives/composer-trigger'
-import type { AttachmentState } from '@shared/primitives/chat-protocol'
+import type { AttachmentState, ChatRole } from '@shared/primitives/chat-protocol'
 import type { FileSizeUnit } from '@shared/primitives/file-size'
 
 export { default as Composer } from './Composer.vue'
@@ -106,4 +106,39 @@ export interface ComposerAttachmentLabels {
   state: Record<AttachmentState, string>
   /** A palavra de cada unidade de tamanho. */
   unit: Record<FileSizeUnit, string>
+}
+
+/**
+ * O vocabulário da CITAÇÃO.
+ *
+ * Só os tipos saem daqui; o bloco em si é montado pelo composer, e não há por
+ * que quem consome montá-lo por fora — ele existe para descrever UM campo, e é
+ * o campo que aponta a descrição. O nome `ComposerQuote` fica para o dado, que
+ * é o que atravessa a fronteira: quem consome o produz a partir da mensagem
+ * citada e o entrega inteiro.
+ *
+ * O papel de quem escreveu vem de `@shared/primitives/chat-protocol` — é o
+ * mesmo vocabulário da thread, e é o que liga as duas peças.
+ */
+export interface ComposerQuote {
+  /** Endereço da mensagem citada, para quem consome saber a qual responder. */
+  id?: string
+  /** Quem escreveu. É o nome que aparece e o que entra no botão de dispensar. */
+  author: string
+  /** O papel de quem escreveu — o mesmo vocabulário da thread. */
+  role?: ChatRole
+  /**
+   * O texto citado, INTEIRO.
+   *
+   * Passe o texto completo: o corte é do desenho, e cortar aqui apagaria o
+   * resto para quem lê por audição.
+   */
+  excerpt: string
+}
+
+export interface ComposerQuoteLabels {
+  /** Nome do botão que dispensa. `{author}` vira o nome de quem escreveu. */
+  dismiss: string
+  /** Como a citação se apresenta ao campo. `{author}` vira o nome. */
+  describes: string
 }
