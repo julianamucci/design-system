@@ -2,14 +2,24 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  Injector,
   TemplateRef,
   ViewEncapsulation,
+  afterNextRender,
   computed,
+  inject,
   input,
   linkedSignal,
   output,
+  viewChild,
 } from '@angular/core';
+import type { TriggerApplied } from '@shared/primitives/composer-trigger';
 import { NdsButton } from './button';
+import {
+  NdsComposerTriggerPopover,
+  type TriggerPopoverLabels,
+  type TriggerSource,
+} from './composer-trigger-popover';
 
 // ─── Composer ────────────────────────────────────────────────────────────────
 //
@@ -93,7 +103,7 @@ let instances = 0;
 @Component({
   selector: 'nds-composer',
   standalone: true,
-  imports: [NgTemplateOutlet, NdsButton],
+  imports: [NgTemplateOutlet, NdsButton, NdsComposerTriggerPopover],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -107,7 +117,13 @@ let instances = 0;
          acende no \`:focus-within\` daqui. Um anel só em volta do texto deixaria
          o trilho de fora do que está em foco — e ele é a mesma superfície. -->
     <div class="nds-composer-field">
+      <!-- O campo APONTA a lista: \`aria-controls\` a endereça e
+           \`aria-activedescendant\` diz qual opção está ativa, sem que o foco
+           saia daqui. O papel de caixa de combinação NÃO entra — a
+           especificação de ARIA em HTML não o admite num campo de várias
+           linhas, e o axe reprova por \`aria-allowed-role\`. -->
       <textarea
+        #fieldEl
         class="nds-composer-input"
         data-slot="composer-input"
         [id]="inputId"
@@ -118,9 +134,26 @@ let instances = 0;
         [attr.aria-label]="labels().input"
         [attr.aria-describedby]="hintId"
         [attr.maxlength]="maxLength() ?? null"
+        [attr.aria-controls]="triggerControls()"
+        [attr.aria-activedescendant]="triggerActiveId()"
         (input)="onInput($event)"
         (keydown)="onKeydown($event)"
+        (keyup)="onKeyup($event)"
+        (click)="syncTrigger()"
+        (blur)="closeTrigger()"
       ></textarea>
+
+      <!-- O seletor só existe quando há gatilho declarado E texto para o painel
+           dizer. Sem rótulo ele abriria com a frase de nenhum resultado em
+           branco, que é pior que não abrir. -->
+      @if (triggerText(); as popoverLabels) {
+        <nds-composer-trigger-popover
+          [field]="fieldEl"
+          [sources]="triggers()"
+          [labels]="popoverLabels"
+          (applied)="onTriggerApplied($event, fieldEl)"
+        />
+      }
     </div>
 
     <div class="nds-composer-rail">
@@ -187,6 +220,15 @@ export class NdsComposer {
   readonly disabled = input<boolean>(false);
   /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
   readonly railStart = input<TemplateRef<unknown> | undefined>(undefined);
+  /**
+   * Gatilhos do seletor — menções, comandos, e qualquer outro caractere.
+   *
+   * Sem eles o campo é só um campo. Com eles, digitar o caractere abre o
+   * seletor, e a tecla de envio passa a ESCOLHER enquanto ele estiver aberto.
+   */
+  readonly triggers = input<TriggerSource[]>([]);
+  /** Textos do seletor. Obrigatórios quando há gatilho, porque são texto de tela. */
+  readonly triggerLabels = input<TriggerPopoverLabels | undefined>(undefined);
 
   /** Alguém pediu para enviar. O texto vai sem espaços nas pontas. */
   readonly submitted = output<string>();
@@ -238,13 +280,117 @@ export class NdsComposer {
     () => this.disabled() || (!this.running() && this.text().trim() === ''),
   );
 
+  // ── O seletor do caractere gatilho ─────────────────────────────────────────
+  //
+  // A consulta é por TIPO, e não por variável de referência: a de referência
+  // fica presa ao bloco do `@if` que a declara, e o seletor é justamente
+  // condicional. Assim os dois atributos do campo continuam saindo do estado
+  // real do painel.
+
+  private readonly popover = viewChild(NdsComposerTriggerPopover);
+
+  /** Necessário para agendar `afterNextRender` fora do contexto de injeção. */
+  private readonly injector = inject(Injector);
+
+  protected readonly triggerText = computed(() =>
+    this.triggers().length ? this.triggerLabels() : undefined,
+  );
+
+  /**
+   * O campo aponta a lista só enquanto ela existe para ele.
+   *
+   * Fechada a lista os dois atributos saem: um `aria-controls` apontando um
+   * painel escondido promete uma lista que não há.
+   */
+  protected readonly triggerControls = computed(() => {
+    const popover = this.popover();
+    return popover?.isOpen() ? popover.id : null;
+  });
+
+  protected readonly triggerActiveId = computed(
+    () => this.popover()?.activeOptionId() ?? null,
+  );
+
   protected onInput(event: Event): void {
     const next = (event.target as HTMLTextAreaElement).value;
     this.text.set(next);
+    this.popover()?.sync();
     this.valueChange.emit(next);
   }
 
+  /**
+   * A rolagem e as setas movem o cursor sem disparar `input`.
+   *
+   * E o gatilho depende de ONDE o cursor está: sem isto o seletor continuaria
+   * aberto sobre um `@` que ficou para trás, e não reabriria ao voltar para
+   * dentro de uma menção já escrita.
+   */
+  protected onKeyup(event: KeyboardEvent): void {
+    if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End') {
+      this.syncTrigger();
+    }
+  }
+
+  protected syncTrigger(): void {
+    this.popover()?.sync();
+  }
+
+  protected closeTrigger(): void {
+    this.popover()?.close();
+  }
+
+  /**
+   * A escolha chegou: o texto passa a ser o do seletor, e o cursor volta.
+   *
+   * O cursor é reposto DEPOIS da renderização porque `[value]` reescreve o
+   * campo na próxima detecção de mudanças, e escrever `value` num campo de
+   * texto leva o cursor para o fim. Repor antes seria repor no lugar errado.
+   */
+  protected onTriggerApplied(applied: TriggerApplied, field: HTMLTextAreaElement): void {
+    this.text.set(applied.text);
+    this.valueChange.emit(applied.text);
+    afterNextRender(
+      () => field.setSelectionRange(applied.caret, applied.caret),
+      { injector: this.injector },
+    );
+  }
+
   protected onKeydown(event: KeyboardEvent): void {
+    // COM O SELETOR ABERTO, AS TECLAS SÃO DELE.
+    //
+    // É a decisão que atravessa o componente inteiro: envio e escolha disputam
+    // a mesma tecla, e enviar no meio de uma menção é o defeito que quem
+    // escreve encontra na primeira vez que usa. As setas e a tecla de escape
+    // também param aqui — sem isso a seta moveria o cursor no texto enquanto a
+    // lista parece andar.
+    const popover = this.popover();
+    if (popover?.isOpen()) {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        popover.move(1);
+        return;
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        popover.move(-1);
+        return;
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        popover.close();
+        return;
+      }
+      // A tecla de envio e a de tabulação escolhem. A segunda entra porque quem
+      // escreve espera que ela complete, e sem isso ela tiraria o foco do campo
+      // com a lista aberta.
+      if ((event.key === 'Enter' && !event.isComposing) || event.key === 'Tab') {
+        if (popover.applyActive()) {
+          event.preventDefault();
+          return;
+        }
+      }
+    }
+
     if (!this.asksToSubmit(event)) return;
     // Só aqui: sem o `preventDefault` a quebra de linha entra junto com o
     // envio, e o campo fica com um enter sobrando depois de limpo.
