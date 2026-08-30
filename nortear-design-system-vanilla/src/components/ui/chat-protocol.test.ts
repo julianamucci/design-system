@@ -12,6 +12,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   ATTACHMENT_STATES,
+  CONTEXT_KINDS,
+  isContextRemovable,
+  isModelSelectable,
+  isVoiceBusy,
   isAttachmentReady,
   isRunFinished,
   isTerminal,
@@ -21,8 +25,13 @@ import {
   waitsForPerson,
   type Attachment,
   type AttachmentState,
+  type ContextItem,
+  type ContextKind,
+  type ModelOption,
   type RunStatus,
   type ToolCallState,
+  type VoiceState,
+  VOICE_STATES,
 } from '@shared/primitives/chat-protocol';
 
 describe('as listas cobrem a união inteira', () => {
@@ -132,5 +141,67 @@ describe('isAttachmentReady — o que pode ser enviado junto', () => {
     expect(isAttachmentReady({ name: 'planta.pdf', state: 'uploading', progress: 0.99 })).toBe(
       false,
     );
+  });
+});
+
+describe('isContextRemovable — o que se pode tirar à mão', () => {
+  const item = (automatic?: boolean): ContextItem => ({
+    label: 'relatorio.ts',
+    kind: 'file',
+    automatic,
+  });
+
+  it('o que a pessoa escolheu sai', () => {
+    expect(isContextRemovable(item())).toBe(true);
+    expect(isContextRemovable(item(false))).toBe(true);
+  });
+
+  it('o automático não ganha botão — ele voltaria na próxima pergunta', () => {
+    // É a regra que separa esta peça da fila de anexos: contexto automático é
+    // o arquivo aberto, e desfazer o que se refaz sozinho é armadilha.
+    expect(isContextRemovable(item(true))).toBe(false);
+  });
+
+  it('a espécie não decide nada aqui', () => {
+    // Só `automatic` governa. Se a espécie passar a governar, esta asserção
+    // reprova antes de a tela divergir da folha.
+    const porEspecie = CONTEXT_KINDS.map((kind: ContextKind) =>
+      isContextRemovable({ label: 'x', kind }),
+    );
+    expect(new Set(porEspecie)).toEqual(new Set([true]));
+  });
+});
+
+describe('isModelSelectable — a opção pode ser escolhida agora?', () => {
+  const modelo = (unavailable?: boolean): ModelOption => ({
+    id: 'rapido',
+    label: 'Rápido',
+    unavailable,
+    unavailableReason: unavailable ? 'Fora do seu plano' : undefined,
+  });
+
+  it('sem marca de indisponível, escolhe', () => {
+    expect(isModelSelectable(modelo())).toBe(true);
+  });
+
+  it('indisponível não escolhe, e o motivo viaja junto', () => {
+    // O motivo é obrigatório porque opção apagada sem explicação é a pergunta
+    // "por que não posso?" sem resposta na tela.
+    const fora = modelo(true);
+    expect(isModelSelectable(fora)).toBe(false);
+    expect(fora.unavailableReason).toBeTruthy();
+  });
+});
+
+describe('isVoiceBusy — o ditado está ocupado?', () => {
+  it('só o repouso está livre', () => {
+    const livres = VOICE_STATES.filter((s: VoiceState) => !isVoiceBusy(s));
+    expect(livres).toEqual(['idle']);
+  });
+
+  it('transcrevendo continua ocupado, ainda que já não capte', () => {
+    // A distinção que faz os dois estados existirem: `recording` se
+    // interrompe, `transcribing` não devolve o áudio se alguém apertar.
+    expect(isVoiceBusy('transcribing')).toBe(true);
   });
 });

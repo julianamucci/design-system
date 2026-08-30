@@ -228,3 +228,107 @@ export interface Attachment {
 export function isAttachmentReady(attachment: Attachment): boolean {
   return attachment.state === 'ready';
 }
+
+// ─── Contexto ─────────────────────────────────────────────────────────────────
+
+/**
+ * De onde veio um item de contexto.
+ *
+ * Passa no critério de "o estado muda o desenho": cada espécie tem ícone
+ * próprio, e `selection` é a única que sempre traz `detail` — um trecho sem
+ * dizer QUAL trecho não é contexto, é o nome de um arquivo repetido.
+ */
+export type ContextKind = 'file' | 'directory' | 'selection' | 'page' | 'repository';
+
+/** Na ordem do mais estreito para o mais largo. */
+export const CONTEXT_KINDS: readonly ContextKind[] = [
+  'selection',
+  'file',
+  'directory',
+  'page',
+  'repository',
+] as const;
+
+/**
+ * Uma coisa que já existe e que vai junto com a pergunta.
+ *
+ * ANEXO E CONTEXTO NÃO SÃO A MESMA PEÇA, ainda que se pareçam na tela. O anexo
+ * é CARGA: um arquivo que sobe, tem bytes, progresso e pode falhar no meio. O
+ * contexto é REFERÊNCIA: aponta para algo que já está lá, não sobe nada e não
+ * tem como falhar. Por isso `ContextItem` não tem `state` nem `progress` — não
+ * há o que esperar.
+ */
+export interface ContextItem {
+  /** Endereço do item, para remover o certo quando dois têm o mesmo nome. */
+  id?: string;
+  /** O nome curto da etiqueta. Caminho inteiro não cabe e não ajuda. */
+  label: string;
+  kind: ContextKind;
+  /** Onde dentro do item — intervalo de linhas, seção, aba. */
+  detail?: string;
+  /**
+   * O item entrou sem ninguém pedir?
+   *
+   * Muda o desenho e muda a interação: contexto automático é o arquivo aberto,
+   * a página em que se está, e tirá-lo à mão não adianta — ele volta na próxima
+   * pergunta. Então ele não ganha botão de remover, e ganha uma marca que diz
+   * por que está ali. O que "automático" significa é do produto; o design
+   * system só desenha a diferença.
+   */
+  automatic?: boolean;
+}
+
+/** O item pode ser tirado à mão? */
+export function isContextRemovable(item: ContextItem): boolean {
+  return item.automatic !== true;
+}
+
+// ─── Controles do trilho ──────────────────────────────────────────────────────
+
+/**
+ * Um modelo que pode responder.
+ *
+ * `description` é o que o seletor mostra na lista e o gatilho não mostra: um
+ * trilho é estreito, e escolher entre "Rápido" e "Profundo" sem saber o que
+ * cada um custa é escolher no escuro. O gatilho leva só o nome.
+ *
+ * `unavailable` vem com MOTIVO obrigatório quando é verdadeiro. Opção apagada
+ * sem explicação é a pergunta "por que não posso?" sem resposta na tela — e
+ * quem não enxerga o cinza não recebe nem a pista.
+ */
+export interface ModelOption {
+  id: string;
+  label: string;
+  description?: string;
+  /** Etiqueta curta — "Novo", "Beta". Nunca o único portador da informação. */
+  badge?: string;
+  unavailable?: boolean;
+  /** Obrigatório quando `unavailable`. É texto, e é o que se anuncia. */
+  unavailableReason?: string;
+}
+
+/** A opção pode ser escolhida agora? */
+export function isModelSelectable(model: ModelOption): boolean {
+  return model.unavailable !== true;
+}
+
+/**
+ * Estado do ditado por voz.
+ *
+ * `recording` capta e `transcribing` já parou de captar e ainda processa. São
+ * separados porque desenham diferente e porque só o primeiro se interrompe —
+ * apertar de novo durante a transcrição não devolve o áudio.
+ */
+export type VoiceState = 'idle' | 'recording' | 'transcribing';
+
+/** Na ordem em que o ditado anda. */
+export const VOICE_STATES: readonly VoiceState[] = [
+  'idle',
+  'recording',
+  'transcribing',
+] as const;
+
+/** O ditado está ocupado — captando ou processando? */
+export function isVoiceBusy(state: VoiceState): boolean {
+  return state !== 'idle';
+}

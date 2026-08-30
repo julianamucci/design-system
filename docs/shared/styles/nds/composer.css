@@ -542,3 +542,302 @@
   min-inline-size: var(--spacing-6);
   min-block-size: var(--spacing-6);
 }
+
+/* ── Contexto ─────────────────────────────────────────────────────────────────
+ *
+ * As etiquetas do que vai junto com a pergunta sem ser carga: o arquivo aberto,
+ * o trecho selecionado, a página em que se está. O vocabulário — `ContextItem`,
+ * `ContextKind` — vem de `@shared/primitives/chat-protocol`.
+ *
+ *   <ul class="nds-composer-context" aria-label="Contexto">
+ *     <li class="nds-composer-context-item" data-kind="selection">
+ *       <svg class="nds-composer-context-icon" aria-hidden="true"></svg>
+ *       <span class="nds-composer-context-label">relatorio.ts</span>
+ *       <span class="nds-composer-context-detail">linhas 12–48</span>
+ *       <button class="nds-button" data-slot="composer-context-remove"></button>
+ *     </li>
+ *     <li class="nds-composer-context-item" data-automatic="true"> … </li>
+ *   </ul>
+ *
+ * PARECE A FILA DE ANEXOS E NÃO É A MESMA PEÇA. O anexo é carga: sobe, tem
+ * bytes, tem progresso e pode falhar no meio — por isso tem barra e estado. O
+ * contexto é referência: aponta para o que já existe, não sobe nada, não tem o
+ * que esperar. Duas peças com a mesma geometria e semânticas diferentes; o que
+ * as separa está no protocolo, não na folha.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. `<ul>` COM NOME, como na fila de anexos: é o que faz o leitor de tela
+ *    anunciar QUANTOS itens de contexto existem antes de percorrê-los. Uma
+ *    pilha de `div` não anuncia nada, e aqui a contagem é a informação — saber
+ *    que a pergunta leva junto sete arquivos muda o que se pergunta.
+ * 2. O ÍCONE DA ESPÉCIE É DECORATIVO, e a espécie vai em texto no nome
+ *    acessível do item. Ícone é a única pista de que aquilo é um trecho e não
+ *    um arquivo inteiro, e pista que só existe em desenho não chega a quem
+ *    ouve (WCAG 1.1.1).
+ * 3. CONTEXTO AUTOMÁTICO NÃO GANHA BOTÃO DE REMOVER — ele voltaria na próxima
+ *    pergunta, e botão que desfaz o que se refaz sozinho é armadilha. Ele ganha
+ *    a marca de automático, que é texto, não só a cor mais fraca.
+ * 4. O BOTÃO DE REMOVER LEVA O NOME DO ITEM. Uma fila de botões "Remover" é um
+ *    botão só para quem navega por audição — mesma regra dos anexos.
+ * 5. ALVO DE TOQUE ≥ 24px no botão (WCAG 2.5.8).
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT).
+ */
+
+.nds-composer-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  padding-block-start: var(--spacing-2);
+  padding-inline: var(--spacing-2);
+  list-style: none;
+}
+
+.nds-composer-context-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1);
+  max-inline-size: 16rem;
+
+  background-color: hsl(var(--muted) / 0.4);
+  border: 1px solid hsl(var(--border));
+  /* Mais redondo que o anexo: etiqueta de referência, não cartão de arquivo. */
+  border-radius: var(--radius-full);
+  font-size: var(--text-label);
+}
+
+/* O automático é mais discreto — e a marca textual ao lado é o que de fato o
+ * distingue; a cor sozinha não descreve estado (WCAG 1.4.1). */
+.nds-composer-context-item[data-automatic="true"] {
+  background-color: transparent;
+  border-style: dashed;
+}
+
+.nds-composer-context-icon {
+  flex-shrink: 0;
+  /* Ícone não tem texto para crescer com a fonte do navegador: medida fixa
+   * aqui é a exceção registrada na guideline 12. */
+  inline-size: var(--spacing-4);
+  block-size: var(--spacing-4);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-composer-context-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nds-composer-context-detail {
+  flex-shrink: 0;
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+[data-slot="composer-context-remove"] {
+  flex-shrink: 0;
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}
+
+/* ── Seletor de modelo ────────────────────────────────────────────────────────
+ *
+ * O controle do trilho que diz QUEM responde. Vocabulário em
+ * `@shared/primitives/chat-protocol` (`ModelOption`, `isModelSelectable`).
+ *
+ *   <div class="nds-composer-model">
+ *     <button class="nds-button" data-slot="composer-model-trigger"
+ *             aria-haspopup="listbox" aria-expanded="false">Rápido</button>
+ *     <div class="nds-composer-model-panel" role="listbox">
+ *       <div class="nds-composer-model-option" role="option" aria-selected="true">
+ *         <span class="nds-composer-model-name">Rápido</span>
+ *         <span class="nds-composer-model-badge">Novo</span>
+ *         <span class="nds-composer-model-description">Responde em segundos.</span>
+ *       </div>
+ *     </div>
+ *   </div>
+ *
+ * O GATILHO LEVA SÓ O NOME, A LISTA LEVA A DESCRIÇÃO. Um trilho é estreito e
+ * o nome é o que se confere de relance; a descrição é o que se lê na hora de
+ * trocar. Pôr as duas no gatilho encolhe o campo, que é o que importa ali.
+ *
+ * O PAINEL ABRE PARA CIMA, como o seletor do gatilho e pelo mesmo motivo: o
+ * composer mora no pé da conversa.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O NOME ACESSÍVEL DO GATILHO DIZ O QUE ELE ESCOLHE, e não só o valor
+ *    escolhido. "Rápido, botão" não informa nada; "Modelo: Rápido" informa.
+ *    O rótulo vem da `translations.json`, com o valor interpolado.
+ * 2. OPÇÃO INDISPONÍVEL CARREGA O MOTIVO EM TEXTO — `aria-disabled` mais a
+ *    frase, nunca só o cinza. Quem não percebe a cor precisa saber por quê, e
+ *    `disabled` puro tiraria a opção da leitura em vez de explicá-la.
+ * 3. A ETIQUETA NÃO É A ÚNICA PORTADORA. "Beta" em pill colorida ao lado do
+ *    nome é reforço; se a condição importa para escolher, ela também está na
+ *    descrição (WCAG 1.4.1).
+ * 4. ALVO DE TOQUE ≥ 24px na opção (WCAG 2.5.8).
+ */
+
+.nds-composer-model {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nds-composer-model-panel {
+  position: absolute;
+  /* Acima do trilho, encostado nele. */
+  inset-block-end: calc(100% + var(--spacing-1));
+  inset-inline-start: 0;
+  z-index: var(--z-popover);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  min-inline-size: 14rem;
+  max-inline-size: 20rem;
+  padding: var(--spacing-1);
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--elevation-md);
+}
+
+.nds-composer-model-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-1) var(--spacing-2);
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5);
+  min-block-size: var(--spacing-6);
+
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.nds-composer-model-option[aria-selected="true"],
+.nds-composer-model-option[data-active="true"] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-composer-model-option[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.nds-composer-model-name {
+  font-size: var(--text-p);
+  font-weight: 500;
+}
+
+.nds-composer-model-badge {
+  grid-column: 2;
+  align-self: start;
+}
+
+.nds-composer-model-description {
+  grid-column: 1 / -1;
+  font-size: var(--text-label);
+  /* Texto corrido em container colorido é sempre `--foreground` derivado, e
+   * nunca a cor semântica: descrição longa raramente alcança 4.5:1 sobre fundo
+   * suave (regra do CLAUDE.md raiz). */
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Ditado por voz ───────────────────────────────────────────────────────────
+ *
+ * O controle do trilho que escreve por quem fala. Vocabulário em
+ * `@shared/primitives/chat-protocol` (`VoiceState`, `isVoiceBusy`).
+ *
+ *   <div class="nds-composer-voice" data-state="recording">
+ *     <button class="nds-button" data-slot="composer-voice-toggle"
+ *             aria-pressed="true">…</button>
+ *     <span class="nds-composer-voice-level" aria-hidden="true">
+ *       <span class="nds-composer-voice-bar"></span>
+ *     </span>
+ *     <span class="nds-composer-voice-status">Gravando · 0:12</span>
+ *   </div>
+ *
+ * O MEDIDOR DE NÍVEL É DECORATIVO E O ESTADO É TEXTO — a mesma decisão da barra
+ * de progresso do anexo e do relógio do media player, e pelo mesmo motivo: o
+ * que muda a cada quadro, anunciado, torna a tela impossível de ouvir. Quem
+ * ouve recebe a PALAVRA, que é o que decide o que fazer.
+ *
+ * O TEMPO DECORRIDO TAMBÉM NÃO SE ANUNCIA. Ele é texto na tela e fica fora de
+ * região viva; um relógio que se reanuncia a cada segundo é o defeito que o
+ * media player já pagou.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O BOTÃO É ALTERNADOR, com `aria-pressed` — não dois botões que se trocam.
+ *    Botão que some leva o foco junto.
+ * 2. `transcribing` DESABILITA o alternador, porque apertar ali não devolve o
+ *    áudio: já parou de captar. O motivo vai no texto de estado.
+ * 3. A PULSAÇÃO RESPEITA `prefers-reduced-motion` — movimento contínuo em
+ *    tela é gatilho vestibular, e o estado já está escrito.
+ * 4. ALVO DE TOQUE ≥ 24px, herdado da regra do trilho.
+ */
+
+.nds-composer-voice {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+}
+
+.nds-composer-voice-level {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  block-size: var(--spacing-4);
+}
+
+.nds-composer-voice-bar {
+  inline-size: 2px;
+  block-size: 100%;
+  background-color: hsl(var(--destructive));
+  border-radius: var(--radius-full);
+  transform-origin: center;
+}
+
+.nds-composer-voice[data-state="recording"] .nds-composer-voice-bar {
+  animation: nds-composer-voice-pulse var(--duration-slow) var(--ease-standard) infinite;
+}
+
+.nds-composer-voice-status {
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes nds-composer-voice-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* A camada de token já zera `--duration-*` sob `prefers-reduced-motion`, então
+ * a animação para sozinha. Este bloco existe pelo RESTO: sem ele a barra
+ * congelaria no primeiro quadro, que é o mais baixo, e o medidor pareceria
+ * desligado justamente para quem escolheu menos movimento. O estado já está em
+ * texto, então nada se perde além do movimento. */
+@media (prefers-reduced-motion: reduce) {
+  .nds-composer-voice[data-state="recording"] .nds-composer-voice-bar {
+    animation: none;
+    transform: scaleY(0.7);
+  }
+}
