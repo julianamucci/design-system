@@ -4,9 +4,9 @@
 // mostra isso, e não o `outerHTML` do formulário com a lista já desenhada.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   type SourceTransform,
@@ -50,8 +50,8 @@ export function triggerSnippet(opts: TriggerSnippetOptions = {}): string {
 
   return snippet(
     importes,
-    `const composer = ${chamada('createComposer', linhas)};`,
-    montar('composer'),
+    `const composer = ${callLine('createComposer', linhas)};`,
+    appendLine('composer'),
   );
 }
 

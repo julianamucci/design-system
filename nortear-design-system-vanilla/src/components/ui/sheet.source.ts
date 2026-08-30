@@ -1,9 +1,9 @@
 // Snippet do painel Code do Sheet — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -204,8 +204,8 @@ export function sheetSnippet(o: SheetSnippetOptions = {}): string {
       .join('\n'),
     body.block,
     pe.block,
-    `const painel = ${chamada('createSheet', panelLines(o, trigger, pe.referencia))};`,
-    montar('painel'),
+    `const painel = ${callLine('createSheet', panelLines(o, trigger, pe.referencia))};`,
+    appendLine('painel'),
     o.mostrarDestroy
       ? `// O painel mora no \`body\` e o ouvinte de teclado mora no \`document\`: quem
 // tira o componente da página chama \`destroy()\` para não deixar nenhum dos
@@ -237,7 +237,7 @@ gatilhoInterno.classList.add('nds-sr-only');
 gatilhoInterno.setAttribute('tabindex', '-1');
 gatilhoInterno.setAttribute('aria-hidden', 'true');`,
     `let aberto = false;
-const painel = ${chamada('createSheet', [
+const painel = ${callLine('createSheet', [
       'trigger: triggerInterno,',
       `title: ${text(o.title ?? 'Controlado pelo pai')},`,
       `description: ${text(o.description ?? 'Abertura programática pelo gatilho interno.')},`,

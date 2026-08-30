@@ -1,13 +1,13 @@
 // Snippet do painel Code do NavigationMenu — ver `@/lib/story-source`.
 //
 // A fábrica recebe os itens como PRIMEIRO ARGUMENTO POSICIONAL e as opções como
-// segundo — `createNavigationMenu(items, options)`. O `chamada()` compartilhado
+// segundo — `createNavigationMenu(items, options)`. O `callLine()` compartilhado
 // monta `createX({ … })`, que é a forma das fábricas de argumento único; a
 // montagem da chamada com lista posicional é local a este módulo.
 
 import {
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -135,7 +135,7 @@ export function navigationMenuSnippet(o: NavigationMenuSnippetOptions = {}): str
   return snippet(
     importing('navigation-menu', 'createNavigationMenu'),
     barBlock(o, o.items ?? ITEMS_DEFAULT),
-    montar('barra'),
+    appendLine('barra'),
     // A barra registra ouvinte no documento. Sair da página dispara a limpeza
     // sozinha; `destroy()` é o caminho de quem desmonta antes disso.
     o.destroy ? `barra.destroy();` : undefined,
@@ -160,7 +160,7 @@ if (painel) {
   painel.dataset.cols = '2';
   painel.dataset.spacing = 'sm';
 }`,
-    montar('barra'),
+    appendLine('barra'),
   );
 }
 
@@ -192,7 +192,7 @@ if (painel) {
   for (const link of apoio) coluna.appendChild(link);
   painel.appendChild(coluna);
 }`,
-    montar('barra'),
+    appendLine('barra'),
   );
 }
 
@@ -224,7 +224,7 @@ export function navigationMenuControlledSnippet(o: NavigationMenuSnippetOptions 
   onValueChange: (valor) => registrarPedido(valor),
 });
 barra.setAttribute('aria-label', ${text(o.ariaLabel ?? NAME_DEFAULT)});`,
-    montar('barra'),
+    appendLine('barra'),
     `// Nada se move enquanto quem controla não mandar.
 barra.setValue('produtos');
 barra.getValue(); // 'produtos'`,

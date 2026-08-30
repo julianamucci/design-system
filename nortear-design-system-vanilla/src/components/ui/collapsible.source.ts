@@ -1,9 +1,9 @@
 // Snippet do painel Code do Collapsible — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -58,11 +58,11 @@ export function collapsibleSnippet(o: CollapsibleSnippetOptions = {}): string {
   return snippet(
     importing('collapsible', 'createCollapsible'),
     PANEL,
-    `const colapsavel = ${chamada(
+    `const colapsavel = ${callLine(
       'createCollapsible',
       optionsComuns(o, text(o.trigger ?? TRIGGER_DEFAULT)),
     )};`,
-    montar('colapsavel'),
+    appendLine('colapsavel'),
   );
 }
 
@@ -90,14 +90,14 @@ export function collapsibleWithTriggerSnippet(
 
   return snippet(
     [importing('button', 'createButton'), importing('collapsible', 'createCollapsible')].join('\n'),
-    `const gatilho = ${chamada('createButton', options([
+    `const gatilho = ${callLine('createButton', options([
       ['variant', text('outline')],
       ['label', text(o.trigger ?? TRIGGER_DEFAULT)],
     ]))};`,
     chevron,
     PANEL,
-    `const colapsavel = ${chamada('createCollapsible', optionsComuns(o, 'gatilho'))};`,
-    montar('colapsavel'),
+    `const colapsavel = ${callLine('createCollapsible', optionsComuns(o, 'gatilho'))};`,
+    appendLine('colapsavel'),
   );
 }
 
@@ -121,14 +121,14 @@ export function collapsibleControlledSnippet(o: CollapsibleSnippetOptions = {}):
     importing('collapsible', 'createCollapsible'),
     PANEL,
     '// A fonte da verdade mora aqui, fora do componente.\nlet aberto = false;',
-    `const colapsavel = ${chamada('createCollapsible', lines)};`,
+    `const colapsavel = ${callLine('createCollapsible', lines)};`,
     [
       'function definir(valor: boolean): void {',
       '  aberto = valor;',
       '  colapsavel.setOpen(valor);',
       '}',
     ].join('\n'),
-    montar('colapsavel'),
+    appendLine('colapsavel'),
   );
 }
 

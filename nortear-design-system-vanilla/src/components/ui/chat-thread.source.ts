@@ -6,9 +6,9 @@
 // mostra.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   type SourceTransform,
@@ -44,8 +44,8 @@ export function chatThreadSnippet(opts: ChatThreadSnippetOptions = {}): string {
 
   return snippet(
     importing('chat-thread', 'createChatThread'),
-    `const thread = ${chamada('createChatThread', linhas)};`,
-    montar('thread'),
+    `const thread = ${callLine('createChatThread', linhas)};`,
+    appendLine('thread'),
     // A ordem é o contrato: quem decide se a rolagem acompanha é o componente,
     // e ele só pode decidir se a mensagem entrar por aqui.
     opts.append

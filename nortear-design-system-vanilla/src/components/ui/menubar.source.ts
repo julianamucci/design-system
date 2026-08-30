@@ -1,13 +1,13 @@
 // Snippet do painel Code do Menubar — ver `@/lib/story-source`.
 //
 // A fábrica recebe os menus como PRIMEIRO ARGUMENTO POSICIONAL e as opções como
-// segundo — `createMenubar(menus, options)`. O `chamada()` compartilhado monta
+// segundo — `createMenubar(menus, options)`. O `callLine()` compartilhado monta
 // `createX({ … })`, que é a forma das fábricas de argumento único; a montagem da
 // chamada com lista posicional é local a este módulo.
 
 import {
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -165,7 +165,7 @@ export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
   return snippet(
     importing('menubar', 'createMenubar'),
     `const barra = createMenubar(${serializarMenus(menus)}${segundo});`,
-    montar('barra'),
+    appendLine('barra'),
     // A barra registra ouvinte no documento. Sair da página dispara a limpeza
     // sozinha; `destroy()` é o caminho de quem desmonta antes disso.
     o.destroy ? `barra.destroy();` : undefined,

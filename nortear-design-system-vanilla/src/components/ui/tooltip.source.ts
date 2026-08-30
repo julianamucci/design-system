@@ -1,9 +1,9 @@
 // Snippet do painel Code do Tooltip — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -67,9 +67,9 @@ export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
       importing('button', 'createButton'),
     ].join('\n'),
     withProvider
-      ? `// O provedor guarda a espera do grupo: o balão seguinte abre na hora\n// enquanto a janela de dispensa dura.\nconst grupo = ${chamada('createTooltipProvider', linesProvider)};`
+      ? `// O provedor guarda a espera do grupo: o balão seguinte abre na hora\n// enquanto a janela de dispensa dura.\nconst grupo = ${callLine('createTooltipProvider', linesProvider)};`
       : undefined,
-    `const gatilho = ${chamada('createButton', options([
+    `const gatilho = ${callLine('createButton', options([
       ['variant', text(o.triggerVariant ?? 'outline')],
       ['size', o.triggerSize ? text(o.triggerSize) : undefined],
       ['label', text(label)],
@@ -83,8 +83,8 @@ const tecla = document.createElement('kbd');
 tecla.textContent = 'Ctrl+S';
 conteudo.appendChild(tecla);`
       : undefined,
-    `const dica = ${chamada(fabrica, lines)};`,
-    montar('dica'),
+    `const dica = ${callLine(fabrica, lines)};`,
+    appendLine('dica'),
   );
 }
 
@@ -112,7 +112,7 @@ for (const side of ['top', 'right', 'bottom', 'left'] as const) {
   const gatilho = createButton({ variant: 'outline', label: side });
   grade.appendChild(createTooltip({ trigger: gatilho, content: \`Tooltip \${side}\`, side }));
 }`,
-    montar('grade'),
+    appendLine('grade'),
   );
 }
 

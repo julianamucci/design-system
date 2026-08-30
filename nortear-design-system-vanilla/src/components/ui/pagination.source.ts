@@ -1,9 +1,9 @@
 // Snippet do painel Code do Pagination — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -38,7 +38,7 @@ const CALLBACK_DEFAULT = '(page) => irPara(page)';
 /**
  * Reindenta as linhas seguintes de um bloco já montado.
  *
- * `chamada()` recua os próprios pares em dois espaços, medida certa para uma
+ * `callLine()` recua os próprios pares em dois espaços, medida certa para uma
  * chamada no topo do arquivo e curta demais quando ela entra dentro de um
  * corpo de função.
  */
@@ -74,8 +74,8 @@ export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
 
   return snippet(
     importing('pagination', 'createPagination'),
-    `const faixa = ${chamada('createPagination', lines)};`,
-    montar('faixa'),
+    `const faixa = ${callLine('createPagination', lines)};`,
+    appendLine('faixa'),
   );
 }
 
@@ -89,7 +89,7 @@ export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
 export function paginationWithStateSnippet(o: PaginationSnippetOptions = {}): string {
   const lines = options([
     ...linesComuns(o, 'paginaAtual'),
-    ['onPageChange', '(page) => { paginaAtual = page; remontar(); }'],
+    ['onPageChange', '(page) => { paginaAtual = page; reappendLine(); }'],
   ]);
 
   return snippet(
@@ -99,12 +99,12 @@ export function paginationWithStateSnippet(o: PaginationSnippetOptions = {}): st
 const faixa = document.createElement('div');
 let paginaAtual = ${o.current ?? 1};
 
-function remontar() {
-  faixa.replaceChildren(${recuar(chamada('createPagination', lines), '  ')});
+function reappendLine() {
+  faixa.replaceChildren(${recuar(callLine('createPagination', lines), '  ')});
 }
 
-remontar();`,
-    montar('faixa'),
+reappendLine();`,
+    appendLine('faixa'),
   );
 }
 

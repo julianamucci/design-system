@@ -2,9 +2,9 @@
 
 import {
   importing,
-  montar,
+  appendLine,
   options,
-  chamada,
+  callLine,
   snippet,
   text,
   type SourceTransform,
@@ -94,7 +94,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
   ];
   if (o.ellipsis) names.push('createBreadcrumbEllipsis');
 
-  const root = chamada(
+  const root = callLine(
     'createBreadcrumb',
     options([['aria-label', o['aria-label'] ? text(o['aria-label']) : undefined]]),
   );
@@ -129,7 +129,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
 
   const ellipsisBlock = o.ellipsis
     ? `const oculto = createBreadcrumbItem();
-oculto.appendChild(${chamada(
+oculto.appendChild(${callLine(
         'createBreadcrumbEllipsis',
         options([['aria-label', o.ellipsisLabel ? text(o.ellipsisLabel) : undefined]]),
       )});`
@@ -149,7 +149,7 @@ ${levelBody}
     `const atual = createBreadcrumbItem();
 atual.appendChild(createBreadcrumbPage({ text: ${text(current)} }));`,
     `lista.append(\n${parts.join('\n')}\n);\ntrilha.appendChild(lista);`,
-    montar('trilha'),
+    appendLine('trilha'),
   );
 }
 
@@ -242,7 +242,7 @@ lista.append(
   atual,
 );
 trilha.appendChild(lista);`,
-    montar('trilha'),
+    appendLine('trilha'),
   );
 }
 

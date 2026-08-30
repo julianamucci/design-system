@@ -1,9 +1,9 @@
 // Snippet do painel Code do Form — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -99,8 +99,8 @@ export function formSnippet(o: FormSnippetOptions = {}): string {
 const controle = ${control};
 controle.setAttribute('aria-invalid', 'true');`
       : undefined,
-    `const campo = ${chamada('createFormField', lines)};`,
-    montar('campo'),
+    `const campo = ${callLine('createFormField', lines)};`,
+    appendLine('campo'),
   );
 }
 
@@ -148,8 +148,8 @@ export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}):
       importing('form', 'createFieldset', 'createFormField'),
       importing('input', 'createInput'),
     ].join('\n'),
-    `const grupo = ${chamada('createFieldset', lines)};`,
-    montar('grupo'),
+    `const grupo = ${callLine('createFieldset', lines)};`,
+    appendLine('grupo'),
   );
 }
 
@@ -202,7 +202,7 @@ formulario.className = 'nds-stack';
 formulario.append(
 ${children.join('\n')}
 );`,
-    montar('formulario'),
+    appendLine('formulario'),
   );
 }
 

@@ -1,9 +1,9 @@
 // Snippet do painel Code do AspectRatio — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -121,8 +121,8 @@ export function aspectRatioSnippet(o: AspectRatioSnippetOptions = {}): string {
   return snippet(
     importing('aspect-ratio', 'createAspectRatio'),
     content?.code,
-    `const caixa = ${chamada('createAspectRatio', lines)};`,
-    montar('caixa'),
+    `const caixa = ${callLine('createAspectRatio', lines)};`,
+    appendLine('caixa'),
   );
 }
 

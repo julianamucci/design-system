@@ -1,9 +1,9 @@
 // Snippet do painel Code do Alert — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -80,7 +80,7 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
     names,
     // Sem nenhuma opção a chamada é `createAlert()`: a fábrica tem parâmetro
     // com valor padrão, e um `{}` vazio seria ruído.
-    criacao: `const alerta = ${lines.length ? chamada('createAlert', lines) : 'createAlert()'};`,
+    criacao: `const alerta = ${lines.length ? callLine('createAlert', lines) : 'createAlert()'};`,
     body: [
       icone ? `alerta.appendChild(createAlertIcon(${text(icone)}));` : '',
       title ? `alerta.appendChild(createAlertTitle({ text: ${text(title)} }));` : '',
@@ -94,7 +94,7 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
 /** A chamada real de `createAlert` e a composição que a story monta em cima. */
 export function alertSnippet(o: AlertSnippetOptions = {}): string {
   const { names, criacao, body } = partesDoAlerta(o);
-  return snippet(importing('alert', ...names), [criacao, ...body].join('\n'), montar('alerta'));
+  return snippet(importing('alert', ...names), [criacao, ...body].join('\n'), appendLine('alerta'));
 }
 
 /**
@@ -133,7 +133,7 @@ export function alertWithActionSnippet(o: AlertWithActionSnippetOptions = {}): s
     `const acao = createAlertAction();
 acao.appendChild(createButton({ label: ${text(acao)}, variant: 'default', size: 'sm' }));
 alerta.appendChild(acao);`,
-    montar('alerta'),
+    appendLine('alerta'),
   );
 }
 

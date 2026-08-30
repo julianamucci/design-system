@@ -1,9 +1,9 @@
 // Snippet do painel Code do Badge — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -40,8 +40,8 @@ export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
 // O tamanho vem de \`.nds-badge > svg\` e o respiro do gap da etiqueta —
 // margem escrita à mão somaria ao gap e dobraria o espaço.`
       : undefined,
-    `const etiqueta = ${chamada('createBadge', lines)};`,
-    montar('etiqueta'),
+    `const etiqueta = ${callLine('createBadge', lines)};`,
+    appendLine('etiqueta'),
   );
 }
 
@@ -89,7 +89,7 @@ grupo.dataset.spacing = 'sm';
 grupo.append(
 ${calls}
 );`,
-    montar('grupo'),
+    appendLine('grupo'),
   );
 }
 
@@ -124,11 +124,11 @@ export function badgeWithCounterSnippet(o: BadgeWithCounterSnippetOptions = {}):
 
   return snippet(
     importing('badge', 'createBadge', 'createBadgeCounter'),
-    `const etiqueta = ${chamada('createBadge', [
+    `const etiqueta = ${callLine('createBadge', [
       `variant: ${text(variant)},`,
       `children: [${text(label)}, createBadgeCounter({ text: ${text(count)} })],`,
     ])};`,
-    montar('etiqueta'),
+    appendLine('etiqueta'),
   );
 }
 
@@ -162,7 +162,7 @@ alvo.type = 'button';
 alvo.className = 'nds-cluster nds-rounded-md nds-focus-ring-inset';
 alvo.setAttribute('aria-label', ${text(name)});
 alvo.appendChild(createBadge({ variant: ${text(variant)}, children: ${text(label)} }));`,
-    montar('alvo'),
+    appendLine('alvo'),
   );
 }
 

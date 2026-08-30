@@ -1,9 +1,9 @@
 // Snippet do painel Code do Accordion — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -81,8 +81,8 @@ export function accordionSnippet(o: AccordionSnippetOptions = {}): string {
   return snippet(
     importing('accordion', 'createAccordion'),
     itemsBlock(items),
-    `const acordeao = ${chamada('createAccordion', callLines(o))};`,
-    montar('acordeao'),
+    `const acordeao = ${callLine('createAccordion', callLines(o))};`,
+    appendLine('acordeao'),
   );
 }
 
@@ -149,10 +149,10 @@ export function accordionWithTriggerRichSnippet(
   return snippet(
     imports.join('\n'),
     itemsBlock(items),
-    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: items }))};`,
+    `const acordeao = ${callLine('createAccordion', callLines({ ...o, items: items }))};`,
     composition,
     `acordeao.querySelector('[data-value="${value}"] span')?.replaceWith(rotulo);`,
-    montar('acordeao'),
+    appendLine('acordeao'),
   );
 }
 
@@ -183,7 +183,7 @@ export function accordionWithContentRichSnippet(
   return snippet(
     [importing('accordion', 'createAccordion'), "import DOMPurify from 'dompurify';"].join('\n'),
     itemsBlock(items),
-    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: items }))};`,
+    `const acordeao = ${callLine('createAccordion', callLines({ ...o, items: items }))};`,
     `const corpo = acordeao.querySelector(
   '[data-content-for="${value}"] .nds-accordion-content-body',
 );
@@ -194,7 +194,7 @@ if (corpo) {
       <li>Manual do usuário</li>
     </ul>\`);
 }`,
-    montar('acordeao'),
+    appendLine('acordeao'),
   );
 }
 

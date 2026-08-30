@@ -1,9 +1,9 @@
 // Snippet do painel Code do Input — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -85,8 +85,8 @@ export function inputSnippet(o: InputSnippetOptions = {}): string {
     // A paleta escura é uma classe no documento: o campo é exatamente o mesmo
     // dos demais estados, e é isso que o snippet precisa deixar claro.
     o.temaEscuro ? `document.documentElement.classList.add('dark');` : undefined,
-    [`const campo = ${chamada('createInput', lines)};`, ...attrs].join('\n'),
-    `const rotulo = ${chamada('createLabel', options([['text', text(label)], ['htmlFor', text(id)]]))};`,
+    [`const campo = ${callLine('createInput', lines)};`, ...attrs].join('\n'),
+    `const rotulo = ${callLine('createLabel', options([['text', text(label)], ['htmlFor', text(id)]]))};`,
     o.ajuda
       ? `const apoio = document.createElement('p');
 apoio.id = ${text(`${id}-ajuda`)};
@@ -99,7 +99,7 @@ erro.id = ${text(`${id}-erro`)};
 erro.className = 'nds-text-caption nds-text-destructive';
 erro.textContent = ${text(o.mensagem)};`
       : undefined,
-    montar(montados.join(', ')),
+    appendLine(montados.join(', ')),
   );
 }
 
@@ -130,12 +130,12 @@ grupo.setAttribute('role', 'group');`,
 prefixo.className = 'nds-input-group-addon';
 prefixo.dataset.align = 'inline-start';
 prefixo.textContent = ${text(prefixo)};`,
-    `const campo = ${chamada('createInput', lines)};
+    `const campo = ${callLine('createInput', lines)};
 campo.classList.add('nds-input-group-control');
 campo.dataset.slot = 'input-group-control';`,
     `grupo.append(prefixo, campo);`,
-    `const rotulo = ${chamada('createLabel', options([['text', text(label)], ['htmlFor', text(id)]]))};`,
-    montar('rotulo, grupo'),
+    `const rotulo = ${callLine('createLabel', options([['text', text(label)], ['htmlFor', text(id)]]))};`,
+    appendLine('rotulo, grupo'),
   );
 }
 

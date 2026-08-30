@@ -1,9 +1,9 @@
 // Snippet do painel Code do ScrollArea — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -199,8 +199,8 @@ export function scrollAreaSnippet(o: ScrollAreaSnippetOptions = {}): string {
   return snippet(
     [importing('scroll-area', 'createScrollArea'), ...content.imports].join('\n'),
     content.block,
-    `const area = ${chamada('createScrollArea', areaLines(o, content.variavel))};`,
-    montar('area'),
+    `const area = ${callLine('createScrollArea', areaLines(o, content.variavel))};`,
+    appendLine('area'),
   );
 }
 
@@ -218,11 +218,11 @@ export function scrollAreaNoLimitSnippet(o: ScrollAreaSnippetOptions = {}): stri
     `// Sem degrau de altura o conteúdo expande e NÃO há rolagem: sem teto não há
 // transbordo. Sem nome também não há papel — região anônima não vira marco, e
 // \`aria-label\` em elemento sem papel é atributo proibido.
-const semTeto = ${chamada('createScrollArea', [
+const semTeto = ${callLine('createScrollArea', [
       `class: ${text(className(o))},`,
       `children: ${content.variavel},`,
     ])};`,
-    `const comTeto = ${chamada('createScrollArea', areaLines({ ...o, size: o.size ?? 'sm' }, content.variavel))};`,
+    `const comTeto = ${callLine('createScrollArea', areaLines({ ...o, size: o.size ?? 'sm' }, content.variavel))};`,
     `document.querySelector('#app')?.append(semTeto, comTeto);`,
   );
 }
@@ -249,7 +249,7 @@ export function scrollAreaEmCardSnippet(o: ScrollAreaSnippetOptions = {}): strin
       ...content.imports,
     ].join('\n'),
     content.block,
-    `const area = ${chamada('createScrollArea', areaLines(o, content.variavel))};`,
+    `const area = ${callLine('createScrollArea', areaLines(o, content.variavel))};`,
     `const cabecalho = createCardHeader();
 cabecalho.append(
   createCardTitle({ text: 'Histórico de atividades' }),
@@ -260,7 +260,7 @@ corpo.appendChild(area);`,
     `const cartao = createCard({ class: 'nds-w-md' });
 // O cabeçalho fica FORA da área rolável: ele é a referência do que rola.
 cartao.append(cabecalho, corpo);`,
-    montar('cartao'),
+    appendLine('cartao'),
   );
 }
 

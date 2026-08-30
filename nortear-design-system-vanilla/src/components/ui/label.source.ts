@@ -1,9 +1,9 @@
 // Snippet do painel Code do Label — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -66,11 +66,11 @@ export function labelSnippet(o: LabelSnippetOptions = {}): string {
 
   return snippet(
     [importing('label', 'createLabel'), importing('input', 'createInput')].join('\n'),
-    `const rotulo = ${chamada('createLabel', labelLines(o, id, o.text ?? TEXT_DEFAULT))};`,
-    `const campo = ${chamada('createInput', field)};`,
+    `const rotulo = ${callLine('createLabel', labelLines(o, id, o.text ?? TEXT_DEFAULT))};`,
+    `const campo = ${callLine('createInput', field)};`,
     // Com o controle desabilitado, a ORDEM importa: a folha casa no irmão
     // marcado com `nds-peer`, e é o controle que carrega a marca.
-    montar(o.disabled ? 'campo, rotulo' : 'rotulo, campo'),
+    appendLine(o.disabled ? 'campo, rotulo' : 'rotulo, campo'),
   );
 }
 
@@ -87,14 +87,14 @@ export function labelObrigatorioSnippet(o: LabelSnippetOptions = {}): string {
 
   return snippet(
     [importing('label', 'createLabel'), importing('input', 'createInput')].join('\n'),
-    `const rotulo = ${chamada('createLabel', labelLines(o, id))};
+    `const rotulo = ${callLine('createLabel', labelLines(o, id))};
 
 const marcador = document.createElement('span');
 marcador.className = 'nds-text-destructive';
 marcador.setAttribute('aria-hidden', 'true');
 marcador.textContent = '*';
 rotulo.append(${text(content)}, marcador);`,
-    `const campo = ${chamada(
+    `const campo = ${callLine(
       'createInput',
       options([
         ['id', text(id)],
@@ -103,7 +103,7 @@ rotulo.append(${text(content)}, marcador);`,
       ]),
     )};
 campo.setAttribute('aria-required', 'true');`,
-    montar('rotulo, campo'),
+    appendLine('rotulo, campo'),
   );
 }
 
@@ -123,8 +123,8 @@ bloco.className = 'nds-stack';
 bloco.dataset.spacing = 'xs';
 bloco.dataset.disabled = 'true';`,
     `bloco.append(
-  ${chamada('createLabel', labelLines(o, id, o.text ?? 'Documento'))},
-  ${chamada(
+  ${callLine('createLabel', labelLines(o, id, o.text ?? 'Documento'))},
+  ${callLine(
     'createInput',
     options([
       ['id', text(id)],
@@ -133,7 +133,7 @@ bloco.dataset.disabled = 'true';`,
     ]),
   )},
 );`,
-    montar('bloco'),
+    appendLine('bloco'),
   );
 }
 
@@ -149,12 +149,12 @@ export function labelWithBoxSnippet(o: LabelSnippetOptions = {}): string {
 
   return snippet(
     [importing('label', 'createLabel'), importing('checkbox', 'createCheckbox')].join('\n'),
-    `const caixa = ${chamada('createCheckbox', options([['id', text(id)]]))};`,
-    `const rotulo = ${chamada(
+    `const caixa = ${callLine('createCheckbox', options([['id', text(id)]]))};`,
+    `const rotulo = ${callLine(
       'createLabel',
       labelLines(o, id, o.text ?? 'Concordo com os termos de uso'),
     )};`,
-    montar('caixa, rotulo'),
+    appendLine('caixa, rotulo'),
   );
 }
 

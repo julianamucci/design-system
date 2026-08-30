@@ -5,9 +5,9 @@
 // constante e mostra o que se faz com ela.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   type SourceTransform,
@@ -32,8 +32,8 @@ function build(opts: QuoteSnippetOptions = {}): string {
 
   return snippet(
     importing('composer', 'createComposer'),
-    `const composer = ${chamada('createComposer', linhas)};`,
-    montar('composer'),
+    `const composer = ${callLine('createComposer', linhas)};`,
+    appendLine('composer'),
   );
 }
 
@@ -65,7 +65,7 @@ export function quoteWithAttachmentsSource(): string {
 export function quoteAbsentSource(): string {
   return snippet(
     importing('composer', 'createComposer'),
-    `const composer = ${chamada('createComposer', options([['labels', 'rotulos']]))};`,
-    montar('composer'),
+    `const composer = ${callLine('createComposer', options([['labels', 'rotulos']]))};`,
+    appendLine('composer'),
   );
 }

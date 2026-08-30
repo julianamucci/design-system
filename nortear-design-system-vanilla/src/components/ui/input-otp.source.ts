@@ -1,9 +1,9 @@
 // Snippet do painel Code do InputOTP — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -79,8 +79,8 @@ function otpLines(o: InputOtpSnippetOptions): string[] {
 export function inputOtpSnippet(o: InputOtpSnippetOptions = {}): string {
   return snippet(
     importing('input-otp', 'createInputOTP'),
-    `const codigo = ${chamada('createInputOTP', otpLines(o))};`,
-    montar('codigo'),
+    `const codigo = ${callLine('createInputOTP', otpLines(o))};`,
+    appendLine('codigo'),
   );
 }
 
@@ -137,7 +137,7 @@ export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): 
 titulo.className = 'nds-text-label';${idLabel ? `\ntitulo.id = ${text(idLabel)};` : ''}
 titulo.textContent = ${text(label)};`,
     [
-      `const codigo = ${chamada('createInputOTP', lines)};`,
+      `const codigo = ${callLine('createInputOTP', lines)};`,
       ...(idLabel
         ? [
             `codigo.removeAttribute('aria-label');`,
@@ -167,7 +167,7 @@ const nota = document.createElement('span');
 nota.className = 'nds-text-caption nds-text-muted-foreground';
 nota.textContent = 'Não recebeu?';
 
-linha.append(nota, ${chamada(
+linha.append(nota, ${callLine(
           'createButton',
           options([
             ['variant', text('link')],
@@ -176,7 +176,7 @@ linha.append(nota, ${chamada(
           ]),
         )});`
       : undefined,
-    montar(montados.join(', ')),
+    appendLine(montados.join(', ')),
   );
 }
 

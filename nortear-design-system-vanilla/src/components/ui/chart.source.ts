@@ -7,9 +7,9 @@
 // e disponível para os outros quatro arquivos de story do componente.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -230,8 +230,8 @@ export function chartSnippet(o: ChartSnippetOptions = {}): string {
   return snippet(
     importing('chart', 'createChart'),
     block,
-    `const grafico = ${chamada('createChart', lines)};`,
-    montar('grafico'),
+    `const grafico = ${callLine('createChart', lines)};`,
+    appendLine('grafico'),
   );
 }
 
@@ -289,10 +289,10 @@ cabecalho.append(
   createCardDescription({ text: ${text(o.cardDescription ?? 'Janeiro — Junho de 2024')} }),
 );`,
     `const conteudo = createCardContent();
-conteudo.appendChild(${chamada('createChart', lines)});
+conteudo.appendChild(${callLine('createChart', lines)});
 
 card.append(cabecalho, conteudo);`,
-    montar('card'),
+    appendLine('card'),
   );
 }
 

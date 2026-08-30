@@ -1,9 +1,9 @@
 // Snippet do painel Code do Tabs — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -93,8 +93,8 @@ export function tabsSnippet(o: TabsSnippetOptions = {}): string {
   return snippet(
     importing('tabs', 'createTabs'),
     PANEL_FABRICA,
-    `const abas = ${chamada('createTabs', conjuntoLines(o, items))};`,
-    montar('abas'),
+    `const abas = ${callLine('createTabs', conjuntoLines(o, items))};`,
+    appendLine('abas'),
   );
 }
 
@@ -114,7 +114,7 @@ export function tabsWithIconsSnippet(
   return snippet(
     [importing('tabs', 'createTabs'), `import { ${[...icons, 'createElement'].join(', ')} } from 'lucide';`].join('\n'),
     PANEL_FABRICA,
-    `const abas = ${chamada('createTabs', conjuntoLines(o, items))};`,
+    `const abas = ${callLine('createTabs', conjuntoLines(o, items))};`,
     `const icones = {
 ${items.map((i) => `  ${i.value}: ${i.icon},`).join('\n')}
 };
@@ -137,7 +137,7 @@ Object.entries(icones).forEach(([valor, icone]) => {
   conteudo.append(svg, rotulo);
   gatilho.append(conteudo);
 });`,
-    montar('abas'),
+    appendLine('abas'),
   );
 }
 
@@ -156,7 +156,7 @@ export function tabsWithBadgeSnippet(
   return snippet(
     [importing('tabs', 'createTabs'), importing('badge', 'createBadge')].join('\n'),
     PANEL_FABRICA,
-    `const abas = ${chamada('createTabs', conjuntoLines(o, items))};`,
+    `const abas = ${callLine('createTabs', conjuntoLines(o, items))};`,
     `const contadores = [
 ${withBadge
   .map(
@@ -181,7 +181,7 @@ contadores.forEach(({ value, text, variant }) => {
   conteudo.append(rotulo, createBadge({ text, variant }));
   gatilho.append(conteudo);
 });`,
-    montar('abas'),
+    appendLine('abas'),
   );
 }
 

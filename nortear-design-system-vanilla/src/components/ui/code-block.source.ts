@@ -1,9 +1,9 @@
 // Snippet do painel Code do CodeBlock — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -81,8 +81,8 @@ export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
   return snippet(
     importing('code-block', 'createCodeBlock'),
     `const source = ${codeLiteral(o.code ?? TRECHO_DEFAULT)};`,
-    `const bloco = ${chamada('createCodeBlock', lines)};`,
-    montar('bloco'),
+    `const bloco = ${callLine('createCodeBlock', lines)};`,
+    appendLine('bloco'),
   );
 }
 

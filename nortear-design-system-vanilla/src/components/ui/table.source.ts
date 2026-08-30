@@ -3,7 +3,7 @@
 // O Table não é uma fábrica só: são sete, uma por peça da tabela. O que o
 // leitor copia é a MONTAGEM — e ela é o snippet inteiro, não uma chamada.
 
-import { montar, snippet, text, type SourceTransform } from '@/lib/story-source';
+import { appendLine, snippet, text, type SourceTransform } from '@/lib/story-source';
 
 export type TableSnippetOptions = {
   /** Legenda desenhada na tela; sem isto ela fica só para o leitor de tela. */
@@ -164,7 +164,7 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
     header(o),
     body(o),
     o.withFooter ? footer() : undefined,
-    montar('wrapper'),
+    appendLine('wrapper'),
   );
 }
 
@@ -195,7 +195,7 @@ export function tableVaziaSnippet(o: TableSnippetOptions = {}): string {
       'corpo.appendChild(linha);',
       'table.appendChild(corpo);',
     ].join('\n'),
-    montar('wrapper'),
+    appendLine('wrapper'),
   );
 }
 
@@ -242,7 +242,7 @@ export function tableLoadingSnippet(o: TableSnippetOptions = {}): string {
       '',
       'regiao.appendChild(wrapper);',
     ].join('\n'),
-    montar('regiao'),
+    appendLine('regiao'),
   );
 }
 

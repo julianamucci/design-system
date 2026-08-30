@@ -1,9 +1,9 @@
 // Snippet do painel Code do Resizable — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -123,8 +123,8 @@ function groupLines(o: ResizableSnippetOptions, panels: ResizableSnippetPanel[])
 
 /** A linha final: o grupo entra na página, e a limpeza quando ela é o assunto. */
 function blockFinal(o: ResizableSnippetOptions, variavel: string): string {
-  if (!o.destroy) return montar(variavel);
-  return `${montar(variavel)}
+  if (!o.destroy) return appendLine(variavel);
+  return `${appendLine(variavel)}
 
 // Durante o arrasto a fábrica escuta \`mousemove\` e \`mouseup\` no documento.
 // Quem tira o grupo da página com o botão ainda pressionado solta os dois aqui.
@@ -148,7 +148,7 @@ export function resizableSnippet(o: ResizableSnippetOptions = {}): string {
   return snippet(
     importing('resizable', 'createResizablePanel'),
     CONTENT_BLOCK,
-    `${HEIGHT_NOTA}const grupo = ${chamada('createResizablePanel', groupLines(o, panels))};`,
+    `${HEIGHT_NOTA}const grupo = ${callLine('createResizablePanel', groupLines(o, panels))};`,
     blockFinal(o, 'grupo'),
   );
 }
@@ -202,8 +202,8 @@ export function resizableNestedSnippet(groupOptions: {
     CONTENT_BLOCK,
     `// O grupo de dentro é outro grupo, com nome de divisor próprio: percorrer os
 // divisores a partir da raiz do de fora alcançaria também os dele.
-const interno = ${chamada('createResizablePanel', groupLines(interno, panelsInternos))};`,
-    `${HEIGHT_NOTA}const externo = ${chamada('createResizablePanel', linesExternas)};`,
+const interno = ${callLine('createResizablePanel', groupLines(interno, panelsInternos))};`,
+    `${HEIGHT_NOTA}const externo = ${callLine('createResizablePanel', linesExternas)};`,
     blockFinal(externo, 'externo'),
   );
 }

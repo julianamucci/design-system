@@ -1,9 +1,9 @@
 // Snippet do painel Code do Skeleton — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -84,7 +84,7 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
     parts.length === 1
       ? `regiao.appendChild(${partCall(parts[0])});`
       : `regiao.append(\n${parts.map((p) => `  ${partCall(p)},`).join('\n')}\n);`,
-    montar('regiao'),
+    appendLine('regiao'),
   );
 }
 
@@ -112,7 +112,7 @@ linhas.append(
   ${partCall({ shape: 'text', width: '1-2' })},
 );`,
     `regiao.append(${partCall({ shape: 'avatar' })}, linhas);`,
-    montar('regiao'),
+    appendLine('regiao'),
   );
 }
 
@@ -150,7 +150,7 @@ lista.setAttribute('aria-label', ${text(o.regionLabel ?? 'Carregando lista de pe
   item.append(${partCall({ shape: 'avatar', size: 'sm' })}, linhas);
   lista.appendChild(item);
 }`,
-    montar('lista'),
+    appendLine('lista'),
   );
 }
 
@@ -166,12 +166,12 @@ export function ratioSkeletonSnippet(o: SkeletonSnippetOptions = {}): string {
     [importing('skeleton', 'createSkeleton'), importing('aspect-ratio', 'createAspectRatio')].join('\n'),
     regiao({ ...o, regionLabel: o.regionLabel ?? 'Carregando imagem' }, 'nds-w-sm'),
     `regiao.appendChild(
-  ${chamada('createAspectRatio', options([
+  ${callLine('createAspectRatio', options([
     ['ratio', '16 / 9'],
     ['content', partCall({ shape: 'fill' })],
   ]))},
 );`,
-    montar('regiao'),
+    appendLine('regiao'),
   );
 }
 

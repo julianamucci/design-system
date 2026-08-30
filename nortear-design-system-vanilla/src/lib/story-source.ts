@@ -50,7 +50,7 @@ export function options(pairs: Array<[string, string | undefined]>): string[] {
  * O limite é de leitura, não de lint: o painel Code é estreito e a quebra
  * acontece de qualquer jeito — melhor onde a gente escolhe.
  */
-export function chamada(fabrica: string, lines: string[]): string {
+export function callLine(fabrica: string, lines: string[]): string {
   if (lines.length === 0) return `${fabrica}({})`;
   const umaLine = `${fabrica}({ ${lines.map((l) => l.replace(/,$/, '')).join(', ')} })`;
   if (umaLine.length <= 72 && !umaLine.includes('\n')) return umaLine;
@@ -68,6 +68,6 @@ export function snippet(...partes: Array<string | undefined | false | null>): st
 }
 
 /** Linha final canônica: o elemento devolvido pela fábrica entra na página. */
-export function montar(variavel: string): string {
+export function appendLine(variavel: string): string {
   return `document.querySelector('#app')?.append(${variavel});`;
 }

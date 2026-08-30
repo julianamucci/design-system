@@ -1,9 +1,9 @@
 // Snippet do painel Code do Toggle Group — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -100,7 +100,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
       .filter(Boolean)
       .join('\n'),
     `const items: ToggleGroupItem[] = [\n${linesItems.join('\n')}\n];`,
-    `const grupo = ${chamada('createToggleGroup', lines)};`,
+    `const grupo = ${callLine('createToggleGroup', lines)};`,
     // `ToggleGroupItem.children` é `string`: o ícone não cabe na chamada, e
     // quem consome o coloca no botão do item depois de construir o grupo.
     withIcon
@@ -110,7 +110,7 @@ grupo.querySelectorAll('[data-slot="toggle"]').forEach((botao, i) => {
   botao.append(createElement(icones[i]));
 });`
       : undefined,
-    montar('grupo'),
+    appendLine('grupo'),
   );
 }
 

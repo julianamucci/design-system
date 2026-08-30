@@ -6,7 +6,7 @@
 
 import {
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -68,8 +68,8 @@ function regionBlock(o: SonnerSnippetOptions): string {
       : `createSonnerToaster({ ${lines.map((l) => l.replace(/,$/, '')).join(', ')} })`;
 
   return body.length <= 78
-    ? `const regiao = ${body};\n${montar('regiao')}`
-    : `const regiao = createSonnerToaster({\n${lines.map((l) => `  ${l}`).join('\n')}\n});\n${montar('regiao')}`;
+    ? `const regiao = ${body};\n${appendLine('regiao')}`
+    : `const regiao = createSonnerToaster({\n${lines.map((l) => `  ${l}`).join('\n')}\n});\n${appendLine('regiao')}`;
 }
 
 /** `toast('…')` / `toast.success('…', { … })`, quebrando quando não couber. */

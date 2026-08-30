@@ -1,8 +1,8 @@
 // Snippet do painel Code do DataTable — ver `@/lib/story-source`.
 
 import {
-  chamada,
-  montar,
+  callLine,
+  appendLine,
   options,
   snippet,
   text,
@@ -165,7 +165,7 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
 
   // A constante e a opção têm o mesmo nome, e é assim que se escreve de
   // verdade: `columns: columns` é ruído que ninguém digita.
-  const tableCall = chamada('createDataTable<Invoice>', lines).replace(
+  const tableCall = callLine('createDataTable<Invoice>', lines).replace(
     '\n  columns: columns,',
     '\n  columns,',
   );
@@ -181,7 +181,7 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
       '// ordenar levaria a marcação para quem ocupou o lugar.',
       `const tabela = ${tableCall};`,
     ].join('\n'),
-    montar('tabela'),
+    appendLine('tabela'),
   );
 }
 

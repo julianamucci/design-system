@@ -1,9 +1,9 @@
 // Snippet do painel Code do Calendar — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -60,8 +60,8 @@ export function calendarSnippet(o: CalendarSnippetOptions = {}): string {
 
   return snippet(
     importing('calendar', 'createCalendar'),
-    `const calendario = ${chamada('createCalendar', lines)};`,
-    montar('calendario'),
+    `const calendario = ${callLine('createCalendar', lines)};`,
+    appendLine('calendario'),
   );
 }
 
@@ -121,7 +121,7 @@ const gatilho = createButton({ variant: 'outline', label: ${text(o.trigger ?? 'E
   },
 });`,
     'const seletor = createPopover({ trigger: gatilho, content: calendario });',
-    montar('seletor'),
+    appendLine('seletor'),
   );
 }
 

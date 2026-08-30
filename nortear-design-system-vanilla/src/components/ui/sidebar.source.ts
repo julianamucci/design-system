@@ -1,7 +1,7 @@
 // Snippet do painel Code do Sidebar — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
   options,
   snippet,
@@ -100,7 +100,7 @@ function barBlock(o: SidebarSnippetOptions): string {
     ['onMobileOpenChange', expressao(o.onMobileOpenChange, CALLBACK_GAVETA)],
   ]);
 
-  return `const barra = ${chamada('createSidebar', lines)};
+  return `const barra = ${callLine('createSidebar', lines)};
 const interno = barra.element.querySelector('[data-sidebar="sidebar"]')!;`;
 }
 

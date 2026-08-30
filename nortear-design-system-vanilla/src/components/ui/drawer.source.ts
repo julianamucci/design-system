@@ -1,9 +1,9 @@
 // Snippet do painel Code do Drawer — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -155,8 +155,8 @@ export function drawerSnippet(o: DrawerSnippetOptions = {}): string {
 corpo.className = 'nds-text-body nds-text-muted-foreground';
 corpo.textContent = ${text(o.bodyText ?? 'Conteúdo do painel (formulário, mensagem, mídia).')};`,
     footer,
-    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'corpo', footer !== undefined))};`,
-    montar('gaveta'),
+    `const gaveta = ${callLine('createDrawer', linesComuns(o, 'corpo', footer !== undefined))};`,
+    appendLine('gaveta'),
     codeAbertura(o),
   );
 }
@@ -227,8 +227,8 @@ formulario.append(
 ${fields.map(field).join('\n')}
 );`,
     footer,
-    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'formulario', footer !== undefined))};`,
-    montar('gaveta'),
+    `const gaveta = ${callLine('createDrawer', linesComuns(o, 'formulario', footer !== undefined))};`,
+    appendLine('gaveta'),
     codeAbertura(o),
   );
 }

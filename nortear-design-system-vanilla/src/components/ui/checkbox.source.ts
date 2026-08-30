@@ -1,9 +1,9 @@
 // Snippet do painel Code do Checkbox — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -68,10 +68,10 @@ export function checkboxSnippet(o: CheckboxSnippetOptions = {}): string {
   const noLabelVisible = o.label === undefined && Boolean(o['aria-label']);
   const label = o.label ?? LABEL_DEFAULT;
   const id = noLabelVisible ? undefined : ID_DEFAULT;
-  const box = `const caixa = ${chamada('createCheckbox', boxOptions(o, id))};`;
+  const box = `const caixa = ${callLine('createCheckbox', boxOptions(o, id))};`;
 
   if (noLabelVisible) {
-    return snippet(importing('checkbox', 'createCheckbox'), box, montar('caixa'));
+    return snippet(importing('checkbox', 'createCheckbox'), box, appendLine('caixa'));
   }
 
   const errorMarca = o.invalid
@@ -101,7 +101,7 @@ linha.append(caixa, rotulo);`;
       line,
       `${box}${errorMarca}`,
       labelCode,
-      montar('linha'),
+      appendLine('linha'),
     );
   }
 
@@ -119,7 +119,7 @@ const campo = document.createElement('div');
 campo.className = 'nds-stack';
 campo.dataset.spacing = 'xs';
 campo.append(linha, mensagem);`,
-    montar('campo'),
+    appendLine('campo'),
   );
 }
 
@@ -182,7 +182,7 @@ textos.dataset.spacing = 'xs';
 textos.append(rotulo, auxiliar);
 
 linha.append(caixa, textos);`,
-    montar('linha'),
+    appendLine('linha'),
   );
 }
 
@@ -275,7 +275,7 @@ grupo.appendChild(titulo);`;
   linha.append(createCheckbox({ id, checked }), rotulo);
   grupo.appendChild(linha);
 }`,
-    montar('grupo'),
+    appendLine('grupo'),
   );
 }
 
@@ -374,7 +374,7 @@ for (const { id, label } of opcoes) {
 }
 
 lista.append(cabecalho, sublista);`,
-    montar('lista'),
+    appendLine('lista'),
   );
 }
 

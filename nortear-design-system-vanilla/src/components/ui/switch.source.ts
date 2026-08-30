@@ -1,9 +1,9 @@
 // Snippet do painel Code do Switch — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -70,20 +70,20 @@ export function switchSnippet(o: SwitchSnippetOptions = {}): string {
   if (!withLabel) {
     return snippet(
       importing('switch', 'createSwitch'),
-      `const controle = ${chamada('createSwitch', lines)};`,
-      montar('controle'),
+      `const controle = ${callLine('createSwitch', lines)};`,
+      appendLine('controle'),
     );
   }
 
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
-    `const controle = ${chamada('createSwitch', lines)};
+    `const controle = ${callLine('createSwitch', lines)};
 const rotulo = createLabel({ htmlFor: ${text(id)}, text: ${text(label)} });`,
     `const linha = document.createElement('div');
 linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';
 linha.append(controle, rotulo);`,
-    montar('linha'),
+    appendLine('linha'),
   );
 }
 
@@ -158,7 +158,7 @@ preferencias.forEach(({ id, label, description, checked }) => {
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
     body,
-    montar(items.length === 1 ? 'painel' : 'grupo'),
+    appendLine(items.length === 1 ? 'painel' : 'grupo'),
   );
 }
 
@@ -177,7 +177,7 @@ auxiliar.className = 'nds-text-body';
 auxiliar.textContent = ${text(item.description)};
 
 textos.append(createLabel({ htmlFor: ${text(item.id)}, text: ${text(item.label)} }), auxiliar);
-painel.append(textos, ${chamada('createSwitch', options([['id', text(item.id)], ['checked', item.checked ? 'true' : undefined]]))});`;
+painel.append(textos, ${callLine('createSwitch', options([['id', text(item.id)], ['checked', item.checked ? 'true' : undefined]]))});`;
 }
 
 /** Transform de story para o painel com descrição / lista de preferências. */
@@ -227,7 +227,7 @@ linha.dataset.spacing = 'sm';
 linha.append(controle, createLabel({ htmlFor: ${text(id)}, text: ${text(label)} }));
 
 formulario.append(linha, oculto, createButton({ type: 'submit', label: 'Salvar preferências' }));`,
-    montar('formulario'),
+    appendLine('formulario'),
   );
 }
 
@@ -271,7 +271,7 @@ const grupo = document.createElement('div');
 grupo.className = 'nds-stack';
 grupo.dataset.spacing = 'xs';
 grupo.append(linha, mensagem);`,
-    montar('grupo'),
+    appendLine('grupo'),
   );
 }
 

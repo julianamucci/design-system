@@ -1,9 +1,9 @@
 // Snippet do painel Code do Dialog — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -44,7 +44,7 @@ const IMPORTS_BASE = [
 /**
  * Um botão em UMA linha.
  *
- * `chamada()` quebraria a chamada em várias assim que o rótulo crescesse, e as
+ * `callLine()` quebraria a chamada em várias assim que o rótulo crescesse, e as
  * linhas de dentro sairiam desalinhadas do array do rodapé — o botão aqui é
  * sempre um item de lista, nunca a chamada principal do snippet.
  */
@@ -106,8 +106,8 @@ export function dialogSnippet(o: DialogSnippetOptions = {}): string {
     `const corpo = document.createElement('p');
 corpo.className = 'nds-text-body nds-text-muted-foreground';
 corpo.textContent = ${text(o.bodyText ?? 'Conteúdo do corpo do diálogo (formulário, mensagem, mídia).')};`,
-    `const dialogo = ${chamada('createDialog', linesComuns(o, 'corpo'))};`,
-    montar('dialogo'),
+    `const dialogo = ${callLine('createDialog', linesComuns(o, 'corpo'))};`,
+    appendLine('dialogo'),
   );
 }
 
@@ -177,8 +177,8 @@ formulario.dataset.spacing = 'md';
 formulario.append(
 ${fields.map(field).join('\n')}
 );`,
-    `const dialogo = ${chamada('createDialog', linesComuns(o, 'formulario'))};`,
-    montar('dialogo'),
+    `const dialogo = ${callLine('createDialog', linesComuns(o, 'formulario'))};`,
+    appendLine('dialogo'),
   );
 }
 
@@ -228,8 +228,8 @@ for (let i = 1; i <= ${total}; i++) {
   paragrafo.textContent = \`Parágrafo \${i} dos termos de uso.\`;
   corpo.appendChild(paragrafo);
 }`,
-    `const dialogo = ${chamada('createDialog', linesComuns(o, 'corpo'))};`,
-    montar('dialogo'),
+    `const dialogo = ${callLine('createDialog', linesComuns(o, 'corpo'))};`,
+    appendLine('dialogo'),
   );
 }
 

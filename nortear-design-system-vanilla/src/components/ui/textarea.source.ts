@@ -1,9 +1,9 @@
 // Snippet do painel Code do Textarea — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -123,7 +123,7 @@ export function textareaSnippet(o: TextareaSnippetOptions = {}): string {
   return snippet(
     [importing('textarea', 'createTextarea'), importing('label', 'createLabel')].join('\n'),
     ...fieldBlocks(o),
-    montar('grupo'),
+    appendLine('grupo'),
   );
 }
 
@@ -145,7 +145,7 @@ function fieldBlocks(o: TextareaSnippetOptions): string[] {
   const ajustes = ajustesNativos(o, id);
 
   return [
-    `const campo = ${chamada('createTextarea', lines)};${ajustes ? `\n${ajustes}` : ''}`,
+    `const campo = ${callLine('createTextarea', lines)};${ajustes ? `\n${ajustes}` : ''}`,
     `const grupo = document.createElement('div');
 grupo.className = 'nds-stack';
 grupo.dataset.spacing = 'sm';
@@ -197,7 +197,7 @@ formulario.addEventListener('submit', (evento) => {
   const dados = new FormData(formulario);
   enviar(dados.get(${text(name)}));
 });`,
-    montar('formulario'),
+    appendLine('formulario'),
   );
 }
 

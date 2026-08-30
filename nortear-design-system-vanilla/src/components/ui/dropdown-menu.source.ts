@@ -1,9 +1,9 @@
 // Snippet do painel Code do DropdownMenu — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -103,8 +103,8 @@ export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string 
 
   return snippet(
     [importing('dropdown-menu', 'createDropdownMenu'), importing('button', 'createButton')].join('\n'),
-    `const menu = ${chamada('createDropdownMenu', lines)};`,
-    montar('menu'),
+    `const menu = ${callLine('createDropdownMenu', lines)};`,
+    appendLine('menu'),
   );
 }
 

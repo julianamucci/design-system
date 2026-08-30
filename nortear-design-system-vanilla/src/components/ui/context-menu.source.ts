@@ -1,9 +1,9 @@
 // Snippet do painel Code do ContextMenu — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -126,8 +126,8 @@ export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
       "const area = document.createElement('div');",
       `area.textContent = ${text(o.triggerLabel ?? AREA_DEFAULT)};`,
     ].join('\n'),
-    `const menu = ${chamada('createContextMenu', lines)};`,
-    montar('menu'),
+    `const menu = ${callLine('createContextMenu', lines)};`,
+    appendLine('menu'),
   );
 }
 

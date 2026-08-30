@@ -1,9 +1,9 @@
 // Snippet do painel Code do HoverCard — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -141,9 +141,9 @@ export function hoverCardSnippet(o: HoverCardSnippetOptions = {}): string {
     importing('hover-card', 'createHoverCard'),
     triggerBlock(o),
     contentBlock(o),
-    `const cartao = ${chamada('createHoverCard', callLines(o))};`,
+    `const cartao = ${callLine('createHoverCard', callLines(o))};`,
     fraseBlock(o),
-    montar('frase'),
+    appendLine('frase'),
   );
 }
 
@@ -185,7 +185,7 @@ export function hoverCardWithComandosSnippet(o: HoverCardWithComandosSnippetOpti
     [importing('hover-card', 'createHoverCard'), importing('button', 'createButton')].join('\n'),
     triggerBlock(o),
     contentBlock(o),
-    `const cartao = ${chamada('createHoverCard', callLines(o))};`,
+    `const cartao = ${callLine('createHoverCard', callLines(o))};`,
     `// Nomes próprios, e não os do gatilho: dois controles com o mesmo nome
 // acessível são ambíguos em leitor de tela.
 const abrir = createButton({ variant: 'outline', size: 'sm', label: ${openLabel} });
@@ -193,7 +193,7 @@ const fechar = createButton({ variant: 'outline', size: 'sm', label: ${closeLabe
 abrir.addEventListener('click', () => cartao.open());
 fechar.addEventListener('click', () => cartao.close());`,
     fraseBlock(o),
-    montar('abrir, fechar, frase'),
+    appendLine('abrir, fechar, frase'),
   );
 }
 

@@ -1,9 +1,9 @@
 // Snippet do painel Code do RadioGroup — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -90,8 +90,8 @@ function groupLines(o: RadioGroupSnippetOptions): string[] {
 export function radioGroupSnippet(o: RadioGroupSnippetOptions = {}): string {
   return snippet(
     importing('radio-group', 'createRadioGroup'),
-    `const grupo = ${chamada('createRadioGroup', groupLines(o))};`,
-    montar('grupo'),
+    `const grupo = ${callLine('createRadioGroup', groupLines(o))};`,
+    appendLine('grupo'),
   );
 }
 
@@ -135,7 +135,7 @@ export function radioGroupWithDescriptionSnippet(
     `const escolhas = [
 ${data}
 ];`,
-    `const grupo = ${chamada(
+    `const grupo = ${callLine(
       'createRadioGroup',
       options([
         ['name', text(name)],
@@ -163,7 +163,7 @@ grupo.querySelectorAll('.nds-radio-row').forEach((linha, i) => {
     .querySelector('[data-slot="radio-group-item"]')
     .setAttribute('aria-describedby', auxiliar.id);
 });`,
-    montar('grupo'),
+    appendLine('grupo'),
   );
 }
 
@@ -187,7 +187,7 @@ export function radioGroupInvalidoSnippet(o: RadioGroupSnippetOptions = {}): str
 
   return snippet(
     importing('radio-group', 'createRadioGroup'),
-    `const grupo = ${chamada('createRadioGroup', groupLines({ ...o, name: name }))};
+    `const grupo = ${callLine('createRadioGroup', groupLines({ ...o, name: name }))};
 
 grupo.setAttribute('aria-invalid', 'true');
 grupo.setAttribute('aria-describedby', '${name}-erro');
@@ -221,7 +221,7 @@ export function formRadioGroupSnippet(o: RadioGroupSnippetOptions = {}): string 
   const name = o.name ?? 'payment';
   // Dentro do formulário quem recolhe a escolha é o submit, não um callback por
   // clique — a linha do `onValueChange` sairia sobrando no snippet.
-  const group = chamada('createRadioGroup', groupLines({ ...o, name: name, onValueChange: false }))
+  const group = callLine('createRadioGroup', groupLines({ ...o, name: name, onValueChange: false }))
     .split('\n')
     .map((line, i) => (i === 0 ? line : `  ${line}`))
     .join('\n');
@@ -242,7 +242,7 @@ formulario.addEventListener('submit', (e) => {
   e.preventDefault();
   registrar(new FormData(formulario).get(${text(name)}));
 });`,
-    montar('formulario'),
+    appendLine('formulario'),
   );
 }
 

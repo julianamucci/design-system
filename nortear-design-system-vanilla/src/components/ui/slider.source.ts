@@ -1,9 +1,9 @@
 // Snippet do painel Code do Slider — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -77,8 +77,8 @@ export function sliderSnippet(o: SliderSnippetOptions = {}): string {
 
   return snippet(
     importing('slider', 'createSlider'),
-    `const controle = ${chamada('createSlider', lines)};`,
-    montar('controle'),
+    `const controle = ${callLine('createSlider', lines)};`,
+    appendLine('controle'),
   );
 }
 

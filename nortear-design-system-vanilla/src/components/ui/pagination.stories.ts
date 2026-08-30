@@ -80,7 +80,7 @@ export const Playground: Story = {
 
     let current = Math.min(Math.max(1, args.current), args.total);
 
-    function remontar(): void {
+    function reappendLine(): void {
       container.replaceChildren(
         createPagination({
           total: args.total,
@@ -90,13 +90,13 @@ export const Playground: Story = {
           onPageChange: (page) => {
             current = page;
             onPageChange(page);
-            remontar();
+            reappendLine();
           },
         }),
       );
     }
 
-    remontar();
+    reappendLine();
     return container;
   },
   play: async ({ canvasElement, step, args }) => {

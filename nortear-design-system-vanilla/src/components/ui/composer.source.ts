@@ -6,9 +6,9 @@
 // painel mostra.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   type SourceTransform,
@@ -52,8 +52,8 @@ export function composerSnippet(opts: ComposerSnippetOptions = {}): string {
 
   return snippet(
     importing('composer', 'createComposer'),
-    `const composer = ${chamada('createComposer', linhas)};`,
-    montar('composer'),
+    `const composer = ${callLine('createComposer', linhas)};`,
+    appendLine('composer'),
     // Quem sabe se a resposta está sendo gerada é quem consome — o componente
     // não acompanha a rede. A linha mostra por onde esse estado entra.
     opts.running

@@ -5,9 +5,9 @@
 // exportada tem como ser medida — e quem a mede é `combobox.source.test.ts`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -96,8 +96,8 @@ export function comboboxSnippet(o: ComboboxSnippetOptions = {}): string {
   return snippet(
     importing('combobox', 'createCombobox'),
     itemsBlock(o),
-    `const combobox = ${chamada('createCombobox', lines)};`,
-    montar('combobox'),
+    `const combobox = ${callLine('createCombobox', lines)};`,
+    appendLine('combobox'),
   );
 }
 
@@ -139,8 +139,8 @@ export function filterComboboxSnippet(o: ComboboxSnippetOptions = {}): string {
     importing('combobox', 'createCombobox', 'type ComboboxItem'),
     itemsBlock(opts, true),
     normalizer,
-    `const combobox = ${chamada('createCombobox', lines)};`,
-    montar('combobox'),
+    `const combobox = ${callLine('createCombobox', lines)};`,
+    appendLine('combobox'),
   );
 }
 
@@ -191,8 +191,8 @@ export function controlledComboboxSnippet(o: ComboboxSnippetOptions = {}): strin
     importing('combobox', 'createCombobox'),
     itemsBlock(opts),
     owner,
-    `const combobox = ${chamada('createCombobox', lines)};`,
-    montar('combobox'),
+    `const combobox = ${callLine('createCombobox', lines)};`,
+    appendLine('combobox'),
   );
 }
 

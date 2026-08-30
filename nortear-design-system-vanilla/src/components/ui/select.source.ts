@@ -1,9 +1,9 @@
 // Snippet do painel Code do Select — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -151,7 +151,7 @@ export function selectSnippet(o: SelectSnippetOptions = {}): string {
   return snippet(
     importing('select', 'createSelect'),
     label(o),
-    `const campo = ${chamada('createSelect', fieldLines(o))};`,
+    `const campo = ${callLine('createSelect', fieldLines(o))};`,
     error,
     `document.querySelector('#app')?.append(rotulo, campo${error ? ', erro' : ''});`,
   );
@@ -172,7 +172,7 @@ export function formSelectSnippet(o: SelectSnippetOptions = {}): string {
 formulario.className = 'nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4';
 formulario.dataset.spacing = 'md';`,
     label(withName),
-    `const campo = ${chamada('createSelect', fieldLines(withName))};`,
+    `const campo = ${callLine('createSelect', fieldLines(withName))};`,
     `formulario.append(rotulo, campo, createButton({ type: 'submit', label: 'Continuar' }));`,
     `formulario.addEventListener('submit', (evento) => {
   evento.preventDefault();
@@ -181,7 +181,7 @@ formulario.dataset.spacing = 'md';`,
   const dados = new FormData(formulario);
   enviar(dados.get(${text(withName.name ?? 'state')}));
 });`,
-    montar('formulario'),
+    appendLine('formulario'),
   );
 }
 

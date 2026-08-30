@@ -1,9 +1,9 @@
 // Snippet do painel Code do Popover — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -41,7 +41,7 @@ const CALLBACK_DEFAULT = '(aberto) => registrar(aberto)';
 /**
  * Reindenta as linhas seguintes de um bloco já montado.
  *
- * `chamada()` recua os próprios pares em dois espaços, medida certa para uma
+ * `callLine()` recua os próprios pares em dois espaços, medida certa para uma
  * chamada no topo do arquivo e curta demais quando ela entra numa lista de
  * argumentos.
  */
@@ -57,7 +57,7 @@ const DESCRIPTION_DEFAULT = 'Ajuste a aparência do conteúdo da página.';
 
 /** O botão que abre o painel. Todas as formas de snippet começam por ele. */
 function blockTrigger(o: PopoverSnippetOptions): string {
-  return `const gatilho = ${chamada(
+  return `const gatilho = ${callLine(
     'createButton',
     options([
       ['variant', text(o.triggerVariant ?? 'outline')],
@@ -88,8 +88,8 @@ function panelLines(o: PopoverSnippetOptions, content: string): string[] {
 
 /** A linha final: o painel entra na página, e a limpeza quando ela é o assunto. */
 function blockFinal(o: PopoverSnippetOptions): string {
-  if (!o.destroy) return montar('painel');
-  return `${montar('painel')}
+  if (!o.destroy) return appendLine('painel');
+  return `${appendLine('painel')}
 
 // O painel aberto mora em portal no \`body\` e a fábrica escuta o documento.
 // Quem tira o componente da página solta as duas coisas por aqui.
@@ -119,7 +119,7 @@ export function popoverSnippet(o: PopoverSnippetOptions = {}): string {
 const conteudo = createPopoverHeader();
 conteudo.append(
   ${recuar(
-    chamada(
+    callLine(
       'createPopoverTitle',
       options([
         ['text', text(o.title ?? TITLE_DEFAULT)],
@@ -129,7 +129,7 @@ conteudo.append(
     '  ',
   )},
   ${recuar(
-    chamada('createPopoverDescription', options([['text', text(o.description ?? DESCRIPTION_DEFAULT)]])),
+    callLine('createPopoverDescription', options([['text', text(o.description ?? DESCRIPTION_DEFAULT)]])),
     '  ',
   )},
 );`;
@@ -138,7 +138,7 @@ conteudo.append(
     importes.join('\n'),
     blockTrigger(o),
     soText ? undefined : header,
-    `const painel = ${chamada(
+    `const painel = ${callLine(
       'createPopover',
       panelLines(o, soText ? text(o.text as string) : 'conteudo'),
     )};`,
@@ -193,7 +193,7 @@ formulario.append(
   campo('perfil-email', 'Email', 'ana@nortear.com.br'),
   createButton({ size: 'sm', label: 'Atualizar', type: 'submit' }),
 );`,
-    `const painel = ${chamada('createPopover', panelLines(o, 'formulario'))};`,
+    `const painel = ${callLine('createPopover', panelLines(o, 'formulario'))};`,
     blockFinal(o),
   );
 }
@@ -230,10 +230,10 @@ acoes.append(
 );
 
 conteudo.append(${recuar(
-      chamada('createPopoverTitle', options([['text', text(o.title ?? 'Confirmar alteração')]])),
+      callLine('createPopoverTitle', options([['text', text(o.title ?? 'Confirmar alteração')]])),
       '  ',
     )}, acoes);`,
-    `const painel = ${chamada('createPopover', panelLines(o, 'conteudo'))};`,
+    `const painel = ${callLine('createPopover', panelLines(o, 'conteudo'))};`,
     blockFinal(o),
   );
 }

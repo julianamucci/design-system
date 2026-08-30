@@ -1,9 +1,9 @@
 // Snippet do painel Code do Avatar — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -49,11 +49,11 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
 
   return snippet(
     importing('avatar', ...names),
-    `const avatar = ${chamada('createAvatar', lines)};`,
+    `const avatar = ${callLine('createAvatar', lines)};`,
     o.status
       ? `avatar.appendChild(createAvatarBadge({ 'aria-label': ${text(o.status)} }));`
       : undefined,
-    montar('avatar'),
+    appendLine('avatar'),
   );
 }
 
@@ -93,7 +93,7 @@ export function avatarGranularSnippet(o: AvatarGranularSnippetOptions = {}): str
   if (o.iconLabel) {
     return snippet(
       importing('avatar', ...names),
-      `const avatar = ${root.length ? chamada('createAvatarRoot', root) : 'createAvatarRoot()'};`,
+      `const avatar = ${root.length ? callLine('createAvatarRoot', root) : 'createAvatarRoot()'};`,
       `// \`icone\` é um SVG do seu conjunto, decorativo: aria-hidden="true".
 // O papel de imagem é o que deixa o fallback receber um nome acessível.
 const fallback = createAvatarFallback();
@@ -101,15 +101,15 @@ fallback.setAttribute('role', 'img');
 fallback.setAttribute('aria-label', ${text(o.iconLabel)});
 fallback.appendChild(icone);
 avatar.appendChild(fallback);`,
-      montar('avatar'),
+      appendLine('avatar'),
     );
   }
 
   return snippet(
     importing('avatar', ...names),
-    `const avatar = ${root.length ? chamada('createAvatarRoot', root) : 'createAvatarRoot()'};`,
+    `const avatar = ${root.length ? callLine('createAvatarRoot', root) : 'createAvatarRoot()'};`,
     `avatar.appendChild(createAvatarFallback({ text: ${text(o.fallback ?? 'JP')} }));`,
-    montar('avatar'),
+    appendLine('avatar'),
   );
 }
 
@@ -148,7 +148,7 @@ for (const src of fotos) {
     `const contador = createAvatarGroupCount({ text: ${text(o.excedente ?? '+3')} });
 contador.setAttribute('aria-hidden', 'true');
 grupo.appendChild(contador);`,
-    montar('grupo'),
+    appendLine('grupo'),
   );
 }
 

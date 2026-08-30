@@ -5,9 +5,9 @@
 // se escreve é uma chamada de fábrica com um texto — é isso que o painel mostra.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -65,8 +65,8 @@ export function markdownSnippet(opts: MarkdownSnippetOptions = {}): string {
   return snippet(
     importing('markdown', 'createMarkdown'),
     `const answer = ${documentLiteral(content)};`,
-    `const view = ${chamada('createMarkdown', lines)};`,
-    montar('view'),
+    `const view = ${callLine('createMarkdown', lines)};`,
+    appendLine('view'),
   );
 }
 

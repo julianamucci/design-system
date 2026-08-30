@@ -67,7 +67,7 @@ describe('paginationComEstadoSnippet', () => {
     expect(code).toContain('let paginaAtual = 3;');
     expect(code).toContain('current: paginaAtual');
     expect(code).toContain('faixa.replaceChildren(');
-    expect(code).toContain('paginaAtual = page; remontar();');
+    expect(code).toContain('paginaAtual = page; reappendLine();');
   });
 
   it('continua sendo a chamada da fábrica, e não o outerHTML', () => {

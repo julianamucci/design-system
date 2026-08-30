@@ -1,9 +1,9 @@
 // Snippet do painel Code do Card — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -66,7 +66,7 @@ function partesDoCard(o: CardSnippetOptions): { names: string[]; blocks: string[
   if (o.action) names.push('createCardAction');
   if (o.showFooter) names.push('createCardFooter');
 
-  const root = chamada(
+  const root = callLine(
     'createCard',
     options([
       ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
@@ -169,7 +169,7 @@ export function cardSnippet(o: CardSnippetOptions = {}): string {
       .filter(Boolean)
       .join('\n'),
     ...blocks,
-    montar('card'),
+    appendLine('card'),
   );
 }
 
@@ -212,7 +212,7 @@ destino.href = '/produtos/cadeira-gamer-pro';
 destino.className = 'nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl';
 destino.setAttribute('aria-label', ${text(`Abrir detalhes do produto ${title}`)});
 destino.appendChild(card);`,
-    montar('destino'),
+    appendLine('destino'),
   );
 }
 

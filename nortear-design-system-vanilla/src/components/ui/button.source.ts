@@ -1,9 +1,9 @@
 // Snippet do painel Code do Button — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -98,9 +98,9 @@ rotulo.textContent = ${text(o.label!)};`
       : undefined,
     contentBlock,
     labelBlock,
-    `const botao = ${chamada('createButton', lines)};`,
+    `const botao = ${callLine('createButton', lines)};`,
     composition,
-    montar('botao'),
+    appendLine('botao'),
   );
 }
 
@@ -177,7 +177,7 @@ acoes.append(
   createButton({ variant: 'outline', label: ${text(o.cancelar ?? 'Cancelar')} }),
   createButton({ label: ${text(o.confirmar ?? 'Confirmar')} }),
 );`,
-    montar('acoes'),
+    appendLine('acoes'),
   );
 }
 
@@ -215,7 +215,7 @@ export function buttonAsLinkSnippet(o: ButtonAsLinkSnippetOptions = {}): string 
 link.href = ${text(o.href ?? '/documentacao')};
 link.className = btnClass(${args.join(', ')});
 link.textContent = ${text(o.label ?? 'Ver documentação')};`,
-    montar('link'),
+    appendLine('link'),
   );
 }
 

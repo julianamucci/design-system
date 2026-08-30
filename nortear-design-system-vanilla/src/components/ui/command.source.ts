@@ -1,9 +1,9 @@
 // Snippet do painel Code do Command — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -56,7 +56,7 @@ function literalDoItem(entry: CommandEntrySnippet): string {
 }
 
 /**
- * O array de itens já indentado para caber dentro da chamada: `chamada()`
+ * O array de itens já indentado para caber dentro da chamada: `callLine()`
  * prefixa só a PRIMEIRA linha de cada opção, então as de dentro do array já
  * saem daqui no recuo final.
  */
@@ -82,8 +82,8 @@ function paletteOptions(o: CommandSnippetOptions): string[] {
 export function commandSnippet(o: CommandSnippetOptions = {}): string {
   return snippet(
     importing('command', 'createCommand'),
-    `const paleta = ${chamada('createCommand', paletteOptions(o))};`,
-    montar('paleta'),
+    `const paleta = ${callLine('createCommand', paletteOptions(o))};`,
+    appendLine('paleta'),
   );
 }
 
@@ -102,8 +102,8 @@ export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
       importing('dialog', 'createDialog'),
     ].join('\n'),
     "const gatilho = createButton({ variant: 'outline', label: 'Buscar' });",
-    `const paleta = ${chamada('createCommand', paletteOptions(o))};`,
-    `const dialogo = ${chamada('createDialog', options([
+    `const paleta = ${callLine('createCommand', paletteOptions(o))};`,
+    `const dialogo = ${callLine('createDialog', options([
       ['trigger', 'gatilho'],
       ['title', text('Command Palette')],
       ['description', text('Busque por um comando ou ação...')],
@@ -123,7 +123,7 @@ export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
       '  gatilho.click();',
       '});',
     ].join('\n'),
-    montar('dialogo'),
+    appendLine('dialogo'),
   );
 }
 

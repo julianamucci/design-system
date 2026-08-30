@@ -1,9 +1,9 @@
 // Snippet do painel Code do Progress — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -40,7 +40,7 @@ const LABEL_DEFAULT = 'Progresso do upload';
 /**
  * Reindenta as linhas seguintes de um bloco já montado.
  *
- * `chamada()` recua os próprios pares em dois espaços, medida certa para uma
+ * `callLine()` recua os próprios pares em dois espaços, medida certa para uma
  * chamada no topo do arquivo e curta demais quando ela entra numa lista de
  * argumentos.
  */
@@ -73,8 +73,8 @@ export function progressSnippet(o: ProgressSnippetOptions = {}): string {
   return snippet(
     importing('progress', 'createProgress'),
     o.value === null ? NOTA_INDETERMINADO : undefined,
-    `const barra = ${chamada('createProgress', linhasDaBarra(o))};`,
-    montar('barra'),
+    `const barra = ${callLine('createProgress', linhasDaBarra(o))};`,
+    appendLine('barra'),
   );
 }
 
@@ -111,8 +111,8 @@ valor.setAttribute('aria-live', 'polite');
 valor.textContent = ${text(anunciado)};
 
 linha.append(nome, valor);`,
-    `bloco.append(linha, ${chamada('createProgress', linhasDaBarra(o))});`,
-    montar('bloco'),
+    `bloco.append(linha, ${callLine('createProgress', linhasDaBarra(o))});`,
+    appendLine('bloco'),
   );
 }
 
@@ -121,7 +121,7 @@ export function progressListaSnippet(items: ProgressSnippetItem[]): string {
   const calls = items.map(
     (i) =>
       `  ${recuar(
-        chamada(
+        callLine(
           'createProgress',
           options([
             ['value', String(i.value)],
@@ -144,7 +144,7 @@ lista.dataset.spacing = 'md';
 lista.append(
 ${calls.join('\n')}
 );`,
-    montar('lista'),
+    appendLine('lista'),
   );
 }
 
@@ -163,7 +163,7 @@ export function progressSourceLista(items: ProgressSnippetItem[]): SourceTransfo
 export function progressAnimadoSnippet(o: ProgressSnippetOptions = {}): string {
   return snippet(
     importing('progress', 'createProgress'),
-    `const barra = ${chamada('createProgress', linhasDaBarra({ ...o, value: o.value ?? 0 }))};
+    `const barra = ${callLine('createProgress', linhasDaBarra({ ...o, value: o.value ?? 0 }))};
 const indicador = barra.querySelector('[data-slot="progress-indicator"]');
 
 function avancar(pct) {
@@ -172,7 +172,7 @@ function avancar(pct) {
   // aqui sobrescreveriam a regra do design system.
   indicador?.style.setProperty('--value', String(pct));
 }`,
-    montar('barra'),
+    appendLine('barra'),
   );
 }
 
@@ -202,8 +202,8 @@ cartao.dataset.spacing = 'sm';
 const titulo = document.createElement('div');
 titulo.className = 'nds-text-body nds-font-medium';
 titulo.textContent = ${text(o.label ?? 'Processando relatório')};`,
-    `cartao.append(titulo, ${chamada('createProgress', linhasDaBarra(o))});`,
-    montar('cartao'),
+    `cartao.append(titulo, ${callLine('createProgress', linhasDaBarra(o))});`,
+    appendLine('cartao'),
   );
 }
 

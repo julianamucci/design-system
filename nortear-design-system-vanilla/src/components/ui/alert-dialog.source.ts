@@ -1,9 +1,9 @@
 // Snippet do painel Code do AlertDialog — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -99,8 +99,8 @@ media.appendChild(createAlertIcon('warning'));`
     imports.join('\n'),
     buttons,
     media,
-    `const dialog = ${chamada('createAlertDialog', lines)};`,
-    montar('dialog'),
+    `const dialog = ${callLine('createAlertDialog', lines)};`,
+    appendLine('dialog'),
   );
 }
 

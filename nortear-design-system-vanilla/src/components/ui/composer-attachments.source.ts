@@ -6,9 +6,9 @@
 // de remoção.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   type SourceTransform,
@@ -31,8 +31,8 @@ function build(opts: AttachmentsSnippetOptions = {}): string {
 
   return snippet(
     importing('composer', 'createComposer'),
-    `const composer = ${chamada('createComposer', linhas)};`,
-    montar('composer'),
+    `const composer = ${callLine('createComposer', linhas)};`,
+    appendLine('composer'),
   );
 }
 
@@ -69,7 +69,7 @@ export function attachmentsWithFieldSource(): string {
 export function attachmentsAbsentSource(): string {
   return snippet(
     importing('composer', 'createComposer'),
-    `const composer = ${chamada('createComposer', options([['labels', 'rotulos']]))};`,
-    montar('composer'),
+    `const composer = ${callLine('createComposer', options([['labels', 'rotulos']]))};`,
+    appendLine('composer'),
   );
 }

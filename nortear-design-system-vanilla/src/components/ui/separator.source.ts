@@ -5,7 +5,7 @@
 // andaime, não o uso: o que se copia daqui é a chamada de `createSeparator`
 // entre os dois blocos que ela divide.
 
-import { importing, montar, options, snippet, text, type SourceTransform } from '@/lib/story-source';
+import { importing, appendLine, options, snippet, text, type SourceTransform } from '@/lib/story-source';
 import type { SeparatorEmphasis, SeparatorOrientation } from './separator';
 
 /** O que as stories usam da `SeparatorOptions`, mais os dois blocos vizinhos. */
@@ -76,7 +76,7 @@ secao.dataset.spacing = 'md';`;
     block(first, o.antes ?? (vertical ? 'Item A' : 'Seção superior')),
     block(segundo, o.depois ?? (vertical ? 'Item B' : 'Seção inferior')),
     `secao.append(${first}, ${separatorCall(o)}, ${segundo});`,
-    montar('secao'),
+    appendLine('secao'),
   );
 }
 
@@ -109,7 +109,7 @@ cabecalho.append(
 conteudo.textContent = ${text(o.depois ?? 'Total: R$ 249,90')};`,
     `const cartao = createCard({ class: 'nds-max-w-md' });
 cartao.append(cabecalho, ${separatorCall(o)}, conteudo);`,
-    montar('cartao'),
+    appendLine('cartao'),
   );
 }
 

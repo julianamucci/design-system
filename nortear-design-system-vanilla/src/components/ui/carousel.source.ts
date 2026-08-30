@@ -1,9 +1,9 @@
 // Snippet do painel Code do Carousel — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -66,8 +66,8 @@ export function carouselSnippet(o: CarouselSnippetOptions = {}): string {
   moldura.appendChild(caixa);
   return moldura;
 });`,
-    `const carrossel = ${chamada('createCarousel', lines)};`,
-    montar('carrossel'),
+    `const carrossel = ${callLine('createCarousel', lines)};`,
+    appendLine('carrossel'),
   );
 }
 

@@ -1,9 +1,9 @@
 // Snippet do painel Code do Toggle — ver `@/lib/story-source`.
 
 import {
-  chamada,
+  callLine,
   importing,
-  montar,
+  appendLine,
   options,
   snippet,
   text,
@@ -60,8 +60,8 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
 
   return snippet(
     [importing('toggle', 'createToggle'), `import { ${icone}, createElement } from 'lucide';`].join('\n'),
-    `const alternador = ${chamada('createToggle', lines)};`,
-    montar('alternador'),
+    `const alternador = ${callLine('createToggle', lines)};`,
+    appendLine('alternador'),
   );
 }
 
@@ -89,7 +89,7 @@ export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
       ['pressed', v.pressed ? 'true' : undefined],
       ['disabled', v.disabled ? 'true' : undefined],
     ]);
-    return `  ${chamada('createToggle', lines)},`;
+    return `  ${callLine('createToggle', lines)},`;
   });
 
   const names = [...icons].filter((n) => n !== 'createElement').sort();
@@ -104,7 +104,7 @@ fileira.dataset.spacing = 'sm';
 fileira.append(
 ${calls.join('\n')}
 );`,
-    montar('fileira'),
+    appendLine('fileira'),
   );
 }
 
@@ -120,7 +120,7 @@ export function toggleSourceRow(variacoes: ToggleSnippetOptions[]): SourceTransf
 export function toggleBarSnippet(items: ToggleSnippetOptions[], nomeDoGrupo: string): string {
   const icons = items.map((i) => i.icon ?? 'Bold');
   const calls = items.map((i) =>
-    `  ${chamada(
+    `  ${callLine(
       'createToggle',
       options([
         ['children', `createElement(${i.icon ?? 'Bold'})`],
@@ -144,7 +144,7 @@ barra.setAttribute('aria-label', ${text(nomeDoGrupo)});
 barra.append(
 ${calls.join('\n')}
 );`,
-    montar('barra'),
+    appendLine('barra'),
   );
 }
 

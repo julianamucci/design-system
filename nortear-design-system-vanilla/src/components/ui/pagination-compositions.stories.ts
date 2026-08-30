@@ -202,7 +202,7 @@ export const Interactive: Story = {
 
     const navContainer = document.createElement('div');
 
-    function remontar(): void {
+    function reappendLine(): void {
       status.textContent = `Página ${current} de ${total}`;
       navContainer.replaceChildren(
         createPagination({
@@ -212,13 +212,13 @@ export const Interactive: Story = {
           'aria-label': 'Paginação interativa',
           onPageChange: (page) => {
             current = page;
-            remontar();
+            reappendLine();
           },
         }),
       );
     }
 
-    remontar();
+    reappendLine();
     wrapper.append(status, navContainer);
     return wrapper;
   },
