@@ -9,6 +9,9 @@ import {
   shouldFollow,
   type ThreadScrollState,
 } from '@shared/primitives/chat-scroll';
+// No call site, e não atrás de um invólucro local: é o que faz a análise
+// estática reconhecer a validação onde ela acontece.
+import { isSafeUrl } from '@shared/primitives/markdown-ast';
 
 // ─── ChatThread ──────────────────────────────────────────────────────────────
 //
@@ -232,10 +235,19 @@ function createSources(sources: ChatSource[], title: string): HTMLElement {
 
   sources.forEach((source, i) => {
     const item = document.createElement('li');
-    const link = document.createElement('a');
+    // A fonte vem de quem gerou a resposta, e endereço vindo dali é ENTRADA,
+    // não constante: `javascript:` num `href` executa. Sem protocolo seguro a
+    // fonte continua legível e deixa de ser clicável — a mesma decisão do
+    // Markdown, que descarta o endereço e preserva o texto.
+    const seguro = isSafeUrl(source.url);
+    const link = document.createElement(seguro ? 'a' : 'span');
     link.className = 'nds-chat-source';
-    link.href = source.url;
-    link.rel = 'noreferrer';
+    if (link instanceof HTMLAnchorElement) {
+      link.href = source.url;
+      link.rel = 'noreferrer';
+    } else {
+      link.dataset.unsafe = '';
+    }
 
     const index = document.createElement('span');
     index.className = 'nds-chat-source-index';

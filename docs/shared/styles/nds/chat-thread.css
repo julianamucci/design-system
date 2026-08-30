@@ -441,6 +441,14 @@
   color: hsl(var(--accent-foreground));
 }
 
+/* A fonte cujo endereço foi RECUSADO continua legível e não finge ser link:
+   sem realce ao passar o ponteiro, porque não há para onde ir. O componente a
+   desenha como `<span>`, então ela também não entra no percurso do teclado. */
+.nds-chat-source[data-unsafe]:hover {
+  background-color: transparent;
+  color: hsl(var(--muted-foreground));
+}
+
 .nds-chat-source:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));

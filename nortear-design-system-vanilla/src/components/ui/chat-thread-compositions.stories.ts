@@ -34,11 +34,29 @@ type Story = StoryObj;
 /** Espião de escopo de módulo: dentro do render, a play não o alcança. */
 const onCopy = fn();
 
+/**
+ * A resposta com fontes, e uma delas com o endereço RECUSADO.
+ *
+ * A fonte recusada mora na story, e não no exemplo compartilhado: o exemplo é o
+ * que a documentação mostra como uso normal, e `javascript:` não é uso normal —
+ * é a entrada hostil que o componente precisa aguentar. As cinco stacks montam
+ * a mesma lista, para a story fotografar a mesma tela em todas.
+ */
+function comFerramentas() {
+  const messages = paraMensagens(CHAT_COM_FERRAMENTAS);
+  const ultima = messages[messages.length - 1];
+  ultima.sources = [
+    ...(ultima.sources ?? []),
+    { title: 'Fonte com endereço recusado', url: 'javascript:alert(1)' },
+  ];
+  return messages;
+}
+
 export const WithReasoningAndTools: Story = {
   parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item2'] },
   render: () =>
     createChatThread({
-      messages: paraMensagens(CHAT_COM_FERRAMENTAS),
+      messages: comFerramentas(),
       labels: chatLabels(),
       size: 'lg',
     }),
@@ -88,6 +106,17 @@ export const WithReasoningAndTools: Story = {
       await expect(links).toHaveLength(2);
       await expect(links[0]).toHaveTextContent('1');
       await expect(links[0]).toHaveAttribute('href');
+    });
+
+    await step('A fonte de endereço recusado é legível, e NÃO é clicável', async () => {
+      // O endereço de uma fonte vem de quem gerou a resposta. `javascript:` num
+      // `href` executa ao clique, então ele não vira link — e a fonte não some,
+      // porque o texto dela continua sendo informação.
+      const sources = root.querySelector<HTMLElement>('.nds-chat-sources')!;
+      const recusada = sources.querySelector<HTMLElement>('[data-unsafe]')!;
+      await expect(recusada.tagName).toBe('SPAN');
+      await expect(recusada).toHaveTextContent(/recusado/i);
+      await expect(sources.querySelector('a[href^="javascript:"]')).toBeNull();
     });
   },
 };
