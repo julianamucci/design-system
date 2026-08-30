@@ -21,6 +21,11 @@ import {
   type ComposerAttachmentLabels,
 } from './composer-attachments';
 import {
+  NdsComposerQuote,
+  type ComposerQuote,
+  type ComposerQuoteLabels,
+} from './composer-quote';
+import {
   NdsComposerTriggerPopover,
   type TriggerPopoverLabels,
   type TriggerSource,
@@ -108,7 +113,13 @@ let instances = 0;
 @Component({
   selector: 'nds-composer',
   standalone: true,
-  imports: [NgTemplateOutlet, NdsButton, NdsComposerAttachments, NdsComposerTriggerPopover],
+  imports: [
+    NgTemplateOutlet,
+    NdsButton,
+    NdsComposerAttachments,
+    NdsComposerQuote,
+    NdsComposerTriggerPopover,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -122,6 +133,22 @@ let instances = 0;
          acende no \`:focus-within\` daqui. Um anel só em volta do texto deixaria
          o trilho de fora do que está em foco — e ele é a mesma superfície. -->
     <div class="nds-composer-field">
+      <!-- A citação vem PRIMEIRO na moldura: contexto antes do que ele
+           contextualiza. A ordem do documento é a ordem de leitura, e quem chega
+           pelo teclado ou por audição encontra a quem responde antes de
+           encontrar o que anexou. Sem citação o bloco não existe — uma descrição
+           apontando bloco ausente ficaria vazia, que é pior que uma descrição
+           curta. -->
+      @if (quoteBlock(); as block) {
+        <div
+          ndsComposerQuote
+          [id]="quoteId"
+          [quote]="block.quote"
+          [labels]="block.labels"
+          (dismissed)="dismissQuote.emit($event)"
+        ></div>
+      }
+
       <!-- A fila vive DENTRO da moldura e ANTES do campo: os anexos fazem parte
            do que está sendo escrito, e uma fila fora dela pareceria uma lista de
            outra coisa. Sem anexo ela não existe no documento — uma lista vazia
@@ -151,7 +178,7 @@ let instances = 0;
         [disabled]="disabled()"
         [placeholder]="labels().placeholder"
         [attr.aria-label]="labels().input"
-        [attr.aria-describedby]="hintId"
+        [attr.aria-describedby]="describedBy()"
         [attr.maxlength]="maxLength() ?? null"
         [attr.aria-controls]="triggerControls()"
         [attr.aria-activedescendant]="triggerActiveId()"
@@ -257,6 +284,15 @@ export class NdsComposer {
   readonly attachments = input<Attachment[]>([]);
   /** Textos da fila de anexos. Obrigatórios quando há anexo. */
   readonly attachmentLabels = input<ComposerAttachmentLabels | undefined>(undefined);
+  /**
+   * A mensagem que está sendo respondida.
+   *
+   * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, e antes
+   * dela, para quem não vê a tela saber a quem responde antes de escrever.
+   */
+  readonly quote = input<ComposerQuote | undefined>(undefined);
+  /** Textos da citação. Obrigatórios quando há citação. */
+  readonly quoteLabels = input<ComposerQuoteLabels | undefined>(undefined);
 
   /** Alguém pediu para enviar. O texto vai sem espaços nas pontas. */
   readonly submitted = output<string>();
@@ -271,6 +307,26 @@ export class NdsComposer {
   readonly valueChange = output<string>();
   /** Alguém pediu para remover um anexo, e o anexo vai junto. */
   readonly removeAttachment = output<Attachment>();
+  /**
+   * Alguém pediu para tirar a citação, e ela vai junto.
+   *
+   * O componente NÃO a tira: decidir que a resposta deixou de responder a
+   * alguém é de quem consome, a mesma divisão de `removeAttachment`.
+   */
+  readonly dismissQuote = output<ComposerQuote>();
+
+  /**
+   * A citação, só quando há o que desenhar E texto para nomeá-la.
+   *
+   * Sem rótulo o bloco abriria com um botão que não diz o que dispensa e sem o
+   * prefixo que faz a descrição do campo virar frase — pior que não existir.
+   * Mesma guarda da fila de anexos e do seletor de gatilho.
+   */
+  protected readonly quoteBlock = computed(() => {
+    const quote = this.quote();
+    const labels = this.quoteLabels();
+    return quote && labels ? { quote, labels } : null;
+  });
 
   /**
    * A fila, só quando há o que desenhar E texto para nomeá-la.
@@ -286,6 +342,18 @@ export class NdsComposer {
 
   protected readonly inputId = `nds-composer-${++instances}`;
   protected readonly hintId = `${this.inputId}-hint`;
+  protected readonly quoteId = `${this.inputId}-quote`;
+
+  /**
+   * O que descreve o campo, na ordem do PESO.
+   *
+   * A citação vem primeiro: saber a quem se responde muda o que se escreve, e a
+   * dica de teclado só muda como se envia. Ela aponta o próprio bloco, então o
+   * texto chega inteiro — inclusive o trecho que a folha corta por linha.
+   */
+  protected readonly describedBy = computed(() =>
+    this.quoteBlock() ? `${this.quoteId} ${this.hintId}` : this.hintId,
+  );
 
   /**
    * O texto agora.
