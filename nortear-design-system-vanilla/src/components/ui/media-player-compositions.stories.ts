@@ -10,7 +10,7 @@ import {
   captionTrack,
 } from './media-player.fixtures';
 import { clockText, messageFromFrame, until } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import { mediaPlayerSource, mediaPlayerSourceWith } from './media-player.source';
 
 const firstPlay = fn();
 const firstPause = fn();
@@ -22,6 +22,9 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    // O piso do arquivo: story sem transform própria cairia no `outerHTML`
+    // — o componente inteiro já desenhado, em vez da chamada de fábrica.
+    docs: { source: { transform: mediaPlayerSource } },
   },
 };
 

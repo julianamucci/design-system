@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createEditor } from './editor';
 import { ADVANCED_CONTENT, BASIC_CONTENT, LABELS, fluidBox } from './editor.fixtures';
-import { editorSourceWith } from './editor.source';
+import { editorSource, editorSourceWith } from './editor.source';
 
 const meta: Meta = {
   title: 'UI/Editor/Variants',
@@ -12,6 +12,11 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O piso do arquivo: story sem transform própria cairia no
+
+      // `outerHTML` — o componente inteiro já desenhado, em vez da chamada.
+
+      source: { transform: editorSource },
       description: {
         component:
           'O conjunto muda o que a barra expõe, não o que o documento aceita: '

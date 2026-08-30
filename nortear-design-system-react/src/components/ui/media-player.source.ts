@@ -101,9 +101,43 @@ export function mediaPlayerSnippet(options: MediaPlayerSnippetOptions = {}): str
 export const mediaPlayerSource: SourceTransform<MediaPlayerSnippetOptions> = (_generated, ctx) =>
   mediaPlayerSnippet(ctx?.args ?? {});
 
-/** Transform de story: mesmo componente, opções fixas que os controls não cobrem. */
-export function mediaPlayerSourceWith(
-  fixed: MediaPlayerSnippetOptions,
-): SourceTransform<MediaPlayerSnippetOptions> {
-  return (_generated, ctx) => mediaPlayerSnippet({ ...ctx?.args, ...fixed });
-}
+/**
+ * Transforms de story: mesmo componente, opções fixas que os controls não
+ * cobrem.
+ *
+ * Uma por configuração, e não uma fábrica que recebe a configuração. A fábrica
+ * devolvia FUNÇÃO, e o guarda transversal chama todo export sem argumento
+ * esperando string — curried, os quatro checks que verificam o snippet (texto
+ * honesto, peças com origem, import que o componente exporta, espião de control
+ * que não vaza) nunca chegavam ao snippet. Nomeadas, cada uma é verificada.
+ */
+const comFixas =
+  (fixed: MediaPlayerSnippetOptions): SourceTransform<MediaPlayerSnippetOptions> =>
+  (_generated, ctx) =>
+    mediaPlayerSnippet({ ...ctx?.args, ...fixed });
+
+/** Com faixas de legenda, e sem o seletor de velocidade. */
+export const mediaPlayerTracksSource = comFixas({ tracks: true, rates: [] });
+
+/** Só áudio. */
+export const mediaPlayerAudioSource = comFixas({ kind: 'audio' });
+
+/**
+ * Os vídeos das demonstrações incorporadas.
+ *
+ * Moram aqui, e não nas fixtures, porque é o snippet que precisa deles como
+ * TEXTO — a fixture só os repassa ao componente. Declarados nos dois, o painel
+ * Code ensinaria um vídeo e a demonstração tocaria outro, e nada acusaria.
+ */
+export const YOUTUBE_VIDEO_ID = 'aqz-KE-bpKQ';
+export const VIMEO_VIDEO_ID = '76979871';
+
+/** Incorporado do YouTube. */
+export const mediaPlayerYoutubeSource = comFixas({
+  embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID },
+});
+
+/** Incorporado do Vimeo. */
+export const mediaPlayerVimeoSource = comFixas({
+  embed: { provider: 'vimeo', videoId: VIMEO_VIDEO_ID },
+});

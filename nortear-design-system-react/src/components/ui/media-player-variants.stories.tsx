@@ -19,7 +19,12 @@ import {
   DEMO_SECONDS,
 } from './media-player.fixtures';
 import { firstControl, clockText, until } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import {
+  mediaPlayerAudioSource,
+  mediaPlayerTracksSource,
+  mediaPlayerVimeoSource,
+  mediaPlayerYoutubeSource,
+} from './media-player.source';
 
 /** O WAV das stories de áudio, resolvido uma vez: o mesmo texto a cada desenho. */
 const AUDIO_SOURCE = silentWav(DEMO_SECONDS);
@@ -46,7 +51,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Video: Story = {
   parameters: {
-    docs: { source: { transform: mediaPlayerSourceWith({ tracks: true, rates: [] }) } },
+    docs: { source: { transform: mediaPlayerTracksSource } },
   },
   render: () => <CanvasVideoPlayer />,
 
@@ -225,7 +230,7 @@ export const Video: Story = {
 };
 
 export const Audio: Story = {
-  parameters: { docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } } },
+  parameters: { docs: { source: { transform: mediaPlayerAudioSource } } },
   render: () => <MediaPlayerCanvas kind="audio" src={AUDIO_SOURCE} />,
 
   play: async ({ canvasElement, step }) => {
@@ -279,9 +284,7 @@ export const YouTube: Story = {
   parameters: {
     docs: {
       source: {
-        transform: mediaPlayerSourceWith({
-          embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID },
-        }),
+        transform: mediaPlayerYoutubeSource,
       },
     },
   },
@@ -350,9 +353,7 @@ export const Vimeo: Story = {
   parameters: {
     docs: {
       source: {
-        transform: mediaPlayerSourceWith({
-          embed: { provider: 'vimeo', videoId: VIMEO_VIDEO_ID },
-        }),
+        transform: mediaPlayerVimeoSource,
       },
     },
   },

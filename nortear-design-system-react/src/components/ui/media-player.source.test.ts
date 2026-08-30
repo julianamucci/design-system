@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   mediaPlayerSnippet,
   mediaPlayerSource,
-  mediaPlayerSourceWith,
+  mediaPlayerAudioSource,
+  mediaPlayerTracksSource,
+  mediaPlayerVimeoSource,
+  mediaPlayerYoutubeSource,
+  VIMEO_VIDEO_ID,
+  YOUTUBE_VIDEO_ID,
 } from './media-player.source';
 
 describe('mediaPlayerSnippet', () => {
@@ -103,9 +108,26 @@ describe('mediaPlayerSource', () => {
   });
 });
 
-describe('mediaPlayerSourceWith', () => {
+describe('as transforms de opção fixa', () => {
   it('as opções fixas vencem os controls', () => {
-    const transform = mediaPlayerSourceWith({ kind: 'audio' });
-    expect(transform('', { args: { kind: 'video' } })).toContain('kind="audio"');
+    // É a razão de elas existirem: a story fixa o que os controls não cobrem,
+    // e o painel Code tem de mostrar o que a story de fato renderiza.
+    expect(mediaPlayerAudioSource('', { args: { kind: 'video' } })).toContain('kind="audio"');
+  });
+
+  it('e sobrevivem à chamada sem contexto', () => {
+    // A guarda transversal chama cada transform exportada sem argumento. Era
+    // exatamente isto que a fábrica curried não fazia: devolvia função, e os
+    // quatro checks que verificam o snippet nunca chegavam ao snippet.
+    expect(mediaPlayerTracksSource()).toContain('labels={labels}');
+    expect(mediaPlayerYoutubeSource()).toContain('youtube');
+    expect(mediaPlayerVimeoSource()).toContain('vimeo');
+  });
+
+  it('o vídeo do snippet é o MESMO que a demonstração toca', () => {
+    // Os IDs viviam nas fixtures e no snippet; declarados nos dois, o painel
+    // Code ensinaria um vídeo e a tela tocaria outro, e nada acusaria.
+    expect(mediaPlayerYoutubeSource()).toContain(YOUTUBE_VIDEO_ID);
+    expect(mediaPlayerVimeoSource()).toContain(VIMEO_VIDEO_ID);
   });
 });

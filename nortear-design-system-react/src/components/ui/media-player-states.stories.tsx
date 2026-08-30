@@ -19,7 +19,7 @@ import {
   DEMO_SECONDS,
 } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import { mediaPlayerAudioSource } from './media-player.source';
 
 /**
  * Espiões de escopo de MÓDULO.
@@ -47,7 +47,7 @@ const meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } },
+    docs: { source: { transform: mediaPlayerAudioSource } },
   },
   // `labels` é prop OBRIGATÓRIA e por isso está nos args; quem a resolve na tela
   // é o canvas, que lê o idioma corrente.

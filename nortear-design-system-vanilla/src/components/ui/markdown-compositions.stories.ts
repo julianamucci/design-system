@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createMarkdown } from './markdown';
-import { markdownSourceWith } from './markdown.source';
+import { markdownSource, markdownSourceWith } from './markdown.source';
 import { MARKDOWN_CODE, MARKDOWN_TABLE } from '@shared/primitives/markdown-examples';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -17,6 +17,11 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O piso do arquivo: story sem transform própria cairia no
+
+      // `outerHTML` — o componente inteiro já desenhado, em vez da chamada.
+
+      source: { transform: markdownSource },
       description: {
         component:
           'O documento delega o bloco de código e a tabela aos componentes do sistema, em vez de desenhar os seus.',

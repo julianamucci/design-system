@@ -13,7 +13,7 @@ import {
   mediaPlayerRoots,
 } from './media-player.fixtures';
 import { clockText, messageFromFrame, until } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import { mediaPlayerTracksSource, mediaPlayerYoutubeSource } from './media-player.source';
 
 const firstPlay = fn();
 const firstPause = fn();
@@ -46,7 +46,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const WithCaptions: Story = {
   parameters: {
-    docs: { source: { transform: mediaPlayerSourceWith({ tracks: true, rates: [] }) } },
+    docs: { source: { transform: mediaPlayerTracksSource } },
   },
   render: () => <CanvasVideoPlayer />,
 
@@ -84,9 +84,7 @@ export const TwoPlayers: Story = {
   parameters: {
     docs: {
       source: {
-        transform: mediaPlayerSourceWith({
-          embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID },
-        }),
+        transform: mediaPlayerYoutubeSource,
       },
     },
   },

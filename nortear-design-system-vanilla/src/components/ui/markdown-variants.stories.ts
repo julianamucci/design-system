@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createMarkdown } from './markdown';
-import { markdownSourceWith } from './markdown.source';
+import { markdownSource, markdownSourceWith } from './markdown.source';
 import { ALLOW_PRESETS } from '@shared/primitives/markdown-ast';
 import { MARKDOWN_COMMENT } from '@shared/primitives/markdown-examples';
 
@@ -18,6 +18,11 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O piso do arquivo: story sem transform própria cairia no
+
+      // `outerHTML` — o componente inteiro já desenhado, em vez da chamada.
+
+      source: { transform: markdownSource },
       description: {
         component:
           'O mesmo texto sob as três listas brancas. O que fica de fora de cada uma vira texto, e nada some.',

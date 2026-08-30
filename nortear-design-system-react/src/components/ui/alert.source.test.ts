@@ -146,7 +146,7 @@ describe('composições', () => {
     const saida = alertWithActionSource();
     expect(saida).toContain('AlertAction');
     expect(saida).toContain('import { Button } from "@/components/ui/button";');
-    expect(saida).toContain('<Button size="sm" variant="outline">');
+    expect(saida).toContain('<Button size="sm" variant="default">');
     // O alerta não é focável: quem recebe o Tab é o botão interno.
     expect(saida).not.toContain('tabIndex');
   });

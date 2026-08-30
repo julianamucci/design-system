@@ -18,7 +18,7 @@ import {
   silentWav,
 } from './media-player.fixtures';
 import { clockText, firstControl, until } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import { mediaPlayerSource, mediaPlayerSourceWith } from './media-player.source';
 
 const meta: Meta = {
   title: 'UI/MediaPlayer/Variants',
@@ -28,6 +28,9 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    // O piso do arquivo: story sem transform própria cairia no `outerHTML`
+    // — o componente inteiro já desenhado, em vez da chamada de fábrica.
+    docs: { source: { transform: mediaPlayerSource } },
   },
 };
 

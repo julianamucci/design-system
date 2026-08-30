@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createMarkdown } from './markdown';
-import { markdownSourceWith } from './markdown.source';
+import { markdownSource, markdownSourceWith } from './markdown.source';
 import { MARKDOWN_STREAMING, MARKDOWN_UNSAFE } from '@shared/primitives/markdown-examples';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -16,6 +16,11 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O piso do arquivo: story sem transform própria cairia no
+
+      // `outerHTML` — o componente inteiro já desenhado, em vez da chamada.
+
+      source: { transform: markdownSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no documento.',
       },

@@ -75,7 +75,16 @@ const OTHER_STACK = /\b(Vue|Svelte|Angular|Vanilla|reka-ui|bits-ui|@radix-ng|rad
  * Lista fechada de propósito. Acrescentar um nome aqui é declarar a exceção;
  * deixar de fora é reprovar — que é o que dá dentes à convenção.
  */
-const HELPERS = new Set(['ratioExpr']);
+const HELPERS = new Set([
+  'ratioExpr',
+  // Os IDs dos vídeos das demonstrações incorporadas. São DADO, e não
+  // construtor de snippet: moram no módulo de snippet porque é ele que precisa
+  // do valor como texto, e as fixtures os reexportam para o componente.
+  // Declarados nos dois lugares, o painel Code ensinaria um vídeo e a
+  // demonstração tocaria outro.
+  'YOUTUBE_VIDEO_ID',
+  'VIMEO_VIDEO_ID',
+]);
 
 /** `./combobox.source.ts` -> `combobox`, a chave de `slugExportados`. */
 const slugDoCaminho = (caminho: string) =>

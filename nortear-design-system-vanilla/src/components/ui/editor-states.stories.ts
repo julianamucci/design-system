@@ -9,7 +9,7 @@ import {
   fluidBox,
 } from './editor.fixtures';
 import { selectImage, selectTableCell, tokenColor } from './editor.play-helpers';
-import { editorSourceWith } from './editor.source';
+import { editorSource, editorSourceWith } from './editor.source';
 
 const meta: Meta = {
   title: 'UI/Editor/States',
@@ -19,6 +19,11 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O piso do arquivo: story sem transform própria cairia no
+
+      // `outerHTML` — o componente inteiro já desenhado, em vez da chamada.
+
+      source: { transform: editorSource },
       description: {
         component:
           'As situações em que o editor cai durante o uso: leitura, cursor numa '

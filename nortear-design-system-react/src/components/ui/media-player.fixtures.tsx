@@ -161,8 +161,10 @@ export function captionTrack(): MediaPlayerTrack {
  * O quadro NÃO carrega na suíte, e é de propósito — ver a story de provedor.
  * Estão aqui para a demonstração no navegador de quem lê a documentação.
  */
-export const YOUTUBE_VIDEO_ID = 'aqz-KE-bpKQ';
-export const VIMEO_VIDEO_ID = '76979871';
+// Uma definição só, em `media-player.source.ts`: é o snippet que precisa do
+// valor como texto, e declarar nos dois faria o painel Code ensinar um vídeo
+// enquanto a demonstração toca outro.
+export { VIMEO_VIDEO_ID, YOUTUBE_VIDEO_ID } from './media-player.source';
 
 // ─── Acesso à instância ──────────────────────────────────────────────────────
 
