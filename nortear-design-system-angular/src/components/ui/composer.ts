@@ -14,7 +14,12 @@ import {
   viewChild,
 } from '@angular/core';
 import type { TriggerApplied } from '@shared/primitives/composer-trigger';
+import type { Attachment } from '@shared/primitives/chat-protocol';
 import { NdsButton } from './button';
+import {
+  NdsComposerAttachments,
+  type ComposerAttachmentLabels,
+} from './composer-attachments';
 import {
   NdsComposerTriggerPopover,
   type TriggerPopoverLabels,
@@ -103,7 +108,7 @@ let instances = 0;
 @Component({
   selector: 'nds-composer',
   standalone: true,
-  imports: [NgTemplateOutlet, NdsButton, NdsComposerTriggerPopover],
+  imports: [NgTemplateOutlet, NdsButton, NdsComposerAttachments, NdsComposerTriggerPopover],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -117,6 +122,20 @@ let instances = 0;
          acende no \`:focus-within\` daqui. Um anel só em volta do texto deixaria
          o trilho de fora do que está em foco — e ele é a mesma superfície. -->
     <div class="nds-composer-field">
+      <!-- A fila vive DENTRO da moldura e ANTES do campo: os anexos fazem parte
+           do que está sendo escrito, e uma fila fora dela pareceria uma lista de
+           outra coisa. Sem anexo ela não existe no documento — uma lista vazia
+           seria anunciada como "lista com zero itens", que promete algo que não
+           há. -->
+      @if (attachmentQueue(); as queue) {
+        <ul
+          ndsComposerAttachments
+          [attachments]="queue.items"
+          [labels]="queue.labels"
+          (removeAttachment)="removeAttachment.emit($event)"
+        ></ul>
+      }
+
       <!-- O campo APONTA a lista: \`aria-controls\` a endereça e
            \`aria-activedescendant\` diz qual opção está ativa, sem que o foco
            saia daqui. O papel de caixa de combinação NÃO entra — a
@@ -229,6 +248,15 @@ export class NdsComposer {
   readonly triggers = input<TriggerSource[]>([]);
   /** Textos do seletor. Obrigatórios quando há gatilho, porque são texto de tela. */
   readonly triggerLabels = input<TriggerPopoverLabels | undefined>(undefined);
+  /**
+   * Os arquivos que vão junto com a mensagem.
+   *
+   * O composer os DESENHA e avisa quando alguém pede para remover; subir,
+   * validar e remover de verdade é de quem consome.
+   */
+  readonly attachments = input<Attachment[]>([]);
+  /** Textos da fila de anexos. Obrigatórios quando há anexo. */
+  readonly attachmentLabels = input<ComposerAttachmentLabels | undefined>(undefined);
 
   /** Alguém pediu para enviar. O texto vai sem espaços nas pontas. */
   readonly submitted = output<string>();
@@ -241,6 +269,20 @@ export class NdsComposer {
    * `onInput` do Vanilla, e o único caminho para quem quer guardar rascunho.
    */
   readonly valueChange = output<string>();
+  /** Alguém pediu para remover um anexo, e o anexo vai junto. */
+  readonly removeAttachment = output<Attachment>();
+
+  /**
+   * A fila, só quando há o que desenhar E texto para nomeá-la.
+   *
+   * Sem rótulo a lista abriria sem nome e com botões que não dizem o que
+   * removem — pior que não existir. Mesma guarda do seletor de gatilho.
+   */
+  protected readonly attachmentQueue = computed(() => {
+    const labels = this.attachmentLabels();
+    const items = this.attachments();
+    return items.length && labels ? { items, labels } : null;
+  });
 
   protected readonly inputId = `nds-composer-${++instances}`;
   protected readonly hintId = `${this.inputId}-hint`;
