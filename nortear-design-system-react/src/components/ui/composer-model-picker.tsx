@@ -113,15 +113,22 @@ function ComposerModelPicker({
   // `value` é semente enquanto ninguém a move. Movida, é quem consome que
   // manda — é por aqui que uma escolha APLICADA volta, no lugar do comando
   // imperativo que uma stack sem renderizador precisa expor.
-  const lastValueRef = React.useRef(value)
-  React.useEffect(() => {
-    if (value === lastValueRef.current) return
-    lastValueRef.current = value
+  //
+  // O ajuste acontece DURANTE a renderização, e não num efeito. Efeito que
+  // chama `setState` de forma síncrona reprova em `react-hooks` porque encadeia
+  // uma segunda renderização: a primeira já pintou com o índice velho, e a tela
+  // pisca no valor anterior antes de assentar. Ajustando aqui, o React descarta
+  // a saída em curso e recomeça antes de tocar o DOM — é o padrão documentado
+  // para estado que precisa acompanhar uma prop.
+  const [lastValue, setLastValue] = React.useState(value)
+  if (value !== lastValue) {
+    setLastValue(value)
     const next = models.findIndex((model) => model.id === value)
-    if (next === -1) return
-    setSelectedIndex(next)
-    setActiveIndex(next)
-  }, [value, models])
+    if (next !== -1) {
+      setSelectedIndex(next)
+      setActiveIndex(next)
+    }
+  }
 
   // O foco vai para a lista ao abrir e volta ao gatilho ao fechar. É efeito de
   // layout porque foco é posição na tela: agendado como passivo, a lista

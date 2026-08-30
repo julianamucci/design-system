@@ -871,8 +871,8 @@
  *     <p class="nds-composer-draft-title">Você tinha um rascunho</p>
  *     <p class="nds-composer-draft-preview">Sobre o orçamento de…</p>
  *     <div class="nds-composer-draft-actions">
- *       <button class="nds-button">Restaurar</button>
- *       <button class="nds-button">Descartar</button>
+ *       <button class="nds-button">Restaurar rascunho</button>
+ *       <button class="nds-button">Descartar rascunho</button>
  *     </div>
  *   </div>
  *
@@ -889,9 +889,15 @@
  *    texto. O rascunho inteiro continua no documento: é o que permite ouvi-lo
  *    por completo e achá-lo pela busca do navegador. Texto cortado em JavaScript
  *    perde as duas coisas, e o reticências vira mentira para quem ouve.
- * 3. CADA BOTÃO DIZ SOBRE O QUE AGE. "Restaurar" e "Descartar" sozinhos são
- *    dois verbos sem objeto para quem chega neles por tabulação vindo de outro
- *    lugar da tela. O rótulo nomeia o rascunho.
+ * 3. CADA BOTÃO DIZ SOBRE O QUE AGE, NO RÓTULO VISÍVEL. "Restaurar" e
+ *    "Descartar" sozinhos são dois verbos sem objeto para quem chega neles por
+ *    tabulação vindo de outro lugar da tela.
+ *
+ *    E o objeto entra no texto que se vê, não num `aria-label` por cima: nome
+ *    acessível que não contém o rótulo visível quebra WCAG 2.5.3 (Label in
+ *    Name), e quem comanda por voz diria "clicar em Restaurar" para um botão
+ *    que atende por outro nome. A primeira versão desta árvore mostrava os
+ *    verbos nus e contradizia esta própria decisão.
  * 4. A FAIXA NÃO ROUBA O FOCO. Quem entrou para escrever continua no campo; a
  *    faixa está antes dele na ordem de leitura, que é o que a torna alcançável
  *    sem tirar ninguém de onde estava.
@@ -954,6 +960,7 @@
  *     <li class="nds-composer-queue-item" data-state="waiting">
  *       <span class="nds-composer-queue-position">1</span>
  *       <span class="nds-composer-queue-text">E o prazo?</span>
+ *       <span class="nds-badge" data-slot="composer-queue-state">Na fila</span>
  *       <button class="nds-button" data-slot="composer-queue-withdraw"></button>
  *     </li>
  *     <li class="nds-composer-queue-item" data-state="sending" aria-busy="true"> … </li>
@@ -977,6 +984,17 @@
  *    que botão nenhum.
  * 3. `aria-busy` NO ITEM QUE ESTÁ INDO, e a palavra do estado em texto. O
  *    ocupado é atributo; o que está acontecendo é frase.
+ *
+ *    A palavra mora num `.nds-badge`, e não numa classe desta folha: é
+ *    etiqueta curta de estado, que é exatamente o que aquele primitivo já
+ *    desenha em todo o sistema — classe nova aqui seria uma segunda badge com
+ *    outro nome. A primeira versão deste bloco exigia a palavra sem dizer onde
+ *    ela morava, e quem implementou teve de decidir sozinho.
+ *
+ *    A palavra aparece nos DOIS estados, não só em `sending`: "na fila" é
+ *    informação tanto quanto "enviando", e mostrá-la só num deles faria a
+ *    ausência de etiqueta significar um estado — que é pista invisível para
+ *    quem ouve.
  * 4. O BOTÃO DE RETIRAR NOMEIA A MENSAGEM. Uma fila de três "Retirar" é um
  *    botão só para quem navega por audição.
  * 5. ALVO DE TOQUE ≥ 24px no botão (WCAG 2.5.8).
