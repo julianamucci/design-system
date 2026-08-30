@@ -150,6 +150,18 @@ const preview: Preview = {
 
     options: {
       storySort: {
+        // Sem isto a ordem NÃO é alfabética, e o '*' engana: quando os DOIS
+        // nomes comparados caem no curinga, o comparador do Storybook devolve
+        // 0 — empate — e o método default ('configure') deixa a ordem de
+        // DESCOBERTA DOS ARQUIVOS decidir. Foi o que pôs as categorias em
+        // Disclosure, Feedback, Overlay, Layout, Display: a ordem do primeiro
+        // arquivo de cada uma (accordion, alert, alert-dialog, aspect-ratio,
+        // avatar). Só 'alphabetical' faz o empate cair no localeCompare.
+        //
+        // Não afeta o que está NOMEADO na lista abaixo, que continua na ordem
+        // escrita, nem os nomes de story dentro de um arquivo — sem
+        // 'includeNames', títulos iguais saem do comparador antes disso.
+        method: 'alphabetical',
         order: [
           'About', ['Overview', 'Accessibility', 'Analytics', 'SEO and GEO', 'Tone of Voice'],
           'Foundations', ['Getting Started', 'Colors and Themes', 'Typography', 'Spacing', 'Elevation, Borders and Shadows', 'Icons', 'Motion', 'Densities', 'Theme System', 'Internationalization', 'Cross-Stack Divergences'],
