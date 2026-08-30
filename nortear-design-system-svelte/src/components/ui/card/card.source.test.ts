@@ -82,7 +82,7 @@ describe('transforms das stories de tamanho, estado e composição', () => {
 
   it('o rodapé traz as duas ações nomeando o card em que agem', () => {
     const saida = cardWithFooterSource();
-    expect(saida).toContain('<CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">');
+    expect(saida).toContain('<CardFooter class="nds-cluster" data-justify="end" data-spacing="md">');
     expect(saida).toContain('aria-label="Cancelar edição de Cadeira Gamer Pro"');
     expect(saida).toContain('aria-label="Salvar alterações em Cadeira Gamer Pro"');
   });
