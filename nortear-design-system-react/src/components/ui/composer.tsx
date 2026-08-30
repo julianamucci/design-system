@@ -7,6 +7,11 @@ import {
   type ComposerAttachmentLabels,
 } from "@/components/ui/composer-attachments"
 import {
+  ComposerQuote as ComposerQuoteBlock,
+  type ComposerQuote,
+  type ComposerQuoteLabels,
+} from "@/components/ui/composer-quote"
+import {
   ComposerTriggerPopover,
   useComposerTrigger,
   type TriggerPopoverLabels,
@@ -118,6 +123,17 @@ export interface ComposerProps
   attachmentLabels?: ComposerAttachmentLabels
   /** Alguém pediu para remover um anexo. */
   onRemoveAttachment?: (attachment: Attachment) => void
+  /**
+   * A mensagem que está sendo respondida.
+   *
+   * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, e vem
+   * PRIMEIRO, para quem não vê a tela saber a quem responde antes de escrever.
+   */
+  quote?: ComposerQuote
+  /** Textos da citação. Obrigatórios quando há citação. */
+  quoteLabels?: ComposerQuoteLabels
+  /** Alguém pediu para tirar a citação. Tirar de verdade é de quem consome. */
+  onDismissQuote?: (quote: ComposerQuote) => void
   /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem consome. */
   onSubmit?: (value: string) => void
   /** Alguém pediu para interromper o que está sendo gerado. */
@@ -159,6 +175,9 @@ function Composer({
   attachments,
   attachmentLabels,
   onRemoveAttachment,
+  quote,
+  quoteLabels,
+  onDismissQuote,
   onSubmit,
   onStop,
   onValueChange,
@@ -167,6 +186,8 @@ function Composer({
 }: ComposerProps) {
   const fieldId = React.useId()
   const hintId = `${fieldId}-hint`
+  const quoteId = `${fieldId}-quote`
+  const hasQuote = quote !== undefined && quoteLabels !== undefined
 
   // Semente ou controle, e a diferença é `onValueChange`: sem ele o campo
   // guarda o próprio texto e `value` só diz por onde começar; com ele, o que
@@ -251,6 +272,17 @@ function Composer({
           acende no `:focus-within` daqui — o trilho está dentro do mesmo
           formulário e faz parte do que está em foco. */}
       <div className="nds-composer-field">
+        {/* A citação vem no TOPO da moldura, antes dos anexos e do campo:
+            contexto vem antes do que ele contextualiza, e a ordem do documento
+            é a ordem de leitura de quem chega pelo teclado ou por audição. */}
+        {hasQuote ? (
+          <ComposerQuoteBlock
+            quote={quote}
+            labels={quoteLabels}
+            id={quoteId}
+            onDismiss={onDismissQuote}
+          />
+        ) : null}
         {/* A fila vem ANTES do campo e DENTRO da moldura: os anexos fazem
             parte do que está sendo escrito, e fora da moldura pareceriam uma
             lista de outra coisa. Sem anexo ela não existe no documento — uma
@@ -277,7 +309,12 @@ function Composer({
           aria-label={labels.input}
           // A dica descreve o campo — `Enter envia` é comportamento, e saber
           // disso depois de apertar a tecla não serve para nada.
-          aria-describedby={hintId}
+          //
+          // Com citação, ela vem PRIMEIRO na descrição: saber a quem se
+          // responde muda o que se escreve, e a dica de teclado só muda como se
+          // envia. A citação aponta o próprio bloco, então o texto dela chega
+          // inteiro — inclusive o trecho que a folha corta por linha.
+          aria-describedby={hasQuote ? `${quoteId} ${hintId}` : hintId}
           // O campo aponta a lista só enquanto ela existe para ele. Um
           // `aria-controls` para um painel escondido promete uma lista que não
           // há, e um `aria-activedescendant` órfão aponta um elemento que já
