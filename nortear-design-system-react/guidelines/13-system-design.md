@@ -11,7 +11,7 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 
 ### Tipo de Aplicação
 - **Storybook** — interface principal de documentação (porta 6006)
-- **SPA sandbox** (`App.tsx`) — desenvolvimento isolado e rota `?view=admin`
+- **SPA sandbox** (`App.tsx`) — desenvolvimento isolado
 - **Frontend-only** - Sem backend ou servidor
 - **Static** - Pode ser deployado em qualquer CDN/hosting estático
 
@@ -162,7 +162,7 @@ storySort: {
 }
 ```
 
-O `App.tsx` mantém state-based routing **apenas para o sandbox de desenvolvimento** (rota `?view=admin`). Novos componentes não devem ser registrados lá para fins de navegação — o título da story é suficiente.
+O `App.tsx` mantém state-based routing **apenas para o sandbox de desenvolvimento**. Novos componentes não devem ser registrados lá para fins de navegação — o título da story é suficiente.
 
 > Para o processo completo de adicionar um novo componente, ver `12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` Seção 14.
 
@@ -583,7 +583,7 @@ function DemoSection() { }
 
 **Razões**:
 - ✅ Storybook sidebar gerencia navegação de docs via `storySort` — zero config
-- ✅ State-based routing em `App.tsx` apenas para o sandbox (`?view=admin`)
+- ✅ State-based routing em `App.tsx` apenas para o sandbox
 - ✅ Sem dependência de router para a interface principal
 - ✅ Novos componentes aparecem na sidebar automaticamente pelo título da story
 

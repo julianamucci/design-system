@@ -1,8 +1,7 @@
-// SANDBOX: Este app existe para desenvolvimento isolado e para a rota ?view=admin.
+// SANDBOX: Este app existe para desenvolvimento isolado.
 // A interface principal de documentação é o Storybook (npm run storybook, porta 6006).
 // Novos componentes NÃO precisam ser registrados aqui — crie stories em src/components/ui/.
 import React, { Suspense, lazy, useState, useEffect } from 'react';
-import { DocsEditor } from './admin/DocsEditor';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarProvider, SidebarInset, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from './components/ui/sidebar';
 import { Button } from './components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion';
@@ -47,7 +46,6 @@ export default function App() {
     return isDevMode ? 'default' : theme;
   });
 
-  const isAdminRoute = new URLSearchParams(window.location.search).get('view') === 'admin';
 
   useEffect(() => {
     // Remove todas as classes de tema — o default INCLUÍDO. Ele era filtrado
@@ -90,9 +88,6 @@ export default function App() {
     return <HomePage onNavigate={setCurrentPage} />;
   };
 
-  if (isAdminRoute) {
-    return <DocsEditor />;
-  }
 
   return (
     <SidebarProvider>

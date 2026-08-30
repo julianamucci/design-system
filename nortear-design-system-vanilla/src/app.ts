@@ -1,6 +1,5 @@
 import { setLocale, getLocale, onLocaleChange, type Locale } from '@/lib/i18n';
 import { track } from '@/lib/analytics';
-import { createDocsEditor } from '@/admin/DocsEditor';
 
 // ─── Docs registry ────────────────────────────────────────────────────────────
 
@@ -146,12 +145,6 @@ async function navigateTo(id: string | null): Promise<void> {
 // ─── Bootstrap ────────────────────────────────────────────────────────────────
 
 export function createApp(root: HTMLElement): void {
-  // Admin editor route: ?view=admin
-  if (new URLSearchParams(window.location.search).get('view') === 'admin') {
-    createDocsEditor(root);
-    return;
-  }
-
   // Detect dark mode
   isDark =
     localStorage.getItem('ds-theme') === 'dark' ||

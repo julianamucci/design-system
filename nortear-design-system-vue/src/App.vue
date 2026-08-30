@@ -7,9 +7,6 @@ import {
 import HomePage from './components/HomePage.vue'
 import ThemeSelector from './components/ThemeSelector.vue'
 import { Toaster } from 'vue-sonner'
-import DocsEditor from './admin/DocsEditor.vue'
-
-const isAdminView = new URLSearchParams(window.location.search).get('view') === 'admin'
 
 // ─── Lazy-loaded documentation pages ────────────────────────────────────────
 const lazyDocs: Record<string, ReturnType<typeof defineAsyncComponent>> = {
@@ -86,9 +83,7 @@ function isCategoryOpen(name: string) {
 </script>
 
 <template>
-  <DocsEditor v-if="isAdminView" />
   <div
-    v-else
     class="flex h-screen overflow-hidden bg-background text-foreground"
   >
     <!-- Skip to content -->

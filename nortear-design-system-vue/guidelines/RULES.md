@@ -122,7 +122,7 @@ Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
 
 A interface principal de documentação é o **Storybook** (`npm run storybook`, porta 6006). Novos componentes são adicionados criando stories — não registrando no `App.vue`.
 
-O `App.vue` é um **sandbox de desenvolvimento** e rota `?view=admin`. Não usar para fins de navegação de documentação.
+O `App.vue` é um **sandbox de desenvolvimento**. Não usar para fins de navegação de documentação.
 
 Referência: `12-arquitetura-projeto.md`.
 

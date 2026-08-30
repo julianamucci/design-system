@@ -5,9 +5,7 @@
   import Home from '@lucide/svelte/icons/house';
   import MousePointer from '@lucide/svelte/icons/mouse-pointer';
   import Database from '@lucide/svelte/icons/database';
-  import DocsEditor from './admin/DocsEditor.svelte';
 
-  const isAdminView = new URLSearchParams(window.location.search).get('view') === 'admin';
 
   // ─── Estado global ──────────────────────────────────────────────────────────
 
@@ -89,9 +87,6 @@
   );
 </script>
 
-{#if isAdminView}
-  <DocsEditor />
-{:else}
 <div class="flex h-screen overflow-hidden bg-background text-foreground font-sans">
   <!-- Sidebar -->
   <aside
@@ -197,5 +192,4 @@
     onclick={() => sidebarOpen = false}
     role="presentation"
   ></div>
-{/if}
 {/if}

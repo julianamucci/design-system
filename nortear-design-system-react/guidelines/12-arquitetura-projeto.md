@@ -13,7 +13,7 @@ npm run storybook      # porta 6006 — interface principal
 npm run dev            # sandbox de desenvolvimento (App.tsx) — uso secundário
 ```
 
-`App.tsx` é um **sandbox**. Ele existe para desenvolvimento isolado e para a rota `?view=admin` (editor visual de docs). Novos componentes **não precisam** ser registrados nele.
+`App.tsx` é um **sandbox**. Ele existe para desenvolvimento isolado. Novos componentes **não precisam** ser registrados nele.
 
 ---
 
@@ -80,10 +80,6 @@ nortear-design-system-react/
 │   │
 │   ├── i18n/
 │   │   └── ui.json              # Traduções da UI chrome (nav labels, comuns)
-│   │
-│   ├── admin/
-│   │   ├── DocsEditor.tsx       # Editor visual (rota ?view=admin)
-│   │   └── useDocs.ts           # Hook para carregar/salvar translations.json
 │   │
 │   └── styles/
 │       ├── globals.css          # tokens CSS + imports de temas + estilos .nds-*
@@ -248,7 +244,6 @@ export default { title: 'Foundations/Minha Página' };
 `App.tsx` é um **sandbox de desenvolvimento** e **não** a interface de documentação.
 
 Responsabilidades atuais:
-- Rota `?view=admin` → editor visual `DocsEditor`
 - Preview isolado de docs pages fora do Storybook
 - Desenvolvimento local antes de criar stories
 
