@@ -140,15 +140,22 @@
   --sidebar-border: 30 15% 85%;
   --sidebar-ring: 4 78% 50%;
 
-  /* Radius — a identidade de forma deste tema é o CANTO CHEIO: base no
-     --radius-full, o que leva a escala derivada inteira ao pill e deixa botão,
-     campo, alerta e cartão arredondados até virarem cápsula. Micro-controle
-     (checkbox, alça, botão de fechar) sai redondo pelo mesmo caminho, que é o
-     efeito pedido.
+  /* Radius — a identidade de forma deste tema é o CANTO GENEROSO: 32px de base,
+     contra os 14px do default. Botão e campo ficam quase em cápsula sem chegar
+     lá, e o cartão vai a 36px.
+
+     Já esteve em `var(--radius-full)`, e foi longe demais: com a base em 9999px
+     a escala inteira colapsa no pill, e um cartão grande vira estádio. 2rem é o
+     ponto em que a forma lê como identidade e não como deformação.
 
      Sobrescreve a BASE, e não os degraus: a escala continua derivando sozinha,
-     como o contrato manda. */
-  --radius: var(--radius-full);
+     como o contrato manda.
+
+     CUIDADO ao subir mais: raio de pai grande expõe qualquer filho que repita o
+     raio em vez de descontar o inset (Rᵢ = Rₑ − E). A 36px de cartão, um filho
+     com 16px de inset deveria ter 20px — e as seções das docs pages ainda
+     desenham 36px. */
+  --radius: 2rem;
 }
 
 /* Dark mode — combina `.dark.tema-warm` */
