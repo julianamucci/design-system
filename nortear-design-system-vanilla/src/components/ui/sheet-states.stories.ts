@@ -207,6 +207,10 @@ export const Controlled: Story = {
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
 
+    // Lido ANTES de abrir: o que o fechamento tem de devolver é isto, e não a
+    // string vazia — outro painel pode estar segurando a trava.
+    const overflowAntes = document.body.style.overflow;
+
     await step('O comando externo abre o painel', async () => {
       await userEvent.click(externo);
       const panel = await waitForPortal('dialog');
@@ -216,10 +220,18 @@ export const Controlled: Story = {
       await expect(externo).toHaveAttribute('data-open', 'true');
     });
 
-    await step('Escape fecha e devolve o estado', async () => {
+    await step('Com o painel aberto, a página atrás não rola', async () => {
+      // `aria-modal="true"` promete que o resto da página está fora de alcance.
+      // Sem a trava a promessa é falsa: o leitor de tela não alcança o que está
+      // atrás, mas o mouse e a roda alcançam.
+      await expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    await step('Escape fecha, devolve o estado e solta a rolagem', async () => {
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('dialog');
       await expect(externo).toHaveAttribute('data-open', 'false');
+      await expect(document.body.style.overflow).toBe(overflowAntes);
     });
   },
 };

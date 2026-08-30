@@ -50,10 +50,18 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
+  closeLabel = "Fechar",
   ...props
 }: SheetPrimitive.Popup.Props & {
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
+  /**
+   * Nome acessível do botão X. Era a palavra "Fechar" escrita direto no JSX, e
+   * essa era a única string de interface do Sheet presa a um idioma: numa
+   * página em inglês ou espanhol o leitor de tela ouvia português, sem que
+   * nada na chamada pudesse mudar isso.
+   */
+  closeLabel?: string
 }) {
   const modal = React.useContext(SheetModalContext)
   return (
@@ -83,7 +91,7 @@ function SheetContent({
           >
             <XIcon
             />
-            <span className="nds-sr-only">Fechar</span>
+            <span className="nds-sr-only">{closeLabel}</span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Popup>

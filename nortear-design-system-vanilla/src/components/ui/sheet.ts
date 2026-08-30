@@ -6,6 +6,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 
 export type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 
@@ -19,6 +20,15 @@ export type SheetOptions = {
   description?: string;
   content: HTMLElement;
   footer?: HTMLElement;
+  /**
+   * Nome acessível do botão de fechar.
+   *
+   * Era a string `Fechar` cravada aqui dentro, e essa era a única string de
+   * interface desta família presa a um idioma: numa página em inglês ou
+   * espanhol o leitor de tela ouvia português, sem que nada na chamada
+   * pudesse mudar isso. Espelha `closeLabel` das outras stacks.
+   */
+  closeLabel?: string;
   onOpenChange?: (open: boolean) => void;
   /** Chamado no fechamento com o caminho que o causou (espelha o Dialog). */
   onClose?: (reason: SheetCloseReason) => void;
@@ -84,7 +94,17 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 // ─── createSheet ──────────────────────────────────────────────────────────────
 
 export function createSheet(options: SheetOptions): DestroyableElement {
-  const { trigger, side = 'right', title, description, content, footer, onOpenChange, onClose } = options;
+  const {
+    trigger,
+    side = 'right',
+    title,
+    description,
+    content,
+    footer,
+    closeLabel = 'Fechar',
+    onOpenChange,
+    onClose,
+  } = options;
 
   const sheetId = ++_sheetCounter;
   const titleId = `sheet-title-${sheetId}`;
@@ -93,6 +113,15 @@ export function createSheet(options: SheetOptions): DestroyableElement {
   let overlayEl: HTMLElement | null = null;
   let panelEl: HTMLElement | null = null;
   let previousFocus: HTMLElement | null = null;
+  /**
+   * Este painel está segurando a trava de rolagem?
+   *
+   * `aria-modal="true"` diz ao leitor de tela que o resto da página está fora de
+   * alcance, e com a rolagem solta a promessa era falsa: o conteúdo atrás do
+   * painel rolava. A contagem vive em `@/lib/scroll-lock`, compartilhada com o
+   * Drawer — dois contadores separados voltariam a travar a página para sempre.
+   */
+  let scrollLocked = false;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'sheet';
@@ -137,7 +166,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
     closeBtn.className = 'nds-sheet-close';
-    closeBtn.setAttribute('aria-label', 'Fechar');
+    closeBtn.setAttribute('aria-label', closeLabel);
     closeBtn.appendChild(createCloseIcon());
     closeBtn.addEventListener('click', () => closeWithReason('close-button'));
 
@@ -187,6 +216,9 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     document.body.appendChild(overlayEl);
     document.body.appendChild(panelEl);
 
+    lockBodyScroll();
+    scrollLocked = true;
+
     const focusable = getFocusable(panelEl);
     focusable[0]?.focus();
 
@@ -207,6 +239,12 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     overlayEl = null;
     panelEl = null;
     document.removeEventListener('keydown', handleKeydown);
+    // Só solta o que ESTE painel travou: `destroy()` chama `close()` mesmo sem
+    // nada montado, e uma solta a mais liberaria a trava de um painel vizinho.
+    if (scrollLocked) {
+      unlockBodyScroll();
+      scrollLocked = false;
+    }
     abertos.delete(registro);
   }
 

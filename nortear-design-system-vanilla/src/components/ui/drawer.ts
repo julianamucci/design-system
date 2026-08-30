@@ -23,6 +23,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -107,7 +108,15 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
   let overlayEl: HTMLElement | null = null;
   let panelEl: HTMLElement | null = null;
   let previousFocus: HTMLElement | null = null;
-  let previousBodyOverflow = '';
+  /**
+   * Este painel está segurando a trava de rolagem?
+   *
+   * A contagem vive em `@/lib/scroll-lock`, compartilhada com o Sheet. Guardar
+   * e devolver o valor cru de `overflow` aqui dentro parecia certo e quebrava
+   * com dois painéis: o segundo a abrir guardaria `hidden` como valor anterior
+   * e o devolveria ao fechar, e a página nunca mais rolaria.
+   */
+  let scrollLocked = false;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'drawer';
@@ -214,8 +223,8 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     document.body.appendChild(panelEl);
 
     if (modal) {
-      previousBodyOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
+      lockBodyScroll();
+      scrollLocked = true;
     }
 
     getFocusable(panelEl)[0]?.focus();
@@ -238,7 +247,13 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     overlayEl = null;
     panelEl = null;
     document.removeEventListener('keydown', handleKeydown);
-    if (modal) document.body.style.overflow = previousBodyOverflow;
+    // Guardado por `scrollLocked`, e não por `modal`: `destroy()` chama o
+    // fechamento mesmo sem nada montado, e uma solta a mais liberaria a trava
+    // de um painel vizinho que ainda está aberto.
+    if (scrollLocked) {
+      unlockBodyScroll();
+      scrollLocked = false;
+    }
   }
 
   function closeWithReason(reason: DrawerCloseReason): void {

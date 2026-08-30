@@ -131,8 +131,9 @@ export class NdsSheetContent {
   readonly showCloseButton = input(true);
 
   /**
-   * Nome acessível do botão X. Default em inglês para bater com o que as outras
-   * quatro stacks já escrevem; numa aplicação traduzida, passe o rótulo.
+   * Nome acessível do botão X. O default é o mesmo das outras quatro stacks —
+   * que até 2026-08-30 tinham a palavra cravada no markup, sem entrada nenhuma
+   * para trocá-la. Numa aplicação traduzida, passe o rótulo.
    */
   readonly closeLabel = input('Fechar');
 

@@ -20,6 +20,13 @@ interface SheetContentProps extends DialogContentProps {
   class?: HTMLAttributes['class']
   side?: 'top' | 'right' | 'bottom' | 'left'
   showCloseButton?: boolean
+  /**
+   * Nome acessível do botão X. Era a palavra "Fechar" escrita direto no
+   * template, e essa era a única string de interface do Sheet presa a um
+   * idioma: numa página em inglês ou espanhol o leitor de tela ouvia
+   * português, sem que nada na chamada pudesse mudar isso.
+   */
+  closeLabel?: string
 }
 
 defineOptions({
@@ -29,10 +36,11 @@ defineOptions({
 const props = withDefaults(defineProps<SheetContentProps>(), {
   side: 'right',
   showCloseButton: true,
+  closeLabel: 'Fechar',
 })
 const emits = defineEmits<DialogContentEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class', 'side', 'showCloseButton')
+const delegatedProps = reactiveOmit(props, 'class', 'side', 'showCloseButton', 'closeLabel')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
@@ -73,7 +81,7 @@ const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
           size="icon-sm"
         >
           <XIcon />
-          <span class="nds-sr-only">Fechar</span>
+          <span class="nds-sr-only">{{ props.closeLabel }}</span>
         </Button>
       </DialogClose>
     </DialogContent>

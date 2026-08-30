@@ -4,6 +4,7 @@
 // guardou. O porque e a medicao (62 KB gzip, 18% do critico) estao no primitivo.
 import { bufferarErros, iniciarFaroQuandoOcioso, marcarStory } from '@shared/primitives/faro';
 import '../src/lib/reload-on-chunk-error';
+import { resetBodyScrollLock } from '../src/lib/scroll-lock';
 import { getThemeFromSubdomain } from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/html-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
@@ -290,6 +291,13 @@ const preview: Preview = {
               node.remove();
             }
           });
+
+        // A varredura acima tira o NÓ do painel sem passar pelo caminho de
+        // fechamento da fábrica, então o contador de trava de rolagem fica de
+        // pé: a story seguinte abre com a página já travada, e o `body` nunca
+        // mais volta a rolar. Não é hipótese — foi o que reprovou a suíte do
+        // Sheet no dia em que a trava passou a existir.
+        resetBodyScrollLock();
       }
       return Story();
     },

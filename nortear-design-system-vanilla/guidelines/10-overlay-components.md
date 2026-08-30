@@ -229,6 +229,7 @@ document.body
 | `title` | — | Vinculado por `aria-labelledby` |
 | `description` | — | Vinculada por `aria-describedby` |
 | `footer` | — | Rodapé com ações |
+| `closeLabel` | `Fechar` | Nome acessível do botão de fechar |
 | `onOpenChange` | — | Recebe o estado a cada abertura e fechamento |
 | `onClose` | — | Recebe o motivo: `escape`, `overlay` ou `close-button` |
 | `class` | — | Classe extra no painel |
@@ -245,12 +246,11 @@ document.body
 - Gatilho com `aria-haspopup="dialog"`
 - Foco entra no primeiro focável e volta ao gatilho ao fechar; Tab e Shift+Tab circulam dentro do painel
 - Escape e clique no fundo fecham
+- A rolagem da página fica travada enquanto o painel está aberto. `aria-modal="true"` diz ao leitor de tela que o resto da página está fora de alcance, e com a rolagem solta a promessa era falsa — o conteúdo atrás do painel rolava
+- A trava é **contada**, em `src/lib/scroll-lock.ts`, e o Drawer usa a mesma. Guardar e devolver o valor cru de `overflow` dentro de cada fábrica parece certo e quebra com dois painéis: o segundo a abrir guarda `hidden` como "valor anterior" e o devolve ao fechar, e a partir daí a página nunca mais rola — sem erro e sem exceção. O valor original é lido uma vez, na primeira trava, e devolvido uma vez, quando a última solta
+- Nome acessível do botão de fechar vem de `closeLabel`. Nada de string de interface cravada na fábrica — em página em inglês ou espanhol, texto fixo faria o leitor de tela anunciar em português
 
 **Analytics**: emitir `sheet_open` / `sheet_close` com `{ component, side, reason }`.
-
-**Dívida medida, para não ser redescoberta**:
-- O nome acessível do botão de fechar é a string `Fechar`, cravada na fábrica. Não passa por `labels` nem por tradução, então em página em inglês ou espanhol o leitor de tela ouve português. É a única string de interface presa nesta stack de overlay
-- O Sheet NÃO trava a rolagem do `body` enquanto aberto; o Drawer trava quando `modal`. São irmãos com comportamento diferente atrás do mesmo `aria-modal="true"`, e o atributo promete o que só um deles cumpre
 
 ---
 
