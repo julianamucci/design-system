@@ -25,25 +25,33 @@
   import type { HTMLAttributes } from 'svelte/elements';
   import type { WithElementRef } from '@/lib/utils.js';
 
-  export type ChatRole = 'user' | 'assistant' | 'system';
+  /**
+   * O vocabulário vem de `chat-protocol.ts`, e não daqui.
+   *
+   * Era a mesma união escrita nas cinco stacks. Importa E reexporta porque
+   * `export … from` não traz o nome ao escopo, e este arquivo usa os três; o
+   * nome público da stack não muda. O motivo de `pending` existir separado de
+   * `running` — um espera por uma PESSOA, o outro pela máquina — está escrito
+   * lá, uma vez, junto com o critério que decide se um estado novo existe.
+   */
+  import type {
+    ChatRole,
+    ChatSource,
+    ToolCallState,
+    ChatToolCall as ChatToolCallData,
+  } from '@shared/primitives/chat-protocol';
+
+  export type { ChatRole, ChatSource, ToolCallState };
 
   /**
-   * Estados de uma chamada de ferramenta.
+   * A chamada de ferramenta, com o espaço de interface desta stack.
    *
-   * `pending` é a espera por uma PESSOA, e não pela máquina: a ferramenta foi
-   * proposta e ainda não foi autorizada. Existe separada de `running` porque as
-   * duas se parecem na tela e são coisas opostas — numa, quem está devendo
-   * resposta é o sistema; na outra, quem lê.
+   * A forma dos DADOS é compartilhada; o que fica aqui é o que não pode ser —
+   * o tipo do espaço que quem consome preenche. No protocolo ele não cabe,
+   * porque lá não há framework, e é essa ausência que faz o módulo servir às
+   * cinco.
    */
-  export type ToolCallState = 'pending' | 'running' | 'done' | 'failed';
-
-  export interface ChatToolCall {
-    /** Endereço da chamada, para quem a atualiza saber qual trocar. */
-    id?: string;
-    name: string;
-    state: ToolCallState;
-    /** Detalhe da chamada — argumentos, resultado, erro. Texto simples. */
-    detail?: string;
+  export interface ChatToolCall extends ChatToolCallData {
     /**
      * Controles de autorização, quando a chamada espera por uma pessoa.
      *
@@ -51,11 +59,6 @@
      * decide o que aprovar significa.
      */
     approval?: Snippet;
-  }
-
-  export interface ChatSource {
-    title: string;
-    url: string;
   }
 
   export interface ChatMessage {

@@ -14,6 +14,20 @@ import {
 // No call site, e não atrás de um invólucro local: é o que faz a análise
 // estática reconhecer a validação onde ela acontece.
 import { isSafeUrl } from "@shared/primitives/markdown-ast"
+// O vocabulário vem de `chat-protocol.ts`, e não daqui: era a mesma união
+// escrita nas cinco stacks. O motivo de `pending` existir separado de
+// `running` — um espera por uma PESSOA, o outro pela máquina — está escrito
+// lá, uma vez.
+import type {
+  ChatRole,
+  ChatSource,
+  ToolCallState,
+  ChatToolCall as ChatToolCallData,
+} from "@shared/primitives/chat-protocol"
+
+// Reexporta o que importou: `export … from` não traz o nome ao escopo, e este
+// arquivo usa os três. O nome público da stack não muda.
+export type { ChatRole, ChatSource, ToolCallState }
 
 /**
  * A superfície da conversa. Estrutura e cores em `nds/chat-thread.css`, que
@@ -36,21 +50,16 @@ import { isSafeUrl } from "@shared/primitives/markdown-ast"
  * colapsável aberto, que é exatamente o que o caminho cirúrgico do Vanilla
  * evita à mão.
  */
-export type ChatRole = "user" | "assistant" | "system"
-export type ToolCallState = "pending" | "running" | "done" | "failed"
-
-export interface ChatToolCall {
-  id?: string
-  name: string
-  state: ToolCallState
-  detail?: string
+/**
+ * A chamada de ferramenta, com o espaço de interface desta stack.
+ *
+ * A forma dos DADOS é compartilhada; o que fica aqui é o que não pode ser — o
+ * tipo do espaço que quem consome preenche. No protocolo ele não cabe, porque
+ * lá não há framework, e é essa ausência que faz o módulo servir às cinco.
+ */
+export interface ChatToolCall extends ChatToolCallData {
   /** Controles de autorização. É um espaço, não uma política. */
   approval?: React.ReactNode
-}
-
-export interface ChatSource {
-  title: string
-  url: string
 }
 
 export interface ChatMessage {

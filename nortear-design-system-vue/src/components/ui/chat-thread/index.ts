@@ -14,31 +14,32 @@ export { default as ChatThread } from './ChatThread.vue'
  * Divergência de API entre frameworks não se "alinha": registra-se. Esta é a
  * primeira das duas; a outra está logo abaixo, em `actions`.
  */
-export type ChatRole = 'user' | 'assistant' | 'system'
-
 /**
- * Estados de uma chamada de ferramenta.
+ * O vocabulário vem de `chat-protocol.ts`, e não daqui.
  *
- * `pending` é a espera por uma PESSOA, e não pela máquina: a ferramenta foi
- * proposta e ainda não foi autorizada. Ela existe separada de `running` porque
- * as duas se parecem na tela e são coisas opostas — numa, quem está devendo
- * resposta é o sistema; na outra, quem lê.
+ * `ChatRole`, `ToolCallState`, `ChatToolCall` e `ChatSource` eram declarados
+ * palavra por palavra em cada uma das cinco stacks — a mesma união escrita
+ * cinco vezes. Com uma peça isso não custava nada; com a família inteira pela
+ * frente, é assim que se produzem cinco vocabulários divergentes.
+ *
+ * Reexportar, e não redeclarar: o nome público desta stack não muda, e quem
+ * importa daqui continua importando daqui. O que mudou é de onde a definição
+ * sai. O motivo de `pending` existir separado de `running` — um espera por uma
+ * PESSOA, o outro pela máquina — está escrito lá, uma vez.
+ *
+ * Nesta stack `ChatToolCall` sai inteiro do protocolo: o espaço de autorização
+ * é um slot com escopo, não um campo do dado.
  */
-export type ToolCallState = 'pending' | 'running' | 'done' | 'failed'
+// Importa E reexporta: `export … from` reexporta sem trazer o nome ao escopo,
+// e este arquivo usa os quatro logo abaixo.
+import type {
+  ChatRole,
+  ChatSource,
+  ChatToolCall,
+  ToolCallState,
+} from '@shared/primitives/chat-protocol'
 
-export interface ChatToolCall {
-  /** Endereço da chamada. É ele que entra como `key` da lista de chamadas. */
-  id?: string
-  name: string
-  state: ToolCallState
-  /** Detalhe da chamada — argumentos, resultado, erro. Texto simples. */
-  detail?: string
-}
-
-export interface ChatSource {
-  title: string
-  url: string
-}
+export type { ChatRole, ChatSource, ChatToolCall, ToolCallState }
 
 export interface ChatMessage {
   /** Endereço da mensagem. É ele que entra como `key`. */

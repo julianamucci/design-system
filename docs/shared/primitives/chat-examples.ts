@@ -12,8 +12,18 @@
  * — botão de ir ao fim, resumo do raciocínio, título das fontes —, não a fala.
  */
 
-/** Papéis que a thread desenha. */
-export type ChatExampleRole = 'user' | 'assistant' | 'system';
+import type { ChatRole, ChatSource, ChatToolCall } from './chat-protocol';
+
+/**
+ * Papéis que a thread desenha.
+ *
+ * Apelido, e não tipo próprio: este arquivo declarava `'user' | 'assistant' |
+ * 'system'` palavra por palavra, que era a MESMA união do `chat-thread`. Foi a
+ * primeira duplicação do vocabulário, e é por causa dela que
+ * `chat-protocol.ts` existe. O apelido fica porque o nome já circula nas cinco
+ * stacks; o que ele nomeia agora vem de um lugar só.
+ */
+export type ChatExampleRole = ChatRole;
 
 export type ChatExampleMessage = {
   role: ChatExampleRole;
@@ -21,8 +31,14 @@ export type ChatExampleMessage = {
   author?: string;
   time?: string;
   reasoning?: string;
-  toolCalls?: Array<{ name: string; state: 'running' | 'done' | 'failed'; detail?: string }>;
-  sources?: Array<{ title: string; url: string }>;
+  /**
+   * Sem `pending`: exemplo de demonstração não espera por ninguém.
+   *
+   * `Omit` do `id` porque o exemplo é dado estático — endereço serve a quem
+   * atualiza uma chamada em andamento, e aqui nada anda.
+   */
+  toolCalls?: Array<Omit<ChatToolCall, 'id' | 'state'> & { state: 'running' | 'done' | 'failed' }>;
+  sources?: ChatSource[];
 };
 
 /** A conversa curta: uma pergunta, uma resposta com estrutura, um aviso. */

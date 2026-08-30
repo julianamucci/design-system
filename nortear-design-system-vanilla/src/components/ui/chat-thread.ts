@@ -40,25 +40,39 @@ import { isSafeUrl } from '@shared/primitives/markdown-ast';
 // e nada podia desligá-lo depois. A regra estava escrita e o caminho até ela,
 // não. É o defeito que `update` fecha.
 
-export type ChatRole = 'user' | 'assistant' | 'system';
+/**
+ * O vocabulário vem de `chat-protocol.ts`, e não daqui.
+ *
+ * Ele NASCEU aqui, e por um tempo isso foi certo: com uma peça só, tipo perto
+ * do componente é tipo fácil de achar. Ele já tinha sido copiado uma vez — o
+ * `ChatExampleRole` do `chat-examples.ts` repetia esta união palavra por
+ * palavra —, e a família conversacional tem mais de oitenta peças pela frente
+ * em cinco stacks. Vocabulário duplicado não quebra teste: ele diverge devagar,
+ * e o sintoma é duas peças desenhando o mesmo estado de jeitos diferentes.
+ *
+ * Reexportar, e não redeclarar: o nome público desta stack não muda. O motivo
+ * de `pending` existir separado de `running` — um espera por uma PESSOA, o
+ * outro pela máquina — está escrito lá, uma vez, junto com o critério que
+ * decide se um estado novo merece existir.
+ */
+import type {
+  ChatRole,
+  ChatSource,
+  ToolCallState,
+  ChatToolCall as ChatToolCallData,
+} from '@shared/primitives/chat-protocol';
+// Importa E reexporta: `export … from` reexporta sem trazer o nome ao escopo,
+// e este arquivo usa os três logo abaixo.
+export type { ChatRole, ChatSource, ToolCallState };
 
 /**
- * Estados de uma chamada de ferramenta.
+ * A chamada de ferramenta, com o espaço de interface desta stack.
  *
- * `pending` é a espera por uma PESSOA, e não pela máquina: a ferramenta foi
- * proposta e ainda não foi autorizada. Ela existe separada de `running` porque
- * as duas se parecem na tela e são coisas opostas — numa, quem está devendo
- * resposta é o sistema; na outra, quem lê.
+ * A forma dos DADOS é compartilhada; o que fica aqui é o que não pode ser: o
+ * tipo do espaço que quem consome preenche. No protocolo ele não cabe, porque
+ * lá não há DOM — e é justamente essa ausência que faz o módulo servir às cinco.
  */
-export type ToolCallState = 'pending' | 'running' | 'done' | 'failed';
-
-export interface ChatToolCall {
-  /** Endereço da chamada. Sem ele, `update` não tem como alcançá-la. */
-  id?: string;
-  name: string;
-  state: ToolCallState;
-  /** Detalhe da chamada — argumentos, resultado, erro. Texto simples. */
-  detail?: string;
+export interface ChatToolCall extends ChatToolCallData {
   /**
    * Controles de autorização, quando a chamada espera por uma pessoa.
    *
@@ -67,11 +81,6 @@ export interface ChatToolCall {
    * `chat-thread.css`.
    */
   approval?: HTMLElement[];
-}
-
-export interface ChatSource {
-  title: string;
-  url: string;
 }
 
 export interface ChatMessageOptions {
