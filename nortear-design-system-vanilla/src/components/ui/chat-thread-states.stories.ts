@@ -42,6 +42,41 @@ async function scrollTo(viewport: HTMLElement, top: number) {
   await waitFor(() => expect(viewport.scrollTop).toBe(top));
 }
 
+export const OpensAtEnd: Story = {
+  parameters: { covers: ['functional.item10'] },
+  render: () =>
+    createChatThread({
+      messages: paraMensagens(CHAT_LONGA),
+      labels: chatLabels(),
+      size: 'md',
+    }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="chat-thread"]')!;
+    const viewport = root.querySelector<HTMLElement>('.nds-chat-thread-viewport')!;
+
+    await step('A conversa abre no FIM, e não no primeiro turno', async () => {
+      // O estado inicial sempre DISSE que a conversa está no fim; até o
+      // observador de tamanho existir, ninguém levava a rolagem lá. O sintoma
+      // aparecia na demonstração: a conversa abria no turno mais antigo e o
+      // botão nascia visível, oferecendo ir para onde ela devia ter aberto.
+      //
+      // A espera é pelo primeiro layout: na construção o `scrollHeight` ainda
+      // é zero, e é o crescimento que dispara a ancoragem. Leitura PURA dentro
+      // do `waitFor`.
+      await waitFor(() =>
+        expect(viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop)
+          .toBeLessThanOrEqual(32),
+      );
+      await expect(viewport.scrollTop).toBeGreaterThan(0);
+    });
+
+    await step('E o botão de ir ao fim não aparece', async () => {
+      await expect(canvas.queryByRole('button', { name: /ir para o fim/i })).toBeNull();
+    });
+  },
+};
+
 export const ReadingBack: Story = {
   parameters: {
     covers: [

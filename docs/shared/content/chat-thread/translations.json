@@ -473,6 +473,11 @@
           "action": "Declarar erro de execução",
           "result": "A faixa aparece fora da lista de mensagens, e some quando o erro é limpo.",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Abrir uma conversa que transborda",
+          "result": "Ela abre no FIM, mostrando o último turno, e o botão de ir ao fim não aparece.",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1014,6 +1019,11 @@
           "action": "Declare a run error",
           "result": "The strip appears outside the message list, and leaves when the error is cleared.",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Open a conversation that overflows",
+          "result": "It opens at the END, showing the last turn, and the jump-to-end button does not appear.",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1554,6 +1564,11 @@
         "item9": {
           "action": "Declarar error de ejecución",
           "result": "La franja aparece fuera de la lista de mensajes, y desaparece cuando el error se limpia.",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Abrir una conversación que desborda",
+          "result": "Se abre en el FINAL, mostrando el último turno, y el botón de ir al final no aparece.",
           "priority": "high"
         }
       },

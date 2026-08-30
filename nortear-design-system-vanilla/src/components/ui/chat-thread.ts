@@ -419,6 +419,27 @@ export function createChatThread(options: ChatThreadOptions): ChatThreadElement 
 
   jump.addEventListener('click', goToEnd);
 
+  /**
+   * Manter o fim colado enquanto se está nele.
+   *
+   * O estado inicial DIZ que a conversa está no fim, e é o que o botão lê —
+   * mas até aqui ninguém tinha levado a rolagem lá. A raiz é devolvida solta:
+   * no momento em que ela é montada, `scrollHeight` ainda é zero, então rolar
+   * na construção não rola nada. O resultado aparecia na tela: a conversa
+   * abria no PRIMEIRO turno, o evento de rolagem corrigia o estado para "não
+   * está no fim", e o botão de ir ao fim nascia visível oferecendo ir para
+   * onde a conversa deveria ter aberto.
+   *
+   * O observador de tamanho resolve os dois casos com a mesma regra: o
+   * primeiro layout é um crescimento de zero para a altura real, e imagem ou
+   * fonte que chega depois é outro. Ele só age quando o estado diz que se está
+   * no fim — quem rolou para trás não é arrastado.
+   */
+  const pinAoFim = () => {
+    if (state.atBottom) viewport.scrollTop = viewport.scrollHeight;
+  };
+  new ResizeObserver(pinAoFim).observe(list);
+
   /** Anúncio único: a resposta pronta, uma vez. */
   const announce = (message: ChatMessageOptions) => {
     if (message.role !== 'assistant') return;

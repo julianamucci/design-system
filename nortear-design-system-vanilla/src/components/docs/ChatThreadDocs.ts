@@ -3,6 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createChatThread } from '@/components/ui/chat-thread';
+import { createSeparator } from '@/components/ui/separator';
 import { chatLabels, paraMensagens } from '@/components/ui/chat-thread.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import chatTranslations from '@shared/content/chat-thread/translations.json';
@@ -173,12 +174,24 @@ export function createChatThreadDocs(): HTMLElement {
             const stack = document.createElement('div');
             stack.className = 'nds-stack nds-w-full';
             stack.dataset.spacing = 'lg';
-            stack.append(
+            // Separador ENTRE os exemplos, e não em volta de cada um.
+            //
+            // A thread não tem moldura própria — em uso real ela mora dentro
+            // de um painel que dá o quadro. Empilhadas na demonstração, quatro
+            // delas viram uma sopa: o rótulo de uma encosta no último turno da
+            // anterior, e não dá para dizer onde uma acaba. O separador é
+            // decorativo de propósito: quem dá a estrutura para quem ouve é a
+            // legenda de cada exemplo, não a linha.
+            const examples = [
               example('demonstration.labels.conversation', CHAT_CONVERSA),
               example('demonstration.labels.tools', CHAT_COM_FERRAMENTAS),
               example('demonstration.labels.streaming', CHAT_EM_STREAMING, true),
               example('demonstration.labels.failed', CHAT_FERRAMENTA_FALHOU),
-            );
+            ];
+            examples.forEach((el, i) => {
+              if (i > 0) stack.appendChild(createSeparator());
+              stack.appendChild(el);
+            });
             return stack;
           },
         });
@@ -447,7 +460,7 @@ export interface ChatThreadOptions {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({
               action: toPlainText(t(`testes.functional.item${i}.action`)),
               result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
