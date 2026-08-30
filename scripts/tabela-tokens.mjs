@@ -48,6 +48,32 @@ if (!slug || slug.startsWith('--')) {
   process.exit(2);
 }
 
+/**
+ * Slugs cujas classes NÃO começam por `.nds-<slug>`.
+ *
+ * A regra geral vale para 58 dos 58 componentes antigos, e o instrumento
+ * dependia dela em silêncio: quando o prefixo divergia, ele não achava folha
+ * nenhuma e imprimia "(nenhuma)" — que se lê como "não há token a conferir",
+ * e não como "não sei onde procurar". Instrumento cego parecendo instrumento
+ * limpo é o mesmo defeito de portão sem dentes.
+ *
+ * A divergência é legítima e vai crescer: a guideline 17 manda UMA FOLHA POR
+ * FAMÍLIA, então o slug vem do catálogo (`composer-model-picker`) e a classe
+ * vem da família (`.nds-composer-model`). As duas nomeações estão certas.
+ *
+ * Lista fechada de propósito — declarar é decidir; adivinhar por prefixo comum
+ * faria `composer-voice` varrer as classes de `composer-context`.
+ */
+const PREFIXO_POR_SLUG = {
+  'composer-model-picker': '.nds-composer-model',
+  'draft-restore': '.nds-composer-draft',
+  'message-queue': '.nds-composer-queue',
+};
+
+/** Os prefixos de classe que ESTE slug pode usar. */
+const PREFIXOS = [`.nds-${slug}`, PREFIXO_POR_SLUG[slug]].filter(Boolean);
+const usaPrefixo = (seletor) => PREFIXOS.some((p) => seletor.includes(p));
+
 /* ── Índice das folhas ─────────────────────────────────────────────────────
  * Divide o CSS em regras folha e guarda, por peça de seletor, os tokens que a
  * regra lê (`var(--x)`) ou declara (`--x:`), com o arquivo e a linha. */
@@ -86,7 +112,7 @@ for (const arquivo of readdirSync(DIR_CSS).filter((f) => f.endsWith('.css'))) {
   let temSlug = false;
   for (const { sel, linha, body } of regrasDe(css)) {
     if (!sel || sel.startsWith('@')) continue;
-    if (sel.includes(`.nds-${slug}`)) temSlug = true;
+    if (usaPrefixo(sel)) temSlug = true;
     const tokens = new Set();
     for (const m of body.matchAll(/var\(\s*(--[A-Za-z0-9-]+)/g)) tokens.add(m[1]);
     for (const m of body.matchAll(/(?:^|[;{\s])(--[A-Za-z0-9-]+)\s*:/g)) tokens.add(m[1]);
@@ -246,7 +272,7 @@ const lidosPelaFolha = new Map(); // token -> Set(seletor)
 for (const [peca, itens] of porSeletor) {
   for (const { token, arquivo } of itens) {
     if (!folhasDoSlug.includes(arquivo)) continue;
-    if (!peca.includes(`.nds-${slug}`)) continue;
+    if (!usaPrefixo(peca)) continue;
     if (!lidosPelaFolha.has(token)) lidosPelaFolha.set(token, new Set());
     lidosPelaFolha.get(token).add(peca);
   }
@@ -317,7 +343,7 @@ if (comoJson) {
 }
 
 console.log(`\n# tabela de tokens — ${slug}`);
-console.log(`folha(s) com seletor .nds-${slug}: ${folhasDoSlug.join(', ') || '(nenhuma)'}`);
+console.log(`folha(s) com seletor ${PREFIXOS.join(' ou ')}: ${folhasDoSlug.join(', ') || '(nenhuma)'}`);
 
 console.log(`\n## 1. linhas que NÃO fecham com a folha (${problemas.length})`);
 if (!problemas.length) console.log('   nenhuma');
