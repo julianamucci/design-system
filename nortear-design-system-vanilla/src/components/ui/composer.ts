@@ -1,5 +1,7 @@
 import { cn } from '@/lib/utils';
 import { createButton } from './button';
+import { createComposerAttachments, type ComposerAttachmentLabels } from './composer-attachments';
+import type { Attachment } from '@shared/primitives/chat-protocol';
 import {
   createTriggerPopover,
   type TriggerPopoverLabels,
@@ -76,6 +78,17 @@ export interface ComposerOptions {
   triggers?: TriggerSource[];
   /** Textos do seletor. Obrigatórios quando há gatilho, porque são texto de tela. */
   triggerLabels?: TriggerPopoverLabels;
+  /**
+   * Os arquivos que vão junto com a mensagem.
+   *
+   * O composer os DESENHA e avisa quando alguém pede para remover; subir,
+   * validar e remover de verdade é de quem consome.
+   */
+  attachments?: Attachment[];
+  /** Textos da fila de anexos. Obrigatórios quando há anexo. */
+  attachmentLabels?: ComposerAttachmentLabels;
+  /** Alguém pediu para remover um anexo. */
+  onRemoveAttachment?: (attachment: Attachment) => void;
   /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem consome. */
   onSubmit?: (value: string) => void;
   /** Alguém pediu para interromper o que está sendo gerado. */
@@ -128,6 +141,9 @@ export function createComposer(options: ComposerOptions): ComposerElement {
     railStart = [],
     triggers = [],
     triggerLabels,
+    attachments = [],
+    attachmentLabels,
+    onRemoveAttachment,
     onSubmit,
     onStop,
     onInput,
@@ -157,6 +173,16 @@ export function createComposer(options: ComposerOptions): ComposerElement {
   input.setAttribute('aria-label', labels.input);
   if (maxLength !== undefined) input.maxLength = maxLength;
   if (disabled) input.disabled = true;
+
+  if (attachments.length && attachmentLabels) {
+    field.appendChild(
+      createComposerAttachments({
+        attachments,
+        labels: attachmentLabels,
+        onRemove: onRemoveAttachment,
+      }),
+    );
+  }
 
   field.appendChild(input);
 

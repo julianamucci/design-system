@@ -340,3 +340,123 @@
   font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
 }
+
+/* ── Anexos ───────────────────────────────────────────────────────────────────
+ *
+ * A fila de arquivos que vai junto com a mensagem, acima do campo e dentro da
+ * mesma moldura — eles fazem parte do que está sendo escrito, e uma fila fora
+ * da moldura pareceria uma lista de outra coisa.
+ *
+ *   <div class="nds-composer-field">
+ *     <ul class="nds-composer-attachments">
+ *       <li class="nds-composer-attachment" data-state="uploading" aria-busy="true">
+ *         <span class="nds-composer-attachment-name">planta.pdf</span>
+ *         <span class="nds-composer-attachment-meta">2,4 MB · Enviando</span>
+ *         <span class="nds-composer-attachment-bar" aria-hidden="true">
+ *           <span class="nds-composer-attachment-bar-fill"></span>
+ *         </span>
+ *         <button class="nds-button" data-slot="composer-attachment-remove">…</button>
+ *       </li>
+ *     </ul>
+ *     <textarea class="nds-composer-input"></textarea>
+ *   </div>
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. A BARRA DE PROGRESSO É DECORATIVA, e o estado é TEXTO. A barra muda a cada
+ *    instante, e é a mesma armadilha do contador de caracteres e do relógio do
+ *    media player: número que se reanuncia torna a tela impossível de ouvir.
+ *    Quem lê com leitor de tela recebe a palavra — "Enviando", "Falhou" —, que
+ *    é o que decide o que fazer. Enquanto sobe, o item é `aria-busy`.
+ * 2. O BOTÃO DE REMOVER DIZ O QUE REMOVE. Uma fila de três botões chamados
+ *    "Remover" é indistinguível por audição; o nome acessível leva o nome do
+ *    arquivo. É a regra 7 da guideline 17 no caso em que ela mais escorrega.
+ * 3. A FILA É UMA LISTA de verdade. É o que faz o leitor de tela anunciar
+ *    quantos anexos há antes de percorrê-los.
+ * 4. ESTADO NUNCA É SÓ COR. O anexo que falhou traz a palavra junto da cor, e
+ *    a cor da borda sozinha não descreve nada para quem não a percebe.
+ * 5. ALVO DE TOQUE ≥ 24px no botão de remover (WCAG 2.5.8).
+ *
+ * O tamanho do arquivo é convertido por `@shared/primitives/file-size`, que
+ * decide mil e vinte e quatro, as casas decimais e o limiar; a PALAVRA da
+ * unidade vem da `translations.json`, porque unidade é texto de interface.
+ */
+
+.nds-composer-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  padding-block-start: var(--spacing-2);
+  padding-inline: var(--spacing-2);
+  list-style: none;
+}
+
+.nds-composer-attachment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5);
+  max-inline-size: 16rem;
+
+  background-color: hsl(var(--muted) / 0.4);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  font-size: var(--text-label);
+}
+
+/* O que falhou muda a BORDA e traz a palavra no texto de apoio — a cor sozinha
+ * não descreve estado (WCAG 1.4.1). */
+.nds-composer-attachment[data-state="failed"] {
+  border-color: hsl(var(--destructive));
+}
+
+.nds-composer-attachment-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: hsl(var(--foreground));
+}
+
+.nds-composer-attachment-meta {
+  flex-shrink: 0;
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+.nds-composer-attachment[data-state="failed"] .nds-composer-attachment-meta {
+  color: hsl(var(--destructive));
+}
+
+/* A barra de progresso: decorativa, e por isso `aria-hidden` no componente.
+ * Fica no rodapé do chip para não roubar largura do nome, que é o que
+ * identifica o arquivo. */
+.nds-composer-attachment-bar {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background-color: hsl(var(--border));
+  border-end-start-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.nds-composer-attachment-bar-fill {
+  display: block;
+  block-size: 100%;
+  inline-size: var(--nds-attachment-progress, 0%);
+  background-color: hsl(var(--primary));
+  transition: inline-size var(--duration-fast);
+}
+
+/* Alvo de toque (WCAG 2.5.8). Medida de ÁREA num botão de ícone, que não tem
+ * texto para crescer — não conflita com a regra de altura de primitivo. */
+.nds-composer-attachments .nds-button {
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}

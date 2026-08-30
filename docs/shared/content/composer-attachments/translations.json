@@ -1,0 +1,1412 @@
+{
+  "pt-BR": {
+    "title": "Anexos do composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A fila de arquivos que vai junto com a mensagem: nome, tamanho, estado, e o botão que tira cada um dela.",
+    "seo": {
+      "title": "Anexos do composer — fila de arquivos da mensagem",
+      "description": "Fila de anexos do campo de mensagem, com estado em palavra e barra de progresso decorativa. O botão de remover diz qual arquivo remove, e o progresso nunca se reanuncia."
+    },
+    "labels": {
+      "list": "Anexos",
+      "remove": "Remover {name}",
+      "state": {
+        "pending": "Na fila",
+        "uploading": "Enviando",
+        "ready": "Pronto",
+        "failed": "Falhou"
+      },
+      "unit": {
+        "byte": "B",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "queue": "A fila, com os quatro estados",
+        "uploading": "Enviando, com progresso",
+        "failed": "O que falhou",
+        "withField": "Junto do campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A fila mora dentro da mesma moldura do campo: os anexos fazem parte do que está sendo escrito, e uma fila fora dela pareceria uma lista de outra coisa.",
+      "item2": "É uma lista de verdade, e é isso que faz o leitor de tela anunciar quantos anexos há antes de percorrê-los.",
+      "item3": "Cada item traz o nome à esquerda e o apoio à direita: tamanho e estado, nessa ordem.",
+      "item4": "A barra de progresso fica no rodapé do item, para não roubar largura do nome — que é o que identifica o arquivo.",
+      "item5": "O botão de remover carrega o nome do arquivo no nome acessível: uma fila de botões iguais é indistinguível por audição.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-attachments\" aria-label=\"Anexos\">\n    <li class=\"nds-composer-attachment\" data-state=\"uploading\" aria-busy=\"true\">\n      <span class=\"nds-composer-attachment-name\">planta.pdf</span>\n      <span class=\"nds-composer-attachment-meta\">2,4 MB · Enviando</span>\n      <span class=\"nds-composer-attachment-bar\" aria-hidden=\"true\">\n        <span class=\"nds-composer-attachment-bar-fill\"></span>\n      </span>\n      <button class=\"nds-button\" data-slot=\"composer-attachment-remove\"\n              aria-label=\"Remover planta.pdf\">×</button>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para o que vai junto com a mensagem, e não para uma biblioteca de arquivos.",
+        "item2": "Mostre o estado em palavra, sempre — a barra é para os olhos.",
+        "item3": "Deixe o tamanho de fora quando não souber: um zero inventado é pior que nenhum número.",
+        "item4": "Remova de verdade só depois de o pedido chegar a quem sobe o arquivo.",
+        "item5": "Deixe o que falhou na fila, com a palavra — tirar sozinho esconde o problema."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Arquivos que vão com a mensagem",
+          "u": "Anexos do composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Lista de arquivos de um projeto",
+          "u": "DataTable",
+          "a": "Ali a lista é o assunto; aqui ela é apêndice do que se escreve."
+        },
+        "item3": {
+          "s": "Progresso de uma tarefa longa",
+          "u": "Progress",
+          "a": "Aquele é o assunto da tela; esta barra é apoio de um item de uma fila."
+        },
+        "item4": {
+          "s": "Escolher um arquivo do disco",
+          "u": "Input",
+          "a": "A escolha é do campo de arquivo; esta fila mostra o que já foi escolhido."
+        },
+        "item5": {
+          "s": "Imagem gerada dentro da resposta",
+          "u": "ChatThread",
+          "a": "Aquilo é o que a resposta trouxe; isto é o que a pergunta leva."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "state": {
+            "name": "Estado",
+            "format": "Uma palavra, no que está acontecendo",
+            "good": "Enviando",
+            "bad": "Aguarde, processando seu arquivo"
+          },
+          "remove": {
+            "name": "Botão de remover",
+            "format": "Verbo mais o nome do arquivo",
+            "good": "Remover planta.pdf",
+            "bad": "Remover"
+          },
+          "unit": {
+            "name": "Unidade de tamanho",
+            "format": "Sigla curta, sem ponto",
+            "good": "2,4 MB",
+            "bad": "2516582 bytes"
+          },
+          "failed": {
+            "name": "Falha",
+            "format": "O que houve, não o que a pessoa fez",
+            "good": "Falhou",
+            "bad": "Arquivo inválido"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Ponha o nome do arquivo no botão que o remove.",
+        "item2": "Diga o estado por escrito, ao lado do tamanho.",
+        "item3": "Deixe a barra ser só desenho.",
+        "item4": "Marque como ocupado o item que ainda está subindo."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não faça da barra uma região viva: ela muda a cada instante.",
+        "item2": "Não use só a cor da borda para dizer que algo falhou.",
+        "item3": "Não invente um tamanho quando não souber.",
+        "item4": "Não remova o item sozinho ao receber o clique."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O botão de remover diz qual arquivo remove.",
+        "dont": "Três botões chamados \"Remover\" são o mesmo botão para quem ouve a tela."
+      },
+      "pair2": {
+        "do": "O estado aparece em palavra, junto do tamanho.",
+        "dont": "A barra sozinha não diz nada a quem não a vê, e a cor da borda também não."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  attachmentLabels,\n  attachments: arquivos,\n  onRemoveAttachment: (anexo) => remover(anexo.id),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  attachmentLabels={attachmentLabels}\n  attachments={arquivos}\n  onRemoveAttachment={(anexo) => remover(anexo.id)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :attachment-labels=\"attachmentLabels\"\n  :attachments=\"arquivos\"\n  @remove-attachment=\"remover\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {attachmentLabels}\n  attachments={arquivos}\n  onRemoveAttachment={(anexo) => remover(anexo.id)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [attachmentLabels]=\"attachmentLabels\"\n  [attachments]=\"arquivos()\"\n  (removeAttachment)=\"remover($event)\"\n/>"
+      },
+      "withProgress": "Com progresso",
+      "withProgressCode": {
+        "web": "// O progresso é de quem sobe o arquivo. O componente desenha o que recebe.\n{ id: 'a1', name: 'planta.pdf', size: 2516582, state: 'uploading', progress: 0.4 }\n\n// Terminou: o estado muda, e a barra some junto.\n{ id: 'a1', name: 'planta.pdf', size: 2516582, state: 'ready' }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "pending": {
+        "label": "Na fila",
+        "trigger": "O arquivo foi escolhido e ainda não começou a subir.",
+        "behavior": "O item já ocupa lugar na tela, e ainda não tem barra."
+      },
+      "uploading": {
+        "label": "Enviando",
+        "trigger": "Quem consome informa o progresso.",
+        "behavior": "A barra aparece no rodapé do item, e o item se declara ocupado."
+      },
+      "ready": {
+        "label": "Pronto",
+        "trigger": "O arquivo terminou de subir.",
+        "behavior": "A barra some e a palavra muda; o item deixa de estar ocupado."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "O envio não terminou.",
+        "behavior": "A borda e a palavra mudam juntas — cor sozinha não descreve estado."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "attachments": {
+          "name": "attachments",
+          "type": "Attachment[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Os arquivos que vão com a mensagem. Sem nenhum, a fila não existe."
+        },
+        "attachmentLabels": {
+          "name": "attachmentLabels",
+          "type": "ComposerAttachmentLabels",
+          "default": "—",
+          "required": "Não",
+          "description": "O texto da fila: nome dela, o do botão de remover, a palavra de cada estado e a de cada unidade. Obrigatório quando há anexo."
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome do arquivo. É ele que identifica o item, e é ele que entra no botão de remover."
+        },
+        "size": {
+          "name": "size",
+          "type": "number",
+          "default": "—",
+          "required": "Não",
+          "description": "Bytes. Ausente quando não se sabe — e aí não há frase, porque um zero inventado é pior que nenhum número."
+        },
+        "state": {
+          "name": "state",
+          "type": "'pending' | 'uploading' | 'ready' | 'failed'",
+          "default": "—",
+          "required": "Sim",
+          "description": "Em que ponto o arquivo está. É a palavra dele que chega a quem ouve a tela."
+        },
+        "progress": {
+          "name": "progress",
+          "type": "number",
+          "default": "—",
+          "required": "Não",
+          "description": "De zero a um. Só faz sentido enquanto sobe, e desenha apenas a barra — não é anunciado."
+        },
+        "onRemoveAttachment": {
+          "name": "onRemoveAttachment",
+          "type": "(anexo) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para remover, e o anexo vem junto. Remover de verdade é de quem sobe o arquivo."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O anexo é dado, e o componente não sabe o que ele significa. Quem consome decide o que pode ser anexado, quando sobe, e o que fazer quando falha — o componente desenha a fila e avisa que alguém pediu para tirar um item dela.",
+      "extensibilityCode": {
+        "web": "// O anexo é DADO, e o componente não sabe o que ele significa.\n// Quem consome decide o que pode ser anexado, quando sobe e o que fazer\n// quando falha.\n{\n  id: 'a1',\n  name: 'planta.pdf',\n  mediaType: 'application/pdf',\n  size: 2516582,      // convertido por @shared/primitives/file-size\n  state: 'failed',    // a palavra vem dos rótulos, e é o que se ouve\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-attachment",
+          "description": "Fundo do item."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-attachment",
+          "description": "Borda do item e trilho da barra."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-attachment",
+          "description": "Arredondamento do item."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-attachment-name",
+          "description": "Nome do arquivo."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-attachment-meta",
+          "description": "Tamanho e estado."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-attachment[data-state=\"failed\"]",
+          "description": "Borda e texto do que falhou — junto da palavra, nunca sozinho."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-composer-attachment-bar-fill",
+          "description": "Preenchimento da barra de progresso."
+        },
+        "durationFast": {
+          "token": "--duration-fast",
+          "value": ".nds-composer-attachment-bar-fill",
+          "description": "Transição do preenchimento."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-attachment {\n  max-inline-size: 20rem;\n}\n\n/* A barra lê o progresso de uma custom property, e não de largura em estilo\n   embutido: o valor é dado de runtime, e a folha decide como ele vira\n   desenho. */\n.nds-composer-attachment-bar-fill {\n  background-color: hsl(var(--primary));\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O estado chega em palavra, a barra é só desenho, e cada botão de remover diz qual arquivo remove.",
+      "items": {
+        "item1": "A fila é uma lista, e o leitor de tela anuncia quantos anexos há antes de percorrê-los.",
+        "item2": "A barra de progresso é escondida de quem ouve: um número que muda a cada instante torna a tela impossível de usar por audição.",
+        "item3": "O item que ainda sobe se declara ocupado, e é assim que a espera é comunicada sem repetir número.",
+        "item4": "O botão de remover carrega o nome do arquivo — sem ele, uma fila de botões iguais é um botão só.",
+        "item5": "O que falhou traz a palavra junto da cor, porque cor sozinha não descreve estado."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Percorre os botões de remover, um por anexo.",
+        "enter": "Aciona o botão sob o foco.",
+        "arrows": "Não fazem nada aqui: a fila é uma lista de leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A fila tem nome próprio, para se distinguir de outras listas da tela.",
+        "item2": "aria-busy marca o item que ainda sobe.",
+        "item3": "aria-hidden tira a barra do que é lido em voz."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A fila é anunciada com o nome e a quantidade de itens.",
+        "item2": "Cada item é lido como nome, tamanho e estado, nessa ordem.",
+        "item3": "O progresso não é lido em momento nenhum."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo em que a fila vive."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Quando o progresso é o assunto da tela, e não apoio de um item."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Quando o que se mostra é rótulo, e não arquivo."
+        },
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "Onde a mensagem com os anexos vai parar."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A conversão de bytes vive num primitivo compartilhado, com três decisões dentro: mil e vinte e quatro em vez de mil, uma casa decimal abaixo de dez, e o limiar exato — mil e vinte e três bytes ficam em bytes.",
+      "item2": "A palavra da unidade não vem do primitivo: unidade é texto de interface e tem três idiomas, então a conta é compartilhada e a frase é montada com o rótulo.",
+      "item3": "O progresso entra por uma propriedade personalizada, e não por largura em estilo embutido: o valor é dado de runtime, e a folha é quem decide como ele vira desenho.",
+      "item4": "O item que falhou fica na fila. Tirá-lo sozinho esconderia o problema de quem precisa decidir o que fazer com ele.",
+      "item5": "Sem tamanho não há frase de tamanho. Quem produz o dado nem sempre sabe quanto o arquivo tem, e um zero ali seria informação inventada."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a fila em si não instrumenta a remoção, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma fila de anexos",
+          "result": "Um item por anexo, na ordem recebida",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar o tamanho em bytes",
+          "result": "Aparece convertido, com a unidade em palavra",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Omitir o tamanho",
+          "result": "Só o estado aparece — nenhum número é inventado",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Passar cada um dos quatro estados",
+          "result": "A palavra do estado aparece no texto de apoio",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar o progresso de um item que sobe",
+          "result": "A barra desenha a fração, e só ela",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Acionar o botão de remover",
+          "result": "Quem consome é avisado, com o anexo junto",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Não passar anexo nenhum",
+          "result": "A fila não existe no documento",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Passar progresso fora da faixa",
+          "result": "A barra fica entre zero e cheia, e não estoura",
+          "priority": "low"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A fila é uma lista, com nome próprio",
+        "item2": "A barra está fora do que é lido em voz e não é região viva",
+        "item3": "O item que sobe se declara ocupado",
+        "item4": "Cada botão de remover carrega o nome do seu arquivo",
+        "item5": "O que falhou traz a palavra, e não só a cor",
+        "item6": "Cada botão de remover tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a fila com os quatro estados",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — na fila",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "Estados — enviando, com a barra",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — pronto",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Estados — falhou",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — junto do campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Composer attachments",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The queue of files that goes along with the message: name, size, state, and the button that takes each one out of it.",
+    "seo": {
+      "title": "Composer attachments — the message file queue",
+      "description": "Attachment queue for the message field, with state in words and a decorative progress bar. The remove button says which file it removes, and progress never re-announces itself."
+    },
+    "labels": {
+      "list": "Attachments",
+      "remove": "Remove {name}",
+      "state": {
+        "pending": "Queued",
+        "uploading": "Uploading",
+        "ready": "Ready",
+        "failed": "Failed"
+      },
+      "unit": {
+        "byte": "B",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "queue": "The queue, with the four states",
+        "uploading": "Uploading, with progress",
+        "failed": "What failed",
+        "withField": "Alongside the field"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The queue lives inside the same frame as the field: attachments are part of what is being written, and a queue outside it would look like a list of something else.",
+      "item2": "It is a real list, and that is what makes the screen reader announce how many attachments there are before going through them.",
+      "item3": "Each item carries the name on the left and the support on the right: size and state, in that order.",
+      "item4": "The progress bar sits at the foot of the item, so as not to steal width from the name — which is what identifies the file.",
+      "item5": "The remove button carries the file name in its accessible name: a queue of identical buttons is indistinguishable by ear.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-attachments\" aria-label=\"Anexos\">\n    <li class=\"nds-composer-attachment\" data-state=\"uploading\" aria-busy=\"true\">\n      <span class=\"nds-composer-attachment-name\">planta.pdf</span>\n      <span class=\"nds-composer-attachment-meta\">2,4 MB · Enviando</span>\n      <span class=\"nds-composer-attachment-bar\" aria-hidden=\"true\">\n        <span class=\"nds-composer-attachment-bar-fill\"></span>\n      </span>\n      <button class=\"nds-button\" data-slot=\"composer-attachment-remove\"\n              aria-label=\"Remover planta.pdf\">×</button>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it for what goes along with the message, not for a file library.",
+        "item2": "Show the state in words, always — the bar is for the eyes.",
+        "item3": "Leave the size out when it is unknown: an invented zero is worse than no number.",
+        "item4": "Only remove for real after the request reaches whoever uploads the file.",
+        "item5": "Leave what failed in the queue, with the word — removing it silently hides the problem."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Files going with the message",
+          "u": "Composer attachments",
+          "a": "—"
+        },
+        "item2": {
+          "s": "A project file list",
+          "u": "DataTable",
+          "a": "There the list is the subject; here it is an appendix to what is written."
+        },
+        "item3": {
+          "s": "Progress of a long task",
+          "u": "Progress",
+          "a": "That one is the subject of the screen; this bar supports one item in a queue."
+        },
+        "item4": {
+          "s": "Picking a file from disk",
+          "u": "Input",
+          "a": "The choice belongs to the file field; this queue shows what was already chosen."
+        },
+        "item5": {
+          "s": "Image generated inside the answer",
+          "u": "ChatThread",
+          "a": "That is what the answer brought; this is what the question carries."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "state": {
+            "name": "State",
+            "format": "One word, on what is happening",
+            "good": "Uploading",
+            "bad": "Please wait, processing your file"
+          },
+          "remove": {
+            "name": "Remove button",
+            "format": "Verb plus the file name",
+            "good": "Remove planta.pdf",
+            "bad": "Remove"
+          },
+          "unit": {
+            "name": "Size unit",
+            "format": "Short abbreviation, no period",
+            "good": "2.4 MB",
+            "bad": "2516582 bytes"
+          },
+          "failed": {
+            "name": "Failure",
+            "format": "What happened, not what the person did",
+            "good": "Failed",
+            "bad": "Invalid file"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Put the file name in the button that removes it.",
+        "item2": "State the state in writing, next to the size.",
+        "item3": "Let the bar be only drawing.",
+        "item4": "Mark as busy the item still uploading."
+      },
+      "dont": {
+        "title": "Do not",
+        "item1": "Do not make the bar a live region: it changes every instant.",
+        "item2": "Do not use border colour alone to say something failed.",
+        "item3": "Do not invent a size when it is unknown.",
+        "item4": "Do not remove the item on your own when the click arrives."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The remove button says which file it removes.",
+        "dont": "Three buttons called \"Remove\" are the same button to whoever hears the screen."
+      },
+      "pair2": {
+        "do": "The state appears in words, next to the size.",
+        "dont": "The bar alone says nothing to whoever cannot see it, and neither does the border colour."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  attachmentLabels,\n  attachments: arquivos,\n  onRemoveAttachment: (anexo) => remover(anexo.id),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  attachmentLabels={attachmentLabels}\n  attachments={arquivos}\n  onRemoveAttachment={(anexo) => remover(anexo.id)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :attachment-labels=\"attachmentLabels\"\n  :attachments=\"arquivos\"\n  @remove-attachment=\"remover\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {attachmentLabels}\n  attachments={arquivos}\n  onRemoveAttachment={(anexo) => remover(anexo.id)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [attachmentLabels]=\"attachmentLabels\"\n  [attachments]=\"arquivos()\"\n  (removeAttachment)=\"remover($event)\"\n/>"
+      },
+      "withProgress": "With progress",
+      "withProgressCode": {
+        "web": "// O progresso é de quem sobe o arquivo. O componente desenha o que recebe.\n{ id: 'a1', name: 'planta.pdf', size: 2516582, state: 'uploading', progress: 0.4 }\n\n// Terminou: o estado muda, e a barra some junto.\n{ id: 'a1', name: 'planta.pdf', size: 2516582, state: 'ready' }"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "pending": {
+        "label": "Queued",
+        "trigger": "The file was chosen and has not started uploading.",
+        "behavior": "The item already takes up space on screen, and has no bar yet."
+      },
+      "uploading": {
+        "label": "Uploading",
+        "trigger": "The consumer reports progress.",
+        "behavior": "The bar appears at the foot of the item, and the item declares itself busy."
+      },
+      "ready": {
+        "label": "Ready",
+        "trigger": "The file finished uploading.",
+        "behavior": "The bar disappears and the word changes; the item stops being busy."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The upload did not finish.",
+        "behavior": "Border and word change together — colour alone does not describe state."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "attachments": {
+          "name": "attachments",
+          "type": "Attachment[]",
+          "default": "—",
+          "required": "No",
+          "description": "The files going with the message. With none, the queue does not exist."
+        },
+        "attachmentLabels": {
+          "name": "attachmentLabels",
+          "type": "ComposerAttachmentLabels",
+          "default": "—",
+          "required": "No",
+          "description": "The queue text: its name, the remove button, the word for each state and for each unit. Required when there is an attachment."
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The file name. It identifies the item, and it goes into the remove button."
+        },
+        "size": {
+          "name": "size",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Bytes. Absent when unknown — and then there is no sentence, because an invented zero is worse than no number."
+        },
+        "state": {
+          "name": "state",
+          "type": "'pending' | 'uploading' | 'ready' | 'failed'",
+          "default": "—",
+          "required": "Yes",
+          "description": "Where the file stands. It is its word that reaches whoever hears the screen."
+        },
+        "progress": {
+          "name": "progress",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "From zero to one. It only makes sense while uploading, and draws only the bar — it is not announced."
+        },
+        "onRemoveAttachment": {
+          "name": "onRemoveAttachment",
+          "type": "(attachment) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to remove, and the attachment comes along. Removing for real belongs to whoever uploads the file."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The attachment is data, and the component does not know what it means. The consumer decides what can be attached, when it uploads, and what to do when it fails — the component draws the queue and reports that someone asked to take an item out of it.",
+      "extensibilityCode": {
+        "web": "// O anexo é DADO, e o componente não sabe o que ele significa.\n// Quem consome decide o que pode ser anexado, quando sobe e o que fazer\n// quando falha.\n{\n  id: 'a1',\n  name: 'planta.pdf',\n  mediaType: 'application/pdf',\n  size: 2516582,      // convertido por @shared/primitives/file-size\n  state: 'failed',    // a palavra vem dos rótulos, e é o que se ouve\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-attachment",
+          "description": "Item background."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-attachment",
+          "description": "Item border and bar track."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-attachment",
+          "description": "Item rounding."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-attachment-name",
+          "description": "File name."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-attachment-meta",
+          "description": "Size and state."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-attachment[data-state=\"failed\"]",
+          "description": "Border and text of what failed — together with the word, never alone."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-composer-attachment-bar-fill",
+          "description": "Progress bar fill."
+        },
+        "durationFast": {
+          "token": "--duration-fast",
+          "value": ".nds-composer-attachment-bar-fill",
+          "description": "Fill transition."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-composer-attachment {\n  max-inline-size: 20rem;\n}\n\n/* A barra lê o progresso de uma custom property, e não de largura em estilo\n   embutido: o valor é dado de runtime, e a folha decide como ele vira\n   desenho. */\n.nds-composer-attachment-bar-fill {\n  background-color: hsl(var(--primary));\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The state arrives in words, the bar is only drawing, and each remove button says which file it removes.",
+      "items": {
+        "item1": "The queue is a list, and the screen reader announces how many attachments there are before going through them.",
+        "item2": "The progress bar is hidden from listeners: a number changing every instant makes the screen impossible to use by ear.",
+        "item3": "The item still uploading declares itself busy, and that is how the wait is communicated without repeating a number.",
+        "item4": "The remove button carries the file name — without it, a queue of identical buttons is a single button.",
+        "item5": "What failed carries the word along with the colour, because colour alone does not describe state."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Moves through the remove buttons, one per attachment.",
+        "enter": "Activates the button under focus.",
+        "arrows": "They do nothing here: the queue is a reading list, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The queue has its own name, to distinguish it from other lists on screen.",
+        "item2": "aria-busy marks the item still uploading.",
+        "item3": "aria-hidden takes the bar out of what is read aloud."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The queue is announced with its name and the number of items.",
+        "item2": "Each item is read as name, size and state, in that order.",
+        "item3": "Progress is never read."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field the queue lives in."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "When progress is the subject of the screen, not support for an item."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "When what is shown is a label, not a file."
+        },
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "Where the message with the attachments ends up."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The byte conversion lives in a shared primitive, with three decisions inside it: 1024 rather than 1000, one decimal below ten, and the exact threshold — 1023 bytes stay in bytes.",
+      "item2": "The unit word does not come from the primitive: a unit is interface text and has three languages, so the maths is shared and the sentence is assembled with the label.",
+      "item3": "Progress goes in through a custom property, not through width in an inline style: the value is runtime data, and the stylesheet decides how it becomes drawing.",
+      "item4": "The failed item stays in the queue. Removing it automatically would hide the problem from whoever needs to decide what to do about it.",
+      "item5": "With no size there is no size sentence. Whoever produces the data does not always know how large the file is, and a zero there would be invented information."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the queue itself does not instrument removal, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a queue of attachments",
+          "result": "One item per attachment, in the order received",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass the size in bytes",
+          "result": "It appears converted, with the unit in words",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Omit the size",
+          "result": "Only the state appears — no number is invented",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Pass each of the four states",
+          "result": "The state word appears in the support text",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass the progress of an uploading item",
+          "result": "The bar draws the fraction, and only it",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Activate the remove button",
+          "result": "The consumer is notified, with the attachment along",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass no attachment at all",
+          "result": "The queue does not exist in the document",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Pass progress out of range",
+          "result": "The bar stays between zero and full, and does not overflow",
+          "priority": "low"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The queue is a list, with its own name",
+        "item2": "The bar is out of what is read aloud and is not a live region",
+        "item3": "The uploading item declares itself busy",
+        "item4": "Each remove button carries its own file name",
+        "item5": "What failed carries the word, not just the colour",
+        "item6": "Each remove button has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the queue with the four states",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — queued",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "States — uploading, with the bar",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — ready",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "States — failed",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — alongside the field",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Adjuntos del composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La fila de archivos que va junto con el mensaje: nombre, tamaño, estado, y el botón que saca a cada uno de ella.",
+    "seo": {
+      "title": "Adjuntos del composer — fila de archivos del mensaje",
+      "description": "Fila de adjuntos del campo de mensaje, con estado en palabra y barra de progreso decorativa. El botón de eliminar dice qué archivo elimina, y el progreso nunca se reanuncia."
+    },
+    "labels": {
+      "list": "Adjuntos",
+      "remove": "Eliminar {name}",
+      "state": {
+        "pending": "En cola",
+        "uploading": "Enviando",
+        "ready": "Listo",
+        "failed": "Falló"
+      },
+      "unit": {
+        "byte": "B",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "queue": "La fila, con los cuatro estados",
+        "uploading": "Enviando, con progreso",
+        "failed": "Lo que falló",
+        "withField": "Junto al campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La fila vive dentro del mismo marco del campo: los adjuntos son parte de lo que se escribe, y una fila fuera parecería una lista de otra cosa.",
+      "item2": "Es una lista de verdad, y eso hace que el lector de pantalla anuncie cuántos adjuntos hay antes de recorrerlos.",
+      "item3": "Cada elemento lleva el nombre a la izquierda y el apoyo a la derecha: tamaño y estado, en ese orden.",
+      "item4": "La barra de progreso está al pie del elemento, para no robar ancho al nombre — que es lo que identifica el archivo.",
+      "item5": "El botón de eliminar lleva el nombre del archivo en su nombre accesible: una fila de botones iguales es indistinguible de oído.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-attachments\" aria-label=\"Anexos\">\n    <li class=\"nds-composer-attachment\" data-state=\"uploading\" aria-busy=\"true\">\n      <span class=\"nds-composer-attachment-name\">planta.pdf</span>\n      <span class=\"nds-composer-attachment-meta\">2,4 MB · Enviando</span>\n      <span class=\"nds-composer-attachment-bar\" aria-hidden=\"true\">\n        <span class=\"nds-composer-attachment-bar-fill\"></span>\n      </span>\n      <button class=\"nds-button\" data-slot=\"composer-attachment-remove\"\n              aria-label=\"Remover planta.pdf\">×</button>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para lo que va junto con el mensaje, no para una biblioteca de archivos.",
+        "item2": "Muestra el estado en palabra, siempre — la barra es para los ojos.",
+        "item3": "Deja el tamaño fuera cuando no lo sepas: un cero inventado es peor que ningún número.",
+        "item4": "Elimina de verdad solo después de que la petición llegue a quien sube el archivo.",
+        "item5": "Deja lo que falló en la fila, con la palabra — quitarlo solo esconde el problema."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Archivos que van con el mensaje",
+          "u": "Adjuntos del composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Lista de archivos de un proyecto",
+          "u": "DataTable",
+          "a": "Allí la lista es el asunto; aquí es apéndice de lo que se escribe."
+        },
+        "item3": {
+          "s": "Progreso de una tarea larga",
+          "u": "Progress",
+          "a": "Aquel es el asunto de la pantalla; esta barra apoya un elemento de una fila."
+        },
+        "item4": {
+          "s": "Elegir un archivo del disco",
+          "u": "Input",
+          "a": "La elección es del campo de archivo; esta fila muestra lo ya elegido."
+        },
+        "item5": {
+          "s": "Imagen generada dentro de la respuesta",
+          "u": "ChatThread",
+          "a": "Aquello es lo que trajo la respuesta; esto es lo que lleva la pregunta."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "state": {
+            "name": "Estado",
+            "format": "Una palabra, sobre lo que ocurre",
+            "good": "Enviando",
+            "bad": "Espera, procesando tu archivo"
+          },
+          "remove": {
+            "name": "Botón de eliminar",
+            "format": "Verbo más el nombre del archivo",
+            "good": "Eliminar planta.pdf",
+            "bad": "Eliminar"
+          },
+          "unit": {
+            "name": "Unidad de tamaño",
+            "format": "Sigla corta, sin punto",
+            "good": "2,4 MB",
+            "bad": "2516582 bytes"
+          },
+          "failed": {
+            "name": "Fallo",
+            "format": "Qué pasó, no qué hizo la persona",
+            "good": "Falló",
+            "bad": "Archivo inválido"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Pon el nombre del archivo en el botón que lo elimina.",
+        "item2": "Di el estado por escrito, junto al tamaño.",
+        "item3": "Deja que la barra sea solo dibujo.",
+        "item4": "Marca como ocupado el elemento que aún sube."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No hagas de la barra una región viva: cambia a cada instante.",
+        "item2": "No uses solo el color del borde para decir que algo falló.",
+        "item3": "No inventes un tamaño cuando no lo sepas.",
+        "item4": "No elimines el elemento por tu cuenta al recibir el clic."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El botón de eliminar dice qué archivo elimina.",
+        "dont": "Tres botones llamados \"Eliminar\" son el mismo botón para quien oye la pantalla."
+      },
+      "pair2": {
+        "do": "El estado aparece en palabra, junto al tamaño.",
+        "dont": "La barra sola no dice nada a quien no la ve, y el color del borde tampoco."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  attachmentLabels,\n  attachments: arquivos,\n  onRemoveAttachment: (anexo) => remover(anexo.id),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  attachmentLabels={attachmentLabels}\n  attachments={arquivos}\n  onRemoveAttachment={(anexo) => remover(anexo.id)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :attachment-labels=\"attachmentLabels\"\n  :attachments=\"arquivos\"\n  @remove-attachment=\"remover\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {attachmentLabels}\n  attachments={arquivos}\n  onRemoveAttachment={(anexo) => remover(anexo.id)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [attachmentLabels]=\"attachmentLabels\"\n  [attachments]=\"arquivos()\"\n  (removeAttachment)=\"remover($event)\"\n/>"
+      },
+      "withProgress": "Con progreso",
+      "withProgressCode": {
+        "web": "// O progresso é de quem sobe o arquivo. O componente desenha o que recebe.\n{ id: 'a1', name: 'planta.pdf', size: 2516582, state: 'uploading', progress: 0.4 }\n\n// Terminou: o estado muda, e a barra some junto.\n{ id: 'a1', name: 'planta.pdf', size: 2516582, state: 'ready' }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "pending": {
+        "label": "En cola",
+        "trigger": "El archivo fue elegido y aún no empezó a subir.",
+        "behavior": "El elemento ya ocupa lugar en pantalla, y aún no tiene barra."
+      },
+      "uploading": {
+        "label": "Enviando",
+        "trigger": "Quien consume informa el progreso.",
+        "behavior": "La barra aparece al pie del elemento, y el elemento se declara ocupado."
+      },
+      "ready": {
+        "label": "Listo",
+        "trigger": "El archivo terminó de subir.",
+        "behavior": "La barra desaparece y la palabra cambia; el elemento deja de estar ocupado."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "La subida no terminó.",
+        "behavior": "Borde y palabra cambian juntos — el color solo no describe un estado."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "attachments": {
+          "name": "attachments",
+          "type": "Attachment[]",
+          "default": "—",
+          "required": "No",
+          "description": "Los archivos que van con el mensaje. Sin ninguno, la fila no existe."
+        },
+        "attachmentLabels": {
+          "name": "attachmentLabels",
+          "type": "ComposerAttachmentLabels",
+          "default": "—",
+          "required": "No",
+          "description": "El texto de la fila: su nombre, el del botón de eliminar, la palabra de cada estado y de cada unidad. Obligatorio cuando hay adjunto."
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre del archivo. Identifica el elemento, y entra en el botón de eliminar."
+        },
+        "size": {
+          "name": "size",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Bytes. Ausente cuando no se sabe — y entonces no hay frase, porque un cero inventado es peor que ningún número."
+        },
+        "state": {
+          "name": "state",
+          "type": "'pending' | 'uploading' | 'ready' | 'failed'",
+          "default": "—",
+          "required": "Sí",
+          "description": "En qué punto está el archivo. Es su palabra la que llega a quien oye la pantalla."
+        },
+        "progress": {
+          "name": "progress",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "De cero a uno. Solo tiene sentido mientras sube, y dibuja solo la barra — no se anuncia."
+        },
+        "onRemoveAttachment": {
+          "name": "onRemoveAttachment",
+          "type": "(adjunto) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió eliminar, y el adjunto viene con él. Eliminar de verdad es de quien sube el archivo."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El adjunto es dato, y el componente no sabe qué significa. Quien consume decide qué se puede adjuntar, cuándo sube, y qué hacer cuando falla — el componente dibuja la fila y avisa que alguien pidió sacar un elemento de ella.",
+      "extensibilityCode": {
+        "web": "// O anexo é DADO, e o componente não sabe o que ele significa.\n// Quem consome decide o que pode ser anexado, quando sobe e o que fazer\n// quando falha.\n{\n  id: 'a1',\n  name: 'planta.pdf',\n  mediaType: 'application/pdf',\n  size: 2516582,      // convertido por @shared/primitives/file-size\n  state: 'failed',    // a palavra vem dos rótulos, e é o que se ouve\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-attachment",
+          "description": "Fondo del elemento."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-attachment",
+          "description": "Borde del elemento y carril de la barra."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-attachment",
+          "description": "Redondeo del elemento."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-attachment-name",
+          "description": "Nombre del archivo."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-attachment-meta",
+          "description": "Tamaño y estado."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-attachment[data-state=\"failed\"]",
+          "description": "Borde y texto de lo que falló — junto a la palabra, nunca solo."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-composer-attachment-bar-fill",
+          "description": "Relleno de la barra de progreso."
+        },
+        "durationFast": {
+          "token": "--duration-fast",
+          "value": ".nds-composer-attachment-bar-fill",
+          "description": "Transición del relleno."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-attachment {\n  max-inline-size: 20rem;\n}\n\n/* A barra lê o progresso de uma custom property, e não de largura em estilo\n   embutido: o valor é dado de runtime, e a folha decide como ele vira\n   desenho. */\n.nds-composer-attachment-bar-fill {\n  background-color: hsl(var(--primary));\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El estado llega en palabra, la barra es solo dibujo, y cada botón de eliminar dice qué archivo elimina.",
+      "items": {
+        "item1": "La fila es una lista, y el lector de pantalla anuncia cuántos adjuntos hay antes de recorrerlos.",
+        "item2": "La barra de progreso se oculta a quien escucha: un número que cambia a cada instante hace la pantalla imposible de usar de oído.",
+        "item3": "El elemento que aún sube se declara ocupado, y así se comunica la espera sin repetir un número.",
+        "item4": "El botón de eliminar lleva el nombre del archivo — sin él, una fila de botones iguales es un solo botón.",
+        "item5": "Lo que falló lleva la palabra junto al color, porque el color solo no describe un estado."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Recorre los botones de eliminar, uno por adjunto.",
+        "enter": "Acciona el botón bajo el foco.",
+        "arrows": "No hacen nada aquí: la fila es una lista de lectura, no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La fila tiene nombre propio, para distinguirse de otras listas de la pantalla.",
+        "item2": "aria-busy marca el elemento que aún sube.",
+        "item3": "aria-hidden saca la barra de lo que se lee en voz."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La fila se anuncia con su nombre y la cantidad de elementos.",
+        "item2": "Cada elemento se lee como nombre, tamaño y estado, en ese orden.",
+        "item3": "El progreso no se lee en ningún momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo en que vive la fila."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Cuando el progreso es el asunto de la pantalla, no apoyo de un elemento."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Cuando lo que se muestra es una etiqueta, no un archivo."
+        },
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "Donde acaba el mensaje con los adjuntos."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La conversión de bytes vive en un primitivo compartido, con tres decisiones dentro: 1024 en vez de 1000, un decimal por debajo de diez, y el umbral exacto — 1023 bytes se quedan en bytes.",
+      "item2": "La palabra de la unidad no viene del primitivo: la unidad es texto de interfaz y tiene tres idiomas, así que la cuenta es compartida y la frase se arma con la etiqueta.",
+      "item3": "El progreso entra por una propiedad personalizada, y no por ancho en estilo embebido: el valor es dato de runtime, y la hoja decide cómo se vuelve dibujo.",
+      "item4": "El elemento que falló se queda en la fila. Quitarlo solo escondería el problema de quien debe decidir qué hacer con él.",
+      "item5": "Sin tamaño no hay frase de tamaño. Quien produce el dato no siempre sabe cuánto pesa el archivo, y un cero ahí sería información inventada."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la fila en sí no instrumenta la eliminación, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una fila de adjuntos",
+          "result": "Un elemento por adjunto, en el orden recibido",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar el tamaño en bytes",
+          "result": "Aparece convertido, con la unidad en palabra",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Omitir el tamaño",
+          "result": "Solo aparece el estado — no se inventa ningún número",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Pasar cada uno de los cuatro estados",
+          "result": "La palabra del estado aparece en el texto de apoyo",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar el progreso de un elemento que sube",
+          "result": "La barra dibuja la fracción, y solo ella",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Accionar el botón de eliminar",
+          "result": "Quien consume es avisado, con el adjunto incluido",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "No pasar ningún adjunto",
+          "result": "La fila no existe en el documento",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Pasar progreso fuera de rango",
+          "result": "La barra queda entre cero y llena, y no se desborda",
+          "priority": "low"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La fila es una lista, con nombre propio",
+        "item2": "La barra está fuera de lo que se lee en voz y no es región viva",
+        "item3": "El elemento que sube se declara ocupado",
+        "item4": "Cada botón de eliminar lleva el nombre de su archivo",
+        "item5": "Lo que falló lleva la palabra, no solo el color",
+        "item6": "Cada botón de eliminar tiene al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la fila con los cuatro estados",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — en cola",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "Estados — enviando, con la barra",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — listo",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Estados — falló",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — junto al campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
