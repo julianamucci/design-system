@@ -1,3 +1,5 @@
+import type { TriggerSpec } from '@shared/primitives/composer-trigger'
+
 export { default as Composer } from './Composer.vue'
 
 /**
@@ -38,4 +40,49 @@ export interface ComposerLabels {
   hint: string
   /** Descrição do limite. `{max}` vira o número. */
   limit: string
+}
+
+/**
+ * O vocabulário do SELETOR DO CARACTERE GATILHO.
+ *
+ * A máquina — onde o gatilho vale, o que ele recorta, como o filtro ordena e o
+ * que fica escrito depois da escolha — vive em
+ * `@shared/primitives/composer-trigger` e é compartilhada. O que mora aqui é só
+ * o vocabulário que o composer expõe a quem consome.
+ */
+
+/** Uma opção do seletor. */
+export interface TriggerOption {
+  /** Endereço da opção. Vira o `id` do elemento, que o campo aponta. */
+  id: string
+  /** O que se lê na lista, e o que o filtro compara. */
+  label: string
+  /** Informação de apoio à direita — time, atalho, descrição curta. */
+  hint?: string
+  /**
+   * O que fica escrito ao escolher. Sem ele, o caractere gatilho mais o rótulo.
+   *
+   * Existe porque o que se escreve nem sempre é o que se lê: um comando mostra
+   * "Resumir a conversa" e escreve `/resumir`.
+   */
+  value?: string
+}
+
+/** Um gatilho e as opções que ele oferece. */
+export interface TriggerSource {
+  spec: TriggerSpec
+  options: TriggerOption[]
+}
+
+/** O texto do painel. Não há padrão em inglês escondido. */
+export interface TriggerPopoverLabels {
+  /**
+   * O que aparece quando o filtro não deixa nada.
+   *
+   * Texto, e não lista vazia: lista vazia é silêncio para quem não vê a tela, e
+   * silêncio parece que a busca não respondeu.
+   */
+  empty: string
+  /** Nome acessível da lista. */
+  list: string
 }
