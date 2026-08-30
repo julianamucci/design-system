@@ -1,0 +1,200 @@
+/*
+ * ─── nds-composer ───────────────────────────────────────────────────────────
+ * A superfície de entrada da conversa: onde se escreve, o trilho de controles
+ * embaixo, e o botão que envia — ou interrompe o que está sendo gerado.
+ *
+ * FOLHA DA FAMÍLIA, não do slug. A guideline 17 constrói por família, e as
+ * treze peças do composer dividem geometria, estados e tokens. O que está aqui
+ * hoje é o núcleo (`composer`); menções, comandos, seletor de modelo, voz e o
+ * composer de toque entram nesta mesma folha, reusando `.nds-composer-rail` e
+ * `.nds-composer-field`. Uma folha por slug produziria treze molduras
+ * ligeiramente diferentes, que é o oposto de um sistema.
+ *
+ * Estrutura:
+ *   <form class="nds-composer" data-state="idle|running">
+ *     <div class="nds-composer-field">                ← a moldura que recebe o foco
+ *       <textarea class="nds-composer-input"></textarea>
+ *     </div>
+ *     <div class="nds-composer-rail">                 ← o trilho de controles
+ *       <div class="nds-composer-rail-start">…</div>  ← anexar, ferramentas
+ *       <div class="nds-composer-rail-end">           ← contador e envio
+ *         <span class="nds-composer-counter" aria-hidden="true">120/2000</span>
+ *         <button class="nds-button" data-slot="composer-submit">Enviar</button>
+ *       </div>
+ *     </div>
+ *     <p class="nds-composer-hint">Enter envia · Shift+Enter quebra linha</p>
+ *   </form>
+ *
+ * A MOLDURA É DO CONJUNTO, NÃO DO CAMPO
+ *
+ * O `<textarea>` perde borda, fundo e anel próprios; quem os desenha é
+ * `.nds-composer-field`, e o anel de foco acende no `:focus-within` dela. Sem
+ * isso haveria duas molduras aninhadas — a do campo e a do conjunto — e o anel
+ * de foco apareceria em volta do texto, deixando o trilho de fora como se não
+ * fizesse parte do que está em foco. Ele faz: é o mesmo formulário.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O CONTADOR NÃO É REGIÃO VIVA, e é `aria-hidden`. Ele muda a cada tecla, e
+ *    um número que se reanuncia a cada tecla torna o campo impossível de usar
+ *    com leitor de tela. O limite chega uma vez, por `aria-describedby` na
+ *    dica — que é texto estático. É a regra 9 da guideline 17 aplicada a um
+ *    contador em vez de a um cronômetro, pelo mesmo motivo.
+ * 2. A DICA É DESCRIÇÃO DO CAMPO, e não decoração. `Enter envia` é
+ *    comportamento, e quem não vê a tela precisa saber disso ANTES de apertar
+ *    Enter — por isso ela entra em `aria-describedby`, e não só embaixo.
+ * 3. O BOTÃO TROCA DE NOME, não só de ícone. Em `data-state="running"` ele
+ *    passa a interromper, e o nome acessível acompanha: "Parar", não um quadrado
+ *    sem rótulo. Estado nunca é só cor nem só forma (regra 4), e nome acessível
+ *    é o nome (regra 7).
+ * 4. O TRILHO ESTÁ SEMPRE NO PERCURSO DO TECLADO. Nada aqui aparece só no
+ *    `:hover` — diferente das ações da mensagem, que são de leitura, estes são
+ *    os controles do campo e existem o tempo todo.
+ * 5. ALVO DE TOQUE ≥ 24px nos controles do trilho (WCAG 2.5.8). É a regra em
+ *    que esta família mais escorrega, e o trilho é feito de botões de ícone.
+ *
+ * ONDE O DESENHO PARA
+ *
+ * O composer não decide o que enviar significa, não limpa o campo sozinho e não
+ * sabe se a mensagem chegou. Ele emite o que foi escrito e devolve o controle a
+ * quem consome — a mesma divisão de `approval` no `chat-thread`. Quem consome
+ * decide se limpa, se guarda rascunho, se reenvia.
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT) — conceitos e estados,
+ * nunca o código, que é ligado a um runtime de React.
+ *
+ * Tokens: --background, --foreground, --muted, --muted-foreground, --input,
+ *         --border, --ring, --destructive, --radius, --spacing-*, --text-*,
+ *         --duration-fast
+ */
+
+.nds-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5);
+  width: 100%;
+}
+
+/* ── A moldura ────────────────────────────────────────────────────────────── */
+
+.nds-composer-field {
+  display: flex;
+  flex-direction: column;
+
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius);
+
+  transition:
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast);
+}
+
+/* O anel acende no CONJUNTO, e não no campo: o trilho está dentro do mesmo
+ * formulário, e um anel só em volta do texto o deixaria de fora do que está em
+ * foco. Mesma forma do `.nds-input:focus-visible` — borda opaca em `--ring`
+ * mais halo —, para o campo do composer não parecer outro sistema. */
+.nds-composer-field:focus-within {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+
+.nds-composer[data-disabled="true"] .nds-composer-field {
+  opacity: 0.5;
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* ── O campo ──────────────────────────────────────────────────────────────── */
+
+.nds-composer-input {
+  /* Zera o que `.nds-textarea` desenharia: aqui quem tem moldura é o conjunto. */
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: 0;
+
+  padding-block: var(--spacing-2-5);
+  padding-inline: var(--spacing-3);
+
+  font-family: inherit;
+  font-size: var(--text-control);
+  line-height: 1.5;
+  color: hsl(var(--foreground));
+
+  /* Sem altura fixa: a altura é resultado de padding + line-height, e o campo
+   * cresce com a fonte do navegador (WCAG 1.4.4). O piso vem de `rows`, que é
+   * contagem de linha e acompanha a fonte; o teto é o ponto em que o texto
+   * passa a rolar, para o composer não empurrar a conversa para fora da tela. */
+  max-block-size: 40vh;
+  overflow-y: auto;
+
+  /* Vertical só: redimensionamento horizontal quebra o trilho. */
+  resize: vertical;
+}
+
+.nds-composer-input::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-composer-input:disabled {
+  cursor: not-allowed;
+}
+
+/* ── O trilho ─────────────────────────────────────────────────────────────── */
+
+.nds-composer-rail {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-block: var(--spacing-1-5);
+  padding-inline: var(--spacing-2);
+
+  border-block-start: 1px solid hsl(var(--border));
+}
+
+.nds-composer-rail-start,
+.nds-composer-rail-end {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+/* O fim do trilho vai para a direita, e é o que separa "o que se acrescenta à
+ * mensagem" de "o que se faz com ela". */
+.nds-composer-rail-end {
+  margin-inline-start: auto;
+}
+
+/* Alvo de toque mínimo (WCAG 2.5.8). É medida de ÁREA, e não altura de texto:
+ * os controles do trilho são botões de ícone, que não têm texto para crescer —
+ * por isso a medida aqui não conflita com a regra de altura de primitivo. */
+.nds-composer-rail .nds-button {
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}
+
+/* ── Contador e dica ──────────────────────────────────────────────────────── */
+
+.nds-composer-counter {
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+/* Perto do limite o número muda de cor E de peso: cor sozinha não descreve
+ * estado para quem não a percebe (WCAG 1.4.1). Quem lê com leitor de tela não
+ * depende de nenhum dos dois — recebe o limite pela descrição do campo. */
+.nds-composer-counter[data-near-limit="true"] {
+  color: hsl(var(--destructive));
+  font-weight: 600;
+}
+
+.nds-composer-hint {
+  margin: 0;
+  padding-inline: var(--spacing-1);
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}

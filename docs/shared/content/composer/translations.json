@@ -1,0 +1,1652 @@
+{
+  "pt-BR": {
+    "title": "Composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A superfície onde se escreve a mensagem: o campo, o trilho de controles e o botão que envia — ou interrompe o que está sendo gerado.",
+    "seo": {
+      "title": "Composer — campo de mensagem com trilho de controles",
+      "description": "Campo de entrada da conversa com trilho de controles, contador de caracteres e envio por teclado. Acessível, sem altura fixa e com o botão que troca de nome ao interromper."
+    },
+    "labels": {
+      "input": "Mensagem",
+      "placeholder": "Escreva sua mensagem…",
+      "submit": "Enviar",
+      "stop": "Parar",
+      "hint": "{key} envia",
+      "limit": "Até {max} caracteres",
+      "attach": "Anexar"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "basic": "Em repouso",
+        "running": "Enquanto gera",
+        "limit": "Com limite de caracteres",
+        "rail": "Com controles no trilho"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A moldura é do conjunto, e não do campo: o anel de foco acende no formulário inteiro, porque o trilho faz parte do que está em foco.",
+      "item2": "O campo cresce com o conteúdo até um teto, e a partir dali rola. Sem altura fixa: ela é resultado do respiro e da entrelinha.",
+      "item3": "O trilho separa o que se acrescenta à mensagem, à esquerda, do que se faz com ela, à direita.",
+      "item4": "O contador só existe quando há limite: contar sem teto não informa nada.",
+      "item5": "A dica descreve o campo. Saber que uma tecla envia depois de tê-la apertado não serve para nada.",
+      "structureCode": {
+        "web": "<form class=\"nds-composer\" data-state=\"idle\">\n  <div class=\"nds-composer-field\">\n    <textarea class=\"nds-composer-input\"></textarea>\n  </div>\n  <div class=\"nds-composer-rail\">\n    <div class=\"nds-composer-rail-start\"></div>\n    <div class=\"nds-composer-rail-end\">\n      <span class=\"nds-composer-counter\" aria-hidden=\"true\">120/2000</span>\n      <button class=\"nds-button\" data-slot=\"composer-submit\">Enviar</button>\n    </div>\n  </div>\n  <p class=\"nds-composer-hint\">Enter envia</p>\n</form>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use como entrada de qualquer conversa, ao pé de uma thread.",
+        "item2": "Deixe o envio por teclado combinar com o dispositivo: tecla direta no teclado físico, combinação no toque.",
+        "item3": "Interromper a geração é do mesmo botão que envia — são o mesmo lugar na tela e nunca acontecem ao mesmo tempo.",
+        "item4": "Limpe o campo depois de enviar apenas quando a mensagem tiver saído: o componente não faz isso sozinho, de propósito.",
+        "item5": "Ponha no trilho apenas o que age sobre a mensagem sendo escrita. Ação de conversa pertence a outro lugar."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Escrever a mensagem de uma conversa",
+          "u": "Composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Campo de texto longo num formulário",
+          "u": "Textarea",
+          "a": "O composer traz trilho e envio por tecla, que num formulário atrapalham."
+        },
+        "item3": {
+          "s": "Texto com formatação rica",
+          "u": "Editor",
+          "a": "O composer é texto simples: o que sai dele é a fala, não um documento."
+        },
+        "item4": {
+          "s": "Busca com sugestões",
+          "u": "Command",
+          "a": "Busca é uma linha e devolve resultado; o composer é multilinha e devolve mensagem."
+        },
+        "item5": {
+          "s": "Comentário curto de uma linha",
+          "u": "Input",
+          "a": "Sem quebra de linha não há o que decidir sobre a tecla de envio."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "placeholder": {
+            "name": "Marca-lugar",
+            "format": "Convite curto, em minúsculas depois da primeira letra",
+            "good": "Escreva sua mensagem…",
+            "bad": "DIGITE AQUI SUA PERGUNTA PARA A IA"
+          },
+          "submit": {
+            "name": "Botão de envio",
+            "format": "Verbo no infinitivo, uma palavra",
+            "good": "Enviar",
+            "bad": "Enviar mensagem agora"
+          },
+          "stop": {
+            "name": "Botão de interrupção",
+            "format": "Verbo que diz o que para, não o que aconteceu",
+            "good": "Parar",
+            "bad": "Cancelado"
+          },
+          "hint": {
+            "name": "Dica de teclado",
+            "format": "A tecla primeiro, o efeito depois",
+            "good": "Enter envia",
+            "bad": "Para enviar sua mensagem, pressione a tecla Enter"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Desabilite o envio com o campo vazio.",
+        "item2": "Deixe o botão trocar de nome ao virar interrupção.",
+        "item3": "Anuncie o limite uma vez, na descrição do campo.",
+        "item4": "Deixe o campo crescer até um teto e rolar dali em diante."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não faça do contador uma região viva: ele se reanuncia a cada tecla.",
+        "item2": "Não envie na tecla direta em superfície de toque.",
+        "item3": "Não limpe o campo antes de a mensagem ter saído.",
+        "item4": "Não dê altura fixa ao campo: ele precisa crescer com a fonte."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O botão troca de nome ao interromper: é o mesmo controle fazendo outra coisa, e o nome diz qual.",
+        "dont": "Trocar só a forma deixa quem usa leitor de tela sem saber o que o botão faz agora."
+      },
+      "pair2": {
+        "do": "O limite chega uma vez, na descrição do campo, e o contador fica só para os olhos.",
+        "dont": "Um contador que se anuncia a cada tecla torna o campo impossível de usar por audição."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\nconst composer = createComposer({\n  labels,\n  onSubmit: (texto) => enviar(texto),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer labels={labels} onSubmit={enviar} />",
+        "vue": "<script setup>\nimport { Composer } from '@/components/ui/composer'\n</script>\n\n<template>\n  <Composer :labels=\"labels\" @submit=\"enviar\" />\n</template>",
+        "svelte": "<script>\n  import { Composer } from '$lib/components/ui/composer';\n</script>\n\n<Composer {labels} onSubmit={enviar} />",
+        "angular": "import { NdsComposer } from '@/components/ui/composer';\n\n@Component({\n  imports: [NdsComposer],\n  template: `<nds-composer [labels]=\"labels\" (submitted)=\"enviar($event)\" />`,\n})"
+      },
+      "withRunning": "Com estado de geração",
+      "withRunningCode": {
+        "vanilla": "// O estado de geração é de quem consome: o composer não sabe se a\n// resposta chegou.\ncomposer.setRunning(true);\ncomposer.addEventListener('nds-stop', () => cancelar());",
+        "react": "// O estado de geração é de quem consome: o composer não sabe se a\n// resposta chegou.\n<Composer labels={labels} running={gerando} onSubmit={enviar} onStop={cancelar} />",
+        "vue": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<Composer :labels=\"labels\" :running=\"gerando\" @submit=\"enviar\" @stop=\"cancelar\" />",
+        "svelte": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<Composer {labels} running={gerando} onSubmit={enviar} onStop={cancelar} />",
+        "angular": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<nds-composer [labels]=\"labels\" [running]=\"gerando()\"\n              (submitted)=\"enviar($event)\" (stopped)=\"cancelar()\" />"
+      }
+    },
+    "variants": {
+      "title": "Modos de envio",
+      "visualTitle": "Exemplos visuais",
+      "note": "O modo não muda o desenho: muda qual tecla envia e o que a dica promete. É a mesma superfície falando a verdade sobre o dispositivo em que está.",
+      "items": {
+        "enter": {
+          "description": "Tecla direta envia; com a modificadora, quebra linha. É a convenção de teclado físico.",
+          "code": {
+            "vanilla": "createComposer({ labels, submitOn: 'enter' });",
+            "react": "<Composer labels={labels} submitOn=\"enter\" />",
+            "vue": "<Composer :labels=\"labels\" submit-on=\"enter\" />",
+            "svelte": "<Composer {labels} submitOn=\"enter\" />",
+            "angular": "<nds-composer [labels]=\"labels\" submitOn=\"enter\" />"
+          }
+        },
+        "modifier": {
+          "description": "A combinação envia; a tecla direta quebra linha. É o certo no toque, onde a tecla direta é a de parágrafo.",
+          "code": {
+            "vanilla": "createComposer({ labels, submitOn: 'modifier' });",
+            "react": "<Composer labels={labels} submitOn=\"modifier\" />",
+            "vue": "<Composer :labels=\"labels\" submit-on=\"modifier\" />",
+            "svelte": "<Composer {labels} submitOn=\"modifier\" />",
+            "angular": "<nds-composer [labels]=\"labels\" submitOn=\"modifier\" />"
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "empty": {
+        "label": "Vazio",
+        "trigger": "O campo não tem texto, ou só espaços.",
+        "behavior": "O envio fica desabilitado, e a tecla de envio não faz nada."
+      },
+      "filled": {
+        "label": "Preenchido",
+        "trigger": "Há texto no campo.",
+        "behavior": "O envio fica disponível pelo botão e pela tecla."
+      },
+      "running": {
+        "label": "Gerando",
+        "trigger": "Quem consome liga o estado de geração.",
+        "behavior": "O mesmo botão passa a interromper, e troca de nome. Um segundo envio não acontece."
+      },
+      "nearLimit": {
+        "label": "Perto do limite",
+        "trigger": "O texto chega a nove décimos do limite.",
+        "behavior": "O contador muda de cor e de peso — dois sinais, porque cor sozinha não descreve estado."
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "trigger": "O composer inteiro está indisponível.",
+        "behavior": "Campo e controles saem do percurso do teclado, e nada envia."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "labels": {
+          "name": "labels",
+          "type": "ComposerLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da interface: nome do campo, marca-lugar, os dois nomes do botão, a dica e o limite."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "required": "Não",
+          "description": "Texto inicial. Rascunho é de quem consome: o componente não guarda nada entre sessões."
+        },
+        "rows": {
+          "name": "rows",
+          "type": "number",
+          "default": "2",
+          "required": "Não",
+          "description": "Linhas visíveis em repouso. É contagem de linha, então acompanha a fonte do navegador."
+        },
+        "maxLength": {
+          "name": "maxLength",
+          "type": "number",
+          "default": "—",
+          "required": "Não",
+          "description": "Limite de caracteres. Sem ele não há contador — contar sem teto não informa nada."
+        },
+        "submitOn": {
+          "name": "submitOn",
+          "type": "'enter' | 'modifier'",
+          "default": "'enter'",
+          "required": "Não",
+          "description": "Qual combinação envia. A dica embaixo do campo muda junto, porque ela promete o comportamento."
+        },
+        "running": {
+          "name": "running",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Se a resposta está sendo gerada. É quem consome que sabe: o componente não acompanha a rede."
+        },
+        "disabled": {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Indisponibiliza o conjunto inteiro — campo, trilho e envio."
+        },
+        "railStart": {
+          "name": "railStart",
+          "type": "elemento[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Controles do início do trilho. É um espaço, e não uma lista fixa: quem consome decide o que age sobre a mensagem."
+        },
+        "onSubmit": {
+          "name": "onSubmit",
+          "type": "(texto) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para enviar, e o texto vem junto, sem espaços nas pontas. Limpar o campo é de quem recebe."
+        },
+        "onStop": {
+          "name": "onStop",
+          "type": "() => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para interromper a geração."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes extras na raiz. É por aqui que a página define a largura."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O trilho é um espaço, e o composer não sabe o que se põe nele. Quem consome decide o que age sobre a mensagem sendo escrita — anexar, escolher ferramenta, ditar — e o componente só reserva o lugar.",
+      "extensibilityCode": {
+        "vanilla": "// O trilho é um ESPAÇO. Quem consome põe o que quiser nele.\ncreateComposer({\n  labels,\n  railStart: [\n    createButton({ label: 'Anexar', variant: 'ghost', size: 'sm' }),\n  ],\n});",
+        "react": "// O trilho é um ESPAÇO. Quem consome põe o que quiser nele.\n<Composer\n  labels={labels}\n  railStart={<Button variant=\"ghost\" size=\"sm\">Anexar</Button>}\n/>",
+        "vue": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um slot. -->\n<Composer :labels=\"labels\">\n  <template #railStart>\n    <Button variant=\"ghost\" size=\"sm\">Anexar</Button>\n  </template>\n</Composer>",
+        "svelte": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um trecho de marcação. -->\n{#snippet railStart()}\n  <Button variant=\"ghost\" size=\"sm\">Anexar</Button>\n{/snippet}\n\n<Composer {labels} {railStart} />",
+        "angular": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um template. -->\n<ng-template #anexar>\n  <button ndsButton variant=\"ghost\" size=\"sm\">Anexar</button>\n</ng-template>\n\n<nds-composer [labels]=\"labels\" [railStart]=\"anexar\" />"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "background": {
+          "token": "--background",
+          "value": ".nds-composer-field",
+          "description": "Fundo da moldura."
+        },
+        "input": {
+          "token": "--input",
+          "value": ".nds-composer-field",
+          "description": "Borda em repouso, com recuo para --border."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-rail",
+          "description": "Linha que separa o trilho do campo."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-composer-field:focus-within",
+          "description": "Anel de foco do conjunto — borda opaca mais halo."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-composer-field",
+          "description": "Arredondamento da moldura."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-input",
+          "description": "Cor do texto que se escreve."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-hint",
+          "description": "Marca-lugar, contador e dica."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer[data-disabled=\"true\"] .nds-composer-field",
+          "description": "Fundo do conjunto indisponível."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-counter[data-near-limit=\"true\"]",
+          "description": "Contador perto do limite — acompanhado de mudança de peso."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-field {\n  border-radius: var(--radius-lg);\n}\n\n/* A moldura é do conjunto: o anel acende no formulário inteiro, e não\n   só em volta do texto. */\n.nds-composer-field:focus-within {\n  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O campo tem nome, a dica o descreve, o contador é invisível a quem ouve, e o botão que interrompe diz que interrompe.",
+      "items": {
+        "item1": "O campo tem nome acessível próprio, e não depende do marca-lugar — que some assim que se digita a primeira letra.",
+        "item2": "A dica de teclado e o limite chegam pela descrição do campo, antes de qualquer tecla ser apertada.",
+        "item3": "O contador não é região viva e é escondido de quem ouve: um número reanunciado a cada tecla torna o campo inutilizável.",
+        "item4": "O botão troca de nome ao virar interrupção, e não só de forma.",
+        "item5": "Os controles do trilho estão sempre no percurso do teclado — nada aqui aparece só sob o ponteiro."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Percorre o campo e os controles do trilho.",
+        "enter": "Envia, no modo de tecla direta; quebra linha no outro.",
+        "arrows": "Andam pelo texto, como em qualquer campo multilinha."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-label no campo dá o nome que o marca-lugar não pode dar.",
+        "item2": "aria-describedby liga a dica e o limite ao campo.",
+        "item3": "aria-hidden no contador o mantém fora do que é lido em voz."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "O nome do campo é lido ao receber foco, seguido da dica e do limite.",
+        "item2": "O contador não é lido em momento nenhum.",
+        "item3": "Ao começar a geração, o botão passa a ser anunciado com o nome de interromper."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "A conversa que o composer alimenta."
+        },
+        "textarea": {
+          "name": "Textarea",
+          "description": "O campo multilinha de formulário, sem trilho nem envio por tecla."
+        },
+        "button": {
+          "name": "Button",
+          "description": "O que se põe no trilho, e o que envia."
+        },
+        "editor": {
+          "name": "Editor",
+          "description": "Quando o que se escreve é documento, e não fala."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O componente não limpa o campo depois de enviar. Limpar cedo perde a mensagem quando o envio falha, e só quem recebe sabe se ela saiu.",
+      "item2": "A tecla de envio é ignorada durante composição de escrita — em teclados com candidatos, ela confirma o caractere, e enviar ali cortaria a palavra pela metade.",
+      "item3": "O teto de altura do campo é uma fração da janela, e não uma medida fixa: numa tela baixa o composer não pode empurrar a conversa para fora.",
+      "item4": "Enviar e interromper são o mesmo botão porque nunca acontecem ao mesmo tempo, e dois botões no mesmo lugar fariam o alvo mudar de significado sob o dedo.",
+      "item5": "Só o texto sem espaços nas pontas é enviado, e um campo com apenas espaços conta como vazio."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; o componente em si não instrumenta o envio, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Abrir com o campo vazio",
+          "result": "O envio está desabilitado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Digitar texto",
+          "result": "O envio fica disponível",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Apertar a tecla de envio no modo de tecla direta",
+          "result": "O texto é emitido, sem espaços nas pontas",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Apertar a tecla com a modificadora de linha",
+          "result": "Quebra a linha e não envia",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "No modo de combinação, apertar só a tecla direta",
+          "result": "Quebra a linha; a combinação é que envia",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Clicar no botão de envio",
+          "result": "O texto é emitido uma vez",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Ligar o estado de geração",
+          "result": "O mesmo botão passa a interromper, e enviar deixa de acontecer",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Interagir com o composer indisponível",
+          "result": "Nada envia, nem por tecla nem por clique",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Enviar",
+          "result": "O campo continua com o texto — limpar é de quem recebe",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Passar controles ao trilho",
+          "result": "Aparecem no início dele e respondem ao clique",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "O campo tem nome acessível próprio",
+        "item2": "A dica e o limite estão ligados ao campo pela descrição",
+        "item3": "O contador está fora do que é lido em voz e não é região viva",
+        "item4": "O botão de envio troca de nome ao virar interrupção",
+        "item5": "Os controles do trilho estão no percurso do teclado",
+        "item6": "O anel de foco acende no conjunto, e não só em volta do texto"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — em repouso",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Modos de envio — os dois lado a lado",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "Estados — preenchido",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — gerando, com o botão de interromper",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — perto do limite",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Estados — indisponível",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composições — com controles no trilho",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Composer",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The surface where the message is written: the field, the control rail and the button that sends — or stops what is being generated.",
+    "seo": {
+      "title": "Composer — message field with a control rail",
+      "description": "Conversation input field with a control rail, character counter and keyboard submit. Accessible, no fixed height, and a button that changes its name when it stops generation."
+    },
+    "labels": {
+      "input": "Message",
+      "placeholder": "Write your message…",
+      "submit": "Send",
+      "stop": "Stop",
+      "hint": "{key} sends",
+      "limit": "Up to {max} characters",
+      "attach": "Attach"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "basic": "At rest",
+        "running": "While generating",
+        "limit": "With a character limit",
+        "rail": "With rail controls"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The frame belongs to the whole, not to the field: the focus ring lights up on the entire form, because the rail is part of what has focus.",
+      "item2": "The field grows with its content up to a ceiling, and scrolls from there. No fixed height: it results from padding and line height.",
+      "item3": "The rail separates what is added to the message, on the left, from what is done with it, on the right.",
+      "item4": "The counter only exists when there is a limit: counting without a ceiling informs nothing.",
+      "item5": "The hint describes the field. Learning that a key sends after pressing it is of no use.",
+      "structureCode": {
+        "web": "<form class=\"nds-composer\" data-state=\"idle\">\n  <div class=\"nds-composer-field\">\n    <textarea class=\"nds-composer-input\"></textarea>\n  </div>\n  <div class=\"nds-composer-rail\">\n    <div class=\"nds-composer-rail-start\"></div>\n    <div class=\"nds-composer-rail-end\">\n      <span class=\"nds-composer-counter\" aria-hidden=\"true\">120/2000</span>\n      <button class=\"nds-button\" data-slot=\"composer-submit\">Enviar</button>\n    </div>\n  </div>\n  <p class=\"nds-composer-hint\">Enter envia</p>\n</form>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it as the input of any conversation, at the foot of a thread.",
+        "item2": "Match keyboard submit to the device: a direct key on a physical keyboard, a combination on touch.",
+        "item3": "Stopping generation belongs to the same button that sends — they are the same place on screen and never happen at once.",
+        "item4": "Clear the field after sending only once the message has left: the component does not do it on its own, by design.",
+        "item5": "Put in the rail only what acts on the message being written. Conversation-level actions belong elsewhere."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Writing a conversation message",
+          "u": "Composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Long text field in a form",
+          "u": "Textarea",
+          "a": "The composer brings a rail and key submit, which get in the way inside a form."
+        },
+        "item3": {
+          "s": "Rich formatted text",
+          "u": "Editor",
+          "a": "The composer is plain text: what comes out of it is speech, not a document."
+        },
+        "item4": {
+          "s": "Search with suggestions",
+          "u": "Command",
+          "a": "Search is one line and returns results; the composer is multiline and returns a message."
+        },
+        "item5": {
+          "s": "Short one-line comment",
+          "u": "Input",
+          "a": "With no line breaks there is nothing to decide about the submit key."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "placeholder": {
+            "name": "Placeholder",
+            "format": "A short invitation, lowercase after the first letter",
+            "good": "Write your message…",
+            "bad": "TYPE YOUR QUESTION FOR THE AI HERE"
+          },
+          "submit": {
+            "name": "Submit button",
+            "format": "Infinitive verb, one word",
+            "good": "Send",
+            "bad": "Send message now"
+          },
+          "stop": {
+            "name": "Stop button",
+            "format": "A verb that says what stops, not what happened",
+            "good": "Stop",
+            "bad": "Cancelled"
+          },
+          "hint": {
+            "name": "Keyboard hint",
+            "format": "The key first, the effect second",
+            "good": "Enter sends",
+            "bad": "To send your message, press the Enter key"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Disable submit while the field is empty.",
+        "item2": "Let the button change its name when it becomes a stop.",
+        "item3": "Announce the limit once, in the field description.",
+        "item4": "Let the field grow up to a ceiling and scroll from there."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not make the counter a live region: it re-announces on every keystroke.",
+        "item2": "Do not submit on the direct key on touch surfaces.",
+        "item3": "Do not clear the field before the message has left.",
+        "item4": "Do not give the field a fixed height: it must grow with the font."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The button changes its name when it stops: the same control doing something else, and the name says which.",
+        "dont": "Changing only the shape leaves screen reader users unaware of what the button now does."
+      },
+      "pair2": {
+        "do": "The limit arrives once, in the field description, and the counter is for the eyes only.",
+        "dont": "A counter that announces on every keystroke makes the field impossible to use by ear."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\nconst composer = createComposer({\n  labels,\n  onSubmit: (texto) => enviar(texto),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer labels={labels} onSubmit={enviar} />",
+        "vue": "<script setup>\nimport { Composer } from '@/components/ui/composer'\n</script>\n\n<template>\n  <Composer :labels=\"labels\" @submit=\"enviar\" />\n</template>",
+        "svelte": "<script>\n  import { Composer } from '$lib/components/ui/composer';\n</script>\n\n<Composer {labels} onSubmit={enviar} />",
+        "angular": "import { NdsComposer } from '@/components/ui/composer';\n\n@Component({\n  imports: [NdsComposer],\n  template: `<nds-composer [labels]=\"labels\" (submitted)=\"enviar($event)\" />`,\n})"
+      },
+      "withRunning": "With a generating state",
+      "withRunningCode": {
+        "vanilla": "// O estado de geração é de quem consome: o composer não sabe se a\n// resposta chegou.\ncomposer.setRunning(true);\ncomposer.addEventListener('nds-stop', () => cancelar());",
+        "react": "// O estado de geração é de quem consome: o composer não sabe se a\n// resposta chegou.\n<Composer labels={labels} running={gerando} onSubmit={enviar} onStop={cancelar} />",
+        "vue": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<Composer :labels=\"labels\" :running=\"gerando\" @submit=\"enviar\" @stop=\"cancelar\" />",
+        "svelte": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<Composer {labels} running={gerando} onSubmit={enviar} onStop={cancelar} />",
+        "angular": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<nds-composer [labels]=\"labels\" [running]=\"gerando()\"\n              (submitted)=\"enviar($event)\" (stopped)=\"cancelar()\" />"
+      }
+    },
+    "variants": {
+      "title": "Submit modes",
+      "visualTitle": "Visual examples",
+      "note": "The mode does not change the design: it changes which key sends and what the hint promises. It is the same surface telling the truth about the device it is on.",
+      "items": {
+        "enter": {
+          "description": "The direct key sends; with the modifier, it breaks the line. This is the physical keyboard convention.",
+          "code": {
+            "vanilla": "createComposer({ labels, submitOn: 'enter' });",
+            "react": "<Composer labels={labels} submitOn=\"enter\" />",
+            "vue": "<Composer :labels=\"labels\" submit-on=\"enter\" />",
+            "svelte": "<Composer {labels} submitOn=\"enter\" />",
+            "angular": "<nds-composer [labels]=\"labels\" submitOn=\"enter\" />"
+          }
+        },
+        "modifier": {
+          "description": "The combination sends; the direct key breaks the line. This is right on touch, where the direct key is the paragraph key.",
+          "code": {
+            "vanilla": "createComposer({ labels, submitOn: 'modifier' });",
+            "react": "<Composer labels={labels} submitOn=\"modifier\" />",
+            "vue": "<Composer :labels=\"labels\" submit-on=\"modifier\" />",
+            "svelte": "<Composer {labels} submitOn=\"modifier\" />",
+            "angular": "<nds-composer [labels]=\"labels\" submitOn=\"modifier\" />"
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "The field has no text, or only spaces.",
+        "behavior": "Submit is disabled, and the submit key does nothing."
+      },
+      "filled": {
+        "label": "Filled",
+        "trigger": "There is text in the field.",
+        "behavior": "Submit becomes available by button and by key."
+      },
+      "running": {
+        "label": "Generating",
+        "trigger": "The consumer turns the generating state on.",
+        "behavior": "The same button switches to stopping, and changes its name. A second submit does not happen."
+      },
+      "nearLimit": {
+        "label": "Near the limit",
+        "trigger": "The text reaches nine tenths of the limit.",
+        "behavior": "The counter changes colour and weight — two signals, because colour alone does not describe state."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "The whole composer is unavailable.",
+        "behavior": "Field and controls leave the keyboard path, and nothing sends."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "labels": {
+          "name": "labels",
+          "type": "ComposerLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The interface text: field name, placeholder, both button names, the hint and the limit."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "required": "No",
+          "description": "Initial text. Drafts belong to the consumer: the component keeps nothing between sessions."
+        },
+        "rows": {
+          "name": "rows",
+          "type": "number",
+          "default": "2",
+          "required": "No",
+          "description": "Visible lines at rest. It is a line count, so it follows the browser font."
+        },
+        "maxLength": {
+          "name": "maxLength",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Character limit. Without it there is no counter — counting without a ceiling informs nothing."
+        },
+        "submitOn": {
+          "name": "submitOn",
+          "type": "'enter' | 'modifier'",
+          "default": "'enter'",
+          "required": "No",
+          "description": "Which combination sends. The hint below the field changes along, because it promises the behaviour."
+        },
+        "running": {
+          "name": "running",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Whether the answer is being generated. The consumer knows: the component does not follow the network."
+        },
+        "disabled": {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Makes the whole set unavailable — field, rail and submit."
+        },
+        "railStart": {
+          "name": "railStart",
+          "type": "element[]",
+          "default": "—",
+          "required": "No",
+          "description": "Controls at the start of the rail. It is a space, not a fixed list: the consumer decides what acts on the message."
+        },
+        "onSubmit": {
+          "name": "onSubmit",
+          "type": "(text) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to send, and the text comes along, trimmed. Clearing the field belongs to the receiver."
+        },
+        "onStop": {
+          "name": "onStop",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to stop generation."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Extra classes on the root. This is where the page sets the width."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The rail is a space, and the composer does not know what goes into it. The consumer decides what acts on the message being written — attach, pick a tool, dictate — and the component only reserves the place.",
+      "extensibilityCode": {
+        "vanilla": "// O trilho é um ESPAÇO. Quem consome põe o que quiser nele.\ncreateComposer({\n  labels,\n  railStart: [\n    createButton({ label: 'Anexar', variant: 'ghost', size: 'sm' }),\n  ],\n});",
+        "react": "// O trilho é um ESPAÇO. Quem consome põe o que quiser nele.\n<Composer\n  labels={labels}\n  railStart={<Button variant=\"ghost\" size=\"sm\">Anexar</Button>}\n/>",
+        "vue": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um slot. -->\n<Composer :labels=\"labels\">\n  <template #railStart>\n    <Button variant=\"ghost\" size=\"sm\">Anexar</Button>\n  </template>\n</Composer>",
+        "svelte": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um trecho de marcação. -->\n{#snippet railStart()}\n  <Button variant=\"ghost\" size=\"sm\">Anexar</Button>\n{/snippet}\n\n<Composer {labels} {railStart} />",
+        "angular": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um template. -->\n<ng-template #anexar>\n  <button ndsButton variant=\"ghost\" size=\"sm\">Anexar</button>\n</ng-template>\n\n<nds-composer [labels]=\"labels\" [railStart]=\"anexar\" />"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "background": {
+          "token": "--background",
+          "value": ".nds-composer-field",
+          "description": "Frame background."
+        },
+        "input": {
+          "token": "--input",
+          "value": ".nds-composer-field",
+          "description": "Border at rest, falling back to --border."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-rail",
+          "description": "Line separating the rail from the field."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-composer-field:focus-within",
+          "description": "Focus ring of the whole set — opaque border plus halo."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-composer-field",
+          "description": "Frame rounding."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-input",
+          "description": "Colour of the text being written."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-hint",
+          "description": "Placeholder, counter and hint."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer[data-disabled=\"true\"] .nds-composer-field",
+          "description": "Background of the unavailable set."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-counter[data-near-limit=\"true\"]",
+          "description": "Counter near the limit — accompanied by a weight change."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-composer-field {\n  border-radius: var(--radius-lg);\n}\n\n/* A moldura é do conjunto: o anel acende no formulário inteiro, e não\n   só em volta do texto. */\n.nds-composer-field:focus-within {\n  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The field has a name, the hint describes it, the counter is invisible to those listening, and the button that stops says it stops.",
+      "items": {
+        "item1": "The field has its own accessible name, and does not rely on the placeholder — which disappears at the first letter typed.",
+        "item2": "The keyboard hint and the limit arrive through the field description, before any key is pressed.",
+        "item3": "The counter is not a live region and is hidden from listeners: a number re-announced on every keystroke makes the field unusable.",
+        "item4": "The button changes its name when it becomes a stop, not just its shape.",
+        "item5": "Rail controls are always in the keyboard path — nothing here appears only under the pointer."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Moves through the field and the rail controls.",
+        "enter": "Sends, in direct-key mode; breaks the line in the other.",
+        "arrows": "Move through the text, as in any multiline field."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-label on the field gives the name the placeholder cannot.",
+        "item2": "aria-describedby links the hint and the limit to the field.",
+        "item3": "aria-hidden on the counter keeps it out of what is read aloud."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The field name is read on focus, followed by the hint and the limit.",
+        "item2": "The counter is never read.",
+        "item3": "When generation starts, the button is announced with the stop name."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "The conversation the composer feeds."
+        },
+        "textarea": {
+          "name": "Textarea",
+          "description": "The multiline form field, with no rail and no key submit."
+        },
+        "button": {
+          "name": "Button",
+          "description": "What goes in the rail, and what sends."
+        },
+        "editor": {
+          "name": "Editor",
+          "description": "When what is written is a document, not speech."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The component does not clear the field after sending. Clearing early loses the message when sending fails, and only the receiver knows whether it left.",
+      "item2": "The submit key is ignored during text composition — on keyboards with candidates it confirms the character, and sending there would cut the word in half.",
+      "item3": "The field height ceiling is a fraction of the window, not a fixed measure: on a short screen the composer must not push the conversation off view.",
+      "item4": "Send and stop are the same button because they never happen at once, and two buttons in the same place would make the target change meaning under the finger.",
+      "item5": "Only the trimmed text is sent, and a field with nothing but spaces counts as empty."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the component itself does not instrument sending, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Open with an empty field",
+          "result": "Submit is disabled",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Type text",
+          "result": "Submit becomes available",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press the submit key in direct-key mode",
+          "result": "The text is emitted, trimmed",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press the key with the line modifier",
+          "result": "Breaks the line and does not send",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "In combination mode, press only the direct key",
+          "result": "Breaks the line; the combination is what sends",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Click the submit button",
+          "result": "The text is emitted once",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Turn the generating state on",
+          "result": "The same button switches to stopping, and sending no longer happens",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Interact with the unavailable composer",
+          "result": "Nothing sends, by key or by click",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Send",
+          "result": "The field keeps the text — clearing belongs to the receiver",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Pass controls to the rail",
+          "result": "They appear at its start and respond to clicks",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The field has its own accessible name",
+        "item2": "The hint and limit are linked to the field by its description",
+        "item3": "The counter is out of what is read aloud and is not a live region",
+        "item4": "The submit button changes its name when it becomes a stop",
+        "item5": "Rail controls are in the keyboard path",
+        "item6": "The focus ring lights up on the whole set, not only around the text"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — at rest",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Submit modes — the two side by side",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "States — filled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — generating, with the stop button",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — near the limit",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "States — unavailable",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Compositions — with rail controls",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La superficie donde se escribe el mensaje: el campo, el riel de controles y el botón que envía — o interrumpe lo que se está generando.",
+    "seo": {
+      "title": "Composer — campo de mensaje con riel de controles",
+      "description": "Campo de entrada de la conversación con riel de controles, contador de caracteres y envío por teclado. Accesible, sin altura fija y con un botón que cambia de nombre al interrumpir."
+    },
+    "labels": {
+      "input": "Mensaje",
+      "placeholder": "Escribe tu mensaje…",
+      "submit": "Enviar",
+      "stop": "Detener",
+      "hint": "{key} envía",
+      "limit": "Hasta {max} caracteres",
+      "attach": "Adjuntar"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "basic": "En reposo",
+        "running": "Mientras genera",
+        "limit": "Con límite de caracteres",
+        "rail": "Con controles en el riel"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El marco es del conjunto, no del campo: el anillo de foco se enciende en todo el formulario, porque el riel forma parte de lo que tiene el foco.",
+      "item2": "El campo crece con su contenido hasta un techo, y a partir de ahí se desplaza. Sin altura fija: es resultado del espaciado y el interlineado.",
+      "item3": "El riel separa lo que se añade al mensaje, a la izquierda, de lo que se hace con él, a la derecha.",
+      "item4": "El contador solo existe cuando hay límite: contar sin techo no informa nada.",
+      "item5": "La pista describe el campo. Saber que una tecla envía después de pulsarla no sirve de nada.",
+      "structureCode": {
+        "web": "<form class=\"nds-composer\" data-state=\"idle\">\n  <div class=\"nds-composer-field\">\n    <textarea class=\"nds-composer-input\"></textarea>\n  </div>\n  <div class=\"nds-composer-rail\">\n    <div class=\"nds-composer-rail-start\"></div>\n    <div class=\"nds-composer-rail-end\">\n      <span class=\"nds-composer-counter\" aria-hidden=\"true\">120/2000</span>\n      <button class=\"nds-button\" data-slot=\"composer-submit\">Enviar</button>\n    </div>\n  </div>\n  <p class=\"nds-composer-hint\">Enter envia</p>\n</form>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo como entrada de cualquier conversación, al pie de un hilo.",
+        "item2": "Haz que el envío por teclado coincida con el dispositivo: tecla directa en teclado físico, combinación en táctil.",
+        "item3": "Interrumpir la generación es del mismo botón que envía — son el mismo lugar en pantalla y nunca ocurren a la vez.",
+        "item4": "Limpia el campo tras enviar solo cuando el mensaje haya salido: el componente no lo hace solo, a propósito.",
+        "item5": "Pon en el riel solo lo que actúa sobre el mensaje que se escribe. Las acciones de conversación pertenecen a otro lugar."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Escribir el mensaje de una conversación",
+          "u": "Composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Campo de texto largo en un formulario",
+          "u": "Textarea",
+          "a": "El composer trae riel y envío por tecla, que estorban dentro de un formulario."
+        },
+        "item3": {
+          "s": "Texto con formato enriquecido",
+          "u": "Editor",
+          "a": "El composer es texto simple: lo que sale de él es habla, no un documento."
+        },
+        "item4": {
+          "s": "Búsqueda con sugerencias",
+          "u": "Command",
+          "a": "La búsqueda es una línea y devuelve resultados; el composer es multilínea y devuelve un mensaje."
+        },
+        "item5": {
+          "s": "Comentario corto de una línea",
+          "u": "Input",
+          "a": "Sin salto de línea no hay nada que decidir sobre la tecla de envío."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "placeholder": {
+            "name": "Marcador",
+            "format": "Invitación corta, en minúsculas después de la primera letra",
+            "good": "Escribe tu mensaje…",
+            "bad": "ESCRIBE AQUÍ TU PREGUNTA PARA LA IA"
+          },
+          "submit": {
+            "name": "Botón de envío",
+            "format": "Verbo en infinitivo, una palabra",
+            "good": "Enviar",
+            "bad": "Enviar mensaje ahora"
+          },
+          "stop": {
+            "name": "Botón de interrupción",
+            "format": "Un verbo que dice qué se detiene, no qué pasó",
+            "good": "Detener",
+            "bad": "Cancelado"
+          },
+          "hint": {
+            "name": "Pista de teclado",
+            "format": "La tecla primero, el efecto después",
+            "good": "Enter envía",
+            "bad": "Para enviar tu mensaje, pulsa la tecla Enter"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Desactiva el envío con el campo vacío.",
+        "item2": "Deja que el botón cambie de nombre al volverse interrupción.",
+        "item3": "Anuncia el límite una vez, en la descripción del campo.",
+        "item4": "Deja que el campo crezca hasta un techo y se desplace desde ahí."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No hagas del contador una región viva: se reanuncia con cada tecla.",
+        "item2": "No envíes con la tecla directa en superficies táctiles.",
+        "item3": "No limpies el campo antes de que el mensaje haya salido.",
+        "item4": "No des altura fija al campo: debe crecer con la fuente."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El botón cambia de nombre al interrumpir: el mismo control haciendo otra cosa, y el nombre dice cuál.",
+        "dont": "Cambiar solo la forma deja a quien usa lector de pantalla sin saber qué hace ahora el botón."
+      },
+      "pair2": {
+        "do": "El límite llega una vez, en la descripción del campo, y el contador queda solo para los ojos.",
+        "dont": "Un contador que se anuncia con cada tecla hace el campo imposible de usar de oído."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\nconst composer = createComposer({\n  labels,\n  onSubmit: (texto) => enviar(texto),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer labels={labels} onSubmit={enviar} />",
+        "vue": "<script setup>\nimport { Composer } from '@/components/ui/composer'\n</script>\n\n<template>\n  <Composer :labels=\"labels\" @submit=\"enviar\" />\n</template>",
+        "svelte": "<script>\n  import { Composer } from '$lib/components/ui/composer';\n</script>\n\n<Composer {labels} onSubmit={enviar} />",
+        "angular": "import { NdsComposer } from '@/components/ui/composer';\n\n@Component({\n  imports: [NdsComposer],\n  template: `<nds-composer [labels]=\"labels\" (submitted)=\"enviar($event)\" />`,\n})"
+      },
+      "withRunning": "Con estado de generación",
+      "withRunningCode": {
+        "vanilla": "// O estado de geração é de quem consome: o composer não sabe se a\n// resposta chegou.\ncomposer.setRunning(true);\ncomposer.addEventListener('nds-stop', () => cancelar());",
+        "react": "// O estado de geração é de quem consome: o composer não sabe se a\n// resposta chegou.\n<Composer labels={labels} running={gerando} onSubmit={enviar} onStop={cancelar} />",
+        "vue": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<Composer :labels=\"labels\" :running=\"gerando\" @submit=\"enviar\" @stop=\"cancelar\" />",
+        "svelte": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<Composer {labels} running={gerando} onSubmit={enviar} onStop={cancelar} />",
+        "angular": "<!-- O estado de geração é de quem consome: o composer não sabe se a\n     resposta chegou. -->\n<nds-composer [labels]=\"labels\" [running]=\"gerando()\"\n              (submitted)=\"enviar($event)\" (stopped)=\"cancelar()\" />"
+      }
+    },
+    "variants": {
+      "title": "Modos de envío",
+      "visualTitle": "Ejemplos visuales",
+      "note": "El modo no cambia el diseño: cambia qué tecla envía y qué promete la pista. Es la misma superficie diciendo la verdad sobre el dispositivo en que está.",
+      "items": {
+        "enter": {
+          "description": "La tecla directa envía; con la modificadora, salta de línea. Es la convención de teclado físico.",
+          "code": {
+            "vanilla": "createComposer({ labels, submitOn: 'enter' });",
+            "react": "<Composer labels={labels} submitOn=\"enter\" />",
+            "vue": "<Composer :labels=\"labels\" submit-on=\"enter\" />",
+            "svelte": "<Composer {labels} submitOn=\"enter\" />",
+            "angular": "<nds-composer [labels]=\"labels\" submitOn=\"enter\" />"
+          }
+        },
+        "modifier": {
+          "description": "La combinación envía; la tecla directa salta de línea. Es lo correcto en táctil, donde la tecla directa es la de párrafo.",
+          "code": {
+            "vanilla": "createComposer({ labels, submitOn: 'modifier' });",
+            "react": "<Composer labels={labels} submitOn=\"modifier\" />",
+            "vue": "<Composer :labels=\"labels\" submit-on=\"modifier\" />",
+            "svelte": "<Composer {labels} submitOn=\"modifier\" />",
+            "angular": "<nds-composer [labels]=\"labels\" submitOn=\"modifier\" />"
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "empty": {
+        "label": "Vacío",
+        "trigger": "El campo no tiene texto, o solo espacios.",
+        "behavior": "El envío queda desactivado, y la tecla de envío no hace nada."
+      },
+      "filled": {
+        "label": "Rellenado",
+        "trigger": "Hay texto en el campo.",
+        "behavior": "El envío queda disponible por botón y por tecla."
+      },
+      "running": {
+        "label": "Generando",
+        "trigger": "Quien consume activa el estado de generación.",
+        "behavior": "El mismo botón pasa a interrumpir, y cambia de nombre. Un segundo envío no ocurre."
+      },
+      "nearLimit": {
+        "label": "Cerca del límite",
+        "trigger": "El texto llega a nueve décimos del límite.",
+        "behavior": "El contador cambia de color y de peso — dos señales, porque el color solo no describe un estado."
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "trigger": "Todo el composer está no disponible.",
+        "behavior": "Campo y controles salen del recorrido del teclado, y nada envía."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "labels": {
+          "name": "labels",
+          "type": "ComposerLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la interfaz: nombre del campo, marcador, los dos nombres del botón, la pista y el límite."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "required": "No",
+          "description": "Texto inicial. El borrador es de quien consume: el componente no guarda nada entre sesiones."
+        },
+        "rows": {
+          "name": "rows",
+          "type": "number",
+          "default": "2",
+          "required": "No",
+          "description": "Líneas visibles en reposo. Es un recuento de líneas, así que sigue la fuente del navegador."
+        },
+        "maxLength": {
+          "name": "maxLength",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Límite de caracteres. Sin él no hay contador — contar sin techo no informa nada."
+        },
+        "submitOn": {
+          "name": "submitOn",
+          "type": "'enter' | 'modifier'",
+          "default": "'enter'",
+          "required": "No",
+          "description": "Qué combinación envía. La pista bajo el campo cambia con ella, porque promete el comportamiento."
+        },
+        "running": {
+          "name": "running",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Si la respuesta se está generando. Quien consume lo sabe: el componente no sigue la red."
+        },
+        "disabled": {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Hace no disponible todo el conjunto — campo, riel y envío."
+        },
+        "railStart": {
+          "name": "railStart",
+          "type": "elemento[]",
+          "default": "—",
+          "required": "No",
+          "description": "Controles del inicio del riel. Es un espacio, no una lista fija: quien consume decide qué actúa sobre el mensaje."
+        },
+        "onSubmit": {
+          "name": "onSubmit",
+          "type": "(texto) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió enviar, y el texto viene con él, sin espacios en los extremos. Limpiar el campo es de quien recibe."
+        },
+        "onStop": {
+          "name": "onStop",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió interrumpir la generación."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases extra en la raíz. Es aquí donde la página define el ancho."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El riel es un espacio, y el composer no sabe qué se pone en él. Quien consume decide qué actúa sobre el mensaje que se escribe — adjuntar, elegir herramienta, dictar — y el componente solo reserva el lugar.",
+      "extensibilityCode": {
+        "vanilla": "// O trilho é um ESPAÇO. Quem consome põe o que quiser nele.\ncreateComposer({\n  labels,\n  railStart: [\n    createButton({ label: 'Anexar', variant: 'ghost', size: 'sm' }),\n  ],\n});",
+        "react": "// O trilho é um ESPAÇO. Quem consome põe o que quiser nele.\n<Composer\n  labels={labels}\n  railStart={<Button variant=\"ghost\" size=\"sm\">Anexar</Button>}\n/>",
+        "vue": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um slot. -->\n<Composer :labels=\"labels\">\n  <template #railStart>\n    <Button variant=\"ghost\" size=\"sm\">Anexar</Button>\n  </template>\n</Composer>",
+        "svelte": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um trecho de marcação. -->\n{#snippet railStart()}\n  <Button variant=\"ghost\" size=\"sm\">Anexar</Button>\n{/snippet}\n\n<Composer {labels} {railStart} />",
+        "angular": "<!-- O trilho é um ESPAÇO, e nesta stack ele é um template. -->\n<ng-template #anexar>\n  <button ndsButton variant=\"ghost\" size=\"sm\">Anexar</button>\n</ng-template>\n\n<nds-composer [labels]=\"labels\" [railStart]=\"anexar\" />"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "background": {
+          "token": "--background",
+          "value": ".nds-composer-field",
+          "description": "Fondo del marco."
+        },
+        "input": {
+          "token": "--input",
+          "value": ".nds-composer-field",
+          "description": "Borde en reposo, con retroceso a --border."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-rail",
+          "description": "Línea que separa el riel del campo."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-composer-field:focus-within",
+          "description": "Anillo de foco del conjunto — borde opaco más halo."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-composer-field",
+          "description": "Redondeo del marco."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-input",
+          "description": "Color del texto que se escribe."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-hint",
+          "description": "Marcador, contador y pista."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer[data-disabled=\"true\"] .nds-composer-field",
+          "description": "Fondo del conjunto no disponible."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-counter[data-near-limit=\"true\"]",
+          "description": "Contador cerca del límite — acompañado de un cambio de peso."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-field {\n  border-radius: var(--radius-lg);\n}\n\n/* A moldura é do conjunto: o anel acende no formulário inteiro, e não\n   só em volta do texto. */\n.nds-composer-field:focus-within {\n  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El campo tiene nombre, la pista lo describe, el contador es invisible para quien escucha, y el botón que interrumpe dice que interrumpe.",
+      "items": {
+        "item1": "El campo tiene nombre accesible propio, y no depende del marcador — que desaparece con la primera letra escrita.",
+        "item2": "La pista de teclado y el límite llegan por la descripción del campo, antes de pulsar cualquier tecla.",
+        "item3": "El contador no es región viva y se oculta a quien escucha: un número reanunciado con cada tecla hace el campo inservible.",
+        "item4": "El botón cambia de nombre al volverse interrupción, no solo de forma.",
+        "item5": "Los controles del riel están siempre en el recorrido del teclado — nada aquí aparece solo bajo el puntero."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Recorre el campo y los controles del riel.",
+        "enter": "Envía, en modo de tecla directa; salta de línea en el otro.",
+        "arrows": "Se mueven por el texto, como en cualquier campo multilínea."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-label en el campo da el nombre que el marcador no puede dar.",
+        "item2": "aria-describedby vincula la pista y el límite al campo.",
+        "item3": "aria-hidden en el contador lo mantiene fuera de lo que se lee en voz."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El nombre del campo se lee al recibir el foco, seguido de la pista y el límite.",
+        "item2": "El contador no se lee en ningún momento.",
+        "item3": "Al comenzar la generación, el botón pasa a anunciarse con el nombre de interrumpir."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "La conversación que el composer alimenta."
+        },
+        "textarea": {
+          "name": "Textarea",
+          "description": "El campo multilínea de formulario, sin riel ni envío por tecla."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Lo que se pone en el riel, y lo que envía."
+        },
+        "editor": {
+          "name": "Editor",
+          "description": "Cuando lo que se escribe es un documento, no habla."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El componente no limpia el campo tras enviar. Limpiar pronto pierde el mensaje cuando el envío falla, y solo quien recibe sabe si salió.",
+      "item2": "La tecla de envío se ignora durante la composición de escritura — en teclados con candidatos confirma el carácter, y enviar ahí cortaría la palabra por la mitad.",
+      "item3": "El techo de altura del campo es una fracción de la ventana, no una medida fija: en una pantalla baja el composer no puede empujar la conversación fuera.",
+      "item4": "Enviar e interrumpir son el mismo botón porque nunca ocurren a la vez, y dos botones en el mismo lugar harían que el objetivo cambiara de significado bajo el dedo.",
+      "item5": "Solo se envía el texto sin espacios en los extremos, y un campo con solo espacios cuenta como vacío."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; el componente en sí no instrumenta el envío, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Abrir con el campo vacío",
+          "result": "El envío está desactivado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Escribir texto",
+          "result": "El envío queda disponible",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar la tecla de envío en modo de tecla directa",
+          "result": "El texto se emite, sin espacios en los extremos",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pulsar la tecla con la modificadora de línea",
+          "result": "Salta de línea y no envía",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "En modo de combinación, pulsar solo la tecla directa",
+          "result": "Salta de línea; la combinación es la que envía",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Hacer clic en el botón de envío",
+          "result": "El texto se emite una vez",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Activar el estado de generación",
+          "result": "El mismo botón pasa a interrumpir, y enviar deja de ocurrir",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Interactuar con el composer no disponible",
+          "result": "Nada envía, ni por tecla ni por clic",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Enviar",
+          "result": "El campo conserva el texto — limpiar es de quien recibe",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Pasar controles al riel",
+          "result": "Aparecen al inicio de él y responden al clic",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "El campo tiene nombre accesible propio",
+        "item2": "La pista y el límite están vinculados al campo por su descripción",
+        "item3": "El contador está fuera de lo que se lee en voz y no es región viva",
+        "item4": "El botón de envío cambia de nombre al volverse interrupción",
+        "item5": "Los controles del riel están en el recorrido del teclado",
+        "item6": "El anillo de foco se enciende en el conjunto, no solo alrededor del texto"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — en reposo",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Modos de envío — los dos lado a lado",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "Estados — rellenado",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — generando, con el botón de interrumpir",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — cerca del límite",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Estados — no disponible",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composiciones — con controles en el riel",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
