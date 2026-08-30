@@ -71,10 +71,6 @@ function applyMotion(motion: string) {
   else delete html.dataset['reducedMotion'];
 }
 
-// Ordem de dentro de uma categoria: componentes em ordem alfabética e, dentro de
-// cada um, as pastas na ordem de leitura.
-const DENTRO_DA_CATEGORIA = ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']];
-
 const preview: Preview = {
   parameters: {
     // O seletor de cor de fundo sai da toolbar. Ele pinta o canvas com
@@ -111,17 +107,23 @@ const preview: Preview = {
           // O preço é simétrico: em inglês, Disclosure sai uma posição depois de
           // Display. Só existe uma lista, e ela ordena strings que não são as
           // que aparecem na tela.
+          // A ordem de dentro de cada categoria se repete por extenso, e não sai
+          // de uma constante: o indexador estático da Storybook lê este arquivo
+          // sem executá-lo e recusa `storySort` que não seja literal — com
+          // identificador ele aborta a inicialização dos projetos do vitest, e
+          // a suíte de navegador das cinco stacks para de subir sem que o build
+          // ou o lint acusem nada.
           'Primitives', [
-            'Conversational', DENTRO_DA_CATEGORIA,   // Conversacional
-            'Display', DENTRO_DA_CATEGORIA,          // Display
-            'Disclosure', DENTRO_DA_CATEGORIA,       // Expansão
-            'Feedback', DENTRO_DA_CATEGORIA,         // Feedback
-            'Form', DENTRO_DA_CATEGORIA,             // Formulário
-            'Layout', DENTRO_DA_CATEGORIA,           // Layout
-            'Navigation', DENTRO_DA_CATEGORIA,       // Navegação
-            'Overlay', DENTRO_DA_CATEGORIA,          // Overlay
-            'Tables', DENTRO_DA_CATEGORIA,           // Tabelas
-            '*', DENTRO_DA_CATEGORIA,                // categoria nova cai aqui, no fim
+            'Conversational', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],   // Conversacional
+            'Display', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],          // Display
+            'Disclosure', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],       // Expansão
+            'Feedback', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],         // Feedback
+            'Form', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],             // Formulário
+            'Layout', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],           // Layout
+            'Navigation', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],       // Navegação
+            'Overlay', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],          // Overlay
+            'Tables', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],           // Tabelas
+            '*', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],                // categoria nova cai aqui, no fim
           ],
           '*',
         ],
