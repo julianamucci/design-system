@@ -166,6 +166,31 @@ entra no `storySort` de `.storybook/preview.ts` das cinco; a docs page usa
 de verificação no `CLAUDE.md` raiz). As etapas 1–5 são seriais por construção:
 são a definição de "o que é essa peça".
 
+**Correção medida ao construir a família 1**: as etapas 1 e 2 também não
+paralelizam ENTRE PEÇAS, e por um motivo mecânico. A folha é uma por família e
+o protocolo é um só, então duas peças escritas ao mesmo tempo colidem nos dois
+arquivos. O que funciona é separar por natureza: os artefatos compartilhados
+(folha, vocabulário, registro) saem em série, num commit próprio, e só então as
+peças que dependem deles seguem em paralelo — porque aí cada uma toca apenas os
+seus arquivos.
+
+### 4.1 Peça que mora num encaixe NÃO vira prop de quem a hospeda
+
+O composer aceita `railStart`, e é por ali que `composer-model-picker` e
+`composer-voice` entram. Nenhum dos dois é prop do composer, e isso é decisão,
+não atalho: uma prop por controle faria o composer crescer para sempre, e o
+controle deixaria de servir a quem não tem campo de texto.
+
+A consequência prática vale para as sete famílias: **peça que se encaixa é peça
+autônoma**, e o teste é perguntar se ela faz sentido montada sozinha. Se fizer,
+ela não toca o arquivo do hospedeiro — o que, de quebra, é o que permite
+construí-la em paralelo com as irmãs.
+
+O contrário também tem caso legítimo: `composer-context`, `composer-attachments`
+e `quote` SÃO props do composer, porque desenham dentro da moldura do campo e
+participam da descrição acessível dele. A pergunta que separa os dois grupos é
+se a peça vive na moldura ou no trilho.
+
 ---
 
 ## 5. Triagem do catálogo — as 120
@@ -228,13 +253,36 @@ slug produz 83 folhas e nenhum sistema.
 
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
-| **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-mentions`, `composer-model-picker`, `composer-slash-commands`, `composer-trigger-popover`, `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
+| **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status`, `thinking-indicator`, `agent-plan`, `todo-list`, `job-progress`, `subagent-list`, `tool-group`, `tool-error`, `tool-timeline`, `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `stopped-run`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `agent-card`, `permission-grant`, `elicitation-form`, `guardrail-notice`, `approval-card` (23) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner`, `reasoning-effort` (6) | O mesmo número em quatro formas (anel, barra, texto, repartição). Primitivo: `token-budget.ts`. Base em `progress` |
 | **6. Navegação da conversa** | `conversa-nav.css` | `message-branches`, `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (8) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
 | **7. Voz** | `voz.css` | `orb`, `voice-conversation`, `read-aloud` (3) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
+
+### 5.3 A triagem se corrige DURANTE a construção, e a correção se escreve
+
+A conta de 5.1 e 5.2 foi feita lendo o catálogo. Construir revela o que ler não
+mostra, e quando revelar, **o número muda aqui** — contagem que não acompanha o
+que existe vira meta, e meta faz criar peça para bater número.
+
+Primeira correção, medida ao fechar a família 1: `composer-mentions` e
+`composer-slash-commands` **não são componentes**. São as duas configurações do
+`composer-trigger-popover`, que nasceu com as duas: a descrição dele já diz
+"menções, comandos, e qualquer outra lista ancorada no que está sendo escrito",
+e as stories de variante chamam-se `Mentions` e `Commands`. Dar slug próprio a
+cada uma criaria duas docs pages para um componente com dois ajustes — que é
+exatamente o que 5.1 existe para evitar.
+
+O critério, para as seis famílias que faltam: **uma entrada do catálogo vira
+slug quando tem desenho, estado ou vocabulário próprios.** Se a diferença cabe
+num argumento do que já existe, ela é variante — vira story e linha na tabela,
+não peça. Ao decidir isso durante a construção, corrija a tabela de 5.2 no
+mesmo passo; não anote para depois.
+
+E o contrário também vale: peça que na leitura parecia uma e ao construir
+mostrou ser duas se DESDOBRA aqui, com o motivo.
 
 Ordem entre famílias — a que evita retrabalho:
 **3.1 fundação → 1 composer → 2 execução → 5 medição → 3 evidência → 4 resposta
