@@ -1,0 +1,95 @@
+/**
+ * Snippet do painel Code do seletor de modelo — ver `@/lib/story-source`.
+ *
+ * Módulo de TS puro — nada de `.tsx` em valor. É o que deixa as funções rodarem
+ * no projeto `unit` do vitest, a única guarda que elas têm: a saída do painel
+ * não chega ao DOM durante a `play`.
+ *
+ * Cada configuração tem a SUA função exportada, chamável SEM argumento. Fábrica
+ * curried devolveria função em vez de string, e as checagens que leem o snippet
+ * nunca chegariam ao snippet.
+ *
+ * A LISTA NÃO É ESCRITA POR EXTENSO em nenhuma das configurações, e isso é
+ * decisão. Os controles do Playground mexem em qual modelo está escolhido e em
+ * se a lista começa aberta — não nos modelos —, então despejar três objetos de
+ * andaime faria o painel ensinar o andaime em vez da peça. O que muda por
+ * story é o nome da constante, que é o que diz QUAL lista está na tela.
+ */
+import {
+  attrsMultilinha,
+  indentar,
+  jsxSnippet,
+  text,
+  type SourceTransform,
+} from "@/lib/story-source"
+
+const IMPORT_PICKER =
+  'import { ComposerModelPicker } from "@/components/ui/composer-model-picker";'
+const IMPORT_COMPOSER = 'import { Composer } from "@/components/ui/composer";'
+
+export type ModelPickerSnippetOptions = {
+  /** Nome da constante da lista que o snippet declara. */
+  models?: string
+  /** O endereço do modelo escolhido. */
+  value?: string
+  /** A lista começa aberta? */
+  open?: boolean
+  /** O snippet monta o seletor dentro do trilho do campo? */
+  rail?: boolean
+}
+
+/** O seletor sozinho, do jeito que ele vive no trilho. */
+function picker(opts: ModelPickerSnippetOptions): string {
+  const value = text(opts.value)
+  return `<ComposerModelPicker${attrsMultilinha([
+    "labels={pickerLabels}",
+    `models={${text(opts.models) ?? "modelos"}}`,
+    // Documentação não ensina a repetir o padrão do componente: só o que
+    // difere entra no snippet.
+    value === undefined ? undefined : `value="${value}"`,
+    opts.open === true ? "open" : undefined,
+    "onValueChange={(model) => escolher(model.id)}",
+  ])} />`
+}
+
+function build(opts: ModelPickerSnippetOptions): string {
+  if (!opts.rail) return jsxSnippet(IMPORT_PICKER, picker(opts))
+
+  // O seletor é AUTÔNOMO: ele não é uma prop do campo, é um controle que quem
+  // consome põe no início do trilho — pelo mesmo espaço de qualquer outro.
+  return jsxSnippet(
+    `${IMPORT_PICKER}\n${IMPORT_COMPOSER}`,
+    `<Composer\n  labels={labels}\n  railStart={\n${indentar(picker(opts), "    ")}\n  }\n/>`,
+  )
+}
+
+/** Transform do `meta` — o Playground, cujos controles mexem no escolhido. */
+export const composerModelPickerSource: SourceTransform<ModelPickerSnippetOptions> = (
+  _generated,
+  ctx,
+) => build(ctx?.args ?? {})
+
+/** A lista aberta, em que a descrição é o único assunto. */
+export function modelPickerDescriptionsSource(): string {
+  return build({ models: "disponiveis", open: true })
+}
+
+/** A lista com a etiqueta curta ao lado de um dos nomes. */
+export function modelPickerBadgeSource(): string {
+  return build({ models: "comEtiqueta", open: true })
+}
+
+/** Em repouso: o gatilho com o nome escolhido, e nenhuma lista no documento. */
+export function modelPickerClosedSource(): string {
+  return build({ value: "balanced" })
+}
+
+/** Com um modelo que não pode responder agora. */
+export function modelPickerUnavailableSource(): string {
+  return build({ open: true })
+}
+
+/** O seletor no início do trilho do campo. */
+export function modelPickerInRailSource(): string {
+  return build({ rail: true })
+}

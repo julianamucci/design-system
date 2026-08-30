@@ -9,6 +9,9 @@ import Attachments, {
 import Context, {
 	type ComposerContextLabels,
 } from "./composer-context.svelte";
+import ModelPicker, {
+	type ComposerModelPickerLabels,
+} from "./composer-model-picker.svelte";
 import Voice, {
 	type ComposerVoiceIntent,
 	type ComposerVoiceLabels,
@@ -49,6 +52,14 @@ export {
 	//
 	Context as ComposerContext,
 	type ComposerContextLabels,
+	// O SELETOR DE MODELO. Ele NÃO é prop do campo: é uma peça autônoma que quem
+	// consome monta e põe no início do trilho, pelo mesmo espaço de qualquer
+	// outro controle. Sai daqui inteiro — e não só o tipo — porque é quem
+	// consome que o monta.
+	ModelPicker,
+	//
+	ModelPicker as ComposerModelPicker,
+	type ComposerModelPickerLabels,
 	// O DITADO POR VOZ. Ele é AUTÔNOMO — o campo não sabe que ele existe, e quem
 	// consome o põe no trilho. Sai exportado inteiro, e não só em tipo, porque é
 	// quem consome que o monta.

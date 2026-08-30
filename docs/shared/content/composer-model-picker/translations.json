@@ -1,0 +1,1517 @@
+{
+  "pt-BR": {
+    "title": "Seletor de modelo do composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O controle do trilho que diz quem responde: o gatilho leva só o nome escolhido, e o painel abre para cima com a descrição de cada modelo.",
+    "seo": {
+      "title": "Seletor de modelo do composer — quem responde a pergunta",
+      "description": "Um gatilho no trilho do campo e uma lista que abre para cima: nome no gatilho, descrição na lista, e o motivo escrito na opção que não pode ser escolhida agora."
+    },
+    "labels": {
+      "trigger": "Modelo: {label}",
+      "list": "Modelos"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "closed": "Fechado, com o nome escolhido",
+        "open": "Aberto, com as descrições",
+        "unavailable": "Com um modelo que não pode responder agora",
+        "withField": "No trilho do campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O gatilho mora no início do trilho, ao lado dos outros controles do campo, e leva só o nome do modelo escolhido.",
+      "item2": "O painel abre para cima, porque o campo mora no pé da conversa e embaixo dele não sobra espaço.",
+      "item3": "Cada opção traz o nome em destaque e, embaixo, a descrição — que é o que se lê na hora de trocar.",
+      "item4": "A etiqueta curta fica à direita do nome, e é reforço: o que muda a escolha também está escrito na descrição.",
+      "item5": "O que não pode ser escolhido agora continua na lista, com o motivo em texto ao lado do nome.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-rail-start\">\n  <div class=\"nds-composer-model\" data-slot=\"composer-model\" data-state=\"open\">\n    <button class=\"nds-button\" data-slot=\"composer-model-trigger\"\n            aria-haspopup=\"listbox\" aria-expanded=\"true\"\n            aria-controls=\"m-panel\" aria-label=\"Modelo: Rápido\">Rápido</button>\n    <div class=\"nds-composer-model-panel\" id=\"m-panel\" role=\"listbox\"\n         tabindex=\"-1\" aria-label=\"Modelos\" aria-activedescendant=\"m-0\">\n      <div class=\"nds-composer-model-option\" id=\"m-0\" role=\"option\"\n           aria-selected=\"true\" data-active=\"true\">\n        <span class=\"nds-composer-model-name\">Rápido</span>\n        <span class=\"nds-badge nds-composer-model-badge\">Novo</span>\n        <span class=\"nds-composer-model-description\">Responde em segundos.</span>\n      </div>\n      <div class=\"nds-composer-model-option\" id=\"m-1\" role=\"option\"\n           aria-selected=\"false\" aria-disabled=\"true\">\n        <span class=\"nds-composer-model-name\">Profundo</span>\n        <span class=\"nds-composer-model-description\">Lê a obra inteira antes de responder.</span>\n        <span class=\"nds-composer-model-description\"\n              data-slot=\"composer-model-reason\">Fora do seu plano.</span>\n      </div>\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando houver mais de um modelo para responder e a escolha mudar o que se recebe de volta.",
+        "item2": "Deixe no gatilho só o nome; a descrição é da lista.",
+        "item3": "Escreva a descrição no que muda para quem pergunta — tempo de resposta, profundidade, alcance.",
+        "item4": "Mantenha na lista o que não pode ser escolhido agora, com o motivo por escrito.",
+        "item5": "Aplicar a troca é de quem monta a conversa: o seletor avisa qual foi escolhido e devolve o controle."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Escolher quem responde, no trilho do campo",
+          "u": "Seletor de modelo do composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Escolher um valor dentro de um formulário",
+          "u": "Select",
+          "a": "Ali a escolha é um campo, com rótulo visível e validação; aqui é um controle do trilho."
+        },
+        "item3": {
+          "s": "Escolher entre dezenas de opções, com busca",
+          "u": "Command",
+          "a": "Busca é para lista longa; aqui são poucas opções e a descrição é o que decide."
+        },
+        "item4": {
+          "s": "Escolher alguém ou um comando enquanto se escreve",
+          "u": "Seletor de gatilho do composer",
+          "a": "Ali a escolha entra no texto da mensagem; aqui ela muda quem vai respondê-la."
+        },
+        "item5": {
+          "s": "Mostrar qual modelo respondeu uma mensagem",
+          "u": "Badge",
+          "a": "Ali é rótulo de leitura; aqui é controle que se aciona."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "trigger": {
+            "name": "Nome acessível do gatilho",
+            "format": "O que ele escolhe, e depois o valor",
+            "good": "Modelo: Rápido",
+            "bad": "Rápido"
+          },
+          "modelName": {
+            "name": "Nome do modelo",
+            "format": "Uma ou duas palavras, do jeito que o produto o chama",
+            "good": "Rápido",
+            "bad": "Modelo de geração de resposta rápida v2"
+          },
+          "description": {
+            "name": "Descrição",
+            "format": "Uma frase, no que muda para quem pergunta",
+            "good": "Responde em segundos.",
+            "bad": "Otimizado para baixa latência."
+          },
+          "badge": {
+            "name": "Etiqueta",
+            "format": "Uma palavra, e nunca a única portadora",
+            "good": "Novo",
+            "bad": "Disponível apenas em contas de teste"
+          },
+          "reason": {
+            "name": "Motivo de indisponibilidade",
+            "format": "Uma frase, no que falta — não no código do erro",
+            "good": "Fora do seu plano.",
+            "bad": "403"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Diga no nome acessível do gatilho o que ele escolhe, além do valor escolhido.",
+        "item2": "Escreva a descrição de cada modelo — é ela que sustenta a troca.",
+        "item3": "Traga o motivo por escrito na opção que não pode ser escolhida.",
+        "item4": "Devolva o foco ao gatilho quando o painel fechar."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não repita a descrição no gatilho: ela encolhe o campo, que é o que importa ali.",
+        "item2": "Não esconda o que está indisponível — some a opção e some a explicação junto.",
+        "item3": "Não deixe a etiqueta ser a única portadora de uma condição que muda a escolha.",
+        "item4": "Não abra o painel para baixo: no pé da conversa não sobra espaço embaixo."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O modelo que não pode responder agora fica na lista, com o motivo escrito ao lado do nome.",
+        "dont": "Ele some da lista, e com ele a resposta para a pergunta \"por que não posso?\"."
+      },
+      "pair2": {
+        "do": "O gatilho leva só o nome, e o campo continua com a largura que importa.",
+        "dont": "O gatilho leva nome e descrição, e o campo encolhe para caber o que já está na lista."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposerModelPicker } from '@/components/ui/composer-model-picker';\nimport { createComposer } from '@/components/ui/composer';\n\nconst picker = createComposerModelPicker({\n  labels: pickerLabels,\n  models,\n  value: 'fast',\n  onValueChange: (model) => escolher(model.id),\n});\n\nconst composer = createComposer({ labels, railStart: [picker] });",
+        "react": "import { ComposerModelPicker } from \"@/components/ui/composer-model-picker\";\nimport { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  railStart={\n    <ComposerModelPicker\n      labels={pickerLabels}\n      models={models}\n      value={escolhido}\n      onValueChange={(model) => escolher(model.id)}\n    />\n  }\n/>",
+        "vue": "<Composer :labels=\"labels\">\n  <template #railStart>\n    <ComposerModelPicker\n      :labels=\"pickerLabels\"\n      :models=\"models\"\n      :value=\"escolhido\"\n      @change=\"escolher\"\n    />\n  </template>\n</Composer>",
+        "svelte": "{#snippet railStart()}\n  <ComposerModelPicker\n    labels={pickerLabels}\n    {models}\n    value={escolhido}\n    onValueChange={(model) => escolher(model.id)}\n  />\n{/snippet}\n\n<Composer {labels} {railStart} />",
+        "angular": "<ng-template #rail>\n  <nds-composer-model-picker\n    [labels]=\"pickerLabels\"\n    [models]=\"models()\"\n    [value]=\"escolhido()\"\n    (valueChange)=\"escolher($event)\"\n  />\n</ng-template>\n\n<nds-composer [labels]=\"labels\" [railStart]=\"rail\" />"
+      },
+      "withUnavailable": "Com um modelo que não pode responder agora",
+      "withUnavailableCode": {
+        "web": "// Um modelo que pode responder. A descrição aparece na lista, e não no\n// gatilho: um trilho é estreito, e o nome é o que se confere de relance.\n{ id: 'fast', label: 'Rápido', description: 'Responde em segundos.' }\n\n// Indisponível vem com MOTIVO, sempre. Opção apagada sem explicação é a\n// pergunta \"por que não posso?\" sem resposta na tela — e quem não enxerga o\n// cinza não recebe nem a pista.\n{\n  id: 'deep',\n  label: 'Profundo',\n  description: 'Lê a obra inteira antes de responder.',\n  unavailable: true,\n  unavailableReason: 'Fora do seu plano.',\n}"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "closed": {
+        "label": "Fechado",
+        "trigger": "Em repouso, antes de alguém pedir para trocar.",
+        "behavior": "O gatilho mostra o nome escolhido, e a lista não existe no documento."
+      },
+      "open": {
+        "label": "Aberto",
+        "trigger": "Alguém acionou o gatilho, pelo ponteiro ou pelo teclado.",
+        "behavior": "A lista aparece acima do trilho, o foco entra nela, e o cursor começa no que já estava escolhido."
+      },
+      "selected": {
+        "label": "Escolhido",
+        "trigger": "Uma opção foi confirmada.",
+        "behavior": "Ela fica marcada na lista, o nome dela passa para o gatilho, e o foco volta para lá."
+      },
+      "unavailable": {
+        "label": "Indisponível",
+        "trigger": "Um modelo não pode responder agora.",
+        "behavior": "A opção continua na lista e continua alcançável pelo cursor, não aceita ser confirmada, e traz o motivo em texto."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "models": {
+          "name": "models",
+          "type": "ModelOption[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os modelos que podem responder, na ordem em que aparecem na lista."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "O modelo escolhido, pelo endereço dele. Sozinho é semente; acompanhado do aviso de troca, é quem consome que manda."
+        },
+        "onValueChange": {
+          "name": "onValueChange",
+          "type": "(model) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém confirmou um modelo, e o modelo vai junto. Aplicar a troca é de quem monta a conversa."
+        },
+        "open": {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "A lista começa aberta. É semente, e não controle: quem abre e fecha depois é o próprio seletor, porque isso é desenho e não estado do mundo."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "A lista abriu ou fechou."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComposerModelPickerLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da interface: o que o gatilho escolhe e o nome da lista."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "Endereço do modelo. É por ele que a escolha se identifica."
+        },
+        "modelLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome curto do modelo. É ele que aparece no gatilho e na lista."
+        },
+        "modelDescription": {
+          "name": "description",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Uma frase sobre o que muda ao escolher esse modelo. Aparece na lista, e não no gatilho."
+        },
+        "badge": {
+          "name": "badge",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Etiqueta curta ao lado do nome. É reforço, e nunca a única portadora da informação."
+        },
+        "unavailable": {
+          "name": "unavailable",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "O modelo não pode responder agora. A opção continua na lista e continua legível, mas não aceita ser confirmada."
+        },
+        "unavailableReason": {
+          "name": "unavailableReason",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Por que não dá, em texto. Obrigatório quando o modelo está indisponível."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O modelo é dado, e o componente não sabe o que ele significa. O que cada um custa, quem tem direito a qual e o que acontece depois da troca é de quem monta a conversa — o seletor desenha a lista e avisa qual foi confirmado.",
+      "extensibilityCode": {
+        "web": "// O modelo é DADO, e o componente não sabe o que ele significa.\n// Quanto custa, quem tem direito e o que acontece depois da troca é de quem\n// monta a conversa.\n{\n  id: 'balanced',            // o endereço, que identifica a escolha\n  label: 'Equilibrado',      // o nome curto, que vai para o gatilho\n  description: 'O meio-termo entre esperar e acertar.',\n  badge: 'Novo',             // reforço; nunca a única portadora\n  unavailable: false,        // verdadeiro exige o motivo abaixo\n  unavailableReason: undefined,\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "popover": {
+          "token": "--popover",
+          "value": ".nds-composer-model-panel",
+          "description": "Fundo da lista, que flutua acima do trilho."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-model-panel",
+          "description": "Moldura da lista."
+        },
+        "elevationMd": {
+          "token": "--elevation-md",
+          "value": ".nds-composer-model-panel",
+          "description": "Sombra que separa a lista do que está atrás."
+        },
+        "zPopover": {
+          "token": "--z-popover",
+          "value": ".nds-composer-model-panel",
+          "description": "Camada em que a lista flutua."
+        },
+        "accent": {
+          "token": "--accent",
+          "value": ".nds-composer-model-option",
+          "description": "Realce da opção escolhida e da que está sob o cursor."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-model-option",
+          "description": "Arredondamento de cada opção."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-composer-model-option",
+          "description": "Alvo de toque mínimo da opção."
+        },
+        "textP": {
+          "token": "--text-p",
+          "value": ".nds-composer-model-name",
+          "description": "Tamanho do nome do modelo."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-model-description",
+          "description": "Cor da descrição e do motivo de indisponibilidade."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-model-panel {\n  max-inline-size: 24rem;\n}\n\n/* A etiqueta é REFORÇO, e não a pista: o que muda a escolha também está\n   escrito na descrição, porque forma e cor sozinhas não descrevem\n   condição (WCAG 1.4.1). */\n.nds-composer-model-badge {\n  text-transform: uppercase;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O gatilho diz o que escolhe e se a lista está aberta; a lista tem nome próprio e cursor anunciado; e o que não pode ser escolhido continua legível, com o motivo em texto.",
+      "items": {
+        "item1": "O nome acessível do gatilho diz o que ele escolhe, e não só o valor escolhido: \"Rápido, botão\" não informa nada.",
+        "item2": "O gatilho anuncia se a lista está aberta ou fechada, antes de alguém acioná-lo.",
+        "item3": "A lista tem nome próprio, e o cursor dela é anunciado a cada passo — nome, descrição e etiqueta chegam juntos.",
+        "item4": "O que não pode ser escolhido agora continua na lista e continua alcançável pelo cursor: tirá-lo da leitura seria esconder o motivo junto.",
+        "item5": "Fechar devolve o foco ao gatilho — sem isso o foco cai no começo da página e quem navega por teclado se perde."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Alcança o gatilho. Com a lista aberta, fecha e devolve o foco a ele.",
+        "enter": "No gatilho, abre a lista. Na lista, confirma a opção sob o cursor.",
+        "arrows": "Andam pelas opções, inclusive pelas que não podem ser escolhidas.",
+        "escape": "Fecha a lista sem trocar nada, e devolve o foco ao gatilho."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "O gatilho declara que abre uma lista e se ela está aberta agora.",
+        "item2": "A lista é uma lista de opções, com nome próprio e um cursor que aponta a opção corrente.",
+        "item3": "A opção indisponível se declara desabilitada sem sair da leitura, e a escolhida se declara escolhida."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "O gatilho é lido como o que escolhe, o valor corrente e o estado da lista.",
+        "item2": "Cada opção é lida como nome, etiqueta e descrição, nessa ordem.",
+        "item3": "A opção indisponível é lida com o motivo, e não só como desabilitada."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo cujo trilho abriga o seletor."
+        },
+        "composerTriggerPopover": {
+          "name": "Seletor de gatilho do composer",
+          "description": "Quando a escolha entra no texto da mensagem, em vez de mudar quem responde."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Quando a escolha é um campo do formulário, com rótulo visível e validação."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Quando o nome do modelo é só leitura, e não um controle que se aciona."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O gatilho leva o nome e a lista leva a descrição. Um trilho é estreito, e o nome é o que se confere de relance; a descrição é o que se lê na hora de trocar. Pôr as duas no gatilho encolhe o campo, que é o que importa ali.",
+      "item2": "A lista abre para cima porque o campo mora no pé da conversa. É a mesma decisão do seletor do caractere gatilho, e pelo mesmo motivo: embaixo não sobra espaço.",
+      "item3": "O que não pode ser escolhido agora não sai da lista. Apagar a opção sem explicação deixa a pergunta \"por que não posso?\" sem resposta na tela, e quem não enxerga o cinza não recebe nem a pista — por isso a opção continua legível e traz o motivo em texto.",
+      "item4": "A etiqueta curta é reforço, e nunca a única portadora. Se a condição importa para escolher, ela também está escrita na descrição — forma e cor sozinhas não descrevem condição.",
+      "item5": "O componente não troca de modelo. Ele avisa qual foi confirmado e devolve o controle: quem sabe o que a troca custa e quando ela vale é quem monta a conversa."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; o seletor em si não instrumenta a troca, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Acionar o gatilho",
+          "result": "A lista abre acima do trilho e o foco entra nela",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Andar com as setas",
+          "result": "O cursor passa de uma opção para a outra, sem sair da lista",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Confirmar a opção sob o cursor",
+          "result": "Quem consome é avisado com o modelo escolhido, e a lista fecha",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pedir para fechar com a tecla de escape",
+          "result": "A lista fecha sem trocar nada e o foco volta ao gatilho",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Acionar algo fora do seletor",
+          "result": "A lista fecha",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Confirmar uma opção que não pode ser escolhida",
+          "result": "Nada é escolhido, a lista continua aberta, e o motivo está em texto na opção",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar o modelo escolhido",
+          "result": "O gatilho mostra o nome dele, e a opção correspondente aparece marcada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar o seletor no trilho do campo",
+          "result": "Ele vive no início do trilho, e a lista abre por cima do campo",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "O nome acessível do gatilho diz o que ele escolhe, e não só o valor",
+        "item2": "O gatilho anuncia se a lista está aberta ou fechada",
+        "item3": "A lista tem nome próprio e um cursor que aponta a opção corrente",
+        "item4": "A opção indisponível continua legível e carrega o motivo em texto",
+        "item5": "Fechar pela tecla de escape devolve o foco ao gatilho",
+        "item6": "Cada opção tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — o seletor, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — a lista aberta, com as descrições",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variantes — com etiqueta ao lado do nome",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — fechado, só com o nome escolhido",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — com um modelo que não pode responder agora",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — no trilho do campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Composer model picker",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The rail control that says who answers: the trigger carries only the chosen name, and the panel opens upward with a description for each model.",
+    "seo": {
+      "title": "Composer model picker — who answers the question",
+      "description": "A trigger on the field rail and a list that opens upward: the name on the trigger, the description in the list, and a written reason on the option that cannot be chosen right now."
+    },
+    "labels": {
+      "trigger": "Model: {label}",
+      "list": "Models"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "closed": "Closed, with the chosen name",
+        "open": "Open, with the descriptions",
+        "unavailable": "With a model that cannot answer right now",
+        "withField": "On the field rail"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The trigger sits at the start of the rail, next to the other field controls, and carries only the chosen model's name.",
+      "item2": "The panel opens upward, because the field lives at the foot of the conversation and there is no room below it.",
+      "item3": "Each option leads with the name and, underneath, the description — which is what you read when deciding to switch.",
+      "item4": "The short tag sits to the right of the name, and it is reinforcement: whatever changes the choice is also written in the description.",
+      "item5": "What cannot be chosen right now stays in the list, with the reason in words beside the name.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-rail-start\">\n  <div class=\"nds-composer-model\" data-slot=\"composer-model\" data-state=\"open\">\n    <button class=\"nds-button\" data-slot=\"composer-model-trigger\"\n            aria-haspopup=\"listbox\" aria-expanded=\"true\"\n            aria-controls=\"m-panel\" aria-label=\"Modelo: Rápido\">Rápido</button>\n    <div class=\"nds-composer-model-panel\" id=\"m-panel\" role=\"listbox\"\n         tabindex=\"-1\" aria-label=\"Modelos\" aria-activedescendant=\"m-0\">\n      <div class=\"nds-composer-model-option\" id=\"m-0\" role=\"option\"\n           aria-selected=\"true\" data-active=\"true\">\n        <span class=\"nds-composer-model-name\">Rápido</span>\n        <span class=\"nds-badge nds-composer-model-badge\">Novo</span>\n        <span class=\"nds-composer-model-description\">Responde em segundos.</span>\n      </div>\n      <div class=\"nds-composer-model-option\" id=\"m-1\" role=\"option\"\n           aria-selected=\"false\" aria-disabled=\"true\">\n        <span class=\"nds-composer-model-name\">Profundo</span>\n        <span class=\"nds-composer-model-description\">Lê a obra inteira antes de responder.</span>\n        <span class=\"nds-composer-model-description\"\n              data-slot=\"composer-model-reason\">Fora do seu plano.</span>\n      </div>\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when more than one model can answer and the choice changes what comes back.",
+        "item2": "Keep only the name on the trigger; the description belongs to the list.",
+        "item3": "Write the description in terms of what changes for the person asking — response time, depth, reach.",
+        "item4": "Keep in the list what cannot be chosen right now, with the reason written out.",
+        "item5": "Applying the switch belongs to whoever runs the conversation: the picker reports which one was chosen and hands control back."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Choosing who answers, on the field rail",
+          "u": "Composer model picker",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Choosing a value inside a form",
+          "u": "Select",
+          "a": "There the choice is a field, with a visible label and validation; here it is a rail control."
+        },
+        "item3": {
+          "s": "Choosing among dozens of options, with search",
+          "u": "Command",
+          "a": "Search is for a long list; here there are few options and the description is what decides."
+        },
+        "item4": {
+          "s": "Choosing a person or a command while writing",
+          "u": "Composer trigger picker",
+          "a": "There the choice goes into the message text; here it changes who will answer it."
+        },
+        "item5": {
+          "s": "Showing which model answered a message",
+          "u": "Badge",
+          "a": "There it is a read-only label; here it is a control you operate."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "trigger": {
+            "name": "Trigger accessible name",
+            "format": "What it chooses, then the value",
+            "good": "Model: Fast",
+            "bad": "Fast"
+          },
+          "modelName": {
+            "name": "Model name",
+            "format": "One or two words, as the product calls it",
+            "good": "Fast",
+            "bad": "Fast answer generation model v2"
+          },
+          "description": {
+            "name": "Description",
+            "format": "One sentence, on what changes for the person asking",
+            "good": "Answers in seconds.",
+            "bad": "Optimized for low latency."
+          },
+          "badge": {
+            "name": "Tag",
+            "format": "One word, and never the only carrier",
+            "good": "New",
+            "bad": "Available only on test accounts"
+          },
+          "reason": {
+            "name": "Unavailability reason",
+            "format": "One sentence, on what is missing — not the error code",
+            "good": "Not in your plan.",
+            "bad": "403"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Say in the trigger's accessible name what it chooses, beyond the chosen value.",
+        "item2": "Write a description for each model — it is what supports the switch.",
+        "item3": "Bring the reason in words on the option that cannot be chosen.",
+        "item4": "Send focus back to the trigger when the panel closes."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't repeat the description on the trigger: it shrinks the field, which is what matters there.",
+        "item2": "Don't hide what is unavailable — the option disappears and the explanation goes with it.",
+        "item3": "Don't let the tag be the only carrier of a condition that changes the choice.",
+        "item4": "Don't open the panel downward: at the foot of the conversation there is no room below."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The model that cannot answer right now stays in the list, with the reason written beside the name.",
+        "dont": "It disappears from the list, and with it the answer to \"why can't I?\"."
+      },
+      "pair2": {
+        "do": "The trigger carries only the name, and the field keeps the width that matters.",
+        "dont": "The trigger carries name and description, and the field shrinks to fit what is already in the list."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createComposerModelPicker } from '@/components/ui/composer-model-picker';\nimport { createComposer } from '@/components/ui/composer';\n\nconst picker = createComposerModelPicker({\n  labels: pickerLabels,\n  models,\n  value: 'fast',\n  onValueChange: (model) => escolher(model.id),\n});\n\nconst composer = createComposer({ labels, railStart: [picker] });",
+        "react": "import { ComposerModelPicker } from \"@/components/ui/composer-model-picker\";\nimport { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  railStart={\n    <ComposerModelPicker\n      labels={pickerLabels}\n      models={models}\n      value={escolhido}\n      onValueChange={(model) => escolher(model.id)}\n    />\n  }\n/>",
+        "vue": "<Composer :labels=\"labels\">\n  <template #railStart>\n    <ComposerModelPicker\n      :labels=\"pickerLabels\"\n      :models=\"models\"\n      :value=\"escolhido\"\n      @change=\"escolher\"\n    />\n  </template>\n</Composer>",
+        "svelte": "{#snippet railStart()}\n  <ComposerModelPicker\n    labels={pickerLabels}\n    {models}\n    value={escolhido}\n    onValueChange={(model) => escolher(model.id)}\n  />\n{/snippet}\n\n<Composer {labels} {railStart} />",
+        "angular": "<ng-template #rail>\n  <nds-composer-model-picker\n    [labels]=\"pickerLabels\"\n    [models]=\"models()\"\n    [value]=\"escolhido()\"\n    (valueChange)=\"escolher($event)\"\n  />\n</ng-template>\n\n<nds-composer [labels]=\"labels\" [railStart]=\"rail\" />"
+      },
+      "withUnavailable": "With a model that cannot answer right now",
+      "withUnavailableCode": {
+        "web": "// Um modelo que pode responder. A descrição aparece na lista, e não no\n// gatilho: um trilho é estreito, e o nome é o que se confere de relance.\n{ id: 'fast', label: 'Rápido', description: 'Responde em segundos.' }\n\n// Indisponível vem com MOTIVO, sempre. Opção apagada sem explicação é a\n// pergunta \"por que não posso?\" sem resposta na tela — e quem não enxerga o\n// cinza não recebe nem a pista.\n{\n  id: 'deep',\n  label: 'Profundo',\n  description: 'Lê a obra inteira antes de responder.',\n  unavailable: true,\n  unavailableReason: 'Fora do seu plano.',\n}"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "closed": {
+        "label": "Closed",
+        "trigger": "At rest, before anyone asks to switch.",
+        "behavior": "The trigger shows the chosen name, and the list is not in the document."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "Someone operated the trigger, by pointer or by keyboard.",
+        "behavior": "The list appears above the rail, focus moves into it, and the cursor starts on what was already chosen."
+      },
+      "selected": {
+        "label": "Chosen",
+        "trigger": "An option was confirmed.",
+        "behavior": "It is marked in the list, its name moves to the trigger, and focus goes back there."
+      },
+      "unavailable": {
+        "label": "Unavailable",
+        "trigger": "A model cannot answer right now.",
+        "behavior": "The option stays in the list and stays reachable by the cursor, refuses to be confirmed, and carries the reason in words."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "models": {
+          "name": "models",
+          "type": "ModelOption[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The models that can answer, in the order they appear in the list."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "The chosen model, by its address. On its own it is a seed; paired with the change report, the consumer is in charge."
+        },
+        "onValueChange": {
+          "name": "onValueChange",
+          "type": "(model) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone confirmed a model, and the model comes along. Applying the switch belongs to whoever runs the conversation."
+        },
+        "open": {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "The list starts open. It is a seed, not a control: what opens and closes it afterwards is the picker itself, because that is drawing and not a state of the world."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open) => void",
+          "default": "—",
+          "required": "No",
+          "description": "The list opened or closed."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComposerModelPickerLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The interface text: what the trigger chooses and the name of the list."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The model's address. It is how the choice identifies itself."
+        },
+        "modelLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The model's short name. It is what appears on the trigger and in the list."
+        },
+        "modelDescription": {
+          "name": "description",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "One sentence about what changes when this model is chosen. It appears in the list, not on the trigger."
+        },
+        "badge": {
+          "name": "badge",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "A short tag beside the name. It is reinforcement, and never the only carrier of the information."
+        },
+        "unavailable": {
+          "name": "unavailable",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "The model cannot answer right now. The option stays in the list and stays readable, but refuses to be confirmed."
+        },
+        "unavailableReason": {
+          "name": "unavailableReason",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Why not, in words. Required whenever the model is unavailable."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The model is data, and the component does not know what it means. What each one costs, who is entitled to which, and what happens after the switch belongs to whoever runs the conversation — the picker draws the list and reports which one was confirmed.",
+      "extensibilityCode": {
+        "web": "// O modelo é DADO, e o componente não sabe o que ele significa.\n// Quanto custa, quem tem direito e o que acontece depois da troca é de quem\n// monta a conversa.\n{\n  id: 'balanced',            // o endereço, que identifica a escolha\n  label: 'Equilibrado',      // o nome curto, que vai para o gatilho\n  description: 'O meio-termo entre esperar e acertar.',\n  badge: 'Novo',             // reforço; nunca a única portadora\n  unavailable: false,        // verdadeiro exige o motivo abaixo\n  unavailableReason: undefined,\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "popover": {
+          "token": "--popover",
+          "value": ".nds-composer-model-panel",
+          "description": "Background of the list, which floats above the rail."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-model-panel",
+          "description": "The list's frame."
+        },
+        "elevationMd": {
+          "token": "--elevation-md",
+          "value": ".nds-composer-model-panel",
+          "description": "Shadow that separates the list from what is behind it."
+        },
+        "zPopover": {
+          "token": "--z-popover",
+          "value": ".nds-composer-model-panel",
+          "description": "The layer the list floats on."
+        },
+        "accent": {
+          "token": "--accent",
+          "value": ".nds-composer-model-option",
+          "description": "Highlight for the chosen option and for the one under the cursor."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-model-option",
+          "description": "Corner rounding of each option."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-composer-model-option",
+          "description": "Minimum touch target of the option."
+        },
+        "textP": {
+          "token": "--text-p",
+          "value": ".nds-composer-model-name",
+          "description": "Size of the model name."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-model-description",
+          "description": "Colour of the description and of the unavailability reason."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": ".nds-composer-model-panel {\n  max-inline-size: 24rem;\n}\n\n/* A etiqueta é REFORÇO, e não a pista: o que muda a escolha também está\n   escrito na descrição, porque forma e cor sozinhas não descrevem\n   condição (WCAG 1.4.1). */\n.nds-composer-model-badge {\n  text-transform: uppercase;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The trigger says what it chooses and whether the list is open; the list has its own name and an announced cursor; and what cannot be chosen stays readable, with the reason in words.",
+      "items": {
+        "item1": "The trigger's accessible name says what it chooses, not just the chosen value: \"Fast, button\" tells you nothing.",
+        "item2": "The trigger announces whether the list is open or closed, before anyone operates it.",
+        "item3": "The list has its own name, and its cursor is announced at every step — name, description and tag arrive together.",
+        "item4": "What cannot be chosen right now stays in the list and stays reachable by the cursor: taking it out of the reading would hide the reason along with it.",
+        "item5": "Closing sends focus back to the trigger — without that, focus falls to the top of the page and keyboard users lose their place."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the trigger. With the list open, closes it and sends focus back there.",
+        "enter": "On the trigger, opens the list. In the list, confirms the option under the cursor.",
+        "arrows": "Walk through the options, including the ones that cannot be chosen.",
+        "escape": "Closes the list without switching anything, and sends focus back to the trigger."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The trigger declares that it opens a list and whether that list is open right now.",
+        "item2": "The list is a list of options, with its own name and a cursor pointing at the current option.",
+        "item3": "The unavailable option declares itself disabled without leaving the reading, and the chosen one declares itself chosen."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The trigger is read as what it chooses, the current value and the state of the list.",
+        "item2": "Each option is read as name, tag and description, in that order.",
+        "item3": "The unavailable option is read with its reason, not merely as disabled."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field whose rail houses the picker."
+        },
+        "composerTriggerPopover": {
+          "name": "Composer trigger picker",
+          "description": "When the choice goes into the message text instead of changing who answers."
+        },
+        "select": {
+          "name": "Select",
+          "description": "When the choice is a form field, with a visible label and validation."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "When the model name is read-only, and not a control you operate."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The trigger carries the name and the list carries the description. A rail is narrow, and the name is what you check at a glance; the description is what you read when switching. Putting both on the trigger shrinks the field, which is what matters there.",
+      "item2": "The list opens upward because the field lives at the foot of the conversation. It is the same decision as the trigger-character picker, and for the same reason: there is no room below.",
+      "item3": "What cannot be chosen right now does not leave the list. Greying an option out without explanation leaves \"why can't I?\" unanswered on screen, and whoever does not perceive the grey gets no hint at all — so the option stays readable and carries the reason in words.",
+      "item4": "The short tag is reinforcement, never the only carrier. If the condition matters to the choice, it is also written in the description — shape and colour alone do not describe a condition.",
+      "item5": "The component does not switch models. It reports which one was confirmed and hands control back: whoever knows what the switch costs and when it is worth it is whoever runs the conversation."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the picker itself does not instrument the switch, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Operate the trigger",
+          "result": "The list opens above the rail and focus moves into it",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Walk with the arrow keys",
+          "result": "The cursor moves from one option to the next, without leaving the list",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Confirm the option under the cursor",
+          "result": "The consumer is told, with the chosen model, and the list closes",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Ask to close with the escape key",
+          "result": "The list closes without switching anything and focus goes back to the trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Operate something outside the picker",
+          "result": "The list closes",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Confirm an option that cannot be chosen",
+          "result": "Nothing is chosen, the list stays open, and the reason is in words on the option",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass the chosen model",
+          "result": "The trigger shows its name, and the matching option appears marked",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the picker on the field rail",
+          "result": "It lives at the start of the rail, and the list opens over the field",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The trigger's accessible name says what it chooses, not just the value",
+        "item2": "The trigger announces whether the list is open or closed",
+        "item3": "The list has its own name and a cursor pointing at the current option",
+        "item4": "The unavailable option stays readable and carries the reason in words",
+        "item5": "Closing with the escape key sends focus back to the trigger",
+        "item6": "Every option has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in every theme and mode.",
+        "item1": {
+          "story": "Playground — the picker, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — the list open, with the descriptions",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variants — with a tag beside the name",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "States — closed, with only the chosen name",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — with a model that cannot answer right now",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — on the field rail",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Selector de modelo del composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "El control del riel que dice quién responde: el disparador lleva solo el nombre elegido, y el panel se abre hacia arriba con la descripción de cada modelo.",
+    "seo": {
+      "title": "Selector de modelo del composer — quién responde la pregunta",
+      "description": "Un disparador en el riel del campo y una lista que se abre hacia arriba: el nombre en el disparador, la descripción en la lista, y el motivo escrito en la opción que no se puede elegir ahora."
+    },
+    "labels": {
+      "trigger": "Modelo: {label}",
+      "list": "Modelos"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "closed": "Cerrado, con el nombre elegido",
+        "open": "Abierto, con las descripciones",
+        "unavailable": "Con un modelo que no puede responder ahora",
+        "withField": "En el riel del campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El disparador vive al inicio del riel, junto a los demás controles del campo, y lleva solo el nombre del modelo elegido.",
+      "item2": "El panel se abre hacia arriba, porque el campo vive al pie de la conversación y debajo no queda espacio.",
+      "item3": "Cada opción encabeza con el nombre y, debajo, la descripción — que es lo que se lee a la hora de cambiar.",
+      "item4": "La etiqueta corta va a la derecha del nombre, y es refuerzo: lo que cambia la elección también está escrito en la descripción.",
+      "item5": "Lo que no se puede elegir ahora sigue en la lista, con el motivo en palabras junto al nombre.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-rail-start\">\n  <div class=\"nds-composer-model\" data-slot=\"composer-model\" data-state=\"open\">\n    <button class=\"nds-button\" data-slot=\"composer-model-trigger\"\n            aria-haspopup=\"listbox\" aria-expanded=\"true\"\n            aria-controls=\"m-panel\" aria-label=\"Modelo: Rápido\">Rápido</button>\n    <div class=\"nds-composer-model-panel\" id=\"m-panel\" role=\"listbox\"\n         tabindex=\"-1\" aria-label=\"Modelos\" aria-activedescendant=\"m-0\">\n      <div class=\"nds-composer-model-option\" id=\"m-0\" role=\"option\"\n           aria-selected=\"true\" data-active=\"true\">\n        <span class=\"nds-composer-model-name\">Rápido</span>\n        <span class=\"nds-badge nds-composer-model-badge\">Novo</span>\n        <span class=\"nds-composer-model-description\">Responde em segundos.</span>\n      </div>\n      <div class=\"nds-composer-model-option\" id=\"m-1\" role=\"option\"\n           aria-selected=\"false\" aria-disabled=\"true\">\n        <span class=\"nds-composer-model-name\">Profundo</span>\n        <span class=\"nds-composer-model-description\">Lê a obra inteira antes de responder.</span>\n        <span class=\"nds-composer-model-description\"\n              data-slot=\"composer-model-reason\">Fora do seu plano.</span>\n      </div>\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Pautas",
+        "item1": "Úsalo cuando haya más de un modelo que pueda responder y la elección cambie lo que se recibe.",
+        "item2": "Deja en el disparador solo el nombre; la descripción es de la lista.",
+        "item3": "Escribe la descripción en lo que cambia para quien pregunta — tiempo de respuesta, profundidad, alcance.",
+        "item4": "Mantén en la lista lo que no se puede elegir ahora, con el motivo por escrito.",
+        "item5": "Aplicar el cambio es de quien arma la conversación: el selector avisa cuál se eligió y devuelve el control."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Elegir quién responde, en el riel del campo",
+          "u": "Selector de modelo del composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Elegir un valor dentro de un formulario",
+          "u": "Select",
+          "a": "Allí la elección es un campo, con etiqueta visible y validación; aquí es un control del riel."
+        },
+        "item3": {
+          "s": "Elegir entre decenas de opciones, con búsqueda",
+          "u": "Command",
+          "a": "La búsqueda es para lista larga; aquí son pocas opciones y la descripción es lo que decide."
+        },
+        "item4": {
+          "s": "Elegir a alguien o un comando mientras se escribe",
+          "u": "Selector de disparador del composer",
+          "a": "Allí la elección entra en el texto del mensaje; aquí cambia quién va a responderlo."
+        },
+        "item5": {
+          "s": "Mostrar qué modelo respondió un mensaje",
+          "u": "Badge",
+          "a": "Allí es etiqueta de lectura; aquí es un control que se acciona."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "trigger": {
+            "name": "Nombre accesible del disparador",
+            "format": "Lo que elige, y después el valor",
+            "good": "Modelo: Rápido",
+            "bad": "Rápido"
+          },
+          "modelName": {
+            "name": "Nombre del modelo",
+            "format": "Una o dos palabras, como el producto lo llama",
+            "good": "Rápido",
+            "bad": "Modelo de generación de respuesta rápida v2"
+          },
+          "description": {
+            "name": "Descripción",
+            "format": "Una frase, en lo que cambia para quien pregunta",
+            "good": "Responde en segundos.",
+            "bad": "Optimizado para baja latencia."
+          },
+          "badge": {
+            "name": "Etiqueta",
+            "format": "Una palabra, y nunca la única portadora",
+            "good": "Nuevo",
+            "bad": "Disponible solo en cuentas de prueba"
+          },
+          "reason": {
+            "name": "Motivo de indisponibilidad",
+            "format": "Una frase, en lo que falta — no el código del error",
+            "good": "Fuera de tu plan.",
+            "bad": "403"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Di en el nombre accesible del disparador qué elige, además del valor elegido.",
+        "item2": "Escribe la descripción de cada modelo — es la que sostiene el cambio.",
+        "item3": "Trae el motivo por escrito en la opción que no se puede elegir.",
+        "item4": "Devuelve el foco al disparador cuando el panel se cierre."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No repitas la descripción en el disparador: encoge el campo, que es lo que importa allí.",
+        "item2": "No escondas lo que no está disponible — desaparece la opción y desaparece la explicación con ella.",
+        "item3": "No dejes que la etiqueta sea la única portadora de una condición que cambia la elección.",
+        "item4": "No abras el panel hacia abajo: al pie de la conversación no queda espacio debajo."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El modelo que no puede responder ahora sigue en la lista, con el motivo escrito junto al nombre.",
+        "dont": "Desaparece de la lista, y con él la respuesta a \"¿por qué no puedo?\"."
+      },
+      "pair2": {
+        "do": "El disparador lleva solo el nombre, y el campo conserva el ancho que importa.",
+        "dont": "El disparador lleva nombre y descripción, y el campo se encoge para caber lo que ya está en la lista."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposerModelPicker } from '@/components/ui/composer-model-picker';\nimport { createComposer } from '@/components/ui/composer';\n\nconst picker = createComposerModelPicker({\n  labels: pickerLabels,\n  models,\n  value: 'fast',\n  onValueChange: (model) => escolher(model.id),\n});\n\nconst composer = createComposer({ labels, railStart: [picker] });",
+        "react": "import { ComposerModelPicker } from \"@/components/ui/composer-model-picker\";\nimport { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  railStart={\n    <ComposerModelPicker\n      labels={pickerLabels}\n      models={models}\n      value={escolhido}\n      onValueChange={(model) => escolher(model.id)}\n    />\n  }\n/>",
+        "vue": "<Composer :labels=\"labels\">\n  <template #railStart>\n    <ComposerModelPicker\n      :labels=\"pickerLabels\"\n      :models=\"models\"\n      :value=\"escolhido\"\n      @change=\"escolher\"\n    />\n  </template>\n</Composer>",
+        "svelte": "{#snippet railStart()}\n  <ComposerModelPicker\n    labels={pickerLabels}\n    {models}\n    value={escolhido}\n    onValueChange={(model) => escolher(model.id)}\n  />\n{/snippet}\n\n<Composer {labels} {railStart} />",
+        "angular": "<ng-template #rail>\n  <nds-composer-model-picker\n    [labels]=\"pickerLabels\"\n    [models]=\"models()\"\n    [value]=\"escolhido()\"\n    (valueChange)=\"escolher($event)\"\n  />\n</ng-template>\n\n<nds-composer [labels]=\"labels\" [railStart]=\"rail\" />"
+      },
+      "withUnavailable": "Con un modelo que no puede responder ahora",
+      "withUnavailableCode": {
+        "web": "// Um modelo que pode responder. A descrição aparece na lista, e não no\n// gatilho: um trilho é estreito, e o nome é o que se confere de relance.\n{ id: 'fast', label: 'Rápido', description: 'Responde em segundos.' }\n\n// Indisponível vem com MOTIVO, sempre. Opção apagada sem explicação é a\n// pergunta \"por que não posso?\" sem resposta na tela — e quem não enxerga o\n// cinza não recebe nem a pista.\n{\n  id: 'deep',\n  label: 'Profundo',\n  description: 'Lê a obra inteira antes de responder.',\n  unavailable: true,\n  unavailableReason: 'Fora do seu plano.',\n}"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "En reposo, antes de que alguien pida cambiar.",
+        "behavior": "El disparador muestra el nombre elegido, y la lista no existe en el documento."
+      },
+      "open": {
+        "label": "Abierto",
+        "trigger": "Alguien accionó el disparador, con el puntero o con el teclado.",
+        "behavior": "La lista aparece encima del riel, el foco entra en ella, y el cursor empieza en lo que ya estaba elegido."
+      },
+      "selected": {
+        "label": "Elegido",
+        "trigger": "Se confirmó una opción.",
+        "behavior": "Queda marcada en la lista, su nombre pasa al disparador, y el foco vuelve allí."
+      },
+      "unavailable": {
+        "label": "No disponible",
+        "trigger": "Un modelo no puede responder ahora.",
+        "behavior": "La opción sigue en la lista y sigue alcanzable por el cursor, no acepta ser confirmada, y trae el motivo en palabras."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "models": {
+          "name": "models",
+          "type": "ModelOption[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los modelos que pueden responder, en el orden en que aparecen en la lista."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "El modelo elegido, por su dirección. Solo es semilla; acompañado del aviso de cambio, manda quien consume."
+        },
+        "onValueChange": {
+          "name": "onValueChange",
+          "type": "(model) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien confirmó un modelo, y el modelo va junto. Aplicar el cambio es de quien arma la conversación."
+        },
+        "open": {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "La lista empieza abierta. Es semilla, y no control: quien abre y cierra después es el propio selector, porque eso es dibujo y no estado del mundo."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open) => void",
+          "default": "—",
+          "required": "No",
+          "description": "La lista se abrió o se cerró."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComposerModelPickerLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la interfaz: qué elige el disparador y el nombre de la lista."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Dirección del modelo. Es por ella que la elección se identifica."
+        },
+        "modelLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre corto del modelo. Es el que aparece en el disparador y en la lista."
+        },
+        "modelDescription": {
+          "name": "description",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Una frase sobre lo que cambia al elegir ese modelo. Aparece en la lista, y no en el disparador."
+        },
+        "badge": {
+          "name": "badge",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Etiqueta corta junto al nombre. Es refuerzo, y nunca la única portadora de la información."
+        },
+        "unavailable": {
+          "name": "unavailable",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "El modelo no puede responder ahora. La opción sigue en la lista y sigue legible, pero no acepta ser confirmada."
+        },
+        "unavailableReason": {
+          "name": "unavailableReason",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Por qué no se puede, en palabras. Obligatorio cuando el modelo no está disponible."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El modelo es dato, y el componente no sabe qué significa. Cuánto cuesta cada uno, quién tiene derecho a cuál y qué pasa después del cambio es de quien arma la conversación — el selector dibuja la lista y avisa cuál se confirmó.",
+      "extensibilityCode": {
+        "web": "// O modelo é DADO, e o componente não sabe o que ele significa.\n// Quanto custa, quem tem direito e o que acontece depois da troca é de quem\n// monta a conversa.\n{\n  id: 'balanced',            // o endereço, que identifica a escolha\n  label: 'Equilibrado',      // o nome curto, que vai para o gatilho\n  description: 'O meio-termo entre esperar e acertar.',\n  badge: 'Novo',             // reforço; nunca a única portadora\n  unavailable: false,        // verdadeiro exige o motivo abaixo\n  unavailableReason: undefined,\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "popover": {
+          "token": "--popover",
+          "value": ".nds-composer-model-panel",
+          "description": "Fondo de la lista, que flota encima del riel."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-model-panel",
+          "description": "Marco de la lista."
+        },
+        "elevationMd": {
+          "token": "--elevation-md",
+          "value": ".nds-composer-model-panel",
+          "description": "Sombra que separa la lista de lo que está detrás."
+        },
+        "zPopover": {
+          "token": "--z-popover",
+          "value": ".nds-composer-model-panel",
+          "description": "Capa en la que flota la lista."
+        },
+        "accent": {
+          "token": "--accent",
+          "value": ".nds-composer-model-option",
+          "description": "Realce de la opción elegida y de la que está bajo el cursor."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-model-option",
+          "description": "Redondeo de cada opción."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-composer-model-option",
+          "description": "Área táctil mínima de la opción."
+        },
+        "textP": {
+          "token": "--text-p",
+          "value": ".nds-composer-model-name",
+          "description": "Tamaño del nombre del modelo."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-model-description",
+          "description": "Color de la descripción y del motivo de indisponibilidad."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-model-panel {\n  max-inline-size: 24rem;\n}\n\n/* A etiqueta é REFORÇO, e não a pista: o que muda a escolha também está\n   escrito na descrição, porque forma e cor sozinhas não descrevem\n   condição (WCAG 1.4.1). */\n.nds-composer-model-badge {\n  text-transform: uppercase;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El disparador dice qué elige y si la lista está abierta; la lista tiene nombre propio y un cursor que se anuncia; y lo que no se puede elegir sigue legible, con el motivo en palabras.",
+      "items": {
+        "item1": "El nombre accesible del disparador dice qué elige, y no solo el valor elegido: \"Rápido, botón\" no informa nada.",
+        "item2": "El disparador anuncia si la lista está abierta o cerrada, antes de que alguien lo accione.",
+        "item3": "La lista tiene nombre propio, y su cursor se anuncia en cada paso — nombre, descripción y etiqueta llegan juntos.",
+        "item4": "Lo que no se puede elegir ahora sigue en la lista y sigue alcanzable por el cursor: sacarlo de la lectura escondería el motivo con él.",
+        "item5": "Cerrar devuelve el foco al disparador — sin eso el foco cae al inicio de la página y quien navega con teclado se pierde."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Alcanza el disparador. Con la lista abierta, la cierra y devuelve el foco allí.",
+        "enter": "En el disparador, abre la lista. En la lista, confirma la opción bajo el cursor.",
+        "arrows": "Recorren las opciones, incluidas las que no se pueden elegir.",
+        "escape": "Cierra la lista sin cambiar nada, y devuelve el foco al disparador."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "El disparador declara que abre una lista y si está abierta ahora.",
+        "item2": "La lista es una lista de opciones, con nombre propio y un cursor que apunta a la opción corriente.",
+        "item3": "La opción no disponible se declara deshabilitada sin salir de la lectura, y la elegida se declara elegida."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El disparador se lee como lo que elige, el valor corriente y el estado de la lista.",
+        "item2": "Cada opción se lee como nombre, etiqueta y descripción, en ese orden.",
+        "item3": "La opción no disponible se lee con su motivo, y no solo como deshabilitada."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo cuyo riel aloja el selector."
+        },
+        "composerTriggerPopover": {
+          "name": "Selector de disparador del composer",
+          "description": "Cuando la elección entra en el texto del mensaje, en vez de cambiar quién responde."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Cuando la elección es un campo del formulario, con etiqueta visible y validación."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Cuando el nombre del modelo es solo lectura, y no un control que se acciona."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El disparador lleva el nombre y la lista lleva la descripción. Un riel es estrecho, y el nombre es lo que se comprueba de un vistazo; la descripción es lo que se lee a la hora de cambiar. Poner las dos en el disparador encoge el campo, que es lo que importa allí.",
+      "item2": "La lista se abre hacia arriba porque el campo vive al pie de la conversación. Es la misma decisión del selector del carácter disparador, y por el mismo motivo: debajo no queda espacio.",
+      "item3": "Lo que no se puede elegir ahora no sale de la lista. Apagar la opción sin explicación deja la pregunta \"¿por qué no puedo?\" sin respuesta en pantalla, y quien no percibe el gris no recibe ni la pista — por eso la opción sigue legible y trae el motivo en palabras.",
+      "item4": "La etiqueta corta es refuerzo, nunca la única portadora. Si la condición importa para elegir, también está escrita en la descripción — forma y color por sí solos no describen una condición.",
+      "item5": "El componente no cambia de modelo. Avisa cuál se confirmó y devuelve el control: quien sabe lo que cuesta el cambio y cuándo vale la pena es quien arma la conversación."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; el selector en sí no instrumenta el cambio, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Accionar el disparador",
+          "result": "La lista se abre encima del riel y el foco entra en ella",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Recorrer con las flechas",
+          "result": "El cursor pasa de una opción a otra, sin salir de la lista",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Confirmar la opción bajo el cursor",
+          "result": "Se avisa a quien consume, con el modelo elegido, y la lista se cierra",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pedir cerrar con la tecla de escape",
+          "result": "La lista se cierra sin cambiar nada y el foco vuelve al disparador",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Accionar algo fuera del selector",
+          "result": "La lista se cierra",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Confirmar una opción que no se puede elegir",
+          "result": "No se elige nada, la lista sigue abierta, y el motivo está en palabras en la opción",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar el modelo elegido",
+          "result": "El disparador muestra su nombre, y la opción correspondiente aparece marcada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar el selector en el riel del campo",
+          "result": "Vive al inicio del riel, y la lista se abre por encima del campo",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que la play afirma.",
+        "item1": "El nombre accesible del disparador dice qué elige, y no solo el valor",
+        "item2": "El disparador anuncia si la lista está abierta o cerrada",
+        "item3": "La lista tiene nombre propio y un cursor que apunta a la opción corriente",
+        "item4": "La opción no disponible sigue legible y lleva el motivo en palabras",
+        "item5": "Cerrar con la tecla de escape devuelve el foco al disparador",
+        "item6": "Cada opción tiene al menos veinticuatro píxeles de área"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — el selector, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — la lista abierta, con las descripciones",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variantes — con etiqueta junto al nombre",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — cerrado, solo con el nombre elegido",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — con un modelo que no puede responder ahora",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — en el riel del campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

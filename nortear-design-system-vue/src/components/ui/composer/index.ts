@@ -10,6 +10,7 @@ import type { FileSizeUnit } from '@shared/primitives/file-size'
 export { default as Composer } from './Composer.vue'
 export { default as ComposerAttachments } from './ComposerAttachments.vue'
 export { default as ComposerContext } from './ComposerContext.vue'
+export { default as ComposerModelPicker } from './ComposerModelPicker.vue'
 export { default as ComposerVoice } from './ComposerVoice.vue'
 
 /**
@@ -137,6 +138,31 @@ export interface ComposerContextLabels {
   kind: Record<ContextKind, string>
   /** A marca do que entrou sem ninguém pedir. É texto, e não só a cor. */
   automatic: string
+}
+
+/**
+ * O vocabulário do SELETOR DE MODELO.
+ *
+ * A peça é AUTÔNOMA, como o ditado por voz: o campo não sabe que ela existe, e
+ * quem consome a põe no início do trilho. Por isso ela não entra na API do
+ * `Composer` — o trilho é um ESPAÇO, e o que se põe nele é de quem monta a
+ * tela.
+ *
+ * O modelo em si — `ModelOption` — vem de `@shared/primitives/chat-protocol`, e
+ * é o mesmo nas cinco stacks, junto da pergunta que decide se ele pode ser
+ * escolhido agora. O que mora aqui é só o texto, porque o nome do gatilho e o
+ * da lista são texto de interface e têm três idiomas.
+ */
+export interface ComposerModelPickerLabels {
+  /**
+   * Nome acessível do gatilho. `{label}` vira o nome do modelo escolhido.
+   *
+   * Ele diz O QUE o gatilho escolhe, e não só o valor escolhido: "Rápido,
+   * botão" não informa nada.
+   */
+  trigger: string
+  /** Nome acessível da lista. */
+  list: string
 }
 
 /**
