@@ -235,6 +235,12 @@ describe('transforms do painel Code', () => {
               mod.startsWith('@/components/ui/') ||
               mod.startsWith('@/lib/') ||
               mod.startsWith('@/hooks/') ||
+              // `@shared/*` é alias desta stack (tsconfig.app.json e
+              // vite.config.ts): é de onde vêm as máquinas compartilhadas pelas
+              // cinco, e um snippet que ensina a máquina precisa citá-la pelo
+              // caminho que resolve. Quem copia o seletor do gatilho importa
+              // `MENTION_TRIGGER` de lá, não do design system.
+              mod.startsWith('@shared/') ||
               dependencias.has(mod) ||
               dependencias.has(mod.split('/').slice(0, mod.startsWith('@') ? 2 : 1).join('/'));
             expect(conhecido, `${name}: import de módulo desconhecido "${mod}"`).toBe(true);

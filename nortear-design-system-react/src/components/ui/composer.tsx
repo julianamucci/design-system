@@ -2,6 +2,12 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  ComposerTriggerPopover,
+  useComposerTrigger,
+  type TriggerPopoverLabels,
+  type TriggerSource,
+} from "@/components/ui/composer-trigger-popover"
 
 /**
  * A superfície de entrada da conversa. Estrutura e cores em `nds/composer.css`,
@@ -87,6 +93,15 @@ export interface ComposerProps
   running?: boolean
   /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
   railStart?: React.ReactNode
+  /**
+   * Gatilhos do seletor — menções, comandos, e qualquer outro caractere.
+   *
+   * Sem eles o campo é só um campo. Com eles, digitar o caractere abre o
+   * seletor, e a tecla de envio passa a ESCOLHER enquanto ele estiver aberto.
+   */
+  triggers?: TriggerSource[]
+  /** Textos do seletor. Obrigatórios quando há gatilho, porque são texto de tela. */
+  triggerLabels?: TriggerPopoverLabels
   /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem consome. */
   onSubmit?: (value: string) => void
   /** Alguém pediu para interromper o que está sendo gerado. */
@@ -123,6 +138,8 @@ function Composer({
   submitOn = "enter",
   running = false,
   railStart,
+  triggers,
+  triggerLabels,
   onSubmit,
   onStop,
   onValueChange,
@@ -139,10 +156,50 @@ function Composer({
   const controlled = value !== undefined && onValueChange !== undefined
   const text = controlled ? value : draft
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const next = event.target.value
+  const inputRef = React.useRef<HTMLTextAreaElement>(null)
+
+  const write = (next: string) => {
     if (!controlled) setDraft(next)
     onValueChange?.(next)
+  }
+
+  // ── O seletor do caractere gatilho ─────────────────────────────────────────
+  //
+  // Só desenha painel quando há gatilho declarado E texto para ele dizer. Sem
+  // rótulo o painel abriria com a frase de nenhum resultado em branco, que é
+  // pior que não abrir. O estado, esse, existe sempre: um hook não pode ser
+  // condicional, e sem gatilho ele nunca chega a abrir.
+  const sources = triggers ?? []
+  const hasTrigger = sources.length > 0 && triggerLabels !== undefined
+
+  /**
+   * Onde o cursor deve parar depois da escolha.
+   *
+   * Aqui o campo é controlado, então escrever é agendar um render — e mexer no
+   * cursor antes dele seria mexer no texto antigo. A posição espera numa
+   * referência e é aplicada quando o texto novo já está na tela.
+   */
+  const caretRef = React.useRef<number | null>(null)
+
+  const trigger = useComposerTrigger({
+    inputRef,
+    sources,
+    onApply: (next, caret) => {
+      caretRef.current = caret
+      write(next)
+    },
+  })
+
+  React.useLayoutEffect(() => {
+    const caret = caretRef.current
+    if (caret === null) return
+    caretRef.current = null
+    inputRef.current?.setSelectionRange(caret, caret)
+  })
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    write(event.target.value)
+    trigger.sync()
   }
 
   const submit = () => {
@@ -177,6 +234,7 @@ function Composer({
       <div className="nds-composer-field">
         <textarea
           id={fieldId}
+          ref={inputRef}
           data-slot="composer-input"
           className="nds-composer-input"
           rows={rows}
@@ -189,10 +247,53 @@ function Composer({
           // A dica descreve o campo — `Enter envia` é comportamento, e saber
           // disso depois de apertar a tecla não serve para nada.
           aria-describedby={hintId}
+          // O campo aponta a lista só enquanto ela existe para ele. Um
+          // `aria-controls` para um painel escondido promete uma lista que não
+          // há, e um `aria-activedescendant` órfão aponta um elemento que já
+          // saiu do documento.
+          aria-controls={hasTrigger && trigger.open ? trigger.listId : undefined}
+          aria-activedescendant={hasTrigger ? trigger.activeOptionId : undefined}
           maxLength={maxLength}
           disabled={disabled}
           onChange={handleChange}
           onKeyDown={(event) => {
+            // COM O SELETOR ABERTO, AS TECLAS SÃO DELE.
+            //
+            // É a decisão que atravessa o componente inteiro: envio e escolha
+            // disputam a mesma tecla, e enviar no meio de uma menção é o
+            // defeito que quem escreve encontra na primeira vez que usa. As
+            // setas e o Escape também param aqui — sem isso a seta moveria o
+            // cursor no texto enquanto a lista parece andar.
+            if (hasTrigger && trigger.isOpen()) {
+              if (event.key === "ArrowDown") {
+                event.preventDefault()
+                trigger.move(1)
+                return
+              }
+              if (event.key === "ArrowUp") {
+                event.preventDefault()
+                trigger.move(-1)
+                return
+              }
+              if (event.key === "Escape") {
+                event.preventDefault()
+                trigger.close()
+                return
+              }
+              // Enter e Tab escolhem. O Tab entra porque quem escreve espera
+              // que ele complete, e sem isso ele tiraria o foco do campo com a
+              // lista aberta.
+              if (
+                (event.key === "Enter" && !event.nativeEvent.isComposing) ||
+                event.key === "Tab"
+              ) {
+                if (trigger.applyActive()) {
+                  event.preventDefault()
+                  return
+                }
+              }
+            }
+
             if (!asksToSubmit(event, submitOn)) return
             // Só aqui: sem o `preventDefault` a quebra de linha entra junto
             // com o envio, e o campo fica com um enter sobrando depois de
@@ -200,7 +301,24 @@ function Composer({
             event.preventDefault()
             submit()
           }}
+          // O clique e as setas movem o cursor sem disparar mudança de texto, e
+          // o gatilho depende de ONDE o cursor está: sem isto o seletor
+          // continuaria aberto sobre um caractere que ficou para trás.
+          onClick={() => trigger.sync()}
+          onKeyUp={(event) => {
+            if (
+              event.key.startsWith("Arrow") ||
+              event.key === "Home" ||
+              event.key === "End"
+            ) {
+              trigger.sync()
+            }
+          }}
+          onBlur={() => trigger.close()}
         />
+        {hasTrigger ? (
+          <ComposerTriggerPopover controller={trigger} labels={triggerLabels} />
+        ) : null}
       </div>
 
       <div className="nds-composer-rail">
