@@ -15,6 +15,7 @@ const VARIANTS: { variant: ButtonVariant; label: string }[] = [
 
 const meta: Meta = {
   title: 'UI/Button/Variants',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsButton] })],
   parameters: {
     // Sem argTypes nesta story: o painel Controls ficaria vazio.

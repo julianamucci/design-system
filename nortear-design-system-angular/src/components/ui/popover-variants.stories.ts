@@ -14,6 +14,7 @@ import { NdsLabel } from './label';
 
 const meta: Meta = {
   title: 'UI/Popover/Variants',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton, NdsInput, NdsLabel] })],
   parameters: {
     layout: 'centered',

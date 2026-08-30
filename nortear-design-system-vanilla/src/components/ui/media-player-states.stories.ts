@@ -28,6 +28,7 @@ const onEnded = fn();
 
 const meta: Meta = {
   title: 'UI/MediaPlayer/States',
+  tags: ['display'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },

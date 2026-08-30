@@ -7,6 +7,7 @@ import { NdsButton, NdsButtonIcon } from './button';
 
 const meta: Meta = {
   title: 'UI/Badge/Compositions',
+  tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsBadge, NdsBadgeCounter, NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

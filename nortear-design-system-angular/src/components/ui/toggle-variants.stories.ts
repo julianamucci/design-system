@@ -5,6 +5,7 @@ import { NdsToggle, NdsToggleIcon } from './toggle';
 
 const meta: Meta = {
   title: 'UI/Toggle/Variants',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsToggle, NdsToggleIcon] })],
   parameters: {
     layout: 'padded',

@@ -7,6 +7,7 @@ import { NdsButton } from './button';
 
 const meta: Meta = {
   title: 'UI/Carousel/Settings',
+  tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio, NdsButton] })],
   parameters: { layout: 'centered', controls: { disable: true } },
 };

@@ -9,6 +9,7 @@ import { NdsButton } from './button';
 
 const meta: Meta = {
   title: 'UI/Form/Compositions',
+  tags: ['form'],
   decorators: [
     moduleMetadata({
       imports: [...NDS_FORM, NdsInput, NdsTextarea, NdsButton, ReactiveFormsModule],

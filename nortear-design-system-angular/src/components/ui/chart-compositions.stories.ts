@@ -27,6 +27,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Chart/Compositions',
+  tags: ['display'],
   decorators: [
     moduleMetadata({
       imports: [NdsChart, NdsCard, NdsCardHeader, NdsCardTitle, NdsCardDescription, NdsCardContent],

@@ -6,6 +6,7 @@ import { NDS_CARD } from './card';
 
 const meta: Meta = {
   title: 'UI/Separator/Compositions',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsSeparator, ...NDS_CARD] })],
   parameters: {
     layout: 'padded',

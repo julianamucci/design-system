@@ -28,6 +28,7 @@ const PANEL_CLASSES =
 
 const meta: Meta = {
   title: 'UI/Collapsible/Variants',
+  tags: ['disclosure'],
   decorators: [moduleMetadata({ imports: [...NDS_COLLAPSIBLE, NdsButton] })],
   parameters: {
     layout: 'padded',

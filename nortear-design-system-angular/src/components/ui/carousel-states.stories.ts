@@ -12,6 +12,7 @@ import { NdsAspectRatio } from './aspect-ratio';
 
 const meta: Meta = {
   title: 'UI/Carousel/States',
+  tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio] })],
   parameters: {
     layout: 'centered',

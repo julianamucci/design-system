@@ -23,6 +23,7 @@ import { mediaPlayerSourceWith } from './media-player.source';
 
 const meta: Meta = {
   title: 'UI/MediaPlayer/Variants',
+  tags: ['display'],
   decorators: [moduleMetadata({ imports: [MediaPlayerComponent] })],
   // Sem `argTypes` próprios, o painel Controls ficaria vazio e a aba Actions
   // prometeria um evento que nenhum arg alimenta.

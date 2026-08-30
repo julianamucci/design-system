@@ -13,6 +13,7 @@ const onSave = fn();
 
 const meta: Meta = {
   title: 'UI/Card/Variants',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_CARD, NdsButton] })],
   parameters: {
     layout: 'padded',

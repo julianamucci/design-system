@@ -7,6 +7,7 @@ import { editorBasicSource, editorAdvancedSource } from './editor.source';
 
 const meta: Meta = {
   title: 'UI/Editor/Variants',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [EditorComponent] })],
   parameters: {
     layout: 'padded',

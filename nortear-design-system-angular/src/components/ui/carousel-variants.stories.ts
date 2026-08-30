@@ -15,6 +15,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Carousel/Variants',
+  tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio] })],
   parameters: { layout: 'centered', controls: { disable: true } },
 };

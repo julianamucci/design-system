@@ -12,6 +12,7 @@ import { NdsLabel } from './label';
 
 const meta: Meta = {
   title: 'UI/Input/Input Group',
+  tags: ['form'],
   decorators: [
     moduleMetadata({
       imports: [...NDS_INPUT_GROUP, NdsButton, NdsButtonIcon, NdsLabel],

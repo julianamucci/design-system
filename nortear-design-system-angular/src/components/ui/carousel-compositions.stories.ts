@@ -30,6 +30,7 @@ const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
 
 const meta: Meta = {
   title: 'UI/Carousel/Compositions',
+  tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio, NdsButton, ...NDS_CARD] })],
   parameters: {
     layout: 'centered',

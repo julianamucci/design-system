@@ -6,6 +6,7 @@ import { NdsInputOtp } from './input-otp';
 
 const meta: Meta = {
   title: 'UI/InputOTP/States',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsInputOtp] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

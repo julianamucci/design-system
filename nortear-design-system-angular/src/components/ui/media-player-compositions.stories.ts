@@ -19,6 +19,7 @@ const secondPause = fn();
 
 const meta: Meta = {
   title: 'UI/MediaPlayer/Compositions',
+  tags: ['display'],
   decorators: [moduleMetadata({ imports: [MediaPlayerComponent] })],
   parameters: {
     layout: 'padded',

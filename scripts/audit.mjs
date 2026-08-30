@@ -3800,6 +3800,60 @@ function auditTemasCompletos() {
   return violations;
 }
 
+/**
+ * Story de componente sem tag de CATEGORIA.
+ *
+ * O filtro da sidebar do Storybook é por tag, e tag em CSF não se herda: cada
+ * arquivo de story carrega as suas. Um componente é escrito em quatro arquivos
+ * — `<slug>.stories`, `-variants`, `-compositions`, `-states` —, e a categoria
+ * costumava ser declarada só no primeiro.
+ *
+ * O efeito é silencioso e enganoso, que é o que torna esta regra necessária:
+ * sem filtro a árvore está inteira, e ao filtrar por "display" o MediaPlayer
+ * aparece com Documentação e Playground e MAIS NADA. A pasta continua lá, o que
+ * faz parecer bug de renderização em vez de ausência de tag. Nenhum portão via:
+ * não é tipo, não é classe, não é texto — o build compila e a story roda.
+ *
+ * Medido em 2026-08-30: 93 arquivos nas cinco stacks, 77 deles no Angular, que
+ * nasceu sem esta convenção.
+ *
+ * `QA/` e `Foundations/` ficam de fora de propósito: são stories de portão e de
+ * fundamento, não de componente, e não pertencem a categoria nenhuma.
+ */
+const CATEGORIAS_SIDEBAR = new Set([
+  'form', 'overlay', 'layout', 'navigation', 'feedback',
+  'display', 'conversational', 'disclosure', 'tables',
+]);
+
+function auditStoryCategoryTag() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const ui = join(ROOT, stackDir(stack), 'src', 'components', 'ui');
+    for (const file of walkDir(ui, ['.stories.ts', '.stories.tsx', '.stories.svelte'])) {
+      const content = readFile(file);
+      if (!content) continue;
+
+      const titulo = (content.match(/title:\s*['"]([^'"]+)['"]/) || [])[1];
+      if (!titulo || !titulo.startsWith('UI/')) continue;
+
+      const bloco = content.match(/tags:\s*\[([\s\S]*?)\]/);
+      const tags = bloco ? [...bloco[1].matchAll(/['"]([^'"]+)['"]/g)].map((m) => m[1]) : [];
+      if (tags.some((t) => CATEGORIAS_SIDEBAR.has(t))) continue;
+
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack,
+        file: relative(ROOT, file), rule: 'story_sem_categoria',
+        message:
+          `"${titulo}" não declara categoria em \`tags\` — ao filtrar a sidebar por` +
+          ' categoria esta story some, e some em silêncio: a pasta do componente' +
+          ' continua visível pelas outras stories dele. Use a mesma categoria da story' +
+          ` principal (uma de: ${[...CATEGORIAS_SIDEBAR].join(', ')})`,
+      });
+    }
+  }
+  return violations;
+}
+
 function auditStorybookInfra() {
   const violations = [];
   for (const stack of STACKS) {
@@ -5474,7 +5528,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

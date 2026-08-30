@@ -9,6 +9,7 @@ import { NdsInput } from './input';
 
 const meta: Meta = {
   title: 'UI/Form/States',
+  tags: ['form'],
   decorators: [
     moduleMetadata({ imports: [...NDS_FORM, NdsInput, ReactiveFormsModule] }),
   ],

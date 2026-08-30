@@ -18,6 +18,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Editor/States',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [EditorComponent] })],
   parameters: {
     layout: 'padded',

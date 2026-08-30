@@ -9,6 +9,7 @@ import { formFieldsetSource, formMultiplosFieldsSource } from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/Compositions',
+  tags: ['form'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },

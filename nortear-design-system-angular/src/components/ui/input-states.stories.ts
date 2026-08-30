@@ -13,6 +13,7 @@ import { NdsLabel } from './label';
 
 const meta: Meta = {
   title: 'UI/Input/States',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsInput, NdsLabel] })],
   parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
 };

@@ -7,6 +7,7 @@ import { formFieldsetSource, formMultipleFieldsSource } from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/Compositions',
+  tags: ['form'],
   component: FormGroupStory,
   parameters: {
     layout: 'padded',

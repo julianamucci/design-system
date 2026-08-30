@@ -18,6 +18,7 @@ import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'UI/Calendar/Compositions',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsCalendar, ...NDS_POPOVER, NdsButton] })],
   parameters: {
     layout: 'centered',

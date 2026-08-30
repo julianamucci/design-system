@@ -10,6 +10,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Progress/States',
+  tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [...NDS_PROGRESS] })],
   parameters: {
     layout: 'padded',

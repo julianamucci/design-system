@@ -14,6 +14,7 @@ import {
 
 const meta: Meta = {
   title: "UI/Form/Compositions",
+  tags: ["form"],
   parameters: {
     layout: "padded",
     controls: { disable: true },

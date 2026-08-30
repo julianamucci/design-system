@@ -19,6 +19,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/HoverCard/Compositions',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR] })],
   parameters: {
     layout: 'padded',

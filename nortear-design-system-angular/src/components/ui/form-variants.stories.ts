@@ -10,6 +10,7 @@ import { NdsInput } from './input';
 
 const meta: Meta = {
   title: 'UI/Form/Variants',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_FORM, NdsInput] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

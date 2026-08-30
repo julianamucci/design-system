@@ -15,6 +15,7 @@ import {
 
 const meta: Meta = {
   title: "UI/Form/Variants",
+  tags: ["form"],
   parameters: {
     layout: "padded",
     controls: { disable: true },

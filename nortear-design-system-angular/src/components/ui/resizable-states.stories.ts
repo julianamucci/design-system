@@ -14,6 +14,7 @@ const layoutsEmitidos: number[][] = [];
 
 const meta: Meta = {
   title: 'UI/Resizable/States',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsResizable, NdsResizablePanel, NdsResizableHandle] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

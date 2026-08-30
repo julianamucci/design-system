@@ -6,6 +6,7 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from './toggle-group';
 
 const meta: Meta = {
   title: 'UI/ToggleGroup/States',
+  tags: ['form'],
   decorators: [
     moduleMetadata({ imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle, NdsToggleIcon] }),
   ],

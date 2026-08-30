@@ -25,6 +25,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Dialog/Variants',
+  tags: ['overlay'],
   decorators: [
     moduleMetadata({ imports: [...NDS_DIALOG, NdsButton, NdsInput, NdsLabel] }),
   ],

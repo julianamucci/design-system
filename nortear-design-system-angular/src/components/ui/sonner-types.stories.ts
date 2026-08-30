@@ -18,6 +18,7 @@ import { waitForToast, clearToasts, PERSISTENT, TEXTS } from './sonner.fixtures'
 
 const meta: Meta = {
   title: 'UI/Sonner/Types',
+  tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster] })],
   parameters: {
     layout: 'padded',

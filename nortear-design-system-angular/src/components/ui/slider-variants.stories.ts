@@ -8,6 +8,7 @@ import { NdsSlider } from './slider';
 
 const meta: Meta = {
   title: 'UI/Slider/Types',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsSlider] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

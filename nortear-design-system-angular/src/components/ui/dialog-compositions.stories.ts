@@ -19,6 +19,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Dialog/Compositions',
+  tags: ['overlay'],
   decorators: [
     moduleMetadata({ imports: [...NDS_DIALOG, NdsButton, NdsAspectRatio] }),
   ],

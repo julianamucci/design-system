@@ -9,6 +9,7 @@ import { NdsButtonIcon } from './button';
 
 const meta: Meta = {
   title: 'UI/Sidebar/Compositions',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR, NdsSeparator] })],
   parameters: { layout: 'fullscreen', controls: { disable: true } },
 };

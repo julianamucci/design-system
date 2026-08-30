@@ -6,6 +6,7 @@ import { ringFailures } from '@shared/testing/button-probe';
 
 const meta: Meta<ButtonStatesArgs> = {
   title: 'UI/Button/States',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },
   // `onClick` precisa de argType: sem ele o renderer Angular do Storybook não

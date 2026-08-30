@@ -33,7 +33,7 @@ type PlaygroundArgs = {
 const meta = {
   title: 'UI/Pagination',
   component: Pagination,
-  tags: ['autodocs'],
+  tags: ['navigation', 'autodocs'],
   parameters: {
     docs: {
       page: withAutoDocsTab(PaginationDocs),

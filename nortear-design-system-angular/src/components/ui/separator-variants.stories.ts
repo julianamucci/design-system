@@ -5,6 +5,7 @@ import { NdsSeparator } from './separator';
 
 const meta: Meta = {
   title: 'UI/Separator/Variants',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsSeparator] })],
   parameters: {
     layout: 'padded',

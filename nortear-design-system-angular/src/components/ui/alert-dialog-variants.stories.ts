@@ -13,6 +13,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 
 const meta: Meta = {
   title: 'UI/AlertDialog/Types',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {
     layout: 'centered',

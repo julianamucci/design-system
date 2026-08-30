@@ -22,6 +22,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Sonner/States',
+  tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster] })],
   parameters: {
     layout: 'padded',

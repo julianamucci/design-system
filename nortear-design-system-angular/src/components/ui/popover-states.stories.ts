@@ -12,6 +12,7 @@ import { NdsButton } from './button';
 
 const meta: Meta = {
   title: 'UI/Popover/States',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
   parameters: {
     layout: 'centered',

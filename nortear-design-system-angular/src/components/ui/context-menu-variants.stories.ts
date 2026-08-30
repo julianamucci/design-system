@@ -11,6 +11,7 @@ import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbo
 
 const meta: Meta = {
   title: 'UI/ContextMenu/Types',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {
     layout: 'centered',

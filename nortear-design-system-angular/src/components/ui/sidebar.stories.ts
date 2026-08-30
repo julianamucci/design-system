@@ -74,7 +74,7 @@ export class Exemplo {}`;
 
 const meta: Meta<SidebarArgs> = {
   title: 'UI/Sidebar',
-  tags: ['autodocs'],
+  tags: ['layout', 'autodocs'],
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR, NdsButtonIcon] })],
   parameters: {
     layout: 'fullscreen',

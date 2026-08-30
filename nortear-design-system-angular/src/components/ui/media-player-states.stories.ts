@@ -29,6 +29,7 @@ const finished = fn();
 
 const meta: Meta = {
   title: 'UI/MediaPlayer/States',
+  tags: ['display'],
   decorators: [moduleMetadata({ imports: [MediaPlayerComponent] })],
   parameters: {
     layout: 'padded',

@@ -14,6 +14,7 @@ const PROPORCOES = [
 
 const meta: Meta = {
   title: 'UI/AspectRatio/Variants',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsAspectRatio] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

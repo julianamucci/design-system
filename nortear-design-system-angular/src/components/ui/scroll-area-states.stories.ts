@@ -14,6 +14,7 @@ import { focusDeclaradoRing } from '@shared/testing/scroll-area-probe';
 
 const meta: Meta = {
   title: 'UI/ScrollArea/States',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsScrollArea, NdsButton] })],
   parameters: {
     layout: 'padded',

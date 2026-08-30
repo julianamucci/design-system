@@ -21,6 +21,7 @@ const undoSpy = fn();
 
 const meta: Meta = {
   title: 'UI/Sonner/Compositions',
+  tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster] })],
   parameters: {
     layout: 'padded',

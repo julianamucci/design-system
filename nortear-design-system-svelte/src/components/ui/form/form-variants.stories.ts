@@ -13,6 +13,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Form/Variants',
+  tags: ['form'],
   component: FormFieldStory,
   parameters: {
     layout: 'padded',

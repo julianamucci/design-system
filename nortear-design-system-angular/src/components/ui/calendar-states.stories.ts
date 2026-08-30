@@ -15,6 +15,7 @@ import { NdsCalendar } from './calendar';
 
 const meta: Meta = {
   title: 'UI/Calendar/States',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsCalendar] })],
   parameters: {
     layout: 'centered',

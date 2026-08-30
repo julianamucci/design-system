@@ -12,6 +12,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Form/States',
+  tags: ['form'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },

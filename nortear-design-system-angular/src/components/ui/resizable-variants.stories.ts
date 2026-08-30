@@ -5,6 +5,7 @@ import { NdsResizable, NdsResizablePanel, NdsResizableHandle } from './resizable
 
 const meta: Meta = {
   title: 'UI/Resizable/Variants',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsResizable, NdsResizablePanel, NdsResizableHandle] })],
   // Sem argTypes nesta suíte: sem desligar, o painel Controls abre vazio.
   parameters: { layout: 'padded', controls: { disable: true } },

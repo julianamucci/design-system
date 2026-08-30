@@ -8,6 +8,7 @@ import { NDS_SIDEBAR } from './sidebar';
 
 const meta: Meta = {
   title: 'UI/Sidebar/Types',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR] })],
   parameters: { layout: 'fullscreen', controls: { disable: true } },
 };

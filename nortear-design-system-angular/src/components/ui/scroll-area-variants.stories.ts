@@ -14,6 +14,7 @@ const ROOT_LARGA = 'nds-max-w-md nds-rounded-md nds-border-default';
 
 const meta: Meta = {
   title: 'UI/ScrollArea/Variants',
+  tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsScrollArea] })],
   parameters: {
     layout: 'padded',

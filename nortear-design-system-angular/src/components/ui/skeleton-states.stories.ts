@@ -11,6 +11,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/Skeleton/States',
+  tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsSkeleton] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

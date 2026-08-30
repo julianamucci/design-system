@@ -20,6 +20,7 @@ import {
 
 const meta: Meta = {
   title: 'UI/HoverCard/States',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR, NdsButton] })],
   parameters: {
     layout: 'padded',

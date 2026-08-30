@@ -19,6 +19,7 @@ const ICONS: { size: ButtonSize; label: string }[] = [
 
 const meta: Meta = {
   title: 'UI/Button/Sizes',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };
