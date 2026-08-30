@@ -29,6 +29,10 @@
   import type { Snippet } from 'svelte';
   import type { HTMLFormAttributes } from 'svelte/elements';
   import type { WithElementRef } from '@/lib/utils.js';
+  import type {
+    TriggerPopoverLabels,
+    TriggerSource,
+  } from './composer-trigger-popover.svelte';
 
   /** Como se pede o envio pelo teclado. */
   export type ComposerSubmitOn =
@@ -81,6 +85,21 @@
      * o componente não acompanha a rede.
      */
     running?: boolean;
+    /**
+     * Gatilhos do seletor — menções, comandos, e qualquer outro caractere.
+     *
+     * Sem eles o campo é só um campo. Com eles, digitar o caractere abre o
+     * seletor, e a tecla de envio passa a ESCOLHER enquanto ele estiver aberto.
+     */
+    triggers?: TriggerSource[];
+    /**
+     * O texto do seletor.
+     *
+     * Obrigatório quando há gatilho, porque é texto de tela: sem ele o painel
+     * abriria com a frase de nenhum resultado em branco, que é pior que não
+     * abrir.
+     */
+    triggerLabels?: TriggerPopoverLabels;
     /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
     railStart?: Snippet;
     /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem recebe. */
@@ -91,8 +110,18 @@
 </script>
 
 <script lang="ts">
+  import { tick } from 'svelte';
+  import {
+    applyTrigger,
+    findTrigger,
+    rankByTerm,
+    type TriggerMatch,
+  } from '@shared/primitives/composer-trigger';
   import { Button } from '@/components/ui/button';
   import { cn } from '@/lib/utils.js';
+  import ComposerTriggerPopover, {
+    type TriggerOption,
+  } from './composer-trigger-popover.svelte';
 
   let {
     ref = $bindable(null),
@@ -103,6 +132,8 @@
     disabled = false,
     submitOn = 'enter',
     running = false,
+    triggers = [],
+    triggerLabels,
     railStart,
     onSubmit,
     onStop,
@@ -113,6 +144,16 @@
   // `$props.id()` só é aceito como inicializador de declaração no topo.
   const uid = $props.id();
   const hintId = `${uid}-hint`;
+  const popoverId = `${uid}-trigger`;
+
+  /**
+   * O campo, para o seletor poder ler onde o cursor está.
+   *
+   * O gatilho depende de ONDE o cursor está, e não do que o texto contém: o
+   * vínculo de texto não carrega essa informação, e é por isso que o elemento
+   * importa aqui.
+   */
+  let inputEl = $state<HTMLTextAreaElement | null>(null);
 
   /** A combinação que envia, para a dica dizer a verdade em cada modo. */
   const submitKey = $derived(submitOn === 'enter' ? 'Enter' : 'Ctrl+Enter');
@@ -147,7 +188,151 @@
     else requestSubmit();
   }
 
+  // ─── O seletor do caractere gatilho ────────────────────────────────────────
+  //
+  // Só existe quando há gatilho declarado E texto para o painel dizer. O ESTADO
+  // mora aqui, e não no painel: quem lê o campo, filtra e resolve a disputa pela
+  // tecla de envio é quem tem o campo. O painel recebe o que mostrar e devolve o
+  // que alguém apontou.
+
+  const hasTriggerPopover = $derived(triggers.length > 0 && triggerLabels !== undefined);
+
+  let triggerMatch = $state<TriggerMatch | null>(null);
+  let triggerOptions = $state<TriggerOption[]>([]);
+  let triggerActiveIndex = $state(0);
+
+  const triggerOpen = $derived(triggerMatch !== null);
+
+  /**
+   * O campo aponta a opção ativa só enquanto ela existe para ele.
+   *
+   * Um `aria-activedescendant` órfão aponta um elemento que já saiu do
+   * documento, e um `aria-controls` para um painel escondido promete uma lista
+   * que não há.
+   */
+  const triggerActiveId = $derived.by(() => {
+    const option = triggerOptions[triggerActiveIndex];
+    return option ? `${popoverId}-${option.id}` : undefined;
+  });
+
+  function closeTriggerPopover(): void {
+    triggerMatch = null;
+    triggerOptions = [];
+    triggerActiveIndex = 0;
+  }
+
+  /** Relê o campo e decide se o seletor abre, filtra ou fecha. */
+  function syncTriggerPopover(el: HTMLTextAreaElement): void {
+    if (!hasTriggerPopover) return;
+    const found = findTrigger(
+      el.value,
+      el.selectionStart ?? 0,
+      triggers.map((source) => source.spec),
+    );
+    const source = found
+      ? triggers.find((candidate) => candidate.spec.char === found.spec.char)
+      : undefined;
+    if (!found || !source) {
+      closeTriggerPopover();
+      return;
+    }
+
+    // O termo mudou: a opção ativa volta ao topo. Manter o índice faria a
+    // escolha pular para outra pessoa a cada letra digitada.
+    const previousTerm = triggerMatch?.term;
+    triggerMatch = found;
+    triggerOptions = rankByTerm(source.options, found.term, (option) => option.label);
+    if (previousTerm !== found.term) triggerActiveIndex = 0;
+    if (triggerActiveIndex >= triggerOptions.length) triggerActiveIndex = 0;
+  }
+
+  /**
+   * A rolagem, o clique e a seta movem o cursor sem que o texto mude.
+   *
+   * O evento traz o elemento, e ler dele — em vez do vínculo — é o que torna
+   * esta releitura independente da ordem em que os dois ouvintes do campo rodam.
+   */
+  function syncFromEvent(event: Event & { currentTarget: HTMLTextAreaElement }): void {
+    syncTriggerPopover(event.currentTarget);
+  }
+
+  function onTriggerKeyup(
+    event: KeyboardEvent & { currentTarget: HTMLTextAreaElement },
+  ): void {
+    if (!event.key.startsWith('Arrow') && event.key !== 'Home' && event.key !== 'End') return;
+    syncTriggerPopover(event.currentTarget);
+  }
+
+  /** Anda pela lista. O foco não se move; o que muda é a opção apontada. */
+  function moveTriggerActive(delta: number): void {
+    const total = triggerOptions.length;
+    if (!triggerOpen || !total) return;
+    // Circular: quem está no fim e desce volta ao começo. Uma lista que para na
+    // última obriga a subir de volta contando.
+    triggerActiveIndex = (triggerActiveIndex + delta + total) % total;
+  }
+
+  /** Escreve a opção ativa no campo. Devolve `false` se não havia o que aplicar. */
+  function applyTriggerActive(): boolean {
+    const el = inputEl;
+    const current = triggerMatch;
+    const option = triggerOptions[triggerActiveIndex];
+    if (!el || !current || !option) return false;
+
+    const replacement = option.value ?? `${current.spec.char}${option.label}`;
+    const applied = applyTrigger(
+      el.value,
+      current,
+      el.selectionStart ?? el.value.length,
+      replacement,
+    );
+
+    value = applied.text;
+    closeTriggerPopover();
+    // O texto chega ao campo na próxima passada do render; a posição do cursor
+    // só existe depois disso.
+    void tick().then(() => el.setSelectionRange(applied.caret, applied.caret));
+    return true;
+  }
+
+  function onTriggerChoose(index: number): void {
+    triggerActiveIndex = index;
+    applyTriggerActive();
+  }
+
   function onKeydown(event: KeyboardEvent): void {
+    // COM O SELETOR ABERTO, AS TECLAS SÃO DELE.
+    //
+    // É a decisão que atravessa o componente inteiro: envio e escolha disputam a
+    // mesma tecla, e enviar no meio de uma menção é o defeito que quem escreve
+    // encontra na primeira vez que usa. As setas e o Escape também param aqui —
+    // sem isso a seta moveria o cursor no texto enquanto a lista parece andar.
+    if (triggerOpen) {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        moveTriggerActive(1);
+        return;
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        moveTriggerActive(-1);
+        return;
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeTriggerPopover();
+        return;
+      }
+      // Enter e Tab escolhem. O Tab entra porque quem escreve espera que ele
+      // complete, e sem isso ele tiraria o foco do campo com a lista aberta.
+      if ((event.key === 'Enter' && !event.isComposing) || event.key === 'Tab') {
+        if (applyTriggerActive()) {
+          event.preventDefault();
+          return;
+        }
+      }
+    }
+
     if (event.key !== 'Enter') return;
     // Composição de IME (acento morto, teclado de idioma com candidatos) usa
     // Enter para CONFIRMAR o caractere. Enviar aqui interromperia quem está
@@ -188,13 +373,35 @@
       class="nds-composer-input"
       {rows}
       bind:value
+      bind:this={inputEl}
       placeholder={labels.placeholder}
       aria-label={labels.input}
       aria-describedby={hintId}
+      aria-controls={triggerOpen ? popoverId : undefined}
+      aria-activedescendant={triggerOpen ? triggerActiveId : undefined}
       maxlength={maxLength}
       {disabled}
       onkeydown={onKeydown}
+      oninput={syncFromEvent}
+      onclick={syncFromEvent}
+      onkeyup={onTriggerKeyup}
+      onblur={closeTriggerPopover}
     ></textarea>
+
+    <!--
+      O painel é ancorado no CAMPO, e abre para cima: o composer mora no pé da
+      conversa, e abrir para baixo é abrir para fora da janela.
+    -->
+    {#if hasTriggerPopover && triggerLabels}
+      <ComposerTriggerPopover
+        id={popoverId}
+        open={triggerOpen}
+        options={triggerOptions}
+        activeIndex={triggerActiveIndex}
+        labels={triggerLabels}
+        onChoose={onTriggerChoose}
+      />
+    {/if}
   </div>
 
   <div class="nds-composer-rail">
