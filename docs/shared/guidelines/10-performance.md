@@ -125,6 +125,63 @@ Usado em docs pages para `docs_section_viewed`. Regras:
 
 ## 3. Carregamento
 
+### O chunk de entrada do preview é o orçamento mais caro que existe
+
+Tudo que `.storybook/preview.ts` importa **estaticamente** entra no chunk de
+entrada do `iframe.html` e é baixado antes de qualquer componente aparecer — em
+toda story, das ~50 do catálogo. É o único lugar do projeto onde um import custa
+vezes o catálogo inteiro.
+
+Medido em 2026-08-29, caminho crítico (soma gzip de todo JS que o `iframe.html`
+referencia de forma ansiosa):
+
+| stack | crítico |
+|---|---|
+| angular | 576 KB |
+| react | 415 KB |
+| vue | 413 KB |
+| svelte | 367 KB |
+| vanilla | 335 KB |
+
+O piso do Angular é mais alto que o teto das outras (runtime + `zone.js`); está
+em AOT, sem compilador JIT no bundle, e não há o que cortar ali.
+
+**O caso que ensinou a regra**: o Grafana Faro entrava por import estático no
+topo do preview, de propósito, para capturar erro desde o carregamento. Custava
+**62 KB gzip — 18% do crítico**, medido em par no mesmo commit (336.214 →
+273.965 B gz no vanilla). A troca não era erro pelo peso: era pagar o SDK inteiro
+para ter um `window.onerror`.
+
+O padrão que resolve, e que vale para qualquer coisa assim:
+
+1. **Segure a garantia com o mínimo síncrono.** Um ouvinte de `error` e
+   `unhandledrejection` num buffer limitado não importa nada e custa um array.
+2. **Carregue o pesado ocioso**, por `await import()` em
+   `requestIdleCallback` com prazo, e reproduza o buffer quando chegar.
+3. **Cheque a variável de ambiente ANTES do import dinâmico** — quem clona o
+   repositório sem `STORYBOOK_FARO_URL` não paga nem o download, e não só o
+   no-op.
+4. **Verifique o que a chegada tardia perde, não presuma.** Aqui não perdeu nada:
+   o `web-vitals` observa com `buffered: true`, então LCP/FCP/CLS/INP anteriores
+   são reproduzidos pelo navegador, e TTFB sai de `getEntriesByType`. Se a
+   verificação tivesse dado o contrário, o certo seria adiar só o
+   `faro-web-tracing` (26,5 KB gz dos 62, e não captura erro nenhum).
+
+A política mora em `docs/shared/primitives/faro.ts`; o `import()` mora no
+`preview.ts` de cada stack, porque só de lá o pacote resolve.
+
+**Como medir** (o portão é o `build-storybook`, que é quem empacota o entry):
+
+```bash
+# soma gzip do JS ansioso do preview
+for u in $(grep -oE '(src|href)="[^"]*\.js"' storybook-static/iframe.html | sed 's/.*="//;s/"//'); do
+  gzip -c "storybook-static/${u#./}" | wc -c
+done | paste -sd+ | bc
+```
+
+Meça em PAR — a mesma conta com e sem a mudança, no mesmo commit e na mesma
+máquina. Comparar com um número anotado semanas atrás mede o que mudou no meio.
+
 ### Lazy Loading de Docs Pages
 
 Docs pages são pesadas (traduções, analytics, SEO, componentes demo). DEVEM ser lazy-loaded:

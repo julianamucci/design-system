@@ -6,7 +6,12 @@
   // os inputs declarados com `input()`.
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node"]
+    // `types` SUBSTITUI a lista padrão, então o que não estiver aqui não existe
+    // para o compilador. `vite/client` entra porque o preview lê
+    // `import.meta.env` (as variáveis do Storybook, entre elas a URL do Faro), e
+    // é assim que as outras quatro stacks o tipam — lá por `vite-env.d.ts`, que
+    // não faz parte deste programa.
+    "types": ["node", "vite/client"]
   },
   "include": ["../src/**/*.ts", "./**/*.ts"],
   "exclude": ["../src/**/*.spec.ts"]

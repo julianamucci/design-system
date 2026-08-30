@@ -56,6 +56,8 @@
     "@angular/compiler-cli": "^22.1.1",
     "@chromatic-com/storybook": "^5.2.1",
     "@eslint/js": "^10.0.1",
+    "@grafana/faro-web-sdk": "^2.9.0",
+    "@grafana/faro-web-tracing": "^2.9.0",
     "@storybook/addon-a11y": "^10.5.7",
     "@storybook/addon-designs": "^11.1.4",
     "@storybook/addon-docs": "^10.5.7",

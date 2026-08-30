@@ -1,12 +1,46 @@
+// Captura de erro no primeiro statement do preview, sem o SDK no chunk de
+// entrada: o ouvinte e sincrono e nao importa nada. O Faro entra ocioso e
+// reproduz o que o buffer guardou. O porque esta no primitivo compartilhado.
+import { bufferarErros, iniciarFaroQuandoOcioso, marcarStory } from '@shared/primitives/faro';
 import '../src/lib/reload-on-chunk-error';
 import { getThemeFromSubdomain } from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/angular-vite';
 import { applicationConfig } from '@storybook/angular-vite';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { withThemeByClassName } from '@storybook/addon-themes';
-import { useEffect } from 'storybook/preview-api';
+import { useEffect, addons } from 'storybook/preview-api';
 import '../src/styles/globals.css';
 import '../src/styles/storybook-docs.css';
+
+bufferarErros();
+
+iniciarFaroQuandoOcioso(
+  async () => {
+    const [sdk, tracing] = await Promise.all([
+      import('@grafana/faro-web-sdk'),
+      import('@grafana/faro-web-tracing'),
+    ]);
+    return {
+      initializeFaro: sdk.initializeFaro,
+      getWebInstrumentations: sdk.getWebInstrumentations,
+      TracingInstrumentation: tracing.TracingInstrumentation,
+    };
+  },
+  { stack: 'angular', env: import.meta.env },
+);
+
+// A story renderizada vira a view do Faro — sem isto, erro e Web Vital de
+// qualquer componente ficariam atribuidos a primeira story aberta.
+if (typeof document !== 'undefined') {
+  const assinarStory = () => {
+    try {
+      addons.getChannel().on('storyRendered', (id: string) => marcarStory(id));
+    } catch {
+      setTimeout(assinarStory, 50);   // canal ainda nao existe no module-eval
+    }
+  };
+  assinarStory();
+}
 
 function applyClasses(
   brand: string,

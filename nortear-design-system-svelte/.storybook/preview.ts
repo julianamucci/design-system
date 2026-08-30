@@ -1,8 +1,8 @@
-// Faro primeiro, antes de qualquer import: e o que garante captura de erro
-// desde o carregamento. No-op silencioso sem STORYBOOK_FARO_URL.
-import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
-import { TracingInstrumentation } from '@grafana/faro-web-tracing';
-import { startFaro, marcarStory } from '@shared/primitives/faro';
+// Captura de erro no primeiro statement do preview — o mesmo instante em que o
+// `startFaro` rodava antes —, mas sem o SDK no chunk de entrada: o ouvinte e
+// sincrono e nao importa nada. O Faro entra ocioso e reproduz o que o buffer
+// guardou. O porque e a medicao (62 KB gzip, 18% do critico) estao no primitivo.
+import { bufferarErros, iniciarFaroQuandoOcioso, marcarStory } from '@shared/primitives/faro';
 import '../src/lib/reload-on-chunk-error';
 import { getThemeFromSubdomain } from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/svelte-vite';
@@ -13,8 +13,20 @@ import { setMode } from 'mode-watcher';
 import '../src/styles/globals.css';
 import '../src/styles/storybook-docs.css';
 
-startFaro(
-  { initializeFaro, getWebInstrumentations, TracingInstrumentation },
+bufferarErros();
+
+iniciarFaroQuandoOcioso(
+  async () => {
+    const [sdk, tracing] = await Promise.all([
+      import('@grafana/faro-web-sdk'),
+      import('@grafana/faro-web-tracing'),
+    ]);
+    return {
+      initializeFaro: sdk.initializeFaro,
+      getWebInstrumentations: sdk.getWebInstrumentations,
+      TracingInstrumentation: tracing.TracingInstrumentation,
+    };
+  },
   { stack: 'svelte', env: import.meta.env },
 );
 

@@ -67,6 +67,7 @@ type FaroMinimum = {
     ) => unknown;
     getActiveUserAction?: () => unknown;
     pushEvent?: (name: string, attrs?: Record<string, string>) => void;
+    pushError?: (error: Error, meta?: { context?: Record<string, string> }) => void;
   };
 };
 
@@ -124,6 +125,68 @@ export type OptionsFaro = {
 
 let instancia: FaroMinimum | null = null;
 
+/**
+ * ── Por que o SDK entra TARDE, e o que segura a garantia enquanto ele não chega
+ *
+ * O import estático dos dois pacotes custava 62 KB gzip no chunk de ENTRADA do
+ * preview — 18% de tudo que carrega antes de qualquer componente aparecer,
+ * medido em par no mesmo commit (336.214 B → 273.965 B gz, vanilla, 2026-08-29).
+ * O `faro-web-tracing` sozinho é 26,5 KB desses, e arrasta o OpenTelemetry.
+ *
+ * O motivo de estar no topo era legítimo e continua valendo: capturar erro
+ * desde o carregamento. O que muda é COMO. Em vez de pagar o SDK inteiro para
+ * ter um `window.onerror`, o preview instala o ouvinte na mão — síncrono, no
+ * primeiro byte, sem dependência nenhuma — e guarda o que acontecer. Quando o
+ * Faro sobe, o buffer é despejado nele. A janela em que um erro se perderia
+ * deixou de existir.
+ *
+ * Os Web Vitals sobrevivem sozinhos, e isso foi VERIFICADO antes de mudar: o
+ * `web-vitals` observa com `buffered: true` (um único `observe()` serve todas as
+ * métricas), então LCP, FCP, CLS e INP anteriores à inicialização são
+ * reproduzidos pelo próprio navegador; TTFB sai de `getEntriesByType`, que é
+ * retroativo por natureza.
+ *
+ * O limite existe para o caso patológico — um laço que lança a cada quadro não
+ * pode virar vazamento de memória enquanto o navegador está ocioso. Perder o
+ * quinquagésimo erro do mesmo laço não custa diagnóstico nenhum.
+ */
+const LIMITE_BUFFER = 50;
+const bufferErros: Array<{ error: Error; contexto: Record<string, string> }> = [];
+let ouvintesInstalados = false;
+
+function ehRuido(mensagem: string): boolean {
+  return ERRORS_IGNORADOS.some((rx) => rx.test(mensagem));
+}
+
+function guardar(error: Error, origem: string): void {
+  if (instancia) return; // o Faro já está de pé e captura sozinho
+  if (bufferErros.length >= LIMITE_BUFFER) return;
+  if (ehRuido(error.message)) return;
+  bufferErros.push({ error, contexto: { origem, capturadoAntesDoFaro: 'true' } });
+}
+
+/**
+ * Instala a captura síncrona de erro. Chame no TOPO do preview, antes de tudo.
+ *
+ * Não importa nada e não depende do Faro: sem `STORYBOOK_FARO_URL` o buffer
+ * simplesmente nunca é despejado, e custa dois ouvintes e um array vazio.
+ */
+export function bufferarErros(): void {
+  if (ouvintesInstalados || typeof window === 'undefined') return;
+  ouvintesInstalados = true;
+
+  window.addEventListener('error', (evento: ErrorEvent) => {
+    const erro =
+      evento.error instanceof Error ? evento.error : new Error(evento.message || 'Erro sem mensagem');
+    guardar(erro, 'window.error');
+  });
+
+  window.addEventListener('unhandledrejection', (evento: PromiseRejectionEvent) => {
+    const motivo = evento.reason;
+    guardar(motivo instanceof Error ? motivo : new Error(String(motivo)), 'unhandledrejection');
+  });
+}
+
 export function startFaro(
   { initializeFaro, getWebInstrumentations, TracingInstrumentation }: FaroParts,
   { stack, env, versao = '1.0.0' }: OptionsFaro,
@@ -154,7 +217,47 @@ export function startFaro(
     userActionsInstrumentation: { initialActivityTimeout: 100 },
   });
 
+  // Despeja o que o buffer guardou enquanto o SDK vinha. `splice` esvazia: um
+  // segundo `startFaro` (que já sai pela guarda de instância) não reenviaria.
+  const pendentes = bufferErros.splice(0);
+  for (const { error, contexto } of pendentes) {
+    instancia.api?.pushError?.(error, { context: contexto });
+  }
+
   return instancia;
+}
+
+/**
+ * Carrega o SDK fora do caminho crítico e sobe o Faro.
+ *
+ * `carregar` é uma função por stack porque só o `preview.ts` resolve
+ * `@grafana/faro-*` — `docs/shared` fica fora de qualquer stack e o Node sobe
+ * até a raiz do repo sem achar o pacote (mesmo motivo já descrito no topo deste
+ * arquivo). O que fica compartilhado é QUANDO carregar, que não deve divergir.
+ *
+ * A variável é conferida ANTES do import: quem clona o repositório sem
+ * `STORYBOOK_FARO_URL` não paga nem o download do chunk, e não só o no-op.
+ */
+export function iniciarFaroQuandoOcioso(
+  carregar: () => Promise<FaroParts>,
+  options: OptionsFaro,
+): void {
+  if (typeof window === 'undefined') return;
+  if (!options.env?.STORYBOOK_FARO_URL) return;
+
+  const subir = () => {
+    void carregar()
+      .then((partes) => startFaro(partes, options))
+      // Observabilidade que quebra a página é pior que observabilidade nenhuma.
+      .catch(() => undefined);
+  };
+
+  // `requestIdleCallback` não existe no Safari < 16.4; o timeout garante que a
+  // janela ociosa não adie para sempre numa aba que nunca fica parada.
+  const ocioso = (window as Window & { requestIdleCallback?: typeof requestIdleCallback })
+    .requestIdleCallback;
+  if (ocioso) ocioso(subir, { timeout: 3000 });
+  else window.setTimeout(subir, 1);
 }
 
 /** Marca a story em foco como a view atual. No-op se o Faro não subiu. */
