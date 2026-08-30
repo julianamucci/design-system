@@ -14,7 +14,7 @@ import { within, expect, fn } from 'storybook/test';
 import { MediaPlayerComponent, type MediaPlayerHostElement } from './media-player';
 import { DEMO_SECONDS, MEDIA_PLAYER_LABELS, silentWav } from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import { mediaPlayerAudioSource } from './media-player.source';
 
 /**
  * Espiões de escopo de MÓDULO.
@@ -35,7 +35,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } },
+    docs: { source: { transform: mediaPlayerAudioSource } },
   },
 };
 

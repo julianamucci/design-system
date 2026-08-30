@@ -19,7 +19,12 @@ import {
   DEMO_SECONDS,
 } from './media-player.fixtures';
 import { firstControl, clockText, until } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import {
+  mediaPlayerAudioSource,
+  mediaPlayerTracksSource,
+  mediaPlayerVimeoSource,
+  mediaPlayerYoutubeSource,
+} from './media-player.source';
 
 const meta: Meta = {
   title: 'Primitives/Display/MediaPlayer/Variants',
@@ -39,7 +44,7 @@ type Story = StoryObj;
 
 export const Video: Story = {
   parameters: {
-    docs: { source: { transform: mediaPlayerSourceWith({ tracks: true, rates: [] }) } },
+    docs: { source: { transform: mediaPlayerTracksSource } },
   },
   render: () => ({
     props: {
@@ -240,7 +245,7 @@ export const Video: Story = {
 };
 
 export const Audio: Story = {
-  parameters: { docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } } },
+  parameters: { docs: { source: { transform: mediaPlayerAudioSource } } },
   render: () => ({
     props: { labels: MEDIA_PLAYER_LABELS, src: silentWav(DEMO_SECONDS) },
     template: '<nds-media-player kind="audio" [src]="src" [labels]="labels" />',
@@ -307,11 +312,7 @@ export const Audio: Story = {
 export const YouTube: Story = {
   parameters: {
     docs: {
-      source: {
-        transform: mediaPlayerSourceWith({
-          embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID },
-        }),
-      },
+      source: { transform: mediaPlayerYoutubeSource },
     },
   },
   render: () => ({
@@ -387,11 +388,7 @@ export const YouTube: Story = {
 export const Vimeo: Story = {
   parameters: {
     docs: {
-      source: {
-        transform: mediaPlayerSourceWith({
-          embed: { provider: 'vimeo', videoId: VIMEO_VIDEO_ID },
-        }),
-      },
+      source: { transform: mediaPlayerVimeoSource },
     },
   },
   render: () => ({

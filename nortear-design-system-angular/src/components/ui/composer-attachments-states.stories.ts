@@ -5,7 +5,11 @@ import type { Attachment } from '@shared/primitives/chat-protocol';
 import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
 import { attachmentLabels, one } from './composer-attachments.fixtures';
-import { composerAttachmentsSourceWith } from './composer-attachments.source';
+import {
+  attachmentsFailedSource,
+  attachmentsQueueSource,
+  attachmentsUploadingSource,
+} from './composer-attachments.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -22,7 +26,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerAttachmentsSourceWith({}) },
+      source: { transform: attachmentsQueueSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no item.',
       },
@@ -76,7 +80,7 @@ export const Pending: Story = {
 export const Uploading: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'accessibility.item3', 'visual.item3'],
-    docs: { source: { transform: composerAttachmentsSourceWith({ queue: 'uploading' }) } },
+    docs: { source: { transform: attachmentsUploadingSource } },
   },
   render: () => mount(one('uploading', { progress: 0.4 })),
   play: async ({ canvasElement, step }) => {
@@ -128,7 +132,7 @@ export const Ready: Story = {
 export const Failed: Story = {
   parameters: {
     covers: ['accessibility.item5', 'visual.item5'],
-    docs: { source: { transform: composerAttachmentsSourceWith({ queue: 'failed' }) } },
+    docs: { source: { transform: attachmentsFailedSource } },
   },
   render: () => mount(one('failed')),
   play: async ({ canvasElement, step }) => {

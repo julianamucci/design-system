@@ -38,6 +38,7 @@ import {
   RdxComboboxTrigger,
   injectComboboxRootContext,
 } from '@radix-ng/primitives/combobox';
+import type { ComboboxFilter as RdxComboboxFilter } from '@radix-ng/primitives/combobox';
 import { ChevronDown } from 'lucide';
 
 // ─── Combobox ─────────────────────────────────────────────────────────────────
@@ -148,6 +149,18 @@ import { ChevronDown } from 'lucide';
 // desregistra os itens do motor de filtragem.
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
+
+/**
+ * O predicado de filtro de quem consome, reexportado pelo design system.
+ *
+ * A assinatura é de TRÊS argumentos — o valor cru do item, o texto digitado e o
+ * resolvedor que converte valor em texto de exibição. Quem escreve um filtro
+ * precisa dela tipada, e o tipo vem do motor por baixo; reexportar aqui é o que
+ * mantém a promessa de que se importa do design system, e não da lib headless.
+ * Sem isto o snippet do painel Code teria de ensinar o pacote de baixo, e o
+ * caminho apareceria na documentação como se fosse API pública daqui.
+ */
+export type ComboboxFilter = RdxComboboxFilter;
 
 /** Lado preferido de abertura da lista em relação ao campo. */
 export type ComboboxSide = 'top' | 'right' | 'bottom' | 'left';

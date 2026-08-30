@@ -3,9 +3,13 @@
 // isso se verifica aqui, em TS puro, sem navegador e sem compilador de template.
 import { describe, expect, it } from 'vitest';
 import {
+  VIMEO_VIDEO_ID,
+  YOUTUBE_VIDEO_ID,
+  mediaPlayerAudioSource,
   mediaPlayerSnippet,
   mediaPlayerSource,
-  mediaPlayerSourceWith,
+  mediaPlayerVimeoSource,
+  mediaPlayerYoutubeSource,
 } from './media-player.source';
 
 describe('mediaPlayerSnippet', () => {
@@ -94,9 +98,16 @@ describe('mediaPlayerSource', () => {
   });
 });
 
-describe('mediaPlayerSourceWith', () => {
+describe('transforms de story', () => {
   it('as opções fixas vencem os controls', () => {
-    const transform = mediaPlayerSourceWith({ kind: 'audio' });
-    expect(transform('', { args: { kind: 'video' } })).toContain('kind="audio"');
+    expect(mediaPlayerAudioSource('', { args: { kind: 'video' } })).toContain('kind="audio"');
+  });
+
+  // Os identificadores moram no módulo de snippet e a fixture os reexporta.
+  // Este par é o que reprovaria se alguém voltasse a declará-los nos dois: o
+  // painel ensinaria um vídeo e a demonstração tocaria outro.
+  it('o vídeo incorporado é o mesmo que a demonstração toca', () => {
+    expect(mediaPlayerYoutubeSource()).toContain(`videoId: '${YOUTUBE_VIDEO_ID}'`);
+    expect(mediaPlayerVimeoSource()).toContain(`videoId: '${VIMEO_VIDEO_ID}'`);
   });
 });

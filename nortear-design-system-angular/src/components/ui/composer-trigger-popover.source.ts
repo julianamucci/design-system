@@ -88,9 +88,30 @@ export type TriggerPopoverSourceTransform = (
 export const triggerPopoverSource: TriggerPopoverSourceTransform = (_code, ctx) =>
   triggerSnippet(ctx?.args ?? {});
 
-/** Transform de story que fixa opções por cima dos args do arquivo. */
-export function triggerPopoverSourceWith(
-  fixed: TriggerSnippetOptions,
-): TriggerPopoverSourceTransform {
-  return (_code, ctx) => triggerSnippet({ ...(ctx?.args ?? {}), ...fixed });
-}
+/**
+ * Transforms de story: mesmo componente, opções fixas por cima dos args.
+ *
+ * Uma por configuração, e não uma fábrica exportada que recebe a configuração.
+ * A fábrica devolvia FUNÇÃO, e a guarda transversal (`source-snippets.test.ts`)
+ * chama todo export sem argumento esperando string — curried, as checagens que
+ * LEEM o snippet nunca chegavam ao snippet. Nomeadas, cada uma é verificada.
+ */
+const comFixas =
+  (fixed: TriggerSnippetOptions): TriggerPopoverSourceTransform =>
+  (_code, ctx) =>
+    triggerSnippet({ ...(ctx?.args ?? {}), ...fixed });
+
+/** A forma básica, para os `meta` que não fixam nada. */
+export const triggerPopoverBaseSource = comFixas({});
+
+/** Só o gatilho de menção. */
+export const triggerPopoverMentionSource = comFixas({ mention: true });
+
+/** Só o gatilho de comando. */
+export const triggerPopoverCommandSource = comFixas({ mention: false, command: true });
+
+/** A lista filtrada pelo que já foi digitado depois do gatilho. */
+export const triggerPopoverFilteredSource = comFixas({ value: 'avisa a @an' });
+
+/** O filtro sem resultado nenhum. */
+export const triggerPopoverEmptySource = comFixas({ value: 'avisa a @zzz' });

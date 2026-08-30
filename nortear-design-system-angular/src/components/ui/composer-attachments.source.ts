@@ -94,9 +94,27 @@ export type AttachmentsSourceTransform = (
 export const composerAttachmentsSource: AttachmentsSourceTransform = (_code, ctx) =>
   composerAttachmentsSnippet(ctx?.args ?? {});
 
-/** Transform de story que fixa opções por cima dos args do arquivo. */
-export function composerAttachmentsSourceWith(
-  fixed: AttachmentsSnippetOptions,
-): AttachmentsSourceTransform {
-  return (_code, ctx) => composerAttachmentsSnippet({ ...(ctx?.args ?? {}), ...fixed });
-}
+/**
+ * Transforms de story: mesmo componente, opções fixas por cima dos args.
+ *
+ * Uma por configuração, e não uma fábrica exportada que recebe a configuração.
+ * A fábrica devolvia FUNÇÃO, e a guarda transversal (`source-snippets.test.ts`)
+ * chama todo export sem argumento esperando string — curried, as checagens que
+ * LEEM o snippet nunca chegavam ao snippet. Nomeadas, cada uma é verificada.
+ */
+const comFixas =
+  (fixed: AttachmentsSnippetOptions): AttachmentsSourceTransform =>
+  (_code, ctx) =>
+    composerAttachmentsSnippet({ ...(ctx?.args ?? {}), ...fixed });
+
+/** A fila em repouso — a forma básica dos anexos. */
+export const attachmentsQueueSource = comFixas({});
+
+/** A fila com um arquivo subindo. */
+export const attachmentsUploadingSource = comFixas({ queue: 'uploading' });
+
+/** A fila com um arquivo que falhou. */
+export const attachmentsFailedSource = comFixas({ queue: 'failed' });
+
+/** O composer sem anexo nenhum. */
+export const attachmentsAbsentSource = comFixas({ absent: true });

@@ -4,7 +4,11 @@ import { expect, fn, within } from 'storybook/test';
 import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
 import { longQuote, quoteLabels } from './composer-quote.fixtures';
-import { composerQuoteSourceWith } from './composer-quote.source';
+import {
+  composerQuoteAbsentSource,
+  composerQuoteLongSource,
+  composerQuoteShortSource,
+} from './composer-quote.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -21,7 +25,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerQuoteSourceWith({}) },
+      source: { transform: composerQuoteShortSource },
       description: {
         component: 'O trecho que não cabe, e o campo sem citação.',
       },
@@ -38,7 +42,7 @@ const onDismissQuote = fn();
 export const LongExcerpt: Story = {
   parameters: {
     covers: ['functional.item2', 'accessibility.item4', 'visual.item2'],
-    docs: { source: { transform: composerQuoteSourceWith({ quote: 'longQuote' }) } },
+    docs: { source: { transform: composerQuoteLongSource } },
   },
   render: () => ({
     props: {
@@ -90,7 +94,7 @@ export const LongExcerpt: Story = {
 export const WithoutQuote: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item3'],
-    docs: { source: { transform: composerQuoteSourceWith({ absent: true }) } },
+    docs: { source: { transform: composerQuoteAbsentSource } },
   },
   render: () => ({
     props: { labels: composerLabels() },

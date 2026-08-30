@@ -80,7 +80,10 @@ function build(content: string, extra: Array<string | null> = []): string {
  * `allow` só aparece quando a story RESTRINGE: o Playground marca os oito
  * blocos, e listá-los repetiria o padrão do componente como se fosse decisão.
  */
-export function markdownSource(_gerado: string, ctx: { args?: Partial<MarkdownArgs> }): string {
+export function markdownSource(
+  _gerado?: string,
+  ctx: { args?: Partial<MarkdownArgs> } = {},
+): string {
   const args = ctx.args ?? {};
   const content = typeof args.content === 'string' && args.content !== ''
     ? args.content

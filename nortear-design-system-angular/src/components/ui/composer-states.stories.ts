@@ -4,7 +4,13 @@ import { signal } from '@angular/core';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NdsComposer } from './composer';
 import { composerLabels, textOfLength } from './composer.fixtures';
-import { composerSourceWith } from './composer.source';
+import {
+  composerBaseSource,
+  composerDisabledSource,
+  composerFilledSource,
+  composerNearLimitSource,
+  composerRunningSource,
+} from './composer.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -21,7 +27,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerSourceWith({}) },
+      source: { transform: composerBaseSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no campo.',
       },
@@ -51,7 +57,7 @@ const generating = signal(true);
 export const Filled: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: composerSourceWith({ value: 'Resume a última reunião.' }) } },
+    docs: { source: { transform: composerFilledSource } },
   },
   render: () => ({
     props: { labels: composerLabels(), onSubmit },
@@ -78,7 +84,7 @@ export const Running: Story = {
     covers: ['functional.item7', 'accessibility.item4', 'visual.item4'],
     docs: {
       source: {
-        transform: composerSourceWith({ running: true, value: 'Resume a última reunião.' }),
+        transform: composerRunningSource,
       },
     },
   },
@@ -136,7 +142,7 @@ export const Running: Story = {
 export const NearLimit: Story = {
   parameters: {
     covers: ['accessibility.item3', 'visual.item5'],
-    docs: { source: { transform: composerSourceWith({ maxLength: LIMIT }) } },
+    docs: { source: { transform: composerNearLimitSource } },
   },
   render: () => ({
     props: {
@@ -185,7 +191,7 @@ export const NearLimit: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item8', 'visual.item6'],
-    docs: { source: { transform: composerSourceWith({ disabled: true }) } },
+    docs: { source: { transform: composerDisabledSource } },
   },
   render: () => ({
     props: { labels: composerLabels(), onSubmit },

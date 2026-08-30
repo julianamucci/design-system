@@ -158,10 +158,14 @@ export function captionTrack(): MediaPlayerTrack {
 }
 
 /**
- * Identificadores públicos, escolhidos por serem estáveis há mais de uma década.
+ * Os identificadores dos vídeos incorporados, REEXPORTADOS de `.source.ts`.
+ *
+ * A definição vive no módulo de snippet porque é ele que precisa do valor como
+ * TEXTO, e daqui só passa ao componente. Uma definição só: declarados nos dois
+ * lugares, o painel Code ensinaria um vídeo e a demonstração tocaria outro, e
+ * nada acusaria.
  *
  * O quadro NÃO carrega na suíte, e é de propósito — ver a story de provedor.
  * Estão aqui para a demonstração no navegador de quem lê a documentação.
  */
-export const YOUTUBE_VIDEO_ID = 'aqz-KE-bpKQ';
-export const VIMEO_VIDEO_ID = '76979871';
+export { VIMEO_VIDEO_ID, YOUTUBE_VIDEO_ID } from './media-player.source';

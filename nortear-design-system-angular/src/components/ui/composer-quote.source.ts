@@ -108,7 +108,27 @@ export type QuoteSourceTransform = (
 export const composerQuoteSource: QuoteSourceTransform = (_code, ctx) =>
   composerQuoteSnippet(ctx?.args ?? {});
 
-/** Transform de story que fixa opções por cima dos args do arquivo. */
-export function composerQuoteSourceWith(fixed: QuoteSnippetOptions): QuoteSourceTransform {
-  return (_code, ctx) => composerQuoteSnippet({ ...(ctx?.args ?? {}), ...fixed });
-}
+/**
+ * Transforms de story: mesmo componente, opções fixas por cima dos args.
+ *
+ * Uma por configuração, e não uma fábrica exportada que recebe a configuração.
+ * A fábrica devolvia FUNÇÃO, e a guarda transversal (`source-snippets.test.ts`)
+ * chama todo export sem argumento esperando string — curried, as checagens que
+ * LEEM o snippet nunca chegavam ao snippet. Nomeadas, cada uma é verificada.
+ */
+const comFixas =
+  (fixed: QuoteSnippetOptions): QuoteSourceTransform =>
+  (_code, ctx) =>
+    composerQuoteSnippet({ ...(ctx?.args ?? {}), ...fixed });
+
+/** Citação curta — a forma básica. */
+export const composerQuoteShortSource = comFixas({});
+
+/** Citação longa: o corte por linha é da folha, e o snippet é o mesmo. */
+export const composerQuoteLongSource = comFixas({ quote: 'longQuote' });
+
+/** Citação e anexos ao mesmo tempo. */
+export const composerQuoteWithAttachmentsSource = comFixas({ withAttachments: true });
+
+/** O composer sem citação nenhuma. */
+export const composerQuoteAbsentSource = comFixas({ absent: true });

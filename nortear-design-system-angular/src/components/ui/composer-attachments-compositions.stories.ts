@@ -4,7 +4,7 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
 import { attachmentLabels, one, queueWithoutSize } from './composer-attachments.fixtures';
-import { composerAttachmentsSourceWith } from './composer-attachments.source';
+import { attachmentsAbsentSource, attachmentsQueueSource } from './composer-attachments.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -20,7 +20,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerAttachmentsSourceWith({}) },
+      source: { transform: attachmentsQueueSource },
       description: {
         component: 'A fila dentro da moldura do campo, e o que acontece ao pedir para remover.',
       },
@@ -147,7 +147,7 @@ export const Removing: Story = {
 export const WithoutAttachments: Story = {
   parameters: {
     covers: ['functional.item7'],
-    docs: { source: { transform: composerAttachmentsSourceWith({ absent: true }) } },
+    docs: { source: { transform: attachmentsAbsentSource } },
   },
   render: () => ({
     props: { labels: composerLabels() },

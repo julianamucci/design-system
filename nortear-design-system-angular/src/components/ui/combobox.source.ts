@@ -187,14 +187,19 @@ const COUNTRY_LABELS = [
 /**
  * O campo com um filtro do CONSUMIDOR.
  *
- * A assinatura é a da lib desta stack, de TRÊS argumentos — o valor cru do
- * item, o texto digitado e o resolvedor que converte valor em texto de
- * exibição. Quem copia precisa ver os três: escrever o predicado com dois
- * parâmetros compila, e o rótulo nunca entra na comparação.
+ * A assinatura é de TRÊS argumentos — o valor cru do item, o texto digitado e o
+ * resolvedor que converte valor em texto de exibição. Quem copia precisa ver os
+ * três: escrever o predicado com dois parâmetros compila, e o rótulo nunca
+ * entra na comparação.
+ *
+ * O tipo vem de `@/components/ui/combobox`, e não do pacote por baixo. Quem
+ * copia importa do design system: um caminho de lib headless no painel Code
+ * apareceria na documentação como se fosse API pública daqui, e passaria a
+ * valer como contrato no dia em que a lib mudasse de nome.
  */
 export function comboboxCustomFilterSnippet(): string {
   return `import { NDS_COMBOBOX } from '@/components/ui/combobox';
-import type { ComboboxFilter } from '@radix-ng/primitives/combobox';
+import type { ComboboxFilter } from '@/components/ui/combobox';
 
 /** Texto sem acento e em caixa baixa — a base de comparação do filtro. */
 function normalize(text: string): string {

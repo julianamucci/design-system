@@ -7,7 +7,7 @@ import {
   mentionSource,
   triggerLabels,
 } from './composer-trigger-popover.fixtures';
-import { triggerPopoverSourceWith } from './composer-trigger-popover.source';
+import { triggerPopoverBaseSource } from './composer-trigger-popover.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -25,7 +25,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: triggerPopoverSourceWith({}) },
+      source: { transform: triggerPopoverBaseSource },
       description: {
         component: 'Escolher pelo teclado e pelo ponteiro, sem que o foco saia do campo.',
       },

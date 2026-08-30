@@ -5,7 +5,7 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { NdsButton } from './button';
 import { NdsComposer } from './composer';
 import { attachLabel, composerLabels } from './composer.fixtures';
-import { composerSourceWith } from './composer.source';
+import { composerRailSource } from './composer.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -22,7 +22,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerSourceWith({ rail: true }) },
+      source: { transform: composerRailSource },
       description: {
         component: 'O composer com os controles que quem consome põe no trilho.',
       },

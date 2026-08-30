@@ -7,7 +7,11 @@ import {
   mentionSource,
   triggerLabels,
 } from './composer-trigger-popover.fixtures';
-import { triggerPopoverSourceWith } from './composer-trigger-popover.source';
+import {
+  triggerPopoverBaseSource,
+  triggerPopoverEmptySource,
+  triggerPopoverFilteredSource,
+} from './composer-trigger-popover.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -24,7 +28,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: triggerPopoverSourceWith({}) },
+      source: { transform: triggerPopoverBaseSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no painel.',
       },
@@ -64,7 +68,7 @@ const panelOf = (root: HTMLElement) =>
 export const Filtered: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item4'],
-    docs: { source: { transform: triggerPopoverSourceWith({ value: 'avisa a @an' }) } },
+    docs: { source: { transform: triggerPopoverFilteredSource } },
   },
   render: mount,
   play: async ({ canvasElement, step }) => {
@@ -105,7 +109,7 @@ export const Filtered: Story = {
 export const Empty: Story = {
   parameters: {
     covers: ['accessibility.item5', 'visual.item5'],
-    docs: { source: { transform: triggerPopoverSourceWith({ value: 'avisa a @zzz' }) } },
+    docs: { source: { transform: triggerPopoverEmptySource } },
   },
   render: mount,
   play: async ({ canvasElement, step }) => {
@@ -145,7 +149,7 @@ export const Empty: Story = {
 export const Closed: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item6'],
-    docs: { source: { transform: triggerPopoverSourceWith({}) } },
+    docs: { source: { transform: triggerPopoverBaseSource } },
   },
   render: mount,
   play: async ({ canvasElement, step }) => {

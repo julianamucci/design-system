@@ -92,7 +92,47 @@ export type ComposerSourceTransform = (
 export const composerSource: ComposerSourceTransform = (_code, ctx) =>
   composerSnippet(ctx?.args ?? {});
 
-/** Transform de story que fixa opções por cima dos args do arquivo. */
-export function composerSourceWith(fixed: ComposerSnippetOptions): ComposerSourceTransform {
-  return (_code, ctx) => composerSnippet({ ...(ctx?.args ?? {}), ...fixed });
-}
+/**
+ * Transforms de story: mesmo componente, opções fixas por cima dos args.
+ *
+ * Uma por configuração, e não uma fábrica exportada que recebe a configuração.
+ * A fábrica devolvia FUNÇÃO, e a guarda transversal (`source-snippets.test.ts`)
+ * chama todo export sem argumento esperando string — curried, as checagens que
+ * LEEM o snippet nunca chegavam ao snippet. Nomeadas, cada uma é verificada.
+ */
+const comFixas =
+  (fixed: ComposerSnippetOptions): ComposerSourceTransform =>
+  (_code, ctx) =>
+    composerSnippet({ ...(ctx?.args ?? {}), ...fixed });
+
+/** A forma básica, para os `meta` que não fixam nada. */
+export const composerBaseSource = comFixas({});
+
+/** Com texto já escrito no campo. */
+export const composerFilledSource = comFixas({ value: 'Resume a última reunião.' });
+
+/** Gerando a resposta: o campo continua editável e o envio vira interrupção. */
+export const composerRunningSource = comFixas({
+  running: true,
+  value: 'Resume a última reunião.',
+});
+
+/**
+ * Perto do limite de caracteres.
+ *
+ * O número acompanha o `LIMIT` da story de estados — é o mesmo limite visto de
+ * dois lados: lá ele governa o componente montado, aqui o que se copia.
+ */
+export const composerNearLimitSource = comFixas({ maxLength: 120 });
+
+/** Desabilitado. */
+export const composerDisabledSource = comFixas({ disabled: true });
+
+/** Com controles no trilho. */
+export const composerRailSource = comFixas({ rail: true });
+
+/** Envio por Enter. */
+export const composerEnterSource = comFixas({ submitOn: 'enter' });
+
+/** Envio por modificador + Enter. */
+export const composerModifierSource = comFixas({ submitOn: 'modifier' });

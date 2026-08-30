@@ -3,7 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
-import { composerSourceWith } from './composer.source';
+import {
+  composerBaseSource,
+  composerEnterSource,
+  composerModifierSource,
+} from './composer.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -20,7 +24,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerSourceWith({}) },
+      source: { transform: composerBaseSource },
       description: {
         component: 'Qual combinação envia, e o que a dica promete em cada modo.',
       },
@@ -37,7 +41,7 @@ const onSubmit = fn();
 export const SubmitOnEnter: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item4', 'visual.item2'],
-    docs: { source: { transform: composerSourceWith({ submitOn: 'enter' }) } },
+    docs: { source: { transform: composerEnterSource } },
   },
   render: () => ({
     props: { labels: composerLabels(), onSubmit },
@@ -86,7 +90,7 @@ export const SubmitOnEnter: Story = {
 export const SubmitOnModifier: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { source: { transform: composerSourceWith({ submitOn: 'modifier' }) } },
+    docs: { source: { transform: composerModifierSource } },
   },
   render: () => ({
     props: { labels: composerLabels(), onSubmit },

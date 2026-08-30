@@ -8,7 +8,11 @@ import {
   mentionSource,
   triggerLabels,
 } from './composer-trigger-popover.fixtures';
-import { triggerPopoverSourceWith } from './composer-trigger-popover.source';
+import {
+  triggerPopoverBaseSource,
+  triggerPopoverCommandSource,
+  triggerPopoverMentionSource,
+} from './composer-trigger-popover.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -25,7 +29,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: triggerPopoverSourceWith({}) },
+      source: { transform: triggerPopoverBaseSource },
       description: {
         component: 'Onde cada caractere gatilho abre a lista — e onde ele não abre.',
       },
@@ -55,7 +59,7 @@ const panelOf = (root: HTMLElement) =>
 export const Mentions: Story = {
   parameters: {
     covers: ['functional.item2', 'functional.item8', 'accessibility.item4', 'visual.item2'],
-    docs: { source: { transform: triggerPopoverSourceWith({ mention: true }) } },
+    docs: { source: { transform: triggerPopoverMentionSource } },
   },
   render: () => ({
     props: {
@@ -114,7 +118,7 @@ export const Commands: Story = {
   parameters: {
     covers: ['functional.item9', 'functional.item10', 'visual.item3'],
     docs: {
-      source: { transform: triggerPopoverSourceWith({ mention: false, command: true }) },
+      source: { transform: triggerPopoverCommandSource },
     },
   },
   render: () => ({

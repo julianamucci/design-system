@@ -5,7 +5,10 @@ import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
 import { attachmentLabels, queue } from './composer-attachments.fixtures';
 import { quoteLabels, shortQuote } from './composer-quote.fixtures';
-import { composerQuoteSourceWith } from './composer-quote.source';
+import {
+  composerQuoteShortSource,
+  composerQuoteWithAttachmentsSource,
+} from './composer-quote.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -21,7 +24,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerQuoteSourceWith({}) },
+      source: { transform: composerQuoteShortSource },
       description: {
         component: 'A citação junto dos anexos, e o pedido para tirá-la.',
       },
@@ -38,7 +41,7 @@ const onDismissQuote = fn();
 export const WithAttachments: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item4'],
-    docs: { source: { transform: composerQuoteSourceWith({ withAttachments: true }) } },
+    docs: { source: { transform: composerQuoteWithAttachmentsSource } },
   },
   render: () => ({
     props: {
