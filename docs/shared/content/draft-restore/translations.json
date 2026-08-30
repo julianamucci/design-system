@@ -1,0 +1,1367 @@
+{
+  "pt-BR": {
+    "title": "Rascunho recuperado",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A faixa que aparece acima do campo quando havia texto por enviar da vez anterior: mostra o que foi encontrado, oferece trazê-lo de volta ou dispensá-lo, e avisa qual botão a pessoa apertou.",
+    "seo": {
+      "title": "Rascunho recuperado — a pergunta sobre o que ficou escrito antes",
+      "description": "Uma faixa de estado acima do campo de escrita, com a prévia do rascunho cortada pela folha e dois controles que nomeiam o que ficou por enviar. Ela não guarda o rascunho, não decide quando ele expira e não diz o que descartar apaga."
+    },
+    "labels": {
+      "title": "Você tinha um rascunho",
+      "restore": "Restaurar rascunho",
+      "discard": "Descartar rascunho"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "found": "Um rascunho encontrado",
+        "dated": "Com o carimbo de tempo",
+        "long": "Um rascunho longo",
+        "aboveComposer": "Acima do campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A faixa fica acima do campo, e não dentro dele: o campo desenha o que se escreve agora, e isto é uma pergunta sobre antes.",
+      "item2": "O título diz o que foi encontrado, e leva junto o carimbo de tempo quando existe um.",
+      "item3": "A prévia mostra o começo do rascunho. O corte é do desenho; o texto inteiro continua no documento.",
+      "item4": "Os controles ficam no fim da faixa, e cada um nomeia o rascunho em vez de trazer só o verbo.",
+      "item5": "A faixa se anuncia como estado, na primeira pausa de quem lê — ela não interrompe e não leva o foco.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-draft\" data-slot=\"composer-draft\" role=\"status\">\n  <p class=\"nds-composer-draft-title\">\n    Você tinha um rascunho<span data-slot=\"composer-draft-timestamp\"> · ontem, 14:32</span>\n  </p>\n  <p class=\"nds-composer-draft-preview\">Sobre o orçamento de agosto: separei os três…</p>\n  <div class=\"nds-composer-draft-actions\">\n    <button class=\"nds-button\" data-slot=\"composer-draft-restore\">Restaurar rascunho</button>\n    <button class=\"nds-button\" data-slot=\"composer-draft-discard\">Descartar rascunho</button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use acima do campo, quando havia texto por enviar da vez anterior e a pessoa precisa decidir o que fazer com ele.",
+        "item2": "Passe o rascunho inteiro: o corte é do desenho, e cortar antes tira do texto a busca do navegador e a leitura por completo.",
+        "item3": "Formate o carimbo de tempo de fora — data e hora se escrevem diferente em cada idioma.",
+        "item4": "Escreva nos controles sobre o que eles agem, e não só o verbo.",
+        "item5": "Tire a faixa da tela quando alguém responder: guardar o rascunho é de quem consome, e é quem decide o que sai da tela."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Havia texto por enviar da vez anterior",
+          "u": "Rascunho recuperado",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Avisar de algo que deu errado e precisa ser lido já",
+          "u": "Alerta",
+          "a": "Ali o aviso é do sistema e interrompe a leitura em curso; aqui a faixa espera a primeira pausa."
+        },
+        "item3": {
+          "s": "Obter uma resposta antes de qualquer outra coisa",
+          "u": "Diálogo de alerta",
+          "a": "Aquilo prende o foco até ser respondido; esta faixa deixa quem chegou para escrever continuar escrevendo."
+        },
+        "item4": {
+          "s": "Avisar de algo que passa sozinho e não pede decisão",
+          "u": "Notificação passageira",
+          "a": "Lá não fica nada para responder; aqui há uma escolha, e ela espera o tempo que precisar."
+        },
+        "item5": {
+          "s": "Mostrar o trecho a que a mensagem responde",
+          "u": "Citação do composer",
+          "a": "Aquilo acompanha o que se está escrevendo agora; isto é sobre o que ficou escrito antes."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "bannerTitle": {
+            "name": "Título",
+            "format": "Frase curta, no passado, sobre o que foi encontrado.",
+            "good": "Você tinha um rascunho",
+            "bad": "Rascunho pendente!"
+          },
+          "restore": {
+            "name": "Controle de restaurar",
+            "format": "O verbo mais o que ele traz de volta.",
+            "good": "Restaurar rascunho",
+            "bad": "Restaurar"
+          },
+          "discard": {
+            "name": "Controle de descartar",
+            "format": "O verbo mais o que ele dispensa.",
+            "good": "Descartar rascunho",
+            "bad": "Não"
+          },
+          "timestamp": {
+            "name": "Carimbo de tempo",
+            "format": "Curto e já escrito, relativo quando for recente.",
+            "good": "ontem, 14:32",
+            "bad": "1755024720"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Mostre o começo do rascunho, para a pessoa reconhecer o que era.",
+        "item2": "Nomeie o rascunho nos dois controles.",
+        "item3": "Deixe o texto inteiro no documento e o corte para o desenho.",
+        "item4": "Deixe quem chegou para escrever continuar no campo."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não corte o rascunho antes de passá-lo à faixa.",
+        "item2": "Não anuncie a faixa como se fosse urgente.",
+        "item3": "Não mande o foco para a faixa quando ela aparece.",
+        "item4": "Não deixe os controles com o verbo sozinho."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O rascunho inteiro chega à faixa, e o desenho corta a prévia em duas linhas.",
+        "dont": "O texto chega já cortado com reticências: some da busca do navegador e nunca chega inteiro a quem ouve."
+      },
+      "pair2": {
+        "do": "Cada controle nomeia o rascunho.",
+        "dont": "Os controles trazem só o verbo, e viram dois destinos sem assunto para quem chega neles por tabulação."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createDraftRestore } from '@/components/ui/draft-restore';\n\nconst faixa = createDraftRestore({\n  labels: rotulos,\n  draft: rascunhoGuardado,\n  onAction: (action) => (action === 'restore' ? restaurar() : descartar()),\n});\n\ntela.prepend(faixa);",
+        "react": "import { DraftRestore } from \"@/components/ui/draft-restore\";\n\n<DraftRestore\n  labels={rotulos}\n  draft={rascunhoGuardado}\n  onAction={(action) => (action === \"restore\" ? restaurar() : descartar())}\n/>",
+        "vue": "<DraftRestore\n  :labels=\"rotulos\"\n  :draft=\"rascunhoGuardado\"\n  @action=\"aoResponder\"\n/>",
+        "svelte": "<DraftRestore\n  labels={rotulos}\n  draft={rascunhoGuardado}\n  onAction={(action) => (action === 'restore' ? restaurar() : descartar())}\n/>",
+        "angular": "<nds-draft-restore\n  [labels]=\"rotulos\"\n  [draft]=\"rascunhoGuardado()\"\n  (action)=\"aoResponder($event)\"\n/>"
+      },
+      "withTimestamp": "Com o carimbo de tempo",
+      "withTimestampCode": {
+        "web": "// A faixa NÃO guarda rascunho, não decide quando um expira e não diz o que\n// descartar apaga. Ela mostra o que foi encontrado e avisa qual controle foi\n// apertado; o resto é de quem consome.\n\n// O carimbo chega JÁ ESCRITO. Formato de data é decisão de idioma, e um\n// componente que o formatasse decidiria idioma em cinco lugares diferentes.\n{ draft: rascunhoGuardado, timestamp: 'ontem, 14:32' }\n\n// O rascunho vai INTEIRO. O corte de duas linhas é do desenho, e é o que\n// mantém o texto achável pela busca do navegador e audível por completo.\n{ draft: textoLongoInteiro }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "found": {
+        "label": "Encontrado",
+        "trigger": "Quem consome achou texto por enviar da vez anterior e montou a faixa.",
+        "behavior": "O título, a prévia e os dois controles aparecem acima do campo. A faixa se anuncia como estado, sem interromper e sem levar o foco."
+      },
+      "dated": {
+        "label": "Com carimbo",
+        "trigger": "Além do texto, sabe-se quando ele foi escrito.",
+        "behavior": "O carimbo acompanha o título e é lido junto com ele. Ele já chega escrito, e a faixa não o formata."
+      },
+      "long": {
+        "label": "Longo",
+        "trigger": "O rascunho não cabe nas duas linhas que a prévia mostra.",
+        "behavior": "O desenho corta a prévia e o texto inteiro continua no documento — achável pela busca do navegador e audível por completo."
+      },
+      "absent": {
+        "label": "Sem rascunho",
+        "trigger": "Não havia texto por enviar, ou alguém já respondeu à pergunta.",
+        "behavior": "Quem consome não monta a faixa. Faixa vazia seria pergunta sem assunto, e tirar da tela o que já foi respondido é de quem guarda o rascunho."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "draft": {
+          "name": "draft",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O rascunho encontrado, inteiro. Passe o texto completo: o corte de duas linhas é do desenho, e cortar antes tira dele a busca do navegador e a leitura por completo."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "DraftRestoreLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da faixa: o que ela diz ter encontrado e o nome de cada um dos dois controles."
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Quando o rascunho foi escrito, já escrito por extenso. Acompanha o título e é lido junto com ele; formato de data é decisão de idioma, e por isso não é decidido aqui."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(action) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém escolheu restaurar ou descartar, e a escolha vem junto do aviso. O que cada uma significa, e o que sai da tela depois, é de quem consome."
+        },
+        "labelTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que a faixa diz ter encontrado. Frase curta, no passado."
+        },
+        "labelRestore": {
+          "name": "restore",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome do controle que traz o rascunho de volta. Ele nomeia o rascunho: um verbo sozinho é um destino sem assunto para quem chega por tabulação."
+        },
+        "labelDiscard": {
+          "name": "discard",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome do controle que dispensa o rascunho. O que dispensar apaga é decisão de quem consome, e a faixa não a anuncia."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A faixa desenha a pergunta, e não a política. Ela não guarda rascunho, não decide quando um expira e não diz o que descartar apaga: mostra o que foi encontrado e avisa qual controle foi apertado. Tirar a faixa da tela depois da resposta também é de quem consome.",
+      "extensibilityCode": {
+        "web": "// O componente desenha o que RECEBE, e não sabe de onde o texto veio.\n{\n  draft: rascunhoGuardado,      // inteiro; o corte de duas linhas é do desenho\n  timestamp: 'ontem, 14:32',    // já escrito — formato de data é de idioma\n}\n\n// A escolha sai como aviso, e o que ela significa é de quem consome:\n// o que descartar apaga, se dá para desfazer, quando um rascunho expira.\nonAction: (action) => (action === 'restore' ? restaurar() : descartar());"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-draft",
+          "description": "Fundo da faixa, a meia opacidade — o suficiente para separá-la do campo sem virar aviso."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-draft",
+          "description": "Contorno da faixa, que é o que a separa do campo quando o fundo é quase igual."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-composer-draft",
+          "description": "Canto arredondado, o mesmo do campo logo abaixo."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-composer-draft",
+          "description": "Respiro lateral de dentro da faixa."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-draft",
+          "description": "Respiro de cima e de baixo, o espaço entre as partes e a distância até o campo."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-composer-draft-actions",
+          "description": "Espaço entre os dois controles."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-draft-title, .nds-composer-draft-preview",
+          "description": "Tamanho do título e da prévia."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-draft-preview",
+          "description": "Cor da prévia, que é citação do que ficou escrito e não o assunto da faixa."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* Quantas linhas da prévia aparecem antes do corte. O corte é do desenho, e\n   é isto que o mantém assim: o texto inteiro continua no documento em\n   qualquer número de linhas. */\n.nds-composer-draft-preview {\n  -webkit-line-clamp: 3;\n  line-clamp: 3;\n}\n\n/* Quando a faixa precisa de mais largura antes de os controles descerem\n   para a linha de baixo. */\n.nds-composer-draft-preview {\n  flex-basis: 20rem;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Uma região de estado, e não de alerta: ela nasce junto com a tela e espera a primeira pausa de quem lê. O rascunho inteiro fica no documento, o corte é só visual, e cada controle nomeia o que ele faz sobre o quê.",
+      "items": {
+        "item1": "A faixa é região de estado, e não de alerta — ela nasce junto com a tela, e interromper a leitura em curso por algo que não é urgente cobra caro de quem ouve.",
+        "item2": "O rascunho inteiro continua no documento: o corte é do desenho, o que o mantém achável pela busca do navegador e audível por completo.",
+        "item3": "Cada controle nomeia o rascunho — dois verbos sozinhos são dois destinos sem assunto para quem chega por tabulação vindo de outro lugar da tela.",
+        "item4": "A faixa não leva o foco. Quem entrou para escrever continua no campo, e a faixa está antes dele na ordem de leitura, que é o que a torna alcançável sem tirar ninguém de onde estava.",
+        "item5": "O carimbo de tempo é lido junto do título. Ele não se atualiza sozinho, então esconder não protegeria ninguém — só tiraria a informação de quem ouve."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Leva o foco ao primeiro controle da faixa e depois ao segundo. A faixa vem antes do campo, então quem tabula do começo da tela a encontra antes de escrever.",
+        "enter": "Aciona o controle em foco; a barra de espaço faz o mesmo.",
+        "arrows": "Não fazem nada aqui: são dois botões independentes, e não uma lista."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "role=\"status\" anuncia a faixa na primeira pausa, sem interromper o que estava sendo lido.",
+        "item2": "Não há nome acessível separado nos controles: o texto que se vê é o mesmo que se ouve, e ele já nomeia o rascunho.",
+        "item3": "Nada na faixa é escondido do leitor de tela — nem a prévia, nem o carimbo de tempo."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A faixa é anunciada na primeira pausa, com o título, o carimbo e a prévia inteira.",
+        "item2": "Os dois controles são anunciados com o verbo e com o que ele age sobre.",
+        "item3": "O foco continua onde estava quando a faixa aparece."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo acima do qual a faixa fica, e que ela deliberadamente não toca."
+        },
+        "alert": {
+          "name": "Alerta",
+          "description": "Quando o aviso é do sistema e precisa ser lido já, em vez de esperar a primeira pausa."
+        },
+        "alertDialog": {
+          "name": "Diálogo de alerta",
+          "description": "Quando a pergunta precisa de resposta antes de qualquer outra coisa, prendendo o foco até ser respondida."
+        },
+        "sonner": {
+          "name": "Notificação passageira",
+          "description": "Quando o aviso passa sozinho e não deixa nada para responder."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A faixa não guarda rascunho, não decide quando um expira e não diz o que descartar apaga. Ela mostra o que foi encontrado e avisa qual controle foi apertado; o resto é política de produto, e política envelhece por produto, não por sistema.",
+      "item2": "Ela é região de estado, e não de alerta. A faixa nasce junto com a tela e quem lê está começando a ler: um alerta interromperia a leitura em curso por algo que não é urgente.",
+      "item3": "A prévia é cortada pelo desenho, nunca por corte no texto. O rascunho inteiro continua no documento, e é isso que o mantém achável pela busca do navegador e audível por completo — reticências feitas em código viram mentira para quem ouve.",
+      "item4": "Cada controle nomeia o rascunho, porque um verbo sozinho é um destino sem assunto para quem chega nele por tabulação vindo de outro lugar da tela.",
+      "item5": "O carimbo de tempo chega já escrito. Formato de data é decisão de idioma, e um componente que o formatasse decidiria idioma em cinco lugares diferentes — a mesma escolha que o tempo decorrido do ditado por voz já tinha feito.",
+      "item6": "A faixa é autônoma: o campo não sabe que ela existe. Quem monta a tela a põe acima dele, e nenhum arquivo do campo precisou mudar por causa dela."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a faixa em si não instrumenta a recuperação do rascunho, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Montar a faixa com um rascunho",
+          "result": "Título, prévia e os dois controles aparecem, e a faixa se anuncia como estado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Montar sem carimbo de tempo",
+          "result": "O título fica sozinho, sem separador nem tempo pendurado nele",
+          "priority": "medium"
+        },
+        "item3": {
+          "action": "Montar com carimbo de tempo",
+          "result": "O carimbo acompanha o título e é lido junto com ele",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar um rascunho longo",
+          "result": "O texto inteiro está no documento, sem reticências postiças; o corte é do desenho",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar a faixa acima do campo",
+          "result": "Ela precede o campo na ordem de leitura e não leva o foco",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Acionar o controle de restaurar",
+          "result": "Quem consome é avisado da escolha de restaurar",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Acionar o controle de descartar",
+          "result": "Quem consome é avisado da escolha de descartar, e a faixa não sai da tela sozinha",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A faixa é região de estado, e não de alerta",
+        "item2": "O rascunho inteiro está no documento e o corte é só visual",
+        "item3": "Cada controle nomeia o rascunho, e não traz só o verbo",
+        "item4": "O carimbo de tempo é lido junto do título",
+        "item5": "A faixa não leva o foco ao aparecer",
+        "item6": "Os controles têm pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a faixa, com os controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — um rascunho encontrado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — com o carimbo de tempo",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — um rascunho longo, cortado pelo desenho",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composições — acima do campo",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — respondendo à pergunta",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Restored draft",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The band that appears above the field when there was unsent text from last time: it shows what was found, offers to bring it back or dismiss it, and reports which control the person pressed.",
+    "seo": {
+      "title": "Restored draft — the question about what was written before",
+      "description": "A status band above the writing field, with the draft preview clipped by the stylesheet and two controls that name what was left unsent. It does not store the draft, does not decide when one expires and does not say what discarding erases."
+    },
+    "labels": {
+      "title": "You had a draft",
+      "restore": "Restore draft",
+      "discard": "Discard draft"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "found": "A draft was found",
+        "dated": "With the time stamp",
+        "long": "A long draft",
+        "aboveComposer": "Above the field"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The band sits above the field, not inside it: the field draws what is being written now, and this is a question about before.",
+      "item2": "The title says what was found, and carries the time stamp along when there is one.",
+      "item3": "The preview shows the beginning of the draft. The clipping belongs to the design; the whole text stays in the document.",
+      "item4": "The controls sit at the end of the band, and each one names the draft instead of carrying only the verb.",
+      "item5": "The band announces itself as status, at the first pause of whoever is reading — it does not interrupt and does not take focus.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-draft\" data-slot=\"composer-draft\" role=\"status\">\n  <p class=\"nds-composer-draft-title\">\n    You had a draft<span data-slot=\"composer-draft-timestamp\"> · yesterday, 2:32 PM</span>\n  </p>\n  <p class=\"nds-composer-draft-preview\">About the August budget: I pulled the three…</p>\n  <div class=\"nds-composer-draft-actions\">\n    <button class=\"nds-button\" data-slot=\"composer-draft-restore\">Restore draft</button>\n    <button class=\"nds-button\" data-slot=\"composer-draft-discard\">Discard draft</button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it above the field, when there was unsent text from last time and the person has to decide what to do with it.",
+        "item2": "Pass the whole draft: the clipping belongs to the design, and clipping beforehand takes browser search and complete reading away from the text.",
+        "item3": "Format the time stamp outside — date and time are written differently in each language.",
+        "item4": "Write in the controls what they act upon, not only the verb.",
+        "item5": "Take the band off the screen once someone answers: keeping the draft belongs to whoever consumes it, and so does deciding what leaves the screen."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "There was unsent text from last time",
+          "u": "Restored draft",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Warn about something that went wrong and must be read now",
+          "u": "Alert",
+          "a": "There the warning belongs to the system and interrupts the reading in progress; here the band waits for the first pause."
+        },
+        "item3": {
+          "s": "Get an answer before anything else",
+          "u": "Alert dialog",
+          "a": "That one holds focus until it is answered; this band lets whoever came to write keep writing."
+        },
+        "item4": {
+          "s": "Warn about something that passes on its own and asks for no decision",
+          "u": "Transient notification",
+          "a": "There is nothing left to answer there; here there is a choice, and it waits as long as it needs to."
+        },
+        "item5": {
+          "s": "Show the passage the message replies to",
+          "u": "Composer quote",
+          "a": "That one follows what is being written now; this one is about what was written before."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "bannerTitle": {
+            "name": "Title",
+            "format": "Short sentence, in the past, about what was found.",
+            "good": "You had a draft",
+            "bad": "Pending draft!"
+          },
+          "restore": {
+            "name": "Restore control",
+            "format": "The verb plus what it brings back.",
+            "good": "Restore draft",
+            "bad": "Restore"
+          },
+          "discard": {
+            "name": "Discard control",
+            "format": "The verb plus what it dismisses.",
+            "good": "Discard draft",
+            "bad": "No"
+          },
+          "timestamp": {
+            "name": "Time stamp",
+            "format": "Short and already written, relative when it is recent.",
+            "good": "yesterday, 2:32 PM",
+            "bad": "1755024720"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Show the beginning of the draft, so the person recognises what it was.",
+        "item2": "Name the draft in both controls.",
+        "item3": "Leave the whole text in the document and the clipping to the design.",
+        "item4": "Let whoever came to write stay in the field."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not clip the draft before handing it to the band.",
+        "item2": "Do not announce the band as if it were urgent.",
+        "item3": "Do not send focus to the band when it appears.",
+        "item4": "Do not leave the controls with the verb alone."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The whole draft reaches the band, and the design clips the preview to two lines.",
+        "dont": "The text arrives already clipped with an ellipsis: it disappears from browser search and never reaches whoever listens in full."
+      },
+      "pair2": {
+        "do": "Each control names the draft.",
+        "dont": "The controls carry only the verb, and become two destinations with no subject for whoever reaches them by tabbing."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createDraftRestore } from '@/components/ui/draft-restore';\n\nconst faixa = createDraftRestore({\n  labels: rotulos,\n  draft: rascunhoGuardado,\n  onAction: (action) => (action === 'restore' ? restaurar() : descartar()),\n});\n\ntela.prepend(faixa);",
+        "react": "import { DraftRestore } from \"@/components/ui/draft-restore\";\n\n<DraftRestore\n  labels={rotulos}\n  draft={rascunhoGuardado}\n  onAction={(action) => (action === \"restore\" ? restaurar() : descartar())}\n/>",
+        "vue": "<DraftRestore\n  :labels=\"rotulos\"\n  :draft=\"rascunhoGuardado\"\n  @action=\"aoResponder\"\n/>",
+        "svelte": "<DraftRestore\n  labels={rotulos}\n  draft={rascunhoGuardado}\n  onAction={(action) => (action === 'restore' ? restaurar() : descartar())}\n/>",
+        "angular": "<nds-draft-restore\n  [labels]=\"rotulos\"\n  [draft]=\"rascunhoGuardado()\"\n  (action)=\"aoResponder($event)\"\n/>"
+      },
+      "withTimestamp": "With the time stamp",
+      "withTimestampCode": {
+        "web": "// The band does NOT store drafts, does not decide when one expires and does\n// not say what discarding erases. It shows what was found and reports which\n// control was pressed; the rest belongs to whoever consumes it.\n\n// The stamp arrives ALREADY WRITTEN. Date format is a language decision, and\n// a component that formatted it would decide language in five places.\n{ draft: rascunhoGuardado, timestamp: 'yesterday, 2:32 PM' }\n\n// The draft goes in WHOLE. The two-line clipping belongs to the design, and\n// that is what keeps the text findable by browser search and audible in full.\n{ draft: textoLongoInteiro }"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "found": {
+        "label": "Found",
+        "trigger": "Whoever consumes it found unsent text from last time and mounted the band.",
+        "behavior": "The title, the preview and both controls appear above the field. The band announces itself as status, without interrupting and without taking focus."
+      },
+      "dated": {
+        "label": "Stamped",
+        "trigger": "Besides the text, it is known when it was written.",
+        "behavior": "The stamp follows the title and is read along with it. It already arrives written, and the band does not format it."
+      },
+      "long": {
+        "label": "Long",
+        "trigger": "The draft does not fit in the two lines the preview shows.",
+        "behavior": "The design clips the preview and the whole text stays in the document — findable by browser search and audible in full."
+      },
+      "absent": {
+        "label": "No draft",
+        "trigger": "There was no unsent text, or someone already answered the question.",
+        "behavior": "Whoever consumes it does not mount the band. An empty band would be a question with no subject, and taking off the screen what has been answered belongs to whoever keeps the draft."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "draft": {
+          "name": "draft",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The draft that was found, whole. Pass the complete text: the two-line clipping belongs to the design, and clipping beforehand takes browser search and complete reading away from it."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "DraftRestoreLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The text of the band: what it says it found and the name of each of the two controls."
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "When the draft was written, already written out. It follows the title and is read along with it; date format is a language decision, and so it is not decided here."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(action) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone chose to restore or to discard, and the choice comes along with the notice. What each one means, and what leaves the screen afterwards, belongs to whoever consumes it."
+        },
+        "labelTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What the band says it found. A short sentence, in the past."
+        },
+        "labelRestore": {
+          "name": "restore",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the control that brings the draft back. It names the draft: a lone verb is a destination with no subject for whoever arrives by tabbing."
+        },
+        "labelDiscard": {
+          "name": "discard",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the control that dismisses the draft. What dismissing erases is decided by whoever consumes it, and the band does not announce it."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The band draws the question, not the policy. It does not store drafts, does not decide when one expires and does not say what discarding erases: it shows what was found and reports which control was pressed. Taking the band off the screen after the answer also belongs to whoever consumes it.",
+      "extensibilityCode": {
+        "web": "// The component draws what it RECEIVES, and does not know where the text\n// came from.\n{\n  draft: rascunhoGuardado,            // whole; the two-line clipping is design\n  timestamp: 'yesterday, 2:32 PM',    // already written — date format is language\n}\n\n// The choice goes out as a notice, and what it means belongs to whoever\n// consumes it: what discarding erases, whether it can be undone, when a\n// draft expires.\nonAction: (action) => (action === 'restore' ? restaurar() : descartar());"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-draft",
+          "description": "Background of the band, at half opacity — enough to separate it from the field without turning into a warning."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-draft",
+          "description": "Outline of the band, which is what separates it from the field when the background is nearly the same."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-composer-draft",
+          "description": "Rounded corner, the same as the field right below."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-composer-draft",
+          "description": "Side breathing room inside the band."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-draft",
+          "description": "Breathing room above and below, the space between the parts and the distance down to the field."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-composer-draft-actions",
+          "description": "Space between the two controls."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-draft-title, .nds-composer-draft-preview",
+          "description": "Size of the title and of the preview."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-draft-preview",
+          "description": "Colour of the preview, which quotes what was written and is not the subject of the band."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": "/* How many lines of the preview show before the clipping. The clipping\n   belongs to the design, and this is what keeps it that way: the whole text\n   stays in the document at any number of lines. */\n.nds-composer-draft-preview {\n  -webkit-line-clamp: 3;\n  line-clamp: 3;\n}\n\n/* When the band needs more width before the controls drop to the line\n   below. */\n.nds-composer-draft-preview {\n  flex-basis: 20rem;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "A status region, not an alert one: it is born together with the screen and waits for the first pause of whoever is reading. The whole draft stays in the document, the clipping is only visual, and each control names what it acts upon.",
+      "items": {
+        "item1": "The band is a status region, not an alert one — it is born together with the screen, and interrupting the reading in progress for something that is not urgent costs whoever listens dearly.",
+        "item2": "The whole draft stays in the document: the clipping belongs to the design, which keeps it findable by browser search and audible in full.",
+        "item3": "Each control names the draft — two lone verbs are two destinations with no subject for whoever arrives by tabbing from elsewhere on the screen.",
+        "item4": "The band does not take focus. Whoever came to write stays in the field, and the band sits before it in reading order, which is what makes it reachable without pulling anyone out of where they were.",
+        "item5": "The time stamp is read along with the title. It does not update on its own, so hiding it would protect no one — it would only take the information away from whoever listens."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Takes focus to the first control of the band and then to the second. The band comes before the field, so whoever tabs from the top of the screen meets it before writing.",
+        "enter": "Activates the focused control; the space bar does the same.",
+        "arrows": "Do nothing here: these are two independent buttons, not a list."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "role=\"status\" announces the band at the first pause, without interrupting what was being read.",
+        "item2": "There is no separate accessible name on the controls: the text you see is the same you hear, and it already names the draft.",
+        "item3": "Nothing in the band is hidden from the screen reader — not the preview, not the time stamp."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The band is announced at the first pause, with the title, the stamp and the whole preview.",
+        "item2": "Both controls are announced with the verb and with what it acts upon.",
+        "item3": "Focus stays where it was when the band appears."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field the band sits above, and which it deliberately does not touch."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "When the warning belongs to the system and must be read now, instead of waiting for the first pause."
+        },
+        "alertDialog": {
+          "name": "Alert dialog",
+          "description": "When the question needs an answer before anything else, holding focus until it is answered."
+        },
+        "sonner": {
+          "name": "Transient notification",
+          "description": "When the warning passes on its own and leaves nothing to answer."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The band does not store drafts, does not decide when one expires and does not say what discarding erases. It shows what was found and reports which control was pressed; the rest is product policy, and policy ages by product, not by system.",
+      "item2": "It is a status region, not an alert one. The band is born together with the screen and whoever reads is just starting to read: an alert would interrupt the reading in progress for something that is not urgent.",
+      "item3": "The preview is clipped by the design, never by clipping the text. The whole draft stays in the document, and that is what keeps it findable by browser search and audible in full — an ellipsis made in code becomes a lie for whoever listens.",
+      "item4": "Each control names the draft, because a lone verb is a destination with no subject for whoever arrives at it by tabbing from elsewhere on the screen.",
+      "item5": "The time stamp arrives already written. Date format is a language decision, and a component that formatted it would decide language in five different places — the same choice the elapsed time of voice dictation had already made.",
+      "item6": "The band is autonomous: the field does not know it exists. Whoever builds the screen puts it above the field, and no file of the field had to change because of it."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the band itself does not instrument draft recovery, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function verifies in each story.",
+        "item1": {
+          "action": "Mount the band with a draft",
+          "result": "Title, preview and both controls appear, and the band announces itself as status",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Mount it with no time stamp",
+          "result": "The title stands alone, with no separator and no time hanging off it",
+          "priority": "medium"
+        },
+        "item3": {
+          "action": "Mount it with a time stamp",
+          "result": "The stamp follows the title and is read along with it",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mount a long draft",
+          "result": "The whole text is in the document, with no bolted-on ellipsis; the clipping belongs to the design",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mount the band above the field",
+          "result": "It precedes the field in reading order and does not take focus",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Activate the restore control",
+          "result": "Whoever consumes it is told about the choice to restore",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Activate the discard control",
+          "result": "Whoever consumes it is told about the choice to discard, and the band does not leave the screen on its own",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The band is a status region, not an alert one",
+        "item2": "The whole draft is in the document and the clipping is only visual",
+        "item3": "Each control names the draft, and does not carry only the verb",
+        "item4": "The time stamp is read along with the title",
+        "item5": "The band does not take focus when it appears",
+        "item6": "The controls have at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the band, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — a draft was found",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — with the time stamp",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — a long draft, clipped by the design",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Compositions — above the field",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — answering the question",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Borrador recuperado",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La franja que aparece encima del campo cuando había texto sin enviar de la vez anterior: muestra lo que se encontró, ofrece recuperarlo o descartarlo, y avisa qué control pulsó la persona.",
+    "seo": {
+      "title": "Borrador recuperado — la pregunta sobre lo que quedó escrito antes",
+      "description": "Una franja de estado encima del campo de escritura, con la vista previa del borrador recortada por la hoja y dos controles que nombran lo que quedó sin enviar. No guarda el borrador, no decide cuándo caduca y no dice qué borra descartar."
+    },
+    "labels": {
+      "title": "Tenías un borrador",
+      "restore": "Recuperar borrador",
+      "discard": "Descartar borrador"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "found": "Un borrador encontrado",
+        "dated": "Con la marca de tiempo",
+        "long": "Un borrador largo",
+        "aboveComposer": "Encima del campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La franja está encima del campo, y no dentro de él: el campo dibuja lo que se escribe ahora, y esto es una pregunta sobre antes.",
+      "item2": "El título dice lo que se encontró, y lleva consigo la marca de tiempo cuando existe una.",
+      "item3": "La vista previa muestra el comienzo del borrador. El recorte es del diseño; el texto entero sigue en el documento.",
+      "item4": "Los controles están al final de la franja, y cada uno nombra el borrador en vez de traer solo el verbo.",
+      "item5": "La franja se anuncia como estado, en la primera pausa de quien lee — no interrumpe y no se lleva el foco.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-draft\" data-slot=\"composer-draft\" role=\"status\">\n  <p class=\"nds-composer-draft-title\">\n    Tenías un borrador<span data-slot=\"composer-draft-timestamp\"> · ayer, 14:32</span>\n  </p>\n  <p class=\"nds-composer-draft-preview\">Sobre el presupuesto de agosto: separé los tres…</p>\n  <div class=\"nds-composer-draft-actions\">\n    <button class=\"nds-button\" data-slot=\"composer-draft-restore\">Recuperar borrador</button>\n    <button class=\"nds-button\" data-slot=\"composer-draft-discard\">Descartar borrador</button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala encima del campo, cuando había texto sin enviar de la vez anterior y la persona tiene que decidir qué hacer con él.",
+        "item2": "Pasa el borrador entero: el recorte es del diseño, y recortar antes le quita al texto la búsqueda del navegador y la lectura completa.",
+        "item3": "Formatea la marca de tiempo desde fuera — fecha y hora se escriben distinto en cada idioma.",
+        "item4": "Escribe en los controles sobre qué actúan, y no solo el verbo.",
+        "item5": "Quita la franja de la pantalla cuando alguien responda: guardar el borrador es de quien consume, y también decidir qué sale de la pantalla."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Había texto sin enviar de la vez anterior",
+          "u": "Borrador recuperado",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Avisar de algo que salió mal y hay que leer ya",
+          "u": "Alerta",
+          "a": "Allí el aviso es del sistema e interrumpe la lectura en curso; aquí la franja espera la primera pausa."
+        },
+        "item3": {
+          "s": "Obtener una respuesta antes que cualquier otra cosa",
+          "u": "Diálogo de alerta",
+          "a": "Aquello retiene el foco hasta ser respondido; esta franja deja seguir escribiendo a quien vino a escribir."
+        },
+        "item4": {
+          "s": "Avisar de algo que pasa solo y no pide decisión",
+          "u": "Notificación pasajera",
+          "a": "Allí no queda nada por responder; aquí hay una elección, y espera el tiempo que haga falta."
+        },
+        "item5": {
+          "s": "Mostrar el fragmento al que responde el mensaje",
+          "u": "Cita del composer",
+          "a": "Aquello acompaña lo que se está escribiendo ahora; esto trata de lo que quedó escrito antes."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "bannerTitle": {
+            "name": "Título",
+            "format": "Frase corta, en pasado, sobre lo que se encontró.",
+            "good": "Tenías un borrador",
+            "bad": "¡Borrador pendiente!"
+          },
+          "restore": {
+            "name": "Control de recuperar",
+            "format": "El verbo más lo que trae de vuelta.",
+            "good": "Recuperar borrador",
+            "bad": "Recuperar"
+          },
+          "discard": {
+            "name": "Control de descartar",
+            "format": "El verbo más lo que descarta.",
+            "good": "Descartar borrador",
+            "bad": "No"
+          },
+          "timestamp": {
+            "name": "Marca de tiempo",
+            "format": "Corta y ya escrita, relativa cuando sea reciente.",
+            "good": "ayer, 14:32",
+            "bad": "1755024720"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Muestra el comienzo del borrador, para que la persona reconozca qué era.",
+        "item2": "Nombra el borrador en los dos controles.",
+        "item3": "Deja el texto entero en el documento y el recorte al diseño.",
+        "item4": "Deja que quien vino a escribir siga en el campo."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No recortes el borrador antes de pasarlo a la franja.",
+        "item2": "No anuncies la franja como si fuera urgente.",
+        "item3": "No mandes el foco a la franja cuando aparece.",
+        "item4": "No dejes los controles con el verbo solo."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El borrador entero llega a la franja, y el diseño recorta la vista previa en dos líneas.",
+        "dont": "El texto llega ya recortado con puntos suspensivos: desaparece de la búsqueda del navegador y nunca llega entero a quien escucha."
+      },
+      "pair2": {
+        "do": "Cada control nombra el borrador.",
+        "dont": "Los controles traen solo el verbo, y se vuelven dos destinos sin asunto para quien llega a ellos tabulando."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createDraftRestore } from '@/components/ui/draft-restore';\n\nconst faixa = createDraftRestore({\n  labels: rotulos,\n  draft: rascunhoGuardado,\n  onAction: (action) => (action === 'restore' ? restaurar() : descartar()),\n});\n\ntela.prepend(faixa);",
+        "react": "import { DraftRestore } from \"@/components/ui/draft-restore\";\n\n<DraftRestore\n  labels={rotulos}\n  draft={rascunhoGuardado}\n  onAction={(action) => (action === \"restore\" ? restaurar() : descartar())}\n/>",
+        "vue": "<DraftRestore\n  :labels=\"rotulos\"\n  :draft=\"rascunhoGuardado\"\n  @action=\"aoResponder\"\n/>",
+        "svelte": "<DraftRestore\n  labels={rotulos}\n  draft={rascunhoGuardado}\n  onAction={(action) => (action === 'restore' ? restaurar() : descartar())}\n/>",
+        "angular": "<nds-draft-restore\n  [labels]=\"rotulos\"\n  [draft]=\"rascunhoGuardado()\"\n  (action)=\"aoResponder($event)\"\n/>"
+      },
+      "withTimestamp": "Con la marca de tiempo",
+      "withTimestampCode": {
+        "web": "// La franja NO guarda borradores, no decide cuándo caduca uno y no dice qué\n// borra descartar. Muestra lo que se encontró y avisa qué control se pulsó;\n// el resto es de quien consume.\n\n// La marca llega YA ESCRITA. El formato de fecha es decisión de idioma, y un\n// componente que lo formateara decidiría el idioma en cinco lugares.\n{ draft: rascunhoGuardado, timestamp: 'ayer, 14:32' }\n\n// El borrador va ENTERO. El recorte de dos líneas es del diseño, y es lo que\n// mantiene el texto localizable por la búsqueda del navegador y audible\n// completo.\n{ draft: textoLongoInteiro }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "found": {
+        "label": "Encontrado",
+        "trigger": "Quien consume encontró texto sin enviar de la vez anterior y montó la franja.",
+        "behavior": "El título, la vista previa y los dos controles aparecen encima del campo. La franja se anuncia como estado, sin interrumpir y sin llevarse el foco."
+      },
+      "dated": {
+        "label": "Con marca",
+        "trigger": "Además del texto, se sabe cuándo fue escrito.",
+        "behavior": "La marca acompaña al título y se lee junto con él. Llega ya escrita, y la franja no la formatea."
+      },
+      "long": {
+        "label": "Largo",
+        "trigger": "El borrador no cabe en las dos líneas que muestra la vista previa.",
+        "behavior": "El diseño recorta la vista previa y el texto entero sigue en el documento — localizable por la búsqueda del navegador y audible completo."
+      },
+      "absent": {
+        "label": "Sin borrador",
+        "trigger": "No había texto sin enviar, o alguien ya respondió a la pregunta.",
+        "behavior": "Quien consume no monta la franja. Una franja vacía sería una pregunta sin asunto, y quitar de la pantalla lo ya respondido es de quien guarda el borrador."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "draft": {
+          "name": "draft",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El borrador encontrado, entero. Pasa el texto completo: el recorte de dos líneas es del diseño, y recortar antes le quita la búsqueda del navegador y la lectura completa."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "DraftRestoreLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la franja: lo que dice haber encontrado y el nombre de cada uno de los dos controles."
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Cuándo fue escrito el borrador, ya escrito por extenso. Acompaña al título y se lee junto con él; el formato de fecha es decisión de idioma, y por eso no se decide aquí."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(action) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien eligió recuperar o descartar, y la elección viene junto con el aviso. Qué significa cada una, y qué sale de la pantalla después, es de quien consume."
+        },
+        "labelTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que la franja dice haber encontrado. Frase corta, en pasado."
+        },
+        "labelRestore": {
+          "name": "restore",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre del control que trae el borrador de vuelta. Nombra el borrador: un verbo solo es un destino sin asunto para quien llega tabulando."
+        },
+        "labelDiscard": {
+          "name": "discard",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre del control que descarta el borrador. Qué borra descartar lo decide quien consume, y la franja no lo anuncia."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La franja dibuja la pregunta, y no la política. No guarda borradores, no decide cuándo caduca uno y no dice qué borra descartar: muestra lo que se encontró y avisa qué control se pulsó. Quitar la franja de la pantalla tras la respuesta también es de quien consume.",
+      "extensibilityCode": {
+        "web": "// El componente dibuja lo que RECIBE, y no sabe de dónde vino el texto.\n{\n  draft: rascunhoGuardado,      // entero; el recorte de dos líneas es diseño\n  timestamp: 'ayer, 14:32',     // ya escrita — el formato de fecha es idioma\n}\n\n// La elección sale como aviso, y lo que significa es de quien consume: qué\n// borra descartar, si se puede deshacer, cuándo caduca un borrador.\nonAction: (action) => (action === 'restore' ? restaurar() : descartar());"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-draft",
+          "description": "Fondo de la franja, a media opacidad — lo justo para separarla del campo sin convertirse en un aviso."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-draft",
+          "description": "Contorno de la franja, que es lo que la separa del campo cuando el fondo es casi igual."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-composer-draft",
+          "description": "Esquina redondeada, la misma del campo de abajo."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-composer-draft",
+          "description": "Respiro lateral dentro de la franja."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-draft",
+          "description": "Respiro arriba y abajo, el espacio entre las partes y la distancia hasta el campo."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-composer-draft-actions",
+          "description": "Espacio entre los dos controles."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-draft-title, .nds-composer-draft-preview",
+          "description": "Tamaño del título y de la vista previa."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-draft-preview",
+          "description": "Color de la vista previa, que cita lo que quedó escrito y no es el asunto de la franja."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* Cuántas líneas de la vista previa se ven antes del recorte. El recorte es\n   del diseño, y esto es lo que lo mantiene así: el texto entero sigue en el\n   documento con cualquier número de líneas. */\n.nds-composer-draft-preview {\n  -webkit-line-clamp: 3;\n  line-clamp: 3;\n}\n\n/* Cuando la franja necesita más ancho antes de que los controles bajen a la\n   línea siguiente. */\n.nds-composer-draft-preview {\n  flex-basis: 20rem;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Una región de estado, y no de alerta: nace junto con la pantalla y espera la primera pausa de quien lee. El borrador entero queda en el documento, el recorte es solo visual, y cada control nombra sobre qué actúa.",
+      "items": {
+        "item1": "La franja es región de estado, y no de alerta — nace junto con la pantalla, e interrumpir la lectura en curso por algo que no es urgente sale caro a quien escucha.",
+        "item2": "El borrador entero sigue en el documento: el recorte es del diseño, lo que lo mantiene localizable por la búsqueda del navegador y audible completo.",
+        "item3": "Cada control nombra el borrador — dos verbos solos son dos destinos sin asunto para quien llega tabulando desde otro lugar de la pantalla.",
+        "item4": "La franja no se lleva el foco. Quien vino a escribir sigue en el campo, y la franja está antes de él en el orden de lectura, que es lo que la hace alcanzable sin sacar a nadie de donde estaba.",
+        "item5": "La marca de tiempo se lee junto al título. No se actualiza sola, así que esconderla no protegería a nadie — solo le quitaría la información a quien escucha."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Lleva el foco al primer control de la franja y luego al segundo. La franja va antes del campo, así que quien tabula desde el principio de la pantalla la encuentra antes de escribir.",
+        "enter": "Acciona el control enfocado; la barra espaciadora hace lo mismo.",
+        "arrows": "Aquí no hacen nada: son dos botones independientes, y no una lista."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "role=\"status\" anuncia la franja en la primera pausa, sin interrumpir lo que se estaba leyendo.",
+        "item2": "No hay nombre accesible aparte en los controles: el texto que se ve es el mismo que se oye, y ya nombra el borrador.",
+        "item3": "Nada de la franja se esconde del lector de pantalla — ni la vista previa, ni la marca de tiempo."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La franja se anuncia en la primera pausa, con el título, la marca y la vista previa entera.",
+        "item2": "Los dos controles se anuncian con el verbo y con aquello sobre lo que actúan.",
+        "item3": "El foco sigue donde estaba cuando aparece la franja."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo encima del cual está la franja, y que ella deliberadamente no toca."
+        },
+        "alert": {
+          "name": "Alerta",
+          "description": "Cuando el aviso es del sistema y hay que leerlo ya, en vez de esperar la primera pausa."
+        },
+        "alertDialog": {
+          "name": "Diálogo de alerta",
+          "description": "Cuando la pregunta necesita respuesta antes que cualquier otra cosa, reteniendo el foco hasta ser respondida."
+        },
+        "sonner": {
+          "name": "Notificación pasajera",
+          "description": "Cuando el aviso pasa solo y no deja nada por responder."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La franja no guarda borradores, no decide cuándo caduca uno y no dice qué borra descartar. Muestra lo que se encontró y avisa qué control se pulsó; el resto es política de producto, y la política envejece por producto, no por sistema.",
+      "item2": "Es región de estado, y no de alerta. La franja nace junto con la pantalla y quien lee está empezando a leer: una alerta interrumpiría la lectura en curso por algo que no es urgente.",
+      "item3": "La vista previa la recorta el diseño, nunca un recorte en el texto. El borrador entero sigue en el documento, y eso es lo que lo mantiene localizable por la búsqueda del navegador y audible completo — unos puntos suspensivos hechos en código se vuelven mentira para quien escucha.",
+      "item4": "Cada control nombra el borrador, porque un verbo solo es un destino sin asunto para quien llega a él tabulando desde otro lugar de la pantalla.",
+      "item5": "La marca de tiempo llega ya escrita. El formato de fecha es decisión de idioma, y un componente que lo formateara decidiría el idioma en cinco lugares distintos — la misma elección que ya había hecho el tiempo transcurrido del dictado por voz.",
+      "item6": "La franja es autónoma: el campo no sabe que existe. Quien monta la pantalla la pone encima de él, y ningún archivo del campo tuvo que cambiar por ella."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la franja en sí no instrumenta la recuperación del borrador, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Montar la franja con un borrador",
+          "result": "Título, vista previa y los dos controles aparecen, y la franja se anuncia como estado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Montarla sin marca de tiempo",
+          "result": "El título queda solo, sin separador ni tiempo colgado de él",
+          "priority": "medium"
+        },
+        "item3": {
+          "action": "Montarla con marca de tiempo",
+          "result": "La marca acompaña al título y se lee junto con él",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar un borrador largo",
+          "result": "El texto entero está en el documento, sin puntos suspensivos postizos; el recorte es del diseño",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar la franja encima del campo",
+          "result": "Precede al campo en el orden de lectura y no se lleva el foco",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Accionar el control de recuperar",
+          "result": "Quien consume recibe el aviso de la elección de recuperar",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Accionar el control de descartar",
+          "result": "Quien consume recibe el aviso de la elección de descartar, y la franja no sale de la pantalla sola",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que afirma la play.",
+        "item1": "La franja es región de estado, y no de alerta",
+        "item2": "El borrador entero está en el documento y el recorte es solo visual",
+        "item3": "Cada control nombra el borrador, y no trae solo el verbo",
+        "item4": "La marca de tiempo se lee junto al título",
+        "item5": "La franja no se lleva el foco al aparecer",
+        "item6": "Los controles tienen al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la franja, con los controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — un borrador encontrado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — con la marca de tiempo",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — un borrador largo, recortado por el diseño",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composiciones — encima del campo",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — respondiendo a la pregunta",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

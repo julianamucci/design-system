@@ -12,6 +12,18 @@ export { default as ComposerAttachments } from './ComposerAttachments.vue'
 export { default as ComposerContext } from './ComposerContext.vue'
 export { default as ComposerModelPicker } from './ComposerModelPicker.vue'
 export { default as ComposerVoice } from './ComposerVoice.vue'
+export { default as DraftRestore } from './DraftRestore.vue'
+
+/**
+ * O vocabulário do RASCUNHO RECUPERADO.
+ *
+ * Ele é REEXPORTADO daqui, e não redeclarado: os tipos moram no bloco de módulo
+ * do próprio `DraftRestore.vue` porque a peça é autônoma — ela não entra na API
+ * do `Composer`, e quem a usa a importa inteira, componente e vocabulário. O
+ * que este índice acrescenta é a porta única da moldura, a mesma por onde as
+ * peças irmãs saem.
+ */
+export type { DraftRestoreAction, DraftRestoreLabels } from './DraftRestore.vue'
 
 /**
  * O vocabulário do compositor.

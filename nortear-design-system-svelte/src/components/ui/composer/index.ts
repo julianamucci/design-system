@@ -16,6 +16,10 @@ import Voice, {
 	type ComposerVoiceIntent,
 	type ComposerVoiceLabels,
 } from "./composer-voice.svelte";
+import DraftRestore, {
+	type DraftRestoreAction,
+	type DraftRestoreLabels,
+} from "./draft-restore.svelte";
 // Só os TIPOS da citação saem daqui. O bloco em si é montado pelo composer, e
 // não há por que quem consome montá-lo por fora: ele existe para descrever UM
 // campo, e é o campo que aponta a descrição. O que atravessa a fronteira é o
@@ -68,6 +72,13 @@ export {
 	Voice as ComposerVoice,
 	type ComposerVoiceIntent,
 	type ComposerVoiceLabels,
+	// O RASCUNHO RECUPERADO. Ele é AUTÔNOMO como o ditado, e fica ACIMA do
+	// campo em vez de dentro dele: o campo desenha o que se escreve agora, e a
+	// faixa é uma pergunta sobre antes. Sai daqui inteiro — e não só em tipo —
+	// porque é quem consome que a monta, no lugar que escolher.
+	DraftRestore,
+	type DraftRestoreAction,
+	type DraftRestoreLabels,
 	// A CITAÇÃO. O vocabulário dela é texto de tela e o dado vem de quem
 	// consome, então os dois tipos saem; o bloco é montado pelo composer.
 	type ComposerQuote,
