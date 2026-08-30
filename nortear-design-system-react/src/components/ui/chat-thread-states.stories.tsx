@@ -370,14 +370,14 @@ export const StreamingUpdate: Story = {
       // `open` do colapsável, que ninguém controla por props.
       const detalhe = message().querySelector<HTMLDetailsElement>(".nds-chat-reasoning")!
       detalhe.open = true
-      const copiarAntes = canvas.getByRole("button", { name: "Copiar" })
-      const mensagemAntes = message()
+      const copyBefore = canvas.getByRole("button", { name: "Copiar" })
+      const messageBefore = message()
 
       await click("Terceiro trecho")
 
       await waitFor(() => expect(message()).toHaveTextContent("e cresce"))
-      await expect(message()).toBe(mensagemAntes)
-      await expect(canvas.getByRole("button", { name: "Copiar" })).toBe(copiarAntes)
+      await expect(message()).toBe(messageBefore)
+      await expect(canvas.getByRole("button", { name: "Copiar" })).toBe(copyBefore)
       await expect(detalhe.open).toBe(true)
     })
 
