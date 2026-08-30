@@ -12,6 +12,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   ATTACHMENT_STATES,
+  canWithdraw,
   CONTEXT_KINDS,
   isContextRemovable,
   isModelSelectable,
@@ -28,6 +29,8 @@ import {
   type ContextItem,
   type ContextKind,
   type ModelOption,
+  type QueuedMessage,
+  QUEUED_MESSAGE_STATES,
   type RunStatus,
   type ToolCallState,
   type VoiceState,
@@ -203,5 +206,20 @@ describe('isVoiceBusy — o ditado está ocupado?', () => {
     // A distinção que faz os dois estados existirem: `recording` se
     // interrompe, `transcribing` não devolve o áudio se alguém apertar.
     expect(isVoiceBusy('transcribing')).toBe(true);
+  });
+});
+
+describe('canWithdraw — ainda dá para tirar da fila?', () => {
+  const na = (state: QueuedMessage['state']): QueuedMessage => ({ text: 'E o prazo?', state });
+
+  it('só a que espera', () => {
+    const podem = QUEUED_MESSAGE_STATES.filter((s) => canWithdraw(na(s)));
+    expect(podem).toEqual(['waiting']);
+  });
+
+  it('a que já está indo não oferece desfazer', () => {
+    // Botão que promete desfazer o que não desfaz é pior que botão nenhum: a
+    // mensagem já saiu, e o que acontece depois é do produto.
+    expect(canWithdraw(na('sending'))).toBe(false);
   });
 });

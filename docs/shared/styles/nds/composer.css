@@ -860,3 +860,178 @@
     transform: scaleY(calc(var(--nds-voice-level, 1) * 0.7));
   }
 }
+
+/* ── Rascunho recuperado ──────────────────────────────────────────────────────
+ *
+ * A faixa que aparece quando havia texto não enviado da vez anterior e oferece
+ * trazê-lo de volta. Fica ACIMA do composer, e não dentro dele: o composer
+ * desenha o que se está escrevendo agora, e isto é uma pergunta sobre antes.
+ *
+ *   <div class="nds-composer-draft" role="status">
+ *     <p class="nds-composer-draft-title">Você tinha um rascunho</p>
+ *     <p class="nds-composer-draft-preview">Sobre o orçamento de…</p>
+ *     <div class="nds-composer-draft-actions">
+ *       <button class="nds-button">Restaurar</button>
+ *       <button class="nds-button">Descartar</button>
+ *     </div>
+ *   </div>
+ *
+ * O DESIGN SYSTEM DESENHA A PERGUNTA, NÃO A POLÍTICA (guideline 17 §7). Ele não
+ * guarda rascunho, não decide quando um expira, e não diz o que "descartar"
+ * apaga. Ele mostra o que foi encontrado e avisa qual botão a pessoa apertou.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. `role="status"`, e NÃO `role="alert"`. A faixa nasce junto com a tela e
+ *    quem lê está começando a ler: `alert` interromperia a leitura em curso
+ *    por algo que não é urgente. `status` anuncia na primeira pausa.
+ * 2. A PRÉVIA É CORTADA PELA FOLHA, com `line-clamp` — nunca por corte no
+ *    texto. O rascunho inteiro continua no documento: é o que permite ouvi-lo
+ *    por completo e achá-lo pela busca do navegador. Texto cortado em JavaScript
+ *    perde as duas coisas, e o reticências vira mentira para quem ouve.
+ * 3. CADA BOTÃO DIZ SOBRE O QUE AGE. "Restaurar" e "Descartar" sozinhos são
+ *    dois verbos sem objeto para quem chega neles por tabulação vindo de outro
+ *    lugar da tela. O rótulo nomeia o rascunho.
+ * 4. A FAIXA NÃO ROUBA O FOCO. Quem entrou para escrever continua no campo; a
+ *    faixa está antes dele na ordem de leitura, que é o que a torna alcançável
+ *    sem tirar ninguém de onde estava.
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT).
+ */
+
+.nds-composer-draft {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  margin-block-end: var(--spacing-2);
+  padding-inline: var(--spacing-3);
+  padding-block: var(--spacing-2);
+
+  background-color: hsl(var(--muted) / 0.5);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+
+.nds-composer-draft-title {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: var(--text-label);
+  font-weight: 500;
+}
+
+.nds-composer-draft-preview {
+  margin: 0;
+  flex: 1 1 12rem;
+  min-inline-size: 0;
+
+  /* O corte é aqui, e não no texto: o rascunho inteiro fica no documento. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-composer-draft-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  margin-inline-start: auto;
+}
+
+/* ── Fila de envio ────────────────────────────────────────────────────────────
+ *
+ * As mensagens escritas enquanto a anterior ainda estava sendo respondida.
+ * Vocabulário em `@shared/primitives/chat-protocol` (`QueuedMessage`,
+ * `canWithdraw`).
+ *
+ *   <ol class="nds-composer-queue" aria-label="Na fila">
+ *     <li class="nds-composer-queue-item" data-state="waiting">
+ *       <span class="nds-composer-queue-position">1</span>
+ *       <span class="nds-composer-queue-text">E o prazo?</span>
+ *       <button class="nds-button" data-slot="composer-queue-withdraw"></button>
+ *     </li>
+ *     <li class="nds-composer-queue-item" data-state="sending" aria-busy="true"> … </li>
+ *   </ol>
+ *
+ * `<ol>` E NÃO `<ul>`: aqui a ordem É a informação. Quem espera quer saber que
+ * é a terceira, e uma lista não ordenada não anuncia posição.
+ *
+ * A FILA NÃO É REGIÃO VIVA. Cada item entrou porque a própria pessoa o
+ * escreveu — anunciar de volta o que se acabou de digitar é repetir, não
+ * informar. É a mesma decisão do contador de caracteres e do relógio do media
+ * player, pelo mesmo motivo.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. A POSIÇÃO É TEXTO, e não só a ordem visual. O número está no documento,
+ *    e não num `::before` de folha — conteúdo gerado por CSS não é confiável
+ *    para leitor de tela e some com a folha.
+ * 2. O QUE JÁ ESTÁ INDO NÃO OFERECE RETIRAR. `canWithdraw` decide; a peça não
+ *    reimplementa a regra. Botão que promete desfazer o que não desfaz é pior
+ *    que botão nenhum.
+ * 3. `aria-busy` NO ITEM QUE ESTÁ INDO, e a palavra do estado em texto. O
+ *    ocupado é atributo; o que está acontecendo é frase.
+ * 4. O BOTÃO DE RETIRAR NOMEIA A MENSAGEM. Uma fila de três "Retirar" é um
+ *    botão só para quem navega por audição.
+ * 5. ALVO DE TOQUE ≥ 24px no botão (WCAG 2.5.8).
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT).
+ */
+
+.nds-composer-queue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  margin: 0;
+  margin-block-end: var(--spacing-2);
+  padding: 0;
+  list-style: none;
+}
+
+.nds-composer-queue-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5);
+
+  background-color: hsl(var(--muted) / 0.4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-label);
+}
+
+/* O que já está indo fica mais discreto — e a palavra ao lado é o que de fato
+ * o distingue; a cor sozinha não descreve estado (WCAG 1.4.1). */
+.nds-composer-queue-item[data-state="sending"] {
+  opacity: 0.7;
+}
+
+.nds-composer-queue-position {
+  flex-shrink: 0;
+  min-inline-size: var(--spacing-4);
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.nds-composer-queue-text {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-slot="composer-queue-withdraw"] {
+  flex-shrink: 0;
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}

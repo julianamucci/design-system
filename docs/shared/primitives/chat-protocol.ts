@@ -332,3 +332,37 @@ export const VOICE_STATES: readonly VoiceState[] = [
 export function isVoiceBusy(state: VoiceState): boolean {
   return state !== 'idle';
 }
+
+// ─── Fila de envio ────────────────────────────────────────────────────────────
+
+/**
+ * Estado de uma mensagem que espera a vez.
+ *
+ * Passa no critério de "o estado muda o desenho" e, mais que isso, muda o que
+ * se PODE fazer: a que espera ainda se retira, a que já está indo não se
+ * retira mais. Duas palavras porque a terceira — enviada — sai da fila e vira
+ * turno da conversa; guardá-la aqui faria a fila crescer para sempre.
+ */
+export type QueuedMessageState = 'waiting' | 'sending';
+
+/** Na ordem em que a mensagem anda. */
+export const QUEUED_MESSAGE_STATES: readonly QueuedMessageState[] = ['waiting', 'sending'] as const;
+
+/** Uma mensagem escrita enquanto a anterior ainda era respondida. */
+export interface QueuedMessage {
+  /** Endereço, para retirar a certa quando duas têm o mesmo texto. */
+  id?: string;
+  text: string;
+  state: QueuedMessageState;
+}
+
+/**
+ * Ainda dá para retirar?
+ *
+ * Só `waiting`. Oferecer o botão em `sending` é oferecer um desfazer que não
+ * desfaz — a mensagem já saiu, e o que acontece depois disso é do produto, não
+ * do design system.
+ */
+export function canWithdraw(message: QueuedMessage): boolean {
+  return message.state === 'waiting';
+}
