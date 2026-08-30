@@ -8,7 +8,7 @@ import { field } from './input-otp.fixtures';
 import { inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
-  title: 'UI/InputOTP',
+  title: 'Primitives/Form/InputOTP',
   component: InputOTPStory,
   tags: ['autodocs', 'form'],
   parameters: {

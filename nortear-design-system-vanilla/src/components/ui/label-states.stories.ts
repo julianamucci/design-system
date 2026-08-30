@@ -14,7 +14,7 @@ import { labelSource, labelSourceBlock, labelSourceWith, labelSourceObrigatorio 
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Label/States',
+  title: 'Primitives/Form/Label/States',
   parameters: {
     layout: 'centered',
     actions: { disable: true },

@@ -18,7 +18,7 @@ import {
 } from './dialog.fixtures';
 
 const meta: Meta = {
-  title: 'UI/Dialog',
+  title: 'Primitives/Overlay/Dialog',
   component: Dialog,
   tags: ['autodocs', 'overlay'],
   parameters: {

@@ -444,10 +444,10 @@
       <DocsRelated
         title={$tStore('related.title')}
         items={[
-          { name: 'Avatar',     description: $tStore('related.avatar'),   path: '?path=/docs/ui-avatar--docs'     },
-          { name: 'Card',       description: $tStore('related.card'),     path: '?path=/docs/ui-card--docs'       },
-          { name: 'Skeleton',   description: $tStore('related.skeleton'), path: '?path=/docs/ui-skeleton--docs'   },
-          { name: 'ScrollArea', description: $tStore('related.aspectRatio'), path: '?path=/docs/ui-scrollarea--docs' },
+          { name: 'Avatar',     description: $tStore('related.avatar'),   path: '?path=/docs/primitives-display-avatar--docs'     },
+          { name: 'Card',       description: $tStore('related.card'),     path: '?path=/docs/primitives-layout-card--docs'       },
+          { name: 'Skeleton',   description: $tStore('related.skeleton'), path: '?path=/docs/primitives-feedback-skeleton--docs'   },
+          { name: 'ScrollArea', description: $tStore('related.aspectRatio'), path: '?path=/docs/primitives-layout-scrollarea--docs' },
         ]}
       />
 

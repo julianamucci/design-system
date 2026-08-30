@@ -33,7 +33,7 @@ const ITEMS_WITH_BLOCK = [
 const selectionSpy = fn();
 
 const meta = {
-  title: 'UI/Menubar/States',
+  title: 'Primitives/Navigation/Menubar/States',
   component: Menubar,
   tags: ['navigation'],
   parameters: {

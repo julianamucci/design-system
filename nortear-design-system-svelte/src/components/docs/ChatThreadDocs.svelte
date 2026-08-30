@@ -415,10 +415,10 @@
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.markdown.name'), description: toPlainText($tStore('related.items.markdown.description')), path: '?path=/docs/ui-markdown--docs' },
-      { name: $tStore('related.items.avatar.name'),   description: toPlainText($tStore('related.items.avatar.description')),   path: '?path=/docs/ui-avatar--docs' },
-      { name: $tStore('related.items.button.name'),   description: toPlainText($tStore('related.items.button.description')),   path: '?path=/docs/ui-button--docs' },
-      { name: $tStore('related.items.skeleton.name'), description: toPlainText($tStore('related.items.skeleton.description')), path: '?path=/docs/ui-skeleton--docs' },
+      { name: $tStore('related.items.markdown.name'), description: toPlainText($tStore('related.items.markdown.description')), path: '?path=/docs/primitives-conversational-markdown--docs' },
+      { name: $tStore('related.items.avatar.name'),   description: toPlainText($tStore('related.items.avatar.description')),   path: '?path=/docs/primitives-display-avatar--docs' },
+      { name: $tStore('related.items.button.name'),   description: toPlainText($tStore('related.items.button.description')),   path: '?path=/docs/primitives-form-button--docs' },
+      { name: $tStore('related.items.skeleton.name'), description: toPlainText($tStore('related.items.skeleton.description')), path: '?path=/docs/primitives-feedback-skeleton--docs' },
     ]}
   />
 

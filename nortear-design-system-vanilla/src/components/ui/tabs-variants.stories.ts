@@ -10,7 +10,7 @@ import { tabsSource, tabsSourceWith } from './tabs.source';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Tabs/Variants',
+  title: 'Primitives/Navigation/Tabs/Variants',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

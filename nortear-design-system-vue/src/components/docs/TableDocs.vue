@@ -495,11 +495,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Badge',        description: toPlainText(tContent('related.badge')),        path: '?path=/docs/ui-badge--docs'         },
-  { name: 'Skeleton',     description: toPlainText(tContent('related.skeleton')),     path: '?path=/docs/ui-skeleton--docs'      },
-  { name: 'Pagination',   description: toPlainText(tContent('related.pagination')),   path: '?path=/docs/ui-pagination--docs'    },
-  { name: 'Avatar',       description: toPlainText(tContent('related.avatar')),       path: '?path=/docs/ui-avatar--docs'        },
-  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs'  },
+  { name: 'Badge',        description: toPlainText(tContent('related.badge')),        path: '?path=/docs/primitives-feedback-badge--docs'         },
+  { name: 'Skeleton',     description: toPlainText(tContent('related.skeleton')),     path: '?path=/docs/primitives-feedback-skeleton--docs'      },
+  { name: 'Pagination',   description: toPlainText(tContent('related.pagination')),   path: '?path=/docs/primitives-navigation-pagination--docs'    },
+  { name: 'Avatar',       description: toPlainText(tContent('related.avatar')),       path: '?path=/docs/primitives-display-avatar--docs'        },
+  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs'  },
 ]);
 
 const noteItems = computed(() => [

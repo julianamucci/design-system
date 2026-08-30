@@ -10,7 +10,7 @@ import {
 import { NdsBadge } from './badge';
 
 const meta: Meta = {
-  title: 'UI/Accordion/Compositions',
+  title: 'Primitives/Disclosure/Accordion/Compositions',
   tags: ['disclosure'],
   decorators: [
     moduleMetadata({

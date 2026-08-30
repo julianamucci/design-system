@@ -590,10 +590,10 @@ export interface AvatarFallbackOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/ui-badge--docs' },
-            { name: 'AspectRatio', description: toPlainText(t('related.aspectRatio')), path: '?path=/docs/ui-aspectratio--docs' },
-            { name: 'Tooltip',     description: toPlainText(t('related.tooltip')),     path: '?path=/docs/ui-tooltip--docs' },
-            { name: 'Card',        description: toPlainText(t('related.card')),        path: '?path=/docs/ui-card--docs' },
+            { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/primitives-feedback-badge--docs' },
+            { name: 'AspectRatio', description: toPlainText(t('related.aspectRatio')), path: '?path=/docs/primitives-layout-aspectratio--docs' },
+            { name: 'Tooltip',     description: toPlainText(t('related.tooltip')),     path: '?path=/docs/primitives-overlay-tooltip--docs' },
+            { name: 'Card',        description: toPlainText(t('related.card')),        path: '?path=/docs/primitives-layout-card--docs' },
           ],
         });
 

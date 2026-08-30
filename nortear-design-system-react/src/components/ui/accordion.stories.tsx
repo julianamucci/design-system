@@ -12,7 +12,7 @@ import { AccordionDocs } from "@/components/docs/AccordionDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "UI/Accordion",
+  title: "Primitives/Disclosure/Accordion",
   component: Accordion,
   tags: ["autodocs", "disclosure"],
   parameters: {

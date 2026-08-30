@@ -11,7 +11,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/ScrollArea/States',
+  title: 'Primitives/Layout/ScrollArea/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

@@ -58,7 +58,7 @@ export class Exemplo {
 }
 
 const meta: Meta<InputOtpArgs> = {
-  title: 'UI/InputOTP',
+  title: 'Primitives/Form/InputOTP',
   // Literal, e não `getCategoryTag('input-otp')`: o indexador do CSF lê as tags
   // por análise ESTÁTICA e recusa qualquer coisa que não seja string literal
   // ('CSF: Expected tag to be string literal'). O arquivo inteiro deixa de ser

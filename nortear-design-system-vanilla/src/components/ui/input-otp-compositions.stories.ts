@@ -7,7 +7,7 @@ import { inputOtpSource, inputOtpSourceComposition } from './input-otp.source';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/InputOTP/Compositions',
+  title: 'Primitives/Form/InputOTP/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

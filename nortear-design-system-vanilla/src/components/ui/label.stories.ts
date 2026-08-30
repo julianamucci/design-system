@@ -14,7 +14,7 @@ type LabelArgs = {
 };
 
 const meta: Meta<LabelArgs> = {
-  title: 'UI/Label',
+  title: 'Primitives/Form/Label',
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',

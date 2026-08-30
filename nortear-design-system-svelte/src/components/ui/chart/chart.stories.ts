@@ -15,7 +15,7 @@ const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73, 209, 214] }];
 const LABEL = 'Acessos mensais no desktop, de janeiro a junho';
 
 const meta: Meta = {
-  title: 'UI/Chart',
+  title: 'Primitives/Display/Chart',
   component: ChartContainer,
   tags: ['autodocs', 'display'],
   parameters: {

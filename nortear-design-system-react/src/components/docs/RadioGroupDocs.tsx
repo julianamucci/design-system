@@ -851,22 +851,22 @@ interface RadioGroupItemProps {
           {
             name: tContent("related.items.checkbox.name"),
             description: toPlainText(tContent("related.items.checkbox.description")),
-            path: "?path=/docs/ui-checkbox--docs",
+            path: "?path=/docs/primitives-form-checkbox--docs",
           },
           {
             name: tContent("related.items.switch.name"),
             description: toPlainText(tContent("related.items.switch.description")),
-            path: "?path=/docs/ui-switch--docs",
+            path: "?path=/docs/primitives-form-switch--docs",
           },
           {
             name: tContent("related.items.select.name"),
             description: toPlainText(tContent("related.items.select.description")),
-            path: "?path=/docs/ui-select--docs",
+            path: "?path=/docs/primitives-form-select--docs",
           },
           {
             name: tContent("related.items.form.name"),
             description: toPlainText(tContent("related.items.form.description")),
-            path: "?path=/docs/ui-form--docs",
+            path: "?path=/docs/primitives-form-form--docs",
           },
         ]}
       />

@@ -11,7 +11,7 @@ import {
 } from './sheet.source';
 
 const meta: Meta = {
-  title: 'UI/Sheet/Compositions',
+  title: 'Primitives/Disclosure/Sheet/Compositions',
   component: SheetStory,
   tags: ['disclosure'],
   parameters: {

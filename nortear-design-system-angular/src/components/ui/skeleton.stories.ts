@@ -37,7 +37,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<SkeletonArgs> = {
-  title: 'UI/Skeleton',
+  title: 'Primitives/Feedback/Skeleton',
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [NdsSkeleton] })],
   parameters: {

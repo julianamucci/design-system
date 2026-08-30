@@ -13,7 +13,7 @@ import {
 } from "./form.source"
 
 const meta: Meta = {
-  title: "UI/Form/Compositions",
+  title: "Primitives/Form/Form/Compositions",
   tags: ["form"],
   parameters: {
     layout: "padded",

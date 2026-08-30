@@ -12,7 +12,7 @@ import {
 import { ringFailures } from "@shared/testing/button-probe";
 
 const meta = {
-  title: "UI/Button/States",
+  title: "Primitives/Form/Button/States",
   tags: ["form"],
   component: Button,
   parameters: {

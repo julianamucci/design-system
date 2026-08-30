@@ -37,7 +37,7 @@ type PlaygroundArgs = ComponentProps<typeof AlertDialog> & {
 const DEMO = { table: { category: "Demonstração" } } as const;
 
 const meta = {
-  title: "UI/AlertDialog",
+  title: "Primitives/Overlay/AlertDialog",
   component: AlertDialog,
   tags: ["autodocs", "overlay"],
   parameters: {

@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import { tabsLineSource, tabsSource, tabsVerticalSource } from "./tabs.source";
 
 const meta: Meta = {
-  title: "UI/Tabs/Variants",
+  title: "Primitives/Navigation/Tabs/Variants",
   tags: ["navigation"],
   component: Tabs,
   parameters: {

@@ -397,10 +397,10 @@ interface LabelProps {
     title={$tStore('related.title')}
     componentSlug="label"
     items={[
-      { name: 'Input',      description: $tStore('related.input'),      path: '?path=/docs/ui-input--docs'      },
+      { name: 'Input',      description: $tStore('related.input'),      path: '?path=/docs/primitives-form-input--docs'      },
       { name: 'FormLabel',  description: $tStore('related.formLabel'),  path: '?path=/docs/ui-formlabel--docs'  },
       { name: 'FormField',  description: $tStore('related.formField'),  path: '?path=/docs/ui-formfield--docs'  },
-      { name: 'Checkbox',   description: $tStore('related.checkbox'),   path: '?path=/docs/ui-checkbox--docs'   },
+      { name: 'Checkbox',   description: $tStore('related.checkbox'),   path: '?path=/docs/primitives-form-checkbox--docs'   },
     ]}
   />
 

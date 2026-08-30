@@ -4,7 +4,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { NdsButton, NdsButtonIcon } from './button';
 
 const meta: Meta = {
-  title: 'UI/Button/Compositions',
+  title: 'Primitives/Form/Button/Compositions',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },

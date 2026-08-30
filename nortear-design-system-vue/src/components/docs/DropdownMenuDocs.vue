@@ -371,11 +371,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.contextMenu.name'), description: toPlainText(tContent('related.items.contextMenu.description')), path: '?path=/docs/ui-contextmenu--docs' },
-  { name: tContent('related.items.menubar.name'),     description: toPlainText(tContent('related.items.menubar.description')),     path: '?path=/docs/ui-menubar--docs'     },
-  { name: tContent('related.items.command.name'),     description: toPlainText(tContent('related.items.command.description')),     path: '?path=/docs/ui-command--docs'     },
-  { name: tContent('related.items.popover.name'),     description: toPlainText(tContent('related.items.popover.description')),     path: '?path=/docs/ui-popover--docs'     },
-  { name: tContent('related.items.select.name'),      description: toPlainText(tContent('related.items.select.description')),      path: '?path=/docs/ui-select--docs'      },
+  { name: tContent('related.items.contextMenu.name'), description: toPlainText(tContent('related.items.contextMenu.description')), path: '?path=/docs/primitives-overlay-contextmenu--docs' },
+  { name: tContent('related.items.menubar.name'),     description: toPlainText(tContent('related.items.menubar.description')),     path: '?path=/docs/primitives-navigation-menubar--docs'     },
+  { name: tContent('related.items.command.name'),     description: toPlainText(tContent('related.items.command.description')),     path: '?path=/docs/primitives-overlay-command--docs'     },
+  { name: tContent('related.items.popover.name'),     description: toPlainText(tContent('related.items.popover.description')),     path: '?path=/docs/primitives-overlay-popover--docs'     },
+  { name: tContent('related.items.select.name'),      description: toPlainText(tContent('related.items.select.description')),      path: '?path=/docs/primitives-form-select--docs'      },
 ]);
 
 const noteItems = computed(() => [

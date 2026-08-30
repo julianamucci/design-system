@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { NdsSeparator } from './separator';
 
 const meta: Meta = {
-  title: 'UI/Separator/States',
+  title: 'Primitives/Layout/Separator/States',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsSeparator] })],
   parameters: {

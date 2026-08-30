@@ -11,7 +11,7 @@ import {
 } from './collapsible.source';
 
 const meta: Meta = {
-  title: 'UI/Collapsible/Compositions',
+  title: 'Primitives/Disclosure/Collapsible/Compositions',
   component: Collapsible,
   tags: ['disclosure'],
   parameters: {

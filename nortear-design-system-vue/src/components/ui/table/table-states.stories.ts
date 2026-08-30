@@ -19,7 +19,7 @@ import {
 } from './table.source';
 
 const meta: Meta = {
-  title: 'UI/Table/States',
+  title: 'Primitives/Tables/Table/States',
   tags: ['tables'],
   parameters: {
     layout: 'padded',

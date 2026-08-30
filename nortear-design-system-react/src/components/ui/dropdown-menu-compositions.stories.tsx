@@ -33,7 +33,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/DropdownMenu/Compositions",
+  title: "Primitives/Overlay/DropdownMenu/Compositions",
   tags: ["overlay"],
   component: DropdownMenu,
   parameters: {

@@ -708,10 +708,10 @@ interface HoverCardContentProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/ui-tooltip--docs'      },
-      { name: $tStore('related.items.popover.name'),      description: $tStore('related.items.popover.description'),      path: '?path=/docs/ui-popover--docs'      },
-      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/ui-dropdownmenu--docs' },
-      { name: $tStore('related.items.card.name'),         description: $tStore('related.items.card.description'),         path: '?path=/docs/ui-card--docs'         },
+      { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
+      { name: $tStore('related.items.popover.name'),      description: $tStore('related.items.popover.description'),      path: '?path=/docs/primitives-overlay-popover--docs'      },
+      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { name: $tStore('related.items.card.name'),         description: $tStore('related.items.card.description'),         path: '?path=/docs/primitives-layout-card--docs'         },
     ]}
   />
 

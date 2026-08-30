@@ -8,7 +8,7 @@ import {
 import { NDS_TABS } from './tabs';
 
 const meta: Meta = {
-  title: 'UI/Tabs/Variants',
+  title: 'Primitives/Navigation/Tabs/Variants',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_TABS] })],
   parameters: {

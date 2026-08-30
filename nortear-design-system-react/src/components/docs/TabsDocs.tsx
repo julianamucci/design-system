@@ -900,17 +900,17 @@ interface TabsContentProps {
           {
             name: tContent("related.items.accordion.name"),
             description: toPlainText(tContent("related.items.accordion.description")),
-            path: "?path=/docs/ui-accordion--docs",
+            path: "?path=/docs/primitives-disclosure-accordion--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
             description: toPlainText(tContent("related.items.sidebar.description")),
-            path: "?path=/docs/ui-sidebar--docs",
+            path: "?path=/docs/primitives-layout-sidebar--docs",
           },
           {
             name: tContent("related.items.toggleGroup.name"),
             description: toPlainText(tContent("related.items.toggleGroup.description")),
-            path: "?path=/docs/ui-togglegroup--docs",
+            path: "?path=/docs/primitives-form-togglegroup--docs",
           },
         ]}
       />

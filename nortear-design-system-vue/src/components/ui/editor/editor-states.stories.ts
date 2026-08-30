@@ -30,7 +30,7 @@ const IMAGE_CONTENT =
   `<p>Antes.</p><img src="data:image/png;base64,${PIXEL_PNG_BASE64}" alt="Ponto de exemplo">`;
 
 const meta = {
-  title: 'UI/Editor/States',
+  title: 'Primitives/Form/Editor/States',
   component: Editor,
   tags: ['form'],
   parameters: {

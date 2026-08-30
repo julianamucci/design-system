@@ -16,7 +16,7 @@ import { COLUMNS, INVOICES, MONTHS, totalOf, type Invoice } from './table.fixtur
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/Table/Variants',
+  title: 'Primitives/Tables/Table/Variants',
   parameters: {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     actions: { disable: true },

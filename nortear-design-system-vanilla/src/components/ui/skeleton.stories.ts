@@ -19,7 +19,7 @@ type SkeletonArgs = {
 };
 
 const meta: Meta<SkeletonArgs> = {
-  title: 'UI/Skeleton',
+  title: 'Primitives/Feedback/Skeleton',
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',

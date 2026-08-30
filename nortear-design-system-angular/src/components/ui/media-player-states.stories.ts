@@ -28,7 +28,7 @@ const paused = fn();
 const finished = fn();
 
 const meta: Meta = {
-  title: 'UI/MediaPlayer/States',
+  title: 'Primitives/Display/MediaPlayer/States',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [MediaPlayerComponent] })],
   parameters: {

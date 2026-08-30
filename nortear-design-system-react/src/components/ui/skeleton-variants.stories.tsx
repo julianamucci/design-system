@@ -9,7 +9,7 @@ import {
 } from "./skeleton.source";
 
 const meta = {
-  title: "UI/Skeleton/Variants",
+  title: "Primitives/Feedback/Skeleton/Variants",
   tags: ["feedback"],
   component: Skeleton,
   parameters: {

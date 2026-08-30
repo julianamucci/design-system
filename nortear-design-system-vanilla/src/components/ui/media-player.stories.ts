@@ -50,7 +50,7 @@ type MediaPlayerArgs = {
 };
 
 const meta: Meta<MediaPlayerArgs> = {
-  title: 'UI/MediaPlayer',
+  title: 'Primitives/Display/MediaPlayer',
   tags: ['autodocs', 'display'],
   parameters: {
     // `padded` e não `centered`: o player é `width: 100%`, e sob `centered` a

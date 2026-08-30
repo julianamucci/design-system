@@ -12,7 +12,7 @@ import { selectImage, selectTableCell, tokenColor } from './editor.play-helpers'
 import { editorSource, editorSourceWith } from './editor.source';
 
 const meta: Meta = {
-  title: 'UI/Editor/States',
+  title: 'Primitives/Form/Editor/States',
   tags: ['form'],
   parameters: {
     layout: 'padded',

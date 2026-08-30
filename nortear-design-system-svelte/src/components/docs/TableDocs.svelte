@@ -1047,11 +1047,11 @@ interface TableRowProps {
       <DocsRelated
         title={$tStore('related.title')}
         items={[
-          { name: 'Avatar',        description: $tStore('related.avatar'),       path: '?path=/docs/ui-avatar--docs'       },
-          { name: 'Badge',         description: $tStore('related.badge'),        path: '?path=/docs/ui-badge--docs'        },
-          { name: 'Pagination',    description: $tStore('related.pagination'),   path: '?path=/docs/ui-pagination--docs'   },
-          { name: 'Skeleton',      description: $tStore('related.skeleton'),     path: '?path=/docs/ui-skeleton--docs'     },
-          { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
+          { name: 'Avatar',        description: $tStore('related.avatar'),       path: '?path=/docs/primitives-display-avatar--docs'       },
+          { name: 'Badge',         description: $tStore('related.badge'),        path: '?path=/docs/primitives-feedback-badge--docs'        },
+          { name: 'Pagination',    description: $tStore('related.pagination'),   path: '?path=/docs/primitives-navigation-pagination--docs'   },
+          { name: 'Skeleton',      description: $tStore('related.skeleton'),     path: '?path=/docs/primitives-feedback-skeleton--docs'     },
+          { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
         ]}
       />
 

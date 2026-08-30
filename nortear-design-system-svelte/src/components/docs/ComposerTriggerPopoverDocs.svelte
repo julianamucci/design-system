@@ -434,10 +434,10 @@ interface TriggerPopoverLabels {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.composer.name'), description: toPlainText($tStore('related.items.composer.description')), path: '?path=/docs/ui-composer--docs' },
-      { name: $tStore('related.items.combobox.name'), description: toPlainText($tStore('related.items.combobox.description')), path: '?path=/docs/ui-combobox--docs' },
-      { name: $tStore('related.items.command.name'),  description: toPlainText($tStore('related.items.command.description')),  path: '?path=/docs/ui-command--docs' },
-      { name: $tStore('related.items.popover.name'),  description: toPlainText($tStore('related.items.popover.description')),  path: '?path=/docs/ui-popover--docs' },
+      { name: $tStore('related.items.composer.name'), description: toPlainText($tStore('related.items.composer.description')), path: '?path=/docs/primitives-conversational-composer--docs' },
+      { name: $tStore('related.items.combobox.name'), description: toPlainText($tStore('related.items.combobox.description')), path: '?path=/docs/primitives-form-combobox--docs' },
+      { name: $tStore('related.items.command.name'),  description: toPlainText($tStore('related.items.command.description')),  path: '?path=/docs/primitives-overlay-command--docs' },
+      { name: $tStore('related.items.popover.name'),  description: toPlainText($tStore('related.items.popover.description')),  path: '?path=/docs/primitives-overlay-popover--docs' },
     ]}
   />
 

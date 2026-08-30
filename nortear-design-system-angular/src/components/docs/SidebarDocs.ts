@@ -841,12 +841,12 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'navigationMenu', name: 'Navigation Menu', path: '?path=/docs/ui-navigationmenu--docs' },
-      { key: 'tabs',           name: 'Tabs',            path: '?path=/docs/ui-tabs--docs'           },
-      { key: 'sheet',          name: 'Sheet',           path: '?path=/docs/ui-sheet--docs'          },
-      { key: 'accordion',      name: 'Accordion',       path: '?path=/docs/ui-accordion--docs'      },
-      { key: 'separator',      name: 'Separator',       path: '?path=/docs/ui-separator--docs'      },
-      { key: 'skeleton',       name: 'Skeleton',        path: '?path=/docs/ui-skeleton--docs'       },
+      { key: 'navigationMenu', name: 'Navigation Menu', path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
+      { key: 'tabs',           name: 'Tabs',            path: '?path=/docs/primitives-navigation-tabs--docs'           },
+      { key: 'sheet',          name: 'Sheet',           path: '?path=/docs/primitives-disclosure-sheet--docs'          },
+      { key: 'accordion',      name: 'Accordion',       path: '?path=/docs/primitives-disclosure-accordion--docs'      },
+      { key: 'separator',      name: 'Separator',       path: '?path=/docs/primitives-layout-separator--docs'      },
+      { key: 'skeleton',       name: 'Skeleton',        path: '?path=/docs/primitives-feedback-skeleton--docs'       },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 

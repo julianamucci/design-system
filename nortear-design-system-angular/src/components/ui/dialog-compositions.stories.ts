@@ -18,7 +18,7 @@ import {
 // configurações de uma propriedade.
 
 const meta: Meta = {
-  title: 'UI/Dialog/Compositions',
+  title: 'Primitives/Overlay/Dialog/Compositions',
   tags: ['overlay'],
   decorators: [
     moduleMetadata({ imports: [...NDS_DIALOG, NdsButton, NdsAspectRatio] }),

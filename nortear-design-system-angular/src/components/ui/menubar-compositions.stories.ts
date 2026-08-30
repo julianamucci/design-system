@@ -25,8 +25,8 @@ const THEMES = [
 const MENUS_EDITOR = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
 
 const meta: Meta = {
-  title: 'UI/Menubar/Compositions',
-  tags: ['overlay'],
+  title: 'Primitives/Navigation/Menubar/Compositions',
+  tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_MENUBAR] })],
   parameters: {
     layout: 'centered',

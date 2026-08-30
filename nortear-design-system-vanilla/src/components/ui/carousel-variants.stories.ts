@@ -19,7 +19,7 @@ import {
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/Variants',
+  title: 'Primitives/Display/Carousel/Variants',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

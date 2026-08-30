@@ -30,7 +30,7 @@ import {
 const AUDIO_SOURCE = silentWav(DEMO_SECONDS);
 
 const meta = {
-  title: 'UI/MediaPlayer/Variants',
+  title: 'Primitives/Display/MediaPlayer/Variants',
   component: MediaPlayer,
   tags: ['display'],
   // Sem `argTypes` próprios, o painel Controls ficaria vazio e a aba Actions

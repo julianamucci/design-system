@@ -7,7 +7,7 @@ import { badgeEmGrupoSourceCom, badgeSource, badgeSourceCom } from './badge.sour
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Badge/Variants',
+  title: 'Primitives/Feedback/Badge/Variants',
   parameters: {
     design: figmaDesign('badge'),
     controls: { disable: true },

@@ -15,7 +15,7 @@ import {
 } from './textarea.source';
 
 const meta: Meta = {
-  title: 'UI/Textarea/Variants',
+  title: 'Primitives/Form/Textarea/Variants',
   component: TextareaStory,
   tags: ['form'],
   parameters: {

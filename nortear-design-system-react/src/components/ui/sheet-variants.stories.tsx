@@ -28,7 +28,7 @@ import sheetTranslations from "@shared/content/sheet/translations.json";
 // fechado, o painel nem está no DOM.
 
 const meta = {
-  title: "UI/Sheet/Variants",
+  title: "Primitives/Disclosure/Sheet/Variants",
   tags: ["disclosure"],
   component: Sheet,
   parameters: {

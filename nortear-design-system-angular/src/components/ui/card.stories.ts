@@ -70,7 +70,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<CardArgs> = {
-  title: 'UI/Card',
+  title: 'Primitives/Layout/Card',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [...NDS_CARD, NdsButton] })],
   parameters: {

@@ -12,7 +12,7 @@ function sideOf(balao: HTMLElement | null): string | null {
 }
 
 const meta: Meta = {
-  title: 'UI/Tooltip',
+  title: 'Primitives/Overlay/Tooltip',
   component: TooltipStory,
   tags: ['autodocs', 'overlay'],
   parameters: {

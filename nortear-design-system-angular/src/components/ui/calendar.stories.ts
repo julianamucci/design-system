@@ -73,7 +73,7 @@ export class Exemplo {
 }
 
 const meta: Meta<CalendarArgs> = {
-  title: 'UI/Calendar',
+  title: 'Primitives/Form/Calendar',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsCalendar] })],
   parameters: {

@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tabsSource } from './tabs.source';
 
 const meta: Meta<any> = {
-  title: 'UI/Tabs',
+  title: 'Primitives/Navigation/Tabs',
   component: Tabs,
   tags: ['autodocs', 'navigation'],
   parameters: {

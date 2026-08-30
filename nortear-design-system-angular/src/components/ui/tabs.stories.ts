@@ -69,7 +69,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<TabsArgs> = {
-  title: 'UI/Tabs',
+  title: 'Primitives/Navigation/Tabs',
   tags: ['autodocs', 'navigation'],
   decorators: [
     moduleMetadata({ imports: [NdsTabs, NdsTabsList, NdsTabsTrigger, NdsTabsContent] }),

@@ -109,8 +109,8 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<MenubarArgs> = {
-  title: 'UI/Menubar',
-  tags: ['autodocs', 'overlay'],
+  title: 'Primitives/Navigation/Menubar',
+  tags: ['autodocs', 'navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_MENUBAR] })],
   parameters: {
     layout: 'centered',

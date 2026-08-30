@@ -948,22 +948,22 @@ interface NavigationMenuLinkProps
           {
             name: tContent("related.items.menubar.name"),
             description: toPlainText(tContent("related.items.menubar.description")),
-            path: "?path=/docs/ui-menubar--docs",
+            path: "?path=/docs/primitives-navigation-menubar--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
             description: toPlainText(tContent("related.items.sidebar.description")),
-            path: "?path=/docs/ui-sidebar--docs",
+            path: "?path=/docs/primitives-layout-sidebar--docs",
           },
           {
             name: tContent("related.items.breadcrumb.name"),
             description: toPlainText(tContent("related.items.breadcrumb.description")),
-            path: "?path=/docs/ui-breadcrumb--docs",
+            path: "?path=/docs/primitives-navigation-breadcrumb--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
             description: toPlainText(tContent("related.items.tabs.description")),
-            path: "?path=/docs/ui-tabs--docs",
+            path: "?path=/docs/primitives-navigation-tabs--docs",
           },
         ]}
       />

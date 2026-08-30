@@ -4,7 +4,7 @@ import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_COMMAND } from './command';
 
 const meta: Meta = {
-  title: 'UI/Command/Variants',
+  title: 'Primitives/Overlay/Command/Variants',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_COMMAND] })],
   parameters: {

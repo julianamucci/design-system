@@ -15,7 +15,7 @@ type CommandArgs = {
 };
 
 const meta: Meta<CommandArgs> = {
-  title: 'UI/Command',
+  title: 'Primitives/Overlay/Command',
   tags: ['autodocs', 'overlay'],
   parameters: {
     docs: {

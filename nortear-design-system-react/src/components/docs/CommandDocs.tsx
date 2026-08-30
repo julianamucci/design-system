@@ -1051,17 +1051,17 @@ interface CommandDialogProps
           {
             name: "Select",
             description: toPlainText(tContent("related.select")),
-            path: "?path=/docs/ui-select--docs",
+            path: "?path=/docs/primitives-form-select--docs",
           },
           {
             name: "DropdownMenu",
             description: toPlainText(tContent("related.dropdownMenu")),
-            path: "?path=/docs/ui-dropdownmenu--docs",
+            path: "?path=/docs/primitives-overlay-dropdownmenu--docs",
           },
           {
             name: "Dialog",
             description: toPlainText(tContent("related.dialog")),
-            path: "?path=/docs/ui-dialog--docs",
+            path: "?path=/docs/primitives-overlay-dialog--docs",
           },
           {
             name: "InputGroup",

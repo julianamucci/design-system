@@ -17,7 +17,7 @@ import {
 } from './dialog.fixtures';
 
 const meta: Meta = {
-  title: 'UI/Dialog/Variants',
+  title: 'Primitives/Overlay/Dialog/Variants',
   component: DialogStory,
   tags: ['overlay'],
   parameters: {

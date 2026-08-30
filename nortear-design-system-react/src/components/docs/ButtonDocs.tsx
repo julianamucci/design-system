@@ -709,12 +709,12 @@ import { Plus } from "lucide-react";`;
               {
                 name: "Toggle",
                 description: toPlainText(tContent("related.toggle")),
-                path: "?path=/docs/ui-toggle--docs",
+                path: "?path=/docs/primitives-form-toggle--docs",
               },
               {
                 name: "Switch",
                 description: toPlainText(tContent("related.switch")),
-                path: "?path=/docs/ui-switch--docs",
+                path: "?path=/docs/primitives-form-switch--docs",
               },
               {
                 name: "Link",
@@ -724,17 +724,17 @@ import { Plus } from "lucide-react";`;
               {
                 name: "Form",
                 description: toPlainText(tContent("related.form")),
-                path: "?path=/docs/ui-form--docs",
+                path: "?path=/docs/primitives-form-form--docs",
               },
               {
                 name: "Dialog",
                 description: toPlainText(tContent("related.dialog")),
-                path: "?path=/docs/ui-dialog--docs",
+                path: "?path=/docs/primitives-overlay-dialog--docs",
               },
               {
                 name: "AlertDialog",
                 description: toPlainText(tContent("related.alertDialog")),
-                path: "?path=/docs/ui-alertdialog--docs",
+                path: "?path=/docs/primitives-overlay-alertdialog--docs",
               },
             ]}
           />

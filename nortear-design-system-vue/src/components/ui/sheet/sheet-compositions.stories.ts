@@ -23,7 +23,7 @@ import {
 } from './sheet.source';
 
 const meta = {
-  title: 'UI/Sheet/Compositions',
+  title: 'Primitives/Disclosure/Sheet/Compositions',
   component: Sheet,
   tags: ['disclosure'],
   parameters: {

@@ -103,7 +103,7 @@ export class Exemplo {
 }
 
 const meta: Meta<PaginationArgs> = {
-  title: 'UI/Pagination',
+  title: 'Primitives/Navigation/Pagination',
   tags: ['autodocs', 'navigation'],
   decorators: [
     moduleMetadata({

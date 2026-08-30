@@ -13,7 +13,7 @@ import {
 } from './breadcrumb.source';
 
 const meta: Meta = {
-  title: 'UI/Breadcrumb/States',
+  title: 'Primitives/Navigation/Breadcrumb/States',
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {

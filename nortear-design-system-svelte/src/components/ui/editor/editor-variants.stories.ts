@@ -6,7 +6,7 @@ import { editorAdvancedSource, editorBasicSource } from './editor.source';
 import { CONTENTS, editorLabels, editorRoot } from './editor.fixtures';
 
 const meta: Meta<typeof Editor> = {
-  title: 'UI/Editor/Variants',
+  title: 'Primitives/Form/Editor/Variants',
   component: Editor,
   tags: ['form'],
   parameters: {

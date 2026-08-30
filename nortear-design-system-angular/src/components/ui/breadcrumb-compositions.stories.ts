@@ -18,7 +18,7 @@ import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/Breadcrumb/Compositions',
+  title: 'Primitives/Navigation/Breadcrumb/Compositions',
   tags: ['navigation'],
   decorators: [
     moduleMetadata({

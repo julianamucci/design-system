@@ -81,7 +81,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<ToggleGroupArgs> = {
-  title: 'UI/ToggleGroup',
+  title: 'Primitives/Form/ToggleGroup',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle] })],
   parameters: {

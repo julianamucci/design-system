@@ -39,7 +39,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Sidebar/Compositions',
+  title: 'Primitives/Layout/Sidebar/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'fullscreen',

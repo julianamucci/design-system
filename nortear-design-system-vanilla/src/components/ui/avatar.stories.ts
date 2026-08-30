@@ -18,7 +18,7 @@ type AvatarArgs = {
 };
 
 const meta: Meta<AvatarArgs> = {
-  title: 'UI/Avatar',
+  title: 'Primitives/Display/Avatar',
   tags: ['autodocs', 'display'],
   parameters: {
     design: figmaDesign('avatar'),

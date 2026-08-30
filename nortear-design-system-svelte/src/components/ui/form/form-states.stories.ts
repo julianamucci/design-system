@@ -12,7 +12,7 @@ import {
 } from './form.source';
 
 const meta: Meta = {
-  title: 'UI/Form/States',
+  title: 'Primitives/Form/Form/States',
   tags: ['form'],
   component: FormFieldStory,
   parameters: {

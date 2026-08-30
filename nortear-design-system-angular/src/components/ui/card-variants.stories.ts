@@ -12,7 +12,7 @@ import { NdsButton } from './button';
 const onSave = fn();
 
 const meta: Meta = {
-  title: 'UI/Card/Variants',
+  title: 'Primitives/Layout/Card/Variants',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_CARD, NdsButton] })],
   parameters: {

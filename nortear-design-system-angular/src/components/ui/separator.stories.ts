@@ -45,7 +45,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<SeparatorArgs> = {
-  title: 'UI/Separator',
+  title: 'Primitives/Layout/Separator',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [NdsSeparator] })],
   parameters: {

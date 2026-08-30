@@ -20,7 +20,7 @@ type PlaygroundArgs = {
 // que o componente não recebe como prop — chegam como atributo. Declarar o
 // componente aqui faria o docgen anunciar uma API que não é a que se controla.
 const meta = {
-  title: "UI/Skeleton",
+  title: "Primitives/Feedback/Skeleton",
   tags: ["autodocs", "feedback"],
   parameters: {
     layout: "padded",

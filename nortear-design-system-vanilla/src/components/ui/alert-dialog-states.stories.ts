@@ -12,7 +12,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/AlertDialog/States',
+  title: 'Primitives/Overlay/AlertDialog/States',
   parameters: {
     design: figmaDesign('alertDialog'),
     controls: { disable: true },

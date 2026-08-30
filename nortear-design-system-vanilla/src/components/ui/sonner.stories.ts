@@ -21,7 +21,7 @@ type SonnerArgs = {
 };
 
 const meta: Meta<SonnerArgs> = {
-  title: 'UI/Sonner',
+  title: 'Primitives/Feedback/Sonner',
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',

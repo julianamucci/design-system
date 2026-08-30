@@ -901,10 +901,10 @@ interface CarouselNavProps extends ButtonProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Tabs',       description: $tStore('related.tabs'),       path: '?path=/docs/ui-tabs--docs'       },
-      { name: 'ScrollArea', description: $tStore('related.scrollArea'), path: '?path=/docs/ui-scrollarea--docs' },
-      { name: 'Card',       description: $tStore('related.card'),       path: '?path=/docs/ui-card--docs'       },
-      { name: 'Pagination', description: $tStore('related.pagination'), path: '?path=/docs/ui-pagination--docs' },
+      { name: 'Tabs',       description: $tStore('related.tabs'),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
+      { name: 'ScrollArea', description: $tStore('related.scrollArea'), path: '?path=/docs/primitives-layout-scrollarea--docs' },
+      { name: 'Card',       description: $tStore('related.card'),       path: '?path=/docs/primitives-layout-card--docs'       },
+      { name: 'Pagination', description: $tStore('related.pagination'), path: '?path=/docs/primitives-navigation-pagination--docs' },
     ]}
   />
 

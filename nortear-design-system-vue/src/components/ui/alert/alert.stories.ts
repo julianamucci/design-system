@@ -8,7 +8,7 @@ import { Info } from 'lucide-vue-next';
 import { alertSource } from './alert.source';
 
 const meta = {
-  title: 'UI/Alert',
+  title: 'Primitives/Feedback/Alert',
   component: Alert,
   tags: ['autodocs', 'feedback'],
   parameters: {

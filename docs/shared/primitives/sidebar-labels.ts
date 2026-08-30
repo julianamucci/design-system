@@ -23,11 +23,26 @@ type Traducao = Partial<Record<Locale, string>>;
 /** Seções e subseções: o caminho que a pessoa percorre até a story. */
 const STRUCTURE: Record<string, Traducao> = {
   // Nível 1
-  UI: { 'pt-BR': 'UI', es: 'UI' },
+  Primitives: { 'pt-BR': 'Primitivos', es: 'Primitivos' },
   Foundations: { 'pt-BR': 'Fundamentos', es: 'Fundamentos' },
   About: { 'pt-BR': 'Sobre', es: 'Acerca de' },
 
-  // Nível 3 — as pastas dentro de cada componente
+  // Nível 2 — as categorias, que vêm da mesma tag que alimenta o filtro da
+  // sidebar. O vocabulário é o que a `translations.json` de cada componente já
+  // mostra ao leitor no cabeçalho da docs page: Disclosure, Display, Feedback,
+  // Layout e Overlay ficam em inglês porque é assim que a casa os chama, e só
+  // traduz o que tem palavra corrente em português.
+  Conversational: { 'pt-BR': 'Conversacional', es: 'Conversacional' },
+  Disclosure: { 'pt-BR': 'Disclosure', es: 'Disclosure' },
+  Display: { 'pt-BR': 'Display', es: 'Display' },
+  Feedback: { 'pt-BR': 'Feedback', es: 'Feedback' },
+  Form: { 'pt-BR': 'Formulário', es: 'Formulario' },
+  Layout: { 'pt-BR': 'Layout', es: 'Layout' },
+  Navigation: { 'pt-BR': 'Navegação', es: 'Navegación' },
+  Overlay: { 'pt-BR': 'Overlay', es: 'Overlay' },
+  Tables: { 'pt-BR': 'Tabelas', es: 'Tablas' },
+
+  // Nível 4 — as pastas dentro de cada componente
   Compositions: { 'pt-BR': 'Composições', es: 'Composiciones' },
   States: { 'pt-BR': 'Estados', es: 'Estados' },
   Variants: { 'pt-BR': 'Variantes', es: 'Variantes' },

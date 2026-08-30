@@ -6,7 +6,7 @@ import CardStory from './CardStory.svelte';
 import { cardDefaultSource, cardPequenoSource } from './card.source';
 
 const meta: Meta = {
-  title: 'UI/Card/Sizes',
+  title: 'Primitives/Layout/Card/Sizes',
   component: Card,
   tags: ['layout'],
   parameters: {

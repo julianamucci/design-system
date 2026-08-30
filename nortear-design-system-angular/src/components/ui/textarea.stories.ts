@@ -57,7 +57,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<TextareaArgs> = {
-  title: 'UI/Textarea',
+  title: 'Primitives/Form/Textarea',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsTextarea, NdsLabel] })],
   parameters: {

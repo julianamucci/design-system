@@ -12,7 +12,7 @@ import {
 } from './slider.source';
 
 const meta: Meta = {
-  title: 'UI/Slider/Compositions',
+  title: 'Primitives/Form/Slider/Compositions',
   component: SliderStory,
   tags: ['form'],
   parameters: {

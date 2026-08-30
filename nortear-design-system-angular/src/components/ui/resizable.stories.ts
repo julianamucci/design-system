@@ -64,7 +64,7 @@ export class Exemplo {
 }
 
 const meta: Meta<ResizableArgs> = {
-  title: 'UI/Resizable',
+  title: 'Primitives/Layout/Resizable',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [NdsResizable, NdsResizablePanel, NdsResizableHandle] })],
   parameters: {

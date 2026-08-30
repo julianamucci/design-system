@@ -35,7 +35,7 @@ const onPause = fn();
 const onEnded = fn();
 
 const meta = {
-  title: 'UI/MediaPlayer/States',
+  title: 'Primitives/Display/MediaPlayer/States',
   component: MediaPlayer,
   tags: ['display'],
   parameters: {

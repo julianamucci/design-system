@@ -68,7 +68,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<PopoverArgs> = {
-  title: 'UI/Popover',
+  title: 'Primitives/Overlay/Popover',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
   parameters: {

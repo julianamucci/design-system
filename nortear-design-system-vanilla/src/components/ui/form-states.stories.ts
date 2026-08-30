@@ -7,7 +7,7 @@ import { formSource, formSourceWith } from './form.source';
 import { createInput } from './input';
 
 const meta: Meta = {
-  title: 'UI/Form/States',
+  title: 'Primitives/Form/Form/States',
   tags: ['form'],
   parameters: {
     layout: 'padded',

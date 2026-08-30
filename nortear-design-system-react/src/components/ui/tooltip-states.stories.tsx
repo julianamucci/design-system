@@ -32,7 +32,7 @@ function wait(ms: number): Promise<void> {
 }
 
 const meta = {
-  title: "UI/Tooltip/States",
+  title: "Primitives/Overlay/Tooltip/States",
   tags: ["overlay"],
   component: Tooltip,
   decorators: [

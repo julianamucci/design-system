@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { calendarSource } from './calendar.source';
 
 const meta: Meta = {
-  title: 'UI/Calendar',
+  title: 'Primitives/Form/Calendar',
   component: Calendar,
   tags: ['autodocs', 'form'],
   parameters: {

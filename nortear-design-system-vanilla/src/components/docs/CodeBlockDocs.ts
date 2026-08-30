@@ -602,10 +602,10 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('related.title'),
           componentSlug: 'code-block',
           items: [
-            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/ui-table--docs' },
-            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/ui-alert--docs' },
-            { name: 'Tabs',  description: toPlainText(t('related.tabs')),  path: '?path=/docs/ui-tabs--docs' },
-            { name: 'Card',  description: toPlainText(t('related.card')),  path: '?path=/docs/ui-card--docs' },
+            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/primitives-tables-table--docs' },
+            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/primitives-feedback-alert--docs' },
+            { name: 'Tabs',  description: toPlainText(t('related.tabs')),  path: '?path=/docs/primitives-navigation-tabs--docs' },
+            { name: 'Card',  description: toPlainText(t('related.card')),  path: '?path=/docs/primitives-layout-card--docs' },
           ],
         });
 

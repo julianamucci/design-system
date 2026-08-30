@@ -43,7 +43,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<ProgressArgs> = {
-  title: 'UI/Progress',
+  title: 'Primitives/Feedback/Progress',
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [...NDS_PROGRESS] })],
   parameters: {

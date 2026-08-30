@@ -15,7 +15,7 @@ import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbo
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/ContextMenu/States',
+  title: 'Primitives/Overlay/ContextMenu/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

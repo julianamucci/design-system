@@ -30,7 +30,7 @@ const MENUS_EDITOR = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Menubar/Compositions',
+  title: 'Primitives/Navigation/Menubar/Compositions',
   parameters: {
     layout: 'padded',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.

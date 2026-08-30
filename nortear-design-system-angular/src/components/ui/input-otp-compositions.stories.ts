@@ -5,7 +5,7 @@ import { NdsInputOtp } from './input-otp';
 import { NdsButton } from './button';
 
 const meta: Meta = {
-  title: 'UI/InputOTP/Compositions',
+  title: 'Primitives/Form/InputOTP/Compositions',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsInputOtp, NdsButton] })],
   parameters: { layout: 'padded', controls: { disable: true } },

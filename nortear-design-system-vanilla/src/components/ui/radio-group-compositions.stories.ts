@@ -11,7 +11,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/RadioGroup/Compositions',
+  title: 'Primitives/Form/RadioGroup/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

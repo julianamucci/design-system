@@ -29,7 +29,7 @@ import {
 // acrescentou e as contagens não fechariam.
 
 const meta: Meta = {
-  title: 'UI/ChatThread/States',
+  title: 'Primitives/Conversational/ChatThread/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsChatThread, NdsButton] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

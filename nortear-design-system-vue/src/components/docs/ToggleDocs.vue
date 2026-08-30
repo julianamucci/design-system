@@ -310,10 +310,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'ToggleGroup', description: toPlainText(tContent('related.items.toggleGroup.description')), path: '?path=/docs/ui-togglegroup--docs' },
-  { name: 'Switch',      description: toPlainText(tContent('related.items.switch.description')),      path: '?path=/docs/ui-switch--docs'      },
-  { name: 'Checkbox',    description: toPlainText(tContent('related.items.checkbox.description')),    path: '?path=/docs/ui-checkbox--docs'    },
-  { name: 'Button',      description: toPlainText(tContent('related.items.button.description')),      path: '?path=/docs/ui-button--docs'      },
+  { name: 'ToggleGroup', description: toPlainText(tContent('related.items.toggleGroup.description')), path: '?path=/docs/primitives-form-togglegroup--docs' },
+  { name: 'Switch',      description: toPlainText(tContent('related.items.switch.description')),      path: '?path=/docs/primitives-form-switch--docs'      },
+  { name: 'Checkbox',    description: toPlainText(tContent('related.items.checkbox.description')),    path: '?path=/docs/primitives-form-checkbox--docs'    },
+  { name: 'Button',      description: toPlainText(tContent('related.items.button.description')),      path: '?path=/docs/primitives-form-button--docs'      },
 ]);
 
 const noteItems = computed(() => [

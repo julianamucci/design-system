@@ -18,7 +18,7 @@ import {
 // congelar.
 
 const meta: Meta = {
-  title: 'UI/Dialog/States',
+  title: 'Primitives/Overlay/Dialog/States',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DIALOG, NdsButton] })],
   parameters: {

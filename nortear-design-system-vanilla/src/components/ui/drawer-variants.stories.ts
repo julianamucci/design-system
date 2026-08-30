@@ -7,7 +7,7 @@ import { openPeloTrigger } from './drawer.fixtures';
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Drawer/Variants',
+  title: 'Primitives/Disclosure/Drawer/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

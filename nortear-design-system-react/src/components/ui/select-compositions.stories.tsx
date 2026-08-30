@@ -22,7 +22,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Select/Compositions",
+  title: "Primitives/Form/Select/Compositions",
   tags: ["form"],
   component: Select,
   parameters: {

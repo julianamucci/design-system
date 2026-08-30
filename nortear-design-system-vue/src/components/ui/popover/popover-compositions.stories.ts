@@ -26,7 +26,7 @@ import {
 // API: todas são arranjo de conteúdo dentro do mesmo PopoverContent.
 
 const meta = {
-  title: 'UI/Popover/Compositions',
+  title: 'Primitives/Overlay/Popover/Compositions',
   component: Popover,
   tags: ['overlay'],
   parameters: {

@@ -24,7 +24,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Sheet/Compositions",
+  title: "Primitives/Disclosure/Sheet/Compositions",
   tags: ["disclosure"],
   component: Sheet,
   parameters: {

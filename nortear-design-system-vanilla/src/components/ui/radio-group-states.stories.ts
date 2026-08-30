@@ -9,7 +9,7 @@ import {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/RadioGroup/States',
+  title: 'Primitives/Form/RadioGroup/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

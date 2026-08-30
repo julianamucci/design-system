@@ -15,7 +15,7 @@ import { triggerPopoverSourceWith } from './composer-trigger-popover.source';
 // tecla de envio ESCOLHE em vez de enviar.
 
 const meta: Meta = {
-  title: 'UI/ComposerTriggerPopover/Compositions',
+  title: 'Primitives/Conversational/ComposerTriggerPopover/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

@@ -377,10 +377,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Toggle',     description: toPlainText(tContent('related.items.toggle.description')),     path: '?path=/docs/ui-toggle--docs'     },
-  { name: 'Tabs',       description: toPlainText(tContent('related.items.tabs.description')),       path: '?path=/docs/ui-tabs--docs'       },
-  { name: 'RadioGroup', description: toPlainText(tContent('related.items.radioGroup.description')), path: '?path=/docs/ui-radiogroup--docs' },
-  { name: 'Checkbox',   description: toPlainText(tContent('related.items.checkbox.description')),   path: '?path=/docs/ui-checkbox--docs'   },
+  { name: 'Toggle',     description: toPlainText(tContent('related.items.toggle.description')),     path: '?path=/docs/primitives-form-toggle--docs'     },
+  { name: 'Tabs',       description: toPlainText(tContent('related.items.tabs.description')),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
+  { name: 'RadioGroup', description: toPlainText(tContent('related.items.radioGroup.description')), path: '?path=/docs/primitives-form-radiogroup--docs' },
+  { name: 'Checkbox',   description: toPlainText(tContent('related.items.checkbox.description')),   path: '?path=/docs/primitives-form-checkbox--docs'   },
 ]);
 
 const noteItems = computed(() => [

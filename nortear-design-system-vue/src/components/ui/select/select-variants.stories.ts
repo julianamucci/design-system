@@ -36,7 +36,7 @@ const REGIOES = {
 } as const;
 
 const meta = {
-  title: 'UI/Select/Variants',
+  title: 'Primitives/Form/Select/Variants',
   component: Select,
   tags: ['form'],
   parameters: {

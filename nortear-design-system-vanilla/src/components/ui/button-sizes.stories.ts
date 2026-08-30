@@ -12,7 +12,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: buttonSource } },
   },
-  title: 'UI/Button/Sizes',
+  title: 'Primitives/Form/Button/Sizes',
 };
 
 export default meta;

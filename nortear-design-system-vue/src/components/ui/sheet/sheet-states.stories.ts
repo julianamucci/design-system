@@ -24,7 +24,7 @@ import {
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta = {
-  title: 'UI/Sheet/States',
+  title: 'Primitives/Disclosure/Sheet/States',
   component: Sheet,
   tags: ['disclosure'],
   parameters: {

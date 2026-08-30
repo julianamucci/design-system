@@ -14,7 +14,7 @@ import {
 } from './resizable.source';
 
 const meta: Meta = {
-  title: 'UI/Resizable/States',
+  title: 'Primitives/Layout/Resizable/States',
   component: ResizableStory,
   tags: ['layout'],
   parameters: {

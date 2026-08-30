@@ -13,7 +13,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Sheet/States',
+  title: 'Primitives/Disclosure/Sheet/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

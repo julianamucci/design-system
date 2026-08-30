@@ -23,7 +23,7 @@ import { Button } from "./button";
 // desabilitado é o `disabled` do elemento nativo.
 
 const meta = {
-  title: "UI/HoverCard/States",
+  title: "Primitives/Overlay/HoverCard/States",
   tags: ["overlay"],
   component: HoverCard,
   parameters: {

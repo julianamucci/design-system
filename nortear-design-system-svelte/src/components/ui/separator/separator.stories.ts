@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { separatorSource } from './separator.source';
 
 const meta: Meta = {
-  title: 'UI/Separator',
+  title: 'Primitives/Layout/Separator',
   component: SeparatorStory,
   tags: ['autodocs', 'layout'],
   parameters: {

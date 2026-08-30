@@ -394,12 +394,12 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'NavigationMenu', description: toPlainText(tContent('related.navigationMenu')), path: '?path=/docs/ui-navigationmenu--docs' },
-  { name: 'Tabs',           description: toPlainText(tContent('related.tabs')),           path: '?path=/docs/ui-tabs--docs'           },
-  { name: 'Sheet',          description: toPlainText(tContent('related.sheet')),          path: '?path=/docs/ui-sheet--docs'          },
-  { name: 'Accordion',      description: toPlainText(tContent('related.accordion')),      path: '?path=/docs/ui-accordion--docs'      },
-  { name: 'Tooltip',        description: toPlainText(tContent('related.tooltip')),        path: '?path=/docs/ui-tooltip--docs'        },
-  { name: 'Separator',      description: toPlainText(tContent('related.separator')),      path: '?path=/docs/ui-separator--docs'      },
+  { name: 'NavigationMenu', description: toPlainText(tContent('related.navigationMenu')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
+  { name: 'Tabs',           description: toPlainText(tContent('related.tabs')),           path: '?path=/docs/primitives-navigation-tabs--docs'           },
+  { name: 'Sheet',          description: toPlainText(tContent('related.sheet')),          path: '?path=/docs/primitives-disclosure-sheet--docs'          },
+  { name: 'Accordion',      description: toPlainText(tContent('related.accordion')),      path: '?path=/docs/primitives-disclosure-accordion--docs'      },
+  { name: 'Tooltip',        description: toPlainText(tContent('related.tooltip')),        path: '?path=/docs/primitives-overlay-tooltip--docs'        },
+  { name: 'Separator',      description: toPlainText(tContent('related.separator')),      path: '?path=/docs/primitives-layout-separator--docs'      },
 ]);
 
 const noteItems = computed(() => [

@@ -712,11 +712,11 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/ui-dropdownmenu--docs' },
-      { key: 'menubar',      name: 'Menubar',       path: '?path=/docs/ui-menubar--docs'      },
-      { key: 'dialog',       name: 'Dialog',        path: '?path=/docs/ui-dialog--docs'       },
-      { key: 'alertDialog',  name: 'Alert Dialog',  path: '?path=/docs/ui-alertdialog--docs'  },
-      { key: 'tooltip',      name: 'Tooltip',       path: '?path=/docs/ui-tooltip--docs'      },
+      { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { key: 'menubar',      name: 'Menubar',       path: '?path=/docs/primitives-navigation-menubar--docs'      },
+      { key: 'dialog',       name: 'Dialog',        path: '?path=/docs/primitives-overlay-dialog--docs'       },
+      { key: 'alertDialog',  name: 'Alert Dialog',  path: '?path=/docs/primitives-overlay-alertdialog--docs'  },
+      { key: 'tooltip',      name: 'Tooltip',       path: '?path=/docs/primitives-overlay-tooltip--docs'      },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 

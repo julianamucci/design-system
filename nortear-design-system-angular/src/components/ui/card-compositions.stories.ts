@@ -12,7 +12,7 @@ import { NdsButton } from './button';
 const onNavigate = fn();
 
 const meta: Meta = {
-  title: 'UI/Card/Compositions',
+  title: 'Primitives/Layout/Card/Compositions',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_CARD, NdsButton] })],
   parameters: {

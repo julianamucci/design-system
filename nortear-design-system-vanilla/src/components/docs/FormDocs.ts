@@ -578,11 +578,11 @@ export type FieldsetOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Input',    description: toPlainText(t('related.input')),    path: '?path=/docs/ui-input--docs' },
-            { name: 'Textarea', description: toPlainText(t('related.textarea')), path: '?path=/docs/ui-textarea--docs' },
-            { name: 'Select',   description: toPlainText(t('related.select')),   path: '?path=/docs/ui-select--docs' },
-            { name: 'Checkbox', description: toPlainText(t('related.checkbox')), path: '?path=/docs/ui-checkbox--docs' },
-            { name: 'Label',    description: toPlainText(t('related.label')),    path: '?path=/docs/ui-label--docs' },
+            { name: 'Input',    description: toPlainText(t('related.input')),    path: '?path=/docs/primitives-form-input--docs' },
+            { name: 'Textarea', description: toPlainText(t('related.textarea')), path: '?path=/docs/primitives-form-textarea--docs' },
+            { name: 'Select',   description: toPlainText(t('related.select')),   path: '?path=/docs/primitives-form-select--docs' },
+            { name: 'Checkbox', description: toPlainText(t('related.checkbox')), path: '?path=/docs/primitives-form-checkbox--docs' },
+            { name: 'Label',    description: toPlainText(t('related.label')),    path: '?path=/docs/primitives-form-label--docs' },
           ],
         });
 

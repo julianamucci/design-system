@@ -804,10 +804,10 @@ interface MenubarRadioGroupProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.navigationMenu.name'), description: $tStore('related.items.navigationMenu.description'), path: '?path=/docs/ui-navigationmenu--docs' },
-      { name: $tStore('related.items.dropdownMenu.name'),   description: $tStore('related.items.dropdownMenu.description'),   path: '?path=/docs/ui-dropdownmenu--docs'   },
-      { name: $tStore('related.items.sidebar.name'),        description: $tStore('related.items.sidebar.description'),        path: '?path=/docs/ui-sidebar--docs'        },
-      { name: $tStore('related.items.command.name'),        description: $tStore('related.items.command.description'),        path: '?path=/docs/ui-command--docs'        },
+      { name: $tStore('related.items.navigationMenu.name'), description: $tStore('related.items.navigationMenu.description'), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
+      { name: $tStore('related.items.dropdownMenu.name'),   description: $tStore('related.items.dropdownMenu.description'),   path: '?path=/docs/primitives-overlay-dropdownmenu--docs'   },
+      { name: $tStore('related.items.sidebar.name'),        description: $tStore('related.items.sidebar.description'),        path: '?path=/docs/primitives-layout-sidebar--docs'        },
+      { name: $tStore('related.items.command.name'),        description: $tStore('related.items.command.description'),        path: '?path=/docs/primitives-overlay-command--docs'        },
     ]}
   />
 

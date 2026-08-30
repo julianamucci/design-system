@@ -20,7 +20,7 @@ import { SlideCard, viewportVisible } from "./carousel.fixtures";
 import { carouselSource, carouselVerticalSource } from "./carousel.source";
 
 const meta = {
-  title: "UI/Carousel/Variants",
+  title: "Primitives/Display/Carousel/Variants",
   tags: ["display"],
   component: Carousel,
   parameters: {

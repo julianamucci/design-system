@@ -14,7 +14,7 @@ import { CHAT_COM_FERRAMENTAS } from '@shared/primitives/chat-examples';
 // que se pode fazer com ela.
 
 const meta: Meta = {
-  title: 'UI/ChatThread/Compositions',
+  title: 'Primitives/Conversational/ChatThread/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsChatThread, NdsButton] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

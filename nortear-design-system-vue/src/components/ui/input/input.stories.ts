@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { inputSource } from './input.source';
 
 const meta = {
-  title: 'UI/Input',
+  title: 'Primitives/Form/Input',
   component: Input,
   tags: ['autodocs', 'form'],
   parameters: {

@@ -15,7 +15,7 @@ import {
 } from "./label.source";
 
 const meta = {
-  title: "UI/Label/States",
+  title: "Primitives/Form/Label/States",
   tags: ["form"],
   component: Label,
   parameters: {

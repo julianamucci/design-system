@@ -833,22 +833,22 @@ interface PanelResizeHandleProps {
           {
             name: tContent("related.items.scrollArea.name"),
             description: toPlainText(tContent("related.items.scrollArea.description")),
-            path: "?path=/docs/ui-scrollarea--docs",
+            path: "?path=/docs/primitives-layout-scrollarea--docs",
           },
           {
             name: tContent("related.items.sheet.name"),
             description: toPlainText(tContent("related.items.sheet.description")),
-            path: "?path=/docs/ui-sheet--docs",
+            path: "?path=/docs/primitives-disclosure-sheet--docs",
           },
           {
             name: tContent("related.items.separator.name"),
             description: toPlainText(tContent("related.items.separator.description")),
-            path: "?path=/docs/ui-separator--docs",
+            path: "?path=/docs/primitives-layout-separator--docs",
           },
           {
             name: tContent("related.items.aspectRatio.name"),
             description: toPlainText(tContent("related.items.aspectRatio.description")),
-            path: "?path=/docs/ui-aspectratio--docs",
+            path: "?path=/docs/primitives-layout-aspectratio--docs",
           },
         ]}
       />

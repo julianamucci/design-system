@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sheetSource } from './sheet.source';
 
 const meta: Meta = {
-  title: 'UI/Sheet',
+  title: 'Primitives/Disclosure/Sheet',
   component: SheetStory,
   tags: ['autodocs', 'disclosure'],
   parameters: {

@@ -811,10 +811,10 @@ export function createSlider(options: SliderRangeOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.input.name'),      description: stripHtml(t('related.items.input.description')),      path: '?path=/docs/ui-input--docs'      },
-            { name: t('related.items.switch.name'),     description: stripHtml(t('related.items.switch.description')),     path: '?path=/docs/ui-switch--docs'     },
-            { name: t('related.items.progress.name'),   description: stripHtml(t('related.items.progress.description')),   path: '?path=/docs/ui-progress--docs'   },
-            { name: t('related.items.radioGroup.name'), description: stripHtml(t('related.items.radioGroup.description')), path: '?path=/docs/ui-radiogroup--docs' },
+            { name: t('related.items.input.name'),      description: stripHtml(t('related.items.input.description')),      path: '?path=/docs/primitives-form-input--docs'      },
+            { name: t('related.items.switch.name'),     description: stripHtml(t('related.items.switch.description')),     path: '?path=/docs/primitives-form-switch--docs'     },
+            { name: t('related.items.progress.name'),   description: stripHtml(t('related.items.progress.description')),   path: '?path=/docs/primitives-feedback-progress--docs'   },
+            { name: t('related.items.radioGroup.name'), description: stripHtml(t('related.items.radioGroup.description')), path: '?path=/docs/primitives-form-radiogroup--docs' },
           ],
         });
 

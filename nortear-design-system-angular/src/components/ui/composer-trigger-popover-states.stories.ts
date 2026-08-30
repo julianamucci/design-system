@@ -15,7 +15,7 @@ import { triggerPopoverSourceWith } from './composer-trigger-popover.source';
 // repete aqui.
 
 const meta: Meta = {
-  title: 'UI/ComposerTriggerPopover/States',
+  title: 'Primitives/Conversational/ComposerTriggerPopover/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

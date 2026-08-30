@@ -22,7 +22,7 @@ import {
 // repete aqui.
 
 const meta: Meta<typeof ChatThread> = {
-  title: 'UI/ChatThread/States',
+  title: 'Primitives/Conversational/ChatThread/States',
   component: ChatThread,
   tags: ['conversational'],
   parameters: {

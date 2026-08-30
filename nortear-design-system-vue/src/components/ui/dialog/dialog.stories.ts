@@ -27,7 +27,7 @@ import {
 import { dialogSource } from './dialog.source';
 
 const meta = {
-  title: 'UI/Dialog',
+  title: 'Primitives/Overlay/Dialog',
   component: Dialog,
   tags: ['autodocs', 'overlay'],
   parameters: {

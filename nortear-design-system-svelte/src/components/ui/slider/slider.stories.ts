@@ -9,7 +9,7 @@ import { handleLimites, handleValue } from '@shared/testing/slider-probe';
 import { sliderSource } from './slider.source';
 
 const meta: Meta = {
-  title: 'UI/Slider',
+  title: 'Primitives/Form/Slider',
   component: Slider,
   tags: ['autodocs', 'form'],
   parameters: {

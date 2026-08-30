@@ -14,7 +14,7 @@ import {
 import { invoices, baseColumns, currency, statusVariant, type Invoice } from './data-table.fixtures';
 
 const meta: Meta = {
-  title: 'UI/DataTable/Compositions',
+  title: 'Primitives/Tables/DataTable/Compositions',
   component: DataTable,
   tags: ['tables'],
   parameters: {

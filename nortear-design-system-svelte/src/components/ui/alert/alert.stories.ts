@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { alertSource } from './alert.source';
 
 const meta: Meta = {
-  title: 'UI/Alert',
+  title: 'Primitives/Feedback/Alert',
   component: Alert,
   tags: ['autodocs', 'feedback'],
   parameters: {

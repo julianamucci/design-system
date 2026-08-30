@@ -21,7 +21,7 @@ const LABEL_NEXT = 'Ir para a próxima página';
 const onPageChange = fn();
 
 const meta: Meta<PaginationArgs> = {
-  title: 'UI/Pagination',
+  title: 'Primitives/Navigation/Pagination',
   tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',

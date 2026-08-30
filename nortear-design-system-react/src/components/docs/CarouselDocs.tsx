@@ -1037,22 +1037,22 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
           {
             name: "Tabs",
             description: toPlainText(tContent("related.tabs")),
-            path: "?path=/docs/ui-tabs--docs",
+            path: "?path=/docs/primitives-navigation-tabs--docs",
           },
           {
             name: "ScrollArea",
             description: toPlainText(tContent("related.scrollArea")),
-            path: "?path=/docs/ui-scrollarea--docs",
+            path: "?path=/docs/primitives-layout-scrollarea--docs",
           },
           {
             name: "Card",
             description: toPlainText(tContent("related.card")),
-            path: "?path=/docs/ui-card--docs",
+            path: "?path=/docs/primitives-layout-card--docs",
           },
           {
             name: "Pagination",
             description: toPlainText(tContent("related.pagination")),
-            path: "?path=/docs/ui-pagination--docs",
+            path: "?path=/docs/primitives-navigation-pagination--docs",
           },
         ]}
       />

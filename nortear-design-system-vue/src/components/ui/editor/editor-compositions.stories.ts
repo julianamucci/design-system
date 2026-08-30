@@ -20,7 +20,7 @@ let editorApi: EditorInstance | null = null;
 const AI_CONTENT = '<p>A IA propõe a descrição; quem publica confere.</p>';
 
 const meta = {
-  title: 'UI/Editor/Compositions',
+  title: 'Primitives/Form/Editor/Compositions',
   component: Editor,
   tags: ['form'],
   parameters: {

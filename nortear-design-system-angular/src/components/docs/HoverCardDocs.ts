@@ -337,7 +337,7 @@ const VARIANT_CODE = {
     <ng-template #tplDoDont1Do>
       <div class="nds-stack" data-spacing="xs">
         <p class="nds-text-body">
-          <a href="?path=/docs/ui-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
+          <a href="?path=/docs/primitives-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
         </p>
         <p class="nds-text-caption nds-text-muted-foreground">
           {{ t('variants.items.userProfile.name') }} · /users/joana
@@ -370,7 +370,7 @@ const VARIANT_CODE = {
       <p class="nds-text-body">
         {{ t('demonstration.labels.userProfile') }}:
         <span ndsHoverCard>
-          <a ndsHoverCardTrigger href="?path=/docs/ui-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
+          <a ndsHoverCardTrigger href="?path=/docs/primitives-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -384,7 +384,7 @@ const VARIANT_CODE = {
         <span ndsHoverCard>
           <a
             ndsHoverCardTrigger
-            href="?path=/docs/ui-avatar--docs"
+            href="?path=/docs/primitives-display-avatar--docs"
             [class]="classesGatilho"
             [openDelay]="500"
             [closeDelay]="200"
@@ -400,7 +400,7 @@ const VARIANT_CODE = {
       <p class="nds-text-body">
         {{ t('usage.scenarios.item1.s') }}
         <span ndsHoverCard>
-          <a ndsHoverCardTrigger href="?path=/docs/ui-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
+          <a ndsHoverCardTrigger href="?path=/docs/primitives-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -414,7 +414,7 @@ const VARIANT_CODE = {
         <span ndsHoverCard>
           <a
             ndsHoverCardTrigger
-            href="?path=/docs/ui-card--docs"
+            href="?path=/docs/primitives-layout-card--docs"
             [class]="classesGatilho"
             [openDelay]="500"
           >design-system.dev</a>
@@ -503,7 +503,7 @@ const VARIANT_CODE = {
             <p class="nds-text-body">
               {{ t('demonstration.labels.userProfile') }}:
               <span ndsHoverCard>
-                <a ndsHoverCardTrigger href="?path=/docs/ui-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
+                <a ndsHoverCardTrigger href="?path=/docs/primitives-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
                 <ng-template ndsHoverCardContent>
                   <ng-container [ngTemplateOutlet]="cartaoPerfil" />
                 </ng-template>
@@ -513,7 +513,7 @@ const VARIANT_CODE = {
             <p class="nds-text-body">
               {{ t('demonstration.labels.linkPreview') }}:
               <span ndsHoverCard>
-                <a ndsHoverCardTrigger href="?path=/docs/ui-card--docs" [class]="classesGatilho">design-system.dev</a>
+                <a ndsHoverCardTrigger href="?path=/docs/primitives-layout-card--docs" [class]="classesGatilho">design-system.dev</a>
                 <ng-template ndsHoverCardContent>
                   <div class="nds-stack" data-spacing="sm">
                     <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs">
@@ -1027,10 +1027,10 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { k: 'tooltip',      path: '?path=/docs/ui-tooltip--docs'      },
-      { k: 'popover',      path: '?path=/docs/ui-popover--docs'      },
-      { k: 'dropdownMenu', path: '?path=/docs/ui-dropdownmenu--docs' },
-      { k: 'card',         path: '?path=/docs/ui-card--docs'         },
+      { k: 'tooltip',      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
+      { k: 'popover',      path: '?path=/docs/primitives-overlay-popover--docs'      },
+      { k: 'dropdownMenu', path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { k: 'card',         path: '?path=/docs/primitives-layout-card--docs'         },
     ].map(({ k, path }) => ({
       name: t(`related.items.${k}.name`),
       description: toPlainText(t(`related.items.${k}.description`)),

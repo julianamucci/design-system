@@ -11,7 +11,7 @@ import { invoices, baseColumns, labelsInvoice, type Invoice } from './data-table
 const CAPTION = 'Faturas recentes';
 
 const meta: Meta = {
-  title: 'UI/DataTable',
+  title: 'Primitives/Tables/DataTable',
   component: DataTable,
   tags: ['autodocs', 'tables'],
   parameters: {

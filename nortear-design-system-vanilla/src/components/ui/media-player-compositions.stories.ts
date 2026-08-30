@@ -17,7 +17,7 @@ const firstPause = fn();
 const secondPause = fn();
 
 const meta: Meta = {
-  title: 'UI/MediaPlayer/Compositions',
+  title: 'Primitives/Display/MediaPlayer/Compositions',
   tags: ['display'],
   parameters: {
     layout: 'padded',

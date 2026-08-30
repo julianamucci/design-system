@@ -22,7 +22,7 @@ import { COUNTRIES, SHORT_COUNTRIES } from './combobox.fixtures';
 import { comboboxControlledSource, comboboxCustomFilterSource } from './combobox.source';
 
 const meta = {
-  title: 'UI/Combobox/Compositions',
+  title: 'Primitives/Form/Combobox/Compositions',
   component: Combobox,
   tags: ['form'],
   parameters: {

@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { accordionSource } from './accordion.source';
 
 const meta: Meta = {
-  title: 'UI/Accordion',
+  title: 'Primitives/Disclosure/Accordion',
   component: Accordion,
   tags: ['autodocs', 'disclosure'],
   parameters: {

@@ -6,7 +6,7 @@ import { scrollAreaSource, scrollAreaSourceWith } from './scroll-area.source';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/ScrollArea/Variants',
+  title: 'Primitives/Layout/ScrollArea/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

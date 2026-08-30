@@ -13,7 +13,7 @@ const onPageChange = fn();
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Pagination/States',
+  title: 'Primitives/Navigation/Pagination/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

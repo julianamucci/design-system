@@ -44,7 +44,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<CheckboxArgs> = {
-  title: 'UI/Checkbox',
+  title: 'Primitives/Form/Checkbox',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsCheckbox, NdsLabel] })],
   parameters: {

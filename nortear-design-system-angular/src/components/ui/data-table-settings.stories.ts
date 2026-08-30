@@ -7,7 +7,7 @@ import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT, type InvoiceDT } from './data
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/DataTable/Settings',
+  title: 'Primitives/Tables/DataTable/Settings',
   tags: ['tables'],
   decorators: [moduleMetadata({ imports: [NdsDataTable] })],
   parameters: {

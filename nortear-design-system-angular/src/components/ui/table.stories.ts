@@ -92,7 +92,7 @@ export class Exemplo {
 }
 
 const meta: Meta<TableArgs> = {
-  title: 'UI/Table',
+  title: 'Primitives/Tables/Table',
   tags: ['autodocs', 'tables'],
   decorators: [
     moduleMetadata({

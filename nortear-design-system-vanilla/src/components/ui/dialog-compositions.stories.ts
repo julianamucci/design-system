@@ -21,7 +21,7 @@ import {
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Dialog/Compositions',
+  title: 'Primitives/Overlay/Dialog/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

@@ -30,7 +30,7 @@ type DialogArgs = {
 };
 
 const meta: Meta<DialogArgs> = {
-  title: 'UI/Dialog',
+  title: 'Primitives/Overlay/Dialog',
   tags: ['autodocs', 'overlay'],
   parameters: {
     docs: { page: withAutoDocsTab(createDialogDocs), source: { transform: dialogSource } },

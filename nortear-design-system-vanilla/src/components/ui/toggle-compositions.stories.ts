@@ -7,7 +7,7 @@ import { buildLucideSvg } from './toggle.fixtures';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Toggle/Compositions',
+  title: 'Primitives/Form/Toggle/Compositions',
   parameters: {
     layout: 'centered',
     // Sem argTypes neste arquivo: os painéis ficariam vazios.

@@ -33,7 +33,7 @@ const ITEMS_NEUTROS = ["Novo", "Abrir", "Salvar"] as const
 const ITEMS_WITH_PERIGO = ["Salvar", "Descartar alterações"] as const
 
 const meta = {
-  title: "UI/Menubar/Variants",
+  title: "Primitives/Navigation/Menubar/Variants",
   tags: ["navigation"],
   component: Menubar,
   parameters: {

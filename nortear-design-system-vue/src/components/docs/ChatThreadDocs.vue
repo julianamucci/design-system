@@ -329,10 +329,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.markdown.name'), description: toPlainText(tContent('related.items.markdown.description')), path: '?path=/docs/ui-markdown--docs' },
-  { name: tContent('related.items.avatar.name'),   description: toPlainText(tContent('related.items.avatar.description')),   path: '?path=/docs/ui-avatar--docs' },
-  { name: tContent('related.items.button.name'),   description: toPlainText(tContent('related.items.button.description')),   path: '?path=/docs/ui-button--docs' },
-  { name: tContent('related.items.skeleton.name'), description: toPlainText(tContent('related.items.skeleton.description')), path: '?path=/docs/ui-skeleton--docs' },
+  { name: tContent('related.items.markdown.name'), description: toPlainText(tContent('related.items.markdown.description')), path: '?path=/docs/primitives-conversational-markdown--docs' },
+  { name: tContent('related.items.avatar.name'),   description: toPlainText(tContent('related.items.avatar.description')),   path: '?path=/docs/primitives-display-avatar--docs' },
+  { name: tContent('related.items.button.name'),   description: toPlainText(tContent('related.items.button.description')),   path: '?path=/docs/primitives-form-button--docs' },
+  { name: tContent('related.items.skeleton.name'), description: toPlainText(tContent('related.items.skeleton.description')), path: '?path=/docs/primitives-feedback-skeleton--docs' },
 ]);
 
 const noteItems = computed(() =>

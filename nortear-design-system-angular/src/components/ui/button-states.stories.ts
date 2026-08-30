@@ -5,7 +5,7 @@ import { NdsButton, NdsButtonIcon } from './button';
 import { ringFailures } from '@shared/testing/button-probe';
 
 const meta: Meta<ButtonStatesArgs> = {
-  title: 'UI/Button/States',
+  title: 'Primitives/Form/Button/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },

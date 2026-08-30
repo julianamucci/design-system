@@ -13,7 +13,7 @@ import {
 import { carouselHorizontalSource, carouselVerticalSource } from './carousel.source';
 
 const meta = {
-  title: 'UI/Carousel/Variants',
+  title: 'Primitives/Display/Carousel/Variants',
   component: Carousel,
   tags: ['display'],
   parameters: {

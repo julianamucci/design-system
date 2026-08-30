@@ -73,7 +73,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<HoverCardArgs> = {
-  title: 'UI/HoverCard',
+  title: 'Primitives/Overlay/HoverCard',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR] })],
   parameters: {

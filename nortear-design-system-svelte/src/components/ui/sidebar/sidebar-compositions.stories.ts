@@ -12,7 +12,7 @@ import {
 } from './sidebar.source';
 
 const meta: Meta = {
-  title: 'UI/Sidebar/Compositions',
+  title: 'Primitives/Layout/Sidebar/Compositions',
   component: SidebarNavGroupsStory,
   tags: ['layout'],
   parameters: {

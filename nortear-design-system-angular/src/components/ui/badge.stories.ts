@@ -26,8 +26,8 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<BadgeArgs> = {
-  title: 'UI/Badge',
-  tags: ['autodocs', 'display'],
+  title: 'Primitives/Feedback/Badge',
+  tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [NdsBadge] })],
   parameters: {
     layout: 'padded',

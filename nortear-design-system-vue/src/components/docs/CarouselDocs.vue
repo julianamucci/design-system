@@ -403,10 +403,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Tabs',       description: toPlainText(tContent('related.tabs')),       path: '?path=/docs/ui-tabs--docs'       },
-  { name: 'ScrollArea', description: toPlainText(tContent('related.scrollArea')), path: '?path=/docs/ui-scrollarea--docs' },
-  { name: 'Card',       description: toPlainText(tContent('related.card')),       path: '?path=/docs/ui-card--docs'       },
-  { name: 'Pagination', description: toPlainText(tContent('related.pagination')), path: '?path=/docs/ui-pagination--docs' },
+  { name: 'Tabs',       description: toPlainText(tContent('related.tabs')),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
+  { name: 'ScrollArea', description: toPlainText(tContent('related.scrollArea')), path: '?path=/docs/primitives-layout-scrollarea--docs' },
+  { name: 'Card',       description: toPlainText(tContent('related.card')),       path: '?path=/docs/primitives-layout-card--docs'       },
+  { name: 'Pagination', description: toPlainText(tContent('related.pagination')), path: '?path=/docs/primitives-navigation-pagination--docs' },
 ]);
 
 const noteItems = computed(() => [

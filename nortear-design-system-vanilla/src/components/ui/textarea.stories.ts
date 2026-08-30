@@ -21,7 +21,7 @@ type TextareaArgs = {
 };
 
 const meta: Meta<TextareaArgs> = {
-  title: 'UI/Textarea',
+  title: 'Primitives/Form/Textarea',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createTextareaDocs), source: { transform: textareaSource } },

@@ -24,7 +24,7 @@ import {
 import { FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
 
 const meta = {
-  title: "UI/NavigationMenu/Compositions",
+  title: "Primitives/Navigation/NavigationMenu/Compositions",
   tags: ["navigation"],
   component: NavigationMenu,
   parameters: {

@@ -9,7 +9,7 @@ import { gestoOpen, clickOutside, closeMenu } from '@shared/testing/context-menu
 import { contextMenuSource } from './context-menu.source';
 
 const meta: Meta = {
-  title: 'UI/ContextMenu',
+  title: 'Primitives/Overlay/ContextMenu',
   component: ContextMenuStory,
   tags: ['autodocs', 'overlay'],
   parameters: {

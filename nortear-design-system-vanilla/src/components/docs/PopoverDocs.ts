@@ -945,10 +945,10 @@ export function createPopoverDescription(options?: PopoverPartOptions): HTMLElem
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/ui-tooltip--docs'      },
-            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/ui-dropdownmenu--docs' },
-            { name: t('related.items.dialog.name'),       description: toPlainText(t('related.items.dialog.description')),       path: '?path=/docs/ui-dialog--docs'       },
-            { name: t('related.items.hoverCard.name'),    description: toPlainText(t('related.items.hoverCard.description')),    path: '?path=/docs/ui-hovercard--docs'    },
+            { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
+            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+            { name: t('related.items.dialog.name'),       description: toPlainText(t('related.items.dialog.description')),       path: '?path=/docs/primitives-overlay-dialog--docs'       },
+            { name: t('related.items.hoverCard.name'),    description: toPlainText(t('related.items.hoverCard.description')),    path: '?path=/docs/primitives-overlay-hovercard--docs'    },
           ],
         });
 

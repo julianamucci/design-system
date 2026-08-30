@@ -12,7 +12,7 @@ const onSubmit = fn();
 type Args = Pick<ComposerOptions, 'value' | 'rows' | 'maxLength' | 'disabled' | 'submitOn'>;
 
 const meta: Meta<Args> = {
-  title: 'UI/Composer',
+  title: 'Primitives/Conversational/Composer',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

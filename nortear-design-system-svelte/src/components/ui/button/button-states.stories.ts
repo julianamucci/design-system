@@ -24,7 +24,7 @@ const meta: Meta = {
       source: { transform: buttonSource },
     },
   },
-  title: 'UI/Button/States',
+  title: 'Primitives/Form/Button/States',
   component: Button,
   tags: ['form'],
   args: {

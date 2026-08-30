@@ -11,7 +11,7 @@ import { composerAttachmentsSourceWith } from './composer-attachments.source';
 // A fila junto do campo, o pedido de remoção, e o caso em que ela não existe.
 
 const meta: Meta = {
-  title: 'UI/ComposerAttachments/Compositions',
+  title: 'Primitives/Conversational/ComposerAttachments/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

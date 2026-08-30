@@ -10,7 +10,7 @@ import { composerSourceWith } from './composer.source';
 // repete aqui.
 
 const meta: Meta = {
-  title: 'UI/Composer/States',
+  title: 'Primitives/Conversational/Composer/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

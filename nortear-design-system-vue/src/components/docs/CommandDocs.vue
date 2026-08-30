@@ -409,9 +409,9 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Select',       description: toPlainText(tContent('related.select')),       path: '?path=/docs/ui-select--docs'       },
-  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs' },
-  { name: 'Dialog',       description: toPlainText(tContent('related.dialog')),       path: '?path=/docs/ui-dialog--docs'       },
+  { name: 'Select',       description: toPlainText(tContent('related.select')),       path: '?path=/docs/primitives-form-select--docs'       },
+  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+  { name: 'Dialog',       description: toPlainText(tContent('related.dialog')),       path: '?path=/docs/primitives-overlay-dialog--docs'       },
 ]);
 
 const noteItems = computed(() => [

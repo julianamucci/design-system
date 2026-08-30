@@ -21,7 +21,7 @@ const DEMO_IMAGE_PRODUCT =
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Card/Compositions',
+  title: 'Primitives/Layout/Card/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

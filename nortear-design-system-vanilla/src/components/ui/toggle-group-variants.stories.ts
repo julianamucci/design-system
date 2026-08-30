@@ -16,7 +16,7 @@ import { toggleGroupSource, toggleGroupSourceWith } from './toggle-group.source'
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/ToggleGroup/Variants',
+  title: 'Primitives/Form/ToggleGroup/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

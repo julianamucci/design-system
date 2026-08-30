@@ -12,7 +12,7 @@ import {
 import { NdsButton } from './button';
 
 const meta: Meta = {
-  title: 'UI/Alert/Compositions',
+  title: 'Primitives/Feedback/Alert/Compositions',
   tags: ['feedback'],
   decorators: [
     moduleMetadata({

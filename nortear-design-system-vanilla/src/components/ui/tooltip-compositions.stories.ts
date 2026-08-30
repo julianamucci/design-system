@@ -15,7 +15,7 @@ const COMPOSITION_HEIGHT = '200px';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Tooltip/Compositions',
+  title: 'Primitives/Overlay/Tooltip/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

@@ -18,7 +18,7 @@ type ScrollAreaArgs = {
 };
 
 const meta: Meta<ScrollAreaArgs> = {
-  title: 'UI/ScrollArea',
+  title: 'Primitives/Layout/ScrollArea',
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',

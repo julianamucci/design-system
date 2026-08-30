@@ -1138,9 +1138,9 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'breadcrumb', path: '?path=/docs/ui-breadcrumb--docs' },
-      { key: 'tabs',       path: '?path=/docs/ui-tabs--docs'       },
-      { key: 'button',     path: '?path=/docs/ui-button--docs'     },
+      { key: 'breadcrumb', path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
+      { key: 'tabs',       path: '?path=/docs/primitives-navigation-tabs--docs'       },
+      { key: 'button',     path: '?path=/docs/primitives-form-button--docs'     },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

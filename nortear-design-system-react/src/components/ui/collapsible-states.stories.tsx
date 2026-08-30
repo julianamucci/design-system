@@ -23,7 +23,7 @@ const TRIGGER_CLASSES = "nds-cluster nds-w-full nds-px-4";
 const CHEVRON_CLASSES = "nds-icon nds-shrink-0 nds-transition-transform nds-chevron";
 
 const meta = {
-  title: "UI/Collapsible/States",
+  title: "Primitives/Disclosure/Collapsible/States",
   tags: ["disclosure"],
   component: Collapsible,
   parameters: {

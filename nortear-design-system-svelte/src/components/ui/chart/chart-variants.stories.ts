@@ -63,7 +63,7 @@ const meta: Meta = {
       source: { transform: chartSource },
     },
   },
-  title: 'UI/Chart/Variants',
+  title: 'Primitives/Display/Chart/Variants',
   component: ChartContainer,
   tags: ['display'],
 };

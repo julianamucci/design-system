@@ -16,7 +16,7 @@ const LANDSCAPE_SRC =
   "https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1200&q=80";
 
 const meta = {
-  title: "UI/AspectRatio",
+  title: "Primitives/Layout/AspectRatio",
   component: AspectRatio,
   tags: ["autodocs", "layout"],
   parameters: {

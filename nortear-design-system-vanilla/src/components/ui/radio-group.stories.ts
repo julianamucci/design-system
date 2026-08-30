@@ -15,7 +15,7 @@ type RadioGroupArgs = {
 };
 
 const meta: Meta<RadioGroupArgs> = {
-  title: 'UI/RadioGroup',
+  title: 'Primitives/Form/RadioGroup',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createRadioGroupDocs), source: { transform: radioGroupSource } },

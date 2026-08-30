@@ -10,7 +10,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const onDismissQuote = fn();
 
 const meta: Meta = {
-  title: 'UI/ComposerQuote',
+  title: 'Primitives/Conversational/ComposerQuote',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

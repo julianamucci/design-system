@@ -20,7 +20,7 @@ type PopoverArgs = {
 };
 
 const meta: Meta<PopoverArgs> = {
-  title: 'UI/Popover',
+  title: 'Primitives/Overlay/Popover',
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',

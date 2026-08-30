@@ -73,7 +73,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<SidebarArgs> = {
-  title: 'UI/Sidebar',
+  title: 'Primitives/Layout/Sidebar',
   tags: ['layout', 'autodocs'],
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR, NdsButtonIcon] })],
   parameters: {

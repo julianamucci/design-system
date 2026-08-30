@@ -9,7 +9,7 @@ const LABEL_PREVIOUS = 'Ir para a página anterior';
 const LABEL_NEXT = 'Ir para a próxima página';
 
 const meta: Meta = {
-  title: 'UI/Pagination/Variants',
+  title: 'Primitives/Navigation/Pagination/Variants',
   component: PaginationStory,
   tags: ['navigation'],
   parameters: {

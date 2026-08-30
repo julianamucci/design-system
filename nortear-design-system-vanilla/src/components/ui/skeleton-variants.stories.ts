@@ -11,7 +11,7 @@ import { boxDesenhada } from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Skeleton/Variants',
+  title: 'Primitives/Feedback/Skeleton/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

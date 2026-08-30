@@ -584,10 +584,10 @@ interface TextareaProps extends HTMLTextareaAttributes {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.input.name'),    description: $tStore('related.items.input.description'),    path: '?path=/docs/ui-input--docs'    },
-      { name: $tStore('related.items.label.name'),    description: $tStore('related.items.label.description'),    path: '?path=/docs/ui-label--docs'    },
-      { name: $tStore('related.items.form.name'),     description: $tStore('related.items.form.description'),     path: '?path=/docs/ui-form--docs'     },
-      { name: $tStore('related.items.inputOTP.name'), description: $tStore('related.items.inputOTP.description'), path: '?path=/docs/ui-inputotp--docs' },
+      { name: $tStore('related.items.input.name'),    description: $tStore('related.items.input.description'),    path: '?path=/docs/primitives-form-input--docs'    },
+      { name: $tStore('related.items.label.name'),    description: $tStore('related.items.label.description'),    path: '?path=/docs/primitives-form-label--docs'    },
+      { name: $tStore('related.items.form.name'),     description: $tStore('related.items.form.description'),     path: '?path=/docs/primitives-form-form--docs'     },
+      { name: $tStore('related.items.inputOTP.name'), description: $tStore('related.items.inputOTP.description'), path: '?path=/docs/primitives-form-inputotp--docs' },
     ]}
   />
 

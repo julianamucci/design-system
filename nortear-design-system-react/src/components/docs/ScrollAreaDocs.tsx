@@ -717,22 +717,22 @@ interface ScrollBarProps {
           {
             name: tContent("related.items.resizable.name"),
             description: toPlainText(tContent("related.items.resizable.description")),
-            path: "?path=/docs/ui-resizable--docs",
+            path: "?path=/docs/primitives-layout-resizable--docs",
           },
           {
             name: tContent("related.items.sheet.name"),
             description: toPlainText(tContent("related.items.sheet.description")),
-            path: "?path=/docs/ui-sheet--docs",
+            path: "?path=/docs/primitives-disclosure-sheet--docs",
           },
           {
             name: tContent("related.items.dialog.name"),
             description: toPlainText(tContent("related.items.dialog.description")),
-            path: "?path=/docs/ui-dialog--docs",
+            path: "?path=/docs/primitives-overlay-dialog--docs",
           },
           {
             name: tContent("related.items.command.name"),
             description: toPlainText(tContent("related.items.command.description")),
-            path: "?path=/docs/ui-command--docs",
+            path: "?path=/docs/primitives-overlay-command--docs",
           },
         ]}
       />

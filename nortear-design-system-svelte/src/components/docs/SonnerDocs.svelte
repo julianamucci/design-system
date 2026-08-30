@@ -552,10 +552,10 @@ toast.promise(promise, {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Alert',        description: $tStore('related.alert'),        path: '?path=/docs/ui-alert--docs'        },
-      { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/ui-alertdialog--docs'  },
-      { name: 'Badge',        description: $tStore('related.badge'),        path: '?path=/docs/ui-badge--docs'        },
-      { name: 'Progress',     description: $tStore('related.progress'),     path: '?path=/docs/ui-progress--docs'     },
+      { name: 'Alert',        description: $tStore('related.alert'),        path: '?path=/docs/primitives-feedback-alert--docs'        },
+      { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/primitives-overlay-alertdialog--docs'  },
+      { name: 'Badge',        description: $tStore('related.badge'),        path: '?path=/docs/primitives-feedback-badge--docs'        },
+      { name: 'Progress',     description: $tStore('related.progress'),     path: '?path=/docs/primitives-feedback-progress--docs'     },
     ]}
   />
 

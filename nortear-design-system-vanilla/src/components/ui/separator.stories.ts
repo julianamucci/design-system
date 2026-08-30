@@ -20,7 +20,7 @@ type SeparatorArgs = {
 // os valores atuais dos controls resolvidos.
 
 const meta: Meta<SeparatorArgs> = {
-  title: 'UI/Separator',
+  title: 'Primitives/Layout/Separator',
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',

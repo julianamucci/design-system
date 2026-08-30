@@ -14,7 +14,7 @@ const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 // componente e precisa continuar sendo avisado.
 
 const meta: Meta = {
-  title: 'UI/Drawer/States',
+  title: 'Primitives/Disclosure/Drawer/States',
   tags: ['disclosure'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton] })],
   parameters: {

@@ -12,7 +12,7 @@ const LABEL_NEXT = 'Ir para a próxima página';
 const onPageChange = fn();
 
 const meta: Meta = {
-  title: 'UI/Pagination/States',
+  title: 'Primitives/Navigation/Pagination/States',
   component: PaginationStory,
   tags: ['navigation'],
   parameters: {

@@ -13,7 +13,7 @@ const BLOCKS: MdBlockKind[] = [
 ];
 
 const meta = {
-  title: 'UI/Markdown',
+  title: 'Primitives/Conversational/Markdown',
   component: Markdown,
   tags: ['autodocs', 'conversational'],
   parameters: {

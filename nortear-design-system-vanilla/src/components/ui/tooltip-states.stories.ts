@@ -30,7 +30,7 @@ function mover(target: HTMLElement): { x: number; y: number } {
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Tooltip/States',
+  title: 'Primitives/Overlay/Tooltip/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

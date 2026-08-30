@@ -12,7 +12,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: collapsibleSource } },
   },
-  title: 'UI/Collapsible/Compositions',
+  title: 'Primitives/Disclosure/Collapsible/Compositions',
 };
 
 export default meta;

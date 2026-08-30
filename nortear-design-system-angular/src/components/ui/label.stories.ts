@@ -49,7 +49,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<LabelArgs> = {
-  title: 'UI/Label',
+  title: 'Primitives/Form/Label',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsLabel, NdsInput] })],
   parameters: {

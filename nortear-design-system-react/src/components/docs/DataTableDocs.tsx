@@ -812,12 +812,12 @@ type DataTableColumnMeta = {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "Table",         description: toPlainText(tContent("related.table")),         path: "?path=/docs/ui-table--docs" },
-          { name: "Chart",         description: toPlainText(tContent("related.chart")),         path: "?path=/docs/ui-chart--docs" },
-          { name: "Pagination",    description: toPlainText(tContent("related.pagination")),    path: "?path=/docs/ui-pagination--docs" },
-          { name: "Checkbox",      description: toPlainText(tContent("related.checkbox")),      path: "?path=/docs/ui-checkbox--docs" },
-          { name: "Input",         description: toPlainText(tContent("related.input")),         path: "?path=/docs/ui-input--docs" },
-          { name: "DropdownMenu",  description: toPlainText(tContent("related.dropdownMenu")),  path: "?path=/docs/ui-dropdownmenu--docs" },
+          { name: "Table",         description: toPlainText(tContent("related.table")),         path: "?path=/docs/primitives-tables-table--docs" },
+          { name: "Chart",         description: toPlainText(tContent("related.chart")),         path: "?path=/docs/primitives-display-chart--docs" },
+          { name: "Pagination",    description: toPlainText(tContent("related.pagination")),    path: "?path=/docs/primitives-navigation-pagination--docs" },
+          { name: "Checkbox",      description: toPlainText(tContent("related.checkbox")),      path: "?path=/docs/primitives-form-checkbox--docs" },
+          { name: "Input",         description: toPlainText(tContent("related.input")),         path: "?path=/docs/primitives-form-input--docs" },
+          { name: "DropdownMenu",  description: toPlainText(tContent("related.dropdownMenu")),  path: "?path=/docs/primitives-overlay-dropdownmenu--docs" },
         ]}
       />
 

@@ -10,7 +10,7 @@ import ComposerDocs from '@/components/docs/ComposerDocs.vue';
 const onSubmit = fn();
 
 const meta = {
-  title: 'UI/Composer',
+  title: 'Primitives/Conversational/Composer',
   component: Composer,
   tags: ['autodocs', 'conversational'],
   parameters: {

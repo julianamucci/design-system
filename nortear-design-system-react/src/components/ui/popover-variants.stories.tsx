@@ -18,7 +18,7 @@ import {
 } from "./popover.source";
 
 const meta = {
-  title: "UI/Popover/Variants",
+  title: "Primitives/Overlay/Popover/Variants",
   tags: ["overlay"],
   component: Popover,
   parameters: {

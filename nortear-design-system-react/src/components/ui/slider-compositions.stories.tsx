@@ -15,7 +15,7 @@ import { Input } from "./input";
 import { handleValue } from "@shared/testing/slider-probe";
 
 const meta = {
-  title: "UI/Slider/Compositions",
+  title: "Primitives/Form/Slider/Compositions",
   tags: ["form"],
   component: Slider,
   parameters: {

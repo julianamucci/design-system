@@ -13,7 +13,7 @@ import { composerAttachmentsSourceWith } from './composer-attachments.source';
 // Playground, e não se repete aqui.
 
 const meta: Meta = {
-  title: 'UI/ComposerAttachments/States',
+  title: 'Primitives/Conversational/ComposerAttachments/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

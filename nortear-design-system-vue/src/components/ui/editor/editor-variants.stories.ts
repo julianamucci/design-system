@@ -5,7 +5,7 @@ import { LABELS } from './editor.fixtures';
 import { editorAdvancedSource, editorBasicSource } from './editor.source';
 
 const meta = {
-  title: 'UI/Editor/Variants',
+  title: 'Primitives/Form/Editor/Variants',
   component: Editor,
   tags: ['form'],
   parameters: {

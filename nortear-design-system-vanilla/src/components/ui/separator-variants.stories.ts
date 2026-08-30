@@ -5,7 +5,7 @@ import { separatorSource, separatorSourceWith } from './separator.source';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Separator/Variants',
+  title: 'Primitives/Layout/Separator/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

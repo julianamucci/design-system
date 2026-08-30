@@ -13,7 +13,7 @@ import {
 } from './table.source';
 
 const meta: Meta = {
-  title: 'UI/Table/States',
+  title: 'Primitives/Tables/Table/States',
   component: Table,
   tags: ['tables'],
   parameters: {

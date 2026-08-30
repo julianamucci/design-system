@@ -84,7 +84,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<TooltipArgs> = {
-  title: 'UI/Tooltip',
+  title: 'Primitives/Overlay/Tooltip',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_TOOLTIP, NdsButton] })],
   parameters: {

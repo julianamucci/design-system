@@ -14,7 +14,7 @@ import {
 } from './card.source';
 
 const meta: Meta = {
-  title: 'UI/Card/Compositions',
+  title: 'Primitives/Layout/Card/Compositions',
   component: Card,
   tags: ['layout'],
   parameters: {

@@ -752,10 +752,10 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'scrollArea',  path: '?path=/docs/ui-scrollarea--docs'  },
-      { key: 'sheet',       path: '?path=/docs/ui-sheet--docs'       },
-      { key: 'separator',   path: '?path=/docs/ui-separator--docs'   },
-      { key: 'aspectRatio', path: '?path=/docs/ui-aspectratio--docs' },
+      { key: 'scrollArea',  path: '?path=/docs/primitives-layout-scrollarea--docs'  },
+      { key: 'sheet',       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+      { key: 'separator',   path: '?path=/docs/primitives-layout-separator--docs'   },
+      { key: 'aspectRatio', path: '?path=/docs/primitives-layout-aspectratio--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

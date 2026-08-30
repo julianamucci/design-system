@@ -16,7 +16,7 @@ import type { Attachment } from '@shared/primitives/chat-protocol';
 // Playground, e não se repete aqui.
 
 const meta: Meta<typeof Composer> = {
-  title: 'UI/ComposerAttachments/States',
+  title: 'Primitives/Conversational/ComposerAttachments/States',
   component: Composer,
   tags: ['conversational'],
   parameters: {

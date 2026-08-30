@@ -730,10 +730,10 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/ui-tooltip--docs'      },
-            { name: t('related.items.popover.name'),      description: toPlainText(t('related.items.popover.description')),      path: '?path=/docs/ui-popover--docs'      },
-            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/ui-dropdownmenu--docs' },
-            { name: t('related.items.card.name'),         description: toPlainText(t('related.items.card.description')),         path: '?path=/docs/ui-card--docs'         },
+            { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
+            { name: t('related.items.popover.name'),      description: toPlainText(t('related.items.popover.description')),      path: '?path=/docs/primitives-overlay-popover--docs'      },
+            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+            { name: t('related.items.card.name'),         description: toPlainText(t('related.items.card.description')),         path: '?path=/docs/primitives-layout-card--docs'         },
           ],
         });
 

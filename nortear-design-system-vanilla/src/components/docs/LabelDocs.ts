@@ -435,11 +435,11 @@ export function createLabelDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Input',      description: toPlainText(t('related.input')),      path: '?path=/docs/ui-input--docs' },
-            { name: 'Checkbox',   description: toPlainText(t('related.checkbox')),   path: '?path=/docs/ui-checkbox--docs' },
-            { name: 'FormLabel',  description: toPlainText(t('related.formLabel')),  path: '?path=/docs/ui-form--docs' },
-            { name: 'FormField',  description: toPlainText(t('related.formField')),  path: '?path=/docs/ui-form--docs' },
-            { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs' },
+            { name: 'Input',      description: toPlainText(t('related.input')),      path: '?path=/docs/primitives-form-input--docs' },
+            { name: 'Checkbox',   description: toPlainText(t('related.checkbox')),   path: '?path=/docs/primitives-form-checkbox--docs' },
+            { name: 'FormLabel',  description: toPlainText(t('related.formLabel')),  path: '?path=/docs/primitives-form-form--docs' },
+            { name: 'FormField',  description: toPlainText(t('related.formField')),  path: '?path=/docs/primitives-form-form--docs' },
+            { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/primitives-form-radiogroup--docs' },
           ],
         });
 

@@ -465,10 +465,10 @@
     title={$tStore('related.title')}
     componentSlug="editor"
     items={[
-      { name: 'Textarea',    description: $tStore('related.textarea'),    path: '?path=/docs/ui-textarea--docs'    },
-      { name: 'CodeBlock',   description: $tStore('related.codeBlock'),   path: '?path=/docs/ui-codeblock--docs'   },
-      { name: 'ToggleGroup', description: $tStore('related.toggleGroup'), path: '?path=/docs/ui-togglegroup--docs' },
-      { name: 'Button',      description: $tStore('related.button'),      path: '?path=/docs/ui-button--docs'      },
+      { name: 'Textarea',    description: $tStore('related.textarea'),    path: '?path=/docs/primitives-form-textarea--docs'    },
+      { name: 'CodeBlock',   description: $tStore('related.codeBlock'),   path: '?path=/docs/primitives-display-codeblock--docs'   },
+      { name: 'ToggleGroup', description: $tStore('related.toggleGroup'), path: '?path=/docs/primitives-form-togglegroup--docs' },
+      { name: 'Button',      description: $tStore('related.button'),      path: '?path=/docs/primitives-form-button--docs'      },
     ]}
   />
 

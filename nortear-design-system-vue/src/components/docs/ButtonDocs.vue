@@ -292,12 +292,12 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Toggle',      description: toPlainText(tContent('related.toggle')),      path: '?path=/docs/ui-toggle--docs'      },
-  { name: 'Switch',      description: toPlainText(tContent('related.switch')),      path: '?path=/docs/ui-switch--docs'      },
+  { name: 'Toggle',      description: toPlainText(tContent('related.toggle')),      path: '?path=/docs/primitives-form-toggle--docs'      },
+  { name: 'Switch',      description: toPlainText(tContent('related.switch')),      path: '?path=/docs/primitives-form-switch--docs'      },
   { name: 'Link',        description: toPlainText(tContent('related.link')),        path: '?path=/docs/foundations-link--docs' },
-  { name: 'Form',        description: toPlainText(tContent('related.form')),        path: '?path=/docs/ui-form--docs'        },
-  { name: 'Dialog',      description: toPlainText(tContent('related.dialog')),      path: '?path=/docs/ui-dialog--docs'      },
-  { name: 'AlertDialog', description: toPlainText(tContent('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
+  { name: 'Form',        description: toPlainText(tContent('related.form')),        path: '?path=/docs/primitives-form-form--docs'        },
+  { name: 'Dialog',      description: toPlainText(tContent('related.dialog')),      path: '?path=/docs/primitives-overlay-dialog--docs'      },
+  { name: 'AlertDialog', description: toPlainText(tContent('related.alertDialog')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
 ]);
 
 const noteItems = computed(() => [

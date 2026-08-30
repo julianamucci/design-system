@@ -27,7 +27,7 @@ type SliderArgs = {
 };
 
 const meta: Meta<SliderArgs> = {
-  title: 'UI/Slider',
+  title: 'Primitives/Form/Slider',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createSliderDocs), source: { transform: sliderSource } },

@@ -11,7 +11,7 @@ import { skeletonSource, type SkeletonArgs } from './skeleton.source';
 // Reference, e sem `docs.source.transform` o snippet sai com o nome interno da
 // função compilada, que ninguém pode importar.
 const meta: Meta<SkeletonArgs> = {
-  title: 'UI/Skeleton',
+  title: 'Primitives/Feedback/Skeleton',
   component: SkeletonStory,
   tags: ['autodocs', 'feedback'],
   parameters: {

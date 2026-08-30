@@ -1164,10 +1164,10 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'tabs',       name: 'Tabs',       path: '?path=/docs/ui-tabs--docs'       },
-      { key: 'scrollArea', name: 'ScrollArea', path: '?path=/docs/ui-scrollarea--docs' },
-      { key: 'card',       name: 'Card',       path: '?path=/docs/ui-card--docs'       },
-      { key: 'pagination', name: 'Pagination', path: '?path=/docs/ui-pagination--docs' },
+      { key: 'tabs',       name: 'Tabs',       path: '?path=/docs/primitives-navigation-tabs--docs'       },
+      { key: 'scrollArea', name: 'ScrollArea', path: '?path=/docs/primitives-layout-scrollarea--docs' },
+      { key: 'card',       name: 'Card',       path: '?path=/docs/primitives-layout-card--docs'       },
+      { key: 'pagination', name: 'Pagination', path: '?path=/docs/primitives-navigation-pagination--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

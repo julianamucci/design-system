@@ -861,9 +861,9 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'stepper',     path: '?path=/docs/ui-stepper--docs'     },
-      { key: 'accordion',   path: '?path=/docs/ui-accordion--docs'   },
-      { key: 'sidebar',     path: '?path=/docs/ui-sidebar--docs'     },
-      { key: 'toggleGroup', path: '?path=/docs/ui-togglegroup--docs' },
+      { key: 'accordion',   path: '?path=/docs/primitives-disclosure-accordion--docs'   },
+      { key: 'sidebar',     path: '?path=/docs/primitives-layout-sidebar--docs'     },
+      { key: 'toggleGroup', path: '?path=/docs/primitives-form-togglegroup--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

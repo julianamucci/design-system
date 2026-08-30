@@ -85,7 +85,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<NavigationMenuArgs> = {
-  title: 'UI/NavigationMenu',
+  title: 'Primitives/Navigation/NavigationMenu',
   tags: ['autodocs', 'navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_NAVIGATION_MENU] })],
   parameters: {

@@ -1276,11 +1276,11 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { name: 'AlertDialog', k: 'alertDialog', path: '?path=/docs/ui-alertdialog--docs' },
-      { name: 'Sheet',       k: 'sheet',       path: '?path=/docs/ui-sheet--docs'       },
-      { name: 'Popover',     k: 'popover',     path: '?path=/docs/ui-popover--docs'     },
-      { name: 'Form',        k: 'form',        path: '?path=/docs/ui-form--docs'        },
-      { name: 'Drawer',      k: 'drawer',      path: '?path=/docs/ui-drawer--docs'      },
+      { name: 'AlertDialog', k: 'alertDialog', path: '?path=/docs/primitives-overlay-alertdialog--docs' },
+      { name: 'Sheet',       k: 'sheet',       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+      { name: 'Popover',     k: 'popover',     path: '?path=/docs/primitives-overlay-popover--docs'     },
+      { name: 'Form',        k: 'form',        path: '?path=/docs/primitives-form-form--docs'        },
+      { name: 'Drawer',      k: 'drawer',      path: '?path=/docs/primitives-disclosure-drawer--docs'      },
     ].map(({ name, k, path }) => ({
       name,
       description: toPlainText(t(`related.${k}`)),

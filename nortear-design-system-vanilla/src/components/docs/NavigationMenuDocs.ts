@@ -792,10 +792,10 @@ export function createNavigationMenu(
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.menubar.name'),    description: toPlainText(t('related.items.menubar.description')),    path: '?path=/docs/ui-menubar--docs'    },
-            { name: t('related.items.sidebar.name'),    description: toPlainText(t('related.items.sidebar.description')),    path: '?path=/docs/ui-sidebar--docs'    },
-            { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/ui-breadcrumb--docs' },
-            { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/ui-tabs--docs'       },
+            { name: t('related.items.menubar.name'),    description: toPlainText(t('related.items.menubar.description')),    path: '?path=/docs/primitives-navigation-menubar--docs'    },
+            { name: t('related.items.sidebar.name'),    description: toPlainText(t('related.items.sidebar.description')),    path: '?path=/docs/primitives-layout-sidebar--docs'    },
+            { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
+            { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
           ],
         });
 

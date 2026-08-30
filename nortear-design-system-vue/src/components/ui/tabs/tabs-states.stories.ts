@@ -8,7 +8,7 @@ import {
 } from './tabs.source';
 
 const meta: Meta<any> = {
-  title: 'UI/Tabs/States',
+  title: 'Primitives/Navigation/Tabs/States',
   component: Tabs,
   tags: ['navigation'],
   parameters: {

@@ -1230,22 +1230,22 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
           {
             name: "Skeleton",
             description: toPlainText(tContent("related.skeleton")),
-            path: "?path=/docs/ui-skeleton--docs",
+            path: "?path=/docs/primitives-feedback-skeleton--docs",
           },
           {
             name: "Badge",
             description: toPlainText(tContent("related.badge")),
-            path: "?path=/docs/ui-badge--docs",
+            path: "?path=/docs/primitives-feedback-badge--docs",
           },
           {
             name: "Pagination",
             description: toPlainText(tContent("related.pagination")),
-            path: "?path=/docs/ui-pagination--docs",
+            path: "?path=/docs/primitives-navigation-pagination--docs",
           },
           {
             name: "DropdownMenu",
             description: toPlainText(tContent("related.dropdownMenu")),
-            path: "?path=/docs/ui-dropdownmenu--docs",
+            path: "?path=/docs/primitives-overlay-dropdownmenu--docs",
           },
         ]}
       />

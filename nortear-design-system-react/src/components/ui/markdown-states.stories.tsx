@@ -12,7 +12,7 @@ import { MARKDOWN_STREAMING, MARKDOWN_UNSAFE } from "@shared/primitives/markdown
 // estado "pronto" é o Playground, e não se repete aqui.
 
 const meta = {
-  title: "UI/Markdown/States",
+  title: "Primitives/Conversational/Markdown/States",
   component: Markdown,
   tags: ["conversational"],
   parameters: {

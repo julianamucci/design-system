@@ -13,7 +13,7 @@ const LABEL_NEXT = 'Ir para a próxima página';
 const onPageChange = fn();
 
 const meta: Meta = {
-  title: 'UI/Pagination',
+  title: 'Primitives/Navigation/Pagination',
   component: PaginationStory,
   tags: ['autodocs', 'navigation'],
   parameters: {

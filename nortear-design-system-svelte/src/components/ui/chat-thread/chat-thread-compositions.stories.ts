@@ -12,7 +12,7 @@ import { CHAT_COM_FERRAMENTAS } from '@shared/primitives/chat-examples';
 // que se pode fazer com ela.
 
 const meta: Meta<typeof ChatThread> = {
-  title: 'UI/ChatThread/Compositions',
+  title: 'Primitives/Conversational/ChatThread/Compositions',
   component: ChatThread,
   tags: ['conversational'],
   parameters: {

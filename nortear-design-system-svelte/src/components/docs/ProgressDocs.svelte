@@ -480,10 +480,10 @@ interface ProgressProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.skeleton.name'), description: $tStore('related.items.skeleton.description'), path: '?path=/docs/ui-skeleton--docs' },
+      { name: $tStore('related.items.skeleton.name'), description: $tStore('related.items.skeleton.description'), path: '?path=/docs/primitives-feedback-skeleton--docs' },
       { name: $tStore('related.items.spinner.name'),  description: $tStore('related.items.spinner.description'),  path: '?path=/docs/ui-spinner--docs'  },
-      { name: $tStore('related.items.alert.name'),    description: $tStore('related.items.alert.description'),    path: '?path=/docs/ui-alert--docs'    },
-      { name: $tStore('related.items.sonner.name'),   description: $tStore('related.items.sonner.description'),   path: '?path=/docs/ui-sonner--docs'   },
+      { name: $tStore('related.items.alert.name'),    description: $tStore('related.items.alert.description'),    path: '?path=/docs/primitives-feedback-alert--docs'    },
+      { name: $tStore('related.items.sonner.name'),   description: $tStore('related.items.sonner.description'),   path: '?path=/docs/primitives-feedback-sonner--docs'   },
     ]}
   />
 

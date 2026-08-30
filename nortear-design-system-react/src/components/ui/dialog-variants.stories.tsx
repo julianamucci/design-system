@@ -32,7 +32,7 @@ import { useTranslation } from "@/lib/i18n";
 import dialogTranslations from "@shared/content/dialog/translations.json";
 
 const meta = {
-  title: "UI/Dialog/Variants",
+  title: "Primitives/Overlay/Dialog/Variants",
   tags: ["overlay"],
   component: Dialog,
   parameters: {

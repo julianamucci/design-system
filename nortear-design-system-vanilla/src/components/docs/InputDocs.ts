@@ -739,11 +739,11 @@ export type InputOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Textarea',  description: toPlainText(t('related.textarea')),  path: '?path=/docs/ui-textarea--docs' },
-            { name: 'InputOTP',  description: toPlainText(t('related.inputOTP')),  path: '?path=/docs/ui-inputotp--docs' },
-            { name: 'Select',    description: toPlainText(t('related.select')),    path: '?path=/docs/ui-select--docs' },
-            { name: 'Form',      description: toPlainText(t('related.form')),      path: '?path=/docs/ui-form--docs' },
-            { name: 'Label',     description: toPlainText(t('related.label')),     path: '?path=/docs/ui-label--docs' },
+            { name: 'Textarea',  description: toPlainText(t('related.textarea')),  path: '?path=/docs/primitives-form-textarea--docs' },
+            { name: 'InputOTP',  description: toPlainText(t('related.inputOTP')),  path: '?path=/docs/primitives-form-inputotp--docs' },
+            { name: 'Select',    description: toPlainText(t('related.select')),    path: '?path=/docs/primitives-form-select--docs' },
+            { name: 'Form',      description: toPlainText(t('related.form')),      path: '?path=/docs/primitives-form-form--docs' },
+            { name: 'Label',     description: toPlainText(t('related.label')),     path: '?path=/docs/primitives-form-label--docs' },
           ],
         });
 

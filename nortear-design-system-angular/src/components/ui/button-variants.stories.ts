@@ -14,7 +14,7 @@ const VARIANTS: { variant: ButtonVariant; label: string }[] = [
 ];
 
 const meta: Meta = {
-  title: 'UI/Button/Variants',
+  title: 'Primitives/Form/Button/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsButton] })],
   parameters: {

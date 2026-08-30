@@ -14,7 +14,7 @@ type BadgeArgs = {
 };
 
 const meta: Meta<BadgeArgs> = {
-  title: 'UI/Badge',
+  title: 'Primitives/Feedback/Badge',
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('badge'),

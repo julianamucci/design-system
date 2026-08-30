@@ -613,10 +613,10 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/ui-skeleton--docs' },
+            { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/primitives-feedback-skeleton--docs' },
             { name: t('related.items.spinner.name'),  description: toPlainText(t('related.items.spinner.description')),  path: '?path=/docs/ui-spinner--docs' },
-            { name: t('related.items.alert.name'),    description: toPlainText(t('related.items.alert.description')),    path: '?path=/docs/ui-alert--docs' },
-            { name: t('related.items.sonner.name'),   description: toPlainText(t('related.items.sonner.description')),   path: '?path=/docs/ui-sonner--docs' },
+            { name: t('related.items.alert.name'),    description: toPlainText(t('related.items.alert.description')),    path: '?path=/docs/primitives-feedback-alert--docs' },
+            { name: t('related.items.sonner.name'),   description: toPlainText(t('related.items.sonner.description')),   path: '?path=/docs/primitives-feedback-sonner--docs' },
           ],
         });
 

@@ -69,7 +69,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<AlertArgs> = {
-  title: 'UI/Alert',
+  title: 'Primitives/Feedback/Alert',
   tags: ['autodocs', 'feedback'],
   decorators: [
     moduleMetadata({

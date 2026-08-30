@@ -11,7 +11,7 @@ import { composerSourceWith } from './composer.source';
 // nele — a mesma divisão de `approval` no ChatThread.
 
 const meta: Meta = {
-  title: 'UI/Composer/Compositions',
+  title: 'Primitives/Conversational/Composer/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

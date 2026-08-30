@@ -20,7 +20,7 @@ import {
 } from "./data-table.fixtures"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
-  title: "UI/DataTable/Compositions",
+  title: "Primitives/Tables/DataTable/Compositions",
   tags: ["tables"],
   component: DataTable<Invoice>,
   parameters: {

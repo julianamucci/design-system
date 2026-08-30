@@ -417,9 +417,9 @@
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.progress.name'),    description: $tStore('related.items.progress.description'),    path: '?path=/docs/ui-progress--docs'    },
-      { name: $tStore('related.items.aspectRatio.name'), description: $tStore('related.items.aspectRatio.description'), path: '?path=/docs/ui-aspectratio--docs' },
-      { name: $tStore('related.items.card.name'),        description: $tStore('related.items.card.description'),        path: '?path=/docs/ui-card--docs'        },
+      { name: $tStore('related.items.progress.name'),    description: $tStore('related.items.progress.description'),    path: '?path=/docs/primitives-feedback-progress--docs'    },
+      { name: $tStore('related.items.aspectRatio.name'), description: $tStore('related.items.aspectRatio.description'), path: '?path=/docs/primitives-layout-aspectratio--docs' },
+      { name: $tStore('related.items.card.name'),        description: $tStore('related.items.card.description'),        path: '?path=/docs/primitives-layout-card--docs'        },
     ]}
   />
 

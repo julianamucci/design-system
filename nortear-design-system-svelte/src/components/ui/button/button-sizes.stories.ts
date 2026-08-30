@@ -27,7 +27,7 @@ const meta: Meta = {
       source: { transform: buttonSource },
     },
   },
-  title: 'UI/Button/Sizes',
+  title: 'Primitives/Form/Button/Sizes',
   component: Button,
   tags: ['form'],
 };

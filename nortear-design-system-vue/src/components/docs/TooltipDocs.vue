@@ -363,9 +363,9 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.popover.name'),   description: toPlainText(tContent('related.items.popover.description')),   path: '?path=/docs/ui-popover--docs'    },
-  { name: tContent('related.items.hoverCard.name'), description: toPlainText(tContent('related.items.hoverCard.description')), path: '?path=/docs/ui-hovercard--docs'  },
-  { name: tContent('related.items.button.name'),    description: toPlainText(tContent('related.items.button.description')),    path: '?path=/docs/ui-button--docs'     },
+  { name: tContent('related.items.popover.name'),   description: toPlainText(tContent('related.items.popover.description')),   path: '?path=/docs/primitives-overlay-popover--docs'    },
+  { name: tContent('related.items.hoverCard.name'), description: toPlainText(tContent('related.items.hoverCard.description')), path: '?path=/docs/primitives-overlay-hovercard--docs'  },
+  { name: tContent('related.items.button.name'),    description: toPlainText(tContent('related.items.button.description')),    path: '?path=/docs/primitives-form-button--docs'     },
   { name: tContent('related.items.kbd.name'),       description: toPlainText(tContent('related.items.kbd.description')),       path: '?path=/docs/ui-kbd--docs'        },
 ]);
 

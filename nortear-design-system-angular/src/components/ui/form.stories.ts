@@ -73,7 +73,7 @@ export class Exemplo {
 }
 
 const meta: Meta<FormArgs> = {
-  title: 'UI/Form',
+  title: 'Primitives/Form/Form',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [...NDS_FORM, NdsInput] })],
   parameters: {

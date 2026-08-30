@@ -47,7 +47,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<ContextMenuArgs> = {
-  title: 'UI/ContextMenu',
+  title: 'Primitives/Overlay/ContextMenu',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {

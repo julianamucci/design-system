@@ -51,7 +51,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<RadioGroupArgs> = {
-  title: 'UI/RadioGroup',
+  title: 'Primitives/Form/RadioGroup',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel] })],
   parameters: {

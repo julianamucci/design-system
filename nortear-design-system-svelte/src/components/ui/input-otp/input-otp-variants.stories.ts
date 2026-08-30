@@ -6,7 +6,7 @@ import { field } from './input-otp.fixtures';
 import { inputOtpWithSeparatorSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
-  title: 'UI/InputOTP/Variants',
+  title: 'Primitives/Form/InputOTP/Variants',
   component: InputOTPStory,
   tags: ['form'],
   parameters: {

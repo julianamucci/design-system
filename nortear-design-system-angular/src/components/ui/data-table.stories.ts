@@ -95,7 +95,7 @@ export class Exemplo {
 }
 
 const meta: Meta<DataTableArgs> = {
-  title: 'UI/DataTable',
+  title: 'Primitives/Tables/DataTable',
   tags: ['autodocs', 'tables'],
   decorators: [moduleMetadata({ imports: [NdsDataTable] })],
   parameters: {

@@ -14,7 +14,7 @@ import {
 import { contrastDeTextFailures } from "@shared/testing/button-probe";
 
 const meta = {
-  title: "UI/Button/Variants",
+  title: "Primitives/Form/Button/Variants",
   tags: ["form"],
   component: Button,
   parameters: {

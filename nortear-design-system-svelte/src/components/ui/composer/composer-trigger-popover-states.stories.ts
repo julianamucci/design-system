@@ -16,7 +16,7 @@ import {
 // repete aqui.
 
 const meta: Meta<typeof Composer> = {
-  title: 'UI/ComposerTriggerPopover/States',
+  title: 'Primitives/Conversational/ComposerTriggerPopover/States',
   component: Composer,
   tags: ['conversational'],
   parameters: {

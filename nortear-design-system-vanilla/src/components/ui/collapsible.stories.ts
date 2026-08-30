@@ -19,7 +19,7 @@ const PANEL_CLASSES =
   'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
 
 const meta: Meta<CollapsibleArgs> = {
-  title: 'UI/Collapsible',
+  title: 'Primitives/Disclosure/Collapsible',
   tags: ['autodocs', 'disclosure'],
   parameters: {
     docs: {

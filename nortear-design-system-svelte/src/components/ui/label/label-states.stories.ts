@@ -24,7 +24,7 @@ import {
  * `data-disabled="true"`. O rótulo não recebe classe nenhuma nos dois casos.
  */
 const meta: Meta = {
-  title: 'UI/Label/States',
+  title: 'Primitives/Form/Label/States',
   component: LabelStory,
   tags: ['form'],
   parameters: {

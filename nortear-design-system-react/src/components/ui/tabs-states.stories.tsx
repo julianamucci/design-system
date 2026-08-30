@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import { tabsAbaDesabilitadaSource, tabsSource } from "./tabs.source";
 
 const meta: Meta = {
-  title: "UI/Tabs/States",
+  title: "Primitives/Navigation/Tabs/States",
   tags: ["navigation"],
   component: Tabs,
   parameters: {

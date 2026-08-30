@@ -6,7 +6,7 @@ import { inputSource, inputSourceWith } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Input/Types',
+  title: 'Primitives/Form/Input/Types',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { labelSource } from './label.source';
 
 const meta = {
-  title: 'UI/Label',
+  title: 'Primitives/Form/Label',
   component: Label,
   tags: ['autodocs', 'form'],
   parameters: {

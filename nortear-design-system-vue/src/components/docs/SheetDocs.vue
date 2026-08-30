@@ -360,10 +360,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.drawer.name'),      description: toPlainText(tContent('related.items.drawer.description')),      path: '?path=/docs/ui-drawer--docs'      },
-  { name: tContent('related.items.dialog.name'),      description: toPlainText(tContent('related.items.dialog.description')),      path: '?path=/docs/ui-dialog--docs'      },
-  { name: tContent('related.items.alertDialog.name'), description: toPlainText(tContent('related.items.alertDialog.description')), path: '?path=/docs/ui-alertdialog--docs' },
-  { name: tContent('related.items.popover.name'),     description: toPlainText(tContent('related.items.popover.description')),     path: '?path=/docs/ui-popover--docs'     },
+  { name: tContent('related.items.drawer.name'),      description: toPlainText(tContent('related.items.drawer.description')),      path: '?path=/docs/primitives-disclosure-drawer--docs'      },
+  { name: tContent('related.items.dialog.name'),      description: toPlainText(tContent('related.items.dialog.description')),      path: '?path=/docs/primitives-overlay-dialog--docs'      },
+  { name: tContent('related.items.alertDialog.name'), description: toPlainText(tContent('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
+  { name: tContent('related.items.popover.name'),     description: toPlainText(tContent('related.items.popover.description')),     path: '?path=/docs/primitives-overlay-popover--docs'     },
 ]);
 
 const noteItems = computed(() => [

@@ -17,7 +17,7 @@ import {
 // story e documentação não possam divergir em silêncio.
 
 const meta: Meta = {
-  title: 'UI/CodeBlock/Variants',
+  title: 'Primitives/Display/CodeBlock/Variants',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [NdsCodeBlock] })],
   parameters: {

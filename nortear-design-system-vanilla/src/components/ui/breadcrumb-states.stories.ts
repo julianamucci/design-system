@@ -14,7 +14,7 @@ import { breadcrumbSource, breadcrumbSourceWith } from './breadcrumb.source';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Breadcrumb/States',
+  title: 'Primitives/Navigation/Breadcrumb/States',
   parameters: {
     design: [figmaDesign('breadcrumb', 'Trilha'), figmaDesign('breadcrumbLink', 'Link')],
     controls: { disable: true },

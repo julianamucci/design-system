@@ -10,7 +10,7 @@ import { NdsInputOtp } from './input-otp';
  * story que só olha a aparência passa.
  */
 const meta: Meta = {
-  title: 'UI/InputOTP/Variants',
+  title: 'Primitives/Form/InputOTP/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsInputOtp] })],
   parameters: { layout: 'padded', controls: { disable: true } },

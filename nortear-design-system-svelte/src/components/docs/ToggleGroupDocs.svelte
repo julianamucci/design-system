@@ -717,10 +717,10 @@ interface ToggleGroupItemProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.toggle.name'),      description: $tStore('related.items.toggle.description'),      path: '?path=/docs/ui-toggle--docs' },
-      { name: $tStore('related.items.tabs.name'),        description: $tStore('related.items.tabs.description'),        path: '?path=/docs/ui-tabs--docs' },
-      { name: $tStore('related.items.radioGroup.name'),  description: $tStore('related.items.radioGroup.description'),  path: '?path=/docs/ui-radiogroup--docs' },
-      { name: $tStore('related.items.checkbox.name'),    description: $tStore('related.items.checkbox.description'),    path: '?path=/docs/ui-checkbox--docs' },
+      { name: $tStore('related.items.toggle.name'),      description: $tStore('related.items.toggle.description'),      path: '?path=/docs/primitives-form-toggle--docs' },
+      { name: $tStore('related.items.tabs.name'),        description: $tStore('related.items.tabs.description'),        path: '?path=/docs/primitives-navigation-tabs--docs' },
+      { name: $tStore('related.items.radioGroup.name'),  description: $tStore('related.items.radioGroup.description'),  path: '?path=/docs/primitives-form-radiogroup--docs' },
+      { name: $tStore('related.items.checkbox.name'),    description: $tStore('related.items.checkbox.description'),    path: '?path=/docs/primitives-form-checkbox--docs' },
     ]}
   />
 

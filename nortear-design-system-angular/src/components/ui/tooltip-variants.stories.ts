@@ -42,7 +42,7 @@ function contraste(a: string, b: string): number {
 }
 
 const meta: Meta = {
-  title: 'UI/Tooltip/Variants',
+  title: 'Primitives/Overlay/Tooltip/Variants',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_TOOLTIP, NdsButton] })],
   parameters: {

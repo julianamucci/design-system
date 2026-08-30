@@ -828,7 +828,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           {
             name: "NavigationMenu",
             description: toPlainText(tContent("related.navigationMenu")),
-            path: "?path=/docs/ui-navigationmenu--docs",
+            path: "?path=/docs/primitives-navigation-navigationmenu--docs",
           },
           {
             name: "Stepper",
@@ -838,12 +838,12 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           {
             name: "Tabs",
             description: toPlainText(tContent("related.tabs")),
-            path: "?path=/docs/ui-tabs--docs",
+            path: "?path=/docs/primitives-navigation-tabs--docs",
           },
           {
             name: "DropdownMenu",
             description: toPlainText(tContent("related.dropdownMenu")),
-            path: "?path=/docs/ui-dropdownmenu--docs",
+            path: "?path=/docs/primitives-overlay-dropdownmenu--docs",
           },
         ]}
       />

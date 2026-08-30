@@ -766,10 +766,10 @@ export function CodeBlockDocs() {
         title={tContent("related.title")}
         componentSlug={SLUG}
         items={[
-          { name: "Table", description: toPlainText(tContent("related.table")), path: "?path=/docs/ui-table--docs" },
-          { name: "Alert", description: toPlainText(tContent("related.alert")), path: "?path=/docs/ui-alert--docs" },
-          { name: "Tabs",  description: toPlainText(tContent("related.tabs")),  path: "?path=/docs/ui-tabs--docs" },
-          { name: "Card",  description: toPlainText(tContent("related.card")),  path: "?path=/docs/ui-card--docs" },
+          { name: "Table", description: toPlainText(tContent("related.table")), path: "?path=/docs/primitives-tables-table--docs" },
+          { name: "Alert", description: toPlainText(tContent("related.alert")), path: "?path=/docs/primitives-feedback-alert--docs" },
+          { name: "Tabs",  description: toPlainText(tContent("related.tabs")),  path: "?path=/docs/primitives-navigation-tabs--docs" },
+          { name: "Card",  description: toPlainText(tContent("related.card")),  path: "?path=/docs/primitives-layout-card--docs" },
         ]}
       />
 

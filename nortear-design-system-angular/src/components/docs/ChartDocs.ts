@@ -1087,9 +1087,9 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'table',     name: 'Table',     path: '?path=/docs/ui-table--docs'     },
-      { key: 'card',      name: 'Card',      path: '?path=/docs/ui-card--docs'      },
-      { key: 'dataTable', name: 'DataTable', path: '?path=/docs/ui-datatable--docs' },
+      { key: 'table',     name: 'Table',     path: '?path=/docs/primitives-tables-table--docs'     },
+      { key: 'card',      name: 'Card',      path: '?path=/docs/primitives-layout-card--docs'      },
+      { key: 'dataTable', name: 'DataTable', path: '?path=/docs/primitives-tables-datatable--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

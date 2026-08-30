@@ -23,7 +23,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Drawer/Compositions",
+  title: "Primitives/Disclosure/Drawer/Compositions",
   tags: ["disclosure"],
   component: Drawer,
   parameters: {

@@ -722,22 +722,22 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           {
             name: "Badge",
             description: toPlainText(tContent("related.badge")),
-            path: "?path=/docs/ui-badge--docs",
+            path: "?path=/docs/primitives-feedback-badge--docs",
           },
           {
             name: "AspectRatio",
             description: toPlainText(tContent("related.aspectRatio")),
-            path: "?path=/docs/ui-aspectratio--docs",
+            path: "?path=/docs/primitives-layout-aspectratio--docs",
           },
           {
             name: "Tooltip",
             description: toPlainText(tContent("related.tooltip")),
-            path: "?path=/docs/ui-tooltip--docs",
+            path: "?path=/docs/primitives-overlay-tooltip--docs",
           },
           {
             name: "Card",
             description: toPlainText(tContent("related.card")),
-            path: "?path=/docs/ui-card--docs",
+            path: "?path=/docs/primitives-layout-card--docs",
           },
         ]}
       />

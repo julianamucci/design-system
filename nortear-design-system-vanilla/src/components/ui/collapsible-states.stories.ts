@@ -15,7 +15,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: collapsibleSource } },
   },
-  title: 'UI/Collapsible/States',
+  title: 'Primitives/Disclosure/Collapsible/States',
 };
 
 export default meta;

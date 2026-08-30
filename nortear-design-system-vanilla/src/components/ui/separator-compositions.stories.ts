@@ -12,7 +12,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Separator/Compositions',
+  title: 'Primitives/Layout/Separator/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

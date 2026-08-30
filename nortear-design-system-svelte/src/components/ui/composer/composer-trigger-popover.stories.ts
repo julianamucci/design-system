@@ -12,7 +12,7 @@ const onSubmit = fn();
 // desta stack exige que eles sirvam ao componente que o `render` devolve, e o
 // campo não tem prop chamada "menção".
 const meta: Meta<typeof ComposerTriggerPopoverStory> = {
-  title: 'UI/ComposerTriggerPopover',
+  title: 'Primitives/Conversational/ComposerTriggerPopover',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

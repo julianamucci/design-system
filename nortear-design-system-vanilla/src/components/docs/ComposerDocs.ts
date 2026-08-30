@@ -439,10 +439,10 @@ export interface ComposerOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/ui-chatthread--docs' },
-            { name: t('related.items.textarea.name'),   description: toPlainText(t('related.items.textarea.description')),   path: '?path=/docs/ui-textarea--docs' },
-            { name: t('related.items.button.name'),     description: toPlainText(t('related.items.button.description')),     path: '?path=/docs/ui-button--docs' },
-            { name: t('related.items.editor.name'),     description: toPlainText(t('related.items.editor.description')),     path: '?path=/docs/ui-editor--docs' },
+            { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/primitives-conversational-chatthread--docs' },
+            { name: t('related.items.textarea.name'),   description: toPlainText(t('related.items.textarea.description')),   path: '?path=/docs/primitives-form-textarea--docs' },
+            { name: t('related.items.button.name'),     description: toPlainText(t('related.items.button.description')),     path: '?path=/docs/primitives-form-button--docs' },
+            { name: t('related.items.editor.name'),     description: toPlainText(t('related.items.editor.description')),     path: '?path=/docs/primitives-form-editor--docs' },
           ],
         });
 

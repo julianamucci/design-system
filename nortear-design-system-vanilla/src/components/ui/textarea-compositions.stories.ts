@@ -11,7 +11,7 @@ import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Textarea/Compositions',
+  title: 'Primitives/Form/Textarea/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

@@ -51,7 +51,7 @@ const MENUS = [
 ];
 
 const meta = {
-  title: 'UI/Menubar',
+  title: 'Primitives/Navigation/Menubar',
   component: Menubar,
   tags: ['autodocs', 'navigation'],
   parameters: {

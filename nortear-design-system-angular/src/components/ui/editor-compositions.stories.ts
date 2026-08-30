@@ -17,7 +17,7 @@ import {
 } from './editor.source';
 
 const meta: Meta = {
-  title: 'UI/Editor/Compositions',
+  title: 'Primitives/Form/Editor/Compositions',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [EditorComponent] })],
   parameters: {

@@ -20,7 +20,7 @@ type CommandArgs = React.ComponentProps<typeof Command> & {
 };
 
 const meta: Meta<CommandArgs> = {
-  title: "UI/Command",
+  title: "Primitives/Overlay/Command",
   component: Command,
   tags: ["autodocs", "overlay"],
   parameters: {

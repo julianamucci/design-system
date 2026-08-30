@@ -19,7 +19,7 @@ import { sidebarSource, sidebarSourceWith } from './sidebar.source';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Sidebar/States',
+  title: 'Primitives/Layout/Sidebar/States',
   parameters: {
     actions: { disable: true },
     layout: 'fullscreen',

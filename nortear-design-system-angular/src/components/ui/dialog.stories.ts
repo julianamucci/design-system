@@ -80,7 +80,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<DialogArgs> = {
-  title: 'UI/Dialog',
+  title: 'Primitives/Overlay/Dialog',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DIALOG, NdsButton] })],
   parameters: {

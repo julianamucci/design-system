@@ -691,11 +691,11 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'input',    name: 'Input',    path: '?path=/docs/ui-input--docs'    },
-      { key: 'textarea', name: 'Textarea', path: '?path=/docs/ui-textarea--docs' },
-      { key: 'select',   name: 'Select',   path: '?path=/docs/ui-select--docs'   },
-      { key: 'checkbox', name: 'Checkbox', path: '?path=/docs/ui-checkbox--docs' },
-      { key: 'label',    name: 'Label',    path: '?path=/docs/ui-label--docs'    },
+      { key: 'input',    name: 'Input',    path: '?path=/docs/primitives-form-input--docs'    },
+      { key: 'textarea', name: 'Textarea', path: '?path=/docs/primitives-form-textarea--docs' },
+      { key: 'select',   name: 'Select',   path: '?path=/docs/primitives-form-select--docs'   },
+      { key: 'checkbox', name: 'Checkbox', path: '?path=/docs/primitives-form-checkbox--docs' },
+      { key: 'label',    name: 'Label',    path: '?path=/docs/primitives-form-label--docs'    },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

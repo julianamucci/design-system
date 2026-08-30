@@ -5,7 +5,7 @@ import { NdsAspectRatio } from './aspect-ratio';
 import { IMG_PLACEHOLDER } from './aspect-ratio.stories';
 
 const meta: Meta = {
-  title: 'UI/AspectRatio/Compositions',
+  title: 'Primitives/Layout/AspectRatio/Compositions',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsAspectRatio] })],
   parameters: { layout: 'padded', controls: { disable: true } },

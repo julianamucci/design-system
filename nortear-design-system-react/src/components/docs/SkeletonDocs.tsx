@@ -585,17 +585,17 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {
             name: tContent("related.items.progress.name"),
             description: toPlainText(tContent("related.items.progress.description")),
-            path: "?path=/docs/ui-progress--docs",
+            path: "?path=/docs/primitives-feedback-progress--docs",
           },
           {
             name: tContent("related.items.aspectRatio.name"),
             description: toPlainText(tContent("related.items.aspectRatio.description")),
-            path: "?path=/docs/ui-aspectratio--docs",
+            path: "?path=/docs/primitives-layout-aspectratio--docs",
           },
           {
             name: tContent("related.items.card.name"),
             description: toPlainText(tContent("related.items.card.description")),
-            path: "?path=/docs/ui-card--docs",
+            path: "?path=/docs/primitives-layout-card--docs",
           },
         ]}
       />

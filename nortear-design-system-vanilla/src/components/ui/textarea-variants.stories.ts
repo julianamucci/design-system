@@ -11,7 +11,7 @@ import {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Textarea/Variants',
+  title: 'Primitives/Form/Textarea/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

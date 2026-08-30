@@ -13,7 +13,7 @@ type FormArgs = {
 };
 
 const meta: Meta<FormArgs> = {
-  title: 'UI/Form',
+  title: 'Primitives/Form/Form',
   component: FormFieldStory,
   tags: ['autodocs', 'form'],
   parameters: {

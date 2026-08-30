@@ -14,7 +14,7 @@ import {
 } from "./button.source";
 
 const meta = {
-  title: "UI/Button/Compositions",
+  title: "Primitives/Form/Button/Compositions",
   tags: ["form"],
   component: Button,
   parameters: {

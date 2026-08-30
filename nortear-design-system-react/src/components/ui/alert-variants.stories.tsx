@@ -18,7 +18,7 @@ import {
 import { themeContrast, themeReprovas } from "@shared/testing/alert-probe";
 
 const meta = {
-  title: "UI/Alert/Variants",
+  title: "Primitives/Feedback/Alert/Variants",
   tags: ["feedback"],
   component: Alert,
   parameters: {

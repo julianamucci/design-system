@@ -35,7 +35,7 @@ import {
 } from './sidebar.source';
 
 const meta = {
-  title: 'UI/Sidebar/Compositions',
+  title: 'Primitives/Layout/Sidebar/Compositions',
   component: Sidebar,
   tags: ['layout'],
   parameters: {

@@ -13,7 +13,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { hoverCardSource } from './hover-card.source';
 
 const meta: Meta = {
-  title: 'UI/HoverCard',
+  title: 'Primitives/Overlay/HoverCard',
   component: HoverCardStory,
   tags: ['autodocs', 'overlay'],
   parameters: {

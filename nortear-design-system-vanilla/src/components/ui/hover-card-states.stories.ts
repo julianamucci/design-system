@@ -21,7 +21,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/HoverCard/States',
+  title: 'Primitives/Overlay/HoverCard/States',
   parameters: {
     layout: 'padded',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.

@@ -14,7 +14,7 @@ import {
 import { breadcrumbSource } from './breadcrumb.source';
 
 const meta: Meta = {
-  title: 'UI/Breadcrumb',
+  title: 'Primitives/Navigation/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs', 'navigation'],
   parameters: {

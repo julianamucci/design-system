@@ -558,8 +558,8 @@ export interface BadgeOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/ui-alert--docs'  },
-            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/ui-button--docs' },
+            { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/primitives-feedback-alert--docs'  },
+            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/primitives-form-button--docs' },
           ],
         });
 

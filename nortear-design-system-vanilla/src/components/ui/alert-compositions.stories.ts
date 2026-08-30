@@ -13,7 +13,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: alertSource } },
   },
-  title: 'UI/Alert/Compositions',
+  title: 'Primitives/Feedback/Alert/Compositions',
 };
 
 export default meta;

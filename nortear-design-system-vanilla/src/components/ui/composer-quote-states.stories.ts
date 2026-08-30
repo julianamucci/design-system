@@ -18,7 +18,7 @@ import {
 // é o que acontece quando ele não cabe, e quando não há citação nenhuma.
 
 const meta: Meta = {
-  title: 'UI/ComposerQuote/States',
+  title: 'Primitives/Conversational/ComposerQuote/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

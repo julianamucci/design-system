@@ -919,11 +919,11 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "AlertDialog", description: toPlainText(tContent("related.alertDialog")), path: "?path=/docs/ui-alertdialog--docs" },
-          { name: "Sheet",       description: toPlainText(tContent("related.sheet")),                  path: "?path=/docs/ui-sheet--docs" },
-          { name: "Popover",     description: toPlainText(tContent("related.popover")),                path: "?path=/docs/ui-popover--docs" },
-          { name: "Form",        description: toPlainText(tContent("related.form")),                   path: "?path=/docs/ui-form--docs" },
-          { name: "Drawer",      description: toPlainText(tContent("related.drawer")),                 path: "?path=/docs/ui-drawer--docs" },
+          { name: "AlertDialog", description: toPlainText(tContent("related.alertDialog")), path: "?path=/docs/primitives-overlay-alertdialog--docs" },
+          { name: "Sheet",       description: toPlainText(tContent("related.sheet")),                  path: "?path=/docs/primitives-disclosure-sheet--docs" },
+          { name: "Popover",     description: toPlainText(tContent("related.popover")),                path: "?path=/docs/primitives-overlay-popover--docs" },
+          { name: "Form",        description: toPlainText(tContent("related.form")),                   path: "?path=/docs/primitives-form-form--docs" },
+          { name: "Drawer",      description: toPlainText(tContent("related.drawer")),                 path: "?path=/docs/primitives-disclosure-drawer--docs" },
         ]}
       />
 

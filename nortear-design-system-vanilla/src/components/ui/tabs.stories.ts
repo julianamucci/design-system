@@ -14,7 +14,7 @@ type TabsArgs = {
 };
 
 const meta: Meta<TabsArgs> = {
-  title: 'UI/Tabs',
+  title: 'Primitives/Navigation/Tabs',
   tags: ['autodocs', 'navigation'],
   parameters: {
     docs: { page: withAutoDocsTab(createTabsDocs), source: { transform: tabsSource } },

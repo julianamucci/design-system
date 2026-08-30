@@ -13,7 +13,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Calendar/Compositions',
+  title: 'Primitives/Form/Calendar/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

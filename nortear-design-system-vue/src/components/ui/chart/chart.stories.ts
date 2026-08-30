@@ -32,7 +32,7 @@ const HEIGHT = 300;
 const LABEL = 'Acessos mensais no desktop, de janeiro a junho';
 
 const meta = {
-  title: 'UI/Chart',
+  title: 'Primitives/Display/Chart',
   component: ChartContainer,
   tags: ['autodocs', 'display'],
   parameters: {

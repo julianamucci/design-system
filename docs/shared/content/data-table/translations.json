@@ -1,7 +1,7 @@
 {
   "pt-BR": {
     "title": "DataTable",
-    "category": "Display",
+    "category": "Tabelas",
     "type": "Componente",
     "description": "Tabela avançada com ordenação, filtros, seleção, paginação, redimensionamento, reordenação, pin de colunas, edição inline e virtualização.",
     "seo": {
@@ -512,7 +512,7 @@
   },
   "en": {
     "title": "DataTable",
-    "category": "Display",
+    "category": "Tables",
     "type": "Component",
     "description": "Advanced table with sorting, filtering, selection, pagination, resizing, reordering, column pinning, inline edit, and virtualization.",
     "seo": {
@@ -1023,7 +1023,7 @@
   },
   "es": {
     "title": "DataTable",
-    "category": "Display",
+    "category": "Tablas",
     "type": "Componente",
     "description": "Tabla avanzada con orden, filtros, selección, paginación, redimensionamiento, reordenamiento, pin de columnas, edición inline y virtualización.",
     "seo": {

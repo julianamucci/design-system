@@ -14,7 +14,7 @@ import { PopoverDocs } from "@/components/docs/PopoverDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "UI/Popover",
+  title: "Primitives/Overlay/Popover",
   component: Popover,
   tags: ["autodocs", "overlay"],
   parameters: {

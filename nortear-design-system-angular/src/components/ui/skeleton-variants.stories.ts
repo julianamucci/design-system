@@ -5,7 +5,7 @@ import { NdsSkeleton } from './skeleton';
 import { NdsAspectRatio } from './aspect-ratio';
 
 const meta: Meta = {
-  title: 'UI/Skeleton/Variants',
+  title: 'Primitives/Feedback/Skeleton/Variants',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsSkeleton, NdsAspectRatio] })],
   parameters: { layout: 'padded', controls: { disable: true } },

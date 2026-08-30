@@ -5,7 +5,7 @@ import { ADVANCED_CONTENT, BASIC_CONTENT, LABELS, fluidBox } from './editor.fixt
 import { editorSource, editorSourceWith } from './editor.source';
 
 const meta: Meta = {
-  title: 'UI/Editor/Variants',
+  title: 'Primitives/Form/Editor/Variants',
   tags: ['form'],
   parameters: {
     layout: 'padded',

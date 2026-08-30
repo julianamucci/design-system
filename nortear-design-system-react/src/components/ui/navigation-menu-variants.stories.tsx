@@ -13,7 +13,7 @@ import { open, close } from "./navigation-menu.fixtures";
 import { navigationMenuSource, navigationMenuVerticalSource } from "./navigation-menu.source";
 
 const meta = {
-  title: "UI/NavigationMenu/Variants",
+  title: "Primitives/Navigation/NavigationMenu/Variants",
   tags: ["navigation"],
   component: NavigationMenu,
   parameters: {

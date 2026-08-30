@@ -13,7 +13,7 @@ import {
 import { sliderPlaygroundSource } from './slider.source';
 
 const meta = {
-  title: 'UI/Slider',
+  title: 'Primitives/Form/Slider',
   component: Slider,
   tags: ['autodocs', 'form'],
   parameters: {

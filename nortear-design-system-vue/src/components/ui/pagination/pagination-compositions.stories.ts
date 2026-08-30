@@ -19,7 +19,7 @@ import {
 } from './pagination.source';
 
 const meta = {
-  title: 'UI/Pagination/Compositions',
+  title: 'Primitives/Navigation/Pagination/Compositions',
   component: Pagination,
   tags: ['navigation'],
   parameters: {

@@ -23,7 +23,7 @@ import {
 } from './context-menu.source';
 
 const meta: Meta = {
-  title: 'UI/ContextMenu/States',
+  title: 'Primitives/Overlay/ContextMenu/States',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {

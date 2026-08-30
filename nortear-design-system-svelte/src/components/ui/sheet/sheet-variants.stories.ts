@@ -11,7 +11,7 @@ import { sheetSource } from './sheet.source';
 // captura e o que o axe tem para examinar — fechada, o painel nem está no DOM.
 
 const meta: Meta = {
-  title: 'UI/Sheet/Variants',
+  title: 'Primitives/Disclosure/Sheet/Variants',
   component: SheetStory,
   tags: ['disclosure'],
   parameters: {

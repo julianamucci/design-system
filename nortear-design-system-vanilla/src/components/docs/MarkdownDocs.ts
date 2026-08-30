@@ -428,10 +428,10 @@ export interface MarkdownOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.codeBlock.name'), description: toPlainText(t('related.items.codeBlock.description')), path: '?path=/docs/ui-codeblock--docs' },
-            { name: t('related.items.editor.name'),    description: toPlainText(t('related.items.editor.description')),    path: '?path=/docs/ui-editor--docs' },
-            { name: t('related.items.table.name'),     description: toPlainText(t('related.items.table.description')),     path: '?path=/docs/ui-table--docs' },
-            { name: t('related.items.skeleton.name'),  description: toPlainText(t('related.items.skeleton.description')),  path: '?path=/docs/ui-skeleton--docs' },
+            { name: t('related.items.codeBlock.name'), description: toPlainText(t('related.items.codeBlock.description')), path: '?path=/docs/primitives-display-codeblock--docs' },
+            { name: t('related.items.editor.name'),    description: toPlainText(t('related.items.editor.description')),    path: '?path=/docs/primitives-form-editor--docs' },
+            { name: t('related.items.table.name'),     description: toPlainText(t('related.items.table.description')),     path: '?path=/docs/primitives-tables-table--docs' },
+            { name: t('related.items.skeleton.name'),  description: toPlainText(t('related.items.skeleton.description')),  path: '?path=/docs/primitives-feedback-skeleton--docs' },
           ],
         });
 

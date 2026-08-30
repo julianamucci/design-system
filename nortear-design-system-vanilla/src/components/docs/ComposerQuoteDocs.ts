@@ -407,10 +407,10 @@ export interface ComposerQuoteLabels {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.composer.name'),    description: toPlainText(t('related.items.composer.description')),    path: '?path=/docs/ui-composer--docs' },
-            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/ui-chatthread--docs' },
-            { name: t('related.items.attachments.name'), description: toPlainText(t('related.items.attachments.description')), path: '?path=/docs/ui-composerattachments--docs' },
-            { name: t('related.items.markdown.name'),    description: toPlainText(t('related.items.markdown.description')),    path: '?path=/docs/ui-markdown--docs' },
+            { name: t('related.items.composer.name'),    description: toPlainText(t('related.items.composer.description')),    path: '?path=/docs/primitives-conversational-composer--docs' },
+            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/primitives-conversational-chatthread--docs' },
+            { name: t('related.items.attachments.name'), description: toPlainText(t('related.items.attachments.description')), path: '?path=/docs/primitives-conversational-composerattachments--docs' },
+            { name: t('related.items.markdown.name'),    description: toPlainText(t('related.items.markdown.description')),    path: '?path=/docs/primitives-conversational-markdown--docs' },
           ],
         });
 

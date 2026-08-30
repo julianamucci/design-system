@@ -7,7 +7,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const meta: Meta = {
-  title: 'UI/DropdownMenu/States',
+  title: 'Primitives/Overlay/DropdownMenu/States',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {

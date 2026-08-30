@@ -6,7 +6,7 @@ import { avatarSource, avatarSourceWith } from './avatar.source';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Avatar/Sizes',
+  title: 'Primitives/Display/Avatar/Sizes',
   parameters: {
     design: figmaDesign('avatar'),
     controls: { disable: true },

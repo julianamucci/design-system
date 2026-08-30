@@ -263,10 +263,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.skeleton.name'), description: toPlainText(tContent('related.items.skeleton.description')), path: '?path=/docs/ui-skeleton--docs' },
+  { name: tContent('related.items.skeleton.name'), description: toPlainText(tContent('related.items.skeleton.description')), path: '?path=/docs/primitives-feedback-skeleton--docs' },
   { name: tContent('related.items.spinner.name'),  description: toPlainText(tContent('related.items.spinner.description')),  path: '?path=/docs/ui-spinner--docs'  },
-  { name: tContent('related.items.alert.name'),    description: toPlainText(tContent('related.items.alert.description')),    path: '?path=/docs/ui-alert--docs'    },
-  { name: tContent('related.items.sonner.name'),   description: toPlainText(tContent('related.items.sonner.description')),   path: '?path=/docs/ui-sonner--docs'   },
+  { name: tContent('related.items.alert.name'),    description: toPlainText(tContent('related.items.alert.description')),    path: '?path=/docs/primitives-feedback-alert--docs'    },
+  { name: tContent('related.items.sonner.name'),   description: toPlainText(tContent('related.items.sonner.description')),   path: '?path=/docs/primitives-feedback-sonner--docs'   },
 ]);
 
 const noteItems = computed(() => [

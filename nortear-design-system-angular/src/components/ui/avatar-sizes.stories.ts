@@ -7,7 +7,7 @@ import { DIAMETER, IMG_AVATAR } from './avatar.stories';
 const PRESETS: AvatarSize[] = ['sm', 'md', 'lg', 'xl', '2xl'];
 
 const meta: Meta = {
-  title: 'UI/Avatar/Sizes',
+  title: 'Primitives/Display/Avatar/Sizes',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_AVATAR] })],
   parameters: {

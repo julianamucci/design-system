@@ -10,7 +10,7 @@ import { userEvent, within, expect } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Calendar/Layouts',
+  title: 'Primitives/Form/Calendar/Layouts',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

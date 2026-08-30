@@ -327,10 +327,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Input',    description: toPlainText(tContent('related.items.input.description')),    path: '?path=/docs/ui-input--docs'    },
-  { name: 'Label',    description: toPlainText(tContent('related.items.label.description')),    path: '?path=/docs/ui-label--docs'    },
-  { name: 'Form',     description: toPlainText(tContent('related.items.form.description')),     path: '?path=/docs/ui-form--docs'     },
-  { name: 'InputOTP', description: toPlainText(tContent('related.items.inputOTP.description')), path: '?path=/docs/ui-inputotp--docs' },
+  { name: 'Input',    description: toPlainText(tContent('related.items.input.description')),    path: '?path=/docs/primitives-form-input--docs'    },
+  { name: 'Label',    description: toPlainText(tContent('related.items.label.description')),    path: '?path=/docs/primitives-form-label--docs'    },
+  { name: 'Form',     description: toPlainText(tContent('related.items.form.description')),     path: '?path=/docs/primitives-form-form--docs'     },
+  { name: 'InputOTP', description: toPlainText(tContent('related.items.inputOTP.description')), path: '?path=/docs/primitives-form-inputotp--docs' },
 ]);
 
 const noteItems = computed(() => [

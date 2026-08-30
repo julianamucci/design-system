@@ -22,7 +22,7 @@ import { COUNTRIES } from './combobox.fixtures';
 import { comboboxSource } from './combobox.source';
 
 const meta = {
-  title: 'UI/Combobox',
+  title: 'Primitives/Form/Combobox',
   component: Combobox,
   tags: ['autodocs', 'form'],
   parameters: {

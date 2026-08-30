@@ -528,10 +528,10 @@
     title={$tStore('related.title')}
     componentSlug="media-player"
     items={[
-      { name: 'AspectRatio', description: $tStore('related.aspectRatio'), path: '?path=/docs/ui-aspectratio--docs' },
-      { name: 'Sonner',      description: $tStore('related.sonner'),      path: '?path=/docs/ui-sonner--docs'      },
-      { name: 'Button',      description: $tStore('related.button'),      path: '?path=/docs/ui-button--docs'      },
-      { name: 'Card',        description: $tStore('related.card'),        path: '?path=/docs/ui-card--docs'        },
+      { name: 'AspectRatio', description: $tStore('related.aspectRatio'), path: '?path=/docs/primitives-layout-aspectratio--docs' },
+      { name: 'Sonner',      description: $tStore('related.sonner'),      path: '?path=/docs/primitives-feedback-sonner--docs'      },
+      { name: 'Button',      description: $tStore('related.button'),      path: '?path=/docs/primitives-form-button--docs'      },
+      { name: 'Card',        description: $tStore('related.card'),        path: '?path=/docs/primitives-layout-card--docs'        },
     ]}
   />
 

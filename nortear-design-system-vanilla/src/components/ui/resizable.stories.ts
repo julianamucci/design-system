@@ -19,7 +19,7 @@ type ResizableArgs = {
 };
 
 const meta: Meta<ResizableArgs> = {
-  title: 'UI/Resizable',
+  title: 'Primitives/Layout/Resizable',
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',

@@ -14,7 +14,7 @@ import { focusMeasureRing, STATES } from '@shared/testing/select-probe';
 import { selectSource } from './select.source';
 
 const meta = {
-  title: 'UI/Select',
+  title: 'Primitives/Form/Select',
   component: Select,
   tags: ['autodocs', 'form'],
   parameters: {

@@ -791,9 +791,9 @@ interface TooltipTriggerProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.popover.name'),   description: $tStore('related.items.popover.description'),   path: '?path=/docs/ui-popover--docs'   },
-      { name: $tStore('related.items.hoverCard.name'), description: $tStore('related.items.hoverCard.description'), path: '?path=/docs/ui-hovercard--docs' },
-      { name: $tStore('related.items.button.name'),    description: $tStore('related.items.button.description'),    path: '?path=/docs/ui-button--docs'    },
+      { name: $tStore('related.items.popover.name'),   description: $tStore('related.items.popover.description'),   path: '?path=/docs/primitives-overlay-popover--docs'   },
+      { name: $tStore('related.items.hoverCard.name'), description: $tStore('related.items.hoverCard.description'), path: '?path=/docs/primitives-overlay-hovercard--docs' },
+      { name: $tStore('related.items.button.name'),    description: $tStore('related.items.button.description'),    path: '?path=/docs/primitives-form-button--docs'    },
       { name: $tStore('related.items.kbd.name'),       description: $tStore('related.items.kbd.description'),       path: '?path=/docs/ui-kbd--docs'       },
     ]}
   />

@@ -10,7 +10,7 @@ import { avatarSource } from './avatar.source';
 const DIAMETRO = { sm: 24, md: 32, lg: 40, xl: 48, '2xl': 64 } as const;
 
 const meta = {
-  title: 'UI/Avatar',
+  title: 'Primitives/Display/Avatar',
   component: Avatar,
   tags: ['autodocs', 'display'],
   parameters: {

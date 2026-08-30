@@ -1262,10 +1262,10 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'menubar',    path: '?path=/docs/ui-menubar--docs'    },
-      { key: 'sidebar',    path: '?path=/docs/ui-sidebar--docs'    },
-      { key: 'breadcrumb', path: '?path=/docs/ui-breadcrumb--docs' },
-      { key: 'tabs',       path: '?path=/docs/ui-tabs--docs'       },
+      { key: 'menubar',    path: '?path=/docs/primitives-navigation-menubar--docs'    },
+      { key: 'sidebar',    path: '?path=/docs/primitives-layout-sidebar--docs'    },
+      { key: 'breadcrumb', path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
+      { key: 'tabs',       path: '?path=/docs/primitives-navigation-tabs--docs'       },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

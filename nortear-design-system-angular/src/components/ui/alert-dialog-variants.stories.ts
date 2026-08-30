@@ -12,7 +12,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 // o fechado já está no Playground.
 
 const meta: Meta = {
-  title: 'UI/AlertDialog/Types',
+  title: 'Primitives/Overlay/AlertDialog/Types',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {

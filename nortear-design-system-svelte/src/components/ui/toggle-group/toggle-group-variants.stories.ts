@@ -16,7 +16,7 @@ async function definir(el: Element, on: boolean): Promise<void> {
 }
 
 const meta: Meta = {
-  title: 'UI/ToggleGroup/Variants',
+  title: 'Primitives/Form/ToggleGroup/Variants',
   component: ToggleGroupStory,
   tags: ['form'],
   parameters: {

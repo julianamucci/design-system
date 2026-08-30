@@ -794,22 +794,22 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               {
                 name: "Sonner",
                 description: toPlainText(tContent("related.sonner")),
-                path: "?path=/docs/ui-sonner--docs",
+                path: "?path=/docs/primitives-feedback-sonner--docs",
               },
               {
                 name: "AlertDialog",
                 description: toPlainText(tContent("related.alertDialog")),
-                path: "?path=/docs/ui-alertdialog--docs",
+                path: "?path=/docs/primitives-overlay-alertdialog--docs",
               },
               {
                 name: "Badge",
                 description: toPlainText(tContent("related.badge")),
-                path: "?path=/docs/ui-badge--docs",
+                path: "?path=/docs/primitives-feedback-badge--docs",
               },
               {
                 name: "Progress",
                 description: toPlainText(tContent("related.progress")),
-                path: "?path=/docs/ui-progress--docs",
+                path: "?path=/docs/primitives-feedback-progress--docs",
               },
             ]}
           />

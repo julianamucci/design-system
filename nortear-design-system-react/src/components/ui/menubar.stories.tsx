@@ -57,7 +57,7 @@ type PlaygroundArgs = {
 }
 
 const meta = {
-  title: "UI/Menubar",
+  title: "Primitives/Navigation/Menubar",
   component: Menubar as never,
   tags: ["autodocs", "navigation"],
   parameters: {

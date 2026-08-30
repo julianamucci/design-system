@@ -20,7 +20,7 @@ function ThreadDemo({ size = ALTURA }: { size?: "xs" | "sm" | "md" | "lg" | "xl"
 }
 
 const meta = {
-  title: "UI/ChatThread",
+  title: "Primitives/Conversational/ChatThread",
   component: ChatThread,
   tags: ["autodocs", "conversational"],
   parameters: {

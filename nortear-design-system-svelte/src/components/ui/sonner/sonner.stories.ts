@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sonnerSource } from './sonner.source';
 
 const meta: Meta = {
-  title: 'UI/Sonner',
+  title: 'Primitives/Feedback/Sonner',
   component: SonnerPlaygroundStory,
   tags: ['autodocs', 'feedback'],
   parameters: {

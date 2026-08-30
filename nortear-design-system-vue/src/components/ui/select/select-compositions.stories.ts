@@ -26,7 +26,7 @@ import {
 } from './select.source';
 
 const meta = {
-  title: 'UI/Select/Compositions',
+  title: 'Primitives/Form/Select/Compositions',
   component: Select,
   tags: ['form'],
   parameters: {

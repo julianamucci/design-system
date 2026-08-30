@@ -613,10 +613,10 @@ export interface AlertTitleOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Sonner',      description: toPlainText(t('related.sonner')),      path: '?path=/docs/ui-sonner--docs' },
-            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
-            { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/ui-badge--docs' },
-            { name: 'Progress',    description: toPlainText(t('related.progress')),    path: '?path=/docs/ui-progress--docs' },
+            { name: 'Sonner',      description: toPlainText(t('related.sonner')),      path: '?path=/docs/primitives-feedback-sonner--docs' },
+            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
+            { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/primitives-feedback-badge--docs' },
+            { name: 'Progress',    description: toPlainText(t('related.progress')),    path: '?path=/docs/primitives-feedback-progress--docs' },
           ],
         });
 

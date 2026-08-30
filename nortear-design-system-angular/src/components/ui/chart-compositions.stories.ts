@@ -26,7 +26,7 @@ import {
 // outra coisa.
 
 const meta: Meta = {
-  title: 'UI/Chart/Compositions',
+  title: 'Primitives/Display/Chart/Compositions',
   tags: ['display'],
   decorators: [
     moduleMetadata({

@@ -12,7 +12,7 @@ import { composerRailSource } from './composer.source';
 // um trecho de marcação, e não uma lista de elementos.
 
 const meta: Meta<typeof Composer> = {
-  title: 'UI/Composer/Compositions',
+  title: 'Primitives/Conversational/Composer/Compositions',
   component: Composer,
   tags: ['conversational'],
   parameters: {

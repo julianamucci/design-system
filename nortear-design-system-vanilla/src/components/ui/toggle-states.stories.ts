@@ -12,7 +12,7 @@ import { buildLucideSvg, cluster } from './toggle.fixtures';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Toggle/States',
+  title: 'Primitives/Form/Toggle/States',
   parameters: {
     layout: 'centered',
     // Sem argTypes neste arquivo: os painéis ficariam vazios.

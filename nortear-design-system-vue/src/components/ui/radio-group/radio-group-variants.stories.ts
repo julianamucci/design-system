@@ -9,7 +9,7 @@ import {
 } from './radio-group.source';
 
 const meta = {
-  title: 'UI/RadioGroup/Variants',
+  title: 'Primitives/Form/RadioGroup/Variants',
   component: RadioGroup,
   tags: ['form'],
   parameters: {

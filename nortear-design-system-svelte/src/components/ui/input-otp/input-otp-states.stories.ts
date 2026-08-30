@@ -7,7 +7,7 @@ import { field } from './input-otp.fixtures';
 import { inputOtpWithErrorSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
-  title: 'UI/InputOTP/States',
+  title: 'Primitives/Form/InputOTP/States',
   component: InputOTPStory,
   tags: ['form'],
   parameters: {

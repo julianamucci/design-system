@@ -13,7 +13,7 @@ const IMG_MARIA =
 const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
 
 const meta: Meta = {
-  title: 'UI/Avatar/States',
+  title: 'Primitives/Display/Avatar/States',
   component: Avatar,
   tags: ['display'],
   parameters: {

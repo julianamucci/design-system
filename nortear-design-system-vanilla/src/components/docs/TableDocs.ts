@@ -925,11 +925,11 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Badge',        description: toPlainText(t('related.badge')),        path: '?path=/docs/ui-badge--docs' },
-            { name: 'Skeleton',     description: toPlainText(t('related.skeleton')),     path: '?path=/docs/ui-skeleton--docs' },
-            { name: 'Pagination',   description: toPlainText(t('related.pagination')),   path: '?path=/docs/ui-pagination--docs' },
-            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdown-menu--docs' },
-            { name: 'Avatar',       description: toPlainText(t('related.avatar')),       path: '?path=/docs/ui-avatar--docs' },
+            { name: 'Badge',        description: toPlainText(t('related.badge')),        path: '?path=/docs/primitives-feedback-badge--docs' },
+            { name: 'Skeleton',     description: toPlainText(t('related.skeleton')),     path: '?path=/docs/primitives-feedback-skeleton--docs' },
+            { name: 'Pagination',   description: toPlainText(t('related.pagination')),   path: '?path=/docs/primitives-navigation-pagination--docs' },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+            { name: 'Avatar',       description: toPlainText(t('related.avatar')),       path: '?path=/docs/primitives-display-avatar--docs' },
           ],
         });
 

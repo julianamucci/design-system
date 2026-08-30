@@ -17,7 +17,7 @@ const FERRAMENTAS = {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Checkbox/States',
+  title: 'Primitives/Form/Checkbox/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

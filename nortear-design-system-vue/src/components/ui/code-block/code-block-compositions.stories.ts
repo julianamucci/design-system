@@ -32,7 +32,7 @@ const linesChecked = (canvasElement: HTMLElement) =>
     .filter((n) => n > 0);
 
 const meta = {
-  title: 'UI/CodeBlock/Compositions',
+  title: 'Primitives/Display/CodeBlock/Compositions',
   component: CodeBlock,
   tags: ['display'],
   parameters: {

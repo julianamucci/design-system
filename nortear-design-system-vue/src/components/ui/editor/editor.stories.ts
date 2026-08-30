@@ -27,7 +27,7 @@ type EditorInstance = InstanceType<typeof Editor>;
 let editorApi: EditorInstance | null = null;
 
 const meta = {
-  title: 'UI/Editor',
+  title: 'Primitives/Form/Editor',
   component: Editor,
   tags: ['autodocs', 'form'],
   parameters: {

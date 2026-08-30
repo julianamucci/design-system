@@ -7,7 +7,7 @@ import { percentualDesenhado } from '@shared/testing/progress-probe';
 import { progressSource } from './progress.source';
 
 const meta = {
-  title: 'UI/Progress',
+  title: 'Primitives/Feedback/Progress',
   component: Progress,
   tags: ['autodocs', 'feedback'],
   parameters: {

@@ -24,7 +24,7 @@ import {
 } from "./alert-dialog.source";
 
 const meta = {
-  title: "UI/AlertDialog/States",
+  title: "Primitives/Overlay/AlertDialog/States",
   tags: ["overlay"],
   component: AlertDialog,
   parameters: {

@@ -26,7 +26,7 @@ import {
 // painel nem está no DOM.
 
 const meta = {
-  title: 'UI/Sheet/Variants',
+  title: 'Primitives/Disclosure/Sheet/Variants',
   component: Sheet,
   tags: ['disclosure'],
   parameters: {

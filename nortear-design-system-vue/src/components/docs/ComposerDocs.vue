@@ -319,10 +319,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.chatThread.name'), description: toPlainText(tContent('related.items.chatThread.description')), path: '?path=/docs/ui-chatthread--docs' },
-  { name: tContent('related.items.textarea.name'),   description: toPlainText(tContent('related.items.textarea.description')),   path: '?path=/docs/ui-textarea--docs' },
-  { name: tContent('related.items.button.name'),     description: toPlainText(tContent('related.items.button.description')),     path: '?path=/docs/ui-button--docs' },
-  { name: tContent('related.items.editor.name'),     description: toPlainText(tContent('related.items.editor.description')),     path: '?path=/docs/ui-editor--docs' },
+  { name: tContent('related.items.chatThread.name'), description: toPlainText(tContent('related.items.chatThread.description')), path: '?path=/docs/primitives-conversational-chatthread--docs' },
+  { name: tContent('related.items.textarea.name'),   description: toPlainText(tContent('related.items.textarea.description')),   path: '?path=/docs/primitives-form-textarea--docs' },
+  { name: tContent('related.items.button.name'),     description: toPlainText(tContent('related.items.button.description')),     path: '?path=/docs/primitives-form-button--docs' },
+  { name: tContent('related.items.editor.name'),     description: toPlainText(tContent('related.items.editor.description')),     path: '?path=/docs/primitives-form-editor--docs' },
 ]);
 
 const noteItems = computed(() =>

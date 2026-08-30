@@ -871,11 +871,11 @@ interface ContextMenuRadioGroupProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
-      { name: 'Menubar',      description: $tStore('related.menubar'),      path: '?path=/docs/ui-menubar--docs'      },
-      { name: 'Dialog',       description: $tStore('related.dialog'),       path: '?path=/docs/ui-dialog--docs'       },
-      { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/ui-alertdialog--docs'  },
-      { name: 'Tooltip',      description: $tStore('related.tooltip'),      path: '?path=/docs/ui-tooltip--docs'      },
+      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { name: 'Menubar',      description: $tStore('related.menubar'),      path: '?path=/docs/primitives-navigation-menubar--docs'      },
+      { name: 'Dialog',       description: $tStore('related.dialog'),       path: '?path=/docs/primitives-overlay-dialog--docs'       },
+      { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/primitives-overlay-alertdialog--docs'  },
+      { name: 'Tooltip',      description: $tStore('related.tooltip'),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
     ]}
   />
 

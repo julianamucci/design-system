@@ -74,7 +74,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<BreadcrumbArgs> = {
-  title: 'UI/Breadcrumb',
+  title: 'Primitives/Navigation/Breadcrumb',
   tags: ['autodocs', 'navigation'],
   decorators: [
     moduleMetadata({

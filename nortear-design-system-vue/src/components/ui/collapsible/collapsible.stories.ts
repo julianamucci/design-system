@@ -18,7 +18,7 @@ const TRIGGER_CLASSES =
 const CHEVRON_CLASSES = 'nds-icon nds-shrink-0 nds-transition-transform nds-chevron';
 
 const meta = {
-  title: 'UI/Collapsible',
+  title: 'Primitives/Disclosure/Collapsible',
   component: Collapsible,
   tags: ['autodocs', 'disclosure'],
   parameters: {

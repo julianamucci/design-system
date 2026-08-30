@@ -13,7 +13,7 @@ import {
 } from "./tabs.source";
 
 const meta: Meta = {
-  title: "UI/Tabs/Compositions",
+  title: "Primitives/Navigation/Tabs/Compositions",
   tags: ["navigation"],
   component: Tabs,
   parameters: {

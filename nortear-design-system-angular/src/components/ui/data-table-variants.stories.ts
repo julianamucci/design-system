@@ -13,7 +13,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/DataTable/Variants',
+  title: 'Primitives/Tables/DataTable/Variants',
   tags: ['tables'],
   decorators: [moduleMetadata({ imports: [NdsDataTable, NdsDataTableDemo] })],
   parameters: {

@@ -56,7 +56,7 @@ type ChartArgs = {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<ChartArgs> = {
-  title: 'UI/Chart',
+  title: 'Primitives/Display/Chart',
   component: createChart as unknown as Meta<ChartArgs>['component'],
   tags: ['autodocs', 'display'],
   parameters: {

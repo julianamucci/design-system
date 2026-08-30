@@ -12,7 +12,7 @@ import { composerSourceWith } from './composer.source';
 // repete aqui.
 
 const meta: Meta = {
-  title: 'UI/Composer/States',
+  title: 'Primitives/Conversational/Composer/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

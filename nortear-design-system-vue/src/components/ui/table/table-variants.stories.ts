@@ -21,7 +21,7 @@ import {
 } from './table.source';
 
 const meta: Meta = {
-  title: 'UI/Table/Variants',
+  title: 'Primitives/Tables/Table/Variants',
   tags: ['tables'],
   parameters: {
     layout: 'padded',

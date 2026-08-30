@@ -35,7 +35,7 @@ type EditorArgs = {
 };
 
 const meta: Meta<EditorArgs> = {
-  title: 'UI/Editor',
+  title: 'Primitives/Form/Editor',
   tags: ['autodocs', 'form'],
   parameters: {
     // `padded` e não `centered`: o editor é `width: 100%`, e sob `centered` a

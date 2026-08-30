@@ -31,7 +31,7 @@ type PlaygroundArgs = {
 };
 
 const meta = {
-  title: 'UI/Pagination',
+  title: 'Primitives/Navigation/Pagination',
   component: Pagination,
   tags: ['navigation', 'autodocs'],
   parameters: {

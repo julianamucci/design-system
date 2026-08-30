@@ -7,7 +7,7 @@ import { NdsSlider } from './slider';
 // desligado — do contrário ele apareceria vazio.
 
 const meta: Meta = {
-  title: 'UI/Slider/Types',
+  title: 'Primitives/Form/Slider/Types',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsSlider] })],
   parameters: { layout: 'padded', controls: { disable: true } },

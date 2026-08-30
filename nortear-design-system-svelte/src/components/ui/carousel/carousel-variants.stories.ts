@@ -15,7 +15,7 @@ import {
 import { carouselSource, carouselVerticalSource } from './carousel.source';
 
 const meta: Meta = {
-  title: 'UI/Carousel/Variants',
+  title: 'Primitives/Display/Carousel/Variants',
   component: Carousel,
   tags: ['display'],
   parameters: {

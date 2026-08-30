@@ -5,7 +5,7 @@ import { NdsSwitch } from './switch';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
-  title: 'UI/Switch/States',
+  title: 'Primitives/Form/Switch/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsSwitch, NdsLabel] })],
   parameters: {

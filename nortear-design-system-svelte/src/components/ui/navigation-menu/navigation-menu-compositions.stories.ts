@@ -7,7 +7,7 @@ import { navigationMenuSource } from './navigation-menu.source';
 import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
-  title: 'UI/NavigationMenu/Compositions',
+  title: 'Primitives/Navigation/NavigationMenu/Compositions',
   component: NavigationMenuStory,
   tags: ['navigation'],
   parameters: {

@@ -38,7 +38,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: chartSource } },
   },
-  title: 'UI/Chart/Settings',
+  title: 'Primitives/Display/Chart/Settings',
 };
 
 export default meta;

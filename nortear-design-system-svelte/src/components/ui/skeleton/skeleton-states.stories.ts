@@ -10,7 +10,7 @@ import {
 import { skeletonStateSource } from './skeleton.source';
 
 const meta: Meta = {
-  title: 'UI/Skeleton/States',
+  title: 'Primitives/Feedback/Skeleton/States',
   component: SkeletonEstadoStory,
   tags: ['feedback'],
   parameters: {

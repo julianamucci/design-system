@@ -35,7 +35,7 @@ const meta: Meta = {
       },
     },
   },
-  title: 'UI/CodeBlock/States',
+  title: 'Primitives/Display/CodeBlock/States',
   component: CodeBlock,
   tags: ['display'],
 };

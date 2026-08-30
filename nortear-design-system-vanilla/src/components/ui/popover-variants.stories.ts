@@ -14,7 +14,7 @@ import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Popover/Variants',
+  title: 'Primitives/Overlay/Popover/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

@@ -5,7 +5,7 @@ import { NDS_AVATAR } from './avatar';
 import { IMG_AVATAR, IMG_QUEBRADA } from './avatar.stories';
 
 const meta: Meta = {
-  title: 'UI/Avatar/States',
+  title: 'Primitives/Display/Avatar/States',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_AVATAR] })],
   parameters: {

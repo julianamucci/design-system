@@ -516,10 +516,10 @@ export class NdsMarkdownDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'codeBlock', path: '?path=/docs/ui-codeblock--docs' },
-      { key: 'editor',    path: '?path=/docs/ui-editor--docs'    },
-      { key: 'table',     path: '?path=/docs/ui-table--docs'     },
-      { key: 'skeleton',  path: '?path=/docs/ui-skeleton--docs'  },
+      { key: 'codeBlock', path: '?path=/docs/primitives-display-codeblock--docs' },
+      { key: 'editor',    path: '?path=/docs/primitives-form-editor--docs'    },
+      { key: 'table',     path: '?path=/docs/primitives-tables-table--docs'     },
+      { key: 'skeleton',  path: '?path=/docs/primitives-feedback-skeleton--docs'  },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

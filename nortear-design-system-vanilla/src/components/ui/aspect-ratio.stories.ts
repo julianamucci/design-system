@@ -20,7 +20,7 @@ type AspectRatioArgs = {
 };
 
 const meta: Meta<AspectRatioArgs> = {
-  title: 'UI/AspectRatio',
+  title: 'Primitives/Layout/AspectRatio',
   tags: ['autodocs', 'layout'],
   parameters: {
     design: figmaDesign('aspectRatio'),

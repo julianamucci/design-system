@@ -17,7 +17,7 @@ const FERRAMENTAS = {
 };
 
 const meta: Meta = {
-  title: 'UI/Checkbox/States',
+  title: 'Primitives/Form/Checkbox/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsCheckbox, NdsLabel] })],
   parameters: { layout: 'padded', controls: { disable: true } },

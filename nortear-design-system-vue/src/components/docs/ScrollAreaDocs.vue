@@ -277,10 +277,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Resizable', description: toPlainText(tContent('related.items.resizable.description')), path: '?path=/docs/ui-resizable--docs' },
-  { name: 'Sheet',     description: toPlainText(tContent('related.items.sheet.description')),     path: '?path=/docs/ui-sheet--docs'     },
-  { name: 'Dialog',    description: toPlainText(tContent('related.items.dialog.description')),    path: '?path=/docs/ui-dialog--docs'    },
-  { name: 'Command',   description: toPlainText(tContent('related.items.command.description')),   path: '?path=/docs/ui-command--docs'   },
+  { name: 'Resizable', description: toPlainText(tContent('related.items.resizable.description')), path: '?path=/docs/primitives-layout-resizable--docs' },
+  { name: 'Sheet',     description: toPlainText(tContent('related.items.sheet.description')),     path: '?path=/docs/primitives-disclosure-sheet--docs'     },
+  { name: 'Dialog',    description: toPlainText(tContent('related.items.dialog.description')),    path: '?path=/docs/primitives-overlay-dialog--docs'    },
+  { name: 'Command',   description: toPlainText(tContent('related.items.command.description')),   path: '?path=/docs/primitives-overlay-command--docs'   },
 ]);
 
 const noteItems = computed(() => [

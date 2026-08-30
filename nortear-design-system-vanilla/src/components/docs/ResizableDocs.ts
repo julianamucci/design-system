@@ -580,10 +580,10 @@ export function createResizablePanel(
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.scrollArea.name'),  description: toPlainText(t('related.items.scrollArea.description')),  path: '?path=/docs/ui-scrollarea--docs'  },
-            { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/ui-sheet--docs'       },
-            { name: t('related.items.separator.name'),   description: toPlainText(t('related.items.separator.description')),   path: '?path=/docs/ui-separator--docs'   },
-            { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/ui-aspectratio--docs' },
+            { name: t('related.items.scrollArea.name'),  description: toPlainText(t('related.items.scrollArea.description')),  path: '?path=/docs/primitives-layout-scrollarea--docs'  },
+            { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+            { name: t('related.items.separator.name'),   description: toPlainText(t('related.items.separator.description')),   path: '?path=/docs/primitives-layout-separator--docs'   },
+            { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/primitives-layout-aspectratio--docs' },
           ],
         });
 

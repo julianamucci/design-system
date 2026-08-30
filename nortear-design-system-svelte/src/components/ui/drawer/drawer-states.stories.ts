@@ -6,7 +6,7 @@ import DrawerStory from './DrawerStory.svelte';
 import { drawerSource } from './drawer.source';
 
 const meta: Meta = {
-  title: 'UI/Drawer/States',
+  title: 'Primitives/Disclosure/Drawer/States',
   component: DrawerStory,
   tags: ['disclosure'],
   parameters: {

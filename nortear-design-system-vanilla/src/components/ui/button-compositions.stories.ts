@@ -17,7 +17,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: buttonSource } },
   },
-  title: 'UI/Button/Compositions',
+  title: 'Primitives/Form/Button/Compositions',
 };
 
 export default meta;

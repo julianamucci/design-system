@@ -40,7 +40,7 @@ const PLAYING_SOURCE = silentWav(5);
 const ENDED_SOURCE = silentWav(0.4);
 
 const meta = {
-  title: 'UI/MediaPlayer/States',
+  title: 'Primitives/Display/MediaPlayer/States',
   component: MediaPlayer,
   tags: ['display'],
   parameters: {

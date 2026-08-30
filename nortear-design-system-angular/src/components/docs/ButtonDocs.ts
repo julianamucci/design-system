@@ -732,11 +732,11 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { name: 'Toggle',       description: toPlainText(t('related.toggle')),      path: '?path=/docs/ui-toggle--docs'       },
-      { name: 'Switch',       description: t('related.switch'),      path: '?path=/docs/ui-switch--docs'       },
-      { name: 'Dialog',       description: t('related.dialog'),      path: '?path=/docs/ui-dialog--docs'       },
-      { name: 'Alert Dialog', description: t('related.alertDialog'), path: '?path=/docs/ui-alert-dialog--docs' },
-      { name: 'Link',         description: t('related.link'),        path: '?path=/docs/ui-breadcrumb--docs'   },
+      { name: 'Toggle',       description: toPlainText(t('related.toggle')),      path: '?path=/docs/primitives-form-toggle--docs'       },
+      { name: 'Switch',       description: t('related.switch'),      path: '?path=/docs/primitives-form-switch--docs'       },
+      { name: 'Dialog',       description: t('related.dialog'),      path: '?path=/docs/primitives-overlay-dialog--docs'       },
+      { name: 'Alert Dialog', description: t('related.alertDialog'), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
+      { name: 'Link',         description: t('related.link'),        path: '?path=/docs/primitives-navigation-breadcrumb--docs'   },
     ];
   });
 

@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/Calendar',
+  title: 'Primitives/Form/Calendar',
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',

@@ -52,7 +52,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<CarouselArgs> = {
-  title: 'UI/Carousel',
+  title: 'Primitives/Display/Carousel',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio] })],
   parameters: {

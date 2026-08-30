@@ -1131,9 +1131,9 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { k: 'popover',   path: '?path=/docs/ui-popover--docs'    },
-      { k: 'hoverCard', path: '?path=/docs/ui-hover-card--docs' },
-      { k: 'button',    path: '?path=/docs/ui-button--docs'     },
+      { k: 'popover',   path: '?path=/docs/primitives-overlay-popover--docs'    },
+      { k: 'hoverCard', path: '?path=/docs/primitives-overlay-hovercard--docs' },
+      { k: 'button',    path: '?path=/docs/primitives-form-button--docs'     },
       { k: 'kbd',       path: '?path=/docs/ui-kbd--docs'        },
     ].map(({ k, path }) => ({
       name: t(`related.items.${k}.name`),

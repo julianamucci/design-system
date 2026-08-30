@@ -1,7 +1,7 @@
 {
   "pt-BR": {
     "title": "Table",
-    "category": "Display",
+    "category": "Tabelas",
     "type": "Componente",
     "description": "Exibe dados tabulares estruturados com semântica HTML correta, scroll horizontal automático e suporte a estados vazios e ações por linha.",
     "seo": {
@@ -460,7 +460,7 @@
   },
   "en": {
     "title": "Table",
-    "category": "Display",
+    "category": "Tables",
     "type": "Component",
     "description": "Displays structured tabular data with correct HTML semantics, automatic horizontal scroll, and support for empty states and row actions.",
     "seo": {
@@ -919,7 +919,7 @@
   },
   "es": {
     "title": "Table",
-    "category": "Display",
+    "category": "Tablas",
     "type": "Componente",
     "description": "Muestra datos tabulares estructurados con semántica HTML correcta, scroll horizontal automático y soporte para estados vacíos y acciones por fila.",
     "seo": {

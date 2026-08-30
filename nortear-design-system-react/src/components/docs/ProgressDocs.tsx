@@ -653,7 +653,7 @@ interface ProgressProps extends Progress.Root.Props {
           {
             name: tContent("related.items.skeleton.name"),
             description: toPlainText(tContent("related.items.skeleton.description")),
-            path: "?path=/docs/ui-skeleton--docs",
+            path: "?path=/docs/primitives-feedback-skeleton--docs",
           },
           {
             name: tContent("related.items.spinner.name"),
@@ -663,12 +663,12 @@ interface ProgressProps extends Progress.Root.Props {
           {
             name: tContent("related.items.alert.name"),
             description: toPlainText(tContent("related.items.alert.description")),
-            path: "?path=/docs/ui-alert--docs",
+            path: "?path=/docs/primitives-feedback-alert--docs",
           },
           {
             name: tContent("related.items.sonner.name"),
             description: toPlainText(tContent("related.items.sonner.description")),
-            path: "?path=/docs/ui-sonner--docs",
+            path: "?path=/docs/primitives-feedback-sonner--docs",
           },
         ]}
       />

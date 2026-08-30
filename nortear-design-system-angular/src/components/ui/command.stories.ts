@@ -53,7 +53,7 @@ export class Exemplo {
 }
 
 const meta: Meta<CommandArgs> = {
-  title: 'UI/Command',
+  title: 'Primitives/Overlay/Command',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_COMMAND] })],
   parameters: {

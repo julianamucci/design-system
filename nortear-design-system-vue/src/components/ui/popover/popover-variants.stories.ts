@@ -20,7 +20,7 @@ import {
 } from './popover.source';
 
 const meta = {
-  title: 'UI/Popover/Variants',
+  title: 'Primitives/Overlay/Popover/Variants',
   component: Popover,
   tags: ['overlay'],
   parameters: {

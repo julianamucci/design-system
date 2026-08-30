@@ -16,7 +16,7 @@ const meta = {
     design: figmaDesign("alert"),
     docs: { source: { transform: alertSource } },
   },
-  title: "UI/Alert/States",
+  title: "Primitives/Feedback/Alert/States",
   tags: ["feedback"],
   component: Alert,
 } satisfies Meta<typeof Alert>;

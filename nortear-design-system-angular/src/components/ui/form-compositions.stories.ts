@@ -8,7 +8,7 @@ import { NdsTextarea } from './textarea';
 import { NdsButton } from './button';
 
 const meta: Meta = {
-  title: 'UI/Form/Compositions',
+  title: 'Primitives/Form/Form/Compositions',
   tags: ['form'],
   decorators: [
     moduleMetadata({

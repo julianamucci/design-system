@@ -189,7 +189,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: chartSource } },
   },
-  title: 'UI/Chart/Variants',
+  title: 'Primitives/Display/Chart/Variants',
 };
 
 export default meta;

@@ -29,7 +29,7 @@ import { Button } from "./button";
 import { comboboxInFormSource, comboboxSource } from "./combobox.source";
 
 const meta: Meta = {
-  title: "UI/Combobox/Compositions",
+  title: "Primitives/Form/Combobox/Compositions",
   component: Combobox,
   tags: ["form"],
   parameters: {

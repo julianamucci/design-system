@@ -1090,10 +1090,10 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { k: 'sheet',       path: '?path=/docs/ui-sheet--docs'       },
-      { k: 'dialog',      path: '?path=/docs/ui-dialog--docs'      },
-      { k: 'alertDialog', path: '?path=/docs/ui-alertdialog--docs' },
-      { k: 'sidebar',     path: '?path=/docs/ui-sidebar--docs'     },
+      { k: 'sheet',       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+      { k: 'dialog',      path: '?path=/docs/primitives-overlay-dialog--docs'      },
+      { k: 'alertDialog', path: '?path=/docs/primitives-overlay-alertdialog--docs' },
+      { k: 'sidebar',     path: '?path=/docs/primitives-layout-sidebar--docs'     },
     ].map(({ k, path }) => ({
       name: t(`related.items.${k}.name`),
       description: toPlainText(t(`related.items.${k}.description`)),

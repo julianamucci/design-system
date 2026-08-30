@@ -27,7 +27,7 @@ type TableArgs = {
 // sem ela o TS recusa o componente, porque `TableArgs` não tem propriedade
 // nenhuma em comum com os props do elemento.
 const meta: Meta<TableArgs & React.ComponentProps<typeof Table>> = {
-  title: "UI/Table",
+  title: "Primitives/Tables/Table",
   component: Table,
   tags: ["autodocs", "tables"],
   parameters: {

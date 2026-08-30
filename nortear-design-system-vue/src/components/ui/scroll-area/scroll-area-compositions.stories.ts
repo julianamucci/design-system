@@ -9,7 +9,7 @@ import {
 } from './scroll-area.source';
 
 const meta = {
-  title: 'UI/ScrollArea/Compositions',
+  title: 'Primitives/Layout/ScrollArea/Compositions',
   component: ScrollArea,
   tags: ['layout'],
   parameters: {

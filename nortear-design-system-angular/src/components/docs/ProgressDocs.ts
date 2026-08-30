@@ -640,10 +640,10 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'skeleton', path: '?path=/docs/ui-skeleton--docs' },
-      { key: 'spinner',  path: '?path=/docs/ui-progress--docs' },
-      { key: 'alert',    path: '?path=/docs/ui-alert--docs'    },
-      { key: 'sonner',   path: '?path=/docs/ui-sonner--docs'   },
+      { key: 'skeleton', path: '?path=/docs/primitives-feedback-skeleton--docs' },
+      { key: 'spinner',  path: '?path=/docs/primitives-feedback-progress--docs' },
+      { key: 'alert',    path: '?path=/docs/primitives-feedback-alert--docs'    },
+      { key: 'sonner',   path: '?path=/docs/primitives-feedback-sonner--docs'   },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

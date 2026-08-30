@@ -18,7 +18,7 @@ import { INVOICES } from './table.fixtures';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/Table/States',
+  title: 'Primitives/Tables/Table/States',
   tags: ['tables'],
   decorators: [
     moduleMetadata({

@@ -21,7 +21,7 @@ import {
 // resultado depender da carga da máquina.
 
 const meta: Meta = {
-  title: 'UI/Sonner/States',
+  title: 'Primitives/Feedback/Sonner/States',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster] })],
   parameters: {

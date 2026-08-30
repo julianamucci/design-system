@@ -896,17 +896,17 @@ interface TooltipContentProps {
             {
               name: tContent("related.items.popover.name"),
               description: toPlainText(tContent("related.items.popover.description")),
-              path: "?path=/docs/ui-popover--docs",
+              path: "?path=/docs/primitives-overlay-popover--docs",
             },
             {
               name: tContent("related.items.hoverCard.name"),
               description: toPlainText(tContent("related.items.hoverCard.description")),
-              path: "?path=/docs/ui-hovercard--docs",
+              path: "?path=/docs/primitives-overlay-hovercard--docs",
             },
             {
               name: tContent("related.items.button.name"),
               description: toPlainText(tContent("related.items.button.description")),
-              path: "?path=/docs/ui-button--docs",
+              path: "?path=/docs/primitives-form-button--docs",
             },
             {
               name: tContent("related.items.kbd.name"),

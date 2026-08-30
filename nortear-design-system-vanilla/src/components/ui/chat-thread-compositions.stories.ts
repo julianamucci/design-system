@@ -13,7 +13,7 @@ import { CHAT_COM_FERRAMENTAS } from '@shared/primitives/chat-examples';
 
 const meta: Meta = {
   tags: ['conversational'],
-  title: 'UI/ChatThread/Compositions',
+  title: 'Primitives/Conversational/ChatThread/Compositions',
   parameters: {
     layout: 'padded',
     controls: { disable: true },

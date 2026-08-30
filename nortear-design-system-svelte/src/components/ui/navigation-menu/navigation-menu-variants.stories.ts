@@ -6,7 +6,7 @@ import { open, close } from './navigation-menu.fixtures';
 import { navigationMenuSource } from './navigation-menu.source';
 
 const meta: Meta = {
-  title: 'UI/NavigationMenu/Variants',
+  title: 'Primitives/Navigation/NavigationMenu/Variants',
   component: NavigationMenuStory,
   tags: ['navigation'],
   parameters: {

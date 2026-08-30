@@ -24,7 +24,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: chartWithCardSource } },
   },
-  title: 'UI/Chart/Compositions',
+  title: 'Primitives/Display/Chart/Compositions',
   tags: ['display'],
 };
 export default meta;

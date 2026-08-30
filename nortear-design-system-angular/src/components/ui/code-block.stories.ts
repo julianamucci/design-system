@@ -78,7 +78,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CodeBlockArgs> 
 }
 
 const meta: Meta<CodeBlockArgs> = {
-  title: 'UI/CodeBlock',
+  title: 'Primitives/Display/CodeBlock',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [NdsCodeBlock] })],
   parameters: {

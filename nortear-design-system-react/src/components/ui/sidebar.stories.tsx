@@ -130,7 +130,7 @@ function SidebarStory({ side, variant, collapsible, defaultOpen, mobileQuery }: 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Sidebar",
+  title: "Primitives/Layout/Sidebar",
   component: Sidebar,
   tags: ["autodocs", "layout"],
   parameters: {

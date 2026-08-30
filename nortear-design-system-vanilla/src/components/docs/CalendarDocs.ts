@@ -623,10 +623,10 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Popover', description: toPlainText(t('related.popover')), path: '?path=/docs/ui-popover--docs' },
-            { name: 'Input', description: toPlainText(t('related.input')), path: '?path=/docs/ui-input--docs' },
-            { name: 'Button', description: toPlainText(t('related.datePicker')), path: '?path=/docs/ui-button--docs' },
-            { name: 'Form', description: toPlainText(t('related.form')), path: '?path=/docs/ui-form--docs' },
+            { name: 'Popover', description: toPlainText(t('related.popover')), path: '?path=/docs/primitives-overlay-popover--docs' },
+            { name: 'Input', description: toPlainText(t('related.input')), path: '?path=/docs/primitives-form-input--docs' },
+            { name: 'Button', description: toPlainText(t('related.datePicker')), path: '?path=/docs/primitives-form-button--docs' },
+            { name: 'Form', description: toPlainText(t('related.form')), path: '?path=/docs/primitives-form-form--docs' },
           ],
         });
 

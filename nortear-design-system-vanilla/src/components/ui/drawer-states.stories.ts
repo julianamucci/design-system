@@ -9,7 +9,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Drawer/States',
+  title: 'Primitives/Disclosure/Drawer/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

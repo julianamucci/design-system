@@ -12,7 +12,7 @@ import {
 } from "./calendar.source";
 
 const meta = {
-  title: "UI/Calendar/States",
+  title: "Primitives/Form/Calendar/States",
   tags: ["form"],
   component: Calendar,
   parameters: {

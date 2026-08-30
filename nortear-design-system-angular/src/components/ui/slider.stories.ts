@@ -53,7 +53,7 @@ export class Exemplo {
 }
 
 const meta: Meta<SliderArgs> = {
-  title: 'UI/Slider',
+  title: 'Primitives/Form/Slider',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsSlider] })],
   parameters: {

@@ -9,7 +9,7 @@ import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta: Meta = {
-  title: 'UI/Popover',
+  title: 'Primitives/Overlay/Popover',
   component: PopoverStory,
   tags: ['autodocs', 'overlay'],
   parameters: {

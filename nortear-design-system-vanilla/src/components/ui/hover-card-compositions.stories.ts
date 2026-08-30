@@ -25,7 +25,7 @@ import {
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/HoverCard/Compositions',
+  title: 'Primitives/Overlay/HoverCard/Compositions',
   parameters: {
     layout: 'padded',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.

@@ -27,8 +27,8 @@ const GROUPS = [
 ] as const;
 
 const meta: Meta = {
-  title: 'UI/Select/Variants',
-  tags: ['overlay'],
+  title: 'Primitives/Form/Select/Variants',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_SELECT] })],
   parameters: {
     layout: 'centered',

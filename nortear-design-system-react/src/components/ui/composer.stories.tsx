@@ -22,7 +22,7 @@ function PlaygroundExample(args: Partial<ComposerProps>) {
 }
 
 const meta = {
-  title: "UI/Composer",
+  title: "Primitives/Conversational/Composer",
   component: Composer,
   tags: ["autodocs", "conversational"],
   parameters: {

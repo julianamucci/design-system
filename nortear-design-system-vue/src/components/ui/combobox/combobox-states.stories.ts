@@ -25,7 +25,7 @@ import {
 } from './combobox.source';
 
 const meta = {
-  title: 'UI/Combobox/States',
+  title: 'Primitives/Form/Combobox/States',
   component: Combobox,
   tags: ['form'],
   parameters: {

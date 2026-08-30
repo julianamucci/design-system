@@ -1010,17 +1010,17 @@ const total = 8;
           {
             name: tContent("related.items.breadcrumb.name"),
             description: toPlainText(tContent("related.items.breadcrumb.description")),
-            path: "?path=/docs/ui-breadcrumb--docs",
+            path: "?path=/docs/primitives-navigation-breadcrumb--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
             description: toPlainText(tContent("related.items.tabs.description")),
-            path: "?path=/docs/ui-tabs--docs",
+            path: "?path=/docs/primitives-navigation-tabs--docs",
           },
           {
             name: tContent("related.items.button.name"),
             description: toPlainText(tContent("related.items.button.description")),
-            path: "?path=/docs/ui-button--docs",
+            path: "?path=/docs/primitives-form-button--docs",
           },
         ]}
       />

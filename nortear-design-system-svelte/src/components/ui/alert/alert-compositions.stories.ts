@@ -24,7 +24,7 @@ const meta: Meta = {
       source: { transform: alertSource },
     },
   },
-  title: 'UI/Alert/Compositions',
+  title: 'Primitives/Feedback/Alert/Compositions',
   component: Alert,
   tags: ['feedback'],
 };

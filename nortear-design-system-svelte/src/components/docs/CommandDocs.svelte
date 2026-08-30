@@ -795,9 +795,9 @@ interface CommandLoadingProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Select',        description: $tStore('related.select'),       path: '?path=/docs/ui-select--docs'       },
-      { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
-      { name: 'Dialog',        description: $tStore('related.dialog'),       path: '?path=/docs/ui-dialog--docs'       },
+      { name: 'Select',        description: $tStore('related.select'),       path: '?path=/docs/primitives-form-select--docs'       },
+      { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { name: 'Dialog',        description: $tStore('related.dialog'),       path: '?path=/docs/primitives-overlay-dialog--docs'       },
     ]}
   />
 

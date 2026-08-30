@@ -6,7 +6,7 @@ import { navigationMenuSource, navigationMenuSourceWith } from './navigation-men
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/NavigationMenu/Variants',
+  title: 'Primitives/Navigation/NavigationMenu/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

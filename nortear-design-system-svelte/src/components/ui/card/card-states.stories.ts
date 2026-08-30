@@ -14,7 +14,7 @@ const onNavigate = fn();
 const onSave = fn();
 
 const meta: Meta = {
-  title: 'UI/Card/States',
+  title: 'Primitives/Layout/Card/States',
   component: Card,
   tags: ['layout'],
   parameters: {

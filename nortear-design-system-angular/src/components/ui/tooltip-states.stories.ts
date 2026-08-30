@@ -35,7 +35,7 @@ function wait(ms: number): Promise<void> {
 }
 
 const meta: Meta = {
-  title: 'UI/Tooltip/States',
+  title: 'Primitives/Overlay/Tooltip/States',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_TOOLTIP, NdsButton] })],
   parameters: {

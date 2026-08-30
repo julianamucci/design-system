@@ -12,7 +12,7 @@ import {
 // stories provam a regra pelo lado que importa: onde o gatilho NÃO vale.
 
 const meta: Meta = {
-  title: "UI/ComposerTriggerPopover/Variants",
+  title: "Primitives/Conversational/ComposerTriggerPopover/Variants",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

@@ -531,11 +531,11 @@ export class NdsSkeletonDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'progress',    path: '?path=/docs/ui-progress--docs'    },
+      { key: 'progress',    path: '?path=/docs/primitives-feedback-progress--docs'    },
       // O id do Storybook sai do title 'UI/AspectRatio', sem hífen: com hífen
       // o link cai em 404 e ninguém percebe, porque nada testa navegação.
-      { key: 'aspectRatio', path: '?path=/docs/ui-aspectratio--docs' },
-      { key: 'card',        path: '?path=/docs/ui-card--docs'        },
+      { key: 'aspectRatio', path: '?path=/docs/primitives-layout-aspectratio--docs' },
+      { key: 'card',        path: '?path=/docs/primitives-layout-card--docs'        },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

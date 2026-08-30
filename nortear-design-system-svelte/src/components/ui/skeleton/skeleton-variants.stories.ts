@@ -11,7 +11,7 @@ import {
 } from './skeleton.source';
 
 const meta: Meta = {
-  title: 'UI/Skeleton/Variants',
+  title: 'Primitives/Feedback/Skeleton/Variants',
   component: SkeletonVarianteStory,
   tags: ['feedback'],
   parameters: {

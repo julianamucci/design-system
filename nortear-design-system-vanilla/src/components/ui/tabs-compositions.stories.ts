@@ -13,7 +13,7 @@ import { User, Settings, Shield } from 'lucide';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Tabs/Compositions',
+  title: 'Primitives/Navigation/Tabs/Compositions',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

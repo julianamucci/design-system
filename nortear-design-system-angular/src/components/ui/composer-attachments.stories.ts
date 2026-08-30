@@ -23,7 +23,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const onRemoveAttachment = fn();
 
 const meta: Meta = {
-  title: 'UI/ComposerAttachments',
+  title: 'Primitives/Conversational/ComposerAttachments',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

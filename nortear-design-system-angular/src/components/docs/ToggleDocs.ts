@@ -636,10 +636,10 @@ export class NdsToggleDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'toggleGroup', path: '?path=/docs/ui-togglegroup--docs' },
-      { key: 'switch',      path: '?path=/docs/ui-switch--docs'      },
-      { key: 'checkbox',    path: '?path=/docs/ui-checkbox--docs'    },
-      { key: 'button',      path: '?path=/docs/ui-button--docs'      },
+      { key: 'toggleGroup', path: '?path=/docs/primitives-form-togglegroup--docs' },
+      { key: 'switch',      path: '?path=/docs/primitives-form-switch--docs'      },
+      { key: 'checkbox',    path: '?path=/docs/primitives-form-checkbox--docs'    },
+      { key: 'button',      path: '?path=/docs/primitives-form-button--docs'      },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

@@ -17,7 +17,7 @@ import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 // Data fixa: com `new Date()` a foto do Chromatic mudaria toda virada de mês.
 
 const meta: Meta = {
-  title: 'UI/Calendar/Compositions',
+  title: 'Primitives/Form/Calendar/Compositions',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsCalendar, ...NDS_POPOVER, NdsButton] })],
   parameters: {

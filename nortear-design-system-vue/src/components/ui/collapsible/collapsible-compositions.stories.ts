@@ -14,7 +14,7 @@ const PANEL_CLASSES =
 const CHEVRON_CLASSES = 'nds-icon nds-shrink-0 nds-transition-transform nds-chevron';
 
 const meta = {
-  title: 'UI/Collapsible/Compositions',
+  title: 'Primitives/Disclosure/Collapsible/Compositions',
   component: Collapsible,
   tags: ['disclosure'],
   parameters: {

@@ -29,7 +29,7 @@ import { DialogDocs } from "@/components/docs/DialogDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "UI/Dialog",
+  title: "Primitives/Overlay/Dialog",
   component: Dialog,
   tags: ["autodocs", "overlay"],
   parameters: {

@@ -702,11 +702,11 @@ export interface ButtonOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Toggle',      description: toPlainText(t('related.toggle')),      path: '?path=/docs/ui-toggle--docs' },
-            { name: 'Switch',      description: toPlainText(t('related.switch')),                 path: '?path=/docs/ui-switch--docs' },
+            { name: 'Toggle',      description: toPlainText(t('related.toggle')),      path: '?path=/docs/primitives-form-toggle--docs' },
+            { name: 'Switch',      description: toPlainText(t('related.switch')),                 path: '?path=/docs/primitives-form-switch--docs' },
             { name: 'Link',        description: toPlainText(t('related.link')),                   path: '?path=/docs/foundations-typography--docs' },
-            { name: 'Dialog',      description: toPlainText(t('related.dialog')),                 path: '?path=/docs/ui-dialog--docs' },
-            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')),            path: '?path=/docs/ui-alertdialog--docs' },
+            { name: 'Dialog',      description: toPlainText(t('related.dialog')),                 path: '?path=/docs/primitives-overlay-dialog--docs' },
+            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')),            path: '?path=/docs/primitives-overlay-alertdialog--docs' },
           ],
         });
 

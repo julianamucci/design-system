@@ -92,8 +92,8 @@ export class Exemplo {
 }
 
 const meta: Meta<SelectArgs> = {
-  title: 'UI/Select',
-  tags: ['autodocs', 'overlay'],
+  title: 'Primitives/Form/Select',
+  tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [...NDS_SELECT] })],
   parameters: {
     layout: 'centered',

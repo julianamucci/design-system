@@ -27,7 +27,7 @@ import {
 const undoSpy = fn();
 
 const meta = {
-  title: "UI/Sonner/Compositions",
+  title: "Primitives/Feedback/Sonner/Compositions",
   tags: ["feedback"],
   parameters: {
     layout: "padded",

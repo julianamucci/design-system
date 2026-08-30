@@ -12,7 +12,7 @@ import { inputOtpSource, inputOtpSourceWith } from './input-otp.source';
  */
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/InputOTP/Variants',
+  title: 'Primitives/Form/InputOTP/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

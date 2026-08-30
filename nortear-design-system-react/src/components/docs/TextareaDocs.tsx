@@ -830,22 +830,22 @@ function Textarea({
           {
             name: tContent("related.items.input.name"),
             description: toPlainText(tContent("related.items.input.description")),
-            path: "?path=/docs/ui-input--docs",
+            path: "?path=/docs/primitives-form-input--docs",
           },
           {
             name: tContent("related.items.label.name"),
             description: toPlainText(tContent("related.items.label.description")),
-            path: "?path=/docs/ui-label--docs",
+            path: "?path=/docs/primitives-form-label--docs",
           },
           {
             name: tContent("related.items.form.name"),
             description: toPlainText(tContent("related.items.form.description")),
-            path: "?path=/docs/ui-form--docs",
+            path: "?path=/docs/primitives-form-form--docs",
           },
           {
             name: tContent("related.items.inputOTP.name"),
             description: toPlainText(tContent("related.items.inputOTP.description")),
-            path: "?path=/docs/ui-inputotp--docs",
+            path: "?path=/docs/primitives-form-inputotp--docs",
           },
         ]}
       />

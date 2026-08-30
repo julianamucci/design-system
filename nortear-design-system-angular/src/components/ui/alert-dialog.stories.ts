@@ -62,7 +62,7 @@ export class Exemplo {
 }
 
 const meta: Meta<AlertDialogArgs> = {
-  title: 'UI/AlertDialog',
+  title: 'Primitives/Overlay/AlertDialog',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {

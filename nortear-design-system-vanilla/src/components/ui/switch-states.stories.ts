@@ -5,7 +5,7 @@ import { switchSource, switchSourceWith, switchSourceInvalido } from './switch.s
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Switch/States',
+  title: 'Primitives/Form/Switch/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

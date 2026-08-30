@@ -746,10 +746,10 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'checkbox',   path: '?path=/docs/ui-checkbox--docs'   },
-      { key: 'toggle',     path: '?path=/docs/ui-toggle--docs'     },
-      { key: 'radioGroup', path: '?path=/docs/ui-radiogroup--docs' },
-      { key: 'form',       path: '?path=/docs/ui-form--docs'       },
+      { key: 'checkbox',   path: '?path=/docs/primitives-form-checkbox--docs'   },
+      { key: 'toggle',     path: '?path=/docs/primitives-form-toggle--docs'     },
+      { key: 'radioGroup', path: '?path=/docs/primitives-form-radiogroup--docs' },
+      { key: 'form',       path: '?path=/docs/primitives-form-form--docs'       },
     ].map(({ key, path }) => ({
       name: toPlainText(t(`related.items.${key}.name`)),
       description: toPlainText(t(`related.items.${key}.description`)),

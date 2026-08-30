@@ -12,7 +12,7 @@ import {
 } from "./input.source";
 
 const meta = {
-  title: "UI/Input/Types",
+  title: "Primitives/Form/Input/Types",
   tags: ["form"],
   component: Input,
   parameters: {

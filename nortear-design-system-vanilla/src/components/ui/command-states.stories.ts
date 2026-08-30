@@ -7,7 +7,7 @@ import { commandSource, commandSourceWith } from './command.source';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Command/States',
+  title: 'Primitives/Overlay/Command/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

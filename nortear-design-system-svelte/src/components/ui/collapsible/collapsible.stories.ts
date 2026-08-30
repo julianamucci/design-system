@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { collapsibleSource } from './collapsible.source';
 
 const meta: Meta = {
-  title: 'UI/Collapsible',
+  title: 'Primitives/Disclosure/Collapsible',
   component: Collapsible,
   tags: ['autodocs', 'disclosure'],
   parameters: {

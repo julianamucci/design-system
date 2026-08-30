@@ -12,7 +12,7 @@ import { MARKDOWN_CODE, MARKDOWN_TABLE } from '@shared/primitives/markdown-examp
 
 const meta: Meta = {
   tags: ['conversational'],
-  title: 'UI/Markdown/Compositions',
+  title: 'Primitives/Conversational/Markdown/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

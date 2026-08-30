@@ -417,10 +417,10 @@ interface Attachment {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.composer.name'),   description: toPlainText($tStore('related.items.composer.description')),   path: '?path=/docs/ui-composer--docs' },
-      { name: $tStore('related.items.progress.name'),   description: toPlainText($tStore('related.items.progress.description')),   path: '?path=/docs/ui-progress--docs' },
-      { name: $tStore('related.items.badge.name'),      description: toPlainText($tStore('related.items.badge.description')),      path: '?path=/docs/ui-badge--docs' },
-      { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/ui-chatthread--docs' },
+      { name: $tStore('related.items.composer.name'),   description: toPlainText($tStore('related.items.composer.description')),   path: '?path=/docs/primitives-conversational-composer--docs' },
+      { name: $tStore('related.items.progress.name'),   description: toPlainText($tStore('related.items.progress.description')),   path: '?path=/docs/primitives-feedback-progress--docs' },
+      { name: $tStore('related.items.badge.name'),      description: toPlainText($tStore('related.items.badge.description')),      path: '?path=/docs/primitives-feedback-badge--docs' },
+      { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/primitives-conversational-chatthread--docs' },
     ]}
   />
 

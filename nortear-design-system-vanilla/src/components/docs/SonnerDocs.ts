@@ -612,10 +612,10 @@ export interface ToastOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Alert',       description: toPlainText(t('related.alert')),       path: '?path=/docs/ui-alert--docs'       },
-            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
-            { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/ui-badge--docs'       },
-            { name: 'Progress',    description: toPlainText(t('related.progress')),    path: '?path=/docs/ui-progress--docs'    },
+            { name: 'Alert',       description: toPlainText(t('related.alert')),       path: '?path=/docs/primitives-feedback-alert--docs'       },
+            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
+            { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/primitives-feedback-badge--docs'       },
+            { name: 'Progress',    description: toPlainText(t('related.progress')),    path: '?path=/docs/primitives-feedback-progress--docs'    },
           ],
         });
 

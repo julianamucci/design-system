@@ -9,7 +9,7 @@ import { sheetSource } from './sheet.source';
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta: Meta = {
-  title: 'UI/Sheet/States',
+  title: 'Primitives/Disclosure/Sheet/States',
   component: SheetStory,
   tags: ['disclosure'],
   parameters: {

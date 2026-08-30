@@ -36,7 +36,7 @@ import {
 } from './chart.fixtures';
 
 const meta: Meta = {
-  title: 'UI/Chart/Types',
+  title: 'Primitives/Display/Chart/Types',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [NdsChart] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

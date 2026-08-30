@@ -596,10 +596,10 @@ export class NdsComposerTriggerPopoverDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'composer', path: '?path=/docs/ui-composer--docs' },
-      { key: 'combobox', path: '?path=/docs/ui-combobox--docs' },
-      { key: 'command',  path: '?path=/docs/ui-command--docs'  },
-      { key: 'popover',  path: '?path=/docs/ui-popover--docs'  },
+      { key: 'composer', path: '?path=/docs/primitives-conversational-composer--docs' },
+      { key: 'combobox', path: '?path=/docs/primitives-form-combobox--docs' },
+      { key: 'command',  path: '?path=/docs/primitives-overlay-command--docs'  },
+      { key: 'popover',  path: '?path=/docs/primitives-overlay-popover--docs'  },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

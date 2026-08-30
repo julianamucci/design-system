@@ -27,7 +27,7 @@ import {
 // prop que não estiver aqui não aparece na tabela. As que o `render` não
 // encaminha entram como documentação, com `control: false`.
 const meta: Meta<typeof Editor> = {
-  title: 'UI/Editor',
+  title: 'Primitives/Form/Editor',
   component: Editor,
   tags: ['autodocs', 'form'],
   parameters: {

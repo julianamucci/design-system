@@ -46,7 +46,7 @@ const RATIOS = [
 ];
 
 const meta: Meta<AspectRatioArgs> = {
-  title: 'UI/AspectRatio',
+  title: 'Primitives/Layout/AspectRatio',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [NdsAspectRatio] })],
   parameters: {

@@ -30,7 +30,7 @@ import {
 } from './dialog.source';
 
 const meta = {
-  title: 'UI/Dialog/Compositions',
+  title: 'Primitives/Overlay/Dialog/Compositions',
   component: Dialog,
   tags: ['overlay'],
   parameters: {

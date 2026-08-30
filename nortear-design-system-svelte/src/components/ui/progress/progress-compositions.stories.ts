@@ -14,7 +14,7 @@ import {
 import { progressSource } from './progress.source';
 
 const meta: Meta = {
-  title: 'UI/Progress/Compositions',
+  title: 'Primitives/Feedback/Progress/Compositions',
   component: ProgressStory,
   tags: ['feedback'],
   parameters: {

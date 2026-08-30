@@ -321,10 +321,10 @@ const keyboardItems = computed(() =>
 );
 
 const relatedItems = computed(() => [
-  { name: 'Textarea',    description: toPlainText(tContent('related.textarea')),    path: '?path=/docs/ui-textarea--docs'    },
-  { name: 'CodeBlock',   description: toPlainText(tContent('related.codeBlock')),   path: '?path=/docs/ui-codeblock--docs'   },
-  { name: 'ToggleGroup', description: toPlainText(tContent('related.toggleGroup')), path: '?path=/docs/ui-togglegroup--docs' },
-  { name: 'Button',      description: toPlainText(tContent('related.button')),      path: '?path=/docs/ui-button--docs'      },
+  { name: 'Textarea',    description: toPlainText(tContent('related.textarea')),    path: '?path=/docs/primitives-form-textarea--docs'    },
+  { name: 'CodeBlock',   description: toPlainText(tContent('related.codeBlock')),   path: '?path=/docs/primitives-display-codeblock--docs'   },
+  { name: 'ToggleGroup', description: toPlainText(tContent('related.toggleGroup')), path: '?path=/docs/primitives-form-togglegroup--docs' },
+  { name: 'Button',      description: toPlainText(tContent('related.button')),      path: '?path=/docs/primitives-form-button--docs'      },
 ]);
 
 const noteItems = computed(() =>

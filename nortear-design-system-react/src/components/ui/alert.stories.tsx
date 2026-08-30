@@ -8,7 +8,7 @@ import { AlertDocs } from "@/components/docs/AlertDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "UI/Alert",
+  title: "Primitives/Feedback/Alert",
   component: Alert,
   tags: ["autodocs", "feedback"],
   parameters: {

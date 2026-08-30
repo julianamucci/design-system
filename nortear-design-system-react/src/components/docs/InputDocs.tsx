@@ -881,27 +881,27 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           {
             name: "Textarea",
             description: toPlainText(tContent("related.textarea")),
-            path: "?path=/docs/ui-textarea--docs",
+            path: "?path=/docs/primitives-form-textarea--docs",
           },
           {
             name: "InputOTP",
             description: toPlainText(tContent("related.inputOTP")),
-            path: "?path=/docs/ui-inputotp--docs",
+            path: "?path=/docs/primitives-form-inputotp--docs",
           },
           {
             name: "Select",
             description: toPlainText(tContent("related.select")),
-            path: "?path=/docs/ui-select--docs",
+            path: "?path=/docs/primitives-form-select--docs",
           },
           {
             name: "Form",
             description: toPlainText(tContent("related.form")),
-            path: "?path=/docs/ui-form--docs",
+            path: "?path=/docs/primitives-form-form--docs",
           },
           {
             name: "Label",
             description: toPlainText(tContent("related.label")),
-            path: "?path=/docs/ui-label--docs",
+            path: "?path=/docs/primitives-form-label--docs",
           },
         ]}
       />

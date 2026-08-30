@@ -12,7 +12,7 @@ import {
 } from './skeleton.source';
 
 const meta: Meta = {
-  title: 'UI/Skeleton/Compositions',
+  title: 'Primitives/Feedback/Skeleton/Compositions',
   component: SkeletonComposicaoStory,
   tags: ['feedback'],
   parameters: {

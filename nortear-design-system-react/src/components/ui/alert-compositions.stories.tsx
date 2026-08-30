@@ -12,7 +12,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Alert/Compositions",
+  title: "Primitives/Feedback/Alert/Compositions",
   tags: ["feedback"],
   component: Alert,
   parameters: {

@@ -15,7 +15,7 @@ import {
 } from './toggle-group.source';
 
 const meta = {
-  title: 'UI/ToggleGroup/Compositions',
+  title: 'Primitives/Form/ToggleGroup/Compositions',
   component: ToggleGroup,
   tags: ['form'],
   parameters: {

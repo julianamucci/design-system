@@ -18,7 +18,7 @@ type InputOTPArgs = {
 };
 
 const meta: Meta<InputOTPArgs> = {
-  title: 'UI/InputOTP',
+  title: 'Primitives/Form/InputOTP',
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'padded',

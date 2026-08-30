@@ -20,7 +20,7 @@ type SheetArgs = {
 };
 
 const meta: Meta<SheetArgs> = {
-  title: 'UI/Sheet',
+  title: 'Primitives/Disclosure/Sheet',
   tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'centered',

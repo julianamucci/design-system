@@ -586,12 +586,12 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <DocsRelated
         title={$tStore('related.title')}
         items={[
-          { name: 'Toggle',      description: toPlainText($tStore('related.toggle')),     path: '?path=/docs/ui-toggle--docs' },
-          { name: 'Switch',      description: $tStore('related.switch'),                path: '?path=/docs/ui-switch--docs' },
+          { name: 'Toggle',      description: toPlainText($tStore('related.toggle')),     path: '?path=/docs/primitives-form-toggle--docs' },
+          { name: 'Switch',      description: $tStore('related.switch'),                path: '?path=/docs/primitives-form-switch--docs' },
           { name: 'Link',        description: $tStore('related.link'),                  path: '?path=/docs/ui-link--docs' },
-          { name: 'Form',        description: toPlainText($tStore('related.form')),                  path: '?path=/docs/ui-form--docs' },
-          { name: 'Dialog',      description: $tStore('related.dialog'),                path: '?path=/docs/ui-dialog--docs' },
-          { name: 'AlertDialog', description: $tStore('related.alertDialog'),           path: '?path=/docs/ui-alertdialog--docs' },
+          { name: 'Form',        description: toPlainText($tStore('related.form')),                  path: '?path=/docs/primitives-form-form--docs' },
+          { name: 'Dialog',      description: $tStore('related.dialog'),                path: '?path=/docs/primitives-overlay-dialog--docs' },
+          { name: 'AlertDialog', description: $tStore('related.alertDialog'),           path: '?path=/docs/primitives-overlay-alertdialog--docs' },
         ]}
       />
 

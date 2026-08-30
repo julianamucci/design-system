@@ -18,7 +18,7 @@ const onSubmit = fn();
 type Args = { mention: boolean; command: boolean };
 
 const meta: Meta<Args> = {
-  title: 'UI/ComposerTriggerPopover',
+  title: 'Primitives/Conversational/ComposerTriggerPopover',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

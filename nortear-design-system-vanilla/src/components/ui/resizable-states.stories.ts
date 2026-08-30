@@ -7,7 +7,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Resizable/States',
+  title: 'Primitives/Layout/Resizable/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

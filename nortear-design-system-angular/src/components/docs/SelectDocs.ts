@@ -1077,10 +1077,10 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'combobox',     path: '?path=/docs/ui-combobox--docs'     },
-      { key: 'radioGroup',   path: '?path=/docs/ui-radiogroup--docs'   },
-      { key: 'dropdownMenu', path: '?path=/docs/ui-dropdownmenu--docs' },
-      { key: 'form',         path: '?path=/docs/ui-input--docs'        },
+      { key: 'combobox',     path: '?path=/docs/primitives-form-combobox--docs'     },
+      { key: 'radioGroup',   path: '?path=/docs/primitives-form-radiogroup--docs'   },
+      { key: 'dropdownMenu', path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { key: 'form',         path: '?path=/docs/primitives-form-input--docs'        },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

@@ -17,7 +17,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'UI/Skeleton',
+  title: 'Primitives/Feedback/Skeleton',
   component: Skeleton,
   tags: ['autodocs', 'feedback'],
   parameters: {

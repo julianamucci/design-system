@@ -21,7 +21,7 @@ const EXIBICOES = [
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Menubar/States',
+  title: 'Primitives/Navigation/Menubar/States',
   parameters: {
     layout: 'padded',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.

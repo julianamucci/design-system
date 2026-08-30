@@ -416,10 +416,10 @@ export interface Attachment {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.composer.name'),   description: toPlainText(t('related.items.composer.description')),   path: '?path=/docs/ui-composer--docs' },
-            { name: t('related.items.progress.name'),   description: toPlainText(t('related.items.progress.description')),   path: '?path=/docs/ui-progress--docs' },
-            { name: t('related.items.badge.name'),      description: toPlainText(t('related.items.badge.description')),      path: '?path=/docs/ui-badge--docs' },
-            { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/ui-chatthread--docs' },
+            { name: t('related.items.composer.name'),   description: toPlainText(t('related.items.composer.description')),   path: '?path=/docs/primitives-conversational-composer--docs' },
+            { name: t('related.items.progress.name'),   description: toPlainText(t('related.items.progress.description')),   path: '?path=/docs/primitives-feedback-progress--docs' },
+            { name: t('related.items.badge.name'),      description: toPlainText(t('related.items.badge.description')),      path: '?path=/docs/primitives-feedback-badge--docs' },
+            { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/primitives-conversational-chatthread--docs' },
           ],
         });
 

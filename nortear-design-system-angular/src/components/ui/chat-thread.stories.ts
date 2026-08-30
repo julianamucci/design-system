@@ -26,7 +26,7 @@ type ChatThreadArgs = {
 const HEIGHT = 'lg' as const;
 
 const meta: Meta<ChatThreadArgs> = {
-  title: 'UI/ChatThread',
+  title: 'Primitives/Conversational/ChatThread',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsChatThread] })],
   parameters: {

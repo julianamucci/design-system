@@ -564,10 +564,10 @@ export class NdsComposerDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'chatThread', path: '?path=/docs/ui-chatthread--docs' },
-      { key: 'textarea',   path: '?path=/docs/ui-textarea--docs'   },
-      { key: 'button',     path: '?path=/docs/ui-button--docs'     },
-      { key: 'editor',     path: '?path=/docs/ui-editor--docs'     },
+      { key: 'chatThread', path: '?path=/docs/primitives-conversational-chatthread--docs' },
+      { key: 'textarea',   path: '?path=/docs/primitives-form-textarea--docs'   },
+      { key: 'button',     path: '?path=/docs/primitives-form-button--docs'     },
+      { key: 'editor',     path: '?path=/docs/primitives-form-editor--docs'     },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

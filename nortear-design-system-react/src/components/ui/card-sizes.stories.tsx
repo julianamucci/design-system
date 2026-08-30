@@ -10,7 +10,7 @@ import {
 import { cardCompactoSource, cardNoFooterSource, cardSource } from "./card.source";
 
 const meta = {
-  title: "UI/Card/Sizes",
+  title: "Primitives/Layout/Card/Sizes",
   tags: ["layout"],
   component: Card,
   parameters: {

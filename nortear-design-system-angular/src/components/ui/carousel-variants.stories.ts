@@ -14,7 +14,7 @@ import {
 } from '@shared/testing/carousel-probe';
 
 const meta: Meta = {
-  title: 'UI/Carousel/Variants',
+  title: 'Primitives/Display/Carousel/Variants',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio] })],
   parameters: { layout: 'centered', controls: { disable: true } },

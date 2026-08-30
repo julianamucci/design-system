@@ -85,7 +85,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<CollapsibleArgs> = {
-  title: 'UI/Collapsible',
+  title: 'Primitives/Disclosure/Collapsible',
   tags: ['autodocs', 'disclosure'],
   decorators: [moduleMetadata({ imports: [...NDS_COLLAPSIBLE, NdsButton] })],
   parameters: {

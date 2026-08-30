@@ -242,9 +242,9 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Avatar',     description: toPlainText(tContent('related.avatar')),   path: '?path=/docs/ui-avatar--docs'     },
-  { name: 'Card',       description: toPlainText(tContent('related.card')),     path: '?path=/docs/ui-card--docs'       },
-  { name: 'Skeleton',   description: toPlainText(tContent('related.skeleton')), path: '?path=/docs/ui-skeleton--docs'   },
+  { name: 'Avatar',     description: toPlainText(tContent('related.avatar')),   path: '?path=/docs/primitives-display-avatar--docs'     },
+  { name: 'Card',       description: toPlainText(tContent('related.card')),     path: '?path=/docs/primitives-layout-card--docs'       },
+  { name: 'Skeleton',   description: toPlainText(tContent('related.skeleton')), path: '?path=/docs/primitives-feedback-skeleton--docs'   },
 ]);
 
 const noteItems = computed(() => [

@@ -160,7 +160,7 @@ function SidebarLoadingPreview() {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Sidebar/States",
+  title: "Primitives/Layout/Sidebar/States",
   tags: ["layout"],
   component: Sidebar,
   parameters: {

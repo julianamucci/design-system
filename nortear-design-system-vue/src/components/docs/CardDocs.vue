@@ -322,12 +322,12 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Separator', description: toPlainText(tContent('related.separator')), path: '?path=/docs/ui-separator--docs' },
-  { name: 'Accordion', description: toPlainText(tContent('related.accordion')), path: '?path=/docs/ui-accordion--docs' },
-  { name: 'Alert',     description: toPlainText(tContent('related.alert')),     path: '?path=/docs/ui-alert--docs'     },
-  { name: 'Button',    description: toPlainText(tContent('related.button')), path: '?path=/docs/ui-button--docs'    },
-  { name: 'Badge',     description: toPlainText(tContent('related.badge')),  path: '?path=/docs/ui-badge--docs'     },
-  { name: 'Avatar',    description: toPlainText(tContent('related.avatar')), path: '?path=/docs/ui-avatar--docs'    },
+  { name: 'Separator', description: toPlainText(tContent('related.separator')), path: '?path=/docs/primitives-layout-separator--docs' },
+  { name: 'Accordion', description: toPlainText(tContent('related.accordion')), path: '?path=/docs/primitives-disclosure-accordion--docs' },
+  { name: 'Alert',     description: toPlainText(tContent('related.alert')),     path: '?path=/docs/primitives-feedback-alert--docs'     },
+  { name: 'Button',    description: toPlainText(tContent('related.button')), path: '?path=/docs/primitives-form-button--docs'    },
+  { name: 'Badge',     description: toPlainText(tContent('related.badge')),  path: '?path=/docs/primitives-feedback-badge--docs'     },
+  { name: 'Avatar',    description: toPlainText(tContent('related.avatar')), path: '?path=/docs/primitives-display-avatar--docs'    },
 ]);
 
 const noteItems = computed(() => [

@@ -431,10 +431,10 @@
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/ui-chatthread--docs' },
-      { name: $tStore('related.items.textarea.name'),   description: toPlainText($tStore('related.items.textarea.description')),   path: '?path=/docs/ui-textarea--docs' },
-      { name: $tStore('related.items.button.name'),     description: toPlainText($tStore('related.items.button.description')),     path: '?path=/docs/ui-button--docs' },
-      { name: $tStore('related.items.editor.name'),     description: toPlainText($tStore('related.items.editor.description')),     path: '?path=/docs/ui-editor--docs' },
+      { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/primitives-conversational-chatthread--docs' },
+      { name: $tStore('related.items.textarea.name'),   description: toPlainText($tStore('related.items.textarea.description')),   path: '?path=/docs/primitives-form-textarea--docs' },
+      { name: $tStore('related.items.button.name'),     description: toPlainText($tStore('related.items.button.description')),     path: '?path=/docs/primitives-form-button--docs' },
+      { name: $tStore('related.items.editor.name'),     description: toPlainText($tStore('related.items.editor.description')),     path: '?path=/docs/primitives-form-editor--docs' },
     ]}
   />
 

@@ -18,7 +18,7 @@ type CarouselArgs = {
 };
 
 const meta: Meta<CarouselArgs> = {
-  title: 'UI/Carousel',
+  title: 'Primitives/Display/Carousel',
   tags: ['autodocs', 'display'],
   parameters: {
     layout: 'centered',

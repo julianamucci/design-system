@@ -16,7 +16,7 @@ import { triggerPopoverSourceWith } from './composer-trigger-popover.source';
 // stories provam a regra pelo lado que importa: onde o gatilho NÃO vale.
 
 const meta: Meta = {
-  title: 'UI/ComposerTriggerPopover/Variants',
+  title: 'Primitives/Conversational/ComposerTriggerPopover/Variants',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

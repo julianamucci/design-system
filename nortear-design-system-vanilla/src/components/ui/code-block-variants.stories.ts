@@ -17,7 +17,7 @@ import {
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/CodeBlock/Variants',
+  title: 'Primitives/Display/CodeBlock/Variants',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

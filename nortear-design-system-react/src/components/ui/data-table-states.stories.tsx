@@ -5,7 +5,7 @@ import { dataTableNoResultsSource, dataTableSource } from "./data-table.source"
 import { baseColumns, type Invoice } from "./data-table.fixtures"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
-  title: "UI/DataTable/States",
+  title: "Primitives/Tables/DataTable/States",
   tags: ["tables"],
   component: DataTable<Invoice>,
   parameters: {

@@ -669,10 +669,10 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'toggle',     path: '?path=/docs/ui-toggle--docs'     },
-      { key: 'tabs',       path: '?path=/docs/ui-tabs--docs'       },
-      { key: 'radioGroup', path: '?path=/docs/ui-radiogroup--docs' },
-      { key: 'checkbox',   path: '?path=/docs/ui-checkbox--docs'   },
+      { key: 'toggle',     path: '?path=/docs/primitives-form-toggle--docs'     },
+      { key: 'tabs',       path: '?path=/docs/primitives-navigation-tabs--docs'       },
+      { key: 'radioGroup', path: '?path=/docs/primitives-form-radiogroup--docs' },
+      { key: 'checkbox',   path: '?path=/docs/primitives-form-checkbox--docs'   },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

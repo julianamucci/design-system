@@ -11,7 +11,7 @@ import { NdsButton } from './button';
 // e o que o prova é o `data-ending-style` que a folha compartilhada anima.
 
 const meta: Meta = {
-  title: 'UI/Popover/States',
+  title: 'Primitives/Overlay/Popover/States',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
   parameters: {

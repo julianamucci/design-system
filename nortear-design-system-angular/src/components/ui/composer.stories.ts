@@ -22,7 +22,7 @@ type ComposerArgs = {
 const onSubmit = fn();
 
 const meta: Meta<ComposerArgs> = {
-  title: 'UI/Composer',
+  title: 'Primitives/Conversational/Composer',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   parameters: {

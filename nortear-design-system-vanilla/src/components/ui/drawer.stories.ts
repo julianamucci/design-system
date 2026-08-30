@@ -23,7 +23,7 @@ type DrawerArgs = {
 };
 
 const meta: Meta<DrawerArgs> = {
-  title: 'UI/Drawer',
+  title: 'Primitives/Disclosure/Drawer',
   tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'padded',

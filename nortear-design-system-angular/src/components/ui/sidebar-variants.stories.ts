@@ -7,7 +7,7 @@ import { NDS_SIDEBAR } from './sidebar';
 // Controls é desligado — do contrário apareceria vazio.
 
 const meta: Meta = {
-  title: 'UI/Sidebar/Types',
+  title: 'Primitives/Layout/Sidebar/Types',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR] })],
   parameters: { layout: 'fullscreen', controls: { disable: true } },

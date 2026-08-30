@@ -46,7 +46,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<SwitchArgs> = {
-  title: 'UI/Switch',
+  title: 'Primitives/Form/Switch',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsSwitch, NdsLabel] })],
   parameters: {

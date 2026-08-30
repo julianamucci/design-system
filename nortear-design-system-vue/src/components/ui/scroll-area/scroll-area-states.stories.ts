@@ -16,7 +16,7 @@ import {
 } from './scroll-area.source';
 
 const meta = {
-  title: 'UI/ScrollArea/States',
+  title: 'Primitives/Layout/ScrollArea/States',
   component: ScrollArea,
   tags: ['layout'],
   parameters: {

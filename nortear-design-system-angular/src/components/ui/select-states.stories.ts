@@ -23,8 +23,8 @@ const stateLabel = (value: unknown): string =>
   STATES.find((e) => e.value === value)?.label ?? String(value ?? '');
 
 const meta: Meta = {
-  title: 'UI/Select/States',
-  tags: ['overlay'],
+  title: 'Primitives/Form/Select/States',
+  tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_SELECT] })],
   parameters: {
     layout: 'centered',

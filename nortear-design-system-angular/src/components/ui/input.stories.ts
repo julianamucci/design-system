@@ -47,7 +47,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<InputArgs> = {
-  title: 'UI/Input',
+  title: 'Primitives/Form/Input',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsInput, NdsLabel] })],
   parameters: {

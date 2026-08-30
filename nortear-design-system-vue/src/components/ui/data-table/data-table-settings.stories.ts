@@ -9,7 +9,7 @@ import {
 } from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
-  title: 'UI/DataTable/Settings',
+  title: 'Primitives/Tables/DataTable/Settings',
   component: DataTable as never,
   tags: ['tables'],
   parameters: {

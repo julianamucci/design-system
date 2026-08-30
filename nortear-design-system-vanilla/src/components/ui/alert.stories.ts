@@ -22,7 +22,7 @@ type AlertArgs = {
 };
 
 const meta: Meta<AlertArgs> = {
-  title: 'UI/Alert',
+  title: 'Primitives/Feedback/Alert',
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('alert'),

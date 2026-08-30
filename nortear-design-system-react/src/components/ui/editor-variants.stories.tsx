@@ -11,7 +11,7 @@ import {
 } from './editor.fixtures';
 
 const meta = {
-  title: 'UI/Editor/Variants',
+  title: 'Primitives/Form/Editor/Variants',
   component: Editor,
   tags: ['form'],
   parameters: {

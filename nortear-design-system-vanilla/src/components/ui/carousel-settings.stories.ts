@@ -11,7 +11,7 @@ import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/Settings',
+  title: 'Primitives/Display/Carousel/Settings',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

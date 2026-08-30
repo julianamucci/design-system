@@ -10,7 +10,7 @@ const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Avatar/States',
+  title: 'Primitives/Display/Avatar/States',
   parameters: {
     design: figmaDesign('avatar'),
     controls: { disable: true },

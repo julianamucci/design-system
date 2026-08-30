@@ -18,7 +18,7 @@ import {
 } from "@shared/testing/slider-probe";
 
 const meta = {
-  title: "UI/Slider/States",
+  title: "Primitives/Form/Slider/States",
   tags: ["form"],
   component: Slider,
   parameters: {

@@ -21,7 +21,7 @@ import {
 } from './drawer.source';
 
 const meta = {
-  title: 'UI/Drawer/Variants',
+  title: 'Primitives/Disclosure/Drawer/Variants',
   component: Drawer,
   tags: ['disclosure'],
   parameters: {

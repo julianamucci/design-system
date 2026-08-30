@@ -749,9 +749,9 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
           title: t('related.title'),
           items: [
             { name: t('related.items.stepper.name'),     description: toPlainText(t('related.items.stepper.description')),     path: '?path=/docs/ui-stepper--docs' },
-            { name: t('related.items.accordion.name'),   description: toPlainText(t('related.items.accordion.description')),   path: '?path=/docs/ui-accordion--docs' },
-            { name: t('related.items.sidebar.name'),     description: toPlainText(t('related.items.sidebar.description')),     path: '?path=/docs/ui-sidebar--docs' },
-            { name: t('related.items.toggleGroup.name'), description: toPlainText(t('related.items.toggleGroup.description')), path: '?path=/docs/ui-togglegroup--docs' },
+            { name: t('related.items.accordion.name'),   description: toPlainText(t('related.items.accordion.description')),   path: '?path=/docs/primitives-disclosure-accordion--docs' },
+            { name: t('related.items.sidebar.name'),     description: toPlainText(t('related.items.sidebar.description')),     path: '?path=/docs/primitives-layout-sidebar--docs' },
+            { name: t('related.items.toggleGroup.name'), description: toPlainText(t('related.items.toggleGroup.description')), path: '?path=/docs/primitives-form-togglegroup--docs' },
           ],
         });
 

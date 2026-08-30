@@ -1,7 +1,7 @@
 {
   "pt-BR": {
     "title": "Sheet",
-    "category": "Overlay",
+    "category": "Disclosure",
     "type": "Componente",
     "description": "Painel lateral deslizante baseado em Dialog, ideal para configurações, filtros avançados e navegação secundária em desktop.",
     "seo": {
@@ -472,7 +472,7 @@
   },
   "en": {
     "title": "Sheet",
-    "category": "Overlay",
+    "category": "Disclosure",
     "type": "Component",
     "description": "Sliding side panel based on Dialog, ideal for settings, advanced filters and secondary navigation on desktop.",
     "seo": {
@@ -943,7 +943,7 @@
   },
   "es": {
     "title": "Sheet",
-    "category": "Overlay",
+    "category": "Disclosure",
     "type": "Componente",
     "description": "Panel lateral deslizante basado en Dialog, ideal para configuración, filtros avanzados y navegación secundaria en desktop.",
     "seo": {

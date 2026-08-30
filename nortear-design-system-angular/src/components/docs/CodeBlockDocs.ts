@@ -251,10 +251,10 @@ const STATE_KEYS = ['idle', 'copied', 'numbered', 'unnumbered', 'scrolling', 'un
 const UX_KEYS = ['headerTitle', 'footer', 'copy', 'comments'];
 
 const RELATED = [
-  { key: 'table', name: 'Table', path: '?path=/docs/ui-table--docs' },
-  { key: 'alert', name: 'Alert', path: '?path=/docs/ui-alert--docs' },
-  { key: 'tabs',  name: 'Tabs',  path: '?path=/docs/ui-tabs--docs'  },
-  { key: 'card',  name: 'Card',  path: '?path=/docs/ui-card--docs'  },
+  { key: 'table', name: 'Table', path: '?path=/docs/primitives-tables-table--docs' },
+  { key: 'alert', name: 'Alert', path: '?path=/docs/primitives-feedback-alert--docs' },
+  { key: 'tabs',  name: 'Tabs',  path: '?path=/docs/primitives-navigation-tabs--docs'  },
+  { key: 'card',  name: 'Card',  path: '?path=/docs/primitives-layout-card--docs'  },
 ];
 
 @Component({

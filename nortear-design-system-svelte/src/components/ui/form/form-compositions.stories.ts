@@ -6,7 +6,7 @@ import FormMultipleStory from './FormMultipleStory.svelte';
 import { formFieldsetSource, formMultipleFieldsSource } from './form.source';
 
 const meta: Meta = {
-  title: 'UI/Form/Compositions',
+  title: 'Primitives/Form/Form/Compositions',
   tags: ['form'],
   component: FormGroupStory,
   parameters: {

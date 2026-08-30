@@ -10,7 +10,7 @@ import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbo
 // Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
 
 const meta: Meta = {
-  title: 'UI/ContextMenu/Types',
+  title: 'Primitives/Overlay/ContextMenu/Types',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {

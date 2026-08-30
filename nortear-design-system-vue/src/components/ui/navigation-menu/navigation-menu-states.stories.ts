@@ -19,7 +19,7 @@ import {
 } from './navigation-menu.source';
 
 const meta = {
-  title: 'UI/NavigationMenu/States',
+  title: 'Primitives/Navigation/NavigationMenu/States',
   component: NavigationMenu,
   tags: ['navigation'],
   parameters: {

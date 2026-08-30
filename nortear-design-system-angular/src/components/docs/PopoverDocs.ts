@@ -1065,10 +1065,10 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { k: 'tooltip',      path: '?path=/docs/ui-tooltip--docs'       },
-      { k: 'dropdownMenu', path: '?path=/docs/ui-dropdown-menu--docs' },
-      { k: 'dialog',       path: '?path=/docs/ui-dialog--docs'        },
-      { k: 'hoverCard',    path: '?path=/docs/ui-hover-card--docs'    },
+      { k: 'tooltip',      path: '?path=/docs/primitives-overlay-tooltip--docs'       },
+      { k: 'dropdownMenu', path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { k: 'dialog',       path: '?path=/docs/primitives-overlay-dialog--docs'        },
+      { k: 'hoverCard',    path: '?path=/docs/primitives-overlay-hovercard--docs'    },
     ].map(({ k, path }) => ({
       name: t(`related.items.${k}.name`),
       description: toPlainText(t(`related.items.${k}.description`)),

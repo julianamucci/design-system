@@ -39,7 +39,7 @@ function keepPlayer(instance: MediaPlayerApi | null): void {
 }
 
 const meta = {
-  title: 'UI/MediaPlayer/Variants',
+  title: 'Primitives/Display/MediaPlayer/Variants',
   component: MediaPlayer,
   tags: ['display'],
   parameters: {

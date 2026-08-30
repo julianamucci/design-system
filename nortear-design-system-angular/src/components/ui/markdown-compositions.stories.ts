@@ -10,7 +10,7 @@ import { MARKDOWN_CODE, MARKDOWN_TABLE } from '@shared/primitives/markdown-examp
 // dois componentes, e é a costura que pode quebrar.
 
 const meta: Meta = {
-  title: 'UI/Markdown/Compositions',
+  title: 'Primitives/Conversational/Markdown/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsMarkdown] })],
   parameters: {

@@ -72,7 +72,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<SheetArgs> = {
-  title: 'UI/Sheet',
+  title: 'Primitives/Disclosure/Sheet',
   tags: ['autodocs', 'disclosure'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
   parameters: {

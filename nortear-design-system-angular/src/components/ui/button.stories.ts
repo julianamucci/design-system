@@ -22,7 +22,7 @@ type ButtonArgs = {
 };
 
 const meta: Meta<ButtonArgs> = {
-  title: 'UI/Button',
+  title: 'Primitives/Form/Button',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: {

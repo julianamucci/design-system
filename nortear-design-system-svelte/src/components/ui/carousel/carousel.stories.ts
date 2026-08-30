@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { carouselSource } from './carousel.source';
 
 const meta: Meta = {
-  title: 'UI/Carousel',
+  title: 'Primitives/Display/Carousel',
   component: Carousel,
   tags: ['autodocs', 'display'],
   parameters: {

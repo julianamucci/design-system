@@ -922,22 +922,22 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
           {
             name: "Accordion",
             description: toPlainText(tContent("related.accordion")),
-            path: "?path=/docs/ui-accordion--docs",
+            path: "?path=/docs/primitives-disclosure-accordion--docs",
           },
           {
             name: "Sheet",
             description: toPlainText(tContent("related.sheet")),
-            path: "?path=/docs/ui-sheet--docs",
+            path: "?path=/docs/primitives-disclosure-sheet--docs",
           },
           {
             name: "Button",
             description: toPlainText(tContent("related.button")),
-            path: "?path=/docs/ui-button--docs",
+            path: "?path=/docs/primitives-form-button--docs",
           },
           {
             name: "Tabs",
             description: toPlainText(tContent("related.tabs")),
-            path: "?path=/docs/ui-tabs--docs",
+            path: "?path=/docs/primitives-navigation-tabs--docs",
           },
         ]}
       />

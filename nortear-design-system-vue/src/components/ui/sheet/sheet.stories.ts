@@ -34,7 +34,7 @@ type SheetArgs = {
 };
 
 const meta = {
-  title: 'UI/Sheet',
+  title: 'Primitives/Disclosure/Sheet',
   component: Sheet,
   tags: ['autodocs', 'disclosure'],
   parameters: {

@@ -687,11 +687,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.contextMenu.name'), description: toPlainText(t('related.items.contextMenu.description')), path: '?path=/docs/ui-contextmenu--docs' },
-            { name: t('related.items.menubar.name'),     description: toPlainText(t('related.items.menubar.description')),     path: '?path=/docs/ui-menubar--docs'     },
-            { name: t('related.items.command.name'),     description: toPlainText(t('related.items.command.description')),     path: '?path=/docs/ui-command--docs'     },
-            { name: t('related.items.popover.name'),     description: toPlainText(t('related.items.popover.description')),     path: '?path=/docs/ui-popover--docs'     },
-            { name: t('related.items.select.name'),      description: toPlainText(t('related.items.select.description')),      path: '?path=/docs/ui-select--docs'      },
+            { name: t('related.items.contextMenu.name'), description: toPlainText(t('related.items.contextMenu.description')), path: '?path=/docs/primitives-overlay-contextmenu--docs' },
+            { name: t('related.items.menubar.name'),     description: toPlainText(t('related.items.menubar.description')),     path: '?path=/docs/primitives-navigation-menubar--docs'     },
+            { name: t('related.items.command.name'),     description: toPlainText(t('related.items.command.description')),     path: '?path=/docs/primitives-overlay-command--docs'     },
+            { name: t('related.items.popover.name'),     description: toPlainText(t('related.items.popover.description')),     path: '?path=/docs/primitives-overlay-popover--docs'     },
+            { name: t('related.items.select.name'),      description: toPlainText(t('related.items.select.description')),      path: '?path=/docs/primitives-form-select--docs'      },
           ],
         });
 

@@ -9,7 +9,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { dataCalendarSelectorSource } from './calendar.source';
 
 const meta = {
-  title: 'UI/Calendar/Compositions',
+  title: 'Primitives/Form/Calendar/Compositions',
   component: Calendar,
   tags: ['form'],
   parameters: {

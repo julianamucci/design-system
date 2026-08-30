@@ -18,7 +18,7 @@ import {
  * alcance de clique e o nome acessível.
  */
 const meta: Meta = {
-  title: 'UI/Label/Compositions',
+  title: 'Primitives/Form/Label/Compositions',
   component: LabelWithInputStory,
   tags: ['form'],
   parameters: {

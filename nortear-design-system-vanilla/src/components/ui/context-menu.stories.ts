@@ -23,7 +23,7 @@ type ContextMenuArgs = {
 };
 
 const meta: Meta<ContextMenuArgs> = {
-  title: 'UI/ContextMenu',
+  title: 'Primitives/Overlay/ContextMenu',
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',

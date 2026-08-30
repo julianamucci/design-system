@@ -26,7 +26,7 @@ const LABEL = {
 };
 
 const meta = {
-  title: 'UI/Drawer',
+  title: 'Primitives/Disclosure/Drawer',
   component: Drawer,
   tags: ['autodocs', 'disclosure'],
   parameters: {

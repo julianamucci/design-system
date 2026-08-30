@@ -49,7 +49,7 @@ export class Exemplo {
 }
 
 const meta: Meta<ChartArgs> = {
-  title: 'UI/Chart',
+  title: 'Primitives/Display/Chart',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [NdsChart] })],
   parameters: {

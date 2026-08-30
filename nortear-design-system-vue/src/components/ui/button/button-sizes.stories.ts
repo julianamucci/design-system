@@ -15,7 +15,7 @@ import {
 } from './button.source';
 
 const meta: Meta<any> = {
-  title: 'UI/Button/Sizes',
+  title: 'Primitives/Form/Button/Sizes',
   component: Button,
   tags: ['form'],
   parameters: {

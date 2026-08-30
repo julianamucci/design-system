@@ -34,7 +34,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/ContextMenu/Compositions",
+  title: "Primitives/Overlay/ContextMenu/Compositions",
   tags: ["overlay"],
   component: ContextMenu,
   parameters: {

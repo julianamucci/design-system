@@ -16,7 +16,7 @@ import {
 } from './input.source';
 
 const meta = {
-  title: 'UI/Input/States',
+  title: 'Primitives/Form/Input/States',
   component: Input,
   tags: ['form'],
   parameters: {

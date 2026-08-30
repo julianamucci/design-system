@@ -7,7 +7,7 @@ import { NdsButton } from './button';
 import { resizeComputado } from '@shared/testing/textarea-probe';
 
 const meta: Meta = {
-  title: 'UI/Textarea/Compositions',
+  title: 'Primitives/Form/Textarea/Compositions',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsTextarea, NdsLabel, NdsButton] })],
   parameters: {

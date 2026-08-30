@@ -20,7 +20,7 @@ import { resizableSource } from './resizable.source';
 const LABEL_HANDLE = 'Redimensionar painéis — use setas para ajustar';
 
 const meta = {
-  title: 'UI/Resizable',
+  title: 'Primitives/Layout/Resizable',
   component: ResizablePanelGroup,
   tags: ['autodocs', 'layout'],
   parameters: {

@@ -5,7 +5,7 @@ import { NDS_NAVIGATION_MENU } from './navigation-menu';
 import { open, close } from './navigation-menu.fixtures';
 
 const meta: Meta = {
-  title: 'UI/NavigationMenu/Variants',
+  title: 'Primitives/Navigation/NavigationMenu/Variants',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_NAVIGATION_MENU] })],
   parameters: {

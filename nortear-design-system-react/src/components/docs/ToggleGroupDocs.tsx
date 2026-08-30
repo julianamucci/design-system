@@ -794,22 +794,22 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           {
             name: tContent("related.items.toggle.name"),
             description: toPlainText(tContent("related.items.toggle.description")),
-            path: "?path=/docs/ui-toggle--docs",
+            path: "?path=/docs/primitives-form-toggle--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
             description: toPlainText(tContent("related.items.tabs.description")),
-            path: "?path=/docs/ui-tabs--docs",
+            path: "?path=/docs/primitives-navigation-tabs--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
             description: toPlainText(tContent("related.items.radioGroup.description")),
-            path: "?path=/docs/ui-radiogroup--docs",
+            path: "?path=/docs/primitives-form-radiogroup--docs",
           },
           {
             name: tContent("related.items.checkbox.name"),
             description: toPlainText(tContent("related.items.checkbox.description")),
-            path: "?path=/docs/ui-checkbox--docs",
+            path: "?path=/docs/primitives-form-checkbox--docs",
           },
         ]}
       />

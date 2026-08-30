@@ -75,7 +75,7 @@ export class Exemplo {
 }
 
 const meta: Meta<SonnerArgs> = {
-  title: 'UI/Sonner',
+  title: 'Primitives/Feedback/Sonner',
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster, NdsButton] })],
   parameters: {

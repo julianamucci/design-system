@@ -6,7 +6,7 @@ import AspectRatioStory from './AspectRatioStory.svelte';
 import { aspectRatioSource } from './aspect-ratio.source';
 
 const meta: Meta = {
-  title: 'UI/AspectRatio/Variants',
+  title: 'Primitives/Layout/AspectRatio/Variants',
   component: AspectRatioStory,
   tags: ['layout'],
   parameters: {

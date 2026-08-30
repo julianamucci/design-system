@@ -26,7 +26,7 @@ const FIELD = {
 };
 
 const meta: Meta = {
-  title: 'UI/Combobox/States',
+  title: 'Primitives/Form/Combobox/States',
   tags: ['form'],
   parameters: {
     layout: 'padded',

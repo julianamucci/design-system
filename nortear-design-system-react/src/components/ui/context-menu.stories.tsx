@@ -37,7 +37,7 @@ type ContextMenuArgs = Omit<React.ComponentProps<typeof ContextMenu>, "onOpenCha
 // componente — passa a não existir para o TypeScript. A aba API Reference sai
 // dos `argTypes` escritos aqui, então nada se perde.
 const meta: Meta<ContextMenuArgs> = {
-  title: "UI/ContextMenu",
+  title: "Primitives/Overlay/ContextMenu",
   tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",

@@ -15,7 +15,7 @@ import { carouselSource, carouselSourceWith } from './carousel.source';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/States',
+  title: 'Primitives/Display/Carousel/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

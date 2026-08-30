@@ -11,7 +11,7 @@ import {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Textarea/States',
+  title: 'Primitives/Form/Textarea/States',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

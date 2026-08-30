@@ -60,7 +60,7 @@ const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
 const meta: Meta = {
-  title: 'UI/Collapsible/Compositions',
+  title: 'Primitives/Disclosure/Collapsible/Compositions',
   tags: ['disclosure'],
   decorators: [
     moduleMetadata({ imports: [...NDS_COLLAPSIBLE, NdsButton, NdsCheckbox, NdsLabel] }),

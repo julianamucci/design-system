@@ -7,7 +7,7 @@ import { apertarTecla, sliderTrack, handleValue } from '@shared/testing/slider-p
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Slider/Variants',
+  title: 'Primitives/Form/Slider/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

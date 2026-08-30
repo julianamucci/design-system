@@ -9,7 +9,7 @@ import {
 } from './toggle-group.source';
 
 const meta: Meta = {
-  title: 'UI/ToggleGroup/States',
+  title: 'Primitives/Form/ToggleGroup/States',
   component: ToggleGroupStory,
   tags: ['form'],
   parameters: {

@@ -152,7 +152,7 @@ const preview: Preview = {
         order: [
           'About', ['Overview', 'Accessibility', 'Analytics', 'SEO and GEO', 'Tone of Voice'],
           'Foundations', ['Getting Started', 'Colors and Themes', 'Typography', 'Spacing', 'Elevation, Borders and Shadows', 'Icons', 'Motion', 'Densities', 'Theme System', 'Internationalization', 'Cross-Stack Divergences'],
-          'UI', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],
+          'Primitives', ['*', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']]],
           '*',
         ],
       },

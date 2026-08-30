@@ -28,7 +28,7 @@ import {
 const undoSpy = fn();
 
 const meta: Meta = {
-  title: 'UI/Sonner/Compositions',
+  title: 'Primitives/Feedback/Sonner/Compositions',
   component: SonnerFrameStory,
   tags: ['feedback'],
   parameters: {

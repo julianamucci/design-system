@@ -23,7 +23,7 @@ interface TableArgs {
 }
 
 const meta: Meta<TableArgs> = {
-  title: 'UI/Table',
+  title: 'Primitives/Tables/Table',
   tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',

@@ -767,10 +767,10 @@ export function createMenubar(
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/ui-navigationmenu--docs' },
-            { name: t('related.items.dropdownMenu.name'),   description: toPlainText(t('related.items.dropdownMenu.description')),   path: '?path=/docs/ui-dropdownmenu--docs'   },
-            { name: t('related.items.sidebar.name'),        description: toPlainText(t('related.items.sidebar.description')),        path: '?path=/docs/ui-sidebar--docs'        },
-            { name: t('related.items.command.name'),        description: toPlainText(t('related.items.command.description')),        path: '?path=/docs/ui-command--docs'        },
+            { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
+            { name: t('related.items.dropdownMenu.name'),   description: toPlainText(t('related.items.dropdownMenu.description')),   path: '?path=/docs/primitives-overlay-dropdownmenu--docs'   },
+            { name: t('related.items.sidebar.name'),        description: toPlainText(t('related.items.sidebar.description')),        path: '?path=/docs/primitives-layout-sidebar--docs'        },
+            { name: t('related.items.command.name'),        description: toPlainText(t('related.items.command.description')),        path: '?path=/docs/primitives-overlay-command--docs'        },
           ],
         });
 

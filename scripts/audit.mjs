@@ -699,8 +699,8 @@ const STORY_VARIANT_SUFFIXES = [
  * Grupo da barra lateral, lido do NOME DO ARQUIVO.
  *
  * É o arquivo que decide, não o `title`: o `title` do sufixo é sempre
- * `UI/<Slug>/<Grupo>` e repete a informação. Ler do nome dispensa parsear o
- * `meta` e funciona igual nas cinco stacks.
+ * `Primitives/<Categoria>/<Slug>/<Grupo>` e repete a informação. Ler do nome
+ * dispensa parsear o `meta` e funciona igual nas cinco stacks.
  */
 function grupoDaStory(caminhoRelativo) {
   const base = basename(caminhoRelativo).replace(/\.stories\.[a-z]+$/, '');
@@ -3817,6 +3817,10 @@ function auditTemasCompletos() {
  * Medido em 2026-08-30: 93 arquivos nas cinco stacks, 77 deles no Angular, que
  * nasceu sem esta convenção.
  *
+ * Desde que a árvore virou `Primitives/<Categoria>/<Componente>`, a categoria
+ * também é a PASTA — e a regra confere as duas uma contra a outra. Tag que
+ * discorda da pasta produz o mesmo sintoma da tag ausente, e só esta regra vê.
+ *
  * `QA/` e `Foundations/` ficam de fora de propósito: são stories de portão e de
  * fundamento, não de componente, e não pertencem a categoria nenhuma.
  */
@@ -3833,21 +3837,37 @@ function auditStoryCategoryTag() {
       const content = readFile(file);
       if (!content) continue;
 
-      const titulo = (content.match(/title:\s*['"]([^'"]+)['"]/) || [])[1];
-      if (!titulo || !titulo.startsWith('UI/')) continue;
+      // Ancorado em `Primitives/`, e não no primeiro `title:` do arquivo: o
+      // `code-block.stories` declara `title: 'exemplo.ts'` num fixture ANTES do
+      // meta, e ler o primeiro fazia o arquivo escapar da regra inteira — o
+      // portão que filtra excluindo em silêncio. São 5 arquivos assim hoje.
+      const titulo = (content.match(/title:\s*['"](Primitives\/[^'"]+)['"]/) || [])[1];
+      if (!titulo) continue;
 
       const bloco = content.match(/tags:\s*\[([\s\S]*?)\]/);
       const tags = bloco ? [...bloco[1].matchAll(/['"]([^'"]+)['"]/g)].map((m) => m[1]) : [];
-      if (tags.some((t) => CATEGORIAS_SIDEBAR.has(t))) continue;
+      const declarada = tags.find((t) => CATEGORIAS_SIDEBAR.has(t));
+
+      // A pasta é a verdade visível: `Primitives/Form/Button/Variants` põe a
+      // story dentro de Formulário quer a tag concorde ou não. Conferir uma
+      // contra a outra pega os dois defeitos com a mesma regra — a tag ausente
+      // e a tag que discorda da pasta, que produz o MESMO sintoma: a story está
+      // na árvore e o filtro daquela categoria não a traz.
+      const daPasta = titulo.split('/')[1]?.toLowerCase();
+
+      if (declarada === daPasta) continue;
 
       violations.push({
         category: 'quality', severity: 'medium', slug: '_infra', stack,
         file: relative(ROOT, file), rule: 'story_sem_categoria',
-        message:
-          `"${titulo}" não declara categoria em \`tags\` — ao filtrar a sidebar por` +
-          ' categoria esta story some, e some em silêncio: a pasta do componente' +
-          ' continua visível pelas outras stories dele. Use a mesma categoria da story' +
-          ` principal (uma de: ${[...CATEGORIAS_SIDEBAR].join(', ')})`,
+        message: declarada
+          ? `"${titulo}" está na pasta ${daPasta} e declara \`tags: ['${declarada}']\` —` +
+            ' ao filtrar por qualquer uma das duas a story some de uma delas. Faça a tag' +
+            ' bater com a pasta'
+          : `"${titulo}" não declara categoria em \`tags\` — ao filtrar a sidebar por` +
+            ' categoria esta story some, e some em silêncio: a pasta do componente' +
+            ' continua visível pelas outras stories dele. Declare' +
+            ` \`tags: ['${daPasta}']\`, a mesma da pasta`,
       });
     }
   }
@@ -4349,7 +4369,17 @@ function auditSidebarVocab(slug) {
       // 3. Segmento de estrutura sem tradução nem dispensa declarada.
       for (const m of content.matchAll(/title: *(['"])([^'"]+)\1/g)) {
         const partes = m[2].split('/');
-        for (const seg of [partes.length > 1 ? partes[0] : null, partes[2] ?? null]) {
+        // `Primitivos/<Categoria>/<Componente>/<Grupo>`: estrutura é 0, 1 e 3.
+        // O índice 2 é o NOME DO COMPONENTE, que fica em inglês de propósito —
+        // são 607 nomes e traduzi-los não se sustenta (ver sidebar-labels.ts).
+        // Antes da divisão por categoria o grupo morava no índice 2, e conferir
+        // aquele índice hoje acusaria os 57 componentes como estrutura sem
+        // tradução.
+        for (const seg of [
+          partes.length > 1 ? partes[0] : null,
+          partes.length > 2 ? partes[1] : null,
+          partes[3] ?? null,
+        ]) {
           if (!seg || conhecidos.has(seg)) continue;
           violations.push({
             category: 'quality', severity: 'medium', slug, stack,

@@ -12,7 +12,7 @@ import {
 } from './aspect-ratio.source';
 
 const meta = {
-  title: 'UI/AspectRatio/Compositions',
+  title: 'Primitives/Layout/AspectRatio/Compositions',
   component: AspectRatio,
   tags: ['layout'],
   parameters: {

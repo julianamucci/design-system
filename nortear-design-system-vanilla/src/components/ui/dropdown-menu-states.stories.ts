@@ -9,7 +9,7 @@ import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbo
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/DropdownMenu/States',
+  title: 'Primitives/Overlay/DropdownMenu/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

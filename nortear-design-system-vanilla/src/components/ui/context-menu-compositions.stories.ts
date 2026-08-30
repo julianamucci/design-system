@@ -12,7 +12,7 @@ import {
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/ContextMenu/Compositions',
+  title: 'Primitives/Overlay/ContextMenu/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

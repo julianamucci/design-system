@@ -47,7 +47,7 @@ const meta: Meta = {
       },
     },
   },
-  title: 'UI/CodeBlock/Compositions',
+  title: 'Primitives/Display/CodeBlock/Compositions',
   component: CodeBlock,
   tags: ['display'],
 };

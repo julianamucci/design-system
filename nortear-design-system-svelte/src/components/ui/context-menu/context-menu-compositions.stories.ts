@@ -15,7 +15,7 @@ import {
 } from './context-menu.source';
 
 const meta: Meta = {
-  title: 'UI/ContextMenu/Compositions',
+  title: 'Primitives/Overlay/ContextMenu/Compositions',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {

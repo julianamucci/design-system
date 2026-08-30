@@ -5,7 +5,7 @@ import { switchSource, switchSourceWith, switchSourcePanel } from './switch.sour
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Switch/Variants',
+  title: 'Primitives/Form/Switch/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

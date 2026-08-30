@@ -895,22 +895,22 @@ interface SelectContentProps {
           {
             name: tContent("related.items.combobox.name"),
             description: toPlainText(tContent("related.items.combobox.description")),
-            path: "?path=/docs/ui-combobox--docs",
+            path: "?path=/docs/primitives-form-combobox--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
             description: toPlainText(tContent("related.items.radioGroup.description")),
-            path: "?path=/docs/ui-radiogroup--docs",
+            path: "?path=/docs/primitives-form-radiogroup--docs",
           },
           {
             name: tContent("related.items.dropdownMenu.name"),
             description: toPlainText(tContent("related.items.dropdownMenu.description")),
-            path: "?path=/docs/ui-dropdownmenu--docs",
+            path: "?path=/docs/primitives-overlay-dropdownmenu--docs",
           },
           {
             name: tContent("related.items.form.name"),
             description: toPlainText(tContent("related.items.form.description")),
-            path: "?path=/docs/ui-form--docs",
+            path: "?path=/docs/primitives-form-form--docs",
           },
         ]}
       />

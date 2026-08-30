@@ -37,7 +37,7 @@ const tokensClassificados = (canvasElement: HTMLElement) =>
   canvasElement.querySelectorAll('[data-token]:not([data-token="plain"])').length;
 
 const meta = {
-  title: "UI/CodeBlock/Variants",
+  title: "Primitives/Display/CodeBlock/Variants",
   component: CodeBlock,
   tags: ["display"],
   parameters: {

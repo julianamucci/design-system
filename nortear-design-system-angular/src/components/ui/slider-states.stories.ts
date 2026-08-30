@@ -5,7 +5,7 @@ import { NdsSlider } from './slider';
 import { focusAssentadoRing, restRing } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
-  title: 'UI/Slider/States',
+  title: 'Primitives/Form/Slider/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsSlider] })],
   parameters: { layout: 'padded', controls: { disable: true } },

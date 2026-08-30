@@ -840,10 +840,10 @@ interface SelectItemProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.combobox.name'),   description: $tStore('related.items.combobox.description'),   path: '?path=/docs/ui-combobox--docs' },
-      { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/ui-radiogroup--docs' },
-      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/ui-dropdownmenu--docs' },
-      { name: $tStore('related.items.form.name'),       description: $tStore('related.items.form.description'),       path: '?path=/docs/ui-form--docs' },
+      { name: $tStore('related.items.combobox.name'),   description: $tStore('related.items.combobox.description'),   path: '?path=/docs/primitives-form-combobox--docs' },
+      { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/primitives-form-radiogroup--docs' },
+      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { name: $tStore('related.items.form.name'),       description: $tStore('related.items.form.description'),       path: '?path=/docs/primitives-form-form--docs' },
     ]}
   />
 

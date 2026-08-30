@@ -501,11 +501,11 @@ export class NdsLabelDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'input',      path: '?path=/docs/ui-input--docs'       },
-      { key: 'formLabel',  path: '?path=/docs/ui-form--docs'        },
-      { key: 'formField',  path: '?path=/docs/ui-form--docs'        },
-      { key: 'checkbox',   path: '?path=/docs/ui-checkbox--docs'    },
-      { key: 'radioGroup', path: '?path=/docs/ui-radio-group--docs' },
+      { key: 'input',      path: '?path=/docs/primitives-form-input--docs'       },
+      { key: 'formLabel',  path: '?path=/docs/primitives-form-form--docs'        },
+      { key: 'formField',  path: '?path=/docs/primitives-form-form--docs'        },
+      { key: 'checkbox',   path: '?path=/docs/primitives-form-checkbox--docs'    },
+      { key: 'radioGroup', path: '?path=/docs/primitives-form-radiogroup--docs' },
     ].map(({ key, path }) => ({
       name: key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase()),
       description: t(`related.${key}`),

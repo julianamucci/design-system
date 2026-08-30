@@ -15,7 +15,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 // Sem argTypes: o painel Controls fica desligado, senão apareceria vazio.
 
 const meta: Meta = {
-  title: 'UI/AlertDialog/States',
+  title: 'Primitives/Overlay/AlertDialog/States',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {

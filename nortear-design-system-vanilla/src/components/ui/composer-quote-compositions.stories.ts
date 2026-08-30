@@ -10,7 +10,7 @@ import { quoteShortSource, quoteWithAttachmentsSource } from './composer-quote.s
 // A citação convivendo com o resto da moldura, e o que acontece ao dispensá-la.
 
 const meta: Meta = {
-  title: 'UI/ComposerQuote/Compositions',
+  title: 'Primitives/Conversational/ComposerQuote/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

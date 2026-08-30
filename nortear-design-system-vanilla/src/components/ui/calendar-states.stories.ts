@@ -15,7 +15,7 @@ import { calendarSource, calendarSourceWith } from './calendar.source';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Calendar/States',
+  title: 'Primitives/Form/Calendar/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

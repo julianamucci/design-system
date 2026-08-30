@@ -63,7 +63,7 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<AvatarArgs> = {
-  title: 'UI/Avatar',
+  title: 'Primitives/Display/Avatar',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [...NDS_AVATAR] })],
   parameters: {

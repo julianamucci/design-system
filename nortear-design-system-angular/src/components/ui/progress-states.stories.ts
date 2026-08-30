@@ -9,7 +9,7 @@ import {
 } from '@shared/testing/progress-probe';
 
 const meta: Meta = {
-  title: 'UI/Progress/States',
+  title: 'Primitives/Feedback/Progress/States',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [...NDS_PROGRESS] })],
   parameters: {

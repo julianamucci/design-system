@@ -712,10 +712,10 @@ interface RadioGroupItemProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.checkbox.name'), description: $tStore('related.items.checkbox.description'), path: '?path=/docs/ui-checkbox--docs' },
-      { name: $tStore('related.items.switch.name'),   description: $tStore('related.items.switch.description'),   path: '?path=/docs/ui-switch--docs' },
-      { name: $tStore('related.items.select.name'),   description: $tStore('related.items.select.description'),   path: '?path=/docs/ui-select--docs' },
-      { name: $tStore('related.items.form.name'),     description: $tStore('related.items.form.description'),     path: '?path=/docs/ui-form--docs' },
+      { name: $tStore('related.items.checkbox.name'), description: $tStore('related.items.checkbox.description'), path: '?path=/docs/primitives-form-checkbox--docs' },
+      { name: $tStore('related.items.switch.name'),   description: $tStore('related.items.switch.description'),   path: '?path=/docs/primitives-form-switch--docs' },
+      { name: $tStore('related.items.select.name'),   description: $tStore('related.items.select.description'),   path: '?path=/docs/primitives-form-select--docs' },
+      { name: $tStore('related.items.form.name'),     description: $tStore('related.items.form.description'),     path: '?path=/docs/primitives-form-form--docs' },
     ]}
   />
 

@@ -12,7 +12,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/AlertDialog/Compositions',
+  title: 'Primitives/Overlay/AlertDialog/Compositions',
   parameters: {
     design: figmaDesign('alertDialog'),
     controls: { disable: true },
