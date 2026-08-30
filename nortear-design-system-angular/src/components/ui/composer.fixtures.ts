@@ -47,3 +47,13 @@ export function attachLabel(): string {
 export function textOfLength(n: number): string {
   return 'a'.repeat(n);
 }
+
+/**
+ * O limite de caracteres da demonstração de "perto do limite".
+ *
+ * Vive aqui porque é lido dos DOIS lados: a story monta o componente com ele, e
+ * a transform do painel Code o imprime no snippet. Cravado nos dois, os dois
+ * podiam divergir em silêncio — e o painel passaria a ensinar um limite que a
+ * tela ao lado não pratica.
+ */
+export const NEAR_LIMIT = 120;

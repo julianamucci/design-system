@@ -121,9 +121,6 @@ const comFixas =
   (_code, ctx) =>
     composerQuoteSnippet({ ...(ctx?.args ?? {}), ...fixed });
 
-/** Citação curta — a forma básica. */
-export const composerQuoteShortSource = comFixas({});
-
 /** Citação longa: o corte por linha é da folha, e o snippet é o mesmo. */
 export const composerQuoteLongSource = comFixas({ quote: 'longQuote' });
 

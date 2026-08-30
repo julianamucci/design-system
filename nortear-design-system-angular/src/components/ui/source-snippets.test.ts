@@ -86,17 +86,29 @@ function exportadosPor(slug: string): Set<string> | null {
   return nomes;
 }
 
-/** Os `import { … } from '@/components/ui/<slug>'` que o snippet ensina. */
+/**
+ * Os `import { … } from '@/components/ui/<slug>'` que o snippet ensina.
+ *
+ * `import type` conta, e a primeira versão desta função o deixava de fora:
+ * `import\s*\{` não casa com o `type` que vem entre a palavra e a chave. O
+ * efeito era o pior tipo de silêncio — o snippet do filtro do combobox, que
+ * importa um TIPO, passava por ser PULADO, e não por ter sido verificado. Um
+ * portão que exclui em silêncio é o defeito que este repositório já pagou caro
+ * duas vezes; aqui ele quase nasceu com um.
+ *
+ * O `type` também aparece por nome (`import { type Foo }`), e ali ele é
+ * prefixo do nome — não do import. Os dois são descascados.
+ */
 function importesDoDesignSystem(texto: string): Array<{ slug: string; nomes: string[] }> {
   const saida: Array<{ slug: string; nomes: string[] }> = [];
   for (const m of texto.matchAll(
-    /import\s*\{([^}]*)\}\s*from\s*'@\/components\/ui\/([a-z0-9-]+)'/g,
+    /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*'@\/components\/ui\/([a-z0-9-]+)'/g,
   )) {
     saida.push({
       slug: m[2]!,
       nomes: m[1]!
         .split(',')
-        .map((n) => n.trim().split(/\s+as\s+/)[0]!.trim())
+        .map((n) => n.trim().split(/\s+as\s+/)[0]!.trim().replace(/^type\s+/, ''))
         .filter(Boolean),
     });
   }

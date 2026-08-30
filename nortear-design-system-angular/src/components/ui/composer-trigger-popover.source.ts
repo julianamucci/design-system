@@ -101,9 +101,6 @@ const comFixas =
   (_code, ctx) =>
     triggerSnippet({ ...(ctx?.args ?? {}), ...fixed });
 
-/** A forma básica, para os `meta` que não fixam nada. */
-export const triggerPopoverBaseSource = comFixas({});
-
 /** Só o gatilho de menção. */
 export const triggerPopoverMentionSource = comFixas({ mention: true });
 

@@ -4,7 +4,7 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
 import { attachmentLabels, one, queueWithoutSize } from './composer-attachments.fixtures';
-import { attachmentsAbsentSource, attachmentsQueueSource } from './composer-attachments.source';
+import { attachmentsAbsentSource, composerAttachmentsSource } from './composer-attachments.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -20,7 +20,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: attachmentsQueueSource },
+      source: { transform: composerAttachmentsSource },
       description: {
         component: 'A fila dentro da moldura do campo, e o que acontece ao pedir para remover.',
       },

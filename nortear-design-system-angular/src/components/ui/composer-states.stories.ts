@@ -3,9 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { signal } from '@angular/core';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NdsComposer } from './composer';
-import { composerLabels, textOfLength } from './composer.fixtures';
+import { NEAR_LIMIT, composerLabels, textOfLength } from './composer.fixtures';
 import {
-  composerBaseSource,
+  composerSource,
   composerDisabledSource,
   composerFilledSource,
   composerNearLimitSource,
@@ -27,7 +27,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerBaseSource },
+      source: { transform: composerSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no campo.',
       },
@@ -42,7 +42,6 @@ type Story = StoryObj;
 const onSubmit = fn();
 const onStop = fn();
 
-const LIMIT = 120;
 
 /**
  * O estado de geração, num signal de MÓDULO.
@@ -147,9 +146,9 @@ export const NearLimit: Story = {
   render: () => ({
     props: {
       labels: composerLabels(),
-      limit: LIMIT,
+      limit: NEAR_LIMIT,
       // Nove décimos do limite é onde o contador muda de cor e de peso.
-      draft: textOfLength(Math.ceil(LIMIT * 0.95)),
+      draft: textOfLength(Math.ceil(NEAR_LIMIT * 0.95)),
       onSubmit,
     },
     template: `
@@ -182,7 +181,7 @@ export const NearLimit: Story = {
       await expect(counter).toHaveAttribute('aria-hidden', 'true');
       await expect(root.querySelector('[aria-live]')).toBeNull();
       await expect(within(canvasElement).getByRole('textbox')).toHaveAccessibleDescription(
-        new RegExp(String(LIMIT)),
+        new RegExp(String(NEAR_LIMIT)),
       );
     });
   },

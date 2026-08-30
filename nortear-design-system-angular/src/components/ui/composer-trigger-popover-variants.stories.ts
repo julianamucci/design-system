@@ -9,7 +9,7 @@ import {
   triggerLabels,
 } from './composer-trigger-popover.fixtures';
 import {
-  triggerPopoverBaseSource,
+  triggerPopoverSource,
   triggerPopoverCommandSource,
   triggerPopoverMentionSource,
 } from './composer-trigger-popover.source';
@@ -29,7 +29,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: triggerPopoverBaseSource },
+      source: { transform: triggerPopoverSource },
       description: {
         component: 'Onde cada caractere gatilho abre a lista — e onde ele não abre.',
       },

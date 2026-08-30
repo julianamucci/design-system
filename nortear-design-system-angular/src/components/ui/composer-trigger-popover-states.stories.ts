@@ -8,7 +8,7 @@ import {
   triggerLabels,
 } from './composer-trigger-popover.fixtures';
 import {
-  triggerPopoverBaseSource,
+  triggerPopoverSource,
   triggerPopoverEmptySource,
   triggerPopoverFilteredSource,
 } from './composer-trigger-popover.source';
@@ -28,7 +28,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: triggerPopoverBaseSource },
+      source: { transform: triggerPopoverSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no painel.',
       },
@@ -149,7 +149,7 @@ export const Empty: Story = {
 export const Closed: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item6'],
-    docs: { source: { transform: triggerPopoverBaseSource } },
+    docs: { source: { transform: triggerPopoverSource } },
   },
   render: mount,
   play: async ({ canvasElement, step }) => {

@@ -7,7 +7,7 @@ import { composerLabels } from './composer.fixtures';
 import { attachmentLabels, one } from './composer-attachments.fixtures';
 import {
   attachmentsFailedSource,
-  attachmentsQueueSource,
+  composerAttachmentsSource,
   attachmentsUploadingSource,
 } from './composer-attachments.source';
 
@@ -26,7 +26,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: attachmentsQueueSource },
+      source: { transform: composerAttachmentsSource },
       description: {
         component: 'Cada story fixa um estado e verifica o que ele muda no item.',
       },

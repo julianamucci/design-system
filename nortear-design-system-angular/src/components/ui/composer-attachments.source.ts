@@ -107,9 +107,6 @@ const comFixas =
   (_code, ctx) =>
     composerAttachmentsSnippet({ ...(ctx?.args ?? {}), ...fixed });
 
-/** A fila em repouso — a forma básica dos anexos. */
-export const attachmentsQueueSource = comFixas({});
-
 /** A fila com um arquivo subindo. */
 export const attachmentsUploadingSource = comFixas({ queue: 'uploading' });
 

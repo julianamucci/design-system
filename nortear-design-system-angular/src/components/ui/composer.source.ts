@@ -16,6 +16,7 @@
  * Cada linha é item de um `join('\n')`, e não uma linha de template literal
  * recuado: o recuo entraria no snippet que a pessoa copia.
  */
+import { NEAR_LIMIT } from './composer.fixtures';
 
 const IMPORT = "import { NdsComposer } from '@/components/ui/composer';";
 
@@ -105,9 +106,6 @@ const comFixas =
   (_code, ctx) =>
     composerSnippet({ ...(ctx?.args ?? {}), ...fixed });
 
-/** A forma básica, para os `meta` que não fixam nada. */
-export const composerBaseSource = comFixas({});
-
 /** Com texto já escrito no campo. */
 export const composerFilledSource = comFixas({ value: 'Resume a última reunião.' });
 
@@ -120,10 +118,10 @@ export const composerRunningSource = comFixas({
 /**
  * Perto do limite de caracteres.
  *
- * O número acompanha o `LIMIT` da story de estados — é o mesmo limite visto de
- * dois lados: lá ele governa o componente montado, aqui o que se copia.
+ * O limite vem das fixtures, e é o mesmo que a story de estados monta: um só
+ * número, visto de dois lados — lá governa o componente, aqui o que se copia.
  */
-export const composerNearLimitSource = comFixas({ maxLength: 120 });
+export const composerNearLimitSource = comFixas({ maxLength: NEAR_LIMIT });
 
 /** Desabilitado. */
 export const composerDisabledSource = comFixas({ disabled: true });

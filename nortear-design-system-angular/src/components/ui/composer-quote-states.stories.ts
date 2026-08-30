@@ -7,7 +7,7 @@ import { longQuote, quoteLabels } from './composer-quote.fixtures';
 import {
   composerQuoteAbsentSource,
   composerQuoteLongSource,
-  composerQuoteShortSource,
+  composerQuoteSource,
 } from './composer-quote.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerQuoteShortSource },
+      source: { transform: composerQuoteSource },
       description: {
         component: 'O trecho que não cabe, e o campo sem citação.',
       },

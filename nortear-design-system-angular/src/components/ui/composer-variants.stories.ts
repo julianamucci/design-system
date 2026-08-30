@@ -4,7 +4,7 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
 import {
-  composerBaseSource,
+  composerSource,
   composerEnterSource,
   composerModifierSource,
 } from './composer.source';
@@ -24,7 +24,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerBaseSource },
+      source: { transform: composerSource },
       description: {
         component: 'Qual combinação envia, e o que a dica promete em cada modo.',
       },

@@ -6,7 +6,7 @@ import { composerLabels } from './composer.fixtures';
 import { attachmentLabels, queue } from './composer-attachments.fixtures';
 import { quoteLabels, shortQuote } from './composer-quote.fixtures';
 import {
-  composerQuoteShortSource,
+  composerQuoteSource,
   composerQuoteWithAttachmentsSource,
 } from './composer-quote.source';
 
@@ -24,7 +24,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: composerQuoteShortSource },
+      source: { transform: composerQuoteSource },
       description: {
         component: 'A citação junto dos anexos, e o pedido para tirá-la.',
       },
