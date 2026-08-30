@@ -79,6 +79,68 @@ dialog (role="dialog", aria-modal, aria-labelledby, aria-describedby)
 
 ---
 
+## Drawer
+
+**Propósito**: painel que entra por uma borda da tela, com alça visível quando entra de baixo. É a variante gestual do Sheet.
+
+**API e exemplos**: `src/components/ui/drawer.ts` + stories + `DrawerDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura**: painel e fundo são portalizados para o `document.body`; só o gatilho fica no lugar onde a fábrica foi chamada.
+
+```
+wrapper
+└── trigger                                       (fornecido por quem compõe)
+
+document.body
+├── .nds-sheet-overlay                            [data-slot="drawer-overlay"]
+└── .nds-drawer-content                           [data-slot="drawer-content"]
+    │                                             role="dialog", data-vaul-drawer-direction
+    ├── .nds-drawer-handle                        (aria-hidden)
+    ├── .nds-drawer-header                        (só se houver título ou descrição)
+    │   ├── .nds-sheet-title
+    │   └── .nds-sheet-description
+    ├── .nds-drawer-body
+    └── .nds-drawer-footer                        (opcional)
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `trigger` | — | Elemento que abre (obrigatório) |
+| `content` | — | Corpo (obrigatório) |
+| `direction` | `bottom` | `bottom`, `top`, `left`, `right`. Só em `bottom` a alça aparece |
+| `title` | — | Vinculado por `aria-labelledby` |
+| `description` | — | Vinculada por `aria-describedby` |
+| `footer` | — | Rodapé com ações |
+| `dismissible` | `true` | Em `false`, Escape e clique no fundo não fecham |
+| `modal` | `true` | Em `false`, sem `aria-modal` e sem trava de rolagem |
+| `onOpenChange` | — | Recebe o estado a cada abertura e fechamento |
+| `onClose` | — | Recebe o motivo: `escape`, `overlay`, `close-button` ou `api` |
+| `class` | — | Classe extra no painel |
+
+A fábrica devolve `open()`, `close()`, `toggle()` e `isOpen()` além do `destroy()`.
+
+**Regras**:
+- A direção se chama `direction`, e a do Sheet se chama `side`. São componentes diferentes e a divergência é intencional: a gaveta se move num eixo, o Sheet encosta num lado
+- `data-vaul-drawer-direction` vai no PAINEL, nunca no wrapper: toda regra de posição, borda e canto do CSS compartilhado lê `.nds-drawer-content[data-vaul-drawer-direction=…]`. Escrito no wrapper, não pinta nada
+- Não há botão de fechar embutido. Quem compõe põe o seu no rodapé e marca com `data-slot="drawer-close"`, que a fábrica liga sozinha — é o equivalente desta stack ao componente `DrawerClose` das outras. Sem a marca, o "Cancelar" do rodapé é um botão inerte
+- Com `dismissible: false`, esse fechador do rodapé passa a ser a ÚNICA saída. Não publique um painel assim sem ele
+- Arrastar é afordância, não mecanismo: a alça não recebe foco nem nome
+- Direção `bottom` é o caso típico em tela estreita
+
+**Acessibilidade**:
+- `role="dialog"`, `aria-labelledby` e `aria-describedby` conforme título e descrição existam
+- `aria-modal="true"` só quando `modal`; em `modal: false` o resto da página segue utilizável, e é isso que o atributo tem de dizer
+- Foco entra no primeiro focável do painel e volta ao gatilho ao fechar
+- Tab e Shift+Tab circulam dentro do painel enquanto ele existe, inclusive em `modal: false`
+- A alça é `aria-hidden`: não há gesto atrás dela, e anunciá-la só somaria ruído
+- Escape não fecha quando `dismissible: false`, mas também não é engolido — o painel não pode virar armadilha de teclado (WCAG 2.1.2)
+
+**Analytics**: emitir `drawer_open` / `drawer_close` com `{ component, direction, reason }` — `reason` é o valor de `onClose`, e é o motivo de ele existir.
+
+---
+
 ## Dropdown Menu
 
 **Propósito**: menu contextual de ações disparado por um trigger (botão, ícone). Para seleção de valor único de uma lista, usar Select.
@@ -131,6 +193,64 @@ A conta de posição é a mesma do Popover e do Tooltip, e mora num lugar só (`
 - Foco gerenciado: ao abrir, foco vai ao primeiro item; ao fechar, volta ao trigger
 
 **Analytics**: emitir `menu_item_click` com `{ menu, item }`.
+
+---
+
+## Sheet
+
+**Propósito**: painel que encosta numa borda da tela, para conteúdo secundário sem tirar o contexto da página. Para a variante gestual, com alça, **Drawer**.
+
+**API e exemplos**: `src/components/ui/sheet.ts` + stories + `SheetDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura**: painel e fundo são portalizados para o `document.body`; só o gatilho fica no lugar onde a fábrica foi chamada.
+
+```
+wrapper
+└── trigger                                       (aria-haspopup="dialog")
+
+document.body
+├── .nds-sheet-overlay
+└── .nds-sheet-content                            role="dialog", aria-modal, data-side
+    ├── .nds-sheet-header                         (só se houver título ou descrição)
+    │   ├── .nds-sheet-title
+    │   └── .nds-sheet-description
+    ├── .nds-sheet-body
+    ├── .nds-sheet-footer                         (opcional)
+    └── .nds-sheet-close                          (último no DOM, no canto pelo CSS)
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `trigger` | — | Elemento que abre (obrigatório) |
+| `content` | — | Corpo (obrigatório) |
+| `side` | `right` | `top`, `right`, `bottom`, `left` |
+| `title` | — | Vinculado por `aria-labelledby` |
+| `description` | — | Vinculada por `aria-describedby` |
+| `footer` | — | Rodapé com ações |
+| `onOpenChange` | — | Recebe o estado a cada abertura e fechamento |
+| `onClose` | — | Recebe o motivo: `escape`, `overlay` ou `close-button` |
+| `class` | — | Classe extra no painel |
+
+**Regras**:
+- Lado lateral para conteúdo em coluna; lado inferior para conteúdo curto em tela estreita
+- Título e descrição não são obrigatórios pela fábrica, mas painel modal sem nome acessível reprova WCAG 4.1.2 — trate-os como obrigatórios em produto
+- `class` existe para dimensão, não para recolorir: o fundo é o token de painel de conteúdo
+- O botão de fechar é sempre desenhado, e é o último filho do painel no DOM; quem o põe no canto é o CSS. A ordem de leitura fica header, corpo, rodapé, fechar
+- Um Sheet por vez, e nunca aninhado com Dialog
+
+**Acessibilidade**:
+- `role="dialog"` + `aria-modal="true"` sempre; `aria-labelledby` e `aria-describedby` conforme título e descrição existam
+- Gatilho com `aria-haspopup="dialog"`
+- Foco entra no primeiro focável e volta ao gatilho ao fechar; Tab e Shift+Tab circulam dentro do painel
+- Escape e clique no fundo fecham
+
+**Analytics**: emitir `sheet_open` / `sheet_close` com `{ component, side, reason }`.
+
+**Dívida medida, para não ser redescoberta**:
+- O nome acessível do botão de fechar é a string `Fechar`, cravada na fábrica. Não passa por `labels` nem por tradução, então em página em inglês ou espanhol o leitor de tela ouve português. É a única string de interface presa nesta stack de overlay
+- O Sheet NÃO trava a rolagem do `body` enquanto aberto; o Drawer trava quando `modal`. São irmãos com comportamento diferente atrás do mesmo `aria-modal="true"`, e o atributo promete o que só um deles cumpre
 
 ---
 
