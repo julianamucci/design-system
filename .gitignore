@@ -3,6 +3,16 @@ node_modules/
 .pnp
 .pnp.js
 
+# Logs — nada de log é versionado.
+#
+# Cobre duas coisas que já morderam. O despejo de crash do Storybook
+# (debug-storybook.log) esteve versionado em vue, svelte e vanilla guardando
+# rastro de pilha do 10.3.5, quatro menores atrás do instalado. E o log de
+# falha de instalador (npm/yarn/pnpm), que até aqui só o .gitignore do react
+# pegava — as outras quatro stacks não têm .gitignore próprio, e instalador
+# falhando neste repositório não é hipótese.
+*.log
+
 # Sandbox de teste da CLI Nortear (gerado por mão, transitório)
 .nortear-cli-test/
 
@@ -45,14 +55,6 @@ Thumbs.db
 
 # Storybook
 .storybook-static/
-
-# Log de diagnóstico do próprio Storybook: ele despeja aqui a saída quando o
-# dev server ou o build quebra. É de uma rodada e de uma versão — os que
-# estavam versionados guardavam rastro de pilha do Storybook 10.3.5, quatro
-# menores atrás do instalado. O padrão cobre debug- e build-storybook.log; o
-# .gitignore do react já trazia esta regra, e as outras quatro stacks não têm
-# .gitignore próprio, então ela mora aqui para valer nas cinco.
-*storybook.log
 
 # Tarball do @nortear/ds-core (npm run core:pack)
 nortear-ds-core-*.tgz
