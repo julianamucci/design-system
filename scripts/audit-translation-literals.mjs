@@ -1,6 +1,6 @@
 // Auditoria de conteúdo compartilhado (docs/shared/content/*/translations.json).
 //
-// Quatro checagens, todas determinísticas:
+// Seis checagens, todas determinísticas:
 //
 //   1. literais      Referência literal a API de um stack em chave de TEXTO
 //                    descritivo. Chaves de código (`*Code`) são isentas.
@@ -10,13 +10,19 @@
 //                    "hover"). Não é erro na web; é o que um consumidor
 //                    não-navegador teria de reescrever.
 //   4. tailwind      Resíduo de `@apply` em snippet de CSS documentado.
+//   5. soltos        Snippet preso em override de stack, invisível ao conteúdo
+//                    compartilhado.
+//   6. chaves        Chave repetida dentro do mesmo objeto. `JSON.parse` fica
+//                    com a última e descarta a primeira sem avisar — o texto
+//                    escrito some, e o sintoma aparece longe da causa.
 //
 // Uso:
 //   node scripts/audit-translation-literals.mjs [--json]
-//   node scripts/audit-translation-literals.mjs --only literais|cobertura|plataforma|tailwind
+//   node scripts/audit-translation-literals.mjs --only literais|cobertura|plataforma|tailwind|soltos|chaves
 //
-// Código de saída: 2 se houver *literais* (as outras checagens são informativas
-// e não quebram pipeline). `--strict` faz qualquer achado sair com 2.
+// Código de saída: 2 se houver *literais* ou *chaves repetidas* — as duas
+// destroem ou falseiam conteúdo. As outras são informativas e não quebram
+// pipeline; `--strict` faz qualquer achado sair com 2.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -164,6 +170,71 @@ function visit(value, keyPath, locale, component) {
   }
 }
 
+// ─── 6. Coleta: chave repetida dentro do mesmo objeto ─────────────────────────
+//
+// `JSON.parse` fica com a ÚLTIMA e descarta a primeira sem dizer nada. Num
+// arquivo de conteúdo isso apaga texto que alguém escreveu, e o sintoma
+// aparece longe da causa: em 2026-08-30 uma linha de tabela chamada
+// `description` colidiu com o cabeçalho de coluna `props.table.description`, e
+// a tabela de propriedades passou a mostrar o literal `props.table.description`
+// no lugar de "Descrição" — nas CINCO stacks de uma vez, sem nada reprovar.
+//
+// A varredura é por tokenização e não por regex: valor de chave pode conter
+// dois-pontos, aspas escapadas e chaves literais, e regex erra nos três.
+
+const duplicateKeys = [];
+
+function collectDuplicateKeys(text, component) {
+  const stack = [];            // { kind: 'obj' | 'arr', keys: Set, name: string }
+  let i = 0;
+  let pendingKey = null;       // a chave lida, à espera do valor
+
+  const currentPath = () => stack.map((n) => n.name).filter(Boolean).join('.');
+
+  while (i < text.length) {
+    const c = text[i];
+
+    if (c === '"') {
+      let j = i + 1;
+      let value = '';
+      while (j < text.length) {
+        if (text[j] === '\\') { value += text[j + 1]; j += 2; continue; }
+        if (text[j] === '"') break;
+        value += text[j];
+        j++;
+      }
+      // É chave se o próximo caractere não-branco for dois-pontos.
+      let k = j + 1;
+      while (k < text.length && /\s/.test(text[k])) k++;
+      if (text[k] === ':' && stack.length && stack[stack.length - 1].kind === 'obj') {
+        const node = stack[stack.length - 1];
+        if (node.keys.has(value)) {
+          duplicateKeys.push({
+            component,
+            path: currentPath(),
+            key: value,
+            line: text.slice(0, i).split('\n').length,
+          });
+        }
+        node.keys.add(value);
+        pendingKey = value;
+      }
+      i = j + 1;
+      continue;
+    }
+
+    if (c === '{' || c === '[') {
+      stack.push({ kind: c === '{' ? 'obj' : 'arr', keys: new Set(), name: pendingKey ?? '' });
+      pendingKey = null;
+      i++;
+      continue;
+    }
+    if (c === '}' || c === ']') { stack.pop(); i++; continue; }
+
+    i++;
+  }
+}
+
 const components = fs
   .readdirSync(CONTENT)
   .filter((c) => fs.statSync(path.join(CONTENT, c)).isDirectory());
@@ -171,7 +242,9 @@ const components = fs
 for (const comp of components) {
   const file = path.join(CONTENT, comp, 'translations.json');
   if (!fs.existsSync(file)) continue;
-  const json = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const raw = fs.readFileSync(file, 'utf8');
+  collectDuplicateKeys(raw, comp);
+  const json = JSON.parse(raw);
   for (const [locale, tree] of Object.entries(json)) visit(tree, [], locale, comp);
 }
 
@@ -326,5 +399,26 @@ if (wants('soltos')) {
   console.log('');
 }
 
-const failed = literals.length > 0 || (STRICT && (platform.length > 0 || tailwind.length > 0));
+if (wants('chaves')) {
+  console.log(`## 6. Chave repetida dentro do mesmo objeto\n`);
+  console.log(`Ocorrências: **${duplicateKeys.length}**\n`);
+  if (duplicateKeys.length) {
+    console.log(`\`JSON.parse\` fica com a última e descarta a primeira em silêncio: o texto`);
+    console.log(`escrito some, e o sintoma aparece longe da causa.\n`);
+    for (const d of duplicateKeys) {
+      console.log(`- \`${d.component}\` · linha ${d.line} · \`${d.path ? d.path + '.' : ''}${d.key}\``);
+    }
+  } else {
+    console.log('Nenhuma.');
+  }
+  console.log('');
+}
+
+// Chave repetida REPROVA, e não fica em informativo: ela apaga conteúdo que
+// alguém escreveu, enquanto as outras checagens apontam texto que está lá e
+// poderia ser melhor.
+const failed =
+  literals.length > 0 ||
+  duplicateKeys.length > 0 ||
+  (STRICT && (platform.length > 0 || tailwind.length > 0));
 process.exit(failed ? 2 : 0);
