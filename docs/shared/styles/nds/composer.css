@@ -72,8 +72,10 @@
  * nunca o código, que é ligado a um runtime de React.
  *
  * Tokens: --background, --foreground, --muted, --muted-foreground, --input,
- *         --border, --ring, --destructive, --radius, --spacing-*, --text-*,
- *         --duration-fast
+ *         --border, --ring, --destructive, --radius, --radius-sm, --spacing-*,
+ *         --text-*, --duration-fast, e no seletor do gatilho --popover,
+ *         --popover-foreground, --accent, --accent-foreground, --elevation-md,
+ *         --z-popover
  */
 
 .nds-composer {
@@ -204,5 +206,137 @@
   margin: 0;
   padding-inline: var(--spacing-1);
   font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Seletor do caractere gatilho ─────────────────────────────────────────────
+ *
+ * O painel que abre quando alguém digita `@` ou `/` no campo. A máquina de
+ * quando ele vale, o que recorta e como aplica está em
+ * `@shared/primitives/composer-trigger.ts`; esta folha desenha o painel e o
+ * item, e o componente liga os dois.
+ *
+ *   <div class="nds-composer-field">
+ *     <textarea class="nds-composer-input"
+ *               aria-controls="…" aria-activedescendant="…"></textarea>
+ *     <div class="nds-composer-trigger-popover" role="listbox">
+ *       <div class="nds-composer-trigger-option" role="option" aria-selected="true">
+ *         <span class="nds-composer-trigger-option-label">Ana Souza</span>
+ *         <span class="nds-composer-trigger-option-hint">Produto</span>
+ *       </div>
+ *     </div>
+ *     <p class="nds-composer-trigger-empty">Nada encontrado</p>
+ *   </div>
+ *
+ * ANCORADO NO CAMPO, E NÃO NO PIXEL DO CURSOR — e isto é uma decisão, não uma
+ * simplificação.
+ *
+ * Ancorar no cursor exige espelhar o `<textarea>` num `<div>` invisível que
+ * repita fonte, entrelinha, respiro e quebra de linha, e medir onde o caractere
+ * caiu. Esse espelho quebra em três lugares que este sistema leva a sério: com
+ * o zoom do navegador, com o tamanho de fonte aumentado (WCAG 1.4.4, que é
+ * justamente por que o campo não tem altura fixa) e entre navegadores, que
+ * arredondam a métrica de forma diferente. O painel ancorado no campo não tem
+ * nada disso para errar, e num campo de duas linhas o cursor está a poucos
+ * pixels dele de qualquer forma.
+ *
+ * O PAINEL ABRE PARA CIMA. O composer mora no pé da conversa; abrir para baixo
+ * é abrir para fora da janela.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O FOCO NUNCA SAI DO CAMPO. Quem escreve continua escrevendo enquanto
+ *    escolhe — mover o foco para a lista faria a próxima letra digitada não
+ *    chegar ao texto. O campo APONTA: `aria-controls` liga-o à lista e
+ *    `aria-activedescendant` diz qual opção está ativa.
+ *
+ *    E o campo NÃO vira `combobox`, ainda que o padrão tenha esse nome: a
+ *    especificação de ARIA em HTML não admite esse papel num campo de várias
+ *    linhas, e o axe reprova por `aria-allowed-role`. Medido aqui, não
+ *    deduzido — a primeira versão trazia o papel e cinco stories reprovaram.
+ * 2. A OPÇÃO ATIVA É `aria-selected`, e não só uma cor de fundo. Estado nunca é
+ *    só cor (WCAG 1.4.1), e aqui é o que o leitor de tela anuncia ao andar pela
+ *    lista.
+ * 3. "NADA ENCONTRADO" É TEXTO, e não uma lista vazia. Lista vazia é silêncio
+ *    para quem não vê a tela, e silêncio parece que a busca não respondeu.
+ *    Sem opções o painel também deixa de ser `role="listbox"`: lista de
+ *    opções sem opção reprova em `aria-required-children`, e o leitor de tela
+ *    anunciaria "lista com zero itens" em vez da frase que explica o que houve.
+ * 4. ALVO DE TOQUE ≥ 24px em cada opção (WCAG 2.5.8).
+ */
+
+.nds-composer-trigger-popover {
+  position: absolute;
+  /* Acima do campo, encostado nele. O composer mora no pé da conversa. */
+  inset-block-end: calc(100% + var(--spacing-1));
+  inset-inline-start: 0;
+  z-index: var(--z-popover);
+
+  max-block-size: 14rem;
+  overflow-y: auto;
+  min-inline-size: 14rem;
+  max-inline-size: 100%;
+
+  padding: var(--spacing-1);
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--elevation-md);
+}
+
+/* A moldura passa a ser o ponto de referência do painel. */
+.nds-composer-field {
+  position: relative;
+}
+
+.nds-composer-trigger-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5);
+  /* Alvo de toque (WCAG 2.5.8). Medida de área, não altura de texto: o respiro
+   * acima é que dá a altura, e ela cresce com a fonte. */
+  min-block-size: var(--spacing-6);
+
+  border-radius: var(--radius-sm);
+  font-size: var(--text-control);
+  cursor: pointer;
+}
+
+/* A opção ativa: fundo E marcação, porque `aria-selected` é o que o leitor de
+ * tela anuncia e a cor é o que os olhos veem. Uma sem a outra deixa metade das
+ * pessoas sem saber onde está. */
+.nds-composer-trigger-option[aria-selected="true"] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-composer-trigger-option-label {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nds-composer-trigger-option-hint {
+  flex-shrink: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+/* Na opção ativa a dica acompanha a cor do fundo: `--muted-foreground` sobre
+ * `--accent` é o par que some. */
+.nds-composer-trigger-option[aria-selected="true"] .nds-composer-trigger-option-hint {
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-composer-trigger-empty {
+  margin: 0;
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-2);
+  font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
 }

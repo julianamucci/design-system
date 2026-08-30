@@ -1,5 +1,10 @@
 import { cn } from '@/lib/utils';
 import { createButton } from './button';
+import {
+  createTriggerPopover,
+  type TriggerPopoverLabels,
+  type TriggerSource,
+} from './composer-trigger-popover';
 
 /**
  * A superfície de entrada da conversa. Estrutura e cores em `nds/composer.css`,
@@ -62,6 +67,15 @@ export interface ComposerOptions {
   submitOn?: ComposerSubmitOn;
   /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
   railStart?: HTMLElement[];
+  /**
+   * Gatilhos do seletor — menções, comandos, e qualquer outro caractere.
+   *
+   * Sem eles o campo é só um campo. Com eles, digitar o caractere abre o
+   * seletor, e a tecla de envio passa a ESCOLHER enquanto ele estiver aberto.
+   */
+  triggers?: TriggerSource[];
+  /** Textos do seletor. Obrigatórios quando há gatilho, porque são texto de tela. */
+  triggerLabels?: TriggerPopoverLabels;
   /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem consome. */
   onSubmit?: (value: string) => void;
   /** Alguém pediu para interromper o que está sendo gerado. */
@@ -112,6 +126,8 @@ export function createComposer(options: ComposerOptions): ComposerElement {
     disabled = false,
     submitOn = 'enter',
     railStart = [],
+    triggers = [],
+    triggerLabels,
     onSubmit,
     onStop,
     onInput,
@@ -143,6 +159,25 @@ export function createComposer(options: ComposerOptions): ComposerElement {
   if (disabled) input.disabled = true;
 
   field.appendChild(input);
+
+  // ── O seletor do caractere gatilho ─────────────────────────────────────────
+  //
+  // Só existe quando há gatilho declarado E texto para o painel dizer. Sem
+  // rótulo o painel abriria com "nada encontrado" em branco, que é pior que
+  // não abrir.
+  const triggerPopover =
+    triggers.length && triggerLabels
+      ? createTriggerPopover({
+          input,
+          sources: triggers,
+          labels: triggerLabels,
+          onApply: () => {
+            desenhar();
+            onInput?.(input.value);
+          },
+        })
+      : null;
+  if (triggerPopover) field.appendChild(triggerPopover.element);
 
   // ── O trilho ───────────────────────────────────────────────────────────────
 
@@ -230,6 +265,39 @@ export function createComposer(options: ComposerOptions): ComposerElement {
   });
 
   input.addEventListener('keydown', (event) => {
+    // COM O SELETOR ABERTO, AS TECLAS SÃO DELE.
+    //
+    // É a decisão que atravessa o componente inteiro: envio e escolha disputam
+    // a mesma tecla, e enviar no meio de uma menção é o defeito que quem
+    // escreve encontra na primeira vez que usa. As setas e o Escape também
+    // param aqui — sem isso a seta moveria o cursor no texto enquanto a lista
+    // parece andar.
+    if (triggerPopover?.isOpen()) {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        triggerPopover.move(1);
+        return;
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        triggerPopover.move(-1);
+        return;
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        triggerPopover.close();
+        return;
+      }
+      // Enter e Tab escolhem. O Tab entra porque quem escreve espera que ele
+      // complete, e sem isso ele tiraria o foco do campo com a lista aberta.
+      if ((event.key === 'Enter' && !event.isComposing) || event.key === 'Tab') {
+        if (triggerPopover.applyActive()) {
+          event.preventDefault();
+          return;
+        }
+      }
+    }
+
     if (!pedeEnvio(event, submitOn)) return;
     // Só aqui: sem o `preventDefault` a quebra de linha entra junto com o
     // envio, e o campo fica com um enter sobrando depois de limpo.
@@ -239,8 +307,20 @@ export function createComposer(options: ComposerOptions): ComposerElement {
 
   input.addEventListener('input', () => {
     desenhar();
+    triggerPopover?.sync();
     onInput?.(input.value);
   });
+
+  // A rolagem e o clique movem o cursor sem disparar `input`, e o gatilho
+  // depende de ONDE o cursor está: sem isto o seletor continuaria aberto sobre
+  // um `@` que ficou para trás.
+  input.addEventListener('click', () => triggerPopover?.sync());
+  input.addEventListener('keyup', (event) => {
+    if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End') {
+      triggerPopover?.sync();
+    }
+  });
+  input.addEventListener('blur', () => triggerPopover?.close());
 
   form.getValue = () => input.value;
   form.setValue = (novo: string) => {

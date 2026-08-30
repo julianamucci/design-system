@@ -1,0 +1,1481 @@
+{
+  "pt-BR": {
+    "title": "Seletor do gatilho",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O painel que abre quando alguém digita um caractere gatilho no campo: menções, comandos, e qualquer outra lista ancorada no que está sendo escrito.",
+    "seo": {
+      "title": "Seletor do gatilho — menções e comandos no composer",
+      "description": "Seletor de menções e comandos ancorado ao campo do composer. O foco nunca sai do campo, a opção ativa é apontada, e a tecla de envio escolhe em vez de enviar enquanto a lista está aberta."
+    },
+    "labels": {
+      "empty": "Nada encontrado",
+      "list": "Sugestões",
+      "team": "Produto"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "mentions": "Menção, em começo de palavra",
+        "commands": "Comando, só no começo do campo",
+        "filtered": "Filtrado pelo que já foi digitado",
+        "empty": "Sem resultado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O campo aponta a lista só enquanto ela existe para ele — fora disso é um campo de texto comum, sem atributo sobrando.",
+      "item2": "O foco nunca sai do campo. Quem escreve continua escrevendo enquanto escolhe, e a opção ativa é apontada, não focada.",
+      "item3": "O painel abre para cima, porque o campo mora no pé da conversa e abrir para baixo é abrir para fora da janela.",
+      "item4": "A opção traz o rótulo à esquerda e uma informação de apoio à direita.",
+      "item5": "Sem resultado, o painel diz por escrito que não há nada — lista vazia é silêncio para quem não vê a tela.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\" role=\"combobox\" aria-expanded=\"true\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para escolher algo que continua sendo texto: quem se menciona, que comando se executa.",
+        "item2": "Declare onde cada gatilho vale: menção em começo de palavra, comando só no começo do campo.",
+        "item3": "Ordene as opções por relevância antes de passar: quem começa pelo termo já vem na frente, e o resto da ordem é sua.",
+        "item4": "Use a informação de apoio para desempatar homônimos, e não para repetir o rótulo.",
+        "item5": "Deixe o valor escrito diferir do rótulo quando o que se lê não é o que se escreve."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mencionar alguém no meio da frase",
+          "u": "Seletor do gatilho",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Escolher entre poucas opções fixas",
+          "u": "Select",
+          "a": "O seletor do gatilho nasce do que está sendo escrito; um seletor de campo não."
+        },
+        "item3": {
+          "s": "Busca global de comandos do aplicativo",
+          "u": "Command",
+          "a": "Aquele é uma janela sobre a tela; este vive dentro do campo e deixa texto para trás."
+        },
+        "item4": {
+          "s": "Completar um campo de uma linha",
+          "u": "Combobox",
+          "a": "Ali o campo inteiro é o termo; aqui o termo é um pedaço do que se escreve."
+        },
+        "item5": {
+          "s": "Oferecer emoji por atalho",
+          "u": "Seletor do gatilho",
+          "a": "—"
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "label": {
+            "name": "Rótulo da opção",
+            "format": "O nome como a pessoa o reconhece",
+            "good": "Ana Souza",
+            "bad": "usuario_ana_souza_2019"
+          },
+          "hint": {
+            "name": "Apoio da opção",
+            "format": "O que desempata, em uma ou duas palavras",
+            "good": "Produto",
+            "bad": "Ana Souza, do time de Produto"
+          },
+          "empty": {
+            "name": "Sem resultado",
+            "format": "Frase curta, sem culpar quem digitou",
+            "good": "Nada encontrado",
+            "bad": "Você digitou errado"
+          },
+          "command": {
+            "name": "Comando",
+            "format": "Verbo no infinitivo, e o valor escrito em minúsculas",
+            "good": "Resumir a conversa",
+            "bad": "RESUMO"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Deixe a tecla de envio escolher enquanto a lista estiver aberta.",
+        "item2": "Abra a lista inteira quando o gatilho acabou de ser digitado.",
+        "item3": "Diga por escrito quando não há resultado.",
+        "item4": "Feche ao apertar a tecla de escape, sem escrever nada."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não mova o foco para a lista: a próxima letra digitada precisa chegar ao texto.",
+        "item2": "Não abra o seletor no meio de uma palavra — endereço de e-mail não é menção.",
+        "item3": "Não marque a opção ativa só por cor.",
+        "item4": "Não deixe a lista vazia falar por si: ela não fala."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "Com a lista aberta, a tecla de envio escolhe a opção.",
+        "dont": "Enviar no meio de uma menção manda a mensagem pela metade, e é o primeiro defeito que quem escreve encontra."
+      },
+      "pair2": {
+        "do": "Sem resultado, o painel diz por escrito que não há nada.",
+        "dont": "Uma lista vazia é silêncio para quem não vê a tela, e silêncio parece falha."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Menções",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\nimport { MENTION_TRIGGER } from '@shared/primitives/composer-trigger';\n\ncreateComposer({\n  labels,\n  triggerLabels,\n  triggers: [{ spec: MENTION_TRIGGER, options: pessoas }],\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\nimport { MENTION_TRIGGER } from \"@shared/primitives/composer-trigger\";\n\n<Composer\n  labels={labels}\n  triggerLabels={triggerLabels}\n  triggers={[{ spec: MENTION_TRIGGER, options: pessoas }]}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :trigger-labels=\"triggerLabels\"\n  :triggers=\"[{ spec: MENTION_TRIGGER, options: pessoas }]\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {triggerLabels}\n  triggers={[{ spec: MENTION_TRIGGER, options: pessoas }]}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [triggerLabels]=\"triggerLabels\"\n  [triggers]=\"mentionTriggers\"\n/>"
+      },
+      "withCommands": "Comandos",
+      "withCommandsCode": {
+        "web": "// O comando vale só no começo do campo, e o que se escreve não é o que\n// se lê: o rótulo diz \"Resumir a conversa\" e o valor escreve \"/resumir\".\n{ spec: COMMAND_TRIGGER, options: [\n  { id: 'resumir', label: 'Resumir a conversa', value: '/resumir', hint: '/resumir' },\n] }"
+      }
+    },
+    "variants": {
+      "title": "Onde o gatilho vale",
+      "visualTitle": "Exemplos visuais",
+      "note": "O painel é o mesmo; o que muda é onde o caractere abre a lista. Menção vale em começo de qualquer palavra; comando vale só na primeira posição do campo, porque no meio da frase aquele caractere é pontuação.",
+      "items": {
+        "mention": {
+          "description": "Vale em começo de qualquer palavra — depois de um espaço ou de uma quebra de linha.",
+          "code": {
+            "web": "{ spec: MENTION_TRIGGER, options: pessoas }"
+          }
+        },
+        "command": {
+          "description": "Vale só na primeira posição do campo. No meio da frase aquele caractere é pontuação.",
+          "code": {
+            "web": "{ spec: COMMAND_TRIGGER, options: comandos }"
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "closed": {
+        "label": "Fechado",
+        "trigger": "Não há gatilho ativo na posição do cursor.",
+        "behavior": "O campo é um campo de texto comum, e a tecla de envio envia."
+      },
+      "open": {
+        "label": "Aberto",
+        "trigger": "O caractere gatilho acabou de ser digitado onde ele vale.",
+        "behavior": "A lista inteira aparece, e o campo passa a apontá-la."
+      },
+      "filtered": {
+        "label": "Filtrado",
+        "trigger": "Há texto entre o gatilho e o cursor.",
+        "behavior": "Só o que casa fica, com quem começa pelo termo na frente, e a opção ativa volta ao topo."
+      },
+      "empty": {
+        "label": "Sem resultado",
+        "trigger": "Nada casa com o que foi digitado.",
+        "behavior": "O painel continua aberto e diz por escrito que não há nada."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "triggers": {
+          "name": "triggers",
+          "type": "TriggerSource[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Os gatilhos do campo, cada um com onde vale e as opções que oferece. Sem eles o campo é só um campo."
+        },
+        "triggerLabels": {
+          "name": "triggerLabels",
+          "type": "TriggerPopoverLabels",
+          "default": "—",
+          "required": "Não",
+          "description": "O texto do painel: nome da lista e a frase de nenhum resultado. Obrigatório quando há gatilho, porque é texto de tela."
+        },
+        "spec": {
+          "name": "spec",
+          "type": "TriggerSpec",
+          "default": "—",
+          "required": "Sim",
+          "description": "O caractere e onde ele vale — começo de palavra ou começo do campo."
+        },
+        "options": {
+          "name": "options",
+          "type": "TriggerOption[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que a lista oferece. A ordem de entrada é preservada dentro de cada grupo do filtro."
+        },
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que se lê na lista, e o que o filtro compara — ignorando acento nos dois sentidos."
+        },
+        "hint": {
+          "name": "hint",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Informação de apoio à direita, para desempatar homônimos."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "O que fica escrito ao escolher. Sem ele, o caractere gatilho mais o rótulo — existe porque o que se escreve nem sempre é o que se lê."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A opção é dado, e o componente não sabe o que ela significa. Quem consome decide quem pode ser mencionado, o que um comando faz e o que fica escrito no lugar do rótulo.",
+      "extensibilityCode": {
+        "web": "// A opção é dado, e o que ela escreve pode diferir do que ela mostra.\n{ id: 'ana', label: 'Ana Souza', hint: 'Produto' }\n// escreve \"@Ana Souza\"\n\n{ id: 'resumir', label: 'Resumir a conversa', value: '/resumir' }\n// escreve \"/resumir\""
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "popover": {
+          "token": "--popover",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Fundo do painel."
+        },
+        "popoverForeground": {
+          "token": "--popover-foreground",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Texto do painel."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Borda do painel."
+        },
+        "elevation": {
+          "token": "--elevation-md",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Sombra que separa o painel do campo."
+        },
+        "zIndex": {
+          "token": "--z-popover",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Camada do painel."
+        },
+        "accent": {
+          "token": "--accent",
+          "value": ".nds-composer-trigger-option[aria-selected=\"true\"]",
+          "description": "Fundo da opção ativa — acompanhado da marcação que o leitor de tela anuncia."
+        },
+        "accentForeground": {
+          "token": "--accent-foreground",
+          "value": ".nds-composer-trigger-option[aria-selected=\"true\"]",
+          "description": "Texto da opção ativa, e da informação de apoio dentro dela."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-trigger-option-hint",
+          "description": "Informação de apoio e a frase de nenhum resultado."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-trigger-option",
+          "description": "Arredondamento da opção."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-trigger-popover {\n  max-block-size: 20rem;\n}\n\n/* A opção ativa marca fundo E estado: um é o que os olhos veem, o outro é o\n   que o leitor de tela anuncia. */\n.nds-composer-trigger-option[aria-selected=\"true\"] {\n  background-color: hsl(var(--accent));\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O foco continua no campo do começo ao fim: o campo aponta a lista, a opção ativa se anuncia, e nada precisa receber foco.",
+      "items": {
+        "item1": "O campo aponta a lista só enquanto ela existe. Ele não muda de papel: a especificação de ARIA em HTML não admite caixa de combinação num campo de várias linhas.",
+        "item2": "O foco nunca sai do campo — mover o foco faria a próxima letra digitada não chegar ao texto.",
+        "item3": "A opção ativa é apontada pelo campo, e anda com as setas sem que nada receba foco.",
+        "item4": "A opção ativa carrega marcação de seleção, e não só uma cor de fundo.",
+        "item5": "Sem resultado, o painel traz uma frase — lista vazia não fala."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Com a lista aberta, escolhe a opção ativa em vez de sair do campo.",
+        "enter": "Com a lista aberta, escolhe. Fechada, envia.",
+        "arrows": "Andam pela lista, circulando do fim ao começo."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-controls liga o campo à lista; o painel é lista de opções enquanto tem opções.",
+        "item2": "Sem opções o painel deixa de ser lista, porque lista de opções sem opção promete filhos que não existem.",
+        "item3": "aria-activedescendant aponta a opção ativa sem mover o foco."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "Ao abrir, a lista é anunciada com o nome dela e a quantidade de opções.",
+        "item2": "Ao andar com as setas, cada opção ativa é lida sem que o foco saia do campo.",
+        "item3": "Sem resultado, a frase do painel é lida como qualquer texto."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo em que o seletor vive."
+        },
+        "combobox": {
+          "name": "Combobox",
+          "description": "Quando o campo inteiro é o termo da busca."
+        },
+        "command": {
+          "name": "Command",
+          "description": "A busca de comandos que abre sobre a tela, e não dentro do campo."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "O painel de propósito geral, ancorado num gatilho e não no que se escreve."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O painel é ancorado no campo, e não no pixel do cursor. Ancorar no cursor exige espelhar o campo num elemento invisível e medir onde o caractere caiu — e esse espelho quebra com o zoom, com a fonte aumentada e entre navegadores.",
+      "item2": "A escolha por ponteiro acontece ao apertar o botão, e não ao soltá-lo: soltar tiraria o foco do campo antes, e a escolha aconteceria com o cursor já perdido.",
+      "item3": "A lista circula: quem está na última opção e desce volta à primeira. Uma lista que para no fim obriga a subir de volta contando.",
+      "item4": "O termo que muda devolve a opção ativa ao topo. Manter o índice faria a escolha pular para outra pessoa a cada letra digitada.",
+      "item5": "O seletor também relê o campo ao clicar e ao andar com as setas: essas ações movem o cursor sem digitar nada, e o gatilho depende de onde o cursor está."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; o seletor em si não instrumenta a escolha, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Digitar o caractere gatilho onde ele vale",
+          "result": "A lista abre inteira",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Continuar digitando depois do gatilho",
+          "result": "A lista filtra, com quem começa pelo termo na frente",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Andar com as setas até passar do fim",
+          "result": "A opção ativa circula de volta ao começo",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Apertar a tecla de envio com a lista aberta",
+          "result": "Escolhe a opção ativa, e não envia",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Apertar a tecla de tabulação com a lista aberta",
+          "result": "Escolhe, e o foco fica no campo",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Apertar a tecla de escape",
+          "result": "Fecha sem escrever nada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Apontar e escolher uma opção",
+          "result": "O texto é escrito e o foco continua no campo",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Digitar o gatilho no meio de uma palavra",
+          "result": "Nada abre — endereço de e-mail não é menção",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Digitar o gatilho de comando depois de texto",
+          "result": "Nada abre — ali aquele caractere é pontuação",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Escolher uma opção cujo valor difere do rótulo",
+          "result": "O campo recebe o valor, e não o rótulo",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "O campo aponta a lista só com ela aberta, e não muda de papel",
+        "item2": "O foco continua no campo do começo ao fim da escolha",
+        "item3": "A opção ativa é apontada pelo campo, e acompanha as setas",
+        "item4": "A opção ativa carrega marcação de seleção, e não só cor",
+        "item5": "Sem resultado há uma frase, e não uma lista vazia",
+        "item6": "Cada opção tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — lista aberta",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Menções — lista com apoio à direita",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Comandos — lista de comandos",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — filtrado",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sem resultado",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estados — fechado",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Trigger picker",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The panel that opens when someone types a trigger character in the field: mentions, commands, and any other list anchored to what is being written.",
+    "seo": {
+      "title": "Trigger picker — mentions and commands in the composer",
+      "description": "Mention and command picker anchored to the composer field. Focus never leaves the field, the active option is pointed at, and the submit key chooses instead of sending while the list is open."
+    },
+    "labels": {
+      "empty": "Nothing found",
+      "list": "Suggestions",
+      "team": "Product"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "mentions": "Mention, at the start of a word",
+        "commands": "Command, only at the start of the field",
+        "filtered": "Filtered by what has been typed",
+        "empty": "No result"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The field points at the list only while it exists for it — otherwise it is an ordinary text field, with no attribute left over.",
+      "item2": "Focus never leaves the field. Whoever is writing keeps writing while choosing, and the active option is pointed at, not focused.",
+      "item3": "The panel opens upwards, because the field lives at the foot of the conversation and opening downwards is opening off-screen.",
+      "item4": "The option carries the label on the left and supporting information on the right.",
+      "item5": "With no result, the panel says in writing that there is nothing — an empty list is silence for those who cannot see the screen.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\" role=\"combobox\" aria-expanded=\"true\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to pick something that stays text: who is mentioned, which command runs.",
+        "item2": "Declare where each trigger is valid: mention at the start of a word, command only at the start of the field.",
+        "item3": "Order options by relevance before passing them: those starting with the term already come first, and the rest of the order is yours.",
+        "item4": "Use the supporting information to disambiguate namesakes, not to repeat the label.",
+        "item5": "Let the written value differ from the label when what is read is not what is written."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Mentioning someone mid-sentence",
+          "u": "Trigger picker",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Choosing among a few fixed options",
+          "u": "Select",
+          "a": "The trigger picker is born from what is being written; a field select is not."
+        },
+        "item3": {
+          "s": "Global app command search",
+          "u": "Command",
+          "a": "That one is a window over the screen; this one lives inside the field and leaves text behind."
+        },
+        "item4": {
+          "s": "Completing a one-line field",
+          "u": "Combobox",
+          "a": "There the whole field is the term; here the term is a fragment of what is written."
+        },
+        "item5": {
+          "s": "Offering emoji by shortcut",
+          "u": "Trigger picker",
+          "a": "—"
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "label": {
+            "name": "Option label",
+            "format": "The name as the person recognises it",
+            "good": "Ana Souza",
+            "bad": "user_ana_souza_2019"
+          },
+          "hint": {
+            "name": "Option support",
+            "format": "What breaks the tie, in one or two words",
+            "good": "Product",
+            "bad": "Ana Souza, from the Product team"
+          },
+          "empty": {
+            "name": "No result",
+            "format": "A short sentence, without blaming whoever typed",
+            "good": "Nothing found",
+            "bad": "You typed it wrong"
+          },
+          "command": {
+            "name": "Command",
+            "format": "Infinitive verb, and the written value in lowercase",
+            "good": "Summarise the conversation",
+            "bad": "SUMMARY"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Let the submit key choose while the list is open.",
+        "item2": "Open the whole list when the trigger has just been typed.",
+        "item3": "Say in writing when there is no result.",
+        "item4": "Close on the escape key, writing nothing."
+      },
+      "dont": {
+        "title": "Do not",
+        "item1": "Do not move focus to the list: the next typed letter must reach the text.",
+        "item2": "Do not open the picker mid-word — an email address is not a mention.",
+        "item3": "Do not mark the active option by colour alone.",
+        "item4": "Do not let an empty list speak for itself: it does not speak."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "With the list open, the submit key picks the option.",
+        "dont": "Sending mid-mention sends half a message, and it is the first defect whoever writes runs into."
+      },
+      "pair2": {
+        "do": "With no result, the panel says in writing that there is nothing.",
+        "dont": "An empty list is silence for those who cannot see the screen, and silence looks like failure."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Mentions",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\nimport { MENTION_TRIGGER } from '@shared/primitives/composer-trigger';\n\ncreateComposer({\n  labels,\n  triggerLabels,\n  triggers: [{ spec: MENTION_TRIGGER, options: pessoas }],\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\nimport { MENTION_TRIGGER } from \"@shared/primitives/composer-trigger\";\n\n<Composer\n  labels={labels}\n  triggerLabels={triggerLabels}\n  triggers={[{ spec: MENTION_TRIGGER, options: pessoas }]}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :trigger-labels=\"triggerLabels\"\n  :triggers=\"[{ spec: MENTION_TRIGGER, options: pessoas }]\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {triggerLabels}\n  triggers={[{ spec: MENTION_TRIGGER, options: pessoas }]}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [triggerLabels]=\"triggerLabels\"\n  [triggers]=\"mentionTriggers\"\n/>"
+      },
+      "withCommands": "Commands",
+      "withCommandsCode": {
+        "web": "// O comando vale só no começo do campo, e o que se escreve não é o que\n// se lê: o rótulo diz \"Resumir a conversa\" e o valor escreve \"/resumir\".\n{ spec: COMMAND_TRIGGER, options: [\n  { id: 'resumir', label: 'Resumir a conversa', value: '/resumir', hint: '/resumir' },\n] }"
+      }
+    },
+    "variants": {
+      "title": "Where the trigger is valid",
+      "visualTitle": "Visual examples",
+      "note": "The panel is the same; what changes is where the character opens the list. A mention is valid at the start of any word; a command only at the first position of the field, because mid-sentence that character is punctuation.",
+      "items": {
+        "mention": {
+          "description": "Valid at the start of any word — after a space or a line break.",
+          "code": {
+            "web": "{ spec: MENTION_TRIGGER, options: pessoas }"
+          }
+        },
+        "command": {
+          "description": "Valid only at the first position of the field. Mid-sentence that character is punctuation.",
+          "code": {
+            "web": "{ spec: COMMAND_TRIGGER, options: comandos }"
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "closed": {
+        "label": "Closed",
+        "trigger": "There is no active trigger at the cursor position.",
+        "behavior": "The field is an ordinary text field, and the submit key sends."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "The trigger character has just been typed where it is valid.",
+        "behavior": "The whole list appears, and the field starts pointing at it."
+      },
+      "filtered": {
+        "label": "Filtered",
+        "trigger": "There is text between the trigger and the cursor.",
+        "behavior": "Only what matches remains, with those starting with the term first, and the active option returns to the top."
+      },
+      "empty": {
+        "label": "No result",
+        "trigger": "Nothing matches what was typed.",
+        "behavior": "The panel stays open and says in writing that there is nothing."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "triggers": {
+          "name": "triggers",
+          "type": "TriggerSource[]",
+          "default": "—",
+          "required": "No",
+          "description": "The field triggers, each with where it is valid and the options it offers. Without them the field is just a field."
+        },
+        "triggerLabels": {
+          "name": "triggerLabels",
+          "type": "TriggerPopoverLabels",
+          "default": "—",
+          "required": "No",
+          "description": "The panel text: the list name and the no-result sentence. Required when there is a trigger, because it is on-screen text."
+        },
+        "spec": {
+          "name": "spec",
+          "type": "TriggerSpec",
+          "default": "—",
+          "required": "Yes",
+          "description": "The character and where it is valid — start of a word or start of the field."
+        },
+        "options": {
+          "name": "options",
+          "type": "TriggerOption[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "What the list offers. Input order is preserved within each filter group."
+        },
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What is read in the list, and what the filter compares — ignoring accents both ways."
+        },
+        "hint": {
+          "name": "hint",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Supporting information on the right, to disambiguate namesakes."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "What gets written when chosen. Without it, the trigger character plus the label — it exists because what is written is not always what is read."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The option is data, and the component does not know what it means. The consumer decides who can be mentioned, what a command does and what gets written in place of the label.",
+      "extensibilityCode": {
+        "web": "// A opção é dado, e o que ela escreve pode diferir do que ela mostra.\n{ id: 'ana', label: 'Ana Souza', hint: 'Produto' }\n// escreve \"@Ana Souza\"\n\n{ id: 'resumir', label: 'Resumir a conversa', value: '/resumir' }\n// escreve \"/resumir\""
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "popover": {
+          "token": "--popover",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Panel background."
+        },
+        "popoverForeground": {
+          "token": "--popover-foreground",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Panel text."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Panel border."
+        },
+        "elevation": {
+          "token": "--elevation-md",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Shadow separating the panel from the field."
+        },
+        "zIndex": {
+          "token": "--z-popover",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Panel layer."
+        },
+        "accent": {
+          "token": "--accent",
+          "value": ".nds-composer-trigger-option[aria-selected=\"true\"]",
+          "description": "Active option background — accompanied by the marking the screen reader announces."
+        },
+        "accentForeground": {
+          "token": "--accent-foreground",
+          "value": ".nds-composer-trigger-option[aria-selected=\"true\"]",
+          "description": "Active option text, and its supporting information."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-trigger-option-hint",
+          "description": "Supporting information and the no-result sentence."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-trigger-option",
+          "description": "Option rounding."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-composer-trigger-popover {\n  max-block-size: 20rem;\n}\n\n/* A opção ativa marca fundo E estado: um é o que os olhos veem, o outro é o\n   que o leitor de tela anuncia. */\n.nds-composer-trigger-option[aria-selected=\"true\"] {\n  background-color: hsl(var(--accent));\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Focus stays in the field from start to end: the field points at the list, the active option announces itself, and nothing needs to receive focus.",
+      "items": {
+        "item1": "The field points at the list only while it exists. It does not change role: the ARIA in HTML specification does not allow a combo box on a multiline field.",
+        "item2": "Focus never leaves the field — moving it would keep the next typed letter from reaching the text.",
+        "item3": "The active option is pointed at by the field, and moves with the arrows without anything receiving focus.",
+        "item4": "The active option carries a selection marking, not just a background colour.",
+        "item5": "With no result, the panel carries a sentence — an empty list does not speak."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "With the list open, picks the active option instead of leaving the field.",
+        "enter": "With the list open, it picks. Closed, it sends.",
+        "arrows": "Move through the list, wrapping from end to start."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-controls links the field to the list; the panel is a listbox while it has options.",
+        "item2": "With no options the panel stops being a list, because a listbox with no option promises children that do not exist.",
+        "item3": "aria-activedescendant points at the active option without moving focus."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "On opening, the list is announced with its name and the number of options.",
+        "item2": "When moving with the arrows, each active option is read without focus leaving the field.",
+        "item3": "With no result, the panel sentence is read like any text."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field the picker lives in."
+        },
+        "combobox": {
+          "name": "Combobox",
+          "description": "When the whole field is the search term."
+        },
+        "command": {
+          "name": "Command",
+          "description": "The command search that opens over the screen, not inside the field."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "The general-purpose panel, anchored to a trigger rather than to what is written."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The panel is anchored to the field, not to the cursor pixel. Anchoring to the cursor requires mirroring the field in an invisible element and measuring where the character landed — and that mirror breaks with zoom, with enlarged fonts and across browsers.",
+      "item2": "Pointer choice happens on button press, not on release: releasing would take focus from the field first, and the choice would happen with the cursor already lost.",
+      "item3": "The list wraps: whoever is on the last option and moves down returns to the first. A list that stops at the end forces counting back up.",
+      "item4": "A changed term returns the active option to the top. Keeping the index would make the choice jump to someone else on every keystroke.",
+      "item5": "The picker also re-reads the field on click and on arrow movement: those actions move the cursor without typing anything, and the trigger depends on where the cursor is."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the picker itself does not instrument the choice, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Type the trigger character where it is valid",
+          "result": "The whole list opens",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Keep typing after the trigger",
+          "result": "The list filters, with those starting with the term first",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Move with the arrows past the end",
+          "result": "The active option wraps back to the start",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Press the submit key with the list open",
+          "result": "It picks the active option, and does not send",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Press the tab key with the list open",
+          "result": "It picks, and focus stays in the field",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Press the escape key",
+          "result": "Closes without writing anything",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Point at and choose an option",
+          "result": "The text is written and focus stays in the field",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Type the trigger mid-word",
+          "result": "Nothing opens — an email address is not a mention",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Type the command trigger after text",
+          "result": "Nothing opens — there that character is punctuation",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Choose an option whose value differs from the label",
+          "result": "The field receives the value, not the label",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The field points at the list only while open, and does not change role",
+        "item2": "Focus stays in the field from start to end of the choice",
+        "item3": "The active option is pointed at by the field, and follows the arrows",
+        "item4": "The active option carries a selection marking, not just colour",
+        "item5": "With no result there is a sentence, not an empty list",
+        "item6": "Each option has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — list open",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Mentions — list with support on the right",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Commands — command list",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "States — filtered",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — no result",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "States — closed",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Selector del disparador",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "El panel que se abre cuando alguien escribe un carácter disparador en el campo: menciones, comandos y cualquier otra lista anclada a lo que se escribe.",
+    "seo": {
+      "title": "Selector del disparador — menciones y comandos en el composer",
+      "description": "Selector de menciones y comandos anclado al campo del composer. El foco nunca sale del campo, la opción activa se señala, y la tecla de envío elige en vez de enviar mientras la lista está abierta."
+    },
+    "labels": {
+      "empty": "Nada encontrado",
+      "list": "Sugerencias",
+      "team": "Producto"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "mentions": "Mención, al inicio de una palabra",
+        "commands": "Comando, solo al inicio del campo",
+        "filtered": "Filtrado por lo ya escrito",
+        "empty": "Sin resultado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El campo señala la lista solo mientras ella existe para él — fuera de eso es un campo de texto común, sin atributo sobrante.",
+      "item2": "El foco nunca sale del campo. Quien escribe sigue escribiendo mientras elige, y la opción activa se señala, no se enfoca.",
+      "item3": "El panel se abre hacia arriba, porque el campo vive al pie de la conversación y abrir hacia abajo es abrir fuera de la ventana.",
+      "item4": "La opción lleva la etiqueta a la izquierda y una información de apoyo a la derecha.",
+      "item5": "Sin resultado, el panel dice por escrito que no hay nada — una lista vacía es silencio para quien no ve la pantalla.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\" role=\"combobox\" aria-expanded=\"true\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para elegir algo que sigue siendo texto: a quién se menciona, qué comando se ejecuta.",
+        "item2": "Declara dónde vale cada disparador: mención al inicio de palabra, comando solo al inicio del campo.",
+        "item3": "Ordena las opciones por relevancia antes de pasarlas: las que empiezan por el término ya vienen primero, y el resto del orden es tuyo.",
+        "item4": "Usa la información de apoyo para desempatar homónimos, no para repetir la etiqueta.",
+        "item5": "Deja que el valor escrito difiera de la etiqueta cuando lo que se lee no es lo que se escribe."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mencionar a alguien a mitad de frase",
+          "u": "Selector del disparador",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Elegir entre pocas opciones fijas",
+          "u": "Select",
+          "a": "El selector del disparador nace de lo que se escribe; un select de campo no."
+        },
+        "item3": {
+          "s": "Búsqueda global de comandos de la aplicación",
+          "u": "Command",
+          "a": "Aquel es una ventana sobre la pantalla; este vive dentro del campo y deja texto detrás."
+        },
+        "item4": {
+          "s": "Completar un campo de una línea",
+          "u": "Combobox",
+          "a": "Allí todo el campo es el término; aquí el término es un fragmento de lo que se escribe."
+        },
+        "item5": {
+          "s": "Ofrecer emoji por atajo",
+          "u": "Selector del disparador",
+          "a": "—"
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "label": {
+            "name": "Etiqueta de la opción",
+            "format": "El nombre como la persona lo reconoce",
+            "good": "Ana Souza",
+            "bad": "usuario_ana_souza_2019"
+          },
+          "hint": {
+            "name": "Apoyo de la opción",
+            "format": "Lo que desempata, en una o dos palabras",
+            "good": "Producto",
+            "bad": "Ana Souza, del equipo de Producto"
+          },
+          "empty": {
+            "name": "Sin resultado",
+            "format": "Frase corta, sin culpar a quien escribió",
+            "good": "Nada encontrado",
+            "bad": "Escribiste mal"
+          },
+          "command": {
+            "name": "Comando",
+            "format": "Verbo en infinitivo, y el valor escrito en minúsculas",
+            "good": "Resumir la conversación",
+            "bad": "RESUMEN"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Deja que la tecla de envío elija mientras la lista esté abierta.",
+        "item2": "Abre la lista entera cuando el disparador acaba de escribirse.",
+        "item3": "Di por escrito cuando no hay resultado.",
+        "item4": "Cierra al pulsar la tecla de escape, sin escribir nada."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No muevas el foco a la lista: la siguiente letra escrita debe llegar al texto.",
+        "item2": "No abras el selector a mitad de palabra — una dirección de correo no es una mención.",
+        "item3": "No marques la opción activa solo por color.",
+        "item4": "No dejes que una lista vacía hable por sí sola: no habla."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "Con la lista abierta, la tecla de envío elige la opción.",
+        "dont": "Enviar a mitad de una mención manda medio mensaje, y es el primer defecto que encuentra quien escribe."
+      },
+      "pair2": {
+        "do": "Sin resultado, el panel dice por escrito que no hay nada.",
+        "dont": "Una lista vacía es silencio para quien no ve la pantalla, y el silencio parece un fallo."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Menciones",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\nimport { MENTION_TRIGGER } from '@shared/primitives/composer-trigger';\n\ncreateComposer({\n  labels,\n  triggerLabels,\n  triggers: [{ spec: MENTION_TRIGGER, options: pessoas }],\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\nimport { MENTION_TRIGGER } from \"@shared/primitives/composer-trigger\";\n\n<Composer\n  labels={labels}\n  triggerLabels={triggerLabels}\n  triggers={[{ spec: MENTION_TRIGGER, options: pessoas }]}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :trigger-labels=\"triggerLabels\"\n  :triggers=\"[{ spec: MENTION_TRIGGER, options: pessoas }]\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {triggerLabels}\n  triggers={[{ spec: MENTION_TRIGGER, options: pessoas }]}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [triggerLabels]=\"triggerLabels\"\n  [triggers]=\"mentionTriggers\"\n/>"
+      },
+      "withCommands": "Comandos",
+      "withCommandsCode": {
+        "web": "// O comando vale só no começo do campo, e o que se escreve não é o que\n// se lê: o rótulo diz \"Resumir a conversa\" e o valor escreve \"/resumir\".\n{ spec: COMMAND_TRIGGER, options: [\n  { id: 'resumir', label: 'Resumir a conversa', value: '/resumir', hint: '/resumir' },\n] }"
+      }
+    },
+    "variants": {
+      "title": "Dónde vale el disparador",
+      "visualTitle": "Ejemplos visuales",
+      "note": "El panel es el mismo; lo que cambia es dónde el carácter abre la lista. La mención vale al inicio de cualquier palabra; el comando solo en la primera posición del campo, porque a mitad de frase ese carácter es puntuación.",
+      "items": {
+        "mention": {
+          "description": "Vale al inicio de cualquier palabra — tras un espacio o un salto de línea.",
+          "code": {
+            "web": "{ spec: MENTION_TRIGGER, options: pessoas }"
+          }
+        },
+        "command": {
+          "description": "Vale solo en la primera posición del campo. A mitad de frase ese carácter es puntuación.",
+          "code": {
+            "web": "{ spec: COMMAND_TRIGGER, options: comandos }"
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "No hay disparador activo en la posición del cursor.",
+        "behavior": "El campo es un campo de texto común, y la tecla de envío envía."
+      },
+      "open": {
+        "label": "Abierto",
+        "trigger": "El carácter disparador acaba de escribirse donde vale.",
+        "behavior": "Aparece la lista entera, y el campo pasa a señalarla."
+      },
+      "filtered": {
+        "label": "Filtrado",
+        "trigger": "Hay texto entre el disparador y el cursor.",
+        "behavior": "Solo queda lo que coincide, con las que empiezan por el término primero, y la opción activa vuelve arriba."
+      },
+      "empty": {
+        "label": "Sin resultado",
+        "trigger": "Nada coincide con lo escrito.",
+        "behavior": "El panel sigue abierto y dice por escrito que no hay nada."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "triggers": {
+          "name": "triggers",
+          "type": "TriggerSource[]",
+          "default": "—",
+          "required": "No",
+          "description": "Los disparadores del campo, cada uno con dónde vale y las opciones que ofrece. Sin ellos el campo es solo un campo."
+        },
+        "triggerLabels": {
+          "name": "triggerLabels",
+          "type": "TriggerPopoverLabels",
+          "default": "—",
+          "required": "No",
+          "description": "El texto del panel: nombre de la lista y la frase de ningún resultado. Obligatorio cuando hay disparador, porque es texto de pantalla."
+        },
+        "spec": {
+          "name": "spec",
+          "type": "TriggerSpec",
+          "default": "—",
+          "required": "Sí",
+          "description": "El carácter y dónde vale — inicio de palabra o inicio del campo."
+        },
+        "options": {
+          "name": "options",
+          "type": "TriggerOption[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que ofrece la lista. El orden de entrada se preserva dentro de cada grupo del filtro."
+        },
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que se lee en la lista, y lo que compara el filtro — ignorando acentos en ambos sentidos."
+        },
+        "hint": {
+          "name": "hint",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Información de apoyo a la derecha, para desempatar homónimos."
+        },
+        "value": {
+          "name": "value",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Lo que queda escrito al elegir. Sin él, el carácter disparador más la etiqueta — existe porque lo que se escribe no siempre es lo que se lee."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La opción es dato, y el componente no sabe qué significa. Quien consume decide a quién se puede mencionar, qué hace un comando y qué queda escrito en lugar de la etiqueta.",
+      "extensibilityCode": {
+        "web": "// A opção é dado, e o que ela escreve pode diferir do que ela mostra.\n{ id: 'ana', label: 'Ana Souza', hint: 'Produto' }\n// escreve \"@Ana Souza\"\n\n{ id: 'resumir', label: 'Resumir a conversa', value: '/resumir' }\n// escreve \"/resumir\""
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "popover": {
+          "token": "--popover",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Fondo del panel."
+        },
+        "popoverForeground": {
+          "token": "--popover-foreground",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Texto del panel."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Borde del panel."
+        },
+        "elevation": {
+          "token": "--elevation-md",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Sombra que separa el panel del campo."
+        },
+        "zIndex": {
+          "token": "--z-popover",
+          "value": ".nds-composer-trigger-popover",
+          "description": "Capa del panel."
+        },
+        "accent": {
+          "token": "--accent",
+          "value": ".nds-composer-trigger-option[aria-selected=\"true\"]",
+          "description": "Fondo de la opción activa — acompañado de la marca que anuncia el lector de pantalla."
+        },
+        "accentForeground": {
+          "token": "--accent-foreground",
+          "value": ".nds-composer-trigger-option[aria-selected=\"true\"]",
+          "description": "Texto de la opción activa, y de su información de apoyo."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-trigger-option-hint",
+          "description": "Información de apoyo y la frase de ningún resultado."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-trigger-option",
+          "description": "Redondeo de la opción."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-trigger-popover {\n  max-block-size: 20rem;\n}\n\n/* A opção ativa marca fundo E estado: um é o que os olhos veem, o outro é o\n   que o leitor de tela anuncia. */\n.nds-composer-trigger-option[aria-selected=\"true\"] {\n  background-color: hsl(var(--accent));\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El foco sigue en el campo de principio a fin: el campo señala la lista, la opción activa se anuncia, y nada necesita recibir el foco.",
+      "items": {
+        "item1": "El campo señala la lista solo mientras ella existe. No cambia de rol: la especificación de ARIA en HTML no admite una caja de combinación en un campo de varias líneas.",
+        "item2": "El foco nunca sale del campo — moverlo haría que la siguiente letra escrita no llegara al texto.",
+        "item3": "La opción activa la señala el campo, y se mueve con las flechas sin que nada reciba el foco.",
+        "item4": "La opción activa lleva marca de selección, no solo un color de fondo.",
+        "item5": "Sin resultado, el panel trae una frase — una lista vacía no habla."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Con la lista abierta, elige la opción activa en vez de salir del campo.",
+        "enter": "Con la lista abierta, elige. Cerrada, envía.",
+        "arrows": "Se mueven por la lista, dando la vuelta del final al inicio."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-controls vincula el campo a la lista; el panel es lista de opciones mientras tiene opciones.",
+        "item2": "Sin opciones el panel deja de ser lista, porque una lista de opciones sin opción promete hijos que no existen.",
+        "item3": "aria-activedescendant señala la opción activa sin mover el foco."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "Al abrir, la lista se anuncia con su nombre y la cantidad de opciones.",
+        "item2": "Al moverse con las flechas, cada opción activa se lee sin que el foco salga del campo.",
+        "item3": "Sin resultado, la frase del panel se lee como cualquier texto."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo en que vive el selector."
+        },
+        "combobox": {
+          "name": "Combobox",
+          "description": "Cuando todo el campo es el término de búsqueda."
+        },
+        "command": {
+          "name": "Command",
+          "description": "La búsqueda de comandos que abre sobre la pantalla, no dentro del campo."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "El panel de propósito general, anclado a un disparador y no a lo que se escribe."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El panel se ancla al campo, no al píxel del cursor. Anclar al cursor exige espejar el campo en un elemento invisible y medir dónde cayó el carácter — y ese espejo se rompe con el zoom, con la fuente aumentada y entre navegadores.",
+      "item2": "La elección por puntero ocurre al presionar el botón, no al soltarlo: soltar quitaría el foco del campo antes, y la elección ocurriría con el cursor ya perdido.",
+      "item3": "La lista da la vuelta: quien está en la última opción y baja vuelve a la primera. Una lista que se detiene al final obliga a subir contando.",
+      "item4": "El término que cambia devuelve la opción activa arriba. Mantener el índice haría que la elección saltara a otra persona con cada tecla.",
+      "item5": "El selector también relee el campo al hacer clic y al moverse con las flechas: esas acciones mueven el cursor sin escribir nada, y el disparador depende de dónde está el cursor."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; el selector en sí no instrumenta la elección, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Escribir el carácter disparador donde vale",
+          "result": "La lista abre entera",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Seguir escribiendo tras el disparador",
+          "result": "La lista filtra, con las que empiezan por el término primero",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Moverse con las flechas más allá del final",
+          "result": "La opción activa vuelve al inicio",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Pulsar la tecla de envío con la lista abierta",
+          "result": "Elige la opción activa, y no envía",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pulsar la tecla de tabulación con la lista abierta",
+          "result": "Elige, y el foco se queda en el campo",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pulsar la tecla de escape",
+          "result": "Cierra sin escribir nada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Apuntar y elegir una opción",
+          "result": "El texto se escribe y el foco sigue en el campo",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Escribir el disparador a mitad de palabra",
+          "result": "Nada abre — una dirección de correo no es una mención",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Escribir el disparador de comando tras texto",
+          "result": "Nada abre — ahí ese carácter es puntuación",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Elegir una opción cuyo valor difiere de la etiqueta",
+          "result": "El campo recibe el valor, no la etiqueta",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "El campo señala la lista solo con ella abierta, y no cambia de rol",
+        "item2": "El foco sigue en el campo de principio a fin de la elección",
+        "item3": "La opción activa la señala el campo, y sigue a las flechas",
+        "item4": "La opción activa lleva marca de selección, no solo color",
+        "item5": "Sin resultado hay una frase, no una lista vacía",
+        "item6": "Cada opción tiene al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — lista abierta",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Menciones — lista con apoyo a la derecha",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Comandos — lista de comandos",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — filtrado",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sin resultado",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estados — cerrado",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
