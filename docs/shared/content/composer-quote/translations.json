@@ -1,0 +1,1274 @@
+{
+  "pt-BR": {
+    "title": "Citação do composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A mensagem que está sendo respondida, no topo do campo. É o que liga a conversa ao que se escreve.",
+    "seo": {
+      "title": "Citação do composer — a quem a mensagem responde",
+      "description": "Bloco de citação no campo de mensagem. Descreve o campo por acessibilidade, corta o trecho por linha sem perder texto, e o botão que dispensa diz de quem é a citação."
+    },
+    "labels": {
+      "dismiss": "Remover citação de {author}",
+      "describes": "Respondendo a {author}"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "short": "Trecho curto",
+        "long": "Trecho longo, cortado por linha",
+        "withAttachments": "Com anexos",
+        "absent": "Sem citação"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A citação fica no topo da moldura, antes dos anexos e do campo: contexto vem antes do que ele contextualiza.",
+      "item2": "Ela descreve o campo, e vem primeiro na descrição — saber a quem se responde muda o que se escreve; a dica de teclado só muda como se envia.",
+      "item3": "O nome de quem escreveu leva um prefixo que só quem ouve recebe, e é ele que transforma dois pedaços numa frase.",
+      "item4": "O trecho é cortado por linha, no desenho. O texto inteiro continua no documento.",
+      "item5": "A barra da esquerda é decorativa: ela repete o que o nome do autor já diz.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <div class=\"nds-composer-quote\" data-slot=\"composer-quote\" id=\"citacao\">\n    <span class=\"nds-composer-quote-author\">\n      <span class=\"nds-sr-only\">Respondendo a</span>Ana Souza\n    </span>\n    <p class=\"nds-composer-quote-excerpt\">A medida sai do container…</p>\n    <button class=\"nds-button\" data-slot=\"composer-quote-dismiss\"\n            aria-label=\"Remover citação de Ana Souza\">×</button>\n  </div>\n  <textarea class=\"nds-composer-input\" aria-describedby=\"citacao dica\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando a resposta se refere a uma mensagem específica, e não à conversa toda.",
+        "item2": "Passe o texto inteiro: o corte é do desenho, e cortar antes apaga o resto para quem ouve.",
+        "item3": "Leve o endereço da mensagem junto — é ele que diz a quem a resposta responde.",
+        "item4": "Tire a citação só quando quem consome mandar; o componente não decide isso.",
+        "item5": "Uma citação de cada vez: duas no mesmo campo não dizem a qual a resposta responde."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Responder a uma mensagem específica",
+          "u": "Citação do composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar uma citação dentro da resposta",
+          "u": "Markdown",
+          "a": "Ali a citação é conteúdo; aqui é contexto do que ainda vai ser escrito."
+        },
+        "item3": {
+          "s": "Apontar a fonte de uma afirmação",
+          "u": "ChatThread",
+          "a": "Fonte é de onde a resposta veio; citação é a quem ela responde."
+        },
+        "item4": {
+          "s": "Anexar um arquivo à mensagem",
+          "u": "Anexos do composer",
+          "a": "Anexo é o que vai junto; citação é a que se responde."
+        },
+        "item5": {
+          "s": "Editar a própria mensagem já enviada",
+          "u": "—",
+          "a": "Editar substitui o turno; citar acrescenta um novo que se refere a ele."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "author": {
+            "name": "Autor",
+            "format": "O nome como a pessoa o reconhece",
+            "good": "Ana Souza",
+            "bad": "Usuário #4821"
+          },
+          "prefix": {
+            "name": "Prefixo audível",
+            "format": "Gerúndio, dizendo o que se está fazendo",
+            "good": "Respondendo a Ana Souza",
+            "bad": "Citação"
+          },
+          "dismiss": {
+            "name": "Botão de dispensar",
+            "format": "Verbo mais de quem é a citação",
+            "good": "Remover citação de Ana Souza",
+            "bad": "Fechar"
+          },
+          "excerpt": {
+            "name": "Trecho",
+            "format": "O texto original, sem reescrever",
+            "good": "A medida sai do container",
+            "bad": "Ana falou sobre medidas"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Passe o trecho inteiro e deixe o corte para o desenho.",
+        "item2": "Ponha o nome de quem escreveu no botão que dispensa.",
+        "item3": "Deixe a citação descrever o campo, antes da dica de teclado.",
+        "item4": "Leve o endereço da mensagem citada."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não corte o trecho em código: quem ouve não tem linhas, tem o texto.",
+        "item2": "Não deixe o botão dizer só \"Fechar\".",
+        "item3": "Não tire a citação sozinho ao receber o clique.",
+        "item4": "Não mostre duas citações no mesmo campo."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O trecho inteiro vai ao documento, e o corte é do desenho.",
+        "dont": "Cortado em código, o resto do texto some para quem lê por audição e para a busca do navegador."
+      },
+      "pair2": {
+        "do": "O botão diz de quem é a citação que ele remove.",
+        "dont": "Numa tela com citação e anexos, dois botões iguais são o mesmo botão para quem ouve."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  quoteLabels,\n  quote: { id: 'm-7', author: 'Ana Souza', excerpt: texto },\n  onDismissQuote: () => responder(null),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  quoteLabels={quoteLabels}\n  quote={{ id: \"m-7\", author: \"Ana Souza\", excerpt: texto }}\n  onDismissQuote={() => responder(null)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :quote-labels=\"quoteLabels\"\n  :quote=\"{ id: 'm-7', author: 'Ana Souza', excerpt: texto }\"\n  @dismiss-quote=\"responder(null)\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {quoteLabels}\n  quote={{ id: 'm-7', author: 'Ana Souza', excerpt: texto }}\n  onDismissQuote={() => responder(null)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [quoteLabels]=\"quoteLabels\"\n  [quote]=\"quote()\"\n  (dismissQuote)=\"responder(null)\"\n/>"
+      },
+      "fromThread": "Vindo da conversa",
+      "fromThreadCode": {
+        "web": "// A citação vem da thread, e o `id` é o mesmo endereço que a mensagem tem\n// lá — é ele que diz a quem a resposta responde.\n{\n  id: mensagem.id,\n  author: mensagem.author,\n  role: mensagem.role,     // o mesmo vocabulário do chat-protocol\n  excerpt: mensagem.content,  // INTEIRO: quem corta é a folha, por linha\n}"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "absent": {
+        "label": "Sem citação",
+        "trigger": "A mensagem não responde a ninguém em particular.",
+        "behavior": "O bloco não existe, e a descrição do campo traz só a dica."
+      },
+      "short": {
+        "label": "Trecho curto",
+        "trigger": "O texto citado cabe em duas linhas.",
+        "behavior": "Aparece inteiro, sem corte."
+      },
+      "long": {
+        "label": "Trecho longo",
+        "trigger": "O texto citado passa de duas linhas.",
+        "behavior": "O desenho corta na segunda linha; o texto inteiro continua no documento."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "quote": {
+          "name": "quote",
+          "type": "ComposerQuote",
+          "default": "—",
+          "required": "Não",
+          "description": "A mensagem que está sendo respondida. Sem ela, o bloco não existe."
+        },
+        "quoteLabels": {
+          "name": "quoteLabels",
+          "type": "ComposerQuoteLabels",
+          "default": "—",
+          "required": "Não",
+          "description": "O texto da citação: o do botão que dispensa e o prefixo audível. Obrigatório quando há citação."
+        },
+        "author": {
+          "name": "author",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "Quem escreveu. Aparece na tela e entra no botão que dispensa."
+        },
+        "excerpt": {
+          "name": "excerpt",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto citado, INTEIRO. Quem corta é o desenho, por linha — cortar aqui apagaria o resto para quem lê por audição."
+        },
+        "quoteId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Endereço da mensagem citada. É ele que diz a quem a resposta responde."
+        },
+        "role": {
+          "name": "role",
+          "type": "'user' | 'assistant' | 'system'",
+          "default": "—",
+          "required": "Não",
+          "description": "O papel de quem escreveu — o mesmo vocabulário da conversa."
+        },
+        "onDismissQuote": {
+          "name": "onDismissQuote",
+          "type": "(citação) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para tirar a citação, e ela vem junto. Tirar de verdade é de quem consome."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A citação é dado, e o componente não sabe o que ela significa. Quem consome decide o que pode ser citado, o que a resposta faz com o endereço, e o que acontece ao dispensar.",
+      "extensibilityCode": {
+        "web": "// O trecho vai INTEIRO. Cortar aqui apagaria o resto para quem lê por\n// audição, que não tem \"linhas\" — tem o texto.\n{ author: 'Ana Souza', excerpt: mensagemInteira }\n\n// E não corte no servidor tampouco: a busca do navegador procura no que está\n// no documento, e o que foi cortado não está."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-composer-quote",
+          "description": "A barra da esquerda, que é decorativa."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-quote",
+          "description": "Fundo do bloco."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-quote",
+          "description": "Arredondamento do lado oposto à barra."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-quote-author",
+          "description": "Nome de quem escreveu."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-quote-excerpt",
+          "description": "O trecho citado."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-quote-author",
+          "description": "Tamanho do autor e do trecho — menor que o do campo, porque é contexto."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-quote {\n  border-inline-start-color: hsl(var(--primary));\n}\n\n/* O corte é por LINHA, e é aqui que se decide quantas. Cortar por caractere\n   em código apagaria o resto do texto para quem lê por audição. */\n.nds-composer-quote-excerpt {\n  -webkit-line-clamp: 3;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A citação descreve o campo, e chega antes da dica: saber a quem se responde muda o que se escreve.",
+      "items": {
+        "item1": "A citação entra na descrição do campo, e vem primeiro — antes da dica de teclado.",
+        "item2": "O nome de quem escreveu leva um prefixo audível, que transforma dois pedaços numa frase.",
+        "item3": "O trecho é cortado por linha, no desenho: o texto inteiro continua no documento e na busca do navegador.",
+        "item4": "O botão que dispensa diz de quem é a citação.",
+        "item5": "A barra da esquerda é decorativa e não é anunciada — ela repete o que o nome já diz."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Alcança o botão que dispensa, antes do campo.",
+        "enter": "Aciona o botão sob o foco.",
+        "arrows": "Não fazem nada aqui: a citação é leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-describedby do campo aponta a citação e a dica, nessa ordem.",
+        "item2": "O prefixo audível vive numa classe que só o leitor de tela recebe.",
+        "item3": "O botão que dispensa tem nome próprio, com o autor dentro."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "Ao focar o campo, ouve-se a quem se responde, o trecho inteiro, e então a dica.",
+        "item2": "O trecho cortado na tela é lido por completo.",
+        "item3": "O botão que dispensa é anunciado com o nome de quem escreveu."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo em que a citação vive."
+        },
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "De onde a citação vem, e para onde a resposta vai."
+        },
+        "attachments": {
+          "name": "Anexos do composer",
+          "description": "O que vai junto com a mensagem, logo abaixo da citação."
+        },
+        "markdown": {
+          "name": "Markdown",
+          "description": "Quando a citação é conteúdo da resposta, e não contexto do campo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O corte do trecho é por linha, em CSS, e nunca por caractere em código. Quem lê por audição não tem linhas — tem o texto —, e o que foi cortado em código também sai da busca do navegador.",
+      "item2": "A citação vem antes da dica na descrição do campo porque as duas informam coisas de peso diferente: a citação muda o que se escreve, e a dica muda como se envia.",
+      "item3": "O prefixo audível existe porque um nome solto no começo da descrição não diz que se está respondendo a alguém — diz só que há um nome ali.",
+      "item4": "A barra da esquerda não é anunciada, e é assim de propósito: ela repete visualmente o que o nome do autor já diz por escrito.",
+      "item5": "Uma citação por vez. Duas no mesmo campo não diriam a qual delas a resposta responde, e o endereço que vai junto ficaria ambíguo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a citação em si não instrumenta o dispensar, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma citação",
+          "result": "O bloco aparece com o autor e o trecho",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar um trecho maior que o espaço",
+          "result": "O texto inteiro fica no documento, e o corte é do desenho",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Acionar o botão que dispensa",
+          "result": "Quem consome é avisado, com a citação junto",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Dispensar",
+          "result": "O bloco continua lá — tirar de verdade é de quem recebe",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Não passar citação",
+          "result": "O bloco não existe, e a descrição do campo traz só a dica",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Passar citação e anexos juntos",
+          "result": "A citação vem antes dos anexos e do campo",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A citação entra na descrição do campo, antes da dica",
+        "item2": "A descrição do campo traz o autor e o trecho",
+        "item3": "O botão que dispensa diz de quem é a citação",
+        "item4": "O trecho cortado na tela continua inteiro para quem ouve",
+        "item5": "O botão que dispensa tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — trecho curto",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — trecho longo, cortado em duas linhas",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — sem citação",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composições — citação e anexos juntos",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Composer quote",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The message being replied to, at the top of the field. It is what links the conversation to what is written.",
+    "seo": {
+      "title": "Composer quote — who the message replies to",
+      "description": "Quote block in the message field. It describes the field for accessibility, clamps the excerpt by line without losing text, and the dismiss button says whose quote it is."
+    },
+    "labels": {
+      "dismiss": "Remove quote from {author}",
+      "describes": "Replying to {author}"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "short": "Short excerpt",
+        "long": "Long excerpt, clamped by line",
+        "withAttachments": "With attachments",
+        "absent": "Without a quote"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The quote sits at the top of the frame, before the attachments and the field: context comes before what it contextualises.",
+      "item2": "It describes the field, and comes first in the description — knowing who you reply to changes what you write; the keyboard hint only changes how you send.",
+      "item3": "The author name carries a prefix only listeners receive, and it is what turns two fragments into a sentence.",
+      "item4": "The excerpt is clamped by line, in the design. The whole text stays in the document.",
+      "item5": "The left bar is decorative: it repeats what the author name already says.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <div class=\"nds-composer-quote\" data-slot=\"composer-quote\" id=\"citacao\">\n    <span class=\"nds-composer-quote-author\">\n      <span class=\"nds-sr-only\">Respondendo a</span>Ana Souza\n    </span>\n    <p class=\"nds-composer-quote-excerpt\">A medida sai do container…</p>\n    <button class=\"nds-button\" data-slot=\"composer-quote-dismiss\"\n            aria-label=\"Remover citação de Ana Souza\">×</button>\n  </div>\n  <textarea class=\"nds-composer-input\" aria-describedby=\"citacao dica\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when the reply refers to a specific message, not to the whole conversation.",
+        "item2": "Pass the whole text: clamping belongs to the design, and cutting earlier erases the rest for listeners.",
+        "item3": "Carry the message address along — it is what says who the reply replies to.",
+        "item4": "Remove the quote only when the consumer says so; the component does not decide that.",
+        "item5": "One quote at a time: two in the same field do not say which one the reply answers."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Replying to a specific message",
+          "u": "Composer quote",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Showing a quote inside the answer",
+          "u": "Markdown",
+          "a": "There the quote is content; here it is context for what is yet to be written."
+        },
+        "item3": {
+          "s": "Pointing at the source of a claim",
+          "u": "ChatThread",
+          "a": "A source is where the answer came from; a quote is who it replies to."
+        },
+        "item4": {
+          "s": "Attaching a file to the message",
+          "u": "Composer attachments",
+          "a": "An attachment is what goes along; a quote is what is being replied to."
+        },
+        "item5": {
+          "s": "Editing your own sent message",
+          "u": "—",
+          "a": "Editing replaces the turn; quoting adds a new one that refers to it."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "author": {
+            "name": "Author",
+            "format": "The name as the person recognises it",
+            "good": "Ana Souza",
+            "bad": "User #4821"
+          },
+          "prefix": {
+            "name": "Audible prefix",
+            "format": "A present participle, saying what is being done",
+            "good": "Replying to Ana Souza",
+            "bad": "Quote"
+          },
+          "dismiss": {
+            "name": "Dismiss button",
+            "format": "Verb plus whose quote it is",
+            "good": "Remove quote from Ana Souza",
+            "bad": "Close"
+          },
+          "excerpt": {
+            "name": "Excerpt",
+            "format": "The original text, unrewritten",
+            "good": "The measure comes from the container",
+            "bad": "Ana talked about measures"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Pass the whole excerpt and leave clamping to the design.",
+        "item2": "Put the author name in the button that dismisses.",
+        "item3": "Let the quote describe the field, before the keyboard hint.",
+        "item4": "Carry the address of the quoted message."
+      },
+      "dont": {
+        "title": "Do not",
+        "item1": "Do not clamp the excerpt in code: listeners have no lines, they have the text.",
+        "item2": "Do not let the button say only \"Close\".",
+        "item3": "Do not remove the quote on your own when the click arrives.",
+        "item4": "Do not show two quotes in the same field."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The whole excerpt goes to the document, and clamping belongs to the design.",
+        "dont": "Cut in code, the rest of the text disappears for listeners and for the browser search."
+      },
+      "pair2": {
+        "do": "The button says whose quote it removes.",
+        "dont": "On a screen with a quote and attachments, two identical buttons are the same button to a listener."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  quoteLabels,\n  quote: { id: 'm-7', author: 'Ana Souza', excerpt: texto },\n  onDismissQuote: () => responder(null),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  quoteLabels={quoteLabels}\n  quote={{ id: \"m-7\", author: \"Ana Souza\", excerpt: texto }}\n  onDismissQuote={() => responder(null)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :quote-labels=\"quoteLabels\"\n  :quote=\"{ id: 'm-7', author: 'Ana Souza', excerpt: texto }\"\n  @dismiss-quote=\"responder(null)\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {quoteLabels}\n  quote={{ id: 'm-7', author: 'Ana Souza', excerpt: texto }}\n  onDismissQuote={() => responder(null)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [quoteLabels]=\"quoteLabels\"\n  [quote]=\"quote()\"\n  (dismissQuote)=\"responder(null)\"\n/>"
+      },
+      "fromThread": "Coming from the conversation",
+      "fromThreadCode": {
+        "web": "// A citação vem da thread, e o `id` é o mesmo endereço que a mensagem tem\n// lá — é ele que diz a quem a resposta responde.\n{\n  id: mensagem.id,\n  author: mensagem.author,\n  role: mensagem.role,     // o mesmo vocabulário do chat-protocol\n  excerpt: mensagem.content,  // INTEIRO: quem corta é a folha, por linha\n}"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "absent": {
+        "label": "No quote",
+        "trigger": "The message does not reply to anyone in particular.",
+        "behavior": "The block does not exist, and the field description carries only the hint."
+      },
+      "short": {
+        "label": "Short excerpt",
+        "trigger": "The quoted text fits in two lines.",
+        "behavior": "It appears whole, uncut."
+      },
+      "long": {
+        "label": "Long excerpt",
+        "trigger": "The quoted text goes beyond two lines.",
+        "behavior": "The design clamps at the second line; the whole text stays in the document."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "quote": {
+          "name": "quote",
+          "type": "ComposerQuote",
+          "default": "—",
+          "required": "No",
+          "description": "The message being replied to. Without it, the block does not exist."
+        },
+        "quoteLabels": {
+          "name": "quoteLabels",
+          "type": "ComposerQuoteLabels",
+          "default": "—",
+          "required": "No",
+          "description": "The quote text: the dismiss button and the audible prefix. Required when there is a quote."
+        },
+        "author": {
+          "name": "author",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "Who wrote it. It appears on screen and goes into the dismiss button."
+        },
+        "excerpt": {
+          "name": "excerpt",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The quoted text, WHOLE. The design clamps it by line — cutting here would erase the rest for listeners."
+        },
+        "quoteId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Address of the quoted message. It says who the reply replies to."
+        },
+        "role": {
+          "name": "role",
+          "type": "'user' | 'assistant' | 'system'",
+          "default": "—",
+          "required": "No",
+          "description": "The role of whoever wrote it — the same vocabulary as the conversation."
+        },
+        "onDismissQuote": {
+          "name": "onDismissQuote",
+          "type": "(quote) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to remove the quote, and it comes along. Removing for real belongs to the consumer."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The quote is data, and the component does not know what it means. The consumer decides what can be quoted, what the reply does with the address, and what happens on dismissal.",
+      "extensibilityCode": {
+        "web": "// O trecho vai INTEIRO. Cortar aqui apagaria o resto para quem lê por\n// audição, que não tem \"linhas\" — tem o texto.\n{ author: 'Ana Souza', excerpt: mensagemInteira }\n\n// E não corte no servidor tampouco: a busca do navegador procura no que está\n// no documento, e o que foi cortado não está."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-composer-quote",
+          "description": "The left bar, which is decorative."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-quote",
+          "description": "Block background."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-quote",
+          "description": "Rounding on the side opposite the bar."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-quote-author",
+          "description": "Name of whoever wrote it."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-quote-excerpt",
+          "description": "The quoted excerpt."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-quote-author",
+          "description": "Size of the author and excerpt — smaller than the field, because it is context."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-composer-quote {\n  border-inline-start-color: hsl(var(--primary));\n}\n\n/* O corte é por LINHA, e é aqui que se decide quantas. Cortar por caractere\n   em código apagaria o resto do texto para quem lê por audição. */\n.nds-composer-quote-excerpt {\n  -webkit-line-clamp: 3;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The quote describes the field, and arrives before the hint: knowing who you reply to changes what you write.",
+      "items": {
+        "item1": "The quote enters the field description, and comes first — before the keyboard hint.",
+        "item2": "The author name carries an audible prefix, which turns two fragments into a sentence.",
+        "item3": "The excerpt is clamped by line, in the design: the whole text stays in the document and in the browser search.",
+        "item4": "The dismiss button says whose quote it is.",
+        "item5": "The left bar is decorative and is not announced — it repeats what the name already says."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the dismiss button, before the field.",
+        "enter": "Activates the button under focus.",
+        "arrows": "They do nothing here: the quote is for reading, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The field aria-describedby points at the quote and the hint, in that order.",
+        "item2": "The audible prefix lives in a class only the screen reader receives.",
+        "item3": "The dismiss button has its own name, with the author inside."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "On focusing the field, one hears who is being replied to, the whole excerpt, and then the hint.",
+        "item2": "The excerpt clamped on screen is read in full.",
+        "item3": "The dismiss button is announced with the author name."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field the quote lives in."
+        },
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "Where the quote comes from, and where the reply goes."
+        },
+        "attachments": {
+          "name": "Composer attachments",
+          "description": "What goes along with the message, just below the quote."
+        },
+        "markdown": {
+          "name": "Markdown",
+          "description": "When the quote is content of the answer, not context for the field."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The excerpt is clamped by line, in CSS, and never by character in code. Whoever reads by ear has no lines — they have the text — and what is cut in code also leaves the browser search.",
+      "item2": "The quote comes before the hint in the field description because the two inform things of different weight: the quote changes what is written, and the hint changes how it is sent.",
+      "item3": "The audible prefix exists because a bare name at the start of the description does not say you are replying to someone — it only says there is a name there.",
+      "item4": "The left bar is not announced, and that is on purpose: it visually repeats what the author name already says in writing.",
+      "item5": "One quote at a time. Two in the same field would not say which one the reply answers, and the address that goes along would be ambiguous."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the quote itself does not instrument dismissal, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a quote",
+          "result": "The block appears with the author and the excerpt",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass an excerpt larger than the space",
+          "result": "The whole text stays in the document, and clamping belongs to the design",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Activate the dismiss button",
+          "result": "The consumer is notified, with the quote along",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Dismiss",
+          "result": "The block stays — removing for real belongs to the receiver",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Pass no quote",
+          "result": "The block does not exist, and the field description carries only the hint",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pass a quote and attachments together",
+          "result": "The quote comes before the attachments and the field",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The quote enters the field description, before the hint",
+        "item2": "The field description carries the author and the excerpt",
+        "item3": "The dismiss button says whose quote it is",
+        "item4": "The excerpt clamped on screen stays whole for listeners",
+        "item5": "The dismiss button has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — short excerpt",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — long excerpt, clamped at two lines",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — no quote",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Compositions — quote and attachments together",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Cita del composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "El mensaje al que se responde, en la parte superior del campo. Es lo que vincula la conversación con lo que se escribe.",
+    "seo": {
+      "title": "Cita del composer — a quién responde el mensaje",
+      "description": "Bloque de cita en el campo de mensaje. Describe el campo por accesibilidad, recorta el fragmento por línea sin perder texto, y el botón que descarta dice de quién es la cita."
+    },
+    "labels": {
+      "dismiss": "Quitar la cita de {author}",
+      "describes": "Respondiendo a {author}"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "short": "Fragmento corto",
+        "long": "Fragmento largo, recortado por línea",
+        "withAttachments": "Con adjuntos",
+        "absent": "Sin cita"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La cita está en la parte superior del marco, antes de los adjuntos y del campo: el contexto viene antes de lo que contextualiza.",
+      "item2": "Describe el campo, y va primero en la descripción — saber a quién se responde cambia lo que se escribe; la pista de teclado solo cambia cómo se envía.",
+      "item3": "El nombre de quien escribió lleva un prefijo que solo quien escucha recibe, y es lo que convierte dos fragmentos en una frase.",
+      "item4": "El fragmento se recorta por línea, en el diseño. El texto entero permanece en el documento.",
+      "item5": "La barra izquierda es decorativa: repite lo que el nombre del autor ya dice.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <div class=\"nds-composer-quote\" data-slot=\"composer-quote\" id=\"citacao\">\n    <span class=\"nds-composer-quote-author\">\n      <span class=\"nds-sr-only\">Respondendo a</span>Ana Souza\n    </span>\n    <p class=\"nds-composer-quote-excerpt\">A medida sai do container…</p>\n    <button class=\"nds-button\" data-slot=\"composer-quote-dismiss\"\n            aria-label=\"Remover citação de Ana Souza\">×</button>\n  </div>\n  <textarea class=\"nds-composer-input\" aria-describedby=\"citacao dica\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala cuando la respuesta se refiere a un mensaje específico, no a toda la conversación.",
+        "item2": "Pasa el texto entero: el recorte es del diseño, y cortar antes borra el resto para quien escucha.",
+        "item3": "Lleva la dirección del mensaje — es lo que dice a quién responde la respuesta.",
+        "item4": "Quita la cita solo cuando quien consume lo indique; el componente no decide eso.",
+        "item5": "Una cita a la vez: dos en el mismo campo no dicen a cuál responde la respuesta."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Responder a un mensaje específico",
+          "u": "Cita del composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar una cita dentro de la respuesta",
+          "u": "Markdown",
+          "a": "Allí la cita es contenido; aquí es contexto de lo que aún se va a escribir."
+        },
+        "item3": {
+          "s": "Señalar la fuente de una afirmación",
+          "u": "ChatThread",
+          "a": "Una fuente es de dónde vino la respuesta; una cita es a quién responde."
+        },
+        "item4": {
+          "s": "Adjuntar un archivo al mensaje",
+          "u": "Adjuntos del composer",
+          "a": "Un adjunto es lo que va junto; una cita es a lo que se responde."
+        },
+        "item5": {
+          "s": "Editar tu propio mensaje ya enviado",
+          "u": "—",
+          "a": "Editar sustituye el turno; citar añade uno nuevo que se refiere a él."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "author": {
+            "name": "Autor",
+            "format": "El nombre como la persona lo reconoce",
+            "good": "Ana Souza",
+            "bad": "Usuario #4821"
+          },
+          "prefix": {
+            "name": "Prefijo audible",
+            "format": "Gerundio, diciendo qué se está haciendo",
+            "good": "Respondiendo a Ana Souza",
+            "bad": "Cita"
+          },
+          "dismiss": {
+            "name": "Botón de descartar",
+            "format": "Verbo más de quién es la cita",
+            "good": "Quitar la cita de Ana Souza",
+            "bad": "Cerrar"
+          },
+          "excerpt": {
+            "name": "Fragmento",
+            "format": "El texto original, sin reescribir",
+            "good": "La medida sale del contenedor",
+            "bad": "Ana habló sobre medidas"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Pasa el fragmento entero y deja el recorte al diseño.",
+        "item2": "Pon el nombre de quien escribió en el botón que descarta.",
+        "item3": "Deja que la cita describa el campo, antes de la pista de teclado.",
+        "item4": "Lleva la dirección del mensaje citado."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No recortes el fragmento en código: quien escucha no tiene líneas, tiene el texto.",
+        "item2": "No dejes que el botón diga solo \"Cerrar\".",
+        "item3": "No quites la cita por tu cuenta al recibir el clic.",
+        "item4": "No muestres dos citas en el mismo campo."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El fragmento entero va al documento, y el recorte es del diseño.",
+        "dont": "Cortado en código, el resto del texto desaparece para quien escucha y para la búsqueda del navegador."
+      },
+      "pair2": {
+        "do": "El botón dice de quién es la cita que quita.",
+        "dont": "En una pantalla con cita y adjuntos, dos botones iguales son el mismo botón para quien escucha."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  quoteLabels,\n  quote: { id: 'm-7', author: 'Ana Souza', excerpt: texto },\n  onDismissQuote: () => responder(null),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  quoteLabels={quoteLabels}\n  quote={{ id: \"m-7\", author: \"Ana Souza\", excerpt: texto }}\n  onDismissQuote={() => responder(null)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :quote-labels=\"quoteLabels\"\n  :quote=\"{ id: 'm-7', author: 'Ana Souza', excerpt: texto }\"\n  @dismiss-quote=\"responder(null)\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {quoteLabels}\n  quote={{ id: 'm-7', author: 'Ana Souza', excerpt: texto }}\n  onDismissQuote={() => responder(null)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [quoteLabels]=\"quoteLabels\"\n  [quote]=\"quote()\"\n  (dismissQuote)=\"responder(null)\"\n/>"
+      },
+      "fromThread": "Viniendo de la conversación",
+      "fromThreadCode": {
+        "web": "// A citação vem da thread, e o `id` é o mesmo endereço que a mensagem tem\n// lá — é ele que diz a quem a resposta responde.\n{\n  id: mensagem.id,\n  author: mensagem.author,\n  role: mensagem.role,     // o mesmo vocabulário do chat-protocol\n  excerpt: mensagem.content,  // INTEIRO: quem corta é a folha, por linha\n}"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "absent": {
+        "label": "Sin cita",
+        "trigger": "El mensaje no responde a nadie en particular.",
+        "behavior": "El bloque no existe, y la descripción del campo lleva solo la pista."
+      },
+      "short": {
+        "label": "Fragmento corto",
+        "trigger": "El texto citado cabe en dos líneas.",
+        "behavior": "Aparece entero, sin recorte."
+      },
+      "long": {
+        "label": "Fragmento largo",
+        "trigger": "El texto citado pasa de dos líneas.",
+        "behavior": "El diseño recorta en la segunda línea; el texto entero permanece en el documento."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "quote": {
+          "name": "quote",
+          "type": "ComposerQuote",
+          "default": "—",
+          "required": "No",
+          "description": "El mensaje al que se responde. Sin él, el bloque no existe."
+        },
+        "quoteLabels": {
+          "name": "quoteLabels",
+          "type": "ComposerQuoteLabels",
+          "default": "—",
+          "required": "No",
+          "description": "El texto de la cita: el del botón que descarta y el prefijo audible. Obligatorio cuando hay cita."
+        },
+        "author": {
+          "name": "author",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Quién lo escribió. Aparece en pantalla y entra en el botón que descarta."
+        },
+        "excerpt": {
+          "name": "excerpt",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto citado, ENTERO. El diseño lo recorta por línea — cortar aquí borraría el resto para quien escucha."
+        },
+        "quoteId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Dirección del mensaje citado. Dice a quién responde la respuesta."
+        },
+        "role": {
+          "name": "role",
+          "type": "'user' | 'assistant' | 'system'",
+          "default": "—",
+          "required": "No",
+          "description": "El rol de quien lo escribió — el mismo vocabulario de la conversación."
+        },
+        "onDismissQuote": {
+          "name": "onDismissQuote",
+          "type": "(cita) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió quitar la cita, y viene con él. Quitarla de verdad es de quien consume."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La cita es dato, y el componente no sabe qué significa. Quien consume decide qué se puede citar, qué hace la respuesta con la dirección, y qué pasa al descartar.",
+      "extensibilityCode": {
+        "web": "// O trecho vai INTEIRO. Cortar aqui apagaria o resto para quem lê por\n// audição, que não tem \"linhas\" — tem o texto.\n{ author: 'Ana Souza', excerpt: mensagemInteira }\n\n// E não corte no servidor tampouco: a busca do navegador procura no que está\n// no documento, e o que foi cortado não está."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-composer-quote",
+          "description": "La barra izquierda, que es decorativa."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-quote",
+          "description": "Fondo del bloque."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-quote",
+          "description": "Redondeo del lado opuesto a la barra."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-composer-quote-author",
+          "description": "Nombre de quien lo escribió."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-quote-excerpt",
+          "description": "El fragmento citado."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-quote-author",
+          "description": "Tamaño del autor y del fragmento — menor que el del campo, porque es contexto."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-quote {\n  border-inline-start-color: hsl(var(--primary));\n}\n\n/* O corte é por LINHA, e é aqui que se decide quantas. Cortar por caractere\n   em código apagaria o resto do texto para quem lê por audição. */\n.nds-composer-quote-excerpt {\n  -webkit-line-clamp: 3;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La cita describe el campo, y llega antes de la pista: saber a quién se responde cambia lo que se escribe.",
+      "items": {
+        "item1": "La cita entra en la descripción del campo, y va primero — antes de la pista de teclado.",
+        "item2": "El nombre de quien escribió lleva un prefijo audible, que convierte dos fragmentos en una frase.",
+        "item3": "El fragmento se recorta por línea, en el diseño: el texto entero permanece en el documento y en la búsqueda del navegador.",
+        "item4": "El botón que descarta dice de quién es la cita.",
+        "item5": "La barra izquierda es decorativa y no se anuncia — repite lo que el nombre ya dice."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Alcanza el botón que descarta, antes del campo.",
+        "enter": "Acciona el botón bajo el foco.",
+        "arrows": "No hacen nada aquí: la cita es lectura, no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "El aria-describedby del campo señala la cita y la pista, en ese orden.",
+        "item2": "El prefijo audible vive en una clase que solo recibe el lector de pantalla.",
+        "item3": "El botón que descarta tiene nombre propio, con el autor dentro."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "Al enfocar el campo, se oye a quién se responde, el fragmento entero, y luego la pista.",
+        "item2": "El fragmento recortado en pantalla se lee completo.",
+        "item3": "El botón que descarta se anuncia con el nombre de quien escribió."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo en que vive la cita."
+        },
+        "chatThread": {
+          "name": "ChatThread",
+          "description": "De dónde viene la cita, y adónde va la respuesta."
+        },
+        "attachments": {
+          "name": "Adjuntos del composer",
+          "description": "Lo que va junto con el mensaje, justo debajo de la cita."
+        },
+        "markdown": {
+          "name": "Markdown",
+          "description": "Cuando la cita es contenido de la respuesta, no contexto del campo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El fragmento se recorta por línea, en CSS, y nunca por carácter en código. Quien lee de oído no tiene líneas — tiene el texto — y lo cortado en código también sale de la búsqueda del navegador.",
+      "item2": "La cita va antes de la pista en la descripción del campo porque ambas informan cosas de peso distinto: la cita cambia lo que se escribe, y la pista cambia cómo se envía.",
+      "item3": "El prefijo audible existe porque un nombre suelto al inicio de la descripción no dice que se está respondiendo a alguien — solo dice que hay un nombre ahí.",
+      "item4": "La barra izquierda no se anuncia, y es a propósito: repite visualmente lo que el nombre del autor ya dice por escrito.",
+      "item5": "Una cita a la vez. Dos en el mismo campo no dirían a cuál responde la respuesta, y la dirección que va con ella quedaría ambigua."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la cita en sí no instrumenta el descarte, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una cita",
+          "result": "El bloque aparece con el autor y el fragmento",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar un fragmento mayor que el espacio",
+          "result": "El texto entero permanece en el documento, y el recorte es del diseño",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Accionar el botón que descarta",
+          "result": "Quien consume es avisado, con la cita incluida",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Descartar",
+          "result": "El bloque se queda — quitarlo de verdad es de quien recibe",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "No pasar cita",
+          "result": "El bloque no existe, y la descripción del campo lleva solo la pista",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pasar cita y adjuntos juntos",
+          "result": "La cita va antes de los adjuntos y del campo",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La cita entra en la descripción del campo, antes de la pista",
+        "item2": "La descripción del campo lleva el autor y el fragmento",
+        "item3": "El botón que descarta dice de quién es la cita",
+        "item4": "El fragmento recortado en pantalla queda entero para quien escucha",
+        "item5": "El botón que descarta tiene al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — fragmento corto",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — fragmento largo, recortado en dos líneas",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — sin cita",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composiciones — cita y adjuntos juntos",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

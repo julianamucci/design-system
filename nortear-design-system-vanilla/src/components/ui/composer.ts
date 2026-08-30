@@ -1,6 +1,11 @@
 import { cn } from '@/lib/utils';
 import { createButton } from './button';
 import { createComposerAttachments, type ComposerAttachmentLabels } from './composer-attachments';
+import {
+  createComposerQuote,
+  type ComposerQuote,
+  type ComposerQuoteLabels,
+} from './composer-quote';
 import type { Attachment } from '@shared/primitives/chat-protocol';
 import {
   createTriggerPopover,
@@ -89,6 +94,17 @@ export interface ComposerOptions {
   attachmentLabels?: ComposerAttachmentLabels;
   /** Alguém pediu para remover um anexo. */
   onRemoveAttachment?: (attachment: Attachment) => void;
+  /**
+   * A mensagem que está sendo respondida.
+   *
+   * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, para
+   * quem não vê a tela saber a quem responde antes de escrever.
+   */
+  quote?: ComposerQuote;
+  /** Textos da citação. Obrigatórios quando há citação. */
+  quoteLabels?: ComposerQuoteLabels;
+  /** Alguém pediu para tirar a citação. */
+  onDismissQuote?: (quote: ComposerQuote) => void;
   /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem consome. */
   onSubmit?: (value: string) => void;
   /** Alguém pediu para interromper o que está sendo gerado. */
@@ -144,6 +160,9 @@ export function createComposer(options: ComposerOptions): ComposerElement {
     attachments = [],
     attachmentLabels,
     onRemoveAttachment,
+    quote,
+    quoteLabels,
+    onDismissQuote,
     onSubmit,
     onStop,
     onInput,
@@ -173,6 +192,13 @@ export function createComposer(options: ComposerOptions): ComposerElement {
   input.setAttribute('aria-label', labels.input);
   if (maxLength !== undefined) input.maxLength = maxLength;
   if (disabled) input.disabled = true;
+
+  const quoteId = `${id}-quote`;
+  if (quote && quoteLabels) {
+    field.appendChild(
+      createComposerQuote({ quote, labels: quoteLabels, id: quoteId, onDismiss: onDismissQuote }),
+    );
+  }
 
   if (attachments.length && attachmentLabels) {
     field.appendChild(
@@ -247,7 +273,15 @@ export function createComposer(options: ComposerOptions): ComposerElement {
 
   // A dica descreve o campo — `Enter envia` é comportamento, e saber disso
   // depois de apertar a tecla não serve para nada.
-  input.setAttribute('aria-describedby', hintId);
+  //
+  // Com citação, ela vem PRIMEIRO na descrição: saber a quem se responde muda
+  // o que se escreve, e a dica de teclado só muda como se envia. A citação
+  // aponta o próprio bloco, então o texto dela chega inteiro — inclusive o
+  // trecho que a folha corta por linha.
+  input.setAttribute(
+    'aria-describedby',
+    quote && quoteLabels ? `${quoteId} ${hintId}` : hintId,
+  );
 
   // ── Estado ─────────────────────────────────────────────────────────────────
 

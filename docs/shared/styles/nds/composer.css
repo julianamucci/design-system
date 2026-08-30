@@ -460,3 +460,85 @@
   min-inline-size: var(--spacing-6);
   min-block-size: var(--spacing-6);
 }
+
+/* ── Citação ──────────────────────────────────────────────────────────────────
+ *
+ * A mensagem que está sendo respondida, no topo da moldura. É o que liga a
+ * conversa ao campo: sem ela, "sim, pode fazer" chega sem dizer a quê.
+ *
+ *   <div class="nds-composer-field">
+ *     <div class="nds-composer-quote" data-slot="composer-quote">
+ *       <span class="nds-composer-quote-author">Ana Souza</span>
+ *       <p class="nds-composer-quote-excerpt">A medida sai do container…</p>
+ *       <button class="nds-button" data-slot="composer-quote-dismiss"
+ *               aria-label="Remover citação de Ana Souza">×</button>
+ *     </div>
+ *     <ul class="nds-composer-attachments">…</ul>
+ *     <textarea class="nds-composer-input"></textarea>
+ *   </div>
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. A CITAÇÃO DESCREVE O CAMPO. Ela entra em `aria-describedby` junto da
+ *    dica, e é assim que quem não vê a tela sabe A QUEM está respondendo antes
+ *    de escrever — e não depois de enviar. É o mesmo raciocínio da dica de
+ *    teclado: informação que muda o que se escreve tem de chegar antes.
+ * 2. O TRECHO É CORTADO POR CSS, NUNCA POR CÓDIGO. `line-clamp` esconde as
+ *    linhas que sobram e mantém o texto inteiro no documento; cortar a string
+ *    em JavaScript apagaria o resto para quem lê por audição, que não tem
+ *    "linhas" — tem o texto. E a busca do navegador continua achando.
+ * 3. O BOTÃO DE DISPENSAR DIZ O QUE DISPENSA, com o nome de quem escreveu.
+ *    Numa tela com citação e anexos, dois "×" seguidos são o mesmo botão para
+ *    quem ouve.
+ * 4. A BARRA DA ESQUERDA É DECORATIVA. Ela repete visualmente o que o rótulo
+ *    do autor já diz; sozinha, não diria nada.
+ * 5. ALVO DE TOQUE ≥ 24px no botão de dispensar (WCAG 2.5.8).
+ */
+
+.nds-composer-quote {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-1) var(--spacing-2);
+  align-items: start;
+
+  margin-block-start: var(--spacing-2);
+  margin-inline: var(--spacing-2);
+  padding-inline-start: var(--spacing-2);
+  padding-block: var(--spacing-1);
+
+  /* A barra é decorativa: o autor já está escrito ao lado. */
+  border-inline-start: 2px solid hsl(var(--primary));
+  background-color: hsl(var(--muted) / 0.4);
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+}
+
+.nds-composer-quote-author {
+  grid-column: 1;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.nds-composer-quote-excerpt {
+  grid-column: 1;
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+
+  /* Corta por LINHA, e não por caractere: o texto inteiro continua no
+   * documento, então quem lê por audição recebe tudo e a busca do navegador
+   * continua achando. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nds-composer-quote .nds-button {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  /* Alvo de toque (WCAG 2.5.8), em botão de ícone — sem texto para crescer. */
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}
