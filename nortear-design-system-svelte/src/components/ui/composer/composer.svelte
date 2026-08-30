@@ -28,7 +28,9 @@
   // saber o que se põe nele.
   import type { Snippet } from 'svelte';
   import type { HTMLFormAttributes } from 'svelte/elements';
+  import type { Attachment } from '@shared/primitives/chat-protocol';
   import type { WithElementRef } from '@/lib/utils.js';
+  import type { ComposerAttachmentLabels } from './composer-attachments.svelte';
   import type {
     TriggerPopoverLabels,
     TriggerSource,
@@ -100,12 +102,23 @@
      * abrir.
      */
     triggerLabels?: TriggerPopoverLabels;
+    /**
+     * Os arquivos que vão junto com a mensagem.
+     *
+     * O composer os DESENHA e avisa quando alguém pede para remover; subir,
+     * validar e remover de verdade é de quem consome.
+     */
+    attachments?: Attachment[];
+    /** Textos da fila de anexos. Obrigatórios quando há anexo. */
+    attachmentLabels?: ComposerAttachmentLabels;
     /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
     railStart?: Snippet;
     /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem recebe. */
     onSubmit?: (value: string) => void;
     /** Alguém pediu para interromper o que está sendo gerado. */
     onStop?: () => void;
+    /** Alguém pediu para remover um anexo. O componente não remove nada. */
+    onRemoveAttachment?: (attachment: Attachment) => void;
   };
 </script>
 
@@ -119,6 +132,7 @@
   } from '@shared/primitives/composer-trigger';
   import { Button } from '@/components/ui/button';
   import { cn } from '@/lib/utils.js';
+  import ComposerAttachments from './composer-attachments.svelte';
   import ComposerTriggerPopover, {
     type TriggerOption,
   } from './composer-trigger-popover.svelte';
@@ -134,12 +148,24 @@
     running = false,
     triggers = [],
     triggerLabels,
+    attachments = [],
+    attachmentLabels,
     railStart,
     onSubmit,
     onStop,
+    onRemoveAttachment,
     class: className,
     ...restProps
   }: ComposerProps = $props();
+
+  /**
+   * A fila só existe quando há anexo E texto para ela.
+   *
+   * Sem anexo ela não fica escondida: ela não existe no documento. Uma lista
+   * vazia seria anunciada como "lista com zero itens", que promete algo que não
+   * há.
+   */
+  const hasAttachments = $derived(attachments.length > 0 && attachmentLabels !== undefined);
 
   // `$props.id()` só é aceito como inicializador de declaração no topo.
   const uid = $props.id();
@@ -367,6 +393,19 @@
     deixaria de fora do que está em foco.
   -->
   <div class="nds-composer-field">
+    <!--
+      A fila vive DENTRO da moldura e ANTES do campo: os anexos fazem parte do
+      que está sendo escrito, e uma fila fora da moldura pareceria uma lista de
+      outra coisa.
+    -->
+    {#if hasAttachments && attachmentLabels}
+      <ComposerAttachments
+        {attachments}
+        labels={attachmentLabels}
+        onRemove={onRemoveAttachment}
+      />
+    {/if}
+
     <textarea
       id={uid}
       data-slot="composer-input"
