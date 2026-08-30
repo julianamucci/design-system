@@ -43,11 +43,14 @@ storybook-static/
 .env.production.local
 !.env.example
 
+# Convenção do Vite para arquivo só-local (o .env.local acima é o caso comum,
+# mas o padrão vale para qualquer um).
+*.local
+
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
+*.sw?
 
 # OS
 .DS_Store
