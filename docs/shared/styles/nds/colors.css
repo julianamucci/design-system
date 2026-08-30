@@ -42,7 +42,7 @@
 .nds-bg-muted         { background-color: hsl(var(--muted)); }
 .nds-bg-primary       { background-color: hsl(var(--primary)); }
 .nds-bg-secondary     { background-color: hsl(var(--secondary)); }
-.nds-bg-accent        { background-color: hsl(var(--accent)); }
+.nds-bg-accent        { background-color: hsl(var(--accent) / 0.2); }
 .nds-bg-destructive   { background-color: hsl(var(--destructive)); }
 .nds-bg-success       { background-color: hsl(var(--success)); }
 .nds-bg-warning       { background-color: hsl(var(--warning)); }
@@ -85,7 +85,7 @@
 /* ── Hover variants (apenas as mais usadas) ────────────────────────────────── */
 .nds-hover-bg-muted-faint:hover { background-color: hsl(var(--muted) / 0.05); }  /* zebra suave de table-row */
 .nds-hover-bg-muted-soft:hover  { background-color: hsl(var(--muted) / 0.5); }
-.nds-hover-bg-accent:hover      { background-color: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+.nds-hover-bg-accent:hover      { background-color: hsl(var(--accent) / 0.2); color: hsl(var(--accent-foreground)); }
 /* O deslocamento fica FORA do `:hover` de propósito: não muda nada enquanto o
  * sublinhado não existe, e evita que cada call site repita
  * `style="text-underline-offset: 4px"` — 4px é a medida que button.css,

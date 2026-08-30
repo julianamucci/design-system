@@ -103,7 +103,7 @@
 .nds-navigation-menu-trigger:focus,
 .nds-navigation-menu-link:hover,
 .nds-navigation-menu-link:focus {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -158,7 +158,7 @@
 
 .nds-navigation-menu-child:hover,
 .nds-navigation-menu-child:focus {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -201,7 +201,7 @@
 
 .nds-navigation-menu-trigger[data-popup-open],
 .nds-navigation-menu-trigger[data-open] {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -233,14 +233,13 @@
  * entra inteiro: 10,04:1 no default, 7,60 no cold e 10,56 no warm. */
 .nds-navigation-menu-link[aria-current="page"],
 .nds-navigation-menu-link[data-active]:not([data-active="false"]) {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
   font-weight: var(--font-weight-semibold, 600);
 }
 
-/* No escuro o accent é o pêssego opaco, e 80% é o que o mantém em 4,66:1 com o
- * texto escuro por cima — a mesma conta do hover de botão e do cartão
- * relacionado. */
+
+/* Mesma conta do hover de botão: no escuro o realce precisa de corpo. */
 .dark .nds-navigation-menu-link[aria-current="page"],
 .dark .nds-navigation-menu-link[data-active]:not([data-active="false"]) {
   background-color: hsl(var(--accent) / 0.8);
@@ -250,7 +249,7 @@
 .nds-navigation-menu-link[aria-current="page"]:focus,
 .nds-navigation-menu-link[data-active]:not([data-active="false"]):hover,
 .nds-navigation-menu-link[data-active]:not([data-active="false"]):focus {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
 }
 
 .nds-navigation-menu-link svg:not([class*="size-"]) {

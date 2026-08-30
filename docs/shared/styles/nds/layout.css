@@ -383,7 +383,7 @@
   --box-border-width: 1px;
 }
 .nds-box[data-surface="accent"] {
-  --box-bg: hsl(var(--accent));
+  --box-bg: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 

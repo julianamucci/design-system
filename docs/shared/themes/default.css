@@ -178,32 +178,34 @@
   --secondary-foreground: 201 22% 18%;
   --muted: 36 16% 93%;
   --muted-foreground: 195 10% 40%;
-  /* O Pêssego #E8A47C a 40%, já composto sobre a página.
+  /* O Pêssego, em valor CHEIO. A força vem do alfa, no ponto de uso.
    *
-   * O accent é SUPERFÍCIE, não cor de traço: ele pinta hover, item destacado
-   * de menu e faixa de intervalo do calendário. Opaco (`22 70% 70%`, o valor
-   * anterior) o pêssego chegava a 2,07:1 contra a página — mais forte que
-   * `--primary` em muita tela, e o realce competia com o que estava realçando.
+   * O accent é SUPERFÍCIE, não cor de traço: ele pinta hover, item destacado de
+   * menu e faixa de intervalo do calendário. Opaco, o pêssego competia com o que
+   * estava realçando; a versão anterior resolvia isso COMPONDO os 40% dentro do
+   * próprio token (`22 71% 88%`), o que tinha uma vantagem — ser medível sozinho
+   * — e dois defeitos que só apareceram com o tempo.
    *
-   * 40% do pêssego é a força pedida; o valor está COMPOSTO, e não escrito como
-   * alfa, por dois motivos. Um: `hsl(var(--accent))` aparece em 45 blocos e
-   * `hsl(var(--accent) / X)` em outros — com alfa no token, os segundos viram
-   * valor inválido e a declaração cai. Dois: superfície translúcida muda de cor
-   * conforme o que está por baixo, e o contraste passa a depender de onde ela
-   * assenta. Aqui `--background`, `--card` e `--popover` são o mesmo valor, então
-   * compor uma vez dá o mesmo resultado em todos eles — com a vantagem de ser
-   * medível sozinho.
+   * Um: o token deixava de ser a cor da marca. Quem lia `--accent` via um pêssego
+   * lavado e não o pêssego, e não havia como pedir o tom cheio para nada.
+   * Dois: a força ficava presa a um valor só, e o claro e o escuro precisam de
+   * forças diferentes para o MESMO tom aparecer sobre páginas opostas.
    *
-   * Medido: texto de `--accent-foreground` por cima vai de 6,41:1 para 10,04:1.
-   * Contra a página a superfície fica em 1,32:1 — acima de `--muted` (1,15) e
-   * de `--secondary` (1,12), que são as outras duas superfícies de apoio do
-   * tema. É realce de apoio, e é assim que ele se comporta.
+   * Agora o token é a cor e o alfa é escrito NO COMPONENTE: as folhas pintam
+   * `hsl(var(--accent) / 0.2)`, e as quatro regras `.dark` que precisam de mais
+   * corpo escrevem `/ 0.8`. Quem lê a folha vê a força que aquela regra aplica,
+   * sem precisar resolver um token para saber o que vai aparecer.
    *
-   * O ESCURO não acompanha: lá o pêssego opaco já assenta sobre um fundo
-   * escuro, dá 6,41:1 com texto escuro por cima, e clarear a página não é o
-   * problema. Onde ele precisava ceder — hover de botão, cartão relacionado,
-   * link ativo — o alfa de 0.8 continua declarado na própria folha. */
-  --accent: 22 71% 88%;
+   * O preço, e é real: superfície translúcida muda de cor conforme o que está
+   * por baixo, então o contraste depende de onde ela assenta. Aqui
+   * `--background`, `--card` e `--popover` têm o mesmo valor, o que faz o
+   * resultado ser o mesmo nos três — mas um tema futuro que os separe precisa
+   * medir os três, e não um.
+   *
+   * MEDIDO no claro, com a superfície a 20% sobre a página: o texto de
+   * `--accent-foreground` por cima dá 11,08:1, e a superfície fica em 1,19:1
+   * contra a página — realce de apoio, acima de `--muted` (1,15). */
+  --accent: 22 55% 62%;
   --accent-foreground: 201 22% 18%;
 
   /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
@@ -297,7 +299,35 @@
   --secondary-foreground: 24 100% 99%;
   --muted: 200 18% 22%;
   --muted-foreground: 197 12% 68%;
-  --accent: 22 70% 70%;
+  /* Mesma cor do claro; o que muda é a força, e ela é escrita no componente:
+     quatro regras `.dark` (hover de botão outline e ghost, link de navegação
+     ativo, hover de cartão relacionado) pintam `hsl(var(--accent) / 0.8)`.
+
+     ATENÇÃO ao mexer no valor abaixo: o 0.8 daquelas quatro regras foi medido
+     contra o accent ANTERIOR (`22 70% 70%`), mais claro, onde dava 4,65:1 com a
+     tinta escura por cima. Com o valor cheio da marca ele NÃO alcança o piso.
+     Medido sobre esta página escura, com `--accent: 22 55% 62%`:
+
+       alfa   superfície   tinta escura   tinta clara
+       0.50   #7c6151      2,35           5,58
+       0.60   #8d6a55      2,75           4,75
+       0.80   #b07d5f      3,78           3,46   ← pedido, e reprova dos dois lados
+       0.95   #ca8b67      4,71           2,78
+       1.00   #d39069      5,07           2,58
+
+     Entre 0.70 e 0.90 existe uma ZONA MORTA: o composto fica em tom médio e
+     nenhuma tinta alcança 4,5:1 — nem a escura, nem a clara. Não é questão de
+     escolher o texto certo; é a superfície que não serve, e o 0.8 que as folhas
+     escrevem cai bem no meio dela: 3,78:1.
+
+     As duas saídas, ambas de uma linha por regra:
+       · subir as quatro para `/ 0.95` — 4,71:1, mantendo a tinta escura;
+       · descer para `/ 0.5` e virar `--accent-foreground` para a tinta clara —
+         5,58:1 e um realce bem mais suave. Aí são duas variáveis, não uma.
+
+     Nenhum portão pega isto sozinho, e a razão vale de lembrete: o axe mede o
+     estado em REPOUSO, e todos os quatro casos são `:hover`. */
+  --accent: 22 55% 62%;
   --accent-foreground: 201 22% 18%;
 
   /* 79.5% e não 78%: a 78% a lavagem sobre `--muted` dava 4.52 contra piso de

@@ -313,7 +313,7 @@
  * ele. Sem a cor do texto declarada junto, o par depende de qual tema está
  * ligado — que é exatamente o que a regra dos contêineres coloridos proíbe. */
 .nds-editor-content .ProseMirror mark {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
   border-radius: var(--radius-xs);
   padding: 0.1em 0.2em;
@@ -426,7 +426,7 @@
 /* Célula selecionada — o realce do sistema, com o texto que vem medido para
  * ele. A lib marca a seleção com esta classe. */
 .nds-editor-content .ProseMirror .selectedCell {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -583,6 +583,6 @@
 
 /* Selecionada, a fórmula usa o mesmo realce do resto da seleção. */
 .nds-editor-content .ProseMirror-selectednode {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   border-radius: var(--radius-sm);
 }

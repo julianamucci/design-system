@@ -86,7 +86,7 @@
 }
 
 .nds-pagination-link:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -104,7 +104,7 @@
  * tirava o hover do único stack em que se aplicava.
  */
 .nds-pagination-link[aria-current="page"] {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 

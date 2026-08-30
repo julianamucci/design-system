@@ -27,7 +27,7 @@
 }
 
 .nds-related-card:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -46,9 +46,8 @@
   border-color: hsl(var(--border));
   background-color: hsl(var(--border) / 0.3);
 }
-/* 0.8: a 50% o composto ficava em tom médio e o `--accent-foreground` escuro
- * — herdado da regra de hover sem `.dark`, que é quem declara a cor — media
- * 2,97:1. A 80% vai a 4,81:1. */
+
+/* Mesma conta do hover de botão: no escuro o realce precisa de corpo. */
 .dark .nds-related-card:hover {
   background-color: hsl(var(--accent) / 0.8);
 }

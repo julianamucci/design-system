@@ -122,7 +122,9 @@ const CANDIDATOS: Array<[string, string]> = [
   ['--input', 'hsl(var(--input))'],
   ['--ring', 'hsl(var(--ring))'],
   ['--muted', 'hsl(var(--muted))'],
-  ['--accent', 'hsl(var(--accent))'],
+    // O accent PINTADO é o composto a 20%, não o tom cheio: casar com o opaco
+  // identificaria como '--accent' uma cor que nenhuma folha usa.
+  ['--accent', 'hsl(var(--accent) / 0.2)'],
   ['--foreground', 'hsl(var(--foreground))'],
   ['--primary', 'hsl(var(--primary))'],
   ['--primary / 0.2', 'hsl(var(--primary) / 0.2)'],

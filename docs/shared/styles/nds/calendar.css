@@ -84,7 +84,7 @@
 }
 
 .nds-calendar-select:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -218,7 +218,7 @@
 }
 
 .nds-calendar-nav-btn:hover:not([aria-disabled="true"]) {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -360,7 +360,7 @@
   position: relative;
   isolation: isolate;
   z-index: 0;
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -375,7 +375,7 @@
   inset-block: 0;
   right: 0;
   width: var(--spacing-4);
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   z-index: -1;
 }
 
@@ -390,7 +390,7 @@
   inset-block: 0;
   left: 0;
   width: var(--spacing-4);
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   z-index: -1;
 }
 
@@ -413,7 +413,7 @@
  * falha entre as colunas. É o que as outras quatro stacks já faziam. */
 .nds-calendar-range-middle {
   border-radius: var(--radius-none);
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -438,7 +438,7 @@
  * tingido nas outras assim que o tema deixava de ser o default. */
 .nds-calendar-today {
   border-radius: var(--nds-cell-radius);
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -509,7 +509,7 @@
 }
 
 .nds-calendar-day-btn:hover:not([data-selected]):not([data-disabled]):not(:disabled) {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -585,7 +585,7 @@
 }
 
 .nds-calendar-day-btn[data-today]:not([data-selected]) {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -633,7 +633,7 @@
  * O React não passa por aqui: lá a faixa vem da família `.nds-calendar-range-*`,
  * e o Angular não tem intervalo. */
 .nds-calendar-range .nds-calendar-day-cell:has([data-selected]) {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
   border-radius: var(--radius-none);
 }
@@ -764,7 +764,7 @@
   }
 
   .nds-calendar-select option:hover {
-    background-color: hsl(var(--accent));
+    background-color: hsl(var(--accent) / 0.2);
     color: hsl(var(--accent-foreground));
   }
 

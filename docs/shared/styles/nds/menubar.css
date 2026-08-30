@@ -93,7 +93,7 @@
 .nds-menubar-trigger:hover,
 .nds-menubar-trigger[data-state="open"],
 .nds-menubar-trigger[data-popup-open] {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 

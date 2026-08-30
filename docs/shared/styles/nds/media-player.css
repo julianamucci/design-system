@@ -137,7 +137,7 @@
 }
 
 .nds-media-player-button:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 

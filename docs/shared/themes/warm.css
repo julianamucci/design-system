@@ -73,7 +73,11 @@
   --secondary-foreground: 4 55% 24%;
   --muted: 30 20% 95%;
   --muted-foreground: 25 12% 42%;
-  --accent: 35 55% 92%;             /* espelha secondary */
+  /* Valor CHEIO: o alfa é escrito no componente (0.2 nas folhas, 0.8 nas quatro
+     regras .dark), então o token guarda o tom e não a aparência final. Este
+     valor foi resolvido para compor, a 20% sobre a página, exatamente o pálido
+     opaco que este tema mostrava antes — a aparência não mudou. */
+  --accent: 34 65% 68%;
   --accent-foreground: 4 55% 24%;
 
   /* Feedback — paleta quente */
@@ -136,9 +140,15 @@
   --sidebar-border: 30 15% 85%;
   --sidebar-ring: 4 78% 50%;
 
-  /* Radius — este tema PODE sobrescrever --radius e os tokens por componente
-     (--radius-button/card/badge/input/alert) para mudar a identidade de forma.
-     A escala --radius-xs..xl (raio aninhado) nunca é sobrescrita. */
+  /* Radius — a identidade de forma deste tema é o CANTO CHEIO: base no
+     --radius-full, o que leva a escala derivada inteira ao pill e deixa botão,
+     campo, alerta e cartão arredondados até virarem cápsula. Micro-controle
+     (checkbox, alça, botão de fechar) sai redondo pelo mesmo caminho, que é o
+     efeito pedido.
+
+     Sobrescreve a BASE, e não os degraus: a escala continua derivando sozinha,
+     como o contrato manda. */
+  --radius: var(--radius-full);
 }
 
 /* Dark mode — combina `.dark.tema-warm` */
@@ -155,7 +165,10 @@
   --secondary-foreground: 35 55% 90%;
   --muted: 25 10% 16%;
   --muted-foreground: 30 12% 70%;
-  --accent: 25 20% 18%;
+  /* Cheio, mesmo motivo do claro. 48% e não 50%: a 50% os quatro casos de
+      davam 4,36:1 com a tinta clara por cima, abaixo do piso; a 48% vão
+     a 4,64:1, e a aparência a 20% fica indistinguível (razão 1,014). */
+  --accent: 23 28% 48%;
   --accent-foreground: 35 55% 90%;
   --destructive: 328 82% 70%;   /* #f174b7 */
   --destructive-foreground: var(--foreground);

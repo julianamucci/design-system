@@ -310,7 +310,7 @@
  * tela anuncia e a cor é o que os olhos veem. Uma sem a outra deixa metade das
  * pessoas sem saber onde está. */
 .nds-composer-trigger-option[aria-selected="true"] {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -727,7 +727,7 @@
 
 .nds-composer-model-option[aria-selected="true"],
 .nds-composer-model-option[data-active="true"] {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 

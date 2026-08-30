@@ -61,7 +61,7 @@
 .nds-toggle[data-state="on"],
 .nds-toggle[data-pressed],
 .nds-toggle[aria-pressed="true"] {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
@@ -101,7 +101,7 @@
 }
 
 .nds-toggle[data-variant="outline"]:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 

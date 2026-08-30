@@ -207,16 +207,23 @@
      (--radius-button, --radius-card, etc.) que por default aponta para um
      degrau da escala, mas temas podem sobrescrever (ver docs/shared/themes/).
 
-     Valor base = 0.625rem (10px). */
+     Valor base = 0.875rem (14px). */
   --radius: 0.875rem;              /* 14px — base global */
-  /* Escala derivada do base — compartilhada pelas 4 stacks */
-  --radius-none: 0;                         /* cantos retos INTENCIONAIS (flush em grupos, fullscreen) */
-  --radius-xs: calc(var(--radius) - 6px);   /* 4px — micro-controles (checkbox, close, handles) */
-  --radius-sm: calc(var(--radius) - 4px);   /* 6px */
-  --radius-md: calc(var(--radius) - 2px);   /* 8px */
-  --radius-lg: var(--radius);               /* 10px */
-  --radius-xl: calc(var(--radius) + 4px);   /* 14px */
-  --radius-full: 9999px;                    /* pill/círculo */
+  /* Escala derivada do base — compartilhada pelas 5 stacks.
+
+     Os offsets negativos passam por `max(0px, …)` porque a base é superfície de
+     tema e um tema pode zerá-la: com `--radius: 0`, `calc(0px - 6px)` dá -6px,
+     e raio negativo é valor INVÁLIDO — a declaração inteira cai, em silêncio,
+     nos 86 lugares que leem os três degraus de baixo. O `max` é o que torna
+     `--radius: 0` um valor de tema utilizável em vez de uma armadilha, e é o
+     que o tema `cold` usa. */
+  --radius-none: 0;                                    /* cantos retos INTENCIONAIS (flush em grupos, fullscreen) */
+  --radius-xs: max(0px, calc(var(--radius) - 6px));    /* 8px — micro-controles (checkbox, close, handles) */
+  --radius-sm: max(0px, calc(var(--radius) - 4px));    /* 10px */
+  --radius-md: max(0px, calc(var(--radius) - 2px));    /* 12px */
+  --radius-lg: var(--radius);                          /* 14px */
+  --radius-xl: calc(var(--radius) + 4px);              /* 18px */
+  --radius-full: 9999px;                               /* pill/círculo */
 
   /* Tokens por componente — superfície de theming. Os DEFAULTS derivam da
      escala (aditiva), o que mantém os pares de raio aninhado válidos em

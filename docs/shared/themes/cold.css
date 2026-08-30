@@ -83,7 +83,9 @@
   --secondary-foreground: 195 80% 22%;
   --muted: 210 20% 95%;
   --muted-foreground: 215 12% 42%;
-  --accent: 205 55% 92%;            /* espelha secondary */
+  /* Valor CHEIO — ver a nota do warm. Resolvido para compor, a 20% sobre a
+     página, o mesmo pálido opaco de antes. */
+  --accent: 206 65% 68%;
   --accent-foreground: 195 80% 22%;
 
   /* Feedback — paleta fria */
@@ -146,9 +148,17 @@
   --sidebar-border: 210 18% 85%;
   --sidebar-ring: 195 90% 38%;
 
-  /* Radius — este tema PODE sobrescrever --radius e os tokens por componente
-     (--radius-button/card/badge/input/alert) para mudar a identidade de forma.
-     A escala --radius-xs..xl (raio aninhado) nunca é sobrescrita. */
+  /* Radius — a identidade de forma deste tema é o CANTO RETO: base zero.
+
+     A base sozinha não basta, e é o detalhe que separa "quase quadrado" de
+     quadrado: --radius-badge aponta para --radius-full, que é 9999px fixo e
+     não deriva da base. Sem zerá-lo à mão, o tema reto teria badge em cápsula.
+
+     Os degraus de baixo da escala passam por max(0px, …) no tokens.css
+     justamente para este caso: sem isso, calc(0px - 6px) daria raio negativo,
+     valor inválido que derruba a declaração em silêncio. */
+  --radius: 0;
+  --radius-badge: 0;
 }
 
 /* Dark mode — combina `.dark.tema-cold` */
@@ -165,7 +175,8 @@
   --secondary-foreground: 205 55% 90%;
   --muted: 215 15% 16%;
   --muted-foreground: 210 12% 70%;
-  --accent: 215 25% 18%;
+  /* Cheio, mesmo motivo. A 0.8 dá 4,77:1 com a tinta clara. */
+  --accent: 214 35% 49%;
   --accent-foreground: 205 55% 90%;
   --destructive: 356 90% 74%;   /* #f88189 */
   --destructive-foreground: var(--foreground);

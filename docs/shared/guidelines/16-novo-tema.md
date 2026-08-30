@@ -105,12 +105,26 @@ divergir do corpo da página. Costuma ser `--background` levemente deslocado.
 `--radius` (base) e os cinco derivados por componente: `--radius-button`,
 `--radius-input`, `--radius-alert`, `--radius-card`, `--radius-badge`.
 
-Só declare se a marca pede identidade de forma diferente. `warm` e `cold` não
-declaram — herdam de `tokens.css`, que é o único token de tema que continua com
-valor lá, justamente porque nem todo tema o declara. O `default` declara porque
-a marca tem identidade de forma. Se declarar, use a escala derivada
-(`var(--radius-lg)`, `var(--radius-xl)`, `var(--radius-full)`), nunca um valor
-em px solto.
+Declare se a marca pede identidade de forma própria. Os três temas de hoje
+declaram, e cada um mostra um caminho:
+
+| tema | o que declara | identidade |
+|---|---|---|
+| `default` | `--radius: 0.875rem` + os cinco por componente | cantos generosos |
+| `warm` | `--radius: var(--radius-full)` | tudo em cápsula; micro-controle sai redondo |
+| `cold` | `--radius: 0` **e** `--radius-badge: 0` | canto reto |
+
+Sobrescrever a BASE é o que move a escala inteira, e é o caminho preferido — os
+degraus continuam derivando sozinhos. Se declarar por componente, use a escala
+(`var(--radius-lg)`, `var(--radius-xl)`, `var(--radius-full)`), nunca px solto.
+
+**O `cold` precisa das duas linhas, e o motivo vale para qualquer tema reto:**
+`--radius-badge` aponta para `--radius-full`, que é `9999px` fixo e não deriva da
+base. Zerar só a base deixaria o badge em cápsula dentro de um tema quadrado.
+
+Zerar a base é seguro porque os três degraus de baixo passam por
+`max(0px, …)` em `tokens.css`. Sem isso, `calc(0px - 6px)` daria raio negativo —
+valor inválido, que derruba a declaração em silêncio nos 86 lugares que os leem.
 
 **Cor é diferente de raio, e a assimetria é proposital:** os 42 tokens de cor
 NÃO existem em `tokens.css`. Cada tema declara os 42, e o Default é um tema como
