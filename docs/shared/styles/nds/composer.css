@@ -763,8 +763,9 @@
  *   <div class="nds-composer-voice" data-state="recording">
  *     <button class="nds-button" data-slot="composer-voice-toggle"
  *             aria-pressed="true">…</button>
- *     <span class="nds-composer-voice-level" aria-hidden="true">
- *       <span class="nds-composer-voice-bar"></span>
+ *     <span class="nds-composer-voice-level" aria-hidden="true"
+ *           style="--nds-voice-level: 0.62">      ← nível: valor de RUNTIME
+ *       <span class="nds-composer-voice-bar"></span>   ← e mais quatro iguais
  *     </span>
  *     <span class="nds-composer-voice-status">Gravando · 0:12</span>
  *   </div>
@@ -808,6 +809,20 @@
   background-color: hsl(var(--destructive));
   border-radius: var(--radius-full);
   transform-origin: center;
+
+  /* O NÍVEL É VALOR DE RUNTIME, e entra por custom property — nunca por um
+   * `style` de desenho, que sairia do tema junto com a densidade e a escala
+   * tipográfica. Mesma mecânica de `--nds-attachment-progress` na fila de
+   * anexos, e pelo mesmo motivo.
+   *
+   * A folha declarava as classes e os quadros da pulsação, mas nada lia o
+   * número: sem esta linha e as duas de baixo, `level` desenharia igual para
+   * 0,2 e para 0,9. Sem nível declarado o padrão é 1, que é exatamente o que a
+   * folha já desenhava antes.
+   *
+   * Ele não se anuncia: quem ouve recebe a PALAVRA do estado, e o medidor é
+   * `aria-hidden`. */
+  transform: scaleY(var(--nds-voice-level, 1));
 }
 
 .nds-composer-voice[data-state="recording"] .nds-composer-voice-bar {
@@ -820,13 +835,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* A pulsação vai até o NÍVEL, e não até o topo: o que se vê é o som que está
+ * entrando, e uma barra que bate no teto com qualquer nível seria decoração
+ * fingindo medida. Sem nível declarado o padrão é 1 — os mesmos quadros de
+ * antes. */
 @keyframes nds-composer-voice-pulse {
   0%,
   100% {
-    transform: scaleY(0.4);
+    transform: scaleY(calc(var(--nds-voice-level, 1) * 0.4));
   }
   50% {
-    transform: scaleY(1);
+    transform: scaleY(var(--nds-voice-level, 1));
   }
 }
 
@@ -838,6 +857,6 @@
 @media (prefers-reduced-motion: reduce) {
   .nds-composer-voice[data-state="recording"] .nds-composer-voice-bar {
     animation: none;
-    transform: scaleY(0.7);
+    transform: scaleY(calc(var(--nds-voice-level, 1) * 0.7));
   }
 }

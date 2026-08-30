@@ -1,0 +1,1433 @@
+{
+  "pt-BR": {
+    "title": "Ditado por voz",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O controle do trilho que escreve por quem fala: um alternador, o desenho do som que entra e o estado em palavra.",
+    "seo": {
+      "title": "Ditado por voz — o controle que escreve por quem fala",
+      "description": "Um alternador com estado de pressionado, um medidor decorativo e o estado em texto. O componente não capta áudio: ele desenha o que recebe e avisa que alguém pediu para começar ou parar."
+    },
+    "labels": {
+      "start": "Ditar",
+      "stop": "Parar de ditar",
+      "status": {
+        "idle": "Ditado desligado",
+        "recording": "Gravando",
+        "transcribing": "Transcrevendo — não dá para interromper"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "idle": "Em repouso",
+        "recording": "Captando",
+        "transcribing": "Transcrevendo",
+        "inRail": "No trilho do campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O controle mora no início do trilho, junto do que se acrescenta à mensagem — e não do lado de quem a envia.",
+      "item2": "O alternador é UM botão que muda de estado, e não dois que se trocam: botão que some leva o foco junto.",
+      "item3": "O medidor desenha o som que entra e sai do que é lido em voz — o que muda a cada quadro, anunciado, torna a tela impossível de ouvir.",
+      "item4": "O estado chega em palavra, ao lado do medidor. É ele que diz o que está acontecendo a quem não vê o desenho.",
+      "item5": "O tempo decorrido acompanha a palavra e fica fora do que se anuncia: um relógio que se reapresenta a cada segundo cobre tudo o mais.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-voice\" data-state=\"recording\">\n  <button class=\"nds-button\" data-slot=\"composer-voice-toggle\"\n          aria-pressed=\"true\" aria-label=\"Parar de ditar\"\n          aria-describedby=\"voz-1-status\">\n    <svg aria-hidden=\"true\"></svg>\n  </button>\n  <span class=\"nds-composer-voice-level\" aria-hidden=\"true\"\n        style=\"--nds-voice-level: 0.62\">\n    <span class=\"nds-composer-voice-bar\"></span>\n  </span>\n  <span class=\"nds-composer-voice-status\" id=\"voz-1-status\">\n    Gravando<span aria-hidden=\"true\"> · 0:12</span>\n  </span>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use no início do trilho, para escrever a mensagem falando em vez de digitando.",
+        "item2": "Passe o estado que você já tem; o componente não pede permissão, não capta e não transcreve.",
+        "item3": "Escreva o estado em palavra, sempre — o medidor é desenho, e desenho não chega a quem ouve.",
+        "item4": "Desabilite o alternador enquanto a transcrição corre, e diga no texto de estado por que ele não responde.",
+        "item5": "Formate o tempo decorrido de fora: duração se escreve diferente em cada idioma, e o desenho não decide idioma."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Escrever a mensagem falando",
+          "u": "Ditado por voz",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Conversar por voz, com resposta falada",
+          "u": "Conversa por voz",
+          "a": "Ali há uma ligação aberta, com estado de conexão e legenda; aqui há um campo de texto que recebe palavras."
+        },
+        "item3": {
+          "s": "Ouvir uma resposta já escrita",
+          "u": "Leitura em voz alta",
+          "a": "Aquilo sai do sistema para quem escuta; isto entra de quem fala."
+        },
+        "item4": {
+          "s": "Tocar um áudio que já existe",
+          "u": "Reprodutor de mídia",
+          "a": "Lá o tempo é de um arquivo com começo e fim; aqui é de uma captura que ainda não acabou."
+        },
+        "item5": {
+          "s": "Um controle que liga e desliga qualquer outra coisa",
+          "u": "Botão alternador",
+          "a": "O alternador comum não carrega medidor nem estado intermediário; este tem um passo em que já parou de captar e ainda processa."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "start": {
+            "name": "Nome em repouso",
+            "format": "Verbo no infinitivo, no que a pessoa vai fazer",
+            "good": "Ditar",
+            "bad": "Microfone"
+          },
+          "stop": {
+            "name": "Nome enquanto ocupa",
+            "format": "O mesmo verbo, negado — o botão é o mesmo",
+            "good": "Parar de ditar",
+            "bad": "Cancelar"
+          },
+          "status": {
+            "name": "Estado",
+            "format": "Uma palavra do que está acontecendo agora",
+            "good": "Gravando",
+            "bad": "Aguarde"
+          },
+          "elapsed": {
+            "name": "Tempo decorrido",
+            "format": "Minutos e segundos, do menor para o maior",
+            "good": "0:12",
+            "bad": "12 segundos se passaram"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Deixe um botão só, que muda de estado e de nome.",
+        "item2": "Diga em palavra o que está acontecendo, além do medidor.",
+        "item3": "Explique no texto de estado por que o alternador não responde durante a transcrição.",
+        "item4": "Mantenha o tempo decorrido fora do que se anuncia."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não troque um botão por outro ao começar a captar.",
+        "item2": "Não deixe o medidor como única pista de que a captura está de pé.",
+        "item3": "Não anuncie o tempo decorrido a cada segundo.",
+        "item4": "Não desabilite o alternador sem dizer por quê."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O estado chega em palavra, ao lado do medidor.",
+        "dont": "Só o medidor separa uma captura de pé de uma parada, e desenho não chega a quem ouve a tela."
+      },
+      "pair2": {
+        "do": "Durante a transcrição o alternador está desabilitado, e o texto de estado diz por quê.",
+        "dont": "O alternador desabilitado sem motivo escrito é a pergunta \"por que não posso?\" sem resposta na tela."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposerVoice } from '@/components/ui/composer-voice';\n\nconst voz = createComposerVoice({\n  labels: rotulos,\n  state: estado,\n  onToggle: (intent) => (intent === 'start' ? comecar() : parar()),\n});\n\ncreateComposer({ labels, railStart: [voz] });",
+        "react": "import { ComposerVoice } from \"@/components/ui/composer-voice\";\n\n<ComposerVoice\n  labels={rotulos}\n  state={estado}\n  onToggle={(intent) => (intent === \"start\" ? comecar() : parar())}\n/>",
+        "vue": "<ComposerVoice\n  :labels=\"rotulos\"\n  :state=\"estado\"\n  @toggle=\"aoAlternar\"\n/>",
+        "svelte": "<ComposerVoice\n  labels={rotulos}\n  {state}\n  onToggle={(intent) => (intent === 'start' ? comecar() : parar())}\n/>",
+        "angular": "<nds-composer-voice\n  [labels]=\"rotulos\"\n  [state]=\"estado()\"\n  (toggle)=\"aoAlternar($event)\"\n/>"
+      },
+      "withLevel": "Com o nível e o tempo",
+      "withLevelCode": {
+        "web": "// O componente NÃO capta áudio. Pedir permissão, captar, transcrever e o que\n// fazer com o texto é de quem consome; aqui só se desenha o estado que chega.\n\n// O nível é DECORATIVO: um número de 0 a 1 que desenha o som e não se anuncia.\n{ state: 'recording', level: 0.62, elapsed: '0:12' }\n\n// Já parou de captar e ainda processa. O alternador fica desabilitado, e o\n// motivo vai no texto de estado — nunca só no cinza do botão.\n{ state: 'transcribing', elapsed: '0:34' }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "idle": {
+        "label": "Em repouso",
+        "trigger": "Ninguém pediu para ditar, ou o ditado acabou.",
+        "behavior": "O alternador não está pressionado e leva o nome de começar. Não há medidor: medidor sem som seria medidor mentindo."
+      },
+      "recording": {
+        "label": "Captando",
+        "trigger": "Quem consome começou a captar, depois de resolver a permissão.",
+        "behavior": "O alternador fica pressionado e passa a se chamar parar, o medidor aparece e pulsa até o nível, e o estado é escrito ao lado."
+      },
+      "transcribing": {
+        "label": "Transcrevendo",
+        "trigger": "A captura terminou e o texto ainda está sendo montado.",
+        "behavior": "O alternador continua pressionado e fica desabilitado — apertar ali não devolve o áudio —, e o motivo aparece escrito no texto de estado."
+      },
+      "disabled": {
+        "label": "Desligado",
+        "trigger": "Ditar não está disponível agora — sem permissão, sem aparelho, ou o campo inteiro está desabilitado.",
+        "behavior": "O alternador não responde em nenhum estado, e o texto ao lado continua dizendo em que ponto o ditado está."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "state": {
+          "name": "state",
+          "type": "'idle' | 'recording' | 'transcribing'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que ponto o ditado está. Quem capta é quem sabe, e é quem passa."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComposerVoiceLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto do controle: o nome do alternador em cada situação e a palavra de cada estado."
+        },
+        "level": {
+          "name": "level",
+          "type": "number",
+          "default": "—",
+          "required": "Não",
+          "description": "O quanto de som está entrando, de zero a um. É desenho, e não se anuncia; fora da faixa, o valor é aparado."
+        },
+        "elapsed": {
+          "name": "elapsed",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Há quanto tempo a captura corre, já escrito. Aparece na tela e fica fora do que se anuncia."
+        },
+        "disabled": {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Ditar não está disponível agora. Durante a transcrição o alternador já se desabilita sozinho."
+        },
+        "onToggle": {
+          "name": "onToggle",
+          "type": "(intent) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para começar ou para parar, e o pedido vem junto. Começar e parar de verdade é de quem capta."
+        },
+        "labelStart": {
+          "name": "start",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome do alternador em repouso — o que a pessoa vai fazer ao acioná-lo."
+        },
+        "labelStop": {
+          "name": "stop",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome do MESMO botão enquanto o ditado ocupa. Ele troca de nome, e não só de desenho."
+        },
+        "labelStatus": {
+          "name": "status",
+          "type": "Record<VoiceState, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada estado. É ela que chega a quem não vê o medidor, e é nela que vai o motivo de o alternador não responder."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O componente não capta áudio. Permissão de microfone, captura, transcrição e o que fazer com o texto são de quem consome — o componente desenha o estado que recebe e avisa que alguém pediu para começar ou parar.",
+      "extensibilityCode": {
+        "web": "// O componente desenha o que RECEBE, e não sabe de onde o som vem.\n// Permissão, captura, transcrição e o destino do texto são de quem consome.\n{\n  state: 'recording',  // em que ponto o ditado está\n  level: 0.62,         // o som que entra, de 0 a 1 — desenho, e só\n  elapsed: '0:12',     // já escrito: formato de duração é decisão de idioma\n  disabled: false,     // ditar não está disponível agora\n}\n\n// O pedido chega como intenção, e não como estado novo: entre pedir para\n// começar e estar captando existe uma permissão que só quem consome resolve.\nonToggle: (intent) => (intent === 'start' ? comecar() : parar());"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-voice-bar",
+          "description": "Cor do medidor — a mesma que marca o que está em curso e pode ser interrompido."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-composer-voice-bar",
+          "description": "Ponta arredondada da barra."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-voice-level",
+          "description": "Altura do medidor, que não tem texto para crescer."
+        },
+        "spacing1_5": {
+          "token": "--spacing-1-5",
+          "value": ".nds-composer-voice",
+          "description": "Espaço entre o alternador, o medidor e a palavra."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-voice-status",
+          "description": "Tamanho do texto de estado."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-voice-status",
+          "description": "Cor do texto de estado e do tempo decorrido."
+        },
+        "durationSlow": {
+          "token": "--duration-slow",
+          "value": ".nds-composer-voice-bar",
+          "description": "Ritmo da pulsação. A camada de tema o zera para quem pediu menos movimento."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-voice-toggle\"]",
+          "description": "Alvo de toque mínimo do alternador, herdado da regra do trilho."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-voice-status {\n  min-inline-size: 8ch;\n}\n\n/* O nível é valor de RUNTIME, e por isso entra por custom property em vez de\n   um `style` de desenho — que sairia do tema, da densidade e da escala\n   tipográfica junto. Sem nível declarado, a pulsação vai ao topo. */\n.nds-composer-voice-level {\n  --nds-voice-level: 0.62;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Um alternador só, com estado de pressionado; o medidor é desenho e o estado é palavra; o tempo decorrido fica fora do que se anuncia.",
+      "items": {
+        "item1": "O alternador é um botão só, que muda de estado e de nome — dois botões que se trocam levariam o foco junto ao sumir.",
+        "item2": "O medidor sai do que é lido em voz: o que muda a cada quadro, anunciado, cobre tudo o mais que houvesse para ouvir.",
+        "item3": "O estado chega em palavra, ao lado do medidor, e é ele que diz o que está acontecendo a quem não vê o desenho.",
+        "item4": "O tempo decorrido está na tela e fora do que se anuncia — um relógio que se reapresenta a cada segundo torna a tela impossível de ouvir.",
+        "item5": "Durante a transcrição o alternador não responde, e o motivo está escrito ao lado dele — nunca só no cinza do botão."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Leva o foco ao alternador. Enquanto ele não responde, sai do percurso, e o que está acontecendo continua escrito ao lado.",
+        "enter": "Aciona o alternador; a barra de espaço faz o mesmo.",
+        "arrows": "Não fazem nada aqui: há um controle só, e não uma lista."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-pressed diz se o ditado está de pé, no mesmo botão que o começa e o para.",
+        "item2": "aria-hidden tira o medidor e o tempo decorrido do que é lido em voz.",
+        "item3": "A descrição do alternador aponta o texto de estado, e é assim que a palavra do que está acontecendo chega junto com o nome do botão."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "O alternador é anunciado com o nome da ação e com o estado de pressionado.",
+        "item2": "A palavra do estado chega pela descrição do botão, sem o tempo decorrido junto.",
+        "item3": "O medidor não é anunciado em momento nenhum."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo em cujo trilho o controle vive."
+        },
+        "composerAttachments": {
+          "name": "Anexos do composer",
+          "description": "Quando o que entra na mensagem é arquivo que sobe, e não fala que vira texto."
+        },
+        "mediaPlayer": {
+          "name": "Reprodutor de mídia",
+          "description": "Quando o áudio já existe e tem começo e fim, em vez de estar sendo captado agora."
+        },
+        "button": {
+          "name": "Botão",
+          "description": "Quando o controle liga e desliga algo sem estado intermediário nem medidor."
+        }
+      }
+    },
+    "notes": {
+      "item1": "O componente NÃO capta áudio. Permissão de microfone, captura, transcrição e o destino do texto são de quem consome — é a mesma divisão da aprovação de ferramenta e do pedido de remover um anexo. Aqui só se desenha o estado que chega, e só se avisa o que foi pedido.",
+      "item2": "Captando e transcrevendo são estados separados porque só o primeiro se interrompe: quando a transcrição começa, a captura já acabou, e apertar de novo não devolve o áudio. Parecem iguais na tela e são opostos — esse é o critério que faz um estado existir.",
+      "item3": "O medidor é decorativo e o estado é texto. É a mesma decisão do contador de caracteres e do relógio do reprodutor de mídia, e pelo mesmo motivo: número que muda a cada quadro, se anunciado, torna a tela impossível de ouvir. Quem ouve recebe a palavra, que é o que decide o que fazer.",
+      "item4": "O tempo decorrido chega já escrito, e não como número de segundos. Formato de duração é decisão de idioma, e o componente que o formatasse decidiria idioma em cinco lugares diferentes — o mesmo motivo que mantém a fala dos exemplos fora da tradução.",
+      "item5": "O pedido sai como intenção — começar ou parar —, e não como estado novo. Entre pedir para começar e estar captando existe uma permissão que pode demorar ou ser negada, e um componente que anunciasse o estado seguinte estaria adivinhando o que ainda não aconteceu.",
+      "title": "Notas"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; o controle em si não instrumenta o ditado, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Montar em repouso",
+          "result": "Um alternador só, não pressionado, com o nome de começar",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Montar captando",
+          "result": "O mesmo botão, agora pressionado e com o nome de parar, e o medidor à vista",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Acionar o alternador em repouso",
+          "result": "Quem consome é avisado do pedido de começar",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Acionar o alternador captando",
+          "result": "Quem consome é avisado do pedido de parar, e nada muda no desenho por conta própria",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar transcrevendo",
+          "result": "O alternador não responde, e o motivo está escrito no texto de estado",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar um nível",
+          "result": "O número entra no desenho por propriedade, e fica fora do que é lido em voz",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Passar o tempo decorrido",
+          "result": "Ele aparece na tela e fica fora do que se anuncia",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar o controle no trilho do campo",
+          "result": "Ele vive no início do trilho e continua no percurso do teclado",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "O alternador é um botão só, com estado de pressionado",
+        "item2": "O nome do alternador muda com o estado do ditado",
+        "item3": "O medidor está fora do que é lido em voz",
+        "item4": "O tempo decorrido está fora do que se anuncia",
+        "item5": "O motivo de o alternador não responder está escrito ao lado dele",
+        "item6": "O alternador tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — o controle, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — em repouso",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — captando, com o medidor",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — transcrevendo",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — desligado",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — no trilho do campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Voice dictation",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The rail control that writes for whoever speaks: one toggle, a drawing of the sound coming in, and the state in words.",
+    "seo": {
+      "title": "Voice dictation — the control that writes for whoever speaks",
+      "description": "A toggle with a pressed state, a decorative meter and the state in text. The component does not capture audio: it draws what it receives and reports that someone asked to start or to stop."
+    },
+    "labels": {
+      "start": "Dictate",
+      "stop": "Stop dictating",
+      "status": {
+        "idle": "Dictation off",
+        "recording": "Recording",
+        "transcribing": "Transcribing — cannot be interrupted"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "idle": "At rest",
+        "recording": "Capturing",
+        "transcribing": "Transcribing",
+        "inRail": "In the field's rail"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The control lives at the start of the rail, next to what is added to the message — not next to what sends it.",
+      "item2": "The toggle is ONE button that changes state, not two that swap places: a button that disappears takes the focus with it.",
+      "item3": "The meter draws the sound coming in and stays out of what is read aloud — what changes every frame, announced, makes the screen impossible to listen to.",
+      "item4": "The state arrives in words, beside the meter. It is what says what is happening to whoever does not see the drawing.",
+      "item5": "The elapsed time follows the word and stays out of what is announced: a clock that re-presents itself every second buries everything else.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-voice\" data-state=\"recording\">\n  <button class=\"nds-button\" data-slot=\"composer-voice-toggle\"\n          aria-pressed=\"true\" aria-label=\"Stop dictating\"\n          aria-describedby=\"voice-1-status\">\n    <svg aria-hidden=\"true\"></svg>\n  </button>\n  <span class=\"nds-composer-voice-level\" aria-hidden=\"true\"\n        style=\"--nds-voice-level: 0.62\">\n    <span class=\"nds-composer-voice-bar\"></span>\n  </span>\n  <span class=\"nds-composer-voice-status\" id=\"voice-1-status\">\n    Recording<span aria-hidden=\"true\"> · 0:12</span>\n  </span>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it at the start of the rail, to write the message by speaking instead of typing.",
+        "item2": "Pass the state you already have; the component asks no permission, captures nothing and transcribes nothing.",
+        "item3": "Always write the state in words — the meter is drawing, and drawing never reaches whoever listens.",
+        "item4": "Disable the toggle while transcription runs, and say in the state text why it does not answer.",
+        "item5": "Format the elapsed time outside: duration is written differently in each language, and drawing does not decide language."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Writing the message by speaking",
+          "u": "Voice dictation",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Talking by voice, with a spoken answer",
+          "u": "Voice conversation",
+          "a": "There a call is open, with connection state and captions; here there is a text field receiving words."
+        },
+        "item3": {
+          "s": "Listening to an answer already written",
+          "u": "Read aloud",
+          "a": "That one leaves the system for whoever listens; this one comes in from whoever speaks."
+        },
+        "item4": {
+          "s": "Playing audio that already exists",
+          "u": "Media player",
+          "a": "There the time belongs to a file with a beginning and an end; here it belongs to a capture that has not finished."
+        },
+        "item5": {
+          "s": "A control that turns anything else on and off",
+          "u": "Toggle button",
+          "a": "A plain toggle carries neither meter nor an in-between state; this one has a step where capture has stopped and processing has not."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "start": {
+            "name": "Name at rest",
+            "format": "A verb, on what the person is about to do",
+            "good": "Dictate",
+            "bad": "Microphone"
+          },
+          "stop": {
+            "name": "Name while busy",
+            "format": "The same verb, negated — it is the same button",
+            "good": "Stop dictating",
+            "bad": "Cancel"
+          },
+          "status": {
+            "name": "State",
+            "format": "One word on what is happening right now",
+            "good": "Recording",
+            "bad": "Please wait"
+          },
+          "elapsed": {
+            "name": "Elapsed time",
+            "format": "Minutes and seconds, smallest unit last",
+            "good": "0:12",
+            "bad": "12 seconds have passed"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Keep a single button that changes state and name.",
+        "item2": "Say in words what is happening, beyond the meter.",
+        "item3": "Explain in the state text why the toggle does not answer during transcription.",
+        "item4": "Keep the elapsed time out of what is announced."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't swap one button for another when capture starts.",
+        "item2": "Don't leave the meter as the only cue that capture is running.",
+        "item3": "Don't announce the elapsed time every second.",
+        "item4": "Don't disable the toggle without saying why."
+      }
+    },
+    "doDont": {
+      "title": "Do and don't",
+      "pair1": {
+        "do": "The state arrives in words, beside the meter.",
+        "dont": "Only the meter separates a running capture from a stopped one, and drawing never reaches whoever listens to the screen."
+      },
+      "pair2": {
+        "do": "During transcription the toggle is disabled, and the state text says why.",
+        "dont": "A disabled toggle with no written reason is the question \"why can't I?\" with no answer on screen."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic use",
+      "basicCode": {
+        "vanilla": "import { createComposerVoice } from '@/components/ui/composer-voice';\n\nconst voz = createComposerVoice({\n  labels: rotulos,\n  state: estado,\n  onToggle: (intent) => (intent === 'start' ? comecar() : parar()),\n});\n\ncreateComposer({ labels, railStart: [voz] });",
+        "react": "import { ComposerVoice } from \"@/components/ui/composer-voice\";\n\n<ComposerVoice\n  labels={rotulos}\n  state={estado}\n  onToggle={(intent) => (intent === \"start\" ? comecar() : parar())}\n/>",
+        "vue": "<ComposerVoice\n  :labels=\"rotulos\"\n  :state=\"estado\"\n  @toggle=\"aoAlternar\"\n/>",
+        "svelte": "<ComposerVoice\n  labels={rotulos}\n  {state}\n  onToggle={(intent) => (intent === 'start' ? comecar() : parar())}\n/>",
+        "angular": "<nds-composer-voice\n  [labels]=\"rotulos\"\n  [state]=\"estado()\"\n  (toggle)=\"aoAlternar($event)\"\n/>"
+      },
+      "withLevel": "With the level and the time",
+      "withLevelCode": {
+        "web": "// The component does NOT capture audio. Asking permission, capturing,\n// transcribing and what to do with the text belong to whoever consumes it;\n// here only the incoming state is drawn.\n\n// The level is DECORATIVE: a number from 0 to 1 that draws the sound and is\n// never announced.\n{ state: 'recording', level: 0.62, elapsed: '0:12' }\n\n// Capture has stopped and processing has not. The toggle goes disabled, and\n// the reason goes into the state text — never into the grey of the button.\n{ state: 'transcribing', elapsed: '0:34' }"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "idle": {
+        "label": "At rest",
+        "trigger": "Nobody asked to dictate, or dictation finished.",
+        "behavior": "The toggle is not pressed and carries the starting name. There is no meter: a meter with no sound would be a meter lying."
+      },
+      "recording": {
+        "label": "Capturing",
+        "trigger": "Whoever consumes started capturing, after settling the permission.",
+        "behavior": "The toggle goes pressed and takes the stopping name, the meter appears and pulses up to the level, and the state is written beside it."
+      },
+      "transcribing": {
+        "label": "Transcribing",
+        "trigger": "Capture is over and the text is still being assembled.",
+        "behavior": "The toggle stays pressed and goes disabled — pressing there does not give the audio back —, and the reason shows in writing in the state text."
+      },
+      "disabled": {
+        "label": "Off",
+        "trigger": "Dictating is not available now — no permission, no device, or the whole field is disabled.",
+        "behavior": "The toggle answers in no state, and the text beside it still says where dictation stands."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "state": {
+          "name": "state",
+          "type": "'idle' | 'recording' | 'transcribing'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where dictation stands. Whoever captures is the one who knows, and the one who passes it."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComposerVoiceLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The control's text: the toggle's name in each situation, and the word for each state."
+        },
+        "level": {
+          "name": "level",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "How much sound is coming in, from zero to one. It is drawing, and is never announced; out of range, the value is clamped."
+        },
+        "elapsed": {
+          "name": "elapsed",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "How long capture has been running, already written. It shows on screen and stays out of what is announced."
+        },
+        "disabled": {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Dictating is not available now. During transcription the toggle already disables itself."
+        },
+        "onToggle": {
+          "name": "onToggle",
+          "type": "(intent) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to start or to stop, and the request comes along. Really starting and stopping belongs to whoever captures."
+        },
+        "labelStart": {
+          "name": "start",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The toggle's name at rest — what the person is about to do by pressing it."
+        },
+        "labelStop": {
+          "name": "stop",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the SAME button while dictation is busy. It changes name, not just drawing."
+        },
+        "labelStatus": {
+          "name": "status",
+          "type": "Record<VoiceState, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each state. It is what reaches whoever does not see the meter, and where the reason the toggle does not answer belongs."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The component does not capture audio. Microphone permission, capture, transcription and what to do with the text belong to whoever consumes it — the component draws the state it receives and reports that someone asked to start or to stop.",
+      "extensibilityCode": {
+        "web": "// The component draws what it RECEIVES, and does not know where the sound\n// comes from. Permission, capture, transcription and the text's destination\n// belong to whoever consumes it.\n{\n  state: 'recording',  // where dictation stands\n  level: 0.62,         // the sound coming in, 0 to 1 — drawing, and only that\n  elapsed: '0:12',     // already written: duration format is a language call\n  disabled: false,     // dictating is not available now\n}\n\n// The request arrives as an intent, not as a new state: between asking to\n// start and actually capturing there is a permission only the consumer settles.\nonToggle: (intent) => (intent === 'start' ? comecar() : parar());"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-voice-bar",
+          "description": "The meter's colour — the same one that marks what is under way and can be interrupted."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-composer-voice-bar",
+          "description": "The bar's rounded tip."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-voice-level",
+          "description": "The meter's height, which has no text to grow with."
+        },
+        "spacing1_5": {
+          "token": "--spacing-1-5",
+          "value": ".nds-composer-voice",
+          "description": "Space between the toggle, the meter and the word."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-voice-status",
+          "description": "Size of the state text."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-voice-status",
+          "description": "Colour of the state text and of the elapsed time."
+        },
+        "durationSlow": {
+          "token": "--duration-slow",
+          "value": ".nds-composer-voice-bar",
+          "description": "The pulse's tempo. The theme layer zeroes it for whoever asked for less motion."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-voice-toggle\"]",
+          "description": "Minimum touch target for the toggle, inherited from the rail's rule."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": ".nds-composer-voice-status {\n  min-inline-size: 8ch;\n}\n\n/* The level is a RUNTIME value, which is why it enters as a custom property\n   instead of a design `style` — that would leave the theme, the density and\n   the type scale behind. With no level declared, the pulse goes to the top. */\n.nds-composer-voice-level {\n  --nds-voice-level: 0.62;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "One toggle, with a pressed state; the meter is drawing and the state is a word; the elapsed time stays out of what is announced.",
+      "items": {
+        "item1": "The toggle is a single button that changes state and name — two buttons swapping places would take the focus with them as they vanish.",
+        "item2": "The meter stays out of what is read aloud: what changes every frame, announced, buries everything else there was to hear.",
+        "item3": "The state arrives in words, beside the meter, and it is what says what is happening to whoever does not see the drawing.",
+        "item4": "The elapsed time is on screen and out of what is announced — a clock that re-presents itself every second makes the screen impossible to listen to.",
+        "item5": "During transcription the toggle does not answer, and the reason is written beside it — never in the grey of the button alone."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Takes focus to the toggle. While it does not answer it leaves the order, and what is happening stays written beside it.",
+        "enter": "Activates the toggle; the space bar does the same.",
+        "arrows": "Do nothing here: there is one control, not a list."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-pressed says whether dictation is running, on the same button that starts and stops it.",
+        "item2": "aria-hidden takes the meter and the elapsed time out of what is read aloud.",
+        "item3": "The toggle's description points at the state text, and that is how the word for what is happening arrives together with the button's name."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The toggle is announced with the action's name and with its pressed state.",
+        "item2": "The state word arrives through the button's description, without the elapsed time along.",
+        "item3": "The meter is never announced."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field in whose rail the control lives."
+        },
+        "composerAttachments": {
+          "name": "Composer attachments",
+          "description": "When what enters the message is a file that uploads, not speech that becomes text."
+        },
+        "mediaPlayer": {
+          "name": "Media player",
+          "description": "When the audio already exists and has a beginning and an end, instead of being captured right now."
+        },
+        "button": {
+          "name": "Button",
+          "description": "When the control turns something on and off with no in-between state and no meter."
+        }
+      }
+    },
+    "notes": {
+      "item1": "The component does NOT capture audio. Microphone permission, capture, transcription and the text's destination belong to whoever consumes it — the same division as tool approval and as the request to remove an attachment. Here only the incoming state is drawn, and only the request is reported.",
+      "item2": "Capturing and transcribing are separate states because only the first can be interrupted: by the time transcription starts, capture is over, and pressing again does not give the audio back. They look alike on screen and are opposites — that is the test that makes a state exist.",
+      "item3": "The meter is decorative and the state is text. It is the same decision as the character counter and the media player's clock, and for the same reason: a number that changes every frame, if announced, makes the screen impossible to listen to. Whoever listens gets the word, which is what decides what to do.",
+      "item4": "The elapsed time arrives already written, not as a number of seconds. Duration format is a language call, and a component that formatted it would be deciding language in five different places — the same reason the example speech stays out of the translation.",
+      "item5": "The request leaves as an intent — start or stop —, not as a new state. Between asking to start and actually capturing there is a permission that may take time or be refused, and a component that announced the next state would be guessing at what has not happened yet.",
+      "title": "Notes"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the control itself does not instrument dictation, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Mount at rest",
+          "result": "A single toggle, not pressed, carrying the starting name",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Mount capturing",
+          "result": "The same button, now pressed and carrying the stopping name, with the meter in sight",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Activate the toggle at rest",
+          "result": "The consumer is told about the request to start",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Activate the toggle while capturing",
+          "result": "The consumer is told about the request to stop, and nothing changes in the drawing on its own",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mount transcribing",
+          "result": "The toggle does not answer, and the reason is written in the state text",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass a level",
+          "result": "The number enters the drawing as a property, and stays out of what is read aloud",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Pass the elapsed time",
+          "result": "It shows on screen and stays out of what is announced",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the control in the field's rail",
+          "result": "It lives at the start of the rail and stays in the keyboard order",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The toggle is a single button, with a pressed state",
+        "item2": "The toggle's name changes with the state of dictation",
+        "item3": "The meter is out of what is read aloud",
+        "item4": "The elapsed time is out of what is announced",
+        "item5": "The reason the toggle does not answer is written beside it",
+        "item6": "The toggle has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the control, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — at rest",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — capturing, with the meter",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — transcribing",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — off",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — in the field's rail",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Dictado por voz",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "El control del riel que escribe por quien habla: un alternador, el dibujo del sonido que entra y el estado en palabra.",
+    "seo": {
+      "title": "Dictado por voz — el control que escribe por quien habla",
+      "description": "Un alternador con estado de presionado, un medidor decorativo y el estado en texto. El componente no capta audio: dibuja lo que recibe y avisa que alguien pidió empezar o parar."
+    },
+    "labels": {
+      "start": "Dictar",
+      "stop": "Dejar de dictar",
+      "status": {
+        "idle": "Dictado apagado",
+        "recording": "Grabando",
+        "transcribing": "Transcribiendo — no se puede interrumpir"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "idle": "En reposo",
+        "recording": "Captando",
+        "transcribing": "Transcribiendo",
+        "inRail": "En el riel del campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El control vive al inicio del riel, junto a lo que se agrega al mensaje — y no junto a quien lo envía.",
+      "item2": "El alternador es UN botón que cambia de estado, y no dos que se intercambian: un botón que desaparece se lleva el foco consigo.",
+      "item3": "El medidor dibuja el sonido que entra y queda fuera de lo que se lee en voz — lo que cambia en cada cuadro, anunciado, vuelve la pantalla imposible de escuchar.",
+      "item4": "El estado llega en palabra, al lado del medidor. Es lo que dice qué está pasando a quien no ve el dibujo.",
+      "item5": "El tiempo transcurrido acompaña a la palabra y queda fuera de lo que se anuncia: un reloj que se repite cada segundo tapa todo lo demás.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-voice\" data-state=\"recording\">\n  <button class=\"nds-button\" data-slot=\"composer-voice-toggle\"\n          aria-pressed=\"true\" aria-label=\"Dejar de dictar\"\n          aria-describedby=\"voz-1-status\">\n    <svg aria-hidden=\"true\"></svg>\n  </button>\n  <span class=\"nds-composer-voice-level\" aria-hidden=\"true\"\n        style=\"--nds-voice-level: 0.62\">\n    <span class=\"nds-composer-voice-bar\"></span>\n  </span>\n  <span class=\"nds-composer-voice-status\" id=\"voz-1-status\">\n    Grabando<span aria-hidden=\"true\"> · 0:12</span>\n  </span>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo al inicio del riel, para escribir el mensaje hablando en vez de tecleando.",
+        "item2": "Pasa el estado que ya tienes; el componente no pide permiso, no capta y no transcribe.",
+        "item3": "Escribe el estado en palabra, siempre — el medidor es dibujo, y el dibujo no llega a quien escucha.",
+        "item4": "Deshabilita el alternador mientras corre la transcripción, y di en el texto de estado por qué no responde.",
+        "item5": "Da formato al tiempo transcurrido desde fuera: la duración se escribe distinto en cada idioma, y el dibujo no decide idioma."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Escribir el mensaje hablando",
+          "u": "Dictado por voz",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Conversar por voz, con respuesta hablada",
+          "u": "Conversación por voz",
+          "a": "Allí hay una llamada abierta, con estado de conexión y subtítulos; aquí hay un campo de texto que recibe palabras."
+        },
+        "item3": {
+          "s": "Escuchar una respuesta ya escrita",
+          "u": "Lectura en voz alta",
+          "a": "Aquello sale del sistema hacia quien escucha; esto entra desde quien habla."
+        },
+        "item4": {
+          "s": "Reproducir un audio que ya existe",
+          "u": "Reproductor de medios",
+          "a": "Allá el tiempo es de un archivo con principio y fin; aquí es de una captura que aún no terminó."
+        },
+        "item5": {
+          "s": "Un control que enciende y apaga cualquier otra cosa",
+          "u": "Botón alternador",
+          "a": "El alternador común no lleva medidor ni estado intermedio; este tiene un paso en el que ya dejó de captar y todavía procesa."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bueno",
+          "avoid": "Evita",
+          "start": {
+            "name": "Nombre en reposo",
+            "format": "Un verbo en infinitivo, sobre lo que la persona va a hacer",
+            "good": "Dictar",
+            "bad": "Micrófono"
+          },
+          "stop": {
+            "name": "Nombre mientras ocupa",
+            "format": "El mismo verbo, negado — el botón es el mismo",
+            "good": "Dejar de dictar",
+            "bad": "Cancelar"
+          },
+          "status": {
+            "name": "Estado",
+            "format": "Una palabra sobre lo que pasa ahora",
+            "good": "Grabando",
+            "bad": "Espere"
+          },
+          "elapsed": {
+            "name": "Tiempo transcurrido",
+            "format": "Minutos y segundos, de mayor a menor unidad",
+            "good": "0:12",
+            "bad": "Han pasado 12 segundos"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Deja un solo botón, que cambia de estado y de nombre.",
+        "item2": "Di en palabra lo que está pasando, además del medidor.",
+        "item3": "Explica en el texto de estado por qué el alternador no responde durante la transcripción.",
+        "item4": "Mantén el tiempo transcurrido fuera de lo que se anuncia."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No cambies un botón por otro al empezar a captar.",
+        "item2": "No dejes el medidor como única pista de que la captura está en pie.",
+        "item3": "No anuncies el tiempo transcurrido cada segundo.",
+        "item4": "No deshabilites el alternador sin decir por qué."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El estado llega en palabra, al lado del medidor.",
+        "dont": "Solo el medidor separa una captura en pie de una parada, y el dibujo no llega a quien escucha la pantalla."
+      },
+      "pair2": {
+        "do": "Durante la transcripción el alternador está deshabilitado, y el texto de estado dice por qué.",
+        "dont": "Un alternador deshabilitado sin motivo escrito es la pregunta \"¿por qué no puedo?\" sin respuesta en la pantalla."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposerVoice } from '@/components/ui/composer-voice';\n\nconst voz = createComposerVoice({\n  labels: rotulos,\n  state: estado,\n  onToggle: (intent) => (intent === 'start' ? comecar() : parar()),\n});\n\ncreateComposer({ labels, railStart: [voz] });",
+        "react": "import { ComposerVoice } from \"@/components/ui/composer-voice\";\n\n<ComposerVoice\n  labels={rotulos}\n  state={estado}\n  onToggle={(intent) => (intent === \"start\" ? comecar() : parar())}\n/>",
+        "vue": "<ComposerVoice\n  :labels=\"rotulos\"\n  :state=\"estado\"\n  @toggle=\"aoAlternar\"\n/>",
+        "svelte": "<ComposerVoice\n  labels={rotulos}\n  {state}\n  onToggle={(intent) => (intent === 'start' ? comecar() : parar())}\n/>",
+        "angular": "<nds-composer-voice\n  [labels]=\"rotulos\"\n  [state]=\"estado()\"\n  (toggle)=\"aoAlternar($event)\"\n/>"
+      },
+      "withLevel": "Con el nivel y el tiempo",
+      "withLevelCode": {
+        "web": "// El componente NO capta audio. Pedir permiso, captar, transcribir y qué\n// hacer con el texto es de quien lo consume; aquí solo se dibuja el estado\n// que llega.\n\n// El nivel es DECORATIVO: un número de 0 a 1 que dibuja el sonido y no se\n// anuncia.\n{ state: 'recording', level: 0.62, elapsed: '0:12' }\n\n// Ya dejó de captar y todavía procesa. El alternador queda deshabilitado, y el\n// motivo va en el texto de estado — nunca solo en el gris del botón.\n{ state: 'transcribing', elapsed: '0:34' }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "idle": {
+        "label": "En reposo",
+        "trigger": "Nadie pidió dictar, o el dictado terminó.",
+        "behavior": "El alternador no está presionado y lleva el nombre de empezar. No hay medidor: un medidor sin sonido sería un medidor mintiendo."
+      },
+      "recording": {
+        "label": "Captando",
+        "trigger": "Quien consume empezó a captar, después de resolver el permiso.",
+        "behavior": "El alternador queda presionado y pasa a llamarse parar, el medidor aparece y late hasta el nivel, y el estado se escribe al lado."
+      },
+      "transcribing": {
+        "label": "Transcribiendo",
+        "trigger": "La captura terminó y el texto aún se está armando.",
+        "behavior": "El alternador sigue presionado y queda deshabilitado — pulsar ahí no devuelve el audio —, y el motivo aparece escrito en el texto de estado."
+      },
+      "disabled": {
+        "label": "Apagado",
+        "trigger": "Dictar no está disponible ahora — sin permiso, sin aparato, o el campo entero está deshabilitado.",
+        "behavior": "El alternador no responde en ningún estado, y el texto de al lado sigue diciendo en qué punto está el dictado."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "state": {
+          "name": "state",
+          "type": "'idle' | 'recording' | 'transcribing'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está el dictado. Quien capta es quien lo sabe, y quien lo pasa."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComposerVoiceLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto del control: el nombre del alternador en cada situación y la palabra de cada estado."
+        },
+        "level": {
+          "name": "level",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Cuánto sonido está entrando, de cero a uno. Es dibujo, y no se anuncia; fuera del rango, el valor se recorta."
+        },
+        "elapsed": {
+          "name": "elapsed",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Cuánto lleva corriendo la captura, ya escrito. Aparece en la pantalla y queda fuera de lo que se anuncia."
+        },
+        "disabled": {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Dictar no está disponible ahora. Durante la transcripción el alternador ya se deshabilita solo."
+        },
+        "onToggle": {
+          "name": "onToggle",
+          "type": "(intent) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió empezar o parar, y la petición va junto. Empezar y parar de verdad es de quien capta."
+        },
+        "labelStart": {
+          "name": "start",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre del alternador en reposo — lo que la persona va a hacer al accionarlo."
+        },
+        "labelStop": {
+          "name": "stop",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre del MISMO botón mientras el dictado ocupa. Cambia de nombre, y no solo de dibujo."
+        },
+        "labelStatus": {
+          "name": "status",
+          "type": "Record<VoiceState, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada estado. Es la que llega a quien no ve el medidor, y donde va el motivo de que el alternador no responda."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El componente no capta audio. El permiso de micrófono, la captura, la transcripción y qué hacer con el texto son de quien lo consume — el componente dibuja el estado que recibe y avisa que alguien pidió empezar o parar.",
+      "extensibilityCode": {
+        "web": "// El componente dibuja lo que RECIBE, y no sabe de dónde viene el sonido.\n// El permiso, la captura, la transcripción y el destino del texto son de quien\n// lo consume.\n{\n  state: 'recording',  // en qué punto está el dictado\n  level: 0.62,         // el sonido que entra, de 0 a 1 — dibujo, y nada más\n  elapsed: '0:12',     // ya escrito: el formato de duración es cosa del idioma\n  disabled: false,     // dictar no está disponible ahora\n}\n\n// La petición llega como intención, y no como estado nuevo: entre pedir\n// empezar y estar captando hay un permiso que solo quien consume resuelve.\nonToggle: (intent) => (intent === 'start' ? comecar() : parar());"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-composer-voice-bar",
+          "description": "Color del medidor — el mismo que marca lo que está en curso y puede interrumpirse."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-composer-voice-bar",
+          "description": "Punta redondeada de la barra."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-voice-level",
+          "description": "Altura del medidor, que no tiene texto para crecer."
+        },
+        "spacing1_5": {
+          "token": "--spacing-1-5",
+          "value": ".nds-composer-voice",
+          "description": "Espacio entre el alternador, el medidor y la palabra."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-voice-status",
+          "description": "Tamaño del texto de estado."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-voice-status",
+          "description": "Color del texto de estado y del tiempo transcurrido."
+        },
+        "durationSlow": {
+          "token": "--duration-slow",
+          "value": ".nds-composer-voice-bar",
+          "description": "Ritmo del latido. La capa de tema lo pone en cero para quien pidió menos movimiento."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-voice-toggle\"]",
+          "description": "Objetivo táctil mínimo del alternador, heredado de la regla del riel."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-voice-status {\n  min-inline-size: 8ch;\n}\n\n/* El nivel es valor de RUNTIME, y por eso entra por custom property en vez de\n   un `style` de diseño — que dejaría atrás el tema, la densidad y la escala\n   tipográfica. Sin nivel declarado, el latido llega arriba. */\n.nds-composer-voice-level {\n  --nds-voice-level: 0.62;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Un solo alternador, con estado de presionado; el medidor es dibujo y el estado es palabra; el tiempo transcurrido queda fuera de lo que se anuncia.",
+      "items": {
+        "item1": "El alternador es un solo botón que cambia de estado y de nombre — dos botones que se intercambian se llevarían el foco al desaparecer.",
+        "item2": "El medidor queda fuera de lo que se lee en voz: lo que cambia en cada cuadro, anunciado, tapa todo lo demás que hubiera para oír.",
+        "item3": "El estado llega en palabra, al lado del medidor, y es lo que dice qué está pasando a quien no ve el dibujo.",
+        "item4": "El tiempo transcurrido está en la pantalla y fuera de lo que se anuncia — un reloj que se repite cada segundo vuelve la pantalla imposible de escuchar.",
+        "item5": "Durante la transcripción el alternador no responde, y el motivo está escrito a su lado — nunca solo en el gris del botón."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Lleva el foco al alternador. Mientras no responde sale del recorrido, y lo que está pasando sigue escrito a su lado.",
+        "enter": "Acciona el alternador; la barra espaciadora hace lo mismo.",
+        "arrows": "No hacen nada aquí: hay un solo control, y no una lista."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-pressed dice si el dictado está en pie, en el mismo botón que lo empieza y lo para.",
+        "item2": "aria-hidden saca el medidor y el tiempo transcurrido de lo que se lee en voz.",
+        "item3": "La descripción del alternador apunta al texto de estado, y así la palabra de lo que está pasando llega junto con el nombre del botón."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El alternador se anuncia con el nombre de la acción y con su estado de presionado.",
+        "item2": "La palabra del estado llega por la descripción del botón, sin el tiempo transcurrido al lado.",
+        "item3": "El medidor no se anuncia en ningún momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo en cuyo riel vive el control."
+        },
+        "composerAttachments": {
+          "name": "Adjuntos del composer",
+          "description": "Cuando lo que entra en el mensaje es un archivo que sube, y no habla que se vuelve texto."
+        },
+        "mediaPlayer": {
+          "name": "Reproductor de medios",
+          "description": "Cuando el audio ya existe y tiene principio y fin, en vez de estar captándose ahora."
+        },
+        "button": {
+          "name": "Botón",
+          "description": "Cuando el control enciende y apaga algo sin estado intermedio ni medidor."
+        }
+      }
+    },
+    "notes": {
+      "item1": "El componente NO capta audio. El permiso de micrófono, la captura, la transcripción y el destino del texto son de quien lo consume — la misma división que la aprobación de herramienta y la petición de quitar un adjunto. Aquí solo se dibuja el estado que llega, y solo se avisa lo que se pidió.",
+      "item2": "Captando y transcribiendo son estados separados porque solo el primero se interrumpe: cuando empieza la transcripción, la captura ya terminó, y pulsar de nuevo no devuelve el audio. Se parecen en la pantalla y son opuestos — ese es el criterio que hace existir a un estado.",
+      "item3": "El medidor es decorativo y el estado es texto. Es la misma decisión del contador de caracteres y del reloj del reproductor de medios, y por el mismo motivo: un número que cambia en cada cuadro, si se anuncia, vuelve la pantalla imposible de escuchar. Quien escucha recibe la palabra, que es lo que decide qué hacer.",
+      "item4": "El tiempo transcurrido llega ya escrito, y no como número de segundos. El formato de duración es cosa del idioma, y un componente que lo formateara estaría decidiendo idioma en cinco lugares distintos — el mismo motivo que mantiene el habla de los ejemplos fuera de la traducción.",
+      "item5": "La petición sale como intención — empezar o parar —, y no como estado nuevo. Entre pedir empezar y estar captando hay un permiso que puede tardar o ser negado, y un componente que anunciara el estado siguiente estaría adivinando lo que aún no ocurrió.",
+      "title": "Notas"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; el control en sí no instrumenta el dictado, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Montar en reposo",
+          "result": "Un solo alternador, no presionado, con el nombre de empezar",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Montar captando",
+          "result": "El mismo botón, ahora presionado y con el nombre de parar, y el medidor a la vista",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Accionar el alternador en reposo",
+          "result": "Se avisa a quien consume de la petición de empezar",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Accionar el alternador mientras capta",
+          "result": "Se avisa a quien consume de la petición de parar, y nada cambia solo en el dibujo",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar transcribiendo",
+          "result": "El alternador no responde, y el motivo está escrito en el texto de estado",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar un nivel",
+          "result": "El número entra en el dibujo por propiedad, y queda fuera de lo que se lee en voz",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Pasar el tiempo transcurrido",
+          "result": "Aparece en la pantalla y queda fuera de lo que se anuncia",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar el control en el riel del campo",
+          "result": "Vive al inicio del riel y sigue en el recorrido del teclado",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "El alternador es un solo botón, con estado de presionado",
+        "item2": "El nombre del alternador cambia con el estado del dictado",
+        "item3": "El medidor queda fuera de lo que se lee en voz",
+        "item4": "El tiempo transcurrido queda fuera de lo que se anuncia",
+        "item5": "El motivo de que el alternador no responda está escrito a su lado",
+        "item6": "El alternador tiene al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — el control, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — en reposo",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — captando, con el medidor",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — transcribiendo",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — apagado",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — en el riel del campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

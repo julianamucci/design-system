@@ -1,10 +1,16 @@
 import type { TriggerSpec } from '@shared/primitives/composer-trigger'
-import type { AttachmentState, ChatRole, ContextKind } from '@shared/primitives/chat-protocol'
+import type {
+  AttachmentState,
+  ChatRole,
+  ContextKind,
+  VoiceState,
+} from '@shared/primitives/chat-protocol'
 import type { FileSizeUnit } from '@shared/primitives/file-size'
 
 export { default as Composer } from './Composer.vue'
 export { default as ComposerAttachments } from './ComposerAttachments.vue'
 export { default as ComposerContext } from './ComposerContext.vue'
+export { default as ComposerVoice } from './ComposerVoice.vue'
 
 /**
  * O vocabulário do compositor.
@@ -166,4 +172,39 @@ export interface ComposerQuoteLabels {
   dismiss: string
   /** Como a citação se apresenta ao campo. `{author}` vira o nome. */
   describes: string
+}
+
+/**
+ * O vocabulário do DITADO POR VOZ.
+ *
+ * A peça é AUTÔNOMA: o campo não sabe que ela existe, e quem consome a põe no
+ * início do trilho. Por isso ela não entra na API do `Composer` como os anexos
+ * e o contexto entram — o trilho é um ESPAÇO, e o que se põe nele é de quem
+ * monta a tela.
+ *
+ * O estado — `VoiceState` — vem de `@shared/primitives/chat-protocol`, e é o
+ * mesmo nas cinco stacks. O que mora aqui é só o texto, porque o nome do
+ * alternador e a palavra de cada estado são texto de interface e têm três
+ * idiomas.
+ */
+
+/**
+ * O pedido que sai do alternador.
+ *
+ * É INTENÇÃO, e não o estado seguinte. Entre pedir para começar e estar
+ * captando existe uma permissão que pode demorar ou ser negada, e um componente
+ * que anunciasse `recording` estaria adivinhando o que ainda não aconteceu.
+ */
+export type ComposerVoiceIntent = 'start' | 'stop'
+
+export interface ComposerVoiceLabels {
+  /** Nome do alternador em repouso — o que a pessoa vai fazer ao acioná-lo. */
+  start: string
+  /** Nome do MESMO botão enquanto o ditado ocupa. Troca de nome, não só de desenho. */
+  stop: string
+  /**
+   * A palavra de cada estado. É ela que chega a quem não vê o medidor, e é
+   * nela que vai o motivo de o alternador não responder na transcrição.
+   */
+  status: Record<VoiceState, string>
 }

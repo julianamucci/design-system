@@ -9,6 +9,10 @@ import Attachments, {
 import Context, {
 	type ComposerContextLabels,
 } from "./composer-context.svelte";
+import Voice, {
+	type ComposerVoiceIntent,
+	type ComposerVoiceLabels,
+} from "./composer-voice.svelte";
 // Só os TIPOS da citação saem daqui. O bloco em si é montado pelo composer, e
 // não há por que quem consome montá-lo por fora: ele existe para descrever UM
 // campo, e é o campo que aponta a descrição. O que atravessa a fronteira é o
@@ -45,6 +49,14 @@ export {
 	//
 	Context as ComposerContext,
 	type ComposerContextLabels,
+	// O DITADO POR VOZ. Ele é AUTÔNOMO — o campo não sabe que ele existe, e quem
+	// consome o põe no trilho. Sai exportado inteiro, e não só em tipo, porque é
+	// quem consome que o monta.
+	Voice,
+	//
+	Voice as ComposerVoice,
+	type ComposerVoiceIntent,
+	type ComposerVoiceLabels,
 	// A CITAÇÃO. O vocabulário dela é texto de tela e o dado vem de quem
 	// consome, então os dois tipos saem; o bloco é montado pelo composer.
 	type ComposerQuote,
