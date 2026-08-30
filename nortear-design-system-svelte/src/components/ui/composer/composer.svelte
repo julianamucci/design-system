@@ -31,6 +31,7 @@
   import type { Attachment } from '@shared/primitives/chat-protocol';
   import type { WithElementRef } from '@/lib/utils.js';
   import type { ComposerAttachmentLabels } from './composer-attachments.svelte';
+  import type { ComposerQuote, ComposerQuoteLabels } from './composer-quote.svelte';
   import type {
     TriggerPopoverLabels,
     TriggerSource,
@@ -111,6 +112,15 @@
     attachments?: Attachment[];
     /** Textos da fila de anexos. Obrigatórios quando há anexo. */
     attachmentLabels?: ComposerAttachmentLabels;
+    /**
+     * A mensagem que está sendo respondida.
+     *
+     * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, para
+     * quem não vê a tela saber a quem responde antes de escrever.
+     */
+    quote?: ComposerQuote;
+    /** Textos da citação. Obrigatórios quando há citação. */
+    quoteLabels?: ComposerQuoteLabels;
     /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
     railStart?: Snippet;
     /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem recebe. */
@@ -119,6 +129,8 @@
     onStop?: () => void;
     /** Alguém pediu para remover um anexo. O componente não remove nada. */
     onRemoveAttachment?: (attachment: Attachment) => void;
+    /** Alguém pediu para tirar a citação. Tirar de verdade é de quem consome. */
+    onDismissQuote?: (quote: ComposerQuote) => void;
   };
 </script>
 
@@ -133,6 +145,7 @@
   import { Button } from '@/components/ui/button';
   import { cn } from '@/lib/utils.js';
   import ComposerAttachments from './composer-attachments.svelte';
+  import ComposerQuoteBlock from './composer-quote.svelte';
   import ComposerTriggerPopover, {
     type TriggerOption,
   } from './composer-trigger-popover.svelte';
@@ -150,10 +163,13 @@
     triggerLabels,
     attachments = [],
     attachmentLabels,
+    quote,
+    quoteLabels,
     railStart,
     onSubmit,
     onStop,
     onRemoveAttachment,
+    onDismissQuote,
     class: className,
     ...restProps
   }: ComposerProps = $props();
@@ -167,10 +183,30 @@
    */
   const hasAttachments = $derived(attachments.length > 0 && attachmentLabels !== undefined);
 
+  /**
+   * A citação só existe quando há mensagem citada E texto para ela.
+   *
+   * Sem rótulo o botão que dispensa nasceria sem nome, e um "×" sem nome é o
+   * defeito que a peça existe para não ter.
+   */
+  const hasQuote = $derived(quote !== undefined && quoteLabels !== undefined);
+
   // `$props.id()` só é aceito como inicializador de declaração no topo.
   const uid = $props.id();
   const hintId = `${uid}-hint`;
   const popoverId = `${uid}-trigger`;
+  const quoteId = `${uid}-quote`;
+
+  /**
+   * A dica descreve o campo — `Enter envia` é comportamento, e saber disso
+   * depois de apertar a tecla não serve para nada.
+   *
+   * Com citação, ela vem PRIMEIRO na descrição: saber a quem se responde muda o
+   * que se escreve, e a dica de teclado só muda como se envia. A citação aponta
+   * o próprio bloco, então o texto dela chega inteiro — inclusive o trecho que
+   * a folha corta por linha.
+   */
+  const describedBy = $derived(hasQuote ? `${quoteId} ${hintId}` : hintId);
 
   /**
    * O campo, para o seletor poder ler onde o cursor está.
@@ -394,6 +430,20 @@
   -->
   <div class="nds-composer-field">
     <!--
+      A citação vem PRIMEIRO — contexto antes do que ele contextualiza. A ordem
+      do documento é a ordem de leitura: quem chega pelo teclado ou por audição
+      encontra a quem responde antes de encontrar o que anexou.
+    -->
+    {#if hasQuote && quote && quoteLabels}
+      <ComposerQuoteBlock
+        id={quoteId}
+        {quote}
+        labels={quoteLabels}
+        onDismiss={onDismissQuote}
+      />
+    {/if}
+
+    <!--
       A fila vive DENTRO da moldura e ANTES do campo: os anexos fazem parte do
       que está sendo escrito, e uma fila fora da moldura pareceria uma lista de
       outra coisa.
@@ -415,7 +465,7 @@
       bind:this={inputEl}
       placeholder={labels.placeholder}
       aria-label={labels.input}
-      aria-describedby={hintId}
+      aria-describedby={describedBy}
       aria-controls={triggerOpen ? popoverId : undefined}
       aria-activedescendant={triggerOpen ? triggerActiveId : undefined}
       maxlength={maxLength}
