@@ -3,11 +3,16 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
+  ComposerAttachments,
+  type ComposerAttachmentLabels,
+} from "@/components/ui/composer-attachments"
+import {
   ComposerTriggerPopover,
   useComposerTrigger,
   type TriggerPopoverLabels,
   type TriggerSource,
 } from "@/components/ui/composer-trigger-popover"
+import type { Attachment } from "@shared/primitives/chat-protocol"
 
 /**
  * A superfície de entrada da conversa. Estrutura e cores em `nds/composer.css`,
@@ -102,6 +107,17 @@ export interface ComposerProps
   triggers?: TriggerSource[]
   /** Textos do seletor. Obrigatórios quando há gatilho, porque são texto de tela. */
   triggerLabels?: TriggerPopoverLabels
+  /**
+   * Os arquivos que vão junto com a mensagem.
+   *
+   * O composer os DESENHA e avisa quando alguém pede para remover; subir,
+   * validar e remover de verdade é de quem consome.
+   */
+  attachments?: Attachment[]
+  /** Textos da fila de anexos. Obrigatórios quando há anexo. */
+  attachmentLabels?: ComposerAttachmentLabels
+  /** Alguém pediu para remover um anexo. */
+  onRemoveAttachment?: (attachment: Attachment) => void
   /** Alguém pediu para enviar. O texto vai junto; limpar o campo é de quem consome. */
   onSubmit?: (value: string) => void
   /** Alguém pediu para interromper o que está sendo gerado. */
@@ -140,6 +156,9 @@ function Composer({
   railStart,
   triggers,
   triggerLabels,
+  attachments,
+  attachmentLabels,
+  onRemoveAttachment,
   onSubmit,
   onStop,
   onValueChange,
@@ -232,6 +251,18 @@ function Composer({
           acende no `:focus-within` daqui — o trilho está dentro do mesmo
           formulário e faz parte do que está em foco. */}
       <div className="nds-composer-field">
+        {/* A fila vem ANTES do campo e DENTRO da moldura: os anexos fazem
+            parte do que está sendo escrito, e fora da moldura pareceriam uma
+            lista de outra coisa. Sem anexo ela não existe no documento — uma
+            lista vazia seria anunciada como "lista com zero itens", que promete
+            algo que não há. */}
+        {attachments?.length && attachmentLabels ? (
+          <ComposerAttachments
+            attachments={attachments}
+            labels={attachmentLabels}
+            onRemove={onRemoveAttachment}
+          />
+        ) : null}
         <textarea
           id={fieldId}
           ref={inputRef}
