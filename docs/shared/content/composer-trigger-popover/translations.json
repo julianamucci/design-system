@@ -31,7 +31,7 @@
       "item4": "A opção traz o rótulo à esquerda e uma informação de apoio à direita.",
       "item5": "Sem resultado, o painel diz por escrito que não há nada — lista vazia é silêncio para quem não vê a tela.",
       "structureCode": {
-        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\" role=\"combobox\" aria-expanded=\"true\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
+        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -524,7 +524,7 @@
       "item4": "The option carries the label on the left and supporting information on the right.",
       "item5": "With no result, the panel says in writing that there is nothing — an empty list is silence for those who cannot see the screen.",
       "structureCode": {
-        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\" role=\"combobox\" aria-expanded=\"true\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
+        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -1017,7 +1017,7 @@
       "item4": "La opción lleva la etiqueta a la izquierda y una información de apoyo a la derecha.",
       "item5": "Sin resultado, el panel dice por escrito que no hay nada — una lista vacía es silencio para quien no ve la pantalla.",
       "structureCode": {
-        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\" role=\"combobox\" aria-expanded=\"true\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
+        "web": "<div class=\"nds-composer-field\">\n  <textarea class=\"nds-composer-input\"\n            aria-controls=\"lista\" aria-activedescendant=\"lista-ana\"></textarea>\n  <div class=\"nds-composer-trigger-popover\" role=\"listbox\" id=\"lista\">\n    <div class=\"nds-composer-trigger-option\" role=\"option\" aria-selected=\"true\"\n         id=\"lista-ana\">\n      <span class=\"nds-composer-trigger-option-label\">Ana Souza</span>\n      <span class=\"nds-composer-trigger-option-hint\">Produto</span>\n    </div>\n  </div>\n</div>"
       }
     },
     "usage": {
