@@ -19,7 +19,6 @@ coverage/
 dist/
 build/
 storybook-static/
-build-storybook.log
 
 # TypeScript build artifacts
 *.tsbuildinfo
@@ -46,6 +45,14 @@ Thumbs.db
 
 # Storybook
 .storybook-static/
+
+# Log de diagnóstico do próprio Storybook: ele despeja aqui a saída quando o
+# dev server ou o build quebra. É de uma rodada e de uma versão — os que
+# estavam versionados guardavam rastro de pilha do Storybook 10.3.5, quatro
+# menores atrás do instalado. O padrão cobre debug- e build-storybook.log; o
+# .gitignore do react já trazia esta regra, e as outras quatro stacks não têm
+# .gitignore próprio, então ela mora aqui para valer nas cinco.
+*storybook.log
 
 # Tarball do @nortear/ds-core (npm run core:pack)
 nortear-ds-core-*.tgz
