@@ -1,9 +1,10 @@
 import type { TriggerSpec } from '@shared/primitives/composer-trigger'
-import type { AttachmentState, ChatRole } from '@shared/primitives/chat-protocol'
+import type { AttachmentState, ChatRole, ContextKind } from '@shared/primitives/chat-protocol'
 import type { FileSizeUnit } from '@shared/primitives/file-size'
 
 export { default as Composer } from './Composer.vue'
 export { default as ComposerAttachments } from './ComposerAttachments.vue'
+export { default as ComposerContext } from './ComposerContext.vue'
 
 /**
  * O vocabulário do compositor.
@@ -106,6 +107,30 @@ export interface ComposerAttachmentLabels {
   state: Record<AttachmentState, string>
   /** A palavra de cada unidade de tamanho. */
   unit: Record<FileSizeUnit, string>
+}
+
+/**
+ * O vocabulário da LISTA DE CONTEXTO.
+ *
+ * NÃO é o da fila de anexos, ainda que a geometria seja quase a mesma. Anexo é
+ * carga — sobe, tem progresso, pode falhar. Contexto é referência: aponta para
+ * o que já existe, e por isso não tem estado nenhum a comunicar. O que separa
+ * as duas peças está no protocolo compartilhado, não no texto.
+ *
+ * O item em si — `ContextItem` — vem de `@shared/primitives/chat-protocol`, e é
+ * o mesmo nas cinco stacks. O que mora aqui é só o texto, porque a palavra de
+ * cada espécie e a marca do que entrou sozinho são texto de interface e têm
+ * três idiomas.
+ */
+export interface ComposerContextLabels {
+  /** Nome acessível da lista. */
+  list: string
+  /** Nome do botão de remover. `{label}` vira o nome do item. */
+  remove: string
+  /** A palavra de cada espécie. É ela que o leitor de tela recebe. */
+  kind: Record<ContextKind, string>
+  /** A marca do que entrou sem ninguém pedir. É texto, e não só a cor. */
+  automatic: string
 }
 
 /**

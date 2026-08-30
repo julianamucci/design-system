@@ -7,6 +7,10 @@ import {
   type ComposerAttachmentLabels,
 } from "@/components/ui/composer-attachments"
 import {
+  ComposerContext,
+  type ComposerContextLabels,
+} from "@/components/ui/composer-context"
+import {
   ComposerQuote as ComposerQuoteBlock,
   type ComposerQuote,
   type ComposerQuoteLabels,
@@ -17,7 +21,7 @@ import {
   type TriggerPopoverLabels,
   type TriggerSource,
 } from "@/components/ui/composer-trigger-popover"
-import type { Attachment } from "@shared/primitives/chat-protocol"
+import type { Attachment, ContextItem } from "@shared/primitives/chat-protocol"
 
 /**
  * A superfície de entrada da conversa. Estrutura e cores em `nds/composer.css`,
@@ -124,6 +128,19 @@ export interface ComposerProps
   /** Alguém pediu para remover um anexo. */
   onRemoveAttachment?: (attachment: Attachment) => void
   /**
+   * O que a pergunta leva junto sem ser carga: arquivo aberto, trecho marcado,
+   * página em que se está.
+   *
+   * NÃO é a fila de anexos, ainda que a geometria seja quase a mesma. Anexo é
+   * carga — sobe, tem progresso, pode falhar. Contexto é referência: aponta
+   * para o que já existe, e por isso não tem estado nenhum a comunicar.
+   */
+  context?: ContextItem[]
+  /** Textos da lista de contexto. Obrigatórios quando há contexto. */
+  contextLabels?: ComposerContextLabels
+  /** Alguém pediu para tirar um item do contexto. */
+  onRemoveContext?: (item: ContextItem) => void
+  /**
    * A mensagem que está sendo respondida.
    *
    * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, e vem
@@ -175,6 +192,9 @@ function Composer({
   attachments,
   attachmentLabels,
   onRemoveAttachment,
+  context,
+  contextLabels,
+  onRemoveContext,
   quote,
   quoteLabels,
   onDismissQuote,
@@ -283,6 +303,21 @@ function Composer({
             onDismiss={onDismissQuote}
           />
         ) : null}
+        {/* O CONTEXTO VEM DEPOIS DA CITAÇÃO E ANTES DOS ANEXOS.
+
+            A ordem do documento é a ordem de leitura: primeiro a quem se
+            responde, depois o que a pergunta já leva junto, depois o que ainda
+            está subindo.
+
+            Sem item a lista não existe no documento: uma lista vazia seria
+            anunciada como "lista com zero itens", que promete algo que não há. */}
+        {context?.length && contextLabels ? (
+          <ComposerContext
+            items={context}
+            labels={contextLabels}
+            onRemove={onRemoveContext}
+          />
+        ) : null}
         {/* A fila vem ANTES do campo e DENTRO da moldura: os anexos fazem
             parte do que está sendo escrito, e fora da moldura pareceriam uma
             lista de outra coisa. Sem anexo ela não existe no documento — uma
@@ -314,6 +349,13 @@ function Composer({
           // responde muda o que se escreve, e a dica de teclado só muda como se
           // envia. A citação aponta o próprio bloco, então o texto dela chega
           // inteiro — inclusive o trecho que a folha corta por linha.
+          //
+          // O CONTEXTO NÃO ENTRA AQUI, e é decisão, não esquecimento. A citação
+          // entra porque saber a quem se responde muda o que se escreve; uma
+          // lista de sete arquivos na descrição do campo vira ruído que se ouve
+          // a cada foco, e a cada tecla que devolva o anúncio. A lista é
+          // navegável, tem nome próprio e a contagem dela é anunciada ao
+          // entrar — não precisa ser repetida na descrição.
           aria-describedby={hasQuote ? `${quoteId} ${hintId}` : hintId}
           // O campo aponta a lista só enquanto ela existe para ele. Um
           // `aria-controls` para um painel escondido promete uma lista que não

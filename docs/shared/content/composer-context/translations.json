@@ -1,0 +1,1418 @@
+{
+  "pt-BR": {
+    "title": "Contexto do composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "As etiquetas do que vai junto com a pergunta sem ser carga: o arquivo aberto, o trecho marcado, a página em que se está.",
+    "seo": {
+      "title": "Contexto do composer — o que a pergunta leva junto",
+      "description": "Etiquetas de referência no campo de mensagem: a espécie em palavra, a marca do que entrou sozinho, e um botão de remover que diz qual item remove. Anexo é carga; contexto é referência."
+    },
+    "labels": {
+      "list": "Contexto",
+      "remove": "Remover {label}",
+      "kind": {
+        "selection": "Trecho",
+        "file": "Arquivo",
+        "directory": "Pasta",
+        "page": "Página",
+        "repository": "Repositório"
+      },
+      "automatic": "Automático"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "kinds": "As cinco espécies",
+        "detail": "Com o recorte",
+        "automatic": "O que entrou sozinho",
+        "withField": "Junto do campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A lista mora dentro da mesma moldura do campo: o que a pergunta leva junto faz parte do que está sendo escrito.",
+      "item2": "É uma lista de verdade, e é isso que faz o leitor de tela dizer quantos itens a pergunta leva antes de percorrê-los — saber que são sete muda o que se pergunta.",
+      "item3": "Cada etiqueta abre com o ícone da espécie, que é só desenho: a palavra da espécie viaja no nome do item, para quem ouve.",
+      "item4": "O recorte vem depois do nome — intervalo de linhas, seção, aba. É ele que separa um pedaço do todo.",
+      "item5": "O que entrou sozinho não ganha botão de remover, e traz escrita a marca que diz por que está ali.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Contexto\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Trecho</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">linhas 12–48</span>\n      <button class=\"nds-button\" data-slot=\"composer-context-remove\"\n              aria-label=\"Remover relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Página</span>\n      <span class=\"nds-composer-context-label\">Painel de medidas</span>\n      <span class=\"nds-composer-context-detail\">Automático</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para o que já existe e vai junto com a pergunta: arquivo aberto, trecho marcado, página em que se está.",
+        "item2": "Diga a espécie por escrito, sempre — o ícone é para os olhos.",
+        "item3": "Traga o recorte quando o item for um pedaço, e não o todo.",
+        "item4": "Marque como automático o que entrou sem ninguém pedir, e não ofereça botão de remover ali.",
+        "item5": "Tire o item de verdade só depois de o pedido chegar a quem monta a pergunta."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Referência ao que já está aberto",
+          "u": "Contexto do composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Arquivo que sobe com a mensagem",
+          "u": "Anexos do composer",
+          "a": "Aquilo é carga: tem bytes, tem progresso e pode falhar no meio. Isto aponta para o que já existe."
+        },
+        "item3": {
+          "s": "Escolher alguém ou um comando enquanto se escreve",
+          "u": "Seletor de gatilho do composer",
+          "a": "Ali a lista é escolha em andamento; aqui é o que já foi escolhido."
+        },
+        "item4": {
+          "s": "A mensagem a que se responde",
+          "u": "Citação do composer",
+          "a": "Aquela descreve o campo, porque muda o que se escreve; esta é uma lista com nome próprio."
+        },
+        "item5": {
+          "s": "Rótulo curto de classificação",
+          "u": "Badge",
+          "a": "O rótulo diz o que uma coisa é; a etiqueta aqui aponta para uma coisa."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "kind": {
+            "name": "Espécie",
+            "format": "Um substantivo, do mais estreito ao mais largo",
+            "good": "Trecho",
+            "bad": "Seleção de texto do editor"
+          },
+          "label": {
+            "name": "Nome da etiqueta",
+            "format": "O nome curto, sem o caminho inteiro",
+            "good": "relatorio.ts",
+            "bad": "/casa/ana/projeto/src/relatorio.ts"
+          },
+          "detail": {
+            "name": "Recorte",
+            "format": "Onde dentro do item, em número ou nome de seção",
+            "good": "linhas 12–48",
+            "bad": "parte do arquivo"
+          },
+          "automatic": {
+            "name": "Marca de automático",
+            "format": "Uma palavra, no motivo de estar ali",
+            "good": "Automático",
+            "bad": "Adicionado automaticamente pelo sistema"
+          },
+          "remove": {
+            "name": "Botão de remover",
+            "format": "Verbo mais o nome do item",
+            "good": "Remover relatorio.ts",
+            "bad": "Remover"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Ponha o nome do item no botão que o remove.",
+        "item2": "Diga a espécie em palavra, além do ícone.",
+        "item3": "Mostre o recorte quando o item for um pedaço.",
+        "item4": "Deixe o automático sem botão de remover, e com a marca à vista."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a espécie só no ícone.",
+        "item2": "Não ofereça remover o que volta sozinho na próxima pergunta.",
+        "item3": "Não use a borda mais discreta como única pista do que entrou sozinho.",
+        "item4": "Não escreva o caminho inteiro na etiqueta: ele não cabe e não ajuda."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "A espécie chega em palavra, junto do nome do item.",
+        "dont": "Só o ícone separa um trecho de um arquivo inteiro, e ícone não chega a quem ouve a tela."
+      },
+      "pair2": {
+        "do": "O que entrou sozinho traz a marca escrita, além da moldura mais discreta.",
+        "dont": "A moldura mais discreta sozinha não diz por que aquele item está ali."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  contextLabels,\n  context: referencias,\n  onRemoveContext: (item) => tirar(item.id),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  contextLabels={contextLabels}\n  context={referencias}\n  onRemoveContext={(item) => tirar(item.id)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :context-labels=\"contextLabels\"\n  :context=\"referencias\"\n  @remove-context=\"tirar\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {contextLabels}\n  context={referencias}\n  onRemoveContext={(item) => tirar(item.id)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [contextLabels]=\"contextLabels\"\n  [context]=\"referencias()\"\n  (removeContext)=\"tirar($event)\"\n/>"
+      },
+      "withAutomatic": "Com item automático",
+      "withAutomaticCode": {
+        "web": "// Referência é o que já existe: nada sobe, nada espera, nada falha.\n{ id: 'c1', label: 'relatorio.ts', kind: 'selection', detail: 'linhas 12–48' }\n\n// Automático é o que entrou sem ninguém pedir. Ele não ganha botão de\n// remover: voltaria na próxima pergunta.\n{ id: 'c2', label: 'Painel de medidas', kind: 'page', automatic: true }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "manual": {
+        "label": "Posto à mão",
+        "trigger": "Alguém escolheu o item para ir junto com a pergunta.",
+        "behavior": "A etiqueta traz o botão que a tira, com o nome do item no rótulo."
+      },
+      "automatic": {
+        "label": "Automático",
+        "trigger": "O item entrou sem ninguém pedir — o arquivo aberto, a página em que se está.",
+        "behavior": "O botão de remover não existe, a marca aparece escrita e a moldura fica mais discreta."
+      },
+      "detailed": {
+        "label": "Com recorte",
+        "trigger": "O item é um pedaço, e não o todo.",
+        "behavior": "O recorte aparece depois do nome — intervalo de linhas, seção, aba."
+      },
+      "empty": {
+        "label": "Sem contexto",
+        "trigger": "A pergunta não leva nada junto.",
+        "behavior": "A lista não existe no documento; uma lista vazia prometeria itens que não há."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "context": {
+          "name": "context",
+          "type": "ContextItem[]",
+          "default": "—",
+          "required": "Não",
+          "description": "O que a pergunta leva junto. Sem nenhum item, a lista não existe."
+        },
+        "contextLabels": {
+          "name": "contextLabels",
+          "type": "ComposerContextLabels",
+          "default": "—",
+          "required": "Não",
+          "description": "O texto da lista: o nome dela, o do botão de remover, a palavra de cada espécie e a marca de automático. Obrigatório quando há contexto."
+        },
+        "onRemoveContext": {
+          "name": "onRemoveContext",
+          "type": "(item) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para tirar um item, e o item vem junto. Tirar de verdade é de quem monta a pergunta."
+        },
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome curto da etiqueta. É ele que identifica o item, e é ele que entra no botão de remover."
+        },
+        "kind": {
+          "name": "kind",
+          "type": "'selection' | 'file' | 'directory' | 'page' | 'repository'",
+          "default": "—",
+          "required": "Sim",
+          "description": "De onde o item veio. Decide o ícone e a palavra que entra no nome acessível do item."
+        },
+        "detail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Onde dentro do item — intervalo de linhas, seção, aba. É o que separa um pedaço do todo."
+        },
+        "automatic": {
+          "name": "automatic",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "O item entrou sem ninguém pedir. Tira o botão de remover e acrescenta a marca escrita."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O item de contexto é dado, e o componente não sabe o que ele significa. O que faz um item entrar sozinho, o quanto ele abrange e o que acontece ao tirá-lo é de quem monta a pergunta — o componente desenha as etiquetas e avisa que alguém pediu para tirar uma.",
+      "extensibilityCode": {
+        "web": "// O item é DADO, e o componente não sabe o que ele significa.\n// O que faz um item entrar sozinho, o quanto ele abrange e o que acontece ao\n// tirá-lo é de quem monta a pergunta.\n{\n  id: 'c1',\n  label: 'relatorio.ts',   // o nome curto; o caminho inteiro não cabe\n  kind: 'selection',       // decide o ícone e a palavra do nome acessível\n  detail: 'linhas 12–48',  // o recorte, quando o item é um pedaço\n  automatic: false,        // verdadeiro tira o botão e acrescenta a marca\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-context-item",
+          "description": "Fundo da etiqueta, transparente no que entrou sozinho."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-context-item",
+          "description": "Moldura da etiqueta."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-composer-context-item",
+          "description": "Arredondamento — etiqueta de referência, não cartão de arquivo."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-context-item",
+          "description": "Tamanho do texto da etiqueta."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-context-detail",
+          "description": "Recorte, marca de automático e ícone da espécie."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-context",
+          "description": "Espaço entre as etiquetas e recuo da lista."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-context-icon",
+          "description": "Medida do ícone, que não tem texto para crescer."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-context-remove\"]",
+          "description": "Alvo de toque mínimo do botão de remover."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-context-item {\n  max-inline-size: 20rem;\n}\n\n/* A moldura tracejada do automático é REFORÇO, e não a pista: a marca escrita\n   ao lado é o que descreve o estado. Cor e traço sozinhos não descrevem. */\n.nds-composer-context-item[data-automatic=\"true\"] {\n  border-style: dashed;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A espécie chega em palavra, o ícone é só desenho, e cada botão de remover diz qual item remove.",
+      "items": {
+        "item1": "A lista é uma lista, e o leitor de tela diz quantos itens a pergunta leva antes de percorrê-los.",
+        "item2": "A espécie viaja no nome do item: o ícone é a única pista visual de que aquilo é um trecho, e pista que só existe em desenho não chega a quem ouve.",
+        "item3": "O que entrou sozinho não oferece botão de remover — botão que desfaz o que se refaz sozinho é armadilha.",
+        "item4": "O botão de remover carrega o nome do item; sem ele, uma fila de botões iguais é um botão só.",
+        "item5": "A marca de automático é texto, e não só a moldura mais discreta."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Percorre os botões de remover — um por item que pode ser tirado.",
+        "enter": "Aciona o botão sob o foco.",
+        "arrows": "Não fazem nada aqui: a lista é de leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A lista tem nome próprio, para se distinguir de outras listas da tela.",
+        "item2": "aria-hidden tira o ícone da espécie do que é lido em voz.",
+        "item3": "O botão de remover leva o nome do item no rótulo acessível."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A lista é anunciada com o nome e a quantidade de itens.",
+        "item2": "Cada item é lido como espécie, nome e recorte, nessa ordem.",
+        "item3": "O que entrou sozinho é lido com a marca, e sem botão para tirá-lo."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo em que a lista vive."
+        },
+        "composerAttachments": {
+          "name": "Anexos do composer",
+          "description": "Quando o que vai junto é carga que sobe, e não referência ao que já existe."
+        },
+        "composerQuote": {
+          "name": "Citação do composer",
+          "description": "Quando o que vai junto é a mensagem a que se responde."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Quando o rótulo diz o que uma coisa é, em vez de apontar para uma coisa."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Carga e referência se parecem na tela e não são a mesma peça. O que sobe tem bytes, progresso e pode falhar no meio; o que se referencia já existe, não sobe nada e não tem o que esperar — por isso o item de contexto não carrega estado nem progresso.",
+      "item2": "A lista NÃO descreve o campo. A mensagem citada descreve, porque saber a quem se responde muda o que se escreve; sete arquivos na descrição do campo viram ruído que se ouve a cada foco. A lista tem nome próprio e se percorre.",
+      "item3": "A espécie viaja em texto porque o ícone é decorativo. Ele é a única pista de que aquilo é um trecho e não o arquivo inteiro, e pista que só existe em desenho não chega a quem ouve.",
+      "item4": "Contexto automático não ganha botão de remover: ele volta na próxima pergunta, e um botão que desfaz o que se refaz sozinho promete o que não cumpre. O que \"automático\" significa é do produto; aqui só se desenha a diferença.",
+      "item5": "As espécies vêm em ordem, do mais estreito para o mais largo — trecho, arquivo, pasta, página, repositório. A ordem mora no vocabulário compartilhado, e não em cada tela."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a lista em si não instrumenta a remoção, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma lista de itens",
+          "result": "Uma etiqueta por item, na ordem recebida",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar cada uma das cinco espécies",
+          "result": "A palavra da espécie entra no nome do item, e o ícone fica fora do que é lido",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar um item com recorte",
+          "result": "O recorte aparece depois do nome",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Marcar um item como automático",
+          "result": "Ele não traz botão de remover, e a marca aparece escrita",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Acionar o botão de remover",
+          "result": "Quem consome é avisado, com o item junto",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Não passar item nenhum",
+          "result": "A lista não existe no documento",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Montar a lista junto do campo",
+          "result": "Ela vive dentro da moldura, entre a mensagem citada e os anexos",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar a lista com uma mensagem citada no mesmo campo",
+          "result": "Só a citação descreve o campo; a lista fica fora da descrição",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A lista é uma lista, com nome próprio",
+        "item2": "A espécie chega em texto, e o ícone está fora do que é lido em voz",
+        "item3": "O item que entrou sozinho não oferece botão de remover",
+        "item4": "Cada botão de remover carrega o nome do seu item",
+        "item5": "A marca de automático é texto, e não só a moldura",
+        "item6": "Cada botão de remover tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a etiqueta, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Espécies — as cinco, lado a lado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Espécies — trecho, com o recorte",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — o que entrou sozinho",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sem contexto",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — junto do campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Composer context",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The chips for what travels with the question without being cargo: the open file, the marked excerpt, the page you are on.",
+    "seo": {
+      "title": "Composer context — what the question carries along",
+      "description": "Reference chips in the message field: the kind in words, a mark for what arrived on its own, and a remove button that says which item it removes. An attachment is cargo; context is a reference."
+    },
+    "labels": {
+      "list": "Context",
+      "remove": "Remove {label}",
+      "kind": {
+        "selection": "Excerpt",
+        "file": "File",
+        "directory": "Folder",
+        "page": "Page",
+        "repository": "Repository"
+      },
+      "automatic": "Automatic"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "kinds": "The five kinds",
+        "detail": "With the range",
+        "automatic": "What arrived on its own",
+        "withField": "Next to the field"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The list lives inside the same frame as the field: what the question carries is part of what is being written.",
+      "item2": "It is a real list, and that is what makes the screen reader say how many items the question carries before walking through them — knowing there are seven changes what you ask.",
+      "item3": "Each chip opens with the icon of its kind, which is drawing only: the word for the kind travels in the item's name, for whoever listens.",
+      "item4": "The range comes after the name — line span, section, tab. It is what separates a piece from the whole.",
+      "item5": "What arrived on its own gets no remove button, and carries in writing the mark that says why it is there.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Context\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Excerpt</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">lines 12–48</span>\n      <button class=\"nds-button\" data-slot=\"composer-context-remove\"\n              aria-label=\"Remove relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Page</span>\n      <span class=\"nds-composer-context-label\">Measurements panel</span>\n      <span class=\"nds-composer-context-detail\">Automatic</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it for what already exists and travels with the question: the open file, the marked excerpt, the page you are on.",
+        "item2": "Always say the kind in writing — the icon is for the eyes.",
+        "item3": "Bring the range when the item is a piece, not the whole.",
+        "item4": "Mark as automatic whatever arrived unasked, and offer no remove button there.",
+        "item5": "Only really drop the item after the request reaches whoever assembles the question."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "A reference to what is already open",
+          "u": "Composer context",
+          "a": "—"
+        },
+        "item2": {
+          "s": "A file that uploads with the message",
+          "u": "Composer attachments",
+          "a": "That is cargo: it has bytes, has progress and can fail midway. This points at what already exists."
+        },
+        "item3": {
+          "s": "Picking a person or a command while writing",
+          "u": "Composer trigger picker",
+          "a": "There the list is a choice in progress; here it is what has already been chosen."
+        },
+        "item4": {
+          "s": "The message being replied to",
+          "u": "Composer quote",
+          "a": "That one describes the field, because it changes what you write; this one is a list with a name of its own."
+        },
+        "item5": {
+          "s": "A short classification label",
+          "u": "Badge",
+          "a": "A badge says what something is; the chip here points at something."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "kind": {
+            "name": "Kind",
+            "format": "One noun, from narrowest to widest",
+            "good": "Excerpt",
+            "bad": "Text selection from the editor"
+          },
+          "label": {
+            "name": "Chip name",
+            "format": "The short name, without the whole path",
+            "good": "relatorio.ts",
+            "bad": "/home/ana/project/src/relatorio.ts"
+          },
+          "detail": {
+            "name": "Range",
+            "format": "Where inside the item, as a number or a section name",
+            "good": "lines 12–48",
+            "bad": "part of the file"
+          },
+          "automatic": {
+            "name": "Automatic mark",
+            "format": "One word, on why it is there",
+            "good": "Automatic",
+            "bad": "Added automatically by the system"
+          },
+          "remove": {
+            "name": "Remove button",
+            "format": "Verb plus the item name",
+            "good": "Remove relatorio.ts",
+            "bad": "Remove"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Put the item name in the button that removes it.",
+        "item2": "Say the kind in words, beyond the icon.",
+        "item3": "Show the range when the item is a piece.",
+        "item4": "Leave the automatic one without a remove button, and with the mark in plain sight."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't leave the kind in the icon alone.",
+        "item2": "Don't offer to remove what comes back on its own with the next question.",
+        "item3": "Don't use the fainter frame as the only cue for what arrived on its own.",
+        "item4": "Don't write the whole path in the chip: it does not fit and does not help."
+      }
+    },
+    "doDont": {
+      "title": "Do and don't",
+      "pair1": {
+        "do": "The kind arrives in words, next to the item name.",
+        "dont": "Only the icon separates an excerpt from a whole file, and an icon never reaches whoever listens."
+      },
+      "pair2": {
+        "do": "What arrived on its own carries the written mark, beyond the fainter frame.",
+        "dont": "The fainter frame alone does not say why that item is there."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic use",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  contextLabels,\n  context: referencias,\n  onRemoveContext: (item) => tirar(item.id),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  contextLabels={contextLabels}\n  context={referencias}\n  onRemoveContext={(item) => tirar(item.id)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :context-labels=\"contextLabels\"\n  :context=\"referencias\"\n  @remove-context=\"tirar\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {contextLabels}\n  context={referencias}\n  onRemoveContext={(item) => tirar(item.id)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [contextLabels]=\"contextLabels\"\n  [context]=\"referencias()\"\n  (removeContext)=\"tirar($event)\"\n/>"
+      },
+      "withAutomatic": "With an automatic item",
+      "withAutomaticCode": {
+        "web": "// A reference is what already exists: nothing uploads, nothing waits,\n// nothing fails.\n{ id: 'c1', label: 'relatorio.ts', kind: 'selection', detail: 'lines 12–48' }\n\n// Automatic is what arrived unasked. It gets no remove button: it would come\n// back with the next question.\n{ id: 'c2', label: 'Measurements panel', kind: 'page', automatic: true }"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "manual": {
+        "label": "Added by hand",
+        "trigger": "Someone picked the item to travel with the question.",
+        "behavior": "The chip carries the button that drops it, with the item name in the label."
+      },
+      "automatic": {
+        "label": "Automatic",
+        "trigger": "The item arrived unasked — the open file, the page you are on.",
+        "behavior": "The remove button does not exist, the mark shows in writing and the frame gets fainter."
+      },
+      "detailed": {
+        "label": "With a range",
+        "trigger": "The item is a piece, not the whole.",
+        "behavior": "The range shows after the name — line span, section, tab."
+      },
+      "empty": {
+        "label": "No context",
+        "trigger": "The question carries nothing along.",
+        "behavior": "The list does not exist in the document; an empty list would promise items that are not there."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "context": {
+          "name": "context",
+          "type": "ContextItem[]",
+          "default": "—",
+          "required": "No",
+          "description": "What the question carries along. With no items, the list does not exist."
+        },
+        "contextLabels": {
+          "name": "contextLabels",
+          "type": "ComposerContextLabels",
+          "default": "—",
+          "required": "No",
+          "description": "The list's text: its name, the remove button's, the word for each kind and the automatic mark. Required when there is context."
+        },
+        "onRemoveContext": {
+          "name": "onRemoveContext",
+          "type": "(item) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to drop an item, and the item comes along. Really dropping it belongs to whoever assembles the question."
+        },
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The chip's short name. It identifies the item, and it is what goes into the remove button."
+        },
+        "kind": {
+          "name": "kind",
+          "type": "'selection' | 'file' | 'directory' | 'page' | 'repository'",
+          "default": "—",
+          "required": "Yes",
+          "description": "Where the item came from. It decides the icon and the word that enters the item's accessible name."
+        },
+        "detail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Where inside the item — line span, section, tab. It is what separates a piece from the whole."
+        },
+        "automatic": {
+          "name": "automatic",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "The item arrived unasked. It drops the remove button and adds the written mark."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The context item is data, and the component does not know what it means. What makes an item arrive on its own, how wide it reaches and what happens when it is dropped belongs to whoever assembles the question — the component draws the chips and reports that someone asked to drop one.",
+      "extensibilityCode": {
+        "web": "// The item is DATA, and the component does not know what it means.\n// What makes an item arrive on its own, how wide it reaches and what happens\n// when it is dropped belongs to whoever assembles the question.\n{\n  id: 'c1',\n  label: 'relatorio.ts',  // the short name; the whole path does not fit\n  kind: 'selection',      // decides the icon and the accessible-name word\n  detail: 'lines 12–48',  // the range, when the item is a piece\n  automatic: false,       // true drops the button and adds the mark\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-context-item",
+          "description": "Chip background, transparent on what arrived on its own."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-context-item",
+          "description": "The chip's frame."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-composer-context-item",
+          "description": "Rounding — a reference chip, not a file card."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-context-item",
+          "description": "Size of the chip text."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-context-detail",
+          "description": "Range, automatic mark and the kind icon."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-context",
+          "description": "Space between chips and the list's inset."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-context-icon",
+          "description": "Icon size, which has no text to grow with."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-context-remove\"]",
+          "description": "Minimum touch target for the remove button."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": ".nds-composer-context-item {\n  max-inline-size: 20rem;\n}\n\n/* The dashed frame on the automatic one is REINFORCEMENT, not the cue: the\n   written mark beside it is what describes the state. Colour and stroke alone\n   describe nothing. */\n.nds-composer-context-item[data-automatic=\"true\"] {\n  border-style: dashed;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The kind arrives in words, the icon is drawing only, and each remove button says which item it removes.",
+      "items": {
+        "item1": "The list is a list, and the screen reader says how many items the question carries before walking through them.",
+        "item2": "The kind travels in the item's name: the icon is the only visual cue that this is an excerpt, and a cue that exists only in drawing never reaches whoever listens.",
+        "item3": "What arrived on its own offers no remove button — a button that undoes what redoes itself is a trap.",
+        "item4": "The remove button carries the item name; without it, a row of identical buttons is a single button.",
+        "item5": "The automatic mark is text, not just the fainter frame."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Walks the remove buttons — one per item that can be dropped.",
+        "enter": "Activates the focused button.",
+        "arrows": "Do nothing here: the list is for reading, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The list has a name of its own, to stand apart from other lists on screen.",
+        "item2": "aria-hidden takes the kind icon out of what is read aloud.",
+        "item3": "The remove button carries the item name in its accessible label."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The list is announced with its name and its item count.",
+        "item2": "Each item reads as kind, name and range, in that order.",
+        "item3": "What arrived on its own reads with the mark, and with no button to drop it."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field the list lives in."
+        },
+        "composerAttachments": {
+          "name": "Composer attachments",
+          "description": "When what travels along is cargo that uploads, not a reference to what already exists."
+        },
+        "composerQuote": {
+          "name": "Composer quote",
+          "description": "When what travels along is the message being replied to."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "When the label says what something is, instead of pointing at something."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "Cargo and reference look alike on screen and are not the same piece. What uploads has bytes, progress and can fail midway; what is referenced already exists, uploads nothing and has nothing to wait for — which is why the context item carries neither state nor progress.",
+      "item2": "The list does NOT describe the field. The quoted message does, because knowing who you are answering changes what you write; seven files in the field's description become noise heard on every focus. The list has a name of its own and is walked through.",
+      "item3": "The kind travels as text because the icon is decorative. It is the only cue that this is an excerpt and not the whole file, and a cue that exists only in drawing never reaches whoever listens.",
+      "item4": "Automatic context gets no remove button: it comes back with the next question, and a button that undoes what redoes itself promises what it cannot keep. What \"automatic\" means belongs to the product; here only the difference is drawn.",
+      "item5": "The kinds come in order, from narrowest to widest — excerpt, file, folder, page, repository. The order lives in the shared vocabulary, not in each screen."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the list itself does not instrument removal, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a list of items",
+          "result": "One chip per item, in the order received",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass each of the five kinds",
+          "result": "The word for the kind enters the item's name, and the icon stays out of what is read",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass an item with a range",
+          "result": "The range shows after the name",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Mark an item as automatic",
+          "result": "It carries no remove button, and the mark shows in writing",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Activate the remove button",
+          "result": "The consumer is told, with the item along",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass no item at all",
+          "result": "The list does not exist in the document",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Mount the list next to the field",
+          "result": "It lives inside the frame, between the quoted message and the attachments",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the list with a quoted message in the same field",
+          "result": "Only the quote describes the field; the list stays out of the description",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The list is a list, with a name of its own",
+        "item2": "The kind arrives as text, and the icon is out of what is read aloud",
+        "item3": "The item that arrived on its own offers no remove button",
+        "item4": "Each remove button carries its own item's name",
+        "item5": "The automatic mark is text, not just the frame",
+        "item6": "Each remove button has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the chip, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Kinds — the five, side by side",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Kinds — excerpt, with the range",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — what arrived on its own",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — no context",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — next to the field",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Contexto del composer",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Las etiquetas de lo que va junto a la pregunta sin ser carga: el archivo abierto, el fragmento marcado, la página en la que se está.",
+    "seo": {
+      "title": "Contexto del composer — lo que la pregunta lleva consigo",
+      "description": "Etiquetas de referencia en el campo de mensaje: la especie en palabra, la marca de lo que entró solo, y un botón de quitar que dice qué elemento quita. Un adjunto es carga; el contexto es referencia."
+    },
+    "labels": {
+      "list": "Contexto",
+      "remove": "Quitar {label}",
+      "kind": {
+        "selection": "Fragmento",
+        "file": "Archivo",
+        "directory": "Carpeta",
+        "page": "Página",
+        "repository": "Repositorio"
+      },
+      "automatic": "Automático"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "kinds": "Las cinco especies",
+        "detail": "Con el recorte",
+        "automatic": "Lo que entró solo",
+        "withField": "Junto al campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La lista vive dentro del mismo marco del campo: lo que la pregunta lleva consigo forma parte de lo que se está escribiendo.",
+      "item2": "Es una lista de verdad, y eso es lo que hace que el lector de pantalla diga cuántos elementos lleva la pregunta antes de recorrerlos — saber que son siete cambia lo que se pregunta.",
+      "item3": "Cada etiqueta abre con el icono de la especie, que es solo dibujo: la palabra de la especie viaja en el nombre del elemento, para quien escucha.",
+      "item4": "El recorte va después del nombre — intervalo de líneas, sección, pestaña. Es lo que separa una parte del todo.",
+      "item5": "Lo que entró solo no recibe botón de quitar, y trae por escrito la marca que dice por qué está ahí.",
+      "structureCode": {
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Contexto\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Fragmento</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">líneas 12–48</span>\n      <button class=\"nds-button\" data-slot=\"composer-context-remove\"\n              aria-label=\"Quitar relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Página</span>\n      <span class=\"nds-composer-context-label\">Panel de medidas</span>\n      <span class=\"nds-composer-context-detail\">Automático</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para lo que ya existe y va junto a la pregunta: archivo abierto, fragmento marcado, página en la que se está.",
+        "item2": "Di la especie por escrito, siempre — el icono es para los ojos.",
+        "item3": "Trae el recorte cuando el elemento sea una parte, y no el todo.",
+        "item4": "Marca como automático lo que entró sin que nadie lo pidiera, y no ofrezcas botón de quitar ahí.",
+        "item5": "Quita el elemento de verdad solo después de que la petición llegue a quien arma la pregunta."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Referencia a lo que ya está abierto",
+          "u": "Contexto del composer",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Archivo que sube con el mensaje",
+          "u": "Adjuntos del composer",
+          "a": "Aquello es carga: tiene bytes, tiene progreso y puede fallar a mitad de camino. Esto apunta a lo que ya existe."
+        },
+        "item3": {
+          "s": "Elegir a alguien o un comando mientras se escribe",
+          "u": "Selector de disparador del composer",
+          "a": "Allí la lista es una elección en curso; aquí es lo que ya se eligió."
+        },
+        "item4": {
+          "s": "El mensaje al que se responde",
+          "u": "Cita del composer",
+          "a": "Aquella describe el campo, porque cambia lo que se escribe; esta es una lista con nombre propio."
+        },
+        "item5": {
+          "s": "Etiqueta corta de clasificación",
+          "u": "Badge",
+          "a": "El rótulo dice qué es una cosa; la etiqueta de aquí apunta a una cosa."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bueno",
+          "avoid": "Evita",
+          "kind": {
+            "name": "Especie",
+            "format": "Un sustantivo, de lo más estrecho a lo más amplio",
+            "good": "Fragmento",
+            "bad": "Selección de texto del editor"
+          },
+          "label": {
+            "name": "Nombre de la etiqueta",
+            "format": "El nombre corto, sin la ruta entera",
+            "good": "relatorio.ts",
+            "bad": "/casa/ana/proyecto/src/relatorio.ts"
+          },
+          "detail": {
+            "name": "Recorte",
+            "format": "Dónde dentro del elemento, en número o nombre de sección",
+            "good": "líneas 12–48",
+            "bad": "parte del archivo"
+          },
+          "automatic": {
+            "name": "Marca de automático",
+            "format": "Una palabra, sobre el motivo de estar ahí",
+            "good": "Automático",
+            "bad": "Añadido automáticamente por el sistema"
+          },
+          "remove": {
+            "name": "Botón de quitar",
+            "format": "Verbo más el nombre del elemento",
+            "good": "Quitar relatorio.ts",
+            "bad": "Quitar"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Pon el nombre del elemento en el botón que lo quita.",
+        "item2": "Di la especie en palabra, además del icono.",
+        "item3": "Muestra el recorte cuando el elemento sea una parte.",
+        "item4": "Deja lo automático sin botón de quitar, y con la marca a la vista."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes la especie solo en el icono.",
+        "item2": "No ofrezcas quitar lo que vuelve solo en la siguiente pregunta.",
+        "item3": "No uses el marco más discreto como única pista de lo que entró solo.",
+        "item4": "No escribas la ruta entera en la etiqueta: no cabe y no ayuda."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "La especie llega en palabra, junto al nombre del elemento.",
+        "dont": "Solo el icono separa un fragmento de un archivo entero, y el icono no llega a quien escucha la pantalla."
+      },
+      "pair2": {
+        "do": "Lo que entró solo trae la marca escrita, además del marco más discreto.",
+        "dont": "El marco más discreto solo no dice por qué ese elemento está ahí."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  contextLabels,\n  context: referencias,\n  onRemoveContext: (item) => tirar(item.id),\n});",
+        "react": "import { Composer } from \"@/components/ui/composer\";\n\n<Composer\n  labels={labels}\n  contextLabels={contextLabels}\n  context={referencias}\n  onRemoveContext={(item) => tirar(item.id)}\n/>",
+        "vue": "<Composer\n  :labels=\"labels\"\n  :context-labels=\"contextLabels\"\n  :context=\"referencias\"\n  @remove-context=\"tirar\"\n/>",
+        "svelte": "<Composer\n  {labels}\n  {contextLabels}\n  context={referencias}\n  onRemoveContext={(item) => tirar(item.id)}\n/>",
+        "angular": "<nds-composer\n  [labels]=\"labels\"\n  [contextLabels]=\"contextLabels\"\n  [context]=\"referencias()\"\n  (removeContext)=\"tirar($event)\"\n/>"
+      },
+      "withAutomatic": "Con elemento automático",
+      "withAutomaticCode": {
+        "web": "// La referencia es lo que ya existe: nada sube, nada espera, nada falla.\n{ id: 'c1', label: 'relatorio.ts', kind: 'selection', detail: 'líneas 12–48' }\n\n// Automático es lo que entró sin que nadie lo pidiera. No recibe botón de\n// quitar: volvería en la siguiente pregunta.\n{ id: 'c2', label: 'Panel de medidas', kind: 'page', automatic: true }"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "manual": {
+        "label": "Puesto a mano",
+        "trigger": "Alguien eligió el elemento para que fuera junto a la pregunta.",
+        "behavior": "La etiqueta trae el botón que la quita, con el nombre del elemento en el rótulo."
+      },
+      "automatic": {
+        "label": "Automático",
+        "trigger": "El elemento entró sin que nadie lo pidiera — el archivo abierto, la página en la que se está.",
+        "behavior": "El botón de quitar no existe, la marca aparece escrita y el marco queda más discreto."
+      },
+      "detailed": {
+        "label": "Con recorte",
+        "trigger": "El elemento es una parte, y no el todo.",
+        "behavior": "El recorte aparece después del nombre — intervalo de líneas, sección, pestaña."
+      },
+      "empty": {
+        "label": "Sin contexto",
+        "trigger": "La pregunta no lleva nada consigo.",
+        "behavior": "La lista no existe en el documento; una lista vacía prometería elementos que no hay."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "context": {
+          "name": "context",
+          "type": "ContextItem[]",
+          "default": "—",
+          "required": "No",
+          "description": "Lo que la pregunta lleva consigo. Sin ningún elemento, la lista no existe."
+        },
+        "contextLabels": {
+          "name": "contextLabels",
+          "type": "ComposerContextLabels",
+          "default": "—",
+          "required": "No",
+          "description": "El texto de la lista: su nombre, el del botón de quitar, la palabra de cada especie y la marca de automático. Obligatorio cuando hay contexto."
+        },
+        "onRemoveContext": {
+          "name": "onRemoveContext",
+          "type": "(item) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió quitar un elemento, y el elemento va junto. Quitarlo de verdad es de quien arma la pregunta."
+        },
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre corto de la etiqueta. Es el que identifica el elemento, y el que entra en el botón de quitar."
+        },
+        "kind": {
+          "name": "kind",
+          "type": "'selection' | 'file' | 'directory' | 'page' | 'repository'",
+          "default": "—",
+          "required": "Sí",
+          "description": "De dónde vino el elemento. Decide el icono y la palabra que entra en el nombre accesible del elemento."
+        },
+        "detail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Dónde dentro del elemento — intervalo de líneas, sección, pestaña. Es lo que separa una parte del todo."
+        },
+        "automatic": {
+          "name": "automatic",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "El elemento entró sin que nadie lo pidiera. Quita el botón de quitar y añade la marca escrita."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El elemento de contexto es un dato, y el componente no sabe qué significa. Qué hace que un elemento entre solo, cuánto abarca y qué pasa al quitarlo es de quien arma la pregunta — el componente dibuja las etiquetas y avisa de que alguien pidió quitar una.",
+      "extensibilityCode": {
+        "web": "// El elemento es DATO, y el componente no sabe qué significa.\n// Qué hace que un elemento entre solo, cuánto abarca y qué pasa al quitarlo\n// es de quien arma la pregunta.\n{\n  id: 'c1',\n  label: 'relatorio.ts',   // el nombre corto; la ruta entera no cabe\n  kind: 'selection',       // decide el icono y la palabra del nombre accesible\n  detail: 'líneas 12–48',  // el recorte, cuando el elemento es una parte\n  automatic: false,        // verdadero quita el botón y añade la marca\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-context-item",
+          "description": "Fondo de la etiqueta, transparente en lo que entró solo."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-composer-context-item",
+          "description": "Marco de la etiqueta."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-composer-context-item",
+          "description": "Redondeo — etiqueta de referencia, no tarjeta de archivo."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-context-item",
+          "description": "Tamaño del texto de la etiqueta."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-context-detail",
+          "description": "Recorte, marca de automático e icono de la especie."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-context",
+          "description": "Espacio entre etiquetas y sangrado de la lista."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-context-icon",
+          "description": "Medida del icono, que no tiene texto para crecer."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-context-remove\"]",
+          "description": "Objetivo táctil mínimo del botón de quitar."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-context-item {\n  max-inline-size: 20rem;\n}\n\n/* El marco discontinuo de lo automático es REFUERZO, y no la pista: la marca\n   escrita al lado es lo que describe el estado. El color y el trazo solos no\n   describen nada. */\n.nds-composer-context-item[data-automatic=\"true\"] {\n  border-style: dashed;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La especie llega en palabra, el icono es solo dibujo, y cada botón de quitar dice qué elemento quita.",
+      "items": {
+        "item1": "La lista es una lista, y el lector de pantalla dice cuántos elementos lleva la pregunta antes de recorrerlos.",
+        "item2": "La especie viaja en el nombre del elemento: el icono es la única pista visual de que aquello es un fragmento, y una pista que solo existe en el dibujo no llega a quien escucha.",
+        "item3": "Lo que entró solo no ofrece botón de quitar — un botón que deshace lo que se rehace solo es una trampa.",
+        "item4": "El botón de quitar lleva el nombre del elemento; sin él, una fila de botones iguales es un botón solo.",
+        "item5": "La marca de automático es texto, y no solo el marco más discreto."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Recorre los botones de quitar — uno por elemento que se puede quitar.",
+        "enter": "Acciona el botón que tiene el foco.",
+        "arrows": "No hacen nada aquí: la lista es de lectura, y no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La lista tiene nombre propio, para distinguirse de otras listas de la pantalla.",
+        "item2": "aria-hidden saca el icono de la especie de lo que se lee en voz.",
+        "item3": "El botón de quitar lleva el nombre del elemento en su rótulo accesible."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La lista se anuncia con su nombre y la cantidad de elementos.",
+        "item2": "Cada elemento se lee como especie, nombre y recorte, en ese orden.",
+        "item3": "Lo que entró solo se lee con la marca, y sin botón para quitarlo."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo en el que vive la lista."
+        },
+        "composerAttachments": {
+          "name": "Adjuntos del composer",
+          "description": "Cuando lo que va junto es carga que sube, y no referencia a lo que ya existe."
+        },
+        "composerQuote": {
+          "name": "Cita del composer",
+          "description": "Cuando lo que va junto es el mensaje al que se responde."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Cuando el rótulo dice qué es una cosa, en vez de apuntar a una cosa."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Carga y referencia se parecen en la pantalla y no son la misma pieza. Lo que sube tiene bytes, progreso y puede fallar a mitad de camino; lo que se referencia ya existe, no sube nada y no tiene nada que esperar — por eso el elemento de contexto no lleva ni estado ni progreso.",
+      "item2": "La lista NO describe el campo. El mensaje citado sí lo describe, porque saber a quién se responde cambia lo que se escribe; siete archivos en la descripción del campo se vuelven ruido que se oye en cada foco. La lista tiene nombre propio y se recorre.",
+      "item3": "La especie viaja como texto porque el icono es decorativo. Él es la única pista de que aquello es un fragmento y no el archivo entero, y una pista que solo existe en el dibujo no llega a quien escucha.",
+      "item4": "El contexto automático no recibe botón de quitar: vuelve en la siguiente pregunta, y un botón que deshace lo que se rehace solo promete lo que no cumple. Lo que \"automático\" significa es del producto; aquí solo se dibuja la diferencia.",
+      "item5": "Las especies vienen en orden, de lo más estrecho a lo más amplio — fragmento, archivo, carpeta, página, repositorio. El orden vive en el vocabulario compartido, y no en cada pantalla."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la lista en sí no instrumenta la eliminación, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una lista de elementos",
+          "result": "Una etiqueta por elemento, en el orden recibido",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar cada una de las cinco especies",
+          "result": "La palabra de la especie entra en el nombre del elemento, y el icono queda fuera de lo que se lee",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar un elemento con recorte",
+          "result": "El recorte aparece después del nombre",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Marcar un elemento como automático",
+          "result": "No trae botón de quitar, y la marca aparece escrita",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Accionar el botón de quitar",
+          "result": "Se avisa a quien consume, con el elemento junto",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "No pasar ningún elemento",
+          "result": "La lista no existe en el documento",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Montar la lista junto al campo",
+          "result": "Vive dentro del marco, entre el mensaje citado y los adjuntos",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar la lista con un mensaje citado en el mismo campo",
+          "result": "Solo la cita describe el campo; la lista queda fuera de la descripción",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, además de lo que afirma la play.",
+        "item1": "La lista es una lista, con nombre propio",
+        "item2": "La especie llega como texto, y el icono queda fuera de lo que se lee en voz",
+        "item3": "El elemento que entró solo no ofrece botón de quitar",
+        "item4": "Cada botón de quitar lleva el nombre de su elemento",
+        "item5": "La marca de automático es texto, y no solo el marco",
+        "item6": "Cada botón de quitar tiene al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la etiqueta, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Especies — las cinco, una al lado de la otra",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Especies — fragmento, con el recorte",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — lo que entró solo",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sin contexto",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — junto al campo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

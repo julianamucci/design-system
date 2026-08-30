@@ -14,12 +14,16 @@ import {
   viewChild,
 } from '@angular/core';
 import type { TriggerApplied } from '@shared/primitives/composer-trigger';
-import type { Attachment } from '@shared/primitives/chat-protocol';
+import type { Attachment, ContextItem } from '@shared/primitives/chat-protocol';
 import { NdsButton } from './button';
 import {
   NdsComposerAttachments,
   type ComposerAttachmentLabels,
 } from './composer-attachments';
+import {
+  NdsComposerContext,
+  type ComposerContextLabels,
+} from './composer-context';
 import {
   NdsComposerQuote,
   type ComposerQuote,
@@ -117,6 +121,7 @@ let instances = 0;
     NgTemplateOutlet,
     NdsButton,
     NdsComposerAttachments,
+    NdsComposerContext,
     NdsComposerQuote,
     NdsComposerTriggerPopover,
   ],
@@ -147,6 +152,22 @@ let instances = 0;
           [labels]="block.labels"
           (dismissed)="dismissQuote.emit($event)"
         ></div>
+      }
+
+      <!-- O contexto vem DEPOIS da citação e ANTES dos anexos: a ordem do
+           documento é a ordem de leitura, e ela vai do que já existe (a
+           referência) para o que ainda está subindo (a carga), e só então para
+           onde se escreve. Sem item OU sem rótulos a lista não existe — uma
+           lista vazia seria anunciada como "lista com zero itens", que promete
+           algo que não há, e sem rótulo ela abriria sem nome e com botões que
+           não dizem o que removem. Mesma guarda da fila de anexos. -->
+      @if (contextList(); as list) {
+        <ul
+          ndsComposerContext
+          [items]="list.items"
+          [labels]="list.labels"
+          (removeContext)="removeContext.emit($event)"
+        ></ul>
       }
 
       <!-- A fila vive DENTRO da moldura e ANTES do campo: os anexos fazem parte
@@ -285,6 +306,15 @@ export class NdsComposer {
   /** Textos da fila de anexos. Obrigatórios quando há anexo. */
   readonly attachmentLabels = input<ComposerAttachmentLabels | undefined>(undefined);
   /**
+   * O que a pergunta leva junto sem ser carga.
+   *
+   * Contexto NÃO é anexo: o anexo é carga — sobe, tem progresso, pode falhar. O
+   * contexto é referência: aponta para o que já está lá e não tem o que esperar.
+   */
+  readonly context = input<ContextItem[]>([]);
+  /** Textos da lista de contexto. Obrigatórios quando há contexto. */
+  readonly contextLabels = input<ComposerContextLabels | undefined>(undefined);
+  /**
    * A mensagem que está sendo respondida.
    *
    * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, e antes
@@ -307,6 +337,15 @@ export class NdsComposer {
   readonly valueChange = output<string>();
   /** Alguém pediu para remover um anexo, e o anexo vai junto. */
   readonly removeAttachment = output<Attachment>();
+  /**
+   * Alguém pediu para tirar um item do contexto, e o item vai junto.
+   *
+   * DIVERGÊNCIA DE API que se registra em vez de se "alinhar": aqui é um
+   * `output()`, e não um callback passado como propriedade. É o caminho desta
+   * stack, e o mesmo de `removeAttachment` e `dismissQuote`. O componente NÃO
+   * tira nada: quem monta a pergunta é quem sabe o que sobra sem aquele item.
+   */
+  readonly removeContext = output<ContextItem>();
   /**
    * Alguém pediu para tirar a citação, e ela vai junto.
    *
@@ -340,6 +379,17 @@ export class NdsComposer {
     return items.length && labels ? { items, labels } : null;
   });
 
+  /**
+   * A lista de contexto, só quando há o que desenhar E texto para nomeá-la.
+   *
+   * Mesma guarda da fila de anexos, e pelo mesmo motivo.
+   */
+  protected readonly contextList = computed(() => {
+    const labels = this.contextLabels();
+    const items = this.context();
+    return items.length && labels ? { items, labels } : null;
+  });
+
   protected readonly inputId = `nds-composer-${++instances}`;
   protected readonly hintId = `${this.inputId}-hint`;
   protected readonly quoteId = `${this.inputId}-quote`;
@@ -350,6 +400,12 @@ export class NdsComposer {
    * A citação vem primeiro: saber a quem se responde muda o que se escreve, e a
    * dica de teclado só muda como se envia. Ela aponta o próprio bloco, então o
    * texto chega inteiro — inclusive o trecho que a folha corta por linha.
+   *
+   * O CONTEXTO FICA DE FORA, e isso é decisão, não esquecimento. A citação entra
+   * porque saber a quem se responde muda o que se escreve; uma lista de sete
+   * arquivos na descrição do campo vira ruído que se ouve a cada foco. A lista é
+   * navegável, tem nome próprio e anuncia a própria contagem ao ser percorrida —
+   * ela não precisa da descrição do campo para existir.
    */
   protected readonly describedBy = computed(() =>
     this.quoteBlock() ? `${this.quoteId} ${this.hintId}` : this.hintId,

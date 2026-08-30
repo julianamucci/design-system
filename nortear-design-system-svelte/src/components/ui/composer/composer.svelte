@@ -28,9 +28,10 @@
   // saber o que se põe nele.
   import type { Snippet } from 'svelte';
   import type { HTMLFormAttributes } from 'svelte/elements';
-  import type { Attachment } from '@shared/primitives/chat-protocol';
+  import type { Attachment, ContextItem } from '@shared/primitives/chat-protocol';
   import type { WithElementRef } from '@/lib/utils.js';
   import type { ComposerAttachmentLabels } from './composer-attachments.svelte';
+  import type { ComposerContextLabels } from './composer-context.svelte';
   import type { ComposerQuote, ComposerQuoteLabels } from './composer-quote.svelte';
   import type {
     TriggerPopoverLabels,
@@ -113,6 +114,18 @@
     /** Textos da fila de anexos. Obrigatórios quando há anexo. */
     attachmentLabels?: ComposerAttachmentLabels;
     /**
+     * O que já existe e vai junto com a pergunta.
+     *
+     * NÃO É A MESMA COISA QUE ANEXO, ainda que se pareçam na moldura. O anexo é
+     * carga — sobe, tem progresso, pode falhar. Contexto é referência: aponta
+     * para o que já está lá, não sobe nada e não tem o que esperar.
+     */
+    context?: ContextItem[];
+    /** Textos da lista de contexto. Obrigatórios quando há contexto. */
+    contextLabels?: ComposerContextLabels;
+    /** Alguém pediu para tirar um item do contexto. O componente não tira nada. */
+    onRemoveContext?: (item: ContextItem) => void;
+    /**
      * A mensagem que está sendo respondida.
      *
      * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, para
@@ -145,6 +158,7 @@
   import { Button } from '@/components/ui/button';
   import { cn } from '@/lib/utils.js';
   import ComposerAttachments from './composer-attachments.svelte';
+  import ComposerContextList from './composer-context.svelte';
   import ComposerQuoteBlock from './composer-quote.svelte';
   import ComposerTriggerPopover, {
     type TriggerOption,
@@ -163,12 +177,15 @@
     triggerLabels,
     attachments = [],
     attachmentLabels,
+    context = [],
+    contextLabels,
     quote,
     quoteLabels,
     railStart,
     onSubmit,
     onStop,
     onRemoveAttachment,
+    onRemoveContext,
     onDismissQuote,
     class: className,
     ...restProps
@@ -182,6 +199,15 @@
    * há.
    */
   const hasAttachments = $derived(attachments.length > 0 && attachmentLabels !== undefined);
+
+  /**
+   * A lista de contexto só existe quando há item E texto para ela.
+   *
+   * Mesma regra da fila, e pelo mesmo motivo: sem item ela não fica escondida,
+   * ela não existe no documento. Uma lista vazia seria anunciada como "lista
+   * com zero itens", que promete algo que não há.
+   */
+  const hasContext = $derived(context.length > 0 && contextLabels !== undefined);
 
   /**
    * A citação só existe quando há mensagem citada E texto para ela.
@@ -205,6 +231,12 @@
    * que se escreve, e a dica de teclado só muda como se envia. A citação aponta
    * o próprio bloco, então o texto dela chega inteiro — inclusive o trecho que
    * a folha corta por linha.
+   *
+   * O CONTEXTO NÃO ENTRA AQUI, e é decisão, não esquecimento. A citação entra
+   * porque saber a quem se responde muda o que se escreve; uma lista de sete
+   * arquivos na descrição do campo vira ruído que se ouve a cada foco, e a cada
+   * tecla que devolva o anúncio. A lista é navegável, tem nome próprio e a
+   * contagem dela é anunciada ao entrar — não precisa ser repetida na descrição.
    */
   const describedBy = $derived(hasQuote ? `${quoteId} ${hintId}` : hintId);
 
@@ -441,6 +473,16 @@
         labels={quoteLabels}
         onDismiss={onDismissQuote}
       />
+    {/if}
+
+    <!--
+      O CONTEXTO VEM DEPOIS DA CITAÇÃO E ANTES DOS ANEXOS.
+
+      A ordem do documento é a ordem de leitura: primeiro a quem se responde,
+      depois o que a pergunta já leva junto, depois o que ainda está subindo.
+    -->
+    {#if hasContext && contextLabels}
+      <ComposerContextList items={context} labels={contextLabels} onRemove={onRemoveContext} />
     {/if}
 
     <!--

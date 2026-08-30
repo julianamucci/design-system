@@ -6,6 +6,9 @@ import Root, {
 import Attachments, {
 	type ComposerAttachmentLabels,
 } from "./composer-attachments.svelte";
+import Context, {
+	type ComposerContextLabels,
+} from "./composer-context.svelte";
 // Só os TIPOS da citação saem daqui. O bloco em si é montado pelo composer, e
 // não há por que quem consome montá-lo por fora: ele existe para descrever UM
 // campo, e é o campo que aponta a descrição. O que atravessa a fronteira é o
@@ -34,6 +37,14 @@ export {
 	//
 	Attachments as ComposerAttachments,
 	type ComposerAttachmentLabels,
+	// A LISTA DE CONTEXTO. Parece a fila de anexos e não é a mesma peça: o anexo
+	// é carga que sobe, o contexto é referência ao que já existe. Quem a monta é
+	// o próprio composer; sai exportada porque o vocabulário dela é texto de
+	// tela, e quem consome precisa do tipo para traduzi-lo.
+	Context,
+	//
+	Context as ComposerContext,
+	type ComposerContextLabels,
 	// A CITAÇÃO. O vocabulário dela é texto de tela e o dado vem de quem
 	// consome, então os dois tipos saem; o bloco é montado pelo composer.
 	type ComposerQuote,

@@ -2,11 +2,15 @@ import { cn } from '@/lib/utils';
 import { createButton } from './button';
 import { createComposerAttachments, type ComposerAttachmentLabels } from './composer-attachments';
 import {
+  createComposerContext,
+  type ComposerContextLabels,
+} from './composer-context';
+import {
   createComposerQuote,
   type ComposerQuote,
   type ComposerQuoteLabels,
 } from './composer-quote';
-import type { Attachment } from '@shared/primitives/chat-protocol';
+import type { Attachment, ContextItem } from '@shared/primitives/chat-protocol';
 import {
   createTriggerPopover,
   type TriggerPopoverLabels,
@@ -95,6 +99,19 @@ export interface ComposerOptions {
   /** Alguém pediu para remover um anexo. */
   onRemoveAttachment?: (attachment: Attachment) => void;
   /**
+   * O que a pergunta leva junto sem ser carga: arquivo aberto, trecho marcado,
+   * página em que se está.
+   *
+   * NÃO é a fila de anexos, ainda que a geometria seja quase a mesma. Anexo é
+   * carga — sobe, tem progresso, pode falhar. Contexto é referência: aponta
+   * para o que já existe, e por isso não tem estado nenhum a comunicar.
+   */
+  context?: ContextItem[];
+  /** Textos da lista de contexto. Obrigatórios quando há contexto. */
+  contextLabels?: ComposerContextLabels;
+  /** Alguém pediu para tirar um item do contexto. */
+  onRemoveContext?: (item: ContextItem) => void;
+  /**
    * A mensagem que está sendo respondida.
    *
    * Ela DESCREVE o campo: entra em `aria-describedby` junto da dica, para
@@ -160,6 +177,9 @@ export function createComposer(options: ComposerOptions): ComposerElement {
     attachments = [],
     attachmentLabels,
     onRemoveAttachment,
+    context = [],
+    contextLabels,
+    onRemoveContext,
     quote,
     quoteLabels,
     onDismissQuote,
@@ -197,6 +217,29 @@ export function createComposer(options: ComposerOptions): ComposerElement {
   if (quote && quoteLabels) {
     field.appendChild(
       createComposerQuote({ quote, labels: quoteLabels, id: quoteId, onDismiss: onDismissQuote }),
+    );
+  }
+
+  // O CONTEXTO VEM DEPOIS DA CITAÇÃO E ANTES DOS ANEXOS.
+  //
+  // A ordem do documento é a ordem de leitura: primeiro a quem se responde,
+  // depois o que a pergunta já leva junto, depois o que ainda está subindo.
+  //
+  // E ELE NÃO ENTRA NO `aria-describedby` DO CAMPO. A citação entra porque
+  // saber a quem se responde muda o que se escreve; uma lista de sete arquivos
+  // na descrição do campo vira ruído que se ouve a cada foco, e a cada tecla
+  // que devolva o anúncio. A lista é navegável, tem nome próprio e a contagem
+  // dela é anunciada ao entrar — não precisa ser repetida na descrição.
+  //
+  // Sem item a lista não existe no documento: uma lista vazia seria anunciada
+  // como "lista com zero itens", que promete algo que não há.
+  if (context.length && contextLabels) {
+    field.appendChild(
+      createComposerContext({
+        items: context,
+        labels: contextLabels,
+        onRemove: onRemoveContext,
+      }),
     );
   }
 
