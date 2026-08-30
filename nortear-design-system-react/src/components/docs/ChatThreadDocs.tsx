@@ -97,7 +97,14 @@ const INTERFACE_CODE = `interface ChatThreadProps extends Omit<React.ComponentPr
 
 export function ChatThreadDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
-  const { t: tContent, locale } = useTranslation(chatTranslations);
+  // A ÚNICA linha sobrescrita é o TIPO de `actions`, e por um motivo de API: o
+  // conteúdo compartilhado descreve o tipo na API do Vanilla, onde os botões do
+  // turno chegam como lista de elementos. Aqui eles chegam como nó, e o que se
+  // passa é qualquer coisa que o renderizador saiba desenhar. O nome da prop é
+  // o mesmo nas duas, então só o tipo diverge.
+  const { t: tContent, locale } = useTranslation(chatTranslations, {
+    "*": { "props.table.actions.type": "ReactNode" },
+  });
   const labels = useChatLabels();
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os

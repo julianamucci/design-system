@@ -25,7 +25,13 @@
   import { toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
-  const { tStore } = useTranslation(chatTranslations);
+  // A ÚNICA linha sobrescrita é o TIPO de `actions`, e por um motivo de API: o
+  // conteúdo compartilhado descreve o tipo na API do Vanilla, onde os botões do
+  // turno chegam como lista de elementos. Aqui eles chegam como trecho de
+  // marcação. O nome da prop é o mesmo nas duas, então só o tipo diverge.
+  const { tStore } = useTranslation(chatTranslations, {
+    '*': { 'props.table.actions.type': 'Snippet' },
+  });
 
   const labels = $derived(chatThreadLabelsFor($locale));
 
