@@ -44,10 +44,13 @@ import {
   rankByTerm,
   type TriggerMatch,
 } from '@shared/primitives/composer-trigger'
+import type { Attachment } from '@shared/primitives/chat-protocol'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import ComposerTriggerPopover from './ComposerTriggerPopover.vue'
+import ComposerAttachments from './ComposerAttachments.vue'
 import type {
+  ComposerAttachmentLabels,
   ComposerLabels,
   ComposerSubmitOn,
   TriggerOption,
@@ -89,6 +92,15 @@ const props = withDefaults(
      * abrir.
      */
     triggerLabels?: TriggerPopoverLabels
+    /**
+     * Os arquivos que vão junto com a mensagem.
+     *
+     * O composer os DESENHA e avisa quando alguém pede para remover; subir,
+     * validar e remover de verdade é de quem consome.
+     */
+    attachments?: Attachment[]
+    /** Textos da fila de anexos. Obrigatórios quando há anexo. */
+    attachmentLabels?: ComposerAttachmentLabels
     class?: HTMLAttributes['class']
   }>(),
   {
@@ -97,6 +109,7 @@ const props = withDefaults(
     submitOn: 'enter',
     running: false,
     triggers: () => [],
+    attachments: () => [],
   },
 )
 
@@ -105,7 +118,24 @@ const emit = defineEmits<{
   submit: [value: string]
   /** Alguém pediu para interromper o que está sendo gerado. */
   stop: []
+  /** Alguém pediu para remover um anexo. O componente não remove nada. */
+  removeAttachment: [attachment: Attachment]
 }>()
+
+/**
+ * A fila só existe quando há anexo E texto para ela.
+ *
+ * Sem anexo ela não fica escondida: ela não existe no documento. Uma lista
+ * vazia seria anunciada como "lista com zero itens", que promete algo que não
+ * há.
+ */
+const hasAttachments = computed(
+  () => props.attachments.length > 0 && props.attachmentLabels !== undefined,
+)
+
+function forwardRemoveAttachment(attachment: Attachment): void {
+  emit('removeAttachment', attachment)
+}
 
 defineSlots<{
   /** Controles do início do trilho — anexar, ferramentas. É um ESPAÇO. */
@@ -340,6 +370,16 @@ function onKeydown(event: KeyboardEvent): void {
          porque o trilho está dentro do mesmo formulário e um anel só em volta
          do texto o deixaria de fora do que está em foco. -->
     <div class="nds-composer-field">
+      <!-- A fila vive DENTRO da moldura e ANTES do campo: os anexos fazem
+           parte do que está sendo escrito, e uma fila fora da moldura
+           pareceria uma lista de outra coisa. -->
+      <ComposerAttachments
+        v-if="hasAttachments && attachmentLabels"
+        :attachments="attachments"
+        :labels="attachmentLabels"
+        @remove="forwardRemoveAttachment"
+      />
+
       <textarea
         :id="fieldId"
         ref="inputRef"

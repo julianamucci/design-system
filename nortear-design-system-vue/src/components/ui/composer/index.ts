@@ -1,6 +1,9 @@
 import type { TriggerSpec } from '@shared/primitives/composer-trigger'
+import type { AttachmentState } from '@shared/primitives/chat-protocol'
+import type { FileSizeUnit } from '@shared/primitives/file-size'
 
 export { default as Composer } from './Composer.vue'
+export { default as ComposerAttachments } from './ComposerAttachments.vue'
 
 /**
  * O vocabulário do compositor.
@@ -85,4 +88,22 @@ export interface TriggerPopoverLabels {
   empty: string
   /** Nome acessível da lista. */
   list: string
+}
+
+/**
+ * O vocabulário da FILA DE ANEXOS.
+ *
+ * A conversão de bytes vive em `@shared/primitives/file-size` e é a mesma nas
+ * cinco stacks; o que mora aqui é só o texto, porque unidade e estado são texto
+ * de interface e têm três idiomas.
+ */
+export interface ComposerAttachmentLabels {
+  /** Nome acessível da fila. */
+  list: string
+  /** Nome do botão de remover. `{name}` vira o nome do arquivo. */
+  remove: string
+  /** A palavra de cada estado. É ela que o leitor de tela recebe. */
+  state: Record<AttachmentState, string>
+  /** A palavra de cada unidade de tamanho. */
+  unit: Record<FileSizeUnit, string>
 }
