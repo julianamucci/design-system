@@ -1,0 +1,1358 @@
+{
+  "pt-BR": {
+    "title": "Fila de envio",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "As mensagens escritas enquanto a anterior ainda era respondida. A ordem é a informação: quem espera quer saber que é a terceira. A que ainda espera se retira; a que já está indo, não.",
+    "seo": {
+      "title": "Fila de envio — o que foi escrito antes de a resposta chegar",
+      "description": "Lista ordenada de mensagens em espera: a posição escrita no documento, a palavra do estado ao lado e um botão de retirar que diz qual mensagem retira. A peça desenha a fila; enviar é de quem consome."
+    },
+    "labels": {
+      "list": "Mensagens na fila",
+      "withdraw": "Retirar {text}",
+      "state": {
+        "waiting": "Na fila",
+        "sending": "Enviando"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "waiting": "Três esperando a vez",
+        "sending": "A primeira já está indo",
+        "long": "Fila longa",
+        "aboveField": "Acima do campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A fila fica acima do campo, e não dentro dele: ela é o que já saiu das mãos de quem escreve, e o campo é o que ainda está sendo escrito.",
+      "item2": "É uma lista ordenada, e não uma lista qualquer: aqui a ordem é a informação, e quem espera quer saber em que lugar está.",
+      "item3": "A posição abre cada item, escrita no documento. Número que existisse só no desenho não chegaria a quem ouve a tela, e sumiria junto com a folha.",
+      "item4": "O texto vem no meio, aparado numa linha só — a fila é o lembrete do que espera, e não a mensagem inteira de novo.",
+      "item5": "A palavra do estado fecha o item, e só a que ainda espera traz o botão que a retira.",
+      "structureCode": {
+        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Mensagens na fila\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Manda o resumo de ontem</span>\n    <span class=\"nds-badge\">Enviando</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">E o prazo?</span>\n    <span class=\"nds-badge\">Na fila</span>\n    <button class=\"nds-button\" data-slot=\"composer-queue-withdraw\">\n      Retirar E o prazo?\n    </button>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando a resposta ainda está vindo e a pessoa continua escrevendo: a fila mostra o que já saiu das mãos dela.",
+        "item2": "Mostre a posição de cada mensagem, sempre — é ela que responde à pergunta de quem espera.",
+        "item3": "Ofereça retirar só o que ainda espera; o que já está indo não volta.",
+        "item4": "Diga o estado em palavra, além do desenho mais apagado.",
+        "item5": "Retire de verdade só depois de o pedido chegar a quem envia."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mensagens escritas antes de a resposta chegar",
+          "u": "Fila de envio",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Arquivo que sobe junto com a mensagem",
+          "u": "Anexos do composer",
+          "a": "Aquilo é carga: tem bytes, tem progresso e pode falhar no meio. Isto é texto esperando a vez."
+        },
+        "item3": {
+          "s": "A mensagem a que se responde",
+          "u": "Citação do composer",
+          "a": "Aquela descreve o campo, porque muda o que se escreve; esta é uma lista com nome próprio, acima dele."
+        },
+        "item4": {
+          "s": "O que a pergunta leva junto sem ser carga",
+          "u": "Contexto do composer",
+          "a": "Aquilo aponta para o que já existe; isto é o que a própria pessoa acabou de escrever."
+        },
+        "item5": {
+          "s": "Aviso de que o envio falhou",
+          "u": "Alert",
+          "a": "A fila diz o que espera, e não o que deu errado."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "position": {
+            "name": "Posição",
+            "format": "Só o número, do primeiro ao último",
+            "good": "1",
+            "bad": "Posição número 1 da fila"
+          },
+          "text": {
+            "name": "Texto da mensagem",
+            "format": "O que foi escrito, tal como foi escrito",
+            "good": "E o prazo?",
+            "bad": "Mensagem em espera"
+          },
+          "state": {
+            "name": "Palavra do estado",
+            "format": "Uma palavra, no que está acontecendo agora",
+            "good": "Enviando",
+            "bad": "Aguardando processamento na fila de saída"
+          },
+          "withdraw": {
+            "name": "Botão de retirar",
+            "format": "Verbo mais o texto da mensagem",
+            "good": "Retirar E o prazo?",
+            "bad": "Retirar"
+          },
+          "list": {
+            "name": "Nome da fila",
+            "format": "Um substantivo no plural, com a situação",
+            "good": "Mensagens na fila",
+            "bad": "Lista"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Ponha o texto da mensagem no botão que a retira.",
+        "item2": "Escreva a posição no documento, e não só no desenho.",
+        "item3": "Diga em palavra o que está acontecendo com cada mensagem.",
+        "item4": "Deixe sem botão de retirar a que já saiu."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não ofereça retirar o que já está indo.",
+        "item2": "Não deixe a posição existir só como desenho da folha.",
+        "item3": "Não use a transparência como única pista de que a mensagem já saiu.",
+        "item4": "Não anuncie de volta a mensagem que a própria pessoa acabou de escrever."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "Cada botão de retirar diz qual mensagem retira.",
+        "dont": "Três botões chamados apenas \"Retirar\" são um botão só para quem navega por audição."
+      },
+      "pair2": {
+        "do": "A palavra do estado acompanha o desenho mais apagado.",
+        "dont": "A mesma palavra serve para as duas, e só a transparência separa a que já saiu."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createMessageQueue } from '@/components/ui/message-queue';\n\nconst queue = createMessageQueue({\n  labels,\n  messages: [\n    { id: 'm1', text: 'Manda o resumo de ontem', state: 'sending' },\n    { id: 'm2', text: 'E o prazo?', state: 'waiting' },\n  ],\n  onWithdraw: (message) => withdraw(message.id),\n});\n\ndocument.querySelector('#app')?.append(queue);",
+        "react": "import { MessageQueue } from \"@/components/ui/message-queue\";\n\n<MessageQueue\n  labels={labels}\n  messages={[\n    { id: \"m1\", text: \"Manda o resumo de ontem\", state: \"sending\" },\n    { id: \"m2\", text: \"E o prazo?\", state: \"waiting\" },\n  ]}\n  onWithdraw={(message) => withdraw(message.id)}\n/>",
+        "vue": "<MessageQueue\n  :labels=\"labels\"\n  :messages=\"[\n    { id: 'm1', text: 'Manda o resumo de ontem', state: 'sending' },\n    { id: 'm2', text: 'E o prazo?', state: 'waiting' },\n  ]\"\n  @withdraw=\"(message) => withdraw(message.id)\"\n/>",
+        "svelte": "<MessageQueue\n  {labels}\n  messages={[\n    { id: 'm1', text: 'Manda o resumo de ontem', state: 'sending' },\n    { id: 'm2', text: 'E o prazo?', state: 'waiting' },\n  ]}\n  onWithdraw={(message) => withdraw(message.id)}\n/>",
+        "angular": "<nds-message-queue\n  [labels]=\"labels\"\n  [messages]=\"messages\"\n  (withdraw)=\"onWithdraw($event)\"\n/>"
+      },
+      "aboveField": "Acima do campo",
+      "aboveFieldCode": {
+        "web": "<!-- A fila é peça própria, e o campo não sabe que ela existe.\n     Quem consome empilha as duas, nesta ordem: primeiro o que espera,\n     depois onde se escreve. -->\n<div class=\"nds-stack\" data-spacing=\"xs\">\n  <ol class=\"nds-composer-queue\">…</ol>\n  <form class=\"nds-composer\">…</form>\n</div>"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "waiting": {
+        "label": "Na fila",
+        "trigger": "A mensagem foi escrita e ainda não saiu.",
+        "behavior": "O item traz a posição, o texto, a palavra do estado e o botão que a retira, com o texto da mensagem no nome."
+      },
+      "sending": {
+        "label": "Enviando",
+        "trigger": "Chegou a vez dela, e a mensagem está saindo.",
+        "behavior": "O item se marca como ocupado, fica mais discreto e perde o botão de retirar — o que já saiu não volta."
+      },
+      "empty": {
+        "label": "Fila vazia",
+        "trigger": "Não há mensagem esperando a vez.",
+        "behavior": "A lista não existe no documento; uma lista vazia prometeria itens que não há."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "messages": {
+          "name": "messages",
+          "type": "QueuedMessage[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "As mensagens que esperam, na ordem em que saem. Com a lista vazia, a fila não existe no documento."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "MessageQueueLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da fila: o nome dela, o do botão de retirar e a palavra de cada estado."
+        },
+        "onWithdraw": {
+          "name": "onWithdraw",
+          "type": "(message) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para retirar, e a mensagem vem junto. Retirar de verdade é de quem envia."
+        },
+        "text": {
+          "name": "text",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que foi escrito. É ele que identifica a mensagem na tela, e é ele que entra no botão que a retira."
+        },
+        "state": {
+          "name": "state",
+          "type": "'waiting' | 'sending'",
+          "default": "—",
+          "required": "Sim",
+          "description": "Em que ponto a mensagem está. Decide quem oferece retirar e quem se marca como ocupado."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Endereço da mensagem, para retirar a certa quando duas trazem o mesmo texto."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A mensagem é dado, e o componente não sabe o que ela significa. Quem decide se a fila anda, se a retirada acontece e o que sobra depois dela é quem envia — a peça desenha o que recebe e avisa o que alguém pediu.",
+      "extensibilityCode": {
+        "web": "// Quem decide se pode retirar é o vocabulário compartilhado, e não a tela.\n// Duas palavras, e a segunda tira o botão: o que já saiu não volta.\nimport { canWithdraw } from '@shared/primitives/chat-protocol';\n\ncanWithdraw({ text: 'E o prazo?', state: 'waiting' });  // true\ncanWithdraw({ text: 'E o prazo?', state: 'sending' });  // false"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-queue-item",
+          "description": "Fundo do item, sempre suave — a fila é um lembrete, não um alerta."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-queue-item",
+          "description": "Arredondamento do item."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-queue-item",
+          "description": "Tamanho do texto do item."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-queue-position",
+          "description": "Cor do número da posição, que é referência e não leitura."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-composer-queue",
+          "description": "Espaço entre um item e o seguinte."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-queue",
+          "description": "Afastamento da fila para o que vem depois dela."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-queue-position",
+          "description": "Largura mínima do número, para as posições ficarem alinhadas."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-queue-withdraw\"]",
+          "description": "Alvo de toque mínimo do botão de retirar."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-composer-queue-item {\n  max-inline-size: 32rem;\n}\n\n/* A fila mais colada ao campo, quando quem consome já empilha os dois. */\n.nds-composer-queue {\n  margin-block-end: var(--spacing-1);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A fila é uma lista ordenada com nome próprio, a posição é texto do documento, a palavra do estado acompanha o desenho, e cada botão de retirar diz qual mensagem retira. Nada aqui se anuncia sozinho.",
+      "items": {
+        "item1": "A lista é ordenada, e é isso que faz a posição significar alguma coisa: sem ordem, o terceiro lugar seria só o terceiro empilhamento.",
+        "item2": "A posição está escrita no documento. Conteúdo gerado pela folha não é confiável para leitor de tela e desaparece quando a folha não carrega.",
+        "item3": "A mensagem que já está indo se marca como ocupada, e a palavra do estado diz o que está acontecendo — o ocupado é atributo, o que acontece é frase.",
+        "item4": "O botão de retirar carrega o texto da sua mensagem; sem ele, uma fila de três botões iguais é um botão só para quem navega por audição.",
+        "item5": "A fila não é região viva. Cada item entrou porque a própria pessoa o escreveu, e anunciar de volta o que se acabou de digitar é repetir, não informar."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Percorre os botões de retirar — um por mensagem que ainda espera.",
+        "enter": "Aciona o botão sob o foco.",
+        "arrows": "Não fazem nada aqui: a fila é de leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A fila tem nome próprio, para se distinguir de outras listas da tela.",
+        "item2": "O item que está saindo se marca como ocupado, e volta ao normal quando deixa a fila.",
+        "item3": "O botão de retirar leva o texto da mensagem no nome acessível."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A fila é anunciada com o nome e a quantidade de mensagens que esperam.",
+        "item2": "Cada item é lido como posição, texto e estado, nessa ordem.",
+        "item3": "A que já está saindo é lida como ocupada, e sem botão para retirá-la."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "O campo que a fila acompanha, logo abaixo dela."
+        },
+        "composerQuote": {
+          "name": "Citação do composer",
+          "description": "Quando o que precede o campo é a mensagem a que se responde, e não o que espera a vez."
+        },
+        "chatThread": {
+          "name": "Thread de conversa",
+          "description": "Onde a mensagem aparece depois de sair da fila e virar turno."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "A etiqueta curta que carrega a palavra do estado dentro de cada item."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A lista é ordenada porque a ordem é a informação. Numa lista sem ordem o leitor de tela anuncia quantos itens há, mas não em que lugar cada um está — e é justamente o lugar que quem espera quer saber.",
+      "item2": "A posição é texto e não desenho. Conteúdo gerado pela folha some com a folha e chega mal a quem ouve a tela, e um número que some é pior que número nenhum.",
+      "item3": "A fila não se anuncia. Cada item entrou porque a própria pessoa acabou de escrevê-lo, e uma região viva devolveria em voz o que ela mesma digitou.",
+      "item4": "Só existem duas palavras de estado, e a terceira é ausência: a mensagem enviada sai da fila e vira turno da conversa. Guardá-la aqui faria a fila crescer para sempre.",
+      "item5": "A peça não envia nada. Enviar, reordenar e decidir o que acontece com o que foi retirado é de quem consome — a fila desenha o que recebe e avisa que alguém pediu para retirar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a fila em si não instrumenta a retirada, que é decisão de quem consome.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma fila de mensagens",
+          "result": "Um item por mensagem, na ordem recebida",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Ler a posição de um item",
+          "result": "O número está escrito no documento, e não no desenho da folha",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar uma mensagem que ainda espera",
+          "result": "Ela traz o botão de retirar, com o próprio texto no nome",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar uma mensagem que já está indo",
+          "result": "Ela se marca como ocupada e não oferece retirar",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Acionar o botão de retirar",
+          "result": "Quem consome é avisado, com a mensagem junto, e a fila continua igual",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Não passar mensagem nenhuma",
+          "result": "A fila não existe no documento",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Montar a fila acima do campo",
+          "result": "Ela vem antes do campo na ordem do documento, e fora da moldura dele",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A fila é uma lista ordenada, com nome próprio",
+        "item2": "A posição chega em texto do documento",
+        "item3": "A mensagem que já está indo não oferece retirar",
+        "item4": "Cada botão de retirar carrega o texto da sua mensagem",
+        "item5": "A palavra do estado é texto, e não só a transparência",
+        "item6": "A fila não é região viva, e nada nela se anuncia sozinho",
+        "item7": "Cada botão de retirar tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — um item, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — três esperando a vez",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — a primeira já está indo",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — a fila vazia",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composições — acima do campo",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — a fila longa",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Message queue",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The messages written while the previous one was still being answered. Order is the information: whoever waits wants to know they are third. What still waits can be withdrawn; what is already on its way cannot.",
+    "seo": {
+      "title": "Message queue — what was written before the answer arrived",
+      "description": "An ordered list of waiting messages: the position written in the document, the state word beside it, and a withdraw button that names the message it withdraws. The piece draws the queue; sending belongs to whoever consumes it."
+    },
+    "labels": {
+      "list": "Queued messages",
+      "withdraw": "Withdraw {text}",
+      "state": {
+        "waiting": "Queued",
+        "sending": "Sending"
+      }
+    },
+    "demonstration": {
+      "title": "Demo",
+      "labels": {
+        "waiting": "Three waiting their turn",
+        "sending": "The first one is already going",
+        "long": "A long queue",
+        "aboveField": "Above the field"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The queue sits above the field, not inside it: it is what already left the writer's hands, and the field is what is still being written.",
+      "item2": "It is an ordered list, not just any list: order is the information here, and whoever waits wants to know their place.",
+      "item3": "The position opens each item, written in the document. A number that existed only in the drawing would not reach whoever listens to the screen, and would vanish along with the stylesheet.",
+      "item4": "The text sits in the middle, trimmed to a single line — the queue is a reminder of what waits, not the whole message again.",
+      "item5": "The state word closes the item, and only what still waits carries the button that withdraws it.",
+      "structureCode": {
+        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Queued messages\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Send me yesterday's summary</span>\n    <span class=\"nds-badge\">Sending</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">And the deadline?</span>\n    <span class=\"nds-badge\">Queued</span>\n    <button class=\"nds-button\" data-slot=\"composer-queue-withdraw\">\n      Withdraw And the deadline?\n    </button>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when the answer is still coming and the person keeps writing: the queue shows what already left their hands.",
+        "item2": "Always show each message's position — it is what answers the question of whoever is waiting.",
+        "item3": "Offer withdrawal only for what still waits; what is already going does not come back.",
+        "item4": "Say the state in words, on top of the fainter drawing.",
+        "item5": "Actually withdraw only after the request reaches whoever sends."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Messages written before the answer arrived",
+          "u": "Message queue",
+          "a": "—"
+        },
+        "item2": {
+          "s": "A file uploaded along with the message",
+          "u": "Composer attachments",
+          "a": "That is payload: it has bytes, progress and can fail midway. This is text waiting its turn."
+        },
+        "item3": {
+          "s": "The message being replied to",
+          "u": "Composer quote",
+          "a": "That one describes the field, because it changes what gets written; this is a list with its own name, above it."
+        },
+        "item4": {
+          "s": "What the question carries along without being payload",
+          "u": "Composer context",
+          "a": "That points at what already exists; this is what the person just wrote."
+        },
+        "item5": {
+          "s": "A warning that sending failed",
+          "u": "Alert",
+          "a": "The queue says what is waiting, not what went wrong."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "position": {
+            "name": "Position",
+            "format": "Just the number, from first to last",
+            "good": "1",
+            "bad": "Position number 1 in the queue"
+          },
+          "text": {
+            "name": "Message text",
+            "format": "What was written, exactly as written",
+            "good": "And the deadline?",
+            "bad": "Waiting message"
+          },
+          "state": {
+            "name": "State word",
+            "format": "One word, on what is happening now",
+            "good": "Sending",
+            "bad": "Awaiting processing in the outbound queue"
+          },
+          "withdraw": {
+            "name": "Withdraw button",
+            "format": "Verb plus the message text",
+            "good": "Withdraw And the deadline?",
+            "bad": "Withdraw"
+          },
+          "list": {
+            "name": "Queue name",
+            "format": "A plural noun, with the situation",
+            "good": "Queued messages",
+            "bad": "List"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Put the message text in the button that withdraws it.",
+        "item2": "Write the position in the document, not only in the drawing.",
+        "item3": "Say in words what is happening to each message.",
+        "item4": "Leave what already left without a withdraw button."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't offer to withdraw what is already going.",
+        "item2": "Don't let the position exist only as stylesheet drawing.",
+        "item3": "Don't use transparency as the only clue that the message already left.",
+        "item4": "Don't announce back the message the person just wrote."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "Each withdraw button names the message it withdraws.",
+        "dont": "Three buttons called just \"Withdraw\" are a single button for whoever navigates by ear."
+      },
+      "pair2": {
+        "do": "The state word travels with the fainter drawing.",
+        "dont": "The same word serves both, and only transparency separates the one that already left."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createMessageQueue } from '@/components/ui/message-queue';\n\nconst queue = createMessageQueue({\n  labels,\n  messages: [\n    { id: 'm1', text: \"Send me yesterday's summary\", state: 'sending' },\n    { id: 'm2', text: 'And the deadline?', state: 'waiting' },\n  ],\n  onWithdraw: (message) => withdraw(message.id),\n});\n\ndocument.querySelector('#app')?.append(queue);",
+        "react": "import { MessageQueue } from \"@/components/ui/message-queue\";\n\n<MessageQueue\n  labels={labels}\n  messages={[\n    { id: \"m1\", text: \"Send me yesterday's summary\", state: \"sending\" },\n    { id: \"m2\", text: \"And the deadline?\", state: \"waiting\" },\n  ]}\n  onWithdraw={(message) => withdraw(message.id)}\n/>",
+        "vue": "<MessageQueue\n  :labels=\"labels\"\n  :messages=\"messages\"\n  @withdraw=\"(message) => withdraw(message.id)\"\n/>",
+        "svelte": "<MessageQueue\n  {labels}\n  messages={[\n    { id: 'm1', text: \"Send me yesterday's summary\", state: 'sending' },\n    { id: 'm2', text: 'And the deadline?', state: 'waiting' },\n  ]}\n  onWithdraw={(message) => withdraw(message.id)}\n/>",
+        "angular": "<nds-message-queue\n  [labels]=\"labels\"\n  [messages]=\"messages\"\n  (withdraw)=\"onWithdraw($event)\"\n/>"
+      },
+      "aboveField": "Above the field",
+      "aboveFieldCode": {
+        "web": "<!-- The queue is its own piece, and the field does not know it exists.\n     Whoever consumes stacks the two, in this order: first what waits,\n     then where one writes. -->\n<div class=\"nds-stack\" data-spacing=\"xs\">\n  <ol class=\"nds-composer-queue\">…</ol>\n  <form class=\"nds-composer\">…</form>\n</div>"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "waiting": {
+        "label": "Queued",
+        "trigger": "The message was written and has not left yet.",
+        "behavior": "The item carries the position, the text, the state word and the button that withdraws it, with the message text in its name."
+      },
+      "sending": {
+        "label": "Sending",
+        "trigger": "Its turn came, and the message is on its way out.",
+        "behavior": "The item marks itself busy, becomes fainter and loses the withdraw button — what already left does not come back."
+      },
+      "empty": {
+        "label": "Empty queue",
+        "trigger": "No message is waiting its turn.",
+        "behavior": "The list does not exist in the document; an empty list would promise items that are not there."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "messages": {
+          "name": "messages",
+          "type": "QueuedMessage[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The messages that wait, in the order they leave. With an empty list, the queue does not exist in the document."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "MessageQueueLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The queue's text: its name, the withdraw button's name and the word for each state."
+        },
+        "onWithdraw": {
+          "name": "onWithdraw",
+          "type": "(message) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to withdraw, and the message comes along. Actually withdrawing belongs to whoever sends."
+        },
+        "text": {
+          "name": "text",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What was written. It identifies the message on screen, and it goes into the button that withdraws it."
+        },
+        "state": {
+          "name": "state",
+          "type": "'waiting' | 'sending'",
+          "default": "—",
+          "required": "Yes",
+          "description": "Where the message stands. Decides who offers withdrawal and who marks itself busy."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "The message's address, to withdraw the right one when two carry the same text."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The message is data, and the component does not know what it means. Whoever sends decides whether the queue moves, whether the withdrawal happens and what is left after it — the piece draws what it receives and reports what someone asked for.",
+      "extensibilityCode": {
+        "web": "// The shared vocabulary decides who may be withdrawn, not the screen.\n// Two words, and the second one removes the button: what left does not return.\nimport { canWithdraw } from '@shared/primitives/chat-protocol';\n\ncanWithdraw({ text: 'And the deadline?', state: 'waiting' });  // true\ncanWithdraw({ text: 'And the deadline?', state: 'sending' });  // false"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-queue-item",
+          "description": "Item background, always soft — the queue is a reminder, not an alert."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-queue-item",
+          "description": "Item corner rounding."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-queue-item",
+          "description": "Item text size."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-queue-position",
+          "description": "Colour of the position number, which is a reference and not reading."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-composer-queue",
+          "description": "Space between one item and the next."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-queue",
+          "description": "Distance from the queue to whatever comes after it."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-queue-position",
+          "description": "Minimum width of the number, so positions stay aligned."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-queue-withdraw\"]",
+          "description": "Minimum touch target of the withdraw button."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-composer-queue-item {\n  max-inline-size: 32rem;\n}\n\n/* The queue closer to the field, when whoever consumes already stacks both. */\n.nds-composer-queue {\n  margin-block-end: var(--spacing-1);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The queue is an ordered list with its own name, the position is document text, the state word travels with the drawing, and each withdraw button names the message it withdraws. Nothing here announces itself.",
+      "items": {
+        "item1": "The list is ordered, and that is what makes position mean anything: without order, third place would be just the third stacking.",
+        "item2": "The position is written in the document. Content generated by the stylesheet is not reliable for screen readers and disappears when the stylesheet does not load.",
+        "item3": "The message on its way marks itself busy, and the state word says what is happening — busy is an attribute, what happens is a sentence.",
+        "item4": "The withdraw button carries its message's text; without it, a queue of three identical buttons is a single button for whoever navigates by ear.",
+        "item5": "The queue is not a live region. Each item is there because the person wrote it, and announcing back what was just typed is repeating, not informing."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Walks the withdraw buttons — one per message that still waits.",
+        "enter": "Activates the focused button.",
+        "arrows": "Do nothing here: the queue is for reading, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The queue has its own name, to tell it apart from other lists on screen.",
+        "item2": "The item on its way out marks itself busy, and returns to normal when it leaves the queue.",
+        "item3": "The withdraw button carries the message text in its accessible name."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The queue is announced with its name and how many messages wait.",
+        "item2": "Each item is read as position, text and state, in that order.",
+        "item3": "The one already leaving is read as busy, and with no button to withdraw it."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "The field the queue accompanies, right below it."
+        },
+        "composerQuote": {
+          "name": "Composer quote",
+          "description": "When what precedes the field is the message being replied to, not what waits its turn."
+        },
+        "chatThread": {
+          "name": "Chat thread",
+          "description": "Where the message shows up after leaving the queue and becoming a turn."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "The short label that carries the state word inside each item."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The list is ordered because order is the information. In an unordered list the screen reader announces how many items there are, but not where each one stands — and the place is exactly what whoever waits wants to know.",
+      "item2": "The position is text, not drawing. Content generated by the stylesheet vanishes with the stylesheet and reaches poorly whoever listens to the screen, and a number that disappears is worse than no number.",
+      "item3": "The queue does not announce itself. Each item is there because the person just wrote it, and a live region would speak back what they typed.",
+      "item4": "There are only two state words, and the third one is absence: a sent message leaves the queue and becomes a turn of the conversation. Keeping it here would make the queue grow forever.",
+      "item5": "The piece sends nothing. Sending, reordering and deciding what happens to what was withdrawn belong to whoever consumes — the queue draws what it receives and reports that someone asked to withdraw."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the queue itself does not instrument withdrawal, which is a decision of whoever consumes.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demo.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a queue of messages",
+          "result": "One item per message, in the order received",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Read an item's position",
+          "result": "The number is written in the document, not in the stylesheet drawing",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass a message that still waits",
+          "result": "It carries the withdraw button, with its own text in the name",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass a message already on its way",
+          "result": "It marks itself busy and offers no withdrawal",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Activate the withdraw button",
+          "result": "Whoever consumes is told, with the message along, and the queue stays as it was",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass no message at all",
+          "result": "The queue does not exist in the document",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Mount the queue above the field",
+          "result": "It comes before the field in document order, and outside its frame",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The queue is an ordered list, with its own name",
+        "item2": "The position arrives as document text",
+        "item3": "The message already on its way offers no withdrawal",
+        "item4": "Each withdraw button carries its own message's text",
+        "item5": "The state word is text, not just transparency",
+        "item6": "The queue is not a live region, and nothing in it announces itself",
+        "item7": "Each withdraw button has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Captured by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — one item, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — three waiting their turn",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — the first one already going",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — the empty queue",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Compositions — above the field",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — the long queue",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Cola de envío",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Los mensajes escritos mientras el anterior todavía se respondía. El orden es la información: quien espera quiere saber que es el tercero. Lo que aún espera se retira; lo que ya va en camino, no.",
+    "seo": {
+      "title": "Cola de envío — lo que se escribió antes de que llegara la respuesta",
+      "description": "Lista ordenada de mensajes en espera: la posición escrita en el documento, la palabra del estado al lado y un botón de retirar que dice qué mensaje retira. La pieza dibuja la cola; enviar es de quien la consume."
+    },
+    "labels": {
+      "list": "Mensajes en cola",
+      "withdraw": "Retirar {text}",
+      "state": {
+        "waiting": "En cola",
+        "sending": "Enviando"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "waiting": "Tres esperando su turno",
+        "sending": "El primero ya va en camino",
+        "long": "Cola larga",
+        "aboveField": "Encima del campo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La cola queda encima del campo, y no dentro de él: es lo que ya salió de las manos de quien escribe, y el campo es lo que todavía se está escribiendo.",
+      "item2": "Es una lista ordenada, y no una lista cualquiera: aquí el orden es la información, y quien espera quiere saber en qué lugar está.",
+      "item3": "La posición abre cada elemento, escrita en el documento. Un número que existiera solo en el dibujo no llegaría a quien escucha la pantalla, y desaparecería junto con la hoja.",
+      "item4": "El texto va en el medio, recortado a una sola línea — la cola es el recordatorio de lo que espera, no el mensaje entero otra vez.",
+      "item5": "La palabra del estado cierra el elemento, y solo lo que aún espera trae el botón que lo retira.",
+      "structureCode": {
+        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Mensajes en cola\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Mándame el resumen de ayer</span>\n    <span class=\"nds-badge\">Enviando</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">¿Y el plazo?</span>\n    <span class=\"nds-badge\">En cola</span>\n    <button class=\"nds-button\" data-slot=\"composer-queue-withdraw\">\n      Retirar ¿Y el plazo?\n    </button>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala cuando la respuesta todavía viene y la persona sigue escribiendo: la cola muestra lo que ya salió de sus manos.",
+        "item2": "Muestra siempre la posición de cada mensaje — es la que responde a la pregunta de quien espera.",
+        "item3": "Ofrece retirar solo lo que aún espera; lo que ya va en camino no vuelve.",
+        "item4": "Di el estado en palabra, además del dibujo más apagado.",
+        "item5": "Retira de verdad solo después de que la petición llegue a quien envía."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mensajes escritos antes de que llegara la respuesta",
+          "u": "Cola de envío",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Archivo que sube junto con el mensaje",
+          "u": "Adjuntos del composer",
+          "a": "Aquello es carga: tiene bytes, tiene progreso y puede fallar a medias. Esto es texto esperando su turno."
+        },
+        "item3": {
+          "s": "El mensaje al que se responde",
+          "u": "Cita del composer",
+          "a": "Aquella describe el campo, porque cambia lo que se escribe; esta es una lista con nombre propio, encima de él."
+        },
+        "item4": {
+          "s": "Lo que la pregunta lleva consigo sin ser carga",
+          "u": "Contexto del composer",
+          "a": "Aquello apunta a lo que ya existe; esto es lo que la propia persona acaba de escribir."
+        },
+        "item5": {
+          "s": "Aviso de que el envío falló",
+          "u": "Alert",
+          "a": "La cola dice lo que espera, y no lo que salió mal."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "position": {
+            "name": "Posición",
+            "format": "Solo el número, del primero al último",
+            "good": "1",
+            "bad": "Posición número 1 de la cola"
+          },
+          "text": {
+            "name": "Texto del mensaje",
+            "format": "Lo que se escribió, tal como se escribió",
+            "good": "¿Y el plazo?",
+            "bad": "Mensaje en espera"
+          },
+          "state": {
+            "name": "Palabra del estado",
+            "format": "Una palabra, sobre lo que pasa ahora",
+            "good": "Enviando",
+            "bad": "Esperando procesamiento en la cola de salida"
+          },
+          "withdraw": {
+            "name": "Botón de retirar",
+            "format": "Verbo más el texto del mensaje",
+            "good": "Retirar ¿Y el plazo?",
+            "bad": "Retirar"
+          },
+          "list": {
+            "name": "Nombre de la cola",
+            "format": "Un sustantivo en plural, con la situación",
+            "good": "Mensajes en cola",
+            "bad": "Lista"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Pon el texto del mensaje en el botón que lo retira.",
+        "item2": "Escribe la posición en el documento, y no solo en el dibujo.",
+        "item3": "Di en palabra qué está pasando con cada mensaje.",
+        "item4": "Deja sin botón de retirar lo que ya salió."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No ofrezcas retirar lo que ya va en camino.",
+        "item2": "No dejes que la posición exista solo como dibujo de la hoja.",
+        "item3": "No uses la transparencia como única pista de que el mensaje ya salió.",
+        "item4": "No anuncies de vuelta el mensaje que la propia persona acaba de escribir."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "Cada botón de retirar dice qué mensaje retira.",
+        "dont": "Tres botones llamados solo \"Retirar\" son un único botón para quien navega de oído."
+      },
+      "pair2": {
+        "do": "La palabra del estado acompaña al dibujo más apagado.",
+        "dont": "La misma palabra sirve para las dos, y solo la transparencia separa la que ya salió."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createMessageQueue } from '@/components/ui/message-queue';\n\nconst queue = createMessageQueue({\n  labels,\n  messages: [\n    { id: 'm1', text: 'Mándame el resumen de ayer', state: 'sending' },\n    { id: 'm2', text: '¿Y el plazo?', state: 'waiting' },\n  ],\n  onWithdraw: (message) => withdraw(message.id),\n});\n\ndocument.querySelector('#app')?.append(queue);",
+        "react": "import { MessageQueue } from \"@/components/ui/message-queue\";\n\n<MessageQueue\n  labels={labels}\n  messages={[\n    { id: \"m1\", text: \"Mándame el resumen de ayer\", state: \"sending\" },\n    { id: \"m2\", text: \"¿Y el plazo?\", state: \"waiting\" },\n  ]}\n  onWithdraw={(message) => withdraw(message.id)}\n/>",
+        "vue": "<MessageQueue\n  :labels=\"labels\"\n  :messages=\"messages\"\n  @withdraw=\"(message) => withdraw(message.id)\"\n/>",
+        "svelte": "<MessageQueue\n  {labels}\n  messages={[\n    { id: 'm1', text: 'Mándame el resumen de ayer', state: 'sending' },\n    { id: 'm2', text: '¿Y el plazo?', state: 'waiting' },\n  ]}\n  onWithdraw={(message) => withdraw(message.id)}\n/>",
+        "angular": "<nds-message-queue\n  [labels]=\"labels\"\n  [messages]=\"messages\"\n  (withdraw)=\"onWithdraw($event)\"\n/>"
+      },
+      "aboveField": "Encima del campo",
+      "aboveFieldCode": {
+        "web": "<!-- La cola es una pieza propia, y el campo no sabe que existe.\n     Quien la consume apila las dos, en este orden: primero lo que espera,\n     después donde se escribe. -->\n<div class=\"nds-stack\" data-spacing=\"xs\">\n  <ol class=\"nds-composer-queue\">…</ol>\n  <form class=\"nds-composer\">…</form>\n</div>"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "waiting": {
+        "label": "En cola",
+        "trigger": "El mensaje se escribió y todavía no salió.",
+        "behavior": "El elemento trae la posición, el texto, la palabra del estado y el botón que lo retira, con el texto del mensaje en su nombre."
+      },
+      "sending": {
+        "label": "Enviando",
+        "trigger": "Llegó su turno, y el mensaje está saliendo.",
+        "behavior": "El elemento se marca como ocupado, queda más apagado y pierde el botón de retirar — lo que ya salió no vuelve."
+      },
+      "empty": {
+        "label": "Cola vacía",
+        "trigger": "No hay ningún mensaje esperando su turno.",
+        "behavior": "La lista no existe en el documento; una lista vacía prometería elementos que no hay."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "messages": {
+          "name": "messages",
+          "type": "QueuedMessage[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los mensajes que esperan, en el orden en que salen. Con la lista vacía, la cola no existe en el documento."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "MessageQueueLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la cola: su nombre, el del botón de retirar y la palabra de cada estado."
+        },
+        "onWithdraw": {
+          "name": "onWithdraw",
+          "type": "(message) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió retirar, y el mensaje viene con la petición. Retirar de verdad es de quien envía."
+        },
+        "text": {
+          "name": "text",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que se escribió. Es lo que identifica el mensaje en pantalla, y es lo que entra en el botón que lo retira."
+        },
+        "state": {
+          "name": "state",
+          "type": "'waiting' | 'sending'",
+          "default": "—",
+          "required": "Sí",
+          "description": "En qué punto está el mensaje. Decide quién ofrece retirar y quién se marca como ocupado."
+        },
+        "id": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "La dirección del mensaje, para retirar el correcto cuando dos traen el mismo texto."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El mensaje es dato, y el componente no sabe qué significa. Quien envía decide si la cola avanza, si la retirada ocurre y qué queda después de ella — la pieza dibuja lo que recibe y avisa lo que alguien pidió.",
+      "extensibilityCode": {
+        "web": "// Quien decide si se puede retirar es el vocabulario compartido, no la pantalla.\n// Dos palabras, y la segunda quita el botón: lo que ya salió no vuelve.\nimport { canWithdraw } from '@shared/primitives/chat-protocol';\n\ncanWithdraw({ text: '¿Y el plazo?', state: 'waiting' });  // true\ncanWithdraw({ text: '¿Y el plazo?', state: 'sending' });  // false"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-composer-queue-item",
+          "description": "Fondo del elemento, siempre suave — la cola es un recordatorio, no una alerta."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-composer-queue-item",
+          "description": "Redondeo del elemento."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-composer-queue-item",
+          "description": "Tamaño del texto del elemento."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-composer-queue-position",
+          "description": "Color del número de posición, que es referencia y no lectura."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-composer-queue",
+          "description": "Espacio entre un elemento y el siguiente."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-composer-queue",
+          "description": "Separación de la cola respecto a lo que viene después de ella."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-composer-queue-position",
+          "description": "Ancho mínimo del número, para que las posiciones queden alineadas."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"composer-queue-withdraw\"]",
+          "description": "Objetivo táctil mínimo del botón de retirar."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-composer-queue-item {\n  max-inline-size: 32rem;\n}\n\n/* La cola más pegada al campo, cuando quien consume ya apila los dos. */\n.nds-composer-queue {\n  margin-block-end: var(--spacing-1);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La cola es una lista ordenada con nombre propio, la posición es texto del documento, la palabra del estado acompaña al dibujo, y cada botón de retirar dice qué mensaje retira. Nada aquí se anuncia solo.",
+      "items": {
+        "item1": "La lista es ordenada, y eso es lo que hace que la posición signifique algo: sin orden, el tercer lugar sería solo el tercer apilamiento.",
+        "item2": "La posición está escrita en el documento. El contenido generado por la hoja no es fiable para el lector de pantalla y desaparece cuando la hoja no carga.",
+        "item3": "El mensaje que ya va en camino se marca como ocupado, y la palabra del estado dice qué está pasando — lo ocupado es atributo, lo que ocurre es frase.",
+        "item4": "El botón de retirar lleva el texto de su mensaje; sin él, una cola de tres botones iguales es un único botón para quien navega de oído.",
+        "item5": "La cola no es una región viva. Cada elemento está ahí porque la propia persona lo escribió, y anunciar de vuelta lo que se acaba de teclear es repetir, no informar."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Recorre los botones de retirar — uno por mensaje que aún espera.",
+        "enter": "Activa el botón enfocado.",
+        "arrows": "No hacen nada aquí: la cola es de lectura, y no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La cola tiene nombre propio, para distinguirse de otras listas de la pantalla.",
+        "item2": "El elemento que está saliendo se marca como ocupado, y vuelve a la normalidad cuando deja la cola.",
+        "item3": "El botón de retirar lleva el texto del mensaje en su nombre accesible."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La cola se anuncia con su nombre y la cantidad de mensajes que esperan.",
+        "item2": "Cada elemento se lee como posición, texto y estado, en ese orden.",
+        "item3": "El que ya está saliendo se lee como ocupado, y sin botón para retirarlo."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "composer": {
+          "name": "Composer",
+          "description": "El campo al que la cola acompaña, justo debajo de ella."
+        },
+        "composerQuote": {
+          "name": "Cita del composer",
+          "description": "Cuando lo que precede al campo es el mensaje al que se responde, y no lo que espera su turno."
+        },
+        "chatThread": {
+          "name": "Hilo de conversación",
+          "description": "Donde el mensaje aparece después de salir de la cola y convertirse en turno."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "La etiqueta corta que lleva la palabra del estado dentro de cada elemento."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La lista es ordenada porque el orden es la información. En una lista sin orden el lector de pantalla anuncia cuántos elementos hay, pero no en qué lugar está cada uno — y el lugar es justo lo que quien espera quiere saber.",
+      "item2": "La posición es texto y no dibujo. El contenido generado por la hoja desaparece con la hoja y llega mal a quien escucha la pantalla, y un número que desaparece es peor que ningún número.",
+      "item3": "La cola no se anuncia. Cada elemento está ahí porque la propia persona acaba de escribirlo, y una región viva le devolvería en voz lo que ella misma tecleó.",
+      "item4": "Solo existen dos palabras de estado, y la tercera es ausencia: el mensaje enviado sale de la cola y se convierte en turno de la conversación. Guardarlo aquí haría que la cola creciera para siempre.",
+      "item5": "La pieza no envía nada. Enviar, reordenar y decidir qué pasa con lo que se retiró es de quien la consume — la cola dibuja lo que recibe y avisa que alguien pidió retirar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la cola en sí no instrumenta la retirada, que es decisión de quien la consume.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una cola de mensajes",
+          "result": "Un elemento por mensaje, en el orden recibido",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Leer la posición de un elemento",
+          "result": "El número está escrito en el documento, y no en el dibujo de la hoja",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar un mensaje que aún espera",
+          "result": "Trae el botón de retirar, con su propio texto en el nombre",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar un mensaje que ya va en camino",
+          "result": "Se marca como ocupado y no ofrece retirar",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Activar el botón de retirar",
+          "result": "Quien consume es avisado, con el mensaje incluido, y la cola sigue igual",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "No pasar ningún mensaje",
+          "result": "La cola no existe en el documento",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Montar la cola encima del campo",
+          "result": "Viene antes del campo en el orden del documento, y fuera de su marco",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La cola es una lista ordenada, con nombre propio",
+        "item2": "La posición llega como texto del documento",
+        "item3": "El mensaje que ya va en camino no ofrece retirar",
+        "item4": "Cada botón de retirar lleva el texto de su mensaje",
+        "item5": "La palabra del estado es texto, y no solo la transparencia",
+        "item6": "La cola no es una región viva, y nada en ella se anuncia solo",
+        "item7": "Cada botón de retirar tiene al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — un elemento, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — tres esperando su turno",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — el primero ya va en camino",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — la cola vacía",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composiciones — encima del campo",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — la cola larga",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
