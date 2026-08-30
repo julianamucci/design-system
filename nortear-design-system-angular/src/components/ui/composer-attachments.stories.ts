@@ -3,7 +3,12 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, within } from 'storybook/test';
 import { NdsComposer } from './composer';
 import { composerLabels } from './composer.fixtures';
-import { attachmentLabels, queue, SIZE_BYTES } from './composer-attachments.fixtures';
+import {
+  attachmentLabels,
+  queue,
+  SIZE_BYTES,
+  SIZE_MB,
+} from './composer-attachments.fixtures';
 import { composerAttachmentsSource } from './composer-attachments.source';
 import { NdsComposerAttachmentsDocs } from '@/components/docs/ComposerAttachmentsDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -83,11 +88,17 @@ export const Playground: Story = {
       // A conta vem do primitivo compartilhado; a palavra, dos rótulos. O
       // arquivo de 2.516.582 bytes se lê em megabytes com uma casa.
       //
-      // O separador decimal é do IDIOMA do navegador, e não do componente: a
-      // asserção aceita os dois para não medir a configuração da máquina no
-      // lugar da conversão.
+      // Três afirmações, e nenhuma delas passa pela mesma conversão que o
+      // componente usa — asserção circular provaria a fiação e não o valor:
+      //
+      //   o número, com o separador do IDIOMA aceito nos dois formatos, porque
+      //   cravar a vírgula mediria a configuração da máquina;
+      //   a unidade, traduzida;
+      //   e a ausência do número de bytes, que é o que prova a conversão.
       const first = list.children[0]!;
-      await expect(first.textContent).toMatch(new RegExp(`2[.,]4\\s${labels.unit.mb}`));
+      await expect(first).toHaveTextContent(/2[.,]4/);
+      await expect(first).toHaveTextContent(labels.unit.mb);
+      await expect(first).not.toHaveTextContent(String(SIZE_MB));
     });
 
     await step('E o que é pequeno fica em bytes — o limiar não é frouxo', async () => {

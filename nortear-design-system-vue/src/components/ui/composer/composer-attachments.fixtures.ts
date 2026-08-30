@@ -16,7 +16,6 @@
  */
 import { computed, type ComputedRef } from 'vue';
 import { useI18nStore, useTranslation, type Locale } from '@/lib/i18n';
-import { formatFileSize } from '@shared/primitives/file-size';
 import type { Attachment } from '@shared/primitives/chat-protocol';
 import attachmentTranslations from '@shared/content/composer-attachments/translations.json';
 import type { ComposerAttachmentLabels } from './index';
@@ -65,18 +64,6 @@ export function useAttachmentLabels(): ComputedRef<ComposerAttachmentLabels> {
 export const SIZE_MB = 2516582;
 export const SIZE_BYTES = 840;
 
-/**
- * O tamanho já escrito, pela mesma porta que o componente usa.
- *
- * A play compara com isto, e não com `2,4 MB` cravado: o separador decimal sai
- * do idioma de quem roda o navegador, e cravá-lo faria a asserção reprovar numa
- * máquina de idioma diferente sem que nada estivesse errado. O que ela afirma é
- * o que importa — o número aparece CONVERTIDO, com a unidade em palavra.
- */
-export function sizeLabel(bytes: number, labels: ComposerAttachmentLabels): string {
-  const { value, unit } = formatFileSize(bytes);
-  return `${value.toLocaleString()} ${labels.unit[unit]}`;
-}
 
 /** Um anexo por estado, na ordem em que o arquivo anda. */
 export function queue(): Attachment[] {

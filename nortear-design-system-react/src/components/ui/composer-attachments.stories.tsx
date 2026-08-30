@@ -10,7 +10,6 @@ import {
   useAttachmentLabels,
 } from "./composer-attachments.fixtures"
 import { composerAttachmentsSource } from "./composer-attachments.source"
-import { formatFileSize } from "@shared/primitives/file-size"
 import { ComposerAttachmentsDocs } from "@/components/docs/ComposerAttachmentsDocs"
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab"
 
@@ -73,18 +72,19 @@ export const Playground: Story = {
 
     await step("O tamanho aparece convertido, com a unidade em palavra", async () => {
       // A conta vem do primitivo compartilhado; a palavra, dos rótulos. O
-      // arquivo de 2.516.582 bytes se lê em megabytes com uma casa — e é o
-      // primitivo que decide mil e vinte e quatro, a casa e o limiar.
+      // arquivo de 2.516.582 bytes se lê em megabytes com uma casa.
       //
-      // A frase esperada é MONTADA, e não escrita à mão: o separador decimal
-      // vem do idioma do navegador, e cravar a vírgula faria a asserção medir a
-      // configuração da máquina em vez do componente.
-      const megabytes = formatFileSize(SIZE_MB)
-      await expect(megabytes.value).toBe(2.4)
+      // Três afirmações, e nenhuma delas passa pela mesma conversão que o
+      // componente usa — asserção circular provaria a fiação e não o valor:
+      //
+      //   o número, com o separador do IDIOMA aceito nos dois formatos, porque
+      //   cravar a vírgula mediria a configuração da máquina;
+      //   a unidade, traduzida;
+      //   e a ausência do número de bytes, que é o que prova a conversão.
       const first = list.children[0]!
-      await expect(first).toHaveTextContent(
-        `${megabytes.value.toLocaleString()} ${labels.unit[megabytes.unit]}`,
-      )
+      await expect(first).toHaveTextContent(/2[.,]4/)
+      await expect(first).toHaveTextContent(labels.unit.mb)
+      await expect(first).not.toHaveTextContent(String(SIZE_MB))
     })
 
     await step("E o que é pequeno fica em bytes — o limiar não é frouxo", async () => {
