@@ -687,10 +687,10 @@ export interface DialogOptions {
           title: t('related.title'),
           items: [
             { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-            { name: 'Sheet',       description: toPlainText(t('related.sheet')),                  path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+            { name: 'Sheet',       description: toPlainText(t('related.sheet')),                  path: '?path=/docs/primitives-overlay-sheet--docs'       },
             { name: 'Popover',     description: toPlainText(t('related.popover')),                path: '?path=/docs/primitives-overlay-popover--docs'     },
             { name: 'Form',        description: toPlainText(t('related.form')),                   path: '?path=/docs/primitives-form-form--docs'        },
-            { name: 'Drawer',      description: toPlainText(t('related.drawer')),                 path: '?path=/docs/primitives-disclosure-drawer--docs'      },
+            { name: 'Drawer',      description: toPlainText(t('related.drawer')),                 path: '?path=/docs/primitives-overlay-drawer--docs'      },
           ],
         });
 

@@ -22,9 +22,9 @@ import {
 } from './drawer.source';
 
 const meta = {
-  title: 'Primitives/Disclosure/Drawer/Compositions',
+  title: 'Primitives/Overlay/Drawer/Compositions',
   component: Drawer,
-  tags: ['disclosure'],
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -34,9 +34,9 @@ type SheetArgs = {
 };
 
 const meta = {
-  title: 'Primitives/Disclosure/Sheet',
+  title: 'Primitives/Overlay/Sheet',
   component: Sheet,
-  tags: ['autodocs', 'disclosure'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(SheetDocs), source: { transform: sheetPlaygroundSource } },

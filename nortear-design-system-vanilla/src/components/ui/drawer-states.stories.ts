@@ -8,8 +8,8 @@ import { drawerClearPortais } from './drawer-portal-cleanup';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 const meta: Meta = {
-  tags: ['disclosure'],
-  title: 'Primitives/Disclosure/Drawer/States',
+  tags: ['overlay'],
+  title: 'Primitives/Overlay/Drawer/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

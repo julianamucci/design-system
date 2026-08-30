@@ -11,8 +11,8 @@ import { createLabel } from './label';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  tags: ['disclosure'],
-  title: 'Primitives/Disclosure/Sheet/Compositions',
+  tags: ['overlay'],
+  title: 'Primitives/Overlay/Sheet/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

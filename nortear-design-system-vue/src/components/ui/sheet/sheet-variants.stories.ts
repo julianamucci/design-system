@@ -26,9 +26,9 @@ import {
 // painel nem está no DOM.
 
 const meta = {
-  title: 'Primitives/Disclosure/Sheet/Variants',
+  title: 'Primitives/Overlay/Sheet/Variants',
   component: Sheet,
-  tags: ['disclosure'],
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

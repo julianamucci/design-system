@@ -1,7 +1,7 @@
 {
   "pt-BR": {
     "title": "Collapsible",
-    "category": "Disclosure",
+    "category": "Expansão",
     "type": "Componente",
     "description": "Seção única expansível controlada por trigger explícito. Ideal para filtros avançados, detalhes secundários e conteúdo raramente acessado.",
     "seo": {
@@ -775,7 +775,7 @@
   },
   "es": {
     "title": "Collapsible",
-    "category": "Disclosure",
+    "category": "Expansión",
     "type": "Componente",
     "description": "Sección única expandible controlada por un trigger explícito. Ideal para filtros avanzados, detalles secundarios y contenido al que se accede raramente.",
     "seo": {

@@ -574,7 +574,7 @@ export class NdsSeparatorDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'card',           path: '?path=/docs/primitives-layout-card--docs'            },
-      { key: 'sheet',          path: '?path=/docs/primitives-disclosure-sheet--docs'           },
+      { key: 'sheet',          path: '?path=/docs/primitives-overlay-sheet--docs'           },
       { key: 'sidebar',        path: '?path=/docs/primitives-layout-sidebar--docs'         },
       { key: 'navigationMenu', path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
     ].map(({ key, path }) => ({

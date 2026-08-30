@@ -16,8 +16,8 @@ const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
 // fechado, o painel nem está no DOM.
 
 const meta: Meta = {
-  title: 'Primitives/Disclosure/Sheet/Variants',
-  tags: ['disclosure'],
+  title: 'Primitives/Overlay/Sheet/Variants',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
   parameters: {
     layout: 'centered',

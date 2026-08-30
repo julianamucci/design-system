@@ -1,7 +1,7 @@
 {
   "pt-BR": {
     "title": "Accordion",
-    "category": "Disclosure",
+    "category": "Expansão",
     "type": "Componente",
     "description": "Seções colapsáveis para organizar conteúdo relacionado. Use para FAQ, documentação e configurações agrupadas.",
     "seo": {
@@ -1159,7 +1159,7 @@
   },
   "es": {
     "title": "Accordion",
-    "category": "Disclosure",
+    "category": "Expansión",
     "type": "Componente",
     "description": "Secciones colapsables para organizar contenido relacionado. Usa para FAQ, documentación y configuraciones agrupadas.",
     "seo": {

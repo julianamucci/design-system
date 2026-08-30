@@ -12,8 +12,8 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta: Meta = {
-  tags: ['disclosure'],
-  title: 'Primitives/Disclosure/Sheet/States',
+  tags: ['overlay'],
+  title: 'Primitives/Overlay/Sheet/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

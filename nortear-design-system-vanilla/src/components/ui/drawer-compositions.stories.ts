@@ -6,8 +6,8 @@ import { createButton } from './button';
 import { openPeloTrigger } from './drawer.fixtures';
 
 const meta: Meta = {
-  tags: ['disclosure'],
-  title: 'Primitives/Disclosure/Drawer/Compositions',
+  tags: ['overlay'],
+  title: 'Primitives/Overlay/Drawer/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

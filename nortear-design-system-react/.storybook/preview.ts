@@ -135,6 +135,10 @@ if (typeof document !== 'undefined') {
   assinarStory();
 }
 
+// Ordem de dentro de uma categoria: componentes em ordem alfabética e, dentro de
+// cada um, as pastas na ordem de leitura.
+const DENTRO_DA_CATEGORIA = ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']];
+
 const preview: Preview = {
   parameters: {
     // O seletor de cor de fundo sai da toolbar. Ele pinta o canvas com
@@ -164,7 +168,25 @@ const preview: Preview = {
         order: [
           'About', ['Overview', 'Accessibility', 'Analytics', 'SEO and GEO', 'Tone of Voice'],
           'Foundations', ['Getting Started', 'Colors and Themes', 'Typography', 'Spacing', 'Elevation, Borders and Shadows', 'Icons', 'Motion', 'Densities', 'Theme System', 'Internationalization', 'Cross-Stack Divergences'],
-          'Primitives', ['*', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']]],
+          // A ordem é a dos RÓTULOS EM pt-BR, não a dos títulos em inglês: a sidebar
+          // ordena pelo título e exibe o rótulo traduzido, e as duas ordens
+          // deixaram de coincidir quando "Disclosure" virou "Expansão". Sem esta
+          // lista, quem lê em português vê "Conversacional, Expansão, Display".
+          // O preço é simétrico: em inglês, Disclosure sai uma posição depois de
+          // Display. Só existe uma lista, e ela ordena strings que não são as
+          // que aparecem na tela.
+          'Primitives', [
+            'Conversational', DENTRO_DA_CATEGORIA,   // Conversacional
+            'Display', DENTRO_DA_CATEGORIA,          // Display
+            'Disclosure', DENTRO_DA_CATEGORIA,       // Expansão
+            'Feedback', DENTRO_DA_CATEGORIA,         // Feedback
+            'Form', DENTRO_DA_CATEGORIA,             // Formulário
+            'Layout', DENTRO_DA_CATEGORIA,           // Layout
+            'Navigation', DENTRO_DA_CATEGORIA,       // Navegação
+            'Overlay', DENTRO_DA_CATEGORIA,          // Overlay
+            'Tables', DENTRO_DA_CATEGORIA,           // Tabelas
+            '*', DENTRO_DA_CATEGORIA,                // categoria nova cai aqui, no fim
+          ],
           '*',
         ],
       },

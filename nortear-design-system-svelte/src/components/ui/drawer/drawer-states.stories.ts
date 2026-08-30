@@ -6,9 +6,9 @@ import DrawerStory from './DrawerStory.svelte';
 import { drawerSource } from './drawer.source';
 
 const meta: Meta = {
-  title: 'Primitives/Disclosure/Drawer/States',
+  title: 'Primitives/Overlay/Drawer/States',
   component: DrawerStory,
-  tags: ['disclosure'],
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

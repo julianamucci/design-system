@@ -245,7 +245,7 @@ const TOKENS: Record<string, { token: string; target: string }> = {
 
 const CAMINHOS: Record<string, string> = {
   resizable: '?path=/docs/primitives-layout-resizable--docs',
-  sheet: '?path=/docs/primitives-disclosure-sheet--docs',
+  sheet: '?path=/docs/primitives-overlay-sheet--docs',
   dialog: '?path=/docs/primitives-overlay-dialog--docs',
   command: '?path=/docs/primitives-overlay-command--docs',
 };

@@ -21,8 +21,8 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "Primitives/Disclosure/Drawer/States",
-  tags: ["disclosure"],
+  title: "Primitives/Overlay/Drawer/States",
+  tags: ["overlay"],
   component: Drawer,
   parameters: {
     layout: "centered",

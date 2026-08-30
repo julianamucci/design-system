@@ -753,7 +753,7 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'scrollArea',  path: '?path=/docs/primitives-layout-scrollarea--docs'  },
-      { key: 'sheet',       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+      { key: 'sheet',       path: '?path=/docs/primitives-overlay-sheet--docs'       },
       { key: 'separator',   path: '?path=/docs/primitives-layout-separator--docs'   },
       { key: 'aspectRatio', path: '?path=/docs/primitives-layout-aspectratio--docs' },
     ].map(({ key, path }) => ({

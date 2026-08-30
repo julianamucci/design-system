@@ -33,7 +33,15 @@ const STRUCTURE: Record<string, Traducao> = {
   // Layout e Overlay ficam em inglês porque é assim que a casa os chama, e só
   // traduz o que tem palavra corrente em português.
   Conversational: { 'pt-BR': 'Conversacional', es: 'Conversacional' },
-  Disclosure: { 'pt-BR': 'Disclosure', es: 'Disclosure' },
+  // "Disclosure" não circula em português — ao contrário de Feedback, Layout e
+  // Display, que já são palavras de uso corrente aqui. E a armadilha tem nome:
+  // "Divulgação" é o que tradutor automático devolve, e é falso cognato — em
+  // português significa tornar público, quase o oposto de conteúdo guardado até
+  // alguém pedir. "Expansão" é exato desde que a categoria ficou só com
+  // Accordion e Collapsible: Drawer e Sheet, que deslizavam em vez de expandir,
+  // foram para Overlay. Em inglês fica Disclosure, que é o nome do padrão no
+  // WAI-ARIA APG e é termo corrente para quem lê naquela língua.
+  Disclosure: { 'pt-BR': 'Expansão', es: 'Expansión' },
   Display: { 'pt-BR': 'Display', es: 'Display' },
   Feedback: { 'pt-BR': 'Feedback', es: 'Feedback' },
   Form: { 'pt-BR': 'Formulário', es: 'Formulario' },

@@ -631,7 +631,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.drawer.name'),      description: toPlainText(t('related.items.drawer.description')),      path: '?path=/docs/primitives-disclosure-drawer--docs'      },
+            { name: t('related.items.drawer.name'),      description: toPlainText(t('related.items.drawer.description')),      path: '?path=/docs/primitives-overlay-drawer--docs'      },
             { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/primitives-overlay-dialog--docs'       },
             { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
             { name: t('related.items.popover.name'),     description: toPlainText(t('related.items.popover.description')),     path: '?path=/docs/primitives-overlay-popover--docs'     },

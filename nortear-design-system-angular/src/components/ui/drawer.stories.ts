@@ -80,8 +80,8 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<DrawerArgs> = {
-  title: 'Primitives/Disclosure/Drawer',
-  tags: ['autodocs', 'disclosure'],
+  title: 'Primitives/Overlay/Drawer',
+  tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton] })],
   parameters: {
     layout: 'centered',

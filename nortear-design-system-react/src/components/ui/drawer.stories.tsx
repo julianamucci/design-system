@@ -26,9 +26,9 @@ const LABEL = {
 };
 
 const meta = {
-  title: "Primitives/Disclosure/Drawer",
+  title: "Primitives/Overlay/Drawer",
   component: Drawer,
-  tags: ["autodocs", "disclosure"],
+  tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
     docs: {

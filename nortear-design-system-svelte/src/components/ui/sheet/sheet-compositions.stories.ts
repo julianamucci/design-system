@@ -11,9 +11,9 @@ import {
 } from './sheet.source';
 
 const meta: Meta = {
-  title: 'Primitives/Disclosure/Sheet/Compositions',
+  title: 'Primitives/Overlay/Sheet/Compositions',
   component: SheetStory,
-  tags: ['disclosure'],
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

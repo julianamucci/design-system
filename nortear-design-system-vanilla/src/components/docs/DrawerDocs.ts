@@ -712,7 +712,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+            { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/primitives-overlay-sheet--docs'       },
             { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/primitives-overlay-dialog--docs'      },
             { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
             { name: t('related.items.sidebar.name'),     description: toPlainText(t('related.items.sidebar.description')),     path: '?path=/docs/primitives-layout-sidebar--docs'     },

@@ -9,9 +9,9 @@ import { sheetSource } from './sheet.source';
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta: Meta = {
-  title: 'Primitives/Disclosure/Sheet/States',
+  title: 'Primitives/Overlay/Sheet/States',
   component: SheetStory,
-  tags: ['disclosure'],
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

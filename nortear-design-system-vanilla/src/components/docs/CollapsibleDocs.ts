@@ -702,7 +702,7 @@ export function createCollapsibleDocs(): HTMLElement {
           title: t('related.title'),
           items: [
             { name: 'Accordion',  description: toPlainText(t('related.accordion')), path: '?path=/docs/primitives-disclosure-accordion--docs'  },
-            { name: 'Sheet',      description: toPlainText(t('related.sheet')),     path: '?path=/docs/primitives-disclosure-sheet--docs'      },
+            { name: 'Sheet',      description: toPlainText(t('related.sheet')),     path: '?path=/docs/primitives-overlay-sheet--docs'      },
             { name: 'Button',     description: toPlainText(t('related.button')),    path: '?path=/docs/primitives-form-button--docs'     },
             { name: 'Tabs',       description: toPlainText(t('related.tabs')),      path: '?path=/docs/primitives-navigation-tabs--docs'       },
           ],

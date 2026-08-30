@@ -21,8 +21,8 @@ const { t } = useTranslation(drawerTranslations as Record<string, unknown>, LABE
 // com o painel montado.
 
 const meta: Meta = {
-  title: 'Primitives/Disclosure/Drawer/Compositions',
-  tags: ['disclosure'],
+  title: 'Primitives/Overlay/Drawer/Compositions',
+  tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton, NdsInput, NdsLabel] })],
   parameters: {
     layout: 'centered',

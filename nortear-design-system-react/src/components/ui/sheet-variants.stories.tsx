@@ -28,8 +28,8 @@ import sheetTranslations from "@shared/content/sheet/translations.json";
 // fechado, o painel nem está no DOM.
 
 const meta = {
-  title: "Primitives/Disclosure/Sheet/Variants",
-  tags: ["disclosure"],
+  title: "Primitives/Overlay/Sheet/Variants",
+  tags: ["overlay"],
   component: Sheet,
   parameters: {
     layout: "centered",

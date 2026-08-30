@@ -1277,10 +1277,10 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { name: 'AlertDialog', k: 'alertDialog', path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-      { name: 'Sheet',       k: 'sheet',       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+      { name: 'Sheet',       k: 'sheet',       path: '?path=/docs/primitives-overlay-sheet--docs'       },
       { name: 'Popover',     k: 'popover',     path: '?path=/docs/primitives-overlay-popover--docs'     },
       { name: 'Form',        k: 'form',        path: '?path=/docs/primitives-form-form--docs'        },
-      { name: 'Drawer',      k: 'drawer',      path: '?path=/docs/primitives-disclosure-drawer--docs'      },
+      { name: 'Drawer',      k: 'drawer',      path: '?path=/docs/primitives-overlay-drawer--docs'      },
     ].map(({ name, k, path }) => ({
       name,
       description: toPlainText(t(`related.${k}`)),

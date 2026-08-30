@@ -14,8 +14,8 @@ import { createButton } from './button';
 // examinar — fechada, o painel nem está no DOM.
 
 const meta: Meta = {
-  tags: ['disclosure'],
-  title: 'Primitives/Disclosure/Sheet/Variants',
+  tags: ['overlay'],
+  title: 'Primitives/Overlay/Sheet/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

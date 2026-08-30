@@ -20,8 +20,8 @@ type SheetArgs = {
 };
 
 const meta: Meta<SheetArgs> = {
-  title: 'Primitives/Disclosure/Sheet',
-  tags: ['autodocs', 'disclosure'],
+  title: 'Primitives/Overlay/Sheet',
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(createSheetDocs), source: { transform: sheetSource } },

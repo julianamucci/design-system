@@ -731,7 +731,7 @@ interface TriggerProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.drawer.name'),      description: $tStore('related.items.drawer.description'),      path: '?path=/docs/primitives-disclosure-drawer--docs'      },
+      { name: $tStore('related.items.drawer.name'),      description: $tStore('related.items.drawer.description'),      path: '?path=/docs/primitives-overlay-drawer--docs'      },
       { name: $tStore('related.items.dialog.name'),      description: $tStore('related.items.dialog.description'),      path: '?path=/docs/primitives-overlay-dialog--docs'      },
       { name: $tStore('related.items.alertDialog.name'), description: $tStore('related.items.alertDialog.description'), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
       { name: $tStore('related.items.popover.name'),     description: $tStore('related.items.popover.description'),     path: '?path=/docs/primitives-overlay-popover--docs'     },

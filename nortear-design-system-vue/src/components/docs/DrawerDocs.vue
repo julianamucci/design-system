@@ -370,7 +370,7 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.sheet.name'),       description: toPlainText(tContent('related.items.sheet.description')),       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+  { name: tContent('related.items.sheet.name'),       description: toPlainText(tContent('related.items.sheet.description')),       path: '?path=/docs/primitives-overlay-sheet--docs'       },
   { name: tContent('related.items.dialog.name'),      description: toPlainText(tContent('related.items.dialog.description')),      path: '?path=/docs/primitives-overlay-dialog--docs'      },
   { name: tContent('related.items.alertDialog.name'), description: toPlainText(tContent('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
   { name: tContent('related.items.sidebar.name'),     description: toPlainText(tContent('related.items.sidebar.description')),     path: '?path=/docs/primitives-layout-sidebar--docs'     },

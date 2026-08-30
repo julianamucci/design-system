@@ -535,7 +535,7 @@ interface ScrollAreaRootProps {
     title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.resizable.name'), description: $tStore('related.items.resizable.description'), path: '?path=/docs/primitives-layout-resizable--docs' },
-      { name: $tStore('related.items.sheet.name'),     description: $tStore('related.items.sheet.description'),     path: '?path=/docs/primitives-disclosure-sheet--docs'     },
+      { name: $tStore('related.items.sheet.name'),     description: $tStore('related.items.sheet.description'),     path: '?path=/docs/primitives-overlay-sheet--docs'     },
       { name: $tStore('related.items.dialog.name'),    description: $tStore('related.items.dialog.description'),    path: '?path=/docs/primitives-overlay-dialog--docs'    },
       { name: $tStore('related.items.command.name'),   description: $tStore('related.items.command.description'),   path: '?path=/docs/primitives-overlay-command--docs'   },
     ]}

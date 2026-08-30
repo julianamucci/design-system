@@ -72,8 +72,8 @@ export class Exemplo {}`;
 }
 
 const meta: Meta<SheetArgs> = {
-  title: 'Primitives/Disclosure/Sheet',
-  tags: ['autodocs', 'disclosure'],
+  title: 'Primitives/Overlay/Sheet',
+  tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
   parameters: {
     layout: 'centered',

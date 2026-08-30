@@ -843,7 +843,7 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
     return [
       { key: 'navigationMenu', name: 'Navigation Menu', path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
       { key: 'tabs',           name: 'Tabs',            path: '?path=/docs/primitives-navigation-tabs--docs'           },
-      { key: 'sheet',          name: 'Sheet',           path: '?path=/docs/primitives-disclosure-sheet--docs'          },
+      { key: 'sheet',          name: 'Sheet',           path: '?path=/docs/primitives-overlay-sheet--docs'          },
       { key: 'accordion',      name: 'Accordion',       path: '?path=/docs/primitives-disclosure-accordion--docs'      },
       { key: 'separator',      name: 'Separator',       path: '?path=/docs/primitives-layout-separator--docs'      },
       { key: 'skeleton',       name: 'Skeleton',        path: '?path=/docs/primitives-feedback-skeleton--docs'       },

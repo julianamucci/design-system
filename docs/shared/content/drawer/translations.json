@@ -1,7 +1,7 @@
 {
   "pt-BR": {
     "title": "Drawer",
-    "category": "Disclosure",
+    "category": "Overlay",
     "type": "Componente",
     "description": "Painel deslizante mobile-first que entra por uma das bordas da tela com gestos de arrastar e fechamento por swipe.",
     "seo": {
@@ -449,7 +449,7 @@
   },
   "en": {
     "title": "Drawer",
-    "category": "Disclosure",
+    "category": "Overlay",
     "type": "Component",
     "description": "Mobile-first sliding panel that enters from any screen edge with drag gestures and swipe-to-dismiss support.",
     "seo": {
@@ -897,7 +897,7 @@
   },
   "es": {
     "title": "Drawer",
-    "category": "Disclosure",
+    "category": "Overlay",
     "type": "Componente",
     "description": "Panel deslizante mobile-first que entra desde cualquier borde de pantalla con gestos de arrastrar y cierre por swipe.",
     "seo": {

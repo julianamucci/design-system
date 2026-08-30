@@ -419,7 +419,7 @@
     title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.card.name'),           description: $tStore('related.items.card.description'),           path: '?path=/docs/primitives-layout-card--docs'           },
-      { name: $tStore('related.items.sheet.name'),          description: $tStore('related.items.sheet.description'),          path: '?path=/docs/primitives-disclosure-sheet--docs'          },
+      { name: $tStore('related.items.sheet.name'),          description: $tStore('related.items.sheet.description'),          path: '?path=/docs/primitives-overlay-sheet--docs'          },
       { name: $tStore('related.items.sidebar.name'),        description: $tStore('related.items.sidebar.description'),        path: '?path=/docs/primitives-layout-sidebar--docs'        },
       { name: $tStore('related.items.navigationMenu.name'), description: $tStore('related.items.navigationMenu.description'), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
     ]}

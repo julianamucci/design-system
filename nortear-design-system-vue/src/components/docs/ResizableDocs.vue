@@ -315,7 +315,7 @@ const keyboardItems = computed(() => [
 
 const relatedItems = computed(() => [
   { name: 'ScrollArea',  description: toPlainText(tContent('related.items.scrollArea.description')),  path: '?path=/docs/primitives-layout-scrollarea--docs'  },
-  { name: 'Sheet',       description: toPlainText(tContent('related.items.sheet.description')),       path: '?path=/docs/primitives-disclosure-sheet--docs'       },
+  { name: 'Sheet',       description: toPlainText(tContent('related.items.sheet.description')),       path: '?path=/docs/primitives-overlay-sheet--docs'       },
   { name: 'Separator',   description: toPlainText(tContent('related.items.separator.description')),   path: '?path=/docs/primitives-layout-separator--docs'   },
   { name: 'AspectRatio', description: toPlainText(tContent('related.items.aspectRatio.description')), path: '?path=/docs/primitives-layout-aspectratio--docs' },
 ]);

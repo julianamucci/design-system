@@ -21,9 +21,9 @@ import {
 } from './drawer.source';
 
 const meta = {
-  title: 'Primitives/Disclosure/Drawer/States',
+  title: 'Primitives/Overlay/Drawer/States',
   component: Drawer,
-  tags: ['disclosure'],
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

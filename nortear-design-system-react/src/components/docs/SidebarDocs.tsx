@@ -1294,7 +1294,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
           {
             name: "Sheet",
             description: toPlainText(tContent("related.sheet")),
-            path: "?path=/docs/primitives-disclosure-sheet--docs",
+            path: "?path=/docs/primitives-overlay-sheet--docs",
           },
           {
             name: "Accordion",

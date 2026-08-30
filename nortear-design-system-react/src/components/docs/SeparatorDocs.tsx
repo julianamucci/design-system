@@ -510,7 +510,7 @@ export function SeparatorDocs() {
           {
             name: tContent("related.items.sheet.name"),
             description: toPlainText(tContent("related.items.sheet.description")),
-            path: "?path=/docs/primitives-disclosure-sheet--docs",
+            path: "?path=/docs/primitives-overlay-sheet--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),

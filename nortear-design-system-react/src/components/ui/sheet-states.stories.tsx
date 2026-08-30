@@ -26,8 +26,8 @@ import sheetTranslations from "@shared/content/sheet/translations.json";
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta = {
-  title: "Primitives/Disclosure/Sheet/States",
-  tags: ["disclosure"],
+  title: "Primitives/Overlay/Sheet/States",
+  tags: ["overlay"],
   component: Sheet,
   parameters: {
     layout: "centered",
