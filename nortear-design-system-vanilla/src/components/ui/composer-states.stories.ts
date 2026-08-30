@@ -103,12 +103,6 @@ export const Running: Story = {
       await expect(onSubmit).not.toHaveBeenCalled();
     });
 
-    await step('Desligado o estado, o botão volta ao envio', async () => {
-      root.setRunning(false);
-      await waitFor(() =>
-        expect(canvas.getByRole('button', { name: composerLabels().submit })).toBeInTheDocument(),
-      );
-    });
   },
 };
 

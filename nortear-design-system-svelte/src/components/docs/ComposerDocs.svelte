@@ -29,7 +29,13 @@
   // trecho de marcação. O nome da prop é o mesmo nas duas, então só o tipo
   // diverge.
   const { tStore } = useTranslation(composerTranslations, {
-    '*': { 'props.table.railStart.type': 'Snippet' },
+    '*': {
+      'props.table.railStart.type': 'Snippet',
+      // Aqui o aviso de mudança não é um callback: é a metade de escrita do
+      // vínculo, e quem consome o declara como vínculo.
+      'props.table.onInput.name': 'bind:value',
+      'props.table.onInput.type': 'string',
+    },
   });
 
   const labels = $derived(composerLabelsFor($locale));
@@ -369,7 +375,7 @@
         },
         items: [
           'labels', 'value', 'rows', 'maxLength', 'submitOn',
-          'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'class',
+          'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'onInput', 'class',
         ].map(k => ({
           name: $tStore(`props.table.${k}.name`),
           type: $tStore(`props.table.${k}.type`),

@@ -110,7 +110,13 @@ export function ComposerDocs() {
   // e o que se passa é qualquer coisa que o renderizador saiba desenhar. O nome
   // da prop é o mesmo nas duas, então só o tipo diverge.
   const { t: tContent, locale } = useTranslation(composerTranslations, {
-    "*": { "props.table.railStart.type": "ReactNode" },
+    "*": {
+      "props.table.railStart.type": "ReactNode",
+      // Aqui o aviso de mudança é a metade controlada de `value`, e o nome
+      // idiomático da stack para isso não é `onInput`.
+      "props.table.onInput.name": "onValueChange",
+      "props.table.onInput.type": "(value: string) => void",
+    },
   });
   const labels = useComposerLabels();
 
@@ -385,7 +391,7 @@ export function ComposerDocs() {
             },
             items: [
               "labels", "value", "rows", "maxLength", "submitOn",
-              "running", "disabled", "railStart", "onSubmit", "onStop", "class",
+              "running", "disabled", "railStart", "onSubmit", "onStop", "onInput", "class",
             ].map((k) => ({
               name: tContent(`props.table.${k}.name`),
               type: tContent(`props.table.${k}.type`),

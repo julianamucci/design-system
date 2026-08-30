@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
-import { useState } from "react"
-import { expect, fn, userEvent, waitFor, within } from "storybook/test"
-import { Button } from "./button"
+import { expect, fn, userEvent, within } from "storybook/test"
 import { Composer } from "./composer"
 import { composerLabels, textOfLength, useComposerLabels } from "./composer.fixtures"
 import {
@@ -44,16 +42,6 @@ const LIMIT = 120
 
 const SAMPLE = "Resume a última reunião."
 
-/**
- * O rótulo do controle que RELIGA a geração.
- *
- * Constante, e não expressão regular escrita à mão na play: o detector de
- * identificador em português apaga string antes de varrer, mas não apaga
- * literal de expressão regular — `/gerar/i` numa play acusaria. E a constante
- * é o mesmo texto que a tela mostra, então a busca não pode divergir dele.
- */
-const RESUME_LABEL = "Gerar de novo"
-
 export const Filled: Story = {
   parameters: {
     covers: ["visual.item3"],
@@ -89,26 +77,21 @@ function FilledExample() {
  * o uso real, pela transform.
  */
 function RunningExample() {
-  const [running, setRunning] = useState(true)
   const labels = useComposerLabels()
+  // `running` fica FIXO, e é o que faz esta story fotografar a mesma tela que
+  // as outras quatro. Desligar a geração aqui obrigaria um controle extra na
+  // tela para restabelecer a precondição na reexecução do painel Interactions —
+  // e esse controle entraria na foto do Chromatic em três stacks e em duas não.
+  // Que o botão volta ao envio quem afirma é a story `Filled`.
   return (
-    <div className="nds-stack nds-max-w-lg" data-spacing="sm">
-      <Composer
-        labels={labels}
-        value={SAMPLE}
-        running={running}
-        onSubmit={onSubmit}
-        onStop={() => {
-          onStop()
-          setRunning(false)
-        }}
-      />
-      <div className="nds-cluster" data-spacing="sm">
-        <Button variant="outline" size="sm" onClick={() => setRunning(true)}>
-          {RESUME_LABEL}
-        </Button>
-      </div>
-    </div>
+    <Composer
+      className="nds-max-w-lg"
+      labels={labels}
+      value={SAMPLE}
+      running
+      onSubmit={onSubmit}
+      onStop={onStop}
+    />
   )
 }
 
@@ -122,17 +105,13 @@ export const Running: Story = {
     const canvas = within(canvasElement)
     const input = canvas.getByRole("textbox")
     const labels = composerLabels()
-    const resume = () => canvas.getByRole("button", { name: RESUME_LABEL })
-
     await step("O botão troca de NOME, e não só de forma", async () => {
-      // Precondição própria: a play reexecuta no mesmo DOM, e a rodada
-      // anterior termina com a geração desligada.
-      await userEvent.click(resume())
+      // Precondição própria sem controle na tela: a geração fica ligada o
+      // tempo todo, então a reexecução parte do mesmo estado.
+      //
       // Trocar só o ícone deixaria quem usa leitor de tela sem saber o que o
       // botão faz agora — e agora ele faz o oposto do que fazia.
-      await waitFor(() =>
-        expect(canvas.getByRole("button", { name: labels.stop })).toBeInTheDocument(),
-      )
+      await expect(canvas.getByRole("button", { name: labels.stop })).toBeInTheDocument()
       await expect(canvas.queryByRole("button", { name: labels.submit })).toBeNull()
     })
 
@@ -153,13 +132,6 @@ export const Running: Story = {
       await expect(onSubmit).not.toHaveBeenCalled()
     })
 
-    await step("Desligado o estado, o botão volta ao envio", async () => {
-      // Quem desligou foi quem consome, ao receber o pedido de interrupção —
-      // o componente não decide sozinho que a geração acabou.
-      await waitFor(() =>
-        expect(canvas.getByRole("button", { name: labels.submit })).toBeInTheDocument(),
-      )
-    })
   },
 }
 

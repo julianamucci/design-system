@@ -297,6 +297,13 @@
           "required": "Não",
           "description": "Alguém pediu para interromper a geração."
         },
+        "onInput": {
+          "name": "onInput",
+          "type": "(texto) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Avisa que o texto mudou. É por aqui que um rascunho é guardado — o componente não guarda nada por conta própria."
+        },
         "class": {
           "name": "class",
           "type": "string",
@@ -847,6 +854,13 @@
           "required": "No",
           "description": "Someone asked to stop generation."
         },
+        "onInput": {
+          "name": "onInput",
+          "type": "(text) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Reports that the text changed. This is where a draft is saved — the component keeps nothing on its own."
+        },
         "class": {
           "name": "class",
           "type": "string",
@@ -1396,6 +1410,13 @@
           "default": "—",
           "required": "No",
           "description": "Alguien pidió interrumpir la generación."
+        },
+        "onInput": {
+          "name": "onInput",
+          "type": "(texto) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Avisa que el texto cambió. Es aquí donde se guarda un borrador — el componente no guarda nada por su cuenta."
         },
         "class": {
           "name": "class",

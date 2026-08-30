@@ -60,6 +60,14 @@
  * quem consome — a mesma divisão de `approval` no `chat-thread`. Quem consome
  * decide se limpa, se guarda rascunho, se reenvia.
  *
+ * A ÚNICA DIVERGÊNCIA DE MARCAÇÃO ENTRE AS CINCO, registrada para não ser
+ * redescoberta: em quatro stacks `.nds-composer` é um `<form>`; no Angular é o
+ * próprio host `<nds-composer>`. Elemento customizado não pode SER um
+ * formulário, e embrulhar um dentro do host somaria uma caixa que ninguém mais
+ * tem. Nada se perde, porque o envio nunca dependeu do `submit` nativo: a tecla
+ * é ouvida no campo e o botão tem manipulador próprio, nas cinco. `.nds-composer`
+ * declara `display: flex`, então o host não fica `inline`.
+ *
  * Derivado do catálogo Elements da assistant-ui (MIT) — conceitos e estados,
  * nunca o código, que é ligado a um runtime de React.
  *

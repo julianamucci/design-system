@@ -49,6 +49,10 @@ const { t: tContent, locale } = useTranslation(composerTranslations, {
   '*': {
     'props.table.railStart.name': '#railStart',
     'props.table.railStart.type': 'slot',
+    // Aqui o aviso de mudança não é um callback: é a metade de escrita do
+    // vínculo de duas vias, e quem consome o declara como vínculo.
+    'props.table.onInput.name': 'v-model:value',
+    'props.table.onInput.type': 'string',
   },
 });
 
@@ -259,7 +263,7 @@ const propsTables = computed(() => [
     },
     items: [
       'labels', 'value', 'rows', 'maxLength', 'submitOn',
-      'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'class',
+      'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'onInput', 'class',
     ].map(k => ({
       name: tContent(`props.table.${k}.name`),
       type: tContent(`props.table.${k}.type`),

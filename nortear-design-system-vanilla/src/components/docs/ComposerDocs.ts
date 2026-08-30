@@ -382,7 +382,7 @@ export interface ComposerOptions {
               cols,
               items: [
                 'labels', 'value', 'rows', 'maxLength', 'submitOn',
-                'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'class',
+                'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'onInput', 'class',
               ].map(k => ({
                 name: t(`props.table.${k}.name`),
                 type: t(`props.table.${k}.type`),

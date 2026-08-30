@@ -55,6 +55,9 @@ const { t, dict } = useTranslation(composerTranslations as Record<string, unknow
     'props.table.onSubmit.type': 'OutputEmitterRef<string>',
     'props.table.onStop.name': 'stopped',
     'props.table.onStop.type': 'OutputEmitterRef<void>',
+    // O aviso de mudança é a saída que faz `[(value)]` funcionar.
+    'props.table.onInput.name': 'valueChange',
+    'props.table.onInput.type': 'OutputEmitterRef<string>',
   },
   'pt-BR': {
     'props.table.class.description':
@@ -506,7 +509,7 @@ export class NdsComposerDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           'labels', 'value', 'rows', 'maxLength', 'submitOn',
-          'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'class',
+          'running', 'disabled', 'railStart', 'onSubmit', 'onStop', 'onInput', 'class',
         ].map((k) => ({
           name: t(`props.table.${k}.name`),
           type: t(`props.table.${k}.type`),

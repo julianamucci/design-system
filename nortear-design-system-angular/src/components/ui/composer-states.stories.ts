@@ -101,8 +101,9 @@ export const Running: Story = {
     const labels = composerLabels();
 
     await step('O botão troca de NOME, e não só de forma', async () => {
-      // Precondição própria: a play reexecuta no mesmo DOM, e o último passo
-      // desliga a geração.
+      // Precondição própria sem controle na tela: a geração fica ligada o tempo
+      // todo, então a reexecução parte do mesmo estado. O sinal é reafirmado
+      // porque ele é de escopo de módulo e sobrevive entre stories.
       generating.set(true);
       // Trocar só o ícone deixaria quem usa leitor de tela sem saber o que o
       // botão faz agora — e agora ele faz o oposto do que fazia.
@@ -129,12 +130,6 @@ export const Running: Story = {
       await expect(onSubmit).not.toHaveBeenCalled();
     });
 
-    await step('Desligado o estado, o botão volta ao envio', async () => {
-      generating.set(false);
-      await waitFor(() =>
-        expect(canvas.getByRole('button', { name: labels.submit })).toBeInTheDocument(),
-      );
-    });
   },
 };
 

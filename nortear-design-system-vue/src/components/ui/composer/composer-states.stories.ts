@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { ref } from 'vue';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { Composer } from './index';
-import { Button } from '@/components/ui/button';
 import { composerLabels, textOfLength, useComposerLabels } from './composer.fixtures';
 import {
   composerBaseSource,
@@ -71,60 +69,44 @@ export const Running: Story = {
     docs: { source: { transform: composerRunningSource } },
   },
   /**
-   * Aqui o estado de geração é uma PROP, e não um método da raiz — não há o que
-   * a play chamar. Quem o liga é um controle na tela, que é justamente o
-   * caminho real: quem sabe se a resposta está vindo é quem consome.
+   * A geração fica LIGADA o tempo todo, e é o que faz esta story fotografar a
+   * mesma tela que as outras quatro stacks.
+   *
+   * Aqui o estado é uma PROP, e não um método da raiz — não há o que a play
+   * chamar. A saída fácil seria um controle na tela para religar entre
+   * reexecuções, e foi o que três stacks fizeram sozinhas: o resultado é o
+   * Chromatic fotografando um botão a mais em três das cinco. Sem desligar,
+   * não há o que religar. Que o botão volta ao envio quem afirma é a story
+   * `Filled`, que é o estado sem geração.
    */
   render: () => ({
-    components: { Composer, Button },
+    components: { Composer },
     setup() {
-      const running = ref(true);
       return {
         labels: useComposerLabels(),
         sample: SAMPLE,
-        running,
-        toggle: () => {
-          running.value = !running.value;
-        },
         onSubmit,
         onStop,
       };
     },
-    template: `<div>
-      <Composer
-        :labels="labels"
-        :value="sample"
-        :running="running"
-        class="nds-max-w-lg"
-        @submit="onSubmit"
-        @stop="onStop"
-      />
-      <div class="nds-cluster nds-mt-4" data-spacing="sm">
-        <Button
-          data-slot="composer-running-toggle"
-          variant="outline"
-          size="sm"
-          @click="toggle"
-        >Alternar geração</Button>
-      </div>
-    </div>`,
+    template: `<Composer
+      :labels="labels"
+      :value="sample"
+      running
+      class="nds-max-w-lg"
+      @submit="onSubmit"
+      @stop="onStop"
+    />`,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="composer"]')!;
-    const toggle = canvasElement.querySelector<HTMLElement>(
-      '[data-slot="composer-running-toggle"]',
-    )!;
     const input = canvas.getByRole('textbox');
 
-    /** Precondição própria: a play reexecuta no mesmo DOM. Leitura pura, e clique. */
-    const setRunning = async (on: boolean) => {
-      if ((root.dataset.state === 'running') !== on) await userEvent.click(toggle);
-      await waitFor(() => expect(root.dataset.state).toBe(on ? 'running' : 'idle'));
-    };
-
     await step('O botão troca de NOME, e não só de forma', async () => {
-      await setRunning(true);
+      // Precondição própria sem controle na tela: a geração fica ligada o
+      // tempo todo, então a reexecução parte do mesmo estado.
+      await expect(root.dataset.state).toBe('running');
       // Trocar só o ícone deixaria quem usa leitor de tela sem saber o que o
       // botão faz agora — e agora ele faz o oposto do que fazia.
       const labels = composerLabels();
@@ -133,7 +115,6 @@ export const Running: Story = {
     });
 
     await step('Ele interrompe, e não envia', async () => {
-      await setRunning(true);
       onSubmit.mockClear();
       onStop.mockClear();
       await userEvent.click(canvas.getByRole('button', { name: composerLabels().stop }));
@@ -144,19 +125,12 @@ export const Running: Story = {
     await step('E a tecla de envio também não envia enquanto gera', async () => {
       // Um segundo envio no meio do primeiro é o defeito que este estado
       // existe para impedir.
-      await setRunning(true);
       onSubmit.mockClear();
       input.focus();
       await userEvent.keyboard('{Enter}');
       await expect(onSubmit).not.toHaveBeenCalled();
     });
 
-    await step('Desligado o estado, o botão volta ao envio', async () => {
-      await setRunning(false);
-      await waitFor(() =>
-        expect(canvas.getByRole('button', { name: composerLabels().submit })).toBeInTheDocument(),
-      );
-    });
   },
 };
 
