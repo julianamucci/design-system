@@ -320,6 +320,14 @@
  *    texto que dispensa a cor, e a peça deixaria de responder sem clique. Quem
  *    precisa dela recolhida a monta dentro de um bloco de expansão — que é
  *    composição, e mantém o controle onde o teclado já sabe encontrá-lo.
+ * 6. A CHAVE DA LISTA É A POSIÇÃO, E NÃO O ENDEREÇO. Esta é a única decisão
+ *    deste bloco que não vale para o vanilla — ele não tem lista com chave —, e
+ *    por isso ela só apareceu ao portar. Nas quatro stacks que reconciliam
+ *    lista por chave, chavear pelo `id` da parcela deixa um `id` repetido
+ *    REORDENAR os nós; a legenda e a barra pareiam por `:nth-child` para
+ *    dividirem a mesma cor, então a cor passaria a apontar para a fatia da
+ *    vizinha. É o mesmo defeito que a parcela zerada obrigatória evita, entrando
+ *    por outra porta — e, como aquele, continua parecendo certo na tela.
  *
  * A BARRA É SEMPRE CHEIA, e esta é a diferença de desenho mais importante em
  * relação ao bloco de cima. As fatias repartem o trilho por proporção, e não
