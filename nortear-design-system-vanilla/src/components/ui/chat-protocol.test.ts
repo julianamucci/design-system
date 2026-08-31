@@ -15,6 +15,7 @@ import {
   canWithdraw,
   CONTEXT_KINDS,
   isContextRemovable,
+  isStepFinished,
   isModelSelectable,
   isVoiceBusy,
   isAttachmentReady,
@@ -29,6 +30,8 @@ import {
   type ContextItem,
   type ContextKind,
   type ModelOption,
+  type PlanStepState,
+  PLAN_STEP_STATES,
   type QueuedMessage,
   QUEUED_MESSAGE_STATES,
   type RunStatus,
@@ -221,5 +224,27 @@ describe('canWithdraw — ainda dá para tirar da fila?', () => {
     // Botão que promete desfazer o que não desfaz é pior que botão nenhum: a
     // mensagem já saiu, e o que acontece depois é do produto.
     expect(canWithdraw(na('sending'))).toBe(false);
+  });
+});
+
+describe('isStepFinished — o passo ainda pode acontecer?', () => {
+  it('pendente e em curso continuam abertos', () => {
+    const abertos = PLAN_STEP_STATES.filter((s: PlanStepState) => !isStepFinished(s));
+    expect(abertos).toEqual(['pending', 'running']);
+  });
+
+  it('pulado conta como fim, ainda que não tenha acontecido', () => {
+    // Mesma leitura de `isRunFinished`, onde `stopped` é fim sem resposta: o
+    // passo pulado não vai acontecer mais, e some da conta do que falta.
+    expect(isStepFinished('skipped')).toBe(true);
+  });
+
+  it('o pulado é estado próprio, e não um done disfarçado', () => {
+    // É o que justifica `PlanStepState` existir em vez de reusar
+    // `ToolCallState`: sem ele, um passo que o agente decidiu não fazer só
+    // caberia como concluído ou falhado, e os dois mentem.
+    expect(PLAN_STEP_STATES).toContain('skipped');
+    expect(isStepFinished('done')).toBe(true);
+    expect(isStepFinished('failed')).toBe(true);
   });
 });

@@ -366,3 +366,55 @@ export interface QueuedMessage {
 export function canWithdraw(message: QueuedMessage): boolean {
   return message.state === 'waiting';
 }
+
+// ─── Plano ────────────────────────────────────────────────────────────────────
+
+/**
+ * Estado de um passo do plano.
+ *
+ * Quatro deles coincidem com `ToolCallState`, e ainda assim são tipo próprio: um
+ * passo de plano não é uma chamada de ferramenta, e juntar os dois faria a lista
+ * de estados de um crescer toda vez que o outro precisasse de um estado novo.
+ *
+ * `skipped` é o quinto, e é o que justifica o tipo existir. Um passo que o
+ * agente decidiu não fazer não é `done` nem `failed`: não aconteceu, e continua
+ * na lista com o motivo. Sumir com ele reescreveria o plano depois do fato, e
+ * quem lê perderia a informação de que havia outro caminho.
+ */
+export type PlanStepState = 'pending' | 'running' | 'done' | 'failed' | 'skipped';
+
+/** Na ordem em que o passo anda. `skipped` sai de `pending`, como `done`. */
+export const PLAN_STEP_STATES: readonly PlanStepState[] = [
+  'pending',
+  'running',
+  'done',
+  'failed',
+  'skipped',
+] as const;
+
+/**
+ * Um passo do que o agente pretende fazer, ou já fez.
+ *
+ * O MESMO TIPO SERVE À LISTA DE TAREFAS do catálogo. Plano e lista de tarefas
+ * têm o mesmo desenho, os mesmos estados e o mesmo vocabulário — o que muda é
+ * quando a lista aparece e quem a propôs, e isso é política de produto, não
+ * forma. Dois componentes aqui seriam duas páginas para uma coisa só.
+ */
+export interface PlanStep {
+  /** Endereço do passo, para atualizar o certo quando dois têm o mesmo texto. */
+  id?: string;
+  label: string;
+  state: PlanStepState;
+  /** Por que pulou, o que produziu, o que falhou — o que couber ao estado. */
+  detail?: string;
+}
+
+/**
+ * O passo acabou, de qualquer maneira?
+ *
+ * `skipped` conta: não vai acontecer mais. É a mesma leitura de `isRunFinished`,
+ * onde `stopped` é fim ainda que sem resposta.
+ */
+export function isStepFinished(state: PlanStepState): boolean {
+  return state === 'done' || state === 'failed' || state === 'skipped';
+}

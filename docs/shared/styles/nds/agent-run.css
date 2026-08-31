@@ -190,3 +190,200 @@
     opacity: 0.6;
   }
 }
+
+/* ── Grupo de chamadas de ferramenta ──────────────────────────────────────────
+ *
+ * O que o agente fez para responder, recolhido num bloco só. Vocabulário:
+ * `ChatToolCall`, `ToolCallState`, `isTerminal`, `waitsForPerson`.
+ *
+ *   <details class="nds-tool-group" data-slot="tool-group">
+ *     <summary class="nds-tool-group-summary" data-slot="tool-group-summary">
+ *       <span class="nds-tool-group-title">3 ferramentas</span>
+ *       <span class="nds-badge" data-slot="tool-group-state">Uma falhou</span>
+ *     </summary>
+ *     <ol class="nds-tool-group-list" data-slot="tool-group-list">
+ *       <li class="nds-tool-call" data-slot="tool-call" data-state="failed">
+ *         <span class="nds-tool-call-name" data-slot="tool-call-name">buscar</span>
+ *         <span class="nds-badge" data-slot="tool-call-state">Falhou</span>
+ *         <p class="nds-tool-call-detail" data-slot="tool-call-detail">Sem resposta</p>
+ *       </li>
+ *     </ol>
+ *   </details>
+ *
+ * `tool-error` DO CATÁLOGO É UM ESTADO DAQUI: `ToolCallState` já separa `failed`,
+ * e a chamada que falhou desenha diferente sem virar outro componente.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O RESUMO CARREGA O QUE HÁ DENTRO, em palavra. Recolhido é o padrão — são
+ *    detalhes de execução, não a resposta —, e um grupo fechado que esconde uma
+ *    falha é uma falha que ninguém vê. Em vez de forçar a abertura, que brigaria
+ *    com quem fechou, o resumo DIZ que algo falhou.
+ * 2. NÃO É REGIÃO VIVA. As chamadas chegam enquanto a resposta é gerada logo
+ *    abaixo; anunciar cada uma corta a leitura do que importa.
+ * 3. A CHAMADA QUE ESPERA UMA PESSOA NÃO FICA AQUI DENTRO. `waitsForPerson` é
+ *    verdadeiro só em `pending`, e pedir autorização dentro de uma caixa fechada
+ *    é pedir sem mostrar — quem consome tira essa para fora, e a docs page diz
+ *    isso. A regra já está escrita no docblock de `waitsForPerson`.
+ * 4. O ESTADO É PALAVRA em `.nds-badge`, nunca só cor ou ícone (WCAG 1.4.1).
+ * 5. `<details>`/`<summary>` de propósito: o navegador já dá o botão, o estado
+ *    de expansão e o teclado. Recriar isso com `div` e `aria-expanded` é
+ *    reimplementar o que já funciona, e foi o que o `collapsible` desta base
+ *    aprendeu.
+ */
+
+.nds-tool-group {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+.nds-tool-group-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-3);
+  padding-block: var(--spacing-2);
+  /* Alvo de toque (WCAG 2.5.8) num elemento que é o botão inteiro. */
+  min-block-size: var(--spacing-6);
+
+  cursor: pointer;
+  font-size: var(--text-label);
+}
+
+.nds-tool-group-title {
+  color: hsl(var(--foreground));
+}
+
+.nds-tool-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  margin: 0;
+  padding-inline: var(--spacing-3);
+  padding-block-end: var(--spacing-2);
+  list-style: none;
+}
+
+.nds-tool-call {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-1) var(--spacing-2);
+
+  padding-block: var(--spacing-1);
+  font-size: var(--text-label);
+}
+
+/* Sem monoespaçada, e é escolha. Não há token de fonte mono neste sistema: o
+ * `code-block` escreve a pilha literal, duas vezes no próprio arquivo. Uma
+ * terceira cópia para um efeito cosmético é duplicata que envelhece sozinha —
+ * o nome da ferramenta se distingue por peso, que o sistema já tokeniza. */
+.nds-tool-call-name {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+}
+
+.nds-tool-call-detail {
+  grid-column: 1 / -1;
+  margin: 0;
+  /* Texto corrido em container colorido é sempre derivado de `--foreground`, e
+   * nunca a cor semântica do estado: descrição raramente alcança 4.5:1 sobre
+   * fundo suave (regra do CLAUDE.md raiz). */
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Plano ────────────────────────────────────────────────────────────────────
+ *
+ * Os passos que o agente pretende dar, ou já deu. Vocabulário: `PlanStep`,
+ * `PlanStepState`, `isStepFinished`.
+ *
+ *   <ol class="nds-agent-plan" data-slot="agent-plan" aria-label="Plano">
+ *     <li class="nds-agent-plan-step" data-slot="agent-plan-step"
+ *         data-state="running" aria-current="step">
+ *       <span class="nds-agent-plan-marker" data-slot="agent-plan-marker" aria-hidden="true"></span>
+ *       <span class="nds-agent-plan-label" data-slot="agent-plan-label">Ler o relatório</span>
+ *       <span class="nds-badge" data-slot="agent-plan-state">Fazendo</span>
+ *       <p class="nds-agent-plan-detail" data-slot="agent-plan-detail">…</p>
+ *     </li>
+ *   </ol>
+ *
+ * `todo-list` DO CATÁLOGO É ESTA PEÇA. Plano e lista de tarefas têm o mesmo
+ * desenho, os mesmos estados e o mesmo vocabulário; o que muda é quando a lista
+ * aparece e quem a propôs, e isso é política de produto, não forma.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. `<ol>` E `aria-current="step"` NO PASSO EM CURSO. É o padrão que o leitor
+ *    de tela já anuncia como "atual", e é o que responde "onde estamos" sem
+ *    depender da cor do marcador.
+ * 2. O PASSO PULADO CONTINUA NA LISTA, com o motivo. Sumir com ele reescreve o
+ *    plano depois do fato, e quem lê perde a informação de que havia outro
+ *    caminho. É o que faz `skipped` existir como estado.
+ * 3. O MARCADOR É DECORATIVO e o estado é palavra em `.nds-badge`. Cinco
+ *    estados distinguidos só por forma e cor não chegam a quem não os vê.
+ * 4. NÃO É REGIÃO VIVA. O plano muda passo a passo enquanto a resposta é
+ *    gerada; narrar cada troca é a mesma armadilha do relógio.
+ * 5. TEXTO CORTADO NUNCA. O rótulo do passo quebra em várias linhas em vez de
+ *    receber reticências — um passo pela metade é uma instrução pela metade.
+ */
+
+.nds-agent-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nds-agent-plan-step {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: var(--spacing-1) var(--spacing-2);
+
+  padding-block: var(--spacing-1);
+  font-size: var(--text-label);
+}
+
+.nds-agent-plan-marker {
+  inline-size: var(--spacing-4);
+  block-size: var(--spacing-4);
+  margin-block-start: 2px;
+  border-radius: var(--radius-full);
+  border: 2px solid hsl(var(--border));
+}
+
+.nds-agent-plan-step[data-state="running"] .nds-agent-plan-marker {
+  border-color: hsl(var(--primary));
+}
+
+.nds-agent-plan-step[data-state="done"] .nds-agent-plan-marker {
+  background-color: hsl(var(--success));
+  border-color: hsl(var(--success));
+}
+
+.nds-agent-plan-step[data-state="failed"] .nds-agent-plan-marker {
+  background-color: hsl(var(--destructive));
+  border-color: hsl(var(--destructive));
+}
+
+/* O pulado fica traçado, e não apagado: apagar sugere que sumiu. */
+.nds-agent-plan-step[data-state="skipped"] .nds-agent-plan-marker {
+  border-style: dashed;
+}
+
+.nds-agent-plan-label {
+  color: hsl(var(--foreground));
+  /* Sem reticências: um passo pela metade é uma instrução pela metade. */
+  overflow-wrap: anywhere;
+}
+
+.nds-agent-plan-detail {
+  grid-column: 2 / -1;
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+}
