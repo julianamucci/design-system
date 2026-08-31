@@ -1,0 +1,1499 @@
+{
+  "pt-BR": {
+    "title": "Plano do agente",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Os passos que o agente pretende dar, ou já deu, na ordem: o que vem, o que está em curso, e o que ficou pelo caminho com o motivo.",
+    "seo": {
+      "title": "Plano do agente — os passos na ordem, e o que aconteceu em cada um",
+      "description": "A lista de passos de um agente: a palavra que descreve cada estado, o marcador que é só desenho, o passo em curso anunciado como o atual, e o passo pulado que continua na lista com o motivo."
+    },
+    "labels": {
+      "plan": "Plano",
+      "state": {
+        "pending": "A fazer",
+        "running": "Fazendo",
+        "done": "Feito",
+        "failed": "Falhou",
+        "skipped": "Pulado"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "proposed": "O plano proposto, antes de agir",
+        "running": "A mesma lista, mantida enquanto o trabalho acontece",
+        "finished": "Depois que tudo se resolveu"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A lista é ordenada, e a ordem é a informação: ela responde o que vem antes e o que vem depois.",
+      "item2": "O passo em curso é anunciado como o atual — é ele que responde onde estamos, sem depender da cor do marcador.",
+      "item3": "O marcador abre cada passo e é só desenho: forma e cor não descrevem estado sozinhas.",
+      "item4": "O rótulo vem depois do marcador e quebra em várias linhas quando é longo; a palavra do estado fica em etiqueta curta, no fim.",
+      "item5": "O detalhe ocupa a linha de baixo, alinhado ao rótulo — é onde cabe o motivo de um passo pulado ou de um que falhou.",
+      "structureCode": {
+        "web": "<ol class=\"nds-agent-plan\" aria-label=\"Plano\">\n  <li class=\"nds-agent-plan-step\" data-state=\"done\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Ler o relatório de custos</span>\n    <span class=\"nds-badge\">Feito</span>\n  </li>\n  <li class=\"nds-agent-plan-step\" data-state=\"running\" aria-current=\"step\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Comparar com o trimestre anterior</span>\n    <span class=\"nds-badge\">Fazendo</span>\n  </li>\n  <li class=\"nds-agent-plan-step\" data-state=\"skipped\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Buscar o histórico no arquivo antigo</span>\n    <span class=\"nds-badge\">Pulado</span>\n    <p class=\"nds-agent-plan-detail\">O relatório já trazia os doze meses.</p>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para mostrar os passos de um trabalho longo — o que se pretende fazer, ou o que já foi feito.",
+        "item2": "Mantenha o passo pulado na lista, com o motivo: sumir com ele reescreve o plano depois do fato.",
+        "item3": "Escreva o estado em palavra, sempre — o marcador é para os olhos.",
+        "item4": "Escreva o rótulo do passo por inteiro e deixe-o quebrar em linhas: reticências cortam a instrução.",
+        "item5": "Atualize os passos em quem consome: a peça desenha a lista que recebe e não executa nada."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar o que se pretende fazer, antes de começar",
+          "u": "Plano do agente",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Manter a lista de tarefas durante o trabalho, com o que já saiu",
+          "u": "Plano do agente",
+          "a": "É a mesma peça: o que muda é quando a lista aparece e quem a propôs."
+        },
+        "item3": {
+          "s": "Dizer em que pé está a resposta inteira",
+          "u": "Estado da execução",
+          "a": "Aquela é uma linha sobre a execução; esta detalha os passos dentro dela."
+        },
+        "item4": {
+          "s": "Mostrar o quanto de uma tarefa longa já andou",
+          "u": "Progress",
+          "a": "Ali existe uma fração conhecida; aqui existem passos, e passo não é porcentagem."
+        },
+        "item5": {
+          "s": "Conduzir quem lê por etapas que ela mesma percorre",
+          "u": "Form",
+          "a": "Lá quem avança é quem lê; aqui os passos são de quem trabalha, e a lista é leitura."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "stepLabel": {
+            "name": "Rótulo do passo",
+            "format": "Verbo no infinitivo, dizendo o que se faz",
+            "good": "Comparar com o trimestre anterior",
+            "bad": "Comparação"
+          },
+          "stateWord": {
+            "name": "Palavra do estado",
+            "format": "Uma palavra sobre o passo, não sobre o sistema",
+            "good": "Fazendo",
+            "bad": "Em processamento pelo servidor"
+          },
+          "detail": {
+            "name": "Detalhe",
+            "format": "Uma frase que explica o que o rótulo não diz",
+            "good": "O relatório já trazia os doze meses.",
+            "bad": "Pulado"
+          },
+          "order": {
+            "name": "Ordem",
+            "format": "A da execução, do primeiro ao último",
+            "good": "Ler, comparar, escrever",
+            "bad": "Escrever, ler, comparar"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva o estado em palavra, ao lado do marcador.",
+        "item2": "Deixe o passo pulado na lista, com o motivo no detalhe.",
+        "item3": "Marque como atual o passo em curso, e só ele.",
+        "item4": "Deixe o rótulo longo quebrar em linhas."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a forma e a cor do marcador como única diferença entre os estados.",
+        "item2": "Não tire da lista o passo que ficou pelo caminho.",
+        "item3": "Não anuncie cada troca de passo: quem lê está ouvindo a resposta ser gerada.",
+        "item4": "Não corte o rótulo com reticências."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O passo pulado continua na lista, e o detalhe diz por quê.",
+        "dont": "O passo pulado some, e o plano passa a contar uma história diferente da que aconteceu."
+      },
+      "pair2": {
+        "do": "Cada estado chega em palavra, ao lado do marcador.",
+        "dont": "Só a forma e a cor do marcador separam um estado do outro, e nenhuma das duas chega a quem ouve a tela."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createAgentPlan } from '@/components/ui/agent-plan';\n\nconst plan = createAgentPlan({ steps, labels });\n\n// Lista vazia não desenha nada: uma lista com zero itens promete o que não há.\nif (plan) document.querySelector('#app')?.append(plan);",
+        "react": "import { AgentPlan } from \"@/components/ui/agent-plan\";\n\n<AgentPlan steps={steps} labels={labels} />",
+        "vue": "<AgentPlan :steps=\"steps\" :labels=\"labels\" />",
+        "svelte": "<AgentPlan {steps} {labels} />",
+        "angular": "@if (steps().length) {\n  <ol ndsAgentPlan [steps]=\"steps()\" [labels]=\"labels\"></ol>\n}"
+      },
+      "withLabels": "Os passos e os rótulos",
+      "withLabelsCode": {
+        "web": "// Os passos são DADO: quem trabalha manda a lista, e a peça a desenha.\nconst steps = [\n  { id: 's1', label: 'Ler o relatório de custos', state: 'done' },\n  { id: 's2', label: 'Comparar com o trimestre anterior', state: 'running' },\n  {\n    id: 's3',\n    label: 'Buscar o histórico no arquivo antigo',\n    state: 'skipped',\n    detail: 'O relatório já trazia os doze meses.',\n  },\n  { id: 's4', label: 'Escrever o resumo', state: 'pending' },\n];\n\n// A palavra de cada um dos cinco estados, e o nome acessível da lista.\nconst labels = {\n  plan: 'Plano',\n  state: {\n    pending: 'A fazer',\n    running: 'Fazendo',\n    done: 'Feito',\n    failed: 'Falhou',\n    skipped: 'Pulado',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "pending": {
+        "label": "A fazer",
+        "trigger": "O passo ainda não começou.",
+        "behavior": "O marcador fica vazio, com a borda neutra, e a palavra diz que o passo está por vir."
+      },
+      "running": {
+        "label": "Fazendo",
+        "trigger": "O trabalho está neste passo agora.",
+        "behavior": "O marcador ganha a cor de destaque e o passo é anunciado como o atual."
+      },
+      "done": {
+        "label": "Feito",
+        "trigger": "O passo terminou e produziu o que devia.",
+        "behavior": "O marcador fica cheio, na cor de sucesso, e o passo já não muda."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "O passo quebrou sem terminar.",
+        "behavior": "O marcador fica cheio, na cor de erro, e o detalhe carrega o que falhou."
+      },
+      "skipped": {
+        "label": "Pulado",
+        "trigger": "Decidiu-se não fazer o passo.",
+        "behavior": "O marcador fica tracejado, o passo continua na lista e o detalhe diz o motivo."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "steps": {
+          "name": "steps",
+          "type": "PlanStep[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os passos, na ordem em que se pretende dá-los. Lista vazia não desenha nada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "AgentPlanLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome da lista e a palavra de cada estado."
+        },
+        "labelsPlan": {
+          "name": "plan",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome acessível da lista, para quem chega nela sem ver o título ao lado."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<PlanStepState, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada um dos cinco estados. É ela que descreve, e não o marcador."
+        },
+        "stepId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Endereço do passo, para atualizar o certo quando dois têm o mesmo texto."
+        },
+        "stepLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que se faz naquele passo, por extenso. Quebra em linhas, e nunca é cortado."
+        },
+        "stepState": {
+          "name": "state",
+          "type": "PlanStepState",
+          "default": "—",
+          "required": "Sim",
+          "description": "Em que pé está o passo. Decide a palavra, o marcador e quem é o passo atual."
+        },
+        "stepDetail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "O motivo, o resultado ou a falha — o que couber ao estado. Ocupa a linha de baixo."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A lista desenha os passos que recebe. Ela não executa nada, não reordena e não decide o que pular significa — quem trabalha é quem manda a lista nova.",
+      "extensibilityCode": {
+        "web": "// O QUE JÁ NÃO PODE MUDAR sai do vocabulário compartilhado, e não de um `if`\n// da tela: o passo ATUAL é o primeiro que ainda não terminou.\nisStepFinished('pending');  // false → ainda pode virar qualquer coisa\nisStepFinished('running');  // false → está acontecendo agora\nisStepFinished('done');     // true\nisStepFinished('failed');   // true\nisStepFinished('skipped');  // true  → não aconteceu, e não vai mais\n\n// Pulado é FIM, e não ausência: o passo fica na lista com o motivo, porque\n// sumir com ele reescreveria o plano depois do fato."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-agent-plan-step",
+          "description": "Tamanho do texto de cada passo."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-agent-plan-label",
+          "description": "O rótulo do passo, que é o que se lê primeiro."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-agent-plan-detail",
+          "description": "O detalhe, que é texto corrido e por isso nunca leva a cor do estado."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-agent-plan-marker",
+          "description": "A borda do marcador de um passo que ainda não terminou."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-agent-plan-step[data-state=\"running\"]",
+          "description": "O marcador do passo em curso."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-agent-plan-step[data-state=\"done\"]",
+          "description": "O marcador do passo que terminou como devia."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-agent-plan-step[data-state=\"failed\"]",
+          "description": "O marcador do passo que quebrou."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-agent-plan",
+          "description": "Espaço entre os passos, e entre as duas linhas de um passo."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-agent-plan-step",
+          "description": "Espaço entre o marcador, o rótulo e a palavra do estado."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-agent-plan-marker",
+          "description": "A medida do marcador."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-agent-plan-marker",
+          "description": "Arredondamento do marcador."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-agent-plan {\n  max-inline-size: 32rem;\n}\n\n/* O marcador é REFORÇO, e não a pista: a palavra ao lado é o que descreve o\n   passo. Mexer no marcador não muda o que chega a quem ouve. */\n.nds-agent-plan-step[data-state=\"running\"] .nds-agent-plan-marker {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A palavra descreve cada passo, o marcador fica fora do que é lido, o passo em curso se anuncia como o atual, e a lista não interrompe quem está ouvindo a resposta.",
+      "items": {
+        "item1": "A lista é uma lista ordenada de verdade, então quantos passos há e em qual deles se está são anunciados sem nenhum trabalho extra.",
+        "item2": "O passo atual é marcado como tal, e é ele que responde onde estamos sem depender da cor do marcador.",
+        "item3": "O marcador fica fora do que é lido em voz — ele é desenho, e a palavra ao lado já diz tudo.",
+        "item4": "A lista não é região viva. O plano muda passo a passo enquanto a resposta é gerada, e narrar cada troca corta a leitura.",
+        "item5": "O rótulo longo quebra em linhas e nunca é cortado: um passo pela metade é uma instrução pela metade."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Não para em passo nenhum: a lista é de leitura, e não há controle nela.",
+        "enter": "Não faz nada aqui.",
+        "arrows": "Rolam a página, como em qualquer texto."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-label dá nome à lista, para quem chega nela sem ver o título ao lado.",
+        "item2": "aria-current marca o passo atual — um só, o primeiro que ainda não terminou.",
+        "item3": "aria-hidden tira o marcador do que é lido em voz."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A lista é anunciada com quantos passos tem, e cada passo com a sua posição.",
+        "item2": "Cada passo é lido como o rótulo, a palavra do estado e o detalhe, quando existe.",
+        "item3": "A troca de passo não interrompe o que estiver sendo lido no momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "A linha que diz em que pé está a resposta que estes passos detalham."
+        },
+        "chatThread": {
+          "name": "Conversa",
+          "description": "Onde o plano aparece, junto do turno que o propôs."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Quando existe uma fração conhecida, e não uma lista de passos."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "A etiqueta curta que carrega a palavra de cada estado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A lista de tarefas do catálogo é esta peça. Plano e lista de tarefas têm o mesmo desenho, os mesmos estados e o mesmo vocabulário — o que muda é quando a lista aparece e quem a propôs, e isso é política de produto, não forma.",
+      "item2": "O passo em curso é anunciado como o atual. É o padrão que responde onde estamos sem depender da cor do marcador, e o atual é sempre o primeiro passo que ainda não terminou.",
+      "item3": "O passo pulado continua na lista, com o motivo. Sumir com ele reescreveria o plano depois do fato, e quem lê perderia a informação de que havia outro caminho.",
+      "item4": "O marcador é decorativo e o estado é palavra. Cinco estados distinguidos só por forma e cor não chegam a quem não os vê.",
+      "item5": "A lista não é região viva, apesar de mudar sozinha. O plano anda passo a passo enquanto a resposta é gerada, e narrar cada troca é a mesma armadilha do relógio.",
+      "item6": "A peça não executa o plano e não decide o que pular significa. Ela desenha os passos que recebe, e quem trabalha manda a lista nova."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a lista em si não instrumenta nada, porque não há nada nela para acionar.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar cada um dos cinco estados",
+          "result": "A palavra daquele estado aparece no passo, e o marcador fica fora do que é lido",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Montar a lista com um passo em curso",
+          "result": "Só ele é marcado como o passo atual",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar uma lista em que nada começou",
+          "result": "O primeiro passo é o atual, porque é o primeiro que ainda não terminou",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Montar uma lista em que tudo já terminou",
+          "result": "Nenhum passo é marcado como atual",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Passar um passo pulado, com motivo",
+          "result": "Ele continua na lista, na posição em que estava, e o motivo aparece",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Montar a lista em qualquer estado",
+          "result": "Ela não é região viva, e nada nela se reanuncia",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar um rótulo longo",
+          "result": "Ele quebra em linhas e não recebe reticências",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Passar uma lista sem passo nenhum",
+          "result": "Nada é desenhado, em vez de uma lista que promete zero passos",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A palavra do estado está sempre presente, e o marcador não é a única pista",
+        "item2": "O marcador está fora do que é lido em voz",
+        "item3": "A lista tem nome acessível, e é uma lista ordenada de verdade",
+        "item4": "Um passo, no máximo, é marcado como o atual",
+        "item5": "A lista não é região viva",
+        "item6": "O rótulo longo quebra em linhas, e nada é cortado"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — um passo, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os cinco, um abaixo do outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — o plano proposto, com tudo por fazer",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — o plano em curso, com o passo atual",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — o plano encerrado, com o passo pulado e o que falhou",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — o plano proposto, antes de agir",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composições — a lista de tarefas, durante o trabalho",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Estados — o rótulo longo, quebrado em linhas",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Agent plan",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The steps that are meant to be taken, or already were, in order: what is coming, what is under way, and what was left behind and why.",
+    "seo": {
+      "title": "Agent plan — the steps in order, and what happened to each one",
+      "description": "An agent's list of steps: the word that describes each state, the marker that is drawing only, the step under way announced as the current one, and the skipped step that stays on the list with its reason."
+    },
+    "labels": {
+      "plan": "Plan",
+      "state": {
+        "pending": "To do",
+        "running": "Doing",
+        "done": "Done",
+        "failed": "Failed",
+        "skipped": "Skipped"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "proposed": "The plan proposed, before acting",
+        "running": "The same list, kept while the work happens",
+        "finished": "After everything settled"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The list is ordered, and the order is the information: it answers what comes before and what comes after.",
+      "item2": "The step under way is announced as the current one — it is what answers where we are, without depending on the marker's colour.",
+      "item3": "The marker opens each step and is drawing only: shape and colour do not describe state on their own.",
+      "item4": "The label comes after the marker and wraps onto several lines when it is long; the state word sits in a short tag at the end.",
+      "item5": "The detail takes the line below, aligned with the label — it is where the reason for a skipped or failed step fits.",
+      "structureCode": {
+        "web": "<ol class=\"nds-agent-plan\" aria-label=\"Plano\">\n  <li class=\"nds-agent-plan-step\" data-state=\"done\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Ler o relatório de custos</span>\n    <span class=\"nds-badge\">Feito</span>\n  </li>\n  <li class=\"nds-agent-plan-step\" data-state=\"running\" aria-current=\"step\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Comparar com o trimestre anterior</span>\n    <span class=\"nds-badge\">Fazendo</span>\n  </li>\n  <li class=\"nds-agent-plan-step\" data-state=\"skipped\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Buscar o histórico no arquivo antigo</span>\n    <span class=\"nds-badge\">Pulado</span>\n    <p class=\"nds-agent-plan-detail\">O relatório já trazia os doze meses.</p>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to show the steps of a long piece of work — what is meant to happen, or what already did.",
+        "item2": "Keep the skipped step on the list, with its reason: removing it rewrites the plan after the fact.",
+        "item3": "Always write the state as a word — the marker is for the eyes.",
+        "item4": "Write the step label in full and let it wrap: an ellipsis cuts the instruction.",
+        "item5": "Update the steps on the consuming side: the piece draws the list it receives and runs nothing."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Show what is meant to happen, before it starts",
+          "u": "Agent plan",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Keep the task list during the work, with what already went out",
+          "u": "Agent plan",
+          "a": "It is the same piece: what changes is when the list shows up and who proposed it."
+        },
+        "item3": {
+          "s": "Say where the whole answer stands",
+          "u": "Run status",
+          "a": "That is one line about the run; this one details the steps inside it."
+        },
+        "item4": {
+          "s": "Show how much of a long task has gone by",
+          "u": "Progress",
+          "a": "There is a known fraction there; here there are steps, and a step is not a percentage."
+        },
+        "item5": {
+          "s": "Walk a reader through stages they go through themselves",
+          "u": "Form",
+          "a": "There the reader is the one moving forward; here the steps belong to whoever is working, and the list is reading."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "stepLabel": {
+            "name": "Step label",
+            "format": "A verb saying what gets done",
+            "good": "Compare with the previous quarter",
+            "bad": "Comparison"
+          },
+          "stateWord": {
+            "name": "State word",
+            "format": "One word about the step, not about the system",
+            "good": "Doing",
+            "bad": "Being processed by the server"
+          },
+          "detail": {
+            "name": "Detail",
+            "format": "One sentence explaining what the label does not say",
+            "good": "The report already carried the twelve months.",
+            "bad": "Skipped"
+          },
+          "order": {
+            "name": "Order",
+            "format": "The order of the work, from first to last",
+            "good": "Read, compare, write",
+            "bad": "Write, read, compare"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the state as a word, next to the marker.",
+        "item2": "Leave the skipped step on the list, with its reason in the detail.",
+        "item3": "Mark the step under way as the current one, and only it.",
+        "item4": "Let a long label wrap onto several lines."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't leave the marker's shape and colour as the only difference between states.",
+        "item2": "Don't take the step that was left behind off the list.",
+        "item3": "Don't announce every change of step: the reader is listening to the answer being generated.",
+        "item4": "Don't cut the label with an ellipsis."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The skipped step stays on the list, and the detail says why.",
+        "dont": "The skipped step disappears, and the plan starts telling a different story from the one that happened."
+      },
+      "pair2": {
+        "do": "Every state arrives as a word, next to the marker.",
+        "dont": "Only the marker's shape and colour tell one state from another, and neither reaches someone listening to the screen."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic use",
+      "basicCode": {
+        "vanilla": "import { createAgentPlan } from '@/components/ui/agent-plan';\n\nconst plan = createAgentPlan({ steps, labels });\n\n// Lista vazia não desenha nada: uma lista com zero itens promete o que não há.\nif (plan) document.querySelector('#app')?.append(plan);",
+        "react": "import { AgentPlan } from \"@/components/ui/agent-plan\";\n\n<AgentPlan steps={steps} labels={labels} />",
+        "vue": "<AgentPlan :steps=\"steps\" :labels=\"labels\" />",
+        "svelte": "<AgentPlan {steps} {labels} />",
+        "angular": "@if (steps().length) {\n  <ol ndsAgentPlan [steps]=\"steps()\" [labels]=\"labels\"></ol>\n}"
+      },
+      "withLabels": "The steps and the labels",
+      "withLabelsCode": {
+        "web": "// Os passos são DADO: quem trabalha manda a lista, e a peça a desenha.\nconst steps = [\n  { id: 's1', label: 'Ler o relatório de custos', state: 'done' },\n  { id: 's2', label: 'Comparar com o trimestre anterior', state: 'running' },\n  {\n    id: 's3',\n    label: 'Buscar o histórico no arquivo antigo',\n    state: 'skipped',\n    detail: 'O relatório já trazia os doze meses.',\n  },\n  { id: 's4', label: 'Escrever o resumo', state: 'pending' },\n];\n\n// A palavra de cada um dos cinco estados, e o nome acessível da lista.\nconst labels = {\n  plan: 'Plano',\n  state: {\n    pending: 'A fazer',\n    running: 'Fazendo',\n    done: 'Feito',\n    failed: 'Falhou',\n    skipped: 'Pulado',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "pending": {
+        "label": "To do",
+        "trigger": "The step has not started.",
+        "behavior": "The marker stays empty, with a neutral border, and the word says the step is still ahead."
+      },
+      "running": {
+        "label": "Doing",
+        "trigger": "The work is on this step right now.",
+        "behavior": "The marker takes the accent colour and the step is announced as the current one."
+      },
+      "done": {
+        "label": "Done",
+        "trigger": "The step finished and produced what it should.",
+        "behavior": "The marker is filled, in the success colour, and the step no longer changes."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The step broke without finishing.",
+        "behavior": "The marker is filled, in the error colour, and the detail carries what failed."
+      },
+      "skipped": {
+        "label": "Skipped",
+        "trigger": "It was decided not to take the step.",
+        "behavior": "The marker becomes dashed, the step stays on the list, and the detail says why."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "steps": {
+          "name": "steps",
+          "type": "PlanStep[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The steps, in the order they are meant to be taken. An empty list draws nothing."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "AgentPlanLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the list and the word for each state."
+        },
+        "labelsPlan": {
+          "name": "plan",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The accessible name of the list, for whoever reaches it without seeing the heading beside it."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<PlanStepState, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each of the five states. It is what describes, not the marker."
+        },
+        "stepId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "The step's address, so the right one is updated when two carry the same text."
+        },
+        "stepLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What gets done in that step, in full. It wraps, and it is never cut."
+        },
+        "stepState": {
+          "name": "state",
+          "type": "PlanStepState",
+          "default": "—",
+          "required": "Yes",
+          "description": "Where the step stands. It decides the word, the marker, and which step is the current one."
+        },
+        "stepDetail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "The reason, the result, or the failure — whatever fits the state. It takes the line below."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The list draws the steps it receives. It runs nothing, reorders nothing, and does not decide what skipping means — whoever is working is who sends the new list.",
+      "extensibilityCode": {
+        "web": "// O QUE JÁ NÃO PODE MUDAR sai do vocabulário compartilhado, e não de um `if`\n// da tela: o passo ATUAL é o primeiro que ainda não terminou.\nisStepFinished('pending');  // false → ainda pode virar qualquer coisa\nisStepFinished('running');  // false → está acontecendo agora\nisStepFinished('done');     // true\nisStepFinished('failed');   // true\nisStepFinished('skipped');  // true  → não aconteceu, e não vai mais\n\n// Pulado é FIM, e não ausência: o passo fica na lista com o motivo, porque\n// sumir com ele reescreveria o plano depois do fato."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-agent-plan-step",
+          "description": "Text size of each step."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-agent-plan-label",
+          "description": "The step label, which is what gets read first."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-agent-plan-detail",
+          "description": "The detail, which is running text and therefore never takes the state colour."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-agent-plan-marker",
+          "description": "The marker border of a step that has not finished."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-agent-plan-step[data-state=\"running\"]",
+          "description": "The marker of the step under way."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-agent-plan-step[data-state=\"done\"]",
+          "description": "The marker of the step that finished as it should."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-agent-plan-step[data-state=\"failed\"]",
+          "description": "The marker of the step that broke."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-agent-plan",
+          "description": "Space between steps, and between the two lines of one step."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-agent-plan-step",
+          "description": "Space between the marker, the label, and the state word."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-agent-plan-marker",
+          "description": "The size of the marker."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-agent-plan-marker",
+          "description": "Rounding of the marker."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-agent-plan {\n  max-inline-size: 32rem;\n}\n\n/* O marcador é REFORÇO, e não a pista: a palavra ao lado é o que descreve o\n   passo. Mexer no marcador não muda o que chega a quem ouve. */\n.nds-agent-plan-step[data-state=\"running\"] .nds-agent-plan-marker {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The word describes each step, the marker stays out of what is read, the step under way announces itself as the current one, and the list never interrupts someone listening to the answer.",
+      "items": {
+        "item1": "The list is a real ordered list, so how many steps there are and which one you are on are announced with no extra work.",
+        "item2": "The current step is marked as such, and it is what answers where we are without depending on the marker's colour.",
+        "item3": "The marker stays out of what is read aloud — it is drawing, and the word beside it already says everything.",
+        "item4": "The list is not a live region. The plan changes step by step while the answer is generated, and narrating every change cuts the reading.",
+        "item5": "A long label wraps and is never cut: half a step is half an instruction."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "It stops at no step: the list is for reading, and there is no control in it.",
+        "enter": "Does nothing here.",
+        "arrows": "Scroll the page, as in any text."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-label names the list, for whoever reaches it without seeing the heading beside it.",
+        "item2": "aria-current marks the current step — one only, the first that has not finished.",
+        "item3": "aria-hidden takes the marker out of what is read aloud."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The list is announced with how many steps it has, and each step with its position.",
+        "item2": "Each step is read as the label, the state word, and the detail when there is one.",
+        "item3": "A change of step does not interrupt whatever is being read at that moment."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "agentStatus": {
+          "name": "Run status",
+          "description": "The line that says where the answer these steps detail stands."
+        },
+        "chatThread": {
+          "name": "Thread",
+          "description": "Where the plan shows up, next to the turn that proposed it."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "When there is a known fraction, and not a list of steps."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "The short tag that carries the word for each state."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The catalogue's task list is this piece. A plan and a task list share the same design, the same states, and the same vocabulary — what changes is when the list shows up and who proposed it, and that is product policy, not form.",
+      "item2": "The step under way is announced as the current one. It is the pattern that answers where we are without depending on the marker's colour, and the current step is always the first one that has not finished.",
+      "item3": "The skipped step stays on the list, with its reason. Removing it would rewrite the plan after the fact, and the reader would lose the information that another path existed.",
+      "item4": "The marker is decorative and the state is a word. Five states told apart by shape and colour alone do not reach anyone who cannot see them.",
+      "item5": "The list is not a live region, even though it changes on its own. The plan moves step by step while the answer is generated, and narrating every change is the same trap as the clock.",
+      "item6": "The piece does not run the plan and does not decide what skipping means. It draws the steps it receives, and whoever is working sends the new list."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the list itself instruments nothing, because there is nothing in it to activate.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass each of the five states",
+          "result": "The word for that state shows up in the step, and the marker stays out of what is read",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Build the list with one step under way",
+          "result": "Only that one is marked as the current step",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Build a list where nothing has started",
+          "result": "The first step is the current one, because it is the first that has not finished",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Build a list where everything has finished",
+          "result": "No step is marked as current",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Pass a skipped step, with a reason",
+          "result": "It stays on the list, in the position it had, and the reason shows up",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Build the list in any state",
+          "result": "It is not a live region, and nothing in it re-announces itself",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass a long label",
+          "result": "It wraps onto several lines and gets no ellipsis",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Pass a list with no step at all",
+          "result": "Nothing is drawn, instead of a list promising zero steps",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe on every story, plus what the play asserts.",
+        "item1": "The state word is always present, and the marker is not the only cue",
+        "item2": "The marker is out of what is read aloud",
+        "item3": "The list has an accessible name, and is a real ordered list",
+        "item4": "At most one step is marked as the current one",
+        "item5": "The list is not a live region",
+        "item6": "A long label wraps, and nothing is cut"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — one step, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the five, one below the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — the plan proposed, with everything still to do",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — the plan under way, with the current step",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — the plan closed, with the skipped step and the failed one",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — the plan proposed, before acting",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Compositions — the task list, during the work",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "States — the long label, wrapped onto several lines",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Plan del agente",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Los pasos que se pretende dar, o que ya se dieron, en orden: lo que viene, lo que está en curso, y lo que quedó en el camino y por qué.",
+    "seo": {
+      "title": "Plan del agente — los pasos en orden, y qué pasó con cada uno",
+      "description": "La lista de pasos de un agente: la palabra que describe cada estado, el marcador que es solo dibujo, el paso en curso anunciado como el actual, y el paso omitido que sigue en la lista con su motivo."
+    },
+    "labels": {
+      "plan": "Plan",
+      "state": {
+        "pending": "Por hacer",
+        "running": "Haciendo",
+        "done": "Hecho",
+        "failed": "Falló",
+        "skipped": "Omitido"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "proposed": "El plan propuesto, antes de actuar",
+        "running": "La misma lista, mantenida mientras el trabajo ocurre",
+        "finished": "Después de que todo se resolvió"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La lista es ordenada, y el orden es la información: responde qué viene antes y qué viene después.",
+      "item2": "El paso en curso se anuncia como el actual — es el que responde dónde estamos, sin depender del color del marcador.",
+      "item3": "El marcador abre cada paso y es solo dibujo: forma y color no describen estado por sí solos.",
+      "item4": "La etiqueta viene después del marcador y se parte en varias líneas cuando es larga; la palabra del estado va en una etiqueta corta, al final.",
+      "item5": "El detalle ocupa la línea de abajo, alineado con la etiqueta — es donde cabe el motivo de un paso omitido o de uno que falló.",
+      "structureCode": {
+        "web": "<ol class=\"nds-agent-plan\" aria-label=\"Plano\">\n  <li class=\"nds-agent-plan-step\" data-state=\"done\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Ler o relatório de custos</span>\n    <span class=\"nds-badge\">Feito</span>\n  </li>\n  <li class=\"nds-agent-plan-step\" data-state=\"running\" aria-current=\"step\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Comparar com o trimestre anterior</span>\n    <span class=\"nds-badge\">Fazendo</span>\n  </li>\n  <li class=\"nds-agent-plan-step\" data-state=\"skipped\">\n    <span class=\"nds-agent-plan-marker\" aria-hidden=\"true\"></span>\n    <span class=\"nds-agent-plan-label\">Buscar o histórico no arquivo antigo</span>\n    <span class=\"nds-badge\">Pulado</span>\n    <p class=\"nds-agent-plan-detail\">O relatório já trazia os doze meses.</p>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para mostrar los pasos de un trabajo largo — lo que se pretende hacer, o lo que ya se hizo.",
+        "item2": "Mantén el paso omitido en la lista, con su motivo: quitarlo reescribe el plan después del hecho.",
+        "item3": "Escribe el estado en palabra, siempre — el marcador es para los ojos.",
+        "item4": "Escribe la etiqueta del paso completa y déjala partirse en líneas: los puntos suspensivos cortan la instrucción.",
+        "item5": "Actualiza los pasos en quien consume: la pieza dibuja la lista que recibe y no ejecuta nada."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar lo que se pretende hacer, antes de empezar",
+          "u": "Plan del agente",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mantener la lista de tareas durante el trabajo, con lo que ya salió",
+          "u": "Plan del agente",
+          "a": "Es la misma pieza: lo que cambia es cuándo aparece la lista y quién la propuso."
+        },
+        "item3": {
+          "s": "Decir en qué punto está la respuesta entera",
+          "u": "Estado de la ejecución",
+          "a": "Aquella es una línea sobre la ejecución; esta detalla los pasos dentro de ella."
+        },
+        "item4": {
+          "s": "Mostrar cuánto de una tarea larga ya avanzó",
+          "u": "Progress",
+          "a": "Allí hay una fracción conocida; aquí hay pasos, y un paso no es un porcentaje."
+        },
+        "item5": {
+          "s": "Guiar a quien lee por etapas que recorre por sí misma",
+          "u": "Form",
+          "a": "Allí quien avanza es quien lee; aquí los pasos son de quien trabaja, y la lista es lectura."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "stepLabel": {
+            "name": "Etiqueta del paso",
+            "format": "Verbo en infinitivo, diciendo qué se hace",
+            "good": "Comparar con el trimestre anterior",
+            "bad": "Comparación"
+          },
+          "stateWord": {
+            "name": "Palabra del estado",
+            "format": "Una palabra sobre el paso, no sobre el sistema",
+            "good": "Haciendo",
+            "bad": "En procesamiento por el servidor"
+          },
+          "detail": {
+            "name": "Detalle",
+            "format": "Una frase que explica lo que la etiqueta no dice",
+            "good": "El informe ya traía los doce meses.",
+            "bad": "Omitido"
+          },
+          "order": {
+            "name": "Orden",
+            "format": "El de la ejecución, del primero al último",
+            "good": "Leer, comparar, escribir",
+            "bad": "Escribir, leer, comparar"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe el estado en palabra, al lado del marcador.",
+        "item2": "Deja el paso omitido en la lista, con el motivo en el detalle.",
+        "item3": "Marca como actual el paso en curso, y solo ese.",
+        "item4": "Deja que la etiqueta larga se parta en líneas."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes la forma y el color del marcador como única diferencia entre los estados.",
+        "item2": "No quites de la lista el paso que quedó en el camino.",
+        "item3": "No anuncies cada cambio de paso: quien lee está escuchando la respuesta generarse.",
+        "item4": "No cortes la etiqueta con puntos suspensivos."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El paso omitido sigue en la lista, y el detalle dice por qué.",
+        "dont": "El paso omitido desaparece, y el plan pasa a contar una historia distinta de la que ocurrió."
+      },
+      "pair2": {
+        "do": "Cada estado llega en palabra, al lado del marcador.",
+        "dont": "Solo la forma y el color del marcador separan un estado de otro, y ninguno llega a quien escucha la pantalla."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createAgentPlan } from '@/components/ui/agent-plan';\n\nconst plan = createAgentPlan({ steps, labels });\n\n// Lista vazia não desenha nada: uma lista com zero itens promete o que não há.\nif (plan) document.querySelector('#app')?.append(plan);",
+        "react": "import { AgentPlan } from \"@/components/ui/agent-plan\";\n\n<AgentPlan steps={steps} labels={labels} />",
+        "vue": "<AgentPlan :steps=\"steps\" :labels=\"labels\" />",
+        "svelte": "<AgentPlan {steps} {labels} />",
+        "angular": "@if (steps().length) {\n  <ol ndsAgentPlan [steps]=\"steps()\" [labels]=\"labels\"></ol>\n}"
+      },
+      "withLabels": "Los pasos y las etiquetas",
+      "withLabelsCode": {
+        "web": "// Os passos são DADO: quem trabalha manda a lista, e a peça a desenha.\nconst steps = [\n  { id: 's1', label: 'Ler o relatório de custos', state: 'done' },\n  { id: 's2', label: 'Comparar com o trimestre anterior', state: 'running' },\n  {\n    id: 's3',\n    label: 'Buscar o histórico no arquivo antigo',\n    state: 'skipped',\n    detail: 'O relatório já trazia os doze meses.',\n  },\n  { id: 's4', label: 'Escrever o resumo', state: 'pending' },\n];\n\n// A palavra de cada um dos cinco estados, e o nome acessível da lista.\nconst labels = {\n  plan: 'Plano',\n  state: {\n    pending: 'A fazer',\n    running: 'Fazendo',\n    done: 'Feito',\n    failed: 'Falhou',\n    skipped: 'Pulado',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "pending": {
+        "label": "Por hacer",
+        "trigger": "El paso todavía no empezó.",
+        "behavior": "El marcador queda vacío, con el borde neutro, y la palabra dice que el paso está por venir."
+      },
+      "running": {
+        "label": "Haciendo",
+        "trigger": "El trabajo está en este paso ahora.",
+        "behavior": "El marcador toma el color de acento y el paso se anuncia como el actual."
+      },
+      "done": {
+        "label": "Hecho",
+        "trigger": "El paso terminó y produjo lo que debía.",
+        "behavior": "El marcador queda lleno, en el color de éxito, y el paso ya no cambia."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "El paso se rompió sin terminar.",
+        "behavior": "El marcador queda lleno, en el color de error, y el detalle carga lo que falló."
+      },
+      "skipped": {
+        "label": "Omitido",
+        "trigger": "Se decidió no dar el paso.",
+        "behavior": "El marcador queda discontinuo, el paso sigue en la lista y el detalle dice el motivo."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "steps": {
+          "name": "steps",
+          "type": "PlanStep[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los pasos, en el orden en que se pretende darlos. Una lista vacía no dibuja nada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "AgentPlanLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre de la lista y la palabra de cada estado."
+        },
+        "labelsPlan": {
+          "name": "plan",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre accesible de la lista, para quien llega a ella sin ver el título al lado."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<PlanStepState, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada uno de los cinco estados. Es ella la que describe, y no el marcador."
+        },
+        "stepId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "La dirección del paso, para actualizar el correcto cuando dos tienen el mismo texto."
+        },
+        "stepLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que se hace en ese paso, completo. Se parte en líneas, y nunca se corta."
+        },
+        "stepState": {
+          "name": "state",
+          "type": "PlanStepState",
+          "default": "—",
+          "required": "Sí",
+          "description": "En qué punto está el paso. Decide la palabra, el marcador y cuál es el paso actual."
+        },
+        "stepDetail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "El motivo, el resultado o la falla — lo que quepa al estado. Ocupa la línea de abajo."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La lista dibuja los pasos que recibe. No ejecuta nada, no reordena y no decide qué significa omitir — quien trabaja es quien manda la lista nueva.",
+      "extensibilityCode": {
+        "web": "// O QUE JÁ NÃO PODE MUDAR sai do vocabulário compartilhado, e não de um `if`\n// da tela: o passo ATUAL é o primeiro que ainda não terminou.\nisStepFinished('pending');  // false → ainda pode virar qualquer coisa\nisStepFinished('running');  // false → está acontecendo agora\nisStepFinished('done');     // true\nisStepFinished('failed');   // true\nisStepFinished('skipped');  // true  → não aconteceu, e não vai mais\n\n// Pulado é FIM, e não ausência: o passo fica na lista com o motivo, porque\n// sumir com ele reescreveria o plano depois do fato."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-agent-plan-step",
+          "description": "Tamaño del texto de cada paso."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-agent-plan-label",
+          "description": "La etiqueta del paso, que es lo que se lee primero."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-agent-plan-detail",
+          "description": "El detalle, que es texto corrido y por eso nunca lleva el color del estado."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-agent-plan-marker",
+          "description": "El borde del marcador de un paso que todavía no terminó."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-agent-plan-step[data-state=\"running\"]",
+          "description": "El marcador del paso en curso."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-agent-plan-step[data-state=\"done\"]",
+          "description": "El marcador del paso que terminó como debía."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-agent-plan-step[data-state=\"failed\"]",
+          "description": "El marcador del paso que se rompió."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-agent-plan",
+          "description": "Espacio entre los pasos, y entre las dos líneas de un paso."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-agent-plan-step",
+          "description": "Espacio entre el marcador, la etiqueta y la palabra del estado."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-agent-plan-marker",
+          "description": "La medida del marcador."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-agent-plan-marker",
+          "description": "Redondeo del marcador."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-agent-plan {\n  max-inline-size: 32rem;\n}\n\n/* O marcador é REFORÇO, e não a pista: a palavra ao lado é o que descreve o\n   passo. Mexer no marcador não muda o que chega a quem ouve. */\n.nds-agent-plan-step[data-state=\"running\"] .nds-agent-plan-marker {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La palabra describe cada paso, el marcador queda fuera de lo que se lee, el paso en curso se anuncia como el actual, y la lista no interrumpe a quien está escuchando la respuesta.",
+      "items": {
+        "item1": "La lista es una lista ordenada de verdad, así que cuántos pasos hay y en cuál se está se anuncian sin trabajo extra.",
+        "item2": "El paso actual está marcado como tal, y es el que responde dónde estamos sin depender del color del marcador.",
+        "item3": "El marcador queda fuera de lo que se lee en voz — es dibujo, y la palabra al lado ya lo dice todo.",
+        "item4": "La lista no es región viva. El plan cambia paso a paso mientras la respuesta se genera, y narrar cada cambio corta la lectura.",
+        "item5": "La etiqueta larga se parte en líneas y nunca se corta: medio paso es media instrucción."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "No se detiene en ningún paso: la lista es de lectura, y no hay control en ella.",
+        "enter": "No hace nada aquí.",
+        "arrows": "Desplazan la página, como en cualquier texto."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-label da nombre a la lista, para quien llega a ella sin ver el título al lado.",
+        "item2": "aria-current marca el paso actual — uno solo, el primero que todavía no terminó.",
+        "item3": "aria-hidden saca el marcador de lo que se lee en voz."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La lista se anuncia con cuántos pasos tiene, y cada paso con su posición.",
+        "item2": "Cada paso se lee como la etiqueta, la palabra del estado y el detalle, cuando existe.",
+        "item3": "El cambio de paso no interrumpe lo que se esté leyendo en ese momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "La línea que dice en qué punto está la respuesta que estos pasos detallan."
+        },
+        "chatThread": {
+          "name": "Conversación",
+          "description": "Donde el plan aparece, junto al turno que lo propuso."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Cuando hay una fracción conocida, y no una lista de pasos."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "La etiqueta corta que carga la palabra de cada estado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La lista de tareas del catálogo es esta pieza. Plan y lista de tareas tienen el mismo dibujo, los mismos estados y el mismo vocabulario — lo que cambia es cuándo aparece la lista y quién la propuso, y eso es política de producto, no forma.",
+      "item2": "El paso en curso se anuncia como el actual. Es el patrón que responde dónde estamos sin depender del color del marcador, y el actual es siempre el primer paso que todavía no terminó.",
+      "item3": "El paso omitido sigue en la lista, con su motivo. Quitarlo reescribiría el plan después del hecho, y quien lee perdería la información de que había otro camino.",
+      "item4": "El marcador es decorativo y el estado es palabra. Cinco estados distinguidos solo por forma y color no llegan a quien no los ve.",
+      "item5": "La lista no es región viva, aunque cambie sola. El plan avanza paso a paso mientras la respuesta se genera, y narrar cada cambio es la misma trampa del reloj.",
+      "item6": "La pieza no ejecuta el plan y no decide qué significa omitir. Dibuja los pasos que recibe, y quien trabaja manda la lista nueva."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la lista en sí no instrumenta nada, porque no hay nada en ella para accionar.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar cada uno de los cinco estados",
+          "result": "La palabra de ese estado aparece en el paso, y el marcador queda fuera de lo que se lee",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Montar la lista con un paso en curso",
+          "result": "Solo ese queda marcado como el paso actual",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar una lista donde nada empezó",
+          "result": "El primer paso es el actual, porque es el primero que todavía no terminó",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Montar una lista donde todo ya terminó",
+          "result": "Ningún paso queda marcado como actual",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Pasar un paso omitido, con motivo",
+          "result": "Sigue en la lista, en la posición que tenía, y el motivo aparece",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Montar la lista en cualquier estado",
+          "result": "No es región viva, y nada en ella se reanuncia",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar una etiqueta larga",
+          "result": "Se parte en líneas y no recibe puntos suspensivos",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Pasar una lista sin ningún paso",
+          "result": "No se dibuja nada, en vez de una lista que promete cero pasos",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La palabra del estado está siempre presente, y el marcador no es la única pista",
+        "item2": "El marcador está fuera de lo que se lee en voz",
+        "item3": "La lista tiene nombre accesible, y es una lista ordenada de verdad",
+        "item4": "Un paso, como máximo, queda marcado como el actual",
+        "item5": "La lista no es región viva",
+        "item6": "La etiqueta larga se parte en líneas, y nada se corta"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — un paso, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cinco, uno debajo del otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — el plan propuesto, con todo por hacer",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — el plan en curso, con el paso actual",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — el plan cerrado, con el paso omitido y el que falló",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — el plan propuesto, antes de actuar",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composiciones — la lista de tareas, durante el trabajo",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Estados — la etiqueta larga, partida en líneas",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
