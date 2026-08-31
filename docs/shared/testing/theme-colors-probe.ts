@@ -200,7 +200,13 @@ export function pairFailures(measurements: PairMeasurement[], minimum: number): 
  *   0.18  badge warning/success/info (escuro) — o mais forte em uso hoje
  *   0.25  folga: é o hover destrutivo do button no escuro, o teto da folha
  */
-export const BACKGROUND_SMOOTH_ALFAS = [0.08, 0.1, 0.12, 0.15, 0.18, 0.25] as const;
+/*
+ *   0.20  accent nos estados que PERMANECEM — item destacado de menu, intervalo
+ *         do calendário, passo concluído, página atual. Entrou quando o accent
+ *         deixou de ser cor própria e virou uma lavagem do primary; o hover dele
+ *         é 0.10, que a lista já cobria.
+ */
+export const BACKGROUND_SMOOTH_ALFAS = [0.08, 0.1, 0.12, 0.15, 0.18, 0.2, 0.25] as const;
 
 export interface PairSmoothMeasurement {
   theme: string;

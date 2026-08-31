@@ -84,7 +84,7 @@
 }
 
 .nds-calendar-select:hover {
-  background-color: hsl(var(--accent) / 0.2);
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
 }
 
@@ -218,7 +218,7 @@
 }
 
 .nds-calendar-nav-btn:hover:not([aria-disabled="true"]) {
-  background-color: hsl(var(--accent) / 0.2);
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
 }
 
@@ -509,7 +509,7 @@
 }
 
 .nds-calendar-day-btn:hover:not([data-selected]):not([data-disabled]):not(:disabled) {
-  background-color: hsl(var(--accent) / 0.2);
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
 }
 
@@ -764,7 +764,7 @@
   }
 
   .nds-calendar-select option:hover {
-    background-color: hsl(var(--accent) / 0.2);
+    background-color: hsl(var(--accent) / 0.1);
     color: hsl(var(--accent-foreground));
   }
 

@@ -67,7 +67,7 @@ type Story = StoryObj;
 const TEXT_MINIMUM = 4.5;
 
 /**
- * Pares de FEEDBACK: a cor semântica pinta fundo suave, nunca superfície cheia.
+ * Pares de LAVAGEM SUAVE: a cor pinta fundo translúcido, nunca superfície cheia.
  *
  * Ficam fora de `PairConsumidoAlcanca4a5` porque lá o cálculo é texto sobre a cor
  * CHEIA, e nenhuma regra do sistema escreve assim — `--destructive-foreground`
@@ -77,8 +77,15 @@ const TEXT_MINIMUM = 4.5;
  * mesmos três temas e dois modos e em todos os alfas que as folhas usam.
  *
  * Não é isenção: é a mesma exigência de 4.5:1, contra o fundo certo.
+ *
+ * `accent` ENTROU nesta lista, e a razão é a mesma dos quatro de feedback — o
+ * nome da lista é que deixou de ser só "feedback". Ele foi cor própria e opaca
+ * até 2026-08-31; hoje é `var(--primary)` pintado a 0.1 no hover e 0.2 nos
+ * estados que permanecem, com `--foreground` por cima. Medido opaco, o par dá
+ * 2.2:1 no claro do default — a tela que esse número descreve não existe. Medido
+ * como se pinta, o pior dos três temas × dois modos × sete alfas é 7.29:1.
  */
-const BACKGROUND_SMOOTH_PAIRS = ['destructive', 'info', 'success', 'warning'] as const;
+const BACKGROUND_SMOOTH_PAIRS = ['accent', 'destructive', 'info', 'success', 'warning'] as const;
 
 export const TodoTokenDocumentadoExists: Story = {
   render: () => createThemeColorsDocs(),

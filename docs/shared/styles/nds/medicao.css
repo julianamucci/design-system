@@ -1,0 +1,240 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Medição — a folha da família 5 da guideline 17.
+ *
+ * O EIXO: O MESMO NÚMERO EM FORMAS DIFERENTES. Anel, barra, texto e repartição
+ * dizem a mesma coisa e escolhem o espaço que têm — um trilho estreito ao lado
+ * de outros controles, um painel de largura inteira, uma linha de rodapé. É
+ * isso que faz as peças daqui dividirem geometria, tokens e vocabulário, e é
+ * por isso que moram numa folha só, e não uma por slug.
+ *
+ * A conta é `@shared/primitives/token-budget`: fração usada, limiar de aviso,
+ * nível e repartição por origem, com o porquê de cada decisão escrito nos
+ * docblocks de lá. Nenhuma peça desta folha reimplementa essas regras, e o dado
+ * de entrada é sempre `TokenUsage`, de `@shared/primitives/chat-protocol`.
+ *
+ * A REGRA QUE ATRAVESSA A FAMÍLIA INTEIRA, herdada da 1 e da 2: o que muda a
+ * cada quadro é DECORATIVO, e o número é TEXTO. Medidor não tem papel ARIA, não
+ * carrega valor e não se anuncia — um contador que se reanuncia torna a tela
+ * impossível de ouvir. Quem ouve recebe o número escrito e a palavra do nível,
+ * que é o que decide o que fazer.
+ *
+ * E A SEGUNDA, que é específica desta família: SEM TETO NÃO HÁ FRAÇÃO, SÓ
+ * CONTAGEM. O teto é opcional no vocabulário porque nem sempre se sabe qual é,
+ * e quem não sabe NÃO desenha medidor: um anel vazio lê como zero por cento,
+ * que é o oposto de "não se sabe quanto cabe".
+ *
+ * TOKENS DE MEDIDOR SÃO SÓLIDOS, nunca opacidade sobre `--muted` — §9 da
+ * guideline 17: opacidade baixa some no escuro, e a escala de intensidade tem
+ * de valer nos dois modos e nos três temas.
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT).
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Uso da janela de contexto ────────────────────────────────────────────────
+ *
+ * Quanto da janela já foi usada. Vocabulário: `TokenUsage`; conta:
+ * `usedPercent`, `budgetLevel`, `usedTokens`, `BudgetLevel`.
+ *
+ *   <p class="nds-context-display" data-slot="context-display"
+ *      data-form="ring" data-level="warning">
+ *     <span class="nds-sr-only" data-slot="context-display-title">Uso da janela de contexto</span>
+ *     <span class="nds-context-display-ring" data-slot="context-display-meter"
+ *           aria-hidden="true" style="--nds-context-used: 78"></span>
+ *     <span class="nds-context-display-value" data-slot="context-display-value">78%</span>
+ *     <span class="nds-context-display-detail" data-slot="context-display-detail">25.000 de 32.000 tokens</span>
+ *     <span class="nds-badge nds-badge-warning nds-context-display-level"
+ *           data-slot="context-display-level">Perto do limite</span>
+ *   </p>
+ *
+ * Na forma de barra o medidor troca de árvore, e só ele:
+ *
+ *     <span class="nds-context-display-bar" data-slot="context-display-meter"
+ *           aria-hidden="true" style="--nds-context-used: 78">
+ *       <span class="nds-context-display-bar-fill"></span>
+ *     </span>
+ *
+ * A CUSTOM PROPERTY FICA NO MEDIDOR nas duas formas, e no trilho — nunca no
+ * preenchimento. Ela herda, então o preenchimento a lê de graça, e em troca o
+ * número mora sempre no mesmo elemento: quem inspeciona o desenho não precisa
+ * saber qual forma está montada para achá-lo.
+ *
+ * A CLASSE ANDA JUNTO DO `data-slot` em toda a árvore, e a folha estiliza pela
+ * CLASSE — nunca por `[data-slot="…"]`. No Angular quase toda peça liga
+ * `data-slot` por host binding, e o atributo estático do template disputa com
+ * ele (regra 8 do `RULES.md` daquela stack): uma regra presa ao atributo pode
+ * simplesmente não aplicar ali. A etiqueta de nível é o caso mais visível — ela
+ * é um `.nds-badge`, que liga `data-slot="badge"` por host binding, e sem a
+ * classe própria ela perderia o alinhamento à direita só numa das cinco.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   `data-form`   Só `bar` muda o desenho, e a regra dele está abaixo. `ring` e
+ *                 `text` são a mesma linha única: um com medidor, o outro sem —
+ *                 e a diferença entre eles é o que o componente monta, não o
+ *                 que a folha declara. Regra vazia para os dois seria desenho
+ *                 que não existe.
+ *   `data-level`  A cor de reforço. AUSENTE quando não há teto, porque sem teto
+ *                 não há nível — e é por isso que a cor padrão mora na raiz, e
+ *                 não numa regra `[data-level="normal"]` que repetiria o mesmo
+ *                 valor num segundo lugar.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O MEDIDOR É DECORATIVO e o número é TEXTO. `aria-hidden` no medidor,
+ *    nenhum `role`, nenhum `aria-valuenow`, nenhum `aria-live` em lugar nenhum.
+ *    O número muda a cada turno; anunciá-lo a cada mudança torna a tela
+ *    impossível de ouvir enquanto a resposta é gerada logo ao lado (regra 9 da
+ *    guideline 17). É a mesma decisão do contador do campo de mensagem, do
+ *    relógio do reprodutor de mídia e do medidor de voz.
+ * 2. O MEDIDOR NÃO É UM SEGUNDO PORTADOR DO NÚMERO. Um `role="progressbar"`
+ *    com `aria-valuenow` ao lado do texto faria o mesmo valor ser lido duas
+ *    vezes, uma delas como controle. Ele não é controle: é o desenho do que já
+ *    está escrito.
+ * 3. O NÍVEL É PALAVRA, e a cor acompanha (WCAG 1.4.1). A palavra aparece
+ *    SEMPRE que há teto, inclusive com folga — uma peça que só falasse quando a
+ *    notícia é ruim deixaria a boa notícia indistinguível de uma medição que
+ *    não chegou.
+ * 4. O NÚMERO TEM NOME. "78%" sozinho não diz de quê; o título é `.nds-sr-only`
+ *    porque quem vê já sabe pelo lugar em que a peça está, e quem ouve não.
+ * 5. SEM TETO NÃO SE DESENHA MEDIDOR, e o detalhe passa a dizer que não há teto
+ *    conhecido. A ausência vira informação em vez de parecer medição pela
+ *    metade.
+ *
+ * POR QUE A BARRA NÃO É `.nds-progress`, e a decisão é de semântica antes de
+ * ser de desenho: aquela é uma barra de progresso — nasce com `role` e
+ * `aria-valuenow`, e é ELA que carrega o valor, o que obriga 3:1 entre a parte
+ * cheia e a vazia (WCAG 1.4.11). Aqui o medidor é reforço de um texto que já
+ * diz o número, sem papel e fora da leitura, e 1.4.11 não alcança gráfico
+ * redundante. Reaproveitar a classe custaria três sobrescritas — a trilha
+ * (`--primary` a 20% lá, sólida aqui), o gancho de cor (`--nds-progress-color`)
+ * e o `inline-size: 100%` fixo —, e sobrescrever três das quatro declarações de
+ * um componente é redesenhá-lo com passos a mais.
+ *
+ * É a mesma diferença que permite `--warning` no medidor daqui e a proibiu como
+ * variante de `.nds-progress`: lá a cor precisava alcançar a trilha porque era
+ * a única portadora do valor; aqui quem carrega o nível é a palavra na
+ * etiqueta.
+ */
+
+.nds-context-display {
+  /* A cor do medidor, e o valor de FOLGA. As duas regras de nível abaixo a
+   * trocam; `normal` não tem regra porque ele É este valor, e um override que
+   * repetisse `--primary` criaria um segundo lugar para mudar a mesma cor. */
+  --nds-context-display-color: var(--primary);
+
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-context-display[data-level="warning"] {
+  --nds-context-display-color: var(--warning);
+}
+
+.nds-context-display[data-level="critical"] {
+  --nds-context-display-color: var(--destructive);
+}
+
+/* ── O anel ─────────────────────────────────────────────────────────────────
+ *
+ * Medida fixa, e ela é legítima: o anel não tem texto dentro para crescer com a
+ * fonte do navegador, então cai na mesma exceção dos ícones
+ * (`12-tokenizacao-dimensoes.md`). `--size-xs` são 24px, que é o degrau da
+ * escada de caixa mais próximo de uma linha de rótulo. */
+.nds-context-display-ring {
+  /* Valor INICIAL, não defensivo: o componente escreve o seu por cima, em
+   * custom property, porque é valor de runtime — mesma mecânica do progresso do
+   * anexo. Sem esta linha, o gradiente abaixo ficaria inválido no instante em
+   * que alguém copiasse a árvore da anatomia sem o atributo. */
+  --nds-context-used: 0;
+
+  flex-shrink: 0;
+  inline-size: var(--size-xs);
+  block-size: var(--size-xs);
+  border-radius: var(--radius-full);
+
+  /* A parte cheia e a vazia num gradiente só: a segunda parada em `0` faz a
+   * troca ser um corte, e não uma transição — meia volta desbotada leria como
+   * incerteza sobre o número, que é justamente o que este desenho não tem. */
+  background: conic-gradient(
+    hsl(var(--nds-context-display-color)) calc(var(--nds-context-used) * 1%),
+    hsl(var(--muted)) 0%
+  );
+
+  /* O miolo vazado. Preencher o centro com a cor da página cravaria o fundo:
+   * o anel mora tanto sobre a página quanto sobre um cartão, e a máscara é o
+   * que o deixa transparente nos dois. Mesma técnica do anel do alert. */
+  -webkit-mask: radial-gradient(closest-side, transparent 64%, #000 65%);
+  mask: radial-gradient(closest-side, transparent 64%, #000 65%);
+}
+
+/* ── A barra ────────────────────────────────────────────────────────────────
+ *
+ * A mesma medição com a linha inteira à disposição. Sem transição de largura, e
+ * é decisão: o número ao lado é texto e troca de um quadro para o outro, então
+ * uma barra que deslizasse ficaria discordando dele durante o deslize — e o
+ * eixo da família é justamente que os dois são a MESMA resposta. De quebra, não
+ * há animação contínua a desligar sob `prefers-reduced-motion`. */
+.nds-context-display-bar {
+  /* Valor inicial, pelo mesmo motivo do anel — e aqui ele também é o que o
+   * preenchimento herda. */
+  --nds-context-used: 0;
+
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  /* Sólida, e não `--primary` a 20% como a trilha da barra de progresso: §9 da
+   * guideline 17 proíbe opacidade baixa em escala de intensidade, que some no
+   * modo escuro. */
+  background-color: hsl(var(--muted));
+  overflow: hidden;
+}
+
+.nds-context-display-bar-fill {
+  display: block;
+  block-size: 100%;
+  inline-size: calc(var(--nds-context-used) * 1%);
+  background-color: hsl(var(--nds-context-display-color));
+}
+
+/* A ÚNICA forma que muda o desenho. A barra toma a linha inteira e desce para
+ * baixo do número — `order` a joga para o fim, `flex-basis` a faz ocupar tudo, e
+ * o `flex-wrap` tem de estar na raiz porque é ela quem decide se há segunda
+ * linha. Sem os três juntos a barra ficaria espremida ao lado do texto, que é o
+ * lugar do anel. */
+.nds-context-display[data-form="bar"] {
+  flex-wrap: wrap;
+}
+
+.nds-context-display[data-form="bar"] .nds-context-display-bar {
+  order: 1;
+  flex-basis: 100%;
+}
+
+/* ── O número e o que o qualifica ───────────────────────────────────────────
+ *
+ * `tabular-nums` nos DOIS elementos que carregam dígito, e não na raiz. Na raiz
+ * ele alcançaria também a palavra do nível, onde não faz nada, e deixaria
+ * `.nds-context-display-detail` sem nenhuma declaração — uma classe na árvore
+ * que a folha nunca lê. Os dígitos mudam a cada turno; sem largura fixa de
+ * algarismo, a linha inteira treme a cada atualização. */
+.nds-context-display-value {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.nds-context-display-detail {
+  font-variant-numeric: tabular-nums;
+}
+
+/* A etiqueta do nível fecha a linha, alinhada à direita — mesma coluna em que a
+ * ação do estado da execução cai, na folha irmã, e pelo mesmo motivo: sem isto
+ * ela fica colada no detalhe e SALTA de lugar quando o texto do detalhe muda de
+ * largura, que é a cada turno. */
+.nds-context-display-level {
+  margin-inline-start: auto;
+}

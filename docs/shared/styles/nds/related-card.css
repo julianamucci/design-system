@@ -27,7 +27,7 @@
 }
 
 .nds-related-card:hover {
-  background-color: hsl(var(--accent) / 0.2);
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
 }
 
@@ -47,10 +47,6 @@
   background-color: hsl(var(--border) / 0.3);
 }
 
-/* Mesma conta do hover de botão: no escuro o realce precisa de corpo. */
-.dark .nds-related-card:hover {
-  background-color: hsl(var(--accent) / 0.8);
-}
 
 /* Conteúdo */
 .nds-related-card-title {

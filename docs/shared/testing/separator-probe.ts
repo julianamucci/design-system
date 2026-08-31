@@ -122,9 +122,10 @@ const CANDIDATOS: Array<[string, string]> = [
   ['--input', 'hsl(var(--input))'],
   ['--ring', 'hsl(var(--ring))'],
   ['--muted', 'hsl(var(--muted))'],
-    // O accent PINTADO é o composto a 20%, não o tom cheio: casar com o opaco
-  // identificaria como '--accent' uma cor que nenhuma folha usa.
-  ['--accent', 'hsl(var(--accent) / 0.2)'],
+  // `--accent` NÃO entra: desde 2026-08-31 ele é `var(--primary)`, então a
+  // lavagem dele é indistinguível de `--primary / 0.2` logo abaixo. Duas
+  // entradas com a mesma cor não identificam nada — a primeira sempre venceria,
+  // e o diagnóstico apontaria o token errado.
   ['--foreground', 'hsl(var(--foreground))'],
   ['--primary', 'hsl(var(--primary))'],
   ['--primary / 0.2', 'hsl(var(--primary) / 0.2)'],

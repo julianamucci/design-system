@@ -254,7 +254,7 @@
 .nds-button-outline:hover,
 .nds-button-outline[aria-pressed="true"],
 .nds-button-outline[aria-expanded="true"] {
-  background-color: hsl(var(--accent) / 0.2);
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
 }
 /* A linha `border-color: hsl(var(--input))` foi REMOVIDA daqui: era residuo de
@@ -273,13 +273,6 @@
  * borda fraca. */
 
 /* Ghost */
-/* No escuro o pêssego assenta sobre página escura e precisa de CORPO para
- * aparecer: 0.2 sumiria. O alfa é escrito aqui, no componente, como no claro
- * — o que muda entre os modos é o número, não o mecanismo. */
-.dark .nds-button-outline:hover,
-.dark .nds-button-outline[aria-pressed="true"] {
-  background-color: hsl(var(--accent) / 0.8);
-}
 
 /* Ghost */
 .nds-button-ghost {
@@ -288,15 +281,10 @@
 .nds-button-ghost:hover,
 .nds-button-ghost[aria-pressed="true"],
 .nds-button-ghost[aria-expanded="true"] {
-  background-color: hsl(var(--accent) / 0.2);
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
 }
 
-/* Mesma conta do outline logo acima. */
-.dark .nds-button-ghost:hover,
-.dark .nds-button-ghost[aria-pressed="true"] {
-  background-color: hsl(var(--accent) / 0.8);
-}
 
 /* Link */
 .nds-button-link {

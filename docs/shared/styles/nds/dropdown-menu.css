@@ -53,7 +53,7 @@
 
 .nds-dropdown-menu-item:focus,
 .nds-dropdown-menu-item:hover {
-  background-color: hsl(var(--accent) / 0.2);
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
 }
 
