@@ -24,12 +24,17 @@
  * A linha que diz em que pé está a resposta. Vocabulário: `RunStatus`,
  * `isRunFinished`.
  *
- *   <p class="nds-agent-status" data-status="running">
- *     <span class="nds-agent-status-dot" aria-hidden="true"></span>
- *     <span class="nds-agent-status-label">Respondendo</span>
- *     <span class="nds-agent-status-elapsed">1:04</span>
+ *   <p class="nds-agent-status" data-slot="agent-status" data-status="running">
+ *     <span class="nds-agent-status-dot" data-slot="agent-status-dot" aria-hidden="true"></span>
+ *     <span class="nds-agent-status-label" data-slot="agent-status-label">Respondendo</span>
+ *     <span class="nds-agent-status-elapsed" data-slot="agent-status-elapsed">1:04</span>
  *     <button class="nds-button" data-slot="agent-status-action">Parar</button>
  *   </p>
+ *
+ * Os `data-slot` entram na árvore inteira, e não só no botão: é a convenção de
+ * toda peça do design system e é por eles que as `play` miram. Árvore que
+ * mostra um só ensina que os outros não existem — e a primeira versão desta
+ * mostrava um só.
  *
  * `stopped-run` DO CATÁLOGO É UM ESTADO DAQUI, e não uma peça: `RunStatus` já
  * separa `stopped` de `failed` porque um oferece continuar e o outro tentar de
@@ -130,10 +135,14 @@
  *    mente, e quem ouve não tem como saber que ele parou de valer.
  */
 
+/* Sem `gap`, e isso foi medido. A frase que descreve o indicador é `.nds-sr-only`,
+ * que é `position: absolute` — ela sai do fluxo. Com os pontos e a frase há UM
+ * item em fluxo, e um `gap` ali não separa nada: era declaração morta com cara
+ * de espaçamento pensado. Quem puser rótulo visível ao lado acrescenta o
+ * espaçamento junto, sabendo por quê. */
 .nds-thinking {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
   margin: 0;
 }
 
