@@ -157,8 +157,8 @@
       "basicCode": {
         "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: 'Permitir que o agente publique o relatório?',\n  scope: [\n    { term: 'Ferramenta', detail: 'publicar_relatorio' },\n    { term: 'Alvo', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
         "react": "import { ApprovalCard } from \"@/components/ui/approval-card\";\n\n<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  scope={scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
-        "vue": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  :scope=\"scope\"\n  :actions=\"[allowOnce, deny]\"\n  @choose=\"answer\"\n/>",
-        "svelte": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  {scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "vue": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  :scope=\"scope\"\n  @choose=\"answer\"\n>\n  <template #actions>\n    <Button variant=\"outline\" size=\"sm\" @click=\"answer('allow-once')\">Permitir uma vez</Button>\n    <Button variant=\"outline\" size=\"sm\" @click=\"answer('deny')\">Recusar</Button>\n  </template>\n</ApprovalCard>",
+        "svelte": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  {scope}\n  onChoose={(choice) => answer(choice)}\n>\n  {#snippet actions()}\n    <Button variant=\"outline\" size=\"sm\" onclick={() => answer('allow-once')}>Permitir uma vez</Button>\n    <Button variant=\"outline\" size=\"sm\" onclick={() => answer('deny')}>Recusar</Button>\n  {/snippet}\n</ApprovalCard>",
         "angular": "<div\n  ndsApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  [scope]=\"scope\"\n  [actions]=\"[allowOnce, deny]\"\n  (choose)=\"answer($event)\"\n></div>"
       },
       "withActions": "Os controles",
@@ -641,8 +641,8 @@
       "basicCode": {
         "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: 'Allow the agent to publish the report?',\n  scope: [\n    { term: 'Tool', detail: 'publicar_relatorio' },\n    { term: 'Target', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
         "react": "import { ApprovalCard } from \"@/components/ui/approval-card\";\n\n<ApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  scope={scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
-        "vue": "<ApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  :scope=\"scope\"\n  :actions=\"[allowOnce, deny]\"\n  @choose=\"answer\"\n/>",
-        "svelte": "<ApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  {scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "vue": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  :scope=\"scope\"\n  @choose=\"answer\"\n>\n  <template #actions>\n    <Button variant=\"outline\" size=\"sm\" @click=\"answer('allow-once')\">Permitir uma vez</Button>\n    <Button variant=\"outline\" size=\"sm\" @click=\"answer('deny')\">Recusar</Button>\n  </template>\n</ApprovalCard>",
+        "svelte": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  {scope}\n  onChoose={(choice) => answer(choice)}\n>\n  {#snippet actions()}\n    <Button variant=\"outline\" size=\"sm\" onclick={() => answer('allow-once')}>Permitir uma vez</Button>\n    <Button variant=\"outline\" size=\"sm\" onclick={() => answer('deny')}>Recusar</Button>\n  {/snippet}\n</ApprovalCard>",
         "angular": "<div\n  ndsApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  [scope]=\"scope\"\n  [actions]=\"[allowOnce, deny]\"\n  (choose)=\"answer($event)\"\n></div>"
       },
       "withActions": "The controls",
@@ -1125,8 +1125,8 @@
       "basicCode": {
         "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: '¿Permitir que el agente publique el informe?',\n  scope: [\n    { term: 'Herramienta', detail: 'publicar_relatorio' },\n    { term: 'Destino', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
         "react": "import { ApprovalCard } from \"@/components/ui/approval-card\";\n\n<ApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  scope={scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
-        "vue": "<ApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  :scope=\"scope\"\n  :actions=\"[allowOnce, deny]\"\n  @choose=\"answer\"\n/>",
-        "svelte": "<ApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  {scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "vue": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  :scope=\"scope\"\n  @choose=\"answer\"\n>\n  <template #actions>\n    <Button variant=\"outline\" size=\"sm\" @click=\"answer('allow-once')\">Permitir uma vez</Button>\n    <Button variant=\"outline\" size=\"sm\" @click=\"answer('deny')\">Recusar</Button>\n  </template>\n</ApprovalCard>",
+        "svelte": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  {scope}\n  onChoose={(choice) => answer(choice)}\n>\n  {#snippet actions()}\n    <Button variant=\"outline\" size=\"sm\" onclick={() => answer('allow-once')}>Permitir uma vez</Button>\n    <Button variant=\"outline\" size=\"sm\" onclick={() => answer('deny')}>Recusar</Button>\n  {/snippet}\n</ApprovalCard>",
         "angular": "<div\n  ndsApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  [scope]=\"scope\"\n  [actions]=\"[allowOnce, deny]\"\n  (choose)=\"answer($event)\"\n></div>"
       },
       "withActions": "Los controles",
