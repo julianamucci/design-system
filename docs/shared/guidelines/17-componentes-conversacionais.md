@@ -224,7 +224,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (38)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (39)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -267,6 +267,7 @@ falta, nomeada — nunca uma folha nova.
 | `attachment` | composição de `file` e `image` dentro do composer |
 | `directive-text` | `markdown` + `badge` em linha |
 | `generative-ui` | não é peça: é a regra de que resposta estruturada usa os primitivos do DS |
+| `agent-card` | `card` + `item` (identidade, e uma linha por habilidade) + `badge` + `connection-state`. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
 ### 5.2 As sete famílias novas (82)
@@ -278,7 +279,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `tool-timeline`, `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `agent-card`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (23 no catálogo, **19 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `tool-timeline`, `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (22 no catálogo — `agent-card` saiu para a 5.1, ver 5.3 —, **18 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner`, `reasoning-effort` (6) | O mesmo número em quatro formas (anel, barra, texto, repartição). Primitivo: `token-budget.ts`. Base em `progress` |
@@ -306,6 +307,56 @@ docs page, com outro título.
 Fica como a §5.3 prescreve: **reversível**. Se ao construir alguma peça vizinha
 aparecer diferença de desenho, estado ou vocabulário, `permission-grant`
 desdobra de volta aqui, com o motivo.
+
+**Quinta correção, e a primeira que atravessa de 5.2 para 5.1**: `agent-card`
+não é peça, é composição — e por isso a contagem das duas tabelas muda junto,
+82 → 81 e 38 → 39.
+
+A fonte descreve a identidade que um agente remoto apresenta antes de se falar
+com ele: nome, versão, fornecedor, um parágrafo, uma linha por habilidade,
+endereço, modelo, e um botão de conectar. E ela mesma diz de que a carta é
+feita: superfície `paper` na raiz, `mono` na versão, no endereço e no modelo,
+`field` no nome da habilidade e no estado conectado — na origem, `agent-card`
+JÁ É composição de superfícies compartilhadas, e não um desenho próprio.
+
+Os três testes desta seção, todos negativos:
+
+- **Desenho, não.** Montada inteira, a carta não deixa buraco — que é
+  exatamente o que a 5.1 manda verificar. `.nds-card` dá a superfície e as
+  cinco partes (o distintivo de versão entra por `.nds-card-action`, que o
+  cabeçalho já posiciona com `:has()`); `.nds-item` dá a identidade e cada
+  linha de habilidade, porque mídia + título + descrição É a linha de
+  habilidade; `.nds-item-group` empilha as linhas; `.nds-badge`,
+  `.nds-font-mono`, `.nds-truncate` e `.nds-spacer-start` fecham o rodapé.
+  Nenhuma classe nova, nenhuma nomeada como faltando.
+- **Estado, não.** `connected` é um booleano, e `ConnectionState` já modela os
+  três. O mapeamento é exato, não aproximado: ligado não oferece ação — a fonte
+  desenha o botão desabilitado, que é a mesma decisão que a folha já escreveu
+  ("sobre uma ligação que está funcionando não há o que fazer aqui") —, e
+  desligado oferece "Conectar", que é `labels.action.disconnected`. Um booleano
+  aqui seria o vocabulário que existe com um estado a menos, e o que se perderia
+  é `reconnecting`, que é justamente o estado que a carta não sabe desenhar.
+- **Vocabulário, não.** `AgentSkill` é `{ name, description }`: rótulo e uma
+  linha de explicação, que é o título e a descrição de `.nds-item`. Tipo novo
+  para isso não é vocabulário de conversa, é uma linha de lista com nome
+  próprio.
+
+E há um teste a mais, que é da família e não da peça: **ela não responde ao
+eixo**. As 22 restantes dizem o que está acontecendo, há quanto tempo, e o que
+fazer a respeito; nesta não está acontecendo nada e não há duração nenhuma. Era
+a única das 23 sem `RunStatus` e sem `ToolCallState`. Vale comparar com
+`approval-card`, que também não tem máquina de estados e mesmo assim ficou: ele
+é o OUTRO LADO de `ToolCallState` `pending`, e é essa amarra que o segura na
+família. `agent-card` não tem amarra nenhuma.
+
+Some a isso que a §1 tira dela justamente o que teria de mais próprio: a marca
+do modelo não entra no repositório, e vira espaço para `HTMLElement`. Depois
+que o logotipo sai, o que resta é um nome, um parágrafo, uma lista, duas cadeias
+monoespaçadas e um botão.
+
+**Reversível**, como as outras quatro: se ao construir `subagent-list` ou
+`agent-handoff` aparecer identidade de agente com desenho, estado ou vocabulário
+próprios, `agent-card` desdobra de volta para a 5.2, com o motivo.
 
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
