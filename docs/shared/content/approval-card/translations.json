@@ -1,0 +1,1454 @@
+{
+  "pt-BR": {
+    "title": "Cartão de autorização",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A pergunta que precisa de resposta antes que algo com consequência aconteça: o que se aprova, até onde vai, e o espaço dos controles que quem consome desenha.",
+    "seo": {
+      "title": "Cartão de autorização — a pergunta e o espaço da resposta",
+      "description": "O cartão que pede autorização: a pergunta e o alcance dentro da parte que se anuncia, os controles fora dela, e um evento que relata qual foi a escolha sem decidir o que ela significa."
+    },
+    "labels": {
+      "question": {
+        "publish": "Permitir que o agente publique o relatório?",
+        "spend": "Permitir que o agente compre os créditos?",
+        "writeFile": "Permitir que o agente grave este arquivo?",
+        "grant": "Permitir que o agente conceda o acesso?",
+        "vague": "Confirmar a operação?"
+      },
+      "scope": {
+        "tool": "Ferramenta",
+        "target": "Alvo",
+        "effect": "Efeito",
+        "cost": "Custo"
+      },
+      "choice": {
+        "allow-once": "Permitir uma vez",
+        "always": "Sempre permitir",
+        "deny": "Recusar"
+      },
+      "learnMore": "Saiba mais"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "publish": "Quando o que se aprova é usar uma ferramenta que escreve fora",
+        "spend": "Quando o que se aprova é gastar",
+        "writeFile": "Quando o que se aprova é tocar um arquivo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O cartão fica à vista, fora de qualquer caixa recolhida: é uma pergunta, e pergunta dobrada é pergunta que não foi feita.",
+      "item2": "A pergunta abre o cartão e diz o que vai acontecer se a resposta for sim.",
+      "item3": "O alcance vem logo abaixo, como pares de termo e valor — o que se aprova, até onde vai, o que isso produz.",
+      "item4": "A pergunta e o alcance ficam juntos dentro da caixa que se anuncia; é o que é preciso saber para decidir.",
+      "item5": "Os controles vêm por último, fora dessa caixa, na mesma ordem em que se lê e em que se tabula. Quem os desenha é quem consome.",
+      "structureCode": {
+        "web": "<div class=\"nds-approval-card\" data-slot=\"approval-card\">\n  <div class=\"nds-approval-card-ask\" data-slot=\"approval-card-ask\" role=\"status\">\n    <p class=\"nds-approval-card-question\" data-slot=\"approval-card-question\">\n      Permitir que o agente publique o relatório?\n    </p>\n    <dl class=\"nds-approval-card-scope\" data-slot=\"approval-card-scope\">\n      <dt class=\"nds-approval-card-scope-term\" data-slot=\"approval-card-scope-term\">Ferramenta</dt>\n      <dd class=\"nds-approval-card-scope-detail\" data-slot=\"approval-card-scope-detail\">publicar_relatorio</dd>\n      <dt class=\"nds-approval-card-scope-term\" data-slot=\"approval-card-scope-term\">Alvo</dt>\n      <dd class=\"nds-approval-card-scope-detail\" data-slot=\"approval-card-scope-detail\">docs/shared/relatorios/</dd>\n    </dl>\n  </div>\n  <div class=\"nds-approval-card-actions\" data-slot=\"approval-card-actions\">\n    <button class=\"nds-button\" data-approval-choice=\"allow-once\">Permitir uma vez</button>\n    <button class=\"nds-button\" data-approval-choice=\"deny\">Recusar</button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando algo com consequência depende de uma resposta: usar uma ferramenta que escreve fora, gastar, tocar um arquivo.",
+        "item2": "Escreva a pergunta dizendo o que vai acontecer, e não como o sistema chama a si mesmo.",
+        "item3": "Dê o alcance inteiro, em termo e valor: alcance pela metade é autorização pela metade.",
+        "item4": "Monte os controles do lado de quem consome, e marque qual deles conta como resposta.",
+        "item5": "Deixe o cartão à vista, fora de qualquer caixa recolhida — pedir autorização sem mostrar é não pedir."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Pedir autorização para algo que ainda não aconteceu",
+          "u": "Cartão de autorização",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar o que o agente já fez, com detalhes que podem ficar guardados",
+          "u": "Grupo de chamadas",
+          "a": "Aquele nasce recolhido porque são detalhes de execução; este fica à vista porque é uma pergunta."
+        },
+        "item3": {
+          "s": "Confirmar uma escolha que precisa interromper tudo até ser respondida",
+          "u": "Alert Dialog",
+          "a": "Aquele toma a tela e prende o foco; este fica junto da conversa e não corta a leitura."
+        },
+        "item4": {
+          "s": "Avisar de algo que já deu errado",
+          "u": "Alert",
+          "a": "Aquele informa e não espera resposta; este existe porque, sem resposta, nada mais acontece."
+        },
+        "item5": {
+          "s": "Dizer em que pé está o que já foi pedido",
+          "u": "Estado da execução",
+          "a": "Aquela linha descreve o que a máquina está fazendo; este cartão diz o que ela não vai fazer sem uma pessoa."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "question": {
+            "name": "Pergunta",
+            "format": "Frase interrogativa que diz o que vai acontecer se a resposta for sim",
+            "good": "Permitir que o agente publique o relatório?",
+            "bad": "Confirmar a operação?"
+          },
+          "scopeTerm": {
+            "name": "Termo do alcance",
+            "format": "Uma ou duas palavras, sem pontuação no fim",
+            "good": "Alvo",
+            "bad": "Alvo da operação a ser executada:"
+          },
+          "scopeDetail": {
+            "name": "Valor do alcance",
+            "format": "O dado como ele é, inteiro, sem abreviar",
+            "good": "docs/shared/relatorios/agosto.md",
+            "bad": "docs/.../agosto.md"
+          },
+          "choice": {
+            "name": "Rótulo do controle",
+            "format": "Verbo que diz o que aquela escolha faz, e nunca só sim ou não",
+            "good": "Permitir uma vez",
+            "bad": "OK"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva a pergunta dizendo o que vai acontecer.",
+        "item2": "Dê o alcance inteiro, em termo e valor.",
+        "item3": "Marque com um valor qual controle conta como resposta.",
+        "item4": "Deixe o cartão à vista, fora de qualquer caixa recolhida."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não peça autorização sem dizer o alcance: quem responde no escuro não está autorizando.",
+        "item2": "Não abrevie o valor do alcance, nem o corte com reticências.",
+        "item3": "Não ponha prazo na pergunta — o que o silêncio significa é decisão de produto.",
+        "item4": "Não faça o cartão decidir o que a resposta significa: ele relata a escolha e para aí."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "O alcance vem em pares de termo e valor, e cada par continua junto para quem navega item a item.",
+        "dont": "O alcance vem embutido na frase, e o pareamento fica na pontuação — que não sobrevive à navegação por lista."
+      },
+      "pair2": {
+        "do": "A pergunta nomeia o que vai acontecer, e o alcance diz até onde isso vai.",
+        "dont": "A pergunta é genérica e não há alcance nenhum: quem responde está autorizando o que não viu."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: 'Permitir que o agente publique o relatório?',\n  scope: [\n    { term: 'Ferramenta', detail: 'publicar_relatorio' },\n    { term: 'Alvo', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
+        "react": "import { ApprovalCard } from \"@/components/ui/approval-card\";\n\n<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  scope={scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "vue": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  :scope=\"scope\"\n  :actions=\"[allowOnce, deny]\"\n  @choose=\"answer\"\n/>",
+        "svelte": "<ApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  {scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "angular": "<div\n  ndsApprovalCard\n  question=\"Permitir que o agente publique o relatório?\"\n  [scope]=\"scope\"\n  [actions]=\"[allowOnce, deny]\"\n  (choose)=\"answer($event)\"\n></div>"
+      },
+      "withActions": "Os controles",
+      "withActionsCode": {
+        "web": "<!-- Os controles são de quem consome. O valor que marca a escolha é o único pedaço do contrato que atravessa a fronteira: ele diz qual controle conta como resposta, e é ele que o evento relata. -->\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"allow-once\">Permitir uma vez</button>\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"always\">Sempre permitir</button>\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"deny\">Recusar</button>"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Forma",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "withScope": {
+        "label": "Com alcance",
+        "trigger": "Quem consome passa os termos do que se aprova.",
+        "behavior": "A lista de termo e valor aparece entre a pergunta e os controles, dentro da parte que se anuncia."
+      },
+      "withoutScope": {
+        "label": "Sem alcance",
+        "trigger": "A pergunta já diz tudo o que há para saber.",
+        "behavior": "A lista não é desenhada, e o cartão fica com a pergunta e os controles."
+      },
+      "longDetail": {
+        "label": "Valor longo",
+        "trigger": "Um valor do alcance não cabe na linha.",
+        "behavior": "Ele quebra e continua na linha seguinte; nada é cortado nem substituído por reticências."
+      },
+      "manyChoices": {
+        "label": "Muitas escolhas",
+        "trigger": "A resposta tem mais de duas escolhas.",
+        "behavior": "Os controles quebram para a linha seguinte e continuam na ordem da marcação, que é a ordem do foco."
+      },
+      "withoutActions": {
+        "label": "Sem controles",
+        "trigger": "Quem consome não passa controle nenhum.",
+        "behavior": "A caixa da resposta não é desenhada. A pergunta continua à vista, e responder passa a depender de algo que está fora do cartão."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "question": {
+          "name": "question",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A pergunta que precisa de resposta. Abre o cartão e é a primeira coisa que o anúncio carrega."
+        },
+        "scope": {
+          "name": "scope",
+          "type": "ApprovalScopeItem[]",
+          "default": "—",
+          "required": "Não",
+          "description": "O alcance do que se aprova, em pares de termo e valor. Sem ele, a lista não é desenhada."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "HTMLElement[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Os controles da resposta, prontos. A peça dá o lugar, a quebra de linha e o afastamento entre alvos vizinhos; o desenho de cada controle é de quem consome."
+        },
+        "onChoose": {
+          "name": "onChoose",
+          "type": "(choice: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém escolheu, e o valor daquela escolha vem junto. Só controle que se declara resposta dispara. O que a escolha significa é de quem consome."
+        },
+        "term": {
+          "name": "term",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O rótulo de uma linha do alcance: o que aquele valor é."
+        },
+        "detail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O valor daquela linha do alcance, inteiro."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O cartão desenha a pergunta, o alcance e o espaço da resposta, e relata qual controle foi acionado. O que acontece ao recusar, se há campo de motivo, se a escolha vale para as próximas e o que uma autorização permanente abrange são decisões de produto — nenhuma delas está aqui, e nenhuma vai estar.",
+      "extensibilityCode": {
+        "web": "// O evento relata o VALOR do controle acionado, e nada mais.\nonChoose('allow-once');\nonChoose('always');\nonChoose('deny');\n\n// Controle que não se declara resposta não dispara nada: um link de\n// \"saiba mais\" no meio dos controles continua sendo só um link."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-approval-card",
+          "description": "Tamanho do texto do cartão."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-approval-card",
+          "description": "A moldura, que é de atenção e não de erro: quem deve resposta aqui é quem lê."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-approval-card",
+          "description": "O fundo do cartão, que o separa do que está em volta sem virar aviso."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-approval-card",
+          "description": "Arredondamento do cartão."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-approval-card",
+          "description": "Recuo interno do cartão e distância entre a parte que se anuncia e os controles."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-approval-card-question · .nds-approval-card-scope-detail",
+          "description": "A pergunta e os valores do alcance: texto corrido nunca carrega cor semântica."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-approval-card-question · .nds-approval-card-scope-detail",
+          "description": "O peso que distingue a pergunta e o valor, sem precisar de outra família."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-approval-card-scope-term",
+          "description": "O termo do alcance, que é rótulo e cede o destaque ao valor."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-approval-card-scope",
+          "description": "Distância entre as linhas do alcance."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-approval-card-ask · .nds-approval-card-actions",
+          "description": "Distância entre a pergunta e o alcance, e entre controles vizinhos."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* A largura é de quem consome: o cartão cresce até onde a conversa der. */\n.nds-approval-card {\n  max-inline-size: 32rem;\n}\n\n/* Empilhar os controles é escolha de quem consome, e ela não muda a ordem — que é a mesma da leitura e a mesma do foco. */\n.nds-approval-card-actions {\n  flex-direction: column;\n  align-items: stretch;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A pergunta e o alcance ficam numa região que se anuncia, e os controles ficam fora dela: cada um já se anuncia sozinho quando o foco chega nele. O anúncio é polido — entra na fila e nunca corta o que estiver sendo lido.",
+      "items": {
+        "item1": "A pergunta e o alcance estão dentro da região que se anuncia. Uma pergunta que aparece e não se anuncia é uma pergunta que ninguém responde: a máquina parou e espera por uma pessoa, e o silêncio é indistinguível de demora.",
+        "item2": "Os controles ficam fora dessa região. Botão dentro de anúncio é rótulo recitado que ninguém pode apertar dali, e alonga o anúncio justamente na hora em que ele precisa ser respondido.",
+        "item3": "O anúncio é polido, e não de emergência. Pedir autorização não é erro, e cortar o que estiver sendo lido é o defeito que a regra da família existe para evitar.",
+        "item4": "O alcance é uma lista de definição: o termo e o valor continuam pareados quando alguém pula de item em item sem ler a linha inteira.",
+        "item5": "A ordem da leitura é a ordem do foco: pergunta, alcance, controles. Nada é reposicionado pela folha.",
+        "item6": "Cada controle tem pelo menos vinte e quatro pixels de alvo, e o texto que se vê é também o nome acessível."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Percorre os controles, na ordem em que eles aparecem. O resto do cartão é texto.",
+        "enter": "Aciona o controle sob o foco.",
+        "arrows": "Não fazem nada aqui: os controles são botões independentes, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A caixa que reúne a pergunta e o alcance é uma região de estado polida: ela anuncia a pergunta sem interromper o que estiver sendo lido.",
+        "item2": "A região para antes dos controles, e por isso a caixa deles fica fora do anúncio.",
+        "item3": "Os controles não levam rótulo acessível separado — o texto que se vê é o nome, e é o mesmo nas cinco stacks."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A pergunta é anunciada uma vez, junto com o alcance dela.",
+        "item2": "Os controles não entram no anúncio; cada um se apresenta quando o foco chega nele.",
+        "item3": "Nenhuma contagem regressiva é lida, porque o cartão não tem prazo."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "toolGroup": {
+          "name": "Grupo de chamadas",
+          "description": "A caixa recolhida de onde a chamada que espera por uma pessoa sai, e para onde este cartão não volta."
+        },
+        "chatThread": {
+          "name": "Conversa",
+          "description": "A conversa que fica parada enquanto esta pergunta não é respondida."
+        },
+        "alertDialog": {
+          "name": "Alert Dialog",
+          "description": "Quando a escolha precisa tomar a tela e prender o foco até ser respondida."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Os controles da resposta, que quem consome monta e passa prontos."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O design system desenha a pergunta e o espaço da resposta. Ele não decide o que a resposta significa: o que acontece ao recusar, se há campo de motivo, se a escolha vale para as próximas e o que uma autorização permanente abrange são decisões de produto.",
+      "item2": "Este é o lugar para onde sai a chamada que espera por uma pessoa. Ela não fica dentro da caixa recolhida do grupo, porque pedir autorização sem mostrar é não pedir; quem faz essa separação é quem consome.",
+      "item3": "Esta é a terceira peça da família em que existe região viva, e a exceção tem motivo próprio. Uma pergunta não é um estado: o estado se anuncia para informar, e este cartão se anuncia porque, sem ele, nada mais acontece.",
+      "item4": "A região para antes dos controles. Ela envolve o que é preciso saber para decidir, e deixa de fora a caixa de quem responde — cada controle já se anuncia sozinho quando o foco chega nele.",
+      "item5": "O cartão não tem prazo, e por isso não há contagem nenhuma aqui. Uma pergunta com relógio se responde pelo silêncio, e o que o silêncio significa é decisão de produto.",
+      "item6": "Não há nada recolhido: uma pergunta dobrada é uma pergunta que não foi feita, e foi essa decisão que tirou esta peça de dentro do grupo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; o cartão não instrumenta a escolha, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar a pergunta e o alcance",
+          "result": "A pergunta abre o cartão e cada termo aparece pareado com o seu valor",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar um valor de alcance que não cabe na linha",
+          "result": "Ele quebra e continua na linha seguinte, sem ser cortado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Não passar alcance nenhum",
+          "result": "A lista não é desenhada, e a pergunta continua à vista",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Passar os controles",
+          "result": "Eles aparecem na caixa da resposta, que vem por último na marcação",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Acionar um controle que se declara resposta",
+          "result": "Quem consome recebe qual foi a escolha, e o cartão continua como estava",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Acionar um controle que não se declara resposta",
+          "result": "Nada é relatado — o cartão não inventa uma escolha que ninguém marcou",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Não passar controle nenhum",
+          "result": "A caixa da resposta não é desenhada",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Separar a chamada que espera por uma pessoa e montar o cartão com ela",
+          "result": "O cartão fica fora da caixa recolhida, e o que sobrou segue dentro dela",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A pergunta e o alcance estão dentro da região que se anuncia",
+        "item2": "Os controles ficam fora dessa região, e ela é a única do cartão",
+        "item3": "O anúncio é polido, e nunca de emergência",
+        "item4": "O alcance é lista de definição, com termo e valor pareados",
+        "item5": "A ordem do foco é a ordem da leitura: pergunta, alcance, controles",
+        "item6": "Cada controle tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — o cartão, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — com alcance",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — sem alcance",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — valor longo, que quebra em vez de ser cortado",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — muitas escolhas, que quebram de linha",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — o cartão fora da caixa recolhida",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Approval card",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The question that needs an answer before something with consequences happens: what is being approved, how far it reaches, and the space for the controls the consumer draws.",
+    "seo": {
+      "title": "Approval card — the question and the space for the answer",
+      "description": "The card that asks for approval: the question and its reach inside the part that announces itself, the controls outside it, and an event that reports which choice was made without deciding what it means."
+    },
+    "labels": {
+      "question": {
+        "publish": "Allow the agent to publish the report?",
+        "spend": "Allow the agent to buy the credits?",
+        "writeFile": "Allow the agent to write this file?",
+        "grant": "Allow the agent to grant the access?",
+        "vague": "Confirm the operation?"
+      },
+      "scope": {
+        "tool": "Tool",
+        "target": "Target",
+        "effect": "Effect",
+        "cost": "Cost"
+      },
+      "choice": {
+        "allow-once": "Allow once",
+        "always": "Always allow",
+        "deny": "Deny"
+      },
+      "learnMore": "Learn more"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "publish": "When what is approved is using a tool that writes outside",
+        "spend": "When what is approved is spending",
+        "writeFile": "When what is approved is touching a file"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The card stays in plain sight, outside any collapsed box: it is a question, and a folded question is a question that was never asked.",
+      "item2": "The question opens the card and says what will happen if the answer is yes.",
+      "item3": "The reach comes right below, as pairs of term and value — what is approved, how far it goes, what it produces.",
+      "item4": "The question and the reach sit together inside the box that announces itself; that is what someone needs in order to decide.",
+      "item5": "The controls come last, outside that box, in the same order they are read and tabbed through. The consumer draws them.",
+      "structureCode": {
+        "web": "<div class=\"nds-approval-card\" data-slot=\"approval-card\">\n  <div class=\"nds-approval-card-ask\" data-slot=\"approval-card-ask\" role=\"status\">\n    <p class=\"nds-approval-card-question\" data-slot=\"approval-card-question\">\n      Allow the agent to publish the report?\n    </p>\n    <dl class=\"nds-approval-card-scope\" data-slot=\"approval-card-scope\">\n      <dt class=\"nds-approval-card-scope-term\" data-slot=\"approval-card-scope-term\">Tool</dt>\n      <dd class=\"nds-approval-card-scope-detail\" data-slot=\"approval-card-scope-detail\">publicar_relatorio</dd>\n      <dt class=\"nds-approval-card-scope-term\" data-slot=\"approval-card-scope-term\">Target</dt>\n      <dd class=\"nds-approval-card-scope-detail\" data-slot=\"approval-card-scope-detail\">docs/shared/relatorios/</dd>\n    </dl>\n  </div>\n  <div class=\"nds-approval-card-actions\" data-slot=\"approval-card-actions\">\n    <button class=\"nds-button\" data-approval-choice=\"allow-once\">Allow once</button>\n    <button class=\"nds-button\" data-approval-choice=\"deny\">Deny</button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when something with consequences depends on an answer: using a tool that writes outside, spending, touching a file.",
+        "item2": "Write the question saying what will happen, not what the system calls itself.",
+        "item3": "Give the whole reach, in term and value: half a reach is half an approval.",
+        "item4": "Build the controls on the consumer side, and mark which of them counts as an answer.",
+        "item5": "Keep the card in plain sight, outside any collapsed box — asking for approval without showing is not asking."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Ask for approval for something that has not happened yet",
+          "u": "Approval card",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Show what the agent already did, with details that may stay tucked away",
+          "u": "Tool group",
+          "a": "That one is born collapsed because those are execution details; this one stays in sight because it is a question."
+        },
+        "item3": {
+          "s": "Confirm a choice that has to interrupt everything until it is answered",
+          "u": "Alert Dialog",
+          "a": "That one takes over the screen and traps focus; this one stays next to the conversation and does not cut the reading."
+        },
+        "item4": {
+          "s": "Warn about something that already went wrong",
+          "u": "Alert",
+          "a": "That one informs and expects no answer; this one exists because, without an answer, nothing else happens."
+        },
+        "item5": {
+          "s": "Say where what was already asked for stands",
+          "u": "Agent status",
+          "a": "That line describes what the machine is doing; this card says what it will not do without a person."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "question": {
+            "name": "Question",
+            "format": "An interrogative sentence saying what will happen if the answer is yes",
+            "good": "Allow the agent to publish the report?",
+            "bad": "Confirm the operation?"
+          },
+          "scopeTerm": {
+            "name": "Reach term",
+            "format": "One or two words, with no trailing punctuation",
+            "good": "Target",
+            "bad": "Target of the operation to be executed:"
+          },
+          "scopeDetail": {
+            "name": "Reach value",
+            "format": "The datum as it is, whole, unabbreviated",
+            "good": "docs/shared/relatorios/agosto.md",
+            "bad": "docs/.../agosto.md"
+          },
+          "choice": {
+            "name": "Control label",
+            "format": "A verb that says what that choice does, never just yes or no",
+            "good": "Allow once",
+            "bad": "OK"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the question saying what will happen.",
+        "item2": "Give the whole reach, in term and value.",
+        "item3": "Mark with a value which control counts as an answer.",
+        "item4": "Keep the card in plain sight, outside any collapsed box."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not ask for approval without stating the reach: answering in the dark is not approving.",
+        "item2": "Do not abbreviate the reach value, and do not cut it with an ellipsis.",
+        "item3": "Do not put a deadline on the question — what silence means is a product decision.",
+        "item4": "Do not make the card decide what the answer means: it reports the choice and stops there."
+      }
+    },
+    "doDont": {
+      "title": "Good practices",
+      "pair1": {
+        "do": "The reach comes as pairs of term and value, and each pair stays together for someone navigating item by item.",
+        "dont": "The reach is folded into the sentence, and the pairing lives in the punctuation — which does not survive list navigation."
+      },
+      "pair2": {
+        "do": "The question names what will happen, and the reach says how far it goes.",
+        "dont": "The question is generic and there is no reach at all: whoever answers is approving what they never saw."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: 'Allow the agent to publish the report?',\n  scope: [\n    { term: 'Tool', detail: 'publicar_relatorio' },\n    { term: 'Target', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
+        "react": "import { ApprovalCard } from \"@/components/ui/approval-card\";\n\n<ApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  scope={scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "vue": "<ApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  :scope=\"scope\"\n  :actions=\"[allowOnce, deny]\"\n  @choose=\"answer\"\n/>",
+        "svelte": "<ApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  {scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "angular": "<div\n  ndsApprovalCard\n  question=\"Allow the agent to publish the report?\"\n  [scope]=\"scope\"\n  [actions]=\"[allowOnce, deny]\"\n  (choose)=\"answer($event)\"\n></div>"
+      },
+      "withActions": "The controls",
+      "withActionsCode": {
+        "web": "<!-- The controls belong to the consumer. The value marking the choice is the only piece of the contract that crosses the border: it says which control counts as an answer, and it is what the event reports. -->\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"allow-once\">Allow once</button>\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"always\">Always allow</button>\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"deny\">Deny</button>"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "Shape",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "withScope": {
+        "label": "With reach",
+        "trigger": "The consumer passes the terms of what is being approved.",
+        "behavior": "The list of term and value appears between the question and the controls, inside the part that announces itself."
+      },
+      "withoutScope": {
+        "label": "Without reach",
+        "trigger": "The question already says everything there is to know.",
+        "behavior": "The list is not drawn, and the card is left with the question and the controls."
+      },
+      "longDetail": {
+        "label": "Long value",
+        "trigger": "A reach value does not fit on the line.",
+        "behavior": "It wraps and continues on the next line; nothing is cut or replaced by an ellipsis."
+      },
+      "manyChoices": {
+        "label": "Many choices",
+        "trigger": "The answer has more than two choices.",
+        "behavior": "The controls wrap to the next line and stay in markup order, which is the focus order."
+      },
+      "withoutActions": {
+        "label": "Without controls",
+        "trigger": "The consumer passes no control at all.",
+        "behavior": "The answer box is not drawn. The question stays in sight, and answering starts to depend on something outside the card."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "question": {
+          "name": "question",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The question that needs an answer. It opens the card and is the first thing the announcement carries."
+        },
+        "scope": {
+          "name": "scope",
+          "type": "ApprovalScopeItem[]",
+          "default": "—",
+          "required": "No",
+          "description": "The reach of what is being approved, as pairs of term and value. Without it, the list is not drawn."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "HTMLElement[]",
+          "default": "—",
+          "required": "No",
+          "description": "The answer controls, ready. The piece gives the place, the line wrapping and the distance between neighbouring targets; drawing each control belongs to the consumer."
+        },
+        "onChoose": {
+          "name": "onChoose",
+          "type": "(choice: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone chose, and the value of that choice comes along. Only a control that declares itself an answer fires. What the choice means belongs to the consumer."
+        },
+        "term": {
+          "name": "term",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The label of one reach line: what that value is."
+        },
+        "detail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The value of that reach line, whole."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The card draws the question, the reach and the space for the answer, and reports which control was activated. What happens on refusal, whether there is a reason field, whether the choice carries over to the next ones and what a standing approval covers are product decisions — none of them is here, and none of them will be.",
+      "extensibilityCode": {
+        "web": "// The event reports the VALUE of the activated control, and nothing else.\nonChoose('allow-once');\nonChoose('always');\nonChoose('deny');\n\n// A control that does not declare itself an answer fires nothing: a\n// \"learn more\" link among the controls is still just a link."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-approval-card",
+          "description": "Text size of the card."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-approval-card",
+          "description": "The frame, which is attention and not error: the one who owes an answer here is the reader."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-approval-card",
+          "description": "The card background, which sets it apart from its surroundings without turning into a warning."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-approval-card",
+          "description": "Corner rounding of the card."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-approval-card",
+          "description": "Inner padding of the card and the distance between the announced part and the controls."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-approval-card-question · .nds-approval-card-scope-detail",
+          "description": "The question and the reach values: running text never carries a semantic colour."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-approval-card-question · .nds-approval-card-scope-detail",
+          "description": "The weight that sets the question and the value apart, with no second family needed."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-approval-card-scope-term",
+          "description": "The reach term, which is a label and yields the emphasis to the value."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-approval-card-scope",
+          "description": "Distance between the reach lines."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-approval-card-ask · .nds-approval-card-actions",
+          "description": "Distance between the question and the reach, and between neighbouring controls."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": "/* Width belongs to the consumer: the card grows as far as the conversation allows. */\n.nds-approval-card {\n  max-inline-size: 32rem;\n}\n\n/* Stacking the controls is the consumer’s choice, and it does not change the order — the same one for reading and for focus. */\n.nds-approval-card-actions {\n  flex-direction: column;\n  align-items: stretch;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The question and the reach sit in a region that announces itself, and the controls stay outside it: each one already announces itself when focus reaches it. The announcement is polite — it joins the queue and never cuts what is being read.",
+      "items": {
+        "item1": "The question and the reach are inside the region that announces itself. A question that appears and does not announce itself is a question nobody answers: the machine stopped and is waiting for a person, and silence is indistinguishable from delay.",
+        "item2": "The controls stay outside that region. A button inside an announcement is a recited label nobody can press from there, and it stretches the announcement exactly when it needs to be answered.",
+        "item3": "The announcement is polite, not an emergency. Asking for approval is not an error, and cutting what is being read is the defect the family rule exists to avoid.",
+        "item4": "The reach is a definition list: term and value stay paired when someone jumps from item to item without reading the whole line.",
+        "item5": "Reading order is focus order: question, reach, controls. Nothing is repositioned by the stylesheet.",
+        "item6": "Every control has at least twenty-four pixels of target, and the visible text is also the accessible name."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Walks through the controls, in the order they appear. The rest of the card is text.",
+        "enter": "Activates the focused control.",
+        "arrows": "Do nothing here: the controls are independent buttons, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The box holding the question and the reach is a polite status region: it announces the question without interrupting what is being read.",
+        "item2": "The region stops before the controls, so their box stays out of the announcement.",
+        "item3": "The controls carry no separate accessible label — the visible text is the name, and it is the same across the five stacks."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The question is announced once, together with its reach.",
+        "item2": "The controls are not part of the announcement; each introduces itself when focus reaches it.",
+        "item3": "No countdown is read, because the card has no deadline."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "toolGroup": {
+          "name": "Tool group",
+          "description": "The collapsed box the call that waits for a person leaves, and that this card does not go back into."
+        },
+        "chatThread": {
+          "name": "Chat thread",
+          "description": "The conversation that stands still while this question goes unanswered."
+        },
+        "alertDialog": {
+          "name": "Alert Dialog",
+          "description": "When the choice has to take over the screen and trap focus until it is answered."
+        },
+        "button": {
+          "name": "Button",
+          "description": "The answer controls, which the consumer builds and passes in ready."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The design system draws the question and the space for the answer. It does not decide what the answer means: what happens on refusal, whether there is a reason field, whether the choice carries over and what a standing approval covers are product decisions.",
+      "item2": "This is where the call that waits for a person goes. It does not stay inside the collapsed box of the group, because asking for approval without showing is not asking; the consumer is the one who separates them.",
+      "item3": "This is the third piece in the family where a live region exists, and the exception has a reason of its own. A question is not a state: a state announces itself to inform, and this card announces itself because, without it, nothing else happens.",
+      "item4": "The region stops before the controls. It wraps what someone needs in order to decide and leaves out the box of whoever answers — each control already announces itself when focus reaches it.",
+      "item5": "The card has no deadline, which is why there is no countdown here. A question with a clock is answered by silence, and what silence means is a product decision.",
+      "item6": "Nothing is collapsed: a folded question is a question that was never asked, and that decision is what took this piece out of the group."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the card does not instrument the choice, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demonstration is used.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass the question and the reach",
+          "result": "The question opens the card and each term appears paired with its value",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass a reach value that does not fit on the line",
+          "result": "It wraps and continues on the next line, without being cut",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass no reach at all",
+          "result": "The list is not drawn, and the question stays in sight",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Pass the controls",
+          "result": "They appear in the answer box, which comes last in the markup",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Activate a control that declares itself an answer",
+          "result": "The consumer receives which choice was made, and the card stays as it was",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Activate a control that does not declare itself an answer",
+          "result": "Nothing is reported — the card does not invent a choice nobody marked",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass no control at all",
+          "result": "The answer box is not drawn",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Split off the call that waits for a person and build the card with it",
+          "result": "The card stays outside the collapsed box, and what is left stays inside it",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The question and the reach are inside the region that announces itself",
+        "item2": "The controls stay outside that region, and it is the only one in the card",
+        "item3": "The announcement is polite, never an emergency",
+        "item4": "The reach is a definition list, with term and value paired",
+        "item5": "Focus order is reading order: question, reach, controls",
+        "item6": "Every control has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in every theme and mode.",
+        "item1": {
+          "story": "Playground — the card, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — with reach",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — without reach",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "States — long value, wrapping instead of being cut",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — many choices, wrapping to the next line",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — the card outside the collapsed box",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Tarjeta de autorización",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La pregunta que necesita respuesta antes de que ocurra algo con consecuencias: qué se aprueba, hasta dónde llega y el espacio de los controles que dibuja quien consume.",
+    "seo": {
+      "title": "Tarjeta de autorización — la pregunta y el espacio de la respuesta",
+      "description": "La tarjeta que pide autorización: la pregunta y su alcance dentro de la parte que se anuncia, los controles fuera de ella y un evento que informa cuál fue la elección sin decidir qué significa."
+    },
+    "labels": {
+      "question": {
+        "publish": "¿Permitir que el agente publique el informe?",
+        "spend": "¿Permitir que el agente compre los créditos?",
+        "writeFile": "¿Permitir que el agente escriba este archivo?",
+        "grant": "¿Permitir que el agente conceda el acceso?",
+        "vague": "¿Confirmar la operación?"
+      },
+      "scope": {
+        "tool": "Herramienta",
+        "target": "Destino",
+        "effect": "Efecto",
+        "cost": "Costo"
+      },
+      "choice": {
+        "allow-once": "Permitir una vez",
+        "always": "Permitir siempre",
+        "deny": "Rechazar"
+      },
+      "learnMore": "Saber más"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "publish": "Cuando lo que se aprueba es usar una herramienta que escribe fuera",
+        "spend": "Cuando lo que se aprueba es gastar",
+        "writeFile": "Cuando lo que se aprueba es tocar un archivo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La tarjeta queda a la vista, fuera de cualquier caja plegada: es una pregunta, y una pregunta doblada es una pregunta que no se hizo.",
+      "item2": "La pregunta abre la tarjeta y dice qué va a ocurrir si la respuesta es sí.",
+      "item3": "El alcance viene justo debajo, como pares de término y valor — qué se aprueba, hasta dónde llega, qué produce.",
+      "item4": "La pregunta y el alcance van juntos dentro de la caja que se anuncia; es lo que hace falta saber para decidir.",
+      "item5": "Los controles vienen al final, fuera de esa caja, en el mismo orden en que se leen y se tabulan. Quien los dibuja es quien consume.",
+      "structureCode": {
+        "web": "<div class=\"nds-approval-card\" data-slot=\"approval-card\">\n  <div class=\"nds-approval-card-ask\" data-slot=\"approval-card-ask\" role=\"status\">\n    <p class=\"nds-approval-card-question\" data-slot=\"approval-card-question\">\n      ¿Permitir que el agente publique el informe?\n    </p>\n    <dl class=\"nds-approval-card-scope\" data-slot=\"approval-card-scope\">\n      <dt class=\"nds-approval-card-scope-term\" data-slot=\"approval-card-scope-term\">Herramienta</dt>\n      <dd class=\"nds-approval-card-scope-detail\" data-slot=\"approval-card-scope-detail\">publicar_relatorio</dd>\n      <dt class=\"nds-approval-card-scope-term\" data-slot=\"approval-card-scope-term\">Destino</dt>\n      <dd class=\"nds-approval-card-scope-detail\" data-slot=\"approval-card-scope-detail\">docs/shared/relatorios/</dd>\n    </dl>\n  </div>\n  <div class=\"nds-approval-card-actions\" data-slot=\"approval-card-actions\">\n    <button class=\"nds-button\" data-approval-choice=\"allow-once\">Permitir una vez</button>\n    <button class=\"nds-button\" data-approval-choice=\"deny\">Rechazar</button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala cuando algo con consecuencias depende de una respuesta: usar una herramienta que escribe fuera, gastar, tocar un archivo.",
+        "item2": "Escribe la pregunta diciendo qué va a ocurrir, y no cómo se llama el sistema a sí mismo.",
+        "item3": "Da el alcance entero, en término y valor: medio alcance es media autorización.",
+        "item4": "Arma los controles del lado de quien consume, y marca cuál de ellos cuenta como respuesta.",
+        "item5": "Deja la tarjeta a la vista, fuera de cualquier caja plegada — pedir autorización sin mostrar es no pedir."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Pedir autorización para algo que todavía no ocurrió",
+          "u": "Tarjeta de autorización",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar lo que el agente ya hizo, con detalles que pueden quedar guardados",
+          "u": "Grupo de llamadas",
+          "a": "Aquel nace plegado porque son detalles de ejecución; esta queda a la vista porque es una pregunta."
+        },
+        "item3": {
+          "s": "Confirmar una elección que necesita interrumpir todo hasta ser respondida",
+          "u": "Alert Dialog",
+          "a": "Aquel toma la pantalla y atrapa el foco; esta queda junto a la conversación y no corta la lectura."
+        },
+        "item4": {
+          "s": "Avisar de algo que ya salió mal",
+          "u": "Alert",
+          "a": "Aquel informa y no espera respuesta; esta existe porque, sin respuesta, no ocurre nada más."
+        },
+        "item5": {
+          "s": "Decir en qué punto está lo que ya se pidió",
+          "u": "Estado de la ejecución",
+          "a": "Aquella línea describe qué está haciendo la máquina; esta tarjeta dice qué no va a hacer sin una persona."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "question": {
+            "name": "Pregunta",
+            "format": "Frase interrogativa que dice qué va a ocurrir si la respuesta es sí",
+            "good": "¿Permitir que el agente publique el informe?",
+            "bad": "¿Confirmar la operación?"
+          },
+          "scopeTerm": {
+            "name": "Término del alcance",
+            "format": "Una o dos palabras, sin puntuación al final",
+            "good": "Destino",
+            "bad": "Destino de la operación que se va a ejecutar:"
+          },
+          "scopeDetail": {
+            "name": "Valor del alcance",
+            "format": "El dato tal cual es, entero, sin abreviar",
+            "good": "docs/shared/relatorios/agosto.md",
+            "bad": "docs/.../agosto.md"
+          },
+          "choice": {
+            "name": "Etiqueta del control",
+            "format": "Verbo que dice qué hace esa elección, y nunca solo sí o no",
+            "good": "Permitir una vez",
+            "bad": "OK"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe la pregunta diciendo qué va a ocurrir.",
+        "item2": "Da el alcance entero, en término y valor.",
+        "item3": "Marca con un valor cuál control cuenta como respuesta.",
+        "item4": "Deja la tarjeta a la vista, fuera de cualquier caja plegada."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No pidas autorización sin decir el alcance: quien responde a ciegas no está autorizando.",
+        "item2": "No abrevies el valor del alcance ni lo cortes con puntos suspensivos.",
+        "item3": "No pongas plazo a la pregunta — qué significa el silencio es decisión de producto.",
+        "item4": "No hagas que la tarjeta decida qué significa la respuesta: informa la elección y ahí para."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "El alcance viene en pares de término y valor, y cada par sigue junto para quien navega ítem por ítem.",
+        "dont": "El alcance va metido en la frase, y el emparejamiento queda en la puntuación — que no sobrevive a la navegación por lista."
+      },
+      "pair2": {
+        "do": "La pregunta nombra qué va a ocurrir, y el alcance dice hasta dónde llega.",
+        "dont": "La pregunta es genérica y no hay alcance alguno: quien responde está autorizando lo que no vio."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: '¿Permitir que el agente publique el informe?',\n  scope: [\n    { term: 'Herramienta', detail: 'publicar_relatorio' },\n    { term: 'Destino', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
+        "react": "import { ApprovalCard } from \"@/components/ui/approval-card\";\n\n<ApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  scope={scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "vue": "<ApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  :scope=\"scope\"\n  :actions=\"[allowOnce, deny]\"\n  @choose=\"answer\"\n/>",
+        "svelte": "<ApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  {scope}\n  actions={[allowOnce, deny]}\n  onChoose={(choice) => answer(choice)}\n/>",
+        "angular": "<div\n  ndsApprovalCard\n  question=\"¿Permitir que el agente publique el informe?\"\n  [scope]=\"scope\"\n  [actions]=\"[allowOnce, deny]\"\n  (choose)=\"answer($event)\"\n></div>"
+      },
+      "withActions": "Los controles",
+      "withActionsCode": {
+        "web": "<!-- Los controles son de quien consume. El valor que marca la elección es el único pedazo del contrato que cruza la frontera: dice cuál control cuenta como respuesta, y es el que informa el evento. -->\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"allow-once\">Permitir una vez</button>\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"always\">Permitir siempre</button>\n<button class=\"nds-button nds-button-sm nds-button-outline\" data-approval-choice=\"deny\">Rechazar</button>"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Forma",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "withScope": {
+        "label": "Con alcance",
+        "trigger": "Quien consume pasa los términos de lo que se aprueba.",
+        "behavior": "La lista de término y valor aparece entre la pregunta y los controles, dentro de la parte que se anuncia."
+      },
+      "withoutScope": {
+        "label": "Sin alcance",
+        "trigger": "La pregunta ya dice todo lo que hay que saber.",
+        "behavior": "La lista no se dibuja, y la tarjeta queda con la pregunta y los controles."
+      },
+      "longDetail": {
+        "label": "Valor largo",
+        "trigger": "Un valor del alcance no cabe en la línea.",
+        "behavior": "Se parte y sigue en la línea siguiente; nada se corta ni se sustituye por puntos suspensivos."
+      },
+      "manyChoices": {
+        "label": "Muchas elecciones",
+        "trigger": "La respuesta tiene más de dos elecciones.",
+        "behavior": "Los controles pasan a la línea siguiente y siguen en el orden del marcado, que es el orden del foco."
+      },
+      "withoutActions": {
+        "label": "Sin controles",
+        "trigger": "Quien consume no pasa ningún control.",
+        "behavior": "La caja de la respuesta no se dibuja. La pregunta sigue a la vista, y responder pasa a depender de algo que está fuera de la tarjeta."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "question": {
+          "name": "question",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La pregunta que necesita respuesta. Abre la tarjeta y es lo primero que lleva el anuncio."
+        },
+        "scope": {
+          "name": "scope",
+          "type": "ApprovalScopeItem[]",
+          "default": "—",
+          "required": "No",
+          "description": "El alcance de lo que se aprueba, en pares de término y valor. Sin él, la lista no se dibuja."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "HTMLElement[]",
+          "default": "—",
+          "required": "No",
+          "description": "Los controles de la respuesta, listos. La pieza da el lugar, el salto de línea y la separación entre destinos vecinos; dibujar cada control es de quien consume."
+        },
+        "onChoose": {
+          "name": "onChoose",
+          "type": "(choice: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien eligió, y el valor de esa elección viene con él. Solo dispara el control que se declara respuesta. Qué significa la elección es de quien consume."
+        },
+        "term": {
+          "name": "term",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La etiqueta de una línea del alcance: qué es ese valor."
+        },
+        "detail": {
+          "name": "detail",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El valor de esa línea del alcance, entero."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La tarjeta dibuja la pregunta, el alcance y el espacio de la respuesta, e informa qué control se accionó. Qué ocurre al rechazar, si hay campo de motivo, si la elección vale para las siguientes y qué abarca una autorización permanente son decisiones de producto — ninguna de ellas está aquí, y ninguna va a estar.",
+      "extensibilityCode": {
+        "web": "// El evento informa el VALOR del control accionado, y nada más.\nonChoose('allow-once');\nonChoose('always');\nonChoose('deny');\n\n// Un control que no se declara respuesta no dispara nada: un enlace de\n// \"saber más\" entre los controles sigue siendo solo un enlace."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-approval-card",
+          "description": "Tamaño del texto de la tarjeta."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-approval-card",
+          "description": "El marco, que es de atención y no de error: quien debe respuesta aquí es quien lee."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-approval-card",
+          "description": "El fondo de la tarjeta, que la separa de lo que hay alrededor sin volverse aviso."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-approval-card",
+          "description": "Redondeo de la tarjeta."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-approval-card",
+          "description": "Relleno interno de la tarjeta y distancia entre la parte que se anuncia y los controles."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-approval-card-question · .nds-approval-card-scope-detail",
+          "description": "La pregunta y los valores del alcance: el texto corrido nunca lleva color semántico."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-approval-card-question · .nds-approval-card-scope-detail",
+          "description": "El peso que distingue la pregunta y el valor, sin necesidad de otra familia."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-approval-card-scope-term",
+          "description": "El término del alcance, que es etiqueta y cede el protagonismo al valor."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-approval-card-scope",
+          "description": "Distancia entre las líneas del alcance."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-approval-card-ask · .nds-approval-card-actions",
+          "description": "Distancia entre la pregunta y el alcance, y entre controles vecinos."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* El ancho es de quien consume: la tarjeta crece hasta donde dé la conversación. */\n.nds-approval-card {\n  max-inline-size: 32rem;\n}\n\n/* Apilar los controles es elección de quien consume, y no cambia el orden — el mismo de la lectura y el mismo del foco. */\n.nds-approval-card-actions {\n  flex-direction: column;\n  align-items: stretch;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La pregunta y el alcance quedan en una región que se anuncia, y los controles quedan fuera de ella: cada uno ya se anuncia solo cuando el foco llega. El anuncio es cortés — entra en la fila y nunca corta lo que se está leyendo.",
+      "items": {
+        "item1": "La pregunta y el alcance están dentro de la región que se anuncia. Una pregunta que aparece y no se anuncia es una pregunta que nadie responde: la máquina se detuvo y espera a una persona, y el silencio es indistinguible de la demora.",
+        "item2": "Los controles quedan fuera de esa región. Un botón dentro de un anuncio es una etiqueta recitada que nadie puede pulsar desde ahí, y alarga el anuncio justo cuando necesita ser respondido.",
+        "item3": "El anuncio es cortés, no de emergencia. Pedir autorización no es un error, y cortar lo que se está leyendo es el defecto que la regla de la familia existe para evitar.",
+        "item4": "El alcance es una lista de definición: el término y el valor siguen emparejados cuando alguien salta de ítem en ítem sin leer la línea entera.",
+        "item5": "El orden de lectura es el orden del foco: pregunta, alcance, controles. La hoja no reposiciona nada.",
+        "item6": "Cada control tiene al menos veinticuatro píxeles de destino, y el texto visible es también el nombre accesible."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Recorre los controles, en el orden en que aparecen. El resto de la tarjeta es texto.",
+        "enter": "Acciona el control enfocado.",
+        "arrows": "No hacen nada aquí: los controles son botones independientes, no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La caja que reúne la pregunta y el alcance es una región de estado cortés: anuncia la pregunta sin interrumpir lo que se está leyendo.",
+        "item2": "La región termina antes de los controles, y por eso su caja queda fuera del anuncio.",
+        "item3": "Los controles no llevan etiqueta accesible aparte — el texto visible es el nombre, y es el mismo en las cinco stacks."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La pregunta se anuncia una vez, junto con su alcance.",
+        "item2": "Los controles no entran en el anuncio; cada uno se presenta cuando el foco llega.",
+        "item3": "No se lee ninguna cuenta regresiva, porque la tarjeta no tiene plazo."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "toolGroup": {
+          "name": "Grupo de llamadas",
+          "description": "La caja plegada de la que sale la llamada que espera a una persona, y a la que esta tarjeta no vuelve."
+        },
+        "chatThread": {
+          "name": "Conversación",
+          "description": "La conversación que queda detenida mientras esta pregunta no se responde."
+        },
+        "alertDialog": {
+          "name": "Alert Dialog",
+          "description": "Cuando la elección necesita tomar la pantalla y atrapar el foco hasta ser respondida."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Los controles de la respuesta, que quien consume arma y pasa listos."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El design system dibuja la pregunta y el espacio de la respuesta. No decide qué significa la respuesta: qué ocurre al rechazar, si hay campo de motivo, si la elección vale para las siguientes y qué abarca una autorización permanente son decisiones de producto.",
+      "item2": "Este es el lugar al que sale la llamada que espera a una persona. No queda dentro de la caja plegada del grupo, porque pedir autorización sin mostrar es no pedir; quien hace esa separación es quien consume.",
+      "item3": "Esta es la tercera pieza de la familia en la que existe región viva, y la excepción tiene motivo propio. Una pregunta no es un estado: el estado se anuncia para informar, y esta tarjeta se anuncia porque, sin ella, no ocurre nada más.",
+      "item4": "La región termina antes de los controles. Envuelve lo que hace falta saber para decidir y deja fuera la caja de quien responde — cada control ya se anuncia solo cuando el foco llega.",
+      "item5": "La tarjeta no tiene plazo, y por eso no hay ninguna cuenta aquí. Una pregunta con reloj se responde por el silencio, y qué significa el silencio es decisión de producto.",
+      "item6": "No hay nada plegado: una pregunta doblada es una pregunta que no se hizo, y esa decisión es la que sacó esta pieza de dentro del grupo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la tarjeta no instrumenta la elección, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar la pregunta y el alcance",
+          "result": "La pregunta abre la tarjeta y cada término aparece emparejado con su valor",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar un valor de alcance que no cabe en la línea",
+          "result": "Se parte y sigue en la línea siguiente, sin ser cortado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "No pasar ningún alcance",
+          "result": "La lista no se dibuja, y la pregunta sigue a la vista",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Pasar los controles",
+          "result": "Aparecen en la caja de la respuesta, que viene al final del marcado",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Accionar un control que se declara respuesta",
+          "result": "Quien consume recibe cuál fue la elección, y la tarjeta sigue como estaba",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Accionar un control que no se declara respuesta",
+          "result": "No se informa nada — la tarjeta no inventa una elección que nadie marcó",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "No pasar ningún control",
+          "result": "La caja de la respuesta no se dibuja",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Separar la llamada que espera a una persona y armar la tarjeta con ella",
+          "result": "La tarjeta queda fuera de la caja plegada, y lo que sobró sigue dentro de ella",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La pregunta y el alcance están dentro de la región que se anuncia",
+        "item2": "Los controles quedan fuera de esa región, y es la única de la tarjeta",
+        "item3": "El anuncio es cortés, y nunca de emergencia",
+        "item4": "El alcance es lista de definición, con término y valor emparejados",
+        "item5": "El orden del foco es el orden de la lectura: pregunta, alcance, controles",
+        "item6": "Cada control tiene al menos veinticuatro píxeles de destino"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la tarjeta, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — con alcance",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — sin alcance",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — valor largo, que se parte en vez de ser cortado",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — muchas elecciones, que pasan de línea",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — la tarjeta fuera de la caja plegada",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
