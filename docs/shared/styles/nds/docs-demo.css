@@ -38,7 +38,39 @@
  */
 [data-docs-preview] {
   overflow: visible;
+}
+
+/*
+ * O PISO é só das molduras que emolduram UM componente inteiro. `variante` fica
+ * de fora de propósito: ali cada item da lista tem a sua moldura, e um piso de
+ * 120px por variante transformaria uma seção de seis botões numa coluna de
+ * 720px de altura. Onde a moldura é uma só, o piso dá respiro; onde ela se
+ * repete, ele multiplica.
+ */
+[data-docs-preview="demonstracao"],
+[data-docs-preview="do"],
+[data-docs-preview="dont"] {
   min-block-size: var(--box-height-xs);
+}
+
+/*
+ * ...e nenhum CARTÃO ACIMA dela recorta também.
+ *
+ * Soltar só a moldura resolveu a Demonstração e não resolveu o Do & Don't, e a
+ * diferença está na árvore: na Demonstração a moldura é o cartão mais externo da
+ * seção, então não havia mais nada recortando. No Do & Don't as duas molduras
+ * moram DENTRO de um cartão que envolve a seção inteira — e esse também tem
+ * `overflow: hidden`. O painel saía da moldura e era decepado um nível acima.
+ *
+ * `:has()` porque o recorte é do ANCESTRAL e a folha não sabe quantos níveis
+ * existem: hoje é um, e uma seção nova pode ter dois. Selecionar pelo que o
+ * cartão CONTÉM resolve em qualquer profundidade e não pede classe nenhuma nas
+ * cinco stacks. O idioma já é da casa — são 75 usos de `:has()` nas folhas.
+ *
+ * Só o `overflow`: o piso é da moldura, não de quem a envolve.
+ */
+.nds-card:has([data-docs-preview]) {
+  overflow: visible;
 }
 
 /*
