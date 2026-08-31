@@ -1,0 +1,1376 @@
+{
+  "pt-BR": {
+    "title": "Estado da ligação",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A linha que diz se ainda há por onde pedir: ligado, reconectando ou sem ligação — e o que dá para fazer a respeito.",
+    "seo": {
+      "title": "Estado da ligação — se ainda há por onde pedir",
+      "description": "A linha do estado da ligação: a palavra que descreve e se anuncia uma vez, o ponto que é só desenho, a contagem que não se anuncia e uma ação que troca de nome quando troca de função."
+    },
+    "labels": {
+      "state": {
+        "connected": "Ligado",
+        "reconnecting": "Reconectando",
+        "disconnected": "Sem ligação"
+      },
+      "action": {
+        "reconnecting": "Tentar agora",
+        "disconnected": "Reconectar"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "connected": "Quando está tudo de pé",
+        "reconnecting": "Quando caiu e algo já está tentando",
+        "disconnected": "Quando caiu e ninguém está tentando"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A linha fica junto de onde a conversa acontece — acima do campo de mensagem ou no alto da tela. Ela não mora dentro de nenhuma moldura.",
+      "item2": "O ponto abre a linha e é só desenho: a cor sozinha não descreve estado.",
+      "item3": "A palavra vem logo depois, e é a única parte que se anuncia — uma vez, sem cortar o que estiver sendo lido.",
+      "item4": "A contagem para a próxima tentativa chega já escrita, fica fora do que é anunciado e só aparece enquanto alguma tentativa está marcada.",
+      "item5": "A ação fica no fim da linha, e o rótulo dela diz o que faz naquele estado.",
+      "structureCode": {
+        "web": "<p class=\"nds-connection-state\" data-state=\"reconnecting\">\n  <span class=\"nds-connection-state-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-connection-state-label\" role=\"status\">Reconectando</span>\n  <span class=\"nds-connection-state-countdown\" aria-hidden=\"true\">em 5 s</span>\n  <button class=\"nds-button nds-connection-state-action\" data-slot=\"connection-state-action\">Tentar agora</button>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para dizer se ainda há por onde pedir, quando a resposta depende de uma ligação que pode cair.",
+        "item2": "Escreva o estado em palavra, sempre — o ponto é para os olhos.",
+        "item3": "Passe a contagem já formatada, no idioma da tela, e só quando alguma tentativa estiver marcada.",
+        "item4": "Dê à ação o nome do que ela faz naquele estado: apressar uma tentativa é diferente de começar uma.",
+        "item5": "Reconecte em quem consome — abrir e refazer a ligação são do produto."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Dizer se ainda há por onde pedir, e oferecer tentar de novo",
+          "u": "Estado da ligação",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Dizer em que pé está a resposta que já foi pedida",
+          "u": "Estado da execução",
+          "a": "Aquela linha descreve o que o agente está fazendo; esta descreve se ainda há por onde falar com ele."
+        },
+        "item3": {
+          "s": "Avisar de uma falha que precisa ser lida e resolvida na hora",
+          "u": "Alert",
+          "a": "Aquele ocupa espaço e interrompe; esta linha é permanente e fica no canto até o estado mudar."
+        },
+        "item4": {
+          "s": "Mostrar o quanto de uma tarefa longa já andou",
+          "u": "Progress",
+          "a": "Ali existe uma fração conhecida; aqui existe um estado, e ligação caída não tem porcentagem."
+        },
+        "item5": {
+          "s": "Rótulo curto que classifica alguma coisa",
+          "u": "Badge",
+          "a": "O rótulo diz o que uma coisa é; esta linha diz o que está acontecendo agora."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "state": {
+            "name": "Palavra do estado",
+            "format": "Uma palavra sobre a ligação, não sobre a infraestrutura",
+            "good": "Sem ligação",
+            "bad": "Socket fechado com código 1006"
+          },
+          "countdown": {
+            "name": "Contagem",
+            "format": "Já escrita, curta, no formato do idioma",
+            "good": "em 5 s",
+            "bad": "5000 milissegundos até a retentativa"
+          },
+          "hurryAction": {
+            "name": "Ação enquanto algo tenta",
+            "format": "Verbo que diz que a tentativa já existe e vai ser apressada",
+            "good": "Tentar agora",
+            "bad": "Aguarde"
+          },
+          "startAction": {
+            "name": "Ação quando nada tenta",
+            "format": "Verbo que diz que a tentativa vai começar, e nunca o mesmo da anterior",
+            "good": "Reconectar",
+            "bad": "Tentar agora"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva o estado em palavra, ao lado do ponto.",
+        "item2": "Troque o nome da ação quando ela troca de função.",
+        "item3": "Passe a contagem já formatada, e deixe-a fora do que se anuncia.",
+        "item4": "Deixe a linha sem ação quando a ligação está de pé."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a cor do ponto como única diferença entre os estados.",
+        "item2": "Não anuncie a contagem: um número que se reescreve a cada segundo torna a tela impossível de ouvir.",
+        "item3": "Não mostre contagem quando nenhuma tentativa está marcada — é um relógio que não corre.",
+        "item4": "Não faça a linha reconectar sozinha."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O estado chega em palavra, ao lado do ponto.",
+        "dont": "Só a cor do ponto separa a ligação de pé da que caiu, e cor não chega a quem ouve a tela."
+      },
+      "pair2": {
+        "do": "A contagem só aparece enquanto uma tentativa está marcada.",
+        "dont": "A contagem aparece com a ligação caída e ninguém tentando — um relógio que não corre, e uma espera que nunca termina."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'em 5 s',\n  labels: rotulos,\n  onRetry: () => religar(),\n});",
+        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
+        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  :labels=\"rotulos\"\n  @retry=\"religar\"\n/>",
+        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
+        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  [labels]=\"rotulos\"\n  (retry)=\"religar()\"\n></p>"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "web": "// A palavra de cada um dos três estados, e o rótulo da ação onde ela existe.\n//\n// Ligado fica sem ação de propósito: sobre uma ligação de pé não há o que\n// fazer aqui. Os outros dois têm nomes diferentes porque fazem coisas\n// diferentes — um apressa a tentativa que já está marcada, o outro começa uma.\nconst rotulos = {\n  state: {\n    connected: 'Ligado',\n    reconnecting: 'Reconectando',\n    disconnected: 'Sem ligação',\n  },\n  action: {\n    reconnecting: 'Tentar agora',\n    disconnected: 'Reconectar',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "connected": {
+        "label": "Ligado",
+        "trigger": "A ligação está de pé e o que for pedido chega ao outro lado.",
+        "behavior": "O ponto fica na cor de sucesso e a linha não oferece ação — não há o que fazer com uma ligação que está de pé."
+      },
+      "reconnecting": {
+        "label": "Reconectando",
+        "trigger": "A ligação caiu e alguma coisa já está tentando restabelecê-la.",
+        "behavior": "O ponto fica na cor de atenção, a contagem para a próxima tentativa aparece e a ação oferece apressá-la."
+      },
+      "disconnected": {
+        "label": "Sem ligação",
+        "trigger": "A ligação caiu e nada está tentando restabelecê-la.",
+        "behavior": "O ponto fica na cor de erro, não há contagem — nenhuma tentativa está marcada — e a ação oferece começar uma."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "state": {
+          "name": "state",
+          "type": "'connected' | 'reconnecting' | 'disconnected'",
+          "default": "'connected'",
+          "required": "Não",
+          "description": "Em que pé está a ligação. Decide a palavra, a cor do ponto, se a contagem tem o que contar e o que a ação oferece."
+        },
+        "countdown": {
+          "name": "countdown",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Quanto falta para a próxima tentativa, já escrito. Só é desenhado enquanto alguma tentativa está marcada, e fica fora do que é anunciado."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ConnectionStateLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada estado e o rótulo da ação onde ela existe."
+        },
+        "onRetry": {
+          "name": "onRetry",
+          "type": "() => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu para tentar de novo. Abrir a ligação é de quem consome."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ConnectionState, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada um dos três estados. É ela que descreve, e não a cor do ponto."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<ConnectionState, string>>",
+          "default": "—",
+          "required": "Não",
+          "description": "O rótulo da ação em cada estado. Estado sem entrada não oferece ação nenhuma."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A linha desenha o estado que recebe e avisa que alguém pediu para tentar de novo. Ela não abre ligação, não conta o tempo e não reagenda nada — quando a tentativa acontece e o que ela alcança é de quem consome.",
+      "extensibilityCode": {
+        "web": "// A CONTAGEM só existe enquanto alguma tentativa está marcada, e quem\n// responde é o vocabulário compartilhado — não um teste escrito na tela.\nisRetryScheduled('reconnecting');   // true  → a contagem tem o que contar\nisRetryScheduled('disconnected');   // false → nada agendado, nada a contar\nisRetryScheduled('connected');      // false → nada caiu, nada a contar\n\n// Os dois falsos chegam pelo mesmo caminho e dizem coisas opostas. É a\n// palavra do estado que separa os dois, e é por isso que ela é obrigatória."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-connection-state",
+          "description": "Tamanho do texto da linha."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-connection-state",
+          "description": "Cor da linha, sobre a qual a palavra do estado se destaca."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-connection-state-label",
+          "description": "A palavra do estado, que é o que descreve."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-connection-state[data-state=\"connected\"]",
+          "description": "O ponto enquanto a ligação está de pé."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-connection-state[data-state=\"reconnecting\"]",
+          "description": "O ponto quando algo já está tentando religar — atenção, e não erro."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-connection-state[data-state=\"disconnected\"]",
+          "description": "O ponto quando a ligação caiu e ninguém está tentando."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-connection-state-dot",
+          "description": "Espaço entre as partes da linha, e a medida do ponto."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-connection-state-dot",
+          "description": "Arredondamento do ponto."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-connection-state-action",
+          "description": "Alvo de toque mínimo da ação."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-connection-state {\n  max-inline-size: 32rem;\n}\n\n/* O ponto é REFORÇO, e não a pista: a palavra ao lado é o que descreve o\n   estado, e é ela que se anuncia. Mexer no ponto não muda o que chega a quem\n   ouve — e a pulsação some sozinha sob movimento reduzido, porque a camada de\n   token zera a duração. */\n.nds-connection-state[data-state=\"reconnecting\"] .nds-connection-state-dot {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A palavra descreve o estado e é a única parte que se anuncia; o ponto e a contagem ficam fora do que é lido, e o anúncio é polido — ele entra na fila e nunca corta o que estiver sendo lido.",
+      "items": {
+        "item1": "A palavra do estado está sempre na linha: a cor do ponto não descreve estado sozinha.",
+        "item2": "O ponto fica fora do que é lido em voz — ele é desenho, e a palavra ao lado já diz tudo.",
+        "item3": "A palavra é uma região de estado polida, e só ela. Perder a ligação não é o passo seguinte de algo que ia bem: é o chão saindo, e quem não vê a tela não tem outro jeito de descobrir.",
+        "item4": "A contagem fica fora da região que se anuncia, por construção — um número que se reescreve a cada segundo torna a tela impossível de ouvir.",
+        "item5": "A ação troca de nome quando troca de função, e o texto que se vê é também o nome acessível."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Chega à ação, quando ela existe. O resto da linha é texto.",
+        "enter": "Aciona a ação sob o foco.",
+        "arrows": "Não fazem nada aqui: a linha é de leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A palavra do estado é uma região de estado polida: ela anuncia a troca sem interromper o que estiver sendo lido.",
+        "item2": "aria-hidden tira o ponto e a contagem do que é lido em voz.",
+        "item3": "A ação não leva rótulo acessível separado — o texto que se vê é o nome."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A troca de estado é anunciada uma vez, como a palavra daquele estado.",
+        "item2": "A contagem nunca é anunciada, nem quando muda a cada segundo.",
+        "item3": "A ação é lida com o nome que ela tem naquele estado."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "O que o agente está fazendo com o que se pediu, enquanto esta linha diz se ainda há por onde pedir."
+        },
+        "chatThread": {
+          "name": "Conversa",
+          "description": "A conversa que depende desta ligação para continuar."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "Quando a falha precisa ser lida e resolvida na hora, em vez de ficar no canto."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Quando o rótulo classifica uma coisa, em vez de dizer o que está acontecendo."
+        }
+      }
+    },
+    "notes": {
+      "item1": "Esta é a segunda peça da família em que existe região viva, e a exceção tem motivo próprio. A regra da folha vale porque um estado que se reanuncia corta a leitura da resposta; perder a ligação é de outra natureza — é o chão saindo, e tudo o que for escrito daqui em diante não vai a lugar nenhum.",
+      "item2": "A região envolve só a palavra, nunca a linha inteira. O rótulo carrega uma coisa só e muda no máximo quando o estado muda; a contagem, que se reescreve a cada segundo, fica fora dela por construção.",
+      "item3": "O anúncio é polido: ele entra na fila e nunca corta o que estiver sendo lido no momento.",
+      "item4": "A contagem chega já formatada, como texto. Formato de duração é decisão de idioma, e um componente que a formatasse decidiria idioma em cinco lugares.",
+      "item5": "A contagem só é desenhada enquanto alguma tentativa está marcada. Mostrá-la com a ligação caída e ninguém tentando é um relógio que não corre, e uma espera que nunca termina.",
+      "item6": "A peça não reconecta nada. Ela não abre transporte, não conta o tempo e não reagenda: desenha o estado que recebe e avisa que alguém pediu para tentar de novo.",
+      "title": "Notas"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a linha em si não instrumenta a ação, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar cada um dos três estados",
+          "result": "A palavra daquele estado aparece na linha, e o ponto fica fora do que é lido",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar a contagem no estado em que alguma tentativa está marcada",
+          "result": "Ela aparece na linha e sai do que é anunciado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar a contagem num estado em que nenhuma tentativa está marcada",
+          "result": "Ela não é desenhada — não há relógio para um tempo que ninguém agendou",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar a linha em qualquer estado",
+          "result": "Só a palavra está numa região que se anuncia, e a contagem fica fora dela",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar o estado em que a ligação está de pé",
+          "result": "A linha não traz botão nenhum",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Passar os dois estados que oferecem ação",
+          "result": "Os rótulos são nomes diferentes, porque as funções são diferentes",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Acionar a ação",
+          "result": "Quem consome é avisado, e a linha continua como estava",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar a linha ao lado da linha de estado da execução",
+          "result": "As duas são autônomas, e nenhuma sabe que a outra existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A palavra do estado está sempre presente, e a cor não é a única pista",
+        "item2": "O ponto está fora do que é lido em voz",
+        "item3": "A palavra está numa região de estado polida, e só ela",
+        "item4": "A contagem não é anunciada, e fica fora da região que se anuncia",
+        "item5": "O nome da ação diz o que ela faz, e muda com o estado",
+        "item6": "A ação tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a linha, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os três, um abaixo do outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — reconectando, com a contagem e a ação que apressa",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — sem ligação, com a ação que começa uma tentativa",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — ligado, sem ação nenhuma",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — a linha ao lado do estado da execução",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Connection state",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The line that says whether there is still somewhere to send things: online, reconnecting or offline — and what can be done about it.",
+    "seo": {
+      "title": "Connection state — whether there is still somewhere to send things",
+      "description": "The connection state line: the word that describes it and is announced once, the dot that is only drawing, the countdown that is never announced, and an action that changes its name when it changes its job."
+    },
+    "labels": {
+      "state": {
+        "connected": "Online",
+        "reconnecting": "Reconnecting",
+        "disconnected": "Offline"
+      },
+      "action": {
+        "reconnecting": "Try now",
+        "disconnected": "Reconnect"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "connected": "When everything is up",
+        "reconnecting": "When it dropped and something is already trying",
+        "disconnected": "When it dropped and nothing is trying"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The line sits next to where the conversation happens — above the message field or at the top of the screen. It does not live inside any frame.",
+      "item2": "The dot opens the line and is only drawing: colour alone does not describe a state.",
+      "item3": "The word comes right after, and it is the only part that is announced — once, without cutting into whatever is being read.",
+      "item4": "The countdown to the next attempt arrives already written, stays out of what is announced, and only shows while an attempt is scheduled.",
+      "item5": "The action sits at the end of the line, and its label says what it does in that state.",
+      "structureCode": {
+        "web": "<p class=\"nds-connection-state\" data-state=\"reconnecting\">\n  <span class=\"nds-connection-state-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-connection-state-label\" role=\"status\">Reconnecting</span>\n  <span class=\"nds-connection-state-countdown\" aria-hidden=\"true\">in 5s</span>\n  <button class=\"nds-button nds-connection-state-action\" data-slot=\"connection-state-action\">Try now</button>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to say whether there is still somewhere to send things, when the answer depends on a link that can drop.",
+        "item2": "Always write the state as a word — the dot is for the eyes.",
+        "item3": "Pass the countdown already formatted, in the language of the screen, and only while an attempt is scheduled.",
+        "item4": "Give the action the name of what it does in that state: hurrying an attempt is not the same as starting one.",
+        "item5": "Reconnect on the consuming side — opening and rebuilding the link belong to the product."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Say whether there is still somewhere to send things, and offer to try again",
+          "u": "Connection state",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Say where the answer that was already asked for stands",
+          "u": "Agent status",
+          "a": "That line describes what the agent is doing; this one describes whether there is still a way to talk to it."
+        },
+        "item3": {
+          "s": "Warn about a failure that has to be read and solved right away",
+          "u": "Alert",
+          "a": "That one takes space and interrupts; this line is permanent and stays in the corner until the state changes."
+        },
+        "item4": {
+          "s": "Show how far a long task has gone",
+          "u": "Progress",
+          "a": "There is a known fraction there; here there is a state, and a dropped link has no percentage."
+        },
+        "item5": {
+          "s": "A short label that classifies something",
+          "u": "Badge",
+          "a": "A label says what something is; this line says what is happening now."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "state": {
+            "name": "State word",
+            "format": "One word about the link, not about the infrastructure",
+            "good": "Offline",
+            "bad": "Socket closed with code 1006"
+          },
+          "countdown": {
+            "name": "Countdown",
+            "format": "Already written, short, in the format of the language",
+            "good": "in 5s",
+            "bad": "5000 milliseconds until retry"
+          },
+          "hurryAction": {
+            "name": "Action while something is trying",
+            "format": "A verb saying the attempt already exists and will be hurried",
+            "good": "Try now",
+            "bad": "Please wait"
+          },
+          "startAction": {
+            "name": "Action when nothing is trying",
+            "format": "A verb saying an attempt will start, and never the same as the previous one",
+            "good": "Reconnect",
+            "bad": "Try now"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the state as a word, next to the dot.",
+        "item2": "Change the name of the action when it changes its job.",
+        "item3": "Pass the countdown already formatted, and keep it out of what is announced.",
+        "item4": "Leave the line without an action while the link is up."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't leave the colour of the dot as the only difference between states.",
+        "item2": "Don't announce the countdown: a number that rewrites itself every second makes the screen impossible to listen to.",
+        "item3": "Don't show a countdown when no attempt is scheduled — it is a clock that does not run.",
+        "item4": "Don't make the line reconnect on its own."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The state arrives as a word, next to the dot.",
+        "dont": "Only the colour of the dot separates a link that is up from one that dropped, and colour never reaches whoever listens to the screen."
+      },
+      "pair2": {
+        "do": "The countdown only shows while an attempt is scheduled.",
+        "dont": "The countdown shows with the link down and nothing trying — a clock that does not run, and a wait that never ends."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'in 5s',\n  labels: rotulos,\n  onRetry: () => religar(),\n});",
+        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
+        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  :labels=\"rotulos\"\n  @retry=\"religar\"\n/>",
+        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
+        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  [labels]=\"rotulos\"\n  (retry)=\"religar()\"\n></p>"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "web": "// The word for each of the three states, and the action label where it exists.\n//\n// Online is deliberately left without an action: there is nothing to do here\n// about a link that is up. The other two have different names because they do\n// different things — one hurries an attempt that is already scheduled, the\n// other starts one.\nconst rotulos = {\n  state: {\n    connected: 'Online',\n    reconnecting: 'Reconnecting',\n    disconnected: 'Offline',\n  },\n  action: {\n    reconnecting: 'Try now',\n    disconnected: 'Reconnect',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "connected": {
+        "label": "Online",
+        "trigger": "The link is up and whatever is asked for reaches the other side.",
+        "behavior": "The dot takes the success colour and the line offers no action — there is nothing to do about a link that is up."
+      },
+      "reconnecting": {
+        "label": "Reconnecting",
+        "trigger": "The link dropped and something is already trying to rebuild it.",
+        "behavior": "The dot takes the attention colour, the countdown to the next attempt shows, and the action offers to hurry it."
+      },
+      "disconnected": {
+        "label": "Offline",
+        "trigger": "The link dropped and nothing is trying to rebuild it.",
+        "behavior": "The dot takes the error colour, there is no countdown — no attempt is scheduled — and the action offers to start one."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "state": {
+          "name": "state",
+          "type": "'connected' | 'reconnecting' | 'disconnected'",
+          "default": "'connected'",
+          "required": "No",
+          "description": "Where the link stands. It decides the word, the colour of the dot, whether the countdown has anything to count, and what the action offers."
+        },
+        "countdown": {
+          "name": "countdown",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "How long until the next attempt, already written. It is only drawn while an attempt is scheduled, and stays out of what is announced."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ConnectionStateLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each state and the action label where it exists."
+        },
+        "onRetry": {
+          "name": "onRetry",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked to try again. Opening the link belongs to the consuming side."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ConnectionState, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each of the three states. It is the word that describes, not the colour of the dot."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<ConnectionState, string>>",
+          "default": "—",
+          "required": "No",
+          "description": "The action label in each state. A state with no entry offers no action at all."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The line draws the state it receives and reports that someone asked to try again. It does not open a link, does not count time and does not reschedule anything — when the attempt happens and how far it gets belongs to the consuming side.",
+      "extensibilityCode": {
+        "web": "// THE COUNTDOWN only exists while an attempt is scheduled, and the shared\n// vocabulary is what answers that — not a check written on the screen.\nisRetryScheduled('reconnecting');   // true  → the countdown has something to count\nisRetryScheduled('disconnected');   // false → nothing scheduled, nothing to count\nisRetryScheduled('connected');      // false → nothing dropped, nothing to count\n\n// The two falses arrive by the same path and mean opposite things. It is the\n// word of the state that tells them apart, and that is why it is required."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-connection-state",
+          "description": "Size of the text in the line."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-connection-state",
+          "description": "Colour of the line, against which the state word stands out."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-connection-state-label",
+          "description": "The state word, which is what describes."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-connection-state[data-state=\"connected\"]",
+          "description": "The dot while the link is up."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-connection-state[data-state=\"reconnecting\"]",
+          "description": "The dot when something is already trying to reconnect — attention, not error."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-connection-state[data-state=\"disconnected\"]",
+          "description": "The dot when the link dropped and nothing is trying."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-connection-state-dot",
+          "description": "Space between the parts of the line, and the size of the dot."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-connection-state-dot",
+          "description": "Rounding of the dot."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-connection-state-action",
+          "description": "Minimum touch target of the action."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": ".nds-connection-state {\n  max-inline-size: 32rem;\n}\n\n/* The dot is REINFORCEMENT, not the clue: the word beside it is what describes\n   the state, and it is the word that gets announced. Touching the dot changes\n   nothing for whoever listens — and the pulse disappears on its own under\n   reduced motion, because the token layer zeroes the duration. */\n.nds-connection-state[data-state=\"reconnecting\"] .nds-connection-state-dot {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The word describes the state and is the only part that gets announced; the dot and the countdown stay out of what is read, and the announcement is polite — it queues and never cuts into whatever is being read.",
+      "items": {
+        "item1": "The state word is always in the line: the colour of the dot does not describe a state on its own.",
+        "item2": "The dot stays out of what is read aloud — it is drawing, and the word beside it already says everything.",
+        "item3": "The word is a polite status region, and only the word. Losing the link is not the next step of something that was going well: it is the floor going away, and whoever does not see the screen has no other way to find out.",
+        "item4": "The countdown stays outside the region that gets announced, by construction — a number that rewrites itself every second makes the screen impossible to listen to.",
+        "item5": "The action changes its name when it changes its job, and the visible text is also the accessible name."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the action, when it exists. The rest of the line is text.",
+        "enter": "Triggers the focused action.",
+        "arrows": "Do nothing here: the line is for reading, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The state word is a polite status region: it announces the change without interrupting whatever is being read.",
+        "item2": "aria-hidden takes the dot and the countdown out of what is read aloud.",
+        "item3": "The action carries no separate accessible label — the visible text is the name."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The change of state is announced once, as the word for that state.",
+        "item2": "The countdown is never announced, not even when it changes every second.",
+        "item3": "The action is read with the name it has in that state."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "agentStatus": {
+          "name": "Agent status",
+          "description": "What the agent is doing with what was asked, while this line says whether there is still somewhere to ask."
+        },
+        "chatThread": {
+          "name": "Chat thread",
+          "description": "The conversation that depends on this link to carry on."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "When the failure has to be read and solved right away, instead of sitting in the corner."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "When the label classifies something, instead of saying what is happening."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "This is the second piece in the family where a live region exists, and the exception has a reason of its own. The sheet's rule holds because a state that re-announces itself cuts into the reading of the answer; losing the link is of another kind — it is the floor going away, and everything written from now on goes nowhere.",
+      "item2": "The region wraps only the word, never the whole line. The label carries one thing and changes at most when the state changes; the countdown, which rewrites itself every second, stays outside it by construction.",
+      "item3": "The announcement is polite: it queues and never cuts into whatever is being read at the moment.",
+      "item4": "The countdown arrives already formatted, as text. Duration format is a language decision, and a component that formatted it would be deciding language in five places.",
+      "item5": "The countdown is only drawn while an attempt is scheduled. Showing it with the link down and nothing trying is a clock that does not run, and a wait that never ends.",
+      "item6": "The piece reconnects nothing. It does not open transport, does not count time and does not reschedule: it draws the state it receives and reports that someone asked to try again."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the line itself does not instrument the action, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demonstration is interacted with.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass each of the three states",
+          "result": "The word for that state shows in the line, and the dot stays out of what is read",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass the countdown in the state where an attempt is scheduled",
+          "result": "It shows in the line and stays out of what is announced",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass the countdown in a state where no attempt is scheduled",
+          "result": "It is not drawn — there is no clock for a time nobody scheduled",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mount the line in any state",
+          "result": "Only the word sits in a region that gets announced, and the countdown stays outside it",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass the state where the link is up",
+          "result": "The line carries no button at all",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pass the two states that offer an action",
+          "result": "The labels are different names, because the jobs are different",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Trigger the action",
+          "result": "The consuming side is told, and the line stays as it was",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the line beside the agent status line",
+          "result": "Both are autonomous, and neither knows the other exists",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The state word is always present, and colour is not the only clue",
+        "item2": "The dot is out of what is read aloud",
+        "item3": "The word sits in a polite status region, and only the word",
+        "item4": "The countdown is not announced, and stays outside the region that gets announced",
+        "item5": "The name of the action says what it does, and changes with the state",
+        "item6": "The action has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the line, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the three, one below the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — reconnecting, with the countdown and the action that hurries it",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — offline, with the action that starts an attempt",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — online, with no action at all",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — the line beside the agent status",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Estado de la conexión",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La línea que dice si todavía hay por dónde pedir: conectado, reconectando o sin conexión — y qué se puede hacer al respecto.",
+    "seo": {
+      "title": "Estado de la conexión — si todavía hay por dónde pedir",
+      "description": "La línea del estado de la conexión: la palabra que describe y se anuncia una vez, el punto que es solo dibujo, la cuenta que no se anuncia y una acción que cambia de nombre cuando cambia de función."
+    },
+    "labels": {
+      "state": {
+        "connected": "Conectado",
+        "reconnecting": "Reconectando",
+        "disconnected": "Sin conexión"
+      },
+      "action": {
+        "reconnecting": "Intentar ahora",
+        "disconnected": "Reconectar"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "connected": "Cuando todo está en pie",
+        "reconnecting": "Cuando se cayó y algo ya está intentando",
+        "disconnected": "Cuando se cayó y nadie está intentando"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La línea va junto a donde ocurre la conversación — encima del campo de mensaje o en lo alto de la pantalla. No vive dentro de ningún marco.",
+      "item2": "El punto abre la línea y es solo dibujo: el color por sí solo no describe un estado.",
+      "item3": "La palabra viene enseguida, y es la única parte que se anuncia — una vez, sin cortar lo que se esté leyendo.",
+      "item4": "La cuenta para el próximo intento llega ya escrita, queda fuera de lo que se anuncia y solo aparece mientras hay un intento agendado.",
+      "item5": "La acción va al final de la línea, y su etiqueta dice qué hace en ese estado.",
+      "structureCode": {
+        "web": "<p class=\"nds-connection-state\" data-state=\"reconnecting\">\n  <span class=\"nds-connection-state-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-connection-state-label\" role=\"status\">Reconectando</span>\n  <span class=\"nds-connection-state-countdown\" aria-hidden=\"true\">en 5 s</span>\n  <button class=\"nds-button nds-connection-state-action\" data-slot=\"connection-state-action\">Intentar ahora</button>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala para decir si todavía hay por dónde pedir, cuando la respuesta depende de una conexión que puede caerse.",
+        "item2": "Escribe siempre el estado en palabra — el punto es para los ojos.",
+        "item3": "Pasa la cuenta ya formateada, en el idioma de la pantalla, y solo mientras haya un intento agendado.",
+        "item4": "Dale a la acción el nombre de lo que hace en ese estado: apurar un intento no es lo mismo que empezar uno.",
+        "item5": "Reconecta en quien consume — abrir y rehacer la conexión son del producto."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Decir si todavía hay por dónde pedir, y ofrecer intentar de nuevo",
+          "u": "Estado de la conexión",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Decir en qué punto está la respuesta que ya se pidió",
+          "u": "Estado de la ejecución",
+          "a": "Aquella línea describe qué está haciendo el agente; esta describe si todavía hay manera de hablarle."
+        },
+        "item3": {
+          "s": "Avisar de un fallo que hay que leer y resolver en el momento",
+          "u": "Alert",
+          "a": "Aquel ocupa espacio e interrumpe; esta línea es permanente y se queda en la esquina hasta que el estado cambie."
+        },
+        "item4": {
+          "s": "Mostrar cuánto ha avanzado una tarea larga",
+          "u": "Progress",
+          "a": "Allí existe una fracción conocida; aquí existe un estado, y una conexión caída no tiene porcentaje."
+        },
+        "item5": {
+          "s": "Etiqueta corta que clasifica algo",
+          "u": "Badge",
+          "a": "La etiqueta dice qué es una cosa; esta línea dice qué está pasando ahora."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "state": {
+            "name": "Palabra del estado",
+            "format": "Una palabra sobre la conexión, no sobre la infraestructura",
+            "good": "Sin conexión",
+            "bad": "Socket cerrado con código 1006"
+          },
+          "countdown": {
+            "name": "Cuenta",
+            "format": "Ya escrita, corta, en el formato del idioma",
+            "good": "en 5 s",
+            "bad": "5000 milisegundos hasta el reintento"
+          },
+          "hurryAction": {
+            "name": "Acción mientras algo intenta",
+            "format": "Verbo que dice que el intento ya existe y será apurado",
+            "good": "Intentar ahora",
+            "bad": "Espere"
+          },
+          "startAction": {
+            "name": "Acción cuando nada intenta",
+            "format": "Verbo que dice que un intento va a empezar, y nunca el mismo que el anterior",
+            "good": "Reconectar",
+            "bad": "Intentar ahora"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe el estado en palabra, al lado del punto.",
+        "item2": "Cambia el nombre de la acción cuando cambia de función.",
+        "item3": "Pasa la cuenta ya formateada, y déjala fuera de lo que se anuncia.",
+        "item4": "Deja la línea sin acción cuando la conexión está en pie."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes el color del punto como única diferencia entre los estados.",
+        "item2": "No anuncies la cuenta: un número que se reescribe cada segundo vuelve la pantalla imposible de escuchar.",
+        "item3": "No muestres cuenta cuando no hay ningún intento agendado — es un reloj que no corre.",
+        "item4": "No hagas que la línea reconecte sola."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El estado llega en palabra, al lado del punto.",
+        "dont": "Solo el color del punto separa la conexión en pie de la que se cayó, y el color no llega a quien escucha la pantalla."
+      },
+      "pair2": {
+        "do": "La cuenta solo aparece mientras hay un intento agendado.",
+        "dont": "La cuenta aparece con la conexión caída y nadie intentando — un reloj que no corre, y una espera que nunca termina."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'en 5 s',\n  labels: rotulos,\n  onRetry: () => religar(),\n});",
+        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
+        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  :labels=\"rotulos\"\n  @retry=\"religar\"\n/>",
+        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
+        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  [labels]=\"rotulos\"\n  (retry)=\"religar()\"\n></p>"
+      },
+      "withLabels": "Las etiquetas",
+      "withLabelsCode": {
+        "web": "// La palabra de cada uno de los tres estados, y la etiqueta de la acción donde\n// existe.\n//\n// Conectado queda sin acción a propósito: sobre una conexión en pie no hay nada\n// que hacer aquí. Los otros dos tienen nombres distintos porque hacen cosas\n// distintas — uno apura el intento ya agendado, el otro empieza uno.\nconst rotulos = {\n  state: {\n    connected: 'Conectado',\n    reconnecting: 'Reconectando',\n    disconnected: 'Sin conexión',\n  },\n  action: {\n    reconnecting: 'Intentar ahora',\n    disconnected: 'Reconectar',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "connected": {
+        "label": "Conectado",
+        "trigger": "La conexión está en pie y lo que se pida llega al otro lado.",
+        "behavior": "El punto toma el color de éxito y la línea no ofrece acción — no hay nada que hacer con una conexión en pie."
+      },
+      "reconnecting": {
+        "label": "Reconectando",
+        "trigger": "La conexión se cayó y algo ya está intentando restablecerla.",
+        "behavior": "El punto toma el color de atención, aparece la cuenta para el próximo intento y la acción ofrece apurarlo."
+      },
+      "disconnected": {
+        "label": "Sin conexión",
+        "trigger": "La conexión se cayó y nada está intentando restablecerla.",
+        "behavior": "El punto toma el color de error, no hay cuenta — ningún intento está agendado — y la acción ofrece empezar uno."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "state": {
+          "name": "state",
+          "type": "'connected' | 'reconnecting' | 'disconnected'",
+          "default": "'connected'",
+          "required": "No",
+          "description": "En qué punto está la conexión. Decide la palabra, el color del punto, si la cuenta tiene algo que contar y qué ofrece la acción."
+        },
+        "countdown": {
+          "name": "countdown",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Cuánto falta para el próximo intento, ya escrito. Solo se dibuja mientras hay un intento agendado, y queda fuera de lo que se anuncia."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ConnectionStateLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada estado y la etiqueta de la acción donde existe."
+        },
+        "onRetry": {
+          "name": "onRetry",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió intentar de nuevo. Abrir la conexión es de quien consume."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ConnectionState, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada uno de los tres estados. Es ella la que describe, y no el color del punto."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<ConnectionState, string>>",
+          "default": "—",
+          "required": "No",
+          "description": "La etiqueta de la acción en cada estado. Un estado sin entrada no ofrece ninguna acción."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La línea dibuja el estado que recibe y avisa que alguien pidió intentar de nuevo. No abre conexión, no cuenta el tiempo y no reagenda nada — cuándo ocurre el intento y hasta dónde llega es de quien consume.",
+      "extensibilityCode": {
+        "web": "// LA CUENTA solo existe mientras hay un intento agendado, y quien responde es\n// el vocabulario compartido — no una comprobación escrita en la pantalla.\nisRetryScheduled('reconnecting');   // true  → la cuenta tiene algo que contar\nisRetryScheduled('disconnected');   // false → nada agendado, nada que contar\nisRetryScheduled('connected');      // false → nada se cayó, nada que contar\n\n// Los dos falsos llegan por el mismo camino y dicen cosas opuestas. Es la\n// palabra del estado la que los separa, y por eso es obligatoria."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-connection-state",
+          "description": "Tamaño del texto de la línea."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-connection-state",
+          "description": "Color de la línea, sobre el cual destaca la palabra del estado."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-connection-state-label",
+          "description": "La palabra del estado, que es lo que describe."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-connection-state[data-state=\"connected\"]",
+          "description": "El punto mientras la conexión está en pie."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-connection-state[data-state=\"reconnecting\"]",
+          "description": "El punto cuando algo ya está intentando reconectar — atención, y no error."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-connection-state[data-state=\"disconnected\"]",
+          "description": "El punto cuando la conexión se cayó y nadie está intentando."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-connection-state-dot",
+          "description": "Espacio entre las partes de la línea, y la medida del punto."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-connection-state-dot",
+          "description": "Redondeo del punto."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-connection-state-action",
+          "description": "Objetivo táctil mínimo de la acción."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-connection-state {\n  max-inline-size: 32rem;\n}\n\n/* El punto es REFUERZO, y no la pista: la palabra al lado es lo que describe el\n   estado, y es ella la que se anuncia. Tocar el punto no cambia lo que llega a\n   quien escucha — y el pulso desaparece solo bajo movimiento reducido, porque\n   la capa de tokens pone la duración en cero. */\n.nds-connection-state[data-state=\"reconnecting\"] .nds-connection-state-dot {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La palabra describe el estado y es la única parte que se anuncia; el punto y la cuenta quedan fuera de lo que se lee, y el anuncio es cortés — entra en la fila y nunca corta lo que se esté leyendo.",
+      "items": {
+        "item1": "La palabra del estado está siempre en la línea: el color del punto no describe un estado por sí solo.",
+        "item2": "El punto queda fuera de lo que se lee en voz — es dibujo, y la palabra al lado ya lo dice todo.",
+        "item3": "La palabra es una región de estado cortés, y solo ella. Perder la conexión no es el paso siguiente de algo que iba bien: es el suelo que se va, y quien no ve la pantalla no tiene otra manera de enterarse.",
+        "item4": "La cuenta queda fuera de la región que se anuncia, por construcción — un número que se reescribe cada segundo vuelve la pantalla imposible de escuchar.",
+        "item5": "La acción cambia de nombre cuando cambia de función, y el texto que se ve es también el nombre accesible."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Llega a la acción, cuando existe. El resto de la línea es texto.",
+        "enter": "Activa la acción enfocada.",
+        "arrows": "No hacen nada aquí: la línea es de lectura, y no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La palabra del estado es una región de estado cortés: anuncia el cambio sin interrumpir lo que se esté leyendo.",
+        "item2": "aria-hidden saca el punto y la cuenta de lo que se lee en voz.",
+        "item3": "La acción no lleva etiqueta accesible aparte — el texto que se ve es el nombre."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El cambio de estado se anuncia una vez, como la palabra de ese estado.",
+        "item2": "La cuenta nunca se anuncia, ni siquiera cuando cambia cada segundo.",
+        "item3": "La acción se lee con el nombre que tiene en ese estado."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "Qué está haciendo el agente con lo que se pidió, mientras esta línea dice si todavía hay por dónde pedir."
+        },
+        "chatThread": {
+          "name": "Conversación",
+          "description": "La conversación que depende de esta conexión para continuar."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "Cuando el fallo hay que leerlo y resolverlo en el momento, en vez de quedarse en la esquina."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Cuando la etiqueta clasifica algo, en vez de decir qué está pasando."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Esta es la segunda pieza de la familia en la que existe región viva, y la excepción tiene motivo propio. La regla de la hoja vale porque un estado que se reanuncia corta la lectura de la respuesta; perder la conexión es de otra naturaleza — es el suelo que se va, y todo lo que se escriba de aquí en adelante no va a ninguna parte.",
+      "item2": "La región envuelve solo la palabra, nunca la línea entera. La etiqueta lleva una sola cosa y cambia como mucho cuando cambia el estado; la cuenta, que se reescribe cada segundo, queda fuera por construcción.",
+      "item3": "El anuncio es cortés: entra en la fila y nunca corta lo que se esté leyendo en ese momento.",
+      "item4": "La cuenta llega ya formateada, como texto. El formato de duración es decisión de idioma, y un componente que la formateara decidiría idioma en cinco lugares.",
+      "item5": "La cuenta solo se dibuja mientras hay un intento agendado. Mostrarla con la conexión caída y nadie intentando es un reloj que no corre, y una espera que nunca termina.",
+      "item6": "La pieza no reconecta nada. No abre transporte, no cuenta el tiempo y no reagenda: dibuja el estado que recibe y avisa que alguien pidió intentar de nuevo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la línea en sí no instrumenta la acción, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar cada uno de los tres estados",
+          "result": "La palabra de ese estado aparece en la línea, y el punto queda fuera de lo que se lee",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar la cuenta en el estado en que hay un intento agendado",
+          "result": "Aparece en la línea y queda fuera de lo que se anuncia",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar la cuenta en un estado en que no hay ningún intento agendado",
+          "result": "No se dibuja — no hay reloj para un tiempo que nadie agendó",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar la línea en cualquier estado",
+          "result": "Solo la palabra está en una región que se anuncia, y la cuenta queda fuera de ella",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar el estado en que la conexión está en pie",
+          "result": "La línea no trae ningún botón",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pasar los dos estados que ofrecen acción",
+          "result": "Las etiquetas son nombres distintos, porque las funciones son distintas",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Activar la acción",
+          "result": "Quien consume es avisado, y la línea sigue como estaba",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar la línea al lado de la línea del estado de la ejecución",
+          "result": "Las dos son autónomas, y ninguna sabe que la otra existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La palabra del estado está siempre presente, y el color no es la única pista",
+        "item2": "El punto queda fuera de lo que se lee en voz",
+        "item3": "La palabra está en una región de estado cortés, y solo ella",
+        "item4": "La cuenta no se anuncia, y queda fuera de la región que se anuncia",
+        "item5": "El nombre de la acción dice qué hace, y cambia con el estado",
+        "item6": "La acción tiene al menos veinticuatro píxeles de objetivo"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la línea, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los tres, uno debajo del otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — reconectando, con la cuenta y la acción que apura",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — sin conexión, con la acción que empieza un intento",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — conectado, sin ninguna acción",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — la línea al lado del estado de la ejecución",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

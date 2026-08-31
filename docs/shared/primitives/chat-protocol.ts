@@ -418,3 +418,53 @@ export interface PlanStep {
 export function isStepFinished(state: PlanStepState): boolean {
   return state === 'done' || state === 'failed' || state === 'skipped';
 }
+
+// ─── Ligação com o serviço ────────────────────────────────────────────────────
+
+/**
+ * Estado da ligação com o serviço que responde.
+ *
+ * NÃO É `RunStatus`, e a distinção é a razão de este tipo existir. Aquele
+ * descreve a EXECUÇÃO — o que o agente está fazendo com o que se pediu. Este
+ * descreve o TRANSPORTE — se ainda há por onde pedir. Uma execução concluída
+ * sobre uma ligação caída é um par perfeitamente possível, e dois tipos que se
+ * confundissem não conseguiriam escrevê-lo.
+ *
+ * Três estados, e é o que o critério deixa passar. Eles são a combinação
+ * completa de duas perguntas: a ligação está de pé, e há alguma tentativa em
+ * curso? De pé é `connected`; caída com alguém tentando é `reconnecting`;
+ * caída sem ninguém tentando é `disconnected`. A quarta combinação — de pé e
+ * tentando — não descreve nada.
+ *
+ * `connecting` NÃO É UM QUARTO ESTADO, e é a decisão mais fácil de errar aqui.
+ * A primeira tentativa desenha exatamente como a quinta: ponto de atenção,
+ * palavra, contagem para a próxima e a ação que apressa. Ter sido a primeira é
+ * conhecimento de quem consome, e a palavra que ele quiser usar sai dos
+ * rótulos, que são dele. Estado que não muda o desenho não é estado.
+ */
+export type ConnectionState = 'connected' | 'reconnecting' | 'disconnected';
+
+/**
+ * Do melhor para o pior. Mesma razão de `RUN_STATUSES`: quem itera estados —
+ * tabela da docs page, story de estados, mapa de rótulos — lê uma lista só.
+ */
+export const CONNECTION_STATES: readonly ConnectionState[] = [
+  'connected',
+  'reconnecting',
+  'disconnected',
+] as const;
+
+/**
+ * Há uma próxima tentativa marcada?
+ *
+ * Só `reconnecting`. É o que decide se a contagem para a próxima tentativa tem
+ * o que contar: desenhar "em 5 s" ao lado de "Sem ligação" é mostrar um relógio
+ * que não corre, e quem lê fica esperando por algo que ninguém agendou.
+ *
+ * Mora aqui, e não em cinco `if`, pelo mesmo motivo de `waitsForPerson`: é uma
+ * regra de duas frases que renderia cinco implementações, e a que discordasse
+ * seria justamente a de `disconnected`, onde a resposta é menos óbvia.
+ */
+export function isRetryScheduled(state: ConnectionState): boolean {
+  return state === 'reconnecting';
+}

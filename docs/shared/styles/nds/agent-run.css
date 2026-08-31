@@ -474,3 +474,122 @@
   margin: 0;
   color: hsl(var(--muted-foreground));
 }
+
+/* ── Estado da ligação ────────────────────────────────────────────────────────
+ *
+ * Se ainda há por onde pedir. Vocabulário: `ConnectionState`,
+ * `isRetryScheduled`.
+ *
+ *   <p class="nds-connection-state" data-slot="connection-state" data-state="reconnecting">
+ *     <span class="nds-connection-state-dot" data-slot="connection-state-dot" aria-hidden="true"></span>
+ *     <span class="nds-connection-state-label" data-slot="connection-state-label" role="status">Reconectando</span>
+ *     <span class="nds-connection-state-countdown" data-slot="connection-state-countdown" aria-hidden="true">em 5 s</span>
+ *     <button class="nds-button nds-connection-state-action" data-slot="connection-state-action">Tentar agora</button>
+ *   </p>
+ *
+ * A CLASSE `nds-connection-state-action` ANDA JUNTO do `data-slot`, e o botão é
+ * a única parte da árvore que precisa das duas: é a classe que esta folha
+ * estiliza, porque `data-slot` no botão é ligado por host binding na stack do
+ * Angular e disputa com o atributo estático do template. Árvore que não mostra
+ * a classe ensina que ela não existe.
+ *
+ * NÃO É O ESTADO DA EXECUÇÃO, e a diferença não é de aparência: as duas linhas
+ * se parecem de propósito. Aquela descreve o que o agente está fazendo com o
+ * que se pediu; esta descreve se ainda há por onde pedir. Uma execução
+ * concluída sobre uma ligação caída é um par possível, e é por isso que os dois
+ * vocabulários são separados.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. AQUI A REGIÃO VIVA EXISTE, e é a SEGUNDA exceção desta folha — a primeira
+ *    é o indicador de geração. A folha proíbe por padrão porque um número que
+ *    se reanuncia torna a tela impossível de ouvir, e o estado da execução vai
+ *    junto nessa proibição: trocar de `running` para `complete` é o passo
+ *    seguinte de uma coisa que está indo bem, e quem ouve já está ouvindo a
+ *    resposta chegar.
+ *
+ *    PERDER A LIGAÇÃO É DE OUTRA NATUREZA: não é o passo seguinte, é o chão
+ *    saindo. Tudo o que for escrito daqui em diante não vai a lugar nenhum, e
+ *    quem não vê a tela não tem outro jeito de descobrir — o silêncio é
+ *    indistinguível de uma resposta demorada. `role="status"` é POLIDO: ele
+ *    entra na fila e nunca corta o que está sendo lido.
+ *
+ *    E A REGIÃO ENVOLVE SÓ A PALAVRA, nunca a raiz. O rótulo carrega uma coisa
+ *    só, e ela muda no máximo quando o estado muda. A contagem, que se reescreve
+ *    a cada segundo, fica FORA da região por construção — região viva na raiz
+ *    reanunciaria o relógio, que é exatamente a armadilha com que esta folha
+ *    abre. A decisão não depende de `aria-hidden` funcionar dentro de região
+ *    viva; depende de a contagem não estar lá dentro.
+ * 2. A CONTAGEM NÃO SE ANUNCIA e chega já escrita, como texto. Formato de
+ *    duração é decisão de idioma, e um componente que a formatasse decidiria
+ *    idioma em cinco lugares. É a mesma escolha do relógio do estado da
+ *    execução, com um motivo a mais aqui: ela é vizinha de uma região viva.
+ * 3. A CONTAGEM SÓ EXISTE ENQUANTO ALGO TENTA. Quem responde é
+ *    `isRetryScheduled`, do vocabulário compartilhado, e não um `if` de cada
+ *    stack: "em 5 s" ao lado de "Sem ligação" é um relógio que não corre.
+ * 4. O PONTO É DECORATIVO e a palavra é o estado. Cor sozinha não descreve
+ *    estado (WCAG 1.4.1), e aqui a cor é a ÚNICA diferença visual entre os três.
+ * 5. A AÇÃO DIZ O QUE FAZ, e muda com o estado: apressa a tentativa que já está
+ *    marcada, ou começa uma quando não há nenhuma. Ligado não oferece ação —
+ *    sobre uma ligação de pé não há o que fazer aqui.
+ * 6. A PEÇA NÃO RECONECTA NADA (§2 da guideline 17). Ela não abre transporte,
+ *    não conta o tempo e não reagenda: desenha o estado que recebe e avisa que
+ *    alguém pediu para tentar de novo.
+ */
+
+.nds-connection-state {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+/* SEM COR BASE NO PONTO, e é escolha. As três regras abaixo esgotam
+ * `ConnectionState`, então uma quarta declaração de `background-color` aqui
+ * seria a que nunca pinta — desenho que não existe, com cara de padrão
+ * pensado. O irmão desta folha tem base porque lá `idle` a usa. */
+.nds-connection-state-dot {
+  flex-shrink: 0;
+  inline-size: var(--spacing-2);
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+}
+
+.nds-connection-state[data-state="connected"] .nds-connection-state-dot {
+  background-color: hsl(var(--success));
+}
+
+/* Atenção, e não erro: a ligação caiu e alguma coisa está cuidando disso. */
+.nds-connection-state[data-state="reconnecting"] .nds-connection-state-dot {
+  background-color: hsl(var(--warning));
+}
+
+.nds-connection-state[data-state="disconnected"] .nds-connection-state-dot {
+  background-color: hsl(var(--destructive));
+}
+
+/* A PALAVRA É O ESTADO, e é ela que a região viva carrega (decisão 1). Nenhuma
+ * cor semântica aqui: texto sobre fundo do sistema é sempre `--foreground`, e a
+ * cor do ponto ao lado é REFORÇO. */
+.nds-connection-state-label {
+  color: hsl(var(--foreground));
+}
+
+.nds-connection-state-countdown {
+  font-variant-numeric: tabular-nums;
+}
+
+/* SELETOR POR CLASSE, e não por `[data-slot]` — mesma medição do bloco do
+ * estado da execução: no Angular o `data-slot` do botão é ligado por host
+ * binding e disputa com o atributo estático do template, e se o host binding
+ * vence a regra não aplica ali. O alvo de toque de 24px é WCAG 2.5.8, e não é
+ * coisa que se possa perder numa stack só. */
+.nds-connection-state-action {
+  margin-inline-start: auto;
+  /* Alvo de toque (WCAG 2.5.8). */
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}

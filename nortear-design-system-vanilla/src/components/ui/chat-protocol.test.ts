@@ -19,8 +19,10 @@ import {
   isModelSelectable,
   isVoiceBusy,
   isAttachmentReady,
+  isRetryScheduled,
   isRunFinished,
   isTerminal,
+  CONNECTION_STATES,
   RUN_STATUSES,
   TOOL_CALL_STATES,
   totalTokens,
@@ -28,6 +30,7 @@ import {
   type Attachment,
   type AttachmentState,
   type ContextItem,
+  type ConnectionState,
   type ContextKind,
   type ModelOption,
   type PlanStepState,
@@ -63,8 +66,13 @@ describe('as listas cobrem a união inteira', () => {
     expect([...ATTACHMENT_STATES].sort()).toEqual([...uniao].sort());
   });
 
+  it('estado da ligação: três, e nenhum a mais', () => {
+    const uniao: ConnectionState[] = ['connected', 'reconnecting', 'disconnected'];
+    expect([...CONNECTION_STATES].sort()).toEqual([...uniao].sort());
+  });
+
   it('as listas não repetem estado', () => {
-    for (const lista of [TOOL_CALL_STATES, RUN_STATUSES, ATTACHMENT_STATES]) {
+    for (const lista of [TOOL_CALL_STATES, RUN_STATUSES, ATTACHMENT_STATES, CONNECTION_STATES]) {
       expect(new Set(lista).size).toBe(lista.length);
     }
   });
@@ -246,5 +254,26 @@ describe('isStepFinished — o passo ainda pode acontecer?', () => {
     expect(PLAN_STEP_STATES).toContain('skipped');
     expect(isStepFinished('done')).toBe(true);
     expect(isStepFinished('failed')).toBe(true);
+  });
+});
+
+describe('isRetryScheduled — há uma próxima tentativa marcada?', () => {
+  it('só enquanto algo está tentando', () => {
+    const marcados = CONNECTION_STATES.filter((s: ConnectionState) => isRetryScheduled(s));
+    expect(marcados).toEqual(['reconnecting']);
+  });
+
+  it('caída sem ninguém tentando não tem o que contar', () => {
+    // É a distinção inteira: desenhar "em 5 s" ao lado de "Sem ligação" é
+    // mostrar um relógio que não corre, e quem lê fica esperando por algo que
+    // ninguém agendou.
+    expect(isRetryScheduled('disconnected')).toBe(false);
+  });
+
+  it('de pé também não, e por outro motivo', () => {
+    // Não há tentativa porque não há o que retomar. Os dois `false` chegam pelo
+    // mesmo caminho e dizem coisas opostas — é o que a palavra do estado
+    // resolve, e a contagem sozinha não resolveria.
+    expect(isRetryScheduled('connected')).toBe(false);
   });
 });
