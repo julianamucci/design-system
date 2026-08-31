@@ -120,7 +120,7 @@ ${items.map((i) => `  ${i.value}: ${i.icon},`).join('\n')}
 };
 
 Object.entries(icones).forEach(([valor, icone]) => {
-  const gatilho = abas.querySelector(\`[role="tab"][data-value="\${value}"]\`);
+  const gatilho = abas.querySelector(\`[role="tab"][data-value="\${valor}"]\`);
   if (!gatilho) return;
   const rotulo = document.createElement('span');
   rotulo.textContent = gatilho.textContent;
