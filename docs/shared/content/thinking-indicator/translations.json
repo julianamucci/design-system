@@ -1,0 +1,1175 @@
+{
+  "pt-BR": {
+    "title": "Indicador de geração",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Os três pontos que ocupam o lugar da resposta enquanto ela não chegou.",
+    "seo": {
+      "title": "Indicador de geração — o lugar da resposta antes de ela chegar",
+      "description": "Três pontos decorativos e uma frase que anuncia, uma vez, que a resposta começou a vir. Não é a linha de estado da execução: este mora onde o texto vai aparecer, e sai de cena quando ele chega."
+    },
+    "labels": {
+      "generating": "Gerando resposta",
+      "searching": "Buscando nas fontes",
+      "reveal": "Fazer o texto chegar"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "waiting": "Enquanto a resposta não chega",
+        "arrived": "Depois que o texto chegou",
+        "withComposer": "Junto do campo que oferece interromper"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A raiz é uma região de estado: ela anuncia uma vez que a resposta começou a vir, e é a única peça desta família que se anuncia.",
+      "item2": "Os três pontos são desenho, e ficam fora do que é lido em voz — animação não se lê.",
+      "item3": "A frase fica escondida do olho e presente para o ouvido. É ela que diz o que está acontecendo.",
+      "item4": "O indicador mora onde o texto vai aparecer, logo depois da pergunta, e não numa barra à parte.",
+      "item5": "Não há botão aqui: interromper é oferecido por quem já tem esse controle.",
+      "structureCode": {
+        "web": "<p class=\"nds-thinking\" role=\"status\">\n  <span class=\"nds-thinking-dots\" aria-hidden=\"true\">\n    <span></span><span></span><span></span>\n  </span>\n  <span class=\"nds-sr-only\">Gerando resposta</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Ponha o indicador no lugar em que a resposta vai aparecer, e só enquanto ela não chegou.",
+        "item2": "Diga em palavra o que está acontecendo: os pontos são desenho, e desenho não chega a quem ouve.",
+        "item3": "Tire o indicador no instante em que o primeiro trecho de texto chegar.",
+        "item4": "Deixe a ação de interromper com quem já a oferece — o indicador não tem controle nenhum.",
+        "item5": "Um indicador por espera. Dois anúncios ao mesmo tempo se atropelam, e nenhum dos dois é ouvido inteiro."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "A resposta ainda não começou a chegar",
+          "u": "Indicador de geração",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Dizer em que pé está a execução, com o que fazer a respeito",
+          "u": "Estado da execução",
+          "a": "Aquilo é uma linha de informação com ação, e mora fora da resposta. Isto é o lugar da resposta, e não oferece nada para acionar."
+        },
+        "item3": {
+          "s": "O que se espera já tem forma conhecida",
+          "u": "Esqueleto",
+          "a": "Ele desenha a forma do que vem. Aqui não se sabe o tamanho do que vem, e desenhar uma forma seria prometer uma."
+        },
+        "item4": {
+          "s": "Sabe-se quanto falta",
+          "u": "Barra de progresso",
+          "a": "Ela mede. O indicador só diz que algo está vindo, e é honesto justamente por não medir."
+        },
+        "item5": {
+          "s": "O texto já está chegando, trecho a trecho",
+          "u": "Conversa, com a mensagem em geração",
+          "a": "A partir do primeiro trecho o lugar já tem texto, e o indicador passa a mentir se ficar."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "phrase": {
+            "name": "Frase anunciada",
+            "format": "O que a máquina está fazendo agora, no gerúndio",
+            "good": "Gerando resposta",
+            "bad": "Aguarde um instante"
+          },
+          "verb": {
+            "name": "Verbo",
+            "format": "O que a máquina faz, nunca o que a pessoa deve fazer",
+            "good": "Buscando nas fontes",
+            "bad": "Por favor, espere"
+          },
+          "length": {
+            "name": "Tamanho",
+            "format": "Duas ou três palavras — a frase é ouvida, e não lida",
+            "good": "Pensando",
+            "bad": "Estamos processando a sua solicitação neste momento"
+          },
+          "promise": {
+            "name": "Prazo",
+            "format": "Nenhum: o indicador não sabe quanto falta",
+            "good": "Gerando resposta",
+            "bad": "Só mais alguns segundos"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva a frase que diz o que está acontecendo, sempre.",
+        "item2": "Ponha o indicador onde o texto vai aparecer.",
+        "item3": "Tire-o assim que o primeiro trecho chegar.",
+        "item4": "Deixe um só indicador de pé por espera."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe os pontos falarem sozinhos: eles não chegam a quem ouve a tela.",
+        "item2": "Não deixe o indicador ao lado do texto que já chegou.",
+        "item3": "Não prometa prazo na frase — nada aqui sabe quanto falta.",
+        "item4": "Não ponha ação no indicador: interromper mora com quem já oferece esse controle."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "A frase diz o que está acontecendo, e é ela que chega a quem ouve a tela.",
+        "dont": "Só os pontos se movendo: para quem ouve a tela, isso é silêncio."
+      },
+      "pair2": {
+        "do": "Chegou o texto, o indicador sai de cena e o lugar passa a ser da resposta.",
+        "dont": "O indicador continua ao lado do texto que já chegou, dizendo que se espera pelo que já veio."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createThinkingIndicator } from '@/components/ui/thinking-indicator';\n\nconst indicator = createThinkingIndicator({ label: 'Gerando resposta' });\ndocument.querySelector('#answer')?.append(indicator);",
+        "react": "import { ThinkingIndicator } from \"@/components/ui/thinking-indicator\";\n\n<ThinkingIndicator label=\"Gerando resposta\" />",
+        "vue": "<ThinkingIndicator label=\"Gerando resposta\" />",
+        "svelte": "<ThinkingIndicator label=\"Gerando resposta\" />",
+        "angular": "<p ndsThinkingIndicator label=\"Gerando resposta\"></p>"
+      },
+      "arrival": "Quando o texto chega",
+      "arrivalCode": {
+        "vanilla": "// O indicador NÃO se apaga sozinho: quem monta a conversa é quem o tira,\n// porque só ele sabe que o primeiro trecho chegou.\nindicator.remove();\nanswer.textContent = trecho;",
+        "react": "// O indicador NÃO se apaga sozinho: quem monta a conversa é quem o tira,\n// porque só ele sabe que o primeiro trecho chegou.\n{texto ? <p>{texto}</p> : <ThinkingIndicator label=\"Gerando resposta\" />}",
+        "vue": "<!-- O indicador NÃO se apaga sozinho: quem monta a conversa é quem o tira,\n     porque só ele sabe que o primeiro trecho chegou. -->\n<p v-if=\"texto\">{{ texto }}</p>\n<ThinkingIndicator v-else label=\"Gerando resposta\" />",
+        "svelte": "<!-- O indicador NÃO se apaga sozinho: quem monta a conversa é quem o tira,\n     porque só ele sabe que o primeiro trecho chegou. -->\n{#if texto}\n  <p>{texto}</p>\n{:else}\n  <ThinkingIndicator label=\"Gerando resposta\" />\n{/if}",
+        "angular": "<!-- O indicador NÃO se apaga sozinho: quem monta a conversa é quem o tira,\n     porque só ele sabe que o primeiro trecho chegou. -->\n@if (texto(); as t) {\n  <p>{{ t }}</p>\n} @else {\n  <p ndsThinkingIndicator label=\"Gerando resposta\"></p>\n}"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "waiting": {
+        "label": "Esperando",
+        "trigger": "A pergunta foi enviada e nenhum trecho de resposta chegou.",
+        "behavior": "Os pontos pulsam em onda, com atraso escalonado, e a frase anuncia uma vez que a resposta começou a vir."
+      },
+      "arrived": {
+        "label": "Texto chegou",
+        "trigger": "O primeiro trecho da resposta chegou.",
+        "behavior": "O indicador sai do documento e o texto ocupa o lugar dele. Quem monta a conversa é quem o tira."
+      },
+      "reducedMotion": {
+        "label": "Movimento reduzido",
+        "trigger": "A pessoa pediu menos movimento no sistema.",
+        "behavior": "Os pontos param sem apagar — continuam visíveis, e a frase continua dizendo tudo o que era preciso saber."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase que diz o que está acontecendo. É ela que chega a quem ouve a tela, e por isso não tem valor padrão: um padrão escondido em inglês não se traduz."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes extras na raiz, para pôr o indicador exatamente onde a resposta vai aparecer."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O indicador desenha e anuncia; ele não decide nada. Ele não sabe quando a resposta começa, quando ela chega nem o que fazer para interrompê-la — quem monta a conversa é quem o põe e quem o tira. São três pontos fixos, porque o atraso escalonado que os faz parecer uma onda é escrito para três.",
+      "extensibilityCode": {
+        "web": "/* O tamanho do ponto e o ritmo da onda são da folha, e mudam para todas as\n   esperas de uma vez. Sobrescrever aqui é decisão de sistema, não de tela. */\n.nds-thinking-dots > span {\n  inline-size: var(--spacing-3);\n  block-size: var(--spacing-3);\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-thinking",
+          "description": "Espaço entre os pontos e o que vier ao lado deles."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-thinking-dots",
+          "description": "Espaço entre um ponto e o seguinte."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-thinking-dots > span",
+          "description": "O que faz de cada ponto um círculo."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-thinking-dots > span",
+          "description": "Cor dos pontos — discreta, porque eles não são a informação."
+        },
+        "durationSlow": {
+          "token": "--duration-slow",
+          "value": ".nds-thinking-dots > span",
+          "description": "Duração da onda, e base do atraso de cada ponto. A camada de tokens a zera sob movimento reduzido."
+        },
+        "easeStandard": {
+          "token": "--ease-standard",
+          "value": ".nds-thinking-dots > span",
+          "description": "Curva da pulsação, a mesma das transições do sistema."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-thinking {\n  justify-content: center;\n}\n\n/* Sob movimento reduzido os pontos param e ficam visíveis. Apagá-los aqui\n   pareceria desligado justamente para quem escolheu menos movimento, e a\n   frase continuaria sendo a única coisa a dizer o que acontece. */\n@media (prefers-reduced-motion: reduce) {\n  .nds-thinking-dots > span {\n    opacity: 0.6;\n  }\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "É a exceção da família: aqui existe região viva, porque o indicador anuncia UMA vez que a resposta começou a vir e depois sai de cena. Avisar que algo começou não é narrar cada passo.",
+      "items": {
+        "item1": "A raiz é uma região de estado. Ela anuncia uma vez, sem interromper o que estiver sendo lido, e não volta a falar.",
+        "item2": "Os pontos ficam fora do que é lido em voz. Animação não se lê, e três pontos anunciados a cada quadro tornariam a tela impossível de ouvir.",
+        "item3": "A frase é escondida do olho e lida em voz: o que os pontos mostram, ela diz.",
+        "item4": "O indicador não entra na ordem de foco. Ele não tem controle nenhum, e uma parada de teclado sem nada para acionar é uma parada perdida.",
+        "item5": "Ele sai do documento quando o texto chega. Indicador que fica é indicador que mente, e quem ouve não tem como saber que ele parou de valer."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Não pára aqui: o indicador não é interativo.",
+        "enter": "Não faz nada — não há controle para acionar.",
+        "arrows": "Não fazem nada: não há lista nem opção para percorrer."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "Ao aparecer, a frase é anunciada uma vez, depois do que estiver sendo lido.",
+        "item2": "Os pontos não são anunciados, nem por quantidade nem por movimento.",
+        "item3": "Quando o texto chega, o indicador some e o que se lê a partir dali é a resposta."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "Quando o que se mostra é em que pé está a execução, com o que fazer a respeito — uma linha de informação fora da resposta."
+        },
+        "chatThread": {
+          "name": "Conversa",
+          "description": "A superfície em que o indicador espera, e onde a resposta vai aparecer."
+        },
+        "skeleton": {
+          "name": "Esqueleto",
+          "description": "Quando o que se espera já tem forma conhecida e vale desenhá-la."
+        },
+        "progress": {
+          "name": "Barra de progresso",
+          "description": "Quando se sabe quanto falta, e a espera pode ser medida."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Não é a mesma peça que o estado da execução, ainda que as duas falem de espera. Aquela é uma linha de informação com ação, e mora fora da resposta; esta é o lugar da resposta enquanto ela não chegou, e mora onde o texto vai aparecer. Quem escolhe entre as duas escolhe pelo lugar.",
+      "item2": "A região viva aqui é exceção, e a exceção tem motivo. A regra desta família proíbe região viva porque um número que se reanuncia torna a tela impossível de ouvir; o indicador anuncia uma vez que a resposta começou a vir e depois sai de cena. É a diferença entre avisar que algo começou e narrar cada passo.",
+      "item3": "Os pontos são decorativos e a frase é lida em voz. A animação é a parte que não se lê, e por isso a frase não é um enfeite do desenho: ela é a informação inteira para quem ouve.",
+      "item4": "Sair de cena é responsabilidade de quem consome, e é a única regra que o componente não pode cumprir sozinho: ele não sabe quando o primeiro trecho de texto chegou. Indicador que fica ao lado do texto já entregue mente.",
+      "item5": "São três pontos, e o número não é opção. O atraso escalonado que faz três pontos parecerem uma onda — em vez de três pontos piscando juntos — está escrito para três; um quarto ponto pulsaria junto com o primeiro."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação. O indicador não instrumenta nada: ele não tem interação para medir.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Montar o indicador",
+          "result": "A raiz é uma região de estado, com a frase dentro dela",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Olhar os pontos",
+          "result": "São três, e estão fora do que é lido em voz",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Trocar a frase",
+          "result": "O que é lido em voz muda, e nada mais na tela muda",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Fazer o texto chegar",
+          "result": "O indicador sai do documento e a resposta ocupa o lugar",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pôr o indicador depois da pergunta",
+          "result": "Ele fica no lugar em que o texto vai aparecer, e é o último elemento da conversa",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Montar o indicador junto do campo que já oferece interromper",
+          "result": "Os dois falam da mesma espera, e só o campo oferece o que acionar",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "Depois que o texto chega, não há região de estado nenhuma no documento",
+        "item2": "Os pontos estão fora do que é lido em voz",
+        "item3": "A frase é lida em voz e não aparece na tela",
+        "item4": "O indicador não entra na ordem de foco",
+        "item5": "Enquanto se espera, há uma só região de estado de pé"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — os três pontos, com a frase",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — enquanto a resposta não chega",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — depois que o texto chegou",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composições — o texto ocupando o lugar do indicador",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composições — junto do campo que oferece interromper",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Thinking indicator",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The three dots that hold the answer's place while it has not arrived.",
+    "seo": {
+      "title": "Thinking indicator — the answer's place before it arrives",
+      "description": "Three decorative dots and a phrase that announces, once, that the answer has started coming. It is not the run status line: this one lives where the text will appear, and leaves when the text arrives."
+    },
+    "labels": {
+      "generating": "Generating answer",
+      "searching": "Searching the sources",
+      "reveal": "Let the text arrive"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "waiting": "While the answer has not arrived",
+        "arrived": "After the text arrived",
+        "withComposer": "Next to the field that offers to stop"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The root is a status region: it announces once that the answer has started coming, and it is the only piece of this family that announces anything.",
+      "item2": "The three dots are drawing, and stay out of what is read aloud — animation cannot be read.",
+      "item3": "The phrase is hidden from the eye and present for the ear. It is what says what is happening.",
+      "item4": "The indicator lives where the text will appear, right after the question, and not in a bar of its own.",
+      "item5": "There is no button here: stopping is offered by whoever already has that control.",
+      "structureCode": {
+        "web": "<p class=\"nds-thinking\" role=\"status\">\n  <span class=\"nds-thinking-dots\" aria-hidden=\"true\">\n    <span></span><span></span><span></span>\n  </span>\n  <span class=\"nds-sr-only\">Generating answer</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Put the indicator where the answer will appear, and only while it has not arrived.",
+        "item2": "Say in words what is happening: the dots are drawing, and drawing does not reach whoever is listening.",
+        "item3": "Remove the indicator the moment the first piece of text arrives.",
+        "item4": "Leave stopping to whoever already offers it — the indicator has no control at all.",
+        "item5": "One indicator per wait. Two announcements at once run over each other, and neither is heard whole."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "The answer has not started arriving yet",
+          "u": "Thinking indicator",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Saying where the run stands, with what to do about it",
+          "u": "Run status",
+          "a": "That is an information line with an action, and it lives outside the answer. This is the answer's place, and it offers nothing to act on."
+        },
+        "item3": {
+          "s": "What is being waited for already has a known shape",
+          "u": "Skeleton",
+          "a": "It draws the shape of what is coming. Here the size of what is coming is unknown, and drawing a shape would promise one."
+        },
+        "item4": {
+          "s": "How much is left is known",
+          "u": "Progress bar",
+          "a": "That one measures. The indicator only says something is coming, and it is honest precisely because it does not measure."
+        },
+        "item5": {
+          "s": "The text is already arriving, piece by piece",
+          "u": "Thread, with the message being generated",
+          "a": "From the first piece on, the place already holds text, and the indicator starts lying if it stays."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "phrase": {
+            "name": "Announced phrase",
+            "format": "What the machine is doing now, as an ongoing action",
+            "good": "Generating answer",
+            "bad": "Please hold on a moment"
+          },
+          "verb": {
+            "name": "Verb",
+            "format": "What the machine does, never what the person should do",
+            "good": "Searching the sources",
+            "bad": "Please wait"
+          },
+          "length": {
+            "name": "Length",
+            "format": "Two or three words — the phrase is heard, not read",
+            "good": "Thinking",
+            "bad": "We are currently processing your request"
+          },
+          "promise": {
+            "name": "Deadline",
+            "format": "None: the indicator does not know how much is left",
+            "good": "Generating answer",
+            "bad": "Just a few more seconds"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Always write the phrase that says what is happening.",
+        "item2": "Put the indicator where the text will appear.",
+        "item3": "Take it away as soon as the first piece arrives.",
+        "item4": "Keep a single indicator standing per wait."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not let the dots speak alone: they do not reach whoever is listening to the screen.",
+        "item2": "Do not leave the indicator next to text that already arrived.",
+        "item3": "Do not promise a deadline in the phrase — nothing here knows how much is left.",
+        "item4": "Do not put an action on the indicator: stopping belongs to whoever already offers that control."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The phrase says what is happening, and it is what reaches whoever is listening to the screen.",
+        "dont": "Only the dots moving: for whoever is listening to the screen, that is silence."
+      },
+      "pair2": {
+        "do": "The text arrived, the indicator leaves, and the place becomes the answer's.",
+        "dont": "The indicator stays next to text that already arrived, claiming a wait for what has already come."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createThinkingIndicator } from '@/components/ui/thinking-indicator';\n\nconst indicator = createThinkingIndicator({ label: 'Generating answer' });\ndocument.querySelector('#answer')?.append(indicator);",
+        "react": "import { ThinkingIndicator } from \"@/components/ui/thinking-indicator\";\n\n<ThinkingIndicator label=\"Generating answer\" />",
+        "vue": "<ThinkingIndicator label=\"Generating answer\" />",
+        "svelte": "<ThinkingIndicator label=\"Generating answer\" />",
+        "angular": "<p ndsThinkingIndicator label=\"Generating answer\"></p>"
+      },
+      "arrival": "When the text arrives",
+      "arrivalCode": {
+        "vanilla": "// The indicator does NOT remove itself: whoever builds the conversation takes\n// it away, because only they know the first piece has arrived.\nindicator.remove();\nanswer.textContent = piece;",
+        "react": "// The indicator does NOT remove itself: whoever builds the conversation takes\n// it away, because only they know the first piece has arrived.\n{text ? <p>{text}</p> : <ThinkingIndicator label=\"Generating answer\" />}",
+        "vue": "<!-- The indicator does NOT remove itself: whoever builds the conversation\n     takes it away, because only they know the first piece has arrived. -->\n<p v-if=\"text\">{{ text }}</p>\n<ThinkingIndicator v-else label=\"Generating answer\" />",
+        "svelte": "<!-- The indicator does NOT remove itself: whoever builds the conversation\n     takes it away, because only they know the first piece has arrived. -->\n{#if text}\n  <p>{text}</p>\n{:else}\n  <ThinkingIndicator label=\"Generating answer\" />\n{/if}",
+        "angular": "<!-- The indicator does NOT remove itself: whoever builds the conversation\n     takes it away, because only they know the first piece has arrived. -->\n@if (text(); as t) {\n  <p>{{ t }}</p>\n} @else {\n  <p ndsThinkingIndicator label=\"Generating answer\"></p>\n}"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "waiting": {
+        "label": "Waiting",
+        "trigger": "The question was sent and no piece of the answer has arrived.",
+        "behavior": "The dots pulse as a wave, with staggered delay, and the phrase announces once that the answer has started coming."
+      },
+      "arrived": {
+        "label": "Text arrived",
+        "trigger": "The first piece of the answer arrived.",
+        "behavior": "The indicator leaves the document and the text takes its place. Whoever builds the conversation is the one who removes it."
+      },
+      "reducedMotion": {
+        "label": "Reduced motion",
+        "trigger": "The person asked the system for less motion.",
+        "behavior": "The dots stop without fading out — they stay visible, and the phrase keeps saying everything that mattered."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The phrase that says what is happening. It is what reaches whoever is listening to the screen, and that is why it has no default: a default hidden in one language does not translate."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Extra classes on the root, to put the indicator exactly where the answer will appear."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The indicator draws and announces; it decides nothing. It does not know when the answer starts, when it arrives, or what stopping it means — whoever builds the conversation puts it there and takes it away. There are three fixed dots, because the staggered delay that makes them look like a wave is written for three.",
+      "extensibilityCode": {
+        "web": "/* The dot size and the rhythm of the wave belong to the sheet, and change\n   every wait at once. Overriding here is a system decision, not a screen one. */\n.nds-thinking-dots > span {\n  inline-size: var(--spacing-3);\n  block-size: var(--spacing-3);\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-thinking",
+          "description": "Space between the dots and whatever sits beside them."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-thinking-dots",
+          "description": "Space between one dot and the next."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-thinking-dots > span",
+          "description": "What makes each dot a circle."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-thinking-dots > span",
+          "description": "Colour of the dots — quiet, because they are not the information."
+        },
+        "durationSlow": {
+          "token": "--duration-slow",
+          "value": ".nds-thinking-dots > span",
+          "description": "Duration of the wave, and the base of each dot's delay. The token layer zeroes it under reduced motion."
+        },
+        "easeStandard": {
+          "token": "--ease-standard",
+          "value": ".nds-thinking-dots > span",
+          "description": "Curve of the pulse, the same one the system's transitions use."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-thinking {\n  justify-content: center;\n}\n\n/* Under reduced motion the dots stop and stay visible. Fading them out here\n   would look switched off precisely to whoever chose less motion, and the\n   phrase would be the only thing left saying what is happening. */\n@media (prefers-reduced-motion: reduce) {\n  .nds-thinking-dots > span {\n    opacity: 0.6;\n  }\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "This is the family's exception: a live region exists here, because the indicator announces ONCE that the answer has started coming and then leaves. Warning that something started is not narrating every step.",
+      "items": {
+        "item1": "The root is a status region. It announces once, without cutting into whatever is being read, and it does not speak again.",
+        "item2": "The dots stay out of what is read aloud. Animation cannot be read, and three dots announced every frame would make the screen impossible to listen to.",
+        "item3": "The phrase is hidden from the eye and read aloud: what the dots show, it says.",
+        "item4": "The indicator does not enter the focus order. It has no control at all, and a keyboard stop with nothing to act on is a stop wasted.",
+        "item5": "It leaves the document when the text arrives. An indicator that stays is an indicator that lies, and whoever is listening has no way to know it stopped being true."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Does not stop here: the indicator is not interactive.",
+        "enter": "Does nothing — there is no control to act on.",
+        "arrows": "Do nothing: there is no list or option to walk through."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "On appearing, the phrase is announced once, after whatever is being read.",
+        "item2": "The dots are not announced, neither by count nor by movement.",
+        "item3": "When the text arrives, the indicator is gone and what is read from there on is the answer."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "agentStatus": {
+          "name": "Run status",
+          "description": "When what is shown is where the run stands, with what to do about it — an information line outside the answer."
+        },
+        "chatThread": {
+          "name": "Thread",
+          "description": "The surface where the indicator waits, and where the answer will appear."
+        },
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "When what is being waited for already has a known shape and it is worth drawing."
+        },
+        "progress": {
+          "name": "Progress bar",
+          "description": "When how much is left is known, and the wait can be measured."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "It is not the same piece as the run status, even though both speak of waiting. That one is an information line with an action, and lives outside the answer; this one is the answer's place while it has not arrived, and lives where the text will appear. Whoever chooses between them chooses by place.",
+      "item2": "The live region here is an exception, and the exception has a reason. This family's rule forbids live regions because a number that re-announces itself makes the screen impossible to listen to; the indicator announces once that the answer has started coming and then leaves. That is the difference between warning that something started and narrating every step.",
+      "item3": "The dots are decorative and the phrase is read aloud. The animation is the part that cannot be read, which is why the phrase is not an ornament of the drawing: it is the whole information for whoever is listening.",
+      "item4": "Leaving is the consumer's responsibility, and it is the one rule the component cannot keep on its own: it does not know when the first piece of text arrived. An indicator that stays next to text already delivered lies.",
+      "item5": "There are three dots, and the number is not an option. The staggered delay that makes three dots look like a wave — instead of three dots blinking together — is written for three; a fourth dot would pulse along with the first."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events. The indicator instruments nothing: it has no interaction to measure.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Mount the indicator",
+          "result": "The root is a status region, with the phrase inside it",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Look at the dots",
+          "result": "There are three, and they are out of what is read aloud",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Change the phrase",
+          "result": "What is read aloud changes, and nothing else on screen does",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Let the text arrive",
+          "result": "The indicator leaves the document and the answer takes the place",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Put the indicator after the question",
+          "result": "It sits where the text will appear, and is the last element of the conversation",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Mount the indicator next to the field that already offers to stop",
+          "result": "Both speak of the same wait, and only the field offers something to act on",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "After the text arrives there is no status region left in the document",
+        "item2": "The dots are out of what is read aloud",
+        "item3": "The phrase is read aloud and does not appear on screen",
+        "item4": "The indicator does not enter the focus order",
+        "item5": "While waiting, there is a single status region standing"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in every theme and mode.",
+        "item1": {
+          "story": "Playground — the three dots, with the phrase",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — while the answer has not arrived",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — after the text arrived",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Compositions — the text taking the indicator's place",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Compositions — next to the field that offers to stop",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Indicador de generación",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Los tres puntos que ocupan el lugar de la respuesta mientras no llega.",
+    "seo": {
+      "title": "Indicador de generación — el lugar de la respuesta antes de que llegue",
+      "description": "Tres puntos decorativos y una frase que anuncia, una vez, que la respuesta empezó a llegar. No es la línea de estado de la ejecución: este vive donde aparecerá el texto, y se retira cuando el texto llega."
+    },
+    "labels": {
+      "generating": "Generando respuesta",
+      "searching": "Buscando en las fuentes",
+      "reveal": "Hacer que llegue el texto"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "waiting": "Mientras la respuesta no llega",
+        "arrived": "Después de que llegó el texto",
+        "withComposer": "Junto al campo que ofrece interrumpir"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La raíz es una región de estado: anuncia una vez que la respuesta empezó a llegar, y es la única pieza de esta familia que se anuncia.",
+      "item2": "Los tres puntos son dibujo, y quedan fuera de lo que se lee en voz — la animación no se lee.",
+      "item3": "La frase queda escondida del ojo y presente para el oído. Es ella la que dice qué está pasando.",
+      "item4": "El indicador vive donde aparecerá el texto, justo después de la pregunta, y no en una barra aparte.",
+      "item5": "Aquí no hay botón: interrumpir lo ofrece quien ya tiene ese control.",
+      "structureCode": {
+        "web": "<p class=\"nds-thinking\" role=\"status\">\n  <span class=\"nds-thinking-dots\" aria-hidden=\"true\">\n    <span></span><span></span><span></span>\n  </span>\n  <span class=\"nds-sr-only\">Generando respuesta</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Pon el indicador en el lugar donde aparecerá la respuesta, y solo mientras no ha llegado.",
+        "item2": "Di en palabras qué está pasando: los puntos son dibujo, y el dibujo no llega a quien escucha.",
+        "item3": "Retira el indicador en el instante en que llegue el primer trozo de texto.",
+        "item4": "Deja la acción de interrumpir a quien ya la ofrece — el indicador no tiene control alguno.",
+        "item5": "Un indicador por espera. Dos anuncios a la vez se atropellan, y ninguno se escucha entero."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "La respuesta todavía no empezó a llegar",
+          "u": "Indicador de generación",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Decir en qué punto está la ejecución, con qué hacer al respecto",
+          "u": "Estado de la ejecución",
+          "a": "Aquello es una línea de información con acción, y vive fuera de la respuesta. Esto es el lugar de la respuesta, y no ofrece nada para accionar."
+        },
+        "item3": {
+          "s": "Lo que se espera ya tiene forma conocida",
+          "u": "Esqueleto",
+          "a": "Él dibuja la forma de lo que viene. Aquí no se sabe el tamaño de lo que viene, y dibujar una forma sería prometer una."
+        },
+        "item4": {
+          "s": "Se sabe cuánto falta",
+          "u": "Barra de progreso",
+          "a": "Ella mide. El indicador solo dice que algo está llegando, y es honesto justamente por no medir."
+        },
+        "item5": {
+          "s": "El texto ya está llegando, trozo a trozo",
+          "u": "Conversación, con el mensaje en generación",
+          "a": "Desde el primer trozo el lugar ya tiene texto, y el indicador pasa a mentir si se queda."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "phrase": {
+            "name": "Frase anunciada",
+            "format": "Lo que la máquina está haciendo ahora, en gerundio",
+            "good": "Generando respuesta",
+            "bad": "Espera un instante"
+          },
+          "verb": {
+            "name": "Verbo",
+            "format": "Lo que hace la máquina, nunca lo que debe hacer la persona",
+            "good": "Buscando en las fuentes",
+            "bad": "Por favor, espera"
+          },
+          "length": {
+            "name": "Tamaño",
+            "format": "Dos o tres palabras — la frase se escucha, no se lee",
+            "good": "Pensando",
+            "bad": "Estamos procesando tu solicitud en este momento"
+          },
+          "promise": {
+            "name": "Plazo",
+            "format": "Ninguno: el indicador no sabe cuánto falta",
+            "good": "Generando respuesta",
+            "bad": "Solo unos segundos más"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe siempre la frase que dice qué está pasando.",
+        "item2": "Pon el indicador donde aparecerá el texto.",
+        "item3": "Retíralo en cuanto llegue el primer trozo.",
+        "item4": "Deja un solo indicador en pie por espera."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes que los puntos hablen solos: no llegan a quien escucha la pantalla.",
+        "item2": "No dejes el indicador al lado del texto que ya llegó.",
+        "item3": "No prometas plazo en la frase — nada aquí sabe cuánto falta.",
+        "item4": "No pongas acción en el indicador: interrumpir vive con quien ya ofrece ese control."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "La frase dice qué está pasando, y es ella la que llega a quien escucha la pantalla.",
+        "dont": "Solo los puntos moviéndose: para quien escucha la pantalla, eso es silencio."
+      },
+      "pair2": {
+        "do": "Llegó el texto, el indicador se retira y el lugar pasa a ser de la respuesta.",
+        "dont": "El indicador sigue al lado del texto que ya llegó, diciendo que se espera lo que ya vino."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createThinkingIndicator } from '@/components/ui/thinking-indicator';\n\nconst indicator = createThinkingIndicator({ label: 'Generando respuesta' });\ndocument.querySelector('#answer')?.append(indicator);",
+        "react": "import { ThinkingIndicator } from \"@/components/ui/thinking-indicator\";\n\n<ThinkingIndicator label=\"Generando respuesta\" />",
+        "vue": "<ThinkingIndicator label=\"Generando respuesta\" />",
+        "svelte": "<ThinkingIndicator label=\"Generando respuesta\" />",
+        "angular": "<p ndsThinkingIndicator label=\"Generando respuesta\"></p>"
+      },
+      "arrival": "Cuando llega el texto",
+      "arrivalCode": {
+        "vanilla": "// El indicador NO se apaga solo: quien monta la conversación es quien lo\n// retira, porque solo él sabe que llegó el primer trozo.\nindicator.remove();\nanswer.textContent = trozo;",
+        "react": "// El indicador NO se apaga solo: quien monta la conversación es quien lo\n// retira, porque solo él sabe que llegó el primer trozo.\n{texto ? <p>{texto}</p> : <ThinkingIndicator label=\"Generando respuesta\" />}",
+        "vue": "<!-- El indicador NO se apaga solo: quien monta la conversación es quien lo\n     retira, porque solo él sabe que llegó el primer trozo. -->\n<p v-if=\"texto\">{{ texto }}</p>\n<ThinkingIndicator v-else label=\"Generando respuesta\" />",
+        "svelte": "<!-- El indicador NO se apaga solo: quien monta la conversación es quien lo\n     retira, porque solo él sabe que llegó el primer trozo. -->\n{#if texto}\n  <p>{texto}</p>\n{:else}\n  <ThinkingIndicator label=\"Generando respuesta\" />\n{/if}",
+        "angular": "<!-- El indicador NO se apaga solo: quien monta la conversación es quien lo\n     retira, porque solo él sabe que llegó el primer trozo. -->\n@if (texto(); as t) {\n  <p>{{ t }}</p>\n} @else {\n  <p ndsThinkingIndicator label=\"Generando respuesta\"></p>\n}"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "waiting": {
+        "label": "Esperando",
+        "trigger": "La pregunta se envió y no llegó ningún trozo de respuesta.",
+        "behavior": "Los puntos laten en onda, con retraso escalonado, y la frase anuncia una vez que la respuesta empezó a llegar."
+      },
+      "arrived": {
+        "label": "Llegó el texto",
+        "trigger": "Llegó el primer trozo de la respuesta.",
+        "behavior": "El indicador sale del documento y el texto ocupa su lugar. Quien monta la conversación es quien lo retira."
+      },
+      "reducedMotion": {
+        "label": "Movimiento reducido",
+        "trigger": "La persona pidió menos movimiento en el sistema.",
+        "behavior": "Los puntos se detienen sin apagarse — siguen visibles, y la frase sigue diciendo todo lo que hacía falta saber."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase que dice qué está pasando. Es la que llega a quien escucha la pantalla, y por eso no tiene valor predeterminado: un valor escondido en un idioma no se traduce."
+        },
+        "class": {
+          "name": "class",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases extra en la raíz, para poner el indicador exactamente donde aparecerá la respuesta."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El indicador dibuja y anuncia; no decide nada. No sabe cuándo empieza la respuesta, cuándo llega ni qué significa interrumpirla — quien monta la conversación es quien lo pone y quien lo retira. Son tres puntos fijos, porque el retraso escalonado que los hace parecer una onda está escrito para tres.",
+      "extensibilityCode": {
+        "web": "/* El tamaño del punto y el ritmo de la onda son de la hoja, y cambian todas\n   las esperas a la vez. Sobrescribir aquí es decisión de sistema, no de\n   pantalla. */\n.nds-thinking-dots > span {\n  inline-size: var(--spacing-3);\n  block-size: var(--spacing-3);\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-thinking",
+          "description": "Espacio entre los puntos y lo que venga a su lado."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-thinking-dots",
+          "description": "Espacio entre un punto y el siguiente."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-thinking-dots > span",
+          "description": "Lo que hace de cada punto un círculo."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-thinking-dots > span",
+          "description": "Color de los puntos — discreto, porque ellos no son la información."
+        },
+        "durationSlow": {
+          "token": "--duration-slow",
+          "value": ".nds-thinking-dots > span",
+          "description": "Duración de la onda, y base del retraso de cada punto. La capa de tokens la pone en cero bajo movimiento reducido."
+        },
+        "easeStandard": {
+          "token": "--ease-standard",
+          "value": ".nds-thinking-dots > span",
+          "description": "Curva del latido, la misma de las transiciones del sistema."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-thinking {\n  justify-content: center;\n}\n\n/* Bajo movimiento reducido los puntos se detienen y quedan visibles.\n   Apagarlos aquí parecería apagado justamente para quien eligió menos\n   movimiento, y la frase sería lo único que dice qué pasa. */\n@media (prefers-reduced-motion: reduce) {\n  .nds-thinking-dots > span {\n    opacity: 0.6;\n  }\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Es la excepción de la familia: aquí existe región viva, porque el indicador anuncia UNA vez que la respuesta empezó a llegar y después se retira. Avisar que algo empezó no es narrar cada paso.",
+      "items": {
+        "item1": "La raíz es una región de estado. Anuncia una vez, sin cortar lo que se esté leyendo, y no vuelve a hablar.",
+        "item2": "Los puntos quedan fuera de lo que se lee en voz. La animación no se lee, y tres puntos anunciados en cada cuadro harían la pantalla imposible de escuchar.",
+        "item3": "La frase está escondida del ojo y se lee en voz: lo que los puntos muestran, ella lo dice.",
+        "item4": "El indicador no entra en el orden de foco. No tiene control alguno, y una parada de teclado sin nada que accionar es una parada perdida.",
+        "item5": "Sale del documento cuando llega el texto. Un indicador que se queda es un indicador que miente, y quien escucha no tiene cómo saber que dejó de valer."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "No se detiene aquí: el indicador no es interactivo.",
+        "enter": "No hace nada — no hay control que accionar.",
+        "arrows": "No hacen nada: no hay lista ni opción que recorrer."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "Al aparecer, la frase se anuncia una vez, después de lo que se esté leyendo.",
+        "item2": "Los puntos no se anuncian, ni por cantidad ni por movimiento.",
+        "item3": "Cuando llega el texto, el indicador desaparece y lo que se lee desde ahí es la respuesta."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "Cuando lo que se muestra es en qué punto está la ejecución, con qué hacer al respecto — una línea de información fuera de la respuesta."
+        },
+        "chatThread": {
+          "name": "Conversación",
+          "description": "La superficie donde el indicador espera, y donde aparecerá la respuesta."
+        },
+        "skeleton": {
+          "name": "Esqueleto",
+          "description": "Cuando lo que se espera ya tiene forma conocida y vale la pena dibujarla."
+        },
+        "progress": {
+          "name": "Barra de progreso",
+          "description": "Cuando se sabe cuánto falta, y la espera se puede medir."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "No es la misma pieza que el estado de la ejecución, aunque las dos hablen de espera. Aquella es una línea de información con acción, y vive fuera de la respuesta; esta es el lugar de la respuesta mientras no llega, y vive donde aparecerá el texto. Quien elige entre las dos elige por el lugar.",
+      "item2": "La región viva aquí es excepción, y la excepción tiene motivo. La regla de esta familia prohíbe región viva porque un número que se reanuncia hace la pantalla imposible de escuchar; el indicador anuncia una vez que la respuesta empezó a llegar y después se retira. Es la diferencia entre avisar que algo empezó y narrar cada paso.",
+      "item3": "Los puntos son decorativos y la frase se lee en voz. La animación es la parte que no se lee, y por eso la frase no es un adorno del dibujo: es la información entera para quien escucha.",
+      "item4": "Retirarse es responsabilidad de quien consume, y es la única regla que el componente no puede cumplir solo: no sabe cuándo llegó el primer trozo de texto. Un indicador que se queda al lado del texto ya entregado miente.",
+      "item5": "Son tres puntos, y el número no es opción. El retraso escalonado que hace que tres puntos parezcan una onda — en vez de tres puntos parpadeando juntos — está escrito para tres; un cuarto punto latiría junto con el primero."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación. El indicador no instrumenta nada: no tiene interacción que medir.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Montar el indicador",
+          "result": "La raíz es una región de estado, con la frase dentro",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Mirar los puntos",
+          "result": "Son tres, y están fuera de lo que se lee en voz",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Cambiar la frase",
+          "result": "Lo que se lee en voz cambia, y nada más en la pantalla cambia",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Hacer que llegue el texto",
+          "result": "El indicador sale del documento y la respuesta ocupa el lugar",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Poner el indicador después de la pregunta",
+          "result": "Queda en el lugar donde aparecerá el texto, y es el último elemento de la conversación",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Montar el indicador junto al campo que ya ofrece interrumpir",
+          "result": "Los dos hablan de la misma espera, y solo el campo ofrece qué accionar",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "Después de que llega el texto no queda ninguna región de estado en el documento",
+        "item2": "Los puntos están fuera de lo que se lee en voz",
+        "item3": "La frase se lee en voz y no aparece en la pantalla",
+        "item4": "El indicador no entra en el orden de foco",
+        "item5": "Mientras se espera, hay una sola región de estado en pie"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — los tres puntos, con la frase",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — mientras la respuesta no llega",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — después de que llegó el texto",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composiciones — el texto ocupando el lugar del indicador",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composiciones — junto al campo que ofrece interrumpir",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
