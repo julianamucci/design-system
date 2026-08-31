@@ -943,3 +943,303 @@
  * contraste contra uma trilha que ninguém mediu, e este sistema já recusou
  * `--warning` na barra exatamente por isso. Cor que não se pode provar é cor
  * que informa em alguns temas e some em outros. */
+
+/* ── Bloco de terminal ────────────────────────────────────────────────────────
+ *
+ * O comando que o agente rodou, e o que voltou dele. Vocabulário: `RunStatus`,
+ * `isRunFinished`.
+ *
+ *   <div class="nds-terminal-block" data-slot="terminal-block" data-status="running" aria-busy="true">
+ *     <p class="nds-terminal-block-command nds-font-mono" data-slot="terminal-block-command">
+ *       <span class="nds-terminal-block-sigil" data-slot="terminal-block-sigil" aria-hidden="true">$</span>
+ *       <code class="nds-terminal-block-command-text" data-slot="terminal-block-command-text"
+ *             id="nds-terminal-block-1-command" lang="en">npm run build</code>
+ *     </p>
+ *     <pre class="nds-terminal-block-output nds-font-mono" data-slot="terminal-block-output"
+ *          role="group" aria-labelledby="nds-terminal-block-1-command" tabindex="0" lang="en">vite v7.1.0 building for production...
+ *   transforming (412) src/main.ts<span class="nds-terminal-block-cursor" data-slot="terminal-block-cursor" aria-hidden="true"></span></pre>
+ *     <p class="nds-terminal-block-result" data-slot="terminal-block-result">
+ *       <span class="nds-terminal-block-dot" data-slot="terminal-block-dot" aria-hidden="true"></span>
+ *       <span class="nds-terminal-block-status" data-slot="terminal-block-status">Em andamento</span>
+ *       <span class="nds-terminal-block-exit" data-slot="terminal-block-exit">código de saída 0</span>
+ *     </p>
+ *   </div>
+ *
+ * `.nds-font-mono` ANDA NA ÁRVORE, e é a única classe daqui que vem de outra
+ * folha (`typography.css`). Ela está em DOIS lugares — a linha do comando e a
+ * saída — e não é cosmética: saída de terminal se alinha em COLUNAS, e coluna
+ * só fecha com avanço fixo. `ls -l`, uma tabela de teste, uma árvore de
+ * arquivos: em fonte proporcional, o alinhamento que carregava o sentido some.
+ *
+ * É por isso que a decisão aqui é o CONTRÁRIO da que o nome da chamada de
+ * ferramenta tomou acima. Lá a monoespaçada era EFEITO, e uma terceira cópia da
+ * pilha literal do `code-block` seria duplicata que envelhece sozinha. Aqui ela
+ * carrega informação — e a saída não é inventar token (não há token de fonte
+ * mono neste sistema) nem copiar a pilha uma terceira vez: é USAR a utilitária
+ * que já existe, na marcação. Esta folha não declara `font-family` nenhuma.
+ *
+ * O RISCO DESSA ESCOLHA é o esquecimento silencioso: classe que mora só na
+ * marcação some quando uma stack copia a árvore pela metade, e nada reprova.
+ * Por isso a `play` do vanilla AFIRMA a classe nos dois elementos, e as outras
+ * quatro copiam a `play` junto com a marcação.
+ *
+ * NÃO É O BLOCO DE CÓDIGO, e esta foi a primeira pergunta da peça. Aquele
+ * mostra código para LER e copiar: tokeniza por gramática, numera linha,
+ * destaca intervalo e trunca o título com reticências. Este mostra o que uma
+ * máquina JÁ ESCREVEU — não há gramática (colorir saída por uma linguagem
+ * inventa sentido que ela não tem), não há linha para citar, o comando não
+ * trunca, e há ESTADO e CÓDIGO DE SAÍDA, que são vocabulário de execução. Pôr
+ * esse vocabulário no bloco de código levaria a família 2 inteira para dentro
+ * da peça que documenta cinquenta componentes.
+ *
+ * SEM BOTÃO DE COPIAR, e é decisão: copiar O QUÊ — o comando ou a saída? — é
+ * pergunta de quem consome, e a peça que responde à do código já existe.
+ *
+ * SEM VARIANTE DE SUPERFÍCIE. A fonte tem um par de superfícies fixo, e ele não
+ * cabe aqui: uma superfície que ignora o tema é uma superfície cujo contraste
+ * teria de ser medido à parte, em três temas e dois modos, para cada linha de
+ * saída. O bloco desenha sobre `--muted`, como as irmãs desta folha.
+ *
+ * SEM AÇÃO. Parar e repetir são do estado da execução, que já os carrega — e
+ * dois botões de parar para uma execução só fariam quem apertasse um deles não
+ * saber qual parou. Esta peça é o REGISTRO do que rodou, não o controle.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. NÃO É REGIÃO VIVA, e aqui a regra da folha encontra o caso extremo dela.
+ *    Saída de comando chega em RAJADA — dezenas de linhas por segundo —, e uma
+ *    região viva a anunciaria pedaço por pedaço até a tela ficar impossível de
+ *    ouvir (regra 1 da §8 da guideline 17). As três exceções da folha não
+ *    alcançam este caso: nada aqui espera por uma pessoa, e nada aqui é o chão
+ *    saindo. O que existe no lugar é `aria-busy="true"` na raiz enquanto corre.
+ *    Quem quiser anunciar o fim escreve o resultado UMA vez, num anunciador
+ *    próprio, do lado de fora.
+ * 2. O CIFRÃO É DECORATIVO, e é FIXO. Lido em voz ele vira "cifrão npm run
+ *    build", e o cifrão não faz parte do que se executou nem do que se
+ *    copiaria. Fixo porque configurável convidaria a pôr informação ali —
+ *    máquina, usuário, caminho —, e informação atrás de `aria-hidden` não chega
+ *    a quem ouve. O que for informação entra no comando, ou ao lado dele.
+ * 3. A SAÍDA É A ÚNICA CAMADA QUE ROLA, e ela tem `tabindex="0"` e NOME (regra
+ *    6 da §8; axe `scrollable-region-focusable`). O nome é o comando, por
+ *    `aria-labelledby` e não por cópia: nome acessível que diverge do texto
+ *    visível é o defeito de WCAG 2.5.3, e apontar para o elemento torna a
+ *    divergência impossível. `role="group"` e não `region` — `region` é marco
+ *    de página, e um marco por bloco de terminal numa conversa é uma lista de
+ *    marcos que ninguém navega.
+ *
+ *    E A CAIXA SÓ EXISTE QUANDO HÁ O QUE MOSTRAR. Um comando que terminou sem
+ *    escrever nada é caso real, e é o que um terminal de verdade mostra: uma
+ *    caixa vazia com parada de tabulação dentro seria dar foco a lugar nenhum.
+ * 4. O CURSOR É DECORATIVO e só existe enquanto corre. Ele marca a costura
+ *    entre o que chegou e o que ainda vem — cursor que fica é cursor que mente.
+ *    A animação para sob `prefers-reduced-motion`, e aqui, ao contrário dos
+ *    pontos do indicador de geração, PARAR BASTA: o quadro de repouso deste
+ *    cursor é o opaco, então ele fica sólido e continua marcando o lugar. Nos
+ *    pontos o repouso era o quadro mais apagado, e por isso lá foi preciso
+ *    escrever uma opacidade à mão.
+ * 5. O ESTADO É PALAVRA, e o ponto é REFORÇO (WCAG 1.4.1). Sem a palavra, três
+ *    dos cinco estados só se distinguiriam por cor — e o ponto existe porque
+ *    numa tela com dez blocos empilhados é ele que permite achar o que quebrou
+ *    sem ler dez palavras.
+ * 6. O CÓDIGO DE SAÍDA CHEGA A QUEM OUVE, como texto e sem `aria-hidden`. Ele
+ *    não se reescreve, então não é o relógio de que esta folha se defende — e é
+ *    a informação que mais aproxima esta peça de um terminal de verdade.
+ *
+ *    A PEÇA NÃO O INTERPRETA. Zero é sucesso por convenção, mas `grep` sai com
+ *    1 quando não acha nada e `diff` sai com 1 quando os arquivos diferem, e
+ *    nenhum dos dois falhou. Quem diz o que aconteceu é o estado; derivar um do
+ *    outro daria duas fontes de verdade que podem discordar — o mesmo defeito
+ *    que `TokenUsage` evita ao deixar o total ser função, e não campo.
+ *
+ *    Por isso o código de saída também NÃO é `.nds-badge`: naquela etiqueta,
+ *    nesta folha, mora a PALAVRA do estado, e vestir o número com ela
+ *    convidaria a lê-lo como o estado.
+ * 7. TEXTO PRÉ-FORMATADO NÃO QUEBRA, e a rolagem horizontal fica DENTRO do
+ *    bloco. `white-space: pre` — e não `pre-wrap` — porque espaço e fim de linha
+ *    carregam sentido: rearrumar uma linha de duzentas colunas desmancha as
+ *    colunas, e era nelas que estava a informação. O transbordo rola no próprio
+ *    elemento, com `overscroll-behavior` contido, e nunca no corpo da página
+ *    (regra do repositório).
+ * 8. NADA TEM ALTURA FIXA. O teto da saída é em `rem`, então ele CRESCE com a
+ *    fonte do navegador (WCAG 1.4.4, Resize Text 200%) em vez de espremer mais
+ *    linhas num espaço do mesmo tamanho — e é um teto, não uma altura: saída
+ *    curta não ganha caixa vazia. O comando quebra em várias linhas em vez de
+ *    receber reticências, mesma escolha do rótulo do passo do plano: comando
+ *    pela metade é instrução pela metade.
+ * 9. A ORDEM DE LEITURA É A ORDEM DA EXECUÇÃO: o que rodou, o que voltou, como
+ *    terminou. É também a ordem do foco, e a folha não a mexe — nada de `order`
+ *    nem de `column-reverse`. Mesma escolha do cartão de autorização, e pelo
+ *    mesmo motivo (WCAG 1.3.2).
+ * 10. SEM DEGRADÊ DE OPACIDADE nas linhas mais antigas, ainda que a fonte o
+ *    faça. Linha de saída é texto corrido, e texto corrido apagado é texto que
+ *    não alcança 4.5:1 — justamente nas linhas para as quais alguém rola para
+ *    trás, que são as que interessam quando algo quebrou. E opacidade baixa
+ *    some no escuro (§9 da guideline 17). O que é mais recente já se diz pela
+ *    POSIÇÃO: é a última linha, onde o cursor está.
+ */
+
+.nds-terminal-block {
+  /* EM `rem`, e é a decisão 8: com `em` o teto seguiria o tamanho do próprio
+   * bloco, e com `px` ele ficaria parado enquanto o texto cresce — a 200% de
+   * fonte, a mesma caixa mostraria metade das linhas. Em `rem` o teto cresce
+   * com a raiz, que é o que a pessoa aumentou. É custom property para que quem
+   * consome mude o teto na folha dele, sem valor de design em `style`. */
+  --terminal-block-max-block-size: 20rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+
+  padding: var(--spacing-3);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted) / 0.3);
+
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-terminal-block-command {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  margin: 0;
+}
+
+.nds-terminal-block-sigil {
+  flex-shrink: 0;
+}
+
+.nds-terminal-block-command-text {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  /* HERDA O TAMANHO, e isto não é redundância: o `<code>` nasce com a família
+   * monoespaçada da engine, e essa família traz junto o tamanho "padrão de
+   * monoespaçada" — 13px, alheio à escala de tipo do sistema. Sem esta linha o
+   * comando encolheria em relação à saída logo abaixo, que é a MESMA fonte. */
+  font-size: inherit;
+  /* Sem reticências: comando pela metade é instrução pela metade (decisão 8). */
+  overflow-wrap: anywhere;
+}
+
+/* A CAIXA QUE ROLA, e a única (decisão 3).
+ *
+ * `overflow: auto` nos dois eixos no mesmo elemento, como no bloco de código:
+ * separar os eixos em dois contêineres faria a barra horizontal ficar num e o
+ * foco no outro. `overscroll-behavior: contain` para a rolagem não escapar para
+ * a página ao chegar no fim — num bloco dentro de uma conversa longa, esse
+ * escape é o que faz a pessoa perder o lugar. */
+.nds-terminal-block-output {
+  margin: 0;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  background-color: hsl(var(--muted) / 0.5);
+
+  max-block-size: var(--terminal-block-max-block-size);
+  overflow: auto;
+  overscroll-behavior: contain;
+
+  /* `pre`, e não `pre-wrap` (decisão 7). */
+  white-space: pre;
+  /* Oito, e não dois: dois é o recuo de código-fonte, e o bloco de código o usa
+   * por isso. Saída de terminal é escrita por programa que assume a parada de
+   * tabulação do terminal, que é de oito — com dois, a coluna que o programa
+   * alinhou sai torta. */
+  tab-size: 8;
+  line-height: 1.6;
+  color: hsl(var(--foreground));
+}
+
+/* A região que rola precisa dizer quando está em foco — mesmo anel da conversa
+ * e do bloco de código. `outline-offset` negativo porque a caixa recorta: um
+ * anel para fora ficaria por baixo do que vier depois. */
+.nds-terminal-block-output:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+/* O CURSOR (decisão 4). Célula de caractere, então as medidas são em `em`: ele
+ * acompanha a fonte da saída em que mora, e não uma escala de espaçamento que
+ * não tem nada a ver com o texto. */
+.nds-terminal-block-cursor {
+  display: inline-block;
+  inline-size: 0.5em;
+  block-size: 1em;
+  vertical-align: text-bottom;
+  background-color: hsl(var(--foreground));
+  /* `steps(2, jump-none)` porque cursor de terminal LIGA E DESLIGA: uma curva
+   * suave faria um pulso, que é o desenho do indicador de geração e diz outra
+   * coisa. E `--duration-stately` porque é o token mais perto do período de um
+   * cursor de verdade; os mais curtos tremem. */
+  animation: nds-terminal-block-blink var(--duration-stately) steps(2, jump-none) infinite;
+}
+
+@keyframes nds-terminal-block-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* PARAR BASTA, e é o contrário do que os pontos do indicador de geração
+ * precisaram. Lá o quadro de repouso era o mais apagado, e congelar ali fazia
+ * os pontos parecerem desligados justamente para quem pediu menos movimento;
+ * aqui o repouso é o opaco, então o cursor fica sólido e continua marcando onde
+ * a próxima linha vai aparecer. */
+@media (prefers-reduced-motion: reduce) {
+  .nds-terminal-block-cursor {
+    animation: none;
+  }
+}
+
+.nds-terminal-block-result {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin: 0;
+}
+
+/* O PONTO É REFORÇO (decisão 5), e a base pinta os DOIS estados neutros — em
+ * espera e interrompido. Não há uma quarta regra repintando `stopped` da mesma
+ * cor: regra que não muda nada é desenho que não existe com cara de estado
+ * pensado, que é a lição escrita no ponto do estado da ligação. O motivo de
+ * interrompido ser neutro continua sendo o do estado da execução: interromper
+ * não é erro, e pintar de vermelho o que a pessoa escolheu fazer é o sistema
+ * discordando dela. */
+.nds-terminal-block-dot {
+  flex-shrink: 0;
+  inline-size: var(--spacing-2);
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--muted-foreground));
+}
+
+.nds-terminal-block[data-status="running"] .nds-terminal-block-dot {
+  background-color: hsl(var(--primary));
+}
+
+.nds-terminal-block[data-status="complete"] .nds-terminal-block-dot {
+  background-color: hsl(var(--success));
+}
+
+.nds-terminal-block[data-status="failed"] .nds-terminal-block-dot {
+  background-color: hsl(var(--destructive));
+}
+
+/* A PALAVRA É O ESTADO. Nenhuma cor semântica aqui: texto corrido em container
+ * colorido é sempre `--foreground` (regra do CLAUDE.md raiz), e o ponto ao lado
+ * é que carrega a cor. */
+.nds-terminal-block-status {
+  color: hsl(var(--foreground));
+}
+
+/* O CÓDIGO DE SAÍDA fica na cor de apoio, herdada da raiz: ele é dado, e a
+ * palavra ao lado é o que descreve (decisão 6). `tabular-nums` porque numa
+ * pilha de blocos os números caem uns sobre os outros, e algarismo de largura
+ * variável faz a coluna dançar de linha em linha. */
+.nds-terminal-block-exit {
+  font-variant-numeric: tabular-nums;
+}

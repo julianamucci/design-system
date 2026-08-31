@@ -1,0 +1,1643 @@
+{
+  "pt-BR": {
+    "title": "Bloco de terminal",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O comando que o agente rodou e o que voltou dele — com a saída preservada como veio, a palavra que diz como terminou e o código de saída.",
+    "seo": {
+      "title": "Bloco de terminal — o comando, a saída e como terminou",
+      "description": "A peça de bloco de terminal: saída pré-formatada que rola dentro do próprio bloco, o estado em palavra, o código de saída que chega a quem ouve, e nada de região viva enquanto a saída chega em rajada."
+    },
+    "labels": {
+      "status": {
+        "idle": "Em espera",
+        "running": "Em andamento",
+        "stopped": "Interrompido",
+        "complete": "Concluído",
+        "failed": "Falhou"
+      },
+      "exitCode": "código de saída {code}"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "running": "Enquanto a saída ainda chega",
+        "complete": "Quando terminou bem",
+        "failed": "Quando quebrou, com uma linha mais larga que o bloco",
+        "withoutOutput": "Quando não houve saída nenhuma"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A linha do comando abre a peça e mostra o que foi executado, como se escreveu. Ela quebra em várias linhas em vez de ser cortada.",
+      "item2": "O sinal antes do comando diz que aquilo é um comando, e fica fora do que é lido em voz.",
+      "item3": "A saída vem em bloco pré-formatado: espaço e fim de linha são preservados, e o transbordo rola dentro do próprio bloco.",
+      "item4": "O cursor marca onde a próxima linha vai aparecer, e só existe enquanto a saída ainda chega.",
+      "item5": "A linha do resultado fecha a peça com a palavra do estado e, quando a execução já acabou, o código de saída.",
+      "structureCode": {
+        "web": "<div class=\"nds-terminal-block\" data-status=\"running\" aria-busy=\"true\">\n  <p class=\"nds-terminal-block-command nds-font-mono\">\n    <span class=\"nds-terminal-block-sigil\" aria-hidden=\"true\">$</span>\n    <code class=\"nds-terminal-block-command-text\" id=\"comando-1\" lang=\"en\">npm run build</code>\n  </p>\n  <pre class=\"nds-terminal-block-output nds-font-mono\" role=\"group\"\n       aria-labelledby=\"comando-1\" tabindex=\"0\" lang=\"en\">vite v7.1.0 building for production...\ntransforming (412) src/main.ts<span class=\"nds-terminal-block-cursor\" aria-hidden=\"true\"></span></pre>\n  <p class=\"nds-terminal-block-result\">\n    <span class=\"nds-terminal-block-dot\" aria-hidden=\"true\"></span>\n    <span class=\"nds-terminal-block-status\">Em andamento</span>\n  </p>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para mostrar o que o agente executou e o que a máquina respondeu, preservando a saída como ela veio.",
+        "item2": "Escreva o estado em palavra, sempre — o ponto ao lado é para os olhos.",
+        "item3": "Mande o código de saída como dado, e o estado à parte: a peça não deduz um do outro.",
+        "item4": "Deixe a saída sem realce de sintaxe: o que a máquina escreveu não tem gramática para colorir.",
+        "item5": "Execute em quem consome — a peça não abre processo, não revela linha por linha e não oferece parar."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar o que um comando escreveu, e como ele terminou",
+          "u": "Bloco de terminal",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar código para alguém ler e copiar",
+          "u": "Bloco de código",
+          "a": "Ali há gramática, numeração e destaque de trecho; aqui há saída de máquina, sem gramática nenhuma."
+        },
+        "item3": {
+          "s": "Dizer em que pé está a resposta que está sendo escrita agora",
+          "u": "Estado da execução",
+          "a": "Aquela linha descreve a resposta inteira; esta descreve um comando dentro dela."
+        },
+        "item4": {
+          "s": "Recolher várias chamadas de ferramenta num bloco só",
+          "u": "Grupo de chamadas",
+          "a": "Ali cada linha é uma chamada com estado próprio; aqui há um comando só, e o corpo é o que ele escreveu."
+        },
+        "item5": {
+          "s": "Medir o quanto uma tarefa longa já andou",
+          "u": "Andamento de trabalho longo",
+          "a": "Ali há unidades feitas e uma barra; aqui há texto, e o que ele diz é o próprio resultado."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "command": {
+            "name": "Comando",
+            "format": "Exatamente o que foi executado, inteiro, sem abreviar",
+            "good": "npm run build --workspace @nortear/ds",
+            "bad": "npm run build…"
+          },
+          "output": {
+            "name": "Saída",
+            "format": "As linhas como a máquina as escreveu, com o espaçamento intacto",
+            "good": "dist/index.html   0.71 kB   gzip: 0.40 kB",
+            "bad": "O build gerou três arquivos."
+          },
+          "status": {
+            "name": "Palavra do estado",
+            "format": "Uma palavra sobre o comando, e nunca a mesma para dois estados",
+            "good": "Interrompido",
+            "bad": "Erro"
+          },
+          "exitCode": {
+            "name": "Código de saída",
+            "format": "Molde com a palavra que apresenta o número, sem julgá-lo",
+            "good": "código de saída 1",
+            "bad": "falhou com 1"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Preserve o espaçamento da saída: é nele que a tabela alinhada carrega a leitura.",
+        "item2": "Deixe a linha larga rolar dentro do bloco.",
+        "item3": "Mostre o código de saída como número, e o que ele significa em palavra ao lado.",
+        "item4": "Tire o cursor assim que a saída para de chegar."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não anuncie a saída enquanto ela chega: texto em rajada anunciado pedaço a pedaço torna a tela impossível de ouvir.",
+        "item2": "Não quebre a linha longa para caber: quebrar desmancha as colunas, e era nelas que estava a informação.",
+        "item3": "Não apague as linhas mais antigas com opacidade — são justamente as que alguém volta para ler.",
+        "item4": "Não deduza o resultado do número: há comando que devolve um sem ter falhado."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "A saída chega com o espaçamento intacto, e as colunas ficam alinhadas.",
+        "dont": "A saída é rearrumada para caber na largura, e a tabela que alinhava os números vira um parágrafo."
+      },
+      "pair2": {
+        "do": "O estado chega em palavra, ao lado do ponto.",
+        "dont": "Só o ponto separa o que terminou bem do que quebrou, e ponto colorido não diz qual dos dois é."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: rotulos,\n});",
+        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
+        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "web": "// A palavra de cada um dos cinco estados e o molde do código de saída.\n//\n// Os cinco existem porque um comando passa por todos: fica na fila, corre, é\n// interrompido por quem lê, termina ou quebra. Interrompido não é falha — é o\n// Ctrl-C —, e por isso as duas palavras são diferentes.\n//\n// O molde é molde porque a palavra que apresenta o número é do idioma, e o\n// número é dado. Ele não julga o número: há comando que devolve um sem ter\n// falhado.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  exitCode: 'código de saída {code}',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "idle": {
+        "label": "Em espera",
+        "trigger": "O comando foi enfileirado e ainda não rodou.",
+        "behavior": "Não há saída nem cursor, a peça não se declara ocupada e o ponto fica neutro."
+      },
+      "running": {
+        "label": "Em andamento",
+        "trigger": "O comando está rodando e a saída ainda chega.",
+        "behavior": "A peça se declara ocupada, o cursor marca onde a próxima linha vai aparecer e o código de saída ainda não existe."
+      },
+      "stopped": {
+        "label": "Interrompido",
+        "trigger": "Alguém interrompeu o comando, e ele parou onde estava.",
+        "behavior": "A saída fica onde parou, o cursor some, a peça deixa de se declarar ocupada e o ponto fica neutro — interromper não é erro."
+      },
+      "complete": {
+        "label": "Concluído",
+        "trigger": "O comando terminou sozinho.",
+        "behavior": "O cursor some, o ponto fica na cor de sucesso e o código de saída aparece escrito ao lado da palavra."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "O comando quebrou no meio, sem que ninguém pedisse.",
+        "behavior": "O cursor some, o ponto fica na cor de erro e o código de saída aparece escrito ao lado da palavra."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "command": {
+          "name": "command",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que foi executado, como se escreveu. É também o nome pelo qual a saída é anunciada."
+        },
+        "lines": {
+          "name": "lines",
+          "type": "readonly string[]",
+          "default": "[]",
+          "required": "Não",
+          "description": "As linhas que voltaram, na ordem em que voltaram. Quem fatia para revelar aos poucos é quem consome."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que pé está o comando. Decide a palavra, a cor do ponto, se a peça se declara ocupada e se há cursor."
+        },
+        "exitCode": {
+          "name": "exitCode",
+          "type": "number",
+          "default": "—",
+          "required": "Não",
+          "description": "O que o processo devolveu ao terminar. Só aparece depois que a execução acabou, e não decide o estado."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "TerminalBlockLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada estado e o molde do código de saída."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada um dos cinco estados. É ela que descreve, e não o ponto."
+        },
+        "labelsExitCode": {
+          "name": "exitCode",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O molde do código de saída. O número é substituído no lugar marcado."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A peça desenha o comando e as linhas que recebe. Ela não executa, não revela aos poucos, não acompanha o fim da rolagem e não oferece parar — parar e repetir são do estado da execução, que já os carrega.",
+      "extensibilityCode": {
+        "web": "// O CÓDIGO DE SAÍDA SÓ EXISTE DEPOIS DO FIM, e quem responde é o vocabulário\n// compartilhado — não um teste escrito na tela.\nisRunFinished('running');   // false → nada de código de saída ainda\nisRunFinished('stopped');   // true  → parado por gente também é fim\nisRunFinished('complete');  // true\nisRunFinished('failed');    // true\n\n// E O NÚMERO NÃO DECIDE NADA. Zero é sucesso por convenção, mas há comando que\n// devolve 1 sem ter falhado: um busca e não acha, outro compara e encontra\n// diferença. Quem diz o que aconteceu é o estado, que vem de quem executou.\n//\n// Derivar um do outro daria duas fontes de verdade que podem discordar — o\n// mesmo defeito que o vocabulário evita ao deixar o total de tokens ser função\n// em vez de campo."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-terminal-block",
+          "description": "Tamanho do texto da peça inteira, do comando à saída."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-terminal-block",
+          "description": "Espaço entre as três partes da peça, recuo da saída e tamanho do ponto."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-terminal-block",
+          "description": "Recuo interno do bloco."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-terminal-block",
+          "description": "Superfície do bloco, e a da caixa de saída dentro dele."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-terminal-block",
+          "description": "Contorno do bloco."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-terminal-block",
+          "description": "Arredondamento do bloco."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-terminal-block-output",
+          "description": "Arredondamento da caixa de saída."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-terminal-block",
+          "description": "Cor de apoio da peça, e do ponto nos dois estados neutros."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-terminal-block-output",
+          "description": "O comando, a saída, o cursor e a palavra do estado, que é o que descreve."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-terminal-block-command-text",
+          "description": "Peso do comando, que o separa da saída logo abaixo."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-terminal-block-output",
+          "description": "Anel de foco da caixa que rola, alcançável pelo teclado."
+        },
+        "durationStately": {
+          "token": "--duration-stately",
+          "value": ".nds-terminal-block-cursor",
+          "description": "Período do piscar do cursor. Zerado sob movimento reduzido, o cursor fica sólido."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-terminal-block-dot",
+          "description": "Cor do ponto enquanto o comando roda."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-terminal-block-dot",
+          "description": "Cor do ponto quando o comando terminou sozinho."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-terminal-block-dot",
+          "description": "Cor do ponto quando o comando quebrou."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-terminal-block {\n  /* O teto da saída é uma custom property, e ele é em `rem` de propósito:\n     assim ele cresce com a fonte do navegador em vez de espremer mais linhas\n     no mesmo espaço quando alguém aumenta o texto. */\n  --terminal-block-max-block-size: 32rem;\n}\n\n/* A cor do ponto é REFORÇO, e não a pista: a palavra ao lado é o que descreve\n   o estado. Mexer no ponto não muda o que chega a quem ouve. */\n.nds-terminal-block-dot {\n  inline-size: var(--spacing-3);\n  block-size: var(--spacing-3);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Nada aqui é região viva: saída de comando chega em rajada, e anunciá-la pedaço a pedaço torna a tela impossível de ouvir. O que diz que a tela ainda se escreve é a peça se declarar ocupada; a palavra descreve o estado, o código de saída chega escrito, e a caixa que rola é alcançável pelo teclado e tem o comando por nome.",
+      "items": {
+        "item1": "A palavra do estado está sempre presente: o ponto colorido não descreve estado sozinho.",
+        "item2": "O sinal antes do comando fica fora do que é lido em voz — lido, ele viraria uma palavra que ninguém executou.",
+        "item3": "A caixa de saída é alcançável pelo teclado e tem o comando por nome, apontado e não copiado.",
+        "item4": "Nada dentro da peça é região viva, e é a decisão mais importante dela.",
+        "item5": "Enquanto a saída chega, a peça se declara ocupada — é o que diz que aquele pedaço da tela ainda se escreve, sem anunciar nada.",
+        "item6": "A rolagem horizontal fica dentro do bloco, e nunca no corpo da página.",
+        "item7": "O código de saída chega a quem ouve, como texto: ele não se reescreve, então não é o número de que a peça se defende.",
+        "item8": "O cursor fica fora do que é lido em voz, e para de piscar sob movimento reduzido — parado, ele continua sólido e continua marcando o lugar."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Chega à caixa de saída, quando ela existe. O resto da peça é texto.",
+        "enter": "Não faz nada aqui: a peça é de leitura, e não oferece ação.",
+        "arrows": "Rolam a saída quando ela está em foco, nos dois eixos."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A raiz se declara ocupada enquanto a saída chega, e nada nela é região viva.",
+        "item2": "A caixa de saída é um grupo nomeado pelo elemento do comando, e não por um texto repetido.",
+        "item3": "aria-hidden tira o sinal do comando e o cursor do que é lido em voz."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A saída nunca é anunciada enquanto chega, nem quando chega em rajada.",
+        "item2": "A caixa de saída é anunciada pelo comando que a produziu, e não como uma região sem assunto.",
+        "item3": "O estado é lido como a palavra daquele estado, e o código de saída como o número que voltou."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "codeBlock": {
+          "name": "Bloco de código",
+          "description": "Quando o que se mostra é código para ler e copiar, com gramática, numeração e destaque de trecho."
+        },
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "Em que pé está a resposta inteira, e onde ficam as ações de parar e repetir."
+        },
+        "toolGroup": {
+          "name": "Grupo de chamadas",
+          "description": "Quando o que se recolhe são várias chamadas com estado próprio, e não a saída de um comando só."
+        },
+        "jobProgress": {
+          "name": "Andamento de trabalho longo",
+          "description": "Quando o que interessa é o quanto já andou, medido em unidades feitas, e não o que foi escrito."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Não é o bloco de código, e a diferença não é de aparência. Aquele mostra código para ler e copiar, e tokeniza por gramática; este mostra o que uma máquina já escreveu, e saída não tem gramática para colorir sem inventar sentido.",
+      "item2": "O estado é o mesmo vocabulário da execução, de propósito: um comando fica na fila, corre, é interrompido, termina ou quebra. O interrompido daqui é o mais literal dos cinco — é o Ctrl-C, que é escolha de pessoa e não falha de máquina.",
+      "item3": "O código de saída é dado, e não estado. A peça mostra o número e não o interpreta: há comando que devolve um sem ter falhado, e deduzir o estado do número daria duas fontes de verdade que podem discordar.",
+      "item4": "A saída é pré-formatada de verdade: espaço e fim de linha carregam sentido, e rearrumar uma linha larga desmancha as colunas em que a informação estava. Por isso ela rola, e rola dentro do próprio bloco.",
+      "item5": "O teto de altura da saída é em unidade que acompanha a fonte do navegador. Fosse fixo, aumentar o texto para o dobro mostraria metade das linhas no mesmo espaço.",
+      "item6": "As linhas mais antigas não são apagadas com opacidade, ainda que seja comum fazê-lo: são justamente as linhas para as quais alguém rola de volta quando algo quebrou. O que é mais recente já se diz pela posição.",
+      "item7": "A peça não executa nada. Ela não abre processo, não revela linha por linha, não conta tempo e não oferece parar — parar e repetir são do estado da execução, e dois botões de parar para uma execução só fariam quem apertasse um deles não saber qual parou."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não oferece ação.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar cada um dos cinco estados",
+          "result": "A palavra daquele estado aparece na peça",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar um comando",
+          "result": "Ele aparece como foi escrito, e é o nome pelo qual a saída é anunciada",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar a peça em qualquer estado",
+          "result": "Nada dentro dela é região viva",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar a peça sem linha de saída nenhuma",
+          "result": "Não há caixa de saída, e nenhuma parada de tabulação vazia",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar um código de saída com a execução ainda em curso",
+          "result": "Ele não aparece, porque um resultado que ainda não existe não se mostra",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar o estado em que o comando roda",
+          "result": "A peça se declara ocupada e o cursor aparece no fim da saída",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar um estado em que o comando já não roda",
+          "result": "A peça deixa de se declarar ocupada e o cursor some",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Passar um código de saída com a execução terminada",
+          "result": "Ele aparece escrito, e sem sair do que é lido em voz",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Passar uma linha mais larga que o bloco",
+          "result": "Ela rola dentro do próprio bloco, e o corpo da página não rola na horizontal",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Chegar à caixa de saída pelo teclado",
+          "result": "Ela recebe o foco e é anunciada com o comando que a produziu",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Empilhar vários blocos",
+          "result": "Cada um é autônomo, e nenhum contém o outro",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Montar o bloco ao lado da linha de estado da execução",
+          "result": "As duas são autônomas, e a ação de parar existe só numa delas",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A palavra do estado está sempre presente, e o ponto não é a única pista",
+        "item2": "O sinal antes do comando está fora do que é lido em voz",
+        "item3": "A caixa de saída é alcançável pelo teclado e tem o comando por nome",
+        "item4": "Nada dentro da peça é região viva",
+        "item5": "A peça se declara ocupada só enquanto a saída chega",
+        "item6": "A rolagem horizontal fica dentro do bloco, e não no corpo da página",
+        "item7": "O código de saída chega a quem ouve, como texto",
+        "item8": "O cursor está fora do que é lido em voz"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a peça, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os cinco, um abaixo do outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — em andamento, com o cursor no fim da saída",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — concluído, com a tabela alinhada e o código de saída",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — falhou, com a linha mais larga que o bloco",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estados — interrompido, com a saída parada no meio",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Estados — sem saída nenhuma",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composições — a sequência de comandos",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Composições — o bloco ao lado do estado da execução",
+          "priority": "medium"
+        },
+        "item10": {
+          "story": "Composições — a saída longa, com a rolagem dentro do bloco",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Terminal block",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The command the agent ran and what came back from it — with the output preserved as it arrived, the word that says how it ended, and the exit code.",
+    "seo": {
+      "title": "Terminal block — the command, the output and how it ended",
+      "description": "The terminal block piece: preformatted output that scrolls inside the block itself, the state as a word, the exit code that reaches people who listen, and no live region while output arrives in bursts."
+    },
+    "labels": {
+      "status": {
+        "idle": "Queued",
+        "running": "Running",
+        "stopped": "Stopped",
+        "complete": "Finished",
+        "failed": "Failed"
+      },
+      "exitCode": "exit code {code}"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "running": "While the output is still arriving",
+        "complete": "When it finished well",
+        "failed": "When it broke, with a line wider than the block",
+        "withoutOutput": "When there was no output at all"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The command line opens the piece and shows what was run, exactly as written. It wraps onto several lines instead of being cut short.",
+      "item2": "The sign before the command says that this is a command, and stays out of what is read aloud.",
+      "item3": "The output comes as a preformatted block: spaces and line breaks are preserved, and any overflow scrolls inside the block itself.",
+      "item4": "The cursor marks where the next line will appear, and only exists while output is still arriving.",
+      "item5": "The result line closes the piece with the state word and, once the run has ended, the exit code.",
+      "structureCode": {
+        "web": "<div class=\"nds-terminal-block\" data-status=\"running\" aria-busy=\"true\">\n  <p class=\"nds-terminal-block-command nds-font-mono\">\n    <span class=\"nds-terminal-block-sigil\" aria-hidden=\"true\">$</span>\n    <code class=\"nds-terminal-block-command-text\" id=\"comando-1\" lang=\"en\">npm run build</code>\n  </p>\n  <pre class=\"nds-terminal-block-output nds-font-mono\" role=\"group\"\n       aria-labelledby=\"comando-1\" tabindex=\"0\" lang=\"en\">vite v7.1.0 building for production...\ntransforming (412) src/main.ts<span class=\"nds-terminal-block-cursor\" aria-hidden=\"true\"></span></pre>\n  <p class=\"nds-terminal-block-result\">\n    <span class=\"nds-terminal-block-dot\" aria-hidden=\"true\"></span>\n    <span class=\"nds-terminal-block-status\">Running</span>\n  </p>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to show what the agent ran and what the machine answered, keeping the output exactly as it arrived.",
+        "item2": "Always write the state as a word — the dot beside it is for the eyes.",
+        "item3": "Send the exit code as data and the state separately: the piece does not deduce one from the other.",
+        "item4": "Leave the output without syntax highlighting: what the machine wrote has no grammar to colour.",
+        "item5": "Run it on the consuming side — the piece opens no process, reveals nothing gradually and offers no stop."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Show what a command wrote, and how it ended",
+          "u": "Terminal block",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Show code for someone to read and copy",
+          "u": "Code block",
+          "a": "That one has grammar, line numbers and range highlighting; this one has machine output, with no grammar at all."
+        },
+        "item3": {
+          "s": "Say where the answer being written right now stands",
+          "u": "Run status",
+          "a": "That line describes the whole answer; this one describes one command inside it."
+        },
+        "item4": {
+          "s": "Collapse several tool calls into a single block",
+          "u": "Tool group",
+          "a": "There each row is a call with its own state; here there is a single command, and the body is what it wrote."
+        },
+        "item5": {
+          "s": "Measure how far a long task has got",
+          "u": "Job progress",
+          "a": "There you have units done and a bar; here you have text, and what it says is the result itself."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "command": {
+            "name": "Command",
+            "format": "Exactly what was run, whole, without abbreviating",
+            "good": "npm run build --workspace @nortear/ds",
+            "bad": "npm run build…"
+          },
+          "output": {
+            "name": "Output",
+            "format": "The lines as the machine wrote them, with the spacing intact",
+            "good": "dist/index.html   0.71 kB   gzip: 0.40 kB",
+            "bad": "The build produced three files."
+          },
+          "status": {
+            "name": "State word",
+            "format": "One word about the command, and never the same one for two states",
+            "good": "Stopped",
+            "bad": "Error"
+          },
+          "exitCode": {
+            "name": "Exit code",
+            "format": "A template with the word that introduces the number, without judging it",
+            "good": "exit code 1",
+            "bad": "failed with 1"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Preserve the spacing of the output: that is where an aligned table carries the reading.",
+        "item2": "Let a wide line scroll inside the block.",
+        "item3": "Show the exit code as a number, and what it means as a word beside it.",
+        "item4": "Remove the cursor as soon as the output stops arriving."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't announce the output while it arrives: text in bursts announced piece by piece makes the screen impossible to listen to.",
+        "item2": "Don't wrap a long line to make it fit: wrapping undoes the columns, and the information was in them.",
+        "item3": "Don't dim older lines with opacity — those are exactly the ones someone scrolls back to read.",
+        "item4": "Don't deduce the result from the number: some commands return one without having failed."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "The output arrives with its spacing intact, and the columns stay aligned.",
+        "dont": "The output is rearranged to fit the width, and the table that aligned the numbers becomes a paragraph."
+      },
+      "pair2": {
+        "do": "The state arrives as a word, next to the dot.",
+        "dont": "Only the dot separates what finished well from what broke, and a coloured dot does not say which of the two it is."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: rotulos,\n});",
+        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
+        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "web": "// The word for each of the five states, and the exit code template.\n//\n// All five exist because a command goes through all of them: it queues, runs,\n// gets interrupted by the reader, finishes or breaks. Stopped is not a\n// failure — it is Ctrl-C — and that is why the two words are different.\n//\n// The template is a template because the word that introduces the number\n// belongs to the language, and the number is data. It does not judge the\n// number: some commands return one without having failed.\nconst rotulos = {\n  status: {\n    idle: 'Queued',\n    running: 'Running',\n    stopped: 'Stopped',\n    complete: 'Finished',\n    failed: 'Failed',\n  },\n  exitCode: 'exit code {code}',\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "idle": {
+        "label": "Queued",
+        "trigger": "The command was queued and has not run yet.",
+        "behavior": "There is no output and no cursor, the piece does not declare itself busy, and the dot stays neutral."
+      },
+      "running": {
+        "label": "Running",
+        "trigger": "The command is running and the output is still arriving.",
+        "behavior": "The piece declares itself busy, the cursor marks where the next line will appear, and the exit code does not exist yet."
+      },
+      "stopped": {
+        "label": "Stopped",
+        "trigger": "Someone interrupted the command, and it stopped where it was.",
+        "behavior": "The output stays where it stopped, the cursor goes, the piece stops declaring itself busy and the dot stays neutral — interrupting is not an error."
+      },
+      "complete": {
+        "label": "Finished",
+        "trigger": "The command ended on its own.",
+        "behavior": "The cursor goes, the dot takes the success colour and the exit code appears written beside the word."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The command broke halfway, without anyone asking.",
+        "behavior": "The cursor goes, the dot takes the error colour and the exit code appears written beside the word."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "command": {
+          "name": "command",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What was run, exactly as written. It is also the name by which the output is announced."
+        },
+        "lines": {
+          "name": "lines",
+          "type": "readonly string[]",
+          "default": "[]",
+          "required": "No",
+          "description": "The lines that came back, in the order they came back. Slicing them to reveal gradually belongs to the consumer."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where the command stands. It decides the word, the dot colour, whether the piece declares itself busy and whether there is a cursor."
+        },
+        "exitCode": {
+          "name": "exitCode",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "What the process returned when it ended. It only appears once the run has ended, and it does not decide the state."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "TerminalBlockLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each state and the exit code template."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each of the five states. It is the word that describes, not the dot."
+        },
+        "labelsExitCode": {
+          "name": "exitCode",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The exit code template. The number is substituted at the marked place."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The piece draws the command and the lines it receives. It does not run, does not reveal gradually, does not follow the end of the scroll and offers no stop — stopping and repeating belong to the run status line, which already carries them.",
+      "extensibilityCode": {
+        "web": "// THE EXIT CODE ONLY EXISTS AFTER THE END, and the shared vocabulary answers\n// that — not a test written on screen.\nisRunFinished('running');   // false → no exit code yet\nisRunFinished('stopped');   // true  → stopped by a person is an ending too\nisRunFinished('complete');  // true\nisRunFinished('failed');    // true\n\n// AND THE NUMBER DECIDES NOTHING. Zero means success by convention, but some\n// commands return 1 without having failed: one searches and finds nothing,\n// another compares and finds a difference. What says what happened is the\n// state, which comes from whoever ran it.\n//\n// Deriving one from the other would give two sources of truth that can\n// disagree — the same defect the vocabulary avoids by making the token total a\n// function rather than a field."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-terminal-block",
+          "description": "Text size of the whole piece, from the command to the output."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-terminal-block",
+          "description": "Space between the three parts of the piece, the output inset and the dot size."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-terminal-block",
+          "description": "Inner padding of the block."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-terminal-block",
+          "description": "Surface of the block, and of the output box inside it."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-terminal-block",
+          "description": "Outline of the block."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-terminal-block",
+          "description": "Corner rounding of the block."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-terminal-block-output",
+          "description": "Corner rounding of the output box."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-terminal-block",
+          "description": "Supporting colour of the piece, and of the dot in the two neutral states."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-terminal-block-output",
+          "description": "The command, the output, the cursor and the state word, which is what describes."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-terminal-block-command-text",
+          "description": "Weight of the command, which sets it apart from the output just below."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-terminal-block-output",
+          "description": "Focus ring of the scrolling box, which is reachable by keyboard."
+        },
+        "durationStately": {
+          "token": "--duration-stately",
+          "value": ".nds-terminal-block-cursor",
+          "description": "Blink period of the cursor. Zeroed under reduced motion, the cursor stays solid."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-terminal-block-dot",
+          "description": "Dot colour while the command is running."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-terminal-block-dot",
+          "description": "Dot colour when the command ended on its own."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-terminal-block-dot",
+          "description": "Dot colour when the command broke."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-terminal-block {\n  /* The output ceiling is a custom property, and it is in `rem` on purpose:\n     that way it grows with the browser font instead of squeezing more lines\n     into the same space when someone enlarges the text. */\n  --terminal-block-max-block-size: 32rem;\n}\n\n/* The dot colour is REINFORCEMENT, not the clue: the word beside it is what\n   describes the state. Changing the dot does not change what reaches people\n   who listen. */\n.nds-terminal-block-dot {\n  inline-size: var(--spacing-3);\n  block-size: var(--spacing-3);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Nothing here is a live region: command output arrives in bursts, and announcing it piece by piece makes the screen impossible to listen to. What says the screen is still being written is the piece declaring itself busy; the word describes the state, the exit code arrives written, and the scrolling box is reachable by keyboard and named after the command.",
+      "items": {
+        "item1": "The state word is always present: the coloured dot does not describe a state on its own.",
+        "item2": "The sign before the command stays out of what is read aloud — read out, it would become a word nobody ran.",
+        "item3": "The output box is reachable by keyboard and named after the command, pointed at rather than copied.",
+        "item4": "Nothing inside the piece is a live region, and that is its most important decision.",
+        "item5": "While output arrives, the piece declares itself busy — that is what says the part of the screen is still being written, without announcing anything.",
+        "item6": "Horizontal scrolling stays inside the block, never in the page body.",
+        "item7": "The exit code reaches people who listen, as text: it does not rewrite itself, so it is not the kind of number the piece guards against.",
+        "item8": "The cursor stays out of what is read aloud, and stops blinking under reduced motion — stopped, it stays solid and keeps marking the place."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the output box when it exists. The rest of the piece is text.",
+        "enter": "Does nothing here: the piece is for reading, and offers no action.",
+        "arrows": "Scroll the output when it has focus, on both axes."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The root declares itself busy while output arrives, and nothing in it is a live region.",
+        "item2": "The output box is a group named by the command element, not by repeated text.",
+        "item3": "aria-hidden takes the command sign and the cursor out of what is read aloud."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The output is never announced while it arrives, not even when it arrives in bursts.",
+        "item2": "The output box is announced by the command that produced it, not as a region without a subject.",
+        "item3": "The state is read as the word for that state, and the exit code as the number that came back."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "codeBlock": {
+          "name": "Code block",
+          "description": "When what is shown is code to read and copy, with grammar, line numbers and range highlighting."
+        },
+        "agentStatus": {
+          "name": "Run status",
+          "description": "Where the whole answer stands, and where the stop and retry actions live."
+        },
+        "toolGroup": {
+          "name": "Tool group",
+          "description": "When what is collapsed is several calls with their own states, rather than the output of a single command."
+        },
+        "jobProgress": {
+          "name": "Job progress",
+          "description": "When what matters is how far it has got, measured in units done, rather than what was written."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "It is not the code block, and the difference is not one of appearance. That one shows code to read and copy, and tokenises by grammar; this one shows what a machine has already written, and output has no grammar to colour without inventing meaning.",
+      "item2": "The state is the same vocabulary as the run, on purpose: a command queues, runs, is interrupted, finishes or breaks. The stopped state here is the most literal of the five — it is Ctrl-C, a person's choice rather than a machine failure.",
+      "item3": "The exit code is data, not state. The piece shows the number and does not interpret it: some commands return one without having failed, and deducing the state from the number would give two sources of truth that can disagree.",
+      "item4": "The output really is preformatted: spaces and line breaks carry meaning, and rearranging a wide line undoes the columns the information was in. That is why it scrolls, and why it scrolls inside the block itself.",
+      "item5": "The height ceiling of the output is in a unit that follows the browser font. Were it fixed, doubling the text size would show half the lines in the same space.",
+      "item6": "Older lines are not dimmed with opacity, common though that is: those are precisely the lines someone scrolls back to when something broke. What is most recent is already said by position.",
+      "item7": "The piece runs nothing. It opens no process, reveals nothing line by line, counts no time and offers no stop — stopping and repeating belong to the run status line, and two stop buttons for one run would leave whoever pressed one unsure which they stopped."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the piece itself instruments nothing, because it offers no action.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demonstration is interacted with.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass each of the five states",
+          "result": "The word for that state appears in the piece",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass a command",
+          "result": "It appears exactly as written, and is the name by which the output is announced",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Mount the piece in any state",
+          "result": "Nothing inside it is a live region",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mount the piece with no output line at all",
+          "result": "There is no output box, and no empty tab stop",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass an exit code while the run is still going",
+          "result": "It does not appear, because a result that does not exist yet is not shown",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass the state in which the command is running",
+          "result": "The piece declares itself busy and the cursor appears at the end of the output",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass a state in which the command is no longer running",
+          "result": "The piece stops declaring itself busy and the cursor goes",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Pass an exit code with the run ended",
+          "result": "It appears written, and without leaving what is read aloud",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pass a line wider than the block",
+          "result": "It scrolls inside the block itself, and the page body does not scroll horizontally",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Reach the output box by keyboard",
+          "result": "It takes focus and is announced with the command that produced it",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Stack several blocks",
+          "result": "Each one is autonomous, and none contains another",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Mount the block beside the run status line",
+          "result": "The two are autonomous, and the stop action exists in only one of them",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The state word is always present, and the dot is not the only clue",
+        "item2": "The sign before the command is out of what is read aloud",
+        "item3": "The output box is reachable by keyboard and named after the command",
+        "item4": "Nothing inside the piece is a live region",
+        "item5": "The piece declares itself busy only while output arrives",
+        "item6": "Horizontal scrolling stays inside the block, not in the page body",
+        "item7": "The exit code reaches people who listen, as text",
+        "item8": "The cursor is out of what is read aloud"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the piece, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the five, one below the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — running, with the cursor at the end of the output",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — finished, with the aligned table and the exit code",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — failed, with the line wider than the block",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "States — stopped, with the output halted halfway",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "States — with no output at all",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Compositions — the sequence of commands",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Compositions — the block beside the run status",
+          "priority": "medium"
+        },
+        "item10": {
+          "story": "Compositions — the long output, scrolling inside the block",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Bloque de terminal",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "El comando que ejecutó el agente y lo que volvió de él — con la salida conservada tal como llegó, la palabra que dice cómo terminó y el código de salida.",
+    "seo": {
+      "title": "Bloque de terminal — el comando, la salida y cómo terminó",
+      "description": "La pieza de bloque de terminal: salida preformateada que se desplaza dentro del propio bloque, el estado en palabra, el código de salida que llega a quien escucha, y nada de región viva mientras la salida llega a ráfagas."
+    },
+    "labels": {
+      "status": {
+        "idle": "En espera",
+        "running": "En curso",
+        "stopped": "Interrumpido",
+        "complete": "Terminado",
+        "failed": "Falló"
+      },
+      "exitCode": "código de salida {code}"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "running": "Mientras la salida todavía llega",
+        "complete": "Cuando terminó bien",
+        "failed": "Cuando se rompió, con una línea más ancha que el bloque",
+        "withoutOutput": "Cuando no hubo salida alguna"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La línea del comando abre la pieza y muestra lo que se ejecutó, tal como se escribió. Se parte en varias líneas en vez de cortarse.",
+      "item2": "El signo delante del comando dice que aquello es un comando, y queda fuera de lo que se lee en voz.",
+      "item3": "La salida viene en bloque preformateado: los espacios y los saltos de línea se conservan, y el desbordamiento se desplaza dentro del propio bloque.",
+      "item4": "El cursor marca dónde aparecerá la próxima línea, y solo existe mientras la salida todavía llega.",
+      "item5": "La línea del resultado cierra la pieza con la palabra del estado y, cuando la ejecución ya terminó, el código de salida.",
+      "structureCode": {
+        "web": "<div class=\"nds-terminal-block\" data-status=\"running\" aria-busy=\"true\">\n  <p class=\"nds-terminal-block-command nds-font-mono\">\n    <span class=\"nds-terminal-block-sigil\" aria-hidden=\"true\">$</span>\n    <code class=\"nds-terminal-block-command-text\" id=\"comando-1\" lang=\"en\">npm run build</code>\n  </p>\n  <pre class=\"nds-terminal-block-output nds-font-mono\" role=\"group\"\n       aria-labelledby=\"comando-1\" tabindex=\"0\" lang=\"en\">vite v7.1.0 building for production...\ntransforming (412) src/main.ts<span class=\"nds-terminal-block-cursor\" aria-hidden=\"true\"></span></pre>\n  <p class=\"nds-terminal-block-result\">\n    <span class=\"nds-terminal-block-dot\" aria-hidden=\"true\"></span>\n    <span class=\"nds-terminal-block-status\">En curso</span>\n  </p>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala para mostrar lo que el agente ejecutó y lo que la máquina respondió, conservando la salida tal como llegó.",
+        "item2": "Escribe siempre el estado en palabra — el punto de al lado es para los ojos.",
+        "item3": "Envía el código de salida como dato, y el estado aparte: la pieza no deduce uno del otro.",
+        "item4": "Deja la salida sin resaltado de sintaxis: lo que la máquina escribió no tiene gramática que colorear.",
+        "item5": "Ejecuta en quien consume — la pieza no abre proceso, no revela línea a línea y no ofrece detener."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar lo que un comando escribió, y cómo terminó",
+          "u": "Bloque de terminal",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar código para que alguien lo lea y lo copie",
+          "u": "Bloque de código",
+          "a": "Allí hay gramática, numeración y resaltado de tramo; aquí hay salida de máquina, sin gramática alguna."
+        },
+        "item3": {
+          "s": "Decir en qué punto está la respuesta que se escribe ahora",
+          "u": "Estado de la ejecución",
+          "a": "Aquella línea describe la respuesta entera; esta describe un comando dentro de ella."
+        },
+        "item4": {
+          "s": "Recoger varias llamadas de herramienta en un solo bloque",
+          "u": "Grupo de llamadas",
+          "a": "Allí cada fila es una llamada con estado propio; aquí hay un solo comando, y el cuerpo es lo que escribió."
+        },
+        "item5": {
+          "s": "Medir cuánto ha avanzado una tarea larga",
+          "u": "Avance de trabajo largo",
+          "a": "Allí hay unidades hechas y una barra; aquí hay texto, y lo que dice es el propio resultado."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "command": {
+            "name": "Comando",
+            "format": "Exactamente lo que se ejecutó, entero, sin abreviar",
+            "good": "npm run build --workspace @nortear/ds",
+            "bad": "npm run build…"
+          },
+          "output": {
+            "name": "Salida",
+            "format": "Las líneas tal como la máquina las escribió, con el espaciado intacto",
+            "good": "dist/index.html   0.71 kB   gzip: 0.40 kB",
+            "bad": "La compilación generó tres archivos."
+          },
+          "status": {
+            "name": "Palabra del estado",
+            "format": "Una palabra sobre el comando, y nunca la misma para dos estados",
+            "good": "Interrumpido",
+            "bad": "Error"
+          },
+          "exitCode": {
+            "name": "Código de salida",
+            "format": "Plantilla con la palabra que presenta el número, sin juzgarlo",
+            "good": "código de salida 1",
+            "bad": "falló con 1"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Conserva el espaciado de la salida: es allí donde la tabla alineada sostiene la lectura.",
+        "item2": "Deja que la línea ancha se desplace dentro del bloque.",
+        "item3": "Muestra el código de salida como número, y lo que significa en palabra al lado.",
+        "item4": "Quita el cursor en cuanto la salida deja de llegar."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No anuncies la salida mientras llega: texto a ráfagas anunciado trozo a trozo vuelve la pantalla imposible de escuchar.",
+        "item2": "No partas la línea larga para que quepa: partirla deshace las columnas, y en ellas estaba la información.",
+        "item3": "No apagues las líneas más antiguas con opacidad — son justamente las que alguien vuelve a leer.",
+        "item4": "No deduzcas el resultado del número: hay comandos que devuelven uno sin haber fallado."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "La salida llega con el espaciado intacto, y las columnas quedan alineadas.",
+        "dont": "La salida se reacomoda para caber en el ancho, y la tabla que alineaba los números se vuelve un párrafo."
+      },
+      "pair2": {
+        "do": "El estado llega en palabra, al lado del punto.",
+        "dont": "Solo el punto separa lo que terminó bien de lo que se rompió, y un punto de color no dice cuál de los dos es."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: rotulos,\n});",
+        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
+        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "Las etiquetas",
+      "withLabelsCode": {
+        "web": "// La palabra de cada uno de los cinco estados y la plantilla del código de\n// salida.\n//\n// Los cinco existen porque un comando pasa por todos: espera en la cola, corre,\n// es interrumpido por quien lee, termina o se rompe. Interrumpido no es fallo —\n// es el Ctrl-C —, y por eso las dos palabras son distintas.\n//\n// La plantilla es plantilla porque la palabra que presenta el número es del\n// idioma, y el número es dato. No juzga el número: hay comandos que devuelven\n// uno sin haber fallado.\nconst rotulos = {\n  status: {\n    idle: 'En espera',\n    running: 'En curso',\n    stopped: 'Interrumpido',\n    complete: 'Terminado',\n    failed: 'Falló',\n  },\n  exitCode: 'código de salida {code}',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "idle": {
+        "label": "En espera",
+        "trigger": "El comando se puso en cola y todavía no se ejecutó.",
+        "behavior": "No hay salida ni cursor, la pieza no se declara ocupada y el punto queda neutro."
+      },
+      "running": {
+        "label": "En curso",
+        "trigger": "El comando se está ejecutando y la salida todavía llega.",
+        "behavior": "La pieza se declara ocupada, el cursor marca dónde aparecerá la próxima línea y el código de salida aún no existe."
+      },
+      "stopped": {
+        "label": "Interrumpido",
+        "trigger": "Alguien interrumpió el comando, y se detuvo donde estaba.",
+        "behavior": "La salida queda donde se detuvo, el cursor desaparece, la pieza deja de declararse ocupada y el punto queda neutro — interrumpir no es un error."
+      },
+      "complete": {
+        "label": "Terminado",
+        "trigger": "El comando terminó por sí solo.",
+        "behavior": "El cursor desaparece, el punto toma el color de éxito y el código de salida aparece escrito al lado de la palabra."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "El comando se rompió a mitad de camino, sin que nadie lo pidiera.",
+        "behavior": "El cursor desaparece, el punto toma el color de error y el código de salida aparece escrito al lado de la palabra."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "command": {
+          "name": "command",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que se ejecutó, tal como se escribió. Es también el nombre con el que se anuncia la salida."
+        },
+        "lines": {
+          "name": "lines",
+          "type": "readonly string[]",
+          "default": "[]",
+          "required": "No",
+          "description": "Las líneas que volvieron, en el orden en que volvieron. Cortarlas para revelar poco a poco es de quien consume."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está el comando. Decide la palabra, el color del punto, si la pieza se declara ocupada y si hay cursor."
+        },
+        "exitCode": {
+          "name": "exitCode",
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Lo que el proceso devolvió al terminar. Solo aparece cuando la ejecución ya acabó, y no decide el estado."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "TerminalBlockLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada estado y la plantilla del código de salida."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada uno de los cinco estados. Es ella la que describe, y no el punto."
+        },
+        "labelsExitCode": {
+          "name": "exitCode",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La plantilla del código de salida. El número se sustituye en el lugar marcado."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La pieza dibuja el comando y las líneas que recibe. No ejecuta, no revela poco a poco, no sigue el final del desplazamiento y no ofrece detener — detener y repetir son del estado de la ejecución, que ya los lleva.",
+      "extensibilityCode": {
+        "web": "// EL CÓDIGO DE SALIDA SOLO EXISTE DESPUÉS DEL FINAL, y quien responde es el\n// vocabulario compartido — no una prueba escrita en la pantalla.\nisRunFinished('running');   // false → todavía no hay código de salida\nisRunFinished('stopped');   // true  → detenido por gente también es final\nisRunFinished('complete');  // true\nisRunFinished('failed');    // true\n\n// Y EL NÚMERO NO DECIDE NADA. Cero es éxito por convención, pero hay comandos\n// que devuelven 1 sin haber fallado: uno busca y no encuentra, otro compara y\n// encuentra una diferencia. Quien dice lo que pasó es el estado, que viene de\n// quien lo ejecutó.\n//\n// Derivar uno del otro daría dos fuentes de verdad que pueden discrepar — el\n// mismo defecto que el vocabulario evita al dejar que el total de tokens sea\n// una función en vez de un campo."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-terminal-block",
+          "description": "Tamaño del texto de toda la pieza, del comando a la salida."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-terminal-block",
+          "description": "Espacio entre las tres partes de la pieza, sangría de la salida y tamaño del punto."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-terminal-block",
+          "description": "Relleno interno del bloque."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-terminal-block",
+          "description": "Superficie del bloque, y la de la caja de salida dentro de él."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-terminal-block",
+          "description": "Contorno del bloque."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-terminal-block",
+          "description": "Redondeo del bloque."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-terminal-block-output",
+          "description": "Redondeo de la caja de salida."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-terminal-block",
+          "description": "Color de apoyo de la pieza, y del punto en los dos estados neutros."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-terminal-block-output",
+          "description": "El comando, la salida, el cursor y la palabra del estado, que es lo que describe."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-terminal-block-command-text",
+          "description": "Peso del comando, que lo separa de la salida justo debajo."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-terminal-block-output",
+          "description": "Anillo de foco de la caja que se desplaza, alcanzable con el teclado."
+        },
+        "durationStately": {
+          "token": "--duration-stately",
+          "value": ".nds-terminal-block-cursor",
+          "description": "Periodo del parpadeo del cursor. Puesto a cero con movimiento reducido, el cursor queda sólido."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-terminal-block-dot",
+          "description": "Color del punto mientras el comando se ejecuta."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-terminal-block-dot",
+          "description": "Color del punto cuando el comando terminó por sí solo."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-terminal-block-dot",
+          "description": "Color del punto cuando el comando se rompió."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-terminal-block {\n  /* El techo de la salida es una custom property, y está en `rem` a propósito:\n     así crece con la fuente del navegador en vez de apretar más líneas en el\n     mismo espacio cuando alguien agranda el texto. */\n  --terminal-block-max-block-size: 32rem;\n}\n\n/* El color del punto es REFUERZO, y no la pista: la palabra de al lado es lo\n   que describe el estado. Tocar el punto no cambia lo que llega a quien\n   escucha. */\n.nds-terminal-block-dot {\n  inline-size: var(--spacing-3);\n  block-size: var(--spacing-3);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Nada aquí es región viva: la salida de un comando llega a ráfagas, y anunciarla trozo a trozo vuelve la pantalla imposible de escuchar. Lo que dice que la pantalla todavía se escribe es que la pieza se declara ocupada; la palabra describe el estado, el código de salida llega escrito, y la caja que se desplaza es alcanzable con el teclado y lleva el comando por nombre.",
+      "items": {
+        "item1": "La palabra del estado está siempre presente: el punto de color no describe un estado por sí solo.",
+        "item2": "El signo delante del comando queda fuera de lo que se lee en voz — leído, se volvería una palabra que nadie ejecutó.",
+        "item3": "La caja de salida es alcanzable con el teclado y lleva el comando por nombre, señalado y no copiado.",
+        "item4": "Nada dentro de la pieza es región viva, y es su decisión más importante.",
+        "item5": "Mientras la salida llega, la pieza se declara ocupada — es lo que dice que esa parte de la pantalla todavía se escribe, sin anunciar nada.",
+        "item6": "El desplazamiento horizontal queda dentro del bloque, y nunca en el cuerpo de la página.",
+        "item7": "El código de salida llega a quien escucha, como texto: no se reescribe, así que no es el número del que la pieza se defiende.",
+        "item8": "El cursor queda fuera de lo que se lee en voz, y deja de parpadear con movimiento reducido — detenido, sigue sólido y sigue marcando el lugar."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Llega a la caja de salida, cuando existe. El resto de la pieza es texto.",
+        "enter": "No hace nada aquí: la pieza es de lectura, y no ofrece acción.",
+        "arrows": "Desplazan la salida cuando tiene el foco, en los dos ejes."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La raíz se declara ocupada mientras la salida llega, y nada en ella es región viva.",
+        "item2": "La caja de salida es un grupo nombrado por el elemento del comando, y no por un texto repetido.",
+        "item3": "aria-hidden saca el signo del comando y el cursor de lo que se lee en voz."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La salida nunca se anuncia mientras llega, ni siquiera cuando llega a ráfagas.",
+        "item2": "La caja de salida se anuncia con el comando que la produjo, y no como una región sin asunto.",
+        "item3": "El estado se lee como la palabra de ese estado, y el código de salida como el número que volvió."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "codeBlock": {
+          "name": "Bloque de código",
+          "description": "Cuando lo que se muestra es código para leer y copiar, con gramática, numeración y resaltado de tramo."
+        },
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "En qué punto está la respuesta entera, y dónde viven las acciones de detener y repetir."
+        },
+        "toolGroup": {
+          "name": "Grupo de llamadas",
+          "description": "Cuando lo que se recoge son varias llamadas con estado propio, y no la salida de un solo comando."
+        },
+        "jobProgress": {
+          "name": "Avance de trabajo largo",
+          "description": "Cuando lo que importa es cuánto ha avanzado, medido en unidades hechas, y no lo que se escribió."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "No es el bloque de código, y la diferencia no es de apariencia. Aquel muestra código para leer y copiar, y tokeniza por gramática; este muestra lo que una máquina ya escribió, y la salida no tiene gramática que colorear sin inventar sentido.",
+      "item2": "El estado es el mismo vocabulario de la ejecución, a propósito: un comando espera en la cola, corre, es interrumpido, termina o se rompe. El interrumpido de aquí es el más literal de los cinco — es el Ctrl-C, que es elección de una persona y no fallo de la máquina.",
+      "item3": "El código de salida es dato, y no estado. La pieza muestra el número y no lo interpreta: hay comandos que devuelven uno sin haber fallado, y deducir el estado del número daría dos fuentes de verdad que pueden discrepar.",
+      "item4": "La salida es preformateada de verdad: los espacios y los saltos de línea llevan sentido, y reacomodar una línea ancha deshace las columnas en las que estaba la información. Por eso se desplaza, y se desplaza dentro del propio bloque.",
+      "item5": "El techo de altura de la salida está en una unidad que sigue la fuente del navegador. Si fuera fijo, agrandar el texto al doble mostraría la mitad de las líneas en el mismo espacio.",
+      "item6": "Las líneas más antiguas no se apagan con opacidad, por común que sea hacerlo: son justamente las líneas a las que alguien vuelve cuando algo se rompió. Lo más reciente ya se dice por la posición.",
+      "item7": "La pieza no ejecuta nada. No abre proceso, no revela línea a línea, no cuenta tiempo y no ofrece detener — detener y repetir son del estado de la ejecución, y dos botones de detener para una sola ejecución dejarían a quien apretara uno sin saber cuál detuvo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no ofrece acción.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar cada uno de los cinco estados",
+          "result": "La palabra de ese estado aparece en la pieza",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar un comando",
+          "result": "Aparece tal como se escribió, y es el nombre con el que se anuncia la salida",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar la pieza en cualquier estado",
+          "result": "Nada dentro de ella es región viva",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar la pieza sin ninguna línea de salida",
+          "result": "No hay caja de salida, ni ninguna parada de tabulación vacía",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar un código de salida con la ejecución todavía en curso",
+          "result": "No aparece, porque un resultado que aún no existe no se muestra",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar el estado en que el comando se ejecuta",
+          "result": "La pieza se declara ocupada y el cursor aparece al final de la salida",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar un estado en que el comando ya no se ejecuta",
+          "result": "La pieza deja de declararse ocupada y el cursor desaparece",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Pasar un código de salida con la ejecución terminada",
+          "result": "Aparece escrito, y sin salir de lo que se lee en voz",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pasar una línea más ancha que el bloque",
+          "result": "Se desplaza dentro del propio bloque, y el cuerpo de la página no se desplaza en horizontal",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Llegar a la caja de salida con el teclado",
+          "result": "Recibe el foco y se anuncia con el comando que la produjo",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Apilar varios bloques",
+          "result": "Cada uno es autónomo, y ninguno contiene al otro",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Montar el bloque al lado de la línea de estado de la ejecución",
+          "result": "Las dos son autónomas, y la acción de detener existe solo en una de ellas",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que la play afirma.",
+        "item1": "La palabra del estado está siempre presente, y el punto no es la única pista",
+        "item2": "El signo delante del comando está fuera de lo que se lee en voz",
+        "item3": "La caja de salida es alcanzable con el teclado y lleva el comando por nombre",
+        "item4": "Nada dentro de la pieza es región viva",
+        "item5": "La pieza se declara ocupada solo mientras la salida llega",
+        "item6": "El desplazamiento horizontal queda dentro del bloque, y no en el cuerpo de la página",
+        "item7": "El código de salida llega a quien escucha, como texto",
+        "item8": "El cursor está fuera de lo que se lee en voz"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la pieza, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cinco, uno debajo del otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — en curso, con el cursor al final de la salida",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — terminado, con la tabla alineada y el código de salida",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — falló, con la línea más ancha que el bloque",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estados — interrumpido, con la salida detenida a medias",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Estados — sin salida alguna",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composiciones — la secuencia de comandos",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Composiciones — el bloque al lado del estado de la ejecución",
+          "priority": "medium"
+        },
+        "item10": {
+          "story": "Composiciones — la salida larga, con el desplazamiento dentro del bloque",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
