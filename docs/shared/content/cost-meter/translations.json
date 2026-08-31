@@ -1,0 +1,1478 @@
+{
+  "pt-BR": {
+    "title": "Medidor de custo",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Quanto uma execução custou, em dinheiro: a quantia escrita, quanto do teto ela ocupa e a palavra que diz se ainda há folga.",
+    "seo": {
+      "title": "Medidor de custo — quanto uma execução custou",
+      "description": "O custo de uma execução em dinheiro: a quantia que chega escrita, a fração do teto em texto, o medidor que é só desenho e o que a peça mostra quando não há orçamento declarado."
+    },
+    "labels": {
+      "title": "Custo desta execução",
+      "level": {
+        "normal": "Com folga",
+        "warning": "Perto do teto",
+        "critical": "No teto"
+      },
+      "of": "de",
+      "unbounded": "Sem teto declarado"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "normal": "Com folga no orçamento",
+        "threshold": "Na borda do aviso",
+        "over": "Quando o gasto passa do teto",
+        "unbounded": "Quando não há teto declarado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A quantia abre a linha, escrita como quem mediu a escreveu — com o símbolo, o separador e as casas decimais da moeda.",
+      "item2": "O detalhe ao lado diz quanto disso é o teto, em por cento e em dinheiro; sem teto declarado, ele diz que não há.",
+      "item3": "A palavra do nível fecha a primeira linha, e é ela que descreve — a cor apenas acompanha.",
+      "item4": "A barra vem abaixo e ocupa a linha inteira. Ela é só desenho: não carrega os números e fica fora do que é lido em voz.",
+      "item5": "Sem teto declarado não se monta barra nem palavra de nível — o que sobra é a quantia e a notícia de que o teto não foi declarado.",
+      "structureCode": {
+        "web": "<p class=\"nds-cost-meter\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Custo desta execução</span>\n  <span class=\"nds-cost-meter-amount\">US$ 0,84</span>\n  <span class=\"nds-cost-meter-detail\">84% de US$ 1,00</span>\n  <span class=\"nds-badge nds-badge-warning nds-cost-meter-level\">Perto do teto</span>\n  <span class=\"nds-cost-meter-bar\" aria-hidden=\"true\" style=\"--nds-cost-spent: 84\">\n    <span class=\"nds-cost-meter-bar-fill\"></span>\n  </span>\n</p>\n\n<!-- Sem teto declarado: sem barra, sem etiqueta, e o detalhe diz o que falta. -->\n<p class=\"nds-cost-meter\">\n  <span class=\"nds-sr-only\">Custo desta execução</span>\n  <span class=\"nds-cost-meter-amount\">US$ 0,84</span>\n  <span class=\"nds-cost-meter-detail\">Sem teto declarado</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para dizer quanto uma execução custou, quando o dinheiro muda o que a pessoa faz a seguir.",
+        "item2": "Escreva a quantia antes de passá-la: símbolo, posição do símbolo, separador e casas decimais são decisão de idioma e de moeda.",
+        "item3": "Passe o teto só quando ele existir de verdade; sem teto declarado a peça mostra o que custou e diz que não há teto.",
+        "item4": "Deixe a fração e o limiar no primitivo compartilhado, para que a palavra do nível queira dizer o mesmo aqui e na medição da janela.",
+        "item5": "Meça e calcule tarifa em quem consome: a peça desenha o que recebe e não busca preço nenhum."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Dizer quanto uma execução custou",
+          "u": "Medidor de custo",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Dizer quanto da janela de contexto ainda cabe",
+          "u": "Uso do contexto",
+          "a": "Aquela mede consumo contra uma janela; esta mede dinheiro contra um orçamento."
+        },
+        "item3": {
+          "s": "Dizer de onde veio o contexto já gasto",
+          "u": "Repartição do contexto",
+          "a": "Aquela reparte um total entre origens; aqui há um valor só e um teto."
+        },
+        "item4": {
+          "s": "Mostrar o quanto de uma tarefa longa já andou",
+          "u": "Progress",
+          "a": "Ali a barra é o controle que carrega o valor; aqui os números são texto e a barra é só desenho."
+        },
+        "item5": {
+          "s": "Detalhar uma cobrança item a item, com ação em cada linha",
+          "u": "Data table",
+          "a": "Aquela tabela é para percorrer e conferir; esta linha é para ler de relance."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "title": {
+            "name": "Título",
+            "format": "Diz de que custo se trata, e de qual escopo",
+            "good": "Custo desta execução",
+            "bad": "Custo"
+          },
+          "level": {
+            "name": "Palavra do nível",
+            "format": "Descreve a folga em palavras de quem lê, e nunca em faixa numérica",
+            "good": "Perto do teto",
+            "bad": "Acima de 75%"
+          },
+          "unbounded": {
+            "name": "Sem teto",
+            "format": "Diz que o teto não foi declarado, e nunca que ele vale zero",
+            "good": "Sem teto declarado",
+            "bad": "Teto zero"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva a quantia no idioma e na moeda de quem lê, antes de passá-la.",
+        "item2": "Deixe o por cento em texto ao lado da barra.",
+        "item3": "Mostre a palavra do nível sempre que houver teto, inclusive com folga.",
+        "item4": "Diga que o teto não foi declarado quando não houver teto."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não passe um número solto esperando que a peça escolha a moeda.",
+        "item2": "Não deixe a barra como única portadora da fração.",
+        "item3": "Não desenhe medidor sem teto: um trilho vazio lê como gasto zero.",
+        "item4": "Não anuncie o custo a cada mudança."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "O teto declarado chega junto com a quantia, e a peça mostra a fração, a palavra do nível e o medidor.",
+        "dont": "O teto existe mas não é passado, e a peça só pode dizer o que custou — a notícia de que o gasto está perto do limite se perde."
+      },
+      "pair2": {
+        "do": "A quantia chega escrita no idioma e na moeda de quem lê.",
+        "dont": "A quantia chega escrita à mão, sem o símbolo nem o separador de quem lê — e continua assim em todos os idiomas."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: rotulos,\n});",
+        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
+        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"rotulos\" />",
+        "svelte": "<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
+        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"rotulos\"></p>"
+      },
+      "withLabels": "O dinheiro escrito, e o teto",
+      "withLabelsCode": {
+        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst rotulos = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "normal": {
+        "label": "Com folga",
+        "trigger": "Menos de três quartos do teto foram gastos.",
+        "behavior": "O medidor fica na cor de destaque e a palavra diz que ainda há folga."
+      },
+      "warning": {
+        "label": "Perto do teto",
+        "trigger": "Três quartos do teto ou mais foram gastos.",
+        "behavior": "O medidor troca de cor e a palavra troca junto — ainda dá tempo de decidir o que cortar."
+      },
+      "critical": {
+        "label": "No teto",
+        "trigger": "Nove décimos do teto ou mais foram gastos.",
+        "behavior": "O medidor vai para a cor de erro e a palavra diz que o orçamento está no fim."
+      },
+      "over": {
+        "label": "Acima do teto",
+        "trigger": "O gasto passou do teto.",
+        "behavior": "A barra para de crescer no cheio e o por cento trava em cem: o desenho não tem para onde ir, e a quantia escrita continua dizendo o valor de verdade."
+      },
+      "unbounded": {
+        "label": "Sem teto declarado",
+        "trigger": "A medição chegou sem orçamento.",
+        "behavior": "Não há barra, nem palavra de nível, nem por cento; a quantia continua na tela e o detalhe diz que o teto não foi declarado."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "amount": {
+          "name": "amount",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que a execução custou, já escrito. Texto, e não número: símbolo, posição do símbolo, separador e casas decimais são decisão de idioma e de moeda."
+        },
+        "budget": {
+          "name": "budget",
+          "type": "CostBudget",
+          "default": "—",
+          "required": "Não",
+          "description": "O teto declarado, quando há um. Ausente é a resposta de que não há teto — e aí não há fração, nem nível, nem medidor."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "CostMeterLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da peça: o nome da medida, a palavra de cada nível, a ligação entre a fração e o teto, e o que dizer sem teto."
+        },
+        "budgetAmount": {
+          "name": "amount",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O teto, já escrito. Mesma decisão da quantia gasta, e o mesmo motivo."
+        },
+        "budgetFraction": {
+          "name": "fraction",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Quanto do teto já foi gasto, de zero a um. Número puro, sem moeda e sem idioma — é ele que entra na conta, e sai do primitivo compartilhado."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "De que custo se trata. Não aparece na tela: quem vê já sabe pelo lugar em que a peça está, e quem ouve não sabe."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada nível. É ela que descreve a folga; a cor do medidor apenas acompanha."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra que liga a fração ao teto: oitenta e quatro por cento DE um dólar."
+        },
+        "labelsUnbounded": {
+          "name": "unbounded",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que dizer quando o teto não foi declarado. Sem ela, a ausência de fração pareceria uma medição pela metade."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A conta não mora na peça, e o dinheiro nunca chega perto dela: o por cento que se lê, o limiar de cada nível e o recorte em uma volta vivem num primitivo compartilhado, e a medição da janela lê exatamente as mesmas respostas. É isso que faz a palavra do nível querer dizer a mesma coisa nas duas telas — dois limiares fariam ela significar uma coisa acima e outra abaixo, e aí ela deixaria de decidir o que fazer.",
+      "extensibilityCode": {
+        "web": "// SEM TETO NÃO HÁ FRAÇÃO. Teto ausente, zero ou não-finito são a mesma resposta:\nspentFraction(0.84);           // null\nspentFraction(0.84, 0);        // null\nspentFraction(0.84, 1);        // 0.84\n\n// RECORTADA EM UMA VOLTA: uma barra não passa do trilho, e desenhar 1,24\n// desenharia 1 de qualquer jeito — só que sem ninguém ter escolhido.\nspentFraction(1.24, 1);        // 1\n\n// O LIMIAR É O MESMO DA MEDIÇÃO DA JANELA, e é exato — três quartos já é aviso:\nfractionLevel(0.74);           // 'normal'\nfractionLevel(0.75);           // 'warning'\nfractionLevel(0.9);            // 'critical'\n\n// E o por cento é TEXTO, travado nas duas pontas, porque é ele que se lê em voz:\nfractionPercent(0.999);        // 99\nfractionPercent(1);            // 100\nfractionPercent(null);         // null"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-cost-meter {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível e o por cento ao lado\n   são o que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-cost-meter[data-level=\"warning\"] {\n  --nds-cost-meter-color: var(--chart-4);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-cost-meter",
+          "description": "Tamanho do texto da linha."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-cost-meter",
+          "description": "Cor da linha e do detalhe que qualifica a quantia."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-cost-meter-amount",
+          "description": "A quantia, que é o que se lê primeiro."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-cost-meter-amount",
+          "description": "Peso da quantia, que é o que se destaca da linha."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-cost-meter",
+          "description": "O medidor enquanto há folga no orçamento."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-cost-meter[data-level=\"warning\"]",
+          "description": "O medidor perto do teto."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-cost-meter[data-level=\"critical\"]",
+          "description": "O medidor no teto."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-cost-meter-bar",
+          "description": "A parte ainda livre do trilho, sólida — opacidade baixa some no modo escuro."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-cost-meter",
+          "description": "Espaço entre as partes da linha, e espessura do trilho."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-cost-meter-bar",
+          "description": "Arredondamento do trilho."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Os números são texto e a barra é desenho: nada aqui se anuncia, o nível chega em palavra, e a quantia tem nome mesmo sem título visível.",
+      "items": {
+        "item1": "A palavra do nível está sempre na linha quando há teto: a cor do medidor não descreve folga sozinha.",
+        "item2": "A barra fica fora do que é lido em voz — ela é desenho, e os números ao lado já dizem tudo.",
+        "item3": "A barra não tem papel de controle nem valor: um segundo portador da mesma fração a faria ser lida duas vezes.",
+        "item4": "Não há região viva. O custo sobe a cada turno, e anunciá-lo a cada mudança corta a leitura da resposta que está sendo gerada ao lado.",
+        "item5": "A fração está em texto ao lado da barra, e não só no desenho — é isso que dispensa a barra de carregar o valor.",
+        "item6": "A quantia tem nome: um título reservado a leitor de tela diz de que custo se trata."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Passa direto: não há controle nesta peça, e sim uma frase sobre uma quantia."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden tira a barra do que é lido em voz.",
+        "item2": "Não há região viva, papel de controle nem valor — quem quiser anunciar a mudança põe a região por fora, sabendo o que está fazendo.",
+        "item3": "O nome da medida chega por texto reservado a leitor de tela, e não por rótulo acessível num elemento sem conteúdo."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A linha é lida como o nome do custo, a quantia, a fração do teto e a palavra do nível.",
+        "item2": "Sem teto declarado, o que se lê é a quantia e a notícia de que o teto não foi declarado.",
+        "item3": "A mudança da quantia não interrompe o que estiver sendo lido no momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "contextDisplay": {
+          "name": "Uso do contexto",
+          "description": "A mesma pergunta na outra grandeza: aquela mede consumo contra uma janela, esta mede dinheiro contra um orçamento."
+        },
+        "contextBreakdown": {
+          "name": "Repartição do contexto",
+          "description": "Quando o que interessa não é quanto foi, e sim de onde veio."
+        },
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "O que estava acontecendo, e há quanto tempo — a linha que costuma vir acima desta."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Quando a barra é o próprio valor, e não o desenho de um número escrito ao lado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O dinheiro chega escrito, e a peça nunca o formata. Símbolo, posição do símbolo, separador de milhar, separador decimal e número de casas variam por idioma E por moeda: a mesma quantia se escreve \"US$ 0,84\", \"$0.84\" ou \"0,84 US$\", e o símbolo troca de ponta entre um idioma e outro. É o mesmo precedente do tempo decorrido do ditado, do relógio do estado da execução e do carimbo da faixa de rascunho.",
+      "item2": "O que atravessa a conta é a fração, e nunca a quantia. A razão entre o gasto e o teto é número puro, sem moeda e sem idioma — uma conta que recebesse dinheiro escrito teria de analisar a cadeia para dividir, e analisar dinheiro escrito é como se erra de moeda em silêncio.",
+      "item3": "O teto anda em par: a quantia escrita e a fração já calculada. Como duas propriedades soltas existiria o estado meio declarado, e nem uma frase sem medidor nem um medidor sem teto escrito são peças que alguém queira montar.",
+      "item4": "Sem teto declarado não há fração, só a quantia. Custo sem orçamento é o caso comum, e um trilho vazio leria como \"não gastou nada\" — que é o oposto do que se sabe.",
+      "item5": "O limiar é o mesmo da medição da janela, e isso é decisão. As duas peças aparecem lado a lado usando a mesma palavra; dois limiares fariam \"perto do teto\" querer dizer uma coisa acima e outra abaixo, e a palavra deixaria de decidir o que fazer.",
+      "item6": "A fração fica em texto ao lado da barra, e não só no desenho. Se o por cento saísse da tela, a barra viraria a única portadora da fração e passaria a dever contraste de gráfico — que é exatamente a diferença entre este medidor e uma barra de progresso.",
+      "item7": "Não há forma alternativa aqui, ao contrário da medição da janela. Lá o anel existe para o trilho estreito; aqui quem decide a largura da linha é uma cadeia escrita fora da peça, e é justamente essa largura que ela não pode medir."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; o medidor em si não instrumenta nada, porque não há interação nele.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma quantia e um teto declarado",
+          "result": "A quantia sai como chegou, o detalhe traz a fração e o teto, e a palavra do nível aparece",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Ler a barra e o detalhe da mesma peça",
+          "result": "A barra desenha o mesmo inteiro que o detalhe diz",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar gastos de folga, aviso e aperto contra o mesmo teto",
+          "result": "Cada um traz a palavra do seu nível, e o atributo de nível acompanha",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar exatamente três quartos do teto",
+          "result": "Já é aviso, e não folga — o limiar é exato",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar um gasto acima do teto",
+          "result": "O por cento trava em cem e a barra para no cheio, e a quantia continua dizendo o valor de verdade",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar uma quantia sem teto declarado",
+          "result": "Não há barra, nem palavra de nível, nem atributo de nível; o detalhe diz que o teto não foi declarado",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Montar a peça ao lado da medição da janela",
+          "result": "As duas desenham a mesma palavra de nível para a mesma fração, e nenhuma vive dentro da outra",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Montar a peça depois da linha de estado da execução",
+          "result": "As duas convivem sem que nenhuma vire propriedade da outra",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A peça não é região viva e nada nela se reanuncia",
+        "item2": "A barra está fora do que é lido em voz, sem papel e sem valor",
+        "item3": "A quantia tem nome, e o nome não aparece na tela",
+        "item4": "O nível chega em palavra, e a cor apenas acompanha",
+        "item5": "A fração está em texto ao lado da barra, e não só no desenho",
+        "item6": "Sem teto declarado não sobra medidor nem etiqueta para ler"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — o custo, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os três níveis, um sob o outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — na borda do aviso",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — acima do teto",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sem teto declarado",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — ao lado da medição da janela",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composições — no fim de uma execução",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Cost meter",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "What a run cost, in money: the written amount, how much of the cap it takes, and the word that says whether there is room left.",
+    "seo": {
+      "title": "Cost meter — what a run cost",
+      "description": "The cost of a run in money: the amount that arrives already written, the share of the cap in text, the meter that is drawing only, and what the piece shows when no budget was declared."
+    },
+    "labels": {
+      "title": "Cost of this run",
+      "level": {
+        "normal": "Room to spare",
+        "warning": "Near the cap",
+        "critical": "At the cap"
+      },
+      "of": "of",
+      "unbounded": "No cap declared"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "normal": "With room in the budget",
+        "threshold": "Right at the warning edge",
+        "over": "When spending goes past the cap",
+        "unbounded": "When no cap was declared"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The amount opens the line, written exactly as whoever measured wrote it — with the currency symbol, the separators and the decimal places.",
+      "item2": "The detail beside it says how much of the cap that is, as a share and in money; with no cap declared, it says there is none.",
+      "item3": "The level word closes the first line, and it is the word that describes — colour only goes along.",
+      "item4": "The bar comes below and takes the whole line. It is drawing only: it carries no numbers and stays out of what is read aloud.",
+      "item5": "With no cap declared there is no bar and no level word — what remains is the amount and the news that no cap was declared.",
+      "structureCode": {
+        "web": "<p class=\"nds-cost-meter\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Cost of this run</span>\n  <span class=\"nds-cost-meter-amount\">$0.84</span>\n  <span class=\"nds-cost-meter-detail\">84% of $1.00</span>\n  <span class=\"nds-badge nds-badge-warning nds-cost-meter-level\">Near the cap</span>\n  <span class=\"nds-cost-meter-bar\" aria-hidden=\"true\" style=\"--nds-cost-spent: 84\">\n    <span class=\"nds-cost-meter-bar-fill\"></span>\n  </span>\n</p>\n\n<!-- No cap declared: no bar, no badge, and the detail says what is missing. -->\n<p class=\"nds-cost-meter\">\n  <span class=\"nds-sr-only\">Cost of this run</span>\n  <span class=\"nds-cost-meter-amount\">$0.84</span>\n  <span class=\"nds-cost-meter-detail\">No cap declared</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to say what a run cost, when the money changes what the person does next.",
+        "item2": "Write the amount before passing it: symbol, symbol position, separators and decimal places are a decision of language and of currency.",
+        "item3": "Pass the cap only when one really exists; with no cap declared the piece shows what it cost and says there is no cap.",
+        "item4": "Leave the share and the threshold in the shared primitive, so the level word means the same here and in the context window reading.",
+        "item5": "Measure and price on the consuming side: the piece draws what it receives and fetches no price at all."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Say what a run cost",
+          "u": "Cost meter",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Say how much of the context window still fits",
+          "u": "Context display",
+          "a": "That one measures consumption against a window; this one measures money against a budget."
+        },
+        "item3": {
+          "s": "Say where the context already spent came from",
+          "u": "Context breakdown",
+          "a": "That one splits a total across origins; here there is a single value and a cap."
+        },
+        "item4": {
+          "s": "Show how far a long task has come",
+          "u": "Progress",
+          "a": "There the bar is the control that carries the value; here the numbers are text and the bar is drawing only."
+        },
+        "item5": {
+          "s": "Itemise a charge line by line, with an action on each row",
+          "u": "Data table",
+          "a": "That table is for walking through and checking; this line is for reading at a glance."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "title": {
+            "name": "Title",
+            "format": "Says which cost it is, and of what scope",
+            "good": "Cost of this run",
+            "bad": "Cost"
+          },
+          "level": {
+            "name": "Level word",
+            "format": "Describes the room left in the reader's words, never as a numeric band",
+            "good": "Near the cap",
+            "bad": "Above 75%"
+          },
+          "unbounded": {
+            "name": "No cap",
+            "format": "Says the cap was not declared, never that it is zero",
+            "good": "No cap declared",
+            "bad": "Cap zero"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the amount in the reader's language and currency before passing it.",
+        "item2": "Keep the share in text beside the bar.",
+        "item3": "Show the level word whenever there is a cap, room to spare included.",
+        "item4": "Say the cap was not declared when there is no cap."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not pass a bare number and expect the piece to choose the currency.",
+        "item2": "Do not leave the bar as the only carrier of the share.",
+        "item3": "Do not draw a meter with no cap: an empty track reads as zero spent.",
+        "item4": "Do not announce the cost on every change."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "The declared cap arrives together with the amount, and the piece shows the share, the level word and the meter.",
+        "dont": "The cap exists but is not passed, so the piece can only say what it cost — the news that spending is near the limit is lost."
+      },
+      "pair2": {
+        "do": "The amount arrives written in the reader's language and currency.",
+        "dont": "The amount arrives hand-written, without the reader's symbol or separators — and stays that way in every language."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: rotulos,\n});",
+        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
+        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"rotulos\" />",
+        "svelte": "<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
+        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"rotulos\"></p>"
+      },
+      "withLabels": "The written money, and the cap",
+      "withLabelsCode": {
+        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst rotulos = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "normal": {
+        "label": "Room to spare",
+        "trigger": "Less than three quarters of the cap has been spent.",
+        "behavior": "The meter stays in the accent colour and the word says there is still room."
+      },
+      "warning": {
+        "label": "Near the cap",
+        "trigger": "Three quarters of the cap or more has been spent.",
+        "behavior": "The meter changes colour and the word changes with it — there is still time to decide what to cut."
+      },
+      "critical": {
+        "label": "At the cap",
+        "trigger": "Nine tenths of the cap or more has been spent.",
+        "behavior": "The meter goes to the error colour and the word says the budget is running out."
+      },
+      "over": {
+        "label": "Above the cap",
+        "trigger": "Spending went past the cap.",
+        "behavior": "The bar stops growing when full and the share locks at one hundred: the drawing has nowhere to go, and the written amount keeps telling the real value."
+      },
+      "unbounded": {
+        "label": "No cap declared",
+        "trigger": "The reading arrived with no budget.",
+        "behavior": "There is no bar, no level word and no share; the amount stays on screen and the detail says the cap was not declared."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "amount": {
+          "name": "amount",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What the run cost, already written. Text, not a number: symbol, symbol position, separators and decimal places are a decision of language and of currency."
+        },
+        "budget": {
+          "name": "budget",
+          "type": "CostBudget",
+          "default": "—",
+          "required": "No",
+          "description": "The declared cap, when there is one. Absent is the answer that there is no cap — and then there is no share, no level and no meter."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "CostMeterLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The text of the piece: the name of the measure, the word for each level, the link between share and cap, and what to say with no cap."
+        },
+        "budgetAmount": {
+          "name": "amount",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The cap, already written. Same decision as the amount spent, and the same reason."
+        },
+        "budgetFraction": {
+          "name": "fraction",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "How much of the cap has been spent, from zero to one. A pure number, with no currency and no language — it is what enters the arithmetic, and it comes from the shared primitive."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "Which cost it is. It does not appear on screen: whoever sees it already knows from where the piece sits, and whoever hears it does not."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each level. It is what describes the room left; the meter colour only goes along."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word that links the share to the cap: eighty-four per cent OF one dollar."
+        },
+        "labelsUnbounded": {
+          "name": "unbounded",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What to say when the cap was not declared. Without it, the missing share would look like a reading left half done."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The arithmetic does not live in the piece, and money never goes near it: the share that is read aloud, the threshold of each level and the clip at one full turn live in a shared primitive, and the context window reading reads exactly the same answers. That is what makes the level word mean the same on both screens — two thresholds would make it mean one thing above and another below, and it would stop deciding anything.",
+      "extensibilityCode": {
+        "web": "// SEM TETO NÃO HÁ FRAÇÃO. Teto ausente, zero ou não-finito são a mesma resposta:\nspentFraction(0.84);           // null\nspentFraction(0.84, 0);        // null\nspentFraction(0.84, 1);        // 0.84\n\n// RECORTADA EM UMA VOLTA: uma barra não passa do trilho, e desenhar 1,24\n// desenharia 1 de qualquer jeito — só que sem ninguém ter escolhido.\nspentFraction(1.24, 1);        // 1\n\n// O LIMIAR É O MESMO DA MEDIÇÃO DA JANELA, e é exato — três quartos já é aviso:\nfractionLevel(0.74);           // 'normal'\nfractionLevel(0.75);           // 'warning'\nfractionLevel(0.9);            // 'critical'\n\n// E o por cento é TEXTO, travado nas duas pontas, porque é ele que se lê em voz:\nfractionPercent(0.999);        // 99\nfractionPercent(1);            // 100\nfractionPercent(null);         // null"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-cost-meter {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível e o por cento ao lado\n   são o que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-cost-meter[data-level=\"warning\"] {\n  --nds-cost-meter-color: var(--chart-4);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-cost-meter",
+          "description": "Text size of the line."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-cost-meter",
+          "description": "Colour of the line and of the detail that qualifies the amount."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-cost-meter-amount",
+          "description": "The amount, which is what gets read first."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-cost-meter-amount",
+          "description": "Weight of the amount, which is what stands out of the line."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-cost-meter",
+          "description": "The meter while there is room in the budget."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-cost-meter[data-level=\"warning\"]",
+          "description": "The meter near the cap."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-cost-meter[data-level=\"critical\"]",
+          "description": "The meter at the cap."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-cost-meter-bar",
+          "description": "The still free part of the track, solid — low opacity disappears in dark mode."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-cost-meter",
+          "description": "Space between the parts of the line, and thickness of the track."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-cost-meter-bar",
+          "description": "Rounding of the track."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The numbers are text and the bar is drawing: nothing here announces itself, the level arrives as a word, and the amount has a name even without a visible title.",
+      "items": {
+        "item1": "The level word is always on the line when there is a cap: the meter colour does not describe the room left on its own.",
+        "item2": "The bar stays out of what is read aloud — it is drawing, and the numbers beside it already say everything.",
+        "item3": "The bar has no control role and no value: a second carrier of the same share would have it read twice.",
+        "item4": "There is no live region. The cost rises every turn, and announcing it on every change cuts into the reading of the answer being generated alongside.",
+        "item5": "The share is in text beside the bar, and not only in the drawing — that is what excuses the bar from carrying the value.",
+        "item6": "The amount has a name: a title reserved for screen readers says which cost it is."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "It passes straight through: there is no control in this piece, only a sentence about an amount."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden takes the bar out of what is read aloud.",
+        "item2": "There is no live region, control role or value — whoever wants to announce the change puts the region outside, knowing what they are doing.",
+        "item3": "The name of the measure arrives as text reserved for screen readers, not as an accessible name on an element with no content."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The line is read as the name of the cost, the amount, the share of the cap and the level word.",
+        "item2": "With no cap declared, what is read is the amount and the news that the cap was not declared.",
+        "item3": "A change in the amount does not interrupt whatever is being read at the moment."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "contextDisplay": {
+          "name": "Context display",
+          "description": "The same question in the other quantity: that one measures consumption against a window, this one measures money against a budget."
+        },
+        "contextBreakdown": {
+          "name": "Context breakdown",
+          "description": "When what matters is not how much went, but where it came from."
+        },
+        "agentStatus": {
+          "name": "Agent status",
+          "description": "What was happening, and for how long — the line that usually sits above this one."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "When the bar is the value itself, and not the drawing of a number written beside it."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "Money arrives already written, and the piece never formats it. Symbol, symbol position, thousands separator, decimal separator and number of places vary by language AND by currency: the same amount is written \"US$ 0,84\", \"$0.84\" or \"0,84 US$\", and the symbol swaps ends between one language and another. It is the same precedent as the elapsed time of voice dictation, the clock of the run status and the stamp of the draft banner.",
+      "item2": "What crosses into the arithmetic is the share, never the amount. The ratio between spending and cap is a pure number, with no currency and no language — arithmetic that received written money would have to parse the string to divide, and parsing written money is how a currency gets mistaken in silence.",
+      "item3": "The cap travels as a pair: the written amount and the already computed share. As two loose properties there would be a half-declared state, and neither a sentence without a meter nor a meter without a written cap is a piece anyone wants to assemble.",
+      "item4": "With no cap declared there is no share, only the amount. Cost without a budget is the common case, and an empty track would read as \"nothing was spent\" — the opposite of what is known.",
+      "item5": "The threshold is the same as the context window reading, and that is a decision. The two pieces appear side by side using the same word; two thresholds would make \"near the cap\" mean one thing above and another below, and the word would stop deciding anything.",
+      "item6": "The share stays in text beside the bar, not only in the drawing. If the share left the screen, the bar would become the only carrier of it and would start owing graphical contrast — which is exactly the difference between this meter and a progress bar.",
+      "item7": "There is no alternative form here, unlike the context window reading. There the ring exists for the narrow rail; here what decides the width of the line is a string written outside the piece, and it is precisely that width the piece cannot measure."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the meter itself instruments nothing, because there is no interaction in it.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass an amount and a declared cap",
+          "result": "The amount comes out as it arrived, the detail brings the share and the cap, and the level word appears",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Read the bar and the detail of the same piece",
+          "result": "The bar draws the same integer the detail states",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass spending at room, warning and tight against the same cap",
+          "result": "Each brings the word of its level, and the level attribute follows",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass exactly three quarters of the cap",
+          "result": "It is already a warning, not room to spare — the threshold is exact",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass spending above the cap",
+          "result": "The share locks at one hundred and the bar stops when full, and the amount keeps telling the real value",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass an amount with no declared cap",
+          "result": "There is no bar, no level word and no level attribute; the detail says the cap was not declared",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Assemble the piece beside the context window reading",
+          "result": "Both draw the same level word for the same share, and neither lives inside the other",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Assemble the piece after the run status line",
+          "result": "The two coexist without either becoming a property of the other",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The piece is not a live region and nothing in it re-announces itself",
+        "item2": "The bar is out of what is read aloud, with no role and no value",
+        "item3": "The amount has a name, and the name does not appear on screen",
+        "item4": "The level arrives as a word, and colour only goes along",
+        "item5": "The share is in text beside the bar, and not only in the drawing",
+        "item6": "With no cap declared there is no meter and no badge left to read"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Captured by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the cost, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the three levels, one under the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — right at the warning edge",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — above the cap",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — no cap declared",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — beside the context window reading",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Compositions — at the end of a run",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Medidor de coste",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Cuánto costó una ejecución, en dinero: la cantidad escrita, cuánto del tope ocupa y la palabra que dice si aún queda margen.",
+    "seo": {
+      "title": "Medidor de coste — cuánto costó una ejecución",
+      "description": "El coste de una ejecución en dinero: la cantidad que llega ya escrita, la fracción del tope en texto, el medidor que es solo dibujo y lo que la pieza muestra cuando no hay presupuesto declarado."
+    },
+    "labels": {
+      "title": "Coste de esta ejecución",
+      "level": {
+        "normal": "Con margen",
+        "warning": "Cerca del tope",
+        "critical": "En el tope"
+      },
+      "of": "de",
+      "unbounded": "Sin tope declarado"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "normal": "Con margen en el presupuesto",
+        "threshold": "Justo en el borde del aviso",
+        "over": "Cuando el gasto pasa del tope",
+        "unbounded": "Cuando no hay tope declarado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La cantidad abre la línea, escrita tal como la escribió quien midió — con el símbolo, el separador y los decimales de la moneda.",
+      "item2": "El detalle al lado dice cuánto de eso es el tope, en porcentaje y en dinero; sin tope declarado, dice que no hay.",
+      "item3": "La palabra del nivel cierra la primera línea, y es ella la que describe — el color solo acompaña.",
+      "item4": "La barra viene debajo y ocupa la línea entera. Es solo dibujo: no lleva los números y queda fuera de lo que se lee en voz.",
+      "item5": "Sin tope declarado no se monta barra ni palabra de nivel — queda la cantidad y la noticia de que el tope no fue declarado.",
+      "structureCode": {
+        "web": "<p class=\"nds-cost-meter\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Coste de esta ejecución</span>\n  <span class=\"nds-cost-meter-amount\">0,84 US$</span>\n  <span class=\"nds-cost-meter-detail\">84% de 1,00 US$</span>\n  <span class=\"nds-badge nds-badge-warning nds-cost-meter-level\">Cerca del tope</span>\n  <span class=\"nds-cost-meter-bar\" aria-hidden=\"true\" style=\"--nds-cost-spent: 84\">\n    <span class=\"nds-cost-meter-bar-fill\"></span>\n  </span>\n</p>\n\n<!-- Sin tope declarado: sin barra, sin etiqueta, y el detalle dice qué falta. -->\n<p class=\"nds-cost-meter\">\n  <span class=\"nds-sr-only\">Coste de esta ejecución</span>\n  <span class=\"nds-cost-meter-amount\">0,84 US$</span>\n  <span class=\"nds-cost-meter-detail\">Sin tope declarado</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para decir cuánto costó una ejecución, cuando el dinero cambia lo que la persona hace a continuación.",
+        "item2": "Escribe la cantidad antes de pasarla: símbolo, posición del símbolo, separador y decimales son decisión de idioma y de moneda.",
+        "item3": "Pasa el tope solo cuando exista de verdad; sin tope declarado la pieza muestra lo que costó y dice que no hay tope.",
+        "item4": "Deja la fracción y el umbral en el primitivo compartido, para que la palabra del nivel signifique lo mismo aquí y en la medición de la ventana.",
+        "item5": "Mide y calcula la tarifa en quien consume: la pieza dibuja lo que recibe y no busca ningún precio."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Decir cuánto costó una ejecución",
+          "u": "Medidor de coste",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Decir cuánto de la ventana de contexto aún cabe",
+          "u": "Uso del contexto",
+          "a": "Aquella mide consumo contra una ventana; esta mide dinero contra un presupuesto."
+        },
+        "item3": {
+          "s": "Decir de dónde vino el contexto ya gastado",
+          "u": "Reparto del contexto",
+          "a": "Aquella reparte un total entre orígenes; aquí hay un solo valor y un tope."
+        },
+        "item4": {
+          "s": "Mostrar cuánto ha avanzado una tarea larga",
+          "u": "Progress",
+          "a": "Allí la barra es el control que lleva el valor; aquí los números son texto y la barra es solo dibujo."
+        },
+        "item5": {
+          "s": "Detallar un cargo línea por línea, con acción en cada fila",
+          "u": "Data table",
+          "a": "Aquella tabla es para recorrer y comprobar; esta línea es para leer de un vistazo."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "title": {
+            "name": "Título",
+            "format": "Dice de qué coste se trata, y de qué alcance",
+            "good": "Coste de esta ejecución",
+            "bad": "Coste"
+          },
+          "level": {
+            "name": "Palabra del nivel",
+            "format": "Describe el margen en palabras de quien lee, nunca como franja numérica",
+            "good": "Cerca del tope",
+            "bad": "Más del 75%"
+          },
+          "unbounded": {
+            "name": "Sin tope",
+            "format": "Dice que el tope no fue declarado, nunca que vale cero",
+            "good": "Sin tope declarado",
+            "bad": "Tope cero"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe la cantidad en el idioma y la moneda de quien lee, antes de pasarla.",
+        "item2": "Deja el porcentaje en texto al lado de la barra.",
+        "item3": "Muestra la palabra del nivel siempre que haya tope, incluso con margen.",
+        "item4": "Di que el tope no fue declarado cuando no haya tope."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No pases un número suelto esperando que la pieza elija la moneda.",
+        "item2": "No dejes la barra como única portadora de la fracción.",
+        "item3": "No dibujes medidor sin tope: un carril vacío se lee como gasto cero.",
+        "item4": "No anuncies el coste en cada cambio."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "El tope declarado llega junto con la cantidad, y la pieza muestra la fracción, la palabra del nivel y el medidor.",
+        "dont": "El tope existe pero no se pasa, y la pieza solo puede decir lo que costó — la noticia de que el gasto está cerca del límite se pierde."
+      },
+      "pair2": {
+        "do": "La cantidad llega escrita en el idioma y la moneda de quien lee.",
+        "dont": "La cantidad llega escrita a mano, sin el símbolo ni el separador de quien lee — y sigue así en todos los idiomas."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: rotulos,\n});",
+        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
+        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"rotulos\" />",
+        "svelte": "<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
+        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"rotulos\"></p>"
+      },
+      "withLabels": "El dinero escrito, y el tope",
+      "withLabelsCode": {
+        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst rotulos = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "normal": {
+        "label": "Con margen",
+        "trigger": "Se han gastado menos de tres cuartos del tope.",
+        "behavior": "El medidor se queda en el color de acento y la palabra dice que aún hay margen."
+      },
+      "warning": {
+        "label": "Cerca del tope",
+        "trigger": "Se han gastado tres cuartos del tope o más.",
+        "behavior": "El medidor cambia de color y la palabra cambia con él — aún da tiempo de decidir qué recortar."
+      },
+      "critical": {
+        "label": "En el tope",
+        "trigger": "Se han gastado nueve décimos del tope o más.",
+        "behavior": "El medidor va al color de error y la palabra dice que el presupuesto se está acabando."
+      },
+      "over": {
+        "label": "Por encima del tope",
+        "trigger": "El gasto pasó del tope.",
+        "behavior": "La barra deja de crecer al llenarse y el porcentaje se fija en cien: el dibujo no tiene a dónde ir, y la cantidad escrita sigue diciendo el valor real."
+      },
+      "unbounded": {
+        "label": "Sin tope declarado",
+        "trigger": "La medición llegó sin presupuesto.",
+        "behavior": "No hay barra, ni palabra de nivel, ni porcentaje; la cantidad sigue en pantalla y el detalle dice que el tope no fue declarado."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "amount": {
+          "name": "amount",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que costó la ejecución, ya escrito. Texto, y no número: símbolo, posición del símbolo, separador y decimales son decisión de idioma y de moneda."
+        },
+        "budget": {
+          "name": "budget",
+          "type": "CostBudget",
+          "default": "—",
+          "required": "No",
+          "description": "El tope declarado, cuando lo hay. Su ausencia es la respuesta de que no hay tope — y entonces no hay fracción, ni nivel, ni medidor."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "CostMeterLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la pieza: el nombre de la medida, la palabra de cada nivel, el enlace entre la fracción y el tope, y qué decir sin tope."
+        },
+        "budgetAmount": {
+          "name": "amount",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El tope, ya escrito. Misma decisión que la cantidad gastada, y por el mismo motivo."
+        },
+        "budgetFraction": {
+          "name": "fraction",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Cuánto del tope ya se gastó, de cero a uno. Número puro, sin moneda y sin idioma — es él quien entra en la cuenta, y sale del primitivo compartido."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "De qué coste se trata. No aparece en pantalla: quien ve ya lo sabe por el lugar en que está la pieza, y quien oye no."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada nivel. Es ella la que describe el margen; el color del medidor solo acompaña."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra que enlaza la fracción con el tope: ochenta y cuatro por ciento DE un dólar."
+        },
+        "labelsUnbounded": {
+          "name": "unbounded",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué decir cuando el tope no fue declarado. Sin ella, la ausencia de fracción parecería una medición a medias."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La cuenta no vive en la pieza, y el dinero nunca se acerca a ella: el porcentaje que se lee, el umbral de cada nivel y el recorte en una vuelta viven en un primitivo compartido, y la medición de la ventana lee exactamente las mismas respuestas. Eso es lo que hace que la palabra del nivel signifique lo mismo en ambas pantallas — dos umbrales la harían significar una cosa arriba y otra abajo, y dejaría de decidir nada.",
+      "extensibilityCode": {
+        "web": "// SEM TETO NÃO HÁ FRAÇÃO. Teto ausente, zero ou não-finito são a mesma resposta:\nspentFraction(0.84);           // null\nspentFraction(0.84, 0);        // null\nspentFraction(0.84, 1);        // 0.84\n\n// RECORTADA EM UMA VOLTA: uma barra não passa do trilho, e desenhar 1,24\n// desenharia 1 de qualquer jeito — só que sem ninguém ter escolhido.\nspentFraction(1.24, 1);        // 1\n\n// O LIMIAR É O MESMO DA MEDIÇÃO DA JANELA, e é exato — três quartos já é aviso:\nfractionLevel(0.74);           // 'normal'\nfractionLevel(0.75);           // 'warning'\nfractionLevel(0.9);            // 'critical'\n\n// E o por cento é TEXTO, travado nas duas pontas, porque é ele que se lê em voz:\nfractionPercent(0.999);        // 99\nfractionPercent(1);            // 100\nfractionPercent(null);         // null"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-cost-meter {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível e o por cento ao lado\n   são o que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-cost-meter[data-level=\"warning\"] {\n  --nds-cost-meter-color: var(--chart-4);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-cost-meter",
+          "description": "Tamaño del texto de la línea."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-cost-meter",
+          "description": "Color de la línea y del detalle que califica la cantidad."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-cost-meter-amount",
+          "description": "La cantidad, que es lo que se lee primero."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-cost-meter-amount",
+          "description": "Peso de la cantidad, que es lo que destaca de la línea."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-cost-meter",
+          "description": "El medidor mientras hay margen en el presupuesto."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-cost-meter[data-level=\"warning\"]",
+          "description": "El medidor cerca del tope."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-cost-meter[data-level=\"critical\"]",
+          "description": "El medidor en el tope."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-cost-meter-bar",
+          "description": "La parte aún libre del carril, sólida — la opacidad baja desaparece en modo oscuro."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-cost-meter",
+          "description": "Espacio entre las partes de la línea, y grosor del carril."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-cost-meter-bar",
+          "description": "Redondeo del carril."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Los números son texto y la barra es dibujo: nada aquí se anuncia, el nivel llega en palabra, y la cantidad tiene nombre incluso sin título visible.",
+      "items": {
+        "item1": "La palabra del nivel está siempre en la línea cuando hay tope: el color del medidor no describe el margen por sí solo.",
+        "item2": "La barra queda fuera de lo que se lee en voz — es dibujo, y los números al lado ya lo dicen todo.",
+        "item3": "La barra no tiene papel de control ni valor: un segundo portador de la misma fracción la haría leer dos veces.",
+        "item4": "No hay región viva. El coste sube en cada turno, y anunciarlo en cada cambio corta la lectura de la respuesta que se está generando al lado.",
+        "item5": "La fracción está en texto al lado de la barra, y no solo en el dibujo — eso es lo que dispensa a la barra de llevar el valor.",
+        "item6": "La cantidad tiene nombre: un título reservado al lector de pantalla dice de qué coste se trata."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Pasa de largo: no hay control en esta pieza, sino una frase sobre una cantidad."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden saca la barra de lo que se lee en voz.",
+        "item2": "No hay región viva, papel de control ni valor — quien quiera anunciar el cambio pone la región por fuera, sabiendo lo que hace.",
+        "item3": "El nombre de la medida llega como texto reservado al lector de pantalla, y no como nombre accesible en un elemento sin contenido."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La línea se lee como el nombre del coste, la cantidad, la fracción del tope y la palabra del nivel.",
+        "item2": "Sin tope declarado, lo que se lee es la cantidad y la noticia de que el tope no fue declarado.",
+        "item3": "El cambio de la cantidad no interrumpe lo que se esté leyendo en ese momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "contextDisplay": {
+          "name": "Uso del contexto",
+          "description": "La misma pregunta en la otra magnitud: aquella mide consumo contra una ventana, esta mide dinero contra un presupuesto."
+        },
+        "contextBreakdown": {
+          "name": "Reparto del contexto",
+          "description": "Cuando lo que importa no es cuánto se fue, sino de dónde vino."
+        },
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "Qué estaba pasando, y desde hace cuánto — la línea que suele venir encima de esta."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Cuando la barra es el propio valor, y no el dibujo de un número escrito al lado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El dinero llega escrito, y la pieza nunca lo formatea. Símbolo, posición del símbolo, separador de miles, separador decimal y número de decimales varían por idioma Y por moneda: la misma cantidad se escribe \"US$ 0,84\", \"$0.84\" o \"0,84 US$\", y el símbolo cambia de punta entre un idioma y otro. Es el mismo precedente del tiempo transcurrido del dictado, del reloj del estado de la ejecución y del sello de la franja de borrador.",
+      "item2": "Lo que atraviesa la cuenta es la fracción, y nunca la cantidad. La razón entre el gasto y el tope es número puro, sin moneda y sin idioma — una cuenta que recibiera dinero escrito tendría que analizar la cadena para dividir, y analizar dinero escrito es como se equivoca uno de moneda en silencio.",
+      "item3": "El tope va en par: la cantidad escrita y la fracción ya calculada. Como dos propiedades sueltas existiría el estado a medio declarar, y ni una frase sin medidor ni un medidor sin tope escrito son piezas que alguien quiera montar.",
+      "item4": "Sin tope declarado no hay fracción, solo la cantidad. Coste sin presupuesto es el caso común, y un carril vacío se leería como \"no se gastó nada\" — que es lo contrario de lo que se sabe.",
+      "item5": "El umbral es el mismo que el de la medición de la ventana, y eso es decisión. Las dos piezas aparecen lado a lado usando la misma palabra; dos umbrales harían que \"cerca del tope\" significara una cosa arriba y otra abajo, y la palabra dejaría de decidir nada.",
+      "item6": "La fracción se queda en texto al lado de la barra, y no solo en el dibujo. Si el porcentaje saliera de la pantalla, la barra pasaría a ser la única portadora de la fracción y empezaría a deber contraste de gráfico — que es exactamente la diferencia entre este medidor y una barra de progreso.",
+      "item7": "No hay forma alternativa aquí, al contrario de la medición de la ventana. Allí el anillo existe para el carril estrecho; aquí quien decide el ancho de la línea es una cadena escrita fuera de la pieza, y es justamente ese ancho el que ella no puede medir."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; el medidor en sí no instrumenta nada, porque no hay interacción en él.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una cantidad y un tope declarado",
+          "result": "La cantidad sale tal como llegó, el detalle trae la fracción y el tope, y aparece la palabra del nivel",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Leer la barra y el detalle de la misma pieza",
+          "result": "La barra dibuja el mismo entero que dice el detalle",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar gastos de margen, aviso y aprieto contra el mismo tope",
+          "result": "Cada uno trae la palabra de su nivel, y el atributo de nivel acompaña",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar exactamente tres cuartos del tope",
+          "result": "Ya es aviso, y no margen — el umbral es exacto",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar un gasto por encima del tope",
+          "result": "El porcentaje se fija en cien y la barra se detiene al llenarse, y la cantidad sigue diciendo el valor real",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar una cantidad sin tope declarado",
+          "result": "No hay barra, ni palabra de nivel, ni atributo de nivel; el detalle dice que el tope no fue declarado",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Montar la pieza al lado de la medición de la ventana",
+          "result": "Las dos dibujan la misma palabra de nivel para la misma fracción, y ninguna vive dentro de la otra",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Montar la pieza después de la línea de estado de la ejecución",
+          "result": "Las dos conviven sin que ninguna se vuelva propiedad de la otra",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La pieza no es región viva y nada en ella se reanuncia",
+        "item2": "La barra está fuera de lo que se lee en voz, sin papel y sin valor",
+        "item3": "La cantidad tiene nombre, y el nombre no aparece en pantalla",
+        "item4": "El nivel llega en palabra, y el color solo acompaña",
+        "item5": "La fracción está en texto al lado de la barra, y no solo en el dibujo",
+        "item6": "Sin tope declarado no queda medidor ni etiqueta para leer"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — el coste, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los tres niveles, uno bajo el otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — justo en el borde del aviso",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — por encima del tope",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sin tope declarado",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — al lado de la medición de la ventana",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composiciones — al final de una ejecución",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

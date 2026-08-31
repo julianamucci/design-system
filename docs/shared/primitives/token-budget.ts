@@ -44,6 +44,27 @@
  *      tokens de verdade não pode sair como 0%, e uma parcela que não é tudo não
  *      pode sair como 100%.
  *
+ * Duas decisões CHEGARAM com a terceira peça de medição, a que desenha o custo
+ * em dinheiro. A moeda não entra aqui — ela é TEXTO e chega escrita de quem
+ * conhece o idioma e a moeda —, mas a FRAÇÃO de um teto gasto é número puro, e
+ * é ela que atravessa:
+ *
+ *   6. O LIMIAR DO CUSTO É O MESMO DA JANELA. É a decisão com duas respostas
+ *      mais plausíveis deste módulo: dinheiro e contexto são grandezas
+ *      diferentes, e nada obrigaria três quartos a significar "aviso" nos dois.
+ *      Mas as duas peças aparecem lado a lado na mesma tela e usam a MESMA
+ *      palavra; dois limiares fariam "perto do teto" querer dizer uma coisa
+ *      acima e outra abaixo, e aí a palavra deixa de decidir o que fazer. É por
+ *      isso que `fractionLevel` existe como função própria em vez de
+ *      `budgetLevel` ganhar uma segunda entrada: com ela, os dois lugares leem
+ *      a mesma comparação, e não duas cópias dela.
+ *   7. A CONTA NÃO CONHECE MOEDA, e é por isso que a fração é o que atravessa.
+ *      `spentFraction` recebe dois números simples e devolve uma razão sem
+ *      unidade: quem tem símbolo, casas decimais e posição do símbolo é o TEXTO,
+ *      e ele nunca passa por aqui. Uma conta que recebesse "US$ 0,42" teria de
+ *      analisar a cadeia para dividir, e analisar dinheiro escrito é como se
+ *      erra de moeda em silêncio.
+ *
  * Derivado do catálogo Elements da assistant-ui (MIT). Ver
  * `docs/shared/guidelines/17-componentes-conversacionais.md`.
  */
@@ -169,15 +190,96 @@ function readablePercent(fraction: number): number {
 }
 
 /**
+ * Uma fração que se possa desenhar: de 0 a 1, e nunca `NaN`.
+ *
+ * O irmão de `countable` para o outro lado da conta. `usedFraction` já devolve
+ * o valor recortado, mas quem calcula a razão FORA daqui — o custo, que divide
+ * dinheiro por dinheiro — pode trazer qualquer coisa, inclusive uma divisão que
+ * já saiu indefinida. Recortar em 1 é a mesma decisão de `usedFraction`: um
+ * anel não dá mais que uma volta e uma barra não passa do trilho.
+ */
+function clampFraction(fraction: number): number {
+  if (!Number.isFinite(fraction) || fraction <= 0) return 0;
+  return Math.min(fraction, 1);
+}
+
+/**
+ * Uma fração qualquer em inteiro de por cento — ou `null` quando não há fração.
+ *
+ * A porta de entrada de `readablePercent` para quem JÁ TEM a razão e não tem
+ * `TokenUsage`: o custo divide dinheiro por dinheiro, e o resultado é uma razão
+ * sem unidade como qualquer outra. Existe para que as duas travas do número que
+ * se lê em voz valham também lá — escritas de novo na peça do custo, uma delas
+ * se perderia, e um gasto de verdade sairia como 0%.
+ *
+ * `null` entra e `null` sai, sem exceção: é assim que "não há teto" atravessa
+ * a conta inteira sem virar zero pelo caminho. A sobrecarga diz isso no TIPO,
+ * e não só no texto: quem chega com fração de verdade recebe número de verdade,
+ * e não precisa de uma asserção para escrever o por cento na tela — asserção é
+ * como um invariante deixa de ser verificado.
+ */
+export function fractionPercent(fraction: number): number;
+export function fractionPercent(fraction: number | null): number | null;
+export function fractionPercent(fraction: number | null): number | null {
+  if (fraction === null) return null;
+  return readablePercent(clampFraction(fraction));
+}
+
+/**
+ * O nível de uma fração já calculada — ou `null` quando não há fração.
+ *
+ * A comparação com os dois limiares, num lugar só (decisão 6 do cabeçalho). É
+ * daqui que `budgetLevel` tira a resposta, e é daqui que a peça do custo tira a
+ * dela: assim "perto do teto" quer dizer a mesma coisa nas duas, que é a única
+ * razão de a palavra servir para decidir o que fazer.
+ *
+ * Os limiares são comparados com `>=`, exatos (decisão 2 do cabeçalho). E a
+ * sobrecarga é a de `fractionPercent`, pelo mesmo motivo: quem chega com fração
+ * de verdade recebe nível de verdade.
+ */
+export function fractionLevel(fraction: number): BudgetLevel;
+export function fractionLevel(fraction: number | null): BudgetLevel | null;
+export function fractionLevel(fraction: number | null): BudgetLevel | null {
+  if (fraction === null) return null;
+  const clamped = clampFraction(fraction);
+  if (clamped >= BUDGET_CRITICAL_AT) return 'critical';
+  if (clamped >= BUDGET_WARNING_AT) return 'warning';
+  return 'normal';
+}
+
+/**
+ * A fração de um teto já gasta, de 0 a 1 — ou `null` quando não há teto.
+ *
+ * O gêmeo de `usedFraction` para a grandeza que não é token. O numerador é um
+ * valor só, e não uma soma de parcelas, porque quem gastou já sabe o total —
+ * e o denominador é o teto DECLARADO, que muitas vezes não existe. Custo sem
+ * orçamento é o caso comum, e ele sai como `null` pela mesma razão de sempre:
+ * um trilho vazio lê como "não gastou nada", que é o oposto de "não se sabe
+ * quanto pode gastar".
+ *
+ * RECORTADA EM 1, como `usedFraction`. Não há gêmeo de `isOverLimit` aqui, e a
+ * ausência é decisão: nenhuma peça desenha o estouro do orçamento diferente do
+ * aperto — nos dois o trilho está cheio e a palavra é a mesma —, e exportar uma
+ * resposta que ninguém lê é o mesmo defeito que a classe morta numa folha.
+ * Quando alguma peça precisar da diferença, ela nasce com o leitor junto.
+ *
+ * NÃO RECEBE MOEDA, e sim dois números (decisão 7 do cabeçalho). Quem sabe o
+ * símbolo, a posição dele e as casas decimais é quem escreve o texto.
+ */
+export function spentFraction(spent: number, budget?: number): number | null {
+  const cap = countable(budget);
+  if (cap === 0) return null;
+  return Math.min(countable(spent) / cap, 1);
+}
+
+/**
  * A fração da janela em número inteiro de por cento — ou `null` sem teto.
  *
  * As travas são as de `readablePercent`, e o `null` é o de `usedFraction`:
  * sem teto não há fração, e por isso não há por cento.
  */
 export function usedPercent(usage: TokenUsage): number | null {
-  const fraction = usedFraction(usage);
-  if (fraction === null) return null;
-  return readablePercent(fraction);
+  return fractionPercent(usedFraction(usage));
 }
 
 /**
@@ -213,14 +315,12 @@ export function isOverLimit(usage: TokenUsage): boolean {
  * o nível mais tranquilo para quem não mediu nada seria inventar uma boa
  * notícia.
  *
- * Os limiares são comparados com `>=`, exatos (decisão 2 do cabeçalho).
+ * A comparação em si mora em `fractionLevel`, e não aqui: é ela que a peça do
+ * custo também lê, e é por isso que "perto do teto" quer dizer a mesma coisa
+ * nas duas telas (decisão 6 do cabeçalho).
  */
 export function budgetLevel(usage: TokenUsage): BudgetLevel | null {
-  const fraction = usedFraction(usage);
-  if (fraction === null) return null;
-  if (fraction >= BUDGET_CRITICAL_AT) return 'critical';
-  if (fraction >= BUDGET_WARNING_AT) return 'warning';
-  return 'normal';
+  return fractionLevel(usedFraction(usage));
 }
 
 // ─── De onde veio ─────────────────────────────────────────────────────────────

@@ -28,9 +28,12 @@ import {
   budgetShares,
   contextSlices,
   contextTotal,
+  fractionLevel,
+  fractionPercent,
   hasLimit,
   isOverLimit,
   remainingTokens,
+  spentFraction,
   usedFraction,
   usedPercent,
   usedTokens,
@@ -307,5 +310,109 @@ describe('contextSlices — a repartição que a legenda lê por posição', () 
 
   it('origem única leva tudo', () => {
     expect(contextSlices([{ id: 'history', tokens: 700 }])[0]!.percent).toBe(100);
+  });
+});
+
+// ─── A fração que vem de fora ─────────────────────────────────────────────────
+//
+// As três funções que a peça do custo trouxe. Elas existem porque a razão entre
+// dois valores é número puro: dinheiro tem moeda e vira TEXTO antes de chegar
+// perto de qualquer conta, mas "quanto do teto já foi" é a mesma pergunta da
+// janela, com a mesma resposta.
+
+describe('a fração de um teto gasto, quando o teto não é de tokens', () => {
+  it('divide o gasto pelo teto', () => {
+    expect(spentFraction(0.42, 1)).toBeCloseTo(0.42, 10);
+    expect(spentFraction(1.5, 2)).toBe(0.75);
+  });
+
+  it('sem teto declarado não há fração, e a resposta é null', () => {
+    // Custo sem orçamento é o caso COMUM, e é o que não pode parecer zero: um
+    // trilho vazio lê como "não gastou nada".
+    expect(spentFraction(0.42)).toBeNull();
+    expect(spentFraction(0.42, 0)).toBeNull();
+    expect(spentFraction(0.42, -1)).toBeNull();
+    expect(spentFraction(0.42, Number.NaN)).toBeNull();
+  });
+
+  it('gasto inválido lê como zero em vez de contaminar a razão', () => {
+    expect(spentFraction(Number.NaN, 1)).toBe(0);
+    expect(spentFraction(-3, 1)).toBe(0);
+  });
+
+  it('passar do teto não passa de uma volta', () => {
+    // Mesmo recorte de `usedFraction`, e pelo mesmo motivo: uma barra não passa
+    // do trilho, então desenhar 1,24 desenharia 1 sem ninguém ter escolhido.
+    expect(1.24 / 1).toBeGreaterThan(1);
+    expect(spentFraction(1.24, 1)).toBe(1);
+  });
+});
+
+describe('o nível sai de uma fração, e é a MESMA comparação das duas peças', () => {
+  it('os limiares valem igual para uma fração que veio de fora', () => {
+    // Decisão 6 do cabeçalho: dois limiares fariam "perto do teto" querer dizer
+    // uma coisa acima e outra abaixo na mesma tela.
+    expect(fractionLevel(0.74)).toBe('normal');
+    expect(fractionLevel(BUDGET_WARNING_AT)).toBe('warning');
+    expect(fractionLevel(0.89)).toBe('warning');
+    expect(fractionLevel(BUDGET_CRITICAL_AT)).toBe('critical');
+  });
+
+  it('e a janela lê exatamente essa comparação', () => {
+    // O que este teste segura não é o valor: é que as duas leituras vêm da
+    // MESMA função. Uma cópia divergiria em silêncio no dia em que um limiar
+    // mudasse.
+    for (const fracao of [0, 0.5, 0.74, 0.75, 0.89, 0.9, 1]) {
+      expect(budgetLevel(usageAt(fracao))).toBe(fractionLevel(fracao));
+    }
+  });
+
+  it('sem fração não há nível', () => {
+    expect(fractionLevel(null)).toBeNull();
+  });
+
+  it('fração acima do teto continua sendo aperto, e não some no recorte', () => {
+    expect(fractionLevel(1.24)).toBe('critical');
+  });
+
+  it('fração impossível lê como zero, e não como aperto', () => {
+    // O infinito é quem dá dentes a esta asserção, e o `NaN` sozinho não daria:
+    // `NaN` não é maior nem menor que nada, então sem o recorte ele já cairia em
+    // `normal` por acidente. O infinito, sem recorte, sai como `critical` — e é
+    // por isso que os três valores entram juntos.
+    for (const impossible of [Number.NaN, Number.POSITIVE_INFINITY, -1]) {
+      expect(fractionLevel(impossible)).toBe(fractionLevel(0));
+      expect(fractionPercent(impossible)).toBe(fractionPercent(0));
+    }
+  });
+});
+
+describe('o por cento de uma fração que veio de fora leva as mesmas travas', () => {
+  it('100% só quando está cheio de verdade', () => {
+    expect(fractionPercent(0.999)).toBe(99);
+    expect(fractionPercent(1)).toBe(100);
+    expect(fractionPercent(1.24)).toBe(100);
+  });
+
+  it('0% só quando nada foi gasto', () => {
+    expect(fractionPercent(0)).toBe(0);
+    expect(fractionPercent(0.0001)).toBe(1);
+  });
+
+  it('sem fração não há por cento', () => {
+    expect(fractionPercent(null)).toBeNull();
+  });
+
+  it('e o por cento da janela lê exatamente esta função', () => {
+    for (const fracao of [0, 0.36, 0.75, 0.999, 1]) {
+      expect(usedPercent(usageAt(fracao))).toBe(fractionPercent(fracao));
+    }
+  });
+
+  it('fração indefinida sai como zero, e nunca como NaN na tela', () => {
+    // Um `NaN` na tela é pior que um zero, porque zero pelo menos se lê — mesma
+    // decisão de `countable`, agora do outro lado da conta.
+    expect(fractionPercent(Number.NaN)).toBe(0);
+    expect(Number.isNaN(fractionPercent(Number.NaN) as number)).toBe(false);
   });
 });

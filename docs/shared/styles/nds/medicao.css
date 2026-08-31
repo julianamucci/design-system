@@ -507,3 +507,204 @@
 .nds-context-breakdown-part:nth-child(8n + 8) {
   --nds-context-slice-color: var(--chart-8);
 }
+
+/* ── Custo de uma execução ───────────────────────────────────────────────────
+ *
+ * Quanto uma execução custou, em dinheiro. Conta: `spentFraction`,
+ * `fractionLevel`, `fractionPercent`, `BudgetLevel`.
+ *
+ * A DECISÃO QUE SÓ ESTA PEÇA TEM, E QUE MUDA O CONTRATO INTEIRO: O DINHEIRO
+ * CHEGA ESCRITO. A peça recebe texto — "US$ 0,42" —, e nunca um número com uma
+ * moeda ao lado. É o mesmo precedente do tempo decorrido do ditado, do relógio
+ * do estado da execução e do carimbo da faixa de rascunho, e aqui ele vale com
+ * mais força: duração tem separador e ordem; moeda tem SÍMBOLO, POSIÇÃO DO
+ * SÍMBOLO, separador de milhar, separador decimal e número de casas — e os
+ * cinco variam por idioma E por moeda. Um componente que formatasse decidiria
+ * as duas coisas em cinco stacks.
+ *
+ * A CONSEQUÊNCIA QUE SÓ APARECEU AO CONSTRUIR: a mesma quantia se escreve de
+ * três jeitos conforme o idioma — `US$ 0,42`, `$0.42`, `0,42 US$`. A posição do
+ * símbolo TROCA DE PONTA entre um idioma e outro. Nenhuma heurística de
+ * componente acerta isso; quem sabe é quem escolheu a moeda.
+ *
+ *   <p class="nds-cost-meter" data-slot="cost-meter" data-level="warning">
+ *     <span class="nds-sr-only" data-slot="cost-meter-title">Custo desta execução</span>
+ *     <span class="nds-cost-meter-amount" data-slot="cost-meter-amount">US$ 0,42</span>
+ *     <span class="nds-cost-meter-detail" data-slot="cost-meter-detail">84% de US$ 0,50</span>
+ *     <span class="nds-badge nds-badge-warning nds-cost-meter-level"
+ *           data-slot="cost-meter-level">Perto do teto</span>
+ *     <span class="nds-cost-meter-bar" data-slot="cost-meter-meter"
+ *           aria-hidden="true" style="--nds-cost-spent: 84">
+ *       <span class="nds-cost-meter-bar-fill"></span>
+ *     </span>
+ *   </p>
+ *
+ * Sem teto declarado, a árvore perde o medidor e a etiqueta, e o detalhe passa
+ * a dizer que não há teto:
+ *
+ *     <p class="nds-cost-meter" data-slot="cost-meter">
+ *       <span class="nds-sr-only" data-slot="cost-meter-title">Custo desta execução</span>
+ *       <span class="nds-cost-meter-amount" data-slot="cost-meter-amount">US$ 0,42</span>
+ *       <span class="nds-cost-meter-detail" data-slot="cost-meter-detail">Sem teto declarado</span>
+ *     </p>
+ *
+ * A CLASSE ANDA JUNTO DO `data-slot` em toda a árvore, e a folha estiliza pela
+ * CLASSE — nunca por `[data-slot="…"]`, como nos dois blocos de cima e pelo
+ * mesmo motivo: no Angular quase toda peça liga `data-slot` por host binding, e
+ * o atributo estático do template disputa com ele. A etiqueta de nível é o caso
+ * visível — ela é um `.nds-badge`, que liga `data-slot="badge"` por host
+ * binding, e sem a classe própria perderia o alinhamento à direita numa só das
+ * cinco.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   `data-level`  A cor de reforço. AUSENTE quando não há teto, porque sem teto
+ *                 não há nível. A cor de folga mora na raiz, e não numa regra
+ *                 `[data-level="normal"]` que repetiria o mesmo valor.
+ *
+ * NÃO HÁ `data-form` AQUI, e a ausência é decisão medida ao construir. A peça
+ * vizinha tem anel, barra e texto porque a forma é escolha de ESPAÇO, e o anel
+ * existe para o trilho estreito. Aqui o que ocupa a linha é uma cadeia de
+ * largura desconhecida — símbolo, milhar e casas decimais vêm de fora —, e é
+ * justamente a largura que a peça não pode medir. A forma compacta que o anel
+ * serviria não é alcançável, e um eixo de forma repetido aqui faria duas peças
+ * responderem à mesma pergunta.
+ *
+ * O MEDIDOR VEM POR ÚLTIMO NO DOM, ao contrário do da peça vizinha. Lá ele
+ * precisa vir antes porque na forma de anel ele precede o número, e `order`
+ * existe só para desfazer isso na forma de barra. Com uma forma só não há o que
+ * desfazer: pôr o medidor no fim faz a ordem visual sair de graça, e economiza
+ * a declaração que existiria para corrigir uma ordem escolhida por outra forma.
+ *
+ * O NÚMERO QUE A BARRA DESENHA ESTÁ ESCRITO AO LADO DELA, e isto NÃO é detalhe
+ * — é o que sustenta a mesma dispensa de 1.4.11 que o primeiro bloco
+ * reivindica. A barra só pode ser "reforço de um texto que já diz o número"
+ * enquanto o texto disser o número; se o por cento saísse da tela, a barra
+ * viraria a única portadora da fração e o limiar de 3:1 entre a parte cheia e a
+ * vazia passaria a valer. Por isso o detalhe é `84% de US$ 0,50`, e não só
+ * `de US$ 0,50`.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O MEDIDOR É DECORATIVO e os números são TEXTO. `aria-hidden` no medidor,
+ *    nenhum `role`, nenhum `aria-valuenow`, nenhum `aria-live` em lugar nenhum.
+ *    O custo sobe a cada turno; anunciá-lo a cada mudança torna a tela
+ *    impossível de ouvir enquanto a resposta é gerada ao lado (regra 9 da
+ *    guideline 17). Mesma decisão dos dois blocos de cima.
+ * 2. O MEDIDOR NÃO É UM SEGUNDO PORTADOR DO NÚMERO. Um `role="progressbar"` com
+ *    `aria-valuenow` ao lado do texto faria a mesma fração ser lida duas vezes,
+ *    uma delas como controle. Ele não é controle: é o desenho do que já está
+ *    escrito.
+ * 3. O NÍVEL É PALAVRA, e a cor acompanha (WCAG 1.4.1). A palavra aparece
+ *    SEMPRE que há teto, inclusive com folga — uma peça que só falasse quando a
+ *    notícia é ruim deixaria a boa notícia indistinguível de uma medição que
+ *    não chegou.
+ * 4. O NÚMERO TEM NOME. "US$ 0,42" sozinho não diz de quê — nem de qual
+ *    execução, nem se é do turno ou da conversa inteira. O título é
+ *    `.nds-sr-only` porque quem vê já sabe pelo lugar em que a peça está, e
+ *    quem ouve não.
+ * 5. SEM TETO NÃO SE DESENHA MEDIDOR, e o detalhe passa a dizer que não há teto
+ *    declarado. Custo sem orçamento é caso real — quase sempre é o caso —, e um
+ *    trilho vazio leria como "não gastou nada", que é o oposto do que se sabe.
+ * 6. O VALOR NÃO TROCA DE SIGNIFICADO ENTRE OS DOIS CASOS, e aqui esta peça
+ *    diverge da vizinha de propósito: lá o valor é a fração quando há teto e a
+ *    contagem quando não há. Dinheiro é dinheiro nos dois casos, então o valor
+ *    é sempre a quantia, e o que aparece e some é o que a QUALIFICA. Quem ouve
+ *    a peça duas vezes ouve o mesmo tipo de número nas duas.
+ *
+ * NÃO HÁ UNIDADE NOS RÓTULOS, ao contrário das duas peças de cima. "tokens" é
+ * palavra de interface e precisa de tradução; a moeda já está dentro da cadeia
+ * que chegou escrita, e um rótulo de unidade aqui seria uma segunda chance de
+ * discordar dela.
+ */
+
+.nds-cost-meter {
+  /* A cor do medidor, e o valor de FOLGA. As duas regras de nível abaixo a
+   * trocam; `normal` não tem regra porque ele É este valor, e um override que
+   * repetisse `--primary` criaria um segundo lugar para mudar a mesma cor.
+   * Os mesmos três valores da peça vizinha, e isso é o eixo da família: se o
+   * limiar é o mesmo e a palavra é a mesma, a cor tem de ser a mesma. */
+  --nds-cost-meter-color: var(--primary);
+
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  /* Na raiz porque é ela quem decide se há segunda linha, e há sempre que o
+   * medidor está montado — ele é o único filho que pede a linha inteira. */
+  flex-wrap: wrap;
+
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-cost-meter[data-level="warning"] {
+  --nds-cost-meter-color: var(--warning);
+}
+
+.nds-cost-meter[data-level="critical"] {
+  --nds-cost-meter-color: var(--destructive);
+}
+
+/* ── A quantia, e o que a qualifica ──────────────────────────────────────────
+ *
+ * `tabular-nums` nos DOIS elementos que carregam dígito, e não na raiz — na
+ * raiz ele alcançaria também a palavra do nível, onde não faz nada. A quantia
+ * sobe a cada turno; sem largura fixa de algarismo, a linha inteira treme a
+ * cada atualização. Vale para a moeda tanto quanto para a contagem: o que se
+ * atualiza são os centavos, que é a última coluna de dígitos da cadeia. */
+.nds-cost-meter-amount {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+/* O por cento e o teto, ou a notícia de que não há teto. É este elemento que
+ * mantém a fração em TEXTO, e é por isso que a barra pode ser só desenho. */
+.nds-cost-meter-detail {
+  font-variant-numeric: tabular-nums;
+}
+
+/* A etiqueta do nível fecha a primeira linha, alinhada à direita — mesma coluna
+ * do nível da peça vizinha e do total da repartição, e pelo mesmo motivo: sem
+ * isto ela fica colada no detalhe e SALTA de lugar quando o detalhe muda de
+ * largura, que é a cada turno e a cada idioma. */
+.nds-cost-meter-level {
+  margin-inline-start: auto;
+}
+
+/* ── O medidor ───────────────────────────────────────────────────────────────
+ *
+ * A linha inteira, abaixo do texto. Sem transição de largura, pela mesma razão
+ * das barras de cima: os números ao lado são texto e trocam de um quadro para o
+ * outro, então uma barra que deslizasse ficaria discordando deles durante o
+ * deslize — e o eixo da família é justamente que os dois são a MESMA resposta.
+ * De quebra, não há animação contínua a desligar sob `prefers-reduced-motion`.
+ *
+ * `flex-basis: 100%` é o que o empurra para a segunda linha, e é a única
+ * declaração de posição que esta peça precisa: com o medidor no fim do DOM, não
+ * há ordem a desfazer. */
+.nds-cost-meter-bar {
+  /* Valor INICIAL, não defensivo: o componente escreve o seu por cima, em
+   * custom property, porque é valor de runtime. Sem esta linha, uma árvore
+   * copiada da anatomia sem o atributo deixaria a largura inválida. */
+  --nds-cost-spent: 0;
+
+  flex-basis: 100%;
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  /* Sólida, e não a cor de destaque com opacidade: §9 da guideline 17 proíbe
+   * opacidade baixa em escala de intensidade, que some no modo escuro. */
+  background-color: hsl(var(--muted));
+  overflow: hidden;
+}
+
+/* A propriedade fica no TRILHO, e não aqui — ela herda, então o preenchimento a
+ * lê de graça, e em troca o número mora sempre no mesmo elemento. Mesma
+ * mecânica das duas barras de cima. */
+.nds-cost-meter-bar-fill {
+  display: block;
+  block-size: 100%;
+  inline-size: calc(var(--nds-cost-spent) * 1%);
+  background-color: hsl(var(--nds-cost-meter-color));
+}
