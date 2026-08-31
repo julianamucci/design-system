@@ -1,0 +1,1418 @@
+{
+  "pt-BR": {
+    "title": "Estado da execução",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A linha que diz em que pé está a resposta: o que está acontecendo, há quanto tempo, e o que dá para fazer a respeito.",
+    "seo": {
+      "title": "Estado da execução — o que está acontecendo, e o que dá para fazer",
+      "description": "A linha de estado do agente: a palavra que descreve, o ponto que é só desenho, o relógio que não se anuncia e uma ação que troca de nome quando troca de função."
+    },
+    "labels": {
+      "status": {
+        "idle": "Em espera",
+        "running": "Respondendo",
+        "stopped": "Interrompida",
+        "complete": "Concluída",
+        "failed": "Falhou"
+      },
+      "action": {
+        "running": "Parar",
+        "stopped": "Retomar",
+        "failed": "Tentar de novo"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "running": "Enquanto a resposta vem",
+        "stopped": "Quando alguém pediu para parar",
+        "failed": "Quando a execução quebrou",
+        "complete": "Quando chegou ao fim"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A linha fica junto de onde a resposta vai aparecer — acima do campo de mensagem ou ao pé da conversa. Ela não mora dentro de nenhuma moldura.",
+      "item2": "O ponto abre a linha e é só desenho: a cor sozinha não descreve estado.",
+      "item3": "A palavra vem logo depois, e é ela que diz o que está acontecendo.",
+      "item4": "O tempo decorrido chega já escrito e fica fora do que é anunciado — um número que se reescreve a cada segundo torna a tela impossível de ouvir.",
+      "item5": "A ação fica no fim da linha, e o rótulo dela diz o que faz naquele estado.",
+      "structureCode": {
+        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Respondendo</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button\" data-slot=\"agent-status-action\">Parar</button>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para dizer em que pé está a resposta que está sendo gerada logo abaixo.",
+        "item2": "Escreva o estado em palavra, sempre — o ponto é para os olhos.",
+        "item3": "Passe o tempo decorrido já formatado, no idioma da tela.",
+        "item4": "Dê à ação o nome do que ela faz naquele estado, e não um nome fixo.",
+        "item5": "Faça o que a ação pede em quem consome: parar, retomar e repetir são do produto."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Dizer em que pé está a resposta, e oferecer parar",
+          "u": "Estado da execução",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar o quanto de uma tarefa longa já andou",
+          "u": "Progress",
+          "a": "Ali existe uma fração conhecida; aqui existe um estado, e execução em curso não tem porcentagem."
+        },
+        "item3": {
+          "s": "Descrever um passo dentro do turno — uma chamada de ferramenta, um raciocínio",
+          "u": "Conversa",
+          "a": "Aquilo mora dentro da mensagem e descreve um passo; esta linha descreve a execução inteira."
+        },
+        "item4": {
+          "s": "Avisar de um erro que precisa ser lido na hora",
+          "u": "Alert",
+          "a": "Aquele interrompe quem lê; esta linha espera ser percorrida, porque quem lê está ouvindo a resposta."
+        },
+        "item5": {
+          "s": "Rótulo curto que classifica alguma coisa",
+          "u": "Badge",
+          "a": "O rótulo diz o que uma coisa é; esta linha diz o que está acontecendo agora."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "state": {
+            "name": "Palavra do estado",
+            "format": "Uma palavra sobre a execução, não sobre o sistema",
+            "good": "Respondendo",
+            "bad": "Em processamento pelo servidor"
+          },
+          "elapsed": {
+            "name": "Tempo decorrido",
+            "format": "Já escrito, curto, no formato do idioma",
+            "good": "1:04",
+            "bad": "64000 milissegundos"
+          },
+          "stopAction": {
+            "name": "Ação enquanto corre",
+            "format": "Verbo no infinitivo, sobre o que ela faz",
+            "good": "Parar",
+            "bad": "Cancelar a operação em andamento"
+          },
+          "restartAction": {
+            "name": "Ação depois do fim",
+            "format": "Verbo que diz o que muda, e nunca o mesmo da anterior",
+            "good": "Tentar de novo",
+            "bad": "Parar"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva o estado em palavra, ao lado do ponto.",
+        "item2": "Troque o nome da ação quando ela troca de função.",
+        "item3": "Passe o tempo já formatado, e deixe-o fora do que se anuncia.",
+        "item4": "Deixe a linha sem ação nos estados em que não há o que fazer."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a cor do ponto como única diferença entre os estados.",
+        "item2": "Não anuncie a troca de estado: quem lê está ouvindo a resposta logo abaixo.",
+        "item3": "Não formate a duração dentro do componente.",
+        "item4": "Não faça a linha parar, retomar ou repetir sozinha."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O estado chega em palavra, ao lado do ponto.",
+        "dont": "Só a cor do ponto separa a execução em curso da que falhou, e cor não chega a quem ouve a tela."
+      },
+      "pair2": {
+        "do": "A ação diz o que faz naquele estado — parar enquanto corre, tentar de novo depois da falha.",
+        "dont": "O mesmo rótulo serve os dois estados, e o botão passa a fazer coisas diferentes com o mesmo nome."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: rotulos,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
+        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
+        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"rotulos\"\n  @action=\"aoPedir\"\n/>",
+        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
+        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"rotulos\"\n  (action)=\"aoPedir($event)\"\n></p>"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "web": "// A palavra de cada um dos cinco estados, e o rótulo da ação onde ela existe.\n//\n// Em espera e concluída ficam sem ação de propósito: começar uma execução é do\n// campo de mensagem, e sobre uma resposta pronta não há o que fazer aqui.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Respondendo',\n    stopped: 'Interrompida',\n    complete: 'Concluída',\n    failed: 'Falhou',\n  },\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "idle": {
+        "label": "Em espera",
+        "trigger": "Nada foi pedido ainda.",
+        "behavior": "O ponto fica neutro e a linha não oferece ação — começar é do campo de mensagem."
+      },
+      "running": {
+        "label": "Respondendo",
+        "trigger": "A resposta está sendo gerada agora.",
+        "behavior": "O ponto ganha a cor de destaque, o relógio corre e a ação oferece parar."
+      },
+      "stopped": {
+        "label": "Interrompida",
+        "trigger": "Quem lê pediu para parar antes do fim.",
+        "behavior": "O ponto fica neutro de propósito — interromper não é erro — e a ação oferece retomar."
+      },
+      "complete": {
+        "label": "Concluída",
+        "trigger": "A resposta chegou ao fim sozinha.",
+        "behavior": "O ponto fica na cor de sucesso, o relógio mostra a duração final e não há ação."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "A execução quebrou sem chegar ao fim.",
+        "behavior": "O ponto fica na cor de erro e a ação oferece tentar de novo."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que pé está a execução. Decide a palavra, a cor do ponto e o que a ação pede."
+        },
+        "elapsed": {
+          "name": "elapsed",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Há quanto tempo a execução corre, já escrito. Fica fora do que é anunciado."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "AgentStatusLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada estado e o rótulo da ação onde ela existe."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(intent) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu a ação, e a intenção vem junto — interromper ou começar de novo. Fazer é de quem consome."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada um dos cinco estados. É ela que descreve, e não a cor do ponto."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<RunStatus, string>>",
+          "default": "—",
+          "required": "Não",
+          "description": "O rótulo da ação em cada estado. Estado sem entrada não oferece ação nenhuma."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A linha desenha o estado que recebe e avisa que alguém pediu a ação. Ela não para, não retoma e não repete — e o que a intenção significa, se retomar continua de onde parou ou refaz do zero, é de quem consome.",
+      "extensibilityCode": {
+        "web": "// A INTENÇÃO sai do vocabulário compartilhado, e não de um `if` da tela:\n// enquanto a execução não terminou, a ação INTERROMPE; depois de terminada,\n// ela COMEÇA DE NOVO.\nisRunFinished('running');  // false → a ação pede 'stop'\nisRunFinished('stopped');  // true  → a ação pede 'start'\nisRunFinished('failed');   // true  → a ação pede 'start'\n\n// O que \"começar de novo\" significa — retomar de onde parou ou refazer do\n// zero — é decisão de produto. A peça não executa nada."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-agent-status",
+          "description": "Tamanho do texto da linha."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-agent-status",
+          "description": "Cor da linha, e do ponto quando o estado é neutro."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-agent-status-label",
+          "description": "A palavra do estado, que é o que descreve."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-agent-status[data-status=\"running\"]",
+          "description": "O ponto enquanto a resposta está vindo."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-agent-status[data-status=\"complete\"]",
+          "description": "O ponto da execução que chegou ao fim sozinha."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-agent-status[data-status=\"failed\"]",
+          "description": "O ponto da execução que quebrou."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-agent-status-dot",
+          "description": "Espaço entre as partes da linha, e a medida do ponto."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-agent-status-dot",
+          "description": "Arredondamento do ponto."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"agent-status-action\"]",
+          "description": "Alvo de toque mínimo da ação."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-agent-status {\n  max-inline-size: 32rem;\n}\n\n/* O ponto é REFORÇO, e não a pista: a palavra ao lado é o que descreve o\n   estado. Mexer no ponto não muda o que chega a quem ouve. */\n.nds-agent-status[data-status=\"running\"] .nds-agent-status-dot {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A palavra descreve o estado, o ponto e o relógio ficam fora do que é lido, e a linha não interrompe quem está ouvindo a resposta.",
+      "items": {
+        "item1": "A palavra do estado está sempre na linha: a cor do ponto não descreve estado sozinha.",
+        "item2": "O ponto fica fora do que é lido em voz — ele é desenho, e a palavra ao lado já diz tudo.",
+        "item3": "A linha não é região viva. Quem lê está ouvindo a resposta ser gerada logo abaixo, e um anúncio a cada troca de estado corta a leitura no meio.",
+        "item4": "O tempo decorrido não é anunciado: um número que se reescreve a cada segundo torna a tela impossível de ouvir.",
+        "item5": "A ação troca de nome quando troca de função, e o texto que se vê é também o nome acessível."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Chega à ação, quando ela existe. O resto da linha é texto.",
+        "enter": "Aciona a ação sob o foco.",
+        "arrows": "Não fazem nada aqui: a linha é de leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden tira o ponto e o tempo decorrido do que é lido em voz.",
+        "item2": "Não há região viva na linha: quem quiser anunciar a troca de estado põe a região por fora, sabendo o que está fazendo.",
+        "item3": "A ação não leva rótulo acessível separado — o texto que se vê é o nome."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A linha é lida como a palavra do estado, e nada mais.",
+        "item2": "A ação é lida com o nome que ela tem naquele estado.",
+        "item3": "A troca de estado não interrompe o que estiver sendo lido no momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "Conversa",
+          "description": "A resposta que esta linha descreve, e onde os passos de um turno moram."
+        },
+        "composer": {
+          "name": "Composer",
+          "description": "O campo de mensagem, acima do qual a linha costuma ficar."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Quando existe uma fração conhecida, e não só um estado."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Quando o rótulo classifica uma coisa, em vez de dizer o que está acontecendo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A linha não é região viva, apesar de o estado mudar sozinho. Quem lê está ouvindo a resposta ser gerada logo abaixo, e um anúncio a cada troca corta a leitura no meio. Quem quiser anunciar põe a região por fora.",
+      "item2": "O ponto é decorativo e a palavra é o estado. Cor sozinha não descreve estado, e aqui a cor é a única diferença visual entre três dos cinco.",
+      "item3": "O relógio chega já formatado, como texto, e não se anuncia. Formato de duração é decisão de idioma, e um componente que o formatasse decidiria idioma em cinco lugares.",
+      "item4": "A ação troca de nome quando troca de função. Botão que troca de função sem trocar de nome é o mesmo botão fazendo coisas diferentes, e quem chega nele por tabulação não tem como saber qual das duas.",
+      "item5": "Interromper não é erro. O que a pessoa parou fica neutro de propósito: pintar de vermelho o que ela escolheu fazer é o sistema discordando dela.",
+      "item6": "A peça não executa nada. Parar, retomar e repetir são de quem consome, e é ele quem decide se retomar continua de onde parou ou refaz do zero."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a linha em si não instrumenta a ação, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar cada um dos cinco estados",
+          "result": "A palavra daquele estado aparece na linha, e o ponto fica fora do que é lido",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar o tempo decorrido",
+          "result": "Ele aparece na linha e sai do que é anunciado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar a linha em qualquer estado",
+          "result": "Ela não é região viva, e nada nela se reanuncia",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar o estado em que a execução corre",
+          "result": "A ação pede para interromper",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar um estado em que a execução já terminou",
+          "result": "A mesma ação passa a pedir para começar de novo, com outro nome",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar um estado sem rótulo de ação",
+          "result": "A linha não traz botão nenhum",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Acionar a ação",
+          "result": "Quem consome é avisado com a intenção junto, e a linha continua como estava",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar a linha acima do campo de mensagem",
+          "result": "Ela vive fora da moldura do campo, e nada no campo sabe que ela existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A palavra do estado está sempre presente, e a cor não é a única pista",
+        "item2": "O ponto está fora do que é lido em voz",
+        "item3": "A linha não é região viva",
+        "item4": "O tempo decorrido não é anunciado",
+        "item5": "O nome da ação diz o que ela faz, e muda com o estado",
+        "item6": "A ação tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a linha, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os cinco, um abaixo do outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — a execução em curso, com relógio e ação de parar",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — a que falhou, com a ação de tentar de novo",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — a que a pessoa parou",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — a linha acima do campo de mensagem",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Run status",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The line that says where the answer stands: what is happening, for how long, and what you can do about it.",
+    "seo": {
+      "title": "Run status — what is happening, and what you can do",
+      "description": "The agent run line: the word that describes it, the dot that is only drawing, the clock that never announces itself, and an action that changes name when it changes job."
+    },
+    "labels": {
+      "status": {
+        "idle": "Idle",
+        "running": "Answering",
+        "stopped": "Stopped",
+        "complete": "Done",
+        "failed": "Failed"
+      },
+      "action": {
+        "running": "Stop",
+        "stopped": "Resume",
+        "failed": "Try again"
+      }
+    },
+    "demonstration": {
+      "title": "Demo",
+      "labels": {
+        "running": "While the answer comes",
+        "stopped": "When someone asked it to stop",
+        "failed": "When the run broke",
+        "complete": "When it reached the end"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The line sits next to where the answer will show up — above the message field or at the foot of the conversation. It does not live inside any frame.",
+      "item2": "The dot opens the line and is only drawing: colour alone does not describe a state.",
+      "item3": "The word comes right after, and it is the word that says what is happening.",
+      "item4": "The elapsed time arrives already written and stays out of what gets announced — a number that rewrites itself every second makes the screen impossible to listen to.",
+      "item5": "The action sits at the end of the line, and its label says what it does in that state.",
+      "structureCode": {
+        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Answering</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button\" data-slot=\"agent-status-action\">Stop</button>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to say where the answer being generated right below stands.",
+        "item2": "Always write the state in words — the dot is for the eyes.",
+        "item3": "Pass the elapsed time already formatted, in the language of the screen.",
+        "item4": "Give the action the name of what it does in that state, never a fixed name.",
+        "item5": "Do what the action asks on the consuming side: stopping, resuming and retrying belong to the product."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Say where the answer stands, and offer to stop it",
+          "u": "Run status",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Show how far a long task has got",
+          "u": "Progress",
+          "a": "There a known fraction exists; here a state exists, and a run in flight has no percentage."
+        },
+        "item3": {
+          "s": "Describe one step inside a turn — a tool call, a piece of reasoning",
+          "u": "Thread",
+          "a": "That lives inside the message and describes a step; this line describes the whole run."
+        },
+        "item4": {
+          "s": "Warn about an error that has to be read right away",
+          "u": "Alert",
+          "a": "That one interrupts the reader; this line waits to be reached, because the reader is listening to the answer."
+        },
+        "item5": {
+          "s": "A short label that classifies something",
+          "u": "Badge",
+          "a": "The label says what something is; this line says what is happening now."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "state": {
+            "name": "State word",
+            "format": "One word about the run, not about the system",
+            "good": "Answering",
+            "bad": "Being processed by the server"
+          },
+          "elapsed": {
+            "name": "Elapsed time",
+            "format": "Already written, short, in the format of the language",
+            "good": "1:04",
+            "bad": "64000 milliseconds"
+          },
+          "stopAction": {
+            "name": "Action while it runs",
+            "format": "A verb, about what it does",
+            "good": "Stop",
+            "bad": "Cancel the operation in progress"
+          },
+          "restartAction": {
+            "name": "Action after the end",
+            "format": "A verb that says what changes, never the same as the previous one",
+            "good": "Try again",
+            "bad": "Stop"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the state in words, next to the dot.",
+        "item2": "Change the name of the action when it changes job.",
+        "item3": "Pass the time already formatted, and keep it out of what gets announced.",
+        "item4": "Leave the line without an action in the states where there is nothing to do."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't leave the colour of the dot as the only difference between states.",
+        "item2": "Don't announce the change of state: the reader is listening to the answer right below.",
+        "item3": "Don't format the duration inside the component.",
+        "item4": "Don't make the line stop, resume or retry by itself."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The state arrives in words, next to the dot.",
+        "dont": "Only the colour of the dot separates a run in flight from one that failed, and colour does not reach whoever listens to the screen."
+      },
+      "pair2": {
+        "do": "The action says what it does in that state — stop while it runs, try again after it failed.",
+        "dont": "The same label serves both states, and the button starts doing different things under one name."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: rotulos,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
+        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
+        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"rotulos\"\n  @action=\"aoPedir\"\n/>",
+        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
+        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"rotulos\"\n  (action)=\"aoPedir($event)\"\n></p>"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "web": "// The word for each of the five states, and the action label where one exists.\n//\n// Idle and done are left without an action on purpose: starting a run belongs\n// to the message field, and there is nothing to do here about a finished answer.\nconst rotulos = {\n  status: {\n    idle: 'Idle',\n    running: 'Answering',\n    stopped: 'Stopped',\n    complete: 'Done',\n    failed: 'Failed',\n  },\n  action: {\n    running: 'Stop',\n    stopped: 'Resume',\n    failed: 'Try again',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "idle": {
+        "label": "Idle",
+        "trigger": "Nothing has been asked yet.",
+        "behavior": "The dot stays neutral and the line offers no action — starting belongs to the message field."
+      },
+      "running": {
+        "label": "Answering",
+        "trigger": "The answer is being generated right now.",
+        "behavior": "The dot takes the accent colour, the clock runs and the action offers to stop."
+      },
+      "stopped": {
+        "label": "Stopped",
+        "trigger": "The reader asked it to stop before the end.",
+        "behavior": "The dot stays neutral on purpose — stopping is not an error — and the action offers to resume."
+      },
+      "complete": {
+        "label": "Done",
+        "trigger": "The answer reached the end on its own.",
+        "behavior": "The dot takes the success colour, the clock shows the final duration and there is no action."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The run broke without reaching the end.",
+        "behavior": "The dot takes the error colour and the action offers to try again."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where the run stands. Decides the word, the colour of the dot and what the action asks for."
+        },
+        "elapsed": {
+          "name": "elapsed",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "How long the run has been going, already written. Stays out of what gets announced."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "AgentStatusLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each state and the action label where one exists."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(intent) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked for the action, and the intent comes along — interrupt or start over. Doing it belongs to the consumer."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each of the five states. It is the word that describes, not the colour of the dot."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<RunStatus, string>>",
+          "default": "—",
+          "required": "No",
+          "description": "The action label in each state. A state with no entry offers no action at all."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The line draws the state it receives and reports that someone asked for the action. It does not stop, resume or retry — and what the intent means, whether resuming continues from where it stopped or redoes it from scratch, belongs to the consumer.",
+      "extensibilityCode": {
+        "web": "// The INTENT comes from the shared vocabulary, not from an `if` on screen:\n// while the run has not finished, the action INTERRUPTS; once it has finished,\n// it STARTS OVER.\nisRunFinished('running');  // false → the action asks for 'stop'\nisRunFinished('stopped');  // true  → the action asks for 'start'\nisRunFinished('failed');   // true  → the action asks for 'start'\n\n// What \"start over\" means — resume where it stopped, or redo from scratch —\n// is a product decision. The piece runs nothing."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-agent-status",
+          "description": "Size of the text in the line."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-agent-status",
+          "description": "Colour of the line, and of the dot when the state is neutral."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-agent-status-label",
+          "description": "The state word, which is what describes."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-agent-status[data-status=\"running\"]",
+          "description": "The dot while the answer is coming."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-agent-status[data-status=\"complete\"]",
+          "description": "The dot of the run that reached the end on its own."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-agent-status[data-status=\"failed\"]",
+          "description": "The dot of the run that broke."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-agent-status-dot",
+          "description": "Space between the parts of the line, and the size of the dot."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-agent-status-dot",
+          "description": "Rounding of the dot."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"agent-status-action\"]",
+          "description": "Minimum touch target of the action."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": ".nds-agent-status {\n  max-inline-size: 32rem;\n}\n\n/* The dot is REINFORCEMENT, not the cue: the word beside it is what describes\n   the state. Touching the dot changes nothing for whoever listens. */\n.nds-agent-status[data-status=\"running\"] .nds-agent-status-dot {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The word describes the state, the dot and the clock stay out of what is read, and the line never interrupts whoever is listening to the answer.",
+      "items": {
+        "item1": "The state word is always in the line: the colour of the dot does not describe a state on its own.",
+        "item2": "The dot stays out of what is read aloud — it is drawing, and the word beside it already says everything.",
+        "item3": "The line is not a live region. The reader is listening to the answer being generated right below, and an announcement at every change of state cuts the reading in half.",
+        "item4": "The elapsed time is not announced: a number that rewrites itself every second makes the screen impossible to listen to.",
+        "item5": "The action changes name when it changes job, and the visible text is also the accessible name."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the action, when there is one. The rest of the line is text.",
+        "enter": "Activates the focused action.",
+        "arrows": "Do nothing here: the line is for reading, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden keeps the dot and the elapsed time out of what is read aloud.",
+        "item2": "There is no live region in the line: whoever wants to announce the change of state puts the region outside, knowing what they are doing.",
+        "item3": "The action carries no separate accessible label — the visible text is the name."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The line is read as the state word, and nothing else.",
+        "item2": "The action is read with the name it has in that state.",
+        "item3": "A change of state does not interrupt whatever is being read at the time."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "chatThread": {
+          "name": "Thread",
+          "description": "The answer this line describes, and where the steps of a turn live."
+        },
+        "composer": {
+          "name": "Composer",
+          "description": "The message field, above which the line usually sits."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "When a known fraction exists, and not just a state."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "When the label classifies something, instead of saying what is happening."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The line is not a live region, even though the state changes on its own. The reader is listening to the answer being generated right below, and an announcement at every change cuts the reading in half. Whoever wants to announce puts the region outside.",
+      "item2": "The dot is decorative and the word is the state. Colour alone does not describe a state, and here colour is the only visual difference between three of the five.",
+      "item3": "The clock arrives already formatted, as text, and never announces itself. Duration format is a language decision, and a component that formatted it would decide language in five places.",
+      "item4": "The action changes name when it changes job. A button that changes job without changing name is one button doing different things, and whoever reaches it by tabbing has no way to know which of the two.",
+      "item5": "Stopping is not an error. What the person stopped stays neutral on purpose: painting in red what they chose to do is the system disagreeing with them.",
+      "item6": "The piece runs nothing. Stopping, resuming and retrying belong to the consumer, and it is the consumer who decides whether resuming continues from where it stopped or redoes it from scratch."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the line itself does not instrument the action, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demo is interacted with.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass each of the five states",
+          "result": "The word for that state shows in the line, and the dot stays out of what is read",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass the elapsed time",
+          "result": "It shows in the line and stays out of what gets announced",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Mount the line in any state",
+          "result": "It is not a live region, and nothing in it re-announces itself",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass the state in which the run is in flight",
+          "result": "The action asks to interrupt",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass a state in which the run has already finished",
+          "result": "The same action starts asking to start over, under another name",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass a state with no action label",
+          "result": "The line carries no button at all",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Activate the action",
+          "result": "The consumer is told, with the intent along, and the line stays as it was",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the line above the message field",
+          "result": "It lives outside the frame of the field, and nothing in the field knows it exists",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The state word is always present, and colour is not the only cue",
+        "item2": "The dot is out of what is read aloud",
+        "item3": "The line is not a live region",
+        "item4": "The elapsed time is not announced",
+        "item5": "The action name says what it does, and changes with the state",
+        "item6": "The action has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Captured by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the line, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the five, one under the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — the run in flight, with clock and stop action",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — the one that failed, with the try again action",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — the one the person stopped",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — the line above the message field",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Estado de la ejecución",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La línea que dice en qué punto está la respuesta: qué está pasando, desde hace cuánto, y qué se puede hacer al respecto.",
+    "seo": {
+      "title": "Estado de la ejecución — qué está pasando, y qué se puede hacer",
+      "description": "La línea de estado del agente: la palabra que describe, el punto que es solo dibujo, el reloj que no se anuncia y una acción que cambia de nombre cuando cambia de función."
+    },
+    "labels": {
+      "status": {
+        "idle": "En espera",
+        "running": "Respondiendo",
+        "stopped": "Detenida",
+        "complete": "Completada",
+        "failed": "Falló"
+      },
+      "action": {
+        "running": "Detener",
+        "stopped": "Reanudar",
+        "failed": "Intentar de nuevo"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "running": "Mientras llega la respuesta",
+        "stopped": "Cuando alguien pidió detenerla",
+        "failed": "Cuando la ejecución se rompió",
+        "complete": "Cuando llegó al final"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La línea queda junto a donde va a aparecer la respuesta — encima del campo de mensaje o al pie de la conversación. No vive dentro de ningún marco.",
+      "item2": "El punto abre la línea y es solo dibujo: el color por sí solo no describe un estado.",
+      "item3": "La palabra viene justo después, y es ella la que dice qué está pasando.",
+      "item4": "El tiempo transcurrido llega ya escrito y queda fuera de lo que se anuncia — un número que se reescribe cada segundo vuelve la pantalla imposible de escuchar.",
+      "item5": "La acción queda al final de la línea, y su rótulo dice qué hace en ese estado.",
+      "structureCode": {
+        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Respondiendo</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button\" data-slot=\"agent-status-action\">Detener</button>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala para decir en qué punto está la respuesta que se está generando justo debajo.",
+        "item2": "Escribe siempre el estado en palabra — el punto es para los ojos.",
+        "item3": "Pasa el tiempo transcurrido ya formateado, en el idioma de la pantalla.",
+        "item4": "Dale a la acción el nombre de lo que hace en ese estado, y no un nombre fijo.",
+        "item5": "Haz lo que la acción pide del lado de quien consume: detener, reanudar y repetir son del producto."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Decir en qué punto está la respuesta, y ofrecer detenerla",
+          "u": "Estado de la ejecución",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar cuánto avanzó una tarea larga",
+          "u": "Progress",
+          "a": "Allí existe una fracción conocida; aquí existe un estado, y una ejecución en curso no tiene porcentaje."
+        },
+        "item3": {
+          "s": "Describir un paso dentro del turno — una llamada de herramienta, un razonamiento",
+          "u": "Conversación",
+          "a": "Aquello vive dentro del mensaje y describe un paso; esta línea describe la ejecución entera."
+        },
+        "item4": {
+          "s": "Avisar de un error que hay que leer en el momento",
+          "u": "Alert",
+          "a": "Aquel interrumpe a quien lee; esta línea espera a ser recorrida, porque quien lee está escuchando la respuesta."
+        },
+        "item5": {
+          "s": "Rótulo corto que clasifica algo",
+          "u": "Badge",
+          "a": "El rótulo dice qué es una cosa; esta línea dice qué está pasando ahora."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "state": {
+            "name": "Palabra del estado",
+            "format": "Una palabra sobre la ejecución, no sobre el sistema",
+            "good": "Respondiendo",
+            "bad": "En procesamiento por el servidor"
+          },
+          "elapsed": {
+            "name": "Tiempo transcurrido",
+            "format": "Ya escrito, corto, en el formato del idioma",
+            "good": "1:04",
+            "bad": "64000 milisegundos"
+          },
+          "stopAction": {
+            "name": "Acción mientras corre",
+            "format": "Verbo en infinitivo, sobre lo que hace",
+            "good": "Detener",
+            "bad": "Cancelar la operación en curso"
+          },
+          "restartAction": {
+            "name": "Acción después del final",
+            "format": "Verbo que dice qué cambia, y nunca el mismo de la anterior",
+            "good": "Intentar de nuevo",
+            "bad": "Detener"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe el estado en palabra, al lado del punto.",
+        "item2": "Cambia el nombre de la acción cuando cambia de función.",
+        "item3": "Pasa el tiempo ya formateado, y déjalo fuera de lo que se anuncia.",
+        "item4": "Deja la línea sin acción en los estados en que no hay nada que hacer."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes el color del punto como única diferencia entre los estados.",
+        "item2": "No anuncies el cambio de estado: quien lee está escuchando la respuesta justo debajo.",
+        "item3": "No formatees la duración dentro del componente.",
+        "item4": "No hagas que la línea detenga, reanude o repita por su cuenta."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El estado llega en palabra, al lado del punto.",
+        "dont": "Solo el color del punto separa la ejecución en curso de la que falló, y el color no llega a quien escucha la pantalla."
+      },
+      "pair2": {
+        "do": "La acción dice qué hace en ese estado — detener mientras corre, intentar de nuevo tras el fallo.",
+        "dont": "El mismo rótulo sirve a los dos estados, y el botón pasa a hacer cosas distintas con un solo nombre."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: rotulos,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
+        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
+        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"rotulos\"\n  @action=\"aoPedir\"\n/>",
+        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
+        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"rotulos\"\n  (action)=\"aoPedir($event)\"\n></p>"
+      },
+      "withLabels": "Los rótulos",
+      "withLabelsCode": {
+        "web": "// La palabra de cada uno de los cinco estados, y el rótulo de la acción donde\n// existe.\n//\n// En espera y completada quedan sin acción a propósito: empezar una ejecución\n// es del campo de mensaje, y sobre una respuesta lista no hay nada que hacer\n// aquí.\nconst rotulos = {\n  status: {\n    idle: 'En espera',\n    running: 'Respondiendo',\n    stopped: 'Detenida',\n    complete: 'Completada',\n    failed: 'Falló',\n  },\n  action: {\n    running: 'Detener',\n    stopped: 'Reanudar',\n    failed: 'Intentar de nuevo',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "idle": {
+        "label": "En espera",
+        "trigger": "Todavía no se pidió nada.",
+        "behavior": "El punto queda neutro y la línea no ofrece acción — empezar es del campo de mensaje."
+      },
+      "running": {
+        "label": "Respondiendo",
+        "trigger": "La respuesta se está generando ahora.",
+        "behavior": "El punto toma el color de acento, el reloj corre y la acción ofrece detener."
+      },
+      "stopped": {
+        "label": "Detenida",
+        "trigger": "Quien lee pidió detenerla antes del final.",
+        "behavior": "El punto queda neutro a propósito — detener no es un error — y la acción ofrece reanudar."
+      },
+      "complete": {
+        "label": "Completada",
+        "trigger": "La respuesta llegó al final por su cuenta.",
+        "behavior": "El punto toma el color de éxito, el reloj muestra la duración final y no hay acción."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "La ejecución se rompió sin llegar al final.",
+        "behavior": "El punto toma el color de error y la acción ofrece intentar de nuevo."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está la ejecución. Decide la palabra, el color del punto y qué pide la acción."
+        },
+        "elapsed": {
+          "name": "elapsed",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Desde hace cuánto corre la ejecución, ya escrito. Queda fuera de lo que se anuncia."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "AgentStatusLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada estado y el rótulo de la acción donde existe."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(intent) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió la acción, y la intención va junto — interrumpir o empezar de nuevo. Hacerlo es de quien consume."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada uno de los cinco estados. Es ella la que describe, y no el color del punto."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<RunStatus, string>>",
+          "default": "—",
+          "required": "No",
+          "description": "El rótulo de la acción en cada estado. Un estado sin entrada no ofrece acción alguna."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La línea dibuja el estado que recibe y avisa que alguien pidió la acción. No detiene, no reanuda y no repite — y qué significa la intención, si reanudar continúa desde donde se detuvo o rehace desde cero, es de quien consume.",
+      "extensibilityCode": {
+        "web": "// La INTENCIÓN sale del vocabulario compartido, y no de un `if` de la pantalla:\n// mientras la ejecución no terminó, la acción INTERRUMPE; una vez terminada,\n// EMPIEZA DE NUEVO.\nisRunFinished('running');  // false → la acción pide 'stop'\nisRunFinished('stopped');  // true  → la acción pide 'start'\nisRunFinished('failed');   // true  → la acción pide 'start'\n\n// Qué significa \"empezar de nuevo\" — reanudar donde se detuvo o rehacer desde\n// cero — es decisión de producto. La pieza no ejecuta nada."
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-agent-status",
+          "description": "Tamaño del texto de la línea."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-agent-status",
+          "description": "Color de la línea, y del punto cuando el estado es neutro."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-agent-status-label",
+          "description": "La palabra del estado, que es lo que describe."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-agent-status[data-status=\"running\"]",
+          "description": "El punto mientras llega la respuesta."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-agent-status[data-status=\"complete\"]",
+          "description": "El punto de la ejecución que llegó al final por su cuenta."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-agent-status[data-status=\"failed\"]",
+          "description": "El punto de la ejecución que se rompió."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-agent-status-dot",
+          "description": "Espacio entre las partes de la línea, y medida del punto."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-agent-status-dot",
+          "description": "Redondeo del punto."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "[data-slot=\"agent-status-action\"]",
+          "description": "Área táctil mínima de la acción."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-agent-status {\n  max-inline-size: 32rem;\n}\n\n/* El punto es REFUERZO, y no la pista: la palabra al lado es lo que describe\n   el estado. Tocar el punto no cambia lo que llega a quien escucha. */\n.nds-agent-status[data-status=\"running\"] .nds-agent-status-dot {\n  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La palabra describe el estado, el punto y el reloj quedan fuera de lo que se lee, y la línea no interrumpe a quien está escuchando la respuesta.",
+      "items": {
+        "item1": "La palabra del estado está siempre en la línea: el color del punto no describe un estado por sí solo.",
+        "item2": "El punto queda fuera de lo que se lee en voz — es dibujo, y la palabra al lado ya lo dice todo.",
+        "item3": "La línea no es una región viva. Quien lee está escuchando la respuesta generarse justo debajo, y un anuncio en cada cambio de estado corta la lectura por la mitad.",
+        "item4": "El tiempo transcurrido no se anuncia: un número que se reescribe cada segundo vuelve la pantalla imposible de escuchar.",
+        "item5": "La acción cambia de nombre cuando cambia de función, y el texto que se ve es también el nombre accesible."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Llega a la acción, cuando existe. El resto de la línea es texto.",
+        "enter": "Activa la acción bajo el foco.",
+        "arrows": "No hacen nada aquí: la línea es de lectura, y no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden saca el punto y el tiempo transcurrido de lo que se lee en voz.",
+        "item2": "No hay región viva en la línea: quien quiera anunciar el cambio de estado pone la región por fuera, sabiendo lo que hace.",
+        "item3": "La acción no lleva rótulo accesible aparte — el texto que se ve es el nombre."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La línea se lee como la palabra del estado, y nada más.",
+        "item2": "La acción se lee con el nombre que tiene en ese estado.",
+        "item3": "El cambio de estado no interrumpe lo que se esté leyendo en ese momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "Conversación",
+          "description": "La respuesta que esta línea describe, y donde viven los pasos de un turno."
+        },
+        "composer": {
+          "name": "Composer",
+          "description": "El campo de mensaje, encima del cual suele quedar la línea."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Cuando existe una fracción conocida, y no solo un estado."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "Cuando el rótulo clasifica una cosa, en vez de decir qué está pasando."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La línea no es una región viva, aunque el estado cambie solo. Quien lee está escuchando la respuesta generarse justo debajo, y un anuncio en cada cambio corta la lectura por la mitad. Quien quiera anunciar pone la región por fuera.",
+      "item2": "El punto es decorativo y la palabra es el estado. El color por sí solo no describe un estado, y aquí el color es la única diferencia visual entre tres de los cinco.",
+      "item3": "El reloj llega ya formateado, como texto, y no se anuncia. El formato de duración es decisión de idioma, y un componente que lo formateara decidiría idioma en cinco lugares.",
+      "item4": "La acción cambia de nombre cuando cambia de función. Un botón que cambia de función sin cambiar de nombre es el mismo botón haciendo cosas distintas, y quien llega a él tabulando no tiene cómo saber cuál de las dos.",
+      "item5": "Detener no es un error. Lo que la persona detuvo queda neutro a propósito: pintar de rojo lo que ella eligió hacer es el sistema contradiciéndola.",
+      "item6": "La pieza no ejecuta nada. Detener, reanudar y repetir son de quien consume, y es él quien decide si reanudar continúa desde donde se detuvo o rehace desde cero."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la línea en sí no instrumenta la acción, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar cada uno de los cinco estados",
+          "result": "La palabra de ese estado aparece en la línea, y el punto queda fuera de lo que se lee",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar el tiempo transcurrido",
+          "result": "Aparece en la línea y sale de lo que se anuncia",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar la línea en cualquier estado",
+          "result": "No es una región viva, y nada en ella se reanuncia",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar el estado en que la ejecución corre",
+          "result": "La acción pide interrumpir",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar un estado en que la ejecución ya terminó",
+          "result": "La misma acción pasa a pedir empezar de nuevo, con otro nombre",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar un estado sin rótulo de acción",
+          "result": "La línea no trae ningún botón",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Activar la acción",
+          "result": "Quien consume es avisado con la intención junto, y la línea sigue como estaba",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar la línea encima del campo de mensaje",
+          "result": "Vive fuera del marco del campo, y nada en el campo sabe que existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que la play afirma.",
+        "item1": "La palabra del estado está siempre presente, y el color no es la única pista",
+        "item2": "El punto está fuera de lo que se lee en voz",
+        "item3": "La línea no es una región viva",
+        "item4": "El tiempo transcurrido no se anuncia",
+        "item5": "El nombre de la acción dice qué hace, y cambia con el estado",
+        "item6": "La acción tiene al menos veinticuatro píxeles de área"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la línea, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cinco, uno debajo del otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — la ejecución en curso, con reloj y acción de detener",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — la que falló, con la acción de intentar de nuevo",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — la que la persona detuvo",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — la línea encima del campo de mensaje",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

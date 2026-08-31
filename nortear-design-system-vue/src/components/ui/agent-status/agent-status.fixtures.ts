@@ -1,0 +1,79 @@
+/**
+ * Andaime das demonstrações do estado da execução.
+ *
+ * Existe pelo mesmo motivo do andaime da faixa de rascunho: num `*.stories.ts`
+ * todo export nomeado vira story, então o andaime não pode morar lá, e a saída
+ * fácil — copiar a constante para cada arquivo — produz cópias que divergem sem
+ * nenhum sinal.
+ *
+ * Os RÓTULOS saem da `translations.json`, porque são texto de interface. O
+ * RELÓGIO é dado de exemplo e fica igual nos três idiomas: ele já chega escrito
+ * ao componente, e traduzi-lo aqui faria as stories fotografarem linhas de
+ * larguras diferentes conforme o idioma da foto.
+ *
+ * Nada de `storybook/test` aqui: a docs page importa deste módulo, e arrastar o
+ * runner para dentro dela levaria o pacote junto.
+ */
+import { computed, type ComputedRef } from 'vue';
+import { useI18nStore, useTranslation, type Locale } from '@/lib/i18n';
+import type { RunStatus } from '@shared/primitives/chat-protocol';
+import statusTranslations from '@shared/content/agent-status/translations.json';
+import type { AgentStatusLabels } from './AgentStatus.vue';
+
+/**
+ * A anotação de tipo é o PORTÃO: a seção `labels` é lida como
+ * `AgentStatusLabels` em CADA idioma, então rótulo que sumir do JSON — ou
+ * idioma que ficar para trás — reprova no type-check, e não na tela.
+ *
+ * É também o que faz o mapa de estados acompanhar o vocabulário compartilhado
+ * sem que ninguém precise lembrar: `status` é `Record<RunStatus, string>`, e um
+ * estado novo em `RUN_STATUSES` reprova a compilação aqui em vez de desenhar
+ * uma linha em branco que ninguém repara.
+ */
+const CONTENT: Record<Locale, { labels: AgentStatusLabels }> = statusTranslations;
+
+/** Os rótulos da linha num idioma — a forma para quem já tem o locale em mãos. */
+export function agentStatusLabelsFor(target: Locale): AgentStatusLabels {
+  return CONTENT[target].labels;
+}
+
+/**
+ * Os rótulos da linha fora de um componente — `play` não é render.
+ *
+ * Lê a MESMA store de locale que o composable abaixo, então o rótulo que a play
+ * procura é sempre o que a linha desenha.
+ */
+export function agentStatusLabels(): AgentStatusLabels {
+  return agentStatusLabelsFor(useI18nStore().locale);
+}
+
+/**
+ * Os rótulos da linha no idioma corrente.
+ *
+ * Devolve um `computed`, e não um objeto pronto: o `setup` roda uma vez, então
+ * um objeto congelaria a linha no idioma em que a story abriu — e a barra de
+ * idioma do Storybook troca o idioma com a story montada.
+ */
+export function useAgentStatusLabels(): ComputedRef<AgentStatusLabels> {
+  const { locale } = useTranslation(statusTranslations);
+  return computed(() => agentStatusLabelsFor(locale.value as Locale));
+}
+
+/**
+ * O relógio de exemplo em cada estado.
+ *
+ * Em espera não tem relógio, e é a única razão de este mapa ser parcial: nada
+ * começou, então não há o que contar. Nos outros quatro o número é o mesmo em
+ * toda foto, para que a diferença entre elas seja o estado e não a largura.
+ */
+const ELAPSED: Partial<Record<RunStatus, string>> = {
+  running: '1:04',
+  stopped: '0:42',
+  complete: '2:11',
+  failed: '0:08',
+};
+
+/** Quanto tempo mostrar naquele estado, ou nada quando não há o que contar. */
+export function elapsedOf(status: RunStatus): string | undefined {
+  return ELAPSED[status];
+}
