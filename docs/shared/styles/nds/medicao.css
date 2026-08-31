@@ -238,3 +238,264 @@
 .nds-context-display-level {
   margin-inline-start: auto;
 }
+
+/* ── Repartição do contexto por origem ───────────────────────────────────────
+ *
+ * De onde veio o que já foi gasto. Vocabulário: `ContextPart`; conta:
+ * `contextTotal`, `contextSlices`, `ContextSlice`.
+ *
+ * A PERGUNTA É OUTRA, E É O QUE SEPARA ESTA PEÇA DA VIZINHA DE CIMA. "Quanto
+ * cabe" precisa de teto; "de onde veio" não precisa de teto nenhum. Por isso
+ * aqui não há `data-level`, não há cor de aviso e não há caso "sem teto": o
+ * denominador é o TOTAL REPARTIDO, e ele existe sempre que existe uma parcela.
+ *
+ *   <div class="nds-context-breakdown" data-slot="context-breakdown">
+ *     <p class="nds-context-breakdown-headline" data-slot="context-breakdown-headline">
+ *       <span class="nds-context-breakdown-title" data-slot="context-breakdown-title">De onde veio o contexto</span>
+ *       <span class="nds-context-breakdown-total" data-slot="context-breakdown-total">25.000 tokens</span>
+ *     </p>
+ *     <span class="nds-context-breakdown-bar" data-slot="context-breakdown-bar" aria-hidden="true">
+ *       <span class="nds-context-breakdown-slice" data-slot="context-breakdown-slice"
+ *             style="--nds-context-share: 6"></span>
+ *       <span class="nds-context-breakdown-slice" data-slot="context-breakdown-slice"
+ *             style="--nds-context-share: 68"></span>
+ *       <span class="nds-context-breakdown-slice" data-slot="context-breakdown-slice"
+ *             style="--nds-context-share: 20"></span>
+ *       <span class="nds-context-breakdown-slice" data-slot="context-breakdown-slice"
+ *             style="--nds-context-share: 6"></span>
+ *     </span>
+ *     <ul class="nds-context-breakdown-legend" data-slot="context-breakdown-legend">
+ *       <li class="nds-context-breakdown-part" data-slot="context-breakdown-part">
+ *         <span class="nds-context-breakdown-swatch" data-slot="context-breakdown-swatch" aria-hidden="true"></span>
+ *         <span class="nds-context-breakdown-name" data-slot="context-breakdown-name">Instruções do sistema</span>
+ *         <span class="nds-context-breakdown-tokens" data-slot="context-breakdown-tokens">1.500 tokens</span>
+ *         <span class="nds-context-breakdown-percent" data-slot="context-breakdown-percent">6%</span>
+ *       </li>
+ *       …uma por parcela, inclusive a que vale zero
+ *     </ul>
+ *   </div>
+ *
+ * A CLASSE ANDA JUNTO DO `data-slot` em toda a árvore, e a folha estiliza pela
+ * CLASSE — mesma razão do bloco de cima, e ela morde mais aqui: a cor de cada
+ * parcela sai de `:nth-child`, e no Angular o `data-slot` vem de host binding.
+ * Uma regra presa ao atributo poderia não aplicar ali, e o que se perderia não
+ * seria um alinhamento — seria o pareamento de cor entre a fatia e a legenda.
+ *
+ * NÃO HÁ ATRIBUTO DE ESTADO NESTA PEÇA, e a ausência é decisão. `data-level`
+ * existe na vizinha porque lá há um teto contra o qual medir; aqui o que varia
+ * é quantas parcelas chegaram e quanto cada uma pesa, e as duas coisas são
+ * desenho por posição, não por estado.
+ *
+ * A COR SAI DA POSIÇÃO, e é a folha que decide qual. Fatia e linha da legenda
+ * são o mesmo `:nth-child` em containers irmãos de mesmo comprimento, então
+ * dividem a cor sem que ninguém escreva o pareamento — e é por isso que a
+ * parcela zerada CONTINUA no DOM (decisão do primitivo): tirá-la desalinharia
+ * as duas contagens, e a legenda passaria a apontar para a fatia da vizinha,
+ * que é o defeito que continua parecendo certo.
+ *
+ * A paleta é `--chart-1` a `--chart-8`, os oito matizes que `16-novo-tema.md`
+ * exige distinguíveis entre si e com 3:1 contra a página NOS DOIS MODOS. Passou
+ * de oito parcelas, a sequência recomeça: repetir matiz é seguro justamente
+ * porque a cor aqui nunca carrega sozinha — o nome e o número da parcela são
+ * texto. Quem chega a nove origens tem um problema de agrupamento, não de
+ * paleta, e a repetição é o sinal disso.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. A BARRA É DECORATIVA e a repartição é TEXTO. `aria-hidden` na barra,
+ *    nenhum `role`, nenhum `aria-valuenow`, nenhum `aria-live` em lugar nenhum.
+ *    Os números mudam a cada turno; anunciá-los a cada mudança torna a tela
+ *    impossível de ouvir enquanto a resposta é gerada ao lado (regra 9 da
+ *    guideline 17). Mesma decisão do bloco de cima.
+ * 2. CADA PARCELA TEM NOME E NÚMERO EM TEXTO (WCAG 1.4.1). A cor da fatia é
+ *    reforço, e a legenda é o que responde. É por isso que 1.4.11 não alcança
+ *    estas fatias: elas não são a única portadora de nada.
+ * 3. A LEGENDA É UMA LISTA DE VERDADE. `ul`/`li` dá a contagem e a posição a
+ *    quem ouve, e posição é o que esta peça pede que se compare entre um turno
+ *    e o seguinte — a ordem é a de quem mediu, e nunca a do tamanho.
+ * 4. O TÍTULO É VISÍVEL, ao contrário do da vizinha. Lá o número mora numa
+ *    linha cujo lugar já diz do que se trata; aqui o que se vê é uma lista de
+ *    nomes e números, e sem título ela não diz o que está sendo repartido.
+ * 5. NADA AQUI EXPANDE OU COLAPSA. Esconder a legenda esconderia justamente o
+ *    texto que dispensa a cor, e a peça deixaria de responder sem clique. Quem
+ *    precisa dela recolhida a monta dentro de um bloco de expansão — que é
+ *    composição, e mantém o controle onde o teclado já sabe encontrá-lo.
+ *
+ * A BARRA É SEMPRE CHEIA, e esta é a diferença de desenho mais importante em
+ * relação ao bloco de cima. As fatias repartem o trilho por proporção, e não
+ * por largura literal: o que se desenha é o todo já gasto, e trilho com sobra
+ * leria como espaço restante — que é a pergunta da vizinha, respondida aqui por
+ * acidente e sem teto para sustentá-la. O trilho só aparece vazio quando não há
+ * nada repartido, e aí o vazio é verdade.
+ */
+
+.nds-context-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── O que está sendo repartido, e quanto ao todo dá ─────────────────────────
+ *
+ * `baseline` porque as duas pontas são texto, e alinhar pelo topo faria o total
+ * flutuar em relação ao título quando um dos dois quebrasse de linha. */
+.nds-context-breakdown-headline {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  margin: 0;
+}
+
+.nds-context-breakdown-title {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+}
+
+/* O total fecha a linha, alinhado à direita — mesma coluna em que a etiqueta de
+ * nível cai no bloco de cima, e pelo mesmo motivo: sem isto ele fica colado no
+ * título e SALTA de lugar quando o título muda de largura, que é a cada idioma.
+ * `tabular-nums` porque o número troca a cada turno. */
+.nds-context-breakdown-total {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── O trilho repartido ──────────────────────────────────────────────────────
+ *
+ * Sem transição de largura, pela mesma razão da barra de cima: os números ao
+ * lado são texto e trocam de um quadro para o outro, então uma fatia que
+ * deslizasse ficaria discordando deles durante o deslize. De quebra, não há
+ * animação contínua a desligar sob `prefers-reduced-motion`. */
+.nds-context-breakdown-bar {
+  display: flex;
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  /* Sólida, e não a cor de destaque com opacidade: §9 da guideline 17 proíbe
+   * opacidade baixa em escala de intensidade, que some no modo escuro. Ela só
+   * aparece quando não há nada repartido — e aí é o desenho do vazio. */
+  background-color: hsl(var(--muted));
+  overflow: hidden;
+}
+
+.nds-context-breakdown-slice {
+  /* Valor INICIAL, não defensivo: o componente escreve o seu por cima, em
+   * custom property, porque é valor de runtime. Sem esta linha, uma árvore
+   * copiada da anatomia sem o atributo deixaria a proporção inválida. */
+  --nds-context-share: 0;
+
+  /* Proporção com base zero, e nunca largura literal: os por cento são
+   * truncados um a um, então somam 99 quando alguma parcela é um fio. Com
+   * largura literal sobraria trilho, e sobra de trilho é a pergunta da peça
+   * vizinha. Repartindo por proporção, o todo continua sendo o todo. */
+  flex-grow: var(--nds-context-share);
+  flex-basis: 0;
+  background-color: hsl(var(--nds-context-slice-color));
+}
+
+/* ── A legenda ───────────────────────────────────────────────────────────────
+ *
+ * Lista de verdade: a contagem e a posição chegam a quem ouve, e é por posição
+ * que esta peça pede para ser comparada entre um turno e o seguinte. */
+.nds-context-breakdown-legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* `center` e não `baseline`: o ponto de cor não tem texto dentro e portanto não
+ * tem linha de base própria — alinhado por ela, ele desceria para o pé da
+ * linha. É o único elemento da peça sem texto, e é por isso que a regra é
+ * daqui e não do cabeçalho. */
+.nds-context-breakdown-part {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* Do tamanho da espessura do trilho: o ponto é um pedaço da fatia, e a medida
+ * repetida é o que diz isso sem palavra nenhuma. Cai na exceção dos ícones
+ * (`12-tokenizacao-dimensoes.md`) — não há texto dentro para crescer com a
+ * fonte do navegador. */
+.nds-context-breakdown-swatch {
+  flex-shrink: 0;
+  inline-size: var(--spacing-2);
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--nds-context-slice-color));
+}
+
+.nds-context-breakdown-name {
+  color: hsl(var(--foreground));
+}
+
+/* A contagem da parcela empurra a coluna dos números para a direita. */
+.nds-context-breakdown-tokens {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* O por cento fecha a linha com largura MÍNIMA de token, e é o que faz as duas
+ * colunas de número se alinharem entre as linhas: com o último elemento de
+ * largura previsível, a contagem de cada parcela termina sempre no mesmo ponto.
+ * Mínima, e não fixa — o número cresce com a fonte do navegador. */
+.nds-context-breakdown-percent {
+  min-inline-size: var(--spacing-10);
+  text-align: end;
+
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── A cor de cada posição ───────────────────────────────────────────────────
+ *
+ * Oito matizes, e a mesma posição nos dois containers. Escrito como par de
+ * seletores em vez de uma regra por container: é a forma que torna impossível a
+ * fatia e a legenda discordarem de cor, porque as duas leem a mesma linha. */
+.nds-context-breakdown-slice:nth-child(8n + 1),
+.nds-context-breakdown-part:nth-child(8n + 1) {
+  --nds-context-slice-color: var(--chart-1);
+}
+
+.nds-context-breakdown-slice:nth-child(8n + 2),
+.nds-context-breakdown-part:nth-child(8n + 2) {
+  --nds-context-slice-color: var(--chart-2);
+}
+
+.nds-context-breakdown-slice:nth-child(8n + 3),
+.nds-context-breakdown-part:nth-child(8n + 3) {
+  --nds-context-slice-color: var(--chart-3);
+}
+
+.nds-context-breakdown-slice:nth-child(8n + 4),
+.nds-context-breakdown-part:nth-child(8n + 4) {
+  --nds-context-slice-color: var(--chart-4);
+}
+
+.nds-context-breakdown-slice:nth-child(8n + 5),
+.nds-context-breakdown-part:nth-child(8n + 5) {
+  --nds-context-slice-color: var(--chart-5);
+}
+
+.nds-context-breakdown-slice:nth-child(8n + 6),
+.nds-context-breakdown-part:nth-child(8n + 6) {
+  --nds-context-slice-color: var(--chart-6);
+}
+
+.nds-context-breakdown-slice:nth-child(8n + 7),
+.nds-context-breakdown-part:nth-child(8n + 7) {
+  --nds-context-slice-color: var(--chart-7);
+}
+
+.nds-context-breakdown-slice:nth-child(8n + 8),
+.nds-context-breakdown-part:nth-child(8n + 8) {
+  --nds-context-slice-color: var(--chart-8);
+}

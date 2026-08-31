@@ -1,0 +1,1478 @@
+{
+  "pt-BR": {
+    "title": "Repartição do contexto",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "De onde veio o contexto já gasto: uma barra repartida e uma legenda com o nome e o peso de cada origem.",
+    "seo": {
+      "title": "Repartição do contexto — de onde veio o que já foi gasto",
+      "description": "A repartição do contexto por origem: a barra que é só desenho, a legenda que carrega nome e número, a ordem que não muda e a parcela que fica na lista mesmo valendo zero."
+    },
+    "labels": {
+      "title": "De onde veio o contexto",
+      "unit": "tokens",
+      "parts": {
+        "system": "Instruções do sistema",
+        "history": "Histórico da conversa",
+        "attachments": "Anexos",
+        "tools": "Resultados de ferramenta"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "typical": "Uma conversa já andada",
+        "sliver": "Quando uma parcela vale quase nada",
+        "single": "Quando tudo veio de uma origem só",
+        "empty": "Quando ainda não há o que repartir"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O título abre o bloco e diz o que está sendo repartido; o total ao lado dele é o denominador de tudo o que vem abaixo.",
+      "item2": "A barra vem depois e é só desenho — ela não carrega os números, não tem papel de controle e fica fora do que é lido em voz.",
+      "item3": "Há uma fatia por origem, na ordem em que a medição chegou, inclusive a que vale zero.",
+      "item4": "A legenda é uma lista: cada linha traz o ponto de cor, o nome da origem, quanto ela trouxe e quanto isso pesa.",
+      "item5": "Fatia e linha se emparelham por posição, e é da posição que sai a cor das duas — nunca de um valor escrito em cada uma.",
+      "structureCode": {
+        "web": "<div class=\"nds-context-breakdown\">\n  <p class=\"nds-context-breakdown-headline\">\n    <span class=\"nds-context-breakdown-title\">De onde veio o contexto</span>\n    <span class=\"nds-context-breakdown-total\">25.000 tokens</span>\n  </p>\n  <span class=\"nds-context-breakdown-bar\" aria-hidden=\"true\">\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 6\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 68\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 20\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 6\"></span>\n  </span>\n  <ul class=\"nds-context-breakdown-legend\">\n    <li class=\"nds-context-breakdown-part\">\n      <span class=\"nds-context-breakdown-swatch\" aria-hidden=\"true\"></span>\n      <span class=\"nds-context-breakdown-name\">Instruções do sistema</span>\n      <span class=\"nds-context-breakdown-tokens\">1.500 tokens</span>\n      <span class=\"nds-context-breakdown-percent\">6%</span>\n    </li>\n  </ul>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para responder de onde veio o contexto já gasto, quando saber a procedência muda o que a pessoa faz a seguir.",
+        "item2": "Passe as parcelas na ordem em que foram medidas, e mantenha essa ordem entre um turno e o seguinte.",
+        "item3": "Mantenha a parcela que zerou na lista: ela é o que segura a cor de cada linha no lugar.",
+        "item4": "Dê palavra a toda origem que a medição produzir — sem palavra, sobra o endereço.",
+        "item5": "Meça e agrupe em quem consome: a peça desenha o que recebe e não busca nada."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Dizer de onde veio o contexto já gasto",
+          "u": "Repartição do contexto",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Dizer quanto da janela ainda cabe",
+          "u": "Uso do contexto",
+          "a": "Aquela pergunta precisa de um teto; esta se responde sem saber quanto cabe."
+        },
+        "item3": {
+          "s": "Comparar valores ao longo do tempo ou entre categorias",
+          "u": "Chart",
+          "a": "Ali há eixo, escala e leitura ponto a ponto; aqui há uma soma repartida numa linha só."
+        },
+        "item4": {
+          "s": "Mostrar o quanto de uma tarefa longa já andou",
+          "u": "Progress",
+          "a": "Ali a barra é o controle que carrega o valor; aqui os valores são texto e a barra é só desenho."
+        },
+        "item5": {
+          "s": "Listar o que compõe uma resposta, item a item, com ação em cada linha",
+          "u": "Data table",
+          "a": "Aquela tabela é para percorrer e agir; esta legenda é para comparar pesos de relance."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "title": {
+            "name": "Título",
+            "format": "Diz o que está sendo repartido, e não o que fazer a respeito",
+            "good": "De onde veio o contexto",
+            "bad": "Detalhes"
+          },
+          "part": {
+            "name": "Nome da origem",
+            "format": "Nomeia a procedência em palavras de quem lê, no plural quando é um conjunto",
+            "good": "Resultados de ferramenta",
+            "bad": "tool_results"
+          },
+          "unit": {
+            "name": "Unidade",
+            "format": "O que está sendo contado, no plural",
+            "good": "tokens",
+            "bad": "un."
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva o nome e o número de cada parcela ao lado da cor.",
+        "item2": "Mantenha a ordem da medição, mesmo quando uma parcela cresce.",
+        "item3": "Deixe a parcela zerada na lista, valendo zero.",
+        "item4": "Deixe a barra fora do que é lido em voz."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não ordene as parcelas por tamanho: a legenda se lê por posição.",
+        "item2": "Não esconda a parcela que zerou — a cor das seguintes escorrega de linha.",
+        "item3": "Não deixe a cor da fatia como única diferença entre as origens.",
+        "item4": "Não anuncie os números a cada mudança."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "As parcelas saem na ordem em que foram medidas, e a mesma origem fica sempre na mesma linha.",
+        "dont": "As parcelas saem ordenadas por tamanho, e a legenda troca de linha a cada turno — duas fotos diferentes parecem a mesma."
+      },
+      "pair2": {
+        "do": "A parcela que zerou continua na lista, e cada linha continua apontando para a sua fatia.",
+        "dont": "A parcela que zerou é retirada, e a cor de cada linha passa a apontar para a fatia da vizinha."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: rotulos,\n});",
+        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={rotulos} />",
+        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"rotulos\" />",
+        "svelte": "<ContextBreakdown parts={parcelas} labels={rotulos} />",
+        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"rotulos\"></div>"
+      },
+      "withLabels": "As parcelas e os rótulos",
+      "withLabelsCode": {
+        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst rotulos = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "sliver": {
+        "label": "Parcela quase invisível",
+        "trigger": "Uma origem trouxe uma fração muito pequena do total.",
+        "behavior": "A fatia vira um fio na barra e o que salva a parcela é o número em texto ao lado do nome; o peso sai como um por cento, e nunca como zero."
+      },
+      "single": {
+        "label": "Uma origem só",
+        "trigger": "Todo o contexto veio de uma única procedência.",
+        "behavior": "A barra fica de uma cor só e as demais parcelas continuam na legenda, valendo zero — é isso que mantém a cor de cada linha apontando para a fatia certa."
+      },
+      "empty": {
+        "label": "Nada repartido",
+        "trigger": "A conversa ainda não gastou contexto nenhum.",
+        "behavior": "O total sai em zero, a barra aparece vazia e todas as parcelas ficam na lista em zero. Aqui o vazio é verdade, e não uma medição que faltou."
+      },
+      "unlabeled": {
+        "label": "Origem sem palavra",
+        "trigger": "A medição trouxe uma origem para a qual não há palavra.",
+        "behavior": "A linha mostra o endereço da origem em vez de ficar em branco: sem nome, a cor ficaria sozinha dizendo de qual parcela se trata."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "parts": {
+          "name": "parts",
+          "type": "ContextPart[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "A repartição, na ordem em que foi medida. Cada parcela é um endereço e uma contagem; a ordem é preservada e a parcela zerada permanece."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ContextBreakdownLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da peça: o que está sendo repartido, o que está sendo contado e a palavra de cada origem."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que está sendo repartido. Aparece na tela, porque uma lista de nomes e números sem título não diz o que foi dividido."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que está sendo contado, no total e em cada parcela."
+        },
+        "labelsParts": {
+          "name": "parts",
+          "type": "Record<string, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada origem, por endereço. Quantas origens existem e como se chamam é conhecimento de quem mediu; origem sem palavra mostra o próprio endereço."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A conta não mora na peça: o total, o peso de cada parcela e o por cento que se lê vivem num primitivo compartilhado, e as cinco leem as mesmas respostas. Escritas como condição de tela, a ordem, a parcela zerada e as travas do número renderiam cinco versões — e uma delas ordenaria por peso para ficar mais bonita.",
+      "extensibilityCode": {
+        "web": "// O DENOMINADOR É O TOTAL REPARTIDO, e nunca um teto. Esta repartição não pede\n// teto nenhum para existir — é o que a separa da medição da janela:\ncontextTotal([{ id: 'a', tokens: 250 }, { id: 'b', tokens: 750 }]);   // 1000\ncontextSlices([{ id: 'a', tokens: 250 }, { id: 'b', tokens: 750 }]);  // 25% e 75%\n\n// A ORDEM É A DE QUEM MEDIU, e não a do tamanho:\ncontextSlices([{ id: 'a', tokens: 1 }, { id: 'b', tokens: 99 }])\n  .map((fatia) => fatia.id);                                          // ['a', 'b']\n\n// A PARCELA ZERADA CONTINUA NA LISTA, para que a cor não escorregue de linha:\ncontextSlices([{ id: 'a', tokens: 100 }, { id: 'b', tokens: 0 }])\n  .length;                                                            // 2\n\n// E o por cento é TEXTO, travado nas duas pontas, porque é ele que se lê em voz:\ncontextSlices([{ id: 'a', tokens: 9999 }, { id: 'b', tokens: 1 }])\n  .map((fatia) => fatia.percent);                                     // [99, 1]\n\n// Sem nada repartido, tudo sai em zero — nunca em conta indefinida:\ncontextSlices([{ id: 'a', tokens: 0 }]).map((fatia) => fatia.percent); // [0]"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-context-breakdown {\n  max-inline-size: 24rem;\n}\n\n/* A cor é REFORÇO, e não a pista: o nome e o número de cada parcela estão em\n   texto na legenda. Trocar a paleta não muda o que chega a quem ouve. */\n.nds-context-breakdown-slice:nth-child(8n + 1),\n.nds-context-breakdown-part:nth-child(8n + 1) {\n  --nds-context-slice-color: var(--chart-5);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-context-breakdown",
+          "description": "Tamanho do texto do bloco."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-context-breakdown",
+          "description": "Cor do texto de apoio: o total e a contagem de cada parcela."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-context-breakdown-name",
+          "description": "Cor do que se lê primeiro: o título, o nome da origem e o peso dela."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-context-breakdown-title",
+          "description": "Peso do título e do por cento de cada parcela."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-context-breakdown-bar",
+          "description": "O trilho por baixo das fatias, sólido — opacidade baixa some no modo escuro."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-context-breakdown-legend",
+          "description": "Espaço entre as linhas da legenda."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-context-breakdown",
+          "description": "Espaço entre as partes do bloco, espessura do trilho e medida do ponto de cor."
+        },
+        "spacing10": {
+          "token": "--spacing-10",
+          "value": ".nds-context-breakdown-percent",
+          "description": "Largura mínima da coluna de por cento, que é o que alinha os números entre as linhas."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-context-breakdown-bar",
+          "description": "Arredondamento do trilho e do ponto de cor."
+        },
+        "chart1": {
+          "token": "--chart-1",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 1. Depois da oitava a sequência recomeça."
+        },
+        "chart2": {
+          "token": "--chart-2",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 2. Depois da oitava a sequência recomeça."
+        },
+        "chart3": {
+          "token": "--chart-3",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 3. Depois da oitava a sequência recomeça."
+        },
+        "chart4": {
+          "token": "--chart-4",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 4. Depois da oitava a sequência recomeça."
+        },
+        "chart5": {
+          "token": "--chart-5",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 5. Depois da oitava a sequência recomeça."
+        },
+        "chart6": {
+          "token": "--chart-6",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 6. Depois da oitava a sequência recomeça."
+        },
+        "chart7": {
+          "token": "--chart-7",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 7. Depois da oitava a sequência recomeça."
+        },
+        "chart8": {
+          "token": "--chart-8",
+          "value": ".nds-context-breakdown-slice",
+          "description": "A cor da parcela na posição 8. Depois da oitava a sequência recomeça."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Os números são texto e a barra é desenho: nada aqui se anuncia, cada parcela chega com nome e número, e a legenda é uma lista de verdade.",
+      "items": {
+        "item1": "Cada parcela tem nome e número em texto: a cor da fatia é reforço, e nunca a única pista.",
+        "item2": "A barra fica fora do que é lido em voz — os números da legenda já dizem tudo.",
+        "item3": "A barra não tem papel de controle nem valor: um segundo portador dos mesmos números os faria ser lidos duas vezes.",
+        "item4": "Não há região viva. Os números mudam a cada turno, e anunciá-los a cada mudança corta a leitura da resposta que está sendo gerada ao lado.",
+        "item5": "A legenda é uma lista, então a contagem e a posição de cada parcela chegam a quem ouve — e é por posição que esta repartição pede para ser comparada."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Passa direto: não há controle nesta peça, e sim um título, um desenho e uma lista."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden tira a barra e os pontos de cor do que é lido em voz.",
+        "item2": "Não há região viva, papel de controle nem valor — quem quiser anunciar a mudança põe a região por fora, sabendo o que está fazendo.",
+        "item3": "O nome de cada parcela é texto na própria linha, e não rótulo acessível pendurado num elemento sem conteúdo."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "O bloco é lido como o título, o total e uma lista com uma linha por origem.",
+        "item2": "Cada linha traz o nome da origem, quanto ela trouxe e quanto isso pesa — nesta ordem.",
+        "item3": "A mudança dos números não interrompe o que estiver sendo lido no momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "contextDisplay": {
+          "name": "Uso do contexto",
+          "description": "A pergunta vizinha: aquela diz quanto ainda cabe, esta diz de onde veio o que já foi gasto."
+        },
+        "chatThread": {
+          "name": "Conversa",
+          "description": "O que produz as origens que esta peça reparte."
+        },
+        "chart": {
+          "name": "Chart",
+          "description": "Quando a comparação precisa de eixo, escala e leitura ponto a ponto."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Quando a barra é o próprio valor, e não o desenho de números escritos ao lado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A repartição divide pelo total repartido, e nunca por um teto. \"De onde veio\" e \"quanto cabe\" são duas perguntas, e esta se responde sem saber quanto cabe — é o que separa esta peça da vizinha.",
+      "item2": "A ordem é a de quem mediu, e nunca a do tamanho. A legenda se lê por posição, e uma parcela que sobe de lugar entre um turno e o seguinte faz comparar duas fotos diferentes achando que é a mesma.",
+      "item3": "A parcela zerada continua na lista. Fatia e legenda se emparelham por posição para dividirem a cor; sumir com a zerada faria a cor apontar para a fatia da vizinha — e continuaria parecendo certa.",
+      "item4": "Os números são texto e a barra é desenho. Um contador que se reanuncia torna a tela impossível de ouvir, e é por isso que não há região viva nem valor acessível aqui.",
+      "item5": "O por cento é travado nas duas pontas, porque é ele que se lê em voz: uma parcela de verdade não sai como zero, e uma parcela que não é tudo não sai como cem. É por isso que a coluna às vezes soma noventa e nove.",
+      "item6": "A barra é sempre cheia, porque ela é o todo repartido. Trilho com sobra leria como espaço restante, que é a pergunta da peça vizinha — e aqui não há teto para sustentá-la.",
+      "item7": "A paleta tem oito matizes e recomeça depois deles. Repetir cor é seguro porque o nome e o número de cada parcela são texto; quem chega a nove origens tem um problema de agrupamento, e a repetição é o sinal disso."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a repartição em si não instrumenta nada, porque não há interação nela.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma repartição com quatro origens",
+          "result": "Há uma fatia e uma linha por origem, na ordem em que foram medidas",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Ler qualquer linha da legenda",
+          "result": "O nome, a contagem e o peso aparecem em texto, e a fatia desenha o mesmo peso",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar uma parcela que vale quase nada",
+          "result": "Ela continua com linha e número, e o peso sai como um por cento em vez de zero",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar uma origem que levou tudo",
+          "result": "As demais continuam na lista em zero, e cada linha continua na sua posição",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar uma repartição sem nada gasto",
+          "result": "O total e todas as parcelas saem em zero, e nenhum número sai indefinido",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar uma origem para a qual não há palavra",
+          "result": "A linha mostra o endereço da origem em vez de ficar em branco",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Montar a peça ao lado da medição da janela",
+          "result": "As duas concordam no total e só a vizinha fala de teto",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Montar a peça dentro de um bloco que expande",
+          "result": "O controle é um botão de verdade, e a peça não sabe que está sendo recolhida",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A peça não é região viva e nada nela se reanuncia",
+        "item2": "A barra está fora do que é lido em voz, sem papel e sem valor",
+        "item3": "Cada parcela tem nome e número em texto, e a cor não é a única pista",
+        "item4": "A parcela zerada continua sendo lida",
+        "item5": "A legenda é uma lista, e a ordem lida é a ordem medida"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a repartição, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — uma parcela quase invisível",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — uma origem só",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — nada repartido",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — origem sem palavra",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — ao lado da medição da janela",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composições — dentro de um bloco que expande",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Context breakdown",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "Where the context already spent came from: a divided bar and a legend with the name and weight of each source.",
+    "seo": {
+      "title": "Context breakdown — where the spent context came from",
+      "description": "The context broken down by source: the bar that is only drawing, the legend that carries name and number, the order that never changes and the share that stays on the list even at zero."
+    },
+    "labels": {
+      "title": "Where the context came from",
+      "unit": "tokens",
+      "parts": {
+        "system": "System instructions",
+        "history": "Conversation history",
+        "attachments": "Attachments",
+        "tools": "Tool results"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "typical": "A conversation already under way",
+        "sliver": "When one share is worth almost nothing",
+        "single": "When everything came from a single source",
+        "empty": "When there is nothing to divide yet"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The title opens the block and says what is being divided; the total beside it is the denominator of everything below.",
+      "item2": "The bar comes next and is only drawing — it carries no numbers, has no control role and stays out of what is read aloud.",
+      "item3": "There is one slice per source, in the order the measurement arrived, including the one worth zero.",
+      "item4": "The legend is a list: each row carries the colour dot, the source name, how much it brought and how much that weighs.",
+      "item5": "Slice and row pair up by position, and the colour of both comes from that position — never from a value written on each.",
+      "structureCode": {
+        "web": "<div class=\"nds-context-breakdown\">\n  <p class=\"nds-context-breakdown-headline\">\n    <span class=\"nds-context-breakdown-title\">Where the context came from</span>\n    <span class=\"nds-context-breakdown-total\">25,000 tokens</span>\n  </p>\n  <span class=\"nds-context-breakdown-bar\" aria-hidden=\"true\">\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 6\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 68\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 20\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 6\"></span>\n  </span>\n  <ul class=\"nds-context-breakdown-legend\">\n    <li class=\"nds-context-breakdown-part\">\n      <span class=\"nds-context-breakdown-swatch\" aria-hidden=\"true\"></span>\n      <span class=\"nds-context-breakdown-name\">System instructions</span>\n      <span class=\"nds-context-breakdown-tokens\">1,500 tokens</span>\n      <span class=\"nds-context-breakdown-percent\">6%</span>\n    </li>\n  </ul>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to answer where the context already spent came from, when knowing the provenance changes what the person does next.",
+        "item2": "Pass the shares in the order they were measured, and keep that order from one turn to the next.",
+        "item3": "Keep the share that dropped to zero on the list: it is what holds each row colour in place.",
+        "item4": "Give a word to every source the measurement produces — without a word, the address is what is left.",
+        "item5": "Measure and group on the consuming side: the piece draws what it receives and fetches nothing."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Say where the context already spent came from",
+          "u": "Context breakdown",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Say how much of the window still fits",
+          "u": "Context display",
+          "a": "That question needs a ceiling; this one is answered without knowing how much fits."
+        },
+        "item3": {
+          "s": "Compare values over time or across categories",
+          "u": "Chart",
+          "a": "There is an axis, a scale and point-by-point reading there; here there is one sum divided along a single line."
+        },
+        "item4": {
+          "s": "Show how far a long task has come",
+          "u": "Progress",
+          "a": "There the bar is the control that carries the value; here the values are text and the bar is only drawing."
+        },
+        "item5": {
+          "s": "List what makes up an answer, item by item, with an action on each row",
+          "u": "Data table",
+          "a": "That table is for scanning and acting; this legend is for comparing weights at a glance."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "title": {
+            "name": "Title",
+            "format": "Says what is being divided, not what to do about it",
+            "good": "Where the context came from",
+            "bad": "Details"
+          },
+          "part": {
+            "name": "Source name",
+            "format": "Names the provenance in the reader words, plural when it is a set",
+            "good": "Tool results",
+            "bad": "tool_results"
+          },
+          "unit": {
+            "name": "Unit",
+            "format": "What is being counted, in the plural",
+            "good": "tokens",
+            "bad": "u."
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the name and the number of each share beside the colour.",
+        "item2": "Keep the measured order, even when one share grows.",
+        "item3": "Keep the zeroed share on the list, at zero.",
+        "item4": "Keep the bar out of what is read aloud."
+      },
+      "dont": {
+        "title": "Do not",
+        "item1": "Do not sort the shares by size: the legend is read by position.",
+        "item2": "Do not hide the share that dropped to zero — the colour of the next rows slides over.",
+        "item3": "Do not let the slice colour be the only difference between sources.",
+        "item4": "Do not announce the numbers on every change."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "The shares come out in the order they were measured, and the same source always stays on the same row.",
+        "dont": "The shares come out sorted by size, and the legend changes rows every turn — two different pictures look like the same one."
+      },
+      "pair2": {
+        "do": "The zeroed share stays on the list, and each row keeps pointing at its own slice.",
+        "dont": "The zeroed share is removed, and each row colour starts pointing at the neighbouring slice."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: rotulos,\n});",
+        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={rotulos} />",
+        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"rotulos\" />",
+        "svelte": "<ContextBreakdown parts={parcelas} labels={rotulos} />",
+        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"rotulos\"></div>"
+      },
+      "withLabels": "The shares and the labels",
+      "withLabelsCode": {
+        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst rotulos = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "sliver": {
+        "label": "Almost invisible share",
+        "trigger": "One source brought a very small fraction of the total.",
+        "behavior": "The slice becomes a thread on the bar, and what saves the share is the number in text beside the name; the weight comes out as one per cent, never as zero."
+      },
+      "single": {
+        "label": "A single source",
+        "trigger": "All of the context came from one provenance.",
+        "behavior": "The bar keeps a single colour and the other shares stay in the legend at zero — that is what keeps each row colour pointing at the right slice."
+      },
+      "empty": {
+        "label": "Nothing divided",
+        "trigger": "The conversation has not spent any context yet.",
+        "behavior": "The total is zero, the bar shows empty and every share stays on the list at zero. Here the emptiness is the truth, not a measurement that failed to arrive."
+      },
+      "unlabeled": {
+        "label": "Source without a word",
+        "trigger": "The measurement brought a source that has no word for it.",
+        "behavior": "The row shows the source address instead of going blank: with no name, the colour would be left alone saying which share it is."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "parts": {
+          "name": "parts",
+          "type": "ContextPart[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The breakdown, in the order it was measured. Each share is an address and a count; the order is preserved and the zeroed share stays."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ContextBreakdownLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The text of the piece: what is being divided, what is being counted and the word for each source."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What is being divided. It shows on screen, because a list of names and numbers with no title does not say what was divided."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What is being counted, in the total and in each share."
+        },
+        "labelsParts": {
+          "name": "parts",
+          "type": "Record<string, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each source, by address. How many sources exist and what they are called belongs to whoever measured; a source with no word shows its own address."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The arithmetic does not live in the piece: the total, the weight of each share and the per cent that gets read live in a shared primitive, and all five read the same answers. Written as screen conditions, the order, the zeroed share and the number guards would produce five versions — and one of them would sort by weight to look nicer.",
+      "extensibilityCode": {
+        "web": "// O DENOMINADOR É O TOTAL REPARTIDO, e nunca um teto. Esta repartição não pede\n// teto nenhum para existir — é o que a separa da medição da janela:\ncontextTotal([{ id: 'a', tokens: 250 }, { id: 'b', tokens: 750 }]);   // 1000\ncontextSlices([{ id: 'a', tokens: 250 }, { id: 'b', tokens: 750 }]);  // 25% e 75%\n\n// A ORDEM É A DE QUEM MEDIU, e não a do tamanho:\ncontextSlices([{ id: 'a', tokens: 1 }, { id: 'b', tokens: 99 }])\n  .map((fatia) => fatia.id);                                          // ['a', 'b']\n\n// A PARCELA ZERADA CONTINUA NA LISTA, para que a cor não escorregue de linha:\ncontextSlices([{ id: 'a', tokens: 100 }, { id: 'b', tokens: 0 }])\n  .length;                                                            // 2\n\n// E o por cento é TEXTO, travado nas duas pontas, porque é ele que se lê em voz:\ncontextSlices([{ id: 'a', tokens: 9999 }, { id: 'b', tokens: 1 }])\n  .map((fatia) => fatia.percent);                                     // [99, 1]\n\n// Sem nada repartido, tudo sai em zero — nunca em conta indefinida:\ncontextSlices([{ id: 'a', tokens: 0 }]).map((fatia) => fatia.percent); // [0]"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-context-breakdown {\n  max-inline-size: 24rem;\n}\n\n/* A cor é REFORÇO, e não a pista: o nome e o número de cada parcela estão em\n   texto na legenda. Trocar a paleta não muda o que chega a quem ouve. */\n.nds-context-breakdown-slice:nth-child(8n + 1),\n.nds-context-breakdown-part:nth-child(8n + 1) {\n  --nds-context-slice-color: var(--chart-5);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-context-breakdown",
+          "description": "Size of the text in the block."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-context-breakdown",
+          "description": "Colour of the supporting text: the total and each share count."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-context-breakdown-name",
+          "description": "Colour of what is read first: the title, the source name and its weight."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-context-breakdown-title",
+          "description": "Weight of the title and of each share per cent."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-context-breakdown-bar",
+          "description": "The track under the slices, solid — low opacity disappears in dark mode."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-context-breakdown-legend",
+          "description": "Space between the legend rows."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-context-breakdown",
+          "description": "Space between the parts of the block, track thickness and colour dot size."
+        },
+        "spacing10": {
+          "token": "--spacing-10",
+          "value": ".nds-context-breakdown-percent",
+          "description": "Minimum width of the per cent column, which is what aligns the numbers across rows."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-context-breakdown-bar",
+          "description": "Rounding of the track and of the colour dot."
+        },
+        "chart1": {
+          "token": "--chart-1",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 1. After the eighth the sequence starts over."
+        },
+        "chart2": {
+          "token": "--chart-2",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 2. After the eighth the sequence starts over."
+        },
+        "chart3": {
+          "token": "--chart-3",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 3. After the eighth the sequence starts over."
+        },
+        "chart4": {
+          "token": "--chart-4",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 4. After the eighth the sequence starts over."
+        },
+        "chart5": {
+          "token": "--chart-5",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 5. After the eighth the sequence starts over."
+        },
+        "chart6": {
+          "token": "--chart-6",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 6. After the eighth the sequence starts over."
+        },
+        "chart7": {
+          "token": "--chart-7",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 7. After the eighth the sequence starts over."
+        },
+        "chart8": {
+          "token": "--chart-8",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Colour of the share in position 8. After the eighth the sequence starts over."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The numbers are text and the bar is drawing: nothing here announces itself, every share arrives with a name and a number, and the legend is a real list.",
+      "items": {
+        "item1": "Every share has a name and a number in text: the slice colour is reinforcement, never the only cue.",
+        "item2": "The bar stays out of what is read aloud — the legend numbers already say everything.",
+        "item3": "The bar has no control role and no value: a second carrier of the same numbers would have them read twice.",
+        "item4": "There is no live region. The numbers change every turn, and announcing them on every change cuts into the reading of the answer being generated alongside.",
+        "item5": "The legend is a list, so the count and the position of each share reach whoever is listening — and position is how this breakdown asks to be compared."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Passes straight through: there is no control in this piece, only a title, a drawing and a list."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden takes the bar and the colour dots out of what is read aloud.",
+        "item2": "There is no live region, control role or value — anyone who wants to announce the change puts the region outside, knowing what they are doing.",
+        "item3": "Each share name is text on its own row, not an accessible label hung on an element with no content."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The block is read as the title, the total and a list with one row per source.",
+        "item2": "Each row carries the source name, how much it brought and how much that weighs — in that order.",
+        "item3": "Changing the numbers does not interrupt whatever is being read at the time."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "contextDisplay": {
+          "name": "Context display",
+          "description": "The neighbouring question: that one says how much still fits, this one says where the spent context came from."
+        },
+        "chatThread": {
+          "name": "Chat thread",
+          "description": "What produces the sources this piece divides."
+        },
+        "chart": {
+          "name": "Chart",
+          "description": "When the comparison needs an axis, a scale and point-by-point reading."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "When the bar is the value itself, not the drawing of numbers written beside it."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The breakdown divides by the total divided, never by a ceiling. \"Where it came from\" and \"how much fits\" are two questions, and this one is answered without knowing how much fits — that is what separates this piece from its neighbour.",
+      "item2": "The order is the one of whoever measured, never the one of size. The legend is read by position, and a share that moves up a row between one turn and the next makes two different pictures look like the same one.",
+      "item3": "The zeroed share stays on the list. Slice and legend pair up by position to share the colour; removing the zeroed one would make the colour point at the neighbouring slice — and it would keep looking right.",
+      "item4": "The numbers are text and the bar is drawing. A counter that re-announces itself makes the screen impossible to listen to, which is why there is no live region and no accessible value here.",
+      "item5": "The per cent is guarded at both ends, because it is the one that gets read aloud: a real share never comes out as zero, and a share that is not everything never comes out as a hundred. That is why the column sometimes adds up to ninety-nine.",
+      "item6": "The bar is always full, because it is the divided whole. A track with room left would read as remaining space, which is the neighbouring question — and there is no ceiling here to back it.",
+      "item7": "The palette has eight hues and starts over after them. Repeating a colour is safe because the name and the number of each share are text; whoever reaches nine sources has a grouping problem, and the repetition is the sign of it."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the breakdown itself instruments nothing, because there is no interaction in it.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demonstration is interacted with.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a breakdown with four sources",
+          "result": "There is one slice and one row per source, in the order they were measured",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Read any legend row",
+          "result": "The name, the count and the weight appear in text, and the slice draws the same weight",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass a share worth almost nothing",
+          "result": "It keeps its row and its number, and the weight comes out as one per cent instead of zero",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass a source that took everything",
+          "result": "The others stay on the list at zero, and each row keeps its position",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass a breakdown with nothing spent",
+          "result": "The total and every share come out at zero, and no number comes out undefined",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass a source that has no word for it",
+          "result": "The row shows the source address instead of going blank",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Mount the piece beside the window measurement",
+          "result": "The two agree on the total and only the neighbour talks about a ceiling",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Mount the piece inside a block that expands",
+          "result": "The control is a real button, and the piece does not know it is being folded away",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The piece is not a live region and nothing in it re-announces itself",
+        "item2": "The bar is out of what is read aloud, with no role and no value",
+        "item3": "Every share has a name and a number in text, and colour is not the only cue",
+        "item4": "The zeroed share is still read",
+        "item5": "The legend is a list, and the order read is the order measured"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Captured by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the breakdown, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — an almost invisible share",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — a single source",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — nothing divided",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — source without a word",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — beside the window measurement",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Compositions — inside a block that expands",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Reparto del contexto",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "De dónde vino el contexto ya gastado: una barra repartida y una leyenda con el nombre y el peso de cada origen.",
+    "seo": {
+      "title": "Reparto del contexto — de dónde vino lo que ya se gastó",
+      "description": "El reparto del contexto por origen: la barra que es solo dibujo, la leyenda que lleva nombre y número, el orden que no cambia y la parte que sigue en la lista aunque valga cero."
+    },
+    "labels": {
+      "title": "De dónde vino el contexto",
+      "unit": "tokens",
+      "parts": {
+        "system": "Instrucciones del sistema",
+        "history": "Historial de la conversación",
+        "attachments": "Adjuntos",
+        "tools": "Resultados de herramienta"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "typical": "Una conversación ya avanzada",
+        "sliver": "Cuando una parte vale casi nada",
+        "single": "Cuando todo vino de un solo origen",
+        "empty": "Cuando todavía no hay nada que repartir"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El título abre el bloque y dice qué se está repartiendo; el total a su lado es el denominador de todo lo que viene abajo.",
+      "item2": "La barra viene después y es solo dibujo — no lleva los números, no tiene papel de control y queda fuera de lo que se lee en voz.",
+      "item3": "Hay una porción por origen, en el orden en que llegó la medición, incluida la que vale cero.",
+      "item4": "La leyenda es una lista: cada fila trae el punto de color, el nombre del origen, cuánto trajo y cuánto pesa eso.",
+      "item5": "Porción y fila se emparejan por posición, y de esa posición sale el color de las dos — nunca de un valor escrito en cada una.",
+      "structureCode": {
+        "web": "<div class=\"nds-context-breakdown\">\n  <p class=\"nds-context-breakdown-headline\">\n    <span class=\"nds-context-breakdown-title\">De dónde vino el contexto</span>\n    <span class=\"nds-context-breakdown-total\">25.000 tokens</span>\n  </p>\n  <span class=\"nds-context-breakdown-bar\" aria-hidden=\"true\">\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 6\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 68\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 20\"></span>\n    <span class=\"nds-context-breakdown-slice\" style=\"--nds-context-share: 6\"></span>\n  </span>\n  <ul class=\"nds-context-breakdown-legend\">\n    <li class=\"nds-context-breakdown-part\">\n      <span class=\"nds-context-breakdown-swatch\" aria-hidden=\"true\"></span>\n      <span class=\"nds-context-breakdown-name\">Instrucciones del sistema</span>\n      <span class=\"nds-context-breakdown-tokens\">1.500 tokens</span>\n      <span class=\"nds-context-breakdown-percent\">6%</span>\n    </li>\n  </ul>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para responder de dónde vino el contexto ya gastado, cuando saber la procedencia cambia lo que la persona hace después.",
+        "item2": "Pasa las partes en el orden en que se midieron, y mantén ese orden de un turno al siguiente.",
+        "item3": "Mantén en la lista la parte que quedó en cero: es lo que sostiene el color de cada fila en su sitio.",
+        "item4": "Dale palabra a todo origen que produzca la medición — sin palabra, queda la dirección.",
+        "item5": "Mide y agrupa en quien consume: la pieza dibuja lo que recibe y no busca nada."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Decir de dónde vino el contexto ya gastado",
+          "u": "Reparto del contexto",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Decir cuánto de la ventana todavía cabe",
+          "u": "Uso del contexto",
+          "a": "Aquella pregunta necesita un techo; esta se responde sin saber cuánto cabe."
+        },
+        "item3": {
+          "s": "Comparar valores a lo largo del tiempo o entre categorías",
+          "u": "Chart",
+          "a": "Allí hay eje, escala y lectura punto a punto; aquí hay una suma repartida en una sola línea."
+        },
+        "item4": {
+          "s": "Mostrar cuánto ha avanzado una tarea larga",
+          "u": "Progress",
+          "a": "Allí la barra es el control que lleva el valor; aquí los valores son texto y la barra es solo dibujo."
+        },
+        "item5": {
+          "s": "Listar lo que compone una respuesta, ítem a ítem, con acción en cada fila",
+          "u": "Data table",
+          "a": "Esa tabla es para recorrer y actuar; esta leyenda es para comparar pesos de un vistazo."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "title": {
+            "name": "Título",
+            "format": "Dice qué se está repartiendo, no qué hacer al respecto",
+            "good": "De dónde vino el contexto",
+            "bad": "Detalles"
+          },
+          "part": {
+            "name": "Nombre del origen",
+            "format": "Nombra la procedencia en palabras de quien lee, en plural cuando es un conjunto",
+            "good": "Resultados de herramienta",
+            "bad": "tool_results"
+          },
+          "unit": {
+            "name": "Unidad",
+            "format": "Lo que se está contando, en plural",
+            "good": "tokens",
+            "bad": "un."
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe el nombre y el número de cada parte junto al color.",
+        "item2": "Mantén el orden de la medición, aunque una parte crezca.",
+        "item3": "Deja en la lista la parte que quedó en cero, valiendo cero.",
+        "item4": "Deja la barra fuera de lo que se lee en voz."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No ordenes las partes por tamaño: la leyenda se lee por posición.",
+        "item2": "No escondas la parte que quedó en cero — el color de las siguientes se corre de fila.",
+        "item3": "No dejes el color de la porción como única diferencia entre los orígenes.",
+        "item4": "No anuncies los números en cada cambio."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "Las partes salen en el orden en que se midieron, y el mismo origen queda siempre en la misma fila.",
+        "dont": "Las partes salen ordenadas por tamaño, y la leyenda cambia de fila en cada turno — dos fotos distintas parecen la misma."
+      },
+      "pair2": {
+        "do": "La parte que quedó en cero sigue en la lista, y cada fila sigue apuntando a su porción.",
+        "dont": "La parte que quedó en cero se retira, y el color de cada fila pasa a apuntar a la porción vecina."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: rotulos,\n});",
+        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={rotulos} />",
+        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"rotulos\" />",
+        "svelte": "<ContextBreakdown parts={parcelas} labels={rotulos} />",
+        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"rotulos\"></div>"
+      },
+      "withLabels": "Las partes y las etiquetas",
+      "withLabelsCode": {
+        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst rotulos = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "sliver": {
+        "label": "Parte casi invisible",
+        "trigger": "Un origen trajo una fracción muy pequeña del total.",
+        "behavior": "La porción se vuelve un hilo en la barra y lo que salva a la parte es el número en texto junto al nombre; el peso sale como uno por ciento, y nunca como cero."
+      },
+      "single": {
+        "label": "Un solo origen",
+        "trigger": "Todo el contexto vino de una única procedencia.",
+        "behavior": "La barra queda de un solo color y las demás partes siguen en la leyenda, valiendo cero — eso es lo que mantiene el color de cada fila apuntando a la porción correcta."
+      },
+      "empty": {
+        "label": "Nada repartido",
+        "trigger": "La conversación todavía no gastó contexto alguno.",
+        "behavior": "El total sale en cero, la barra aparece vacía y todas las partes quedan en la lista en cero. Aquí el vacío es verdad, y no una medición que faltó."
+      },
+      "unlabeled": {
+        "label": "Origen sin palabra",
+        "trigger": "La medición trajo un origen para el cual no hay palabra.",
+        "behavior": "La fila muestra la dirección del origen en vez de quedar en blanco: sin nombre, el color quedaría solo diciendo de qué parte se trata."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "parts": {
+          "name": "parts",
+          "type": "ContextPart[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "El reparto, en el orden en que se midió. Cada parte es una dirección y un conteo; el orden se preserva y la parte en cero permanece."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ContextBreakdownLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la pieza: qué se está repartiendo, qué se está contando y la palabra de cada origen."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué se está repartiendo. Aparece en pantalla, porque una lista de nombres y números sin título no dice qué se dividió."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que se está contando, en el total y en cada parte."
+        },
+        "labelsParts": {
+          "name": "parts",
+          "type": "Record<string, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada origen, por dirección. Cuántos orígenes existen y cómo se llaman es conocimiento de quien midió; un origen sin palabra muestra su propia dirección."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La cuenta no vive en la pieza: el total, el peso de cada parte y el por ciento que se lee viven en un primitivo compartido, y las cinco leen las mismas respuestas. Escritas como condición de pantalla, el orden, la parte en cero y los topes del número producirían cinco versiones — y una de ellas ordenaría por peso para quedar más bonita.",
+      "extensibilityCode": {
+        "web": "// O DENOMINADOR É O TOTAL REPARTIDO, e nunca um teto. Esta repartição não pede\n// teto nenhum para existir — é o que a separa da medição da janela:\ncontextTotal([{ id: 'a', tokens: 250 }, { id: 'b', tokens: 750 }]);   // 1000\ncontextSlices([{ id: 'a', tokens: 250 }, { id: 'b', tokens: 750 }]);  // 25% e 75%\n\n// A ORDEM É A DE QUEM MEDIU, e não a do tamanho:\ncontextSlices([{ id: 'a', tokens: 1 }, { id: 'b', tokens: 99 }])\n  .map((fatia) => fatia.id);                                          // ['a', 'b']\n\n// A PARCELA ZERADA CONTINUA NA LISTA, para que a cor não escorregue de linha:\ncontextSlices([{ id: 'a', tokens: 100 }, { id: 'b', tokens: 0 }])\n  .length;                                                            // 2\n\n// E o por cento é TEXTO, travado nas duas pontas, porque é ele que se lê em voz:\ncontextSlices([{ id: 'a', tokens: 9999 }, { id: 'b', tokens: 1 }])\n  .map((fatia) => fatia.percent);                                     // [99, 1]\n\n// Sem nada repartido, tudo sai em zero — nunca em conta indefinida:\ncontextSlices([{ id: 'a', tokens: 0 }]).map((fatia) => fatia.percent); // [0]"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-context-breakdown {\n  max-inline-size: 24rem;\n}\n\n/* A cor é REFORÇO, e não a pista: o nome e o número de cada parcela estão em\n   texto na legenda. Trocar a paleta não muda o que chega a quem ouve. */\n.nds-context-breakdown-slice:nth-child(8n + 1),\n.nds-context-breakdown-part:nth-child(8n + 1) {\n  --nds-context-slice-color: var(--chart-5);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-context-breakdown",
+          "description": "Tamaño del texto del bloque."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-context-breakdown",
+          "description": "Color del texto de apoyo: el total y el conteo de cada parte."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-context-breakdown-name",
+          "description": "Color de lo que se lee primero: el título, el nombre del origen y su peso."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-context-breakdown-title",
+          "description": "Peso del título y del por ciento de cada parte."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-context-breakdown-bar",
+          "description": "El riel bajo las porciones, sólido — la opacidad baja desaparece en modo oscuro."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-context-breakdown-legend",
+          "description": "Espacio entre las filas de la leyenda."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-context-breakdown",
+          "description": "Espacio entre las partes del bloque, grosor del riel y medida del punto de color."
+        },
+        "spacing10": {
+          "token": "--spacing-10",
+          "value": ".nds-context-breakdown-percent",
+          "description": "Ancho mínimo de la columna de por ciento, que es lo que alinea los números entre filas."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-context-breakdown-bar",
+          "description": "Redondeo del riel y del punto de color."
+        },
+        "chart1": {
+          "token": "--chart-1",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 1. Después de la octava la secuencia recomienza."
+        },
+        "chart2": {
+          "token": "--chart-2",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 2. Después de la octava la secuencia recomienza."
+        },
+        "chart3": {
+          "token": "--chart-3",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 3. Después de la octava la secuencia recomienza."
+        },
+        "chart4": {
+          "token": "--chart-4",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 4. Después de la octava la secuencia recomienza."
+        },
+        "chart5": {
+          "token": "--chart-5",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 5. Después de la octava la secuencia recomienza."
+        },
+        "chart6": {
+          "token": "--chart-6",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 6. Después de la octava la secuencia recomienza."
+        },
+        "chart7": {
+          "token": "--chart-7",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 7. Después de la octava la secuencia recomienza."
+        },
+        "chart8": {
+          "token": "--chart-8",
+          "value": ".nds-context-breakdown-slice",
+          "description": "Color de la parte en la posición 8. Después de la octava la secuencia recomienza."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Los números son texto y la barra es dibujo: nada aquí se anuncia, cada parte llega con nombre y número, y la leyenda es una lista de verdad.",
+      "items": {
+        "item1": "Cada parte tiene nombre y número en texto: el color de la porción es refuerzo, y nunca la única pista.",
+        "item2": "La barra queda fuera de lo que se lee en voz — los números de la leyenda ya lo dicen todo.",
+        "item3": "La barra no tiene papel de control ni valor: un segundo portador de los mismos números haría que se leyeran dos veces.",
+        "item4": "No hay región viva. Los números cambian en cada turno, y anunciarlos en cada cambio corta la lectura de la respuesta que se está generando al lado.",
+        "item5": "La leyenda es una lista, así que el conteo y la posición de cada parte llegan a quien escucha — y es por posición que este reparto pide ser comparado."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Pasa de largo: no hay control en esta pieza, sino un título, un dibujo y una lista."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden saca la barra y los puntos de color de lo que se lee en voz.",
+        "item2": "No hay región viva, papel de control ni valor — quien quiera anunciar el cambio pone la región por fuera, sabiendo lo que hace.",
+        "item3": "El nombre de cada parte es texto en su propia fila, y no una etiqueta accesible colgada de un elemento sin contenido."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El bloque se lee como el título, el total y una lista con una fila por origen.",
+        "item2": "Cada fila trae el nombre del origen, cuánto trajo y cuánto pesa eso — en ese orden.",
+        "item3": "El cambio de los números no interrumpe lo que se esté leyendo en ese momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "contextDisplay": {
+          "name": "Uso del contexto",
+          "description": "La pregunta vecina: aquella dice cuánto todavía cabe, esta dice de dónde vino lo ya gastado."
+        },
+        "chatThread": {
+          "name": "Conversación",
+          "description": "Lo que produce los orígenes que esta pieza reparte."
+        },
+        "chart": {
+          "name": "Chart",
+          "description": "Cuando la comparación necesita eje, escala y lectura punto a punto."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Cuando la barra es el valor mismo, y no el dibujo de números escritos al lado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El reparto divide por el total repartido, y nunca por un techo. \"De dónde vino\" y \"cuánto cabe\" son dos preguntas, y esta se responde sin saber cuánto cabe — es lo que separa esta pieza de la vecina.",
+      "item2": "El orden es el de quien midió, y nunca el del tamaño. La leyenda se lee por posición, y una parte que sube de fila entre un turno y el siguiente hace comparar dos fotos distintas creyendo que es la misma.",
+      "item3": "La parte en cero sigue en la lista. Porción y leyenda se emparejan por posición para compartir el color; quitar la que quedó en cero haría que el color apuntara a la porción vecina — y seguiría pareciendo correcto.",
+      "item4": "Los números son texto y la barra es dibujo. Un contador que se reanuncia vuelve la pantalla imposible de escuchar, y por eso aquí no hay región viva ni valor accesible.",
+      "item5": "El por ciento tiene tope en las dos puntas, porque es el que se lee en voz: una parte de verdad no sale como cero, y una parte que no es todo no sale como cien. Por eso la columna a veces suma noventa y nueve.",
+      "item6": "La barra siempre está llena, porque ella es el todo repartido. Un riel con sobra se leería como espacio restante, que es la pregunta de la pieza vecina — y aquí no hay techo que la sostenga.",
+      "item7": "La paleta tiene ocho matices y recomienza tras ellos. Repetir color es seguro porque el nombre y el número de cada parte son texto; quien llega a nueve orígenes tiene un problema de agrupación, y la repetición es la señal de eso."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; el reparto en sí no instrumenta nada, porque no hay interacción en él.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar un reparto con cuatro orígenes",
+          "result": "Hay una porción y una fila por origen, en el orden en que se midieron",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Leer cualquier fila de la leyenda",
+          "result": "El nombre, el conteo y el peso aparecen en texto, y la porción dibuja el mismo peso",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar una parte que vale casi nada",
+          "result": "Conserva su fila y su número, y el peso sale como uno por ciento en vez de cero",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar un origen que se llevó todo",
+          "result": "Los demás siguen en la lista en cero, y cada fila conserva su posición",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar un reparto sin nada gastado",
+          "result": "El total y todas las partes salen en cero, y ningún número sale indefinido",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar un origen para el cual no hay palabra",
+          "result": "La fila muestra la dirección del origen en vez de quedar en blanco",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Montar la pieza junto a la medición de la ventana",
+          "result": "Las dos coinciden en el total y solo la vecina habla de techo",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Montar la pieza dentro de un bloque que se expande",
+          "result": "El control es un botón de verdad, y la pieza no sabe que se la está plegando",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que la play afirma.",
+        "item1": "La pieza no es región viva y nada en ella se reanuncia",
+        "item2": "La barra queda fuera de lo que se lee en voz, sin papel y sin valor",
+        "item3": "Cada parte tiene nombre y número en texto, y el color no es la única pista",
+        "item4": "La parte en cero se sigue leyendo",
+        "item5": "La leyenda es una lista, y el orden leído es el orden medido"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — el reparto, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — una parte casi invisible",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — un solo origen",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — nada repartido",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — origen sin palabra",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — junto a la medición de la ventana",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composiciones — dentro de un bloque que se expande",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
