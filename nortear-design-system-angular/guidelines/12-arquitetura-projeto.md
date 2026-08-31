@@ -75,7 +75,6 @@ nortear-design-system-angular/
 │   │   ├── motion.ts               # tokens de duração/easing + prefersReducedMotion()
 │   │   ├── strip-html.ts           # stripHtml e toPlainText
 │   │   ├── wait-for-portal.ts      # esperarPortal + a regra de âncora de foco
-│   │   ├── story-tags.ts           # slug → categoria, para o filtro da sidebar
 │   │   ├── withAutoDocsTab.ts      # bridge Angular → React para o Docs tab
 │   │   ├── montarAngularEmReact.ts # o mecanismo do bridge
 │   │   ├── reload-on-chunk-error.ts
@@ -188,7 +187,9 @@ order: [
 ]
 ```
 
-Não existe lista de categorias mantida à mão: a sidebar reflete os títulos das stories. O filtro por categoria vem das `tags` de cada meta, mapeadas em `src/lib/story-tags.ts`.
+Não existe lista de categorias mantida à mão, e agora é verdade: o filtro por categoria vem das `tags` do meta de cada arquivo de story, e a categoria também é a PASTA no título (`Primitives/<Categoria>/<Componente>`). As duas são conferidas uma contra a outra pela regra `story_sem_categoria` do `audit.mjs`.
+
+Houve um `src/lib/story-tags.ts` que se dizia a fonte canônica desse mapeamento. Ninguém o importava, e ele estava desatualizado em vinte componentes — uma lista mantida à mão que ninguém mantinha. Saiu em 2026-08-31.
 
 **Vocabulário da sidebar é inglês**, e há regra de auditoria que detecta nome em português — este stack já reintroduziu um no dia seguinte à normalização.
 
@@ -246,9 +247,7 @@ GA4 vive em `manager-head.html` — **no manager, não no iframe** — com envio
 
 **6.** Acrescentar o export ao `docs-smoke.stories.ts`.
 
-**7.** Registrar o slug em `src/lib/story-tags.ts`.
-
-**8.** Rodar, na ordem: `npx tsc -p .storybook/tsconfig.json --noEmit`, `npm test`, `node scripts/audit.mjs <slug> --json`.
+**7.** Rodar, na ordem: `npx tsc -p .storybook/tsconfig.json --noEmit`, `npm test`, `node scripts/audit.mjs <slug> --json`.
 
 ---
 

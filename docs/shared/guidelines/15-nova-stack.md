@@ -77,7 +77,7 @@ O `CLAUDE.md` de um pacote é um **ponteiro de ~20 linhas**: qual é a stack, on
 
 > **Cuidado com ponteiro para arquivo que não existe.** Medido: `svelte/CLAUDE.md` e `vanilla/CLAUDE.md` apontam para `STORYBOOK-ARCHITECTURE.md`, e esse arquivo **só existe no react** (o vue tem um homônimo com sufixo, `STORYBOOK-ARCHITECTURE-VUE.md`). Ponteiro morto é pior que ausência: ele afirma que existe documentação. Ao criar a stack nova, não copie a linha sem copiar o arquivo — ou não cite o arquivo.
 
-### 2.3 `src/lib/` — 12 arquivos em 4 de 4
+### 2.3 `src/lib/` — 11 arquivos em 4 de 4
 
 | Arquivo | Presença | Função |
 |---|---|---|
@@ -87,14 +87,13 @@ O `CLAUDE.md` de um pacote é um **ponteiro de ~20 linhas**: qual é a stack, on
 | `use-active-section` | 5/5 | `onActive` imediato, `onDwell` após 2s |
 | `docs-tracking` | 5/5 | observer de clique via `data-track*` |
 | `strip-html` | 5/5 | `stripHtml` e `toPlainText` — dois destinos, duas funções |
-| `story-tags` | 5/5 | slug → categoria, para o filtro da sidebar |
 | `withAutoDocsTab` | 5/5 | aba de documentação da story |
 | `wait-for-portal` | 5/5 | espera o overlay assentar antes de afirmar |
 | `reload-on-chunk-error` | 5/5 | recarrega quando o Vite troca chunk sob os pés |
 | `utils` | 5/5 | `cn()`. **Sem helper de sanitização** — `DOMPurify.sanitize()` vai no call site |
 | `motion` | **4/5** | presets de duração e detecção de movimento reduzido em JS |
 
-**`motion` é o caso que a regra existe para pegar.** Está em react, vue, svelte e vanilla; **não** está no angular. É defensável — o único consumidor era o Chart, e o Chart do Angular desenha SVG sem animação em JS — mas defensável **por escrito**, não por omissão silenciosa. A stack nova que não trouxer um dos doze registra a razão no `13-system-design.md` dela.
+**`motion` é o caso que a regra existe para pegar.** Está em react, vue, svelte e vanilla; **não** está no angular. É defensável — o único consumidor era o Chart, e o Chart do Angular desenha SVG sem animação em JS — mas defensável **por escrito**, não por omissão silenciosa. A stack nova que não trouxer um dos onze registra a razão no `13-system-design.md` dela.
 
 Arquivos que são idioma de uma stack só (não copiar sem motivo): `hooks` (svelte), `echarts-theme`, `destroy`, `listener-ledger` (vanilla), `montarAngularEmReact` (angular).
 
@@ -218,7 +217,7 @@ npm run build-storybook
 
 1. `package.json`, `tsconfig`, `vite.config`, aliases — nada funciona antes disso
 2. `.storybook/` completo, com o GA4 no manager e sem identificador real
-3. `src/lib/` — os 12 arquivos, adaptados ao idioma do framework
+3. `src/lib/` — os 11 arquivos, adaptados ao idioma do framework
 4. Os 17 containers de seção (skill `docs-sections`)
 5. **`guidelines/` e o `CLAUDE.md` ponteiro** — antes dos componentes, não depois: é o que torna a stack visível para a auditoria enquanto ela ainda está sendo construída
 6. Componentes, um por um, cada um com primitivo, stories, docs page e export no `docs-smoke`
