@@ -224,7 +224,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (39)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (40)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -268,9 +268,10 @@ falta, nomeada — nunca uma folha nova.
 | `directive-text` | `markdown` + `badge` em linha |
 | `generative-ui` | não é peça: é a regra de que resposta estruturada usa os primitivos do DS |
 | `agent-card` | `card` + `item` (identidade, e uma linha por habilidade) + `badge` + `connection-state`. Veio da família 2 — ver 5.3 |
+| `tool-timeline` | `tool-group` aberto — as chamadas já chegam na ordem em que aconteceram — com `agent-status` acima (o rótulo que muda enquanto corre, e o relógio) e `.nds-cluster` de `.nds-badge` para as estatísticas de arquivo. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (81)
+### 5.2 As sete famílias novas (80)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -279,7 +280,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `tool-timeline`, `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (22 no catálogo — `agent-card` saiu para a 5.1, ver 5.3 —, **18 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (21 no catálogo — `agent-card` e `tool-timeline` saíram para a 5.1, ver 5.3 —, **17 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner`, `reasoning-effort` (6) | O mesmo número em quatro formas (anel, barra, texto, repartição). Primitivo: `token-budget.ts`. Base em `progress` |
@@ -357,6 +358,73 @@ monoespaçadas e um botão.
 **Reversível**, como as outras quatro: se ao construir `subagent-list` ou
 `agent-handoff` aparecer identidade de agente com desenho, estado ou vocabulário
 próprios, `agent-card` desdobra de volta para a 5.2, com o motivo.
+
+**Sexta correção, e a segunda que atravessa de 5.2 para 5.1**: `tool-timeline`
+é `tool-group` aberto — e as duas contagens mudam junto, 81 → 80 e 39 → 40.
+
+O que a fonte descreve, lido inteiro antes de decidir: um botão de abrir com
+dois rótulos (um em repouso, um que cintila enquanto corre), um painel com uma
+linha por passo — ícone, verbo, etiqueta — e uma faixa de estatísticas de
+arquivo ao pé. Os tipos são `TimelineStep { verb, chip, icon }` e
+`TimelineStat { file, added?, removed? }`, mais `visibleSteps: number` e
+`streaming: boolean`.
+
+**A LINHA DO TEMPO NÃO TEM TEMPO**, e é essa medida que decide todo o resto. Não
+há carimbo, não há duração, não há relógio: o único eixo temporal da peça é a
+ORDEM DO ARRANJO. Quem carrega `durationMs` na fonte é o `tool-group` DELA, não
+esta. Então a pergunta que parecia a difícil — o que ela mostra é tempo
+ABSOLUTO, que é dado do produto e chega escrito como o relógio do estado da
+execução, ou ORDEM, que a lista já dá pela posição? — nem chega a ser feita: a
+fonte não mostra nem um nem outro, e `ToolGroupOptions.calls` já está
+documentado como "na ordem em que aconteceram". O grupo JÁ É cronológico.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, a linha do tempo não deixa buraco.
+  `.nds-tool-group` dá a caixa: `<details>`, resumo com rótulo e `<ol>` de
+  linhas — que é literalmente a "vertical trace" da fonte, cuja anatomia não tem
+  trilho, nem ponto, nem conector, só linhas empilhadas. O rótulo que troca
+  enquanto corre é `.nds-agent-status-label`, que já muda com `RunStatus` e já
+  traz o relógio ao lado, no bloco irmão desta folha. A faixa de estatísticas é
+  `.nds-cluster[data-spacing="xs"]` de `.nds-badge nds-badge-success` /
+  `nds-badge-destructive`, com `.nds-font-mono` e `.nds-truncate` no caminho do
+  arquivo. Nenhuma classe nova, nenhuma nomeada como faltando.
+
+  O ícone por linha é o único traço que a composição não reproduz, e é decisão,
+  não esquecimento: ele repete em desenho o verbo que está do lado, e a decisão
+  4 do grupo já trocou codificação icônica por PALAVRA em `.nds-badge`. Ícone
+  que repete a palavra vizinha é a duplicação que aquela decisão removeu.
+- **Estado, não.** `TimelineStep` não tem estado NENHUM — é a única entrada da
+  família cujas linhas não carregam `ToolCallState`. O que sobra é
+  `streaming: boolean`, e ele é `RunStatus` `running` achatado num booleano,
+  perdendo `stopped`, `failed` e `complete`: exatamente o defeito de
+  `connected: boolean` do `agent-card`, na mesma folha e pelo mesmo motivo.
+  `visibleSteps` não é estado, é FATIA — e a §2 já a entrega a quem consome, que
+  passa `steps.slice(0, n)`, porque o componente desenha o que RECEBE. É a
+  mesma leitura que a 5.1 já fez em `streaming-text`, `loading-state` e
+  `number-ticker`: revelação é animação e é recorte, não é peça.
+- **Vocabulário, não.** `TimelineStep { verb, chip, icon }` é `ChatToolCall` com
+  um campo A MENOS: `verb` é `name`, `chip` é `detail`, e `icon` é espaço de
+  `HTMLElement` pela §1 — na fonte ele é um `LucideIcon`, que é referência de
+  componente React, justamente o que não porta. `TimelineStat` é vocabulário de
+  verdade, e é o único da peça — mas não é desta família: `{ file, added,
+  removed }` é o cabeçalho de um diff, e a casa dele é `diff-hunks.ts`, com
+  `code-diff` e `reviewable-diff`, na família 4. Escrevê-lo agora em
+  `agent-run.css` seria decidir a folha da 4 de dentro da 2, contra a ordem que
+  a §5.2 fixou e pelo motivo que ela dá.
+
+E o teste da família, que é o quarto: ela responde ao eixo, e responde
+exatamente o que o `tool-group` já responde. É aí que ela difere do
+`agent-card`, que saiu da família por não responder a eixo nenhum — esta
+continua sendo sobre a execução, e por isso não vira cartão nem coisa nova:
+vira story de composição da peça que já diz o que o agente fez, aberta em vez
+de recolhida.
+
+**Reversível**, como as outras cinco: se ao construir `code-runner` ou
+`computer-use` aparecer sequência de passos com desenho, estado ou vocabulário
+próprios — um trilho de verdade, um carimbo que chegue como DADO, um estado por
+passo que `ToolCallState` não modele —, `tool-timeline` desdobra de volta para
+a 5.2, com o motivo.
 
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
