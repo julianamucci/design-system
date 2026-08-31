@@ -163,7 +163,7 @@ interface ChatToolCall {
     <ng-template #tplDoDont1Dont>
       <!-- O contraexemplo: o resumo do conjunto emudecido, e a caixa fechada
            passa a contar as ferramentas sem dizer o que houve. -->
-      <details ndsToolGroup [calls]="failureCallsPlantedDefect" [labels]="wordless()"></details>
+      <details ndsToolGroup [calls]="failureCalls" [labels]="wordless()"></details>
     </ng-template>
 
     <ng-template #tplDoDont2Do>
