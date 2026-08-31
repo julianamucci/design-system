@@ -51,6 +51,39 @@ const WEB_STACKS = ['react', 'vue', 'svelte', 'vanilla', 'angular'];
 // nunca chegaram a ser auditados.
 const CODE_KEY_RX = /Code$/;
 
+/**
+ * Código também se reconhece pela FORMA, não só pelo nome da chave.
+ *
+ * O sufixo sozinho excluía em silêncio: `variants.items.enter.code` e três
+ * irmãs, nos componentes conversacionais, guardam variante por stack e nunca
+ * entraram na contagem de cobertura. Chave de código que o contador não vê é
+ * chave que pode ficar sem variante sem ninguém notar — o mesmo modo de falhar
+ * que a varredura de snippets já teve quando o sufixo mudou de lugar no nome.
+ *
+ * Alargar o regex para `/[Cc]ode$/` NÃO serve, e é o detalhe que decide o
+ * desenho: `props.table.code` do code-block é a LINHA de uma prop chamada
+ * "code", com `{name, type, default, required}` dentro. Pelo nome ela viraria
+ * chave de código; a varredura pararia ali e a descrição da prop deixaria de ser
+ * auditada como texto. `usage.uxWriting.table.code` cairia igual.
+ *
+ * A forma decide sem ambiguidade: um objeto cujas chaves são TODAS stack (ou
+ * `web`) é variante de código por construção — nenhuma tabela de props tem
+ * `react` e `vue` como colunas. Medido sobre os 84 `translations.json`: só as
+ * quatro chaves que faltavam batem, e nenhuma prosa entra, nem a da página de
+ * divergências cross-stack, que era o risco óbvio.
+ *
+ * Fica de fora `code` com valor STRING — `labels.actions.code` e
+ * `demonstration.labels.code` são RÓTULOS de interface ("Código"), não snippet,
+ * e continuam sendo auditados como texto. Forma de string não prova nada, e
+ * inventar aqui trocaria uma exclusão silenciosa por uma inclusão silenciosa.
+ */
+function ehVarianteDeStack(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const chaves = Object.keys(value);
+  if (chaves.length === 0) return false;
+  return chaves.every((k) => STACKS.includes(k) || k === 'web');
+}
+
 // `href` guarda URL — não é código nem prosa auditável.
 const URL_KEY_RX = /^href$/;
 
@@ -146,7 +179,7 @@ function visit(value, keyPath, locale, component) {
   // exporia cada variante como se fosse texto descritivo.
   if (URL_KEY_RX.test(lastKey)) return;
 
-  if (CODE_KEY_RX.test(lastKey)) {
+  if (CODE_KEY_RX.test(lastKey) || ehVarianteDeStack(value)) {
     const fullPath = keyPath.join('.');
     if (typeof value === 'string') {
       codeKeys.push({ component, locale, key: fullPath, form: 'string', variants: [] });
