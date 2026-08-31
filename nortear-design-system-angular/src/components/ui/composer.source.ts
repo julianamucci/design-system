@@ -80,6 +80,30 @@ export function composerSnippet(opts: ComposerSnippetOptions = {}): string {
   const body = ['  readonly labels = composerLabels();'];
   if (opts.running) body.push('  readonly generating = signal(true);');
 
+  // Os retornos que o template liga precisam ser MEMBRO da classe do exemplo:
+  // expressão de template não enxerga função de módulo, e quem copiasse
+  // receberia um binding que não resolve.
+  body.push(
+    '',
+    '  // O composer relata o envio e para aí: o que se faz com o texto é do',
+    '  // produto, e limpar o campo também.',
+    '  send(text: string): void {',
+    '    this.publish(text);',
+    '  }',
+  );
+
+  if (opts.running) {
+    body.push(
+      '',
+      '  // Interromper é do produto: o componente não acompanha a rede, então',
+      '  // quem baixa o sinal de geração é quem o levantou.',
+      '  cancel(): void {',
+      '    this.stopGeneration();',
+      '    this.generating.set(false);',
+      '  }',
+    );
+  }
+
   return build(inner, body);
 }
 

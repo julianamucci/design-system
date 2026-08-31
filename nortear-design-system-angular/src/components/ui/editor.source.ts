@@ -46,6 +46,16 @@ function contentField(html: string): string {
   return `  html = '${html}';`;
 }
 
+/**
+ * Os rótulos como MEMBRO da classe, e não como constante do módulo.
+ *
+ * Expressão de template só enxerga membro de classe: um objeto declarado ao
+ * lado do componente é invisível para o binding, e quem copiasse receberia um
+ * nome que não resolve. É também a única prop obrigatória — todos os botões
+ * são só de ícone, e sem ela a barra não tem nome acessível nenhum.
+ */
+const LABELS_MEMBER = '  readonly labels = editorLabels();';
+
 /** O uso real do editor, com só o que difere do padrão. */
 export function editorSnippet(options: EditorSnippetOptions = {}): string {
   const {
@@ -70,6 +80,7 @@ export function editorSnippet(options: EditorSnippetOptions = {}): string {
   ].filter(Boolean);
 
   const members = [
+    LABELS_MEMBER,
     content === undefined ? '' : contentField(content),
     ...extraMembers,
   ].filter(Boolean);

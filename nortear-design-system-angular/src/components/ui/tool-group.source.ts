@@ -115,6 +115,23 @@ function callsLiteral(detail: boolean): string[] {
 /** A linha que fecha toda classe de exemplo: o texto da caixa. */
 const LABELS_LINE = '  readonly labels = toolGroupLabels();';
 
+/**
+ * O destino do `(openChange)`, sempre que o snippet escreve esse retorno.
+ *
+ * Precisa ser MEMBRO da classe: expressão de template não enxerga função de
+ * módulo, e um snippet que ligasse o retorno sem declarar o método entregaria
+ * a quem copia um binding que não resolve.
+ */
+const REGISTER = [
+  '',
+  '  protected expanded = false;',
+  '',
+  '  protected register(open: boolean): void {',
+  '    // O novo estado chega junto: ninguém precisa ler o elemento de volta.',
+  '    this.expanded = open;',
+  '  }',
+];
+
 /** O tipo que o painel Code espera: recebe o gerado e os args, devolve o uso. */
 export type ToolGroupSourceTransform = (
   code?: string,
@@ -131,7 +148,7 @@ export const toolGroupSource: ToolGroupSourceTransform = (_code, ctx) => {
   return build(
     [IMPORT, CALL_IMPORT],
     groupLines('    ', { calls: 'calls', open: args.open === true, change: true }),
-    [...callsLiteral(args.detail !== false), LABELS_LINE],
+    [...callsLiteral(args.detail !== false), LABELS_LINE, ...REGISTER],
   );
 };
 
@@ -196,13 +213,7 @@ export function toolGroupTogglingSource(): string {
     [
       '  readonly calls = callsWithFailure;',
       LABELS_LINE,
-      '',
-      '  protected expanded = false;',
-      '',
-      '  protected register(open: boolean): void {',
-      '    // O novo estado chega junto: ninguém precisa ler o elemento de volta.',
-      '    this.expanded = open;',
-      '  }',
+      ...REGISTER,
     ],
   );
 }
