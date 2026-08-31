@@ -57,6 +57,13 @@ export function triggerSnippet(opts: TriggerSnippetOptions = {}): string {
   const body: string[] = [
     '  readonly labels = composerLabels();',
     '  readonly triggerLabels = triggerLabels();',
+    '',
+    '  // O que se faz com o texto enviado é de quem consome. O método precisa',
+    '  // existir na CLASSE: expressão de template não enxerga função de módulo.',
+    '  send(text: string): void {',
+    '    this.publish(text);',
+    '  }',
+    '',
     entries.length === 1
       ? `  readonly triggers = [${entries[0]}];`
       : ['  readonly triggers = [', ...entries.map((e) => `    ${e},`), '  ];'].join('\n'),

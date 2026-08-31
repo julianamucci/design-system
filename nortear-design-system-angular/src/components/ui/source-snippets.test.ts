@@ -115,6 +115,86 @@ function importesDoDesignSystem(texto: string): Array<{ slug: string; nomes: str
   return saida;
 }
 
+/**
+ * Palavras que aparecem numa expressão de template e NÃO são membro de classe.
+ *
+ * Literal, palavra reservada e sintaxe de controle de fluxo do Angular. A lista
+ * é fechada de propósito: o que não estiver aqui e não for membro declarado é
+ * acusado, porque o silêncio é o modo de falhar que este check existe para
+ * fechar.
+ */
+const NAO_E_MEMBRO = new Set([
+  'true', 'false', 'null', 'undefined', 'this', 'let', 'as', 'of', 'track', 'in',
+  '$event', '$index', '$first', '$last', '$even', '$odd', '$count', '$implicit',
+]);
+
+/**
+ * O que o template LIGA e a classe do snippet não declara.
+ *
+ * POR QUE ESTE CHECK EXISTE. Expressão de template do Angular só enxerga membro
+ * de classe — uma constante importada no topo do arquivo é invisível ali. Três
+ * snippets de `context-breakdown` ligavam `[parts]="CONTEXT_PARTS_TYPICAL"`
+ * direto, e quem copiasse receberia um binding que não resolve. O check irmão,
+ * que confere os IMPORTS, passava: o import estava certo, o uso é que não podia
+ * ser aquele. É a mesma promessa vista do outro lado, e faltava metade dela.
+ *
+ * Só a RAIZ da expressão é conferida: em `usuario.nome` quem precisa existir é
+ * `usuario`, e em `contar()` é `contar`. O que vem depois do ponto é do tipo,
+ * não do escopo do template.
+ */
+function ligacoesSemMembro(texto: string): string[] {
+  const template = /template:\s*`([\s\S]*?)`/.exec(texto)?.[1];
+  if (!template) return [];
+
+  // Os membros que a classe do próprio snippet declara: campo, método,
+  // getter, e o que vier de `readonly`/`protected`/`static`.
+  const membros = new Set<string>();
+  for (const m of texto.matchAll(
+    /^\s*(?:readonly|protected|private|public|static|get|set|async)?\s*(?:readonly\s+)?([A-Za-z_$][\w$]*)\s*[=(:]/gm,
+  )) {
+    membros.add(m[1]!);
+  }
+
+  // O PRÓPRIO TEMPLATE introduz nomes, e ignorá-los foi o meu primeiro erro
+  // aqui: a versão anterior deste check acusou 50 bindings corretos, quase
+  // todos variável de `@for`. Portão que despeja falso positivo ensina a
+  // ignorar portão, e junto some o achado que importava.
+  const locais = new Set<string>();
+  // `@for (choice of choices; track choice.value)` — o nome antes do `of`.
+  for (const m of template.matchAll(/@for\s*\(\s*([A-Za-z_$][\w$]*)\s+of\s/g)) locais.add(m[1]!);
+  // `@if (x; as y)` e `@switch`/`@case` com apelido.
+  for (const m of template.matchAll(/;\s*as\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  // `@let nome = …`
+  for (const m of template.matchAll(/@let\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  // `<ng-template #nome>` e referência de template em geral.
+  for (const m of template.matchAll(/#([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+
+  const soltos = new Set<string>();
+  const registra = (expressaoBruta: string) => {
+    // CHAVE DE OBJETO LITERAL NÃO É REFERÊNCIA, e foi o segundo falso positivo
+    // deste check: `[usage]="{ input: 18000, output: 7000 }"` acusava `input` e
+    // `output` como membros faltando. O que distingue chave de ramo de ternário
+    // é o que vem ANTES — chave é precedida de `{` ou `,`, e o ramo de um
+    // ternário, de `?` ou `:`. Apagar a chave antes de varrer resolve sem
+    // precisar entender a expressão.
+    const expressao = expressaoBruta.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
+
+    for (const ident of expressao.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
+      const nome = ident[1]!;
+      if (NAO_E_MEMBRO.has(nome) || membros.has(nome) || locais.has(nome)) continue;
+      soltos.add(nome);
+    }
+  };
+
+  // Binding de propriedade, escuta de evento e interpolação — os três lugares
+  // em que uma expressão do template é avaliada contra a classe.
+  for (const m of template.matchAll(/\[[\w.$-]+\]="([^"]*)"/g)) registra(m[1]!);
+  for (const m of template.matchAll(/\((?!\s)[\w.$-]+\)="([^"]*)"/g)) registra(m[1]!);
+  for (const m of template.matchAll(/\{\{([^}]*)\}\}/g)) registra(m[1]!);
+
+  return [...soltos].sort();
+}
+
 describe('transforms do painel Code', () => {
   it('existe pelo menos um módulo de source por varredura', () => {
     expect(caminhos.length).toBeGreaterThan(0);
@@ -175,6 +255,19 @@ describe('transforms do painel Code', () => {
           // que não veio, e ali é sempre defeito.
           const template = /template:\s*`([\s\S]*?)`/.exec(texto)?.[1];
           if (template) expect(template).not.toContain('undefined');
+        });
+
+        it(`${name} liga só o que a classe declara`, () => {
+          const saida = fn();
+          if (typeof saida !== 'string') return;
+
+          const soltos = ligacoesSemMembro(saida);
+          expect(
+            soltos,
+            `${name}: o template liga ${soltos.join(', ')}, que a classe não declara — ` +
+              `expressão de template só enxerga membro de classe, e quem copiar recebe ` +
+              `um binding que não resolve`,
+          ).toEqual([]);
         });
 
         it(`${name} importa só o que o componente exporta`, () => {

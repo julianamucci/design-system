@@ -233,6 +233,13 @@ export function approvalCardOutsideTheGroupSource(): string {
       '  readonly split = splitWaitingCalls(this.calls);',
       '  readonly choices = approvalChoices();',
       '  readonly groupLabels = toolGroupLabels();',
+      '',
+      '  // O alcance sai da chamada que espera: quem monta a pergunta é quem',
+      '  // sabe o que ela abrange. Precisa ser MEMBRO da classe — expressão de',
+      '  // template não enxerga função importada nem constante de módulo.',
+      '  scopeOfWaiting(call: ChatToolCall): string {',
+      '    return call.name;',
+      '  }',
       ...ANSWER,
     ],
   );
