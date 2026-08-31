@@ -198,7 +198,8 @@
  *
  *   <details class="nds-tool-group" data-slot="tool-group">
  *     <summary class="nds-tool-group-summary" data-slot="tool-group-summary">
- *       <span class="nds-tool-group-title">3 ferramentas</span>
+ *       <svg class="nds-icon nds-tool-group-icon" aria-hidden="true">…</svg>
+ *       <span class="nds-tool-group-title" data-slot="tool-group-title">3 ferramentas</span>
  *       <span class="nds-badge" data-slot="tool-group-state">Uma falhou</span>
  *     </summary>
  *     <ol class="nds-tool-group-list" data-slot="tool-group-list">
@@ -226,10 +227,19 @@
  *    é pedir sem mostrar — quem consome tira essa para fora, e a docs page diz
  *    isso. A regra já está escrita no docblock de `waitsForPerson`.
  * 4. O ESTADO É PALAVRA em `.nds-badge`, nunca só cor ou ícone (WCAG 1.4.1).
+ *    A variante da etiqueta — a cor, que é REFORÇO — sai de
+ *    `@shared/primitives/tool-group-summary`, e não de cinco mapas inline: a
+ *    árvore acima escreve só `.nds-badge` porque a segunda classe depende do
+ *    estado daquela linha.
  * 5. `<details>`/`<summary>` de propósito: o navegador já dá o botão, o estado
  *    de expansão e o teclado. Recriar isso com `div` e `aria-expanded` é
  *    reimplementar o que já funciona, e foi o que o `collapsible` desta base
  *    aprendeu.
+ *
+ *    A contrapartida vem junto e está na regra do `.nds-tool-group-summary`:
+ *    quem troca o `display` do `<summary>` perde o marcador que o navegador
+ *    dava de graça — e perde em engine, não em todas —, então a afordância
+ *    volta como ícone do sistema, que gira com o estado.
  */
 
 .nds-tool-group {
@@ -250,10 +260,52 @@
 
   cursor: pointer;
   font-size: var(--text-label);
+
+  /* O MARCADOR DO NAVEGADOR SAI COM O `display` ACIMA, e a saída não é igual em
+   * toda engine: `<summary>` nasce `display: list-item`, e trocar isso apaga o
+   * triângulo no Chromium e no Firefox enquanto o Safari mantém o dele. A caixa
+   * ficaria com afordância numa engine e nenhuma nas outras — um `<details>`
+   * sem seta é um botão que não parece botão, e a decisão 5 escolheu
+   * `<details>` justamente para não ter de reconstruir a afordância à mão.
+   *
+   * Então o marcador sai nas três, e o ícone do sistema entra no lugar dele.
+   * É o que `.nds-chat-tool-call-summary` já faz na peça irmã, com o mesmo
+   * chevron e a mesma rotação. */
+  list-style: none;
+}
+
+.nds-tool-group-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* O `<summary>` É O CONTROLE, e com o marcador fora ele precisa dizer quando
+ * está em foco — mesmo anel do resumo da chamada de ferramenta na conversa. */
+.nds-tool-group-summary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
+  border-radius: var(--radius);
+}
+
+.nds-tool-group-icon {
+  flex-shrink: 0;
+  color: hsl(var(--muted-foreground));
+  transition: transform var(--duration-fast);
+}
+
+.nds-tool-group[open] .nds-tool-group-icon {
+  transform: rotate(90deg);
 }
 
 .nds-tool-group-title {
   color: hsl(var(--foreground));
+}
+
+/* O estado do CONJUNTO alinha à direita, na mesma coluna em que os estados das
+ * chamadas caem (`grid-template-columns: 1fr auto`, abaixo). Sem isto a
+ * etiqueta do resumo fica colada no título e SALTA de lugar no instante em que
+ * o grupo abre — o olho persegue a etiqueta em vez de ler a lista que apareceu. */
+[data-slot="tool-group-state"] {
+  margin-inline-start: auto;
 }
 
 .nds-tool-group-list {

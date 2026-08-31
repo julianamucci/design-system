@@ -1,0 +1,1451 @@
+{
+  "pt-BR": {
+    "title": "Grupo de ferramentas",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O que o agente fez para responder, reunido num bloco só. O bloco nasce recolhido e o resumo diz em palavra o que há dentro — inclusive que algo falhou.",
+    "seo": {
+      "title": "Grupo de ferramentas — o resumo diz o que há dentro antes de alguém abrir",
+      "description": "O bloco recolhido das chamadas de ferramenta de um turno: o resumo em palavra, os quatro estados de cada chamada, e por que a chamada que espera por uma pessoa fica de fora."
+    },
+    "labels": {
+      "title": {
+        "one": "1 ferramenta",
+        "other": "{n} ferramentas"
+      },
+      "summary": {
+        "pending": "Espera por você",
+        "running": "Em curso",
+        "done": "Concluído",
+        "failed": "Algo falhou"
+      },
+      "call": {
+        "pending": "Esperando você",
+        "running": "Em curso",
+        "done": "Concluída",
+        "failed": "Falhou"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "failure": "Quando algo falhou no meio",
+        "done": "Quando tudo deu certo",
+        "running": "Enquanto ainda corre",
+        "waiting": "A que espera por você, fora do grupo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O grupo é uma caixa que abre e fecha, e nasce fechada: o que interessa é a resposta, e o passo a passo é para quem for conferir.",
+      "item2": "O resumo é a linha sempre visível — a seta, o título com a contagem e a etiqueta que diz o que há dentro.",
+      "item3": "A etiqueta do resumo carrega em palavra o estado do conjunto, inclusive que algo falhou, para que a falha não dependa de alguém abrir a caixa.",
+      "item4": "A lista é ordenada e traz uma linha por chamada: o nome da ferramenta e a etiqueta com o estado dela.",
+      "item5": "O detalhe ocupa a linha inteira, abaixo do nome — é o argumento, o resultado ou o motivo da falha, o que couber ao estado.",
+      "structureCode": {
+        "web": "<details class=\"nds-tool-group\" data-slot=\"tool-group\">\n  <summary class=\"nds-tool-group-summary\" data-slot=\"tool-group-summary\">\n    <svg class=\"nds-icon nds-tool-group-icon\" aria-hidden=\"true\">…</svg>\n    <span class=\"nds-tool-group-title\" data-slot=\"tool-group-title\">3 ferramentas</span>\n    <span class=\"nds-badge nds-badge-destructive\" data-slot=\"tool-group-state\">Algo falhou</span>\n  </summary>\n  <ol class=\"nds-tool-group-list\" data-slot=\"tool-group-list\">\n    <li class=\"nds-tool-call\" data-slot=\"tool-call\" data-state=\"failed\">\n      <span class=\"nds-tool-call-name\" data-slot=\"tool-call-name\">publicar_relatorio</span>\n      <span class=\"nds-badge nds-badge-destructive\" data-slot=\"tool-call-state\">Falhou</span>\n      <p class=\"nds-tool-call-detail\" data-slot=\"tool-call-detail\">O destino recusou: falta permissão de escrita.</p>\n    </li>\n  </ol>\n</details>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para reunir o que o agente fez para responder, junto da resposta e sem competir com ela.",
+        "item2": "Deixe o grupo nascer fechado: são detalhes de execução, e não a resposta.",
+        "item3": "Escreva no resumo o que há dentro, sempre em palavra — quem não abriu precisa saber que algo falhou.",
+        "item4": "Tire do grupo a chamada que espera por uma pessoa e ponha-a à vista.",
+        "item5": "Mande o detalhe de cada chamada já escrito, curto e no idioma da tela."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Reunir várias chamadas de ferramenta de um mesmo turno",
+          "u": "Grupo de ferramentas",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar uma chamada isolada, dentro da mensagem",
+          "u": "Conversa",
+          "a": "Ali a chamada mora dentro do turno e cada uma abre por si; aqui elas vêm reunidas num bloco só."
+        },
+        "item3": {
+          "s": "Pedir autorização para uma chamada",
+          "u": "Conversa",
+          "a": "O espaço da autorização fica onde a chamada está à vista, e esta caixa nasce fechada."
+        },
+        "item4": {
+          "s": "Dizer em que pé está a resposta inteira",
+          "u": "Estado da execução",
+          "a": "Aquela linha fala da execução; este bloco fala do que ela fez pelo caminho."
+        },
+        "item5": {
+          "s": "Esconder e mostrar seções de uma página",
+          "u": "Accordion",
+          "a": "Ali as seções são o conteúdo da página; aqui a caixa guarda o registro de uma execução."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "groupTitle": {
+            "name": "Título do resumo",
+            "format": "A contagem mais o nome da coisa, no plural do idioma",
+            "good": "3 ferramentas",
+            "bad": "Detalhes"
+          },
+          "summaryState": {
+            "name": "Estado do conjunto",
+            "format": "Uma frase curta sobre o todo, e não sobre uma linha",
+            "good": "Algo falhou",
+            "bad": "Recusa no destino"
+          },
+          "callState": {
+            "name": "Estado da chamada",
+            "format": "Uma palavra, a mesma em toda linha daquele estado",
+            "good": "Falhou",
+            "bad": "Deu ruim"
+          },
+          "detail": {
+            "name": "Detalhe da chamada",
+            "format": "Uma frase que diz o que saiu, ou por que não saiu",
+            "good": "O destino recusou: falta permissão de escrita.",
+            "bad": "Falha inesperada"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Deixe o grupo nascer fechado, e diga no resumo o que há dentro.",
+        "item2": "Escreva o estado de cada chamada em palavra, ao lado do nome.",
+        "item3": "Tire do grupo a chamada que espera por uma pessoa.",
+        "item4": "Mande o detalhe já escrito, curto, no idioma da tela."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a falha depender de alguém abrir a caixa.",
+        "item2": "Não distinga os estados só pela cor da etiqueta.",
+        "item3": "Não peça autorização de dentro de uma caixa fechada.",
+        "item4": "Não force a caixa a abrir quando algo falha: isso briga com quem acabou de fechá-la."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "O resumo diz que algo falhou, com a caixa ainda fechada.",
+        "dont": "O resumo só conta as ferramentas, e a falha fica escondida até alguém abrir."
+      },
+      "pair2": {
+        "do": "A chamada que espera por uma pessoa fica fora do grupo, à vista.",
+        "dont": "Ela fica dentro da caixa fechada, e o pedido nunca chega a quem devia responder."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: rotulos,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
+        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"rotulos\"\n  @open-change=\"registrar\"\n/>",
+        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"rotulos\"\n  (openChange)=\"registrar($event)\"\n></details>"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst rotulos = {\n  title: (quantas) => (quantas === 1 ? '1 ferramenta' : `${quantas} ferramentas`),\n  summary: {\n    pending: 'Espera por você',\n    running: 'Em curso',\n    done: 'Concluído',\n    failed: 'Algo falhou',\n  },\n  call: {\n    pending: 'Esperando você',\n    running: 'Em curso',\n    done: 'Concluída',\n    failed: 'Falhou',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "pending": {
+        "label": "Esperando você",
+        "trigger": "A chamada precisa da autorização de uma pessoa para acontecer.",
+        "behavior": "A linha recebe a etiqueta de aviso e o resumo passa a dizer que algo espera. É a única chamada que não deveria estar aqui dentro."
+      },
+      "running": {
+        "label": "Em curso",
+        "trigger": "A ferramenta está sendo executada agora.",
+        "behavior": "A linha recebe a etiqueta de destaque e o resumo diz que o grupo ainda não terminou."
+      },
+      "done": {
+        "label": "Concluída",
+        "trigger": "A ferramenta devolveu o que foi pedido.",
+        "behavior": "A linha recebe a etiqueta de sucesso, e o detalhe passa a ser o resultado."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "A ferramenta não conseguiu terminar.",
+        "behavior": "A linha recebe a etiqueta de erro, o detalhe passa a ser o motivo, e o resumo diz que algo falhou mesmo com a caixa fechada."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "calls": {
+          "name": "calls",
+          "type": "ChatToolCall[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "As chamadas que o grupo desenha, na ordem em que aconteceram."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ToolGroupLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O título do resumo, a palavra do conjunto e a palavra de cada chamada."
+        },
+        "open": {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "A caixa começa aberta. O padrão é fechada: são detalhes de execução, e não a resposta."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém abriu ou fechou a caixa, e o novo estado vem junto."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "(count: number) => string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O título do resumo a partir da contagem. É função porque plural é decisão de idioma."
+        },
+        "labelsSummary": {
+          "name": "summary",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra que o resumo mostra sobre o conjunto, uma por estado."
+        },
+        "labelsCall": {
+          "name": "call",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada chamada na lista, uma por estado."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "O grupo desenha as chamadas que recebe e avisa quando alguém abre ou fecha a caixa. Ele não executa nada, não decide o que uma falha significa e não tira ninguém da lista — separar a chamada que espera por uma pessoa é de quem consome, e o vocabulário compartilhado já traz essa separação pronta.",
+      "extensibilityCode": {
+        "web": "// O QUE O RESUMO DIZ sai do vocabulário compartilhado, e não de um `if` da\n// tela: a ordem de precedência é a mesma nas cinco stacks.\nsummarizeToolCalls(chamadas).state;\n// 'failed'  → algo falhou, e o resumo diz isso com a caixa fechada\n// 'pending' → algo espera por uma pessoa\n// 'running' → o grupo ainda não terminou\n// 'done'    → tudo terminou bem\n\n// E a chamada que espera por uma PESSOA sai do grupo ANTES de entrar nele.\n// Quem separa é quem consome: um componente que filtrasse sozinho apagaria da\n// tela um dado que recebeu.\nconst { grouped, waiting } = splitWaitingCalls(chamadas);"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-tool-group-summary",
+          "description": "Tamanho do texto do resumo e da lista."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-tool-group",
+          "description": "Contorno da caixa."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-tool-group",
+          "description": "Fundo discreto da caixa, que a separa da resposta sem competir com ela."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-tool-group",
+          "description": "Arredondamento da caixa e do anel de foco do resumo."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-tool-group-title",
+          "description": "Título do resumo e nome da ferramenta."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-tool-call-detail",
+          "description": "Detalhe da chamada e cor da seta. Texto corrido nunca leva a cor do estado."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-tool-group-summary",
+          "description": "Anel de foco do resumo, que é o controle da caixa."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-tool-group-summary",
+          "description": "Recuo lateral do resumo e da lista, que alinha as duas colunas."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-tool-group-summary",
+          "description": "Alvo de toque mínimo do resumo."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-tool-call-name",
+          "description": "Peso que distingue o nome da ferramenta do resto da linha."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-tool-group {\n  max-inline-size: 40rem;\n}\n\n/* A seta é REFORÇO, e não a informação: quem carrega o estado do conjunto é a\n   palavra na etiqueta do resumo. Mexer nela não muda o que chega a quem ouve. */\n.nds-tool-group[open] .nds-tool-group-icon {\n  transform: rotate(90deg) scale(1.15);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O estado de cada chamada é palavra, o resumo carrega o que há dentro mesmo com a caixa fechada, e quem abre e fecha é o próprio navegador.",
+      "items": {
+        "item1": "O resumo diz em palavra o que há dentro, inclusive que algo falhou: quem não abriu a caixa fica sabendo assim mesmo.",
+        "item2": "O estado de cada chamada é uma palavra na etiqueta, e nunca só a cor dela.",
+        "item3": "O grupo não é região viva. As chamadas chegam enquanto a resposta é gerada logo abaixo, e anunciar cada uma cortaria a leitura do que importa.",
+        "item4": "Quem abre e fecha é o navegador: o resumo já é um controle, já anuncia se está aberto e já responde ao teclado, sem nada escrito à mão.",
+        "item5": "A chamada que espera por uma pessoa fica fora da caixa fechada. Pedir autorização sem mostrar o pedido é não pedir."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Chega ao resumo, que é o controle da caixa. A lista é texto.",
+        "enter": "Abre e fecha a caixa. A barra de espaço faz o mesmo.",
+        "arrows": "Não fazem nada aqui: a lista é de leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "Nenhum atributo de expansão é escrito à mão: o resumo de um bloco que abre e fecha já anuncia sozinho em que estado está.",
+        "item2": "Não há região viva no grupo. Quem quiser anunciar a chegada de uma chamada põe a região por fora, sabendo o que está fazendo."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "O resumo é lido como um controle, com o título, a palavra do conjunto e se a caixa está aberta ou fechada.",
+        "item2": "Cada chamada é lida como item de lista: o nome da ferramenta, a palavra do estado e o detalhe.",
+        "item3": "A seta do resumo fica fora da leitura — ela repete em desenho o que o controle já anuncia."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "Conversa",
+          "description": "Onde a resposta mora, e onde a chamada que espera por uma pessoa recebe os controles."
+        },
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "A linha que diz em que pé está a resposta que este bloco acompanha."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "A etiqueta que carrega a palavra do estado, no resumo e em cada chamada."
+        },
+        "accordion": {
+          "name": "Accordion",
+          "description": "Quando o que abre e fecha é o conteúdo da página, e não o registro de uma execução."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O bloco abre e fecha com o elemento que o navegador já traz pronto. Ele dá o botão, o estado de expansão e o teclado; recriar isso à mão é reimplementar o que já funciona.",
+      "item2": "O grupo nasce recolhido, e o resumo diz em palavra o que há dentro. Um grupo fechado que esconde uma falha é uma falha que ninguém vê — e a saída não é forçar a abertura, que brigaria com quem acabou de fechar.",
+      "item3": "Não é região viva, apesar de as chamadas chegarem sozinhas. Quem lê está ouvindo a resposta ser gerada logo abaixo, e um anúncio por chamada corta a leitura no meio.",
+      "item4": "A chamada que espera por uma pessoa não fica aqui dentro. Quem consome tira essa para fora, e o vocabulário compartilhado traz a separação pronta.",
+      "item5": "O estado é palavra, nunca só cor ou ícone. A cor da etiqueta é reforço, e some para quem não a percebe.",
+      "item6": "A chamada de ferramenta que falhou é um estado deste bloco, e não outro componente: o vocabulário já separa a falha, e o desenho muda sem que o componente mude.",
+      "item7": "A peça não executa nada e não decide o que uma falha significa. Ela desenha as chamadas que recebe, e avisa quando alguém abre ou fecha."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; o grupo em si não instrumenta nada.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Montar o grupo sem dizer nada sobre a caixa",
+          "result": "Ele nasce recolhido, e a lista não aparece antes de alguém abrir",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Abrir e fechar a caixa",
+          "result": "Quem consome é avisado das duas vezes, com o novo estado junto",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar uma chamada em cada um dos quatro estados",
+          "result": "Cada linha traz a palavra daquele estado, e a ordem é a do vocabulário",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar um grupo com uma chamada que falhou, sem abrir a caixa",
+          "result": "O resumo diz que algo falhou sem que ninguém precise abrir",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar um grupo em que tudo terminou bem",
+          "result": "O resumo diz que terminou, e nenhuma chamada aparece em erro",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Passar um grupo com uma chamada ainda em curso",
+          "result": "O resumo diz que o grupo ainda não terminou",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Passar o detalhe de uma chamada",
+          "result": "Ele aparece na linha dela, abaixo do nome",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Separar a chamada que espera por uma pessoa antes de montar o grupo",
+          "result": "Ela fica fora da caixa recolhida e à vista, e o grupo desenha só o resto",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "O estado de cada chamada é palavra, e não só a cor da etiqueta",
+        "item2": "O resumo carrega em palavra o que há dentro, inclusive a falha, com a caixa fechada",
+        "item3": "O grupo não é região viva",
+        "item4": "A caixa abre e fecha pelo teclado, sem atributo de expansão escrito à mão",
+        "item5": "O alvo de toque do resumo tem pelo menos vinte e quatro pixels",
+        "item6": "A chamada que espera por uma pessoa não fica dentro da caixa recolhida"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — o grupo, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os quatro, um abaixo do outro, com a caixa aberta",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — o grupo com uma falha, ainda recolhido",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — o grupo em que tudo terminou bem",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Estados — o grupo que ainda corre",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — a chamada que espera por uma pessoa, fora do grupo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Tool group",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "What the agent did in order to answer, gathered into a single block. The block starts collapsed and the summary says in words what is inside — including that something failed.",
+    "seo": {
+      "title": "Tool group — the summary says what is inside before anyone opens it",
+      "description": "The collapsed block of tool calls from one turn: the summary in words, the four states of each call, and why the call that waits on a person stays outside."
+    },
+    "labels": {
+      "title": {
+        "one": "1 tool",
+        "other": "{n} tools"
+      },
+      "summary": {
+        "pending": "Waiting on you",
+        "running": "Running",
+        "done": "All done",
+        "failed": "Something failed"
+      },
+      "call": {
+        "pending": "Waiting on you",
+        "running": "Running",
+        "done": "Done",
+        "failed": "Failed"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "failure": "When something failed along the way",
+        "done": "When everything worked",
+        "running": "While it is still running",
+        "waiting": "The one waiting on you, outside the group"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The group is a box that opens and closes, and it starts closed: the answer is what matters, and the step by step is for whoever wants to check.",
+      "item2": "The summary is the line that is always visible — the arrow, the title with the count, and the tag that says what is inside.",
+      "item3": "The summary tag carries the state of the whole in words, including that something failed, so the failure does not depend on anyone opening the box.",
+      "item4": "The list is ordered and brings one line per call: the tool name and the tag with its state.",
+      "item5": "The detail takes the whole line, below the name — it is the argument, the result or the reason for the failure, whichever fits the state.",
+      "structureCode": {
+        "web": "<details class=\"nds-tool-group\" data-slot=\"tool-group\">\n  <summary class=\"nds-tool-group-summary\" data-slot=\"tool-group-summary\">\n    <svg class=\"nds-icon nds-tool-group-icon\" aria-hidden=\"true\">…</svg>\n    <span class=\"nds-tool-group-title\" data-slot=\"tool-group-title\">3 tools</span>\n    <span class=\"nds-badge nds-badge-destructive\" data-slot=\"tool-group-state\">Something failed</span>\n  </summary>\n  <ol class=\"nds-tool-group-list\" data-slot=\"tool-group-list\">\n    <li class=\"nds-tool-call\" data-slot=\"tool-call\" data-state=\"failed\">\n      <span class=\"nds-tool-call-name\" data-slot=\"tool-call-name\">publicar_relatorio</span>\n      <span class=\"nds-badge nds-badge-destructive\" data-slot=\"tool-call-state\">Failed</span>\n      <p class=\"nds-tool-call-detail\" data-slot=\"tool-call-detail\">The destination refused: write permission is missing.</p>\n    </li>\n  </ol>\n</details>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to gather what the agent did in order to answer, next to the answer and without competing with it.",
+        "item2": "Let the group start closed: these are execution details, not the answer.",
+        "item3": "Write in the summary what is inside, always in words — whoever did not open it needs to know that something failed.",
+        "item4": "Take the call that waits on a person out of the group and put it in plain sight.",
+        "item5": "Send each call's detail already written, short and in the language of the screen."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Gather several tool calls from the same turn",
+          "u": "Tool group",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Show a single call, inside the message",
+          "u": "Chat thread",
+          "a": "There the call lives inside the turn and each one opens on its own; here they come gathered into a single block."
+        },
+        "item3": {
+          "s": "Ask for authorization for a call",
+          "u": "Chat thread",
+          "a": "The space for the authorization sits where the call is in plain sight, and this box starts closed."
+        },
+        "item4": {
+          "s": "Say where the whole answer stands",
+          "u": "Agent status",
+          "a": "That line talks about the run; this block talks about what it did along the way."
+        },
+        "item5": {
+          "s": "Hide and show sections of a page",
+          "u": "Accordion",
+          "a": "There the sections are the content of the page; here the box holds the record of a run."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "groupTitle": {
+            "name": "Summary title",
+            "format": "The count plus the name of the thing, in the plural of the language",
+            "good": "3 tools",
+            "bad": "Details"
+          },
+          "summaryState": {
+            "name": "State of the whole",
+            "format": "A short sentence about the whole, not about one line",
+            "good": "Something failed",
+            "bad": "Refused by destination"
+          },
+          "callState": {
+            "name": "Call state",
+            "format": "One word, the same on every line in that state",
+            "good": "Failed",
+            "bad": "Went bad"
+          },
+          "detail": {
+            "name": "Call detail",
+            "format": "A sentence that says what came out, or why it did not",
+            "good": "The destination refused: write permission is missing.",
+            "bad": "Unexpected failure"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Let the group start closed, and say in the summary what is inside.",
+        "item2": "Write each call's state in words, next to the name.",
+        "item3": "Take the call that waits on a person out of the group.",
+        "item4": "Send the detail already written, short, in the language of the screen."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't let the failure depend on someone opening the box.",
+        "item2": "Don't tell the states apart by the color of the tag alone.",
+        "item3": "Don't ask for authorization from inside a closed box.",
+        "item4": "Don't force the box open when something fails: that fights whoever has just closed it."
+      }
+    },
+    "doDont": {
+      "title": "Right and wrong",
+      "pair1": {
+        "do": "The summary says that something failed, with the box still closed.",
+        "dont": "The summary only counts the tools, and the failure stays hidden until someone opens it."
+      },
+      "pair2": {
+        "do": "The call that waits on a person stays outside the group, in plain sight.",
+        "dont": "It stays inside the closed box, and the request never reaches whoever should answer it."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: rotulos,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
+        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"rotulos\"\n  @open-change=\"registrar\"\n/>",
+        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"rotulos\"\n  (openChange)=\"registrar($event)\"\n></details>"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst rotulos = {\n  title: (quantas) => (quantas === 1 ? '1 tool' : `${quantas} tools`),\n  summary: {\n    pending: 'Waiting on you',\n    running: 'Running',\n    done: 'All done',\n    failed: 'Something failed',\n  },\n  call: {\n    pending: 'Waiting on you',\n    running: 'Running',\n    done: 'Done',\n    failed: 'Failed',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "pending": {
+        "label": "Waiting on you",
+        "trigger": "The call needs a person's authorization in order to happen.",
+        "behavior": "The line gets the warning tag and the summary starts saying that something is waiting. It is the one call that should not be inside here."
+      },
+      "running": {
+        "label": "Running",
+        "trigger": "The tool is being executed right now.",
+        "behavior": "The line gets the highlight tag and the summary says the group has not finished yet."
+      },
+      "done": {
+        "label": "Done",
+        "trigger": "The tool returned what was asked of it.",
+        "behavior": "The line gets the success tag, and the detail becomes the result."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The tool could not finish.",
+        "behavior": "The line gets the error tag, the detail becomes the reason, and the summary says something failed even with the box closed."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "calls": {
+          "name": "calls",
+          "type": "ChatToolCall[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The calls the group draws, in the order in which they happened."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ToolGroupLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The summary title, the word for the whole and the word for each call."
+        },
+        "open": {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "The box starts open. The default is closed: these are execution details, not the answer."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone opened or closed the box, and the new state comes along."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "(count: number) => string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The summary title built from the count. It is a function because plural is a decision of language."
+        },
+        "labelsSummary": {
+          "name": "summary",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word the summary shows about the whole, one per state."
+        },
+        "labelsCall": {
+          "name": "call",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each call in the list, one per state."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The group draws the calls it receives and reports when someone opens or closes the box. It runs nothing, does not decide what a failure means and takes no one out of the list — separating the call that waits on a person belongs to whoever consumes it, and the shared vocabulary already brings that split ready.",
+      "extensibilityCode": {
+        "web": "// O QUE O RESUMO DIZ sai do vocabulário compartilhado, e não de um `if` da\n// tela: a ordem de precedência é a mesma nas cinco stacks.\nsummarizeToolCalls(chamadas).state;\n// 'failed'  → algo falhou, e o resumo diz isso com a caixa fechada\n// 'pending' → algo espera por uma pessoa\n// 'running' → o grupo ainda não terminou\n// 'done'    → tudo terminou bem\n\n// E a chamada que espera por uma PESSOA sai do grupo ANTES de entrar nele.\n// Quem separa é quem consome: um componente que filtrasse sozinho apagaria da\n// tela um dado que recebeu.\nconst { grouped, waiting } = splitWaitingCalls(chamadas);"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-tool-group-summary",
+          "description": "Text size of the summary and of the list."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-tool-group",
+          "description": "Outline of the box."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-tool-group",
+          "description": "Quiet background of the box, which sets it apart from the answer without competing with it."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-tool-group",
+          "description": "Rounding of the box and of the summary's focus ring."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-tool-group-title",
+          "description": "Summary title and tool name."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-tool-call-detail",
+          "description": "Call detail and color of the arrow. Running text never carries the state color."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-tool-group-summary",
+          "description": "Focus ring of the summary, which is the control of the box."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-tool-group-summary",
+          "description": "Side inset of the summary and of the list, which lines the two columns up."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-tool-group-summary",
+          "description": "Minimum touch target of the summary."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-tool-call-name",
+          "description": "Weight that sets the tool name apart from the rest of the line."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": ".nds-tool-group {\n  max-inline-size: 40rem;\n}\n\n/* A seta é REFORÇO, e não a informação: quem carrega o estado do conjunto é a\n   palavra na etiqueta do resumo. Mexer nela não muda o que chega a quem ouve. */\n.nds-tool-group[open] .nds-tool-group-icon {\n  transform: rotate(90deg) scale(1.15);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Each call's state is a word, the summary carries what is inside even with the box closed, and the one opening and closing it is the browser itself.",
+      "items": {
+        "item1": "The summary says in words what is inside, including that something failed: whoever did not open the box finds out anyway.",
+        "item2": "Each call's state is a word on the tag, and never the color of the tag alone.",
+        "item3": "The group is not a live region. The calls arrive while the answer is being generated right below, and announcing each one would cut into the reading of what matters.",
+        "item4": "The one opening and closing is the browser: the summary is already a control, already announces whether it is open and already answers the keyboard, with nothing written by hand.",
+        "item5": "The call that waits on a person stays outside the closed box. Asking for authorization without showing the request is not asking."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the summary, which is the control of the box. The list is text.",
+        "enter": "Opens and closes the box. The space bar does the same.",
+        "arrows": "Do nothing here: the list is for reading, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "No expansion attribute is written by hand: the summary of a block that opens and closes already announces on its own which state it is in.",
+        "item2": "There is no live region in the group. Whoever wants to announce a call's arrival puts the region outside, knowing what they are doing."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The summary is read as a control, with the title, the word for the whole and whether the box is open or closed.",
+        "item2": "Each call is read as a list item: the tool name, the word for the state and the detail.",
+        "item3": "The summary arrow stays out of the reading — it repeats in drawing what the control already announces."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "chatThread": {
+          "name": "Chat thread",
+          "description": "Where the answer lives, and where the call that waits on a person gets its controls."
+        },
+        "agentStatus": {
+          "name": "Agent status",
+          "description": "The line that says where the answer this block accompanies stands."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "The tag that carries the word for the state, in the summary and in each call."
+        },
+        "accordion": {
+          "name": "Accordion",
+          "description": "When what opens and closes is the content of the page, and not the record of a run."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The block opens and closes with the element the browser already ships. It gives the button, the expansion state and the keyboard; rebuilding that by hand is reimplementing what already works.",
+      "item2": "The group starts collapsed, and the summary says in words what is inside. A closed group that hides a failure is a failure nobody sees — and the way out is not to force it open, which would fight whoever has just closed it.",
+      "item3": "It is not a live region, even though the calls arrive on their own. Whoever is reading is listening to the answer being generated right below, and one announcement per call cuts into the reading.",
+      "item4": "The call that waits on a person does not stay in here. Whoever consumes it takes that one out, and the shared vocabulary brings the split ready.",
+      "item5": "The state is a word, never color or icon alone. The tag color is reinforcement, and it disappears for whoever does not perceive it.",
+      "item6": "The tool call that failed is a state of this block, and not another component: the vocabulary already sets the failure apart, and the drawing changes without the component changing.",
+      "item7": "The piece runs nothing and does not decide what a failure means. It draws the calls it receives, and reports when someone opens or closes it."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the group itself instruments nothing.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Mount the group without saying anything about the box",
+          "result": "It starts collapsed, and the list does not show before someone opens it",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Open and close the box",
+          "result": "Whoever consumes it is told both times, with the new state along",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass one call in each of the four states",
+          "result": "Each line brings the word for that state, and the order is the vocabulary's",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass a group with a call that failed, without opening the box",
+          "result": "The summary says something failed without anyone needing to open it",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass a group in which everything finished well",
+          "result": "The summary says it finished, and no call shows up in error",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pass a group with a call still running",
+          "result": "The summary says the group has not finished yet",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Pass the detail of a call",
+          "result": "It shows on that call's line, below the name",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Split off the call that waits on a person before mounting the group",
+          "result": "It stays outside the collapsed box and in plain sight, and the group draws only the rest",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe on every story, plus what the play asserts.",
+        "item1": "Each call's state is a word, and not the tag color alone",
+        "item2": "The summary carries in words what is inside, the failure included, with the box closed",
+        "item3": "The group is not a live region",
+        "item4": "The box opens and closes by keyboard, with no expansion attribute written by hand",
+        "item5": "The summary's touch target is at least twenty-four pixels",
+        "item6": "The call that waits on a person does not stay inside the collapsed box"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Shot by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the group, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the four, one below the other, with the box open",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — the group with a failure, still collapsed",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — the group in which everything finished well",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "States — the group that is still running",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — the call that waits on a person, outside the group",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Grupo de herramientas",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Lo que el agente hizo para responder, reunido en un solo bloque. El bloque nace plegado y el resumen dice en palabras qué hay dentro, incluso que algo falló.",
+    "seo": {
+      "title": "Grupo de herramientas — el resumen dice qué hay dentro antes de que alguien abra",
+      "description": "El bloque plegado de las llamadas a herramientas de un turno: el resumen en palabras, los cuatro estados de cada llamada, y por qué la llamada que espera a una persona se queda fuera."
+    },
+    "labels": {
+      "title": {
+        "one": "1 herramienta",
+        "other": "{n} herramientas"
+      },
+      "summary": {
+        "pending": "Te espera",
+        "running": "En curso",
+        "done": "Todo listo",
+        "failed": "Algo falló"
+      },
+      "call": {
+        "pending": "Esperándote",
+        "running": "En curso",
+        "done": "Hecha",
+        "failed": "Falló"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "failure": "Cuando algo falló por el camino",
+        "done": "Cuando todo salió bien",
+        "running": "Mientras todavía corre",
+        "waiting": "La que te espera, fuera del grupo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El grupo es una caja que abre y cierra, y nace cerrada: lo que importa es la respuesta, y el paso a paso es para quien quiera comprobarlo.",
+      "item2": "El resumen es la línea siempre visible — la flecha, el título con el recuento y la etiqueta que dice qué hay dentro.",
+      "item3": "La etiqueta del resumen lleva en palabras el estado del conjunto, incluso que algo falló, para que el fallo no dependa de que alguien abra la caja.",
+      "item4": "La lista está ordenada y trae una línea por llamada: el nombre de la herramienta y la etiqueta con su estado.",
+      "item5": "El detalle ocupa la línea entera, debajo del nombre — es el argumento, el resultado o el motivo del fallo, lo que corresponda al estado.",
+      "structureCode": {
+        "web": "<details class=\"nds-tool-group\" data-slot=\"tool-group\">\n  <summary class=\"nds-tool-group-summary\" data-slot=\"tool-group-summary\">\n    <svg class=\"nds-icon nds-tool-group-icon\" aria-hidden=\"true\">…</svg>\n    <span class=\"nds-tool-group-title\" data-slot=\"tool-group-title\">3 herramientas</span>\n    <span class=\"nds-badge nds-badge-destructive\" data-slot=\"tool-group-state\">Algo falló</span>\n  </summary>\n  <ol class=\"nds-tool-group-list\" data-slot=\"tool-group-list\">\n    <li class=\"nds-tool-call\" data-slot=\"tool-call\" data-state=\"failed\">\n      <span class=\"nds-tool-call-name\" data-slot=\"tool-call-name\">publicar_relatorio</span>\n      <span class=\"nds-badge nds-badge-destructive\" data-slot=\"tool-call-state\">Falló</span>\n      <p class=\"nds-tool-call-detail\" data-slot=\"tool-call-detail\">El destino rechazó: falta permiso de escritura.</p>\n    </li>\n  </ol>\n</details>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para reunir lo que el agente hizo para responder, junto a la respuesta y sin competir con ella.",
+        "item2": "Deja que el grupo nazca cerrado: son detalles de ejecución, no la respuesta.",
+        "item3": "Escribe en el resumen qué hay dentro, siempre en palabras — quien no abrió necesita saber que algo falló.",
+        "item4": "Saca del grupo la llamada que espera a una persona y ponla a la vista.",
+        "item5": "Manda el detalle de cada llamada ya escrito, corto y en el idioma de la pantalla."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Reunir varias llamadas a herramientas de un mismo turno",
+          "u": "Grupo de herramientas",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar una llamada aislada, dentro del mensaje",
+          "u": "Conversación",
+          "a": "Allí la llamada vive dentro del turno y cada una abre por sí sola; aquí vienen reunidas en un solo bloque."
+        },
+        "item3": {
+          "s": "Pedir autorización para una llamada",
+          "u": "Conversación",
+          "a": "El espacio de la autorización está donde la llamada queda a la vista, y esta caja nace cerrada."
+        },
+        "item4": {
+          "s": "Decir en qué punto está la respuesta entera",
+          "u": "Estado de la ejecución",
+          "a": "Aquella línea habla de la ejecución; este bloque habla de lo que hizo por el camino."
+        },
+        "item5": {
+          "s": "Ocultar y mostrar secciones de una página",
+          "u": "Accordion",
+          "a": "Allí las secciones son el contenido de la página; aquí la caja guarda el registro de una ejecución."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "groupTitle": {
+            "name": "Título del resumen",
+            "format": "El recuento más el nombre de la cosa, en el plural del idioma",
+            "good": "3 herramientas",
+            "bad": "Detalles"
+          },
+          "summaryState": {
+            "name": "Estado del conjunto",
+            "format": "Una frase corta sobre el todo, y no sobre una línea",
+            "good": "Algo falló",
+            "bad": "Rechazo en el destino"
+          },
+          "callState": {
+            "name": "Estado de la llamada",
+            "format": "Una palabra, la misma en cada línea de ese estado",
+            "good": "Falló",
+            "bad": "Salió mal"
+          },
+          "detail": {
+            "name": "Detalle de la llamada",
+            "format": "Una frase que dice qué salió, o por qué no salió",
+            "good": "El destino rechazó: falta permiso de escritura.",
+            "bad": "Fallo inesperado"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Deja que el grupo nazca cerrado, y di en el resumen qué hay dentro.",
+        "item2": "Escribe el estado de cada llamada en palabras, junto al nombre.",
+        "item3": "Saca del grupo la llamada que espera a una persona.",
+        "item4": "Manda el detalle ya escrito, corto, en el idioma de la pantalla."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes que el fallo dependa de que alguien abra la caja.",
+        "item2": "No distingas los estados solo por el color de la etiqueta.",
+        "item3": "No pidas autorización desde dentro de una caja cerrada.",
+        "item4": "No fuerces la caja a abrirse cuando algo falla: eso pelea con quien acaba de cerrarla."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "El resumen dice que algo falló, con la caja todavía cerrada.",
+        "dont": "El resumen solo cuenta las herramientas, y el fallo queda escondido hasta que alguien abra."
+      },
+      "pair2": {
+        "do": "La llamada que espera a una persona queda fuera del grupo, a la vista.",
+        "dont": "Queda dentro de la caja cerrada, y la petición nunca llega a quien debía responderla."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: rotulos,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
+        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"rotulos\"\n  @open-change=\"registrar\"\n/>",
+        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"rotulos\"\n  (openChange)=\"registrar($event)\"\n></details>"
+      },
+      "withLabels": "Las etiquetas",
+      "withLabelsCode": {
+        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst rotulos = {\n  title: (quantas) => (quantas === 1 ? '1 herramienta' : `${quantas} herramientas`),\n  summary: {\n    pending: 'Te espera',\n    running: 'En curso',\n    done: 'Todo listo',\n    failed: 'Algo falló',\n  },\n  call: {\n    pending: 'Esperándote',\n    running: 'En curso',\n    done: 'Hecha',\n    failed: 'Falló',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "pending": {
+        "label": "Esperándote",
+        "trigger": "La llamada necesita la autorización de una persona para ocurrir.",
+        "behavior": "La línea recibe la etiqueta de aviso y el resumen pasa a decir que algo espera. Es la única llamada que no debería estar aquí dentro."
+      },
+      "running": {
+        "label": "En curso",
+        "trigger": "La herramienta se está ejecutando ahora.",
+        "behavior": "La línea recibe la etiqueta de realce y el resumen dice que el grupo todavía no terminó."
+      },
+      "done": {
+        "label": "Hecha",
+        "trigger": "La herramienta devolvió lo que se le pidió.",
+        "behavior": "La línea recibe la etiqueta de éxito, y el detalle pasa a ser el resultado."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "La herramienta no consiguió terminar.",
+        "behavior": "La línea recibe la etiqueta de error, el detalle pasa a ser el motivo, y el resumen dice que algo falló incluso con la caja cerrada."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "calls": {
+          "name": "calls",
+          "type": "ChatToolCall[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Las llamadas que el grupo dibuja, en el orden en que ocurrieron."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ToolGroupLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El título del resumen, la palabra del conjunto y la palabra de cada llamada."
+        },
+        "open": {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "La caja empieza abierta. Lo predeterminado es cerrada: son detalles de ejecución, no la respuesta."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien abrió o cerró la caja, y el nuevo estado viene con el aviso."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "(count: number) => string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El título del resumen a partir del recuento. Es función porque el plural es decisión de idioma."
+        },
+        "labelsSummary": {
+          "name": "summary",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra que el resumen muestra sobre el conjunto, una por estado."
+        },
+        "labelsCall": {
+          "name": "call",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada llamada en la lista, una por estado."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "El grupo dibuja las llamadas que recibe y avisa cuando alguien abre o cierra la caja. No ejecuta nada, no decide qué significa un fallo y no saca a nadie de la lista — separar la llamada que espera a una persona es de quien consume, y el vocabulario compartido ya trae esa separación lista.",
+      "extensibilityCode": {
+        "web": "// O QUE O RESUMO DIZ sai do vocabulário compartilhado, e não de um `if` da\n// tela: a ordem de precedência é a mesma nas cinco stacks.\nsummarizeToolCalls(chamadas).state;\n// 'failed'  → algo falhou, e o resumo diz isso com a caixa fechada\n// 'pending' → algo espera por uma pessoa\n// 'running' → o grupo ainda não terminou\n// 'done'    → tudo terminou bem\n\n// E a chamada que espera por uma PESSOA sai do grupo ANTES de entrar nele.\n// Quem separa é quem consome: um componente que filtrasse sozinho apagaria da\n// tela um dado que recebeu.\nconst { grouped, waiting } = splitWaitingCalls(chamadas);"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-tool-group-summary",
+          "description": "Tamaño del texto del resumen y de la lista."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-tool-group",
+          "description": "Contorno de la caja."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-tool-group",
+          "description": "Fondo discreto de la caja, que la separa de la respuesta sin competir con ella."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-tool-group",
+          "description": "Redondeo de la caja y del anillo de foco del resumen."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-tool-group-title",
+          "description": "Título del resumen y nombre de la herramienta."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-tool-call-detail",
+          "description": "Detalle de la llamada y color de la flecha. El texto corrido nunca lleva el color del estado."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-tool-group-summary",
+          "description": "Anillo de foco del resumen, que es el control de la caja."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-tool-group-summary",
+          "description": "Sangría lateral del resumen y de la lista, que alinea las dos columnas."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-tool-group-summary",
+          "description": "Objetivo táctil mínimo del resumen."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-tool-call-name",
+          "description": "Peso que distingue el nombre de la herramienta del resto de la línea."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-tool-group {\n  max-inline-size: 40rem;\n}\n\n/* A seta é REFORÇO, e não a informação: quem carrega o estado do conjunto é a\n   palavra na etiqueta do resumo. Mexer nela não muda o que chega a quem ouve. */\n.nds-tool-group[open] .nds-tool-group-icon {\n  transform: rotate(90deg) scale(1.15);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El estado de cada llamada es palabra, el resumen lleva lo que hay dentro incluso con la caja cerrada, y quien abre y cierra es el propio navegador.",
+      "items": {
+        "item1": "El resumen dice en palabras qué hay dentro, incluso que algo falló: quien no abrió la caja se entera igual.",
+        "item2": "El estado de cada llamada es una palabra en la etiqueta, y nunca solo el color de ella.",
+        "item3": "El grupo no es región viva. Las llamadas llegan mientras la respuesta se genera justo debajo, y anunciar cada una cortaría la lectura de lo que importa.",
+        "item4": "Quien abre y cierra es el navegador: el resumen ya es un control, ya anuncia si está abierto y ya responde al teclado, sin nada escrito a mano.",
+        "item5": "La llamada que espera a una persona queda fuera de la caja cerrada. Pedir autorización sin mostrar la petición es no pedir."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Llega al resumen, que es el control de la caja. La lista es texto.",
+        "enter": "Abre y cierra la caja. La barra espaciadora hace lo mismo.",
+        "arrows": "No hacen nada aquí: la lista es de lectura, y no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "Ningún atributo de expansión se escribe a mano: el resumen de un bloque que abre y cierra ya anuncia por sí solo en qué estado está.",
+        "item2": "No hay región viva en el grupo. Quien quiera anunciar la llegada de una llamada pone la región por fuera, sabiendo lo que hace."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El resumen se lee como un control, con el título, la palabra del conjunto y si la caja está abierta o cerrada.",
+        "item2": "Cada llamada se lee como elemento de lista: el nombre de la herramienta, la palabra del estado y el detalle.",
+        "item3": "La flecha del resumen queda fuera de la lectura — repite en dibujo lo que el control ya anuncia."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "Conversación",
+          "description": "Donde vive la respuesta, y donde la llamada que espera a una persona recibe los controles."
+        },
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "La línea que dice en qué punto está la respuesta que este bloque acompaña."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "La etiqueta que lleva la palabra del estado, en el resumen y en cada llamada."
+        },
+        "accordion": {
+          "name": "Accordion",
+          "description": "Cuando lo que abre y cierra es el contenido de la página, y no el registro de una ejecución."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El bloque abre y cierra con el elemento que el navegador ya trae listo. Da el botón, el estado de expansión y el teclado; rehacer eso a mano es reimplementar lo que ya funciona.",
+      "item2": "El grupo nace plegado, y el resumen dice en palabras qué hay dentro. Un grupo cerrado que esconde un fallo es un fallo que nadie ve — y la salida no es forzar la apertura, que pelearía con quien acaba de cerrar.",
+      "item3": "No es región viva, aunque las llamadas lleguen solas. Quien lee está escuchando la respuesta generarse justo debajo, y un anuncio por llamada corta la lectura por la mitad.",
+      "item4": "La llamada que espera a una persona no se queda aquí dentro. Quien consume saca esa fuera, y el vocabulario compartido trae la separación lista.",
+      "item5": "El estado es palabra, nunca solo color o icono. El color de la etiqueta es refuerzo, y desaparece para quien no lo percibe.",
+      "item6": "La llamada a herramienta que falló es un estado de este bloque, y no otro componente: el vocabulario ya separa el fallo, y el dibujo cambia sin que cambie el componente.",
+      "item7": "La pieza no ejecuta nada y no decide qué significa un fallo. Dibuja las llamadas que recibe, y avisa cuando alguien abre o cierra."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; el grupo en sí no instrumenta nada.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Montar el grupo sin decir nada sobre la caja",
+          "result": "Nace plegado, y la lista no aparece antes de que alguien abra",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Abrir y cerrar la caja",
+          "result": "Quien consume recibe el aviso las dos veces, con el nuevo estado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar una llamada en cada uno de los cuatro estados",
+          "result": "Cada línea trae la palabra de ese estado, y el orden es el del vocabulario",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar un grupo con una llamada que falló, sin abrir la caja",
+          "result": "El resumen dice que algo falló sin que nadie necesite abrir",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar un grupo en el que todo terminó bien",
+          "result": "El resumen dice que terminó, y ninguna llamada aparece en error",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pasar un grupo con una llamada todavía en curso",
+          "result": "El resumen dice que el grupo aún no terminó",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Pasar el detalle de una llamada",
+          "result": "Aparece en la línea de ella, debajo del nombre",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Separar la llamada que espera a una persona antes de montar el grupo",
+          "result": "Queda fuera de la caja plegada y a la vista, y el grupo dibuja solo el resto",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que la play afirma.",
+        "item1": "El estado de cada llamada es palabra, y no solo el color de la etiqueta",
+        "item2": "El resumen lleva en palabras qué hay dentro, el fallo incluido, con la caja cerrada",
+        "item3": "El grupo no es región viva",
+        "item4": "La caja abre y cierra con el teclado, sin atributo de expansión escrito a mano",
+        "item5": "El objetivo táctil del resumen tiene al menos veinticuatro píxeles",
+        "item6": "La llamada que espera a una persona no queda dentro de la caja plegada"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — el grupo, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cuatro, uno debajo del otro, con la caja abierta",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — el grupo con un fallo, todavía plegado",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — el grupo en el que todo terminó bien",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Estados — el grupo que todavía corre",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — la llamada que espera a una persona, fuera del grupo",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
