@@ -351,10 +351,19 @@
   font-size: var(--text-label);
 }
 
-/* Sem monoespaçada, e é escolha. Não há token de fonte mono neste sistema: o
- * `code-block` escreve a pilha literal, duas vezes no próprio arquivo. Uma
- * terceira cópia para um efeito cosmético é duplicata que envelhece sozinha —
- * o nome da ferramenta se distingue por peso, que o sistema já tokeniza. */
+/* Sem monoespaçada, e é escolha — mas o motivo que estava escrito aqui era
+ * FALSO, e a correção importa mais que a decisão.
+ *
+ * Eu tinha escrito que "não há token de fonte mono neste sistema". Há:
+ * `.nds-font-mono`, utilitária em `typography.css`, achada por quem construiu o
+ * bloco do terminal mais abaixo — que a usa, e com razão. Eu olhei o
+ * `code-block`, vi a pilha de fontes escrita literal duas vezes, e concluí do
+ * exemplo em vez de procurar.
+ *
+ * A decisão continua a mesma, por um motivo que agora é o verdadeiro: aqui a
+ * mono seria EFEITO, e lá é CARGA. Saída de terminal alinha em colunas, e
+ * coluna só fecha com avanço fixo; o nome de uma ferramenta não alinha com
+ * nada, e se distingue por peso, que o sistema já tokeniza. */
 .nds-tool-call-name {
   color: hsl(var(--foreground));
   font-weight: var(--font-weight-medium);
