@@ -60,22 +60,6 @@ const { t, dict } = useTranslation(groupTranslations as Record<string, unknown>,
     'props.table.onOpenChange.name': 'openChange',
     'props.table.onOpenChange.type': 'OutputEmitterRef<boolean>',
   },
-  // A descrição vai junto com o nome e o tipo, e nos três idiomas: a do
-  // conteúdo compartilhado fala de um retorno, e aqui o que existe é uma saída
-  // que, ao lado de `open`, ainda dá o atalho de duas vias. Descrição que ficou
-  // para trás do nome é a linha da tabela discordando de si mesma.
-  'pt-BR': {
-    'props.table.onOpenChange.description':
-      'Alguém abriu ou fechou a caixa, e o novo estado vem junto. Ao lado de open, ela dá o atalho de duas vias.',
-  },
-  en: {
-    'props.table.onOpenChange.description':
-      'Someone opened or closed the box, and the new state comes along. Next to open, it gives the two-way shortcut.',
-  },
-  es: {
-    'props.table.onOpenChange.description':
-      'Alguien abrió o cerró la caja, y el nuevo estado viene con el aviso. Junto a open, da el atajo de dos vías.',
-  },
 });
 
 // Esta peça não tem eixo de forma, e o conteúdo compartilhado não traz seção de

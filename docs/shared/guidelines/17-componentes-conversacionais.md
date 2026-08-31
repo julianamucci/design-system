@@ -177,12 +177,15 @@ seus arquivos.
 ### 4.1 O override troca o NOME, e só
 
 Quando a API de uma stack diverge — retorno vira evento, prop vira `output()` —,
-o override na docs page cobre **o nome da linha**, e nada mais. O tipo e a
-descrição continuam vindo do conteúdo compartilhado.
+o override na docs page cobre **o nome da linha**, e o **tipo** quando o tipo
+declarado daquela stack é de fato outro. **A descrição nunca.**
 
-O tipo, porque a tabela documenta o que **quem consome** escreve. Numa stack de
-eventos, quem consome escreve um manipulador `(valor) => void`; a forma de
-DECLARAÇÃO do evento é do autor do componente e não pertence à tabela.
+Sobre o tipo, siga o precedente da SUA stack, que já está fixado e difere entre
+elas de propósito: no Angular, `AgentStatusDocs` e `ComposerContextDocs`
+sobrescrevem para `OutputEmitterRef<T>`, que é o tipo do membro; no Vue,
+`AgentStatusDocs` mantém o tipo compartilhado, porque o que quem consome escreve
+é um manipulador `(valor) => void` — a forma de DECLARAÇÃO do emit é do autor do
+componente e não pertence à tabela.
 
 A descrição, porque ela já é neutra de API por regra — e se você sentir vontade
 de sobrescrevê-la, é sinal de que o texto compartilhado nomeia a API de alguma
