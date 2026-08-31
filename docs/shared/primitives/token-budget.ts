@@ -65,6 +65,26 @@
  *      analisar a cadeia para dividir, e analisar dinheiro escrito é como se
  *      erra de moeda em silêncio.
  *
+ * Uma decisão CHEGOU com a quarta peça de medição, a que avisa que uma cota
+ * está no fim. Ela é a primeira que lê o RESTO em vez do gasto, e o resto tem a
+ * mesma pergunta com duas respostas plausíveis que as sete de cima:
+ *
+ *   8. O RESTO NUNCA É NEGATIVO. Quem passou do teto não tem "menos que nada"
+ *      de cota, tem cota nenhuma — e "-3 mensagens" na tela é um número que não
+ *      descreve nada. É a mesma resposta que `remainingTokens` já dava para a
+ *      janela, e `remainingUnits` existe para que ela não seja escrita uma
+ *      segunda vez: subtração é a operação que mais parece dispensar uma
+ *      função, e é exatamente por isso que uma das cinco stacks a escreveria
+ *      sem o piso.
+ *
+ * A DIVISÃO ENTRE OS DOIS PARES, que é o que torna o módulo legível: as funções
+ * que recebem `TokenUsage` respondem sobre a JANELA (`usedFraction`,
+ * `usedPercent`, `remainingTokens`, `budgetLevel`); as que recebem dois números
+ * soltos respondem sobre QUALQUER grandeza com teto (`spentFraction`,
+ * `remainingUnits`, `fractionLevel`, `fractionPercent`). O segundo par nasceu
+ * com o custo e cresceu com a cota, e é ele que faz três peças diferentes lerem
+ * a mesma comparação.
+ *
  * Derivado do catálogo Elements da assistant-ui (MIT). Ver
  * `docs/shared/guidelines/17-componentes-conversacionais.md`.
  */
@@ -270,6 +290,31 @@ export function spentFraction(spent: number, budget?: number): number | null {
   const cap = countable(budget);
   if (cap === 0) return null;
   return Math.min(countable(spent) / cap, 1);
+}
+
+/**
+ * Quanto de um teto ainda sobra — nunca negativo, nunca `NaN`.
+ *
+ * O par de `spentFraction`: os dois recebem os mesmos dois números, e é por
+ * isso que não podem discordar. Aquele devolve a RAZÃO, que é o que se desenha;
+ * este devolve o RESTO, que é o que se escreve. O gêmeo de `remainingTokens`
+ * para a grandeza que não é token, exatamente como `spentFraction` é o gêmeo de
+ * `usedFraction`.
+ *
+ * NUNCA NEGATIVO (decisão 8 do cabeçalho). Quem passou do teto não tem "menos
+ * que nada" de cota, tem cota nenhuma. Quem precisa da notícia de que passou
+ * lê a fração, que satura em 1, ou o próprio gasto, que nunca foi tocado.
+ *
+ * DEVOLVE NÚMERO, e não `null`, e essa é a diferença deliberada em relação a
+ * `spentFraction` e `remainingTokens`. Aqueles respondem "não há fração" com a
+ * ausência, porque desenhar uma fração que não existe é o defeito que a folha
+ * de medição inteira evita. Aqui a resposta certa para um teto que não é teto —
+ * ausente, zero, negativo ou não-finito — é ZERO, e não a ausência: teto zero
+ * quer dizer que não sobra nada, e quem lê o resto o escreve na tela. Um `null`
+ * aqui obrigaria cada peça a inventar o que escrever no lugar.
+ */
+export function remainingUnits(spent: number, budget?: number): number {
+  return Math.max(countable(budget) - countable(spent), 0);
 }
 
 /**

@@ -708,3 +708,313 @@
   inline-size: calc(var(--nds-cost-spent) * 1%);
   background-color: hsl(var(--nds-cost-meter-color));
 }
+
+/* ── Faixa de cota ───────────────────────────────────────────────────────────
+ *
+ * Quanto ainda resta de uma cota, quando ela renova, e o que dá para fazer a
+ * respeito. Conta: `remainingUnits`, `spentFraction`, `fractionLevel`,
+ * `fractionPercent`, `BudgetLevel`.
+ *
+ * A PERGUNTA É O RESTO, e é ela que separa esta peça das três de cima. As
+ * outras medem o que JÁ FOI — quanto da janela se ocupou, de onde o gasto veio,
+ * quanto custou. Esta mede o que AINDA HÁ, e o número da manchete é
+ * `teto − gasto`, não o gasto. É a mesma medição virada do avesso, e virá-la é
+ * o que muda a decisão de quem lê: "64% usados" se confere, "18 restantes" se
+ * gasta.
+ *
+ * TRÊS COISAS QUE NENHUMA IRMÃ TEM, e são elas que fazem desta peça um slug em
+ * vez de uma composição de `alert` com um medidor da família (§5.3 da guideline
+ * 17): um HORIZONTE — quando a cota renova —, um ESPAÇO DE CONTROLES, e o
+ * estado ESGOTADA. As três estão abaixo, cada uma com o motivo.
+ *
+ *   <div class="nds-quota-banner" data-slot="quota-banner" data-level="warning">
+ *     <span class="nds-sr-only" data-slot="quota-banner-title">Cota do plano</span>
+ *     <p class="nds-quota-banner-headline" data-slot="quota-banner-headline">
+ *       <span class="nds-quota-banner-remaining" data-slot="quota-banner-remaining">18 mensagens restantes</span>
+ *       <span class="nds-quota-banner-renews" data-slot="quota-banner-renews">Renova em 3 h 12 min</span>
+ *       <span class="nds-badge nds-badge-warning nds-quota-banner-level"
+ *             data-slot="quota-banner-level">Perto do fim</span>
+ *     </p>
+ *     <span class="nds-quota-banner-bar" data-slot="quota-banner-meter"
+ *           aria-hidden="true" style="--nds-quota-used: 64">
+ *       <span class="nds-quota-banner-bar-fill"></span>
+ *     </span>
+ *     <div class="nds-quota-banner-footer" data-slot="quota-banner-footer">
+ *       <span class="nds-quota-banner-detail" data-slot="quota-banner-detail">32 de 50 mensagens</span>
+ *       <div class="nds-quota-banner-actions" data-slot="quota-banner-actions">
+ *         <button class="nds-button">Mudar de plano</button>
+ *       </div>
+ *     </div>
+ *   </div>
+ *
+ * Com a cota esgotada, a manchete troca de número por palavra e o resto da
+ * árvore fica igual:
+ *
+ *     <span class="nds-quota-banner-remaining" data-slot="quota-banner-remaining">Cota esgotada</span>
+ *
+ * A CLASSE ANDA JUNTO DO `data-slot` em toda a árvore, e a folha estiliza pela
+ * CLASSE — nunca por `[data-slot="…"]`, como nos três blocos de cima e pelo
+ * mesmo motivo: no Angular quase toda peça liga `data-slot` por host binding, e
+ * o atributo estático do template disputa com ele. Aqui isso morde em DOIS
+ * lugares, e não num: a etiqueta de nível, que é um `.nds-badge` com host
+ * binding próprio, e os controles, que chegam prontos de quem consome e podem
+ * trazer o `data-slot` do botão junto.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   `data-level`  A cor de reforço, na moldura e no medidor. SEMPRE PRESENTE,
+ *                 ao contrário das três peças de cima — lá ele some quando não
+ *                 há teto, e aqui não há caso sem teto (ver a decisão 6). A cor
+ *                 de folga mora na raiz, e não numa regra `[data-level="normal"]`
+ *                 que repetiria o mesmo valor num segundo lugar.
+ *
+ * NÃO HÁ `data-state="exhausted"`, e a ausência é decisão medida ao construir. A
+ * cota esgotada já é `critical` — o resto só chega a zero quando a fração chega
+ * a um —, então um atributo a mais não teria regra própria para carregar: seria
+ * desenho que não existe, com cara de padrão pensado. O que muda quando a cota
+ * acaba é o TEXTO da manchete, e texto não precisa de gancho de folha.
+ *
+ * O MEDIDOR SEPARA AS DUAS LINHAS DE TEXTO, e não vem por último como o do
+ * custo. Aqui há texto dos dois lados dele — a manchete acima, a contagem e os
+ * controles abaixo —, então ele é a divisória natural da caixa: pô-lo no fim
+ * exigiria `order` para desfazer a ordem do DOM, e `order` que discorda da
+ * ordem de leitura é a armadilha da decisão 5.
+ *
+ * A FRAÇÃO ESTÁ EM TEXTO, E AQUI ELA É UMA RAZÃO. As três peças de cima
+ * escrevem o por cento ao lado do medidor, porque nelas o por cento É o valor.
+ * Aqui o valor da manchete é uma CONTAGEM, e `32 de 50 mensagens` diz
+ * exatamente o que a barra desenha — mais exatamente, aliás, porque não passa
+ * pelo truncamento do inteiro. Um por cento a mais na caixa seria um segundo
+ * número numa segunda escala, e quem lê passaria a converter entre os dois para
+ * conferir se concordam. O que importa para a dispensa de 1.4.11 é que a barra
+ * não seja a ÚNICA portadora da fração, e a razão a carrega inteira.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O MEDIDOR É DECORATIVO e os números são TEXTO. `aria-hidden` no medidor,
+ *    nenhum `role`, nenhum `aria-valuenow`. Mesma decisão dos três blocos de
+ *    cima, e o motivo não muda: a barra é o desenho de uma razão que já está
+ *    escrita ao lado.
+ * 2. NÃO HÁ REGIÃO VIVA AQUI, e esta é a decisão que mais precisou ser tomada
+ *    em vez de herdada. A folha proíbe por padrão; a folha vizinha abre TRÊS
+ *    exceções — o indicador de geração, o estado da ligação e o cartão de
+ *    autorização —, e "sua cota acabou" tem cara de pertencer à segunda: perder
+ *    a cota é o chão saindo, do mesmo jeito que perder a ligação.
+ *
+ *    E NÃO É. Duas diferenças, e cada uma bastaria. A primeira: o número desta
+ *    peça ANDA. Ele desce a cada turno — 18, 17, 16 —, e uma região viva sobre
+ *    um contador reanuncia a cada passo, que é exatamente a armadilha com que
+ *    esta folha abre. O estado da ligação não tem esse problema porque a região
+ *    de lá envolve só a PALAVRA, e a palavra muda três vezes na vida da tela;
+ *    aqui não há palavra que mude sozinha — a etiqueta de nível troca junto com
+ *    o número, e no mesmo instante.
+ *
+ *    A segunda: a ligação cai SEM QUE NINGUÉM FAÇA NADA, e quem não vê a tela
+ *    não tem outro jeito de descobrir — o silêncio é indistinguível de uma
+ *    resposta demorada. A cota acaba porque quem lê acabou de gastá-la: é a
+ *    consequência imediata do próprio ato, com o foco ainda no campo em que ele
+ *    foi feito. Quem desabilita a entrada é quem anuncia que ela está
+ *    desabilitada, e esse alguém não é o design system (§2 da guideline 17).
+ *    Duas vozes para um fato só é o defeito do segundo portador, aplicado ao
+ *    que se ouve.
+ *
+ *    Quem quiser que a chegada da faixa se anuncie põe a região POR FORA,
+ *    sabendo o que está fazendo — mesma saída que a peça do custo oferece.
+ * 3. O NÍVEL É PALAVRA, e a cor acompanha (WCAG 1.4.1). Ele aparece SEMPRE,
+ *    inclusive com folga: uma faixa que só falasse quando a notícia é ruim
+ *    deixaria a boa notícia indistinguível de uma medição que não chegou. Aqui
+ *    a cor está em dois lugares — moldura e medidor —, e é justamente por isso
+ *    que a palavra importa: duas superfícies coloridas ainda são zero palavras.
+ * 4. O NÚMERO TEM NOME, e o nome é o ESCOPO. "18 mensagens restantes" já diz o
+ *    que é contado, então o título reservado a leitor de tela responde a outra
+ *    pergunta — de qual cota se trata, a do plano, a do dia, a do projeto. Quem
+ *    vê sabe pelo lugar em que a faixa está; quem ouve não.
+ * 5. A ORDEM DE LEITURA É A ORDEM DO FOCO: manchete, medidor, contagem,
+ *    controles. Os controles vêm por último na marcação e a folha não os move —
+ *    nada de `order`, nada de `row-reverse`. Controle que é o primeiro para o
+ *    olho e o último para a tabulação faz duas perguntas diferentes na mesma
+ *    tela (WCAG 1.3.2 e 2.4.3). É a mesma escolha do cartão de autorização, e
+ *    ela vale com mais força aqui porque a caixa tem duas linhas de texto entre
+ *    a manchete e o botão.
+ * 6. NÃO HÁ CASO SEM TETO, e a ausência dele é a divergência desta peça em
+ *    relação às três de cima. Lá o teto é opcional porque o que se mede existe
+ *    sem ele: consumo sem janela conhecida é uma contagem, custo sem orçamento
+ *    é o caso comum. Aqui o teto É O ASSUNTO — "quanto ainda resta" não tem
+ *    resposta sem ele —, e uma faixa de cota sem cota não é uma medição pela
+ *    metade, é a ausência da pergunta. A regra da família continua valendo, um
+ *    passo antes: em vez de desenhar um trilho vazio que leria como zero, a
+ *    peça não existe. Quem não tem teto não monta a faixa.
+ * 7. O HORIZONTE É OPCIONAL, e o TEXTO DELE CHEGA ESCRITO. Cota que não renova
+ *    é caso real — crédito comprado uma vez —, e nesse caso a linha some em vez
+ *    de dizer "renova em nunca". Quando existe, a DURAÇÃO vem escrita de quem
+ *    mede, pelo mesmo precedente do relógio da execução e do carimbo do
+ *    rascunho: formato de duração é decisão de idioma e de lugar. A palavra que
+ *    a antecede, essa vem dos rótulos — ela é interface, tem três traduções, e
+ *    grudá-la na cadeia a tiraria da `translations.json`. Mesma divisão que a
+ *    peça do custo faz entre a quantia e a palavra que a liga ao teto.
+ * 8. OS CONTROLES SÃO ESPAÇO, E NÃO POLÍTICA (§2 e §7 da guideline 17). A peça
+ *    desenha o lugar de quem responde e nada mais: o que "mudar de plano" faz,
+ *    se há um segundo botão, se a cota pode ser comprada avulsa — nada disso
+ *    está aqui, e nada disso vai estar. É o mesmo contrato do cartão de
+ *    autorização e das ações da mensagem.
+ * 9. ALVO DE TOQUE ≥ 24 px (WCAG 2.5.8) nos controles, e a garantia é da folha e
+ *    não de quem monta o botão: quem consome passa um `HTMLElement` pronto, e o
+ *    piso não pode depender de ele ter lembrado. Mesma regra da ação do estado
+ *    da ligação, na folha vizinha.
+ *
+ * A MOLDURA É COLORIDA, MAS O TEXTO NÃO. A cor de nível chega à borda e ao
+ * medidor; a manchete é `--foreground` e as duas linhas de apoio são
+ * `--muted-foreground`, como em qualquer container colorido do design system.
+ * Cor semântica em texto corrido raramente alcança os 4.5:1 que ele exige, e o
+ * contraste não pode depender de qual nível a medição calhou de dar.
+ *
+ * O FUNDO NÃO PODE SER `--muted` SÓLIDO, e isso foi medido contra a árvore: o
+ * trilho do medidor É `--muted` sólido nas quatro peças desta folha, então uma
+ * caixa da mesma cor faria a parte VAZIA do trilho sumir dentro dela — a barra
+ * pareceria mais curta do que é, e num nível baixo pareceria não existir. A
+ * caixa fica em `--muted` a 30%, como a moldura do cartão de autorização na
+ * folha vizinha. Isto NÃO contradiz a regra do cabeçalho desta folha: aquela
+ * proíbe opacidade em ESCALA DE INTENSIDADE, que é o que some no escuro; aqui a
+ * opacidade é de uma SUPERFÍCIE de valor único, que não codifica número nenhum.
+ */
+
+.nds-quota-banner {
+  /* A cor do nível, lida pela moldura e pelo medidor. As duas regras abaixo a
+   * trocam; `normal` não tem regra porque ele É este valor, e um override que
+   * repetisse `--primary` criaria um segundo lugar para mudar a mesma cor. Os
+   * mesmos três valores das peças irmãs, e isso é o eixo da família: se o
+   * limiar é o mesmo e a palavra é a mesma, a cor tem de ser a mesma. */
+  --nds-quota-banner-color: var(--primary);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+
+  padding: var(--spacing-3);
+  border: 1px solid hsl(var(--nds-quota-banner-color) / 0.5);
+  border-radius: var(--radius);
+  /* A 30%, e não sólida: o trilho do medidor é `--muted` sólido, e uma caixa da
+   * mesma cor engoliria a parte vazia dele. */
+  background-color: hsl(var(--muted) / 0.3);
+
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-quota-banner[data-level="warning"] {
+  --nds-quota-banner-color: var(--warning);
+}
+
+.nds-quota-banner[data-level="critical"] {
+  --nds-quota-banner-color: var(--destructive);
+}
+
+/* ── A manchete ──────────────────────────────────────────────────────────────
+ *
+ * `baseline` porque as três pontas são texto, e alinhar pelo topo faria a
+ * etiqueta flutuar em relação ao número quando uma delas quebrasse de linha.
+ * `wrap` na própria manchete, e não na raiz: a raiz é uma coluna, e quem decide
+ * se a etiqueta desce para uma segunda linha é a linha em que ela está. */
+.nds-quota-banner-headline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin: 0;
+}
+
+/* O que ainda resta, que é o que se lê primeiro. `tabular-nums` porque o número
+ * desce a cada turno, e sem largura fixa de algarismo a linha inteira treme a
+ * cada atualização — o mesmo motivo das três peças de cima. */
+.nds-quota-banner-remaining {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quando a cota renova. Texto de apoio, e não `--foreground`: o horizonte
+ * qualifica o número, e quem decide o que fazer lê o número primeiro. */
+.nds-quota-banner-renews {
+  font-variant-numeric: tabular-nums;
+}
+
+/* A etiqueta do nível fecha a manchete, alinhada à direita — mesma coluna em
+ * que o nível das duas peças de cima e o total da repartição caem, e pelo mesmo
+ * motivo: sem isto ela fica colada no horizonte e SALTA de lugar quando o texto
+ * dele muda de largura, que é a cada turno. */
+.nds-quota-banner-level {
+  margin-inline-start: auto;
+}
+
+/* ── O medidor ───────────────────────────────────────────────────────────────
+ *
+ * A linha inteira, entre as duas linhas de texto. Sem transição de largura,
+ * pela mesma razão das barras de cima: os números ao lado são texto e trocam de
+ * um quadro para o outro, então uma barra que deslizasse ficaria discordando
+ * deles durante o deslize. De quebra, não há animação contínua a desligar sob
+ * `prefers-reduced-motion`.
+ *
+ * Sem declaração de posição nenhuma: a raiz é uma coluna, então o medidor já
+ * ocupa a largura toda e já está entre a manchete e o rodapé. É o que se ganha
+ * pondo-o no lugar certo do DOM em vez de corrigi-lo depois com `order`. */
+.nds-quota-banner-bar {
+  /* Valor INICIAL, não defensivo: o componente escreve o seu por cima, em
+   * custom property, porque é valor de runtime. Sem esta linha, uma árvore
+   * copiada da anatomia sem o atributo deixaria a largura inválida. */
+  --nds-quota-used: 0;
+
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  /* Sólida, e não a cor de destaque com opacidade: §9 da guideline 17 proíbe
+   * opacidade baixa em escala de intensidade, que some no modo escuro. */
+  background-color: hsl(var(--muted));
+  overflow: hidden;
+}
+
+/* A propriedade fica no TRILHO, e não aqui — ela herda, então o preenchimento a
+ * lê de graça, e em troca o número mora sempre no mesmo elemento. Mesma
+ * mecânica das três barras de cima. */
+.nds-quota-banner-bar-fill {
+  display: block;
+  block-size: 100%;
+  inline-size: calc(var(--nds-quota-used) * 1%);
+  background-color: hsl(var(--nds-quota-banner-color));
+}
+
+/* ── O rodapé: a contagem exata, e o que dá para fazer ───────────────────────
+ *
+ * `center` e não `baseline`: os controles chegam prontos de quem consome, e um
+ * botão alinhado pela linha de base do texto ao lado desceria pelo tamanho do
+ * próprio padding. É a mesma razão pela qual a legenda da repartição alinha
+ * pelo centro — o elemento sem linha de base própria manda na regra. */
+.nds-quota-banner-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+/* A razão que a barra desenha, em texto. É este elemento que dispensa o medidor
+ * de carregar o valor, e é por isso que ele nunca some. */
+.nds-quota-banner-detail {
+  font-variant-numeric: tabular-nums;
+}
+
+/* SELETOR POR CLASSE, e não por `[data-slot]` — mesma medição das folhas
+ * vizinhas: no Angular o `data-slot` é ligado por host binding e disputa com o
+ * atributo estático do template, e se o host binding vence a regra não aplica
+ * ali. O alvo de toque de 24px é WCAG 2.5.8 e vale para os controles que chegam
+ * de fora, que é justamente onde não dá para confiar que alguém lembrou. */
+.nds-quota-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-inline-start: auto;
+}
+
+.nds-quota-banner-actions > * {
+  /* Alvo de toque (WCAG 2.5.8). */
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}

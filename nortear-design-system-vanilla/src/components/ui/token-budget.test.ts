@@ -33,6 +33,7 @@ import {
   hasLimit,
   isOverLimit,
   remainingTokens,
+  remainingUnits,
   spentFraction,
   usedFraction,
   usedPercent,
@@ -345,6 +346,60 @@ describe('a fração de um teto gasto, quando o teto não é de tokens', () => {
     // do trilho, então desenhar 1,24 desenharia 1 sem ninguém ter escolhido.
     expect(1.24 / 1).toBeGreaterThan(1);
     expect(spentFraction(1.24, 1)).toBe(1);
+  });
+});
+
+// ─── O resto, quando o teto não é de tokens ───────────────────────────────────
+//
+// A função que a peça da cota trouxe (decisão 8 do cabeçalho). Ela é o PAR de
+// `spentFraction` — os mesmos dois números entram nas duas —, e o que este
+// bloco segura é o piso em zero: subtração parece dispensar função, e é por
+// isso que ela precisa de uma.
+
+describe('o resto de um teto, quando o teto não é de tokens', () => {
+  it('subtrai o gasto do teto', () => {
+    expect(remainingUnits(32, 50)).toBe(18);
+    expect(remainingUnits(0, 50)).toBe(50);
+  });
+
+  it('encostar no teto deixa zero, e não um resto de um fio', () => {
+    expect(remainingUnits(50, 50)).toBe(0);
+  });
+
+  it('passar do teto NÃO deixa resto negativo', () => {
+    // Decisão 8: quem passou do teto não tem "menos que nada" de cota, tem cota
+    // nenhuma. Sem o piso, esta linha sai `-12` — que é um número que não
+    // descreve nada, e é o que uma subtração escrita à mão produz.
+    expect(50 - 62).toBeLessThan(0);
+    expect(remainingUnits(62, 50)).toBe(0);
+  });
+
+  it('teto que não é teto não deixa nada restando', () => {
+    // O infinito é quem dá dentes aqui, e o `NaN` sozinho não daria: `NaN` não é
+    // maior nem menor que nada, então uma implementação sem `countable` já cairia
+    // em zero por acidente. Com o teto infinito, uma implementação sem
+    // normalização devolve `Infinity` — e é por isso que os quatro entram juntos.
+    for (const notACap of [undefined, 0, -50, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(remainingUnits(32, notACap)).toBe(0);
+    }
+  });
+
+  it('gasto impossível lê como zero, e o resto continua sendo o teto inteiro', () => {
+    // O outro lado de `countable`, e o mesmo do gasto em `spentFraction`: um
+    // `NaN` na tela é pior que um zero, porque zero pelo menos se lê.
+    for (const notASpend of [Number.NaN, Number.POSITIVE_INFINITY, -3]) {
+      expect(remainingUnits(notASpend, 50)).toBe(50);
+    }
+  });
+
+  it('e o resto concorda com a fração, porque os dois leem os mesmos números', () => {
+    // O que este teste segura não é o valor: é que resto zero e fração cheia
+    // são a MESMA notícia. Se um deles fosse escrito à parte, uma cota chegaria
+    // à tela com barra cheia e "2 restantes", ou com barra pela metade e
+    // "0 restantes" — e as duas metades da peça discordariam.
+    for (const [spent, cap] of [[0, 50], [32, 50], [50, 50], [62, 50]] as const) {
+      expect(remainingUnits(spent, cap) === 0).toBe(spentFraction(spent, cap) === 1);
+    }
   });
 });
 

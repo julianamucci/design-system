@@ -1,0 +1,1649 @@
+{
+  "pt-BR": {
+    "title": "Faixa de cota",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Quanto ainda resta de uma cota, quando ela renova e o que dá para fazer a respeito: o número que sobra, a razão do que já foi e o espaço de quem responde.",
+    "seo": {
+      "title": "Faixa de cota — quanto ainda resta, e até quando",
+      "description": "A medição virada do avesso: o número da manchete é o que sobra, não o que foi gasto. A razão em texto, o medidor que é só desenho, o horizonte que chega escrito e o espaço dos controles."
+    },
+    "labels": {
+      "action": "Mudar de plano",
+      "title": "Cota do plano",
+      "unit": "mensagens",
+      "left": "restantes",
+      "exhausted": "Cota esgotada",
+      "renews": "Renova em",
+      "of": "de",
+      "level": {
+        "normal": "Com folga",
+        "warning": "Perto do fim",
+        "critical": "No fim"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "normal": "Com folga na cota",
+        "threshold": "Na borda do aviso",
+        "exhausted": "Quando a cota acaba",
+        "noRenewal": "Quando a cota não renova"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A manchete abre com o que AINDA RESTA, e não com o que já foi — é esse número que decide o que a pessoa faz a seguir.",
+      "item2": "O horizonte diz quando a cota renova, e chega escrito de quem mede. Cota que não renova simplesmente não traz a linha.",
+      "item3": "A palavra do nível fecha a manchete, e é ela que descreve — a cor apenas acompanha, na moldura e no medidor.",
+      "item4": "O medidor separa as duas linhas de texto. Ele é só desenho: não carrega o número e fica fora do que é lido em voz.",
+      "item5": "O rodapé traz a razão exata do que já foi, em texto — é ela que dispensa o medidor de carregar a fração.",
+      "item6": "Os controles fecham a caixa, por último na marcação e por último no foco. Eles chegam prontos de quem consome.",
+      "structureCode": {
+        "web": "<div class=\"nds-quota-banner\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Cota do plano</span>\n  <p class=\"nds-quota-banner-headline\">\n    <span class=\"nds-quota-banner-remaining\">32 mensagens restantes</span>\n    <span class=\"nds-quota-banner-renews\">Renova em 3 h 12 min</span>\n    <span class=\"nds-badge nds-badge-warning nds-quota-banner-level\">Perto do fim</span>\n  </p>\n  <span class=\"nds-quota-banner-bar\" aria-hidden=\"true\" style=\"--nds-quota-used: 84\">\n    <span class=\"nds-quota-banner-bar-fill\"></span>\n  </span>\n  <div class=\"nds-quota-banner-footer\">\n    <span class=\"nds-quota-banner-detail\">168 de 200 mensagens</span>\n    <div class=\"nds-quota-banner-actions\">\n      <button class=\"nds-button\">Mudar de plano</button>\n    </div>\n  </div>\n</div>\n\n<!-- Cota esgotada: a manchete troca de número por palavra, e o resto fica igual. -->\n<span class=\"nds-quota-banner-remaining\">Cota esgotada</span>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando o que resta de uma cota muda o que a pessoa faz a seguir — economizar, esperar a renovação, ou trocar de plano.",
+        "item2": "Passe o teto sempre: a cota É o teto, e uma faixa sem ele não tem número de que falar.",
+        "item3": "Escreva o horizonte antes de passá-lo; formato de duração é decisão de idioma e de lugar.",
+        "item4": "Deixe a conta e o limiar no primitivo compartilhado, para que a palavra do nível queira dizer o mesmo aqui e nas outras medições da tela.",
+        "item5": "Passe os controles prontos: a peça desenha o lugar de quem responde e não decide o que a resposta significa."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Avisar que uma cota está no fim, e oferecer o que fazer",
+          "u": "Faixa de cota",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Dizer quanto da janela de contexto ainda cabe",
+          "u": "Uso do contexto",
+          "a": "Aquela mede o que já foi ocupado; esta mede o que sobra, e traz horizonte e controles."
+        },
+        "item3": {
+          "s": "Dizer quanto uma execução custou em dinheiro",
+          "u": "Medidor de custo",
+          "a": "Ali a quantia chega escrita porque tem moeda; aqui o que se conta são unidades sem símbolo."
+        },
+        "item4": {
+          "s": "Avisar de um erro ou de uma condição que não se mede",
+          "u": "Alert",
+          "a": "Aquele carrega uma mensagem e uma ação; esta carrega um número, um horizonte e uma razão."
+        },
+        "item5": {
+          "s": "Mostrar o quanto de uma tarefa longa já andou",
+          "u": "Progress",
+          "a": "Ali a barra é o controle que carrega o valor; aqui os números são texto e a barra é só desenho."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "title": {
+            "name": "Título",
+            "format": "Diz de qual cota se trata, e não o que ela conta",
+            "good": "Cota do plano",
+            "bad": "Cota"
+          },
+          "unit": {
+            "name": "Unidade",
+            "format": "Nome do que é contado, no plural, sem número junto",
+            "good": "mensagens",
+            "bad": "msgs restantes"
+          },
+          "left": {
+            "name": "Palavra do resto",
+            "format": "Acompanha a unidade e não muda com o gênero dela",
+            "good": "restantes",
+            "bad": "usadas"
+          },
+          "exhausted": {
+            "name": "Cota esgotada",
+            "format": "Diz que acabou, e nunca conta zero",
+            "good": "Cota esgotada",
+            "bad": "0 mensagens restantes"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Lidere com o que resta: é o número que muda a decisão.",
+        "item2": "Escreva o horizonte no idioma de quem lê, antes de passá-lo.",
+        "item3": "Mostre a palavra do nível sempre, inclusive com folga.",
+        "item4": "Deixe a razão exata em texto ao lado do medidor."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não monte a faixa sem teto: sem cota não há resto de que falar.",
+        "item2": "Não escreva zero restantes quando a cota acabou — diga que acabou.",
+        "item3": "Não deixe a barra como única portadora da fração.",
+        "item4": "Não anuncie a contagem a cada mudança."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "O horizonte chega junto, e quem lê sabe se vale a pena esperar em vez de trocar de plano.",
+        "dont": "A cota renova, mas o horizonte não é passado — a faixa só sabe dizer que está no fim, e esperar vira aposta."
+      },
+      "pair2": {
+        "do": "O horizonte chega escrito no idioma de quem lê.",
+        "dont": "O horizonte chega escrito à mão, com um formato que não muda com quem lê — e continua assim em todos os idiomas."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizonte,\n  actions: [botao],\n  labels: rotulos,\n});",
+        "react": "import { QuotaBanner } from \"@/components/ui/quota-banner\";\n\n<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[botao]}\n  labels={rotulos}\n/>",
+        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizonte\"\n  :actions=\"[botao]\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[botao]}\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsQuotaBanner\n  [quota]=\"{ used: 168, limit: 200 }\"\n  [renewsIn]=\"horizonte\"\n  [actions]=\"[botao]\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "O horizonte escrito, e o texto da peça",
+      "withLabelsCode": {
+        "web": "// O HORIZONTE CHEGA ESCRITO. Quantas casas, qual separador e como se abrevia\n// hora e minuto são decisão de idioma e de lugar — quem sabe disso é quem\n// mede, e não um componente que decidiria idioma em cinco lugares.\nconst unidade = (valor, nome) =>\n  new Intl.NumberFormat('pt-BR', {\n    style: 'unit',\n    unit: nome,\n    unitDisplay: 'short',\n  }).format(valor);\n\nconst horizonte = `${unidade(3, 'hour')} ${unidade(12, 'minute')}`;\n\n// E o texto da peça: de qual cota se trata, o que é contado, a palavra que\n// acompanha o resto, o que dizer quando acabou, a palavra que antecede o\n// horizonte, a que liga a razão, e a palavra de cada nível.\nconst rotulos = {\n  title: 'Cota do plano',\n  unit: 'mensagens',\n  left: 'restantes',\n  exhausted: 'Cota esgotada',\n  renews: 'Renova em',\n  of: 'de',\n  level: { normal: 'Com folga', warning: 'Perto do fim', critical: 'No fim' },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "normal": {
+        "label": "Com folga",
+        "trigger": "Menos de três quartos da cota foram usados.",
+        "behavior": "A moldura e o medidor ficam na cor de destaque, e a palavra diz que ainda há folga."
+      },
+      "warning": {
+        "label": "Perto do fim",
+        "trigger": "Três quartos da cota ou mais foram usados.",
+        "behavior": "A moldura e o medidor trocam de cor e a palavra troca junto — ainda dá tempo de economizar ou de esperar a renovação."
+      },
+      "critical": {
+        "label": "No fim",
+        "trigger": "Nove décimos da cota ou mais foram usados.",
+        "behavior": "A moldura e o medidor vão para a cor de erro e a palavra diz que a cota está acabando."
+      },
+      "exhausted": {
+        "label": "Cota esgotada",
+        "trigger": "O uso encostou no teto ou passou dele.",
+        "behavior": "A manchete troca o número pela palavra que diz que acabou; o resto não vira negativo e o medidor para no cheio."
+      },
+      "noRenewal": {
+        "label": "Sem renovação",
+        "trigger": "A cota chegou sem horizonte de renovação.",
+        "behavior": "A linha do horizonte não é montada; o resto da faixa fica igual, porque a medição não depende dela."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "quota": {
+          "name": "quota",
+          "type": "QuotaAllowance",
+          "default": "—",
+          "required": "Sim",
+          "description": "O uso e o teto. Os dois andam juntos porque a cota É o teto: sem ele não há resto de que falar, e a faixa não teria assunto."
+        },
+        "renewsIn": {
+          "name": "renewsIn",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Quando a cota renova, já escrito. Ausente é a resposta de que ela não renova, e aí a linha não aparece."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "HTMLElement[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Os controles, prontos de quem consome. A peça desenha o lugar de quem responde; o que a resposta faz é de quem a passou."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "QuotaBannerLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da peça: de qual cota se trata, o que é contado, e as palavras que acompanham o resto, o horizonte e o nível."
+        },
+        "quotaUsed": {
+          "name": "used",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Quanto da cota já foi usado. Número puro, sem unidade — quem nomeia o que é contado é o texto."
+        },
+        "quotaLimit": {
+          "name": "limit",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "O teto da cota. Obrigatório, ao contrário das medições irmãs: ali a ausência do teto é caso real, aqui é a ausência da pergunta."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "De qual cota se trata. Não aparece na tela: quem vê já sabe pelo lugar em que a faixa está, e quem ouve não sabe."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que está sendo contado. Aparece na manchete e na razão do rodapé, para que os dois números falem da mesma coisa."
+        },
+        "labelsLeft": {
+          "name": "left",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra que acompanha o resto. É ela que impede a manchete de ser lida como o que já foi gasto."
+        },
+        "labelsExhausted": {
+          "name": "exhausted",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que dizer quando não sobra nada. Sem ela a manchete contaria zero, e zero contado lê como medição, não como fim."
+        },
+        "labelsRenews": {
+          "name": "renews",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra que antecede o horizonte. Ela é interface e tem tradução; a duração ao lado é formato e chega escrita."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra que liga o usado ao teto na razão do rodapé: cento e sessenta e oito DE duzentos."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada nível. É ela que descreve a folga; a cor da moldura e do medidor apenas acompanha."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A conta não mora na peça: o resto, a razão, o limiar de cada nível e o recorte em uma volta vivem num primitivo compartilhado, e as outras medições da tela leem exatamente as mesmas respostas. O resto é o par da razão — os dois recebem os mesmos dois números —, e é isso que impede a faixa de mostrar barra cheia ao lado de um resto que não zerou.",
+      "extensibilityCode": {
+        "web": "// O RESTO NUNCA É NEGATIVO. Quem passou do teto não tem \"menos que nada\" de\n// cota, tem cota nenhuma — e é por isso que a subtração mora aqui:\nremainingUnits(168, 200);      // 32\nremainingUnits(214, 200);      // 0, e não -14\n\n// TETO QUE NÃO É TETO não deixa nada restando, e a razão sai como ausência:\nremainingUnits(168, 0);        // 0\nspentFraction(168, 0);         // null\n\n// A RAZÃO É O PAR DO RESTO: resto zero e razão cheia são a mesma notícia.\nspentFraction(214, 200);       // 1\n\n// O LIMIAR É O MESMO DAS OUTRAS MEDIÇÕES, e é exato — três quartos já é aviso:\nfractionLevel(0.74);           // 'normal'\nfractionLevel(0.75);           // 'warning'\nfractionLevel(0.9);            // 'critical'\n\n// E o por cento que o medidor desenha é travado nas duas pontas:\nfractionPercent(0.999);        // 99\nfractionPercent(1);            // 100"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-quota-banner {\n  max-inline-size: 28rem;\n}\n\n/* A cor é REFORÇO, e não a pista: a palavra do nível e a razão do rodapé são o\n   que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-quota-banner[data-level=\"warning\"] {\n  --nds-quota-banner-color: var(--chart-4);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-quota-banner",
+          "description": "Tamanho do texto da faixa."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-quota-banner",
+          "description": "Cor do horizonte e da razão que qualificam o número."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-quota-banner-remaining",
+          "description": "O que ainda resta, que é o que se lê primeiro."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-quota-banner-remaining",
+          "description": "Peso da manchete, que é o que se destaca da caixa."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-quota-banner",
+          "description": "A moldura e o medidor enquanto há folga."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-quota-banner[data-level=\"warning\"]",
+          "description": "A moldura e o medidor perto do fim."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-quota-banner[data-level=\"critical\"]",
+          "description": "A moldura e o medidor no fim da cota."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-quota-banner-bar",
+          "description": "A parte ainda livre do trilho, sólida — e o fundo da caixa, a trinta por cento, para que a parte livre não suma dentro dele."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-quota-banner",
+          "description": "Espaço entre as partes da faixa, e espessura do trilho."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-quota-banner",
+          "description": "Respiro interno da caixa."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-quota-banner-actions",
+          "description": "Piso do alvo de toque dos controles."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-quota-banner",
+          "description": "Arredondamento da caixa."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-quota-banner-bar",
+          "description": "Arredondamento do trilho."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Os números são texto e o medidor é desenho: nada aqui se anuncia, o nível chega em palavra, a cota esgotada é dita em palavra, e os controles são os últimos tanto para o olho quanto para o foco.",
+      "items": {
+        "item1": "A palavra do nível está sempre na faixa: a cor da moldura e do medidor não descreve folga sozinha.",
+        "item2": "O medidor fica fora do que é lido em voz — ele é desenho, e a razão ao lado já diz tudo.",
+        "item3": "O medidor não tem papel de controle nem valor: um segundo portador da mesma razão a faria ser lida duas vezes.",
+        "item4": "Não há região viva. A contagem desce a cada turno, e anunciá-la a cada mudança corta a leitura do que estiver sendo lido.",
+        "item5": "A razão está em texto no rodapé, e não só no desenho — é isso que dispensa o medidor de carregar a fração.",
+        "item6": "A cota esgotada é dita em palavra, e não pelo trilho cheio: trilho cheio é a mesma imagem de estar no fim sem ter acabado.",
+        "item7": "Os controles vêm por último na marcação, então a ordem do olho e a ordem do foco são a mesma."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Passa pelo texto e chega aos controles, na ordem em que eles aparecem.",
+        "enter": "Aciona o controle em foco. O que ele faz é de quem o passou — a faixa não decide."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden tira o medidor do que é lido em voz.",
+        "item2": "Não há região viva, papel de controle nem valor — quem quiser anunciar a chegada da faixa põe a região por fora, sabendo o que está fazendo.",
+        "item3": "O nome da cota chega por texto reservado a leitor de tela, e não por rótulo acessível num elemento sem conteúdo."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A faixa é lida como o nome da cota, o que resta, quando ela renova, a palavra do nível, a razão do que já foi, e então os controles.",
+        "item2": "Com a cota esgotada, o que se lê no lugar do número é a palavra que diz que ela acabou.",
+        "item3": "A mudança da contagem não interrompe o que estiver sendo lido no momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "contextDisplay": {
+          "name": "Uso do contexto",
+          "description": "A mesma medição pelo outro lado: aquela diz quanto já foi ocupado, esta diz quanto ainda sobra."
+        },
+        "costMeter": {
+          "name": "Medidor de custo",
+          "description": "Quando o teto é de dinheiro, e a quantia precisa chegar escrita por causa da moeda."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "Quando o aviso é uma mensagem e uma ação, sem número, sem horizonte e sem razão para medir."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Quando a barra é o próprio valor, e não o desenho de um número escrito ao lado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A pergunta é o RESTO, e é ela que separa esta peça das medições irmãs. As outras medem o que já foi; esta mede o que ainda há, e virar a medição do avesso muda a decisão de quem lê: uma se confere, a outra se gasta.",
+      "item2": "Não há caso sem teto, e essa é a divergência em relação às irmãs. Ali o teto é opcional porque o que se mede existe sem ele; aqui o teto é o assunto, e uma faixa de cota sem cota não é medição pela metade, é a ausência da pergunta. Quem não tem teto não monta a faixa.",
+      "item3": "O resto nunca é negativo. Quem passou do teto não tem menos que nada de cota, tem cota nenhuma — e a subtração mora no primitivo compartilhado justamente porque parece dispensar uma função.",
+      "item4": "Cota esgotada não é um quarto nível. O resto só chega a zero quando a razão chega a um, então o nível já é o mais apertado; o que muda é o texto da manchete, que troca o número pela palavra. Um atributo a mais não teria desenho próprio para carregar.",
+      "item5": "A razão fica em texto no rodapé, e aqui ela é uma razão e não um por cento. A manchete já traz uma contagem; um segundo número em outra escala faria quem lê converter entre os dois para conferir se concordam.",
+      "item6": "Não há região viva, e a decisão foi tomada em vez de herdada. A contagem desce a cada turno, e região viva sobre contador reanuncia a cada passo; e a cota acaba como consequência do que a própria pessoa acabou de fazer, com o foco ainda onde ela fez. Quem desabilita a entrada é quem anuncia isso.",
+      "item7": "Os controles são espaço, e não política. O que muda de plano faz, se há um segundo botão, se a cota pode ser comprada avulsa — nada disso está aqui, e nada disso vai estar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a faixa em si não instrumenta nada, porque os controles são de quem os passa.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar um uso e um teto",
+          "result": "A manchete traz o resto e a unidade, o rodapé traz a razão, e a palavra do nível aparece",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Ler o medidor e o rodapé da mesma faixa",
+          "result": "O medidor desenha o mesmo número que a razão do rodapé descreve",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar usos de folga, aviso e aperto contra o mesmo teto",
+          "result": "Cada um traz a palavra do seu nível, e o atributo de nível acompanha",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar exatamente três quartos do teto",
+          "result": "Já é aviso, e não folga — o limiar é exato",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar um uso acima do teto",
+          "result": "O resto para em zero e nunca fica negativo, o medidor para no cheio, e a manchete diz que a cota acabou",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar uma cota sem horizonte de renovação",
+          "result": "A linha do horizonte não é montada, e o resto da faixa continua igual",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar um controle pronto para a faixa",
+          "result": "Ele aparece por último na marcação, e a faixa não decide o que ele faz",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Montar a faixa ao lado da medição da janela",
+          "result": "As duas desenham a mesma palavra de nível para a mesma fração, e nenhuma vive dentro da outra",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A faixa não é região viva e nada nela se reanuncia",
+        "item2": "O medidor está fora do que é lido em voz, sem papel e sem valor",
+        "item3": "O nome da cota chega em texto reservado a leitor de tela",
+        "item4": "A razão está em texto no rodapé, e não só no desenho",
+        "item5": "O nível chega em palavra, e a cor apenas acompanha",
+        "item6": "A cota esgotada é dita em palavra, e não pelo trilho cheio",
+        "item7": "Os controles são os últimos tanto para o olho quanto para o foco"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a faixa, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os três níveis, um sob o outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — na borda do aviso",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — cota esgotada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sem renovação",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — com um controle",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composições — ao lado da medição da janela",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Quota banner",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "How much of an allowance is left, when it renews, and what can be done about it: the number that remains, the ratio already spent, and the space for whoever answers.",
+    "seo": {
+      "title": "Quota banner — how much is left, and until when",
+      "description": "The measurement turned inside out: the headline number is what remains, not what was spent. The ratio in text, the meter that is only drawing, the horizon that arrives written, and the space for the controls."
+    },
+    "labels": {
+      "action": "Change plan",
+      "title": "Plan quota",
+      "unit": "messages",
+      "left": "left",
+      "exhausted": "Quota used up",
+      "renews": "Renews in",
+      "of": "of",
+      "level": {
+        "normal": "Room to spare",
+        "warning": "Near the end",
+        "critical": "At the end"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "normal": "With room to spare",
+        "threshold": "At the warning edge",
+        "exhausted": "When the quota runs out",
+        "noRenewal": "When the quota does not renew"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The headline opens with what IS LEFT, not with what was spent — that is the number that decides what the person does next.",
+      "item2": "The horizon says when the allowance renews, and it arrives written from whoever measured. An allowance that does not renew simply omits the line.",
+      "item3": "The level word closes the headline, and it is what describes — colour only follows, on the frame and on the meter.",
+      "item4": "The meter separates the two lines of text. It is only drawing: it carries no number and stays out of what is read aloud.",
+      "item5": "The footer carries the exact ratio of what has gone, in text — that is what frees the meter from carrying the fraction.",
+      "item6": "The controls close the box, last in the markup and last in the focus order. They arrive ready from whoever consumes the piece.",
+      "structureCode": {
+        "web": "<div class=\"nds-quota-banner\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Plan quota</span>\n  <p class=\"nds-quota-banner-headline\">\n    <span class=\"nds-quota-banner-remaining\">32 messages left</span>\n    <span class=\"nds-quota-banner-renews\">Renews in 3 hr 12 min</span>\n    <span class=\"nds-badge nds-badge-warning nds-quota-banner-level\">Near the end</span>\n  </p>\n  <span class=\"nds-quota-banner-bar\" aria-hidden=\"true\" style=\"--nds-quota-used: 84\">\n    <span class=\"nds-quota-banner-bar-fill\"></span>\n  </span>\n  <div class=\"nds-quota-banner-footer\">\n    <span class=\"nds-quota-banner-detail\">168 of 200 messages</span>\n    <div class=\"nds-quota-banner-actions\">\n      <button class=\"nds-button\">Change plan</button>\n    </div>\n  </div>\n</div>\n\n<!-- Quota used up: the headline swaps the number for a word, the rest stays. -->\n<span class=\"nds-quota-banner-remaining\">Quota used up</span>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when what is left of an allowance changes what the person does next — spend less, wait for the renewal, or change plans.",
+        "item2": "Always pass the ceiling: the allowance IS the ceiling, and a banner without one has no number to talk about.",
+        "item3": "Write the horizon before passing it; duration format is a decision of language and place.",
+        "item4": "Leave the arithmetic and the threshold in the shared primitive, so the level word means the same here and in the other measurements on screen.",
+        "item5": "Pass the controls ready: the piece draws the place for whoever answers and does not decide what the answer means."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Warn that an allowance is running out, and offer what to do",
+          "u": "Quota banner",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Say how much of the context window still fits",
+          "u": "Context usage",
+          "a": "That one measures what has been taken; this one measures what is left, and carries a horizon and controls."
+        },
+        "item3": {
+          "s": "Say how much a run cost in money",
+          "u": "Cost meter",
+          "a": "There the amount arrives written because it carries a currency; here what is counted are units with no symbol."
+        },
+        "item4": {
+          "s": "Warn about an error or a condition that is not measured",
+          "u": "Alert",
+          "a": "That one carries a message and an action; this one carries a number, a horizon and a ratio."
+        },
+        "item5": {
+          "s": "Show how far a long task has come",
+          "u": "Progress",
+          "a": "There the bar is the control that carries the value; here the numbers are text and the bar is only drawing."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "title": {
+            "name": "Title",
+            "format": "Says which allowance it is, not what it counts",
+            "good": "Plan quota",
+            "bad": "Quota"
+          },
+          "unit": {
+            "name": "Unit",
+            "format": "Name of what is counted, plural, with no number attached",
+            "good": "messages",
+            "bad": "msgs left"
+          },
+          "left": {
+            "name": "Remainder word",
+            "format": "Goes with the unit and does not change with its gender",
+            "good": "left",
+            "bad": "used"
+          },
+          "exhausted": {
+            "name": "Quota used up",
+            "format": "Says it ran out, and never counts zero",
+            "good": "Quota used up",
+            "bad": "0 messages left"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Lead with what is left: that is the number that changes the decision.",
+        "item2": "Write the horizon in the reader's language before passing it.",
+        "item3": "Show the level word always, including when there is room to spare.",
+        "item4": "Keep the exact ratio in text next to the meter."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not mount the banner without a ceiling: with no allowance there is no remainder to talk about.",
+        "item2": "Do not write zero left when the allowance ran out — say that it ran out.",
+        "item3": "Do not leave the bar as the only carrier of the fraction.",
+        "item4": "Do not announce the count on every change."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "The horizon arrives with the measurement, and the reader knows whether waiting beats changing plans.",
+        "dont": "The allowance does renew, but the horizon is not passed — the banner can only say it is near the end, and waiting becomes a bet."
+      },
+      "pair2": {
+        "do": "The horizon arrives written in the reader's language.",
+        "dont": "The horizon arrives written by hand, in a format that does not change with the reader — and stays that way in every language."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizon,\n  actions: [button],\n  labels: labels,\n});",
+        "react": "import { QuotaBanner } from \"@/components/ui/quota-banner\";\n\n<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizon}\n  actions={[button]}\n  labels={labels}\n/>",
+        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizon\"\n  :actions=\"[button]\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizon}\n  actions={[button]}\n  labels={labels}\n/>",
+        "angular": "<div\n  ndsQuotaBanner\n  [quota]=\"{ used: 168, limit: 200 }\"\n  [renewsIn]=\"horizon\"\n  [actions]=\"[button]\"\n  [labels]=\"labels\"\n></div>"
+      },
+      "withLabels": "The written horizon, and the text of the piece",
+      "withLabelsCode": {
+        "web": "// THE HORIZON ARRIVES WRITTEN. How many digits, which separator and how hours\n// and minutes are abbreviated are decisions of language and place — whoever\n// knows that is whoever measured, not a component that would decide language\n// in five places at once.\nconst unit = (value, name) =>\n  new Intl.NumberFormat('en', {\n    style: 'unit',\n    unit: name,\n    unitDisplay: 'short',\n  }).format(value);\n\nconst horizon = `${unit(3, 'hour')} ${unit(12, 'minute')}`;\n\n// And the text of the piece: which allowance it is, what is counted, the word\n// that goes with the remainder, what to say when it ran out, the word before\n// the horizon, the one that ties the ratio, and the word for each level.\nconst labels = {\n  title: 'Plan quota',\n  unit: 'messages',\n  left: 'left',\n  exhausted: 'Quota used up',\n  renews: 'Renews in',\n  of: 'of',\n  level: { normal: 'Room to spare', warning: 'Near the end', critical: 'At the end' },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "normal": {
+        "label": "Room to spare",
+        "trigger": "Less than three quarters of the allowance has been used.",
+        "behavior": "Frame and meter stay in the accent colour, and the word says there is still room."
+      },
+      "warning": {
+        "label": "Near the end",
+        "trigger": "Three quarters of the allowance or more has been used.",
+        "behavior": "Frame and meter change colour and the word changes with them — there is still time to spend less or to wait for the renewal."
+      },
+      "critical": {
+        "label": "At the end",
+        "trigger": "Nine tenths of the allowance or more has been used.",
+        "behavior": "Frame and meter go to the error colour and the word says the allowance is running out."
+      },
+      "exhausted": {
+        "label": "Quota used up",
+        "trigger": "Usage reached the ceiling or went past it.",
+        "behavior": "The headline swaps the number for the word that says it ran out; the remainder never goes negative and the meter stops at full."
+      },
+      "noRenewal": {
+        "label": "No renewal",
+        "trigger": "The allowance arrived without a renewal horizon.",
+        "behavior": "The horizon line is not mounted; the rest of the banner stays the same, because the measurement does not depend on it."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "quota": {
+          "name": "quota",
+          "type": "QuotaAllowance",
+          "default": "—",
+          "required": "Yes",
+          "description": "The usage and the ceiling. They travel together because the allowance IS the ceiling: without it there is no remainder to talk about, and the banner has no subject."
+        },
+        "renewsIn": {
+          "name": "renewsIn",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "When the allowance renews, already written. Absent is the answer that it does not renew, and then the line does not appear."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "HTMLElement[]",
+          "default": "—",
+          "required": "No",
+          "description": "The controls, ready from whoever consumes the piece. It draws the place for whoever answers; what the answer does belongs to whoever passed it."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "QuotaBannerLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The text of the piece: which allowance it is, what is counted, and the words that go with the remainder, the horizon and the level."
+        },
+        "quotaUsed": {
+          "name": "used",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "How much of the allowance has been used. A plain number, with no unit — what names the thing counted is the text."
+        },
+        "quotaLimit": {
+          "name": "limit",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "The ceiling of the allowance. Required, unlike the sibling measurements: there a missing ceiling is a real case, here it is the missing question."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "Which allowance it is. It does not appear on screen: whoever sees already knows from where the banner sits, and whoever listens does not."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What is being counted. It appears in the headline and in the footer ratio, so that both numbers speak of the same thing."
+        },
+        "labelsLeft": {
+          "name": "left",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word that goes with the remainder. It is what keeps the headline from being read as what has already been spent."
+        },
+        "labelsExhausted": {
+          "name": "exhausted",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What to say when nothing is left. Without it the headline would count zero, and a counted zero reads as a measurement, not as an ending."
+        },
+        "labelsRenews": {
+          "name": "renews",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word before the horizon. It is interface and has a translation; the duration beside it is format and arrives written."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word that ties the used amount to the ceiling in the footer ratio: one hundred and sixty-eight OF two hundred."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each level. It is what describes the room left; the colour of the frame and the meter only follows."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The arithmetic does not live in the piece: the remainder, the ratio, the threshold for each level and the clamp at one turn all live in a shared primitive, and the other measurements on screen read exactly the same answers. The remainder is the twin of the ratio — both take the same two numbers — and that is what keeps the banner from showing a full bar next to a remainder that has not reached zero.",
+      "extensibilityCode": {
+        "web": "// THE REMAINDER IS NEVER NEGATIVE. Whoever went past the ceiling does not have\n// \"less than nothing\" of allowance, they have none — hence the subtraction here:\nremainingUnits(168, 200);      // 32\nremainingUnits(214, 200);      // 0, not -14\n\n// A CEILING THAT IS NOT A CEILING leaves nothing behind, and the ratio is absent:\nremainingUnits(168, 0);        // 0\nspentFraction(168, 0);         // null\n\n// THE RATIO IS THE TWIN OF THE REMAINDER: zero left and a full ratio are one fact.\nspentFraction(214, 200);       // 1\n\n// THE THRESHOLD IS THE SAME AS THE OTHER MEASUREMENTS, and it is exact:\nfractionLevel(0.74);           // 'normal'\nfractionLevel(0.75);           // 'warning'\nfractionLevel(0.9);            // 'critical'\n\n// And the percentage the meter draws is locked at both ends:\nfractionPercent(0.999);        // 99\nfractionPercent(1);            // 100"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-quota-banner {\n  max-inline-size: 28rem;\n}\n\n/* Colour is REINFORCEMENT, not the cue: the level word and the footer ratio are\n   what describe. Changing the colour does not change what reaches a listener. */\n.nds-quota-banner[data-level=\"warning\"] {\n  --nds-quota-banner-color: var(--chart-4);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-quota-banner",
+          "description": "Text size of the banner."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-quota-banner",
+          "description": "Colour of the horizon and the ratio that qualify the number."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-quota-banner-remaining",
+          "description": "What is still left, which is what gets read first."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-quota-banner-remaining",
+          "description": "Weight of the headline, which is what stands out from the box."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-quota-banner",
+          "description": "Frame and meter while there is room to spare."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-quota-banner[data-level=\"warning\"]",
+          "description": "Frame and meter near the end."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-quota-banner[data-level=\"critical\"]",
+          "description": "Frame and meter at the end of the allowance."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-quota-banner-bar",
+          "description": "The still-free part of the track, solid — and the box background, at thirty per cent, so the free part does not vanish into it."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-quota-banner",
+          "description": "Space between the parts of the banner, and thickness of the track."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-quota-banner",
+          "description": "Inner breathing room of the box."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-quota-banner-actions",
+          "description": "Floor of the touch target for the controls."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-quota-banner",
+          "description": "Rounding of the box."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-quota-banner-bar",
+          "description": "Rounding of the track."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The numbers are text and the meter is drawing: nothing here announces itself, the level arrives as a word, a used-up quota is said in words, and the controls are last both for the eye and for the focus.",
+      "items": {
+        "item1": "The level word is always in the banner: the colour of the frame and the meter does not describe the room left on its own.",
+        "item2": "The meter stays out of what is read aloud — it is drawing, and the ratio beside it already says everything.",
+        "item3": "The meter has no control role and no value: a second carrier of the same ratio would have it read twice.",
+        "item4": "There is no live region. The count drops every turn, and announcing it on every change cuts into whatever is being read.",
+        "item5": "The ratio is in text in the footer, not only in the drawing — that is what frees the meter from carrying the fraction.",
+        "item6": "A used-up quota is said in words, not by a full track: a full track is the same picture as being near the end without having ended.",
+        "item7": "The controls come last in the markup, so the order for the eye and the order for the focus are the same."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Passes through the text and reaches the controls, in the order they appear.",
+        "enter": "Activates the focused control. What it does belongs to whoever passed it — the banner does not decide."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden keeps the meter out of what is read aloud.",
+        "item2": "There is no live region, control role or value — whoever wants to announce the banner's arrival puts the region outside, knowing what they are doing.",
+        "item3": "The name of the allowance arrives as screen-reader-only text, not as an accessible label on an element with no content."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The banner reads as the name of the allowance, what is left, when it renews, the level word, the ratio of what has gone, and then the controls.",
+        "item2": "With the quota used up, what is read in place of the number is the word saying it ran out.",
+        "item3": "A change in the count does not interrupt whatever is being read at the time."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "contextDisplay": {
+          "name": "Context usage",
+          "description": "The same measurement from the other side: that one says how much has been taken, this one says how much is left."
+        },
+        "costMeter": {
+          "name": "Cost meter",
+          "description": "When the ceiling is money, and the amount has to arrive written because of the currency."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "When the warning is a message and an action, with no number, no horizon and no ratio to measure."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "When the bar is the value itself, and not the drawing of a number written beside it."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The question is the REMAINDER, and that is what separates this piece from the sibling measurements. The others measure what has gone; this one measures what is still there, and turning the measurement inside out changes the reader's decision: one is checked, the other is spent.",
+      "item2": "There is no ceiling-less case, and that is the divergence from the siblings. There the ceiling is optional because what is measured exists without it; here the ceiling is the subject, and a quota banner with no quota is not a half measurement, it is the missing question. Whoever has no ceiling does not mount the banner.",
+      "item3": "The remainder is never negative. Whoever went past the ceiling does not have less than nothing of allowance, they have none — and the subtraction lives in the shared primitive precisely because it looks like it needs no function.",
+      "item4": "A used-up quota is not a fourth level. The remainder only reaches zero when the ratio reaches one, so the level is already the tightest one; what changes is the headline text, which swaps the number for a word. One more attribute would have no drawing of its own to carry.",
+      "item5": "The ratio stays in text in the footer, and here it is a ratio and not a percentage. The headline already carries a count; a second number on another scale would make the reader convert between the two to check that they agree.",
+      "item6": "There is no live region, and the decision was taken rather than inherited. The count drops every turn, and a live region over a counter re-announces at every step; and the allowance runs out as a consequence of what the person just did, with the focus still where they did it. Whoever disables the input is who announces that.",
+      "item7": "The controls are space, not policy. What changing plans does, whether there is a second button, whether the allowance can be bought separately — none of that is here, and none of it will be."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the banner itself instruments nothing, because the controls belong to whoever passes them.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a usage and a ceiling",
+          "result": "The headline carries the remainder and the unit, the footer carries the ratio, and the level word appears",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Read the meter and the footer of the same banner",
+          "result": "The meter draws the same number the footer ratio describes",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass usages of room, warning and tightness against the same ceiling",
+          "result": "Each carries the word of its own level, and the level attribute follows",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass exactly three quarters of the ceiling",
+          "result": "It is already a warning, not room to spare — the threshold is exact",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass a usage above the ceiling",
+          "result": "The remainder stops at zero and never goes negative, the meter stops at full, and the headline says the quota ran out",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass an allowance with no renewal horizon",
+          "result": "The horizon line is not mounted, and the rest of the banner stays the same",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass a ready control to the banner",
+          "result": "It appears last in the markup, and the banner does not decide what it does",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Mount the banner beside the context window measurement",
+          "result": "Both draw the same level word for the same fraction, and neither lives inside the other",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The banner is not a live region and nothing in it re-announces",
+        "item2": "The meter stays out of what is read aloud, with no role and no value",
+        "item3": "The name of the allowance arrives as screen-reader-only text",
+        "item4": "The ratio is in text in the footer, not only in the drawing",
+        "item5": "The level arrives as a word, and colour only follows",
+        "item6": "A used-up quota is said in words, not by a full track",
+        "item7": "The controls are last both for the eye and for the focus"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the banner, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the three levels, one under the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — at the warning edge",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — quota used up",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — no renewal",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — with a control",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Compositions — beside the context window measurement",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Franja de cuota",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Cuánto queda de una cuota, cuándo se renueva y qué se puede hacer al respecto: el número que sobra, la razón de lo ya gastado y el espacio de quien responde.",
+    "seo": {
+      "title": "Franja de cuota — cuánto queda, y hasta cuándo",
+      "description": "La medición del revés: el número del titular es lo que queda, no lo que se gastó. La razón en texto, el medidor que solo es dibujo, el horizonte que llega escrito y el espacio de los controles."
+    },
+    "labels": {
+      "action": "Cambiar de plan",
+      "title": "Cuota del plan",
+      "unit": "mensajes",
+      "left": "restantes",
+      "exhausted": "Cuota agotada",
+      "renews": "Se renueva en",
+      "of": "de",
+      "level": {
+        "normal": "Con margen",
+        "warning": "Cerca del final",
+        "critical": "En el final"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "normal": "Con margen en la cuota",
+        "threshold": "En el borde del aviso",
+        "exhausted": "Cuando la cuota se acaba",
+        "noRenewal": "Cuando la cuota no se renueva"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El titular abre con lo que AÚN QUEDA, y no con lo ya gastado — ese es el número que decide qué hace la persona a continuación.",
+      "item2": "El horizonte dice cuándo se renueva la cuota, y llega escrito de quien mide. Una cuota que no se renueva simplemente no trae la línea.",
+      "item3": "La palabra del nivel cierra el titular, y es ella la que describe — el color solo acompaña, en el marco y en el medidor.",
+      "item4": "El medidor separa las dos líneas de texto. Solo es dibujo: no lleva el número y queda fuera de lo que se lee en voz.",
+      "item5": "El pie trae la razón exacta de lo ya gastado, en texto — es ella la que libra al medidor de llevar la fracción.",
+      "item6": "Los controles cierran la caja, últimos en el marcado y últimos en el foco. Llegan listos de quien consume la pieza.",
+      "structureCode": {
+        "web": "<div class=\"nds-quota-banner\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Cuota del plan</span>\n  <p class=\"nds-quota-banner-headline\">\n    <span class=\"nds-quota-banner-remaining\">32 mensajes restantes</span>\n    <span class=\"nds-quota-banner-renews\">Se renueva en 3 h 12 min</span>\n    <span class=\"nds-badge nds-badge-warning nds-quota-banner-level\">Cerca del final</span>\n  </p>\n  <span class=\"nds-quota-banner-bar\" aria-hidden=\"true\" style=\"--nds-quota-used: 84\">\n    <span class=\"nds-quota-banner-bar-fill\"></span>\n  </span>\n  <div class=\"nds-quota-banner-footer\">\n    <span class=\"nds-quota-banner-detail\">168 de 200 mensajes</span>\n    <div class=\"nds-quota-banner-actions\">\n      <button class=\"nds-button\">Cambiar de plan</button>\n    </div>\n  </div>\n</div>\n\n<!-- Cuota agotada: el titular cambia el número por una palabra, el resto queda igual. -->\n<span class=\"nds-quota-banner-remaining\">Cuota agotada</span>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala cuando lo que queda de una cuota cambia lo que la persona hace después — gastar menos, esperar la renovación o cambiar de plan.",
+        "item2": "Pasa siempre el techo: la cuota ES el techo, y una franja sin él no tiene número del que hablar.",
+        "item3": "Escribe el horizonte antes de pasarlo; el formato de duración es decisión de idioma y de lugar.",
+        "item4": "Deja la cuenta y el umbral en el primitivo compartido, para que la palabra del nivel signifique lo mismo aquí y en las demás mediciones de la pantalla.",
+        "item5": "Pasa los controles listos: la pieza dibuja el lugar de quien responde y no decide qué significa la respuesta."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Avisar de que una cuota se acaba, y ofrecer qué hacer",
+          "u": "Franja de cuota",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Decir cuánto cabe todavía en la ventana de contexto",
+          "u": "Uso del contexto",
+          "a": "Aquella mide lo ya ocupado; esta mide lo que sobra, y trae horizonte y controles."
+        },
+        "item3": {
+          "s": "Decir cuánto costó una ejecución en dinero",
+          "u": "Medidor de coste",
+          "a": "Allí la cantidad llega escrita porque lleva moneda; aquí lo que se cuenta son unidades sin símbolo."
+        },
+        "item4": {
+          "s": "Avisar de un error o de una condición que no se mide",
+          "u": "Alert",
+          "a": "Aquel lleva un mensaje y una acción; esta lleva un número, un horizonte y una razón."
+        },
+        "item5": {
+          "s": "Mostrar cuánto ha avanzado una tarea larga",
+          "u": "Progress",
+          "a": "Allí la barra es el control que lleva el valor; aquí los números son texto y la barra solo es dibujo."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "title": {
+            "name": "Título",
+            "format": "Dice de qué cuota se trata, y no qué cuenta",
+            "good": "Cuota del plan",
+            "bad": "Cuota"
+          },
+          "unit": {
+            "name": "Unidad",
+            "format": "Nombre de lo que se cuenta, en plural, sin número al lado",
+            "good": "mensajes",
+            "bad": "msjs restantes"
+          },
+          "left": {
+            "name": "Palabra del resto",
+            "format": "Acompaña a la unidad y no cambia con su género",
+            "good": "restantes",
+            "bad": "usados"
+          },
+          "exhausted": {
+            "name": "Cuota agotada",
+            "format": "Dice que se acabó, y nunca cuenta cero",
+            "good": "Cuota agotada",
+            "bad": "0 mensajes restantes"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Empieza por lo que queda: es el número que cambia la decisión.",
+        "item2": "Escribe el horizonte en el idioma de quien lee, antes de pasarlo.",
+        "item3": "Muestra siempre la palabra del nivel, también cuando hay margen.",
+        "item4": "Deja la razón exacta en texto junto al medidor."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No montes la franja sin techo: sin cuota no hay resto del que hablar.",
+        "item2": "No escribas cero restantes cuando la cuota se acabó — di que se acabó.",
+        "item3": "No dejes la barra como única portadora de la fracción.",
+        "item4": "No anuncies el recuento en cada cambio."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "El horizonte llega junto con la medición, y quien lee sabe si merece la pena esperar en vez de cambiar de plan.",
+        "dont": "La cuota sí se renueva, pero el horizonte no se pasa — la franja solo sabe decir que está por acabarse, y esperar se vuelve una apuesta."
+      },
+      "pair2": {
+        "do": "El horizonte llega escrito en el idioma de quien lee.",
+        "dont": "El horizonte llega escrito a mano, con un formato que no cambia con quien lee — y sigue igual en todos los idiomas."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizonte,\n  actions: [boton],\n  labels: rotulos,\n});",
+        "react": "import { QuotaBanner } from \"@/components/ui/quota-banner\";\n\n<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[boton]}\n  labels={rotulos}\n/>",
+        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizonte\"\n  :actions=\"[boton]\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[boton]}\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsQuotaBanner\n  [quota]=\"{ used: 168, limit: 200 }\"\n  [renewsIn]=\"horizonte\"\n  [actions]=\"[boton]\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "El horizonte escrito, y el texto de la pieza",
+      "withLabelsCode": {
+        "web": "// EL HORIZONTE LLEGA ESCRITO. Cuántas cifras, qué separador y cómo se abrevian\n// hora y minuto son decisiones de idioma y de lugar — quien lo sabe es quien\n// mide, y no un componente que decidiría el idioma en cinco lugares.\nconst unidad = (valor, nombre) =>\n  new Intl.NumberFormat('es', {\n    style: 'unit',\n    unit: nombre,\n    unitDisplay: 'short',\n  }).format(valor);\n\nconst horizonte = `${unidad(3, 'hour')} ${unidad(12, 'minute')}`;\n\n// Y el texto de la pieza: de qué cuota se trata, qué se cuenta, la palabra que\n// acompaña al resto, qué decir cuando se acabó, la palabra que antecede al\n// horizonte, la que ata la razón, y la palabra de cada nivel.\nconst rotulos = {\n  title: 'Cuota del plan',\n  unit: 'mensajes',\n  left: 'restantes',\n  exhausted: 'Cuota agotada',\n  renews: 'Se renueva en',\n  of: 'de',\n  level: { normal: 'Con margen', warning: 'Cerca del final', critical: 'En el final' },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "normal": {
+        "label": "Con margen",
+        "trigger": "Se ha usado menos de tres cuartos de la cuota.",
+        "behavior": "El marco y el medidor se quedan en el color de énfasis, y la palabra dice que aún hay margen."
+      },
+      "warning": {
+        "label": "Cerca del final",
+        "trigger": "Se han usado tres cuartos de la cuota o más.",
+        "behavior": "El marco y el medidor cambian de color y la palabra cambia con ellos — aún da tiempo de gastar menos o de esperar la renovación."
+      },
+      "critical": {
+        "label": "En el final",
+        "trigger": "Se han usado nueve décimos de la cuota o más.",
+        "behavior": "El marco y el medidor pasan al color de error y la palabra dice que la cuota se está acabando."
+      },
+      "exhausted": {
+        "label": "Cuota agotada",
+        "trigger": "El uso llegó al techo o lo pasó.",
+        "behavior": "El titular cambia el número por la palabra que dice que se acabó; el resto nunca se vuelve negativo y el medidor se detiene lleno."
+      },
+      "noRenewal": {
+        "label": "Sin renovación",
+        "trigger": "La cuota llegó sin horizonte de renovación.",
+        "behavior": "La línea del horizonte no se monta; el resto de la franja queda igual, porque la medición no depende de ella."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "quota": {
+          "name": "quota",
+          "type": "QuotaAllowance",
+          "default": "—",
+          "required": "Sí",
+          "description": "El uso y el techo. Van juntos porque la cuota ES el techo: sin él no hay resto del que hablar, y la franja no tendría asunto."
+        },
+        "renewsIn": {
+          "name": "renewsIn",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Cuándo se renueva la cuota, ya escrito. Su ausencia es la respuesta de que no se renueva, y entonces la línea no aparece."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "HTMLElement[]",
+          "default": "—",
+          "required": "No",
+          "description": "Los controles, listos de quien consume la pieza. Ella dibuja el lugar de quien responde; lo que la respuesta hace es de quien la pasó."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "QuotaBannerLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la pieza: de qué cuota se trata, qué se cuenta, y las palabras que acompañan al resto, al horizonte y al nivel."
+        },
+        "quotaUsed": {
+          "name": "used",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Cuánto de la cuota se ha usado. Número puro, sin unidad — quien nombra lo que se cuenta es el texto."
+        },
+        "quotaLimit": {
+          "name": "limit",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "El techo de la cuota. Obligatorio, al contrario de las mediciones hermanas: allí la ausencia del techo es un caso real, aquí es la ausencia de la pregunta."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "De qué cuota se trata. No aparece en pantalla: quien ve ya lo sabe por el lugar donde está la franja, y quien escucha no."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué se está contando. Aparece en el titular y en la razón del pie, para que ambos números hablen de lo mismo."
+        },
+        "labelsLeft": {
+          "name": "left",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra que acompaña al resto. Es la que impide que el titular se lea como lo ya gastado."
+        },
+        "labelsExhausted": {
+          "name": "exhausted",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué decir cuando no sobra nada. Sin ella el titular contaría cero, y un cero contado se lee como medición, no como final."
+        },
+        "labelsRenews": {
+          "name": "renews",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra que antecede al horizonte. Ella es interfaz y tiene traducción; la duración a su lado es formato y llega escrita."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra que ata lo usado al techo en la razón del pie: ciento sesenta y ocho DE doscientos."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada nivel. Es la que describe el margen; el color del marco y del medidor solo acompaña."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La cuenta no vive en la pieza: el resto, la razón, el umbral de cada nivel y el recorte en una vuelta viven en un primitivo compartido, y las demás mediciones de la pantalla leen exactamente las mismas respuestas. El resto es el par de la razón — ambos reciben los mismos dos números —, y eso es lo que impide que la franja muestre una barra llena junto a un resto que no llegó a cero.",
+      "extensibilityCode": {
+        "web": "// EL RESTO NUNCA ES NEGATIVO. Quien pasó del techo no tiene \"menos que nada\" de\n// cuota, no tiene ninguna — y por eso la resta vive aquí:\nremainingUnits(168, 200);      // 32\nremainingUnits(214, 200);      // 0, y no -14\n\n// UN TECHO QUE NO ES TECHO no deja nada, y la razón sale como ausencia:\nremainingUnits(168, 0);        // 0\nspentFraction(168, 0);         // null\n\n// LA RAZÓN ES EL PAR DEL RESTO: resto cero y razón llena son la misma noticia.\nspentFraction(214, 200);       // 1\n\n// EL UMBRAL ES EL MISMO DE LAS DEMÁS MEDICIONES, y es exacto:\nfractionLevel(0.74);           // 'normal'\nfractionLevel(0.75);           // 'warning'\nfractionLevel(0.9);            // 'critical'\n\n// Y el porcentaje que el medidor dibuja está trabado en los dos extremos:\nfractionPercent(0.999);        // 99\nfractionPercent(1);            // 100"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-quota-banner {\n  max-inline-size: 28rem;\n}\n\n/* El color es REFUERZO, y no la pista: la palabra del nivel y la razón del pie\n   son lo que describe. Cambiar el color no cambia lo que llega a quien escucha. */\n.nds-quota-banner[data-level=\"warning\"] {\n  --nds-quota-banner-color: var(--chart-4);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-quota-banner",
+          "description": "Tamaño del texto de la franja."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-quota-banner",
+          "description": "Color del horizonte y de la razón que califican al número."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-quota-banner-remaining",
+          "description": "Lo que aún queda, que es lo que se lee primero."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-quota-banner-remaining",
+          "description": "Peso del titular, que es lo que destaca de la caja."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-quota-banner",
+          "description": "El marco y el medidor mientras hay margen."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-quota-banner[data-level=\"warning\"]",
+          "description": "El marco y el medidor cerca del final."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-quota-banner[data-level=\"critical\"]",
+          "description": "El marco y el medidor en el final de la cuota."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-quota-banner-bar",
+          "description": "La parte aún libre del carril, sólida — y el fondo de la caja, al treinta por ciento, para que la parte libre no desaparezca dentro de él."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-quota-banner",
+          "description": "Espacio entre las partes de la franja, y grosor del carril."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-quota-banner",
+          "description": "Respiro interior de la caja."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-quota-banner-actions",
+          "description": "Mínimo del área táctil de los controles."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-quota-banner",
+          "description": "Redondeo de la caja."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-quota-banner-bar",
+          "description": "Redondeo del carril."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Los números son texto y el medidor es dibujo: nada aquí se anuncia, el nivel llega en palabra, la cuota agotada se dice en palabra, y los controles son los últimos tanto para el ojo como para el foco.",
+      "items": {
+        "item1": "La palabra del nivel está siempre en la franja: el color del marco y del medidor no describe el margen por sí solo.",
+        "item2": "El medidor queda fuera de lo que se lee en voz — es dibujo, y la razón a su lado ya lo dice todo.",
+        "item3": "El medidor no tiene papel de control ni valor: un segundo portador de la misma razón haría que se leyera dos veces.",
+        "item4": "No hay región viva. El recuento baja en cada turno, y anunciarlo en cada cambio corta la lectura de lo que se esté leyendo.",
+        "item5": "La razón está en texto en el pie, y no solo en el dibujo — eso es lo que libra al medidor de llevar la fracción.",
+        "item6": "La cuota agotada se dice en palabra, y no por el carril lleno: un carril lleno es la misma imagen que estar en el final sin haber acabado.",
+        "item7": "Los controles van últimos en el marcado, así que el orden del ojo y el orden del foco son el mismo."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Pasa por el texto y llega a los controles, en el orden en que aparecen.",
+        "enter": "Activa el control enfocado. Lo que hace es de quien lo pasó — la franja no decide."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden saca el medidor de lo que se lee en voz.",
+        "item2": "No hay región viva, papel de control ni valor — quien quiera anunciar la llegada de la franja pone la región por fuera, sabiendo lo que hace.",
+        "item3": "El nombre de la cuota llega por texto reservado a lector de pantalla, y no por etiqueta accesible en un elemento sin contenido."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La franja se lee como el nombre de la cuota, lo que queda, cuándo se renueva, la palabra del nivel, la razón de lo ya gastado, y luego los controles.",
+        "item2": "Con la cuota agotada, lo que se lee en lugar del número es la palabra que dice que se acabó.",
+        "item3": "El cambio del recuento no interrumpe lo que se esté leyendo en ese momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "contextDisplay": {
+          "name": "Uso del contexto",
+          "description": "La misma medición por el otro lado: aquella dice cuánto se ha ocupado, esta dice cuánto sobra."
+        },
+        "costMeter": {
+          "name": "Medidor de coste",
+          "description": "Cuando el techo es de dinero, y la cantidad tiene que llegar escrita por causa de la moneda."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "Cuando el aviso es un mensaje y una acción, sin número, sin horizonte y sin razón que medir."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Cuando la barra es el propio valor, y no el dibujo de un número escrito a su lado."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La pregunta es el RESTO, y es ella la que separa esta pieza de las mediciones hermanas. Las otras miden lo ya gastado; esta mide lo que aún hay, y darle la vuelta a la medición cambia la decisión de quien lee: una se comprueba, la otra se gasta.",
+      "item2": "No hay caso sin techo, y esa es la divergencia respecto a las hermanas. Allí el techo es opcional porque lo medido existe sin él; aquí el techo es el asunto, y una franja de cuota sin cuota no es una medición a medias, es la ausencia de la pregunta. Quien no tiene techo no monta la franja.",
+      "item3": "El resto nunca es negativo. Quien pasó del techo no tiene menos que nada de cuota, no tiene ninguna — y la resta vive en el primitivo compartido justamente porque parece no necesitar una función.",
+      "item4": "La cuota agotada no es un cuarto nivel. El resto solo llega a cero cuando la razón llega a uno, así que el nivel ya es el más apretado; lo que cambia es el texto del titular, que sustituye el número por una palabra. Un atributo más no tendría dibujo propio que llevar.",
+      "item5": "La razón se queda en texto en el pie, y aquí es una razón y no un porcentaje. El titular ya trae un recuento; un segundo número en otra escala haría que quien lee convirtiera entre los dos para comprobar que concuerdan.",
+      "item6": "No hay región viva, y la decisión se tomó en vez de heredarse. El recuento baja en cada turno, y una región viva sobre un contador se reanuncia en cada paso; y la cuota se acaba como consecuencia de lo que la propia persona acaba de hacer, con el foco todavía donde lo hizo. Quien deshabilita la entrada es quien anuncia eso.",
+      "item7": "Los controles son espacio, y no política. Qué hace cambiar de plan, si hay un segundo botón, si la cuota se puede comprar aparte — nada de eso está aquí, y nada de eso va a estar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la franja en sí no instrumenta nada, porque los controles son de quien los pasa.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar un uso y un techo",
+          "result": "El titular trae el resto y la unidad, el pie trae la razón, y la palabra del nivel aparece",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Leer el medidor y el pie de la misma franja",
+          "result": "El medidor dibuja el mismo número que describe la razón del pie",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar usos de margen, aviso y aprieto contra el mismo techo",
+          "result": "Cada uno trae la palabra de su nivel, y el atributo de nivel acompaña",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar exactamente tres cuartos del techo",
+          "result": "Ya es aviso, y no margen — el umbral es exacto",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar un uso por encima del techo",
+          "result": "El resto se detiene en cero y nunca queda negativo, el medidor se detiene lleno, y el titular dice que la cuota se acabó",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar una cuota sin horizonte de renovación",
+          "result": "La línea del horizonte no se monta, y el resto de la franja sigue igual",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar un control listo a la franja",
+          "result": "Aparece el último en el marcado, y la franja no decide qué hace",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Montar la franja junto a la medición de la ventana",
+          "result": "Las dos dibujan la misma palabra de nivel para la misma fracción, y ninguna vive dentro de la otra",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La franja no es región viva y nada en ella se reanuncia",
+        "item2": "El medidor está fuera de lo que se lee en voz, sin papel y sin valor",
+        "item3": "El nombre de la cuota llega en texto reservado a lector de pantalla",
+        "item4": "La razón está en texto en el pie, y no solo en el dibujo",
+        "item5": "El nivel llega en palabra, y el color solo acompaña",
+        "item6": "La cuota agotada se dice en palabra, y no por el carril lleno",
+        "item7": "Los controles son los últimos tanto para el ojo como para el foco"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la franja, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los tres niveles, uno bajo el otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — en el borde del aviso",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — cuota agotada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — sin renovación",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — con un control",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Composiciones — junto a la medición de la ventana",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}
