@@ -140,22 +140,23 @@
   --sidebar-border: 30 15% 85%;
   --sidebar-ring: 4 78% 50%;
 
-  /* Radius — a identidade de forma deste tema é o CANTO GENEROSO: 32px de base,
-     contra os 14px do default. Botão e campo ficam quase em cápsula sem chegar
-     lá, e o cartão vai a 36px.
+  /* Radius — a identidade de forma deste tema é o CANTO GENEROSO: 24px de base,
+     contra os 14px do default. O cartão vai a 28px, e botão e campo ficam
+     nitidamente mais macios sem virar cápsula.
 
-     Já esteve em `var(--radius-full)`, e foi longe demais: com a base em 9999px
-     a escala inteira colapsa no pill, e um cartão grande vira estádio. 2rem é o
-     ponto em que a forma lê como identidade e não como deformação.
+     Duas tentativas anteriores, e as duas ensinaram: `var(--radius-full)`
+     colapsava a escala inteira no pill e fazia cartão grande virar estádio; 2rem
+     ainda deixava a forma competindo com o conteúdo. 1.5rem é onde ela lê como
+     identidade e para de chamar atenção para si.
 
      Sobrescreve a BASE, e não os degraus: a escala continua derivando sozinha,
      como o contrato manda.
 
-     CUIDADO ao subir mais: raio de pai grande expõe qualquer filho que repita o
-     raio em vez de descontar o inset (Rᵢ = Rₑ − E). A 36px de cartão, um filho
-     com 16px de inset deveria ter 20px — e as seções das docs pages ainda
-     desenham 36px. */
-  --radius: 2rem;
+     Raio de pai grande expõe filho que repita o raio em vez de descontar o inset
+     (Rᵢ = Rₑ − E) — foi assim que o defeito das docs pages apareceu. Está
+     corrigido com `.nds-card-nested` e guardado pela regra
+     `card_aninhado_sem_desconto`. */
+  --radius: 1.5rem;
 }
 
 /* Dark mode — combina `.dark.tema-warm` */

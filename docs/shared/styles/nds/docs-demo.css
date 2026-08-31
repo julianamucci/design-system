@@ -12,6 +12,36 @@
 }
 
 /*
+ * ─── A moldura de demonstração não recorta, e tem piso ────────────────────────
+ *
+ * `[data-docs-preview]` é o gancho das TRÊS molduras que emolduram componente
+ * vivo: `demonstracao` (ComponentDemo), `do` e `dont` (Do & Don't). As três são
+ * `.nds-card`, e o card recorta — `overflow: hidden` está lá desde o primeiro
+ * commit do `.nds-*`, para que imagem e fundo respeitem o raio.
+ *
+ * Recortar é certo no card de produto e errado na moldura de demo, e a diferença
+ * aparece com componente que abre CAMADA FLUTUANTE inline: o painel é
+ * posicionado fora do fluxo, então não empurra a altura do card — a moldura
+ * continua do tamanho do gatilho e o painel é decepado. Foi o que apareceu no
+ * seletor de modelo e na lista de status: metade do painel cortada, e a moldura
+ * parecendo pequena demais porque o que a encheria estava escondido.
+ *
+ * `overflow: visible` devolve o painel. O preço é que um filho com fundo próprio
+ * pode passar do canto arredondado — aceitável numa moldura de documentação,
+ * onde o assunto é o componente e não a moldura.
+ *
+ * O piso é a segunda metade: sem altura fora do fluxo para preencher, a moldura
+ * colapsa na altura do gatilho. `--box-height-xs` (120px) é o degrau mais baixo
+ * da escada nomeada — dá respiro sem transformar a demonstração de um botão
+ * numa área vazia. Quem precisa de mais pede pela escada: `.nds-demo-box` com
+ * `data-size` (altura fixa) ou `data-min` (piso maior).
+ */
+[data-docs-preview] {
+  overflow: visible;
+  min-block-size: var(--box-height-xs);
+}
+
+/*
  * ─── nds-docs-demo-row ───────────────────────────────────────────────────────
  * Linha de demonstração para peças que se esticam na altura do vizinho —
  * separador vertical, divisória de barra de ferramentas.
