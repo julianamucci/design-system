@@ -9,8 +9,14 @@
  *
  * A conta é `@shared/primitives/token-budget`: fração usada, limiar de aviso,
  * nível e repartição por origem, com o porquê de cada decisão escrito nos
- * docblocks de lá. Nenhuma peça desta folha reimplementa essas regras, e o dado
- * de entrada é sempre `TokenUsage`, de `@shared/primitives/chat-protocol`.
+ * docblocks de lá. Nenhuma peça desta folha reimplementa essas regras.
+ *
+ * MEDIDO AO CONSTRUIR A QUINTA PEÇA, e a linha anterior dizia o contrário: NEM
+ * TODA PEÇA DAQUI LÊ UMA CONTA. Quatro delas medem consumo contra um teto e
+ * entram por `TokenUsage` ou por um par de números; a quinta mede TEMPO, que
+ * não tem teto, não tem fração e por isso não tem conta nenhuma para
+ * compartilhar. O eixo da família nunca foi a divisão — é o mesmo número em
+ * formas diferentes, e a forma de quem não tem denominador é texto puro.
  *
  * A REGRA QUE ATRAVESSA A FAMÍLIA INTEIRA, herdada da 1 e da 2: o que muda a
  * cada quadro é DECORATIVO, e o número é TEXTO. Medidor não tem papel ARIA, não
@@ -869,7 +875,8 @@
  * contraste não pode depender de qual nível a medição calhou de dar.
  *
  * O FUNDO NÃO PODE SER `--muted` SÓLIDO, e isso foi medido contra a árvore: o
- * trilho do medidor É `--muted` sólido nas quatro peças desta folha, então uma
+ * trilho do medidor É `--muted` sólido nas quatro peças desta folha que
+ * desenham medidor, então uma
  * caixa da mesma cor faria a parte VAZIA do trilho sumir dentro dela — a barra
  * pareceria mais curta do que é, e num nível baixo pareceria não existir. A
  * caixa fica em `--muted` a 30%, como a moldura do cartão de autorização na
@@ -1017,4 +1024,205 @@
   /* Alvo de toque (WCAG 2.5.8). */
   min-inline-size: var(--spacing-6);
   min-block-size: var(--spacing-6);
+}
+
+/* ── Tempo de uma resposta ───────────────────────────────────────────────────
+ *
+ * Quanto a resposta demorou, repartida nas medidas que quem lê usa para
+ * decidir: até o primeiro token, no total, a que velocidade, em quantos
+ * pedaços. Conta: NENHUMA — e essa é a primeira coisa a saber sobre esta peça.
+ *
+ * POR QUE ELA É UM SLUG, E NÃO UMA FORMA DA MEDIÇÃO DA JANELA. A pergunta foi
+ * feita antes de desenhar, porque as quatro peças de cima medem CONSUMO contra
+ * um teto e esta mede TEMPO, que não tem teto nenhum. A resposta são três
+ * diferenças, e cada uma bastaria:
+ *
+ *   TEMPO NÃO TEM DENOMINADOR. A peça da janela é `TokenUsage` -> fração ->
+ *   medidor -> nível, e tirar o teto dela não deixa uma forma mais magra: não
+ *   sobra fração, nem medidor, nem nível, nem unidade. "Demorou 4,2 s" só
+ *   viraria fração se comparasse com alguma coisa, e comparar com o quê é
+ *   decisão de produto (§2 da guideline 17). Esta é, portanto, a única peça
+ *   desta folha SEM MEDIDOR, e a ausência dele é o desenho, não uma falta.
+ *
+ *   SÃO VÁRIAS GRANDEZAS, E ELAS NÃO SOMAM. Cada irmã carrega UMA medição; a
+ *   repartição carrega várias, mas todas são parcelas de um mesmo total, e é o
+ *   total que dá sentido ao por cento de cada uma. Aqui convivem duas durações,
+ *   uma taxa e uma contagem: nada as soma, nada as reparte, e um denominador
+ *   comum seria inventado.
+ *
+ *   O NÚMERO PODE ESTAR ANDANDO. Nenhuma irmã tem esse estado: a medição delas
+ *   assenta a cada turno. Aqui a resposta ainda está sendo gerada enquanto
+ *   parte dos números já se conhece, e "ainda não é o valor final" muda o que
+ *   se desenha E o que se pode ler em voz (decisão 3).
+ *
+ *   <div class="nds-message-timing" data-slot="message-timing" aria-busy="true">
+ *     <span class="nds-sr-only" data-slot="message-timing-title">Tempo desta resposta</span>
+ *     <span class="nds-badge" data-slot="message-timing-state">Medindo</span>
+ *     <dl class="nds-message-timing-stats" data-slot="message-timing-stats">
+ *       <div class="nds-message-timing-stat" data-slot="message-timing-stat">
+ *         <dt class="nds-message-timing-label" data-slot="message-timing-label">Primeiro token</dt>
+ *         <dd class="nds-message-timing-value" data-slot="message-timing-value">420 ms</dd>
+ *       </div>
+ *       <div class="nds-message-timing-stat" data-slot="message-timing-stat">
+ *         <dt class="nds-message-timing-label" data-slot="message-timing-label">Total</dt>
+ *         <dd class="nds-message-timing-value" data-slot="message-timing-value">1,24 s</dd>
+ *       </div>
+ *     </dl>
+ *   </div>
+ *
+ * Com a medição encerrada, a etiqueta some e o `aria-busy` sai; o resto da
+ * árvore fica igual:
+ *
+ *     <div class="nds-message-timing" data-slot="message-timing">
+ *
+ * A CLASSE ANDA JUNTO DO `data-slot` em toda a árvore, e a folha estiliza pela
+ * CLASSE — nunca por `[data-slot="…"]`, como nos quatro blocos de cima e pelo
+ * mesmo motivo: no Angular quase toda peça liga `data-slot` por host binding, e
+ * o atributo estático do template disputa com ele.
+ *
+ * A ÚNICA EXCEÇÃO É A ETIQUETA DO ESTADO, e ela é a prova da regra pelo avesso:
+ * as irmãs dão classe própria à delas para empurrá-la para a direita da linha,
+ * e aqui ela ABRE a linha, onde o `gap` da raiz já a coloca. Não há uma
+ * declaração para escrever, e classe sem regra é classe morta — o portão
+ * `dead_class_in_component` a acusaria, com razão.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   Nenhum. Não há `data-form` como na peça da janela, porque não há medidor
+ *   que troque de forma; não há `data-level`, porque não há teto de que caiba
+ *   uma fração; e não há `data-state="measuring"`, pelo mesmo motivo que a
+ *   faixa de cota recusou o dela — não haveria regra para o atributo carregar,
+ *   e o que muda quando a medição encerra é a etiqueta EXISTIR, que é marcação
+ *   e não desenho. O único atributo que troca é o `aria-busy`, e ele não é
+ *   gancho de folha: é o que se diz a quem ouve.
+ *
+ * A FORMA É DO CONTAINER, E NÃO UM ARGUMENTO. A peça da janela tem três formas
+ * porque um MEDIDOR tem formas — anel num trilho estreito, barra num painel.
+ * Aqui só há pares de termo e valor, e uma linha que quebra: no rodapé de uma
+ * mensagem ela ocupa a largura e fica em uma linha; dentro de uma dica de
+ * ferramenta estreita ela cai em um par por linha sozinha, sem que ninguém
+ * precise avisar onde a peça está. Um argumento de forma seria uma segunda
+ * resposta para uma pergunta que o `flex-wrap` já responde.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O PAR É UMA LISTA DE DEFINIÇÃO. `<dl>` com `<dt>` e `<dd>`, e cada par
+ *    dentro do seu `<div>` — que a especificação permite justamente para isto.
+ *    O `<div>` não é embrulho de conveniência: é ele que faz o PAR ser a
+ *    unidade que quebra de linha. Sem ele, "Velocidade" terminaria uma linha e
+ *    "38,4 tok/s" abriria a seguinte, e duas medições diferentes pareceriam uma
+ *    só. É a mesma escolha do alcance do cartão de autorização, na folha
+ *    vizinha, e pelo mesmo motivo: termo e valor pareados sobrevivem a quem
+ *    navega de item em item.
+ * 2. OS NÚMEROS SÃO O CONTEÚDO, e ficam DENTRO do que é lido em voz. Aqui esta
+ *    folha diverge do relógio do estado da execução, na folha vizinha, e a
+ *    divergência é o que separa as duas peças: lá o número CORRE — "há 12 s"
+ *    se reescreve sozinho —, e por isso ele é `aria-hidden` e quem ouve recebe
+ *    a palavra do estado no lugar dele. Aqui os números SÃO a peça; escondê-los
+ *    deixaria uma medição inteira vazia para quem ouve, com um título anunciando
+ *    nada.
+ * 3. ENQUANTO A MEDIÇÃO ANDA, `aria-busy`, e não região viva nem `aria-hidden`.
+ *    A regra da família proíbe reanunciar um contador, e ela continua valendo:
+ *    não há `aria-live` em lugar nenhum. O que `aria-busy="true"` faz é o
+ *    oposto de anunciar — ele diz "isto ainda está mudando, não trate como
+ *    final" sem tirar nada da leitura. É o mesmo que a mensagem em streaming já
+ *    usa, e é a resposta certa para um número que ainda não assentou: escondê-lo
+ *    seria mentir por omissão, anunciá-lo seria interromper a resposta que está
+ *    sendo lida logo acima.
+ * 4. O ESTADO É PALAVRA (WCAG 1.4.1). A fonte destaca os valores em azul
+ *    enquanto a resposta é gerada; cor sozinha não descreve estado, e aqui ela
+ *    descreveria o estado MAIS importante desta peça — o de que o número ainda
+ *    não vale. A etiqueta com a palavra substitui o destaque, e nada aqui troca
+ *    de cor.
+ * 5. A PALAVRA VEM ANTES DOS NÚMEROS, e esta é a divergência em relação às
+ *    quatro irmãs, onde a etiqueta de nível fecha a linha. Lá ela é um JUÍZO
+ *    sobre um número que já está completo, e chegar depois dele é a ordem
+ *    natural. Aqui ela diz que o que vem a seguir ainda não vale: um aviso
+ *    desses que chegasse depois chegaria tarde, para o olho e para o ouvido.
+ * 6. A ETIQUETA SÓ APARECE ENQUANTO MEDE, e aqui a folha também diverge das
+ *    irmãs de propósito. Nelas o nível aparece sempre, inclusive com folga,
+ *    porque a ausência de um juízo seria indistinguível de uma medição que não
+ *    chegou. Aqui o que a etiqueta diz é que a medição NÃO ACABOU, e uma linha
+ *    de números sem ressalva já se lê como o que ela é: números finais. Uma
+ *    etiqueta permanente dizendo "final" nunca variaria, e o que nunca varia
+ *    não informa.
+ * 7. A MEDIÇÃO TEM NOME. "1,24 s" ao pé de uma mensagem não diz de que resposta
+ *    se trata, nem se o tempo é do turno ou da conversa. O título é
+ *    `.nds-sr-only`, como o das quatro irmãs, porque quem vê já sabe pelo lugar
+ *    em que a peça está e quem ouve não sabe.
+ * 8. ALVO DE TOQUE: nenhum. Não há controle nesta peça, e é de propósito — a
+ *    forma compacta da fonte é um gatilho com dica de ferramenta, e ela se monta
+ *    COMPONDO `button` e `tooltip` com esta peça dentro, em vez de a peça
+ *    ganhar uma camada flutuante e a política de foco que vem com ela.
+ *
+ * TUDO CHEGA ESCRITO, e é por isso que não há conta nenhuma aqui — nem neste
+ * bloco, nem em `token-budget.ts`. Duração tem separador decimal, ordem de
+ * unidade e abreviatura que trocam com o idioma; velocidade tem tudo isso mais
+ * o nome da unidade. É o mesmo precedente do relógio da execução, do tempo
+ * decorrido do ditado, do carimbo do rascunho e da quantia do custo — e aqui
+ * ele vale para a peça INTEIRA, porque não sobra número cru nenhum para uma
+ * conta compartilhada guardar. Uma peça sem conta é resultado legítimo: a
+ * decisão que ela guarda é de MARCAÇÃO e de leitura em voz, não de aritmética.
+ */
+
+.nds-message-timing {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Os pares ────────────────────────────────────────────────────────────────
+ *
+ * `baseline` porque as duas pontas de cada par são texto, e alinhar pelo topo
+ * faria o valor flutuar em relação ao termo quando um deles quebrasse de linha.
+ * `wrap` aqui e na raiz: a raiz decide se a etiqueta do estado desce, e esta
+ * lista decide se um par desce — são duas perguntas, e o container de cada uma
+ * é quem a responde.
+ *
+ * A margem do `<dl>` é do navegador e vai embora: esta lista é uma linha de
+ * rodapé, e o recuo padrão de uma lista de definição a descolaria do texto que
+ * ela mede. */
+.nds-message-timing-stats {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  margin: 0;
+}
+
+/* O par, que é a unidade que quebra (decisão 1). O espaço daqui é o menor da
+ * escada de propósito: ele precisa ser visivelmente MENOR que o espaço entre os
+ * pares, ou "Total 1,24 s Velocidade 38,4 tok/s" vira uma fileira de seis
+ * palavras soltas e quem lê passa a agrupá-las por conta própria. */
+.nds-message-timing-stat {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-1);
+}
+
+/* O termo. Texto de apoio, e não `--foreground`: quem decide o que fazer lê o
+ * NÚMERO, e o termo diz de qual número se trata. A cor vem da raiz.
+ *
+ * A margem do `<dt>` é do navegador e vai embora, pelo mesmo motivo da lista. */
+.nds-message-timing-label {
+  margin: 0;
+}
+
+/* O valor. `--foreground` e peso médio porque é ele que se lê primeiro, e
+ * `tabular-nums` porque estes números trocam entre uma resposta e a seguinte —
+ * sem largura fixa de algarismo, a linha inteira treme a cada troca. Mesmo
+ * motivo das quatro peças de cima.
+ *
+ * A margem do `<dd>` é do navegador e vai embora: ela existe para uma lista de
+ * definição em bloco, e aqui o valor anda ao lado do termo. */
+.nds-message-timing-value {
+  margin: 0;
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
 }
