@@ -174,7 +174,28 @@ arquivos. O que funciona é separar por natureza: os artefatos compartilhados
 peças que dependem deles seguem em paralelo — porque aí cada uma toca apenas os
 seus arquivos.
 
-### 4.1 Peça que mora num encaixe NÃO vira prop de quem a hospeda
+### 4.1 O override troca o NOME, e só
+
+Quando a API de uma stack diverge — retorno vira evento, prop vira `output()` —,
+o override na docs page cobre **o nome da linha**, e nada mais. O tipo e a
+descrição continuam vindo do conteúdo compartilhado.
+
+O tipo, porque a tabela documenta o que **quem consome** escreve. Numa stack de
+eventos, quem consome escreve um manipulador `(valor) => void`; a forma de
+DECLARAÇÃO do evento é do autor do componente e não pertence à tabela.
+
+A descrição, porque ela já é neutra de API por regra — e se você sentir vontade
+de sobrescrevê-la, é sinal de que o texto compartilhado nomeia a API de alguma
+stack. **O conserto é lá, não aqui.** Isso já custou caro: no `form`, quatro
+stacks sobrescreviam a mesma frase porque o texto compartilhado dizia
+`createFormField`; e no `tool-group`, uma descrição sobrescrita em três idiomas
+só acrescentava a palavra "Evento" ao texto compartilhado, que a coluna do nome
+já dizia.
+
+Regra prática: **se a mesma frase aparece sobrescrita em mais de uma stack, o
+defeito está no compartilhado.**
+
+### 4.2 Peça que mora num encaixe NÃO vira prop de quem a hospeda
 
 O composer aceita `railStart`, e é por ali que `composer-model-picker` e
 `composer-voice` entram. Nenhum dos dois é prop do composer, e isso é decisão,
