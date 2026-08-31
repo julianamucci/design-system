@@ -39,7 +39,19 @@ const VARIANT_KEYS: readonly string[] = [...STACKS, ...VARIANT_GROUPS];
  * auditoria de literais: o que é código não precisa ser neutro de API.
  */
 export function isCodeKey(key: string): boolean {
-  return /(?:^|[a-z])Code$/.test(key) || /^code[A-Z]/.test(key);
+  // A chave nua `code` entra, e ela é a que mais aparece: dentro de
+  // `variants.items.<x>.code` o sufixo seria redundante, e foi assim que quatro
+  // nós de `composer` e `composer-trigger-popover` nasceram invisíveis a esta
+  // função. Sem serem reconhecidos, não são achatados — e `t()` cai no
+  // `?? key`, então a caixa de código da seção de Formas mostrava o literal
+  // `variants.items.enter.code` para o leitor, nas cinco stacks.
+  //
+  // Aceitar a chave nua é seguro porque quem decide de verdade é
+  // `isCodeVariantNode`: ele exige que TODAS as sub-chaves sejam nomes de stack
+  // conhecidos e que todos os valores sejam string. Um `props.table.code` do
+  // `code-block`, cujo nó tem `name`/`type`/`description`, não passa nessa
+  // guarda e continua sendo texto auditável.
+  return /(?:^|[a-z])Code$/.test(key) || /^code[A-Z]/.test(key) || key === 'code';
 }
 
 /**
