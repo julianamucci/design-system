@@ -9,6 +9,7 @@ import { applicationConfig } from '@storybook/angular-vite';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { useEffect, addons } from 'storybook/preview-api';
+import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';
 import '../src/styles/globals.css';
 import '../src/styles/storybook-docs.css';
 
@@ -73,6 +74,42 @@ function applyMotion(motion: string) {
   const html = document.documentElement;
   if (motion === 'reduce') html.dataset['reducedMotion'] = 'true';
   else delete html.dataset['reducedMotion'];
+}
+
+// Assinatura direta do canal do preview. O manager emite GLOBALS_UPDATED em
+// TODA mudança de toolbar — inclusive ao voltar pro Default —, mas o decorator
+// não re-roda nesse caso, então o cascade de tema não revertia: a classe
+// `tema-*` anterior ficava no <html>. Páginas MDX não-atreladas (ex: "Cores e
+// Temas") também não passam pelo decorator. Ouvir o canal resolve os dois.
+//
+// Ficou invisível enquanto os três temas tinham o MESMO raio: só a cor
+// revertia errado, e cor de tema muda pouco entre default e warm. Com o warm
+// em 32px de base, voltar ao Default deixando o canto arredondado é evidente.
+//
+// react, vue e svelte já tinham isto; vanilla e angular nasceram sem.
+// Guard `typeof document` evita execução na indexação em Node (sem canal e
+// sem DOM).
+if (typeof document !== 'undefined') {
+  const onGlobals = ({ globals = {} }: { globals?: Record<string, string> }) => {
+    applyClasses(
+      globals['brand'] || 'default',
+      globals['density'] || 'default',
+      globals['font'] || 'default',
+      globals['typescale'] || 'minor-third',
+      globals['typebase'] || 'm',
+    );
+    applyMotion(globals['motion'] || 'default');
+  };
+  const subscribe = () => {
+    try {
+      const channel = addons.getChannel();
+      channel.on(GLOBALS_UPDATED, onGlobals);
+      channel.on(SET_GLOBALS, onGlobals);
+    } catch {
+      setTimeout(subscribe, 50);
+    }
+  };
+  subscribe();
 }
 
 const preview: Preview = {

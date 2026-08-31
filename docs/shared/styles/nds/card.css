@@ -34,6 +34,13 @@
   overflow: hidden;
 
   border-radius: var(--radius-card);
+  background-color: var(--card-bg);
+  color: var(--card-fg);
+  box-shadow: 0 0 0 1px var(--card-ring), var(--elevation-sm);
+
+  padding-block: var(--spacing-4);              /* 16px top/bottom */
+  padding-inline: var(--spacing-4);             /* 16px left/right */
+  font-size: var(--text-control);                          /* 14px */
 }
 
 /* Cartão DENTRO de cartão: o filho desconta o inset, não repete o raio do pai.
@@ -56,13 +63,6 @@
  * negativo é valor inválido — a declaração cairia inteira, em silêncio. */
 .nds-card-nested {
   border-radius: max(0px, calc(var(--radius-card) - var(--spacing-4)));
-  background-color: var(--card-bg);
-  color: var(--card-fg);
-  box-shadow: 0 0 0 1px var(--card-ring), var(--elevation-sm);
-
-  padding-block: var(--spacing-4);              /* 16px top/bottom */
-  padding-inline: var(--spacing-4);             /* 16px left/right */
-  font-size: var(--text-control);                          /* 14px */
 }
 
 /* Tamanho sm */
