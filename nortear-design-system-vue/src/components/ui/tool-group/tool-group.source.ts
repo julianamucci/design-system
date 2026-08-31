@@ -105,7 +105,7 @@ export function toolGroupEveryStateSource(): string {
 
 /** O grupo com uma falha, ainda recolhido — o que a peça existe para servir. */
 export function toolGroupFailedSource(): string {
-  return build({ calls: 'chamadasComFalha' });
+  return build({ calls: 'chamadasComFalha', change: false });
 }
 
 /** O grupo em que tudo terminou bem. */

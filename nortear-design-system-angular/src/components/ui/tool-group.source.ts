@@ -137,7 +137,7 @@ export const toolGroupSource: ToolGroupSourceTransform = (_code, ctx) => {
 
 /** O mesmo componente, com a lista pronta que o exemplo desenha. */
 function fromList(calls: string): string {
-  return build([IMPORT], groupLines('    ', { calls: 'calls', change: true }), [
+  return build([IMPORT], groupLines('    ', { calls: 'calls', change: false }), [
     `  readonly calls = ${calls};`,
     LABELS_LINE,
   ]);

@@ -88,17 +88,17 @@ export function toolGroupEveryStateSource(): string {
 
 /** O grupo com uma falha, ainda recolhido — o que a peça existe para servir. */
 export function toolGroupFailedSource(): string {
-  return build({ calls: 'chamadasComFalha' });
+  return build({ calls: 'chamadasComFalha', change: false });
 }
 
 /** O grupo em que tudo terminou bem. */
 export function toolGroupDoneSource(): string {
-  return build({ calls: 'chamadasConcluidas' });
+  return build({ calls: 'chamadasConcluidas', change: false });
 }
 
 /** O grupo que ainda corre. */
 export function toolGroupRunningSource(): string {
-  return build({ calls: 'chamadasEmCurso' });
+  return build({ calls: 'chamadasEmCurso', change: false });
 }
 
 /**
