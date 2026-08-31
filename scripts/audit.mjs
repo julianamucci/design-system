@@ -5158,7 +5158,34 @@ function auditQuality(slug) {
   ];
 
   for (const stack of STACKS) {
-    const { docs } = filesForSlug(slug, stack);
+    const { ui, docs } = filesForSlug(slug, stack);
+
+    // A PÁGINA INTEIRA faltando era invisível.
+    //
+    // `missing_section` itera as páginas ENCONTRADAS: zero páginas dá zero
+    // achados, e a stack que publica stories e esquece a docs page passa limpa
+    // — o pior modo de falhar, porque o silêncio se lê como aprovação. Achado
+    // ao construir a família 1 da guideline 17, quando uma stack ficou com
+    // stories sem página e `audit.mjs` reportou vazio.
+    //
+    // A guarda é `ui.length`: sem nenhum arquivo do slug na stack, a peça não
+    // existe ali e cobrar a página seria cobrar a ausência inteira, que é
+    // outro assunto. Com arquivos e sem página, quem lê aquela stack não tem
+    // documentação nenhuma do que está publicado na barra lateral.
+    if (ui.length && !docs.length) {
+      const Slug =
+        slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+      violations.push({
+        category: 'quality', severity: 'high', slug, stack,
+        file: `nortear-design-system-${stack}/src/components/docs/${Slug}Docs.*`,
+        rule: 'docs_page_ausente',
+        message:
+          `A stack publica ${ui.length} arquivo(s) de "${slug}" e não tem docs page. ` +
+          `O componente aparece na barra lateral sem nada que o explique, e ` +
+          `missing_section não alcança isso — ela só olha página que existe.`,
+      });
+    }
+
     for (const file of docs) {
       const content = readFile(file);
       if (!content) continue;
