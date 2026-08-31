@@ -26,6 +26,8 @@ import {
   BUDGET_WARNING_AT,
   budgetLevel,
   budgetShares,
+  contextSlices,
+  contextTotal,
   hasLimit,
   isOverLimit,
   remainingTokens,
@@ -228,5 +230,82 @@ describe('a repartição responde "de onde veio", e divide pelo TOTAL', () => {
     const shares = budgetShares({ input: 400, output: 0 });
     expect(shares).toHaveLength(2);
     expect(shares[1]).toEqual({ origin: 'output', tokens: 0, fraction: 0 });
+  });
+});
+
+describe('contextTotal — a soma das origens nomeadas', () => {
+  it('soma o que cada origem trouxe', () => {
+    expect(contextTotal([{ id: 'system', tokens: 400 }, { id: 'history', tokens: 1600 }])).toBe(2000);
+  });
+
+  it('lista vazia soma zero, e não NaN', () => {
+    expect(contextTotal([])).toBe(0);
+  });
+
+  it('parcela inválida conta como zero em vez de contaminar a soma', () => {
+    // `countable` recusa negativo, não-finito e ausente. Sem isso um único
+    // número ruim vindo de quem mediu viraria `NaN` em toda a repartição, e o
+    // desenho inteiro sumiria por causa de uma linha.
+    const soma = contextTotal([
+      { id: 'ok', tokens: 100 },
+      { id: 'negativa', tokens: -50 },
+      { id: 'infinita', tokens: Number.POSITIVE_INFINITY },
+    ]);
+    expect(soma).toBe(100);
+  });
+});
+
+describe('contextSlices — a repartição que a legenda lê por posição', () => {
+  const partes = [
+    { id: 'system', tokens: 250 },
+    { id: 'history', tokens: 500 },
+    { id: 'tools', tokens: 250 },
+  ];
+
+  it('divide pelo TOTAL REPARTIDO, nunca por um teto', () => {
+    // É a decisão 3 do cabeçalho, e o que separa esta peça da irmã: "de onde
+    // veio" se responde sem saber quanto cabe.
+    const fatias = contextSlices(partes);
+    expect(fatias.map((f) => f.percent)).toEqual([25, 50, 25]);
+  });
+
+  it('mantém a ORDEM de quem mediu, e não a do tamanho', () => {
+    // Decisão 4. Ordenar por peso faria a legenda trocar de linha entre um
+    // turno e o seguinte, e quem lê a legenda a lê por posição — a mesma
+    // repartição pareceria outra só porque uma parcela cresceu.
+    expect(contextSlices(partes).map((f) => f.id)).toEqual(['system', 'history', 'tools']);
+  });
+
+  it('a parcela zerada CONTINUA na lista', () => {
+    // Fatia e linha da legenda se emparelham por posição para dividirem a
+    // mesma cor. Sumir com a zerada desalinharia as duas listas, e a cor
+    // passaria a apontar para a fatia da vizinha — que continua parecendo certa.
+    const fatias = contextSlices([
+      { id: 'system', tokens: 100 },
+      { id: 'attachments', tokens: 0 },
+      { id: 'history', tokens: 100 },
+    ]);
+    expect(fatias.map((f) => f.id)).toEqual(['system', 'attachments', 'history']);
+    expect(fatias[1]!.percent).toBe(0);
+  });
+
+  it('total zero devolve zeros, e nunca NaN', () => {
+    // Dividir por zero na tela aconteceria SEMPRE na primeira vez que alguém
+    // abre a peça, que é o pior momento possível.
+    const fatias = contextSlices([{ id: 'system', tokens: 0 }, { id: 'history', tokens: 0 }]);
+    expect(fatias.every((f) => f.percent === 0 && f.fraction === 0)).toBe(true);
+    expect(fatias.some((f) => Number.isNaN(f.percent))).toBe(false);
+  });
+
+  it('as duas travas do número lido valem aqui também', () => {
+    // Uma parcela com tokens de verdade não sai como 0%, e uma que não é tudo
+    // não sai como 100% — é o número que se lê em voz.
+    const quaseTudo = contextSlices([{ id: 'history', tokens: 9999 }, { id: 'system', tokens: 1 }]);
+    expect(quaseTudo[0]!.percent).toBe(99);
+    expect(quaseTudo[1]!.percent).toBe(1);
+  });
+
+  it('origem única leva tudo', () => {
+    expect(contextSlices([{ id: 'history', tokens: 700 }])[0]!.percent).toBe(100);
   });
 });

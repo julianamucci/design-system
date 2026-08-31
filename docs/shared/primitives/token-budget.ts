@@ -30,6 +30,20 @@
  *      que trocasse de denominador conforme houvesse teto faria o mesmo desenho
  *      significar duas coisas.
  *
+ * Duas decisões CHEGARAM com a segunda peça de medição, a que desenha a
+ * repartição por origem nomeada. As duas são do mesmo tipo das três de cima —
+ * têm resposta plausível dos dois lados, e escritas em cinco stacks sairiam
+ * diferentes em pelo menos uma:
+ *
+ *   4. A ORDEM DA REPARTIÇÃO É A DE QUEM MEDIU, e nunca a do tamanho. Ordenar
+ *      por peso parece uma gentileza e é o contrário: a legenda é lida por
+ *      posição, e uma parcela que sobe de lugar entre um turno e o seguinte faz
+ *      quem lê comparar duas fotos diferentes achando que compara a mesma.
+ *   5. O POR CENTO DE CADA PARCELA É TEXTO, e leva as mesmas duas travas de
+ *      `usedPercent`, pelo mesmo motivo: é ele que se lê em voz. Uma parcela com
+ *      tokens de verdade não pode sair como 0%, e uma parcela que não é tudo não
+ *      pode sair como 100%.
+ *
  * Derivado do catálogo Elements da assistant-ui (MIT). Ver
  * `docs/shared/guidelines/17-componentes-conversacionais.md`.
  */
@@ -130,26 +144,40 @@ export function usedFraction(usage: TokenUsage): number | null {
 }
 
 /**
- * A fração em número inteiro de por cento — ou `null` quando não há teto.
+ * Uma fração de 0 a 1 em número inteiro de por cento, para ser LIDA.
  *
  * DUAS TRAVAS, e as duas existem porque este número é TEXTO: ele é lido em voz,
- * enquanto o anel ao lado é só desenho. Arredondar é escolher qual mentira
+ * enquanto o desenho ao lado é só desenho. Arredondar é escolher qual mentira
  * contar, então as duas mentiras que importam ficam de fora.
  *
- *   - 100% só quando está cheio de verdade. Ver "100%" com espaço sobrando faz
+ *   - 100% só quando é tudo de verdade. Ver "100%" com espaço sobrando faz
  *     parar de escrever quem não precisava parar.
- *   - 0% só quando nada foi gasto. Um turno já respondido que aparece como 0%
- *     diz que a conversa não começou.
+ *   - 0% só quando não há nada. Um turno já respondido que aparece como 0% diz
+ *     que a conversa não começou.
  *
  * Entre as duas pontas o valor é truncado, e não arredondado: truncar nunca
  * empurra o número para uma ponta que ele não alcançou.
+ *
+ * Mora numa função só porque DOIS números da folha de medição são texto — a
+ * fração da janela e o peso de cada parcela da repartição — e as travas valem
+ * igual para os dois. Escritas duas vezes, uma delas perderia uma trava.
+ */
+function readablePercent(fraction: number): number {
+  if (fraction <= 0) return 0;
+  if (fraction >= 1) return 100;
+  return Math.min(Math.max(Math.floor(fraction * 100), 1), 99);
+}
+
+/**
+ * A fração da janela em número inteiro de por cento — ou `null` sem teto.
+ *
+ * As travas são as de `readablePercent`, e o `null` é o de `usedFraction`:
+ * sem teto não há fração, e por isso não há por cento.
  */
 export function usedPercent(usage: TokenUsage): number | null {
   const fraction = usedFraction(usage);
   if (fraction === null) return null;
-  if (fraction <= 0) return 0;
-  if (fraction >= 1) return 100;
-  return Math.min(Math.max(Math.floor(fraction * 100), 1), 99);
+  return readablePercent(fraction);
 }
 
 /**
@@ -241,4 +269,84 @@ export function budgetShares(usage: TokenUsage): BudgetShare[] {
     tokens: tokens[origin],
     fraction: total === 0 ? 0 : tokens[origin] / total,
   }));
+}
+
+// ─── De onde veio, por origem NOMEADA ─────────────────────────────────────────
+//
+// `budgetShares` reparte por DIREÇÃO — o que veio da pergunta e o que veio da
+// resposta —, e as duas origens são fixas porque o vocabulário só conhece
+// essas duas. A repartição por PROCEDÊNCIA é outra pergunta: instruções do
+// sistema, histórico, anexos, resultados de ferramenta. Quantas origens existem
+// e como se chamam é conhecimento de quem mediu, não do design system, e é por
+// isso que aqui a origem é uma etiqueta e não um membro de união.
+//
+// O DENOMINADOR CONTINUA SENDO O TOTAL REPARTIDO, e nunca o teto — é a mesma
+// decisão 3 do cabeçalho, e vale ainda com mais força aqui: esta repartição não
+// pede teto nenhum para existir. É o que separa esta peça da irmã. "De onde
+// veio" se responde sem saber quanto cabe.
+
+/**
+ * Uma origem nomeada do consumo, como quem mediu a produziu.
+ *
+ * O `id` é ENDEREÇO, e não texto de tela: a palavra que se lê é interface, tem
+ * três idiomas e sai da `translations.json`, como a palavra de cada nível já
+ * sai. Guardar aqui o nome traduzido faria a repartição mudar de conteúdo com o
+ * idioma da foto.
+ */
+export interface ContextPart {
+  id: string;
+  tokens: number;
+}
+
+/** Uma origem com o peso dela na repartição. */
+export interface ContextSlice {
+  id: string;
+  tokens: number;
+  /** De 0 a 1, sobre o TOTAL REPARTIDO — nunca sobre o teto. */
+  fraction: number;
+  /** O mesmo peso em inteiro de por cento. Este número é TEXTO. */
+  percent: number;
+}
+
+/**
+ * O total repartido — a soma das parcelas, e o denominador de todas elas.
+ *
+ * Existe como função exportada, e não como um `reduce` de cada stack, porque é
+ * ela que responde a pergunta "há o que repartir?". Zero é a conversa que ainda
+ * não teve turno nenhum, e é o primeiro estado que qualquer tela mostra.
+ */
+export function contextTotal(parts: readonly ContextPart[]): number {
+  let total = 0;
+  for (const part of parts) total += countable(part.tokens);
+  return total;
+}
+
+/**
+ * A repartição do consumo por origem nomeada.
+ *
+ * NA ORDEM EM QUE CHEGARAM (decisão 4 do cabeçalho). Ordenar por peso faria a
+ * legenda trocar de linha entre um turno e o seguinte, e quem lê a legenda a lê
+ * por posição — a mesma repartição pareceria outra só porque uma parcela
+ * cresceu.
+ *
+ * TODA PARCELA SAI, inclusive a que vale zero, e aqui isso é mais do que a
+ * legenda estável de `budgetShares`: a fatia e a linha da legenda se emparelham
+ * por POSIÇÃO para dividirem a mesma cor. Sumir com a parcela zerada
+ * desalinharia as duas listas, e a cor da legenda passaria a apontar para a
+ * fatia da vizinha — que é o pior defeito possível numa repartição, porque
+ * continua parecendo certa.
+ *
+ * Com total zero as parcelas saem todas em zero, e não em `NaN`: dividir por
+ * zero na tela é o defeito que `formatFileSize` já tinha aprendido a não
+ * cometer, e aqui ele aconteceria sempre na primeira vez que alguém abre a
+ * peça.
+ */
+export function contextSlices(parts: readonly ContextPart[]): ContextSlice[] {
+  const total = contextTotal(parts);
+
+  return parts.map((part) => {
+    const tokens = countable(part.tokens);
+    const fraction = total === 0 ? 0 : tokens / total;
+    return { id: part.id, tokens, fraction, percent: readablePercent(fraction) };
+  });
 }

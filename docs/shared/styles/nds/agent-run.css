@@ -593,3 +593,172 @@
   min-inline-size: var(--spacing-6);
   min-block-size: var(--spacing-6);
 }
+
+/* ── Cartão de autorização ────────────────────────────────────────────────────
+ *
+ * A pergunta que precisa de resposta antes que algo com consequência aconteça:
+ * usar uma ferramenta, gastar, tocar um arquivo.
+ *
+ *   <div class="nds-approval-card" data-slot="approval-card">
+ *     <div class="nds-approval-card-ask" data-slot="approval-card-ask" role="status">
+ *       <p class="nds-approval-card-question" data-slot="approval-card-question">
+ *         Permitir que o agente publique o relatório?
+ *       </p>
+ *       <dl class="nds-approval-card-scope" data-slot="approval-card-scope">
+ *         <dt class="nds-approval-card-scope-term" data-slot="approval-card-scope-term">Ferramenta</dt>
+ *         <dd class="nds-approval-card-scope-detail" data-slot="approval-card-scope-detail">publicar_relatorio</dd>
+ *         <dt class="nds-approval-card-scope-term" data-slot="approval-card-scope-term">Alvo</dt>
+ *         <dd class="nds-approval-card-scope-detail" data-slot="approval-card-scope-detail">docs/shared/relatorios/</dd>
+ *       </dl>
+ *     </div>
+ *     <div class="nds-approval-card-actions" data-slot="approval-card-actions">
+ *       <button class="nds-button" data-approval-choice="allow-once">Permitir uma vez</button>
+ *       <button class="nds-button" data-approval-choice="deny">Recusar</button>
+ *     </div>
+ *   </div>
+ *
+ * A CLASSE ANDA JUNTO do `data-slot` na árvore inteira, e aqui isso não é
+ * precaução herdada: é a folha inteira que estiliza por classe, porque no
+ * Angular `data-slot` é ligado por host binding em várias peças e disputa com o
+ * atributo estático do template (regra 8 do `RULES.md` daquela stack). Árvore
+ * que mostra só o `data-slot` ensina que a classe não existe.
+ *
+ * `data-approval-choice` NÃO É NOSSO, e por isso aparece sem classe nenhuma:
+ * quem escreve o atributo é quem monta os controles, e ele é o único pedaço do
+ * contrato que atravessa a fronteira do que a peça desenha. A folha não o
+ * estiliza — ele não descreve desenho, marca qual controle é resposta.
+ *
+ * ONDE ESTE CARTÃO MORA. Ele é o OUTRO LADO da decisão 3 do grupo de chamadas:
+ * `waitsForPerson` é verdadeiro só em `pending`, e a chamada que espera uma
+ * pessoa não fica dentro da caixa recolhida, porque pedir autorização sem
+ * mostrar é não pedir. Este é o lugar para onde ela sai. Quem separa é quem
+ * consome, com `splitWaitingCalls`.
+ *
+ * O LIMITE DA PEÇA, e é a §7 da guideline 17 que o traça: o design system
+ * desenha A PERGUNTA e o ESPAÇO DA RESPOSTA. Ele não decide o que a resposta
+ * significa. O que acontece ao recusar, se há campo de motivo, se a escolha
+ * vale para as próximas, o que "sempre permitir" abrange — nada disso está
+ * aqui, e nada disso vai estar. Os controles chegam prontos de quem consome,
+ * pelo mesmo contrato que a autorização dentro da conversa já usa.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. AQUI A REGIÃO VIVA EXISTE, e é a TERCEIRA exceção desta folha — as duas
+ *    primeiras são o indicador de geração e o estado da ligação. A proibição
+ *    padrão continua valendo e é boa: estado que se reanuncia corta a leitura
+ *    da resposta que está chegando.
+ *
+ *    UMA PERGUNTA NÃO É UM ESTADO. O estado da execução se anuncia para
+ *    informar; este cartão se anuncia porque, sem ele, NADA MAIS ACONTECE. A
+ *    máquina parou e espera por uma pessoa — é um impasse, e dos dois lados:
+ *    quem não vê a tela fica esperando uma resposta que nunca vem, porque quem
+ *    a produziria está esperando por ela. Pergunta que aparece e não se anuncia
+ *    é pergunta que ninguém responde.
+ *
+ *    E É POLIDO, `role="status"` e não `role="alert"`. Pedir autorização não é
+ *    erro, e cortar o que estiver sendo lido é justamente a armadilha da regra
+ *    1 da §8. Polido entra na fila; entrar na fila basta, porque a fila anda e
+ *    o impasse não tem prazo.
+ *
+ *    A REGIÃO PARA ANTES DOS CONTROLES, e essa parte só aparece com a marcação
+ *    na mão. Ela envolve a pergunta e o alcance — o que é preciso saber para
+ *    decidir — e deixa de fora a caixa dos controles. Botão dentro de anúncio é
+ *    rótulo recitado que ninguém pode apertar dali: cada controle já se anuncia
+ *    sozinho quando o foco chega nele, e repeti-los só faz o anúncio ficar
+ *    longo justamente na hora em que ele precisa ser respondido. É a mesma
+ *    escolha de escopo do estado da ligação, onde a região envolve só a
+ *    palavra — e ela obriga a caixa `-ask` a existir como elemento.
+ * 2. O ALCANCE É UMA LISTA DE DEFINIÇÃO, e não uma frase com dois-pontos.
+ *    "Ferramenta: publicar_relatorio" põe o pareamento na pontuação, e
+ *    pontuação não sobrevive à navegação por lista de um leitor de tela. Com
+ *    `<dl>`, o termo e o valor continuam pareados quando alguém pula de item em
+ *    item sem ler a linha inteira.
+ * 3. A ORDEM DE LEITURA É A ORDEM DO FOCO: pergunta, alcance, controles. Os
+ *    controles vêm por último na marcação e a folha não os move — nada de
+ *    `order` nem de `row-reverse`. Controle que é o primeiro para o olho e o
+ *    último para a tabulação faz duas perguntas diferentes na mesma tela (WCAG
+ *    1.3.2 e 2.4.3), e uma delas é respondida no escuro.
+ * 4. O CARTÃO NÃO TEM PRAZO, e é por isso que não há contagem nenhuma aqui — ao
+ *    contrário do estado da ligação, que conta porque a máquina vai tentar de
+ *    novo sozinha. Uma pergunta com relógio se responde pelo silêncio, e o que
+ *    o silêncio significa é política de produto. Se o produto tiver prazo, ele
+ *    o desenha; a peça não o inventa.
+ * 5. A MOLDURA É DE ATENÇÃO, e não de erro. Mesma cor e mesma opacidade da
+ *    chamada de ferramenta que espera por uma pessoa dentro da conversa
+ *    (`.nds-chat-tool-call[data-state="pending"]`), e pelo mesmo motivo: quem
+ *    deve resposta aqui é quem lê. A cor não descreve nada sozinha (WCAG
+ *    1.4.1) — a pergunta é a pergunta, e ela está escrita.
+ * 6. NÃO HÁ DISCLOSURE. Nenhum `<details>`, nada recolhido: uma pergunta
+ *    dobrada é uma pergunta que não foi feita, que é exatamente a decisão que
+ *    tirou esta peça de dentro do grupo.
+ */
+
+.nds-approval-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+
+  padding: var(--spacing-3);
+  border: 1px solid hsl(var(--warning) / 0.5);
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted) / 0.3);
+
+  font-size: var(--text-label);
+}
+
+/* A REGIÃO VIVA É ESTA CAIXA (decisão 1), e ela existe como elemento justamente
+ * para que a caixa dos controles fique de fora. Sem ela, o único lugar onde o
+ * papel caberia seria a raiz — e a raiz contém os botões. */
+.nds-approval-card-ask {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.nds-approval-card-question {
+  margin: 0;
+  /* Texto sobre fundo de sistema é sempre `--foreground`: a moldura de atenção
+   * ao redor é REFORÇO, e cor semântica em texto corrido raramente alcança os
+   * 4.5:1 que ele exige (regra dos contêineres coloridos). */
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+}
+
+/* Duas colunas na LISTA, e não em cada par, e isso foi medido contra a marcação:
+ * com a grade em cada par, os valores de itens diferentes começariam em posições
+ * diferentes conforme o tamanho do termo à esquerda. Quem lê o alcance está
+ * comparando alvos, e alvo desalinhado se compara mal. */
+.nds-approval-card-scope {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--spacing-1) var(--spacing-3);
+  margin: 0;
+}
+
+.nds-approval-card-scope-term {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Sem monoespaçada, pela mesma razão escrita no nome da chamada de ferramenta:
+ * não há token de fonte mono neste sistema, e uma terceira cópia da pilha
+ * literal do `code-block` seria duplicata que envelhece sozinha. O valor se
+ * distingue por peso, que o sistema já tokeniza. */
+.nds-approval-card-scope-detail {
+  margin: 0;
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  /* Um caminho longo QUEBRA, e não recebe reticências: alcance pela metade é
+   * autorização pela metade — mesma escolha do rótulo do passo do plano. */
+  overflow-wrap: anywhere;
+}
+
+/* O ESPAÇO DA RESPOSTA. Quem desenha os controles é quem consome (§7 da
+ * guideline 17), e por isso aqui não há regra que os alcance: a folha dá o
+ * lugar, a quebra de linha e o afastamento entre alvos vizinhos, e cada
+ * controle traz o próprio tamanho. Mesma forma de
+ * `.nds-chat-tool-call-approval`, que é o mesmo contrato dentro da conversa. */
+.nds-approval-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
