@@ -126,7 +126,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "O rascunho inteiro chega à faixa, e o desenho corta a prévia em duas linhas.",
         "dont": "O texto chega já cortado com reticências: some da busca do navegador e nunca chega inteiro a quem ouve."
@@ -581,7 +581,7 @@
       }
     },
     "doDont": {
-      "title": "Right and wrong",
+      "title": "Best practices",
       "pair1": {
         "do": "The whole draft reaches the band, and the design clips the preview to two lines.",
         "dont": "The text arrives already clipped with an ellipsis: it disappears from browser search and never reaches whoever listens in full."
@@ -1036,7 +1036,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "El borrador entero llega a la franja, y el diseño recorta la vista previa en dos líneas.",
         "dont": "El texto llega ya recortado con puntos suspensivos: desaparece de la búsqueda del navegador y nunca llega entero a quien escucha."

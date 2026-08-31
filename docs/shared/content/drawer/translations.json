@@ -130,7 +130,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Drawer com DrawerTitle visível ou sr-only para aria-labelledby.",
         "dont": "Drawer sem DrawerTitle — leitor de tela não anuncia o painel."
@@ -431,7 +431,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -578,7 +578,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Drawer with visible or sr-only DrawerTitle for aria-labelledby.",
         "dont": "Drawer without DrawerTitle — screen reader doesn't announce the panel."
@@ -879,7 +879,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1026,7 +1026,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Drawer con DrawerTitle visible o sr-only para aria-labelledby.",
         "dont": "Drawer sin DrawerTitle — el lector de pantalla no anuncia el panel."
@@ -1327,7 +1327,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

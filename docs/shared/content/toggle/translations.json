@@ -120,7 +120,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Toggle icon-only com aria-label descritivo da função.",
         "dont": "Não use aria-label genérico como \"Botão\" ou nome da letra."
@@ -436,7 +436,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -573,7 +573,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Icon-only Toggle with descriptive aria-label for the function.",
         "dont": "Don't use generic aria-label like \"Button\" or the letter name."
@@ -889,7 +889,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1026,7 +1026,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Toggle icon-only con aria-label descriptivo de la función.",
         "dont": "No uses aria-label genérico como \"Botón\" o el nombre de la letra."
@@ -1342,7 +1342,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

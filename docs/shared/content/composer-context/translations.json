@@ -139,7 +139,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "A espécie chega em palavra, junto do nome do item.",
         "dont": "Só o ícone separa um trecho de um arquivo inteiro, e ícone não chega a quem ouve a tela."
@@ -611,7 +611,7 @@
       }
     },
     "doDont": {
-      "title": "Do and don't",
+      "title": "Best practices",
       "pair1": {
         "do": "The kind arrives in words, next to the item name.",
         "dont": "Only the icon separates an excerpt from a whole file, and an icon never reaches whoever listens."
@@ -1083,7 +1083,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "La especie llega en palabra, junto al nombre del elemento.",
         "dont": "Solo el icono separa un fragmento de un archivo entero, y el icono no llega a quien escucha la pantalla."

@@ -49,7 +49,7 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
       "dont": { "title": "Não use quando", "item1": "...", "itemN": "..." }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": { "do": "Descrição do uso correto.", "dont": "Descrição do uso incorreto." },
       "pair2": { "do": "...", "dont": "..." }
     },
@@ -150,7 +150,7 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",

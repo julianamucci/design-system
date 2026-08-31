@@ -122,7 +122,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Exiba o valor numérico ao lado do slider.",
         "dont": "Não deixe o valor invisível — usuário não sabe onde está."
@@ -449,7 +449,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -588,7 +588,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Display the numeric value next to the slider.",
         "dont": "Don't leave the value invisible — user doesn't know where they are."
@@ -915,7 +915,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1054,7 +1054,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Muestra el valor numérico al lado del slider.",
         "dont": "No dejes el valor invisible — el usuario no sabe dónde está."
@@ -1381,7 +1381,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

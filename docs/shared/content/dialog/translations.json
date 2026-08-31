@@ -146,7 +146,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Título nomeia o objeto, descrição orienta a ação, botão primário usa verbo específico (\"Salvar alterações\").",
         "dont": "Título genérico (\"Atenção\"), descrição vazia e botão \"OK\" sem indicar o que será feito."
@@ -439,7 +439,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -603,7 +603,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Title names the object, description guides the action, primary button uses a specific verb (\"Save changes\").",
         "dont": "Generic title (\"Notice\"), empty description, and \"OK\" button without indicating what will happen."
@@ -896,7 +896,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1060,7 +1060,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "El título nombra el objeto, la descripción orienta la acción, el botón primario usa un verbo específico (\"Guardar cambios\").",
         "dont": "Título genérico (\"Atención\"), descripción vacía y botón \"OK\" sin indicar lo que hará."
@@ -1353,7 +1353,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

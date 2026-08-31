@@ -123,7 +123,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Sempre vincule o Label ao item pelo atributo for, apontando para o id correspondente.",
         "dont": "Não use texto solto ao lado do radio — leitores de tela não associam."
@@ -424,7 +424,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -564,7 +564,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Always link the Label to the item through the for attribute, pointing at the matching id.",
         "dont": "Don't use loose text next to the radio — screen readers won't associate."
@@ -865,7 +865,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1005,7 +1005,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Vincula siempre el Label al ítem por el atributo for, apuntando al id correspondiente.",
         "dont": "No uses texto suelto al lado del radio — los lectores de pantalla no asocian."
@@ -1306,7 +1306,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

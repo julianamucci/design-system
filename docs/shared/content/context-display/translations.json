@@ -132,7 +132,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "A palavra do nível está na linha, e a cor apenas reforça.",
         "dont": "Só a cor do medidor separa a folga do aperto, e cor não chega a quem ouve a tela."
@@ -527,7 +527,6 @@
     },
     "nav": {}
   },
-
   "en": {
     "title": "Context usage",
     "category": "Conversational",
@@ -661,7 +660,7 @@
       }
     },
     "doDont": {
-      "title": "Do and don't",
+      "title": "Best practices",
       "pair1": {
         "do": "The level word is on the line, and colour only reinforces it.",
         "dont": "Only the meter colour separates room to spare from the limit, and colour does not reach someone listening to the screen."
@@ -1056,7 +1055,6 @@
     },
     "nav": {}
   },
-
   "es": {
     "title": "Uso del contexto",
     "category": "Conversacional",
@@ -1190,7 +1188,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "La palabra del nivel está en la línea, y el color solo refuerza.",
         "dont": "Solo el color del medidor separa la holgura del apuro, y el color no llega a quien escucha la pantalla."

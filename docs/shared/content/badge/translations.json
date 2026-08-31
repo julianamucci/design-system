@@ -123,7 +123,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Texto curto e direto (1 a 3 palavras). Rótulo complementa o item, não substitui.",
         "dont": "Frases completas ou texto longo que quebra o layout inline."
@@ -385,7 +385,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -525,7 +525,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Short, direct text (1 to 3 words). The label complements the item, never replaces it.",
         "dont": "Full sentences or long text that breaks the inline layout."
@@ -787,7 +787,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -927,7 +927,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Texto corto y directo (1 a 3 palabras). La etiqueta complementa al ítem, no lo sustituye.",
         "dont": "Frases completas o texto largo que rompe el layout inline."
@@ -1189,7 +1189,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

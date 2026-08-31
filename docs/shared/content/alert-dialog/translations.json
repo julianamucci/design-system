@@ -137,7 +137,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Título nomeia a ação, descrição explica a consequência, botão repete o verbo.",
         "dont": "Título em forma de pergunta (\"Tem certeza?\") e botões genéricos (\"OK\", \"Sim\")."
@@ -431,7 +431,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -585,7 +585,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Title names the action, description explains the consequence, button repeats the verb.",
         "dont": "Title as a question (\"Are you sure?\") and generic buttons (\"OK\", \"Yes\")."
@@ -879,7 +879,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1033,7 +1033,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Título nombra la acción, descripción explica la consecuencia, botón repite el verbo.",
         "dont": "Título en forma de pregunta (\"¿Estás seguro?\") y botones genéricos (\"OK\", \"Sí\")."
@@ -1327,7 +1327,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

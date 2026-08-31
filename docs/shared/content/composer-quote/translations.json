@@ -125,7 +125,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "O trecho inteiro vai ao documento, e o corte é do desenho.",
         "dont": "Cortado em código, o resto do texto some para quem lê por audição e para a busca do navegador."
@@ -549,7 +549,7 @@
       }
     },
     "doDont": {
-      "title": "Right and wrong",
+      "title": "Best practices",
       "pair1": {
         "do": "The whole excerpt goes to the document, and clamping belongs to the design.",
         "dont": "Cut in code, the rest of the text disappears for listeners and for the browser search."
@@ -973,7 +973,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "El fragmento entero va al documento, y el recorte es del diseño.",
         "dont": "Cortado en código, el resto del texto desaparece para quien escucha y para la búsqueda del navegador."

@@ -148,7 +148,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "toast.success com título breve no passado. Confirma o que aconteceu sem excesso.",
         "dont": "Toast para erro que bloqueia o fluxo. Use Alert para mensagens persistentes."
@@ -383,7 +383,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Tipos",
@@ -548,7 +548,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "toast.success with a brief past-tense title. Confirms what happened without excess.",
         "dont": "Toast for a flow-blocking error. Use Alert for persistent messages."
@@ -783,7 +783,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Types",
@@ -948,7 +948,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "toast.success con título breve en pasado. Confirma lo que ocurrió sin exceso.",
         "dont": "Toast para error que bloquea el flujo. Usa Alert para mensajes persistentes."
@@ -1183,7 +1183,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Tipos",

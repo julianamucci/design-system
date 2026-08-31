@@ -135,7 +135,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Cada botão de retirar diz qual mensagem retira.",
         "dont": "Três botões chamados apenas \"Retirar\" são um botão só para quem navega por audição."
@@ -587,7 +587,7 @@
       }
     },
     "doDont": {
-      "title": "Right and wrong",
+      "title": "Best practices",
       "pair1": {
         "do": "Each withdraw button names the message it withdraws.",
         "dont": "Three buttons called just \"Withdraw\" are a single button for whoever navigates by ear."
@@ -1039,7 +1039,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Cada botón de retirar dice qué mensaje retira.",
         "dont": "Tres botones llamados solo \"Retirar\" son un único botón para quien navega de oído."

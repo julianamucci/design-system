@@ -125,7 +125,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Esqueleto que imita a caixa do conteúdo final — título, linha cheia, linha curta.",
         "dont": "Bloco único genérico, que causa salto de layout quando o conteúdo chega."
@@ -388,7 +388,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -530,7 +530,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Skeleton mirroring the final content box — heading, full line, short line.",
         "dont": "A single generic block, which makes the layout jump when the content arrives."
@@ -793,7 +793,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -935,7 +935,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Esqueleto que imita la caja del contenido final — título, línea completa, línea corta.",
         "dont": "Un bloque genérico único, que provoca salto de layout cuando llega el contenido."
@@ -1198,7 +1198,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

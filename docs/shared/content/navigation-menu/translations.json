@@ -130,7 +130,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "NavigationMenu com aria-label=\"Navegação principal\" e aria-current=\"page\" no link ativo.",
         "dont": "NavigationMenu sem aria-label — leitor de tela anuncia apenas \"navigation\"."
@@ -444,7 +444,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -592,7 +592,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "NavigationMenu with aria-label=\"Main navigation\" and aria-current=\"page\" on active link.",
         "dont": "NavigationMenu without aria-label — screen reader announces just \"navigation\"."
@@ -906,7 +906,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1054,7 +1054,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "NavigationMenu con aria-label=\"Navegación principal\" y aria-current=\"page\" en el link activo.",
         "dont": "NavigationMenu sin aria-label — el lector de pantalla anuncia solo \"navigation\"."
@@ -1368,7 +1368,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

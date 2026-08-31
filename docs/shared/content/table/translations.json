@@ -151,7 +151,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "TableCaption descritivo (pode ficar só para leitor de tela) + scope=\"col\" em todos os cabeçalhos.",
         "dont": "Tabela sem caption e sem scope — inacessível para leitores de tela."
@@ -441,7 +441,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Padrões de Uso",
@@ -610,7 +610,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Descriptive TableCaption (can be screen-reader only) + scope=\"col\" on all header cells.",
         "dont": "Table without caption and scope — inaccessible to screen readers."
@@ -900,7 +900,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Usage Patterns",
@@ -1069,7 +1069,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "TableCaption descriptivo (puede quedar solo para lector de pantalla) + scope=\"col\" en todos los encabezados.",
         "dont": "Tabla sin caption ni scope — inaccesible para lectores de pantalla."
@@ -1359,7 +1359,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Patrones de Uso",

@@ -127,7 +127,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Linguagem informada, rótulo com o nome do arquivo e destaque só nas linhas que o texto explica.",
         "dont": "Bloco sem linguagem, sem rótulo e com metade das linhas destacadas."
@@ -573,7 +573,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -717,7 +717,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Language declared, label with the file name, and highlighting only on the lines the text explains.",
         "dont": "Block with no language, no label, and half the lines highlighted."
@@ -1163,7 +1163,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1307,7 +1307,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Lenguaje indicado, etiqueta con el nombre del archivo y destaque solo en las líneas que el texto explica.",
         "dont": "Bloque sin lenguaje, sin etiqueta y con la mitad de las líneas destacadas."
@@ -1753,7 +1753,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

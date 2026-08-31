@@ -125,7 +125,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "A frase diz o que está acontecendo, e é ela que chega a quem ouve a tela.",
         "dont": "Só os pontos se movendo: para quem ouve a tela, isso é silêncio."
@@ -516,7 +516,7 @@
       }
     },
     "doDont": {
-      "title": "Right and wrong",
+      "title": "Best practices",
       "pair1": {
         "do": "The phrase says what is happening, and it is what reaches whoever is listening to the screen.",
         "dont": "Only the dots moving: for whoever is listening to the screen, that is silence."
@@ -907,7 +907,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "La frase dice qué está pasando, y es ella la que llega a quien escucha la pantalla.",
         "dont": "Solo los puntos moviéndose: para quien escucha la pantalla, eso es silencio."

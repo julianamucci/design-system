@@ -126,7 +126,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "InputOTP de 6 dígitos com autoComplete=one-time-code para autofill SMS.",
         "dont": "InputOTP sem autoComplete — usuário digita manualmente."
@@ -466,7 +466,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -610,7 +610,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "6-digit InputOTP with autoComplete=one-time-code for SMS autofill.",
         "dont": "InputOTP without autoComplete — user types manually."
@@ -950,7 +950,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1094,7 +1094,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "InputOTP de 6 dígitos con autoComplete=one-time-code para autofill SMS.",
         "dont": "InputOTP sin autoComplete — usuario escribe manualmente."
@@ -1434,7 +1434,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

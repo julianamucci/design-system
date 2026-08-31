@@ -142,7 +142,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Multi-séries com legenda automática e <code>aria-label</code> que nomeia cada série.",
         "dont": "Diferenciar séries somente por cor sem legenda ou label acessível."
@@ -466,7 +466,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Tipos",
@@ -625,7 +625,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Multi-series with automatic legend and <code>aria-label</code> naming each series.",
         "dont": "Differentiate series by color alone without a legend or accessible label."
@@ -949,7 +949,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Types",
@@ -1108,7 +1108,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Multi-series con leyenda automática y <code>aria-label</code> que nombra cada serie.",
         "dont": "Diferenciar series solo por color sin leyenda ni label accesible."
@@ -1432,7 +1432,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Tipos",

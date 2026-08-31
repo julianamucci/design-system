@@ -593,7 +593,7 @@
       }
     },
     "doDont": {
-      "title": "Good practices",
+      "title": "Best practices",
       "pair1": {
         "do": "An address with a refused scheme loses its destination and keeps the text: the reader still sees what was written.",
         "dont": "Deleting the whole link hides that there was one — and, in a conversation, hides that the model tried to send it."
@@ -923,7 +923,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to use",
-      "doDont": "Good practices",
+      "doDont": "Best practices",
       "techRef": "Technical reference",
       "import": "Import",
       "variants": "Allow-lists",

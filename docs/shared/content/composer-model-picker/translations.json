@@ -131,7 +131,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "O modelo que não pode responder agora fica na lista, com o motivo escrito ao lado do nome.",
         "dont": "Ele some da lista, e com ele a resposta para a pergunta \"por que não posso?\"."
@@ -636,7 +636,7 @@
       }
     },
     "doDont": {
-      "title": "Right and wrong",
+      "title": "Best practices",
       "pair1": {
         "do": "The model that cannot answer right now stays in the list, with the reason written beside the name.",
         "dont": "It disappears from the list, and with it the answer to \"why can't I?\"."
@@ -1141,7 +1141,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "El modelo que no puede responder ahora sigue en la lista, con el motivo escrito junto al nombre.",
         "dont": "Desaparece de la lista, y con él la respuesta a \"¿por qué no puedo?\"."

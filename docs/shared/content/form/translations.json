@@ -116,7 +116,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Label visível + descrição abaixo do controle quando o formato exige explicação.",
         "dont": "Apenas placeholder como rótulo — desaparece ao digitar e quebra acessibilidade."
@@ -475,7 +475,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Visible label + description below the control when the format needs explanation.",
         "dont": "Placeholder only as a label — it disappears when typing and breaks accessibility."
@@ -834,7 +834,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Label visible + descripción debajo del control cuando el formato necesita explicación.",
         "dont": "Solo placeholder como rótulo — desaparece al escribir y rompe la accesibilidad."

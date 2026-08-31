@@ -99,7 +99,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Ofereça as mesmas ações também via botão ou DropdownMenu visível.",
         "dont": "Usar o Context Menu como único acesso a funcionalidades críticas."
@@ -235,10 +235,10 @@
         "destructiveFocus": "Fundo de item destrutivo em foco",
         "mutedFg": "Texto de label e shortcut",
         "border": "Linha separadora",
-    "popupBorder": "Borda de 1px do popup",
+        "popupBorder": "Borda de 1px do popup",
         "shadow": "Sombra do popup",
         "radius": "Border radius do popup",
-    "radiusItem": "Border radius dos itens do menu",
+        "radiusItem": "Border radius dos itens do menu",
         "zIndex": "Camada de empilhamento do popup"
       },
       "customizationTitle": "Como personalizar via tema:"
@@ -426,7 +426,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -543,7 +543,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Provide the same actions also via a visible button or DropdownMenu.",
         "dont": "Use Context Menu as the only access point to critical features."
@@ -679,10 +679,10 @@
         "destructiveFocus": "Destructive item focus background",
         "mutedFg": "Label and shortcut text",
         "border": "Separator line",
-    "popupBorder": "1px popup border",
+        "popupBorder": "1px popup border",
         "shadow": "Popup shadow",
         "radius": "Popup border radius",
-    "radiusItem": "Menu item border radius",
+        "radiusItem": "Menu item border radius",
         "zIndex": "Popup stacking layer"
       },
       "customizationTitle": "How to customize via theme:"
@@ -870,7 +870,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -987,7 +987,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Ofrece las mismas acciones también vía botón visible o DropdownMenu.",
         "dont": "Usar el Context Menu como único acceso a funcionalidades críticas."
@@ -1123,10 +1123,10 @@
         "destructiveFocus": "Fondo de ítem destructivo en foco",
         "mutedFg": "Texto de etiqueta y atajo",
         "border": "Línea separadora",
-    "popupBorder": "Borde de 1px del popup",
+        "popupBorder": "Borde de 1px del popup",
         "shadow": "Sombra del popup",
         "radius": "Border radius del popup",
-    "radiusItem": "Border radius de los ítems del menú",
+        "radiusItem": "Border radius de los ítems del menú",
         "zIndex": "Capa de apilamiento del popup"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
@@ -1314,7 +1314,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

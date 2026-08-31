@@ -143,7 +143,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Card com CardTitle, CardDescription e ações no CardFooter. Unidade semântica clara.",
         "dont": "Card usado apenas como divisor visual sem título ou conteúdo semântico."
@@ -406,7 +406,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -566,7 +566,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Card with CardTitle, CardDescription and actions in CardFooter. Clear semantic unit.",
         "dont": "Card used only as a visual divider with no title or semantic content."
@@ -829,7 +829,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -989,7 +989,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Card con CardTitle, CardDescription y acciones en CardFooter. Unidad semántica clara.",
         "dont": "Card usado solo como divisor visual sin título ni contenido semántico."
@@ -1252,7 +1252,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

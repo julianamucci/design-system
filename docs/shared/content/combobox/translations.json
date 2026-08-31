@@ -163,7 +163,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Dar a cada botão de remover o nome do que ele remove: \"Remover Brasil\".",
         "dont": "Repetir \"Remover\" em todos os chips: quem navega por teclado ouve cinco botões idênticos."
@@ -596,7 +596,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -777,7 +777,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Give each remove button the name of what it removes: \"Remove Brazil\".",
         "dont": "Repeat \"Remove\" on every chip: keyboard users hear five identical buttons."
@@ -1210,7 +1210,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1391,7 +1391,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Dar a cada botón de quitar el nombre de lo que quita: \"Quitar Brasil\".",
         "dont": "Repetir \"Quitar\" en todos los chips: quien navega por teclado oye cinco botones idénticos."
@@ -1824,7 +1824,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

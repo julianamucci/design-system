@@ -117,7 +117,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Imagem com <code>object-fit: cover</code> preenche o container sem distorcer.",
         "dont": "Imagem com <code>object-contain</code> deixa bordas vazias dentro do ratio."
@@ -329,7 +329,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Ratios",
@@ -463,7 +463,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Image with <code>object-fit: cover</code> fills the container without distortion.",
         "dont": "Image with <code>object-contain</code> leaves empty borders inside the ratio."
@@ -675,7 +675,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Ratios",
@@ -809,7 +809,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Imagen con <code>object-fit: cover</code> rellena el contenedor sin distorsionar.",
         "dont": "Imagen con <code>object-contain</code> deja bordes vacíos dentro del ratio."
@@ -1021,7 +1021,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Ratios",

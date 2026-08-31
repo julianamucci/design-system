@@ -379,7 +379,7 @@
         "do": "Use o modo múltiplo quando o usuário precisa comparar seções abertas simultaneamente.",
         "dont": "Não use Accordion para uma única seção expansível — use Collapsible."
       },
-      "title": "Do & Don't"
+      "title": "Boas práticas"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -562,7 +562,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -958,7 +958,7 @@
         "do": "Use the multiple mode when users need to compare open sections simultaneously.",
         "dont": "Don't use Accordion for a single expandable section — use Collapsible."
       },
-      "title": "Do & Don't"
+      "title": "Best practices"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -1141,7 +1141,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1537,7 +1537,7 @@
         "do": "Usa el modo múltiple cuando el usuario necesita comparar secciones abiertas simultáneamente.",
         "dont": "No uses Accordion para una única sección expandible — usa Collapsible."
       },
-      "title": "Do & Don't"
+      "title": "Buenas prácticas"
     },
     "accessibility": {
       "title": "Accesibilidad",
@@ -1720,7 +1720,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

@@ -130,7 +130,7 @@
       }
     },
     "doDont": {
-      "title": "Certo e errado",
+      "title": "Boas práticas",
       "pair1": {
         "do": "O passo pulado continua na lista, e o detalhe diz por quê.",
         "dont": "O passo pulado some, e o plano passa a contar uma história diferente da que aconteceu."
@@ -629,7 +629,7 @@
       }
     },
     "doDont": {
-      "title": "Right and wrong",
+      "title": "Best practices",
       "pair1": {
         "do": "The skipped step stays on the list, and the detail says why.",
         "dont": "The skipped step disappears, and the plan starts telling a different story from the one that happened."
@@ -1128,7 +1128,7 @@
       }
     },
     "doDont": {
-      "title": "Correcto e incorrecto",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "El paso omitido sigue en la lista, y el detalle dice por qué.",
         "dont": "El paso omitido desaparece, y el plan pasa a contar una historia distinta de la que ocurrió."

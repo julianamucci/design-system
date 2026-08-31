@@ -97,7 +97,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Trigger com label descritivo e alternado com o estado: 'Exibir filtros avançados' / 'Ocultar filtros avançados'.",
         "dont": "Trigger genérico sem contexto: 'Ver mais', 'Toggle' ou apenas ícone sem label acessível."
@@ -370,7 +370,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -484,7 +484,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Trigger with descriptive label toggled by state: 'Show advanced filters' / 'Hide advanced filters'.",
         "dont": "Generic trigger without context: 'See more', 'Toggle', or icon-only without accessible label."
@@ -757,7 +757,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -871,7 +871,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Trigger con label descriptivo alternado según el estado: 'Mostrar filtros avanzados' / 'Ocultar filtros avanzados'.",
         "dont": "Trigger genérico sin contexto: 'Ver más', 'Toggle' o solo ícono sin label accesible."
@@ -1144,7 +1144,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

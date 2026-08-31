@@ -131,7 +131,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "DropdownMenu com Label, Items agrupados e Separator entre grupos.",
         "dont": "DropdownMenu com 10+ items planos sem agrupamento — vira lista de scroll."
@@ -457,7 +457,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -606,7 +606,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "DropdownMenu with Label, grouped Items, and Separator between groups.",
         "dont": "DropdownMenu with 10+ flat items without grouping — becomes a scroll list."
@@ -932,7 +932,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1081,7 +1081,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "DropdownMenu con Label, Items agrupados y Separator entre grupos.",
         "dont": "DropdownMenu con 10+ items planos sin agrupamiento — se vuelve lista de scroll."
@@ -1407,7 +1407,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",

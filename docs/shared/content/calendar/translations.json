@@ -135,7 +135,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Boas práticas",
       "pair1": {
         "do": "Calendar com <code>locale={ptBR}</code> e <code>mode=\"single\"</code> no Popover do DatePicker.",
         "dont": "Calendar sem <code>locale</code> — meses e dias aparecem em inglês."
@@ -431,7 +431,7 @@
       "demonstration": "Demonstração",
       "anatomy": "Anatomia",
       "usage": "Quando Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Boas práticas",
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
@@ -583,7 +583,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Best practices",
       "pair1": {
         "do": "Calendar with <code>locale={enUS}</code> and <code>mode=\"single\"</code> inside the DatePicker Popover.",
         "dont": "Calendar without <code>locale</code> — months and weekdays fall back to English."
@@ -879,7 +879,7 @@
       "demonstration": "Demonstration",
       "anatomy": "Anatomy",
       "usage": "When to Use",
-      "doDont": "Do & Don't",
+      "doDont": "Best practices",
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
@@ -1031,7 +1031,7 @@
       }
     },
     "doDont": {
-      "title": "Do & Don't",
+      "title": "Buenas prácticas",
       "pair1": {
         "do": "Calendar con <code>locale={es}</code> y <code>mode=\"single\"</code> dentro del Popover del DatePicker.",
         "dont": "Calendar sin <code>locale</code> — los meses y días caen a inglés."
@@ -1327,7 +1327,7 @@
       "demonstration": "Demostración",
       "anatomy": "Anatomía",
       "usage": "Cuándo Usar",
-      "doDont": "Do & Don't",
+      "doDont": "Buenas prácticas",
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
