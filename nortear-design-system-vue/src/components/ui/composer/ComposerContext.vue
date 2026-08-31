@@ -140,6 +140,7 @@ function requestRemove(item: ContextItem): void {
            sozinha não descreve estado (WCAG 1.4.1). -->
       <Button
         v-if="isRemovable(item)"
+        class="nds-composer-context-remove"
         data-slot="composer-context-remove"
         variant="ghost"
         size="icon-sm"

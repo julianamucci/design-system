@@ -169,7 +169,11 @@ export function createToolGroup(options: ToolGroupOptions): HTMLDetailsElement {
   // versões dela, e uma discordaria justamente no caso em que a resposta é
   // menos óbvia — uma falha ao lado de algo que ainda corre.
   const state = summarizeToolCalls(calls).state;
-  summary.appendChild(createStateBadge(state, labels.summary[state], 'tool-group-state'));
+  const summaryBadge = createStateBadge(state, labels.summary[state], 'tool-group-state');
+  // A classe é o que a folha estiliza; o `data-slot` continua sendo o contrato
+  // de markup que as cinco stacks compartilham. Somam-se, não se substituem.
+  summaryBadge.classList.add('nds-tool-group-state');
+  summary.appendChild(summaryBadge);
 
   root.appendChild(summary);
 

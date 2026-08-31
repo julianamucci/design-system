@@ -208,8 +208,16 @@ export class NdsToolGroup implements OnInit {
    * O mapa de variantes também é do primitivo compartilhado. Escrevê-lo à mão
    * aqui seria a quinta cópia de uma tabela de quatro linhas, e é assim que se
    * produzem cinco telas que discordam sobre a cor de um estado.
+   *
+   * `nds-tool-group-state` entra JUNTO no `[class]`, e não como `class`
+   * estática ao lado dele: é a classe que a folha estiliza (o empurrão para a
+   * direita), e aqui ela não depende de como o Angular reconcilia estático com
+   * ligação. O `data-slot` continua no template — ele é o contrato de markup
+   * das cinco stacks, e o que se faz aqui é somar, não substituir.
    */
-  protected readonly summaryBadgeClass = computed(() => toolCallBadgeClass(this.summaryState()));
+  protected readonly summaryBadgeClass = computed(
+    () => `${toolCallBadgeClass(this.summaryState())} nds-tool-group-state`,
+  );
 
   /** A cor da etiqueta de uma linha, do mesmo mapa compartilhado. */
   protected badgeClassOf(state: ToolCallState): string {

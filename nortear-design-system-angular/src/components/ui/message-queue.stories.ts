@@ -138,7 +138,9 @@ export const Playground: Story = {
       // isso, cinco stacks escreveriam cinco versões da mesma regra e uma delas
       // discordaria.
       const withdrawable = canWithdraw({ text: args.text, state: args.state });
-      const button = item.querySelector('[data-slot="composer-queue-withdraw"]');
+      // Pela CLASSE: o `ndsButton` liga `data-slot="button"` por host binding e
+      // disputa com o estático do template (§8 do RULES.md).
+      const button = item.querySelector('.nds-composer-queue-withdraw');
       await expect(button !== null).toBe(withdrawable);
     });
   },

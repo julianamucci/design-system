@@ -157,6 +157,7 @@
   -->
   {#if actionLabel}
     <Button
+      class="nds-agent-status-action"
       data-slot="agent-status-action"
       variant="outline"
       size="sm"

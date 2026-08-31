@@ -144,6 +144,7 @@ export interface MessageQueueLabels {
                 type="button"
                 variant="ghost"
                 size="icon-sm"
+                class="nds-composer-queue-withdraw"
                 data-slot="composer-queue-withdraw"
                 [attr.aria-label]="row.withdrawLabel"
                 (click)="withdraw.emit(row.message)"

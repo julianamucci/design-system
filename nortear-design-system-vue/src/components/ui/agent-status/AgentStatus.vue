@@ -158,6 +158,7 @@ const intent = computed<AgentStatusIntent>(() =>
          2.5.3 pelo caminho. -->
     <Button
       v-if="actionLabel"
+      class="nds-agent-status-action"
       data-slot="agent-status-action"
       variant="outline"
       size="sm"

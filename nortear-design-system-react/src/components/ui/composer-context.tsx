@@ -129,6 +129,7 @@ function ComposerContext({ items, labels, onRemove }: ComposerContextProps) {
               // chamados "Remover" é um botão só para quem navega por audição
               // (decisão 4).
               <Button
+                className="nds-composer-context-remove"
                 data-slot="composer-context-remove"
                 type="button"
                 variant="ghost"

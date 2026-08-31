@@ -126,6 +126,7 @@ export function createMessageQueue(
         'aria-label': labels.withdraw.replace('{text}', message.text),
         onClick: () => onWithdraw?.(message),
       });
+      withdraw.classList.add('nds-composer-queue-withdraw');
       withdraw.dataset.slot = 'composer-queue-withdraw';
       item.appendChild(withdraw);
     }

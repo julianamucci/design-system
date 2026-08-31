@@ -166,6 +166,7 @@ function reportToggle(event: Event) {
       <!-- A palavra vem antes da cor: a variante da etiqueta é reforço, e some
            para quem não a percebe (decisão 4). -->
       <span
+        class="nds-tool-group-state"
         :class="toolCallBadgeClass(summaryState)"
         data-slot="tool-group-state"
       >{{ labels.summary[summaryState] }}</span>

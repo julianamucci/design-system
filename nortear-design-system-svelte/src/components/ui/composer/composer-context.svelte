@@ -137,6 +137,7 @@
       -->
       {#if isContextRemovable(item)}
         <Button
+          class="nds-composer-context-remove"
           data-slot="composer-context-remove"
           variant="ghost"
           size="icon-sm"

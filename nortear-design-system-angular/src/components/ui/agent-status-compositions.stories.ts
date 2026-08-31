@@ -115,7 +115,10 @@ export const Requesting: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const line = canvasElement.querySelector<HTMLElement>('[data-slot="agent-status"]')!;
-    const button = line.querySelector<HTMLButtonElement>('[data-slot="agent-status-action"]')!;
+    // Pela CLASSE: o `ndsButton` liga `data-slot="button"` por host binding e
+    // disputa com o estático do template (§8 do RULES.md). E é justamente a
+    // classe que carrega o alvo de toque medido logo abaixo.
+    const button = line.querySelector<HTMLButtonElement>('.nds-agent-status-action')!;
     const labels = agentStatusLabels();
 
     await step('O alvo de toque tem pelo menos vinte e quatro pixels', async () => {

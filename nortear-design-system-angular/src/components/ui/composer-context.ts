@@ -183,6 +183,7 @@ export interface ComposerContextLabels {
             type="button"
             variant="ghost"
             size="icon-sm"
+            class="nds-composer-context-remove"
             data-slot="composer-context-remove"
             [attr.aria-label]="row.removeLabel"
             (click)="removeContext.emit(row.item)"

@@ -38,7 +38,7 @@
       "item4": "O recorte vem depois do nome — intervalo de linhas, seção, aba. É ele que separa um pedaço do todo.",
       "item5": "O que entrou sozinho não ganha botão de remover, e traz escrita a marca que diz por que está ali.",
       "structureCode": {
-        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Contexto\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Trecho</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">linhas 12–48</span>\n      <button class=\"nds-button\" data-slot=\"composer-context-remove\"\n              aria-label=\"Remover relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Página</span>\n      <span class=\"nds-composer-context-label\">Painel de medidas</span>\n      <span class=\"nds-composer-context-detail\">Automático</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Contexto\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Trecho</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">linhas 12–48</span>\n      <button class=\"nds-button nds-composer-context-remove\" data-slot=\"composer-context-remove\"\n              aria-label=\"Remover relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Página</span>\n      <span class=\"nds-composer-context-label\">Painel de medidas</span>\n      <span class=\"nds-composer-context-detail\">Automático</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
       }
     },
     "usage": {
@@ -299,7 +299,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"composer-context-remove\"]",
+          "value": ".nds-composer-context-remove",
           "description": "Alvo de toque mínimo do botão de remover."
         }
       },
@@ -510,7 +510,7 @@
       "item4": "The range comes after the name — line span, section, tab. It is what separates a piece from the whole.",
       "item5": "What arrived on its own gets no remove button, and carries in writing the mark that says why it is there.",
       "structureCode": {
-        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Context\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Excerpt</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">lines 12–48</span>\n      <button class=\"nds-button\" data-slot=\"composer-context-remove\"\n              aria-label=\"Remove relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Page</span>\n      <span class=\"nds-composer-context-label\">Measurements panel</span>\n      <span class=\"nds-composer-context-detail\">Automatic</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Context\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Excerpt</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">lines 12–48</span>\n      <button class=\"nds-button nds-composer-context-remove\" data-slot=\"composer-context-remove\"\n              aria-label=\"Remove relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Page</span>\n      <span class=\"nds-composer-context-label\">Measurements panel</span>\n      <span class=\"nds-composer-context-detail\">Automatic</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
       }
     },
     "usage": {
@@ -771,7 +771,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"composer-context-remove\"]",
+          "value": ".nds-composer-context-remove",
           "description": "Minimum touch target for the remove button."
         }
       },
@@ -982,7 +982,7 @@
       "item4": "El recorte va después del nombre — intervalo de líneas, sección, pestaña. Es lo que separa una parte del todo.",
       "item5": "Lo que entró solo no recibe botón de quitar, y trae por escrito la marca que dice por qué está ahí.",
       "structureCode": {
-        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Contexto\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Fragmento</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">líneas 12–48</span>\n      <button class=\"nds-button\" data-slot=\"composer-context-remove\"\n              aria-label=\"Quitar relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Página</span>\n      <span class=\"nds-composer-context-label\">Panel de medidas</span>\n      <span class=\"nds-composer-context-detail\">Automático</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
+        "web": "<div class=\"nds-composer-field\">\n  <ul class=\"nds-composer-context\" aria-label=\"Contexto\">\n    <li class=\"nds-composer-context-item\" data-kind=\"selection\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Fragmento</span>\n      <span class=\"nds-composer-context-label\">relatorio.ts</span>\n      <span class=\"nds-composer-context-detail\">líneas 12–48</span>\n      <button class=\"nds-button nds-composer-context-remove\" data-slot=\"composer-context-remove\"\n              aria-label=\"Quitar relatorio.ts\">×</button>\n    </li>\n    <li class=\"nds-composer-context-item\" data-kind=\"page\" data-automatic=\"true\">\n      <svg class=\"nds-composer-context-icon\" aria-hidden=\"true\"></svg>\n      <span class=\"nds-sr-only\">Página</span>\n      <span class=\"nds-composer-context-label\">Panel de medidas</span>\n      <span class=\"nds-composer-context-detail\">Automático</span>\n    </li>\n  </ul>\n  <textarea class=\"nds-composer-input\"></textarea>\n</div>"
       }
     },
     "usage": {
@@ -1243,7 +1243,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"composer-context-remove\"]",
+          "value": ".nds-composer-context-remove",
           "description": "Objetivo táctil mínimo del botón de quitar."
         }
       },

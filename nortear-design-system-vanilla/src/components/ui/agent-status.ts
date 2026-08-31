@@ -138,6 +138,7 @@ export function createAgentStatus(options: AgentStatusOptions): HTMLElement {
       size: 'sm',
       onClick: () => onAction?.(intent),
     });
+    action.classList.add('nds-agent-status-action');
     action.dataset.slot = 'agent-status-action';
     root.appendChild(action);
   }

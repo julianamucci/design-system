@@ -131,6 +131,7 @@ function MessageQueue({
             // de três botões chamados "Retirar" é um botão só para quem navega
             // por audição.
             <Button
+              className="nds-composer-queue-withdraw"
               data-slot="composer-queue-withdraw"
               type="button"
               variant="ghost"

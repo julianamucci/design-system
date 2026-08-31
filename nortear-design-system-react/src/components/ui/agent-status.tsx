@@ -145,6 +145,7 @@ function AgentStatus({
           2.5.3 pelo caminho. */}
       {actionLabel ? (
         <Button
+          className="nds-agent-status-action"
           data-slot="agent-status-action"
           type="button"
           variant="outline"

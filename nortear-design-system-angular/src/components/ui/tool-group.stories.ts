@@ -114,7 +114,10 @@ export const Playground: Story = {
 
     await step('O resumo traz a contagem e a palavra do conjunto', async () => {
       const title = root.querySelector<HTMLElement>('[data-slot="tool-group-title"]')!;
-      const state = root.querySelector<HTMLElement>('[data-slot="tool-group-state"]')!;
+      // Pela CLASSE, e não pelo `data-slot`: o `ndsBadge` liga `data-slot` por
+      // host binding, e o atributo estático do template disputa com ele (§8 do
+      // RULES.md). A classe é o que a folha estiliza e não disputa com ninguém.
+      const state = root.querySelector<HTMLElement>('.nds-tool-group-state')!;
       const total = root.querySelectorAll('[data-slot="tool-call"]').length;
       await expect(title.textContent).toBe(labels.title(total));
       // Há uma falha na lista de exemplo, e o resumo diz isso mesmo fechado.

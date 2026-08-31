@@ -28,13 +28,19 @@
  *     <span class="nds-agent-status-dot" data-slot="agent-status-dot" aria-hidden="true"></span>
  *     <span class="nds-agent-status-label" data-slot="agent-status-label">Respondendo</span>
  *     <span class="nds-agent-status-elapsed" data-slot="agent-status-elapsed">1:04</span>
- *     <button class="nds-button" data-slot="agent-status-action">Parar</button>
+ *     <button class="nds-button nds-agent-status-action" data-slot="agent-status-action">Parar</button>
  *   </p>
  *
  * Os `data-slot` entram na árvore inteira, e não só no botão: é a convenção de
  * toda peça do design system e é por eles que as `play` miram. Árvore que
  * mostra um só ensina que os outros não existem — e a primeira versão desta
  * mostrava um só.
+ *
+ * A CLASSE `nds-agent-status-action` ANDA JUNTO do `data-slot`, e o botão é a
+ * única parte da árvore que precisa das duas: é a classe que esta folha
+ * estiliza, porque `data-slot` no botão é ligado por host binding na stack do
+ * Angular e disputa com o atributo estático do template. Árvore que não mostra
+ * a classe ensina que ela não existe.
  *
  * `stopped-run` DO CATÁLOGO É UM ESTADO DAQUI, e não uma peça: `RunStatus` já
  * separa `stopped` de `failed` porque um oferece continuar e o outro tentar de
@@ -101,7 +107,18 @@
   font-variant-numeric: tabular-nums;
 }
 
-[data-slot="agent-status-action"] {
+/* SELETOR POR CLASSE, e não por `[data-slot]` — e isto foi medido, não
+ * preferido. No Angular quase toda peça liga `data-slot` por HOST BINDING:
+ * `ndsButton` escreve `"button"` e `ndsBadge` escreve `"badge"`. O atributo
+ * estático que o template do consumidor escreve DISPUTA com ele, e a regra 8
+ * do `RULES.md` daquela stack já registra a disputa com três precedentes,
+ * mandando procurar pela classe em teste.
+ *
+ * A folha caía na mesma armadilha, e pior: se o host binding vence, esta
+ * regra não aplica NO ANGULAR — o botão perde o alinhamento e o alvo de
+ * toque de 24px, que é WCAG 2.5.8. Uma classe não disputa com ninguém, e o
+ * conserto vale mesmo que a disputa se resolvesse do outro lado. */
+.nds-agent-status-action {
   margin-inline-start: auto;
   /* Alvo de toque (WCAG 2.5.8). */
   min-inline-size: var(--spacing-6);
@@ -200,7 +217,7 @@
  *     <summary class="nds-tool-group-summary" data-slot="tool-group-summary">
  *       <svg class="nds-icon nds-tool-group-icon" aria-hidden="true">…</svg>
  *       <span class="nds-tool-group-title" data-slot="tool-group-title">3 ferramentas</span>
- *       <span class="nds-badge" data-slot="tool-group-state">Uma falhou</span>
+ *       <span class="nds-badge nds-tool-group-state" data-slot="tool-group-state">Uma falhou</span>
  *     </summary>
  *     <ol class="nds-tool-group-list" data-slot="tool-group-list">
  *       <li class="nds-tool-call" data-slot="tool-call" data-state="failed">
@@ -210,6 +227,12 @@
  *       </li>
  *     </ol>
  *   </details>
+ *
+ * A CLASSE `nds-tool-group-state` ANDA JUNTO do `data-slot` na etiqueta do
+ * resumo — e só nela, porque só ela é empurrada para a direita. É a classe que
+ * esta folha estiliza: `data-slot` ali é ligado por host binding na stack do
+ * Angular e disputa com o atributo estático do template. Árvore que não mostra
+ * a classe ensina que ela não existe.
  *
  * `tool-error` DO CATÁLOGO É UM ESTADO DAQUI: `ToolCallState` já separa `failed`,
  * e a chamada que falhou desenha diferente sem virar outro componente.
@@ -304,7 +327,7 @@
  * chamadas caem (`grid-template-columns: 1fr auto`, abaixo). Sem isto a
  * etiqueta do resumo fica colada no título e SALTA de lugar no instante em que
  * o grupo abre — o olho persegue a etiqueta em vez de ler a lista que apareceu. */
-[data-slot="tool-group-state"] {
+.nds-tool-group-state {
   margin-inline-start: auto;
 }
 
@@ -432,6 +455,18 @@
   color: hsl(var(--foreground));
   /* Sem reticências: um passo pela metade é uma instrução pela metade. */
   overflow-wrap: anywhere;
+}
+
+/* "ONDE ESTAMOS" TAMBÉM PRECISA CHEGAR AO OLHO.
+ *
+ * A decisão 1 resolveu a audição: `aria-current="step"` é o que o leitor de
+ * tela anuncia como atual. Mas o passo atual é o primeiro que ainda não
+ * terminou — e num plano PROPOSTO, em que nada corre, ele é `pending` como
+ * todos os outros. Sem esta regra, a lista inteira desenha igual e a resposta
+ * chega a quem ouve e não a quem vê. É a mesma falha de sentido único que a
+ * folha combate ao exigir palavra ao lado da cor, invertida. */
+.nds-agent-plan-step[aria-current="step"] .nds-agent-plan-label {
+  font-weight: var(--font-weight-medium);
 }
 
 .nds-agent-plan-detail {

@@ -34,7 +34,7 @@
       "item4": "O texto vem no meio, aparado numa linha só — a fila é o lembrete do que espera, e não a mensagem inteira de novo.",
       "item5": "A palavra do estado fecha o item, e só a que ainda espera traz o botão que a retira.",
       "structureCode": {
-        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Mensagens na fila\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Manda o resumo de ontem</span>\n    <span class=\"nds-badge\">Enviando</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">E o prazo?</span>\n    <span class=\"nds-badge\">Na fila</span>\n    <button class=\"nds-button\" data-slot=\"composer-queue-withdraw\">\n      Retirar E o prazo?\n    </button>\n  </li>\n</ol>"
+        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Mensagens na fila\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Manda o resumo de ontem</span>\n    <span class=\"nds-badge\">Enviando</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">E o prazo?</span>\n    <span class=\"nds-badge\">Na fila</span>\n    <button class=\"nds-button nds-composer-queue-withdraw\" data-slot=\"composer-queue-withdraw\">\n      Retirar E o prazo?\n    </button>\n  </li>\n</ol>"
       }
     },
     "usage": {
@@ -283,7 +283,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"composer-queue-withdraw\"]",
+          "value": ".nds-composer-queue-withdraw",
           "description": "Alvo de toque mínimo do botão de retirar."
         }
       },
@@ -486,7 +486,7 @@
       "item4": "The text sits in the middle, trimmed to a single line — the queue is a reminder of what waits, not the whole message again.",
       "item5": "The state word closes the item, and only what still waits carries the button that withdraws it.",
       "structureCode": {
-        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Queued messages\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Send me yesterday's summary</span>\n    <span class=\"nds-badge\">Sending</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">And the deadline?</span>\n    <span class=\"nds-badge\">Queued</span>\n    <button class=\"nds-button\" data-slot=\"composer-queue-withdraw\">\n      Withdraw And the deadline?\n    </button>\n  </li>\n</ol>"
+        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Queued messages\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Send me yesterday's summary</span>\n    <span class=\"nds-badge\">Sending</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">And the deadline?</span>\n    <span class=\"nds-badge\">Queued</span>\n    <button class=\"nds-button nds-composer-queue-withdraw\" data-slot=\"composer-queue-withdraw\">\n      Withdraw And the deadline?\n    </button>\n  </li>\n</ol>"
       }
     },
     "usage": {
@@ -735,7 +735,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"composer-queue-withdraw\"]",
+          "value": ".nds-composer-queue-withdraw",
           "description": "Minimum touch target of the withdraw button."
         }
       },
@@ -938,7 +938,7 @@
       "item4": "El texto va en el medio, recortado a una sola línea — la cola es el recordatorio de lo que espera, no el mensaje entero otra vez.",
       "item5": "La palabra del estado cierra el elemento, y solo lo que aún espera trae el botón que lo retira.",
       "structureCode": {
-        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Mensajes en cola\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Mándame el resumen de ayer</span>\n    <span class=\"nds-badge\">Enviando</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">¿Y el plazo?</span>\n    <span class=\"nds-badge\">En cola</span>\n    <button class=\"nds-button\" data-slot=\"composer-queue-withdraw\">\n      Retirar ¿Y el plazo?\n    </button>\n  </li>\n</ol>"
+        "web": "<ol class=\"nds-composer-queue\" aria-label=\"Mensajes en cola\">\n  <li class=\"nds-composer-queue-item\" data-state=\"sending\" aria-busy=\"true\">\n    <span class=\"nds-composer-queue-position\">1</span>\n    <span class=\"nds-composer-queue-text\">Mándame el resumen de ayer</span>\n    <span class=\"nds-badge\">Enviando</span>\n  </li>\n\n  <li class=\"nds-composer-queue-item\" data-state=\"waiting\">\n    <span class=\"nds-composer-queue-position\">2</span>\n    <span class=\"nds-composer-queue-text\">¿Y el plazo?</span>\n    <span class=\"nds-badge\">En cola</span>\n    <button class=\"nds-button nds-composer-queue-withdraw\" data-slot=\"composer-queue-withdraw\">\n      Retirar ¿Y el plazo?\n    </button>\n  </li>\n</ol>"
       }
     },
     "usage": {
@@ -1187,7 +1187,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"composer-queue-withdraw\"]",
+          "value": ".nds-composer-queue-withdraw",
           "description": "Objetivo táctil mínimo del botón de retirar."
         }
       },

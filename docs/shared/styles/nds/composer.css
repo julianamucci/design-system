@@ -554,10 +554,17 @@
  *       <svg class="nds-composer-context-icon" aria-hidden="true"></svg>
  *       <span class="nds-composer-context-label">relatorio.ts</span>
  *       <span class="nds-composer-context-detail">linhas 12–48</span>
- *       <button class="nds-button" data-slot="composer-context-remove"></button>
+ *       <button class="nds-button nds-composer-context-remove" data-slot="composer-context-remove"></button>
  *     </li>
  *     <li class="nds-composer-context-item" data-automatic="true"> … </li>
  *   </ul>
+ *
+ * A CLASSE `nds-composer-context-remove` ANDA JUNTO do `data-slot`, e o botão é
+ * a única parte da árvore que precisa das duas: é a classe que esta folha
+ * estiliza, porque `data-slot` no botão é ligado por host binding na stack do
+ * Angular e disputa com o atributo estático do template. Árvore que não mostra
+ * a classe ensina que ela não existe — e o que se perde sem ela é o alvo de
+ * toque de 24px, que é WCAG 2.5.8.
  *
  * PARECE A FILA DE ANEXOS E NÃO É A MESMA PEÇA. O anexo é carga: sobe, tem
  * bytes, tem progresso e pode falhar no meio — por isso tem barra e estado. O
@@ -640,7 +647,18 @@
   font-variant-numeric: tabular-nums;
 }
 
-[data-slot="composer-context-remove"] {
+/* SELETOR POR CLASSE, e não por `[data-slot]` — e isto foi medido, não
+ * preferido. No Angular quase toda peça liga `data-slot` por HOST BINDING:
+ * `ndsButton` escreve `"button"` e `ndsBadge` escreve `"badge"`. O atributo
+ * estático que o template do consumidor escreve DISPUTA com ele, e a regra 8
+ * do `RULES.md` daquela stack já registra a disputa com três precedentes,
+ * mandando procurar pela classe em teste.
+ *
+ * A folha caía na mesma armadilha, e pior: se o host binding vence, esta
+ * regra não aplica NO ANGULAR — o botão perde o alinhamento e o alvo de
+ * toque de 24px, que é WCAG 2.5.8. Uma classe não disputa com ninguém, e o
+ * conserto vale mesmo que a disputa se resolvesse do outro lado. */
+.nds-composer-context-remove {
   flex-shrink: 0;
   min-inline-size: var(--spacing-6);
   min-block-size: var(--spacing-6);
@@ -961,10 +979,17 @@
  *       <span class="nds-composer-queue-position">1</span>
  *       <span class="nds-composer-queue-text">E o prazo?</span>
  *       <span class="nds-badge" data-slot="composer-queue-state">Na fila</span>
- *       <button class="nds-button" data-slot="composer-queue-withdraw"></button>
+ *       <button class="nds-button nds-composer-queue-withdraw" data-slot="composer-queue-withdraw"></button>
  *     </li>
  *     <li class="nds-composer-queue-item" data-state="sending" aria-busy="true"> … </li>
  *   </ol>
+ *
+ * A CLASSE `nds-composer-queue-withdraw` ANDA JUNTO do `data-slot`, e o botão é
+ * a única parte da árvore que precisa das duas: é a classe que esta folha
+ * estiliza, porque `data-slot` no botão é ligado por host binding na stack do
+ * Angular e disputa com o atributo estático do template. Árvore que não mostra
+ * a classe ensina que ela não existe — e o que se perde sem ela é o alvo de
+ * toque de 24px, que é WCAG 2.5.8.
  *
  * `<ol>` E NÃO `<ul>`: aqui a ordem É a informação. Quem espera quer saber que
  * é a terceira, e uma lista não ordenada não anuncia posição.
@@ -1048,7 +1073,7 @@
   white-space: nowrap;
 }
 
-[data-slot="composer-queue-withdraw"] {
+.nds-composer-queue-withdraw {
   flex-shrink: 0;
   min-inline-size: var(--spacing-6);
   min-block-size: var(--spacing-6);

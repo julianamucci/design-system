@@ -40,7 +40,7 @@
       "item4": "O tempo decorrido chega já escrito e fica fora do que é anunciado — um número que se reescreve a cada segundo torna a tela impossível de ouvir.",
       "item5": "A ação fica no fim da linha, e o rótulo dela diz o que faz naquele estado.",
       "structureCode": {
-        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Respondendo</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button\" data-slot=\"agent-status-action\">Parar</button>\n</p>"
+        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Respondendo</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button nds-agent-status-action\" data-slot=\"agent-status-action\">Parar</button>\n</p>"
       }
     },
     "usage": {
@@ -298,7 +298,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"agent-status-action\"]",
+          "value": ".nds-agent-status-action",
           "description": "Alvo de toque mínimo da ação."
         }
       },
@@ -512,7 +512,7 @@
       "item4": "The elapsed time arrives already written and stays out of what gets announced — a number that rewrites itself every second makes the screen impossible to listen to.",
       "item5": "The action sits at the end of the line, and its label says what it does in that state.",
       "structureCode": {
-        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Answering</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button\" data-slot=\"agent-status-action\">Stop</button>\n</p>"
+        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Answering</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button nds-agent-status-action\" data-slot=\"agent-status-action\">Stop</button>\n</p>"
       }
     },
     "usage": {
@@ -770,7 +770,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"agent-status-action\"]",
+          "value": ".nds-agent-status-action",
           "description": "Minimum touch target of the action."
         }
       },
@@ -984,7 +984,7 @@
       "item4": "El tiempo transcurrido llega ya escrito y queda fuera de lo que se anuncia — un número que se reescribe cada segundo vuelve la pantalla imposible de escuchar.",
       "item5": "La acción queda al final de la línea, y su rótulo dice qué hace en ese estado.",
       "structureCode": {
-        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Respondiendo</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button\" data-slot=\"agent-status-action\">Detener</button>\n</p>"
+        "web": "<p class=\"nds-agent-status\" data-status=\"running\">\n  <span class=\"nds-agent-status-dot\" aria-hidden=\"true\"></span>\n  <span class=\"nds-agent-status-label\">Respondiendo</span>\n  <span class=\"nds-agent-status-elapsed\" aria-hidden=\"true\">1:04</span>\n  <button class=\"nds-button nds-agent-status-action\" data-slot=\"agent-status-action\">Detener</button>\n</p>"
       }
     },
     "usage": {
@@ -1242,7 +1242,7 @@
         },
         "spacing6": {
           "token": "--spacing-6",
-          "value": "[data-slot=\"agent-status-action\"]",
+          "value": ".nds-agent-status-action",
           "description": "Área táctil mínima de la acción."
         }
       },

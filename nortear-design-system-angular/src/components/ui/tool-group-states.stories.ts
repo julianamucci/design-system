@@ -59,8 +59,10 @@ const mount = (calls: ChatToolCall[], open = false) => ({
 const groupOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLDetailsElement>('[data-slot="tool-group"]')!;
 
+// Pela CLASSE, e não pelo `data-slot`: o `ndsBadge` liga `data-slot` por host
+// binding, e o atributo estático do template disputa com ele (§8 do RULES.md).
 const summaryStateOf = (group: HTMLElement) =>
-  group.querySelector<HTMLElement>('[data-slot="tool-group-state"]')!;
+  group.querySelector<HTMLElement>('.nds-tool-group-state')!;
 
 /**
  * Os quatro, um abaixo do outro, com a caixa aberta.

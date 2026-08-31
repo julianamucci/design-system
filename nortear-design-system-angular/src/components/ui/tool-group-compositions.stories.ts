@@ -193,7 +193,9 @@ export const WaitingOutside: Story = {
       const items = [...inSight.querySelectorAll<HTMLElement>('[data-slot="tool-call"]')];
       await expect(items).toHaveLength(1);
       await expect(items[0]!.dataset.state).toBe('pending');
-      await expect(inSight.querySelector('[data-slot="tool-group-state"]')?.textContent).toBe(
+      // Pela CLASSE: `data-slot` no host do `ndsBadge` disputa com o estático
+      // que o template escreve (§8 do RULES.md).
+      await expect(inSight.querySelector('.nds-tool-group-state')?.textContent).toBe(
         labels.summary.pending,
       );
     });

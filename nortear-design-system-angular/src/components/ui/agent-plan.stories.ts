@@ -130,7 +130,12 @@ export const Playground: Story = {
       // O marcador é forma e cor, e nenhuma das duas descreve estado sozinha
       // (WCAG 1.4.1, decisão 3 da folha).
       await expect(first.dataset.state).toBe(args.state);
-      const badge = first.querySelector<HTMLElement>('[data-slot="agent-plan-state"]')!;
+      // Pela CLASSE do próprio Badge: o `ndsBadge` liga `data-slot="badge"` por
+      // host binding, e o `data-slot="agent-plan-state"` estático do template
+      // disputa com ele, sem ordem garantida (§8 do RULES.md). A folha não tem
+      // regra para este estado, então não há classe própria a procurar — o que
+      // identifica a etiqueta dentro do passo é `.nds-badge`.
+      const badge = first.querySelector<HTMLElement>('.nds-badge')!;
       await expect(badge.textContent).toBe(labels.state[args.state]);
     });
 

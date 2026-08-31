@@ -74,9 +74,9 @@ export const Manual: Story = {
 
     await step('O posto à mão traz o botão que o tira', async () => {
       await expect(placed.dataset.automatic).toBeUndefined();
-      const removeButton = placed.querySelector<HTMLElement>(
-        '[data-slot="composer-context-remove"]',
-      )!;
+      // Pela CLASSE: o `ndsButton` liga `data-slot="button"` por host binding e
+      // disputa com o estático do template (§8 do RULES.md).
+      const removeButton = placed.querySelector<HTMLElement>('.nds-composer-context-remove')!;
       await expect(removeButton).toHaveAccessibleName(
         contextLabels().remove.replace('{label}', 'relatorio.ts'),
       );
@@ -111,7 +111,7 @@ export const Automatic: Story = {
       // Ele voltaria na próxima pergunta, e botão que desfaz o que se refaz
       // sozinho é armadilha: promete o que não cumpre.
       await expect(item.dataset.automatic).toBe('true');
-      await expect(item.querySelector('[data-slot="composer-context-remove"]')).toBeNull();
+      await expect(item.querySelector('.nds-composer-context-remove')).toBeNull();
       await expect(list.querySelectorAll('button')).toHaveLength(0);
     });
 

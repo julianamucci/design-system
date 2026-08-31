@@ -143,7 +143,7 @@ function ToolGroup({
         </span>
 
         <span
-          className={toolCallBadgeClass(summaryState)}
+          className={`${toolCallBadgeClass(summaryState)} nds-tool-group-state`}
           data-slot="tool-group-state"
         >
           {labels.summary[summaryState]}

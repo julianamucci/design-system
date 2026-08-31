@@ -99,9 +99,9 @@ export const Waiting: Story = {
         const li = list.querySelector<HTMLElement>(
           `[data-slot="composer-queue-item"][data-message-id="${message.id}"]`,
         )!;
-        const button = li.querySelector<HTMLElement>(
-          '[data-slot="composer-queue-withdraw"]',
-        )!;
+        // Pela CLASSE: o `ndsButton` liga `data-slot="button"` por host binding
+        // e disputa com o estático do template (§8 do RULES.md).
+        const button = li.querySelector<HTMLElement>('.nds-composer-queue-withdraw')!;
         await expect(button).toHaveAccessibleName(
           labels.withdraw.replace('{text}', message.text),
         );
@@ -130,7 +130,7 @@ export const Sending: Story = {
       // promete desfazer o que não desfaz é pior que botão nenhum.
       await expect(first.dataset.state).toBe('sending');
       await expect(first.getAttribute('aria-busy')).toBe('true');
-      await expect(first.querySelector('[data-slot="composer-queue-withdraw"]')).toBeNull();
+      await expect(first.querySelector('.nds-composer-queue-withdraw')).toBeNull();
       await expect(canWithdraw(sending()[0]!)).toBe(false);
     });
 

@@ -141,6 +141,7 @@ export interface AgentStatusLabels {
         type="button"
         variant="outline"
         size="sm"
+        class="nds-agent-status-action"
         data-slot="agent-status-action"
         (click)="action.emit(intent())"
       >{{ label }}</button>

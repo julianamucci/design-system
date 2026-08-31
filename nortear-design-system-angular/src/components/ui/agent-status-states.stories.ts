@@ -63,8 +63,11 @@ const mount = (status: RunStatus) => ({
 const lineOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="agent-status"]')!;
 
+// Pela CLASSE, e não pelo `data-slot`: o `ndsButton` liga `data-slot="button"`
+// por host binding, e o atributo estático do template disputa com ele (§8 do
+// RULES.md). A classe é o que a folha estiliza e não disputa com ninguém.
 const actionOf = (line: HTMLElement) =>
-  line.querySelector<HTMLButtonElement>('[data-slot="agent-status-action"]');
+  line.querySelector<HTMLButtonElement>('.nds-agent-status-action');
 
 /**
  * Os cinco, um abaixo do outro.
@@ -136,7 +139,7 @@ export const EveryState: Story = {
       // coisas diferentes, e quem chega nele por tabulação não sabe qual das
       // duas (decisão 4 da folha).
       const names = [...canvasElement.querySelectorAll<HTMLElement>(
-        '[data-slot="agent-status-action"]',
+        '.nds-agent-status-action',
       )].map((button) => button.textContent);
       await expect(names).toHaveLength(3);
       await expect(new Set(names).size).toBe(3);

@@ -138,6 +138,7 @@
         -->
         {#if canWithdraw(message)}
           <Button
+            class="nds-composer-queue-withdraw"
             data-slot="composer-queue-withdraw"
             variant="ghost"
             size="icon-sm"

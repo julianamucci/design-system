@@ -106,7 +106,11 @@ export const EveryState: Story = {
     await step('Cada um traz a PALAVRA daquele estado, e o marcador sai da leitura', async () => {
       for (const [index, state] of PLAN_STEP_STATES.entries()) {
         const el = steps[index]!;
-        const badge = el.querySelector<HTMLElement>('[data-slot="agent-plan-state"]')!;
+        // Pela CLASSE do próprio Badge: o `ndsBadge` liga `data-slot="badge"`
+        // por host binding e disputa com o estático do template (§8 do
+        // RULES.md). A folha não declara regra para este estado, então não há
+        // classe própria — dentro do passo, a etiqueta é `.nds-badge`.
+        const badge = el.querySelector<HTMLElement>('.nds-badge')!;
         await expect(badge.textContent).toBe(labels.state[state]);
         const marker = el.querySelector<HTMLElement>('[data-slot="agent-plan-marker"]')!;
         await expect(marker.getAttribute('aria-hidden')).toBe('true');
@@ -199,7 +203,7 @@ export const Finished: Story = {
       const skipped = steps.find((el) => el.dataset.state === 'skipped')!;
       const detail = skipped.querySelector<HTMLElement>('[data-slot="agent-plan-detail"]')!;
       await expect(detail.textContent?.length).toBeGreaterThan(0);
-      const badge = skipped.querySelector<HTMLElement>('[data-slot="agent-plan-state"]')!;
+      const badge = skipped.querySelector<HTMLElement>('.nds-badge')!;
       await expect(badge.textContent).toBe(labels.state.skipped);
     });
 

@@ -167,6 +167,7 @@ export function createComposerContext(
         'aria-label': labels.remove.replace('{label}', item.label),
         onClick: () => onRemove?.(item),
       });
+      remove.classList.add('nds-composer-context-remove');
       remove.dataset.slot = 'composer-context-remove';
       li.appendChild(remove);
     } else {

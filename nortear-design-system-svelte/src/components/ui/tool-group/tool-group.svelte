@@ -166,7 +166,9 @@
       >{labels.title(calls.length)}</span
     >
 
-    <span class={toolCallBadgeClass(summaryState)} data-slot="tool-group-state"
+    <span
+      class="{toolCallBadgeClass(summaryState)} nds-tool-group-state"
+      data-slot="tool-group-state"
       >{labels.summary[summaryState]}</span
     >
   </summary>

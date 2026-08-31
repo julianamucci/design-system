@@ -126,6 +126,7 @@ function requestWithdraw(message: QueuedMessage): void {
 
       <Button
         v-if="isWithdrawable(message)"
+        class="nds-composer-queue-withdraw"
         data-slot="composer-queue-withdraw"
         variant="ghost"
         size="icon-sm"
