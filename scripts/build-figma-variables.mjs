@@ -159,6 +159,19 @@ function toPx(raw, lookup, seen = new Set()) {
     return next === undefined ? null : toPx(next, lookup, seen);
   }
 
+  // `max(0px, calc(var(--radius) - 6px))` — a forma que os três degraus de
+  // baixo da escala de raio passaram a usar para que um tema possa zerar a
+  // base sem produzir raio negativo. Sem esta linha o toPx devolvia null e
+  // --radius-xs/sm/md SUMIAM do export, em silêncio: três variáveis
+  // documentadas, ausentes da biblioteca do Figma e de todo consumidor
+  // gerado a partir daqui.
+  m = /^max\(\s*(.+?)\s*,\s*(.+)\s*\)$/.exec(v);
+  if (m) {
+    const partes = [m[1], m[2]].map((parte) => toPx(parte.trim(), lookup, new Set(seen)));
+    if (partes.some((n) => n === null)) return null;
+    return Math.max(partes[0], partes[1]);
+  }
+
   m = /^calc\(\s*var\((--[\w-]+)\)\s*([*+-])\s*([\d.]+)(px)?\s*\)$/.exec(v);
   if (m) {
     if (seen.has(m[1])) return null;
@@ -293,22 +306,39 @@ for (const [modo, sel] of DENSIDADES) {
       : null;
     if (!grupo) continue;
     const px = toPx(raw, lookup);
-    if (px === null) continue;
+    if (px === null) { avisos.push(`dimensão ${token} não resolveu em ${modo}: ${raw}`); continue; }
     put(tree, `${grupo}/${name}`, { $type: 'number', $value: round(px) });
   }
   dimModes[modo] = tree;
 }
 
-// ── Coleção: Raio ────────────────────────────────────────────────────────────
-// Nenhum tema sobrescreve raio (verificado): modo único.
+// ── Coleção: Raio (modos = temas) ────────────────────────────────────────────
+//
+// Já foi modo único, com o comentário "nenhum tema sobrescreve raio
+// (verificado)". A verificação era verdadeira quando foi feita e parou de ser:
+// o warm virou cápsula (`--radius: 1.5rem`) e o cold virou reto (`--radius: 0`
+// mais `--radius-badge: 0`, porque o badge aponta para --radius-full, que é
+// fixo e não deriva da base). Enquanto a coleção teve um modo só, a identidade
+// de FORMA dos dois temas não saía daqui — nem para o Figma, nem para nenhum
+// consumidor gerado. Modo único não avisa que virou mentira.
 
-const raizRaio = layer(':root', '.tema-default');
-const raioTree = {};
-for (const [token, raw] of Object.entries(raizRaio)) {
-  if (!token.startsWith('--radius')) continue;
-  const px = toPx(raw, (t) => raizRaio[t]);
-  if (px === null) continue;
-  put(raioTree, token.slice(2), { $type: 'number', $value: round(px) });
+const raioModes = {};
+for (const tema of TEMAS) {
+  const decls = layer(':root', `.tema-${tema}`);
+  const tree = {};
+  for (const [token, raw] of Object.entries(decls)) {
+    if (!token.startsWith('--radius')) continue;
+    const px = toPx(raw, (t) => decls[t]);
+    // Silêncio aqui foi o que deixou --radius-xs/sm/md sumirem quando a escala
+    // passou a usar max(): o valor não resolvia, o token era pulado, e a
+    // contagem só encolhia. Descarte tem de virar linha na saída.
+    // Silêncio aqui foi o que deixou --radius-xs/sm/md sumirem quando a escala
+    // passou a usar `max()`: o valor não resolvia, o token era pulado, e a
+    // contagem só encolhia. Descarte tem de virar linha na saída.
+    if (px === null) { avisos.push(`raio ${token} não resolveu em ${tema}: ${raw}`); continue; }
+    put(tree, token.slice(2), { $type: 'number', $value: round(px) });
+  }
+  raioModes[tema] = tree;
 }
 
 // ── Coleção: Tipografia (modos = escalas) ────────────────────────────────────
@@ -426,7 +456,7 @@ const doc = {
   $sources: SOURCES,
   Cor: { modes: corModes },
   Dimensao: { modes: dimModes },
-  Raio: { modes: { default: raioTree } },
+  Raio: { modes: raioModes },
   Tipografia: { modes: tipoModes },
   Fonte: { modes: fonteModes },
   Movimento: { modes: { default: motionTree } },

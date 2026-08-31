@@ -178,12 +178,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.9544,
-                0.94288,
-                0.9256
+                0.2346,
+                0.410267,
+                0.4454
               ],
               "alpha": 1,
-              "hex": "#f3f0ec"
+              "hex": "#3c6972"
             }
           },
           "accent-foreground": {
@@ -258,12 +258,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.735,
-                0.336,
-                0.105
+                0.629,
+                0.474867,
+                0.051
               ],
               "alpha": 1,
-              "hex": "#bb561b"
+              "hex": "#a0790d"
             }
           },
           "warning-foreground": {
@@ -883,12 +883,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.208,
-                0.279067,
-                0.312
+                0.2896,
+                0.71968,
+                0.7504
               ],
               "alpha": 1,
-              "hex": "#354750"
+              "hex": "#4ab8bf"
             }
           },
           "accent-foreground": {
@@ -963,12 +963,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.905,
-                0.544,
-                0.335
+                0.979,
+                0.8194,
+                0.181
               ],
               "alpha": 1,
-              "hex": "#e78b55"
+              "hex": "#fad12e"
             }
           },
           "warning-foreground": {
@@ -1588,12 +1588,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.964,
-                0.927333,
-                0.876
+                0.888,
+                0.707733,
+                0.472
               ],
               "alpha": 1,
-              "hex": "#f6ecdf"
+              "hex": "#e2b478"
             }
           },
           "accent-foreground": {
@@ -2293,12 +2293,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.216,
-                0.174,
-                0.144
+                0.6144,
+                0.44864,
+                0.3456
               ],
               "alpha": 1,
-              "hex": "#372c25"
+              "hex": "#9d7258"
             }
           },
           "accent-foreground": {
@@ -2998,12 +2998,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.876,
-                0.927333,
-                0.964
+                0.472,
+                0.707733,
+                0.888
               ],
               "alpha": 1,
-              "hex": "#dfecf6"
+              "hex": "#78b4e2"
             }
           },
           "accent-foreground": {
@@ -3703,12 +3703,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.135,
-                0.1725,
-                0.225
+                0.3185,
+                0.467133,
+                0.6615
               ],
               "alpha": 1,
-              "hex": "#222c39"
+              "hex": "#5177a9"
             }
           },
           "accent-foreground": {
@@ -4705,6 +4705,114 @@
         "radius-badge": {
           "$type": "number",
           "$value": 9999
+        }
+      },
+      "warm": {
+        "radius": {
+          "$type": "number",
+          "$value": 24
+        },
+        "radius-none": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-xs": {
+          "$type": "number",
+          "$value": 18
+        },
+        "radius-sm": {
+          "$type": "number",
+          "$value": 20
+        },
+        "radius-md": {
+          "$type": "number",
+          "$value": 22
+        },
+        "radius-lg": {
+          "$type": "number",
+          "$value": 24
+        },
+        "radius-xl": {
+          "$type": "number",
+          "$value": 28
+        },
+        "radius-full": {
+          "$type": "number",
+          "$value": 9999
+        },
+        "radius-button": {
+          "$type": "number",
+          "$value": 24
+        },
+        "radius-input": {
+          "$type": "number",
+          "$value": 24
+        },
+        "radius-alert": {
+          "$type": "number",
+          "$value": 24
+        },
+        "radius-card": {
+          "$type": "number",
+          "$value": 28
+        },
+        "radius-badge": {
+          "$type": "number",
+          "$value": 9999
+        }
+      },
+      "cold": {
+        "radius": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-none": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-xs": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-sm": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-md": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-lg": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-xl": {
+          "$type": "number",
+          "$value": 4
+        },
+        "radius-full": {
+          "$type": "number",
+          "$value": 9999
+        },
+        "radius-button": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-input": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-alert": {
+          "$type": "number",
+          "$value": 0
+        },
+        "radius-card": {
+          "$type": "number",
+          "$value": 4
+        },
+        "radius-badge": {
+          "$type": "number",
+          "$value": 0
         }
       }
     }
