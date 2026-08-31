@@ -254,7 +254,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status`, `thinking-indicator`, `agent-plan`, `todo-list`, `job-progress`, `subagent-list`, `tool-group`, `tool-error`, `tool-timeline`, `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `stopped-run`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `agent-card`, `permission-grant`, `elicitation-form`, `guardrail-notice`, `approval-card` (23) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan`, `todo-list`, `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `tool-timeline`, `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `agent-card`, `permission-grant`, `elicitation-form`, `guardrail-notice`, `approval-card` (23 no catálogo, **21 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner`, `reasoning-effort` (6) | O mesmo número em quatro formas (anel, barra, texto, repartição). Primitivo: `token-budget.ts`. Base em `progress` |
@@ -266,6 +266,14 @@ slug produz 83 folhas e nenhum sistema.
 A conta de 5.1 e 5.2 foi feita lendo o catálogo. Construir revela o que ler não
 mostra, e quando revelar, **o número muda aqui** — contagem que não acompanha o
 que existe vira meta, e meta faz criar peça para bater número.
+
+Duas correções da família 2 já saem da leitura do vocabulário, antes de
+construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
+`stopped`** e **`tool-error` é `ToolCallState` `failed`**. Os dois estados já
+existem em `chat-protocol.ts`, com o critério de existirem escrito no docblock —
+`stopped` desenha diferente de `failed` porque um oferece continuar e o outro
+tentar de novo. Estado que o vocabulário já modela não vira componente; vira
+story de estado e linha na tabela de quem o mostra.
 
 Primeira correção, medida ao fechar a família 1: `composer-mentions` e
 `composer-slash-commands` **não são componentes**. São as duas configurações do

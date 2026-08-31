@@ -1,0 +1,183 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Execução do agente — a folha da família 2 da guideline 17.
+ *
+ * Todas as peças daqui respondem à mesma pergunta em três partes: O QUE ESTÁ
+ * ACONTECENDO, HÁ QUANTO TEMPO, e O QUE EU POSSO FAZER A RESPEITO. É esse eixo
+ * que as faz dividir geometria, estados e tokens — e é por isso que moram numa
+ * folha só, e não uma por slug.
+ *
+ * O vocabulário é `@shared/primitives/chat-protocol`: `RunStatus` e
+ * `ToolCallState`, com as decisões de por que cada estado existe escritas nos
+ * docblocks de lá. Nenhuma peça desta folha reimplementa essas regras.
+ *
+ * A REGRA QUE ATRAVESSA A FAMÍLIA INTEIRA, e que ela herda da 1: o que muda a
+ * cada quadro é DECORATIVO, e o estado é TEXTO. Execução em curso tem relógio,
+ * barra e animação, e nenhum dos três se anuncia — um número que se reanuncia
+ * torna a tela impossível de ouvir. Quem ouve recebe a palavra, que é o que
+ * decide o que fazer.
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT).
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Estado da execução ───────────────────────────────────────────────────────
+ *
+ * A linha que diz em que pé está a resposta. Vocabulário: `RunStatus`,
+ * `isRunFinished`.
+ *
+ *   <p class="nds-agent-status" data-status="running">
+ *     <span class="nds-agent-status-dot" aria-hidden="true"></span>
+ *     <span class="nds-agent-status-label">Respondendo</span>
+ *     <span class="nds-agent-status-elapsed">1:04</span>
+ *     <button class="nds-button" data-slot="agent-status-action">Parar</button>
+ *   </p>
+ *
+ * `stopped-run` DO CATÁLOGO É UM ESTADO DAQUI, e não uma peça: `RunStatus` já
+ * separa `stopped` de `failed` porque um oferece continuar e o outro tentar de
+ * novo. O desenho muda, o componente não.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. NÃO É REGIÃO VIVA. A tentação é grande — o estado muda sozinho —, mas
+ *    quem lê está ouvindo a RESPOSTA sendo gerada logo abaixo, e um anúncio a
+ *    cada troca de estado corta a leitura no meio. Quem quiser anunciar põe a
+ *    região viva por fora, sabendo o que está fazendo.
+ * 2. O PONTO É DECORATIVO e a palavra é o estado. Cor sozinha não descreve
+ *    estado (WCAG 1.4.1), e aqui a cor é a única diferença visual entre três
+ *    dos cinco.
+ * 3. O RELÓGIO NÃO SE ANUNCIA e chega já formatado, como texto. Formato de
+ *    duração é decisão de idioma; o componente que o formatasse decidiria
+ *    idioma em cinco lugares.
+ * 4. A AÇÃO MUDA COM O ESTADO, e o rótulo diz o que faz — "Parar" enquanto
+ *    corre, "Tentar de novo" quando falhou. Botão que troca de função sem
+ *    trocar de nome é o mesmo botão fazendo coisas diferentes.
+ */
+
+.nds-agent-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-agent-status-dot {
+  flex-shrink: 0;
+  inline-size: var(--spacing-2);
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--muted-foreground));
+}
+
+.nds-agent-status[data-status="running"] .nds-agent-status-dot {
+  background-color: hsl(var(--primary));
+}
+
+.nds-agent-status[data-status="complete"] .nds-agent-status-dot {
+  background-color: hsl(var(--success));
+}
+
+.nds-agent-status[data-status="failed"] .nds-agent-status-dot {
+  background-color: hsl(var(--destructive));
+}
+
+/* O que a pessoa parou fica neutro de propósito: interromper não é erro, e
+ * pintar de vermelho o que ela escolheu fazer é o sistema discordando dela. */
+.nds-agent-status[data-status="stopped"] .nds-agent-status-dot {
+  background-color: hsl(var(--muted-foreground));
+}
+
+.nds-agent-status-label {
+  color: hsl(var(--foreground));
+}
+
+.nds-agent-status-elapsed {
+  font-variant-numeric: tabular-nums;
+}
+
+[data-slot="agent-status-action"] {
+  margin-inline-start: auto;
+  /* Alvo de toque (WCAG 2.5.8). */
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}
+
+/* ── Indicador de geração ─────────────────────────────────────────────────────
+ *
+ * Os três pontos que dizem que a resposta está vindo. Não é o mesmo que o
+ * estado da execução: aquele é uma linha de informação com ação, este é o lugar
+ * da resposta enquanto ela não chegou — ele mora ONDE o texto vai aparecer.
+ *
+ *   <p class="nds-thinking" role="status">
+ *     <span class="nds-thinking-dots" aria-hidden="true">
+ *       <span></span><span></span><span></span>
+ *     </span>
+ *     <span class="nds-sr-only">Gerando resposta</span>
+ *   </p>
+ *
+ * AQUI A REGIÃO VIVA EXISTE, e é a exceção que confirma a regra da folha.
+ * `role="status"` anuncia UMA vez que a resposta começou a vir, e depois o
+ * elemento some — não há número se reanunciando. É a diferença entre avisar
+ * que algo começou e narrar cada passo.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. OS PONTOS SÃO DECORATIVOS e a frase é `sr-only`. Animação não se lê.
+ * 2. A ANIMAÇÃO RESPEITA `prefers-reduced-motion` — sem ela os pontos ficam
+ *    parados e a frase continua dizendo tudo o que era preciso saber.
+ * 3. O ELEMENTO SOME quando o texto chega. Indicador que fica é indicador que
+ *    mente, e quem ouve não tem como saber que ele parou de valer.
+ */
+
+.nds-thinking {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin: 0;
+}
+
+.nds-thinking-dots {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.nds-thinking-dots > span {
+  inline-size: var(--spacing-2);
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--muted-foreground));
+  animation: nds-thinking-pulse var(--duration-slow) var(--ease-standard) infinite;
+}
+
+/* O atraso escalonado é o que faz três pontos parecerem uma onda, e não três
+ * pontos piscando juntos. */
+.nds-thinking-dots > span:nth-child(2) {
+  animation-delay: calc(var(--duration-slow) / 6);
+}
+
+.nds-thinking-dots > span:nth-child(3) {
+  animation-delay: calc(var(--duration-slow) / 3);
+}
+
+@keyframes nds-thinking-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* A camada de token já zera `--duration-*` sob movimento reduzido, o que para a
+ * animação. Este bloco existe pelo RESTO: sem ele os pontos congelariam no
+ * primeiro quadro, que é o mais apagado, e pareceriam desligados justamente
+ * para quem escolheu menos movimento. A frase continua no lugar. */
+@media (prefers-reduced-motion: reduce) {
+  .nds-thinking-dots > span {
+    animation: none;
+    opacity: 0.6;
+  }
+}
