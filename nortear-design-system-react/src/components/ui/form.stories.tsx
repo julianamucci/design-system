@@ -4,6 +4,8 @@ import { expect, userEvent, within } from "storybook/test"
 import { FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { formSource } from "./form.source"
+import { FormDocs } from "@/components/docs/FormDocs"
+import { withAutoDocsTab } from "@/lib/withAutoDocsTab"
 
 type FormArgs = {
   label: string
@@ -21,7 +23,10 @@ const meta: Meta<FormArgs> = {
     layout: "padded",
     // O painel imprimia o `nds-max-w-sm` do canvas e os `args.x || undefined`
     // do render — andaime da story, não o componente.
-    docs: { source: { transform: formSource } },
+    docs: {
+      page: withAutoDocsTab(FormDocs),
+      source: { transform: formSource },
+    },
   },
   argTypes: {
     label: {

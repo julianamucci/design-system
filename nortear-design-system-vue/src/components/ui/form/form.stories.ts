@@ -3,6 +3,8 @@ import { expect, userEvent, within } from 'storybook/test';
 import { Input } from '@/components/ui/input';
 import { FormField } from './index';
 import { formSource } from './form.source';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import FormDocs from '@/components/docs/FormDocs.vue';
 
 type FormArgs = {
   label: string;
@@ -18,7 +20,10 @@ const meta: Meta<FormArgs> = {
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'padded',
-    docs: { source: { transform: formSource } },
+    docs: {
+      page: withAutoDocsTab(FormDocs),
+      source: { transform: formSource },
+    },
   },
   argTypes: {
     label: {
