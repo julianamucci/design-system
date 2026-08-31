@@ -100,6 +100,17 @@ export function approvalWaitingQuestion(): string {
  * de fora. Aqui as três escolhas apenas existem, para que a demonstração tenha
  * o que apertar.
  *
+ * E HÁ UM SEGUNDO MOTIVO, mais forte que o primeiro, porque não depende de
+ * onde a guideline traçou a fronteira: num cartão que pede autorização, dar
+ * ênfase visual a "Aprovar" EMPURRA para aprovar. É padrão escuro conhecido em
+ * diálogo de permissão, e um design system que o embarcasse na demonstração o
+ * espalharia por todo produto que copiasse o exemplo.
+ *
+ * A demonstração fica visualmente lisa por causa disso, e é para ficar. Quem
+ * consome passa os próprios controles por `actions` e escolhe a ênfase que
+ * quiser — a fronteira já é dele. O que não se faz é ENSINAR a escolha aqui.
+ * Este parágrafo existe para que "deixar bonito" não desfaça a decisão depois.
+ *
  * `data-approval-choice` é escrito AQUI, por quem monta os controles. É o único
  * pedaço do contrato que atravessa a fronteira do que a peça desenha.
  */
