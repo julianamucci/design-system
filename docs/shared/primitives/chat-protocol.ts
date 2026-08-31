@@ -468,3 +468,76 @@ export const CONNECTION_STATES: readonly ConnectionState[] = [
 export function isRetryScheduled(state: ConnectionState): boolean {
   return state === 'reconnecting';
 }
+
+// ─── Trabalho longo ───────────────────────────────────────────────────────────
+
+/**
+ * O quanto um trabalho longo já andou.
+ *
+ * NÃO É UM ESTADO, e por isso não há tipo de estado novo aqui: o trabalho longo
+ * — indexar um repositório, processar um lote — nasce, corre, é interrompido,
+ * termina ou quebra, que é exatamente `RunStatus`, e cada um dos cinco já
+ * desenha diferente naquela linha pelos mesmos motivos. O que o trabalho longo
+ * acrescenta ao estado da execução é a CONTA, e conta não é estado.
+ *
+ * `total` É OPCIONAL, e é a razão de este tipo existir em vez de dois números
+ * soltos. Trabalho que não sabe de quantos é caso REAL — quem varre um
+ * repositório sabe quantos arquivos abriu, e não quantos vai abrir — e ele
+ * precisa desenhar diferente de "acabou de começar", que é a leitura de zero.
+ * Guardar `total: 0` para dizer "não sei" é o mesmo defeito que `TokenUsage`
+ * evita ao deixar `limit` de fora: ausência tem de se distinguir de zero, e um
+ * número não distingue as duas.
+ */
+export interface JobCount {
+  /** Quantas unidades já foram feitas. */
+  done: number;
+  /** De quantas, quando se sabe. Ausente é "não se sabe", nunca zero. */
+  total?: number;
+}
+
+/**
+ * Sabe-se de quantas?
+ *
+ * `undefined` e zero respondem a mesma coisa, e o zero é o que faz esta função
+ * valer mais que um `!== undefined` escrito em cinco lugares: dividir por zero
+ * devolve fração inválida, e o componente que a arredondasse desenharia trilha
+ * vazia — "acabou de começar" — para um trabalho que não tem o que fazer.
+ */
+export function hasKnownTotal(count: JobCount): boolean {
+  return count.total !== undefined && count.total > 0;
+}
+
+/**
+ * O quanto a barra mostra, em porcentagem, ou `null` para "andando sem
+ * estimativa".
+ *
+ * Mora aqui, e não em cinco `if`, pelo mesmo motivo de `isRetryScheduled`: são
+ * três decisões de uma frase cada, e a que discordaria entre stacks é
+ * justamente a terceira.
+ *
+ * 1. CONCLUÍDO É CHEIO, e a conta não entra. Um trabalho que terminou está
+ *    inteiro feito ainda que ninguém tenha contado as unidades, e uma barra
+ *    pela metade ao lado da palavra "Concluído" é a peça discordando de si.
+ * 2. SEM TOTAL CONHECIDO, ANDANDO É INDETERMINADO. `null` é o que a barra do
+ *    design system já entende por "em andamento, sem estimativa" — ela troca a
+ *    fração por um traço que percorre o trilho e deixa de escrever
+ *    `aria-valuenow`, porque zero mentiria. É a armadilha que este tipo existe
+ *    para fechar: vazio não pode parecer começo.
+ * 3. SEM TOTAL CONHECIDO E PARADO, A TRILHA FICA VAZIA. Aqui o traço correndo
+ *    diria que ainda anda, que é pior que não dizer nada — e a palavra do
+ *    estado ao lado ("Em espera", "Interrompido", "Falhou") já impede a leitura
+ *    de "acabou de começar", que era o risco de zero.
+ *
+ * O ARREDONDAMENTO É PARA BAIXO, e isso é decisão e não gosto: com
+ * arredondamento ao mais próximo, 4 999 de 5 000 vira cem por cento, e a barra
+ * enche ANTES de o trabalho acabar. Barra cheia ao lado de "Em andamento" é a
+ * mesma discordância da decisão 1, invertida.
+ */
+export function jobProgressValue(status: RunStatus, count?: JobCount): number | null {
+  if (status === 'complete') return 100;
+  if (count && hasKnownTotal(count)) {
+    const fracao = Math.min(Math.max(count.done, 0) / count.total!, 1);
+    return Math.floor(fracao * 100);
+  }
+  return status === 'running' ? null : 0;
+}

@@ -762,3 +762,184 @@
   flex-wrap: wrap;
   gap: var(--spacing-2);
 }
+
+/* ── Andamento de trabalho longo ──────────────────────────────────────────────
+ *
+ * O quanto já andou uma tarefa que o agente disparou e que continua correndo
+ * depois de a resposta terminar — indexar um repositório, processar um lote.
+ * Vocabulário: `RunStatus`, `JobCount`, `hasKnownTotal`, `jobProgressValue`,
+ * `isRunFinished`.
+ *
+ *   <div class="nds-job-progress" data-slot="job-progress" data-status="running" aria-busy="true">
+ *     <span class="nds-job-progress-label" data-slot="job-progress-label">Indexando o repositório</span>
+ *     <span class="nds-job-progress-count" data-slot="job-progress-count" aria-hidden="true">1.240 de 5.000</span>
+ *     <div class="nds-progress nds-job-progress-bar" data-slot="progress"
+ *          role="progressbar" aria-label="Indexando o repositório"
+ *          aria-valuenow="24" aria-valuemin="0" aria-valuemax="100">
+ *       <div class="nds-progress-indicator" data-slot="progress-indicator"></div>
+ *     </div>
+ *     <span class="nds-job-progress-status" data-slot="job-progress-status">Em andamento</span>
+ *     <button class="nds-button nds-job-progress-action" data-slot="job-progress-action">Parar</button>
+ *   </div>
+ *
+ * A CLASSE `nds-job-progress-bar` ANDA JUNTO das do progresso, e o mesmo vale
+ * para `nds-job-progress-action` no botão: são as duas partes da árvore que
+ * chegam prontas de outra peça, e é pela classe própria que esta folha as
+ * alcança. `data-slot` nas duas é ligado por host binding na stack do Angular e
+ * disputa com o atributo estático do template (regra 8 do `RULES.md` de lá) —
+ * seletor por classe não disputa com ninguém. Árvore que não mostra a classe
+ * ensina que ela não existe.
+ *
+ * NENHUMA REGRA DESTA FOLHA LÊ `data-status`, ao contrário dos três blocos
+ * acima, e a diferença tem motivo: ali o estado troca a cor de um ponto que
+ * esta folha desenha; aqui ele troca o preenchimento de uma BARRA que é de
+ * outra peça, e quem o troca é `data-variant`, a API pública do progresso. O
+ * atributo continua na raiz porque é o gancho pelo qual as `play` miram e pelo
+ * qual quem consome distingue os cinco — mas escrever aqui uma regra que o
+ * lesse só para tê-la seria desenho que não existe com cara de estado pensado.
+ *
+ * NÃO É O ESTADO DA EXECUÇÃO, e a diferença é de escopo. Aquela linha descreve
+ * a RESPOSTA que está sendo escrita; esta descreve uma tarefa que sobrevive à
+ * resposta. É por isso que esta tem conta e barra e aquela tem só relógio: um
+ * trabalho longo se mede em unidades feitas, e uma resposta, não. O ESTADO é o
+ * mesmo vocabulário de propósito — `RunStatus` já separa os cinco momentos, e
+ * pelos mesmos motivos.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. NÃO É REGIÃO VIVA, e a decisão foi tomada aqui, não herdada. A folha
+ *    proíbe por padrão e tem três exceções escritas — o indicador de geração
+ *    (avisa UMA vez que a resposta começou a vir), o estado da ligação (o chão
+ *    saindo) e o cartão de autorização (a máquina parou e espera por uma
+ *    pessoa). Nenhuma alcança este caso, e é justamente o contrário delas: um
+ *    trabalho longo é o que anda SOZINHO enquanto quem pediu faz outra coisa.
+ *    Nada está bloqueado, ninguém deve resposta, e o que muda é um número que
+ *    se reescreve a cada unidade. Anunciar isso é a armadilha com que esta
+ *    folha abre.
+ *
+ *    O que existe no lugar é `aria-busy="true"` na raiz enquanto corre (regra 1
+ *    da §8): ele diz que aquele pedaço da tela ainda se escreve, sem anunciar
+ *    nada. É o mesmo que o anexo em envio já usa.
+ * 2. O ESTADO É PALAVRA, e é a única parte da peça que não sai do que é lido em
+ *    voz. Sem ela, os cinco estados existiriam só em cor de barra e movimento —
+ *    e dois deles, em espera e interrompido, desenham exatamente igual (WCAG
+ *    1.4.1). A palavra é o que separa.
+ * 3. A CONTA É DECORATIVA, e a barra é quem carrega o número. As duas dizem a
+ *    mesma coisa, e a que sai é a que RERRODA: `aria-valuenow` não é região
+ *    viva — nenhum leitor o anuncia sozinho, e todos o entregam a quem
+ *    perguntar —, enquanto a conta em texto se reescreve a cada unidade dentro
+ *    da linha que alguém pode estar lendo.
+ *
+ *    A CONTRAPARTIDA FOI PESADA: sem total conhecido a barra não tem valor
+ *    nenhum, e a conta escondida ("1 240 até agora") passa a ser a única no
+ *    papel. Ela sai assim mesmo, porque uma contagem sem denominador não
+ *    responde "quanto falta" — diz que a coisa está viva, que é exatamente o
+ *    que `aria-busy` e a palavra "Em andamento" já dizem, sem rerrodar.
+ * 4. A BARRA É A DO DESIGN SYSTEM, com o papel e o nome intactos. Ela não é
+ *    escondida, e isso não contradiz a regra da folha: "não se anuncia" e "não
+ *    se lê" são coisas diferentes, e `role="progressbar"` é da segunda espécie.
+ *    Esconder a barra própria do sistema dentro de outra peça faria este bloco
+ *    entregar MENOS que `progress` sozinho entrega.
+ *
+ *    O NOME É O RÓTULO DO TRABALHO, repetido do texto ao lado. Barra sem nome é
+ *    anunciada como "barra de progresso, 24%" — o leitor diz quanto, nunca de
+ *    quê —, e essa decisão já está escrita no próprio `progress`.
+ * 5. SEM TOTAL CONHECIDO, A BARRA É INDETERMINADA — e este é o caso que a peça
+ *    existe para não errar. Quem varre um repositório sabe quantos arquivos
+ *    abriu, e não quantos vai abrir; desenhar zero ali seria dizer "acabou de
+ *    começar" para algo que já andou muito. O indeterminado do `progress` troca
+ *    a fração por um traço que percorre o trilho e deixa de escrever
+ *    `aria-valuenow`, que é como se diz "ocupado" sem inventar um número.
+ *
+ *    E ELE VALE SÓ ENQUANTO CORRE. Parado sem total, o traço correndo diria que
+ *    ainda anda — pior que não dizer nada —, então a trilha fica vazia e a
+ *    palavra do estado responde. Quem decide isso é `jobProgressValue`, do
+ *    vocabulário compartilhado, e não um `if` por stack.
+ * 6. A AÇÃO MUDA COM O ESTADO, e o rótulo diz o que faz — "Parar" enquanto
+ *    corre, "Retomar" depois de interrompido, "Tentar de novo" depois de
+ *    falhar. Botão que troca de função sem trocar de nome é o mesmo botão
+ *    fazendo coisas diferentes. Em espera e concluído não oferecem nada:
+ *    disparar o trabalho é de quem o enfileirou, e sobre um trabalho pronto não
+ *    há o que fazer aqui.
+ * 7. NADA AQUI TEM ALTURA FIXA. O rótulo quebra em várias linhas em vez de
+ *    receber reticências — nome de trabalho pela metade é trabalho não
+ *    identificado, mesma escolha do rótulo do passo do plano —, e a única
+ *    medida rígida é o alvo de toque de 24px da ação (WCAG 2.5.8).
+ */
+
+/* A GRADE MORA NA RAIZ, e não em duas caixas de linha, e isso foi medido contra
+ * a marcação: a conta e a ação caem na MESMA coluna da direita, e é a grade
+ * única que garante isso. Com uma caixa por linha, cada uma alinharia o seu
+ * item pela largura do próprio conteúdo, e os dois ficariam a distâncias
+ * diferentes da borda — desalinhamento que ninguém escreveu e que muda a cada
+ * número novo.
+ *
+ * De quebra, a peça fica sem duas caixas que não desenhavam nada. */
+.nds-job-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--spacing-1) var(--spacing-2);
+
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-job-progress-label {
+  grid-column: 1;
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  /* Sem reticências: nome de trabalho pela metade é trabalho não identificado. */
+  overflow-wrap: anywhere;
+}
+
+/* `justify-self: end` NA COLUNA DA DIREITA, nos dois itens que caem nela.
+ *
+ * A coluna é `auto`, então ela tem a largura do MAIOR dos dois — e o menor
+ * seria esticado até lá pelo `stretch` que a grade assume. Na prática é o botão
+ * que se deforma: "Parar" é curto e "1.240 de 5.000" é longo, e sem esta linha
+ * o alvo cresceria conforme o número do lado, que não tem nada a ver com ele. */
+.nds-job-progress-count {
+  grid-column: 2;
+  justify-self: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.nds-job-progress-bar {
+  grid-column: 1 / -1;
+}
+
+.nds-job-progress-status {
+  grid-column: 1;
+  color: hsl(var(--foreground));
+}
+
+/* SELETOR POR CLASSE, e não por `[data-slot]` — mesma medição dos blocos do
+ * estado da execução e da ligação: no Angular o `data-slot` do botão é ligado
+ * por host binding e disputa com o atributo estático do template, e se o host
+ * binding vence a regra não aplica ali. O alvo de toque de 24px é WCAG 2.5.8, e
+ * não é coisa que se possa perder numa stack só.
+ *
+ * SEM `margin-inline-start: auto` aqui, ao contrário das duas linhas irmãs: lá
+ * a caixa é flex e o empurrão é o que joga o botão para a direita; aqui a
+ * coluna já o coloca lá, e um `auto` a mais só brigaria com o `justify-self`. */
+.nds-job-progress-action {
+  grid-column: 2;
+  justify-self: end;
+  /* Alvo de toque (WCAG 2.5.8). */
+  min-inline-size: var(--spacing-6);
+  min-block-size: var(--spacing-6);
+}
+
+/* SEM TERCEIRA COR DE PREENCHIMENTO, e é medição, não esquecimento.
+ *
+ * Concluído e falhou trocam a barra por `data-variant`, que é a API pública do
+ * progresso, e as duas cores já foram medidas contra a trilha nos três temas e
+ * nos dois modos — WCAG 1.4.11 pede 3:1 entre a parte cheia e a vazia, e é o
+ * único jeito de ver onde a barra termina. Em espera e interrompido ficam com o
+ * primário, e é a PALAVRA que os separa de "em andamento" (decisão 2).
+ *
+ * Pintar o interrompido de `--muted-foreground` seria inventar uma razão de
+ * contraste contra uma trilha que ninguém mediu, e este sistema já recusou
+ * `--warning` na barra exatamente por isso. Cor que não se pode provar é cor
+ * que informa em alguns temas e some em outros. */

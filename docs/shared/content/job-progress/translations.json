@@ -1,0 +1,1616 @@
+{
+  "pt-BR": {
+    "title": "Andamento de trabalho longo",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O quanto já andou uma tarefa que o agente disparou e que continua correndo depois de a resposta terminar — com a conta, a barra e o que dá para fazer a respeito.",
+    "seo": {
+      "title": "Andamento de trabalho longo — a conta, a barra e a palavra",
+      "description": "A peça de andamento de trabalho longo: a palavra que descreve o estado, a conta e a barra que ficam fora do que é anunciado, o caso sem total conhecido que desenha diferente de zero e uma ação que troca de nome quando troca de função."
+    },
+    "labels": {
+      "job": "Indexando o repositório",
+      "status": {
+        "idle": "Em espera",
+        "running": "Em andamento",
+        "stopped": "Interrompido",
+        "complete": "Concluído",
+        "failed": "Falhou"
+      },
+      "count": "{done} de {total}",
+      "countWithoutTotal": "{done} até agora",
+      "action": {
+        "running": "Parar",
+        "stopped": "Retomar",
+        "failed": "Tentar de novo"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "running": "Enquanto corre, e se sabe de quantas",
+        "unknownTotal": "Enquanto corre, sem saber de quantas",
+        "stopped": "Quando alguém interrompeu",
+        "complete": "Quando acabou"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O rótulo abre a peça e diz o que está sendo feito. É também o nome pelo qual a barra é anunciada.",
+      "item2": "A conta fica à direita do rótulo, já escrita no idioma de quem lê, e fica fora do que é anunciado.",
+      "item3": "A barra atravessa a peça inteira e mostra a fração; sem total conhecido ela troca a fração por um traço que percorre o trilho.",
+      "item4": "A palavra do estado vem abaixo da barra, e é a única parte que não sai do que é lido em voz.",
+      "item5": "A ação fica no fim, alinhada com a conta na mesma coluna, e o rótulo dela diz o que faz naquele estado.",
+      "structureCode": {
+        "web": "<div class=\"nds-job-progress\" data-status=\"running\" aria-busy=\"true\">\n  <span class=\"nds-job-progress-label\">Indexando o repositório</span>\n  <span class=\"nds-job-progress-count\" aria-hidden=\"true\">1.240 de 5.000</span>\n  <div class=\"nds-progress nds-job-progress-bar\" role=\"progressbar\"\n       aria-label=\"Indexando o repositório\"\n       aria-valuenow=\"24\" aria-valuemin=\"0\" aria-valuemax=\"100\">\n    <div class=\"nds-progress-indicator\"></div>\n  </div>\n  <span class=\"nds-job-progress-status\">Em andamento</span>\n  <button class=\"nds-button nds-job-progress-action\" data-slot=\"job-progress-action\">Parar</button>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para uma tarefa que continua correndo depois de a resposta terminar, e que se mede em unidades feitas.",
+        "item2": "Escreva o estado em palavra, sempre — a barra e a conta são para os olhos.",
+        "item3": "Deixe o total de fora quando ele não for conhecido, em vez de mandar zero: a peça desenha os dois casos de maneiras diferentes.",
+        "item4": "Dê à ação o nome do que ela faz naquele estado: interromper, retomar e repetir são três coisas.",
+        "item5": "Execute em quem consome — parar, retomar e repetir de verdade são do produto."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar o quanto uma tarefa longa já andou, e oferecer interrompê-la",
+          "u": "Andamento de trabalho longo",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Dizer em que pé está a resposta que está sendo escrita agora",
+          "u": "Estado da execução",
+          "a": "Aquela linha se mede em tempo, e esta se mede em unidades feitas."
+        },
+        "item3": {
+          "s": "Dizer se ainda há por onde pedir",
+          "u": "Estado da ligação",
+          "a": "Aquela descreve o transporte; esta descreve uma tarefa que já foi aceita."
+        },
+        "item4": {
+          "s": "Mostrar uma fração isolada, sem estado nem ação",
+          "u": "Progress",
+          "a": "Ali há uma barra e nada mais; aqui há um trabalho, com nome, estado e o que fazer a respeito."
+        },
+        "item5": {
+          "s": "Listar os passos que o agente pretende dar",
+          "u": "Plano do agente",
+          "a": "Ali cada passo tem estado próprio; aqui há um trabalho só, medido em unidades."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "jobLabel": {
+            "name": "Rótulo do trabalho",
+            "format": "O que está sendo feito, em verbo, sem jargão de infraestrutura",
+            "good": "Indexando o repositório",
+            "bad": "job_id 7f3a em execução no worker 2"
+          },
+          "count": {
+            "name": "Conta com total",
+            "format": "Molde com os dois números e a palavra que os liga",
+            "good": "1.240 de 5.000",
+            "bad": "24.8%"
+          },
+          "countWithoutTotal": {
+            "name": "Conta sem total",
+            "format": "Molde com um número só, que não promete um fim",
+            "good": "1.240 até agora",
+            "bad": "1.240 de ?"
+          },
+          "status": {
+            "name": "Palavra do estado",
+            "format": "Uma palavra sobre o trabalho, e nunca a mesma para dois estados",
+            "good": "Interrompido",
+            "bad": "Em andamento"
+          },
+          "action": {
+            "name": "Ação",
+            "format": "Verbo que diz o que acontece naquele estado, diferente em cada um",
+            "good": "Retomar",
+            "bad": "Executar"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva o estado em palavra, abaixo da barra.",
+        "item2": "Troque o nome da ação quando ela troca de função.",
+        "item3": "Omita o total quando ele não for conhecido, e deixe a barra dizer que não há estimativa.",
+        "item4": "Deixe a peça sem ação quando o trabalho está em espera ou já acabou."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a barra e a conta como única diferença entre os estados.",
+        "item2": "Não anuncie a conta: um número que se reescreve a cada unidade torna a tela impossível de ouvir.",
+        "item3": "Não mande zero como total para dizer que não se sabe — zero desenha como começo, e é a leitura oposta.",
+        "item4": "Não faça a peça executar, parar ou retomar coisa alguma."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "Sem total conhecido, a barra diz que não há estimativa.",
+        "dont": "O total desconhecido chega como zero, e a trilha vazia lê como um trabalho que acabou de começar."
+      },
+      "pair2": {
+        "do": "O estado chega em palavra, abaixo da barra.",
+        "dont": "Só a barra separa o que corre do que foi interrompido, e barra parada não diz qual dos dois é."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: rotulos,\n  onAction: (intent) => aplicar(intent),\n});",
+        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"rotulos\"\n  @action=\"aplicar\"\n/>",
+        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"rotulos\"\n  (action)=\"aplicar($event)\"\n></div>"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "idle": {
+        "label": "Em espera",
+        "trigger": "O trabalho foi enfileirado e ainda não começou.",
+        "behavior": "A trilha fica vazia, a peça não se declara ocupada e não há ação — disparar o trabalho é de quem o enfileirou."
+      },
+      "running": {
+        "label": "Em andamento",
+        "trigger": "O trabalho está correndo.",
+        "behavior": "A peça se declara ocupada, a barra mostra a fração — ou um traço que percorre o trilho, quando não se sabe de quantas — e a ação oferece interromper."
+      },
+      "stopped": {
+        "label": "Interrompido",
+        "trigger": "Alguém pediu para parar, e o trabalho parou onde estava.",
+        "behavior": "A barra congela onde chegou, a peça deixa de se declarar ocupada e a ação oferece retomar."
+      },
+      "complete": {
+        "label": "Concluído",
+        "trigger": "O trabalho terminou inteiro.",
+        "behavior": "A barra fica cheia na cor de sucesso, mesmo que a conta seja parcial, e não há ação — sobre um trabalho pronto não há o que fazer aqui."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "O trabalho quebrou no meio, sem que ninguém pedisse.",
+        "behavior": "A barra congela onde chegou, na cor de erro, e a ação oferece tentar de novo."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que está sendo feito. É também o nome pelo qual a barra é anunciada."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que pé está o trabalho. Decide a palavra, a cor da barra, se a peça se declara ocupada e o que a ação oferece."
+        },
+        "count": {
+          "name": "count",
+          "type": "JobCount",
+          "default": "—",
+          "required": "Não",
+          "description": "Quanto já andou, e de quanto. Ausente é não haver conta nenhuma; um total ausente dentro dele é não se saber de quantas."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "JobProgressLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada estado, os moldes da conta e o rótulo da ação onde ela existe."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(intent: 'stop' | 'start') => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Alguém pediu a ação, e a intenção diz qual das duas. Parar, retomar e repetir de verdade são de quem consome."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada um dos cinco estados. É ela que descreve, e não a barra."
+        },
+        "labelsCount": {
+          "name": "count",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O molde da conta quando se sabe de quantas. Os dois números são substituídos no idioma de quem lê."
+        },
+        "labelsCountWithoutTotal": {
+          "name": "countWithoutTotal",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O molde da conta quando não se sabe de quantas. Só o número já feito é substituído."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<RunStatus, string>>",
+          "default": "—",
+          "required": "Não",
+          "description": "O rótulo da ação em cada estado. Estado sem entrada não oferece ação nenhuma."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A peça desenha o andamento que recebe e avisa que alguém pediu a ação. Ela não executa, não conta e não retoma nada — quando o trabalho anda e o que ele alcança é de quem consome.",
+      "extensibilityCode": {
+        "web": "// O QUE A BARRA MOSTRA sai do vocabulário compartilhado, e não de um teste\n// escrito na tela. São três decisões, e a terceira é a que discordaria entre\n// implementações.\njobProgressValue('running', { done: 1240, total: 5000 });  // 24   → a fração\njobProgressValue('running', { done: 1240 });              // null → sem estimativa\njobProgressValue('stopped', { done: 1240 });              // 0    → parado, trilha vazia\njobProgressValue('complete');                             // 100  → cheio, sem conta\n\n// Concluído é cheio ainda que ninguém tenha contado as unidades: barra pela\n// metade ao lado da palavra é a peça discordando de si.\n//\n// E o arredondamento é para BAIXO — ao mais próximo, 4.999 de 5.000 daria cem\n// por cento, e a barra encheria antes de o trabalho acabar.\njobProgressValue('running', { done: 4999, total: 5000 }); // 99\n\n// TOTAL ZERO É AUSÊNCIA, e não um denominador: dividir por ele devolveria uma\n// fração inválida, e a barra desenharia trilha vazia para um trabalho que não\n// tem o que fazer.\nhasKnownTotal({ done: 0, total: 0 });  // false"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-job-progress",
+          "description": "Tamanho do texto da peça."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-job-progress",
+          "description": "Cor de apoio da peça, sobre a qual o rótulo e a palavra do estado se destacam."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-job-progress",
+          "description": "Espaço entre as três linhas da peça."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-job-progress",
+          "description": "Espaço entre a coluna do texto e a coluna da direita."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-job-progress-label",
+          "description": "O rótulo do trabalho e a palavra do estado, que é o que descreve."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-job-progress-label",
+          "description": "Peso do rótulo do trabalho, que o separa da palavra do estado."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-job-progress-action",
+          "description": "Alvo de toque mínimo da ação."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-progress-indicator",
+          "description": "Preenchimento da barra enquanto o trabalho corre, espera ou está interrompido."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-progress[data-variant=\"success\"]",
+          "description": "Preenchimento da barra quando o trabalho terminou inteiro."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-progress[data-variant=\"destructive\"]",
+          "description": "Preenchimento da barra quando o trabalho quebrou no meio."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-job-progress {\n  max-inline-size: 32rem;\n}\n\n/* A barra é REFORÇO, e não a pista: a palavra abaixo dela é o que descreve o\n   estado. Mexer na barra não muda o que chega a quem ouve — e o traço que\n   percorre o trilho já para sozinho sob movimento reduzido, porque a camada de\n   token zera a duração. */\n.nds-job-progress .nds-progress {\n  block-size: var(--spacing-1);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A palavra descreve o estado e é a única parte que não sai do que é lido em voz; a conta fica fora, a barra mantém o papel e o nome, e nada aqui é região viva — o que diz que a tela ainda se escreve é a peça se declarar ocupada.",
+      "items": {
+        "item1": "A palavra do estado está sempre presente: a barra não descreve estado sozinha, e dois dos cinco estados desenham igual.",
+        "item2": "A conta fica fora do que é lido em voz — ela se reescreve a cada unidade, e a barra já carrega o mesmo número.",
+        "item3": "A barra mantém o papel e o nome, e o nome é o rótulo do trabalho: barra sem nome é anunciada como uma porcentagem sem assunto.",
+        "item4": "Nada aqui é região viva. Um trabalho longo é o que anda sozinho enquanto quem pediu faz outra coisa; nada está bloqueado e ninguém deve resposta.",
+        "item5": "Enquanto corre, a peça se declara ocupada — é o que diz que aquele pedaço da tela ainda se escreve, sem anunciar nada.",
+        "item6": "Sem total conhecido, a barra deixa de mostrar um número em vez de mostrar zero: vazio não pode parecer começo.",
+        "item7": "A ação troca de nome quando troca de função, e o texto que se vê é também o nome acessível."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Chega à ação, quando ela existe. O resto da peça é texto.",
+        "enter": "Aciona a ação sob o foco.",
+        "arrows": "Não fazem nada aqui: a peça é de leitura, e não um menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A raiz se declara ocupada enquanto o trabalho corre, e nada nela é região viva.",
+        "item2": "aria-hidden tira a conta do que é lido em voz.",
+        "item3": "A barra é anunciada com o rótulo do trabalho, e sem valor nenhum quando não se sabe de quantas."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "O estado é lido como a palavra daquele estado, e nunca anunciado sozinho.",
+        "item2": "A conta nunca é lida, nem quando muda a cada unidade.",
+        "item3": "A fração é entregue a quem perguntar pela barra, e não empurrada a quem está lendo outra coisa."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "Em que pé está a resposta que está sendo escrita agora, enquanto esta peça mede uma tarefa que sobrevive a ela."
+        },
+        "agentPlan": {
+          "name": "Plano do agente",
+          "description": "Quando o que se mostra são passos com estado próprio, e não um trabalho só medido em unidades."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "A barra sozinha, quando não há trabalho com nome, estado e ação em volta dela."
+        },
+        "connectionState": {
+          "name": "Estado da ligação",
+          "description": "Se ainda há por onde pedir, enquanto esta peça mede uma tarefa que já foi aceita."
+        }
+      }
+    },
+    "notes": {
+      "item1": "O estado é o mesmo vocabulário da execução, de propósito: os cinco momentos de um trabalho longo são os mesmos, e pelos mesmos motivos — um oferece retomar e o outro oferece tentar de novo.",
+      "item2": "Não é o estado da execução, e a diferença é de escopo. Aquela linha descreve a resposta que está sendo escrita; esta descreve uma tarefa que continua correndo depois de ela terminar.",
+      "item3": "Ficar sem total conhecido é caso real, e não borda: quem varre um repositório sabe quantos arquivos abriu, e não quantos vai abrir. A barra troca a fração por um traço que percorre o trilho, e deixa de mostrar um número.",
+      "item4": "O traço que percorre o trilho vale só enquanto o trabalho corre. Parado sem total, ele diria que ainda anda, que é pior que não dizer nada.",
+      "item5": "O arredondamento da fração é para baixo. Ao mais próximo, faltando uma unidade de cinco mil a barra encheria, e barra cheia ao lado da palavra é a peça discordando de si.",
+      "item6": "A conta e a barra dizem a mesma coisa, e a que sai do que é lido em voz é a que se reescreve. A barra entrega o número a quem perguntar; ela não o empurra a quem está lendo outra coisa.",
+      "item7": "A peça não executa nada. Ela não dispara, não conta, não para e não retoma: desenha o andamento que recebe e avisa que alguém pediu a ação.",
+      "title": "Notas"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a peça em si não instrumenta a ação, que é do produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar cada um dos cinco estados",
+          "result": "A palavra daquele estado aparece na peça, e a barra acompanha o estado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar uma conta com total conhecido",
+          "result": "A barra mostra a fração e a conta aparece escrita ao lado do rótulo",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar uma conta sem total conhecido",
+          "result": "A barra deixa de mostrar um número e passa a dizer que não há estimativa",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar zero como total",
+          "result": "É tratado como total desconhecido, e não como um denominador",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar a peça em qualquer estado",
+          "result": "Nada dentro dela é região viva",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar o estado em que o trabalho corre",
+          "result": "A peça se declara ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar um estado em que o trabalho já não corre",
+          "result": "A peça deixa de se declarar ocupada",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Passar o estado concluído com uma conta parcial",
+          "result": "A barra fica cheia, porque o trabalho terminou inteiro",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Passar os três estados que oferecem ação",
+          "result": "Os rótulos são nomes diferentes, porque as funções são diferentes",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Acionar a ação",
+          "result": "Quem consome é avisado com a intenção daquele estado, e a peça continua como estava",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Montar a peça ao lado da linha de estado da execução",
+          "result": "As duas são autônomas, e nenhuma sabe que a outra existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A palavra do estado está sempre presente, e a barra não é a única pista",
+        "item2": "A conta está fora do que é lido em voz",
+        "item3": "A barra mantém o papel e o nome, e o nome é o rótulo do trabalho",
+        "item4": "Nada dentro da peça é região viva",
+        "item5": "A peça se declara ocupada só enquanto o trabalho corre",
+        "item6": "O nome da ação diz o que ela faz, e muda com o estado",
+        "item7": "A ação tem pelo menos vinte e quatro pixels de alvo"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a peça, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os cinco, um abaixo do outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — em andamento, com a fração e a ação que interrompe",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — sem total conhecido, com a barra sem estimativa",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — interrompido, com a ação que retoma",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Estados — concluído, com a barra cheia",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Estados — falhou, com a ação que repete",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composições — a fila de trabalhos",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Composições — o trabalho ao lado do estado da execução",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Long job progress",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "How far a task the agent started has come, one that keeps running after the answer is finished — with the tally, the bar and what can be done about it.",
+    "seo": {
+      "title": "Long job progress — the tally, the bar and the word",
+      "description": "The long job progress piece: the word that describes the state, the tally and the bar that stay out of what is announced, the case with no known total that draws differently from zero, and an action that changes name when it changes function."
+    },
+    "labels": {
+      "job": "Indexing the repository",
+      "status": {
+        "idle": "Queued",
+        "running": "Running",
+        "stopped": "Stopped",
+        "complete": "Done",
+        "failed": "Failed"
+      },
+      "count": "{done} of {total}",
+      "countWithoutTotal": "{done} so far",
+      "action": {
+        "running": "Stop",
+        "stopped": "Resume",
+        "failed": "Try again"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "running": "While it runs, and how many there are is known",
+        "unknownTotal": "While it runs, with no idea how many there are",
+        "stopped": "When someone stopped it",
+        "complete": "When it finished"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The label opens the piece and says what is being done. It is also the name the bar is announced by.",
+      "item2": "The tally sits to the right of the label, already written in the reader's language, and stays out of what is announced.",
+      "item3": "The bar spans the whole piece and shows the fraction; with no known total it swaps the fraction for a stripe that runs across the track.",
+      "item4": "The word of the state comes below the bar, and it is the only part that does not leave what is read aloud.",
+      "item5": "The action sits at the end, aligned with the tally in the same column, and its label says what it does in that state.",
+      "structureCode": {
+        "web": "<div class=\"nds-job-progress\" data-status=\"running\" aria-busy=\"true\">\n  <span class=\"nds-job-progress-label\">Indexing the repository</span>\n  <span class=\"nds-job-progress-count\" aria-hidden=\"true\">1,240 of 5,000</span>\n  <div class=\"nds-progress nds-job-progress-bar\" role=\"progressbar\"\n       aria-label=\"Indexing the repository\"\n       aria-valuenow=\"24\" aria-valuemin=\"0\" aria-valuemax=\"100\">\n    <div class=\"nds-progress-indicator\"></div>\n  </div>\n  <span class=\"nds-job-progress-status\">Running</span>\n  <button class=\"nds-button nds-job-progress-action\" data-slot=\"job-progress-action\">Stop</button>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it for a task that keeps running after the answer is finished, and that is measured in units done.",
+        "item2": "Always write the state as a word — the bar and the tally are for the eyes.",
+        "item3": "Leave the total out when it is not known, instead of sending zero: the piece draws the two cases differently.",
+        "item4": "Give the action the name of what it does in that state: stopping, resuming and retrying are three things.",
+        "item5": "Run the work on the consuming side — stopping, resuming and retrying for real belong to the product."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Show how far a long task has come, and offer to stop it",
+          "u": "Long job progress",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Say where the answer being written right now stands",
+          "u": "Run status",
+          "a": "That line is measured in time, and this one is measured in units done."
+        },
+        "item3": {
+          "s": "Say whether there is still somewhere to ask",
+          "u": "Connection state",
+          "a": "That one describes the transport; this one describes a task already accepted."
+        },
+        "item4": {
+          "s": "Show an isolated fraction, with no state and no action",
+          "u": "Progress",
+          "a": "There is a bar and nothing else there; here there is a job, with a name, a state and something to do about it."
+        },
+        "item5": {
+          "s": "List the steps the agent intends to take",
+          "u": "Agent plan",
+          "a": "There each step has its own state; here there is a single job, measured in units."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "jobLabel": {
+            "name": "Job label",
+            "format": "What is being done, as a verb, with no infrastructure jargon",
+            "good": "Indexing the repository",
+            "bad": "job_id 7f3a running on worker 2"
+          },
+          "count": {
+            "name": "Tally with a total",
+            "format": "A template with both numbers and the word that joins them",
+            "good": "1,240 of 5,000",
+            "bad": "24.8%"
+          },
+          "countWithoutTotal": {
+            "name": "Tally with no total",
+            "format": "A template with a single number, promising no end",
+            "good": "1,240 so far",
+            "bad": "1,240 of ?"
+          },
+          "status": {
+            "name": "Word of the state",
+            "format": "One word about the job, and never the same for two states",
+            "good": "Stopped",
+            "bad": "Running"
+          },
+          "action": {
+            "name": "Action",
+            "format": "A verb saying what happens in that state, different in each one",
+            "good": "Resume",
+            "bad": "Run"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the state as a word, below the bar.",
+        "item2": "Change the name of the action when it changes function.",
+        "item3": "Leave the total out when it is not known, and let the bar say there is no estimate.",
+        "item4": "Leave the piece without an action when the job is queued or already finished."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't leave the bar and the tally as the only difference between the states.",
+        "item2": "Don't announce the tally: a number that rewrites itself with every unit makes the screen impossible to listen to.",
+        "item3": "Don't send zero as the total to say it is unknown — zero draws like a beginning, which is the opposite reading.",
+        "item4": "Don't make the piece run, stop or resume anything."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "With no known total, the bar says there is no estimate.",
+        "dont": "The unknown total arrives as zero, and the empty track reads as a job that has just started."
+      },
+      "pair2": {
+        "do": "The state arrives as a word, below the bar.",
+        "dont": "Only the bar separates what is running from what was stopped, and a still bar does not say which of the two it is."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic use",
+      "basicCode": {
+        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: rotulos,\n  onAction: (intent) => aplicar(intent),\n});",
+        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"rotulos\"\n  @action=\"aplicar\"\n/>",
+        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"rotulos\"\n  (action)=\"aplicar($event)\"\n></div>"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "idle": {
+        "label": "Queued",
+        "trigger": "The job was queued and has not started yet.",
+        "behavior": "The track stays empty, the piece does not declare itself busy and there is no action — starting the job belongs to whoever queued it."
+      },
+      "running": {
+        "label": "Running",
+        "trigger": "The job is running.",
+        "behavior": "The piece declares itself busy, the bar shows the fraction — or a stripe running across the track, when how many there are is unknown — and the action offers to stop it."
+      },
+      "stopped": {
+        "label": "Stopped",
+        "trigger": "Someone asked it to stop, and the job stopped where it was.",
+        "behavior": "The bar freezes where it got to, the piece stops declaring itself busy and the action offers to resume."
+      },
+      "complete": {
+        "label": "Done",
+        "trigger": "The job finished in full.",
+        "behavior": "The bar is full in the success colour, even if the tally is partial, and there is no action — there is nothing to do here about a finished job."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The job broke midway, without anyone asking.",
+        "behavior": "The bar freezes where it got to, in the error colour, and the action offers to try again."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What is being done. It is also the name the bar is announced by."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where the job stands. It decides the word, the colour of the bar, whether the piece declares itself busy and what the action offers."
+        },
+        "count": {
+          "name": "count",
+          "type": "JobCount",
+          "default": "—",
+          "required": "No",
+          "description": "How far it has come, and out of how much. Absent means there is no tally at all; a total absent inside it means how many there are is unknown."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "JobProgressLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word of each state, the tally templates and the label of the action where it exists."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(intent: 'stop' | 'start') => void",
+          "default": "—",
+          "required": "No",
+          "description": "Someone asked for the action, and the intent says which of the two. Stopping, resuming and retrying for real belong to the consumer."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word of each of the five states. It is what describes, not the bar."
+        },
+        "labelsCount": {
+          "name": "count",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The tally template for when how many there are is known. Both numbers are substituted in the reader's language."
+        },
+        "labelsCountWithoutTotal": {
+          "name": "countWithoutTotal",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The tally template for when how many there are is unknown. Only the number already done is substituted."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<RunStatus, string>>",
+          "default": "—",
+          "required": "No",
+          "description": "The label of the action in each state. A state with no entry offers no action at all."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The piece draws the progress it receives and reports that someone asked for the action. It does not run, does not count and does not resume anything — when the job moves and what it reaches belong to the consumer.",
+      "extensibilityCode": {
+        "web": "// O QUE A BARRA MOSTRA sai do vocabulário compartilhado, e não de um teste\n// escrito na tela. São três decisões, e a terceira é a que discordaria entre\n// implementações.\njobProgressValue('running', { done: 1240, total: 5000 });  // 24   → a fração\njobProgressValue('running', { done: 1240 });              // null → sem estimativa\njobProgressValue('stopped', { done: 1240 });              // 0    → parado, trilha vazia\njobProgressValue('complete');                             // 100  → cheio, sem conta\n\n// Concluído é cheio ainda que ninguém tenha contado as unidades: barra pela\n// metade ao lado da palavra é a peça discordando de si.\n//\n// E o arredondamento é para BAIXO — ao mais próximo, 4.999 de 5.000 daria cem\n// por cento, e a barra encheria antes de o trabalho acabar.\njobProgressValue('running', { done: 4999, total: 5000 }); // 99\n\n// TOTAL ZERO É AUSÊNCIA, e não um denominador: dividir por ele devolveria uma\n// fração inválida, e a barra desenharia trilha vazia para um trabalho que não\n// tem o que fazer.\nhasKnownTotal({ done: 0, total: 0 });  // false"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-job-progress",
+          "description": "Text size of the piece."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-job-progress",
+          "description": "Supporting colour of the piece, against which the label and the word of the state stand out."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-job-progress",
+          "description": "Space between the three rows of the piece."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-job-progress",
+          "description": "Space between the text column and the right-hand column."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-job-progress-label",
+          "description": "The job label and the word of the state, which is what describes."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-job-progress-label",
+          "description": "Weight of the job label, which sets it apart from the word of the state."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-job-progress-action",
+          "description": "Minimum touch target of the action."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-progress-indicator",
+          "description": "Fill of the bar while the job runs, waits or is stopped."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-progress[data-variant=\"success\"]",
+          "description": "Fill of the bar when the job finished in full."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-progress[data-variant=\"destructive\"]",
+          "description": "Fill of the bar when the job broke midway."
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": ".nds-job-progress {\n  max-inline-size: 32rem;\n}\n\n/* A barra é REFORÇO, e não a pista: a palavra abaixo dela é o que descreve o\n   estado. Mexer na barra não muda o que chega a quem ouve — e o traço que\n   percorre o trilho já para sozinho sob movimento reduzido, porque a camada de\n   token zera a duração. */\n.nds-job-progress .nds-progress {\n  block-size: var(--spacing-1);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The word describes the state and is the only part that does not leave what is read aloud; the tally stays out, the bar keeps its role and its name, and nothing here is a live region — what says the screen is still being written is the piece declaring itself busy.",
+      "items": {
+        "item1": "The word of the state is always present: the bar does not describe a state on its own, and two of the five states draw the same.",
+        "item2": "The tally stays out of what is read aloud — it rewrites itself with every unit, and the bar already carries the same number.",
+        "item3": "The bar keeps its role and its name, and the name is the job label: a bar with no name is announced as a percentage with no subject.",
+        "item4": "Nothing here is a live region. A long job is the thing that runs on its own while whoever asked does something else; nothing is blocked and nobody owes an answer.",
+        "item5": "While it runs, the piece declares itself busy — that is what says that part of the screen is still being written, without announcing anything.",
+        "item6": "With no known total, the bar stops showing a number instead of showing zero: empty must not look like a beginning.",
+        "item7": "The action changes name when it changes function, and the text you see is also the accessible name."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the action, when it exists. The rest of the piece is text.",
+        "enter": "Triggers the focused action.",
+        "arrows": "Do nothing here: the piece is for reading, not a menu."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The root declares itself busy while the job runs, and nothing inside it is a live region.",
+        "item2": "aria-hidden takes the tally out of what is read aloud.",
+        "item3": "The bar is announced with the job label, and with no value at all when how many there are is unknown."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The state is read as the word of that state, and never announced on its own.",
+        "item2": "The tally is never read, not even when it changes with every unit.",
+        "item3": "The fraction is handed to whoever asks the bar, and not pushed at whoever is reading something else."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "agentStatus": {
+          "name": "Run status",
+          "description": "Where the answer being written right now stands, while this piece measures a task that outlives it."
+        },
+        "agentPlan": {
+          "name": "Agent plan",
+          "description": "When what is shown are steps with a state of their own, and not a single job measured in units."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "The bar on its own, when there is no job with a name, a state and an action around it."
+        },
+        "connectionState": {
+          "name": "Connection state",
+          "description": "Whether there is still somewhere to ask, while this piece measures a task that has already been accepted."
+        }
+      }
+    },
+    "notes": {
+      "item1": "The state is the same vocabulary as the run, on purpose: the five moments of a long job are the same, and for the same reasons — one offers to resume and the other offers to try again.",
+      "item2": "It is not the run status, and the difference is one of scope. That line describes the answer being written; this one describes a task that keeps running after it finishes.",
+      "item3": "Being without a known total is a real case, not an edge: whoever sweeps a repository knows how many files they opened, not how many they will open. The bar swaps the fraction for a stripe that runs across the track, and stops showing a number.",
+      "item4": "The stripe running across the track only holds while the job runs. Stopped with no total, it would say it is still moving, which is worse than saying nothing.",
+      "item5": "The fraction rounds down. Rounding to the nearest, one unit short of five thousand would fill the bar, and a full bar next to the word is the piece disagreeing with itself.",
+      "item6": "The tally and the bar say the same thing, and the one that leaves what is read aloud is the one that rewrites itself. The bar hands the number to whoever asks; it does not push it at whoever is reading something else.",
+      "item7": "The piece runs nothing. It does not start, does not count, does not stop and does not resume: it draws the progress it receives and reports that someone asked for the action.",
+      "title": "Notes"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the piece itself does not instrument the action, which belongs to the product.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demonstration is interacted with.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass each of the five states",
+          "result": "The word of that state appears in the piece, and the bar follows the state",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass a tally with a known total",
+          "result": "The bar shows the fraction and the tally appears written beside the label",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass a tally with no known total",
+          "result": "The bar stops showing a number and says there is no estimate",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass zero as the total",
+          "result": "It is treated as an unknown total, not as a denominator",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mount the piece in any state",
+          "result": "Nothing inside it is a live region",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass the state in which the job runs",
+          "result": "The piece declares itself busy",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass a state in which the job no longer runs",
+          "result": "The piece stops declaring itself busy",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Pass the finished state with a partial tally",
+          "result": "The bar is full, because the job finished in full",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pass the three states that offer an action",
+          "result": "The labels are different names, because the functions are different",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Trigger the action",
+          "result": "The consumer is told, with the intent of that state, and the piece stays as it was",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Mount the piece beside the run status line",
+          "result": "The two are autonomous, and neither knows the other exists",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe on every story, plus what the play asserts.",
+        "item1": "The word of the state is always present, and the bar is not the only cue",
+        "item2": "The tally is out of what is read aloud",
+        "item3": "The bar keeps its role and its name, and the name is the job label",
+        "item4": "Nothing inside the piece is a live region",
+        "item5": "The piece declares itself busy only while the job runs",
+        "item6": "The name of the action says what it does, and changes with the state",
+        "item7": "The action has at least twenty-four pixels of target"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in every theme and mode.",
+        "item1": {
+          "story": "Playground — the piece, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the five, one below the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — running, with the fraction and the action that stops it",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — with no known total, and a bar with no estimate",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — stopped, with the action that resumes",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "States — finished, with the bar full",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "States — failed, with the action that retries",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Compositions — the queue of jobs",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Compositions — the job beside the run status",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Avance de trabajo largo",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Cuánto ha avanzado una tarea que el agente lanzó y que sigue corriendo después de que la respuesta termina — con la cuenta, la barra y lo que se puede hacer al respecto.",
+    "seo": {
+      "title": "Avance de trabajo largo — la cuenta, la barra y la palabra",
+      "description": "La pieza de avance de trabajo largo: la palabra que describe el estado, la cuenta y la barra que quedan fuera de lo que se anuncia, el caso sin total conocido que se dibuja distinto de cero y una acción que cambia de nombre cuando cambia de función."
+    },
+    "labels": {
+      "job": "Indexando el repositorio",
+      "status": {
+        "idle": "En espera",
+        "running": "En curso",
+        "stopped": "Interrumpido",
+        "complete": "Concluido",
+        "failed": "Falló"
+      },
+      "count": "{done} de {total}",
+      "countWithoutTotal": "{done} hasta ahora",
+      "action": {
+        "running": "Detener",
+        "stopped": "Reanudar",
+        "failed": "Reintentar"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "running": "Mientras corre, y se sabe de cuántas",
+        "unknownTotal": "Mientras corre, sin saber de cuántas",
+        "stopped": "Cuando alguien lo interrumpió",
+        "complete": "Cuando terminó"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La etiqueta abre la pieza y dice qué se está haciendo. Es también el nombre con el que se anuncia la barra.",
+      "item2": "La cuenta va a la derecha de la etiqueta, ya escrita en el idioma de quien lee, y queda fuera de lo que se anuncia.",
+      "item3": "La barra atraviesa la pieza entera y muestra la fracción; sin total conocido cambia la fracción por un trazo que recorre el riel.",
+      "item4": "La palabra del estado va debajo de la barra, y es la única parte que no sale de lo que se lee en voz.",
+      "item5": "La acción va al final, alineada con la cuenta en la misma columna, y su etiqueta dice qué hace en ese estado.",
+      "structureCode": {
+        "web": "<div class=\"nds-job-progress\" data-status=\"running\" aria-busy=\"true\">\n  <span class=\"nds-job-progress-label\">Indexando el repositorio</span>\n  <span class=\"nds-job-progress-count\" aria-hidden=\"true\">1.240 de 5.000</span>\n  <div class=\"nds-progress nds-job-progress-bar\" role=\"progressbar\"\n       aria-label=\"Indexando el repositorio\"\n       aria-valuenow=\"24\" aria-valuemin=\"0\" aria-valuemax=\"100\">\n    <div class=\"nds-progress-indicator\"></div>\n  </div>\n  <span class=\"nds-job-progress-status\">En curso</span>\n  <button class=\"nds-button nds-job-progress-action\" data-slot=\"job-progress-action\">Detener</button>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para una tarea que sigue corriendo después de que la respuesta termina, y que se mide en unidades hechas.",
+        "item2": "Escribe el estado en palabra, siempre — la barra y la cuenta son para los ojos.",
+        "item3": "Deja el total fuera cuando no se conoce, en vez de mandar cero: la pieza dibuja los dos casos de maneras distintas.",
+        "item4": "Dale a la acción el nombre de lo que hace en ese estado: detener, reanudar y reintentar son tres cosas.",
+        "item5": "Ejecuta en quien consume — detener, reanudar y reintentar de verdad son del producto."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar cuánto ha avanzado una tarea larga, y ofrecer interrumpirla",
+          "u": "Avance de trabajo largo",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Decir en qué punto está la respuesta que se escribe ahora",
+          "u": "Estado de la ejecución",
+          "a": "Aquella línea se mide en tiempo, y esta se mide en unidades hechas."
+        },
+        "item3": {
+          "s": "Decir si todavía hay por dónde pedir",
+          "u": "Estado de la conexión",
+          "a": "Aquella describe el transporte; esta describe una tarea ya aceptada."
+        },
+        "item4": {
+          "s": "Mostrar una fracción aislada, sin estado ni acción",
+          "u": "Progress",
+          "a": "Allí hay una barra y nada más; aquí hay un trabajo, con nombre, estado y algo que hacer al respecto."
+        },
+        "item5": {
+          "s": "Listar los pasos que el agente piensa dar",
+          "u": "Plan del agente",
+          "a": "Allí cada paso tiene estado propio; aquí hay un solo trabajo, medido en unidades."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "jobLabel": {
+            "name": "Etiqueta del trabajo",
+            "format": "Qué se está haciendo, en verbo, sin jerga de infraestructura",
+            "good": "Indexando el repositorio",
+            "bad": "job_id 7f3a en ejecución en el worker 2"
+          },
+          "count": {
+            "name": "Cuenta con total",
+            "format": "Molde con los dos números y la palabra que los une",
+            "good": "1.240 de 5.000",
+            "bad": "24,8%"
+          },
+          "countWithoutTotal": {
+            "name": "Cuenta sin total",
+            "format": "Molde con un solo número, que no promete un final",
+            "good": "1.240 hasta ahora",
+            "bad": "1.240 de ?"
+          },
+          "status": {
+            "name": "Palabra del estado",
+            "format": "Una palabra sobre el trabajo, y nunca la misma para dos estados",
+            "good": "Interrumpido",
+            "bad": "En curso"
+          },
+          "action": {
+            "name": "Acción",
+            "format": "Verbo que dice qué pasa en ese estado, distinto en cada uno",
+            "good": "Reanudar",
+            "bad": "Ejecutar"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe el estado en palabra, debajo de la barra.",
+        "item2": "Cambia el nombre de la acción cuando cambia de función.",
+        "item3": "Omite el total cuando no se conoce, y deja que la barra diga que no hay estimación.",
+        "item4": "Deja la pieza sin acción cuando el trabajo está en espera o ya terminó."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes la barra y la cuenta como única diferencia entre los estados.",
+        "item2": "No anuncies la cuenta: un número que se reescribe con cada unidad vuelve la pantalla imposible de escuchar.",
+        "item3": "No mandes cero como total para decir que no se sabe — cero se dibuja como comienzo, que es la lectura opuesta.",
+        "item4": "No hagas que la pieza ejecute, detenga o reanude nada."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "Sin total conocido, la barra dice que no hay estimación.",
+        "dont": "El total desconocido llega como cero, y el riel vacío se lee como un trabajo que acaba de empezar."
+      },
+      "pair2": {
+        "do": "El estado llega en palabra, debajo de la barra.",
+        "dont": "Solo la barra separa lo que corre de lo que fue interrumpido, y una barra quieta no dice cuál de los dos es."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: rotulos,\n  onAction: (intent) => aplicar(intent),\n});",
+        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"rotulos\"\n  @action=\"aplicar\"\n/>",
+        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"rotulos\"\n  (action)=\"aplicar($event)\"\n></div>"
+      },
+      "withLabels": "Las etiquetas",
+      "withLabelsCode": {
+        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "idle": {
+        "label": "En espera",
+        "trigger": "El trabajo fue puesto en cola y todavía no empezó.",
+        "behavior": "El riel queda vacío, la pieza no se declara ocupada y no hay acción — lanzar el trabajo es de quien lo puso en cola."
+      },
+      "running": {
+        "label": "En curso",
+        "trigger": "El trabajo está corriendo.",
+        "behavior": "La pieza se declara ocupada, la barra muestra la fracción — o un trazo que recorre el riel, cuando no se sabe de cuántas — y la acción ofrece interrumpirlo."
+      },
+      "stopped": {
+        "label": "Interrumpido",
+        "trigger": "Alguien pidió detenerlo, y el trabajo paró donde estaba.",
+        "behavior": "La barra se congela donde llegó, la pieza deja de declararse ocupada y la acción ofrece reanudar."
+      },
+      "complete": {
+        "label": "Concluido",
+        "trigger": "El trabajo terminó entero.",
+        "behavior": "La barra queda llena en el color de éxito, aunque la cuenta sea parcial, y no hay acción — sobre un trabajo listo no hay nada que hacer aquí."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "El trabajo se rompió a mitad de camino, sin que nadie lo pidiera.",
+        "behavior": "La barra se congela donde llegó, en el color de error, y la acción ofrece reintentar."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "label": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué se está haciendo. Es también el nombre con el que se anuncia la barra."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está el trabajo. Decide la palabra, el color de la barra, si la pieza se declara ocupada y qué ofrece la acción."
+        },
+        "count": {
+          "name": "count",
+          "type": "JobCount",
+          "default": "—",
+          "required": "No",
+          "description": "Cuánto ha avanzado, y de cuánto. Ausente es no haber cuenta alguna; un total ausente dentro de él es no saber de cuántas."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "JobProgressLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada estado, los moldes de la cuenta y la etiqueta de la acción donde existe."
+        },
+        "onAction": {
+          "name": "onAction",
+          "type": "(intent: 'stop' | 'start') => void",
+          "default": "—",
+          "required": "No",
+          "description": "Alguien pidió la acción, y la intención dice cuál de las dos. Detener, reanudar y reintentar de verdad son de quien consume."
+        },
+        "labelsStatus": {
+          "name": "status",
+          "type": "Record<RunStatus, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada uno de los cinco estados. Es ella la que describe, y no la barra."
+        },
+        "labelsCount": {
+          "name": "count",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El molde de la cuenta cuando se sabe de cuántas. Los dos números se sustituyen en el idioma de quien lee."
+        },
+        "labelsCountWithoutTotal": {
+          "name": "countWithoutTotal",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El molde de la cuenta cuando no se sabe de cuántas. Solo se sustituye el número ya hecho."
+        },
+        "labelsAction": {
+          "name": "action",
+          "type": "Partial<Record<RunStatus, string>>",
+          "default": "—",
+          "required": "No",
+          "description": "La etiqueta de la acción en cada estado. Un estado sin entrada no ofrece acción alguna."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La pieza dibuja el avance que recibe y avisa que alguien pidió la acción. No ejecuta, no cuenta y no reanuda nada — cuándo el trabajo avanza y qué alcanza es de quien consume.",
+      "extensibilityCode": {
+        "web": "// O QUE A BARRA MOSTRA sai do vocabulário compartilhado, e não de um teste\n// escrito na tela. São três decisões, e a terceira é a que discordaria entre\n// implementações.\njobProgressValue('running', { done: 1240, total: 5000 });  // 24   → a fração\njobProgressValue('running', { done: 1240 });              // null → sem estimativa\njobProgressValue('stopped', { done: 1240 });              // 0    → parado, trilha vazia\njobProgressValue('complete');                             // 100  → cheio, sem conta\n\n// Concluído é cheio ainda que ninguém tenha contado as unidades: barra pela\n// metade ao lado da palavra é a peça discordando de si.\n//\n// E o arredondamento é para BAIXO — ao mais próximo, 4.999 de 5.000 daria cem\n// por cento, e a barra encheria antes de o trabalho acabar.\njobProgressValue('running', { done: 4999, total: 5000 }); // 99\n\n// TOTAL ZERO É AUSÊNCIA, e não um denominador: dividir por ele devolveria uma\n// fração inválida, e a barra desenharia trilha vazia para um trabalho que não\n// tem o que fazer.\nhasKnownTotal({ done: 0, total: 0 });  // false"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-job-progress",
+          "description": "Tamaño del texto de la pieza."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-job-progress",
+          "description": "Color de apoyo de la pieza, sobre el que destacan la etiqueta y la palabra del estado."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-job-progress",
+          "description": "Espacio entre las tres filas de la pieza."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-job-progress",
+          "description": "Espacio entre la columna del texto y la columna de la derecha."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-job-progress-label",
+          "description": "La etiqueta del trabajo y la palabra del estado, que es lo que describe."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-job-progress-label",
+          "description": "Peso de la etiqueta del trabajo, que la separa de la palabra del estado."
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": ".nds-job-progress-action",
+          "description": "Área táctil mínima de la acción."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-progress-indicator",
+          "description": "Relleno de la barra mientras el trabajo corre, espera o está interrumpido."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-progress[data-variant=\"success\"]",
+          "description": "Relleno de la barra cuando el trabajo terminó entero."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-progress[data-variant=\"destructive\"]",
+          "description": "Relleno de la barra cuando el trabajo se rompió a mitad de camino."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-job-progress {\n  max-inline-size: 32rem;\n}\n\n/* A barra é REFORÇO, e não a pista: a palavra abaixo dela é o que descreve o\n   estado. Mexer na barra não muda o que chega a quem ouve — e o traço que\n   percorre o trilho já para sozinho sob movimento reduzido, porque a camada de\n   token zera a duração. */\n.nds-job-progress .nds-progress {\n  block-size: var(--spacing-1);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La palabra describe el estado y es la única parte que no sale de lo que se lee en voz; la cuenta queda fuera, la barra conserva el rol y el nombre, y nada aquí es región viva — lo que dice que la pantalla todavía se escribe es que la pieza se declara ocupada.",
+      "items": {
+        "item1": "La palabra del estado está siempre presente: la barra no describe un estado por sí sola, y dos de los cinco estados se dibujan igual.",
+        "item2": "La cuenta queda fuera de lo que se lee en voz — se reescribe con cada unidad, y la barra ya lleva el mismo número.",
+        "item3": "La barra conserva el rol y el nombre, y el nombre es la etiqueta del trabajo: una barra sin nombre se anuncia como un porcentaje sin asunto.",
+        "item4": "Nada aquí es región viva. Un trabajo largo es lo que avanza solo mientras quien lo pidió hace otra cosa; nada está bloqueado y nadie debe respuesta.",
+        "item5": "Mientras corre, la pieza se declara ocupada — es lo que dice que esa parte de la pantalla todavía se escribe, sin anunciar nada.",
+        "item6": "Sin total conocido, la barra deja de mostrar un número en vez de mostrar cero: vacío no puede parecer comienzo.",
+        "item7": "La acción cambia de nombre cuando cambia de función, y el texto que se ve es también el nombre accesible."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Llega a la acción, cuando existe. El resto de la pieza es texto.",
+        "enter": "Activa la acción bajo el foco.",
+        "arrows": "No hacen nada aquí: la pieza es de lectura, y no un menú."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La raíz se declara ocupada mientras el trabajo corre, y nada dentro de ella es región viva.",
+        "item2": "aria-hidden saca la cuenta de lo que se lee en voz.",
+        "item3": "La barra se anuncia con la etiqueta del trabajo, y sin valor alguno cuando no se sabe de cuántas."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El estado se lee como la palabra de ese estado, y nunca se anuncia solo.",
+        "item2": "La cuenta nunca se lee, ni cuando cambia con cada unidad.",
+        "item3": "La fracción se entrega a quien pregunta por la barra, y no se empuja a quien está leyendo otra cosa."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "En qué punto está la respuesta que se escribe ahora, mientras esta pieza mide una tarea que le sobrevive."
+        },
+        "agentPlan": {
+          "name": "Plan del agente",
+          "description": "Cuando lo que se muestra son pasos con estado propio, y no un solo trabajo medido en unidades."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "La barra sola, cuando no hay un trabajo con nombre, estado y acción alrededor de ella."
+        },
+        "connectionState": {
+          "name": "Estado de la conexión",
+          "description": "Si todavía hay por dónde pedir, mientras esta pieza mide una tarea que ya fue aceptada."
+        }
+      }
+    },
+    "notes": {
+      "item1": "El estado es el mismo vocabulario de la ejecución, a propósito: los cinco momentos de un trabajo largo son los mismos, y por los mismos motivos — uno ofrece reanudar y el otro ofrece reintentar.",
+      "item2": "No es el estado de la ejecución, y la diferencia es de alcance. Aquella línea describe la respuesta que se está escribiendo; esta describe una tarea que sigue corriendo después de que termina.",
+      "item3": "Quedarse sin total conocido es un caso real, y no un borde: quien recorre un repositorio sabe cuántos archivos abrió, y no cuántos va a abrir. La barra cambia la fracción por un trazo que recorre el riel, y deja de mostrar un número.",
+      "item4": "El trazo que recorre el riel vale solo mientras el trabajo corre. Detenido sin total, diría que todavía avanza, que es peor que no decir nada.",
+      "item5": "El redondeo de la fracción es hacia abajo. Al más cercano, faltando una unidad de cinco mil la barra se llenaría, y una barra llena junto a la palabra es la pieza contradiciéndose.",
+      "item6": "La cuenta y la barra dicen lo mismo, y la que sale de lo que se lee en voz es la que se reescribe. La barra entrega el número a quien pregunta; no lo empuja a quien está leyendo otra cosa.",
+      "item7": "La pieza no ejecuta nada. No lanza, no cuenta, no detiene y no reanuda: dibuja el avance que recibe y avisa que alguien pidió la acción.",
+      "title": "Notas"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta la acción, que es del producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar cada uno de los cinco estados",
+          "result": "La palabra de ese estado aparece en la pieza, y la barra acompaña el estado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar una cuenta con total conocido",
+          "result": "La barra muestra la fracción y la cuenta aparece escrita junto a la etiqueta",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar una cuenta sin total conocido",
+          "result": "La barra deja de mostrar un número y pasa a decir que no hay estimación",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar cero como total",
+          "result": "Se trata como total desconocido, y no como un denominador",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar la pieza en cualquier estado",
+          "result": "Nada dentro de ella es región viva",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar el estado en que el trabajo corre",
+          "result": "La pieza se declara ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar un estado en que el trabajo ya no corre",
+          "result": "La pieza deja de declararse ocupada",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Pasar el estado concluido con una cuenta parcial",
+          "result": "La barra queda llena, porque el trabajo terminó entero",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pasar los tres estados que ofrecen acción",
+          "result": "Las etiquetas son nombres distintos, porque las funciones son distintas",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Activar la acción",
+          "result": "Quien consume es avisado con la intención de ese estado, y la pieza sigue como estaba",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Montar la pieza junto a la línea de estado de la ejecución",
+          "result": "Las dos son autónomas, y ninguna sabe que la otra existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La palabra del estado está siempre presente, y la barra no es la única pista",
+        "item2": "La cuenta está fuera de lo que se lee en voz",
+        "item3": "La barra conserva el rol y el nombre, y el nombre es la etiqueta del trabajo",
+        "item4": "Nada dentro de la pieza es región viva",
+        "item5": "La pieza se declara ocupada solo mientras el trabajo corre",
+        "item6": "El nombre de la acción dice qué hace, y cambia con el estado",
+        "item7": "La acción tiene al menos veinticuatro píxeles de área"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la pieza, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cinco, uno debajo del otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — en curso, con la fracción y la acción que interrumpe",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — sin total conocido, con la barra sin estimación",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — interrumpido, con la acción que reanuda",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Estados — concluido, con la barra llena",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Estados — falló, con la acción que reintenta",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composiciones — la cola de trabajos",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Composiciones — el trabajo junto al estado de la ejecución",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

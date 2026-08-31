@@ -21,6 +21,8 @@ import {
   isAttachmentReady,
   isRetryScheduled,
   isRunFinished,
+  hasKnownTotal,
+  jobProgressValue,
   isTerminal,
   CONNECTION_STATES,
   RUN_STATUSES,
@@ -275,5 +277,73 @@ describe('isRetryScheduled — há uma próxima tentativa marcada?', () => {
     // mesmo caminho e dizem coisas opostas — é o que a palavra do estado
     // resolve, e a contagem sozinha não resolveria.
     expect(isRetryScheduled('connected')).toBe(false);
+  });
+});
+
+describe('hasKnownTotal — sabe-se de quantas?', () => {
+  it('ausente é "não se sabe"', () => {
+    expect(hasKnownTotal({ done: 1240 })).toBe(false);
+  });
+
+  it('zero também, e é por ele que a função existe', () => {
+    // `total !== undefined` escrito em cinco lugares deixaria zero passar, e
+    // dividir por zero devolve fração inválida: a barra desenharia trilha
+    // vazia — "acabou de começar" — para um trabalho sem o que fazer.
+    expect(hasKnownTotal({ done: 0, total: 0 })).toBe(false);
+  });
+
+  it('um total de verdade responde que sim', () => {
+    expect(hasKnownTotal({ done: 1240, total: 5000 })).toBe(true);
+  });
+});
+
+describe('jobProgressValue — o que a barra mostra', () => {
+  it('a fração, quando há de quantas', () => {
+    expect(jobProgressValue('running', { done: 1240, total: 5000 })).toBe(24);
+  });
+
+  it('sem total conhecido, andando é indeterminado', () => {
+    // `null` é o que a barra entende por "em andamento, sem estimativa": ela
+    // troca a fração por um traço que percorre o trilho e não escreve
+    // `aria-valuenow`, porque zero mentiria. Vazio não pode parecer começo.
+    expect(jobProgressValue('running', { done: 1240 })).toBeNull();
+    expect(jobProgressValue('running')).toBeNull();
+  });
+
+  it('sem total conhecido e parado, a trilha fica vazia', () => {
+    // O traço correndo diria que ainda anda, que é pior que não dizer nada. A
+    // palavra do estado ao lado é o que impede a leitura de "acabou de
+    // começar".
+    expect(jobProgressValue('idle', { done: 0 })).toBe(0);
+    expect(jobProgressValue('stopped', { done: 1240 })).toBe(0);
+    expect(jobProgressValue('failed')).toBe(0);
+  });
+
+  it('concluído é cheio, e a conta não entra', () => {
+    // Um trabalho que terminou está inteiro feito ainda que ninguém tenha
+    // contado as unidades — barra pela metade ao lado de "Concluído" é a peça
+    // discordando de si.
+    expect(jobProgressValue('complete')).toBe(100);
+    expect(jobProgressValue('complete', { done: 3, total: 5000 })).toBe(100);
+  });
+
+  it('arredonda para BAIXO, e é o que impede a barra de encher cedo', () => {
+    // Ao mais próximo, 4 999 de 5 000 daria cem por cento: barra cheia ao lado
+    // de "Em andamento".
+    expect(jobProgressValue('running', { done: 4999, total: 5000 })).toBe(99);
+  });
+
+  it('nunca passa dos cem, nem fica negativo', () => {
+    expect(jobProgressValue('running', { done: 7000, total: 5000 })).toBe(100);
+    expect(jobProgressValue('running', { done: -3, total: 5000 })).toBe(0);
+  });
+
+  it('todo estado do vocabulário tem resposta', () => {
+    // Estado novo em `RunStatus` não pode cair num buraco silencioso: ou a
+    // fração, ou o indeterminado.
+    for (const status of RUN_STATUSES) {
+      const valor = jobProgressValue(status, { done: 1240, total: 5000 });
+      expect(typeof valor === 'number').toBe(true);
+    }
   });
 });
