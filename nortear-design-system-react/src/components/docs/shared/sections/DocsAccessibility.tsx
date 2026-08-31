@@ -63,7 +63,7 @@ export function DocsAccessibility({
           <h3 className="nds-text-base nds-font-semibold nds-mb-4">{keyboardTitle}</h3>
           <div className="nds-grid" data-cols="2" data-spacing="sm">
             {keyboardItems.map((item, i) => (
-              <Card key={i} className="nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4">
+              <Card key={i} className="nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4 nds-card-nested">
                 <div className="nds-row" data-spacing="sm" data-align="start">
                   <kbd className="nds-kbd">
                     {item.key}

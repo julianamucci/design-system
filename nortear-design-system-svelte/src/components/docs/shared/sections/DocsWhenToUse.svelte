@@ -37,7 +37,7 @@
   <Card class="nds-p-4 nds-stack" data-spacing="lg">
 
       <!-- Guidelines -->
-      <Card class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack" data-spacing="sm">
+      <Card class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack nds-card-nested" data-spacing="sm">
           <h3 class="nds-font-medium nds-text-body">{guidelines.title}</h3>
           <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
             {#each guidelines.items as item, i (i)}
@@ -47,7 +47,7 @@
       </Card>
 
       <!-- Cenários -->
-      <Card class="nds-overflow-x nds-p-4">
+      <Card class="nds-overflow-x nds-p-4 nds-card-nested">
         <Table class="nds-w-full nds-border-collapse nds-text-body">
           <TableHeader>
             <TableRow class="nds-border-b nds-bg-muted-soft nds-font-medium">
@@ -72,7 +72,7 @@
       {#if uxWriting}
       <div class="nds-stack" data-spacing="sm">
         <h3 class="nds-font-medium nds-text-body">{uxWriting.title}</h3>
-        <Card class="nds-overflow-x nds-p-4">
+        <Card class="nds-overflow-x nds-p-4 nds-card-nested">
           <Table class="nds-w-full nds-border-collapse nds-text-body">
             <TableHeader>
               <TableRow class="nds-border-b nds-bg-muted-soft">
@@ -113,7 +113,7 @@
 
       <!-- Do / Don't cards -->
       <div class="nds-grid" data-cols="2" data-spacing="md">
-        <Card class="nds-p-4">
+        <Card class="nds-p-4 nds-card-nested">
             <h3 class="nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster" data-spacing="sm">
               <span class="nds-pill" data-tone="success">✓</span>
               {doBlock.title}
@@ -124,7 +124,7 @@
               {/each}
             </ul>
         </Card>
-        <Card class="nds-p-4">
+        <Card class="nds-p-4 nds-card-nested">
             <h3 class="nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster" data-spacing="sm">
               <span class="nds-pill" data-tone="destructive">✗</span>
               {dontBlock.title}

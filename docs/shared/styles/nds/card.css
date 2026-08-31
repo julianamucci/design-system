@@ -34,6 +34,28 @@
   overflow: hidden;
 
   border-radius: var(--radius-card);
+}
+
+/* Cartão DENTRO de cartão: o filho desconta o inset, não repete o raio do pai.
+ *
+ * `Rᵢ = Rₑ − E` é a regra que a página de fundamentos Elevação documenta, com a
+ * consequência de descumpri-la escrita lá: "repetir o raio do pai deixa o canto
+ * interno visualmente mais grosso". As seções das docs pages nasceram antes da
+ * regra e repetiam `--radius-card` no filho — 16px a mais do que deviam, em
+ * todos os temas. Passava por decoração enquanto a base era 14px; com o `warm`
+ * em 32px, o cartão externo vai a 36px e o erro fica evidente.
+ *
+ * Esta classe fixa O PAR que as docs pages usam — pai `--radius-card`, inset
+ * `--spacing-4` (16px) —, e existe separada de `.nds-radius-nested` de
+ * propósito: aquela é a genérica, para quando o par é outro, e exige que o
+ * contêiner declare `--nested-parent-radius` e `--nested-inset`. Aqui o par é
+ * sempre o mesmo, e uma classe sem configuração é o que um portão consegue
+ * cobrar.
+ *
+ * O `max()` guarda o tema reto: com `--radius: 0`, o cálculo dá negativo, e raio
+ * negativo é valor inválido — a declaração cairia inteira, em silêncio. */
+.nds-card-nested {
+  border-radius: max(0px, calc(var(--radius-card) - var(--spacing-4)));
   background-color: var(--card-bg);
   color: var(--card-fg);
   box-shadow: 0 0 0 1px var(--card-ring), var(--elevation-sm);

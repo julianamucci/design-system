@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/*
+ * audit-ignore: card-nested — os três cartões desta seção são IRMÃOS, não
+ * aninhados: quem os agrupa é um `div` de layout, sem raio e sem padding. Não
+ * há inset a descontar, e marcá-los com `nds-card-nested` deixaria o canto
+ * menor do que deve. Ver a regra `card_aninhado_sem_desconto` no audit.
+ */
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Kbd } from '@/components/ui/kbd';

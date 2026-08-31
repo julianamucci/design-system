@@ -65,7 +65,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
       <Card className="nds-p-4 nds-stack" data-spacing="lg">
 
         {/* Guidelines */}
-        <Card className="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack" data-spacing="sm">
+        <Card className="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack nds-card-nested" data-spacing="sm">
           <h3 className="nds-font-medium nds-text-body">{guidelines.title}</h3>
           <ul className="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
             {guidelines.items.map((item, i) => (
@@ -75,7 +75,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
         </Card>
 
         {/* Cenários */}
-        <Card className="nds-overflow-x nds-p-4">
+        <Card className="nds-overflow-x nds-p-4 nds-card-nested">
           <Table className="nds-w-full nds-border-collapse nds-text-body">
             <TableHeader>
               <TableRow className="nds-border-b nds-bg-muted-soft nds-font-medium">
@@ -100,7 +100,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
         {uxWriting && (
           <div className="nds-stack" data-spacing="sm">
             <h3 className="nds-font-medium nds-text-body">{uxWriting.title}</h3>
-            <Card className="nds-overflow-x nds-p-4">
+            <Card className="nds-overflow-x nds-p-4 nds-card-nested">
               <Table className="nds-w-full nds-border-collapse nds-text-body">
                 <TableHeader>
                   <TableRow className="nds-border-b nds-bg-muted-soft">
@@ -141,7 +141,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
 
         {/* Do / Don't cards */}
         <div className="nds-grid" data-cols="2" data-spacing="md">
-          <Card className="nds-p-4">
+          <Card className="nds-p-4 nds-card-nested">
             <h3 className="nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster" data-spacing="sm">
               <span className="nds-pill" data-tone="success">✓</span>
               {doBlock.title}
@@ -152,7 +152,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
               ))}
             </ul>
           </Card>
-          <Card className="nds-p-4">
+          <Card className="nds-p-4 nds-card-nested">
             <h3 className="nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster" data-spacing="sm">
               <span className="nds-pill" data-tone="destructive">✗</span>
               {dontBlock.title}

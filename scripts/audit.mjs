@@ -3829,6 +3829,74 @@ const CATEGORIAS_SIDEBAR = new Set([
   'display', 'conversational', 'disclosure', 'tables',
 ]);
 
+/**
+ * Cartão dentro de cartão sem descontar o inset.
+ *
+ * A regra é `Rᵢ = Rₑ − E` — o raio do filho é o do pai menos o espaçamento
+ * entre eles —, e a página de fundamentos Elevação a documenta com a
+ * consequência: "repetir o raio do pai deixa o canto interno visualmente mais
+ * grosso". As seções das docs pages nasceram ANTES da regra e nunca foram
+ * atualizadas: `.nds-card` dentro de `.nds-card` com 16px de inset, os dois com
+ * `--radius-card`. 16px a mais no filho, em todos os temas.
+ *
+ * Ficou invisível por muito tempo porque a base era 14px e o erro passava por
+ * decoração. Com o tema `warm` em 32px, o cartão externo vai a 36px e o canto
+ * grosso aparece — foi assim que o defeito foi notado, por olho, não por portão.
+ *
+ * A conferência é POSICIONAL, e é o que dá para fazer sem parsear cinco
+ * sintaxes: nas seções compartilhadas o cartão de fora é sempre declarado antes
+ * dos de dentro, então todo cartão depois do primeiro precisa de
+ * `nds-card-nested`. Arquivo cujos cartões são IRMÃOS (o `DocsTestes` é o caso)
+ * se declara com `audit-ignore: card-nested — <motivo>` na primeira linha do
+ * bloco de comentário. Exceção sem motivo escrito não conta.
+ */
+const CARTAO_POR_STACK = {
+  react: /<Card\b/g,
+  vue: /<Card\b/g,
+  svelte: /<Card\b/g,
+  angular: /<div\s+ndsCard\b/g,
+  vanilla: /createCard\(/g,
+};
+
+function auditCardNestedRadius() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs', 'shared', 'sections');
+    const rx = CARTAO_POR_STACK[stack];
+    if (!rx || !existsSync(dir)) continue;
+
+    for (const file of walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const content = readFile(file);
+      if (!content) continue;
+      if (/audit-ignore:\s*card-nested\s*[—-]\s*\S/.test(content)) continue;
+
+      const cartoes = [...content.matchAll(new RegExp(rx.source, 'g'))].map((m) => m.index);
+      if (cartoes.length < 2) continue;
+
+      // Do segundo em diante: cada um tem de carregar a classe. Olha só a
+      // janela daquele cartão, senão a classe de um vizinho absolveria todos.
+      let semClasse = 0;
+      for (let i = 1; i < cartoes.length; i++) {
+        const fim = i + 1 < cartoes.length ? cartoes[i + 1] : content.length;
+        const janela = content.slice(cartoes[i], Math.min(fim, cartoes[i] + 600));
+        if (!janela.includes('nds-card-nested')) semClasse++;
+      }
+      if (semClasse === 0) continue;
+
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack,
+        file: relative(ROOT, file), rule: 'card_aninhado_sem_desconto',
+        message:
+          `${semClasse} cartão(ões) aninhado(s) sem \`nds-card-nested\` — filho que repete` +
+          ' o raio do pai fica com o canto grosso (Rᵢ = Rₑ − E, ver a página de' +
+          ' fundamentos Elevação). Se os cartões forem IRMÃOS e não aninhados, declare' +
+          ' `audit-ignore: card-nested — <motivo>` no arquivo',
+      });
+    }
+  }
+  return violations;
+}
+
 function auditStoryCategoryTag() {
   const violations = [];
   for (const stack of STACKS) {
@@ -5585,7 +5653,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

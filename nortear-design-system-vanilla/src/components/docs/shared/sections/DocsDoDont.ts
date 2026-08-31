@@ -48,7 +48,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
     // DocsVariants e em ComponentDemo. Sem ele o Card herda a coluna do
     // `.nds-card` e encosta tudo à esquerda — visível em qualquer componente
     // de largura própria.
-    const doBox = createCard({ className: 'nds-cluster nds-shadow-none nds-p-4' });
+    const doBox = createCard({ className: 'nds-cluster nds-shadow-none nds-p-4 nds-card-nested' });
     doBox.dataset.justify = 'center';
     doBox.dataset.docsPreview = 'do';
     doBox.appendChild(pair.doPreviewFactory());
@@ -66,7 +66,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
         <span class="nds-pill" data-tone="destructive">✗</span>
         <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">${DOMPurify.sanitize(pair.dontLabel)}</span>
       </div>`;
-    const dontBox = createCard({ className: 'nds-cluster nds-shadow-none nds-p-4' });
+    const dontBox = createCard({ className: 'nds-cluster nds-shadow-none nds-p-4 nds-card-nested' });
     dontBox.dataset.justify = 'center';
     dontBox.dataset.docsPreview = 'dont';
     dontBox.appendChild(pair.dontPreviewFactory());

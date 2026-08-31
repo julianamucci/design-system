@@ -40,7 +40,7 @@ export interface DocsKeyboardItem { key: string; description: string }
           <div class="nds-grid" data-cols="2" data-spacing="sm">
             @for (item of keyboardItems(); track item.key) {
               <div ndsCard
-                class="nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4"
+                class="nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4 nds-card-nested"
                 data-spacing="sm"
                 data-align="start"
               >

@@ -74,7 +74,7 @@ withDefaults(defineProps<{
           <Card
             v-for="(item, i) in keyboardItems"
             :key="i"
-            class="nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4"
+            class="nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4 nds-card-nested"
           >
             <div
               class="nds-row"

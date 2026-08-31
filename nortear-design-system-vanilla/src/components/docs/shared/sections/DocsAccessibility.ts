@@ -48,7 +48,7 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   kbGrid.dataset.cols = '2';
   kbGrid.dataset.spacing = 'sm';
   props.keyboardItems.forEach(item => {
-    const card = createCard({ className: 'nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4' });
+    const card = createCard({ className: 'nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4 nds-card-nested' });
     card.dataset.spacing = 'sm';
     card.dataset.align = 'start';
     const kbd = document.createElement('kbd');

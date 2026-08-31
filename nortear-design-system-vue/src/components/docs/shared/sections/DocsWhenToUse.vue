@@ -50,7 +50,7 @@ const props = defineProps<{
     >
       <!-- Guidelines -->
       <Card
-        class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack"
+        class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack nds-card-nested"
         data-spacing="sm"
       >
         <h3 class="nds-font-medium nds-text-body">
@@ -69,7 +69,7 @@ const props = defineProps<{
       </Card>
 
       <!-- Cenários -->
-      <Card class="nds-overflow-x nds-p-4">
+      <Card class="nds-overflow-x nds-p-4 nds-card-nested">
         <Table class="nds-w-full nds-border-collapse nds-text-body">
           <TableHeader>
             <TableRow class="nds-border-b nds-bg-muted-soft nds-font-medium">
@@ -113,7 +113,7 @@ const props = defineProps<{
         <h3 class="nds-font-medium nds-text-body">
           {{ uxWriting.title }}
         </h3>
-        <Card class="nds-overflow-x nds-p-4">
+        <Card class="nds-overflow-x nds-p-4 nds-card-nested">
           <Table class="nds-w-full nds-border-collapse nds-text-body">
             <TableHeader>
               <TableRow class="nds-border-b nds-bg-muted-soft">
@@ -185,7 +185,7 @@ const props = defineProps<{
         data-cols="2"
         data-spacing="md"
       >
-        <Card class="nds-p-4">
+        <Card class="nds-p-4 nds-card-nested">
           <h3
             class="nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster"
             data-spacing="sm"
@@ -207,7 +207,7 @@ const props = defineProps<{
             />
           </ul>
         </Card>
-        <Card class="nds-p-4">
+        <Card class="nds-p-4 nds-card-nested">
           <h3
             class="nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster"
             data-spacing="sm"

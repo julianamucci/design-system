@@ -53,7 +53,7 @@ export interface DocsDoDontPair {
                   herda a coluna do .nds-card e encosta tudo à esquerda.
                 -->
                 <div ndsCard
-                  class="nds-cluster nds-shadow-none nds-p-4"
+                  class="nds-cluster nds-shadow-none nds-p-4 nds-card-nested"
                   data-justify="center"
                   data-docs-preview="do"
                 >
@@ -71,7 +71,7 @@ export interface DocsDoDontPair {
                   </span>
                 </div>
                 <div ndsCard
-                  class="nds-cluster nds-shadow-none nds-p-4"
+                  class="nds-cluster nds-shadow-none nds-p-4 nds-card-nested"
                   data-justify="center"
                   data-docs-preview="dont"
                 >

@@ -40,7 +40,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   card.dataset.spacing = 'lg';
 
   // ── Guidelines ───────────────────────────────────────────────────────────────
-  const guidelinesBlock = createCard({ className: 'nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack' });
+  const guidelinesBlock = createCard({ className: 'nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack nds-card-nested' });
   guidelinesBlock.dataset.spacing = 'sm';
   const guidelinesTitle = document.createElement('h3');
   guidelinesTitle.className = 'nds-font-medium nds-text-body';
@@ -58,7 +58,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   guidelinesBlock.appendChild(guidelinesList);
 
   // ── Scenarios table ───────────────────────────────────────────────────────────
-  const scenariosBlock = createCard({ className: 'nds-overflow-x nds-p-4' });
+  const scenariosBlock = createCard({ className: 'nds-overflow-x nds-p-4 nds-card-nested' });
 
   const { wrapper: scenariosTableWrapper, table: scenariosTable } = createTable('nds-w-full nds-border-collapse nds-text-body');
 
@@ -94,7 +94,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
     uxTitle.textContent = ux.title;
     uxBlock.appendChild(uxTitle);
 
-    const uxTableWrap = createCard({ className: 'nds-overflow-x nds-p-4' });
+    const uxTableWrap = createCard({ className: 'nds-overflow-x nds-p-4 nds-card-nested' });
 
     const { wrapper: uxInnerTableWrapper, table: uxTable } = createTable('nds-w-full nds-border-collapse nds-text-body');
 
@@ -140,7 +140,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   doBlock.dataset.cols = '2';
   doBlock.dataset.spacing = 'md';
 
-  const doCard = createCard({ className: 'nds-p-4' });
+  const doCard = createCard({ className: 'nds-p-4 nds-card-nested' });
   const doTitle = document.createElement('h3');
   doTitle.className = 'nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster';
   doTitle.dataset.spacing = 'sm';
@@ -155,7 +155,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   });
   doCard.append(doTitle, doList);
 
-  const dontCard = createCard({ className: 'nds-p-4' });
+  const dontCard = createCard({ className: 'nds-p-4 nds-card-nested' });
   const dontTitle = document.createElement('h3');
   dontTitle.className = 'nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster';
   dontTitle.dataset.spacing = 'sm';
