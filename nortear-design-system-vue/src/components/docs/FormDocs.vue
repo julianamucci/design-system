@@ -34,28 +34,16 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 // derrubou docs page em runtime neste repositório.
 //
 // O conteúdo compartilhado nomeia as duas peças pelas FACTORIES da stack de
-// referência; aqui elas são componentes. `props.extensibility` fala da mesma
-// superfície com o vocabulário de lá (`HTMLElement` passado em `input`), e nesta
-// stack o controle vai no slot padrão. Overrides trocam nome e vocabulário de
-// API — o texto que ensina é o mesmo.
+// referência, e só isso é sobrescrito aqui. A prosa de extensibilidade era
+// sobrescrita também, nas quatro stacks, até o texto compartilhado deixar de
+// nomear uma fábrica: contorno repetido em quatro lugares é sintoma de defeito
+// na origem, não de quatro necessidades diferentes.
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(formTranslations, {
   '*': {
     'props.fieldTitle': 'FormField',
     'props.fieldsetTitle': 'Fieldset',
-  },
-  'pt-BR': {
-    'props.extensibility':
-      '<code>FormField</code> aceita qualquer controle no slot padrão — campo de texto, área de texto, seleção, marcação e composições. Use <code>class</code> para customizações pontuais com tokens do projeto.',
-  },
-  en: {
-    'props.extensibility':
-      '<code>FormField</code> accepts any control in the default slot — text field, text area, select, checkbox and compositions. Use <code>class</code> for custom styling with project tokens.',
-  },
-  es: {
-    'props.extensibility':
-      '<code>FormField</code> acepta cualquier control en el slot por defecto — campo de texto, área de texto, selección, marcación y composiciones. Usa <code>class</code> para personalización puntual con tokens del proyecto.',
   },
 });
 

@@ -77,8 +77,6 @@ const { t, dict } = useTranslation(formTranslations as Record<string, unknown>, 
       'Rótulo do agrupamento, projetado como primeiro filho do agrupamento.',
     'props.table.children':
       'Os campos projetados dentro do agrupamento, espaçados em 16px.',
-    'props.extensibility':
-      'O campo aceita qualquer controle projetado — campo de texto, área de texto, seleção, marcação e composições. Classes extras vão no atributo class do próprio elemento.',
     'states.withError.trigger':
       'Mensagem de erro projetada, ou estado inválido vindo do controle de formulário',
     'states.withError.behavior':
@@ -109,8 +107,6 @@ const { t, dict } = useTranslation(formTranslations as Record<string, unknown>, 
       'Group label, projected as the first child of the group.',
     'props.table.children':
       'The fields projected inside the group, spaced by 16px.',
-    'props.extensibility':
-      'The field accepts any projected control — text field, text area, selection, check and compositions. Extra classes go on the class attribute of the element itself.',
     'states.withError.trigger':
       'Projected error message, or invalid state coming from the form control',
     'states.withError.behavior':
@@ -141,8 +137,6 @@ const { t, dict } = useTranslation(formTranslations as Record<string, unknown>, 
       'Rótulo del agrupamiento, proyectado como primer hijo del agrupamiento.',
     'props.table.children':
       'Los campos proyectados dentro del agrupamiento, espaciados en 16px.',
-    'props.extensibility':
-      'El campo acepta cualquier control proyectado — campo de texto, área de texto, selección, marcación y composiciones. Las clases extra van en el atributo class del propio elemento.',
     'states.withError.trigger':
       'Mensaje de error proyectado, o estado inválido proveniente del control de formulario',
     'states.withError.behavior':

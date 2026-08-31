@@ -201,7 +201,7 @@
         "children": "Lista de elementos (geralmente <code>FormField</code>) dentro do fieldset."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>createFormField</code> aceita qualquer <code>HTMLElement</code> como <code>input</code> — funciona com input, textarea, select, checkbox e composições. Use <code>class</code> para customizações pontuais com tokens do projeto."
+      "extensibility": "O campo aceita qualquer controle como conteúdo — campo de texto, área de texto, seleção, marcação e composições. A classe do elemento continua disponível para customizações pontuais com tokens do projeto."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -560,7 +560,7 @@
         "children": "List of elements (usually <code>FormField</code>) inside the fieldset."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>createFormField</code> accepts any <code>HTMLElement</code> as <code>input</code> — works with input, textarea, select, checkbox and compositions. Use <code>class</code> for custom styling with project tokens."
+      "extensibility": "The field accepts any control as its content — text field, text area, select, checkbox and compositions. The element's class stays available for targeted styling with project tokens."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -919,7 +919,7 @@
         "children": "Lista de elementos (generalmente <code>FormField</code>) dentro del fieldset."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>createFormField</code> acepta cualquier <code>HTMLElement</code> como <code>input</code> — funciona con input, textarea, select, checkbox y composiciones. Usa <code>class</code> para personalización puntual con tokens del proyecto."
+      "extensibility": "El campo acepta cualquier control como contenido — campo de texto, área de texto, selección, casilla y composiciones. La clase del elemento sigue disponible para personalización puntual con tokens del proyecto."
     },
     "tokens": {
       "title": "Design Tokens",
