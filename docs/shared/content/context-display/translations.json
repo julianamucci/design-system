@@ -1,0 +1,1588 @@
+{
+  "pt-BR": {
+    "title": "Uso do contexto",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Quanto da janela de contexto já foi usada: o mesmo número em anel, em barra ou só em texto.",
+    "seo": {
+      "title": "Uso do contexto — o mesmo número em anel, barra ou texto",
+      "description": "A medição da janela de contexto: o número que se lê, o medidor que é só desenho, a palavra que diz se ainda há folga e o caso em que não se sabe o teto."
+    },
+    "labels": {
+      "title": "Uso da janela de contexto",
+      "level": {
+        "normal": "Com folga",
+        "warning": "Perto do limite",
+        "critical": "No limite"
+      },
+      "of": "de",
+      "unit": "tokens",
+      "unbounded": "Sem teto conhecido"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "ring": "Em anel, num trilho estreito",
+        "bar": "Em barra, num painel",
+        "text": "Só em texto, numa linha de rodapé",
+        "unbounded": "Quando não se sabe o teto"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "O nome da medida abre o bloco e não aparece na tela: quem vê já sabe do que se trata pelo lugar em que a peça está, e quem ouve não sabe.",
+      "item2": "O medidor vem depois e é só desenho — ele não carrega o valor, não tem papel de controle e fica fora do que é lido em voz.",
+      "item3": "O número é texto, e é ele que descreve: a fração quando há teto, a contagem quando não há.",
+      "item4": "O detalhe qualifica o número — o teto quando ele existe, e a notícia de que não existe quando não existe.",
+      "item5": "A palavra do nível fecha a linha, alinhada à direita, com a cor como reforço.",
+      "structureCode": {
+        "web": "<p class=\"nds-context-display\" data-form=\"ring\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Uso da janela de contexto</span>\n  <span class=\"nds-context-display-ring\" aria-hidden=\"true\" style=\"--nds-context-used: 78\"></span>\n  <span class=\"nds-context-display-value\">78%</span>\n  <span class=\"nds-context-display-detail\">25.000 de 32.000 tokens</span>\n  <span class=\"nds-badge nds-badge-warning nds-context-display-level\">Perto do limite</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use para dizer quanto da janela de contexto já foi gasto, perto de onde a conversa acontece.",
+        "item2": "Escolha a forma pelo espaço disponível: as três dizem o mesmo número.",
+        "item3": "Passe a medição inteira, com o teto sempre que ele for conhecido.",
+        "item4": "Deixe a palavra do nível na tela, inclusive quando há folga — ela é a resposta, e a cor é reforço.",
+        "item5": "Meça e conte em quem consome: a peça desenha o que recebe e não busca nada."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Dizer quanto da janela de contexto já foi usada",
+          "u": "Uso do contexto",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar o quanto de uma tarefa longa já andou",
+          "u": "Progress",
+          "a": "Ali a barra é o controle que carrega o valor e é lida como tal; aqui o valor é texto e o medidor é só desenho."
+        },
+        "item3": {
+          "s": "Avisar de um estouro que precisa ser lido na hora",
+          "u": "Alert",
+          "a": "Aquele interrompe quem lê; esta linha espera ser percorrida, porque quem lê está ouvindo a resposta."
+        },
+        "item4": {
+          "s": "Rótulo curto que classifica alguma coisa",
+          "u": "Badge",
+          "a": "O rótulo diz o que uma coisa é; esta linha diz quanto de uma medida já foi gasto."
+        },
+        "item5": {
+          "s": "Dizer há quanto tempo a resposta está sendo gerada",
+          "u": "Estado da execução",
+          "a": "Aquela linha fala de tempo e do que se pode fazer; esta fala de quanto espaço ainda resta."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "name": {
+            "name": "Nome da medida",
+            "format": "Diz de que número se trata, em poucas palavras",
+            "good": "Uso da janela de contexto",
+            "bad": "Métrica"
+          },
+          "level": {
+            "name": "Palavra do nível",
+            "format": "Diz quanto espaço resta, e não o que fazer a respeito",
+            "good": "Perto do limite",
+            "bad": "Atenção"
+          },
+          "unit": {
+            "name": "Unidade",
+            "format": "O que está sendo contado, no plural",
+            "good": "tokens",
+            "bad": "un."
+          },
+          "unbounded": {
+            "name": "Quando não há teto",
+            "format": "Diz que o teto é desconhecido, e nunca que ele é zero",
+            "good": "Sem teto conhecido",
+            "bad": "0%"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva a palavra do nível ao lado da cor.",
+        "item2": "Mostre a contagem quando o teto não for conhecido.",
+        "item3": "Escolha a forma pelo espaço, e mantenha a mesma na mesma tela.",
+        "item4": "Deixe o medidor fora do que é lido em voz."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a cor do medidor como única diferença entre os níveis.",
+        "item2": "Não desenhe medidor sem teto conhecido: vazio lê como zero por cento.",
+        "item3": "Não anuncie o número a cada mudança.",
+        "item4": "Não dê papel de controle ao medidor — ele não é o valor, é o desenho dele."
+      }
+    },
+    "doDont": {
+      "title": "Certo e errado",
+      "pair1": {
+        "do": "A palavra do nível está na linha, e a cor apenas reforça.",
+        "dont": "Só a cor do medidor separa a folga do aperto, e cor não chega a quem ouve a tela."
+      },
+      "pair2": {
+        "do": "Sem teto conhecido, a peça mostra a contagem e diz que o teto é desconhecido.",
+        "dont": "Sem teto, o medidor aparece vazio — e vazio lê como zero por cento, que é o oposto do que se quer dizer."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: rotulos,\n});",
+        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
+        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
+        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"rotulos\"\n></p>"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst rotulos = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
+      }
+    },
+    "variants": {
+      "title": "Formas",
+      "visualTitle": "Exemplos visuais",
+      "note": "As três dizem o mesmo número, e a escolha é de espaço: o anel cabe num trilho estreito ao lado de outros controles, a barra toma a linha inteira de um painel, e o texto sozinho serve a um rodapé. Trocar de forma não muda o que é lido em voz.",
+      "items": {
+        "ring": {
+          "description": "Um anel antes do número. É a forma mais compacta, e cabe ao lado de outros controles sem empurrar nenhum.",
+          "variantCode": {
+            "vanilla": "{ form: 'ring' }",
+            "react": "form=\"ring\"",
+            "vue": "form=\"ring\"",
+            "svelte": "form=\"ring\"",
+            "angular": "form=\"ring\""
+          }
+        },
+        "bar": {
+          "description": "Um trilho de largura inteira, abaixo do número. É a forma para quando a peça tem um painel só para ela.",
+          "variantCode": {
+            "vanilla": "{ form: 'bar' }",
+            "react": "form=\"bar\"",
+            "vue": "form=\"bar\"",
+            "svelte": "form=\"bar\"",
+            "angular": "form=\"bar\""
+          }
+        },
+        "text": {
+          "description": "Só o número e o que o qualifica, sem medidor nenhum. É a forma para um rodapé, onde qualquer desenho competiria com o texto ao redor.",
+          "variantCode": {
+            "vanilla": "{ form: 'text' }",
+            "react": "form=\"text\"",
+            "vue": "form=\"text\"",
+            "svelte": "form=\"text\"",
+            "angular": "form=\"text\""
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "normal": {
+        "label": "Com folga",
+        "trigger": "Menos de três quartos da janela foram gastos.",
+        "behavior": "O medidor fica na cor de destaque e a palavra diz que ainda há espaço."
+      },
+      "warning": {
+        "label": "Perto do limite",
+        "trigger": "Três quartos da janela ou mais foram gastos.",
+        "behavior": "O medidor troca de cor e a palavra troca junto — ainda dá tempo de enxugar o contexto."
+      },
+      "critical": {
+        "label": "No limite",
+        "trigger": "Nove décimos da janela ou mais foram gastos.",
+        "behavior": "O medidor vai para a cor de erro e a palavra diz que o próximo turno pode não caber."
+      },
+      "over": {
+        "label": "Acima do teto",
+        "trigger": "O consumo passou do teto.",
+        "behavior": "O medidor para de crescer no cheio e o número trava em cem por cento: o desenho não tem para onde ir."
+      },
+      "unbounded": {
+        "label": "Sem teto conhecido",
+        "trigger": "A medição chegou sem teto.",
+        "behavior": "Não há medidor nem palavra de nível; o número passa a ser a contagem e o detalhe diz que o teto é desconhecido."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "usage": {
+          "name": "usage",
+          "type": "TokenUsage",
+          "default": "—",
+          "required": "Sim",
+          "description": "A medição: o consumido de cada origem, e o teto quando ele é conhecido. O total é sempre derivado da soma."
+        },
+        "form": {
+          "name": "form",
+          "type": "'ring' | 'bar' | 'text'",
+          "default": "'ring'",
+          "required": "Não",
+          "description": "Como desenhar o mesmo número. A escolha é de espaço, e não de significado."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ContextDisplayLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da peça: o nome da medida, a palavra de cada nível, a unidade e o que dizer sem teto."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "De que número se trata. Não aparece na tela, e é o que responde a pergunta para quem ouve."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada nível. É ela que descreve, e não a cor do medidor."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "Liga o consumido ao teto na frase do detalhe."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que está sendo contado."
+        },
+        "labelsUnbounded": {
+          "name": "unbounded",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que dizer quando o teto não é conhecido. Sem ele, a ausência de fração pareceria medição pela metade."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A conta não mora na peça: fração, limiar de aviso, nível e repartição vivem num primitivo compartilhado, e as cinco stacks leem as mesmas respostas. Escrita como condição de tela, a mesma regra renderia cinco versões — e uma delas discordaria sobre a borda exata do limiar.",
+      "extensibilityCode": {
+        "web": "// O LIMIAR É DECISÃO DO PRIMITIVO, e a comparação é EXATA:\nbudgetLevel({ input: 749, output: 0, limit: 1000 });  // 'normal'\nbudgetLevel({ input: 750, output: 0, limit: 1000 });  // 'warning'  — três quartos em ponto\nbudgetLevel({ input: 900, output: 0, limit: 1000 });  // 'critical'\n\n// SEM TETO NÃO HÁ FRAÇÃO, e a ausência sai como ausência — nunca como zero:\nusedPercent({ input: 800, output: 400 });             // null\nbudgetLevel({ input: 800, output: 400 });             // null\n\n// O número é travado nas duas pontas, porque é ele que se lê em voz:\nusedPercent({ input: 999, output: 0, limit: 1000 });  // 99, e não 100\nusedPercent({ input: 1, output: 0, limit: 10000 });   // 1, e não 0"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-context-display",
+          "description": "Tamanho do texto da linha."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-context-display",
+          "description": "Cor da linha e do detalhe que qualifica o número."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-context-display-value",
+          "description": "O número, que é o que se lê."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-context-display-value",
+          "description": "Peso do número, que é o que se destaca da linha."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-context-display",
+          "description": "O medidor enquanto há folga."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-context-display[data-level=\"warning\"]",
+          "description": "O medidor perto do limite."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-context-display[data-level=\"critical\"]",
+          "description": "O medidor no limite."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-context-display-ring",
+          "description": "A parte ainda livre do medidor, sólida — opacidade baixa some no modo escuro."
+        },
+        "sizeXs": {
+          "token": "--size-xs",
+          "value": ".nds-context-display-ring",
+          "description": "Medida do anel, que não tem texto dentro para crescer."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-context-display",
+          "description": "Espaço entre as partes da linha, e espessura do trilho da barra."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-context-display-bar",
+          "description": "Arredondamento do anel e do trilho."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-context-display {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível ao lado é o que\n   descreve. Mexer no anel não muda o que chega a quem ouve. */\n.nds-context-display-ring {\n  inline-size: var(--size-default);\n  block-size: var(--size-default);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O número é texto e o medidor é desenho: nada aqui se anuncia, o nível chega em palavra, e a medida tem nome mesmo sem título visível.",
+      "items": {
+        "item1": "A palavra do nível está sempre na linha quando há teto: a cor do medidor não descreve nível sozinha.",
+        "item2": "O medidor fica fora do que é lido em voz — ele é desenho, e o número ao lado já diz tudo.",
+        "item3": "O medidor não tem papel de controle nem valor: um segundo portador do mesmo número o faria ser lido duas vezes.",
+        "item4": "Não há região viva. O número muda a cada turno, e anunciá-lo a cada mudança corta a leitura da resposta que está sendo gerada ao lado.",
+        "item5": "O número tem nome: um título reservado a leitor de tela diz de que medida se trata."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Passa direto: não há controle nesta peça, e sim uma frase sobre uma medição."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden tira o medidor do que é lido em voz.",
+        "item2": "Não há região viva, papel de controle nem valor — quem quiser anunciar a mudança põe a região por fora, sabendo o que está fazendo.",
+        "item3": "O nome da medida chega por texto reservado a leitor de tela, e não por rótulo acessível no elemento."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A linha é lida como o nome da medida, o número, o que o qualifica e a palavra do nível.",
+        "item2": "Sem teto conhecido, o que se lê é a contagem e a notícia de que o teto é desconhecido.",
+        "item3": "A mudança do número não interrompe o que estiver sendo lido no momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "A linha vizinha: aquela diz o que está acontecendo, esta diz quanto espaço resta."
+        },
+        "chatThread": {
+          "name": "Conversa",
+          "description": "O que gasta a janela que esta peça mede."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Quando a barra é o próprio valor, e não o desenho de um número escrito ao lado."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "A etiqueta que carrega a palavra do nível."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O número é texto e o medidor é desenho. Um contador que se reanuncia torna a tela impossível de ouvir, e é por isso que não há região viva nem valor acessível aqui.",
+      "item2": "Sem teto não há fração, só contagem. O teto é opcional porque nem sempre se sabe qual é, e quem não sabe não ganha medidor: um anel vazio lê como zero por cento.",
+      "item3": "O limiar de aviso é decisão do primitivo compartilhado, e não de cada tela. Três quartos avisam, nove décimos apertam, e a comparação é exata — frouxa, duas peças discordariam sobre o mesmo número.",
+      "item4": "O total é derivado, nunca campo. Total guardado pode discordar da soma, e um número que discorda de si mesmo é pior que número nenhum.",
+      "item5": "O medidor e o número mostram o mesmo inteiro. Um medidor contínuo ao lado de um número travado seriam duas respostas para uma pergunta só.",
+      "item6": "As três formas dizem o mesmo. Trocar de forma é escolha de espaço, e não de informação — nada muda no que é lido em voz."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a medição em si não instrumenta nada, porque não há interação nela.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma medição com teto",
+          "result": "O número sai como fração, e o medidor desenha a mesma fração",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar uma medição sem teto",
+          "result": "Não há medidor nem palavra de nível, e o número passa a ser a contagem",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Percorrer os três níveis",
+          "result": "A palavra troca junto com a cor, e nunca só a cor",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar um consumo exatamente no limiar de aviso",
+          "result": "O nível já é o de aviso, porque a comparação é exata",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar um consumo acima do teto",
+          "result": "O medidor não passa do cheio e o número trava em cem por cento",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Trocar a forma",
+          "result": "O que é lido em voz continua o mesmo, e só o medidor muda",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Montar a peça em qualquer forma",
+          "result": "Ela não é região viva, e o medidor não tem papel nem valor",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar a peça ao lado do campo de mensagem",
+          "result": "Ela vive fora da moldura do campo, e nada no campo sabe que ela existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A palavra do nível está presente sempre que há teto, e a cor não é a única pista",
+        "item2": "O medidor está fora do que é lido em voz",
+        "item3": "O medidor não tem papel de controle nem valor",
+        "item4": "A peça não é região viva",
+        "item5": "O número tem nome, dado por texto reservado a leitor de tela",
+        "item6": "Sem teto não há medidor, e o texto diz que o teto é desconhecido"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a medição, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Formas — anel, barra e texto, uma abaixo da outra",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — os três níveis, um abaixo do outro",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — sem teto conhecido",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — acima do teto",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — a medição ao lado do campo de mensagem",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+
+  "en": {
+    "title": "Context usage",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "How much of the context window has been spent: the same number as a ring, as a bar, or as plain text.",
+    "seo": {
+      "title": "Context usage — the same number as a ring, a bar or text",
+      "description": "The context window measurement: the number that is read, the meter that is only drawing, the word that says whether there is room left, and the case where the ceiling is unknown."
+    },
+    "labels": {
+      "title": "Context window usage",
+      "level": {
+        "normal": "Room to spare",
+        "warning": "Near the limit",
+        "critical": "At the limit"
+      },
+      "of": "of",
+      "unit": "tokens",
+      "unbounded": "Ceiling unknown"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "ring": "As a ring, in a narrow rail",
+        "bar": "As a bar, in a panel",
+        "text": "As text alone, in a footer line",
+        "unbounded": "When the ceiling is unknown"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The name of the measurement opens the block and stays off screen: people who see it already know what it is from where it sits, and people who hear it do not.",
+      "item2": "The meter comes next and is drawing only — it carries no value, has no control role, and stays out of what is read aloud.",
+      "item3": "The number is text, and it is what describes: the fraction when there is a ceiling, the count when there is not.",
+      "item4": "The detail qualifies the number — the ceiling when it exists, and the news that it does not when it does not.",
+      "item5": "The level word closes the line, aligned to the end, with colour as reinforcement.",
+      "structureCode": {
+        "web": "<p class=\"nds-context-display\" data-form=\"ring\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Context window usage</span>\n  <span class=\"nds-context-display-ring\" aria-hidden=\"true\" style=\"--nds-context-used: 78\"></span>\n  <span class=\"nds-context-display-value\">78%</span>\n  <span class=\"nds-context-display-detail\">25,000 of 32,000 tokens</span>\n  <span class=\"nds-badge nds-badge-warning nds-context-display-level\">Near the limit</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it to say how much of the context window has been spent, near where the conversation happens.",
+        "item2": "Pick the form by the space available: all three say the same number.",
+        "item3": "Pass the whole measurement, including the ceiling whenever it is known.",
+        "item4": "Keep the level word on screen, including when there is room to spare — it is the answer, and colour is reinforcement.",
+        "item5": "Measure and count on the consuming side: the piece draws what it receives and fetches nothing."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Say how much of the context window has been spent",
+          "u": "Context usage",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Show how far a long task has got",
+          "u": "Progress",
+          "a": "There the bar is the control that carries the value and is read as such; here the value is text and the meter is drawing only."
+        },
+        "item3": {
+          "s": "Warn about an overflow that has to be read right away",
+          "u": "Alert",
+          "a": "That one interrupts the reader; this line waits to be reached, because the reader is listening to the answer."
+        },
+        "item4": {
+          "s": "A short label that classifies something",
+          "u": "Badge",
+          "a": "A label says what a thing is; this line says how much of a measurement has been spent."
+        },
+        "item5": {
+          "s": "Say how long the answer has been coming",
+          "u": "Run status",
+          "a": "That line speaks of time and of what can be done; this one speaks of how much room is left."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "name": {
+            "name": "Name of the measurement",
+            "format": "Says which number this is, in a few words",
+            "good": "Context window usage",
+            "bad": "Metric"
+          },
+          "level": {
+            "name": "Level word",
+            "format": "Says how much room is left, not what to do about it",
+            "good": "Near the limit",
+            "bad": "Warning"
+          },
+          "unit": {
+            "name": "Unit",
+            "format": "What is being counted, in the plural",
+            "good": "tokens",
+            "bad": "u."
+          },
+          "unbounded": {
+            "name": "When there is no ceiling",
+            "format": "Says the ceiling is unknown, never that it is zero",
+            "good": "Ceiling unknown",
+            "bad": "0%"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the level word next to the colour.",
+        "item2": "Show the count when the ceiling is unknown.",
+        "item3": "Pick the form by the space, and keep the same one on the same screen.",
+        "item4": "Keep the meter out of what is read aloud."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Don't let the meter colour be the only difference between levels.",
+        "item2": "Don't draw a meter without a known ceiling: empty reads as zero per cent.",
+        "item3": "Don't announce the number on every change.",
+        "item4": "Don't give the meter a control role — it is not the value, it is the drawing of it."
+      }
+    },
+    "doDont": {
+      "title": "Do and don't",
+      "pair1": {
+        "do": "The level word is on the line, and colour only reinforces it.",
+        "dont": "Only the meter colour separates room to spare from the limit, and colour does not reach someone listening to the screen."
+      },
+      "pair2": {
+        "do": "With no known ceiling, the piece shows the count and says the ceiling is unknown.",
+        "dont": "With no ceiling, the meter shows up empty — and empty reads as zero per cent, the opposite of what is meant."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: rotulos,\n});",
+        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
+        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
+        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"rotulos\"\n></p>"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst rotulos = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
+      }
+    },
+    "variants": {
+      "title": "Forms",
+      "visualTitle": "Visual examples",
+      "note": "All three say the same number, and the choice is about space: the ring fits a narrow rail beside other controls, the bar takes the whole line of a panel, and text alone suits a footer. Changing form does not change what is read aloud.",
+      "items": {
+        "ring": {
+          "description": "A ring before the number. It is the most compact form, and it sits beside other controls without pushing any of them.",
+          "variantCode": {
+            "vanilla": "{ form: 'ring' }",
+            "react": "form=\"ring\"",
+            "vue": "form=\"ring\"",
+            "svelte": "form=\"ring\"",
+            "angular": "form=\"ring\""
+          }
+        },
+        "bar": {
+          "description": "A full-width track below the number. This is the form for when the piece has a panel to itself.",
+          "variantCode": {
+            "vanilla": "{ form: 'bar' }",
+            "react": "form=\"bar\"",
+            "vue": "form=\"bar\"",
+            "svelte": "form=\"bar\"",
+            "angular": "form=\"bar\""
+          }
+        },
+        "text": {
+          "description": "Only the number and what qualifies it, with no meter at all. This is the form for a footer, where any drawing would compete with the surrounding text.",
+          "variantCode": {
+            "vanilla": "{ form: 'text' }",
+            "react": "form=\"text\"",
+            "vue": "form=\"text\"",
+            "svelte": "form=\"text\"",
+            "angular": "form=\"text\""
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "normal": {
+        "label": "Room to spare",
+        "trigger": "Less than three quarters of the window has been spent.",
+        "behavior": "The meter stays in the accent colour and the word says there is still room."
+      },
+      "warning": {
+        "label": "Near the limit",
+        "trigger": "Three quarters of the window or more has been spent.",
+        "behavior": "The meter changes colour and the word changes with it — there is still time to trim the context."
+      },
+      "critical": {
+        "label": "At the limit",
+        "trigger": "Nine tenths of the window or more has been spent.",
+        "behavior": "The meter goes to the error colour and the word says the next turn may not fit."
+      },
+      "over": {
+        "label": "Above the ceiling",
+        "trigger": "Consumption went past the ceiling.",
+        "behavior": "The meter stops growing at full and the number locks at a hundred per cent: the drawing has nowhere left to go."
+      },
+      "unbounded": {
+        "label": "Ceiling unknown",
+        "trigger": "The measurement arrived with no ceiling.",
+        "behavior": "There is no meter and no level word; the number becomes the count and the detail says the ceiling is unknown."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "usage": {
+          "name": "usage",
+          "type": "TokenUsage",
+          "default": "—",
+          "required": "Yes",
+          "description": "The measurement: what each origin spent, and the ceiling when it is known. The total is always derived from the sum."
+        },
+        "form": {
+          "name": "form",
+          "type": "'ring' | 'bar' | 'text'",
+          "default": "'ring'",
+          "required": "No",
+          "description": "How to draw the same number. The choice is about space, not about meaning."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ContextDisplayLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The text of the piece: the name of the measurement, the word for each level, the unit, and what to say with no ceiling."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "Which number this is. It stays off screen, and it is what answers the question for someone listening."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each level. It is what describes, not the meter colour."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "Joins what was spent to the ceiling in the detail sentence."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What is being counted."
+        },
+        "labelsUnbounded": {
+          "name": "unbounded",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What to say when the ceiling is unknown. Without it, the missing fraction would look like a half-finished measurement."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The arithmetic does not live in the piece: fraction, warning threshold, level and breakdown live in a shared primitive, and all five stacks read the same answers. Written as a screen condition, the same rule would produce five versions — and one of them would disagree about the exact edge of the threshold.",
+      "extensibilityCode": {
+        "web": "// O LIMIAR É DECISÃO DO PRIMITIVO, e a comparação é EXATA:\nbudgetLevel({ input: 749, output: 0, limit: 1000 });  // 'normal'\nbudgetLevel({ input: 750, output: 0, limit: 1000 });  // 'warning'  — três quartos em ponto\nbudgetLevel({ input: 900, output: 0, limit: 1000 });  // 'critical'\n\n// SEM TETO NÃO HÁ FRAÇÃO, e a ausência sai como ausência — nunca como zero:\nusedPercent({ input: 800, output: 400 });             // null\nbudgetLevel({ input: 800, output: 400 });             // null\n\n// O número é travado nas duas pontas, porque é ele que se lê em voz:\nusedPercent({ input: 999, output: 0, limit: 1000 });  // 99, e não 100\nusedPercent({ input: 1, output: 0, limit: 10000 });   // 1, e não 0"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-context-display",
+          "description": "Text size of the line."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-context-display",
+          "description": "Colour of the line and of the detail that qualifies the number."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-context-display-value",
+          "description": "The number, which is what gets read."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-context-display-value",
+          "description": "Weight of the number, which is what stands out from the line."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-context-display",
+          "description": "The meter while there is room to spare."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-context-display[data-level=\"warning\"]",
+          "description": "The meter near the limit."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-context-display[data-level=\"critical\"]",
+          "description": "The meter at the limit."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-context-display-ring",
+          "description": "The still-free part of the meter, solid — low opacity disappears in dark mode."
+        },
+        "sizeXs": {
+          "token": "--size-xs",
+          "value": ".nds-context-display-ring",
+          "description": "Size of the ring, which has no text inside to grow with."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-context-display",
+          "description": "Space between the parts of the line, and thickness of the bar track."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-context-display-bar",
+          "description": "Rounding of the ring and of the track."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-context-display {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível ao lado é o que\n   descreve. Mexer no anel não muda o que chega a quem ouve. */\n.nds-context-display-ring {\n  inline-size: var(--size-default);\n  block-size: var(--size-default);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The number is text and the meter is drawing: nothing here announces itself, the level arrives as a word, and the measurement has a name even with no visible title.",
+      "items": {
+        "item1": "The level word is always on the line when there is a ceiling: the meter colour does not describe the level on its own.",
+        "item2": "The meter stays out of what is read aloud — it is drawing, and the number beside it already says everything.",
+        "item3": "The meter has no control role and no value: a second carrier of the same number would make it be read twice.",
+        "item4": "There is no live region. The number changes every turn, and announcing it on every change cuts through the answer being generated beside it.",
+        "item5": "The number has a name: a title reserved for screen readers says which measurement this is."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Passes straight through: there is no control in this piece, only a sentence about a measurement."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden takes the meter out of what is read aloud.",
+        "item2": "There is no live region, control role or value — anyone who wants to announce the change puts the region outside, knowing what they are doing.",
+        "item3": "The name of the measurement arrives as text reserved for screen readers, not as an accessible label on the element."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The line is read as the name of the measurement, the number, what qualifies it, and the level word.",
+        "item2": "With no known ceiling, what is read is the count and the news that the ceiling is unknown.",
+        "item3": "A change in the number does not interrupt whatever is being read at the time."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "agentStatus": {
+          "name": "Run status",
+          "description": "The neighbouring line: that one says what is happening, this one says how much room is left."
+        },
+        "chatThread": {
+          "name": "Thread",
+          "description": "What spends the window this piece measures."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "When the bar is the value itself, rather than the drawing of a number written beside it."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "The label that carries the level word."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The number is text and the meter is drawing. A counter that re-announces itself makes the screen impossible to listen to, which is why there is no live region and no accessible value here.",
+      "item2": "With no ceiling there is no fraction, only a count. The ceiling is optional because it is not always known, and whoever does not know it gets no meter: an empty ring reads as zero per cent.",
+      "item3": "The warning threshold is a decision of the shared primitive, not of each screen. Three quarters warns, nine tenths tightens, and the comparison is exact — a loose one would have two pieces disagreeing about the same number.",
+      "item4": "The total is derived, never a field. A stored total can disagree with the sum, and a number that disagrees with itself is worse than no number.",
+      "item5": "The meter and the number show the same integer. A continuous meter beside a clamped number would be two answers to a single question.",
+      "item6": "All three forms say the same thing. Changing form is a choice about space, not about information — nothing changes in what is read aloud."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the measurement itself instruments nothing, because there is no interaction in it.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a measurement with a ceiling",
+          "result": "The number comes out as a fraction, and the meter draws the same fraction",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass a measurement with no ceiling",
+          "result": "There is no meter and no level word, and the number becomes the count",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Go through the three levels",
+          "result": "The word changes along with the colour, never colour alone",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass consumption exactly at the warning threshold",
+          "result": "The level is already the warning one, because the comparison is exact",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass consumption above the ceiling",
+          "result": "The meter does not go past full and the number locks at a hundred per cent",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Change the form",
+          "result": "What is read aloud stays the same, and only the meter changes",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Mount the piece in any form",
+          "result": "It is not a live region, and the meter has no role and no value",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the piece beside the message field",
+          "result": "It lives outside the frame of the field, and nothing in the field knows it exists",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The level word is present whenever there is a ceiling, and colour is not the only cue",
+        "item2": "The meter is out of what is read aloud",
+        "item3": "The meter has no control role and no value",
+        "item4": "The piece is not a live region",
+        "item5": "The number has a name, given by text reserved for screen readers",
+        "item6": "With no ceiling there is no meter, and the text says the ceiling is unknown"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the measurement, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Forms — ring, bar and text, one below the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — the three levels, one below the other",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — with no known ceiling",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — above the ceiling",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — the measurement beside the message field",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+
+  "es": {
+    "title": "Uso del contexto",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Cuánto de la ventana de contexto ya se gastó: el mismo número en anillo, en barra o solo en texto.",
+    "seo": {
+      "title": "Uso del contexto — el mismo número en anillo, barra o texto",
+      "description": "La medición de la ventana de contexto: el número que se lee, el medidor que es solo dibujo, la palabra que dice si aún queda holgura y el caso en que no se conoce el techo."
+    },
+    "labels": {
+      "title": "Uso de la ventana de contexto",
+      "level": {
+        "normal": "Con holgura",
+        "warning": "Cerca del límite",
+        "critical": "En el límite"
+      },
+      "of": "de",
+      "unit": "tokens",
+      "unbounded": "Sin techo conocido"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "ring": "En anillo, en un carril estrecho",
+        "bar": "En barra, en un panel",
+        "text": "Solo en texto, en una línea de pie",
+        "unbounded": "Cuando no se conoce el techo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "El nombre de la medida abre el bloque y no aparece en pantalla: quien lo ve ya sabe de qué se trata por el lugar donde está la pieza, y quien lo oye no.",
+      "item2": "El medidor viene después y es solo dibujo: no lleva el valor, no tiene papel de control y queda fuera de lo que se lee en voz alta.",
+      "item3": "El número es texto, y es él quien describe: la fracción cuando hay techo, el recuento cuando no lo hay.",
+      "item4": "El detalle califica el número — el techo cuando existe, y la noticia de que no existe cuando no existe.",
+      "item5": "La palabra del nivel cierra la línea, alineada al final, con el color como refuerzo.",
+      "structureCode": {
+        "web": "<p class=\"nds-context-display\" data-form=\"ring\" data-level=\"warning\">\n  <span class=\"nds-sr-only\">Uso de la ventana de contexto</span>\n  <span class=\"nds-context-display-ring\" aria-hidden=\"true\" style=\"--nds-context-used: 78\"></span>\n  <span class=\"nds-context-display-value\">78%</span>\n  <span class=\"nds-context-display-detail\">25.000 de 32.000 tokens</span>\n  <span class=\"nds-badge nds-badge-warning nds-context-display-level\">Cerca del límite</span>\n</p>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo para decir cuánto de la ventana de contexto ya se gastó, cerca de donde ocurre la conversación.",
+        "item2": "Elige la forma por el espacio disponible: las tres dicen el mismo número.",
+        "item3": "Pasa la medición entera, con el techo siempre que se conozca.",
+        "item4": "Mantén la palabra del nivel en pantalla, incluso cuando hay holgura — ella es la respuesta, y el color es refuerzo.",
+        "item5": "Mide y cuenta en quien consume: la pieza dibuja lo que recibe y no busca nada."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Decir cuánto de la ventana de contexto ya se usó",
+          "u": "Uso del contexto",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar cuánto ha avanzado una tarea larga",
+          "u": "Progress",
+          "a": "Allí la barra es el control que lleva el valor y se lee como tal; aquí el valor es texto y el medidor es solo dibujo."
+        },
+        "item3": {
+          "s": "Avisar de un desborde que hay que leer en el momento",
+          "u": "Alert",
+          "a": "Aquel interrumpe a quien lee; esta línea espera a ser recorrida, porque quien lee está escuchando la respuesta."
+        },
+        "item4": {
+          "s": "Etiqueta corta que clasifica algo",
+          "u": "Badge",
+          "a": "La etiqueta dice qué es una cosa; esta línea dice cuánto de una medida ya se gastó."
+        },
+        "item5": {
+          "s": "Decir hace cuánto tiempo se está generando la respuesta",
+          "u": "Estado de la ejecución",
+          "a": "Aquella línea habla de tiempo y de lo que se puede hacer; esta habla de cuánto espacio queda."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "name": {
+            "name": "Nombre de la medida",
+            "format": "Dice de qué número se trata, en pocas palabras",
+            "good": "Uso de la ventana de contexto",
+            "bad": "Métrica"
+          },
+          "level": {
+            "name": "Palabra del nivel",
+            "format": "Dice cuánto espacio queda, no qué hacer al respecto",
+            "good": "Cerca del límite",
+            "bad": "Atención"
+          },
+          "unit": {
+            "name": "Unidad",
+            "format": "Lo que se está contando, en plural",
+            "good": "tokens",
+            "bad": "un."
+          },
+          "unbounded": {
+            "name": "Cuando no hay techo",
+            "format": "Dice que el techo es desconocido, nunca que es cero",
+            "good": "Sin techo conocido",
+            "bad": "0%"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe la palabra del nivel junto al color.",
+        "item2": "Muestra el recuento cuando el techo no se conoce.",
+        "item3": "Elige la forma por el espacio, y mantén la misma en la misma pantalla.",
+        "item4": "Deja el medidor fuera de lo que se lee en voz alta."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes el color del medidor como única diferencia entre los niveles.",
+        "item2": "No dibujes medidor sin techo conocido: vacío se lee como cero por ciento.",
+        "item3": "No anuncies el número en cada cambio.",
+        "item4": "No des papel de control al medidor: no es el valor, es el dibujo de él."
+      }
+    },
+    "doDont": {
+      "title": "Correcto e incorrecto",
+      "pair1": {
+        "do": "La palabra del nivel está en la línea, y el color solo refuerza.",
+        "dont": "Solo el color del medidor separa la holgura del apuro, y el color no llega a quien escucha la pantalla."
+      },
+      "pair2": {
+        "do": "Sin techo conocido, la pieza muestra el recuento y dice que el techo es desconocido.",
+        "dont": "Sin techo, el medidor aparece vacío — y vacío se lee como cero por ciento, lo opuesto de lo que se quiere decir."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: rotulos,\n});",
+        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
+        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
+        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"rotulos\"\n></p>"
+      },
+      "withLabels": "Las etiquetas",
+      "withLabelsCode": {
+        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst rotulos = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
+      }
+    },
+    "variants": {
+      "title": "Formas",
+      "visualTitle": "Ejemplos visuales",
+      "note": "Las tres dicen el mismo número, y la elección es de espacio: el anillo cabe en un carril estrecho junto a otros controles, la barra toma la línea entera de un panel, y el texto solo sirve a un pie. Cambiar de forma no cambia lo que se lee en voz alta.",
+      "items": {
+        "ring": {
+          "description": "Un anillo antes del número. Es la forma más compacta, y cabe junto a otros controles sin empujar a ninguno.",
+          "variantCode": {
+            "vanilla": "{ form: 'ring' }",
+            "react": "form=\"ring\"",
+            "vue": "form=\"ring\"",
+            "svelte": "form=\"ring\"",
+            "angular": "form=\"ring\""
+          }
+        },
+        "bar": {
+          "description": "Un carril de ancho completo, debajo del número. Es la forma para cuando la pieza tiene un panel solo para ella.",
+          "variantCode": {
+            "vanilla": "{ form: 'bar' }",
+            "react": "form=\"bar\"",
+            "vue": "form=\"bar\"",
+            "svelte": "form=\"bar\"",
+            "angular": "form=\"bar\""
+          }
+        },
+        "text": {
+          "description": "Solo el número y lo que lo califica, sin medidor alguno. Es la forma para un pie, donde cualquier dibujo competiría con el texto alrededor.",
+          "variantCode": {
+            "vanilla": "{ form: 'text' }",
+            "react": "form=\"text\"",
+            "vue": "form=\"text\"",
+            "svelte": "form=\"text\"",
+            "angular": "form=\"text\""
+          }
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "normal": {
+        "label": "Con holgura",
+        "trigger": "Se gastó menos de tres cuartos de la ventana.",
+        "behavior": "El medidor queda en el color de realce y la palabra dice que aún hay espacio."
+      },
+      "warning": {
+        "label": "Cerca del límite",
+        "trigger": "Se gastaron tres cuartos de la ventana o más.",
+        "behavior": "El medidor cambia de color y la palabra cambia con él — aún hay tiempo de recortar el contexto."
+      },
+      "critical": {
+        "label": "En el límite",
+        "trigger": "Se gastaron nueve décimos de la ventana o más.",
+        "behavior": "El medidor pasa al color de error y la palabra dice que el próximo turno puede no caber."
+      },
+      "over": {
+        "label": "Por encima del techo",
+        "trigger": "El consumo pasó del techo.",
+        "behavior": "El medidor deja de crecer en lleno y el número se fija en cien por ciento: el dibujo no tiene a dónde ir."
+      },
+      "unbounded": {
+        "label": "Sin techo conocido",
+        "trigger": "La medición llegó sin techo.",
+        "behavior": "No hay medidor ni palabra de nivel; el número pasa a ser el recuento y el detalle dice que el techo es desconocido."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "usage": {
+          "name": "usage",
+          "type": "TokenUsage",
+          "default": "—",
+          "required": "Sí",
+          "description": "La medición: lo consumido por cada origen, y el techo cuando se conoce. El total siempre se deriva de la suma."
+        },
+        "form": {
+          "name": "form",
+          "type": "'ring' | 'bar' | 'text'",
+          "default": "'ring'",
+          "required": "No",
+          "description": "Cómo dibujar el mismo número. La elección es de espacio, no de significado."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ContextDisplayLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la pieza: el nombre de la medida, la palabra de cada nivel, la unidad y qué decir sin techo."
+        },
+        "labelsTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "De qué número se trata. No aparece en pantalla, y es lo que responde la pregunta para quien escucha."
+        },
+        "labelsLevel": {
+          "name": "level",
+          "type": "Record<BudgetLevel, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada nivel. Es ella la que describe, y no el color del medidor."
+        },
+        "labelsOf": {
+          "name": "of",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Une lo consumido al techo en la frase del detalle."
+        },
+        "labelsUnit": {
+          "name": "unit",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que se está contando."
+        },
+        "labelsUnbounded": {
+          "name": "unbounded",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué decir cuando el techo no se conoce. Sin ello, la ausencia de fracción parecería una medición a medias."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La cuenta no vive en la pieza: fracción, umbral de aviso, nivel y reparto viven en un primitivo compartido, y las cinco stacks leen las mismas respuestas. Escrita como condición de pantalla, la misma regla daría cinco versiones — y una de ellas discreparía sobre el borde exacto del umbral.",
+      "extensibilityCode": {
+        "web": "// O LIMIAR É DECISÃO DO PRIMITIVO, e a comparação é EXATA:\nbudgetLevel({ input: 749, output: 0, limit: 1000 });  // 'normal'\nbudgetLevel({ input: 750, output: 0, limit: 1000 });  // 'warning'  — três quartos em ponto\nbudgetLevel({ input: 900, output: 0, limit: 1000 });  // 'critical'\n\n// SEM TETO NÃO HÁ FRAÇÃO, e a ausência sai como ausência — nunca como zero:\nusedPercent({ input: 800, output: 400 });             // null\nbudgetLevel({ input: 800, output: 400 });             // null\n\n// O número é travado nas duas pontas, porque é ele que se lê em voz:\nusedPercent({ input: 999, output: 0, limit: 1000 });  // 99, e não 100\nusedPercent({ input: 1, output: 0, limit: 10000 });   // 1, e não 0"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-context-display",
+          "description": "Tamaño del texto de la línea."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-context-display",
+          "description": "Color de la línea y del detalle que califica el número."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-context-display-value",
+          "description": "El número, que es lo que se lee."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-context-display-value",
+          "description": "Peso del número, que es lo que se destaca de la línea."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-context-display",
+          "description": "El medidor mientras hay holgura."
+        },
+        "warning": {
+          "token": "--warning",
+          "value": ".nds-context-display[data-level=\"warning\"]",
+          "description": "El medidor cerca del límite."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-context-display[data-level=\"critical\"]",
+          "description": "El medidor en el límite."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-context-display-ring",
+          "description": "La parte aún libre del medidor, sólida — la opacidad baja desaparece en modo oscuro."
+        },
+        "sizeXs": {
+          "token": "--size-xs",
+          "value": ".nds-context-display-ring",
+          "description": "Medida del anillo, que no tiene texto dentro para crecer."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-context-display",
+          "description": "Espacio entre las partes de la línea, y grosor del carril de la barra."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-context-display-bar",
+          "description": "Redondeo del anillo y del carril."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-context-display {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível ao lado é o que\n   descreve. Mexer no anel não muda o que chega a quem ouve. */\n.nds-context-display-ring {\n  inline-size: var(--size-default);\n  block-size: var(--size-default);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El número es texto y el medidor es dibujo: nada aquí se anuncia, el nivel llega en palabra, y la medida tiene nombre aun sin título visible.",
+      "items": {
+        "item1": "La palabra del nivel está siempre en la línea cuando hay techo: el color del medidor no describe el nivel por sí solo.",
+        "item2": "El medidor queda fuera de lo que se lee en voz alta — es dibujo, y el número al lado ya lo dice todo.",
+        "item3": "El medidor no tiene papel de control ni valor: un segundo portador del mismo número lo haría leerse dos veces.",
+        "item4": "No hay región viva. El número cambia en cada turno, y anunciarlo en cada cambio corta la lectura de la respuesta que se genera al lado.",
+        "item5": "El número tiene nombre: un título reservado a lector de pantalla dice de qué medida se trata."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Pasa de largo: no hay control en esta pieza, sino una frase sobre una medición."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "aria-hidden saca el medidor de lo que se lee en voz alta.",
+        "item2": "No hay región viva, papel de control ni valor — quien quiera anunciar el cambio pone la región por fuera, sabiendo lo que hace.",
+        "item3": "El nombre de la medida llega por texto reservado a lector de pantalla, y no por etiqueta accesible en el elemento."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La línea se lee como el nombre de la medida, el número, lo que lo califica y la palabra del nivel.",
+        "item2": "Sin techo conocido, lo que se lee es el recuento y la noticia de que el techo es desconocido.",
+        "item3": "El cambio del número no interrumpe lo que se esté leyendo en ese momento."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "La línea vecina: aquella dice qué está pasando, esta dice cuánto espacio queda."
+        },
+        "chatThread": {
+          "name": "Conversación",
+          "description": "Lo que gasta la ventana que esta pieza mide."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Cuando la barra es el valor mismo, y no el dibujo de un número escrito al lado."
+        },
+        "badge": {
+          "name": "Badge",
+          "description": "La etiqueta que lleva la palabra del nivel."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "El número es texto y el medidor es dibujo. Un contador que se reanuncia hace la pantalla imposible de escuchar, y por eso aquí no hay región viva ni valor accesible.",
+      "item2": "Sin techo no hay fracción, solo recuento. El techo es opcional porque no siempre se conoce, y quien no lo conoce no recibe medidor: un anillo vacío se lee como cero por ciento.",
+      "item3": "El umbral de aviso es decisión del primitivo compartido, y no de cada pantalla. Tres cuartos avisan, nueve décimos aprietan, y la comparación es exacta — floja, dos piezas discreparían sobre el mismo número.",
+      "item4": "El total es derivado, nunca campo. Un total guardado puede discrepar de la suma, y un número que discrepa de sí mismo es peor que ningún número.",
+      "item5": "El medidor y el número muestran el mismo entero. Un medidor continuo junto a un número fijado serían dos respuestas para una sola pregunta.",
+      "item6": "Las tres formas dicen lo mismo. Cambiar de forma es elección de espacio, y no de información — nada cambia en lo que se lee en voz alta."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la medición en sí no instrumenta nada, porque no hay interacción en ella.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible por dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una medición con techo",
+          "result": "El número sale como fracción, y el medidor dibuja la misma fracción",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar una medición sin techo",
+          "result": "No hay medidor ni palabra de nivel, y el número pasa a ser el recuento",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Recorrer los tres niveles",
+          "result": "La palabra cambia junto con el color, y nunca solo el color",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar un consumo exactamente en el umbral de aviso",
+          "result": "El nivel ya es el de aviso, porque la comparación es exacta",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar un consumo por encima del techo",
+          "result": "El medidor no pasa del lleno y el número se fija en cien por ciento",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Cambiar la forma",
+          "result": "Lo que se lee en voz alta sigue igual, y solo cambia el medidor",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Montar la pieza en cualquier forma",
+          "result": "No es región viva, y el medidor no tiene papel ni valor",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar la pieza junto al campo de mensaje",
+          "result": "Vive fuera del marco del campo, y nada en el campo sabe que existe",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que la play afirma.",
+        "item1": "La palabra del nivel está presente siempre que hay techo, y el color no es la única pista",
+        "item2": "El medidor está fuera de lo que se lee en voz alta",
+        "item3": "El medidor no tiene papel de control ni valor",
+        "item4": "La pieza no es región viva",
+        "item5": "El número tiene nombre, dado por texto reservado a lector de pantalla",
+        "item6": "Sin techo no hay medidor, y el texto dice que el techo es desconocido"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la medición, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Formas — anillo, barra y texto, una debajo de la otra",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — los tres niveles, uno debajo del otro",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — sin techo conocido",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — por encima del techo",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — la medición junto al campo de mensaje",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

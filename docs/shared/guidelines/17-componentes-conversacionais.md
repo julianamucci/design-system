@@ -127,7 +127,7 @@ caiba em duas frases e renda cinco implementações vai para um primitivo:
 | `chat-scroll.ts` *(existe)* | Acompanhar o fim, contar o não lido |
 | `chat-protocol.ts` | O vocabulário (§3.1) |
 | `composer-trigger.ts` | Caractere gatilho (`@`, `/`), recorte do termo, filtro, âncora do cursor — a mesma máquina serve menções, comandos e qualquer picker futuro |
-| `token-budget.ts` | Fração usada, limiar de aviso, repartição por origem — três peças de medição desenham o mesmo número |
+| `token-budget.ts` *(existe)* | Fração usada, limiar de aviso, repartição por origem — três peças de medição desenham o mesmo número. Importa `TokenUsage` de `chat-protocol.ts`, nunca o redeclara: aquele é o vocabulário, este é a conta |
 | `stream-reveal.ts` | Quantas palavras já apareceram, qual é a mais nova — texto em streaming, revelação de imagem, ticker |
 | `diff-hunks.ts` | Partir um diff unificado em blocos, e o estado por bloco (manter/descartar) — `code-diff` e `reviewable-diff` compartilham |
 
