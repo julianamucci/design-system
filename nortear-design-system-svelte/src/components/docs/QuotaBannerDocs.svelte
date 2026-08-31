@@ -31,12 +31,12 @@
    * O nome é o mesmo do conteúdo compartilhado, e a descrição também vale
    * palavra por palavra — a peça desenha o lugar de quem responde, e isso não
    * muda com quem renderiza. O que muda é a FORMA de passar o controle: lá é uma
-   * lista de nós do documento, aqui é uma lista de snippets, que é o vocabulário
-   * desta stack para o mesmo contrato. Mesmo precedente do cartão de
+   * lista de nós do documento, aqui é um snippet, que é o vocabulário desta
+   * stack para o mesmo contrato. Mesmo precedente da conversa e do cartão de
    * autorização.
    */
   const { tStore } = useTranslation(quotaTranslations, {
-    '*': { 'props.table.actions.type': 'Snippet[]' },
+    '*': { 'props.table.actions.type': 'Snippet' },
   });
 
   const labels = $derived(quotaBannerLabelsFor($locale));
@@ -139,7 +139,7 @@
   const interfaceCode = `interface QuotaBannerProps {
   quota: QuotaAllowance;   // o uso e o teto
   renewsIn?: string;       // quando renova, JÁ ESCRITO; ausente é "não renova"
-  actions?: Snippet[];     // os controles, prontos de quem consome
+  actions?: Snippet;       // os controles, prontos de quem consome
   labels: QuotaBannerLabels;
 }
 
@@ -180,18 +180,6 @@ export interface QuotaBannerLabels {
     />
   {/snippet}
 
-  <!--
-    O controle da demonstração, montado por QUEM CONSOME.
-
-    Ele nasce aqui e não dentro da peça porque a §7 da guideline 17 deixa o
-    desenho do controle, a ênfase dele e o significado da escolha do lado de fora
-    do design system. A faixa desenha o LUGAR de quem responde; o que o botão faz
-    é de quem o passou — e é por isso que ele não tem manipulador nenhum aqui.
-  -->
-  {#snippet demoAction()}
-    <Button variant="outline" size="sm">{actionLabel}</Button>
-  {/snippet}
-
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <!--
     A legenda diz QUAL exemplo está desenhado — sem ela, quatro caixas empilhadas
@@ -229,12 +217,24 @@ export interface QuotaBannerLabels {
         <p class="nds-text-caption nds-text-muted-foreground">
           {$tStore('demonstration.labels.exhausted')}
         </p>
+        <!--
+          O controle da demonstração, montado por QUEM CONSOME.
+
+          Ele nasce aqui e não dentro da peça porque a §7 da guideline 17 deixa
+          o desenho do controle, a ênfase dele e o significado da escolha do
+          lado de fora do design system. A faixa desenha o LUGAR de quem
+          responde; o que o botão faz é de quem o passou — e é por isso que ele
+          não tem manipulador nenhum aqui.
+        -->
         <QuotaBanner
           quota={quotaOf('exhausted')}
           renewsIn={renewalFor('exhausted')}
-          actions={[demoAction]}
           {labels}
-        />
+        >
+          {#snippet actions()}
+            <Button variant="outline" size="sm">{actionLabel}</Button>
+          {/snippet}
+        </QuotaBanner>
       </div>
 
       <Separator />

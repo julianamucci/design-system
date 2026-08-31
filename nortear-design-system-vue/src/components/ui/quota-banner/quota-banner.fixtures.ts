@@ -11,12 +11,17 @@
  * traduzi-los faria as stories fotografarem frações diferentes conforme o
  * idioma da foto.
  *
- * O QUE ESTE ARQUIVO FAZ E O COMPONENTE NÃO: ESCREVER O HORIZONTE, e MONTAR O
- * CONTROLE. Os dois são de propósito, e são a demonstração do contrato — aqui o
- * andaime está no papel de quem consome, e é quem consome que conhece o idioma
- * e sabe o que o botão faz. Um formatador de duração mora nesta camada em
- * qualquer produto de verdade; o que não pode é morar dentro do componente,
- * onde decidiria idioma em cinco stacks de uma vez.
+ * O QUE ESTE ARQUIVO FAZ E O COMPONENTE NÃO: ESCREVER O HORIZONTE. É de
+ * propósito, e é a demonstração do contrato — aqui o andaime está no papel de
+ * quem consome, e é quem consome que conhece o idioma. Um formatador de duração
+ * mora nesta camada em qualquer produto de verdade; o que não pode é morar
+ * dentro do componente, onde decidiria idioma em cinco stacks de uma vez.
+ *
+ * O CONTROLE não nasce aqui, e essa é a diferença para a referência: lá o
+ * andaime devolve um nó do documento pronto; aqui o espaço dos controles é um
+ * slot, e slot é marcação — ela mora no invólucro da story e na docs page. O que
+ * este arquivo entrega é a PALAVRA do controle, que é texto de interface e sai
+ * da `translations.json` como qualquer outro rótulo.
  *
  * A prova disso se vê trocando o idioma da página: a mesma duração sai
  * `3 h 12 min` ou `3 hr 12 min`, e a abreviatura da hora troca com quem lê.
@@ -30,8 +35,7 @@
  * Nada de `storybook/test` aqui: a docs page importa deste módulo, e arrastar o
  * runner para dentro dela levaria o pacote junto.
  */
-import { computed, h, type ComputedRef, type VNode } from 'vue';
-import { Button } from '@/components/ui/button';
+import { computed, type ComputedRef } from 'vue';
 import { useI18nStore, useTranslation, type Locale } from '@/lib/i18n';
 import quotaTranslations from '@shared/content/quota-banner/translations.json';
 import type { QuotaAllowance, QuotaBannerLabels } from './QuotaBanner.vue';
@@ -47,7 +51,7 @@ import type { QuotaAllowance, QuotaBannerLabels } from './QuotaBanner.vue';
  * uma etiqueta em branco que ninguém repara.
  *
  * O `action` entra na mesma anotação, e não numa leitura solta: ele é o rótulo
- * do CONTROLE, que nasce neste arquivo e não na peça — mas continua sendo texto
+ * do CONTROLE, que é de quem consome e não da peça — mas continua sendo texto
  * de interface, com as mesmas três traduções.
  */
 const CONTENT: Record<Locale, { labels: QuotaBannerLabels & { action: string } }> =
@@ -207,29 +211,21 @@ export function useQuotaRenewals(): ComputedRef<Record<QuotaBannerCase, string |
 }
 
 /**
- * O controle da faixa, montado por QUEM CONSOME.
+ * A palavra do controle, no idioma corrente.
  *
- * Ele nasce aqui e não dentro da peça porque a §7 da guideline 17 deixa o
- * desenho do controle, a ênfase dele e o significado da escolha do lado de fora
- * do design system. A faixa desenha o LUGAR de quem responde; o que o botão faz
- * é de quem o passou — e é por isso que ele não tem manipulador nenhum aqui:
- * demonstrar a política seria demonstrar o que a peça não tem.
- */
-function quotaBannerActionFor(target: Locale): VNode {
-  return h(
-    Button,
-    { variant: 'outline', size: 'sm' },
-    () => CONTENT[target].labels.action,
-  );
-}
-
-/**
- * O controle no idioma corrente, numa lista pronta para a propriedade.
+ * Ela não está em `QuotaBannerLabels` de propósito: o controle é de quem
+ * consome, e a peça não sabe o que ele diz nem o que ele faz (§7 da guideline
+ * 17). Quem o monta é que precisa da palavra, e é quem a pede aqui.
  *
- * Um `computed`, e não um nó guardado: o rótulo é texto de interface, e a barra
- * de idioma do Storybook troca o idioma com a story montada.
+ * O CONTROLE não nasce neste arquivo, e é o que mudou quando o espaço dos
+ * controles virou slot: slot é marcação, e marcação mora no invólucro da story
+ * e na docs page. O que este módulo entrega é a PALAVRA — texto de interface,
+ * que sai da `translations.json` como qualquer outro rótulo.
+ *
+ * Um `computed`, e não uma cadeia guardada: a barra de idioma do Storybook
+ * troca o idioma com a story montada.
  */
-export function useQuotaBannerActions(): ComputedRef<VNode[]> {
+export function useQuotaBannerActionLabel(): ComputedRef<string> {
   const { locale } = useTranslation(quotaTranslations);
-  return computed(() => [quotaBannerActionFor(locale.value as Locale)]);
+  return computed(() => CONTENT[locale.value as Locale].labels.action);
 }

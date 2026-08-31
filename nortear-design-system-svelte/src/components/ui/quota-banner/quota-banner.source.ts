@@ -21,8 +21,9 @@
  *
  * Por isso o formatador de duração aparece no snippet, com idioma explícito: é
  * ele que o leitor precisa reconhecer como SEU, e não do design system. E por
- * isso o controle aparece como um snippet declarado FORA da peça: nesta stack é
- * essa a forma de "o componente dá o lugar, e quem consome decide".
+ * isso o controle aparece dentro do snippet `actions`, passado para a peça:
+ * nesta stack é essa a forma de "o componente dá o lugar, e quem consome
+ * decide".
  */
 import { attrsMultilinha, svelteSnippet } from '@/lib/story-source';
 
@@ -82,20 +83,29 @@ function script(opts: { imports?: string[]; after?: string[] } = {}): string {
   ].join('\n');
 }
 
+/** Indenta cada linha não vazia com dois espaços. */
+function indent(block: string): string {
+  return block
+    .split('\n')
+    .map((current) => (current.trim() ? `  ${current}` : current))
+    .join('\n');
+}
+
 /**
- * O controle, declarado FORA da peça.
+ * O controle, no espaço que a peça abre.
  *
- * É a forma desta stack para o espaço dos controles, e o snippet a mostra
- * inteira: quem consome escreve o botão, e a faixa só hospeda o lugar dele. Não
- * há manipulador nenhum aqui de propósito — o que o botão faz não passa pela
- * peça (§7 da guideline 17).
+ * É a forma desta stack para o espaço dos controles — o mesmo snippet `actions`
+ * da conversa e do cartão de autorização —, e o exemplo a mostra inteira: quem
+ * consome escreve o botão, e a faixa só hospeda o lugar dele. Não há
+ * manipulador nenhum aqui de propósito: o que o botão faz não passa pela peça
+ * (§7 da guideline 17).
  */
-const CONTROL = [
-  '<!--',
-  '  O CONTROLE É DE QUEM CONSOME. A faixa desenha o lugar de quem responde; o',
-  '  que o botão faz não passa por ela.',
-  '-->',
-  '{#snippet control()}',
+const ACTIONS_SNIPPET = [
+  '{#snippet actions()}',
+  '  <!--',
+  '    O CONTROLE É DE QUEM CONSOME. A faixa desenha o lugar de quem responde;',
+  '    o que o botão faz não passa por ela.',
+  '  -->',
   '  <Button variant="outline" size="sm">Mudar de plano</Button>',
   '{/snippet}',
 ].join('\n');
@@ -110,7 +120,6 @@ function build(opts: QuotaBannerSnippetOptions): string {
     // Sem renovação o atributo sai INTEIRO, e não vazio: a ausência é a
     // resposta, e um atributo em branco ensinaria a mandar uma cadeia vazia.
     renews && 'renewsIn={horizon}',
-    'actions={[control]}',
     '{labels}',
   ]);
 
@@ -126,7 +135,7 @@ function build(opts: QuotaBannerSnippetOptions): string {
       imports: [IMPORT_BUTTON],
       after: [renews ? HORIZON : NO_HORIZON, ...conta],
     }),
-    `${CONTROL}\n\n<QuotaBanner${attributes} />`,
+    [`<QuotaBanner${attributes}>`, indent(ACTIONS_SNIPPET), '</QuotaBanner>'].join('\n'),
   );
 }
 

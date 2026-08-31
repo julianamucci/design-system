@@ -43,14 +43,13 @@
  * recebe a medição e desenha — §2 da guideline 17.
  *
  * DIVERGÊNCIA DE API DE FRAMEWORK, registrada e não "alinhada", num ponto só: o
- * TIPO dos controles. Eles continuam entrando por PROPRIEDADE, com o nome e a
- * forma que o conteúdo compartilhado declara — uma lista —, e o que muda é o
- * que a lista carrega: nós desta stack, e não nós do documento. É o que
- * "controle pronto de quem consome" quer dizer aqui, porque quem monta o
- * controle o monta com as ferramentas desta stack, e a peça o hospeda sem saber
- * o que ele é. Nada mais diverge: a peça é só leitura, não tem retorno para
- * avisar nem escolha para relatar, e é justamente o aviso de volta que costuma
- * ser o ponto em que as cinco stacks deixam de se parecer.
+ * espaço dos controles é um SLOT (`#actions`), e não uma lista de nós passada
+ * por propriedade. É a forma desta stack para "quem desenha é quem consome" — a
+ * mesma que a conversa e o cartão de autorização já usam —, e é ela que faz a
+ * peça hospedar o controle sem saber o que ele é. Nada mais diverge: a peça é
+ * só leitura, não tem retorno para avisar nem escolha para relatar, e é
+ * justamente o aviso de volta que costuma ser o ponto em que as cinco stacks
+ * deixam de se parecer.
  *
  * O vocabulário mora neste bloco, e não no índice da pasta, porque a peça é
  * autônoma: ela não entra na API de nenhuma outra, e quem a usa a importa por
@@ -130,8 +129,13 @@ export interface QuotaBannerLabels {
 </script>
 
 <script setup lang="ts">
-import { computed, type VNode } from 'vue'
+import { computed } from 'vue'
 import { Badge, type BadgeVariants } from '@/components/ui/badge'
+// A leitura de slot vem de UMA implementação, e não de uma cópia por peça: ela
+// nasceu para exatamente este caso — o slot está sempre declarado, e quem decide
+// se ele desenha alguma coisa é o `v-if` de quem consome, lá dentro. Copiá-la
+// produziria duas versões que divergem sem nenhum sinal.
+import { hasSlotContent } from '@/components/ui/chat-thread/chat-slots'
 import {
   fractionLevel,
   fractionPercent,
@@ -149,6 +153,10 @@ const props = defineProps<{
    * caso real —, e aí a linha some em vez de dizer "renova em nunca".
    */
   renewsIn?: string
+  labels: QuotaBannerLabels
+}>()
+
+const slots = defineSlots<{
   /**
    * Os controles, prontos de quem consome.
    *
@@ -156,13 +164,14 @@ const props = defineProps<{
    * lugar de quem responde e nada mais. O que "mudar de plano" faz, se há um
    * segundo botão, se a cota pode ser comprada avulsa — nada disso está aqui.
    *
-   * A LISTA CARREGA NÓS DESTA STACK, e é a única divergência de API a
-   * registrar: quem monta o controle o monta com as ferramentas desta stack, e
-   * a peça o hospeda sem saber o que ele é. O nome e a forma — uma lista, numa
-   * propriedade — são os que o conteúdo compartilhado declara.
+   * É o MESMO contrato que a conversa e o cartão de autorização já usam nesta
+   * stack: quem monta o controle o monta com as ferramentas daqui, e a peça o
+   * hospeda sem saber o que ele é.
+   *
+   * Slot que não desenha nada não desenha a caixa: um vão com afastamento e sem
+   * nada dentro é espaço reservado para quem nunca chegou.
    */
-  actions?: VNode[]
-  labels: QuotaBannerLabels
+  actions?: () => unknown
 }>()
 
 /**
@@ -243,14 +252,14 @@ const detailText = computed(
 )
 
 /**
- * Os controles, numa lista que sempre existe — mesmo vazia.
+ * O slot desenhou alguma coisa?
  *
- * A AUSÊNCIA decide se a CAIXA é montada, e não se a lista existe: um container
- * vazio deixaria um espaço que ninguém pediu e um `data-slot` que não descreve
- * nada. Ter a lista sempre em mãos é o que deixa a repetição do template sem
- * ramo, e é ela quem não pode receber ausência.
+ * Chamado de dentro do render, e não de um `computed`: o slot só pode ser
+ * invocado durante a renderização, e é ali que a resposta é usada.
  */
-const actionList = computed<VNode[]>(() => props.actions ?? [])
+function actionsFilled(): boolean {
+  return hasSlotContent(slots.actions?.())
+}
 </script>
 
 <template>
@@ -347,18 +356,14 @@ const actionList = computed<VNode[]>(() => props.actions ?? [])
            existe quando há o que pôr dentro: um container vazio deixaria um
            espaço que ninguém pediu e um `data-slot` que não descreve nada.
 
-           Os nós saem daqui exatamente como chegaram — a peça não os reescreve,
-           não lhes pendura manipulador e não sabe o que eles fazem. -->
+           O que o slot desenha sai daqui exatamente como chegou — a peça não o
+           reescreve, não lhe pendura manipulador e não sabe o que ele faz. -->
       <div
-        v-if="actionList.length > 0"
+        v-if="actionsFilled()"
         class="nds-quota-banner-actions"
         data-slot="quota-banner-actions"
       >
-        <component
-          :is="action"
-          v-for="(action, index) in actionList"
-          :key="index"
-        />
+        <slot name="actions" />
       </div>
     </div>
   </div>

@@ -7,10 +7,11 @@ import { useActiveSection } from '@/lib/use-active-section';
 import { QuotaBanner } from '@/components/ui/quota-banner';
 import {
   quotaOf,
-  useQuotaBannerActions,
+  useQuotaBannerActionLabel,
   useQuotaBannerLabels,
   useQuotaRenewals,
 } from '@/components/ui/quota-banner/quota-banner.fixtures';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -37,20 +38,24 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 // O locale sai do `useTranslation`, nunca de store de estado: locale de Pinia já
 // derrubou docs page em runtime neste repositório.
 //
-// UMA linha sobrescrita, e é a única divergência de API da peça: o TIPO dos
-// controles. Eles continuam entrando por propriedade, com o mesmo nome e na
-// mesma forma — uma lista —, e o que muda é o que a lista carrega: nós desta
-// stack, e não nós do documento. O NOME não se toca porque não diverge, e a
-// DESCRIÇÃO tampouco: o que a propriedade significa é o mesmo nas cinco.
+// DUAS linhas sobrescritas, e as duas são a única divergência de API da peça: o
+// espaço dos controles é um SLOT nesta stack, e não uma lista de nós passada por
+// propriedade — então o NOME é o do slot e o TIPO acompanha. Mesmo precedente da
+// conversa e do cartão de autorização. A DESCRIÇÃO nunca entra: o que o espaço
+// dos controles significa é o mesmo nas cinco, e vontade de sobrescrevê-la é
+// sinal de que o defeito está no texto compartilhado.
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(quotaTranslations, {
-  '*': { 'props.table.actions.type': 'VNode[]' },
+  '*': {
+    'props.table.actions.name': '#actions',
+    'props.table.actions.type': 'slot',
+  },
 });
 
 const labels = useQuotaBannerLabels();
 const renewals = useQuotaRenewals();
-const actions = useQuotaBannerActions();
+const actionLabel = useQuotaBannerActionLabel();
 
 /** As cotas dos quatro exemplos da demonstração. */
 const quotas = computed(() => ({
@@ -278,9 +283,15 @@ const propsTables = computed(() => [
 const interfaceCode = `interface QuotaBannerProps {
   quota: QuotaAllowance;      // o uso e o teto
   renewsIn?: string;          // quando renova, JÁ ESCRITO; ausente é "não renova"
-  actions?: VNode[];          // os controles, prontos de quem consome
   labels: QuotaBannerLabels;
 }
+
+// Os controles não entram por propriedade: eles são o SLOT \`#actions\`, e slot
+// que não desenha nada não desenha a caixa.
+//
+//   <template #actions>
+//     <Button variant="outline" size="sm">Mudar de plano</Button>
+//   </template>
 
 // O teto é OBRIGATÓRIO aqui, ao contrário das medições irmãs: a cota É o teto,
 // e "quanto ainda resta" não tem resposta sem ele. Quem não tem teto não monta
@@ -468,12 +479,25 @@ const visualTests = computed(() => ({
           <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.exhausted') }}
           </p>
+          <!-- O controle da demonstração, montado por QUEM CONSOME.
+
+               Ele nasce aqui e não dentro da peça porque a §7 da guideline 17
+               deixa o desenho do controle, a ênfase dele e o significado da
+               escolha do lado de fora do design system. A faixa desenha o LUGAR
+               de quem responde; o que o botão faz é de quem o passou — e é por
+               isso que ele não tem manipulador nenhum aqui. -->
           <QuotaBanner
             :quota="quotas.exhausted"
             :renews-in="renewals.exhausted"
-            :actions="actions"
             :labels="labels"
-          />
+          >
+            <template #actions>
+              <Button
+                variant="outline"
+                size="sm"
+              >{{ actionLabel }}</Button>
+            </template>
+          </QuotaBanner>
         </div>
 
         <Separator />

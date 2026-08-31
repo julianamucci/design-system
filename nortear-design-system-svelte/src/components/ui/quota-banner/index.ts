@@ -20,9 +20,9 @@ export {
 	//
 	// A API DIVERGE do primitivo de referência num ponto, e é assim que tem de
 	// ser: lá o espaço dos controles é uma lista de nós do documento passada por
-	// propriedade; aqui os controles entram como uma lista de SNIPPETS, que é a
-	// forma desta stack para "o componente dá o lugar, e quem consome decide" —
-	// a mesma que o cartão de autorização já fixou. Divergência de API de
+	// propriedade; aqui os controles entram como um SNIPPET, que é a forma desta
+	// stack para "o componente dá o lugar, e quem consome decide" — a mesma que a
+	// conversa e o cartão de autorização já fixaram. Divergência de API de
 	// framework não se "alinha": registra-se.
 	//
 	// O que NÃO diverge é o resto, e é o que importa: a marcação, as classes

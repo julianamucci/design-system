@@ -46,10 +46,11 @@
   // DIVERGÊNCIA DE API, em relação à referência: lá a peça é uma fábrica que
   // recebe um objeto de opções e devolve o elemento, e o espaço dos controles é
   // uma lista de nós do documento. Aqui ela é um componente, as opções são props
-  // e os controles entram como uma lista de SNIPPETS — que é a forma desta stack
-  // para "o componente dá o lugar, e quem consome decide", já fixada pelo cartão
-  // de autorização. Divergência de API de framework não se "alinha": registra-se.
-  // Marcação, classes `.nds-*`, `data-slot`, ARIA e comportamento são os mesmos.
+  // e os controles entram como um SNIPPET — que é a forma desta stack para "o
+  // componente dá o lugar, e quem consome decide", já fixada pela conversa e
+  // pelo cartão de autorização. Divergência de API de framework não se "alinha":
+  // registra-se. Marcação, classes `.nds-*`, `data-slot`, ARIA e comportamento
+  // são os mesmos.
   import type { BadgeVariant } from '@/components/ui/badge';
   import type { BudgetLevel } from '@shared/primitives/token-budget';
 
@@ -176,9 +177,12 @@
      * lugar de quem responde e nada mais. O que "mudar de plano" faz, se há um
      * segundo botão, se a cota pode ser comprada avulsa — nada disso está aqui.
      * Mesmo contrato das ações da mensagem e do cartão de autorização, na forma
-     * desta stack: uma LISTA DE SNIPPETS, e não uma lista de nós do documento.
+     * desta stack: um SNIPPET, e não uma lista de nós do documento.
+     *
+     * Ausente não desenha a caixa: um vão com afastamento e sem nada dentro é
+     * espaço reservado para quem nunca chegou.
      */
-    actions?: Snippet[];
+    actions?: Snippet;
     labels: QuotaBannerLabels;
     class?: string;
   } = $props();
@@ -308,11 +312,9 @@
       quando há o que pôr dentro: um container vazio deixaria um espaço que
       ninguém pediu e um `data-slot` que não descreve nada.
     -->
-    {#if actions && actions.length > 0}
+    {#if actions}
       <div class="nds-quota-banner-actions" data-slot="quota-banner-actions">
-        {#each actions as action, index (index)}
-          {@render action()}
-        {/each}
+        {@render actions()}
       </div>
     {/if}
   </div>

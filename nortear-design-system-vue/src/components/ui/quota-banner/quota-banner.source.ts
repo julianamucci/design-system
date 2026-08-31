@@ -50,13 +50,29 @@ const IMPORT_BUDGET = [
   "import { remainingUnits } from '@shared/primitives/token-budget';",
 ].join('\n');
 
-// O `h` entra junto porque o controle é um NÓ desta stack, e é ele que a lista
-// carrega: quem monta o controle o monta com as ferramentas daqui, e a peça o
-// hospeda sem saber o que ele é.
+// O botão entra junto porque o controle é MARCAÇÃO de quem consome, escrita
+// dentro do slot: quem o monta o monta com as ferramentas daqui, e a peça
+// hospeda o lugar sem saber o que ele é.
 const IMPORT_ACTION = [
-  "import { h } from 'vue';",
   IMPORT_BUDGET,
   "import { Button } from '@/components/ui/button';",
+].join('\n');
+
+/**
+ * O controle, no espaço que a peça abre.
+ *
+ * É a forma desta stack para o espaço dos controles — o mesmo slot `#actions`
+ * da conversa e do cartão de autorização —, e o exemplo o mostra inteiro: quem
+ * consome escreve o botão, e a faixa só hospeda o lugar dele. Nenhum
+ * manipulador aqui, de propósito: o que o botão faz não passa pela peça (§7 da
+ * guideline 17).
+ */
+const ACTIONS_SLOT = [
+  '<template #actions>',
+  '  <!-- O CONTROLE É DE QUEM CONSOME. A faixa desenha o lugar de quem',
+  '       responde; o que o botão faz não passa por ela. -->',
+  '  <Button variant="outline" size="sm">Mudar de plano</Button>',
+  '</template>',
 ].join('\n');
 
 const IMPORT_BESIDE = [
@@ -92,10 +108,14 @@ function bannerTag(used: number, limit: number, renews: boolean, hasAction = fal
   const attributes = attrsMultilinha([
     `:quota="{ used: ${used}, limit: ${limit} }"`,
     renews ? ':renews-in="horizonte"' : undefined,
-    hasAction ? ':actions="[controle]"' : undefined,
     ':labels="rotulos"',
   ]);
-  return `<QuotaBanner${attributes} />`;
+  if (!hasAction) return `<QuotaBanner${attributes} />`;
+  return [
+    `<QuotaBanner${attributes}>`,
+    indentar(ACTIONS_SLOT),
+    '</QuotaBanner>',
+  ].join('\n');
 }
 
 function build(opts: QuotaBannerArgs): string {
@@ -218,10 +238,6 @@ export function quotaBannerWithActionSource(): string {
       IMPORT_ACTION,
       '',
       horizonLines(),
-      '',
-      '// O CONTROLE É DE QUEM CONSOME, e chega pronto. A faixa desenha o lugar',
-      '// de quem responde; o que o botão faz não passa por ela.',
-      "const controle = h(Button, { variant: 'outline', size: 'sm' }, () => 'Mudar de plano');",
       '',
       '// O resto sai da conta compartilhada: 168 de 200 deixa 32, e nunca um',
       '// número negativo.',

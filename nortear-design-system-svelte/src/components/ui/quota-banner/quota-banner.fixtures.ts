@@ -23,7 +23,7 @@
  *
  * O CONTROLE não nasce aqui, e essa é a diferença desta stack para a
  * referência: lá o andaime devolve um nó do documento pronto; aqui o espaço dos
- * controles é uma lista de snippets, e snippet só existe dentro de um
+ * controles é um snippet, e snippet só existe dentro de um
  * componente. O que este arquivo entrega é a PALAVRA do controle — que é texto
  * de interface e sai da `translations.json` como qualquer outro rótulo.
  *

@@ -2,9 +2,10 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { QuotaBanner } from './index';
 import { ContextDisplay } from '@/components/ui/context-display';
+import { Button } from '@/components/ui/button';
 import {
   quotaOf,
-  useQuotaBannerActions,
+  useQuotaBannerActionLabel,
   useQuotaBannerLabels,
   useQuotaRenewals,
 } from './quota-banner.fixtures';
@@ -56,14 +57,15 @@ const bannerOf = (canvasElement: HTMLElement) =>
 export const WithAction: Story = {
   parameters: { covers: ['functional.item7', 'accessibility.item7', 'visual.item6'] },
   render: () => ({
-    components: { QuotaBanner },
+    components: { QuotaBanner, Button },
     setup() {
-      // O controle nasce no andaime, no papel de quem consome: é ele que sabe o
-      // que o botão faz, e a faixa apenas o hospeda.
+      // O controle nasce na MARCAÇÃO desta story, no papel de quem consome: é
+      // ela que sabe o que o botão faz, e a faixa apenas hospeda o lugar dele.
+      // O andaime entrega só a PALAVRA, que é texto de interface.
       return {
         quota: quotaOf('warning'),
         renewals: useQuotaRenewals(),
-        actions: useQuotaBannerActions(),
+        actionLabel: useQuotaBannerActionLabel(),
         labels: useQuotaBannerLabels(),
       };
     },
@@ -71,9 +73,12 @@ export const WithAction: Story = {
       class="nds-max-w-lg"
       :quota="quota"
       :renews-in="renewals.warning"
-      :actions="actions"
       :labels="labels"
-    />`,
+    >
+      <template #actions>
+        <Button variant="outline" size="sm">{{ actionLabel }}</Button>
+      </template>
+    </QuotaBanner>`,
   }),
   play: async ({ canvasElement, step }) => {
     const banner = bannerOf(canvasElement);

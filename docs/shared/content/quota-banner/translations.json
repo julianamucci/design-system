@@ -152,8 +152,8 @@
       "basicCode": {
         "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizonte,\n  actions: [botao],\n  labels: rotulos,\n});",
         "react": "import { QuotaBanner } from \"@/components/ui/quota-banner\";\n\n<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[botao]}\n  labels={rotulos}\n/>",
-        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizonte\"\n  :actions=\"[botao]\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[botao]}\n  labels={rotulos}\n/>",
+        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizonte\"\n  :labels=\"rotulos\"\n>\n  <template #actions>\n    <Button variant=\"outline\" size=\"sm\">Mudar de plano</Button>\n  </template>\n</QuotaBanner>",
+        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  labels={rotulos}\n>\n  {#snippet actions()}\n    <Button variant=\"outline\" size=\"sm\">Mudar de plano</Button>\n  {/snippet}\n</QuotaBanner>",
         "angular": "<div\n  ndsQuotaBanner\n  [quota]=\"{ used: 168, limit: 200 }\"\n  [renewsIn]=\"horizonte\"\n  [actions]=\"[botao]\"\n  [labels]=\"rotulos\"\n></div>"
       },
       "withLabels": "O horizonte escrito, e o texto da peça",
@@ -701,8 +701,8 @@
       "basicCode": {
         "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizon,\n  actions: [button],\n  labels: labels,\n});",
         "react": "import { QuotaBanner } from \"@/components/ui/quota-banner\";\n\n<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizon}\n  actions={[button]}\n  labels={labels}\n/>",
-        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizon\"\n  :actions=\"[button]\"\n  :labels=\"labels\"\n/>",
-        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizon}\n  actions={[button]}\n  labels={labels}\n/>",
+        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizon\"\n  :labels=\"labels\"\n>\n  <template #actions>\n    <Button variant=\"outline\" size=\"sm\">Change plan</Button>\n  </template>\n</QuotaBanner>",
+        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizon}\n  labels={labels}\n>\n  {#snippet actions()}\n    <Button variant=\"outline\" size=\"sm\">Change plan</Button>\n  {/snippet}\n</QuotaBanner>",
         "angular": "<div\n  ndsQuotaBanner\n  [quota]=\"{ used: 168, limit: 200 }\"\n  [renewsIn]=\"horizon\"\n  [actions]=\"[button]\"\n  [labels]=\"labels\"\n></div>"
       },
       "withLabels": "The written horizon, and the text of the piece",
@@ -1250,8 +1250,8 @@
       "basicCode": {
         "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizonte,\n  actions: [boton],\n  labels: rotulos,\n});",
         "react": "import { QuotaBanner } from \"@/components/ui/quota-banner\";\n\n<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[boton]}\n  labels={rotulos}\n/>",
-        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizonte\"\n  :actions=\"[boton]\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  actions={[boton]}\n  labels={rotulos}\n/>",
+        "vue": "<QuotaBanner\n  :quota=\"{ used: 168, limit: 200 }\"\n  :renews-in=\"horizonte\"\n  :labels=\"rotulos\"\n>\n  <template #actions>\n    <Button variant=\"outline\" size=\"sm\">Cambiar de plan</Button>\n  </template>\n</QuotaBanner>",
+        "svelte": "<QuotaBanner\n  quota={{ used: 168, limit: 200 }}\n  renewsIn={horizonte}\n  labels={rotulos}\n>\n  {#snippet actions()}\n    <Button variant=\"outline\" size=\"sm\">Cambiar de plan</Button>\n  {/snippet}\n</QuotaBanner>",
         "angular": "<div\n  ndsQuotaBanner\n  [quota]=\"{ used: 168, limit: 200 }\"\n  [renewsIn]=\"horizonte\"\n  [actions]=\"[boton]\"\n  [labels]=\"rotulos\"\n></div>"
       },
       "withLabels": "El horizonte escrito, y el texto de la pieza",
