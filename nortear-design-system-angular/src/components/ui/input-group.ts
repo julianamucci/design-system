@@ -17,7 +17,6 @@ import { Directive, ElementRef, inject, input } from '@angular/core';
 // uma pasta `input-group/` separada.
 
 export type InputGroupAlign = 'inline-start' | 'inline-end' | 'block-start' | 'block-end';
-export type InputGroupButtonSize = 'xs' | 'sm' | 'icon-xs' | 'icon-sm';
 
 /**
  * A moldura.
@@ -70,8 +69,16 @@ export class NdsInputGroupAddon {
     // da ação, o que quebra a navegação por teclado.
     if (target?.closest('button')) return;
 
-    const group = this.hostRef.nativeElement.parentElement;
-    group?.querySelector<HTMLElement>('[data-slot="input-group-control"]')?.focus();
+    // A moldura sai de `closest`, e não do pai imediato: um invólucro de
+    // layout entre o addon e o grupo deixaria `parentElement` apontando para
+    // ele, e o atalho pararia de achar o campo sem erro nenhum.
+    const group = this.hostRef.nativeElement.closest('[data-slot="input-group"]');
+    // O campo é procurado pela CLASSE, e não pelo `data-slot`: aqui o
+    // `data-slot` sai de host binding, e host binding DISPUTA com atributo
+    // estático de template quando duas diretivas caem no mesmo elemento — é o
+    // risco que o docblock do `InputGroupInput` descreve logo abaixo. A classe
+    // está nas cinco stacks, no mesmo elemento, e não tem essa disputa.
+    group?.querySelector<HTMLElement>('.nds-input-group-control')?.focus();
   }
 }
 
@@ -121,8 +128,18 @@ export class NdsInputGroupText {}
  * Botão compacto dentro do grupo.
  *
  * Vai no mesmo elemento que o `ndsButton` (`<button ndsButton variant="ghost"
- * ndsInputGroupButton>`): o visual de botão continua sendo do botão, e daqui sai
- * só o aperto de medida que cabe dentro da moldura.
+ * size="icon-xs" ndsInputGroupButton>`): o visual de botão continua sendo do
+ * botão, e daqui sai só o aperto de medida que cabe dentro da moldura.
+ *
+ * A MEDIDA É DO `ndsButton`, e esta diretiva NÃO tem entrada `size` — é
+ * divergência de API desta stack, registrada em vez de "alinhada". Nas outras
+ * quatro, `size` é prop do próprio `InputGroupButton`, que a repassa ao botão.
+ * Aqui as duas diretivas dividem o mesmo elemento, então uma entrada `size`
+ * daqui seria a SEGUNDA com esse nome no mesmo host — e só produziria um
+ * atributo inerte: nenhuma folha do design system lê `[data-size]` para
+ * `.nds-input-group-button`. Entrada que promete medida e não aplica nenhuma é
+ * pior que entrada nenhuma, porque o botão sai no tamanho padrão sem erro em
+ * lugar algum. Escreva `size` no `ndsButton` do mesmo elemento.
  */
 @Directive({
   selector: 'button[ndsInputGroupButton]',
@@ -130,13 +147,10 @@ export class NdsInputGroupText {}
   host: {
     class: 'nds-input-group-button',
     type: 'button',
-    '[attr.data-size]': 'size()',
     '[attr.data-slot]': '"input-group-button"',
   },
 })
-export class NdsInputGroupButton {
-  readonly size = input<InputGroupButtonSize>('xs');
-}
+export class NdsInputGroupButton {}
 
 /** A família inteira — conveniência para o `imports` de quem compõe. */
 export const NDS_INPUT_GROUP = [
