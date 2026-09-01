@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (54)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (55)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -284,9 +284,10 @@ falta, nomeada — nunca uma folha nova.
 | `elicitation-form` | `approval-card` com um corpo de campos entre a pergunta e os controles. `.nds-approval-card-ask` leva o pedido em `.nds-approval-card-question` e o servidor em `.nds-approval-card-scope`, um par de termo e valor; os campos são `.nds-field-group` de `createFormField`, que já monta `<label for>`, já dá id à descrição e à mensagem de erro e já as costura no `aria-describedby` do controle; os controles são `.nds-approval-card-actions`, o mesmo espaço de `HTMLElement[]` que a família inteira usa. A fonte não guarda valor e não valida — `onAccept()` e `onDecline()` não recebem argumento —, então o que sobra dela é moldura, pergunta e espaço, que o cartão já é; esquema que virasse campo seria geração de formulário, e a §2 a mantém de fora. Os campos entram como IRMÃOS de `-ask`, nunca dentro: a região viva fecha antes deles (decisão 1 daquele bloco), e formulário recitado num anúncio é pior que botão recitado. **Falta uma opção, e está nomeada**: `createApprovalCard` não tem por onde receber um corpo — pede `fields?: HTMLElement[]` apensado entre `-ask` e `-actions`, onde a raiz já é a pilha e o `gap` dela já é o afastamento; nem classe nova, nem folha nova. Veio da família 2 — ver 5.3 |
 | `confidence-marker` | `markdown` com o gatilho de explicação que esta base já compõe. Cada afirmação é um `<button>` em linha dentro do parágrafo, com a cadeia que `hover-card.fixtures.ts` e `hover-card.source.ts` já escrevem literalmente e nesta ordem — `.nds-underline-dotted` `.nds-cursor-help` `.nds-bg-transparent` `.nds-border-none` `.nds-p-0` —, e o nível troca só a decoração: `.nds-underline` para o que se apoia em fonte, `.nds-underline-dotted` para o que não se apoia, as duas com o mesmo deslocamento que cinco folhas já aplicam. O nível chega também como PALAVRA — `.nds-badge` em linha, como `directive-text` acima nesta tabela, ou `.nds-sr-only` quando o parágrafo não pode ser interrompido —, porque a fonte declara três níveis e desenha duas decorações, deixando o terceiro por conta da cor, que a regra 3 desta folha troca pela palavra e a regra 4 da §8 proíbe (WCAG 1.4.1). A base da afirmação é `.nds-popover-content` num encaixe ABAIXO do parágrafo, ligado por `aria-describedby`: encaixe, e não caixa flutuante, é o que faz a revelação não cobrir o texto que se está lendo, que é a decisão 4 do bloco da citação em linha. O espaço se reserva com `min-block-size`, nunca com a altura fixa da fonte, porque o encaixe carrega texto (§9). Nenhuma classe nova, e nenhuma nomeada como faltando: se o produto quiser três decorações em vez de duas palavras, a que falta é `.nds-underline-dashed` em `utilities.css`, ao lado das duas que já estão lá — utilitária, nunca folha. Veio da família 3 — ver 5.3 |
 | `code-diff` | `code-block` com a espécie da linha. O cabeçalho é `.nds-code-block-header`: `.nds-code-block-title` monoespaçado, que já TRUNCA o caminho do arquivo em vez de empurrar o botão, e os dois contadores em `.nds-cluster[data-spacing="xs"]` de `.nds-badge nds-badge-success` / `.nds-badge nds-badge-destructive` com `.nds-font-mono` — o mesmo desenho que `tool-timeline` já resolveu nesta tabela para `{ file, added, removed }`, que é este cabeçalho com outros nomes. O corpo é `.nds-code-block-scroll`, que rola nos dois eixos no mesmo container com `overscroll-behavior-inline: contain` e `tabindex="0"`; `.nds-code-block-pre` com `lang="en"` e `tab-size: 2`; `.nds-code-block-text` com `white-space: pre`, que é literalmente a decisão que a fonte anuncia; e `.nds-code-block-gutter` sticky, que sobrevive à rolagem horizontal — mais realce por gramática, que a fonte não tem. **Unificado, sem numeração e sem cabeçalho de trecho**: a fonte não desenha nenhum dos três, e é isso que tira daqui a única geometria que esta base não teria — duas numerações que avançam em ritmos diferentes. **Faltam duas coisas, e estão nomeadas**: `.nds-code-block-line` conhece um estado por linha (`data-highlighted`) e o diferencial quer três espécies, o que é um `data-kind` com um par de tinta por espécie — `--success` e `--destructive` com alfa, como o destaque já é `--primary` com alfa —, medido contra `--muted` E contra a linha destacada nos dois modos; e o gutter, hoje `aria-hidden` porque número é redundante com a posição, nesse modo carrega `+` / `−` visível mais a palavra em `.nds-sr-only`, porque tinta sozinha é a codificação que a regra 4 da §8 recusa e cujo exemplo é este. **Pede duas opções em `createCodeBlock`**: a espécie por linha ao lado de `highlightLines`, e o mesmo `actions?: HTMLElement[]` que `code-runner` já pede nesta tabela; nem classe fora das nomeadas, nem folha nova. A entrada escalonada a 60 ms é revelação, e revelação é `13-animacao.md`. Veio da família 4 — ver 5.3 |
+| `schedule-card` | `.nds-card` com o interruptor no cabeçalho e `.nds-item-group` de `agent-status` embaixo. `.nds-card-header` leva o nome em `.nds-card-title` `.nds-truncate` e a cadência em `.nds-card-description`, com o `switch` em `.nds-card-action` — a grade já abre a segunda coluna com `:has(> .nds-card-action)` e a segunda linha com `:has(> .nds-card-description)`, e a ação já ocupa as duas linhas com `justify-self: end`, sem regra nova. A linha da próxima execução é `.nds-item` `data-size="sm"` com o rótulo em `.nds-item-title` e o instante em `.nds-badge` com `.nds-font-mono`, chegando já escrito como texto — a decisão da contagem do estado da ligação, que é onde esta família já resolveu tempo FUTURO; pausado, o instante dá lugar à PALAVRA, e não ao esmaecimento, que a regra 4 da §8 recusa. O ícone de relógio entra em `.nds-badge > svg`, que já o dimensiona. O histórico é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"`, com o carimbo em `.nds-item-title` e `agent-status` em `.nds-item-actions` — `RunStatus` inteiro no lugar do booleano da fonte, que separa o que falhou do que alguém interrompeu. Sem execução nenhuma, `empty.css`. O que a cadência agenda e o que pausar faz é produto (§7), e a própria fonte já o põe fora da peça. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (66)
+### 5.2 As sete famílias novas (65)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -295,7 +296,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `schedule-card`, `checkpoint-history`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (15 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox` e `elicitation-form` saíram para a 5.1, ver 5.3 —, **11 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `checkpoint-history`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (14 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox`, `elicitation-form` e `schedule-card` saíram para a 5.1, ver 5.3 —, **10 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (19 no catálogo — `code-diff` saiu para a 5.1, ver 5.3 —, **19 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`, cuja justificativa a vigésima segunda correção reduziu a `reviewable-diff` sozinha — ver §3.2. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
@@ -3100,10 +3101,232 @@ tabela da 5.2 relida depois dela. Contador compartilhado com duas portas vivas
 lê-se do arquivo, nunca da própria conta.
 
 
+**Vigésima terceira correção, e a décima sétima que atravessa de 5.2 para 5.1**:
+`schedule-card` é `.nds-card` com `switch` no cabeçalho e `.nds-item-group` de
+`agent-status` — e as duas contagens mudam junto, 66 → 65 e 54 → 55. É a quarta
+que colapsa numa peça da PRÓPRIA família 2 já construída, e a primeira em que o
+sinal do booleano aparece nas DUAS formas dentro da mesma entrada.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`ScheduleRun { id: string, at: string, ok: boolean }` e, no componente, `name:
+string`, `cadence: string`, `nextRun: string`, `enabled: boolean`, `history:
+readonly ScheduleRun[]`, `onToggle?: () => void` e `className`. Sete entradas no
+componente, três campos na linha, UMA chamada de volta — e sem argumento. Faixa
+de runtime não há: a página publica só a forma standalone, e é a primeira entrada
+triada assim. A leitura fica mais curta por isso, e é preciso dizer para que lado:
+o que falta é a contradição INTERNA que a décima oitava e a vigésima acharam
+entre as duas faixas das suas, e ela é uma prova a menos contra a entrada — nunca
+uma a favor. A anatomia são três blocos: um cabeçalho com ícone de relógio, o
+nome cortado, a cadência abaixo e um `<button role="switch" aria-checked>` no fim
+da linha; uma linha "next" que mostra `nextRun` enquanto ligado e a palavra
+literal "paused" enquanto desligado, com a linha inteira esmaecendo; e uma fila
+"recent runs" de uma linha por execução passada, com visto ou cruz, o carimbo e a
+palavra "ok" ou "failed". Com `history` vazio o rótulo da fila continua desenhado
+e nenhuma linha segue.
+
+**A FONTE DIZ, DELA MESMA, QUE A REGRA E O QUE PAUSAR SIGNIFICA MORAM DO LADO DE
+FORA** — "it is a plain display; the schedule itself, and what pausing actually
+does, live in your own backend" —, e é essa medida que decide todo o resto. É a
+§7 escrita pela origem, antes de esta seção precisar aplicá-la: tirada a política
+— o que a cadência agenda, o que pausar faz, se a execução perdida é reposta —, o
+que sobra é um nome, três cadeias já formatadas, um interruptor e uma lista.
+
+Antes dos três testes, as três perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **Tempo FUTURO é eixo novo nesta família? NÃO É, e a folha já o tinha
+  construído.** É a pergunta mais forte da entrada, porque as nove peças desta
+  família já construídas descrevem o que está acontecendo ou o que já aconteceu, e
+  esta descreve o que vai acontecer. A resposta está em
+  `.nds-connection-state-countdown`: "em 5 s" é um instante futuro, desenhado ao
+  lado da palavra do estado e antes da ação — e a decisão 2 daquele bloco já
+  registra o preço, que é o mesmo aqui. **Chega já escrito, como texto**, porque
+  formato de duração e de data é decisão de idioma, e um componente que o
+  formatasse decidiria idioma em cinco lugares; a terceira regra do estado da
+  execução diz o mesmo do relógio dela. Com o instante futuro já resolvido como
+  cadeia por uma peça de pé, `nextRun` não abre eixo nenhum: entra numa fenda que
+  a família abriu, e não numa que ela não tem.
+- **A cadência é vocabulário, ou é cadeia? É cadeia, e a fonte já a entrega
+  escrita.** "Daily at 06:00" é o valor inteiro — não há regra de recorrência, não
+  há intervalo, não há dia da semana, não há nada que o componente parta ou
+  interprete. É a diferença exata para `x` e `y` na nona correção: lá o tipo
+  trazia DADO que nada aqui descrevia e que só existia sobre uma superfície; aqui
+  o tipo é `string`, e cadeia já formatada é o que esta família decidiu receber
+  por regra. **Conceito que não entra no sistema de tipos não é vocabulário que se
+  ganha; é texto que se hospeda** — e hospedar texto é o que
+  `.nds-card-description` faz.
+- **O interruptor é ação, ou é estado? É o `switch`, inteiro, e o desenho dele já
+  está no design system.** A fonte escreve `<button role="switch"
+  aria-checked={enabled}>`, que é literalmente a árvore do cabeçalho de
+  `switch.css`, atributo por atributo. E o par de campos que o alimenta —
+  `enabled: boolean` mais um `onToggle` que "não muda `enabled` sozinho" — é a API
+  de um interruptor controlado, que aquele primitivo já tem construído nas cinco
+  stacks. A tentação é lê-lo como a terceira parte do eixo da família ("o que eu
+  posso fazer a respeito"), e ele é: mas ali a família já respondeu com ESPAÇO, e
+  o espaço no cabeçalho de um cartão é `.nds-card-action`, onde a quinta correção
+  pôs o distintivo de versão, a décima a etiqueta de política e a décima sétima a
+  contagem.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montado inteiro, o cartão não deixa buraco — e a fonte mesma
+  já diz de que ele é feito, como em quase toda esta seção: a raiz "usa a
+  superfície `paper` compartilhada", a cadência e os rótulos "next" e "recent
+  runs" usam `mono`, e a linha "next" "fica numa pílula `field`". Superfície
+  compartilhada declarada na origem — a leitura da quinta, da sétima, da décima,
+  da décima primeira, da décima segunda, da décima quarta, da décima quinta, da
+  décima sétima, da décima oitava, da décima nona e da vigésima correções, e o
+  oposto exato do que a nona leu em `computer-use`.
+
+  A composição são três filhos de `.nds-card`. O cabeçalho é `.nds-card-header`
+  com `.nds-card-title` `.nds-truncate` para o nome, `.nds-card-description` para
+  a cadência e o `switch` em `.nds-card-action` — e a grade que costura isso já
+  está escrita: `.nds-card-header:has(> .nds-card-action)` abre a segunda coluna,
+  `.nds-card-header:has(> .nds-card-description)` abre a segunda linha, e
+  `.nds-card-action` já ocupa a coluna 2 nas duas linhas com `justify-self: end`.
+  É o cabeçalho da fonte, sem uma regra nova. O ícone de relógio entra em
+  `.nds-badge > svg`, que já o dimensiona e alinha, e é a mesma saída que a décima
+  oitava usou para o ícone de banco de dados — e não `.nds-item-media-icon`, cujo
+  quadrado tingido a décima sexta teve de nomear como faltando. A linha "next" é
+  `.nds-item` `data-size="sm"` com o rótulo em `.nds-item-title` e o instante em
+  `.nds-badge` com `.nds-font-mono`, onde a quinta, a décima primeira, a décima
+  segunda, a décima sétima e a décima oitava já puseram todo valor técnico. A fila
+  é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"`, com o
+  carimbo em `.nds-item-title` e `agent-status` inteiro em `.nds-item-actions` — o
+  ponto decorativo e a PALAVRA. Sem execução nenhuma, `empty.css`, como na décima
+  sétima. Nenhuma classe nova, nenhuma nomeada como faltando.
+
+  Três traços a composição não reproduz, os três por decisão já escrita. O
+  esmaecimento da linha "next" quando pausado é opacidade, que a regra 4 da §8
+  troca pela PALAVRA — e a palavra já está lá, porque a própria fonte escreve
+  "paused" no lugar do instante. O visto e a cruz por linha são o ícone que esta
+  folha já recusou uma vez: o ponto é decorativo e a palavra é o estado, e trocar
+  isso numa entrada seria redecidir uma regra da família para uma peça. E a fonte
+  não separa corpo de cabeçalho, que a composição separa porque o cartão desta
+  casa tem `.nds-card-content` — divergência de marcação, não de desenho.
+
+  Onde fonte e composição DISCORDAM, a composição está mais fina, como na oitava,
+  na décima primeira, na décima quarta, na décima quinta, na décima sétima e na
+  décima oitava: a fonte separa a execução que deu certo da que falhou por ícone e
+  por duas palavras inglesas fixas, e aqui cada linha carrega `RunStatus` inteiro
+  pela `agent-status`, com a palavra traduzida e a distinção que a fonte não faz
+  entre o que falhou e o que alguém interrompeu.
+
+  E há uma leitura de PARENTESCO que fecha este teste, e ela não vem desta
+  família: `item.css` abre dizendo que a linha rica é "usada em listas de
+  configurações". Um nome, uma explicação abaixo dele e um interruptor no fim da
+  linha é a linha de configuração canônica do design system, e `settings-panel` já
+  está na 5.1 apontando `form`. A entrada é uma configuração de agendamento com um
+  histórico embaixo.
+
+- **Estado, não — e é a primeira em que o sinal fala pelas DUAS bocas na mesma
+  entrada.** `ok: boolean` sabe fazer dois desenhos onde `RunStatus` tem cinco
+  palavras, e o que se perde é o pior conjunto possível para o assunto: `stopped`
+  — a execução agendada que alguém interrompeu no meio —, `running` — a das seis
+  da manhã que ainda está correndo quando se abre a tela — e `idle`. Uma fila de
+  execuções passadas em que a interrompida desenha igual à que quebrou é a mesma
+  perda que a décima oitava mediu, e aqui ela custa mais: num agendamento
+  repetido, distinguir "eu parei esta" de "esta falhou" é o que decide se a
+  cadência está errada ou se o mundo está.
+
+  E `enabled: boolean` é o sinal PELO AVESSO, a leitura da décima quinta e da
+  décima nona: não achata vocabulário nenhum — não há palavra de conversa para
+  "pausado", e não deve haver, porque agendamento pausado não é execução parada —,
+  mas é o MESMO booleano que a peça que desenha a superfície já declara. Lá o dono
+  era o `composer` e depois o `media-player`; aqui é o `switch`, e a coincidência
+  é mais crua que nas duas anteriores, porque não é só o booleano: é o booleano, a
+  chamada de volta que não o muda sozinha e o `role="switch"` com `aria-checked`,
+  que é a árvore inteira do primitivo. **As duas formas do sinal na mesma entrada
+  não se somam, elas se dividem o campo**: um booleano fica aquém do vocabulário,
+  o outro é de outra peça — e não sobra nenhum que seja desta.
+
+  A sub-regra do sinal mudo não se aplica, porque o sinal falou; mas a chamada de
+  volta que sobra confirma pelo mesmo caminho das outras: `onToggle` é a assinatura
+  de UM tipo de peça, e o dono dela está construído nas cinco stacks. Depois de
+  `onSelect`, `onPick` e `onJump`, é a primeira que não é de escolha e ainda assim
+  nomeia dono — o que ela nomeia não é quem escolhe, é quem alterna.
+
+- **Vocabulário, não, e desta vez nenhum campo fica sem par.** `id` é endereço de
+  linha, que `ChatToolCall.id` e `PlanStep.id` já declaram com o mesmo docblock.
+  `at` é carimbo já formatado, que é a decisão do relógio de `agent-status` e da
+  contagem de `connection-state`, nas mesmas palavras. `ok` é `RunStatus`
+  estreitado, medido acima. `name` e `cadence` são dado de produto, que a §7
+  entrega a quem monta, como o servidor da vigésima e a etiqueta de política da
+  décima. `nextRun` é a mesma cadeia de instante, medida na primeira pergunta. É a
+  distância inteira para `computer-use`, que sobreviveu por ter dois campos sem par
+  em lugar nenhum: aqui todos têm par, e quase todos têm par nesta folha.
+
+E o teste da família, que é o quarto: **ela responde ao eixo, e é a primeira que o
+responde sobre uma execução que ainda não existe.** "O que está acontecendo" é
+"nada, e de novo amanhã às seis"; "há quanto tempo" é o instante futuro que o
+estado da ligação já desenha; "o que eu posso fazer a respeito" é desligar. As
+três respostas cabem, e nenhuma pede desenho que a folha não tenha — o que faz
+desta a leitura mais limpa do padrão que a sexta, a sétima, a décima primeira, a
+décima segunda, a décima quarta, a décima quinta, a décima sétima e a vigésima já
+nomearam: **`schedule-card` não sai por não pertencer à família — sai por já estar
+construída dentro dela.**
+
+**E POR QUE MIGRA EM VEZ DE SER ABSORVIDA**, pelo critério da quarta e da
+vigésima: absorção é para quem não acrescenta nada — mesma marcação, mesmo
+vocabulário, mesma docs page com outro título. Aqui a composição junta três peças
+que não se conhecem — o cartão, o interruptor e o estado da execução — e uma docs
+page desta entrada mostraria `switch` dentro de `.nds-card-action`, que a docs
+page do estado da execução não mostra e não deve mostrar. **A 5.1 é para quem
+compõe mais de uma peça.**
+
+**As reversibilidades que apontavam para cá, respondidas:**
+
+- **`background-inbox` (décima sétima) CONFIRMA, e a cláusula fecha os dois
+  gatilhos.** A condição era trabalho em segundo plano com desenho, estado ou
+  vocabulário próprios: um ponto de entrada que saia da conversa e peça desenho,
+  um estado por execução que `RunStatus` não modele, ou não-lido chegando como
+  VOCABULÁRIO. Nenhum dos três: não há ponto de entrada, não há gatilho e não há
+  painel; o estado por execução é `ok: boolean`, que é aquém do vocabulário e não
+  além dele; e não-lido não existe — as linhas são histórico, e ninguém as coleta.
+  O segundo gatilho — se `agent-status` precisasse de desenho próprio para viver
+  em lista — também fica mudo: aqui ela vive em lista pela segunda vez, e
+  `.nds-item-group` continua bastando. `background-inbox` fica na 5.1.
+- **`elicitation-form` (vigésima) CONFIRMA.** A condição era pergunta com corpo de
+  desenho, estado ou vocabulário próprios. Não há pergunta nenhuma aqui: não há
+  pedido, não há alcance, não há par de controles e não há nada de pé esperando
+  resposta. Um interruptor não é pergunta com consequência no sentido da §7 — o
+  que ele muda é o mundo, direto, e o que essa mudança significa a própria fonte
+  já pôs fora da peça. `elicitation-form` fica na 5.1.
+- **`permission-grant` (quarta) e `computer-use` (nona) não são tocadas**: nada
+  aqui é pergunta com consequência nem geometria sobre superfície.
+
+**Reversível**, como as outras vinte e duas: se ao construir `checkpoint-history` —
+a única que falta na família — aparecer agendamento com desenho, estado ou
+vocabulário próprios: uma cadência que chegue ESTRUTURADA e precise de desenho
+(um trilho de sete pontos, uma prévia das próximas execuções, um calendário), um
+estado por execução passada que `RunStatus` não modele — `missed`, `throttled`,
+`skipped` por sobreposição, que são os três que um agendamento repetido tem e uma
+execução avulsa não —, ou o estado do próprio agendamento chegando como
+VOCABULÁRIO em vez de ser o booleano do interruptor —, `schedule-card` desdobra de
+volta para a 5.2, com o motivo. E há um segundo gatilho, deste lado: se
+`agent-status` precisar de desenho próprio para carregar um instante FUTURO em vez
+de um decorrido — o que a composição evita pondo o instante da linha "next" num
+distintivo, e não na fenda do relógio —, a mudança é dela, e o cartão continua não
+sendo peça.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 14, 3 tem 6, 4 tem 19, 5 tem 5, 6 tem 8 e 7 tem 2 — **65** na 5.2. A
+5.1 vai a **55** (53 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. A família 2 fica com **10 componentes**, e as sete somam 59.
+
+E o registro de método vale uma terceira vez, porque DUAS portas escreveram nesta
+seção enquanto esta lia a fonte: a 3 tem 6 pela vigésima primeira e a 4 tem 19
+pela vigésima segunda, e nenhum dos dois números saiu do delta desta passada —
+saíram das tabelas relidas depois de a árvore assentar. A conta que esta correção
+tinha escrito antes disso dizia 20 na 4, e já estava velha quando foi escrita.
+**Contador compartilhado não se lê duas vezes: lê-se uma, depois.**
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
-Apareceu dez vezes: **oito** como achatamento, sempre igual, e **duas** pelo
-avesso — `mobile-composer` e `read-aloud` —, que são as que fecham a sub-regra. Por isso vira critério:
+Apareceu onze vezes: **nove** como achatamento, sempre igual, e **três** pelo
+avesso — `mobile-composer`, `read-aloud` e `schedule-card`, que declara as duas
+formas de uma vez e por isso conta nas duas; as duas primeiras são as que fecham
+a sub-regra. Por isso vira critério:
 **booleano onde este vocabulário já tem cinco palavras.**
 
 | entrada | o que a fonte declara | o que ela perde |
@@ -3116,9 +3339,10 @@ avesso — `mobile-composer` e `read-aloud` —, que são as que fecham a sub-re
 | `background-inbox` | `state = running\|ready\|failed` — e `ready` é `complete` renomeada | `idle`, `stopped` |
 | `retrieval-chunks` | `searching: boolean` — e a faixa de runtime da própria fonte declara quatro palavras | `idle`, `stopped`, `failed` |
 | `elicitation-form` | `state = request\|accepted\|declined` — e só `request` é do vocabulário | `running`, `failed` |
+| `schedule-card` | `ok: boolean` por execução passada — e `enabled: boolean` ao lado, que é o do `switch` | `idle`, `running`, `stopped` |
 
-Nas oito, o achatamento não é economia — é sinal de que a entrada foi
-desenhada para uma tela só, sem o vocabulário que a família já tem. E as oito
+Nas nove, o achatamento não é economia — é sinal de que a entrada foi
+desenhada para uma tela só, sem o vocabulário que a família já tem. E as nove
 colapsaram pelos testes normais; o booleano só chegou antes.
 
 **A quarta é o limite da forma**, medida na décima primeira correção, e vale
@@ -3330,6 +3554,20 @@ ponto fez na nona correção —, e uma etiqueta a mais na mesma coluna não é 
 Ao contar o que a entrada perde, conte também o que ela acrescenta, e pergunte se
 o acréscimo é um valor ou uma dimensão.
 
+
+**Décima primeira aparição, e a primeira em que o sinal fala pelas DUAS bocas na
+mesma entrada, medida na vigésima terceira correção**: `schedule-card` declara
+dois booleanos, e eles não são do mesmo defeito. `ok: boolean` é achatamento —
+dois desenhos onde `RunStatus` tem cinco palavras, e o que se perde é `stopped`,
+`running` e `idle`, num assunto em que a execução que alguém interrompeu e a que
+quebrou são justamente o que se vai ler. `enabled: boolean` é o avesso da décima
+quinta e da décima nona: não achata nada, porque não há palavra de conversa para
+"pausado" e não deve haver — mas é o booleano que o `switch` já declara, com a
+chamada de volta que não o muda sozinha e o `role="switch"` com `aria-checked`
+junto, que é a árvore inteira do primitivo. **Quando as duas formas aparecem na
+mesma entrada, elas não se somam: dividem o campo** — um booleano fica aquém do
+vocabulário, o outro é de outra peça, e não sobra nenhum que seja da entrada. Ao
+ler os tipos, não pare no primeiro booleano: conte de quem é cada um.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
