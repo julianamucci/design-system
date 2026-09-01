@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (56)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (57)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -286,9 +286,10 @@ falta, nomeada — nunca uma folha nova.
 | `code-diff` | `code-block` com a espécie da linha. O cabeçalho é `.nds-code-block-header`: `.nds-code-block-title` monoespaçado, que já TRUNCA o caminho do arquivo em vez de empurrar o botão, e os dois contadores em `.nds-cluster[data-spacing="xs"]` de `.nds-badge nds-badge-success` / `.nds-badge nds-badge-destructive` com `.nds-font-mono` — o mesmo desenho que `tool-timeline` já resolveu nesta tabela para `{ file, added, removed }`, que é este cabeçalho com outros nomes. O corpo é `.nds-code-block-scroll`, que rola nos dois eixos no mesmo container com `overscroll-behavior-inline: contain`, `tabindex="0"` e — desde o conserto do defeito que a leitura desta entrada encontrou — `role="group"` mais nome acessível, que é o par que a regra 6 da §8 pede (`group` e não `region`: uma página de documentação tem dezenas de blocos, e `region` com nome viraria dezenas de landmarks homônimos); `.nds-code-block-pre` com `lang="en"` e `tab-size: 2`; `.nds-code-block-text` com `white-space: pre`, que é literalmente a decisão que a fonte anuncia; e `.nds-code-block-gutter` sticky, que sobrevive à rolagem horizontal — mais realce por gramática, que a fonte não tem. **Unificado, sem numeração e sem cabeçalho de trecho**: a fonte não desenha nenhum dos três, e é isso que tira daqui a única geometria que esta base não teria — duas numerações que avançam em ritmos diferentes. **Faltavam duas coisas, e as duas estão CONSTRUÍDAS**: `.nds-code-block-line` conhecia um estado por linha (`data-highlighted`) e o diferencial quer três espécies — hoje é `data-kind="context|added|removed"` com um par de tinta por espécie, `--success` e `--destructive` a 0.12, o mesmo alfa do destaque, medido contra `--muted` E contra a linha destacada nos dois modos e nos três temas (pior caso 4.66:1, e a 0.14 reprovaria a 4.48:1); e o gutter, que segue `aria-hidden` enquanto numera porque número é redundante com a posição, nesse modo carrega `+` / `−` visível mais a palavra em `.nds-sr-only` e deixa de ser escondido, porque tinta sozinha é a codificação que a regra 4 da §8 recusa e cujo exemplo é este. **As duas opções existem nas cinco**: a espécie por linha (`lineKinds`, indexada por linha e não por intervalo, porque espécie é classificação completa onde destaque é decoração esparsa) e a mesma opção de ações que `code-runner` pede nesta tabela; nem classe fora das nomeadas, nem folha nova. A decisão de marca e palavra por espécie mora em `docs/shared/primitives/code-block-lines.ts`, e as palavras em `code-block-labels.ts`. A entrada escalonada a 60 ms é revelação, e revelação é `13-animacao.md`. Veio da família 4 — ver 5.3 |
 | `schedule-card` | `.nds-card` com o interruptor no cabeçalho e `.nds-item-group` de `agent-status` embaixo. `.nds-card-header` leva o nome em `.nds-card-title` `.nds-truncate` e a cadência em `.nds-card-description`, com o `switch` em `.nds-card-action` — a grade já abre a segunda coluna com `:has(> .nds-card-action)` e a segunda linha com `:has(> .nds-card-description)`, e a ação já ocupa as duas linhas com `justify-self: end`, sem regra nova. A linha da próxima execução é `.nds-item` `data-size="sm"` com o rótulo em `.nds-item-title` e o instante em `.nds-badge` com `.nds-font-mono`, chegando já escrito como texto — a decisão da contagem do estado da ligação, que é onde esta família já resolveu tempo FUTURO; pausado, o instante dá lugar à PALAVRA, e não ao esmaecimento, que a regra 4 da §8 recusa. O ícone de relógio entra em `.nds-badge > svg`, que já o dimensiona. O histórico é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"`, com o carimbo em `.nds-item-title` e `agent-status` em `.nds-item-actions` — `RunStatus` inteiro no lugar do booleano da fonte, que separa o que falhou do que alguém interrompeu. Sem execução nenhuma, `empty.css`. O que a cadência agenda e o que pausar faz é produto (§7), e a própria fonte já o põe fora da peça. Veio da família 2 — ver 5.3 |
 | `reviewable-diff` | `.nds-card` com um `code-block` por trecho. `.nds-card-header` leva o nome do arquivo em `.nds-card-title` com `.nds-font-mono` e `.nds-truncate`, e a contagem do que já foi decidido em `.nds-badge` com `.nds-font-mono` dentro de `.nds-card-action`, o encaixe que a grade do cabeçalho já abre com `:has(> .nds-card-action)`; `.nds-card-content` recebe `.nds-stack[data-spacing="sm"]` de um `.nds-code-block-root` por trecho, com o intervalo em `.nds-code-block-title` monoespaçado — cadeia que a fonte imprime e nunca reparte, logo nenhum `@@` a interpretar — e, em `.nds-code-block-actions`, os dois controles enquanto o trecho está pendente ou o `.nds-badge` do que foi decidido depois, que é a fila de `actions?: HTMLElement[]` da §2 e não um estado; `.nds-card-footer` leva o que falta decidir e o botão de aplicar. As linhas usam a espécie por linha que `code-diff` já nomeou nesta tabela, dentro de `.nds-code-block-scroll` — que a fonte desta entrada não tem, e é onde a composição fica mais fina que ela. O trecho descartado **não esmaece**: opacidade sozinha separando duas decisões é a codificação que a regra 4 da §8 recusa e que a décima segunda já mediu, e a palavra já está ao lado. A contagem do cabeçalho e o portão do rodapé são derivados de `hunks`, como a própria fonte declara — agregado que é leitura rende função, não desenho. Nenhuma classe nova e nenhuma nomeada como faltando: as opções que `code-runner` e `code-diff` pediam ao `code-block` — `actions`, `lineKinds`, a palavra na calha e o nome da região que rola — já estão de pé. Veio da família 4 — ver 5.3 |
+| `message-branches` | `.nds-cluster[data-spacing="xs"]` de três nós dentro do encaixe `actions` da mensagem do `chat-thread` — que é `.nds-chat-message-actions`, e é onde a PRÓPRIA fonte manda pôr a peça ("put it in the assistant message's action row, next to copy and regenerate"). Os dois controles são `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm` com os chevrons do lucide e nome acessível TEXTUAL (regra 7 da §8); o quadrado de 32 px já passa do alvo de 24 px da regra 10, onde a fonte desenha 24 exatos. A posição é `.nds-badge` com `.nds-font-mono`, o mesmo par que sete linhas desta tabela já usam para contador, e o molde é `{index} de {total}`, que `computer-use` já escreve — palavra do idioma, onde a fonte crava uma barra que em voz alta vira "três barra seis". A resposta ativa NÃO é da peça: é `.nds-chat-message-content`, com `createMarkdown` e `isSafeUrl`, e a própria fonte a dispensa no seu exemplo "stepper only" (`[&>p]:hidden`) e não a tem na faixa de runtime, onde o corpo vem do turno. **Não se compõe com `createPagination`**, e é a única armadilha desta linha: aquele produz `<nav role="navigation">`, e um seletor por turno numa conversa de cinquenta renderia cinquenta landmarks homônimos — a mesma leitura que a vigésima segunda correção fez ao escolher `group` em vez de `region`. O que se aproveita de `pagination` é o CONTRATO (`total`, `current`, `onPageChange`), não o landmark nem a fila de números. Dar a volta nas pontas não se reproduz: um "anterior" que na primeira leva à última é controle cujo nome mente, e a faixa de runtime da própria fonte desabilita nas pontas. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 6 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (64)
+### 5.2 As sete famílias novas (63)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -301,7 +302,7 @@ slug produz 83 folhas e nenhum sistema.
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (18 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1, ver 5.3 —, **18 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
-| **6. Navegação da conversa** | `conversa-nav.css` | `message-branches`, `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (8) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
+| **6. Navegação da conversa** | `conversa-nav.css` | `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (8 no catálogo — `message-branches` saiu para a 5.1, ver 5.3 —, **7 componentes**) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
 | **7. Voz** | `voz.css` | `orb`, `voice-conversation` (2 no catálogo — `read-aloud` saiu para a 5.1, ver 5.3 —, **2 componentes**) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
 
 ### 5.3 A triagem se corrige DURANTE a construção, e a correção se escreve
@@ -3548,6 +3549,225 @@ uma correção que confiasse nele teria escrito 65 no fim. **Contador
 compartilhado não se herda de quem pede o trabalho: lê-se do arquivo, depois.**
 
 
+**Vigésima quinta correção, e a décima nona que atravessa de 5.2 para 5.1**:
+`message-branches` é o encaixe `actions` da mensagem do `chat-thread` com um
+trio de `.nds-cluster` dentro — e as duas contagens mudam junto, 64 → 63 e
+56 → 57. É a primeira que sai da família 6, que continua sem folha e agora com
+sete entradas, e é a primeira leitura da campanha em que a peça onde a entrada
+colapsa é a BASE DECLARADA da própria família.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`variants: readonly string[]`, `index: number`,
+`onIndexChange: (index: number) => void` e `className`. Quatro entradas, uma
+delas chamada de volta, **nenhum tipo declarado e nenhuma união** — a forma mais
+rala das vinte e cinco leituras, mais rala até que a da décima quarta, que ao
+menos tinha um booleano. A anatomia é uma raiz com duas coisas: um `<p>` com a
+variante ativa, "keyed on index so it fades in on change", e uma fileira de
+anterior, `n / m` e próximo. Fora disso, três comportamentos declarados: dá a
+volta nas duas pontas, com uma variante só os dois controles nascem
+desabilitados e o contador lê `1 / 1`, e sem variante nenhuma lê `0 / 0`.
+
+**A PEÇA NÃO SABE DA ÁRVORE, SÓ DO ÍNDICE — e é essa medida que decide todo o
+resto.** A prosa da fonte abre falando de irmandade: "a regenerated answer does
+not replace the previous one; it becomes a sibling branch". Mas isso é a faixa
+de RUNTIME, e é lá que moram as três coisas que fariam da irmandade um
+vocabulário — `branchNumber`, `branchCount` e `switchToBranch({ position |
+branchId })`, que é a única assinatura da página capaz de endereçar um ramo em
+vez de contar posições. **A faixa standalone não tem NADA disso**: não há id, não
+há pai, não há irmão, não há relação nenhuma. Há um arranjo plano e um número que
+o indexa, e a §1 é literal sobre qual das duas se lê ("use sempre a forma
+standalone, nunca a with runtime"). A árvore que dava nome à entrada fica inteira
+do lado que esta guideline não porta, e o que atravessa para cá é
+`total`/`current`/`onPageChange` com outros três nomes.
+
+Antes dos três testes, as quatro medidas que esta triagem tinha de tomar, porque
+é de uma delas que sairia desenho próprio:
+
+- **O que é a posição.** `index: number`, base zero, exibido base um — que é
+  `current` do `pagination`, base um, com a conversão de fora. Índice fora do
+  intervalo "cai de volta para a primeira variante", que é tolerância de entrada,
+  não estado.
+- **O que é o total.** `variants.length`. Não é campo, é a MEDIDA DO ARRANJO — e
+  é a única coisa que separa esta entrada do `pagination`, que recebe `total` de
+  fora porque não tem as páginas na mão. Só que a diferença corre para o lado
+  errado: agregado que se lê do conteúdo é a conta que a décima sétima e a
+  vigésima quarta já classificaram, e as duas escreveram a mesma frase —
+  **agregado que é leitura rende função, não desenho.**
+- **Se há estado por ramo. Não há, e é a ausência mais larga da campanha.** Um
+  ramo é uma `string`. Não tem id, não tem instante, não tem modelo, não tem quem
+  o gerou, não tem estado de execução — nem sequer a marca de qual deles é o
+  ORIGINAL, que é justamente o que a décima quarta correção disse que este
+  seletor tornava alcançável.
+- **Se a navegação tem consequência que uma paginação não tem.** Tem uma, e é a
+  única carta séria desta triagem: trocar de ramo troca o texto que alguém está
+  lendo. Mas a consequência **já tem dono nas duas pontas**. Do lado do anúncio, a
+  regra 1 da §8 e `.nds-chat-thread-announcer`, que é a única região viva desta
+  família e é da thread, não da peça. Do lado do desenho, a fonte responde à troca
+  com um esmaecimento de entrada — `cycle` com outro nome —, e a 5.1 já deu dono a
+  esse assunto quatro vezes, sempre o mesmo: `13-animacao.md`. E vale reparar no
+  que a fonte NÃO traz: nem `aria-live`, nem `aria-busy`, nem anúncio nenhum. A
+  peça que teria de existir por causa da consequência não desenha a consequência.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, não deixa buraco, e a fonte mesma já diz de
+  que ela é feita, pela oitava vez nesta seção e na forma mais forte que já
+  apareceu: "the buttons use the shared `ghostButton` surface and the counter the
+  `mono` surface from `surfaces.tsx`". Ela tem DOIS tipos de nó, e declara os dois
+  compartilhados. É a leitura da quinta, da sétima, da décima, da décima quarta e
+  da vigésima segunda, e o oposto exato do que a nona leu em `computer-use` e a
+  décima terceira em `inline-citation` — lá a origem declarava compartilhado o
+  resto e não tinha o que oferecer para o que a peça tinha de próprio; aqui não
+  sobra nada para oferecer.
+
+  E as duas metades do trio já estão DESENHADAS nesta casa, em dois lugares
+  diferentes: `calendar` põe dois `.nds-calendar-nav-btn` ladeando um
+  `.nds-calendar-caption`, e `computer-use` — construída nesta mesma campanha —
+  escreve "3 de 6" em `.nds-computer-use-position`, com `tabular-nums` e o tom
+  secundário. As duas carregam classe ESCOPADA porque as duas têm geometria em
+  volta: uma sobrepõe uma grade, a outra legenda um quadro. Aqui não há geometria
+  em volta nenhuma — é uma fileira de três itens numa fila que já existe —, e por
+  isso o trio sai de `.nds-cluster` mais `.nds-button` mais `.nds-badge`, sem
+  classe nova. Se um dia se quiser o trio compartilhado, ele é UTILITÁRIA, nunca
+  folha e nunca peça, e é exatamente o que a abertura da 5.1 manda.
+
+  Onde a composição e a fonte DISCORDAM, a composição está mais fina, como na
+  oitava, na décima primeira e na décima quarta, e em três pontos. O contador da
+  fonte é `text-foreground/35` — opacidade carregando a informação, que é a
+  codificação que a regra 4 da §8 recusa e que a décima segunda já mediu —,
+  contra a etiqueta com borda e `--foreground` da regra de container colorido da
+  §9. O molde é uma barra crua, contra `{index} de {total}`, que é palavra de
+  idioma e é o que `computer-use` já escreve; "3 / 6" lido em voz alta é "três
+  barra seis". E o alvo de toque da fonte é 24 px exatos, no limite da regra 10,
+  contra os 32 px do quadrado pequeno desta casa.
+
+  Há um ponto em que compor com a peça errada seria defeito, e ele fica
+  registrado porque é a única armadilha da linha: `createPagination` monta
+  `<nav role="navigation" aria-label>`, e um seletor por turno numa conversa de
+  cinquenta renderia cinquenta landmarks homônimos. É a leitura da vigésima
+  segunda, palavra por palavra, quando ela escolheu `group` em vez de `region`
+  para o bloco de código. O que se aproveita de `pagination` é o CONTRATO; o
+  landmark e a fila de números ficam onde estão.
+
+- **Estado, não — e o sinal ficou MUDO pela oitava vez.** Não há booleano, não há
+  união encolhida, não há máquina de estados: não há TIPO. Pela sub-regra da
+  décima, olha-se então a assinatura que sobrou no lugar do estado, e ela é uma
+  só — `onIndexChange`. É a quarta chamada de volta de escolha depois de
+  `onSelect`, `onPick` e `onJump`, e é a que aponta o dono mais exato das quatro:
+  não uma analogia, e sim o mesmo trio, com o mesmo sentido, a uma pasta de
+  distância — `PaginationOptions` declara `total`, `current` e
+  `onPageChange?: (page: number) => void`, e `pagination` é o que a 5.2 escreve
+  como base desta família. Não é o limite da décima terceira: `onOpenIndexChange`
+  era o par de abrir e fechar que a §2 exige de TODA peça daqui, e por isso não
+  apontava ninguém; escolher um item numa fila não é isso, e as três anteriores
+  colapsaram.
+
+  E vale a distinção que separa esta leitura da nona, porque as duas têm um índice
+  sobre um arranjo e desfechos opostos. Em `computer-use` o eixo não era o índice:
+  era o PONTO, `x` e `y` em porcentagem do quadro, que não tinha par em nada que
+  este vocabulário descrevesse, e o `activeIndex` era o que sobrava ao lado dele.
+  Aqui o índice é o eixo inteiro, e o eixo tem dono. **Índice sobre arranjo plano
+  não é dimensão; é a coordenada que a fila já tinha.**
+
+- **Vocabulário, não — e a ausência aqui é do tipo que a sexta forma pega.**
+  `variants: readonly string[]` é a repetição exata de `words: readonly string[]`
+  da décima nona, e vale a frase que aquela correção deixou escrita: **o parágrafo
+  não é da peça.** Uma resposta irmã, nesta casa, é `ChatMessageOptions` —
+  conteúdo em Markdown, autor, hora, avatar, `streaming`, chamadas de ferramenta,
+  raciocínio, fontes e ações. Achatar isso numa cadeia não perde um campo: perde
+  oito, e perde junto todas as PARTES que `MessagePartKind` enumera. É o
+  estreitamento medido contra o que está CONSTRUÍDO, que é o alargamento que a
+  décima nona fez da regra, e é o mais largo já medido — as anteriores estreitavam
+  uma união (`DocumentAnchor.page`, `kind` de campo de formulário); esta estreita
+  o objeto inteiro.
+
+  E o efeito não fica no tipo: obriga a peça a desenhar a resposta num `<p>` de
+  texto cru, onde esta casa passa toda fala de modelo por `createMarkdown` com
+  `isSafeUrl` dentro de `.nds-chat-message-content`. A própria fonte já não
+  acredita nesse `<p>`: o exemplo "stepper only" dela o esconde
+  (`className="[&>p]:hidden"`) e manda o corpo vir de fora, e a faixa de runtime
+  não o tem, porque lá o corpo é `MessagePrimitive.Parts`. **Corpo que a própria
+  fonte esconde no segundo exemplo não é a peça** — o que resta é o trio.
+
+E o teste da família, que é o quarto: ela responde ao eixo — achar e trocar de
+lugar sem perder o seu — e responde com uma das quatro peças que a 5.2 nomeia
+como BASE da família. É a leitura da décima quarta com um grau a mais: lá a
+entrada colapsava na peça de que a família tomou o nome, e aqui colapsa na peça
+que a família declarou como fundação antes de existir uma linha dela.
+
+**As três contradições entre as faixas da fonte, e as três a standalone perde**,
+que é a leitura que a décima oitava fixou e a vigésima confirmou. Dar a volta nas
+pontas: a faixa de runtime desabilita nas pontas, e o "anterior" que na primeira
+leva à última é um controle cujo nome mente. Sumir com uma variante só:
+`hideWhenSingleBranch` existe no runtime "para manter a fileira de ações
+estável", e a standalone desenha dois controles inertes em todo turno que tem uma
+resposta só. Endereçar um ramo: `switchToBranch({ branchId })` existe no runtime,
+e na standalone não há id nenhum. **Nas três, o que a standalone entrega é pior**
+— e a terceira é a que apaga a árvore.
+
+**O que a décima quarta escreveu sobre o seletor de ramo SE SUSTENTA, e o escopo
+dela também.** Conferido na fonte do `edit-message`, palavra por palavra: "at
+runtime, editing does not delete anything: sending … appends the rewrite as a new
+sibling of the original under the same parent … the original message and
+everything under it stay in the thread's history, reachable again through the
+branch picker's `n / m` stepper, so nothing is actually discarded, only no longer
+the branch showing". Aquela correção citou o trecho com a ressalva certa — "com
+runtime" — e a conclusão que ela tirou dele não dependia de o seletor ser peça:
+dependia de `discardedReplies` ser dado de produto, e a fonte diz isso com todas
+as letras. O que esta leitura ACRESCENTA é o que faltava dizer: a irmandade que
+torna a original alcançável mora na faixa de runtime, e a peça que a 5.2 tinha
+reservado para ela nunca teve como carregá-la. **Tratar o seletor como coisa
+existente estava certo; o que não se podia é supor que ele seria SLUG** — e agora
+ele existe, como composição, no encaixe que a própria décima quarta já usava para
+o controle de editar.
+
+**E uma leitura que NÃO se decide daqui**, pela herança da décima sétima: nada
+nesta triagem tocou `thread-list`. A caixa de execuções em segundo plano
+projetava o estado da LISTA DE CONVERSAS, e a correção que a colapsou deixou
+escrito que, se aquilo reaparecer como filtro dela, o conserto é na família 6.
+`message-branches` navega entre irmãs de UM turno, dentro de uma thread; não
+enxerga conversa nenhuma, não tem fila de conversas e não encosta naquele
+assunto. A herança segue aberta, e quem triar `thread-list` a responde.
+
+**E uma leitura de FAMÍLIA que esta correção obriga a escrever, porque a folha
+continua por fundar.** A 5.2 dá quatro bases à família 6 — `sidebar`, `command`,
+`pagination` e `stepper.css` —, e esta foi a primeira entrada a bater em uma
+delas. O que ela mede é que `pagination` entra na família como CONTRATO (`total`,
+`current`, `onPageChange`) e não como markup: o `<nav>` com nome que serve a um
+rodapé de tabela é o que não pode ser repetido por turno. Quem fundar
+`conversa-nav.css` escreva isso no cabeçalho — e repare que as sete que ficam são
+todas de nível de CONVERSA, não de turno: buscar, listar, retomar, compartilhar,
+apresentar. A única que era de dentro do turno saiu, e o eixo da folha fica mais
+estreito e mais nítido por causa disso.
+
+**Reversível**, como as outras vinte e quatro: se ao construir `regenerate-menu` —
+a irmã mais próxima, que é o controle que CRIA o ramo — aparecer navegação entre
+irmãs com desenho, estado ou vocabulário próprios (um ramo que chegue como objeto
+com id, instante ou modelo em vez de cadeia; um estado por ramo que a posição não
+modele; ou uma geometria que a fileira de ações não comporte),
+`message-branches` desdobra de volta para a 5.2, com o motivo. E há um segundo
+gatilho, deste lado: se `thread-list` ou `shared-conversation` pedirem um trio de
+anterior, posição e próximo com regra que não seja de fila — posição pegajosa,
+teclado de fila, o trio governando uma região rolável —, o que nasce é a
+UTILITÁRIA compartilhada do trio, e ela continua não sendo esta peça.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 14, 3 tem 6, 4 tem 18, 5 tem 5, 6 tem 7 e 7 tem 2 — **63** na 5.2.
+A 5.1 vai a **57** (55 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. A família 6 fica com **7 componentes**, e as sete somam 57.
+
+E o registro de método vale uma quinta vez, e desta vez contra o BRIEFING e não
+contra a árvore, que estava limpa: o pedido desta correção trazia que `pagination`
+"já desenha anterior / N de M / próximo", e ele **não desenha**. `pagination.css`
+não tem nó de fração nenhum, e `createPagination` monta um link por página com
+reticências a partir de sete — enumeração, não posição. A afirmação empurrava para
+o COLAPSO, e a peça colapsou assim mesmo, por outros três caminhos. **Vale para os
+dois lados: afirmação que favorece o desfecho a que se chega é a que menos se
+confere, e é por isso que ela tem de ser conferida primeiro.** O mesmo pedido
+contava "nove triagens seguidas" colapsadas; são ONZE — da décima quarta à
+vigésima quarta, sem sobrevivência no meio, e a última foi a décima terceira.
+
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
 Apareceu doze vezes: **dez** como achatamento, sempre igual, e **três** pelo
@@ -3810,6 +4030,30 @@ e a própria fonte declara que ela é derivada e nunca guardada. Ao ler uma uni�
 em que só a primeira palavra é do vocabulário, pergunte o que a peça faz com as
 outras — se troca desenho por elas, é a §7; se soma, é função; peça não é nenhuma
 das duas.
+
+**Oitavo sinal mudo, medido na vigésima quinta correção**, e é o mais mudo de
+todos: `message-branches` não declara booleano, união nem tipo — declara um
+arranjo de cadeias, um número e uma chamada de volta. Pela sub-regra da décima,
+a assinatura que sobrou no lugar do estado é `onIndexChange`, a quarta de escolha
+depois de `onSelect`, `onPick` e `onJump`, e a que aponta o dono mais exato das
+quatro: `PaginationOptions` declara `total`, `current` e `onPageChange` com o
+mesmo sentido, e `pagination` é a base que a 5.2 já dava à família da entrada.
+Colapsou. O que ela acrescenta ao instrumento é o par que faltava para fechar a
+leitura da nona: **índice sobre arranjo plano não é eixo, é a coordenada que a
+fila já tinha.** Em `computer-use` o `activeIndex` também indexava uma lista e
+não decidiu nada — quem decidiu foi o PONTO ao lado dele, `x` e `y`, que era eixo
+sem dono. Ao ver um índice, pergunte sobre o que ele anda: se sobre uma fila, o
+dono existe; se sobre uma dimensão que este vocabulário não tem, é a nona.
+
+E a sexta forma — tipo mais estreito — apareceu na mesma leitura, na largura
+máxima já medida: `variants: readonly string[]` diz que uma resposta irmã é uma
+cadeia, onde `ChatMessageOptions` tem nove campos e `MessagePartKind` enumera
+sete espécies de parte. As anteriores estreitavam uma união dentro de um objeto;
+esta estreita o objeto inteiro, e o efeito chega ao desenho: obriga a peça a pôr
+fala de modelo num `<p>` cru, onde esta casa passa tudo por `createMarkdown` com
+`isSafeUrl`. É a repetição de `words: readonly string[]` na décima nona, e vale a
+mesma frase — **o parágrafo não é da peça.**
+
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
