@@ -305,7 +305,6 @@
       "usedWith": "Costuma ser usado com",
       "toggle": "Para opções visuais de dois estados (negrito, alinhamento) — usa <code>aria-pressed</code>.",
       "switch": "Para configurações on/off com efeito imediato (notificações, dark mode).",
-      "link": "Para navegação pura no fluxo de texto — sem estilo de botão.",
       "form": "Para botões <code>type=\"submit\"</code> em formulários com validação.",
       "dialog": "Para botões de ação em janelas de diálogo.",
       "alertDialog": "Para botões de confirmação em ações destrutivas críticas."
@@ -756,7 +755,6 @@
       "usedWith": "Often used with",
       "toggle": "For visual two-state options (bold, alignment) — uses <code>aria-pressed</code>.",
       "switch": "For on/off settings with immediate effect (notifications, dark mode).",
-      "link": "For pure navigation in text flow — without button styling.",
       "form": "For <code>type=\"submit\"</code> buttons in forms with validation.",
       "dialog": "For action buttons in dialog windows.",
       "alertDialog": "For confirmation buttons in critical destructive actions."
@@ -1207,7 +1205,6 @@
       "usedWith": "Se usa frecuentemente con",
       "toggle": "Para opciones visuales de dos estados (negrita, alineación) — usa <code>aria-pressed</code>.",
       "switch": "Para configuraciones on/off con efecto inmediato (notificaciones, dark mode).",
-      "link": "Para navegación pura en el flujo de texto — sin estilo de botón.",
       "form": "Para botones <code>type=\"submit\"</code> en formularios con validación.",
       "dialog": "Para botones de acción en ventanas de diálogo.",
       "alertDialog": "Para botones de confirmación en acciones destructivas críticas."

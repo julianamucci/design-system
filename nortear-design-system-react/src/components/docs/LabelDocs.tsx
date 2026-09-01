@@ -431,8 +431,8 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
             path: "?path=/docs/primitives-form-input--docs",
           },
           {
-            name: "FormLabel",
-            description: toPlainText(tContent("related.formLabel")),
+            name: "FormField",
+            description: toPlainText(tContent("related.formField")),
             path: "?path=/docs/primitives-form-form--docs",
           },
           {

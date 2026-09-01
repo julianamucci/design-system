@@ -318,10 +318,6 @@
           "name": "Skeleton",
           "description": "Placeholder para loading de estrutura conhecida."
         },
-        "spinner": {
-          "name": "Spinner",
-          "description": "Indicador circular para duração desconhecida e curta."
-        },
         "alert": {
           "name": "Alert",
           "description": "Notificação de conclusão ou erro de uma operação."
@@ -753,10 +749,6 @@
           "name": "Skeleton",
           "description": "Placeholder for loading content with known structure."
         },
-        "spinner": {
-          "name": "Spinner",
-          "description": "Circular indicator for unknown short duration."
-        },
         "alert": {
           "name": "Alert",
           "description": "Notification of completion or error of an operation."
@@ -1187,10 +1179,6 @@
         "skeleton": {
           "name": "Skeleton",
           "description": "Placeholder para carga de estructura conocida."
-        },
-        "spinner": {
-          "name": "Spinner",
-          "description": "Indicador circular para duración desconocida y corta."
         },
         "alert": {
           "name": "Alert",

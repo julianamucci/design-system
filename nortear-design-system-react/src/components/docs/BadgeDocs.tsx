@@ -535,11 +535,6 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             description: toPlainText(tContent("related.button")),
             path: "?path=/docs/primitives-form-button--docs",
           },
-          {
-            name: "Avatar",
-            description: toPlainText(tContent("related.chip")),
-            path: "?path=/docs/primitives-display-avatar--docs",
-          },
         ]}
       />
 

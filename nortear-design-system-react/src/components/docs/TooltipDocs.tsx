@@ -908,11 +908,6 @@ interface TooltipContentProps {
               description: toPlainText(tContent("related.items.button.description")),
               path: "?path=/docs/primitives-form-button--docs",
             },
-            {
-              name: tContent("related.items.kbd.name"),
-              description: toPlainText(tContent("related.items.kbd.description")),
-              path: "?path=/docs/ui-kbd--docs",
-            },
           ]}
         />
 

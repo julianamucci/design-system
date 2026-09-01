@@ -255,8 +255,6 @@
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "alert": "Para mensagens com título e descrição que exigem mais contexto.",
-      "chip": "Para rótulos interativos, removíveis ou filtráveis (quando existir no projeto).",
-      "tag": "Para classificações agrupadas e editáveis pelo usuário.",
       "button": "Para tornar o Badge clicável, envolva em Button ou use como slot interno."
     },
     "notes": {
@@ -657,8 +655,6 @@
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "alert": "For messages with title and description that need more context.",
-      "chip": "For interactive, removable, or filterable labels (when available in the project).",
-      "tag": "For grouped, user-editable classifications.",
       "button": "To make Badge clickable, wrap it in a Button or use it as an internal slot."
     },
     "notes": {
@@ -1059,8 +1055,6 @@
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "alert": "Para mensajes con título y descripción que requieren más contexto.",
-      "chip": "Para etiquetas interactivas, removibles o filtrables (cuando exista en el proyecto).",
-      "tag": "Para clasificaciones agrupadas y editables por el usuario.",
       "button": "Para hacer Badge clicable, envuélvelo en Button o úsalo como slot interno."
     },
     "notes": {

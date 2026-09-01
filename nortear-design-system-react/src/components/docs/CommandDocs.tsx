@@ -1063,11 +1063,6 @@ interface CommandDialogProps
             description: toPlainText(tContent("related.dialog")),
             path: "?path=/docs/primitives-overlay-dialog--docs",
           },
-          {
-            name: "InputGroup",
-            description: toPlainText(tContent("related.inputGroup")),
-            path: "?path=/docs/ui-inputgroup--docs",
-          },
         ]}
       />
 

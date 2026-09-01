@@ -370,7 +370,6 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'DatePicker', description: toPlainText(tContent('related.datePicker')), path: '?path=/docs/ui-datepicker--docs' },
   { name: 'Popover',    description: toPlainText(tContent('related.popover')),    path: '?path=/docs/primitives-overlay-popover--docs'    },
   { name: 'Form',       description: toPlainText(tContent('related.form')),       path: '?path=/docs/primitives-form-form--docs'       },
   { name: 'Input',      description: toPlainText(tContent('related.input')),      path: '?path=/docs/primitives-form-input--docs'      },

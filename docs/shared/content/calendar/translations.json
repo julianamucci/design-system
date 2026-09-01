@@ -290,7 +290,6 @@
       "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
-      "datePicker": "Calendar dentro de Popover com Button — padrão composto para seleção inline em formulários.",
       "popover": "Wrapper para esconder o Calendar e acioná-lo por um Button.",
       "form": "Integração com validação de formulário: o campo entrega o valor escolhido ao formulário e recebe de volta o estado de erro.",
       "input": "Alternativa quando basta <code>type=\"date\"</code> nativo do browser."
@@ -738,7 +737,6 @@
       "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
-      "datePicker": "Calendar inside Popover with Button — composed pattern for inline date selection in forms.",
       "popover": "Wrapper to hide the Calendar and trigger it via a Button.",
       "form": "Form validation integration: the field hands the chosen value to the form and gets the error state back.",
       "input": "Alternative when the browser's native <code>type=\"date\"</code> is enough."
@@ -1186,7 +1184,6 @@
       "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
-      "datePicker": "Calendar dentro de Popover con Button — patrón compuesto para selección inline en formularios.",
       "popover": "Wrapper para esconder el Calendar y accionarlo con un Button.",
       "form": "Integración con validación de formulario: el campo entrega el valor elegido al formulario y recibe de vuelta el estado de error.",
       "input": "Alternativa cuando basta <code>type=\"date\"</code> nativo del navegador."

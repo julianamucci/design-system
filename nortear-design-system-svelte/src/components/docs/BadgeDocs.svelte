@@ -443,8 +443,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
     items={[
       { name: 'Alert',   description: $tStore('related.alert'),  path: '?path=/docs/primitives-feedback-alert--docs'   },
       { name: 'Button',  description: $tStore('related.button'), path: '?path=/docs/primitives-form-button--docs'  },
-      { name: 'Chip',    description: $tStore('related.chip'),   path: '?path=/docs/ui-chip--docs'    },
-      { name: 'Tag',     description: $tStore('related.tag'),    path: '?path=/docs/ui-tag--docs'     },
     ]}
   />
 

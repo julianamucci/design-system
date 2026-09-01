@@ -734,9 +734,9 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
     return [
       { name: 'Toggle',       description: toPlainText(t('related.toggle')),      path: '?path=/docs/primitives-form-toggle--docs'       },
       { name: 'Switch',       description: t('related.switch'),      path: '?path=/docs/primitives-form-switch--docs'       },
+      { name: 'Form',         description: toPlainText(t('related.form')),        path: '?path=/docs/primitives-form-form--docs'         },
       { name: 'Dialog',       description: t('related.dialog'),      path: '?path=/docs/primitives-overlay-dialog--docs'       },
       { name: 'Alert Dialog', description: t('related.alertDialog'), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-      { name: 'Link',         description: t('related.link'),        path: '?path=/docs/primitives-navigation-breadcrumb--docs'   },
     ];
   });
 

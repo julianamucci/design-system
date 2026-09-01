@@ -624,9 +624,8 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
           title: t('related.title'),
           items: [
             { name: 'Popover', description: toPlainText(t('related.popover')), path: '?path=/docs/primitives-overlay-popover--docs' },
-            { name: 'Input', description: toPlainText(t('related.input')), path: '?path=/docs/primitives-form-input--docs' },
-            { name: 'Button', description: toPlainText(t('related.datePicker')), path: '?path=/docs/primitives-form-button--docs' },
             { name: 'Form', description: toPlainText(t('related.form')), path: '?path=/docs/primitives-form-form--docs' },
+            { name: 'Input', description: toPlainText(t('related.input')), path: '?path=/docs/primitives-form-input--docs' },
           ],
         });
 

@@ -4462,6 +4462,149 @@ function auditSidebarVocab(slug) {
 }
 
 /** Título das foundations: MDX, slug-independente. */
+// ─── Links de "Componentes Relacionados" ────────────────────────────────────
+
+/**
+ * `sanitize` do Storybook (`storybook/internal/csf`), copiado porque o audit não
+ * carrega o Storybook. É ele que transforma o `title` do meta no id da URL:
+ * `Primitives/Form/Button` → `primitives-form-button`, e a aba de docs é esse id
+ * mais `--docs`. Acento NÃO é removido — `QA/Nome Acessível` vira
+ * `qa-nome-acessível`, e é assim que o Storybook resolve mesmo.
+ */
+function storyIdFromTitle(title) {
+  return title
+    .toLowerCase()
+    .replace(/[ ’–—―′¿'`~!@#$%^&*()_|+\-=?;:'",.<>{}[\]\\/]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
+/**
+ * Ids que REALMENTE têm página de documentação numa stack.
+ *
+ * Duas fontes, e as duas importam:
+ *   - `*.stories.*` cujo meta declara `tags: [… 'autodocs' …]` — só essas ganham
+ *     aba Docs. Kind sem autodocs (Variants, States, Compositions) existe na
+ *     árvore e mesmo assim `--docs` não resolve, então entrar aqui pelo título
+ *     apenas deixaria o portão cego para o caso mais provável de link errado.
+ *   - `*.mdx` com `<Meta title>` — o arquivo JÁ é a página de docs.
+ *
+ * O `title` é lido depois da âncora do meta, e exigindo título de CAMINHO
+ * (inicial maiúscula e uma barra). Ler o primeiro `title:` do arquivo casa
+ * fixture de dado — `title: 'exemplo.ts'` no code-block, `title: 'Conta'` em
+ * arranjos de demonstração — e um id inventado desses ABSOLVE um link morto.
+ */
+const _docsIdsPorStack = new Map();
+function docsIdsForStack(stack) {
+  if (_docsIdsPorStack.has(stack)) return _docsIdsPorStack.get(stack);
+  const ids = new Set();
+  const dir = join(ROOT, stackDir(stack), 'src');
+
+  for (const file of walkDir(dir, ['.mdx'])) {
+    const m = (readFile(file) || '').match(/<Meta\b[^>]*\btitle\s*=\s*(['"])([^'"]+)\1/);
+    if (m) ids.add(storyIdFromTitle(m[2]));
+  }
+
+  const storyExts = ['.stories.js', '.stories.jsx', '.stories.mjs', '.stories.ts', '.stories.tsx'];
+  for (const file of walkDir(dir, storyExts)) {
+    const content = readFile(file);
+    if (!content) continue;
+    const ancora = content.search(/(?:const\s+meta\b|export\s+default\s*\{|satisfies\s+Meta)/);
+    if (ancora < 0) continue;
+    const bloco = content.slice(ancora);
+
+    const titulos = [...bloco.matchAll(/(?:^|[\s{,])title\s*:\s*(['"`])([^'"`]+)\1/gm)].map((m) => m[2]);
+    const titulo = titulos.find((t) => t.includes('/') && /^[A-ZÀ-Ý]/.test(t));
+    if (!titulo) continue;
+
+    const tags = bloco.match(/(?:^|[\s{,])tags\s*:\s*\[([^\]]*)\]/m);
+    if (!tags || !/['"`]autodocs['"`]/.test(tags[1])) continue;
+
+    ids.add(storyIdFromTitle(titulo));
+  }
+
+  _docsIdsPorStack.set(stack, ids);
+  return ids;
+}
+
+/**
+ * Link de navegação apontando para página que não existe.
+ *
+ * Nenhum portão via isto, e por isso 22 links mortos sobreviveram: o card de
+ * "Componentes Relacionados" ABRE — o Storybook aceita qualquer `?path=` e cai
+ * numa árvore vazia —, então nem build, nem lint, nem axe, nem play function
+ * tinham como reprovar. O defeito só aparecia para quem clicava.
+ *
+ * O que este portão cobre: todo `?path=/docs/<id>--docs` escrito em `src/`, nas
+ * cinco stacks, cruzado contra os ids que têm aba de docs naquela MESMA stack —
+ * um link vivo em react e morto em vue é exatamente o caso que passa despercebido.
+ *
+ * O que ele NÃO cobre, e as duas exclusões são nomeadas de propósito (filtro que
+ * exclui em silêncio é como o `source-snippets` encolheu sem ninguém ver):
+ *   - arquivo `*.test.*` / `*.spec.*` — o `manager-href.test.ts` monta
+ *     `?path=/docs/ui-tabs--docs` e `?path=/docs/x--docs` como ENTRADA sintética
+ *     da função sob teste; não são destinos de navegação.
+ *   - linha de comentário — o docblock do `analytics.ts` cita
+ *     `/?path=/docs/ui-accordion--docs` para ilustrar o formato da URL.
+ * Se um desses passar a conter link de navegação de verdade, ele sai da exclusão.
+ */
+function auditRelatedDeadLink() {
+  const violations = [];
+  const exts = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.vue', '.svelte', '.mdx', '.html'];
+
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src');
+    if (!existsSync(dir)) continue;
+
+    const ids = docsIdsForStack(stack);
+
+    // Cobertura antes de conteúdo: conjunto vazio significa que o leitor de
+    // `title`/`tags` parou de casar (meta declarado de outra forma, pasta
+    // movida). Sem esta guarda o portão reprovaria os ~70 links de uma vez e
+    // pareceria ter achado 70 defeitos, quando quem quebrou foi ele mesmo.
+    if (ids.size === 0) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: `${stackDir(stack)}/src`, rule: 'related_link_alvo_inexistente',
+        message:
+          'Nenhum id com aba de docs encontrado nesta stack — o leitor de `title`/`tags`' +
+          ' do meta não está casando, e o cruzamento de links relacionados ficou sem base.' +
+          ' Conserte o leitor em `docsIdsForStack` antes de ler qualquer resultado desta regra',
+      });
+      continue;
+    }
+
+    for (const file of walkDir(dir, exts)) {
+      const nome = basename(file);
+      if (/\.(test|spec)\./.test(nome)) continue;
+      const content = readFile(file);
+      if (!content || !content.includes('?path=/docs/')) continue;
+
+      const linhas = content.split('\n');
+      for (let i = 0; i < linhas.length; i++) {
+        const linha = linhas[i];
+        if (/^\s*(\/\/|\*|\/\*|<!--)/.test(linha)) continue;
+        for (const m of linha.matchAll(/\?path=\/docs\/([A-Za-z0-9À-Ý-]+?)--docs\b/gi)) {
+          const alvo = m[1];
+          if (ids.has(alvo)) continue;
+          violations.push({
+            category: 'quality', severity: 'high', slug: '_infra', stack,
+            file: relative(ROOT, file), line: i + 1, rule: 'related_link_alvo_inexistente',
+            message:
+              `\`?path=/docs/${alvo}--docs\` não corresponde a nenhuma página de documentação` +
+              ` desta stack. O link abre uma árvore vazia — o Storybook aceita qualquer` +
+              ` \`?path=\`, então nada mais reprova isto. Ou aponte para um id que exista,` +
+              ` ou remova a entrada (e a chave \`related.*\` no translations.json, se ela` +
+              ` não servir mais a ninguém). Nunca aponte para story de QA: não é página de docs`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 function auditFoundationLabels() {
   const violations = [];
   const conhecidos = sidebarConhecidos();
@@ -5686,7 +5829,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

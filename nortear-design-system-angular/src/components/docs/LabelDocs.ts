@@ -502,7 +502,6 @@ export class NdsLabelDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'input',      path: '?path=/docs/primitives-form-input--docs'       },
-      { key: 'formLabel',  path: '?path=/docs/primitives-form-form--docs'        },
       { key: 'formField',  path: '?path=/docs/primitives-form-form--docs'        },
       { key: 'checkbox',   path: '?path=/docs/primitives-form-checkbox--docs'    },
       { key: 'radioGroup', path: '?path=/docs/primitives-form-radiogroup--docs' },

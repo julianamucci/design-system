@@ -553,8 +553,6 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'alert',  name: 'Alert',  path: '?path=/docs/primitives-feedback-alert--docs'  },
-      { key: 'chip',   name: 'Chip',   path: '?path=/docs/primitives-feedback-badge--docs'  },
-      { key: 'tag',    name: 'Tag',    path: '?path=/docs/primitives-feedback-badge--docs'  },
       { key: 'button', name: 'Button', path: '?path=/docs/primitives-form-button--docs' },
     ].map(({ key, name, path }) => ({
       name: name,

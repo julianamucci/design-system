@@ -594,7 +594,6 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'datePicker', name: 'Popover', path: '?path=/docs/primitives-overlay-popover--docs' },
       { key: 'popover',    name: 'Popover', path: '?path=/docs/primitives-overlay-popover--docs' },
       { key: 'form',       name: 'Form',    path: '?path=/docs/primitives-form-form--docs'    },
       { key: 'input',      name: 'Input',   path: '?path=/docs/primitives-form-input--docs'   },

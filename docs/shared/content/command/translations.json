@@ -245,8 +245,7 @@
       "usedWith": "Costuma ser usado com",
       "select": "Para listas pequenas e fixas sem necessidade de busca por texto.",
       "dropdownMenu": "Para listas de ações ativadas por clique em trigger explícito.",
-      "dialog": "Container para o padrão Command Palette (Command + Dialog).",
-      "inputGroup": "Usado internamente no CommandInput para o campo de busca com ícone."
+      "dialog": "Container para o padrão Command Palette (Command + Dialog)."
     },
     "notes": {
       "title": "Notas de Implementação",
@@ -611,8 +610,7 @@
       "usedWith": "Often used with",
       "select": "For small, fixed lists that don't require text search.",
       "dropdownMenu": "For action lists triggered by an explicit click on a trigger.",
-      "dialog": "Container for the Command Palette pattern (Command + Dialog).",
-      "inputGroup": "Used internally in CommandInput for the search field with icon."
+      "dialog": "Container for the Command Palette pattern (Command + Dialog)."
     },
     "notes": {
       "title": "Implementation Notes",
@@ -977,8 +975,7 @@
       "usedWith": "Se usa frecuentemente con",
       "select": "Para listas pequeñas y fijas sin necesidad de búsqueda por texto.",
       "dropdownMenu": "Para listas de acciones activadas por clic explícito en un trigger.",
-      "dialog": "Contenedor para el patrón Command Palette (Command + Dialog).",
-      "inputGroup": "Usado internamente en CommandInput para el campo de búsqueda con ícono."
+      "dialog": "Contenedor para el patrón Command Palette (Command + Dialog)."
     },
     "notes": {
       "title": "Notas de Implementación",

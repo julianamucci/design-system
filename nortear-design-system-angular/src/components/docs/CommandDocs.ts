@@ -759,7 +759,6 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       { key: 'select',       name: 'Select',        path: '?path=/docs/primitives-form-select--docs'       },
       { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
       { key: 'dialog',       name: 'Dialog',        path: '?path=/docs/primitives-overlay-dialog--docs'       },
-      { key: 'inputGroup',   name: 'Input',         path: '?path=/docs/primitives-form-input--docs'        },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 

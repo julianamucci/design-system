@@ -185,7 +185,6 @@
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "input": "Campo de texto ao qual o Label é associado.",
-      "formLabel": "Versão do Label integrada ao FormField — associação automática via contexto.",
       "formField": "Container que gerencia a associação entre Label e campo de forma automática.",
       "checkbox": "Sempre acompanhado de Label com htmlFor para identificar a opção.",
       "radioGroup": "Cada RadioGroupItem deve ter Label associado via htmlFor."
@@ -463,7 +462,6 @@
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "input": "Text field to which the Label is associated.",
-      "formLabel": "Label version integrated with FormField — automatic association via context.",
       "formField": "Container that automatically manages the Label-to-field association.",
       "checkbox": "Always paired with a Label with htmlFor to identify the option.",
       "radioGroup": "Each RadioGroupItem must have a Label associated via htmlFor."
@@ -741,7 +739,6 @@
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "input": "Campo de texto al que se asocia el Label.",
-      "formLabel": "Versión del Label integrada con FormField — asociación automática via contexto.",
       "formField": "Contenedor que gestiona automáticamente la asociación entre Label y campo.",
       "checkbox": "Siempre acompañado de Label con htmlFor para identificar la opción.",
       "radioGroup": "Cada RadioGroupItem debe tener un Label asociado via htmlFor."

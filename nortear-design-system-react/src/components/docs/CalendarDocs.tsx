@@ -690,11 +690,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         title={tContent("related.title")}
         items={[
           {
-            name: "DatePicker",
-            description: toPlainText(tContent("related.datePicker")),
-            path: "?path=/docs/primitives-overlay-popover--docs",
-          },
-          {
             name: "Popover",
             description: toPlainText(tContent("related.popover")),
             path: "?path=/docs/primitives-overlay-popover--docs",

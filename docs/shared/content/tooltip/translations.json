@@ -348,10 +348,6 @@
         "button": {
           "name": "Button",
           "description": "Trigger comum de tooltips (especialmente icon-only)."
-        },
-        "kbd": {
-          "name": "Kbd",
-          "description": "Indicador de tecla para atalhos dentro do tooltip."
         }
       }
     },
@@ -802,10 +798,6 @@
         "button": {
           "name": "Button",
           "description": "Common tooltip trigger (especially icon-only)."
-        },
-        "kbd": {
-          "name": "Kbd",
-          "description": "Key indicator for shortcuts inside the tooltip."
         }
       }
     },
@@ -1256,10 +1248,6 @@
         "button": {
           "name": "Button",
           "description": "Trigger común de tooltips (especialmente icon-only)."
-        },
-        "kbd": {
-          "name": "Kbd",
-          "description": "Indicador de tecla para atajos dentro del tooltip."
         }
       }
     },

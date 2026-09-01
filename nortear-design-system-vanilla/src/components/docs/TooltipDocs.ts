@@ -757,7 +757,6 @@ export function createTooltipProvider(
             { name: t('related.items.popover.name'),   description: toPlainText(t('related.items.popover.description')),   path: '?path=/docs/primitives-overlay-popover--docs'    },
             { name: t('related.items.hoverCard.name'), description: toPlainText(t('related.items.hoverCard.description')), path: '?path=/docs/primitives-overlay-hovercard--docs'  },
             { name: t('related.items.button.name'),    description: toPlainText(t('related.items.button.description')),    path: '?path=/docs/primitives-form-button--docs'     },
-            { name: t('related.items.kbd.name'),       description: toPlainText(t('related.items.kbd.description')),       path: '?path=/docs/ui-kbd--docs'        },
           ],
         });
 

@@ -656,11 +656,6 @@ interface ProgressProps extends Progress.Root.Props {
             path: "?path=/docs/primitives-feedback-skeleton--docs",
           },
           {
-            name: tContent("related.items.spinner.name"),
-            description: toPlainText(tContent("related.items.spinner.description")),
-            path: "?path=/docs/ui-spinner--docs",
-          },
-          {
             name: tContent("related.items.alert.name"),
             description: toPlainText(tContent("related.items.alert.description")),
             path: "?path=/docs/primitives-feedback-alert--docs",

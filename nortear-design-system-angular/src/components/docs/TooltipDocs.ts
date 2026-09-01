@@ -1134,7 +1134,6 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
       { k: 'popover',   path: '?path=/docs/primitives-overlay-popover--docs'    },
       { k: 'hoverCard', path: '?path=/docs/primitives-overlay-hovercard--docs' },
       { k: 'button',    path: '?path=/docs/primitives-form-button--docs'     },
-      { k: 'kbd',       path: '?path=/docs/ui-kbd--docs'        },
     ].map(({ k, path }) => ({
       name: t(`related.items.${k}.name`),
       description: toPlainText(t(`related.items.${k}.description`)),

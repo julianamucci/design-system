@@ -436,9 +436,8 @@ export function createLabelDocs(): HTMLElement {
           title: t('related.title'),
           items: [
             { name: 'Input',      description: toPlainText(t('related.input')),      path: '?path=/docs/primitives-form-input--docs' },
-            { name: 'Checkbox',   description: toPlainText(t('related.checkbox')),   path: '?path=/docs/primitives-form-checkbox--docs' },
-            { name: 'FormLabel',  description: toPlainText(t('related.formLabel')),  path: '?path=/docs/primitives-form-form--docs' },
             { name: 'FormField',  description: toPlainText(t('related.formField')),  path: '?path=/docs/primitives-form-form--docs' },
+            { name: 'Checkbox',   description: toPlainText(t('related.checkbox')),   path: '?path=/docs/primitives-form-checkbox--docs' },
             { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/primitives-form-radiogroup--docs' },
           ],
         });

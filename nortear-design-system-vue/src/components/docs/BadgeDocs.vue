@@ -230,8 +230,6 @@ const keyboardItems = computed(() => [
 const relatedItems = computed(() => [
   { name: 'Alert',   description: toPlainText(tContent('related.alert')),  path: '?path=/docs/primitives-feedback-alert--docs'   },
   { name: 'Button',  description: toPlainText(tContent('related.button')), path: '?path=/docs/primitives-form-button--docs'  },
-  { name: 'Chip',    description: toPlainText(tContent('related.chip')),   path: '?path=/docs/ui-chip--docs'    },
-  { name: 'Tag',     description: toPlainText(tContent('related.tag')),    path: '?path=/docs/ui-tag--docs'     },
 ]);
 
 const noteItems = computed(() => [

@@ -641,7 +641,6 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'skeleton', path: '?path=/docs/primitives-feedback-skeleton--docs' },
-      { key: 'spinner',  path: '?path=/docs/primitives-feedback-progress--docs' },
       { key: 'alert',    path: '?path=/docs/primitives-feedback-alert--docs'    },
       { key: 'sonner',   path: '?path=/docs/primitives-feedback-sonner--docs'   },
     ].map(({ key, path }) => ({

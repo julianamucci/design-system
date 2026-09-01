@@ -717,11 +717,6 @@ import { Plus } from "lucide-react";`;
                 path: "?path=/docs/primitives-form-switch--docs",
               },
               {
-                name: "Link",
-                description: toPlainText(tContent("related.link")),
-                path: "?path=/docs/ui-link--docs",
-              },
-              {
                 name: "Form",
                 description: toPlainText(tContent("related.form")),
                 path: "?path=/docs/primitives-form-form--docs",
