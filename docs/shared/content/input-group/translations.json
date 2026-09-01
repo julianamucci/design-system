@@ -1,0 +1,1604 @@
+{
+  "pt-BR": {
+    "title": "InputGroup",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Moldura única em volta de um campo e seus acompanhamentos — ícone, texto, atalho ou botão —, com a borda e o anel de foco no grupo em vez de no campo.",
+    "seo": {
+      "title": "InputGroup — Formulário",
+      "description": "Documentação do InputGroup: moldura com addons alinhados no início, no fim, acima ou abaixo do campo; estados de foco, inválido e desabilitado no grupo; conformidade WCAG 2.2 AA.",
+      "aiSummary": "Componente InputGroup: um grupo que envolve um campo de texto e seus acompanhamentos numa moldura só. A borda, o anel de foco e o realce de estado inválido vivem no grupo; o campo interno perde a moldura própria. O addon é decoração e não recebe foco; quando o acompanhamento é um controle, ele é um botão de verdade.",
+      "aiEntities": "InputGroup, addon, prefixo, sufixo, campo de formulário, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-invalid, role group, design system"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "searchGroup": "Buscar componentes",
+        "searchField": "Buscar",
+        "clear": "Limpar busca",
+        "password": "Senha",
+        "reveal": "Mostrar senha",
+        "hide": "Ocultar senha",
+        "siteGroup": "Endereço do site",
+        "siteField": "minhaempresa",
+        "prefix": "https://",
+        "paste": "Colar",
+        "note": "Anotação",
+        "send": "Enviar",
+        "invalidMsg": "Endereço inválido",
+        "shortcut": "⌘K"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Grupo</strong> — a moldura. É dele a borda, o arredondamento e o anel de foco; ele reage ao estado do campo que está dentro.",
+      "item2": "<strong>Addon</strong> — o compartimento do acompanhamento. Tem quatro posições: antes do campo, depois dele, acima ou abaixo. Nas duas últimas o grupo passa a empilhar.",
+      "item3": "<strong>Texto</strong> — palavra ou ícone dentro do addon, em cor de apoio. É decoração e não recebe foco.",
+      "item4": "<strong>Botão</strong> — quando o acompanhamento faz alguma coisa. É um botão de verdade, com a medida apertada para caber na moldura.",
+      "item5": "<strong>Campo</strong> — o input, sem moldura própria: a borda e o anel de foco já são do grupo.",
+      "item6": "<strong>Área de texto</strong> — a alternativa de várias linhas para o mesmo lugar do campo. Presente, o grupo empilha sozinho.",
+      "structureLabel": "Estrutura",
+      "structureCode": {
+        "react": "<InputGroup aria-label=\"Endereço do site\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"minhaempresa\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton onClick={paste}>Colar</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "vue": "<InputGroup aria-label=\"Endereço do site\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"minhaempresa\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton @click=\"paste\">Colar</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "svelte": "<InputGroup aria-label=\"Endereço do site\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"minhaempresa\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton onclick={paste}>Colar</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "angular": "<div ndsInputGroup aria-label=\"Endereço do site\">\n  <div ndsInputGroupAddon align=\"inline-start\">\n    <span ndsInputGroupText>https://</span>\n  </div>\n\n  <input ndsInputGroupInput placeholder=\"minhaempresa\" />\n\n  <div ndsInputGroupAddon align=\"inline-end\">\n    <button ndsButton variant=\"ghost\" ndsInputGroupButton (click)=\"paste()\">\n      Colar\n    </button>\n  </div>\n</div>",
+        "vanilla": "const group = createInputGroup({ 'aria-label': 'Endereço do site' });\n\nconst prefix = createInputGroupAddon({ align: 'inline-start' });\nprefix.appendChild(createInputGroupText({ text: 'https://' }));\n\nconst field = createInputGroupInput({ placeholder: 'minhaempresa' });\n\nconst suffix = createInputGroupAddon({ align: 'inline-end' });\nsuffix.appendChild(createInputGroupButton({ label: 'Colar', onClick: paste }));\n\ngroup.append(prefix, field, suffix);"
+      }
+    },
+    "usage": {
+      "title": "Quando Usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando o acompanhamento pertence ao campo — uma unidade, um domínio, um atalho, um botão que age sobre o que foi digitado. Se ele age sobre outra coisa, o lugar dele é fora da moldura.",
+        "item2": "O campo continua precisando do próprio rótulo. A moldura é desenho; ela não nomeia nada.",
+        "item3": "Nomeie o grupo quando ele tiver mais de um controle dentro. Com um campo só, o rótulo do campo já diz tudo e nomear o grupo faz repetir.",
+        "item4": "Acompanhamento decorativo fica fora da ordem de tabulação. Acompanhamento que age é um botão, nunca um bloco clicável.",
+        "item5": "Um campo por moldura. Dois campos lado a lado numa borda só viram um alvo de clique ambíguo e um rótulo que não se sabe de quem é."
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Nomeie o campo com um rótulo visível, mesmo com prefixo explicando o formato.",
+        "item2": "Marque o erro no campo e descreva o problema em texto ligado a ele.",
+        "item3": "Dê nome acessível ao botão do addon quando ele mostrar só um ícone.",
+        "item4": "Mantenha o prefixo curto: ele divide a largura com o que a pessoa digita."
+      },
+      "dont": {
+        "title": "Evite",
+        "item1": "Trocar o rótulo do campo pelo texto do prefixo.",
+        "item2": "Pôr um bloco clicável no addon no lugar de um botão.",
+        "item3": "Sinalizar erro só pela cor da moldura.",
+        "item4": "Empilhar addon acima e abaixo ao mesmo tempo de um campo de uma linha só."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Campo de busca com lupa e atalho de teclado",
+          "u": "Sim",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Valor com unidade fixa antes ou depois",
+          "u": "Sim",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Campo com botão que age sobre o conteúdo digitado",
+          "u": "Sim",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Dois campos que formam um valor só, como intervalo de datas",
+          "u": "Não",
+          "a": "Dois campos irmãos, cada um com o próprio rótulo"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras",
+          "correct": "Correto",
+          "avoid": "Evite",
+          "prefix": {
+            "name": "Prefixo",
+            "format": "Fragmento fixo do valor, sem pontuação de frase",
+            "good": "https://",
+            "bad": "Digite o endereço:"
+          },
+          "suffix": {
+            "name": "Sufixo",
+            "format": "Unidade ou domínio, curto",
+            "good": "kg",
+            "bad": "quilogramas por unidade"
+          },
+          "addonButton": {
+            "name": "Botão do addon",
+            "format": "Verbo no infinitivo; com ícone só, o nome acessível diz a ação",
+            "good": "Limpar busca",
+            "bad": "OK"
+          },
+          "groupName": {
+            "name": "Nome do grupo",
+            "format": "Só quando há mais de um controle; nomeia o conjunto, não o campo",
+            "good": "Endereço do site",
+            "bad": "Grupo de entrada"
+          }
+        }
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "O acompanhamento que age é um botão: recebe foco, responde ao teclado e tem nome.",
+        "dont": "Um bloco clicável no lugar do botão não recebe foco e some para quem navega por teclado."
+      },
+      "pair2": {
+        "do": "O erro aparece na moldura e também em texto ligado ao campo.",
+        "dont": "Só a moldura vermelha: quem não distingue a cor não fica sabendo de nada."
+      },
+      "pair3": {
+        "do": "O rótulo do campo fica visível acima da moldura; o prefixo só completa o formato.",
+        "dont": "O prefixo fazendo as vezes de rótulo deixa o campo sem nome para o leitor de tela."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "A variação é a POSIÇÃO do acompanhamento. As duas posições em bloco fazem o grupo passar de linha para coluna, e é a folha compartilhada que decide isso sozinha.",
+      "items": {
+        "inlineStart": {
+          "name": "Antes do campo",
+          "description": "O addon abre a linha. É a posição do ícone de busca e do prefixo de formato."
+        },
+        "inlineEnd": {
+          "name": "Depois do campo",
+          "description": "O addon fecha a linha. É a posição da unidade, do atalho e do botão de ação."
+        },
+        "blockStart": {
+          "name": "Acima do campo",
+          "description": "O addon ocupa a largura inteira e o grupo vira coluna. Serve a uma barra de apoio acima do que se digita."
+        },
+        "blockEnd": {
+          "name": "Abaixo do campo",
+          "description": "Mesma largura inteira, embaixo. É onde cabe o contador de caracteres e o botão de envio de uma área de texto."
+        }
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "search": {
+          "name": "Campo de busca",
+          "description": "Ícone antes, atalho de teclado depois. O ícone é decoração e fica fora da árvore de acessibilidade; o atalho é texto, não controle.",
+          "use": "Busca global, filtro de lista, paleta de comandos."
+        },
+        "password": {
+          "name": "Senha com alternância",
+          "description": "Um <code>Button</code> no addon final trocando entre texto e senha. O nome do botão MUDA junto com o estado, porque é ele que conta o que aconteceu.",
+          "use": "Cadastro e login, onde errar a senha em silêncio custa caro."
+        },
+        "affix": {
+          "name": "Prefixo e sufixo de formato",
+          "description": "Dois <code>InputGroupText</code> em volta do <code>Input</code>, um em cada ponta. Eles completam o formato do valor e não substituem o <code>Label</code> do campo.",
+          "use": "Endereço de site, valor com moeda, medida com unidade."
+        },
+        "textareaToolbar": {
+          "name": "Área de texto com barra",
+          "description": "Um <code>Textarea</code> com uma barra de <code>Button</code> embaixo. Com o <code>Textarea</code> dentro, o grupo empilha sem precisar de opção.",
+          "use": "Caixa de comentário, campo de anotação, redação de mensagem."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
+      },
+      "rest": {
+        "label": "Rest",
+        "trigger": "Sem foco e sem erro",
+        "behavior": "Moldura na cor de borda de campo."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "O campo interno recebe foco por teclado",
+        "behavior": "A moldura acende: a borda vai para a cor de foco e ganha um halo em volta. O campo não desenha anel próprio — quem acende é o grupo."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "O campo é marcado como inválido",
+        "behavior": "Moldura na cor de erro, e o realce PERMANECE sem foco. Com foco, o anel de foco aparece por fora do de erro, para que os dois convivam."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "O campo interno está desabilitado",
+        "behavior": "O grupo inteiro esmaece e recebe fundo neutro. O campo sai da ordem de tabulação por ser desabilitado de verdade, não por aparência."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Nome acessível do grupo. Use quando a moldura tiver mais de um controle dentro; com um campo só ele repete o rótulo do campo."
+        },
+        "align": {
+          "type": "'inline-start' | 'inline-end' | 'block-start' | 'block-end'",
+          "default": "'inline-start'",
+          "required": "Não",
+          "description": "Posição do addon. As duas em bloco fazem o grupo empilhar."
+        },
+        "size": {
+          "type": "'xs' | 'sm' | 'icon-xs' | 'icon-sm'",
+          "default": "'xs'",
+          "required": "Não",
+          "description": "Medida do botão dentro da moldura. As duas de ícone são para o botão sem texto."
+        },
+        "variant": {
+          "type": "ButtonVariant",
+          "default": "'ghost'",
+          "required": "Não",
+          "description": "Aparência do botão, repassada ao botão do design system."
+        },
+        "text": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Conteúdo textual do compartimento de texto."
+        },
+        "class": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes adicionais na raiz de cada peça."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": {
+        "react": "// O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n// de <input>. O estado inválido é do CAMPO — a moldura reage por :has().\n<InputGroup aria-label=\"Endereço do site\">\n  <InputGroupInput\n    aria-invalid={hasError}\n    aria-describedby={hasError ? \"site-error\" : undefined}\n  />\n</InputGroup>\n<p id=\"site-error\">Endereço inválido</p>",
+        "vue": "<!-- O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n     de <input>. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<InputGroup :aria-label=\"'Endereço do site'\">\n  <InputGroupInput\n    :aria-invalid=\"hasError || undefined\"\n    :aria-describedby=\"hasError ? 'site-error' : undefined\"\n  />\n</InputGroup>\n<p id=\"site-error\">Endereço inválido</p>",
+        "svelte": "<!-- O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n     de <input>. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<InputGroup aria-label=\"Endereço do site\">\n  <InputGroupInput\n    aria-invalid={hasError || undefined}\n    aria-describedby={hasError ? \"site-error\" : undefined}\n  />\n</InputGroup>\n<p id=\"site-error\">Endereço inválido</p>",
+        "angular": "<!-- As diretivas não engolem atributo: o que se escreve no elemento chega\n     nele. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<div ndsInputGroup aria-label=\"Endereço do site\">\n  <input\n    ndsInputGroupInput\n    [attr.aria-invalid]=\"hasError() || null\"\n    [attr.aria-describedby]=\"hasError() ? 'site-error' : null\"\n  />\n</div>\n<p id=\"site-error\">Endereço inválido</p>",
+        "vanilla": "// As fábricas devolvem o elemento nativo: o que falta se escreve nele.\n// O estado inválido é do CAMPO — a moldura reage por :has().\nconst field = createInputGroupInput({ id: 'site' });\nfield.setAttribute('aria-invalid', 'true');\nfield.setAttribute('aria-describedby', 'site-error');"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "border": {
+          "class": ".nds-input-group",
+          "part": "Cor da moldura em repouso"
+        },
+        "radius": {
+          "class": ".nds-input-group",
+          "part": "Arredondamento da moldura"
+        },
+        "transition": {
+          "class": ".nds-input-group",
+          "part": "Tempo da transição de borda e halo"
+        },
+        "ring": {
+          "class": ".nds-input-group",
+          "part": "Cor da borda e do halo quando o campo interno recebe foco"
+        },
+        "destructive": {
+          "class": ".nds-input-group",
+          "part": "Cor da moldura e do halo quando o campo é marcado como inválido"
+        },
+        "disabledBg": {
+          "class": ".nds-input-group",
+          "part": "Fundo neutro quando o campo interno está desabilitado"
+        },
+        "controlRadius": {
+          "class": ".nds-input-group-control",
+          "part": "Arredondamento zerado do campo, que perde a moldura própria"
+        },
+        "textareaPadding": {
+          "class": ".nds-input-group-control",
+          "part": "Espaço interno vertical, quando o campo é uma área de texto"
+        },
+        "addonPadding": {
+          "class": ".nds-input-group-addon",
+          "part": "Espaço interno vertical do addon"
+        },
+        "addonGap": {
+          "class": ".nds-input-group-addon",
+          "part": "Espaço entre os itens dentro do addon"
+        },
+        "addonSize": {
+          "class": ".nds-input-group-addon",
+          "part": "Tamanho do texto do addon"
+        },
+        "addonWeight": {
+          "class": ".nds-input-group-addon",
+          "part": "Peso do texto do addon"
+        },
+        "addonColor": {
+          "class": ".nds-input-group-addon",
+          "part": "Cor de apoio do addon e do texto"
+        },
+        "addonInline": {
+          "class": ".nds-input-group-addon",
+          "part": "Recuo lateral nas duas posições em linha"
+        },
+        "addonBlock": {
+          "class": ".nds-input-group-addon",
+          "part": "Recuo lateral nas duas posições em bloco"
+        },
+        "iconSize": {
+          "class": ".nds-input-group-addon",
+          "part": "Medida do ícone que o addon carrega"
+        },
+        "buttonRadius": {
+          "class": ".nds-input-group-button",
+          "part": "Arredondamento interno do botão, um degrau abaixo do da moldura"
+        },
+        "buttonGap": {
+          "class": ".nds-input-group-button",
+          "part": "Espaço entre o ícone e o texto do botão"
+        },
+        "buttonPadding": {
+          "class": ".nds-input-group-button",
+          "part": "Recuo lateral do botão apertado"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* A moldura lê os tokens do tema — trocar o tema troca o grupo inteiro.\n   Para um caso pontual, sobreponha o token no escopo, nunca a cor na regra. */\n.formulario-de-busca .nds-input-group {\n  --radius: var(--radius-full);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A moldura agrupa; ela não nomeia. Quem tem nome é o campo, pelo rótulo, e o grupo só ganha nome quando guarda mais de um controle. Acompanhamento decorativo fica fora do foco e fora da leitura; acompanhamento que age é um botão de verdade.",
+      "items": {
+        "item1": "A raiz declara papel de grupo. O papel aceita nome acessível — e é por isso que ele está declarado aqui, e não deixado implícito: um contêiner sem papel descarta o nome em silêncio.",
+        "item2": "O nome do grupo é opcional e nunca inventado. Com um campo só, nomear o grupo faz o leitor de tela dizer as mesmas palavras duas vezes.",
+        "item3": "O addon não tem papel nenhum. Um agrupamento sem nome dentro de outro agrupamento acrescenta um degrau que não diz nada.",
+        "item4": "Clicar no addon leva o foco ao campo. É atalho de ponteiro para o que o campo já oferece ao teclado, e por isso o addon não é parada de tabulação.",
+        "item5": "Ícone dentro do addon fica fora da árvore de acessibilidade. O que ele ilustra já está no rótulo do campo.",
+        "item6": "Acompanhamento que age é um botão de verdade, com nome próprio quando mostra só um ícone.",
+        "item7": "Nenhuma altura fixa: a altura sai do espaço interno e da entrelinha, e a moldura cresce com o tamanho de fonte do navegador (WCAG 1.4.4).",
+        "item8": "Estado nunca depende só de cor: inválido carrega o atributo de invalidez e um texto ligado ao campo; desabilitado é desabilitado de verdade (WCAG 1.4.1).",
+        "item9": "Sem região viva. Nada no grupo se reanuncia — quem conta o erro é o texto ligado ao campo, no momento em que a validação acontece."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Entra no campo e, depois dele, em cada botão do addon, na ordem visual.",
+        "shiftTab": "Percorre o mesmo caminho ao contrário.",
+        "enter": "Aciona o botão do addon que estiver em foco.",
+        "space": "Aciona o botão do addon que estiver em foco."
+      },
+      "aria": {
+        "title": "ARIA",
+        "group": "role=\"group\" na moldura — o papel que aceita nome acessível.",
+        "label": "aria-label no grupo, só quando ele guarda mais de um controle.",
+        "invalid": "aria-invalid no CAMPO; a moldura reage por seletor de estado.",
+        "describedby": "aria-describedby ligando o campo ao texto que descreve o erro.",
+        "hidden": "aria-hidden no ícone decorativo do addon."
+      },
+      "screenReader": {
+        "field": "O campo é anunciado pelo próprio rótulo, com o tipo e o valor atual.",
+        "group": "Com nome, o grupo é anunciado antes do campo e situa o botão que o acompanha.",
+        "invalid": "Marcado como inválido, o campo é anunciado como inválido e o texto ligado a ele é lido em seguida.",
+        "button": "O botão do addon é anunciado pelo nome próprio, e não pelo desenho do ícone."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "input": {
+          "name": "Input",
+          "description": "O campo de uma linha que vive dentro da moldura."
+        },
+        "textarea": {
+          "name": "Textarea",
+          "description": "A alternativa de várias linhas para o mesmo lugar."
+        },
+        "button": {
+          "name": "Button",
+          "description": "O botão que o addon aperta para caber na moldura."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Rótulo, texto de apoio e mensagem de erro em volta do campo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>A moldura é do grupo, e o campo fica nu.</strong> O campo interno zera a própria borda e o próprio anel — se ele desenhasse os dois, apareceriam duas molduras concêntricas na hora do foco.",
+      "item2": "<strong>O grupo empilha sozinho.</strong> Basta um addon em bloco, ou uma área de texto dentro, para a folha compartilhada trocar linha por coluna. Não há opção de direção para passar.",
+      "item3": "<strong>O realce de erro sobrevive à perda de foco</strong>, e com foco os dois convivem: o de erro por dentro, o de foco por fora. Sem isso, focar um campo inválido não mudaria nada na tela.",
+      "item4": "<strong>O clique no addon não atropela o botão.</strong> O atalho que leva o foco ao campo é ignorado quando o clique cai sobre um botão — senão apertar o botão devolveria o foco ao campo no meio da ação.",
+      "item5": "<strong>O campo é achado pela classe do controle</strong>, e não pelo elemento: assim o atalho do addon alcança tanto o campo de uma linha quanto a área de texto."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos disparados pelas páginas de documentação que usam o componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "button_click": {
+          "trigger": "Pessoa aciona o botão do addon na demonstração",
+          "payload": "{ component: \"input-group\", variant, location }"
+        },
+        "docs_section_viewed": {
+          "trigger": "Seção da página fica visível por dois segundos contínuos",
+          "payload": "{ section_id, component_name: \"input-group\", locale }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada composição da moldura.",
+        "item1": {
+          "action": "Clicar no addon decorativo, fora de qualquer botão",
+          "result": "O foco vai para o campo interno do grupo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar no botão dentro do addon",
+          "result": "O botão age e permanece com o foco; o campo não o rouba",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar o grupo com uma área de texto no lugar do campo",
+          "result": "O grupo empilha e o atalho do addon alcança a área de texto",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Declarar o addon em cada uma das quatro posições",
+          "result": "Cada addon leva a posição declarada e a ordem visual acompanha",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Desabilitar o campo interno",
+          "result": "O campo sai da ordem de tabulação e o grupo inteiro esmaece",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "A raiz declara papel de grupo e aceita o nome acessível que recebe",
+        "item3": "O addon não declara papel nenhum",
+        "item4": "Nenhum addon é parada de tabulação; o que age é um botão",
+        "item5": "O campo marcado como inválido carrega o atributo e aponta para o texto que o descreve",
+        "item6": "Nenhum elemento do grupo declara região viva",
+        "item7": "Nenhuma peça do grupo declara altura fixa"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "required": "Obrigatório",
+        "description": "Estados que o Chromatic deve capturar.",
+        "item1": {
+          "story": "Playground",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — as quatro posições do addon",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — repouso, inválido e desabilitado",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composições — busca, senha, formato e área de texto",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Boas práticas",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "compositions": "Composições",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "InputGroup",
+    "category": "Form",
+    "type": "Component",
+    "description": "A single frame around a field and what goes with it — icon, text, shortcut or button — with the border and focus ring on the group instead of on the field.",
+    "seo": {
+      "title": "InputGroup — Form",
+      "description": "InputGroup documentation: a frame with addons aligned before, after, above or below the field; focus, invalid and disabled states on the group; WCAG 2.2 AA conformance.",
+      "aiSummary": "InputGroup component: a group wrapping a text field and its companions in a single frame. The border, the focus ring and the invalid highlight live on the group; the inner field loses its own frame. The addon is decoration and takes no focus; when a companion acts, it is a real button.",
+      "aiEntities": "InputGroup, addon, prefix, suffix, form field, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-invalid, role group, design system"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "searchGroup": "Search components",
+        "searchField": "Search",
+        "clear": "Clear search",
+        "password": "Password",
+        "reveal": "Show password",
+        "hide": "Hide password",
+        "siteGroup": "Site address",
+        "siteField": "mycompany",
+        "prefix": "https://",
+        "paste": "Paste",
+        "note": "Note",
+        "send": "Send",
+        "invalidMsg": "Invalid address",
+        "shortcut": "⌘K"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Group</strong> — the frame. The border, the corner radius and the focus ring belong to it, and it reacts to the state of the field inside.",
+      "item2": "<strong>Addon</strong> — the compartment for the companion. It has four positions: before the field, after it, above or below. In the last two the group starts stacking.",
+      "item3": "<strong>Text</strong> — a word or icon inside the addon, in a supporting colour. It is decoration and takes no focus.",
+      "item4": "<strong>Button</strong> — for when the companion does something. It is a real button, tightened to fit inside the frame.",
+      "item5": "<strong>Field</strong> — the input, with no frame of its own: the border and the focus ring already belong to the group.",
+      "item6": "<strong>Text area</strong> — the multi-line alternative for the same slot. With it present, the group stacks on its own.",
+      "structureLabel": "Structure",
+      "structureCode": {
+        "react": "<InputGroup aria-label=\"Site address\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"mycompany\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton onClick={paste}>Paste</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "vue": "<InputGroup aria-label=\"Site address\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"mycompany\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton @click=\"paste\">Paste</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "svelte": "<InputGroup aria-label=\"Site address\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"mycompany\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton onclick={paste}>Paste</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "angular": "<div ndsInputGroup aria-label=\"Site address\">\n  <div ndsInputGroupAddon align=\"inline-start\">\n    <span ndsInputGroupText>https://</span>\n  </div>\n\n  <input ndsInputGroupInput placeholder=\"mycompany\" />\n\n  <div ndsInputGroupAddon align=\"inline-end\">\n    <button ndsButton variant=\"ghost\" ndsInputGroupButton (click)=\"paste()\">\n      Paste\n    </button>\n  </div>\n</div>",
+        "vanilla": "const group = createInputGroup({ 'aria-label': 'Site address' });\n\nconst prefix = createInputGroupAddon({ align: 'inline-start' });\nprefix.appendChild(createInputGroupText({ text: 'https://' }));\n\nconst field = createInputGroupInput({ placeholder: 'mycompany' });\n\nconst suffix = createInputGroupAddon({ align: 'inline-end' });\nsuffix.appendChild(createInputGroupButton({ label: 'Paste', onClick: paste }));\n\ngroup.append(prefix, field, suffix);"
+      }
+    },
+    "usage": {
+      "title": "When To Use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when the companion belongs to the field — a unit, a domain, a shortcut, a button acting on what was typed. If it acts on something else, it belongs outside the frame.",
+        "item2": "The field still needs its own label. The frame is drawing; it names nothing.",
+        "item3": "Name the group when it holds more than one control. With a single field the field label already says it, and naming the group repeats it.",
+        "item4": "A decorative companion stays out of the tab order. A companion that acts is a button, never a clickable block.",
+        "item5": "One field per frame. Two fields side by side in a single border become an ambiguous click target and a label nobody can attribute."
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Name the field with a visible label, even when a prefix explains the format.",
+        "item2": "Mark the error on the field and describe the problem in text tied to it.",
+        "item3": "Give the addon button an accessible name when it shows only an icon.",
+        "item4": "Keep the prefix short: it shares the width with what the person types."
+      },
+      "dont": {
+        "title": "Avoid",
+        "item1": "Replacing the field label with the prefix text.",
+        "item2": "Putting a clickable block in the addon instead of a button.",
+        "item3": "Signalling an error by frame colour alone.",
+        "item4": "Stacking an addon above and below a single-line field at the same time."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Search field with a magnifier and a keyboard shortcut",
+          "u": "Yes",
+          "a": "—"
+        },
+        "item2": {
+          "s": "A value with a fixed unit before or after it",
+          "u": "Yes",
+          "a": "—"
+        },
+        "item3": {
+          "s": "A field with a button acting on what was typed",
+          "u": "Yes",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Two fields forming a single value, such as a date range",
+          "u": "No",
+          "a": "Two sibling fields, each with its own label"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "prefix": {
+            "name": "Prefix",
+            "format": "A fixed fragment of the value, with no sentence punctuation",
+            "good": "https://",
+            "bad": "Enter the address:"
+          },
+          "suffix": {
+            "name": "Suffix",
+            "format": "A unit or domain, kept short",
+            "good": "kg",
+            "bad": "kilograms per unit"
+          },
+          "addonButton": {
+            "name": "Addon button",
+            "format": "A verb; with an icon only, the accessible name states the action",
+            "good": "Clear search",
+            "bad": "OK"
+          },
+          "groupName": {
+            "name": "Group name",
+            "format": "Only when there is more than one control; it names the set, not the field",
+            "good": "Site address",
+            "bad": "Input group"
+          }
+        }
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "A companion that acts is a button: it takes focus, answers the keyboard and has a name.",
+        "dont": "A clickable block in place of the button takes no focus and vanishes for keyboard users."
+      },
+      "pair2": {
+        "do": "The error shows on the frame and also in text tied to the field.",
+        "dont": "A red frame alone: anyone who cannot tell the colour apart learns nothing."
+      },
+      "pair3": {
+        "do": "The field label stays visible above the frame; the prefix only completes the format.",
+        "dont": "A prefix standing in for the label leaves the field unnamed for the screen reader."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "note": "The variation is the POSITION of the companion. The two block positions turn the group from a row into a column, and the shared stylesheet decides that on its own.",
+      "items": {
+        "inlineStart": {
+          "name": "Before the field",
+          "description": "The addon opens the row. This is where the search icon and the format prefix go."
+        },
+        "inlineEnd": {
+          "name": "After the field",
+          "description": "The addon closes the row. This is where the unit, the shortcut and the action button go."
+        },
+        "blockStart": {
+          "name": "Above the field",
+          "description": "The addon takes the full width and the group becomes a column. It suits a support bar above what is being typed."
+        },
+        "blockEnd": {
+          "name": "Below the field",
+          "description": "Same full width, underneath. This is where a character counter and a send button for a text area fit."
+        }
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "search": {
+          "name": "Search field",
+          "description": "Icon before, keyboard shortcut after. The icon is decoration and stays out of the accessibility tree; the shortcut is text, not a control.",
+          "use": "Global search, list filter, command palette."
+        },
+        "password": {
+          "name": "Password with a toggle",
+          "description": "A <code>Button</code> in the trailing addon switching between text and password. The button name CHANGES with the state, because it is what reports what happened.",
+          "use": "Sign-up and sign-in, where mistyping a password silently is costly."
+        },
+        "affix": {
+          "name": "Format prefix and suffix",
+          "description": "Two <code>InputGroupText</code> around the <code>Input</code>, one at each end. They complete the value format and never replace the field <code>Label</code>.",
+          "use": "Site address, an amount with a currency, a measure with a unit."
+        },
+        "textareaToolbar": {
+          "name": "Text area with a bar",
+          "description": "A <code>Textarea</code> with a bar of <code>Button</code> underneath. With the <code>Textarea</code> inside, the group stacks without needing an option.",
+          "use": "Comment box, note field, message composer."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behaviour"
+      },
+      "rest": {
+        "label": "Rest",
+        "trigger": "No focus and no error",
+        "behavior": "Frame in the field border colour."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "The inner field receives keyboard focus",
+        "behavior": "The frame lights up: the border moves to the focus colour and gains a halo around it. The field draws no ring of its own — the group is what lights up."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "The field is marked as invalid",
+        "behavior": "Frame in the error colour, and the highlight STAYS with focus gone. With focus, the focus ring appears outside the error one so both can coexist."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "The inner field is disabled",
+        "behavior": "The whole group dims and takes a neutral background. The field leaves the tab order because it is genuinely disabled, not because it looks that way."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Accessible name of the group. Use it when the frame holds more than one control; with a single field it repeats the field label."
+        },
+        "align": {
+          "type": "'inline-start' | 'inline-end' | 'block-start' | 'block-end'",
+          "default": "'inline-start'",
+          "required": "No",
+          "description": "Position of the addon. The two block ones make the group stack."
+        },
+        "size": {
+          "type": "'xs' | 'sm' | 'icon-xs' | 'icon-sm'",
+          "default": "'xs'",
+          "required": "No",
+          "description": "Measure of the button inside the frame. The two icon ones are for a button with no text."
+        },
+        "variant": {
+          "type": "ButtonVariant",
+          "default": "'ghost'",
+          "required": "No",
+          "description": "Appearance of the button, passed through to the design system button."
+        },
+        "text": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Textual content of the text compartment."
+        },
+        "class": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Extra classes on the root of each piece."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": {
+        "react": "// O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n// de <input>. O estado inválido é do CAMPO — a moldura reage por :has().\n<InputGroup aria-label=\"Site address\">\n  <InputGroupInput\n    aria-invalid={hasError}\n    aria-describedby={hasError ? \"site-error\" : undefined}\n  />\n</InputGroup>\n<p id=\"site-error\">Invalid address</p>",
+        "vue": "<!-- O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n     de <input>. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<InputGroup :aria-label=\"'Site address'\">\n  <InputGroupInput\n    :aria-invalid=\"hasError || undefined\"\n    :aria-describedby=\"hasError ? 'site-error' : undefined\"\n  />\n</InputGroup>\n<p id=\"site-error\">Invalid address</p>",
+        "svelte": "<!-- O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n     de <input>. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<InputGroup aria-label=\"Site address\">\n  <InputGroupInput\n    aria-invalid={hasError || undefined}\n    aria-describedby={hasError ? \"site-error\" : undefined}\n  />\n</InputGroup>\n<p id=\"site-error\">Invalid address</p>",
+        "angular": "<!-- As diretivas não engolem atributo: o que se escreve no elemento chega\n     nele. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<div ndsInputGroup aria-label=\"Site address\">\n  <input\n    ndsInputGroupInput\n    [attr.aria-invalid]=\"hasError() || null\"\n    [attr.aria-describedby]=\"hasError() ? 'site-error' : null\"\n  />\n</div>\n<p id=\"site-error\">Invalid address</p>",
+        "vanilla": "// As fábricas devolvem o elemento nativo: o que falta se escreve nele.\n// O estado inválido é do CAMPO — a moldura reage por :has().\nconst field = createInputGroupInput({ id: 'site' });\nfield.setAttribute('aria-invalid', 'true');\nfield.setAttribute('aria-describedby', 'site-error');"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Applies to",
+        "border": {
+          "class": ".nds-input-group",
+          "part": "Frame colour at rest"
+        },
+        "radius": {
+          "class": ".nds-input-group",
+          "part": "Corner radius of the frame"
+        },
+        "transition": {
+          "class": ".nds-input-group",
+          "part": "Duration of the border and halo transition"
+        },
+        "ring": {
+          "class": ".nds-input-group",
+          "part": "Border and halo colour when the inner field takes focus"
+        },
+        "destructive": {
+          "class": ".nds-input-group",
+          "part": "Frame and halo colour when the field is marked invalid"
+        },
+        "disabledBg": {
+          "class": ".nds-input-group",
+          "part": "Neutral background when the inner field is disabled"
+        },
+        "controlRadius": {
+          "class": ".nds-input-group-control",
+          "part": "Zeroed radius of the field, which loses its own frame"
+        },
+        "textareaPadding": {
+          "class": ".nds-input-group-control",
+          "part": "Vertical inner spacing, when the field is a text area"
+        },
+        "addonPadding": {
+          "class": ".nds-input-group-addon",
+          "part": "Vertical inner spacing of the addon"
+        },
+        "addonGap": {
+          "class": ".nds-input-group-addon",
+          "part": "Spacing between items inside the addon"
+        },
+        "addonSize": {
+          "class": ".nds-input-group-addon",
+          "part": "Text size of the addon"
+        },
+        "addonWeight": {
+          "class": ".nds-input-group-addon",
+          "part": "Text weight of the addon"
+        },
+        "addonColor": {
+          "class": ".nds-input-group-addon",
+          "part": "Supporting colour of the addon and its text"
+        },
+        "addonInline": {
+          "class": ".nds-input-group-addon",
+          "part": "Side inset in the two inline positions"
+        },
+        "addonBlock": {
+          "class": ".nds-input-group-addon",
+          "part": "Side inset in the two block positions"
+        },
+        "iconSize": {
+          "class": ".nds-input-group-addon",
+          "part": "Size of the icon the addon carries"
+        },
+        "buttonRadius": {
+          "class": ".nds-input-group-button",
+          "part": "Inner radius of the button, one step below the frame"
+        },
+        "buttonGap": {
+          "class": ".nds-input-group-button",
+          "part": "Spacing between the icon and the text of the button"
+        },
+        "buttonPadding": {
+          "class": ".nds-input-group-button",
+          "part": "Side inset of the tightened button"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": "/* A moldura lê os tokens do tema — trocar o tema troca o grupo inteiro.\n   Para um caso pontual, sobreponha o token no escopo, nunca a cor na regra. */\n.formulario-de-busca .nds-input-group {\n  --radius: var(--radius-full);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The frame groups; it does not name. What has a name is the field, through its label, and the group only takes a name when it holds more than one control. A decorative companion stays out of focus and out of the reading; a companion that acts is a real button.",
+      "items": {
+        "item1": "The root declares a group role. The role accepts an accessible name — which is why it is declared here rather than left implicit: a container with no role discards the name silently.",
+        "item2": "The group name is optional and never invented. With a single field, naming the group makes the screen reader say the same words twice.",
+        "item3": "The addon has no role at all. An unnamed grouping inside another grouping adds a step that says nothing.",
+        "item4": "Clicking the addon moves focus to the field. It is a pointer shortcut to what the field already offers the keyboard, which is why the addon is not a tab stop.",
+        "item5": "An icon inside the addon stays out of the accessibility tree. What it illustrates is already in the field label.",
+        "item6": "A companion that acts is a real button, with a name of its own when it shows only an icon.",
+        "item7": "No fixed height: height comes out of inner spacing and line height, so the frame grows with the browser font size (WCAG 1.4.4).",
+        "item8": "State never depends on colour alone: invalid carries the invalidity attribute and text tied to the field; disabled is genuinely disabled (WCAG 1.4.1).",
+        "item9": "No live region. Nothing in the group re-announces itself — the error is reported by the text tied to the field, at the moment validation happens."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Enters the field and then each addon button, in visual order.",
+        "shiftTab": "Walks the same path backwards.",
+        "enter": "Activates the focused addon button.",
+        "space": "Activates the focused addon button."
+      },
+      "aria": {
+        "title": "ARIA",
+        "group": "role=\"group\" on the frame — the role that accepts an accessible name.",
+        "label": "aria-label on the group, only when it holds more than one control.",
+        "invalid": "aria-invalid on the FIELD; the frame reacts through a state selector.",
+        "describedby": "aria-describedby tying the field to the text describing the error.",
+        "hidden": "aria-hidden on the decorative icon of the addon."
+      },
+      "screenReader": {
+        "field": "The field is announced by its own label, with its type and current value.",
+        "group": "When named, the group is announced before the field and places the button that accompanies it.",
+        "invalid": "Marked as invalid, the field is announced as invalid and the text tied to it is read next.",
+        "button": "The addon button is announced by its own name, not by the drawing of the icon."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "input": {
+          "name": "Input",
+          "description": "The single-line field that lives inside the frame."
+        },
+        "textarea": {
+          "name": "Textarea",
+          "description": "The multi-line alternative for the same slot."
+        },
+        "button": {
+          "name": "Button",
+          "description": "The button the addon tightens to fit inside the frame."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Label, support text and error message around the field."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>The frame belongs to the group, and the field goes bare.</strong> The inner field zeroes its own border and its own ring — if it drew both, two concentric frames would appear on focus.",
+      "item2": "<strong>The group stacks on its own.</strong> One block addon, or a text area inside, is enough for the shared stylesheet to swap a row for a column. There is no direction option to pass.",
+      "item3": "<strong>The error highlight survives losing focus</strong>, and under focus the two coexist: the error one inside, the focus one outside. Without that, focusing an invalid field would change nothing on screen.",
+      "item4": "<strong>The addon click does not run over the button.</strong> The shortcut that moves focus to the field is skipped when the click lands on a button — otherwise pressing the button would hand focus back to the field mid-action.",
+      "item5": "<strong>The field is found by the control class</strong>, not by the element: that way the addon shortcut reaches both the single-line field and the text area."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Events fired by the documentation pages that use the component.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "button_click": {
+          "trigger": "A person activates the addon button in the demonstration",
+          "payload": "{ component: \"input-group\", variant, location }"
+        },
+        "docs_section_viewed": {
+          "trigger": "A page section stays visible for two continuous seconds",
+          "payload": "{ section_id, component_name: \"input-group\", locale }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behaviour",
+        "description": "What must happen in each composition of the frame.",
+        "item1": {
+          "action": "Click the decorative addon, away from any button",
+          "result": "Focus moves to the field inside the group",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click the button inside the addon",
+          "result": "The button acts and keeps focus; the field does not steal it",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Build the group with a text area in place of the field",
+          "result": "The group stacks and the addon shortcut reaches the text area",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Declare the addon in each of the four positions",
+          "result": "Each addon carries the declared position and the visual order follows",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Disable the inner field",
+          "result": "The field leaves the tab order and the whole group dims",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools must confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "The root declares a group role and accepts the accessible name it is given",
+        "item3": "The addon declares no role at all",
+        "item4": "No addon is a tab stop; the one that acts is a button",
+        "item5": "The field marked as invalid carries the attribute and points at the text describing it",
+        "item6": "No element of the group declares a live region",
+        "item7": "No piece of the group declares a fixed height"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "required": "Required",
+        "description": "States Chromatic must capture.",
+        "item1": {
+          "story": "Playground",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — the four addon positions",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — rest, invalid and disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Compositions — search, password, format and text area",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When To Use",
+      "doDont": "Best practices",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "compositions": "Compositions",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "InputGroup",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Un marco único alrededor de un campo y lo que lo acompaña — icono, texto, atajo o botón —, con el borde y el anillo de foco en el grupo y no en el campo.",
+    "seo": {
+      "title": "InputGroup — Formulario",
+      "description": "Documentación del InputGroup: marco con complementos alineados antes, después, encima o debajo del campo; estados de foco, no válido y deshabilitado en el grupo; conformidad WCAG 2.2 AA.",
+      "aiSummary": "Componente InputGroup: un grupo que envuelve un campo de texto y sus complementos en un solo marco. El borde, el anillo de foco y el realce de estado no válido viven en el grupo; el campo interno pierde su propio marco. El complemento es decoración y no recibe foco; cuando acompaña una acción, es un botón de verdad.",
+      "aiEntities": "InputGroup, complemento, prefijo, sufijo, campo de formulario, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-invalid, role group, design system"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "searchGroup": "Buscar componentes",
+        "searchField": "Buscar",
+        "clear": "Limpiar búsqueda",
+        "password": "Contraseña",
+        "reveal": "Mostrar contraseña",
+        "hide": "Ocultar contraseña",
+        "siteGroup": "Dirección del sitio",
+        "siteField": "miempresa",
+        "prefix": "https://",
+        "paste": "Pegar",
+        "note": "Nota",
+        "send": "Enviar",
+        "invalidMsg": "Dirección no válida",
+        "shortcut": "⌘K"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Grupo</strong> — el marco. Suyos son el borde, el redondeo y el anillo de foco; reacciona al estado del campo que hay dentro.",
+      "item2": "<strong>Complemento</strong> — el compartimento de lo que acompaña. Tiene cuatro posiciones: antes del campo, después, encima o debajo. En las dos últimas el grupo pasa a apilar.",
+      "item3": "<strong>Texto</strong> — palabra o icono dentro del complemento, en color de apoyo. Es decoración y no recibe foco.",
+      "item4": "<strong>Botón</strong> — cuando el complemento hace algo. Es un botón de verdad, con la medida ajustada para caber en el marco.",
+      "item5": "<strong>Campo</strong> — el input, sin marco propio: el borde y el anillo de foco ya son del grupo.",
+      "item6": "<strong>Área de texto</strong> — la alternativa de varias líneas para el mismo sitio. Presente, el grupo apila solo.",
+      "structureLabel": "Estructura",
+      "structureCode": {
+        "react": "<InputGroup aria-label=\"Dirección del sitio\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"miempresa\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton onClick={paste}>Pegar</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "vue": "<InputGroup aria-label=\"Dirección del sitio\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"miempresa\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton @click=\"paste\">Pegar</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "svelte": "<InputGroup aria-label=\"Dirección del sitio\">\n  <InputGroupAddon align=\"inline-start\">\n    <InputGroupText>https://</InputGroupText>\n  </InputGroupAddon>\n\n  <InputGroupInput placeholder=\"miempresa\" />\n\n  <InputGroupAddon align=\"inline-end\">\n    <InputGroupButton onclick={paste}>Pegar</InputGroupButton>\n  </InputGroupAddon>\n</InputGroup>",
+        "angular": "<div ndsInputGroup aria-label=\"Dirección del sitio\">\n  <div ndsInputGroupAddon align=\"inline-start\">\n    <span ndsInputGroupText>https://</span>\n  </div>\n\n  <input ndsInputGroupInput placeholder=\"miempresa\" />\n\n  <div ndsInputGroupAddon align=\"inline-end\">\n    <button ndsButton variant=\"ghost\" ndsInputGroupButton (click)=\"paste()\">\n      Pegar\n    </button>\n  </div>\n</div>",
+        "vanilla": "const group = createInputGroup({ 'aria-label': 'Dirección del sitio' });\n\nconst prefix = createInputGroupAddon({ align: 'inline-start' });\nprefix.appendChild(createInputGroupText({ text: 'https://' }));\n\nconst field = createInputGroupInput({ placeholder: 'miempresa' });\n\nconst suffix = createInputGroupAddon({ align: 'inline-end' });\nsuffix.appendChild(createInputGroupButton({ label: 'Pegar', onClick: paste }));\n\ngroup.append(prefix, field, suffix);"
+      }
+    },
+    "usage": {
+      "title": "Cuándo Usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo cuando el complemento pertenece al campo — una unidad, un dominio, un atajo, un botón que actúa sobre lo escrito. Si actúa sobre otra cosa, su sitio está fuera del marco.",
+        "item2": "El campo sigue necesitando su propia etiqueta. El marco es dibujo; no nombra nada.",
+        "item3": "Nombra el grupo cuando tenga más de un control dentro. Con un solo campo, la etiqueta del campo ya lo dice y nombrar el grupo lo repite.",
+        "item4": "El complemento decorativo queda fuera del orden de tabulación. El complemento que actúa es un botón, nunca un bloque pulsable.",
+        "item5": "Un campo por marco. Dos campos uno al lado del otro en un solo borde se vuelven un objetivo de clic ambiguo y una etiqueta que no se sabe de quién es."
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Nombra el campo con una etiqueta visible, aunque un prefijo explique el formato.",
+        "item2": "Marca el error en el campo y describe el problema en un texto ligado a él.",
+        "item3": "Da nombre accesible al botón del complemento cuando solo muestre un icono.",
+        "item4": "Mantén el prefijo corto: comparte el ancho con lo que la persona escribe."
+      },
+      "dont": {
+        "title": "Evita",
+        "item1": "Sustituir la etiqueta del campo por el texto del prefijo.",
+        "item2": "Poner un bloque pulsable en el complemento en lugar de un botón.",
+        "item3": "Señalar el error solo por el color del marco.",
+        "item4": "Apilar complemento encima y debajo a la vez de un campo de una sola línea."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usar",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Campo de búsqueda con lupa y atajo de teclado",
+          "u": "Sí",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Un valor con una unidad fija delante o detrás",
+          "u": "Sí",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Un campo con un botón que actúa sobre lo escrito",
+          "u": "Sí",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Dos campos que forman un solo valor, como un intervalo de fechas",
+          "u": "No",
+          "a": "Dos campos hermanos, cada uno con su propia etiqueta"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas",
+          "correct": "Correcto",
+          "avoid": "Evita",
+          "prefix": {
+            "name": "Prefijo",
+            "format": "Fragmento fijo del valor, sin puntuación de frase",
+            "good": "https://",
+            "bad": "Escribe la dirección:"
+          },
+          "suffix": {
+            "name": "Sufijo",
+            "format": "Unidad o dominio, corto",
+            "good": "kg",
+            "bad": "kilogramos por unidad"
+          },
+          "addonButton": {
+            "name": "Botón del complemento",
+            "format": "Un verbo; con solo un icono, el nombre accesible dice la acción",
+            "good": "Limpiar búsqueda",
+            "bad": "OK"
+          },
+          "groupName": {
+            "name": "Nombre del grupo",
+            "format": "Solo cuando hay más de un control; nombra el conjunto, no el campo",
+            "good": "Dirección del sitio",
+            "bad": "Grupo de entrada"
+          }
+        }
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "El complemento que actúa es un botón: recibe foco, responde al teclado y tiene nombre.",
+        "dont": "Un bloque pulsable en lugar del botón no recibe foco y desaparece para quien navega con teclado."
+      },
+      "pair2": {
+        "do": "El error aparece en el marco y también en un texto ligado al campo.",
+        "dont": "Solo el marco rojo: quien no distingue el color no se entera de nada."
+      },
+      "pair3": {
+        "do": "La etiqueta del campo queda visible sobre el marco; el prefijo solo completa el formato.",
+        "dont": "El prefijo haciendo de etiqueta deja el campo sin nombre para el lector de pantalla."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "La variación es la POSICIÓN del complemento. Las dos posiciones en bloque hacen que el grupo pase de fila a columna, y lo decide sola la hoja compartida.",
+      "items": {
+        "inlineStart": {
+          "name": "Antes del campo",
+          "description": "El complemento abre la fila. Es la posición del icono de búsqueda y del prefijo de formato."
+        },
+        "inlineEnd": {
+          "name": "Después del campo",
+          "description": "El complemento cierra la fila. Es la posición de la unidad, del atajo y del botón de acción."
+        },
+        "blockStart": {
+          "name": "Encima del campo",
+          "description": "El complemento ocupa todo el ancho y el grupo pasa a columna. Sirve a una barra de apoyo encima de lo que se escribe."
+        },
+        "blockEnd": {
+          "name": "Debajo del campo",
+          "description": "El mismo ancho completo, abajo. Ahí caben el contador de caracteres y el botón de envío de un área de texto."
+        }
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "search": {
+          "name": "Campo de búsqueda",
+          "description": "Icono delante, atajo de teclado detrás. El icono es decoración y queda fuera del árbol de accesibilidad; el atajo es texto, no un control.",
+          "use": "Búsqueda global, filtro de lista, paleta de comandos."
+        },
+        "password": {
+          "name": "Contraseña con alternancia",
+          "description": "Un <code>Button</code> en el complemento final que alterna entre texto y contraseña. El nombre del botón CAMBIA con el estado, porque es lo que cuenta qué pasó.",
+          "use": "Registro e inicio de sesión, donde equivocarse en silencio sale caro."
+        },
+        "affix": {
+          "name": "Prefijo y sufijo de formato",
+          "description": "Dos <code>InputGroupText</code> alrededor del <code>Input</code>, uno en cada extremo. Completan el formato del valor y no sustituyen la <code>Label</code> del campo.",
+          "use": "Dirección de sitio, importe con moneda, medida con unidad."
+        },
+        "textareaToolbar": {
+          "name": "Área de texto con barra",
+          "description": "Un <code>Textarea</code> con una barra de <code>Button</code> debajo. Con el <code>Textarea</code> dentro, el grupo apila sin necesitar ninguna opción.",
+          "use": "Caja de comentarios, campo de notas, redacción de mensajes."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
+      },
+      "rest": {
+        "label": "Rest",
+        "trigger": "Sin foco y sin error",
+        "behavior": "Marco en el color de borde de campo."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "El campo interno recibe foco por teclado",
+        "behavior": "El marco se enciende: el borde pasa al color de foco y gana un halo alrededor. El campo no dibuja anillo propio — quien se enciende es el grupo."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "El campo está marcado como no válido",
+        "behavior": "Marco en el color de error, y el realce PERMANECE sin foco. Con foco, el anillo de foco aparece por fuera del de error, para que ambos convivan."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "El campo interno está deshabilitado",
+        "behavior": "Todo el grupo se atenúa y recibe un fondo neutro. El campo sale del orden de tabulación por estar deshabilitado de verdad, no por apariencia."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Nombre accesible del grupo. Úsalo cuando el marco tenga más de un control dentro; con un solo campo repite la etiqueta del campo."
+        },
+        "align": {
+          "type": "'inline-start' | 'inline-end' | 'block-start' | 'block-end'",
+          "default": "'inline-start'",
+          "required": "No",
+          "description": "Posición del complemento. Las dos en bloque hacen que el grupo apile."
+        },
+        "size": {
+          "type": "'xs' | 'sm' | 'icon-xs' | 'icon-sm'",
+          "default": "'xs'",
+          "required": "No",
+          "description": "Medida del botón dentro del marco. Las dos de icono son para el botón sin texto."
+        },
+        "variant": {
+          "type": "ButtonVariant",
+          "default": "'ghost'",
+          "required": "No",
+          "description": "Apariencia del botón, trasladada al botón del design system."
+        },
+        "text": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Contenido textual del compartimento de texto."
+        },
+        "class": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases adicionales en la raíz de cada pieza."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": {
+        "react": "// O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n// de <input>. O estado inválido é do CAMPO — a moldura reage por :has().\n<InputGroup aria-label=\"Dirección del sitio\">\n  <InputGroupInput\n    aria-invalid={hasError}\n    aria-describedby={hasError ? \"site-error\" : undefined}\n  />\n</InputGroup>\n<p id=\"site-error\">Dirección no válida</p>",
+        "vue": "<!-- O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n     de <input>. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<InputGroup :aria-label=\"'Dirección del sitio'\">\n  <InputGroupInput\n    :aria-invalid=\"hasError || undefined\"\n    :aria-describedby=\"hasError ? 'site-error' : undefined\"\n  />\n</InputGroup>\n<p id=\"site-error\">Dirección no válida</p>",
+        "svelte": "<!-- O grupo repassa todo atributo nativo de <div>, e o campo todo atributo\n     de <input>. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<InputGroup aria-label=\"Dirección del sitio\">\n  <InputGroupInput\n    aria-invalid={hasError || undefined}\n    aria-describedby={hasError ? \"site-error\" : undefined}\n  />\n</InputGroup>\n<p id=\"site-error\">Dirección no válida</p>",
+        "angular": "<!-- As diretivas não engolem atributo: o que se escreve no elemento chega\n     nele. O estado inválido é do CAMPO — a moldura reage por :has(). -->\n<div ndsInputGroup aria-label=\"Dirección del sitio\">\n  <input\n    ndsInputGroupInput\n    [attr.aria-invalid]=\"hasError() || null\"\n    [attr.aria-describedby]=\"hasError() ? 'site-error' : null\"\n  />\n</div>\n<p id=\"site-error\">Dirección no válida</p>",
+        "vanilla": "// As fábricas devolvem o elemento nativo: o que falta se escreve nele.\n// O estado inválido é do CAMPO — a moldura reage por :has().\nconst field = createInputGroupInput({ id: 'site' });\nfield.setAttribute('aria-invalid', 'true');\nfield.setAttribute('aria-describedby', 'site-error');"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "border": {
+          "class": ".nds-input-group",
+          "part": "Color del marco en reposo"
+        },
+        "radius": {
+          "class": ".nds-input-group",
+          "part": "Redondeo del marco"
+        },
+        "transition": {
+          "class": ".nds-input-group",
+          "part": "Duración de la transición de borde y halo"
+        },
+        "ring": {
+          "class": ".nds-input-group",
+          "part": "Color del borde y del halo cuando el campo interno recibe foco"
+        },
+        "destructive": {
+          "class": ".nds-input-group",
+          "part": "Color del marco y del halo cuando el campo se marca como no válido"
+        },
+        "disabledBg": {
+          "class": ".nds-input-group",
+          "part": "Fondo neutro cuando el campo interno está deshabilitado"
+        },
+        "controlRadius": {
+          "class": ".nds-input-group-control",
+          "part": "Redondeo a cero del campo, que pierde su propio marco"
+        },
+        "textareaPadding": {
+          "class": ".nds-input-group-control",
+          "part": "Espacio interno vertical, cuando el campo es un área de texto"
+        },
+        "addonPadding": {
+          "class": ".nds-input-group-addon",
+          "part": "Espacio interno vertical del complemento"
+        },
+        "addonGap": {
+          "class": ".nds-input-group-addon",
+          "part": "Espacio entre los elementos dentro del complemento"
+        },
+        "addonSize": {
+          "class": ".nds-input-group-addon",
+          "part": "Tamaño del texto del complemento"
+        },
+        "addonWeight": {
+          "class": ".nds-input-group-addon",
+          "part": "Peso del texto del complemento"
+        },
+        "addonColor": {
+          "class": ".nds-input-group-addon",
+          "part": "Color de apoyo del complemento y de su texto"
+        },
+        "addonInline": {
+          "class": ".nds-input-group-addon",
+          "part": "Sangría lateral en las dos posiciones en línea"
+        },
+        "addonBlock": {
+          "class": ".nds-input-group-addon",
+          "part": "Sangría lateral en las dos posiciones en bloque"
+        },
+        "iconSize": {
+          "class": ".nds-input-group-addon",
+          "part": "Medida del icono que lleva el complemento"
+        },
+        "buttonRadius": {
+          "class": ".nds-input-group-button",
+          "part": "Redondeo interno del botón, un escalón por debajo del marco"
+        },
+        "buttonGap": {
+          "class": ".nds-input-group-button",
+          "part": "Espacio entre el icono y el texto del botón"
+        },
+        "buttonPadding": {
+          "class": ".nds-input-group-button",
+          "part": "Sangría lateral del botón ajustado"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* A moldura lê os tokens do tema — trocar o tema troca o grupo inteiro.\n   Para um caso pontual, sobreponha o token no escopo, nunca a cor na regra. */\n.formulario-de-busca .nds-input-group {\n  --radius: var(--radius-full);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El marco agrupa; no nombra. Quien tiene nombre es el campo, por su etiqueta, y el grupo solo recibe nombre cuando guarda más de un control. El complemento decorativo queda fuera del foco y fuera de la lectura; el complemento que actúa es un botón de verdad.",
+      "items": {
+        "item1": "La raíz declara papel de grupo. El papel acepta nombre accesible — y por eso está declarado aquí y no dejado implícito: un contenedor sin papel descarta el nombre en silencio.",
+        "item2": "El nombre del grupo es opcional y nunca inventado. Con un solo campo, nombrar el grupo hace que el lector de pantalla diga las mismas palabras dos veces.",
+        "item3": "El complemento no tiene papel ninguno. Una agrupación sin nombre dentro de otra agrupación añade un escalón que no dice nada.",
+        "item4": "Pulsar el complemento lleva el foco al campo. Es un atajo de puntero para lo que el campo ya ofrece al teclado, y por eso el complemento no es parada de tabulación.",
+        "item5": "Un icono dentro del complemento queda fuera del árbol de accesibilidad. Lo que ilustra ya está en la etiqueta del campo.",
+        "item6": "El complemento que actúa es un botón de verdad, con nombre propio cuando solo muestra un icono.",
+        "item7": "Ninguna altura fija: la altura sale del espacio interno y del interlineado, y el marco crece con el tamaño de fuente del navegador (WCAG 1.4.4).",
+        "item8": "El estado nunca depende solo del color: no válido lleva el atributo de invalidez y un texto ligado al campo; deshabilitado está deshabilitado de verdad (WCAG 1.4.1).",
+        "item9": "Sin región activa. Nada en el grupo se reanuncia — quien cuenta el error es el texto ligado al campo, en el momento en que ocurre la validación."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Entra en el campo y luego en cada botón del complemento, en orden visual.",
+        "shiftTab": "Recorre el mismo camino al revés.",
+        "enter": "Activa el botón del complemento que tenga el foco.",
+        "space": "Activa el botón del complemento que tenga el foco."
+      },
+      "aria": {
+        "title": "ARIA",
+        "group": "role=\"group\" en el marco — el papel que acepta nombre accesible.",
+        "label": "aria-label en el grupo, solo cuando guarda más de un control.",
+        "invalid": "aria-invalid en el CAMPO; el marco reacciona por selector de estado.",
+        "describedby": "aria-describedby ligando el campo al texto que describe el error.",
+        "hidden": "aria-hidden en el icono decorativo del complemento."
+      },
+      "screenReader": {
+        "field": "El campo se anuncia por su propia etiqueta, con su tipo y su valor actual.",
+        "group": "Con nombre, el grupo se anuncia antes del campo y sitúa el botón que lo acompaña.",
+        "invalid": "Marcado como no válido, el campo se anuncia como no válido y a continuación se lee el texto ligado a él.",
+        "button": "El botón del complemento se anuncia por su propio nombre, y no por el dibujo del icono."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "input": {
+          "name": "Input",
+          "description": "El campo de una línea que vive dentro del marco."
+        },
+        "textarea": {
+          "name": "Textarea",
+          "description": "La alternativa de varias líneas para el mismo sitio."
+        },
+        "button": {
+          "name": "Button",
+          "description": "El botón que el complemento ajusta para caber en el marco."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Etiqueta, texto de apoyo y mensaje de error alrededor del campo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>El marco es del grupo, y el campo queda desnudo.</strong> El campo interno pone a cero su propio borde y su propio anillo — si dibujara los dos, aparecerían dos marcos concéntricos al recibir foco.",
+      "item2": "<strong>El grupo apila solo.</strong> Basta un complemento en bloque, o un área de texto dentro, para que la hoja compartida cambie fila por columna. No hay opción de dirección que pasar.",
+      "item3": "<strong>El realce de error sobrevive a la pérdida de foco</strong>, y con foco ambos conviven: el de error por dentro, el de foco por fuera. Sin eso, poner el foco en un campo no válido no cambiaría nada en pantalla.",
+      "item4": "<strong>El clic en el complemento no atropella al botón.</strong> El atajo que lleva el foco al campo se salta cuando el clic cae sobre un botón — si no, pulsar el botón devolvería el foco al campo en plena acción.",
+      "item5": "<strong>El campo se encuentra por la clase del control</strong>, y no por el elemento: así el atajo del complemento alcanza tanto el campo de una línea como el área de texto."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos disparados por las páginas de documentación que usan el componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "button_click": {
+          "trigger": "Una persona activa el botón del complemento en la demostración",
+          "payload": "{ component: \"input-group\", variant, location }"
+        },
+        "docs_section_viewed": {
+          "trigger": "Una sección de la página queda visible durante dos segundos continuos",
+          "payload": "{ section_id, component_name: \"input-group\", locale }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Qué debe ocurrir en cada composición del marco.",
+        "item1": {
+          "action": "Pulsar el complemento decorativo, lejos de cualquier botón",
+          "result": "El foco pasa al campo que hay dentro del grupo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar el botón dentro del complemento",
+          "result": "El botón actúa y conserva el foco; el campo no se lo quita",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar el grupo con un área de texto en lugar del campo",
+          "result": "El grupo apila y el atajo del complemento alcanza el área de texto",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Declarar el complemento en cada una de las cuatro posiciones",
+          "result": "Cada complemento lleva la posición declarada y el orden visual la acompaña",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Deshabilitar el campo interno",
+          "result": "El campo sale del orden de tabulación y todo el grupo se atenúa",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "La raíz declara papel de grupo y acepta el nombre accesible que recibe",
+        "item3": "El complemento no declara papel ninguno",
+        "item4": "Ningún complemento es parada de tabulación; el que actúa es un botón",
+        "item5": "El campo marcado como no válido lleva el atributo y apunta al texto que lo describe",
+        "item6": "Ningún elemento del grupo declara región activa",
+        "item7": "Ninguna pieza del grupo declara altura fija"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "required": "Obligatorio",
+        "description": "Estados que Chromatic debe capturar.",
+        "item1": {
+          "story": "Playground",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — las cuatro posiciones del complemento",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — reposo, no válido y deshabilitado",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composiciones — búsqueda, contraseña, formato y área de texto",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Buenas prácticas",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "compositions": "Composiciones",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}

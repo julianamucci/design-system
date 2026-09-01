@@ -32,7 +32,7 @@
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
-.nds-input-group:has([data-slot="input-group-control"]:focus-visible) {
+.nds-input-group:has(.nds-input-group-control:focus-visible) {
   border-color: hsl(var(--ring));
   box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
 }
@@ -52,7 +52,7 @@
 /* O anel de foco a 0,5 media 1,97:1 sobre o fundo: melhor que o halo
  * sozinho, e ainda abaixo dos 3:1 de 1.4.11. Virou anel opaco; ver a nota
  * canônica em `input.css`. */
-.nds-input-group:has([aria-invalid="true"]):has([data-slot="input-group-control"]:focus-visible) {
+.nds-input-group:has([aria-invalid="true"]):has(.nds-input-group-control:focus-visible) {
   box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
   outline: 2px solid hsl(var(--ring));
   outline-offset: 3px;
