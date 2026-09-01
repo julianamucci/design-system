@@ -1195,6 +1195,105 @@ tem 5, 6 tem 8 e 7 tem 3 — **75** na 5.2. A 5.1 vai a **45** (43 linhas contad
 no arquivo, e duas delas carregam duas entradas). Somam 120. A família 2 fica
 com **13 componentes**, e as sete somam 69.
 
+**Décima terceira correção, e a segunda em que a peça SOBREVIVE**:
+`inline-citation` abre a família 3 e não colapsa. **Nenhuma contagem muda** — a
+5.1 fica em **45**, a 5.2 em **75**, a família 3 nos seus **9**. Somando as sete:
+11 + 13 + 9 + 20 + 5 + 8 + 3 = **69 componentes**; 45 + 75 = **120 entradas**.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`Source { domain, title, snippet }` e `InlineCitation { sources, openIndex:
+number | null, onOpenIndexChange, className }`. A anatomia é um **parágrafo
+FIXO** com dois pontos de ancoragem, e a fonte diz por que: o runtime "não tem
+ligação posicional entre uma marca e um deslocamento dentro do texto em
+streaming". Então ela entrega um espécime e manda editar a frase no arquivo
+instalado — "the paragraph text is written directly into the source, not passed
+as a prop".
+
+**O SINAL FICOU MUDO PELA QUARTA VEZ**, e desta vez a sub-regra do sinal mudo
+não decide: a assinatura que sobrou é `onOpenIndexChange`, que é ABERTURA — o
+par que a §2 exige de toda peça desta família ("se tem `open`, tem
+`onOpenChange`"). É a diferença para `onSelect` e `onPick`: aqueles eram a
+assinatura de UM tipo de peça e por isso apontavam um dono; este a família
+inteira tem, e ele não aponta ninguém. Quem decidiu foram os três testes.
+
+Duas perguntas tinham de ser respondidas antes de qualquer desenho, porque o DS
+já tem `hover-card`, `popover`, `badge` e `tooltip` — **isto é mais do que um
+cartão de ponteiro com título e link?**
+
+1. **Ela vive DENTRO de texto corrido**, e isso é geometria própria: assentar na
+   linha de base sem esticar a entrelinha, não se separar da palavra anterior na
+   quebra de linha, e ainda assim oferecer 24 px de alvo de toque. As três
+   exigências brigam entre si, e é exatamente onde a regra 10 da §8 diz que esta
+   família mais escorrega.
+2. **Toque não tem `hover`.** Uma citação que só abrisse ao ponteiro é invisível
+   em telefone, e a regra 3 da §8 é literal a respeito.
+
+Os três testes, e o primeiro é POSITIVO — o segundo em treze leituras:
+
+- **Desenho, SIM.** Montada com o que existe, a marca deixa buraco, e o buraco
+  não é uma classe: é a GEOMETRIA DE UM ELEMENTO QUE INTERROMPE UM PARÁGRAFO.
+  As irmãs desta base desenham caixas, onde a altura é livre porque não há linha
+  de texto em volta; aqui a altura da marca é limitada pela caixa de linha do
+  parágrafo, e o alvo de toque tem de crescer FORA do fluxo para não esticar a
+  entrelinha em toda linha que cite alguma coisa. Nada no design system põe uma
+  parada de toque de 24 px dentro de uma linha de 20 px sem mexer no parágrafo.
+
+  E o comportamento diverge no mesmo lugar. O cartão de ponteiro desta base abre
+  por `mouseenter` **e por `focus`**, com 600 ms, e nasce `role="dialog"` — papel
+  que exige nome acessível, que ele tira do texto do gatilho. Com um gatilho cujo
+  texto é "1", o resultado é um diálogo chamado "1". Percorrer com Tab uma frase
+  de cinco citações abriria cinco painéis, um por parada. A peça abre por
+  CLIQUE — o caminho que serve a toque, teclado e ponteiro de uma vez —, é um
+  botão com `aria-expanded`, e não abre por foco.
+
+  O que COMPÕE, compõe mesmo, e está escrito na folha: a caixa É
+  `.nds-popover-content`, que é a superfície flutuante compartilhada — e a fonte
+  declara a dela do mesmo jeito ("a marca e a prévia leem a superfície
+  `floating` compartilhada"), que foi o sinal lido na quinta, na sétima e na
+  décima correções. A diferença é que lá a origem declarava compartilhado
+  TAMBÉM o que a peça tinha de próprio, e aqui ela não tem o que oferecer para a
+  marca dentro da frase: a fonte não menciona superfície nenhuma para ela, porque
+  no React ela é uma cadeia de classes literal no elemento.
+- **Estado, não.** Não há máquina de estados: o que existe é disclosure, que a §2
+  já autoriza a ser interno e a §2 já obriga a ser controlável.
+- **Vocabulário, não — e aqui a ausência é a NOTÍCIA.** `Citation` e `ChatSource`
+  descrevem a entrada inteira, e descrevem MELHOR. `Source { domain, title,
+  snippet }` guarda o trecho DENTRO da fonte, que é o defeito que o docblock de
+  `Citation` já tinha nomeado ao fundar a família: a mesma fonte apoia
+  afirmações diferentes com trechos diferentes, e o documento apareceria três
+  vezes na lista de fontes de um turno. E `domain` é o endereço achatado em
+  cadeia de exibição — perde o `url`, que é o que faz uma procedência ser
+  verificável. **Caber no vocabulário sem sobra é sinal de que a fundação está
+  certa, e não de que a peça colapsa**: `approval-card` também não tem
+  vocabulário próprio e ficou.
+
+E o teste da família, que é o quarto: ela responde ao eixo — em que a resposta
+se apoia — do jeito mais direto que a família tem, apontando a fonte de UMA
+afirmação em vez das fontes de um turno.
+
+**O QUE A PEÇA CORRIGE NA FONTE**, e as duas correções são parte da entrega:
+
+- **A peça é a MARCA, e não o parágrafo.** Um componente cujo texto mora no
+  arquivo instalado não é componente, é espécime — e o design system não pode
+  ficar dono do texto da resposta, que é do modelo e é desenhado pelo Markdown ou
+  pela conversa. Vale aqui a §4.2 palavra por palavra: peça que se encaixa é peça
+  autônoma, e a marca faz sentido montada sozinha dentro de qualquer frase. A
+  numeração, que na fonte é a posição no arranjo, passa a chegar de fora, porque
+  é CONTEÚDO — é ela que liga a frase à lista de fontes — e porque marcas irmãs
+  podem nem estar no mesmo parágrafo.
+- **`openIndex: number | null` vira `open`/`onOpenChange` por marca.** Um índice
+  único é a conveniência de um espécime que só sabe ancorar duas marcas — a
+  própria fonte diz que índices além de 0 e 1 "não têm onde se prender" —, e ele
+  não endereça marca que não seja posição de arranjo. Exclusão mútua é decisão de
+  quem monta a página, e a §2 já a entrega a ele; a story de composição mostra as
+  quatro linhas que isso custa.
+
+**Reversível**, como as outras doze: se ao construir `document-reference` ou
+`retrieval-chunks` a marca dentro do texto aparecer sem geometria própria — uma
+prévia que caiba num cartão de ponteiro, sem alvo de toque em conflito com a
+entrelinha, e sem o caminho de abertura por clique —, `inline-citation` colapsa
+para a 5.1, com o motivo.
+
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
 `stopped`** e **`tool-error` é `ToolCallState` `failed`**. Os dois estados já
@@ -1277,6 +1376,16 @@ sempre: `onSelect` e `onPick` são chamadas de volta cujo dono já existia, e as
 duas entradas colapsaram; `activeIndex` sobre um par de coordenadas era eixo sem
 dono, e aquela sobreviveu. Não é um quarto teste — é onde olhar quando o sinal
 não fala.
+
+**Quarto sinal mudo, medido na décima terceira correção**, e ele marca o LIMITE
+da sub-regra: `inline-citation` não declara estado nenhum — o que existe é
+disclosure —, e a assinatura que sobrou no lugar dele é `onOpenIndexChange`.
+Sobreviveu. A diferença para os três anteriores é que essa chamada de volta
+**não é de um tipo de peça**: abrir e fechar é o par que a §2 exige de TODA peça
+desta família, então ele não aponta dono nenhum. `onSelect` e `onPick` apontavam
+um; `activeIndex` sobre um par de coordenadas era eixo sem dono; este não aponta
+e não é eixo. Onde a assinatura que sobrou é a que a família inteira já tem, a
+sub-regra fica calada também, e quem decide são os três testes sozinhos.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um

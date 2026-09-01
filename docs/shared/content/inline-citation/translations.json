@@ -1,0 +1,1565 @@
+{
+  "pt-BR": {
+    "title": "Citação em linha",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A marca numerada que liga uma afirmação da frase à fonte em que ela se apoia, com a prévia da fonte a um clique de distância.",
+    "seo": {
+      "title": "Citação em linha — a marca que aponta a fonte de uma afirmação",
+      "description": "Uma marca numerada dentro de texto corrido, com a prévia da fonte: endereço, título, trecho citado e o lugar dentro do documento. Abre por clique, e por isso existe em toque e no teclado."
+    },
+    "labels": {
+      "marker": "Fonte",
+      "unsafeSource": "Endereço recusado"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "inSentence": "Dentro de uma frase",
+        "open": "Com a prévia aberta",
+        "minimal": "Quando só se conhece a fonte",
+        "unsafe": "Quando o endereço foi recusado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A raiz fica em linha e não abre caixa própria no parágrafo: o que se vê é a marca, e o texto continua correndo em volta dela.",
+      "item2": "A marca é um botão que se expande. O número é o texto que se vê; o nome acessível traz a palavra, o número e o título da fonte.",
+      "item3": "O alvo de toque é maior que a marca e vive fora do fluxo. Sem isso, a entrelinha do parágrafo mudaria em toda linha que trouxesse uma citação.",
+      "item4": "A prévia só existe enquanto está aberta, e é filha da marca — é o que faz o percurso do teclado alcançar o link do título sem nada mover o foco.",
+      "item5": "Dentro da prévia: o endereço, o título, o trecho citado e o lugar dentro do documento. Cada um só quando existe; nada ocupa espaço no lugar do que não veio.",
+      "structureCode": {
+        "web": "<span class=\"nds-inline-citation\" data-slot=\"inline-citation\">\n  <button class=\"nds-inline-citation-marker\" data-slot=\"inline-citation-marker\"\n          type=\"button\" aria-expanded=\"true\" aria-controls=\"c1-panel\"\n          aria-label=\"Fonte 1: Relatório anual de operações\">1</button>\n\n  <!-- só existe enquanto está aberta -->\n  <span class=\"nds-popover-content nds-inline-citation-panel\"\n        data-slot=\"inline-citation-panel\" id=\"c1-panel\" data-side=\"bottom\">\n    <span class=\"nds-inline-citation-address nds-font-mono nds-truncate\"\n          data-slot=\"inline-citation-address\">https://exemplo.test/relatorios</span>\n    <a class=\"nds-inline-citation-title\" data-slot=\"inline-citation-title\"\n       href=\"https://exemplo.test/relatorios\" rel=\"noreferrer\">Relatório anual de operações</a>\n    <q class=\"nds-inline-citation-excerpt\" data-slot=\"inline-citation-excerpt\">A receita cresceu doze por cento.</q>\n    <span class=\"nds-inline-citation-anchor\" data-slot=\"inline-citation-anchor\">Página 12</span>\n  </span>\n</span>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando uma afirmação específica dentro de uma frase precisa dizer em que se apoia. Para as fontes do turno inteiro, a lista da conversa responde melhor.",
+        "item2": "Numere as marcas de fora. A numeração é conteúdo: é ela que liga a frase à lista de fontes, e uma marca que se numerasse sozinha precisaria conhecer as irmãs.",
+        "item3": "Escreva o nome acessível antes de passá-lo, e deixe dentro dele o número que se vê.",
+        "item4": "Não deixe espaço antes da marca. Sem espaço, ela não se separa da palavra que a antecede quando a linha quebra.",
+        "item5": "Se duas prévias não devem ficar abertas ao mesmo tempo, feche a irmã ao abrir uma. A peça não conhece as vizinhas.",
+        "item6": "Passe só o que a citação tem. Sem trecho e sem lugar, a prévia mostra a fonte e nada mais."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Apoiar uma afirmação dentro de uma frase",
+          "u": "Citação em linha",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Listar as fontes de um turno inteiro",
+          "u": "Conversa",
+          "a": "Ali as fontes são a lista do turno, sem apontar afirmação nenhuma; aqui a marca aponta uma."
+        },
+        "item3": {
+          "s": "Mostrar a prévia de um link comum",
+          "u": "Cartão de ponteiro",
+          "a": "Aquele abre por ponteiro e por foco, que é o certo para um link isolado; aqui há muitas marcas numa frase e nenhuma delas pode depender de ponteiro."
+        },
+        "item4": {
+          "s": "Explicar um termo dentro do texto",
+          "u": "Dica de ferramenta",
+          "a": "A dica não guarda link nem trecho, e não é caminho de teclado para conteúdo."
+        },
+        "item5": {
+          "s": "Abrir um painel com controles ancorado a um gatilho",
+          "u": "Painel ancorado",
+          "a": "Aquele trata conteúdo interativo e a política de foco que vem com ele; esta é uma prévia curta dentro da frase."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "marker": {
+            "name": "Nome acessível da marca",
+            "format": "A palavra para fonte, o número e o título do documento, na ordem do idioma.",
+            "good": "Fonte 1: Relatório anual de operações",
+            "bad": "1"
+          },
+          "unsafeSource": {
+            "name": "Endereço recusado",
+            "format": "Diz que o endereço não vale, sem repeti-lo.",
+            "good": "Endereço recusado",
+            "bad": "javascript:alert(1)"
+          },
+          "sourceTitle": {
+            "name": "Título da fonte",
+            "format": "O título do documento, como ele se chama.",
+            "good": "Relatório anual de operações",
+            "bad": "Clique aqui"
+          },
+          "anchor": {
+            "name": "Lugar dentro da fonte",
+            "format": "Já escrito, com a palavra que diz de que unidade se trata.",
+            "good": "Página 12",
+            "bad": "12"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Escreva o nome acessível com a fonte dentro, e mantenha nele o número que se vê.",
+        "item2": "Ponha a marca logo depois da afirmação que ela apoia, sem espaço no meio.",
+        "item3": "Deixe a prévia fechar por Escape e por um clique fora dela.",
+        "item4": "Passe o endereço como ele chegou e deixe a peça decidir se ele pode virar link."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não deixe a prévia depender de passar o ponteiro: em toque não há ponteiro.",
+        "item2": "Não use o número como nome acessível — ele não diz de que fonte se trata.",
+        "item3": "Não escreva um traço no lugar do trecho ou do lugar que não vieram; omita-os.",
+        "item4": "Não eleve a marca acima da linha de base: a entrelinha do parágrafo mudaria onde há citação."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "O nome acessível traz a palavra, o número e o título — quem ouve sabe de que fonte se trata antes de abrir.",
+        "dont": "O nome acessível é o número. Quem vê tem o texto em volta para se orientar; quem ouve recebe um botão chamado um."
+      },
+      "pair2": {
+        "do": "A citação que só tem fonte mostra a fonte e nada mais: o que não veio não ocupa espaço.",
+        "dont": "Um traço entra no lugar do trecho que não veio, e a prévia passa a afirmar que existe um trecho vazio."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\nconst marca = createInlineCitation({ citation, index: 1, labels: rotulos });\n\n// SEM ESPAÇO ANTES: assim a marca não se separa da palavra na quebra de linha.\nfrase.append('A receita cresceu doze por cento', marca, '.');"
+      },
+      "withLabels": "O nome acessível, escrito antes de chegar",
+      "withLabelsCode": {
+        "web": "// O NOME ACESSÍVEL CHEGA ESCRITO. \"1\" sozinho não diz de que fonte se trata,\n// e a ordem entre a palavra, o número e o título troca com o idioma — quem\n// conhece as três é quem monta a página.\nconst rotulos = {\n  marker: `Fonte ${numero}: ${citation.source.title}`,\n  unsafeSource: 'Endereço recusado',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "closed": {
+        "label": "Recolhida",
+        "trigger": "O estado de repouso: a marca está na frase e ninguém a acionou.",
+        "behavior": "Só o número aparece, sobre o fundo apagado do tema. O botão diz que está recolhido, e não há nada montado além dele."
+      },
+      "open": {
+        "label": "Expandida",
+        "trigger": "Alguém acionou a marca, por clique, por toque ou pelo teclado.",
+        "behavior": "A prévia monta abaixo da marca — ou acima, quando abaixo não cabe —, o botão passa a dizer que está expandido e a marca troca de fundo como reforço."
+      },
+      "minimal": {
+        "label": "Só a fonte",
+        "trigger": "A citação chegou sem trecho e sem lugar dentro do documento.",
+        "behavior": "A prévia monta o endereço e o título, e nada mais. Não há traço nem espaço reservado no lugar do que não veio."
+      },
+      "unsafe": {
+        "label": "Endereço recusado",
+        "trigger": "O endereço da fonte não usa um esquema que possa virar link.",
+        "behavior": "O título continua legível e deixa de ser link; o endereço sai da prévia e no lugar dele entram as palavras que dizem que ele foi recusado."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "citation": {
+          "name": "citation",
+          "type": "Citation",
+          "default": "—",
+          "required": "Sim",
+          "description": "A citação: a fonte, o trecho em que a afirmação se apoia e onde dentro do documento. O trecho mora na citação, e não na fonte, porque a mesma fonte apoia afirmações diferentes."
+        },
+        "index": {
+          "name": "index",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "O número que a marca mostra. É conteúdo: é por ele que a frase se refere à fonte, e quem numera é quem escreve a frase."
+        },
+        "defaultOpen": {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Nasce com a prévia aberta. Serve para fotografar o estado; no uso corrente quem abre é quem lê."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Cada abertura e cada fechamento. É por aqui que quem monta a página fecha uma prévia irmã ao abrir esta — a peça não conhece as vizinhas."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "InlineCitationLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O texto da peça: o nome acessível da marca e o que se diz no lugar de um endereço recusado."
+        },
+        "citationSource": {
+          "name": "source",
+          "type": "ChatSource",
+          "default": "—",
+          "required": "Sim",
+          "description": "O documento citado: o título e o endereço."
+        },
+        "citationExcerpt": {
+          "name": "excerpt",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "O texto citado, como saiu da fonte. Ausente é ausente: nada ocupa o lugar dele."
+        },
+        "citationAnchor": {
+          "name": "anchor",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Onde dentro do documento — página, âncora, intervalo de linhas. Chega escrito, porque um número solto não é um lugar."
+        },
+        "sourceTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O título do documento, como ele se chama. É o que a prévia mostra em destaque."
+        },
+        "sourceUrl": {
+          "name": "url",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O endereço do documento. Ele é dado de terceiro, e a peça verifica se pode virar link no ponto em que ele encosta na página."
+        },
+        "labelsMarker": {
+          "name": "marker",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome acessível da marca, já escrito. Precisa conter o número que se vê, e diz de que fonte se trata."
+        },
+        "labelsUnsafeSource": {
+          "name": "unsafeSource",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que se diz no lugar de um endereço recusado. Obrigatório mesmo para quem nunca espera um: sem ele, a prévia mostraria a linha em branco no dia em que aparecesse."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A peça é controlável: quem quiser decidir de fora recebe cada abertura e cada fechamento e devolve a ordem por comando. É esse par que resolve a exclusão mútua entre marcas, que a peça não resolve sozinha porque não conhece as vizinhas — e não conhecer as vizinhas é o que permite que duas marcas da mesma frase venham de lugares diferentes da resposta.",
+      "extensibilityCode": {
+        "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\n// A EXCLUSÃO MÚTUA É DE QUEM MONTA A PÁGINA. A peça não conhece as vizinhas;\n// quem as tem numa lista fecha as outras ao abrir uma.\nconst marcas = [];\n\nfor (const [i, citation] of citacoes.entries()) {\n  const marca = createInlineCitation({\n    citation,\n    index: i + 1,\n    labels: rotulosDe(i + 1, citation),\n    onOpenChange: (aberta) => {\n      if (!aberta) return;\n      for (const outra of marcas) if (outra !== marca) outra.close();\n    },\n  });\n  marcas.push(marca);\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* A marca lê a superfície apagada do tema. Para destacá-la mais, troque o par\n   de cores — nunca a altura, que é resultado do respiro e da entrelinha. */\n.nds-inline-citation-marker {\n  background-color: hsl(var(--accent) / 0.2);\n}\n\n/* A prévia herda a superfície flutuante compartilhada; o que é só dela é o\n   espaço entre as linhas. */\n.nds-inline-citation-panel {\n  gap: var(--spacing-3);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-inline-citation-marker",
+          "description": "Fundo da marca em repouso — apagado, para não competir com o texto em volta."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-inline-citation-marker",
+          "description": "Cor do número, que precisa ser legível dentro de um parágrafo."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-inline-citation-marker",
+          "description": "Fundo da marca com a prévia aberta. É reforço do estado, nunca o portador dele."
+        },
+        "primaryForeground": {
+          "token": "--primary-foreground",
+          "value": ".nds-inline-citation-marker",
+          "description": "Cor do número sobre a marca aberta."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-inline-citation-marker",
+          "description": "Anel de foco da marca, para quem chega por teclado."
+        },
+        "sizeXs": {
+          "token": "--size-xs",
+          "value": ".nds-inline-citation-marker",
+          "description": "Alvo de toque mínimo da marca — vinte e quatro pixels, medidos fora do fluxo do parágrafo."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-inline-citation-marker",
+          "description": "Arredondamento da marca."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-inline-citation-marker",
+          "description": "Tamanho do número, menor que o texto em volta e derivado dele."
+        },
+        "textControlSm": {
+          "token": "--text-control-sm",
+          "value": ".nds-inline-citation-panel",
+          "description": "Tamanho do texto da prévia."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-inline-citation-panel",
+          "description": "Espaço entre as linhas da prévia, e o vão entre ela e a marca."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-inline-citation-address",
+          "description": "Cor do endereço, que é apoio do título."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-inline-citation-excerpt",
+          "description": "Filete que marca o trecho citado como vindo de outro lugar."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A marca é um botão que se expande, e não um gatilho de diálogo: quem ouve recebe o nome da fonte e o estado da prévia. O clique abre, e é ele que faz a peça existir em toque, no teclado e no ponteiro ao mesmo tempo.",
+      "items": {
+        "item1": "A marca é um botão que se expande, e a prévia é o conteúdo que ele controla. Não é diálogo, e por isso não precisa de nome próprio — um diálogo chamado um não diz nada.",
+        "item2": "O nome acessível traz a palavra, o número e o título da fonte, e contém o número que se vê na tela.",
+        "item3": "O clique abre, e ele serve aos três meios: toque, teclado e ponteiro. Nada nesta peça existe só ao passar o ponteiro.",
+        "item4": "A marca não abre ao receber foco. Percorrer com tabulação uma frase de cinco citações abriria cinco prévias, uma por parada.",
+        "item5": "A tecla de escape fecha a prévia e o foco não se move: ele já está na marca, que é de onde ela saiu.",
+        "item6": "A prévia é filha da marca, então o percurso do teclado alcança o link do título sem que nada mova o foco.",
+        "item7": "O alvo de toque tem ao menos vinte e quatro pixels e vive fora do fluxo, para que a entrelinha do parágrafo não mude onde há uma citação.",
+        "item8": "Não há região viva, e o estado aberto não depende de cor: quem vê tem a prévia na tela, e quem ouve tem o estado do botão."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Chega à marca. Com a prévia aberta, a próxima parada é o link do título.",
+        "enter": "Abre a prévia, e fecha quando ela já está aberta.",
+        "escape": "Fecha a prévia. O foco continua na marca."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "O estado expandido do botão é o que diz se a prévia está aberta, e é ele que quem ouve recebe.",
+        "item2": "O botão aponta para a prévia por identificador, e é essa ligação que descreve a relação entre os dois.",
+        "item3": "O nome acessível da marca chega escrito, porque o número que se vê não descreve fonte nenhuma.",
+        "item4": "Não há papel de diálogo, nem região viva, nem valor: a prévia é conteúdo controlado por um botão."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A marca é anunciada pelo nome da fonte, com o número dentro, e pelo estado recolhido ou expandido.",
+        "item2": "Aberta a prévia, o percurso continua no endereço, no título, no trecho citado e no lugar dentro do documento.",
+        "item3": "Abrir e fechar não interrompem o que estiver sendo lido: nada aqui se anuncia sozinho."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "Conversa",
+          "description": "A lista de fontes do turno, para onde as marcas apontam. Ali o documento aparece uma vez; aqui cada marca aponta uma afirmação."
+        },
+        "hoverCard": {
+          "name": "Cartão de ponteiro",
+          "description": "A prévia de um link isolado. Abre por ponteiro e por foco, que é o certo quando há um só gatilho na tela."
+        },
+        "popover": {
+          "name": "Painel ancorado",
+          "description": "O painel para conteúdo interativo, com a política de foco que vem junto."
+        },
+        "tooltip": {
+          "name": "Dica de ferramenta",
+          "description": "A explicação curta de um controle. Não guarda link nem trecho, e não é caminho de teclado para conteúdo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "A peça é a marca, e não o parágrafo. Quem escreve a frase decide onde cada afirmação precisa de apoio, e o design system não fica dono do texto da resposta.",
+      "item2": "O trecho mora na citação, e não na fonte. A mesma fonte apoia afirmações diferentes com trechos diferentes, e guardá-lo dentro dela faria o documento aparecer três vezes na lista de fontes.",
+      "item3": "A numeração é conteúdo e chega de fora. Uma marca que se numerasse sozinha precisaria conhecer as irmãs, e marcas irmãs podem nem estar no mesmo parágrafo.",
+      "item4": "A prévia abre por clique, e não por ponteiro. É a decisão que faz a peça existir em telefone, e a mesma que a separa do cartão de prévia de link.",
+      "item5": "A marca não abre ao receber foco. É divergência deliberada em relação ao cartão de ponteiro, e o motivo é a densidade: numa frase há muitas marcas e um só link.",
+      "item6": "A prévia é filha da marca, e não um painel no fim do documento. É o que faz a ordem de tabulação alcançar o link do título sem nada mover o foco.",
+      "item7": "A marca assenta na linha de base. Elevá-la é a convenção tipográfica, e é ela que estica a caixa de linha: o parágrafo respiraria diferente nas linhas que citam alguma coisa.",
+      "item8": "O alvo de toque cresce por fora do fluxo. É como as duas exigências se atendem ao mesmo tempo — vinte e quatro pixels para o dedo, e nenhuma mudança de entrelinha para quem lê.",
+      "item9": "Endereço de fonte é dado de terceiro, e a pergunta é feita no ponto em que ele encosta na página. O que não passa continua legível e deixa de ser link.",
+      "item10": "A exclusão mútua entre prévias é de quem monta a página. A peça não conhece as vizinhas, e é isso que permite que duas marcas da mesma frase venham de lugares diferentes da resposta."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a marca em si não instrumenta nada, porque abrir uma prévia é leitura e não conversão.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Montar a marca dentro de uma frase",
+          "result": "O número aparece e o texto continua correndo em volta dela, sem caixa própria no parágrafo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar o nome acessível escrito",
+          "result": "A marca é anunciada por ele, e o número que se vê está dentro do nome",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Acionar a marca",
+          "result": "A prévia monta com o endereço, o título, o trecho e o lugar, e o botão passa a dizer que está expandido",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Acionar a marca de novo",
+          "result": "A prévia sai da página e o botão volta a dizer que está recolhido",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar uma citação sem trecho e sem lugar",
+          "result": "A prévia monta só o endereço e o título, sem traço nem espaço reservado no lugar do resto",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar uma fonte cujo endereço não pode virar link",
+          "result": "O título continua legível e deixa de ser link, e no lugar do endereço entram as palavras que dizem que ele foi recusado",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pressionar a tecla de escape com a prévia aberta",
+          "result": "A prévia fecha e o foco continua na marca",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Abrir uma marca enquanto a irmã está aberta",
+          "result": "Quem monta a página fecha a irmã pelo evento de abertura, e a peça não precisou conhecer a vizinha",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A marca é um botão que se expande, e a prévia não é um diálogo",
+        "item2": "O nome acessível diz de que fonte se trata e contém o número visível",
+        "item3": "O botão aponta para a prévia por identificador",
+        "item4": "A marca não abre ao receber foco",
+        "item5": "A tecla de escape fecha sem mover o foco",
+        "item6": "O percurso do teclado alcança o link do título sem que nada mova o foco",
+        "item7": "O alvo de toque da marca tem ao menos vinte e quatro pixels",
+        "item8": "Não há região viva, e o estado aberto não depende só de cor"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a marca dentro de uma frase",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — a prévia aberta",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — só a fonte",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — endereço recusado",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composições — várias marcas na mesma frase",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — duas prévias que não ficam abertas juntas",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Inline citation",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The numbered marker that ties a claim in a sentence to the source it rests on, with a preview of that source one click away.",
+    "seo": {
+      "title": "Inline citation — the marker that points to a claim's source",
+      "description": "A numbered marker inside running text, with a preview of the source: address, title, quoted excerpt and the place within the document. It opens on click, so it exists on touch and on the keyboard."
+    },
+    "labels": {
+      "marker": "Source",
+      "unsafeSource": "Address refused"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "inSentence": "Inside a sentence",
+        "open": "With the preview open",
+        "minimal": "When only the source is known",
+        "unsafe": "When the address was refused"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The root stays inline and opens no box of its own in the paragraph: what you see is the marker, and the text keeps running around it.",
+      "item2": "The marker is a button that expands. The number is the visible text; the accessible name carries the word, the number and the source title.",
+      "item3": "The touch target is larger than the marker and lives outside the flow. Without that, the paragraph's leading would change on every line carrying a citation.",
+      "item4": "The preview exists only while open, and it is a child of the marker — that is what lets the keyboard path reach the title link without anything moving focus.",
+      "item5": "Inside the preview: the address, the title, the quoted excerpt and the place within the document. Each one only when it exists; nothing takes up room for what did not arrive.",
+      "structureCode": {
+        "web": "<span class=\"nds-inline-citation\" data-slot=\"inline-citation\">\n  <button class=\"nds-inline-citation-marker\" data-slot=\"inline-citation-marker\"\n          type=\"button\" aria-expanded=\"true\" aria-controls=\"c1-panel\"\n          aria-label=\"Source 1: Annual operations report\">1</button>\n\n  <!-- exists only while open -->\n  <span class=\"nds-popover-content nds-inline-citation-panel\"\n        data-slot=\"inline-citation-panel\" id=\"c1-panel\" data-side=\"bottom\">\n    <span class=\"nds-inline-citation-address nds-font-mono nds-truncate\"\n          data-slot=\"inline-citation-address\">https://exemplo.test/relatorios</span>\n    <a class=\"nds-inline-citation-title\" data-slot=\"inline-citation-title\"\n       href=\"https://exemplo.test/relatorios\" rel=\"noreferrer\">Annual operations report</a>\n    <q class=\"nds-inline-citation-excerpt\" data-slot=\"inline-citation-excerpt\">Revenue grew twelve percent.</q>\n    <span class=\"nds-inline-citation-anchor\" data-slot=\"inline-citation-anchor\">Page 12</span>\n  </span>\n</span>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when a specific claim inside a sentence has to say what it rests on. For the sources of a whole turn, the conversation's list answers better.",
+        "item2": "Number the markers from outside. The numbering is content: it is what ties the sentence to the source list, and a marker that numbered itself would have to know its siblings.",
+        "item3": "Write the accessible name before passing it, and keep the visible number inside it.",
+        "item4": "Leave no space before the marker. Without a space, it will not part from the word before it when the line breaks.",
+        "item5": "If two previews must not stay open at once, close the sibling when one opens. The piece does not know its neighbours.",
+        "item6": "Pass only what the citation has. With no excerpt and no place, the preview shows the source and nothing else."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Back a claim inside a sentence",
+          "u": "Inline citation",
+          "a": "—"
+        },
+        "item2": {
+          "s": "List the sources of a whole turn",
+          "u": "Conversation",
+          "a": "There the sources are the turn's list and point at no claim; here the marker points at one."
+        },
+        "item3": {
+          "s": "Show the preview of an ordinary link",
+          "u": "Hover card",
+          "a": "That one opens on pointer and on focus, which is right for a single link; here there are many markers in one sentence and none of them can depend on a pointer."
+        },
+        "item4": {
+          "s": "Explain a term inside the text",
+          "u": "Tooltip",
+          "a": "A tooltip holds no link and no excerpt, and it is not a keyboard path to content."
+        },
+        "item5": {
+          "s": "Open a panel with controls anchored to a trigger",
+          "u": "Popover",
+          "a": "That one handles interactive content and the focus policy that comes with it; this is a short preview inside the sentence."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "marker": {
+            "name": "Marker's accessible name",
+            "format": "The word for source, the number and the document title, in the language's order.",
+            "good": "Source 1: Annual operations report",
+            "bad": "1"
+          },
+          "unsafeSource": {
+            "name": "Refused address",
+            "format": "Says the address does not hold, without repeating it.",
+            "good": "Address refused",
+            "bad": "javascript:alert(1)"
+          },
+          "sourceTitle": {
+            "name": "Source title",
+            "format": "The document's title, as it is called.",
+            "good": "Annual operations report",
+            "bad": "Click here"
+          },
+          "anchor": {
+            "name": "Place within the source",
+            "format": "Already written, with the word that says which unit it is.",
+            "good": "Page 12",
+            "bad": "12"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Write the accessible name with the source inside it, and keep the visible number there.",
+        "item2": "Put the marker right after the claim it backs, with no space in between.",
+        "item3": "Let the preview close on escape and on a click outside it.",
+        "item4": "Pass the address as it arrived and let the piece decide whether it can become a link."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not let the preview depend on hovering: there is no pointer on touch.",
+        "item2": "Do not use the number as the accessible name — it says nothing about which source it is.",
+        "item3": "Do not write a dash in place of an excerpt or a place that did not arrive; leave them out.",
+        "item4": "Do not raise the marker above the baseline: the paragraph's leading would change wherever there is a citation."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "The accessible name carries the word, the number and the title — whoever listens knows which source it is before opening it.",
+        "dont": "The accessible name is the number. Whoever sees it has the surrounding text to go by; whoever listens gets a button called one."
+      },
+      "pair2": {
+        "do": "A citation with only a source shows the source and nothing else: what did not arrive takes up no room.",
+        "dont": "A dash stands in for the excerpt that did not arrive, and the preview now claims there is an empty excerpt."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\nconst marca = createInlineCitation({ citation, index: 1, labels: rotulos });\n\n// NO SPACE BEFORE IT: this is how the marker stays with the word on a line break.\nfrase.append('Revenue grew twelve percent', marca, '.');"
+      },
+      "withLabels": "The accessible name, written before it arrives",
+      "withLabelsCode": {
+        "web": "// THE ACCESSIBLE NAME ARRIVES WRITTEN. \"1\" alone says nothing about which\n// source it is, and the order between the word, the number and the title\n// changes with the language — whoever knows all three is whoever builds the page.\nconst rotulos = {\n  marker: `Source ${numero}: ${citation.source.title}`,\n  unsafeSource: 'Address refused',\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "closed": {
+        "label": "Collapsed",
+        "trigger": "The resting state: the marker sits in the sentence and nobody has activated it.",
+        "behavior": "Only the number shows, on the theme's muted surface. The button says it is collapsed, and nothing else is mounted."
+      },
+      "open": {
+        "label": "Expanded",
+        "trigger": "Somebody activated the marker, by click, by touch or from the keyboard.",
+        "behavior": "The preview mounts below the marker — or above, when below does not fit —, the button says it is expanded and the marker changes surface as reinforcement."
+      },
+      "minimal": {
+        "label": "Source only",
+        "trigger": "The citation arrived with no excerpt and no place within the document.",
+        "behavior": "The preview mounts the address and the title, and nothing else. There is no dash and no reserved room for what did not arrive."
+      },
+      "unsafe": {
+        "label": "Address refused",
+        "trigger": "The source's address does not use a scheme that can become a link.",
+        "behavior": "The title stays readable and stops being a link; the address leaves the preview and the words that say it was refused take its place."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "citation": {
+          "name": "citation",
+          "type": "Citation",
+          "default": "—",
+          "required": "Yes",
+          "description": "The citation: the source, the excerpt the claim rests on and where within the document. The excerpt lives in the citation, not in the source, because the same source backs different claims."
+        },
+        "index": {
+          "name": "index",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "The number the marker shows. It is content: it is how the sentence refers to the source, and whoever numbers is whoever writes the sentence."
+        },
+        "defaultOpen": {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Born with the preview open. It is there to photograph the state; in ordinary use whoever opens it is whoever reads."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Every opening and every closing. This is how whoever builds the page closes a sibling preview when this one opens — the piece does not know its neighbours."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "InlineCitationLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The piece's text: the marker's accessible name and what is said in place of a refused address."
+        },
+        "citationSource": {
+          "name": "source",
+          "type": "ChatSource",
+          "default": "—",
+          "required": "Yes",
+          "description": "The cited document: its title and its address."
+        },
+        "citationExcerpt": {
+          "name": "excerpt",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "The quoted text, as it left the source. Absent is absent: nothing takes its place."
+        },
+        "citationAnchor": {
+          "name": "anchor",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Where within the document — page, anchor, line range. It arrives written, because a bare number is not a place."
+        },
+        "sourceTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The document's title, as it is called. It is what the preview shows in relief."
+        },
+        "sourceUrl": {
+          "name": "url",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The document's address. It is third-party data, and the piece checks whether it can become a link at the point where it touches the page."
+        },
+        "labelsMarker": {
+          "name": "marker",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The marker's accessible name, already written. It has to contain the visible number, and it says which source this is."
+        },
+        "labelsUnsafeSource": {
+          "name": "unsafeSource",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What is said in place of a refused address. Required even for whoever never expects one: without it the preview would show a blank line the day one appeared."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The piece is controllable: whoever wants to decide from outside receives every opening and every closing and gives the order back by command. That pair is what solves mutual exclusion between markers, which the piece does not solve on its own because it does not know its neighbours — and not knowing them is what lets two markers in the same sentence come from different places in the answer.",
+      "extensibilityCode": {
+        "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\n// MUTUAL EXCLUSION BELONGS TO WHOEVER BUILDS THE PAGE. The piece does not know\n// its neighbours; whoever holds them in a list closes the others on open.\nconst marcas = [];\n\nfor (const [i, citation] of citacoes.entries()) {\n  const marca = createInlineCitation({\n    citation,\n    index: i + 1,\n    labels: rotulosDe(i + 1, citation),\n    onOpenChange: (aberta) => {\n      if (!aberta) return;\n      for (const outra of marcas) if (outra !== marca) outra.close();\n    },\n  });\n  marcas.push(marca);\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": "/* The marker reads the theme's muted surface. To make it stand out more, swap\n   the colour pair — never the height, which is a result of padding and leading. */\n.nds-inline-citation-marker {\n  background-color: hsl(var(--accent) / 0.2);\n}\n\n/* The preview inherits the shared floating surface; what belongs to it alone is\n   the space between its lines. */\n.nds-inline-citation-panel {\n  gap: var(--spacing-3);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-inline-citation-marker",
+          "description": "The marker's resting surface — muted, so it does not compete with the text around it."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-inline-citation-marker",
+          "description": "The number's colour, which has to stay readable inside a paragraph."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-inline-citation-marker",
+          "description": "The marker's surface while the preview is open. Reinforcement of the state, never its carrier."
+        },
+        "primaryForeground": {
+          "token": "--primary-foreground",
+          "value": ".nds-inline-citation-marker",
+          "description": "The number's colour over the open marker."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-inline-citation-marker",
+          "description": "The marker's focus ring, for whoever arrives by keyboard."
+        },
+        "sizeXs": {
+          "token": "--size-xs",
+          "value": ".nds-inline-citation-marker",
+          "description": "The marker's minimum touch target — twenty-four pixels, measured outside the paragraph's flow."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-inline-citation-marker",
+          "description": "The marker's rounding."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-inline-citation-marker",
+          "description": "The number's size, smaller than the surrounding text and derived from it."
+        },
+        "textControlSm": {
+          "token": "--text-control-sm",
+          "value": ".nds-inline-citation-panel",
+          "description": "The size of the preview's text."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-inline-citation-panel",
+          "description": "The space between the preview's lines, and the gap between it and the marker."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-inline-citation-address",
+          "description": "The address's colour, which is support for the title."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-inline-citation-excerpt",
+          "description": "The rule that marks the excerpt as coming from somewhere else."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The marker is a button that expands, not a dialog trigger: whoever listens gets the source's name and the preview's state. The click opens it, and that is what makes the piece exist on touch, on the keyboard and on the pointer at once.",
+      "items": {
+        "item1": "The marker is a button that expands, and the preview is the content it controls. It is not a dialog, so it needs no name of its own — a dialog called one says nothing.",
+        "item2": "The accessible name carries the word, the number and the source title, and it contains the number visible on screen.",
+        "item3": "The click opens it, and it serves all three means: touch, keyboard and pointer. Nothing in this piece exists only on hover.",
+        "item4": "The marker does not open on focus. Tabbing through a sentence with five citations would open five previews, one per stop.",
+        "item5": "The escape key closes the preview and focus does not move: it is already on the marker, which is where the preview came from.",
+        "item6": "The preview is a child of the marker, so the keyboard path reaches the title link without anything moving focus.",
+        "item7": "The touch target is at least twenty-four pixels and lives outside the flow, so the paragraph's leading does not change where there is a citation.",
+        "item8": "There is no live region, and the open state does not depend on colour: whoever sees has the preview on screen, and whoever listens has the button's state."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Reaches the marker. With the preview open, the next stop is the title link.",
+        "enter": "Opens the preview, and closes it when it is already open.",
+        "escape": "Closes the preview. Focus stays on the marker."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The button's expanded state is what says whether the preview is open, and it is what whoever listens receives.",
+        "item2": "The button points to the preview by identifier, and that link is what describes the relation between the two.",
+        "item3": "The marker's accessible name arrives written, because the visible number describes no source at all.",
+        "item4": "There is no dialog role, no live region and no value: the preview is content controlled by a button."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The marker is announced by the source's name, with the number inside it, and by the collapsed or expanded state.",
+        "item2": "With the preview open, the path continues through the address, the title, the excerpt and the place within the document.",
+        "item3": "Opening and closing do not interrupt whatever is being read: nothing here announces itself."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "chatThread": {
+          "name": "Conversation",
+          "description": "The turn's source list, which the markers point at. There the document shows once; here each marker points at a claim."
+        },
+        "hoverCard": {
+          "name": "Hover card",
+          "description": "The preview of a single link. It opens on pointer and on focus, which is right when there is one trigger on screen."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "The panel for interactive content, with the focus policy that comes with it."
+        },
+        "tooltip": {
+          "name": "Tooltip",
+          "description": "The short explanation of a control. It holds no link and no excerpt, and it is not a keyboard path to content."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The piece is the marker, not the paragraph. Whoever writes the sentence decides where each claim needs backing, and the design system does not own the text of the answer.",
+      "item2": "The excerpt lives in the citation, not in the source. The same source backs different claims with different excerpts, and keeping it inside the source would make the document appear three times in the source list.",
+      "item3": "The numbering is content and arrives from outside. A marker that numbered itself would have to know its siblings, and sibling markers may not even share a paragraph.",
+      "item4": "The preview opens on click, not on hover. That is the decision that makes the piece exist on a phone, and the same one that separates it from the link preview card.",
+      "item5": "The marker does not open on focus. It is a deliberate divergence from the hover card, and the reason is density: a sentence has many markers and a single link does not.",
+      "item6": "The preview is a child of the marker, not a panel at the end of the document. That is what lets the tab order reach the title link without anything moving focus.",
+      "item7": "The marker sits on the baseline. Raising it is the typographic convention, and it is what stretches the line box: the paragraph would breathe differently on the lines that cite something.",
+      "item8": "The touch target grows outside the flow. That is how both requirements are met at once — twenty-four pixels for the finger, and no change of leading for whoever reads.",
+      "item9": "A source address is third-party data, and the question is asked at the point where it touches the page. What does not pass stays readable and stops being a link.",
+      "item10": "Mutual exclusion between previews belongs to whoever builds the page. The piece does not know its neighbours, and that is what lets two markers in the same sentence come from different places in the answer."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the marker itself instruments nothing, because opening a preview is reading and not conversion.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demonstration is used.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Mount the marker inside a sentence",
+          "result": "The number appears and the text keeps running around it, with no box of its own in the paragraph",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass the written accessible name",
+          "result": "The marker is announced by it, and the visible number is inside the name",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Activate the marker",
+          "result": "The preview mounts with the address, the title, the excerpt and the place, and the button says it is expanded",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Activate the marker again",
+          "result": "The preview leaves the page and the button says it is collapsed again",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass a citation with no excerpt and no place",
+          "result": "The preview mounts only the address and the title, with no dash and no reserved room for the rest",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass a source whose address cannot become a link",
+          "result": "The title stays readable and stops being a link, and the words saying the address was refused take its place",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Press the escape key with the preview open",
+          "result": "The preview closes and focus stays on the marker",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Open a marker while its sibling is open",
+          "result": "Whoever builds the page closes the sibling through the open event, and the piece never had to know its neighbour",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The marker is a button that expands, and the preview is not a dialog",
+        "item2": "The accessible name says which source it is and contains the visible number",
+        "item3": "The button points to the preview by identifier",
+        "item4": "The marker does not open on focus",
+        "item5": "The escape key closes it without moving focus",
+        "item6": "The keyboard path reaches the title link without anything moving focus",
+        "item7": "The marker's touch target is at least twenty-four pixels",
+        "item8": "There is no live region, and the open state does not depend on colour alone"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the marker inside a sentence",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the preview open",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — source only",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — address refused",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Compositions — several markers in one sentence",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — two previews that never stay open together",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Cita en línea",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La marca numerada que une una afirmación de la frase con la fuente en la que se apoya, con la vista previa de esa fuente a un clic de distancia.",
+    "seo": {
+      "title": "Cita en línea — la marca que señala la fuente de una afirmación",
+      "description": "Una marca numerada dentro del texto corrido, con la vista previa de la fuente: dirección, título, fragmento citado y el lugar dentro del documento. Se abre con un clic, y por eso existe en pantalla táctil y con el teclado."
+    },
+    "labels": {
+      "marker": "Fuente",
+      "unsafeSource": "Dirección rechazada"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "inSentence": "Dentro de una frase",
+        "open": "Con la vista previa abierta",
+        "minimal": "Cuando solo se conoce la fuente",
+        "unsafe": "Cuando la dirección fue rechazada"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La raíz permanece en línea y no abre una caja propia en el párrafo: lo que se ve es la marca, y el texto sigue corriendo a su alrededor.",
+      "item2": "La marca es un botón que se expande. El número es el texto visible; el nombre accesible lleva la palabra, el número y el título de la fuente.",
+      "item3": "El área táctil es mayor que la marca y vive fuera del flujo. Sin eso, el interlineado del párrafo cambiaría en cada línea que llevara una cita.",
+      "item4": "La vista previa solo existe mientras está abierta y es hija de la marca — eso es lo que permite que el recorrido del teclado alcance el enlace del título sin que nada mueva el foco.",
+      "item5": "Dentro de la vista previa: la dirección, el título, el fragmento citado y el lugar dentro del documento. Cada uno solo cuando existe; nada ocupa espacio en lugar de lo que no llegó.",
+      "structureCode": {
+        "web": "<span class=\"nds-inline-citation\" data-slot=\"inline-citation\">\n  <button class=\"nds-inline-citation-marker\" data-slot=\"inline-citation-marker\"\n          type=\"button\" aria-expanded=\"true\" aria-controls=\"c1-panel\"\n          aria-label=\"Fuente 1: Informe anual de operaciones\">1</button>\n\n  <!-- solo existe mientras está abierta -->\n  <span class=\"nds-popover-content nds-inline-citation-panel\"\n        data-slot=\"inline-citation-panel\" id=\"c1-panel\" data-side=\"bottom\">\n    <span class=\"nds-inline-citation-address nds-font-mono nds-truncate\"\n          data-slot=\"inline-citation-address\">https://exemplo.test/relatorios</span>\n    <a class=\"nds-inline-citation-title\" data-slot=\"inline-citation-title\"\n       href=\"https://exemplo.test/relatorios\" rel=\"noreferrer\">Informe anual de operaciones</a>\n    <q class=\"nds-inline-citation-excerpt\" data-slot=\"inline-citation-excerpt\">Los ingresos crecieron doce por ciento.</q>\n    <span class=\"nds-inline-citation-anchor\" data-slot=\"inline-citation-anchor\">Página 12</span>\n  </span>\n</span>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala cuando una afirmación concreta dentro de una frase necesita decir en qué se apoya. Para las fuentes de todo un turno, la lista de la conversación responde mejor.",
+        "item2": "Numera las marcas desde fuera. La numeración es contenido: es lo que une la frase con la lista de fuentes, y una marca que se numerara sola tendría que conocer a sus hermanas.",
+        "item3": "Escribe el nombre accesible antes de pasarlo, y deja dentro de él el número visible.",
+        "item4": "No dejes espacio antes de la marca. Sin espacio, no se separa de la palabra anterior cuando la línea se corta.",
+        "item5": "Si dos vistas previas no deben quedar abiertas a la vez, cierra la hermana al abrir una. La pieza no conoce a sus vecinas.",
+        "item6": "Pasa solo lo que la cita tiene. Sin fragmento y sin lugar, la vista previa muestra la fuente y nada más."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Respaldar una afirmación dentro de una frase",
+          "u": "Cita en línea",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Listar las fuentes de todo un turno",
+          "u": "Conversación",
+          "a": "Allí las fuentes son la lista del turno y no señalan ninguna afirmación; aquí la marca señala una."
+        },
+        "item3": {
+          "s": "Mostrar la vista previa de un enlace común",
+          "u": "Tarjeta de puntero",
+          "a": "Aquella se abre con el puntero y con el foco, que es lo correcto para un enlace aislado; aquí hay muchas marcas en una frase y ninguna puede depender del puntero."
+        },
+        "item4": {
+          "s": "Explicar un término dentro del texto",
+          "u": "Descripción emergente",
+          "a": "No guarda enlace ni fragmento, y no es un camino de teclado hacia el contenido."
+        },
+        "item5": {
+          "s": "Abrir un panel con controles anclado a un disparador",
+          "u": "Panel anclado",
+          "a": "Aquel trata contenido interactivo y la política de foco que lo acompaña; esta es una vista previa breve dentro de la frase."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "marker": {
+            "name": "Nombre accesible de la marca",
+            "format": "La palabra para fuente, el número y el título del documento, en el orden del idioma.",
+            "good": "Fuente 1: Informe anual de operaciones",
+            "bad": "1"
+          },
+          "unsafeSource": {
+            "name": "Dirección rechazada",
+            "format": "Dice que la dirección no sirve, sin repetirla.",
+            "good": "Dirección rechazada",
+            "bad": "javascript:alert(1)"
+          },
+          "sourceTitle": {
+            "name": "Título de la fuente",
+            "format": "El título del documento, tal como se llama.",
+            "good": "Informe anual de operaciones",
+            "bad": "Haz clic aquí"
+          },
+          "anchor": {
+            "name": "Lugar dentro de la fuente",
+            "format": "Ya escrito, con la palabra que dice de qué unidad se trata.",
+            "good": "Página 12",
+            "bad": "12"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Escribe el nombre accesible con la fuente dentro, y mantén en él el número visible.",
+        "item2": "Pon la marca justo después de la afirmación que respalda, sin espacio en medio.",
+        "item3": "Deja que la vista previa se cierre con la tecla de escape y con un clic fuera de ella.",
+        "item4": "Pasa la dirección tal como llegó y deja que la pieza decida si puede convertirse en enlace."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No dejes que la vista previa dependa del puntero: en pantalla táctil no hay puntero.",
+        "item2": "No uses el número como nombre accesible — no dice de qué fuente se trata.",
+        "item3": "No escribas un guion en lugar del fragmento o del lugar que no llegaron; omítelos.",
+        "item4": "No eleves la marca por encima de la línea base: el interlineado del párrafo cambiaría donde hay una cita."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "El nombre accesible lleva la palabra, el número y el título — quien escucha sabe de qué fuente se trata antes de abrirla.",
+        "dont": "El nombre accesible es el número. Quien ve tiene el texto alrededor para orientarse; quien escucha recibe un botón llamado uno."
+      },
+      "pair2": {
+        "do": "La cita que solo tiene fuente muestra la fuente y nada más: lo que no llegó no ocupa espacio.",
+        "dont": "Un guion ocupa el lugar del fragmento que no llegó, y la vista previa pasa a afirmar que existe un fragmento vacío."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\nconst marca = createInlineCitation({ citation, index: 1, labels: rotulos });\n\n// SIN ESPACIO ANTES: así la marca no se separa de la palabra al cortarse la línea.\nfrase.append('Los ingresos crecieron doce por ciento', marca, '.');"
+      },
+      "withLabels": "El nombre accesible, escrito antes de llegar",
+      "withLabelsCode": {
+        "web": "// EL NOMBRE ACCESIBLE LLEGA ESCRITO. \"1\" por sí solo no dice de qué fuente se\n// trata, y el orden entre la palabra, el número y el título cambia con el\n// idioma — quien conoce los tres es quien monta la página.\nconst rotulos = {\n  marker: `Fuente ${numero}: ${citation.source.title}`,\n  unsafeSource: 'Dirección rechazada',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "closed": {
+        "label": "Contraída",
+        "trigger": "El estado de reposo: la marca está en la frase y nadie la ha activado.",
+        "behavior": "Solo aparece el número, sobre la superficie apagada del tema. El botón dice que está contraído, y no hay nada más montado."
+      },
+      "open": {
+        "label": "Expandida",
+        "trigger": "Alguien activó la marca, con un clic, un toque o el teclado.",
+        "behavior": "La vista previa se monta debajo de la marca — o encima, cuando debajo no cabe —, el botón pasa a decir que está expandido y la marca cambia de superficie como refuerzo."
+      },
+      "minimal": {
+        "label": "Solo la fuente",
+        "trigger": "La cita llegó sin fragmento y sin lugar dentro del documento.",
+        "behavior": "La vista previa monta la dirección y el título, y nada más. No hay guion ni espacio reservado en lugar de lo que no llegó."
+      },
+      "unsafe": {
+        "label": "Dirección rechazada",
+        "trigger": "La dirección de la fuente no usa un esquema que pueda convertirse en enlace.",
+        "behavior": "El título sigue legible y deja de ser enlace; la dirección sale de la vista previa y en su lugar entran las palabras que dicen que fue rechazada."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "citation": {
+          "name": "citation",
+          "type": "Citation",
+          "default": "—",
+          "required": "Sí",
+          "description": "La cita: la fuente, el fragmento en el que la afirmación se apoya y dónde dentro del documento. El fragmento vive en la cita, y no en la fuente, porque la misma fuente respalda afirmaciones distintas."
+        },
+        "index": {
+          "name": "index",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "El número que la marca muestra. Es contenido: es por él que la frase se refiere a la fuente, y quien numera es quien escribe la frase."
+        },
+        "defaultOpen": {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Nace con la vista previa abierta. Sirve para fotografiar el estado; en el uso corriente quien la abre es quien lee."
+        },
+        "onOpenChange": {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Cada apertura y cada cierre. Es por aquí que quien monta la página cierra una vista previa hermana al abrir esta — la pieza no conoce a sus vecinas."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "InlineCitationLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El texto de la pieza: el nombre accesible de la marca y lo que se dice en lugar de una dirección rechazada."
+        },
+        "citationSource": {
+          "name": "source",
+          "type": "ChatSource",
+          "default": "—",
+          "required": "Sí",
+          "description": "El documento citado: el título y la dirección."
+        },
+        "citationExcerpt": {
+          "name": "excerpt",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "El texto citado, tal como salió de la fuente. Ausente es ausente: nada ocupa su lugar."
+        },
+        "citationAnchor": {
+          "name": "anchor",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Dónde dentro del documento — página, ancla, intervalo de líneas. Llega escrito, porque un número suelto no es un lugar."
+        },
+        "sourceTitle": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El título del documento, tal como se llama. Es lo que la vista previa muestra en primer plano."
+        },
+        "sourceUrl": {
+          "name": "url",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La dirección del documento. Es dato de terceros, y la pieza comprueba si puede convertirse en enlace en el punto en que toca la página."
+        },
+        "labelsMarker": {
+          "name": "marker",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre accesible de la marca, ya escrito. Debe contener el número visible, y dice de qué fuente se trata."
+        },
+        "labelsUnsafeSource": {
+          "name": "unsafeSource",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que se dice en lugar de una dirección rechazada. Obligatorio incluso para quien nunca espera una: sin él, la vista previa mostraría la línea en blanco el día en que apareciera."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La pieza es controlable: quien quiera decidir desde fuera recibe cada apertura y cada cierre y devuelve la orden por comando. Ese par es lo que resuelve la exclusión mutua entre marcas, que la pieza no resuelve sola porque no conoce a sus vecinas — y no conocerlas es lo que permite que dos marcas de la misma frase vengan de lugares distintos de la respuesta.",
+      "extensibilityCode": {
+        "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\n// LA EXCLUSIÓN MUTUA ES DE QUIEN MONTA LA PÁGINA. La pieza no conoce a sus\n// vecinas; quien las tiene en una lista cierra las otras al abrir una.\nconst marcas = [];\n\nfor (const [i, citation] of citacoes.entries()) {\n  const marca = createInlineCitation({\n    citation,\n    index: i + 1,\n    labels: rotulosDe(i + 1, citation),\n    onOpenChange: (aberta) => {\n      if (!aberta) return;\n      for (const outra of marcas) if (outra !== marca) outra.close();\n    },\n  });\n  marcas.push(marca);\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* La marca lee la superficie apagada del tema. Para destacarla más, cambia el\n   par de colores — nunca la altura, que es resultado del respiro y el interlineado. */\n.nds-inline-citation-marker {\n  background-color: hsl(var(--accent) / 0.2);\n}\n\n/* La vista previa hereda la superficie flotante compartida; lo que es solo suyo\n   es el espacio entre sus líneas. */\n.nds-inline-citation-panel {\n  gap: var(--spacing-3);\n}"
+      },
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-inline-citation-marker",
+          "description": "Superficie de la marca en reposo — apagada, para no competir con el texto alrededor."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-inline-citation-marker",
+          "description": "Color del número, que debe ser legible dentro de un párrafo."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-inline-citation-marker",
+          "description": "Superficie de la marca con la vista previa abierta. Es refuerzo del estado, nunca su portador."
+        },
+        "primaryForeground": {
+          "token": "--primary-foreground",
+          "value": ".nds-inline-citation-marker",
+          "description": "Color del número sobre la marca abierta."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-inline-citation-marker",
+          "description": "Anillo de foco de la marca, para quien llega por teclado."
+        },
+        "sizeXs": {
+          "token": "--size-xs",
+          "value": ".nds-inline-citation-marker",
+          "description": "Área táctil mínima de la marca — veinticuatro píxeles, medidos fuera del flujo del párrafo."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-inline-citation-marker",
+          "description": "Redondeo de la marca."
+        },
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-inline-citation-marker",
+          "description": "Tamaño del número, menor que el texto alrededor y derivado de él."
+        },
+        "textControlSm": {
+          "token": "--text-control-sm",
+          "value": ".nds-inline-citation-panel",
+          "description": "Tamaño del texto de la vista previa."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-inline-citation-panel",
+          "description": "Espacio entre las líneas de la vista previa, y el hueco entre ella y la marca."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-inline-citation-address",
+          "description": "Color de la dirección, que es apoyo del título."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-inline-citation-excerpt",
+          "description": "Filete que marca el fragmento citado como venido de otro lugar."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "La marca es un botón que se expande, y no un disparador de diálogo: quien escucha recibe el nombre de la fuente y el estado de la vista previa. El clic la abre, y eso es lo que hace que la pieza exista a la vez en pantalla táctil, con el teclado y con el puntero.",
+      "items": {
+        "item1": "La marca es un botón que se expande, y la vista previa es el contenido que controla. No es un diálogo, y por eso no necesita nombre propio — un diálogo llamado uno no dice nada.",
+        "item2": "El nombre accesible lleva la palabra, el número y el título de la fuente, y contiene el número visible en la pantalla.",
+        "item3": "El clic la abre, y sirve a los tres medios: pantalla táctil, teclado y puntero. Nada en esta pieza existe solo al pasar el puntero.",
+        "item4": "La marca no se abre al recibir el foco. Recorrer con tabulación una frase con cinco citas abriría cinco vistas previas, una por parada.",
+        "item5": "La tecla de escape cierra la vista previa y el foco no se mueve: ya está en la marca, que es de donde salió.",
+        "item6": "La vista previa es hija de la marca, así que el recorrido del teclado alcanza el enlace del título sin que nada mueva el foco.",
+        "item7": "El área táctil tiene al menos veinticuatro píxeles y vive fuera del flujo, para que el interlineado del párrafo no cambie donde hay una cita.",
+        "item8": "No hay región viva, y el estado abierto no depende del color: quien ve tiene la vista previa en la pantalla, y quien escucha tiene el estado del botón."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Llega a la marca. Con la vista previa abierta, la siguiente parada es el enlace del título.",
+        "enter": "Abre la vista previa, y la cierra cuando ya está abierta.",
+        "escape": "Cierra la vista previa. El foco sigue en la marca."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "El estado expandido del botón es lo que dice si la vista previa está abierta, y es lo que recibe quien escucha.",
+        "item2": "El botón apunta a la vista previa por identificador, y ese vínculo es lo que describe la relación entre ambos.",
+        "item3": "El nombre accesible de la marca llega escrito, porque el número visible no describe fuente alguna.",
+        "item4": "No hay papel de diálogo, ni región viva, ni valor: la vista previa es contenido controlado por un botón."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La marca se anuncia por el nombre de la fuente, con el número dentro, y por el estado contraído o expandido.",
+        "item2": "Abierta la vista previa, el recorrido sigue por la dirección, el título, el fragmento citado y el lugar dentro del documento.",
+        "item3": "Abrir y cerrar no interrumpen lo que se esté leyendo: nada aquí se anuncia solo."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chatThread": {
+          "name": "Conversación",
+          "description": "La lista de fuentes del turno, a la que apuntan las marcas. Allí el documento aparece una vez; aquí cada marca señala una afirmación."
+        },
+        "hoverCard": {
+          "name": "Tarjeta de puntero",
+          "description": "La vista previa de un enlace aislado. Se abre con el puntero y con el foco, que es lo correcto cuando hay un solo disparador en la pantalla."
+        },
+        "popover": {
+          "name": "Panel anclado",
+          "description": "El panel para contenido interactivo, con la política de foco que lo acompaña."
+        },
+        "tooltip": {
+          "name": "Descripción emergente",
+          "description": "La explicación breve de un control. No guarda enlace ni fragmento, y no es un camino de teclado hacia el contenido."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La pieza es la marca, y no el párrafo. Quien escribe la frase decide dónde cada afirmación necesita apoyo, y el design system no se queda como dueño del texto de la respuesta.",
+      "item2": "El fragmento vive en la cita, y no en la fuente. La misma fuente respalda afirmaciones distintas con fragmentos distintos, y guardarlo dentro de ella haría que el documento apareciera tres veces en la lista de fuentes.",
+      "item3": "La numeración es contenido y llega de fuera. Una marca que se numerara sola tendría que conocer a sus hermanas, y las marcas hermanas pueden ni siquiera estar en el mismo párrafo.",
+      "item4": "La vista previa se abre con un clic, y no con el puntero. Es la decisión que hace que la pieza exista en un teléfono, y la misma que la separa de la tarjeta de vista previa de enlace.",
+      "item5": "La marca no se abre al recibir el foco. Es una divergencia deliberada respecto a la tarjeta de puntero, y el motivo es la densidad: en una frase hay muchas marcas y un solo enlace.",
+      "item6": "La vista previa es hija de la marca, y no un panel al final del documento. Es lo que hace que el orden de tabulación alcance el enlace del título sin que nada mueva el foco.",
+      "item7": "La marca se asienta en la línea base. Elevarla es la convención tipográfica, y es lo que estira la caja de línea: el párrafo respiraría distinto en las líneas que citan algo.",
+      "item8": "El área táctil crece fuera del flujo. Es así como se atienden las dos exigencias a la vez — veinticuatro píxeles para el dedo, y ningún cambio de interlineado para quien lee.",
+      "item9": "La dirección de una fuente es dato de terceros, y la pregunta se hace en el punto en que toca la página. Lo que no pasa sigue legible y deja de ser enlace.",
+      "item10": "La exclusión mutua entre vistas previas es de quien monta la página. La pieza no conoce a sus vecinas, y eso es lo que permite que dos marcas de la misma frase vengan de lugares distintos de la respuesta."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la marca en sí no instrumenta nada, porque abrir una vista previa es lectura y no conversión.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección permanece visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Montar la marca dentro de una frase",
+          "result": "El número aparece y el texto sigue corriendo a su alrededor, sin caja propia en el párrafo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar el nombre accesible escrito",
+          "result": "La marca se anuncia por él, y el número visible está dentro del nombre",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Activar la marca",
+          "result": "La vista previa se monta con la dirección, el título, el fragmento y el lugar, y el botón pasa a decir que está expandido",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Activar la marca de nuevo",
+          "result": "La vista previa sale de la página y el botón vuelve a decir que está contraído",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar una cita sin fragmento y sin lugar",
+          "result": "La vista previa monta solo la dirección y el título, sin guion ni espacio reservado para el resto",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar una fuente cuya dirección no puede convertirse en enlace",
+          "result": "El título sigue legible y deja de ser enlace, y en lugar de la dirección entran las palabras que dicen que fue rechazada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pulsar la tecla de escape con la vista previa abierta",
+          "result": "La vista previa se cierra y el foco sigue en la marca",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Abrir una marca mientras la hermana está abierta",
+          "result": "Quien monta la página cierra la hermana por el evento de apertura, y la pieza no necesitó conocer a la vecina",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que la play afirma.",
+        "item1": "La marca es un botón que se expande, y la vista previa no es un diálogo",
+        "item2": "El nombre accesible dice de qué fuente se trata y contiene el número visible",
+        "item3": "El botón apunta a la vista previa por identificador",
+        "item4": "La marca no se abre al recibir el foco",
+        "item5": "La tecla de escape la cierra sin mover el foco",
+        "item6": "El recorrido del teclado alcanza el enlace del título sin que nada mueva el foco",
+        "item7": "El área táctil de la marca tiene al menos veinticuatro píxeles",
+        "item8": "No hay región viva, y el estado abierto no depende solo del color"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la marca dentro de una frase",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — la vista previa abierta",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — solo la fuente",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — dirección rechazada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composiciones — varias marcas en la misma frase",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — dos vistas previas que nunca quedan abiertas juntas",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

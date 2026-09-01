@@ -1,0 +1,289 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Evidência e procedência — a folha da família 3 da guideline 17.
+ *
+ * O EIXO: EM QUE A RESPOSTA SE APOIA. Uma frase afirma alguma coisa, e as peças
+ * daqui respondem de onde aquilo veio — o documento, o trecho, o lugar dentro
+ * dele, o quanto se pode confiar, o que foi procurado e o que voltou. É isso que
+ * faz as nove dividirem geometria, tokens e vocabulário, e é por isso que moram
+ * numa folha só, e não uma por slug.
+ *
+ * O vocabulário é `@shared/primitives/chat-protocol`: `ChatSource` é o
+ * documento, `Citation` é o apoio — a fonte, o trecho e onde dentro dela. As
+ * duas já existiam antes desta folha, escritas ao fundar a família, e o docblock
+ * de `Citation` guarda a decisão que governa a folha inteira: O TRECHO MORA NA
+ * CITAÇÃO, E NÃO NA FONTE. A mesma fonte apoia afirmações diferentes com
+ * trechos diferentes; guardar o trecho dentro dela faria o mesmo documento
+ * aparecer três vezes na lista de fontes de um turno.
+ *
+ * TRÊS REGRAS ATRAVESSAM A FAMÍLIA INTEIRA, e as três já foram pagas em outra
+ * folha antes de chegarem aqui:
+ *
+ * 1. NENHUMA PEÇA DAQUI BUSCA NADA (§2 da guideline 17). Procedência é dado que
+ *    chega; uma peça que resolvesse o endereço, baixasse o documento ou pedisse
+ *    o trecho traria transporte junto, e transporte envelhece por produto.
+ * 2. ENDEREÇO DE FONTE É DADO DE TERCEIRO. Ele foi escrito por quem gerou a
+ *    resposta, e `javascript:` num `href` executa. Toda peça daqui pergunta
+ *    `isSafeUrl` NO PONTO em que o endereço encosta no DOM — não antes, e não
+ *    por um invólucro que uma varredura de segurança não reconheceria. O que
+ *    falha continua LEGÍVEL e deixa de ser link: informação não se apaga por
+ *    causa de um endereço ruim, e link que não leva a lugar nenhum é parada de
+ *    tabulação sem destino. É a mesma decisão da lista de fontes da conversa.
+ * 3. NADA AQUI É REGIÃO VIVA, e nenhuma peça se reanuncia. Evidência chega junto
+ *    com a resposta, e a resposta está sendo lida ao lado; um painel que se
+ *    anunciasse cortaria a leitura daquilo que ele existe para apoiar (regra 1
+ *    da §8 da guideline 17). Estado é PALAVRA — ou atributo que uma tecnologia
+ *    assistiva lê como palavra —, nunca só cor (WCAG 1.4.1).
+ *
+ * A CLASSE ANDA JUNTO DO `data-slot` em toda a árvore, e a folha estiliza pela
+ * CLASSE — nunca por `[data-slot="…"]`. No Angular quase toda peça liga
+ * `data-slot` por host binding, e o atributo estático do template disputa com
+ * ele: uma regra presa ao atributo pode simplesmente não aplicar ali. O que a
+ * folha lê por atributo é ARIA e `data-*` de ESTADO, que são iguais nas cinco
+ * porque descrevem o componente, não a marcação.
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT),
+ * `Copyright (c) 2025 AgentbaseAI Inc.` — o desenho e os estados; nunca o
+ * código, que é preso a um runtime de React.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Citação em linha ─────────────────────────────────────────────────────────
+ *
+ * A marca numerada que liga uma frase à fonte em que ela se apoia. Vocabulário:
+ * `Citation`; a marca não tem conta nenhuma para ler.
+ *
+ *   <span class="nds-inline-citation" data-slot="inline-citation">
+ *     <button class="nds-inline-citation-marker" data-slot="inline-citation-marker"
+ *             type="button" aria-expanded="false" aria-controls="…-panel">1</button>
+ *
+ *     <!-- só existe enquanto está aberta -->
+ *     <span class="nds-popover-content nds-inline-citation-panel"
+ *           data-slot="inline-citation-panel" id="…-panel" data-side="bottom">
+ *       <span class="nds-inline-citation-address nds-font-mono nds-truncate"
+ *             data-slot="inline-citation-address">https://exemplo.test/relatorio</span>
+ *       <a class="nds-inline-citation-title" data-slot="inline-citation-title"
+ *          href="…" rel="noreferrer">Relatório anual</a>
+ *       <q class="nds-inline-citation-excerpt" data-slot="inline-citation-excerpt"
+ *          cite="…">A receita cresceu doze por cento.</q>
+ *       <span class="nds-inline-citation-anchor"
+ *             data-slot="inline-citation-anchor">Página 12</span>
+ *     </span>
+ *   </span>
+ *
+ * POR QUE ESTA PEÇA EXISTE, e não é um cartão de ponteiro com título e link.
+ * A pergunta foi feita antes de qualquer desenho, e a resposta tem duas metades
+ * que nenhum painel flutuante genérico resolve:
+ *
+ *   · ELA VIVE DENTRO DE TEXTO CORRIDO, e isso é geometria própria. A marca
+ *     interrompe um parágrafo: assenta na linha de base sem esticar a
+ *     entrelinha, não se separa da palavra que a antecede quando a linha quebra,
+ *     e mesmo assim oferece um alvo de toque de 24 px. As três exigências brigam
+ *     entre si — é justamente onde esta família mais escorrega (regra 10 da §8)
+ *     — e nenhuma classe desta base as concilia, porque as irmãs desenham listas
+ *     e caixas, onde a altura do elemento é livre por não haver linha de texto em
+ *     volta dele.
+ *   · TOQUE NÃO TEM PONTEIRO. O cartão de ponteiro desta base abre por
+ *     `mouseenter` e por `focus`, com 600 ms de espera. Em telefone o primeiro
+ *     não existe; e percorrer com Tab um parágrafo de cinco citações pelo
+ *     segundo abriria cinco painéis, um por parada de tabulação.
+ *
+ * O QUE A SUPERFÍCIE REAPROVEITA, e por quê. A caixa É `.nds-popover-content`,
+ * com esta folha acrescentando só o que a citação tem de próprio. A fonte
+ * declara a dela do mesmo jeito — "a marca e a prévia leem a superfície
+ * `floating` compartilhada" —, e superfície compartilhada declarada na origem é
+ * o sinal que esta campanha já leu três vezes. Fundo, borda, raio, sombra,
+ * respiro e a pilha em coluna vêm de lá inteiros; o que se sobrescreve é o
+ * espaço entre as linhas, que aqui é mais apertado porque endereço e título são
+ * uma unidade só.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   `aria-expanded`  Aberta ou fechada, na marca. Lido por ATRIBUTO e não por
+ *                    classe de propósito: classe pode dessincronizar do estado
+ *                    ARIA, e o dia em que dessincronizasse a cor diria uma coisa
+ *                    e o leitor de tela outra.
+ *   `data-side`      Para onde a caixa abriu. `bottom` é o padrão e não tem
+ *                    regra: escrever a mesma declaração num segundo lugar é o
+ *                    que faz duas verdades divergirem.
+ *   `data-unsafe`    No título, quando o endereço da fonte foi recusado. Ele
+ *                    deixa de ser link e deixa de parecer um.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. A MARCA É UM BOTÃO QUE EXPANDE, e não um gatilho de diálogo. Papel de
+ *    diálogo exige nome acessível, e o cartão de ponteiro desta base tira o dele
+ *    do texto do gatilho — com um gatilho cujo texto é "1", o resultado seria um
+ *    diálogo chamado "1". Aqui a caixa é o conteúdo que `aria-controls` liga, sem
+ *    papel e sem nome próprio, e quem diz o estado é `aria-expanded`.
+ * 2. O NOME ACESSÍVEL É O NOME, NÃO O NÚMERO. "1" não diz de que fonte se trata.
+ *    O nome chega escrito, com a palavra para "fonte", o número e o título
+ *    dentro — e contém o número que se vê, que é o que a WCAG 2.5.3 exige.
+ * 3. O CLIQUE ABRE, E O PONTEIRO SÓ AJUDA. Um caminho serve aos três meios:
+ *    toque, teclado (Enter e Espaço, que um botão já dispara) e ponteiro. A
+ *    abertura por espera de ponteiro é CONVENIÊNCIA — nada nesta peça existe só
+ *    no `:hover` (regra 3 da §8).
+ * 4. A MARCA NÃO ABRE POR FOCO. É a divergência deliberada em relação ao cartão
+ *    de ponteiro, e o motivo é a densidade: numa frase há muitas citações e um
+ *    só link. Caixa aberta sem ninguém pedir cobre o texto que se estava lendo.
+ * 5. ESCAPE FECHA E O FOCO NÃO SE MOVE. Ele já está na marca, que é de onde a
+ *    caixa saiu — nada é preciso devolver (WCAG 2.1.2, e a regra 2 da §8).
+ * 6. A CAIXA É FILHA DA MARCA, e não um portal para o fim do documento. É o que
+ *    faz a ordem de tabulação alcançar o link do título sem mover o foco à mão.
+ *    Portalada, o Tab sairia da marca para a próxima palavra do parágrafo, e o
+ *    link ficaria inalcançável sem teclado — que é a mesma perda que a regra 3
+ *    descreve, com outro nome.
+ * 7. O ALVO DE TOQUE É MAIOR QUE A MARCA, e cresce por um pseudo-elemento
+ *    posicionado, fora do fluxo. Aumentar a marca em si esticaria a entrelinha
+ *    do parágrafo inteiro em toda linha que tivesse uma citação (WCAG 2.5.8
+ *    contra 1.4.4, e as duas se atendem).
+ * 8. A MARCA NÃO É SOBRESCRITA. Elevá-la com `vertical-align: super` é a
+ *    convenção tipográfica, e é ela que estica a caixa de linha: o parágrafo
+ *    respiraria diferente exatamente nas linhas que citam alguma coisa. Ela
+ *    assenta na linha de base, menor que o texto, e a diferença de fundo é o que
+ *    a destaca.
+ * 9. O ESTADO ABERTO NÃO É SÓ COR (WCAG 1.4.1). Quem vê tem a caixa na tela;
+ *    quem ouve tem `aria-expanded`. A troca de fundo da marca é reforço dos
+ *    dois, nunca o portador.
+ * 10. O TRECHO É `<q>`, e as aspas vêm do navegador. Escrevê-las no texto as
+ *    fixaria num idioma só — é a mesma razão pela qual nenhum glifo entra na
+ *    `translations.json`.
+ *
+ * SEM ALTURA FIXA em nada que carregue texto: a marca cresce com a fonte do
+ * navegador, e o que a dimensiona é `padding-inline` mais `line-height`
+ * (WCAG 1.4.4). O único valor de caixa desta peça é o alvo de toque, que é
+ * `--size-xs` — 24 px, o mínimo da 2.5.8 — e não tem texto dentro.
+ */
+
+.nds-inline-citation {
+  /* A raiz é `position: relative` e nada mais: é ela que a caixa toma como
+     âncora, e é por isso que o posicionamento inteiro mora nesta folha e o
+     código só escreve o empurrão de volta para dentro da janela. Sem `display`
+     declarado, ela continua em linha e não abre caixa própria no parágrafo. */
+  position: relative;
+}
+
+.nds-inline-citation-marker {
+  display: inline-block;
+  /* Na LINHA DE BASE, e não elevada — decisão 8. */
+  vertical-align: baseline;
+  /* Âncora do alvo de toque, que é o pseudo-elemento logo abaixo. */
+  position: relative;
+
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--spacing-1);
+  /* Largura mínima em `em` do PRÓPRIO texto: um "1" e um "12" ocupam a mesma
+     caixa, e a fila de marcas de um parágrafo não fica serrilhada. */
+  min-inline-size: 1.5em;
+
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+
+  font-family: inherit;
+  font-size: var(--text-label);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  /* Dígitos de mesma largura: sem isso a marca muda de tamanho entre "1" e "7"
+     em fontes de largura proporcional. */
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+
+  cursor: pointer;
+  transition: background-color var(--duration-fast) ease-out;
+}
+
+/* O ALVO DE TOQUE (decisão 7): 24 px no mínimo, centrado sobre a marca e FORA
+   do fluxo, para não esticar a caixa de linha do parágrafo. Marca maior que o
+   mínimo mantém o próprio tamanho — `max()` toma o que for maior dos dois. */
+.nds-inline-citation-marker::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  translate: -50% -50%;
+  inline-size: max(100%, var(--size-xs));
+  block-size: max(100%, var(--size-xs));
+}
+
+.nds-inline-citation-marker:hover {
+  background-color: hsl(var(--accent) / 0.15);
+}
+
+.nds-inline-citation-marker:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+
+/* ABERTA — reforço, nunca o portador do estado (decisão 9). */
+.nds-inline-citation-marker[aria-expanded="true"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-inline-citation-panel {
+  /* O empurrão de volta para dentro da janela chega por aqui, DECLARADO em
+     zero: o código só escreve a propriedade quando ela não é zero, e escrever
+     um valor de custom property é o único caminho que ele tem para a folha. */
+  --nds-inline-citation-shift: 0px;
+
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: calc(100% + var(--spacing-2));
+  translate: var(--nds-inline-citation-shift) 0;
+
+  /* Mais apertado que a superfície compartilhada: endereço e título são uma
+     unidade, e o respiro do painel genérico os separava em dois blocos. */
+  gap: var(--spacing-2);
+
+  font-size: var(--text-control-sm);
+  line-height: var(--line-height-normal);
+}
+
+/* Abaixo não cabia (e acima cabe): a caixa sobe. `bottom` não tem regra — é o
+   valor da declaração acima, e repeti-lo seria uma segunda verdade. */
+.nds-inline-citation-panel[data-side="top"] {
+  inset-block-start: auto;
+  inset-block-end: calc(100% + var(--spacing-2));
+}
+
+.nds-inline-citation-address {
+  font-size: var(--text-control-xs);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-inline-citation-title {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.nds-inline-citation-title:hover {
+  color: hsl(var(--primary));
+}
+
+.nds-inline-citation-title:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px hsl(var(--popover)), 0 0 0 4px hsl(var(--ring));
+}
+
+/* O título de fonte cujo ENDEREÇO FOI RECUSADO continua legível e não finge ser
+   link: sem sublinhado e sem realce, porque não há para onde ir. O componente o
+   desenha como `<span>`, então ele também não entra no percurso do teclado. */
+.nds-inline-citation-title[data-unsafe] {
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+}
+
+.nds-inline-citation-excerpt {
+  border-inline-start: 2px solid hsl(var(--border));
+  padding-inline-start: var(--spacing-2);
+  color: hsl(var(--foreground));
+}
+
+.nds-inline-citation-anchor {
+  font-size: var(--text-control-xs);
+  color: hsl(var(--muted-foreground));
+}
