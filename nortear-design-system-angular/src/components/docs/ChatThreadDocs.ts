@@ -517,7 +517,7 @@ export class NdsChatThreadDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           'messages', 'labels', 'id', 'role', 'streaming',
-          'toolCalls', 'sources', 'actions', 'error', 'class',
+          'toolCalls', 'sources', 'actions', 'error', 'regionLabel', 'class',
         ].map((k) => ({
           name: t(`props.table.${k}.name`),
           type: t(`props.table.${k}.type`),

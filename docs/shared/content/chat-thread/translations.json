@@ -37,7 +37,7 @@
       "item4": "O botão que devolve ao fim, com a contagem do que chegou enquanto se lia para trás.",
       "item5": "O anunciador, única região viva da conversa: recebe a resposta uma vez, quando ela termina.",
       "structureCode": {
-        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\">   <!-- quem ROLA -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
+        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\"    <!-- quem ROLA -->\n       role=\"group\" aria-label=\"Conversa\">      <!-- e como se chama -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
       }
     },
     "usage": {
@@ -289,6 +289,13 @@
           "required": "Não",
           "description": "Endereço da mensagem. Opcional numa conversa parada, e necessário para o streaming: mensagem sem id não pode ser atualizada."
         },
+        "regionLabel": {
+          "name": "regionLabel",
+          "type": "string",
+          "default": "Conversa",
+          "required": "Não",
+          "description": "Nome acessível da área que rola, que entra na ordem de tabulação. Dê nomes distintos quando houver mais de uma conversa na mesma tela."
+        },
         "error": {
           "name": "error",
           "type": "string",
@@ -357,7 +364,7 @@
         "item2": "Enquanto gera, a mensagem é marcada como ocupada; ao terminar, o texto dela é anunciado uma vez por uma região educada fora do fluxo.",
         "item3": "Mensagem nova não move o foco, e a rolagem só acompanha o fim se já estava nele.",
         "item4": "As ações da mensagem aparecem no ponteiro E no foco, e permanecem no percurso do teclado em qualquer estado.",
-        "item5": "A área que rola é alcançável por teclado: sem isso, o que ficou fora da tela não tem como ser lido por quem não usa ponteiro."
+        "item5": "A área que rola é alcançável por teclado E tem papel de grupo com nome próprio. Sem o foco, o que ficou fora da tela não tem como ser lido por quem não usa ponteiro; sem o nome, essa parada de teclado chega ao leitor de tela sem dizer onde a pessoa entrou."
       },
       "keyboard": {
         "title": "Teclado",
@@ -370,7 +377,7 @@
         "busy": "<code>aria-busy=\"true\"</code> na mensagem enquanto o texto dela chega",
         "live": "Uma única <code>aria-live=\"polite\"</code>, fora do fluxo, que recebe a resposta pronta — a lista de mensagens não tem nenhuma",
         "list": "A conversa é uma lista ordenada de verdade, então o leitor de tela anuncia a posição de cada turno",
-        "scrollable": "A área que rola tem <code>tabindex=\"0\"</code>, porque região rolável precisa ser alcançável por teclado",
+        "scrollable": "A área que rola tem <code>tabindex=\"0\"</code>, <code>role=\"group\"</code> e <code>aria-label</code> — o foco a torna alcançável, e o papel é o que lhe permite carregar nome",
         "jump": "O botão de ir ao fim carrega a contagem no próprio nome acessível, e desaparece do percurso quando não há para onde ir"
       },
       "screenReader": {
@@ -378,7 +385,8 @@
         "turns": "Anuncia cada turno como item de lista, com a posição e o total",
         "answer": "Anuncia a resposta uma vez, inteira, quando ela termina de chegar",
         "tool": "Lê o estado da ferramenta no texto do resumo, sem depender da cor do ícone",
-        "jump": "Anuncia quantas mensagens chegaram enquanto se lia para trás"
+        "jump": "Anuncia quantas mensagens chegaram enquanto se lia para trás",
+        "scrollRegion": "Anuncia a área da conversa como grupo, pelo nome dela — quem chega por teclado sabe onde entrou"
       }
     },
     "related": {
@@ -587,7 +595,7 @@
       "item4": "The button that returns to the end, with the count of what arrived while reading back.",
       "item5": "The announcer, the conversation’s only live region: it receives the answer once, when it ends.",
       "structureCode": {
-        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\">   <!-- quem ROLA -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
+        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\"    <!-- quem ROLA -->\n       role=\"group\" aria-label=\"Conversa\">      <!-- e como se chama -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
       }
     },
     "usage": {
@@ -839,6 +847,13 @@
           "required": "No",
           "description": "Address of the message. Optional in a still conversation, and required for streaming: a message without an id cannot be updated."
         },
+        "regionLabel": {
+          "name": "regionLabel",
+          "type": "string",
+          "default": "Conversation",
+          "required": "No",
+          "description": "Accessible name of the scrolling area, which is in the tab order. Give distinct names when there is more than one conversation on the same screen."
+        },
         "error": {
           "name": "error",
           "type": "string",
@@ -907,7 +922,7 @@
         "item2": "While generating, the message is marked busy; when it ends, its text is announced once by a polite region outside the flow.",
         "item3": "A new message does not move the focus, and the scroll follows the end only if it was already there.",
         "item4": "The message actions appear on pointer AND on focus, and remain in the keyboard path in every state.",
-        "item5": "The scrolling area is reachable by keyboard: without it, what is off screen cannot be read by whoever does not use a pointer."
+        "item5": "The scrolling area is reachable by keyboard AND carries a group role with a name of its own. Without focus, what is off screen cannot be read by whoever does not use a pointer; without the name, that keyboard stop reaches the screen reader without saying where the person landed."
       },
       "keyboard": {
         "title": "Keyboard",
@@ -920,7 +935,7 @@
         "busy": "<code>aria-busy=\"true\"</code> on the message while its text arrives",
         "live": "A single <code>aria-live=\"polite\"</code>, outside the flow, receiving the finished answer — the message list has none",
         "list": "The conversation is a genuine ordered list, so the screen reader announces each turn’s position",
-        "scrollable": "The scrolling area has <code>tabindex=\"0\"</code>, because a scrollable region must be keyboard reachable",
+        "scrollable": "The scrolling area has <code>tabindex=\"0\"</code>, <code>role=\"group\"</code> and <code>aria-label</code> — focus makes it reachable, and the role is what lets it carry a name",
         "jump": "The jump-to-end button carries the count in its own accessible name, and leaves the path when there is nowhere to go"
       },
       "screenReader": {
@@ -928,7 +943,8 @@
         "turns": "Announces each turn as a list item, with its position and the total",
         "answer": "Announces the answer once, whole, when it finishes arriving",
         "tool": "Reads the tool state in the summary text, without depending on the icon colour",
-        "jump": "Announces how many messages arrived while reading back"
+        "jump": "Announces how many messages arrived while reading back",
+        "scrollRegion": "Announces the conversation area as a group, by its name — keyboard users learn where they landed"
       }
     },
     "related": {
@@ -1137,7 +1153,7 @@
       "item4": "El botón que devuelve al final, con el conteo de lo que llegó mientras se leía hacia atrás.",
       "item5": "El anunciador, única región viva de la conversación: recibe la respuesta una vez, cuando termina.",
       "structureCode": {
-        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\">   <!-- quem ROLA -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
+        "web": "<div class=\"nds-chat-thread\">\n  <div class=\"nds-chat-thread-viewport\" tabindex=\"0\"    <!-- quem ROLA -->\n       role=\"group\" aria-label=\"Conversa\">      <!-- e como se chama -->\n    <ol class=\"nds-chat-thread-list\">\n      <li class=\"nds-chat-message\" data-role=\"assistant\">\n        <div class=\"nds-chat-message-avatar\">           <!-- Avatar -->\n        <div class=\"nds-chat-message-body\">\n          <div class=\"nds-chat-message-header\">         <!-- nome · hora -->\n          <details class=\"nds-chat-reasoning\">          <!-- fechado -->\n          <details class=\"nds-chat-tool-call\" data-state=\"done\">\n          <div class=\"nds-chat-message-content\">        <!-- Markdown -->\n          <ol class=\"nds-chat-sources\">                 <!-- numeradas -->\n          <div class=\"nds-chat-message-actions\">        <!-- hover E foco -->\n      </li>\n    </ol>\n  </div>\n  <button class=\"nds-chat-thread-jump\">                 <!-- some no fim -->\n  <div class=\"nds-chat-thread-announcer\" aria-live=\"polite\">\n</div>"
       }
     },
     "usage": {
@@ -1389,6 +1405,13 @@
           "required": "No",
           "description": "Dirección del mensaje. Opcional en una conversación quieta, y necesaria para el streaming: un mensaje sin id no puede actualizarse."
         },
+        "regionLabel": {
+          "name": "regionLabel",
+          "type": "string",
+          "default": "Conversación",
+          "required": "No",
+          "description": "Nombre accesible del área que se desplaza, que entra en el orden de tabulación. Dé nombres distintos cuando haya más de una conversación en la misma pantalla."
+        },
         "error": {
           "name": "error",
           "type": "string",
@@ -1457,7 +1480,7 @@
         "item2": "Mientras genera, el mensaje se marca como ocupado; al terminar, su texto se anuncia una vez por una región educada fuera del flujo.",
         "item3": "Un mensaje nuevo no mueve el foco, y el desplazamiento sigue el final solo si ya estaba en él.",
         "item4": "Las acciones del mensaje aparecen con el puntero Y con el foco, y permanecen en el recorrido del teclado en cualquier estado.",
-        "item5": "El área que se desplaza es alcanzable por teclado: sin eso, lo que quedó fuera de pantalla no puede ser leído por quien no usa puntero."
+        "item5": "El área que se desplaza es alcanzable por teclado Y lleva papel de grupo con nombre propio. Sin el foco, lo que quedó fuera de pantalla no puede ser leído por quien no usa puntero; sin el nombre, esa parada de teclado llega al lector de pantalla sin decir dónde entró la persona."
       },
       "keyboard": {
         "title": "Teclado",
@@ -1470,7 +1493,7 @@
         "busy": "<code>aria-busy=\"true\"</code> en el mensaje mientras llega su texto",
         "live": "Una única <code>aria-live=\"polite\"</code>, fuera del flujo, que recibe la respuesta terminada — la lista de mensajes no tiene ninguna",
         "list": "La conversación es una lista ordenada de verdad, así que el lector de pantalla anuncia la posición de cada turno",
-        "scrollable": "El área que se desplaza tiene <code>tabindex=\"0\"</code>, porque una región desplazable debe ser alcanzable por teclado",
+        "scrollable": "El área que se desplaza tiene <code>tabindex=\"0\"</code>, <code>role=\"group\"</code> y <code>aria-label</code> — el foco la hace alcanzable, y el papel es lo que le permite llevar nombre",
         "jump": "El botón de ir al final lleva el conteo en su propio nombre accesible, y sale del recorrido cuando no hay adónde ir"
       },
       "screenReader": {
@@ -1478,7 +1501,8 @@
         "turns": "Anuncia cada turno como ítem de lista, con su posición y el total",
         "answer": "Anuncia la respuesta una vez, entera, cuando termina de llegar",
         "tool": "Lee el estado de la herramienta en el texto del resumen, sin depender del color del ícono",
-        "jump": "Anuncia cuántos mensajes llegaron mientras se leía hacia atrás"
+        "jump": "Anuncia cuántos mensajes llegaron mientras se leía hacia atrás",
+        "scrollRegion": "Anuncia el área de la conversación como grupo, por su nombre — quien llega por teclado sabe dónde entró"
       }
     },
     "related": {

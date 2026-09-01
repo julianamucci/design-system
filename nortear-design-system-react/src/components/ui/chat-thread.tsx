@@ -14,6 +14,7 @@ import {
 // No call site, e não atrás de um invólucro local: é o que faz a análise
 // estática reconhecer a validação onde ela acontece.
 import { isSafeUrl } from "@shared/primitives/markdown-ast"
+import { LABELS_CHAT_THREAD_DEFAULT } from "@shared/primitives/chat-thread-labels"
 // O vocabulário vem de `chat-protocol.ts`, e não daqui: era a mesma união
 // escrita nas cinco stacks. O motivo de `pending` existir separado de
 // `running` — um espera por uma PESSOA, o outro pela máquina — está escrito
@@ -91,6 +92,14 @@ export interface ChatThreadProps extends Omit<React.ComponentProps<"div">, "chil
   /** Falha da EXECUÇÃO, e não de uma ferramenta. */
   error?: string
   size?: "xs" | "sm" | "md" | "lg" | "xl"
+  /**
+   * Nome acessível da área que rola, que entra na ordem de tabulação.
+   *
+   * Tem padrão porque o design system sabe o que a região é — uma conversa — e
+   * porque quem compõe não pensa em nomear um elemento que não se vê. Dê nomes
+   * DISTINTOS quando houver mais de uma conversa na mesma tela.
+   */
+  regionLabel?: string
 }
 
 function Chevron({ className }: { className: string }) {
@@ -242,6 +251,7 @@ function ChatThread({
   labels,
   error,
   size,
+  regionLabel = LABELS_CHAT_THREAD_DEFAULT.region,
   className,
   ...props
 }: ChatThreadProps) {
@@ -361,6 +371,23 @@ function ChatThread({
         // torná-lo configurável só criaria o jeito de desligar a única coisa
         // que faz a rolagem existir para quem não usa mouse.
         tabIndex={0}
+        // E NOMEADA, que é a outra metade da regra 6 da §8: o foco sozinho
+        // fazia uma parada de teclado que o leitor de tela não sabia anunciar.
+        // Papel e nome andam juntos — `aria-label` em elemento sem papel é
+        // atributo proibido, e o axe acusa `aria-prohibited-attr`.
+        //
+        // `role="group"` e não `region`: `region` com nome vira marco de
+        // página, e a docs page mostra várias conversas — seriam vários marcos
+        // homônimos, que é o que torna a lista de regiões do leitor inútil.
+        //
+        // E não `log` nem `feed`, que é a tentação óbvia numa conversa: os dois
+        // trazem semântica viva embutida e passariam a anunciar CADA trecho que
+        // chega durante o streaming. Quem anuncia aqui é
+        // `.nds-chat-thread-announcer`, uma vez, quando a resposta termina.
+        // `group` nomeia sem falar e sem tocar na semântica de lista do `<ol>`
+        // que mora dentro.
+        role="group"
+        aria-label={regionLabel}
         onScroll={handleScroll}
       >
         <ol ref={listRef} className="nds-chat-thread-list">

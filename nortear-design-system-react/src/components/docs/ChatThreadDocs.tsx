@@ -373,7 +373,7 @@ export function ChatThreadDocs() {
             },
             items: [
               "messages", "labels", "id", "role", "streaming",
-              "toolCalls", "sources", "actions", "error", "class",
+              "toolCalls", "sources", "actions", "error", "regionLabel", "class",
             ].map((k) => ({
               name: tContent(`props.table.${k}.name`),
               type: tContent(`props.table.${k}.type`),

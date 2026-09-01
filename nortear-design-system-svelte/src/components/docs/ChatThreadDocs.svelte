@@ -362,7 +362,7 @@
         },
         items: [
           'messages', 'labels', 'id', 'role', 'streaming',
-          'toolCalls', 'sources', 'actions', 'error', 'class',
+          'toolCalls', 'sources', 'actions', 'error', 'regionLabel', 'class',
         ].map(k => ({
           name: $tStore(`props.table.${k}.name`),
           type: $tStore(`props.table.${k}.type`),

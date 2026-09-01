@@ -52,6 +52,7 @@ import {
   shouldFollow,
   type ThreadScrollState,
 } from '@shared/primitives/chat-scroll'
+import { LABELS_CHAT_THREAD_DEFAULT } from '@shared/primitives/chat-thread-labels'
 import type {
   ChatMessage as ChatMessageData,
   ChatRole,
@@ -75,8 +76,18 @@ const props = defineProps<{
    * na raiz.
    */
   size?: ChatThreadSize
+  /**
+   * Nome acessível da área que rola, que entra na ordem de tabulação.
+   *
+   * Tem padrão porque o design system sabe o que a região é — uma conversa — e
+   * porque quem compõe não pensa em nomear um elemento que não se vê. Dê nomes
+   * DISTINTOS quando houver mais de uma conversa na mesma tela.
+   */
+  regionLabel?: string
   class?: HTMLAttributes['class']
 }>()
+
+const regionLabel = computed(() => props.regionLabel ?? LABELS_CHAT_THREAD_DEFAULT.region)
 
 defineSlots<{
   /** Retrato de quem falou. */
@@ -217,11 +228,29 @@ const jumpLabel = computed(() =>
     <!-- Quem ROLA é este elemento, e é dele que sai a medida. `tabindex` fixo,
          e não prop: região rolável tem de ser alcançável por teclado (WCAG
          2.1.1), e torná-lo configurável só criaria o jeito de desligar a única
-         coisa que faz a rolagem existir para quem não usa mouse. -->
+         coisa que faz a rolagem existir para quem não usa mouse.
+
+         E NOMEADA, que é a outra metade da regra 6 da §8: o foco sozinho fazia
+         uma parada de teclado que o leitor de tela não sabia anunciar. Papel e
+         nome andam juntos — `aria-label` em elemento sem papel é atributo
+         proibido, e o axe acusa `aria-prohibited-attr`.
+
+         `role="group"` e não `region`: `region` com nome vira marco de página, e
+         a docs page mostra várias conversas — seriam vários marcos homônimos,
+         que é o que torna a lista de regiões do leitor inútil.
+
+         E não `log` nem `feed`, que é a tentação óbvia numa conversa: os dois
+         trazem semântica viva embutida e passariam a anunciar CADA trecho que
+         chega durante o streaming. Quem anuncia aqui é
+         `.nds-chat-thread-announcer`, uma vez, quando a resposta termina.
+         `group` nomeia sem falar e sem tocar na semântica de lista do `<ol>` que
+         mora dentro. -->
     <div
       ref="viewport"
       class="nds-chat-thread-viewport"
       tabindex="0"
+      role="group"
+      :aria-label="regionLabel"
       @scroll="handleScroll"
     >
       <ol

@@ -28,6 +28,7 @@ import {
 // estática reconhecer a validação onde ela acontece. O template chama
 // `isSafeUrl(source.url)` pelo nome, ligado direto ao símbolo importado.
 import { isSafeUrl } from '@shared/primitives/markdown-ast';
+import { LABELS_CHAT_THREAD_DEFAULT } from '@shared/primitives/chat-thread-labels';
 
 // ─── ChatThread ──────────────────────────────────────────────────────────────
 //
@@ -146,10 +147,28 @@ export interface ChatThreadLabels {
     '[attr.data-size]': 'size() ?? null',
   },
   template: `
+    <!-- Região rolável alcançável por teclado (WCAG 2.1.1) E NOMEADA, que é a
+         outra metade da regra 6 da §8: o foco sozinho fazia uma parada de
+         teclado que o leitor de tela não sabia anunciar. Papel e nome andam
+         juntos — \`aria-label\` em elemento sem papel é atributo proibido, e o
+         axe acusa \`aria-prohibited-attr\`.
+
+         \`role="group"\` e não \`region\`: \`region\` com nome vira marco de página, e
+         a docs page mostra várias conversas — seriam vários marcos homônimos,
+         que é o que torna a lista de regiões do leitor inútil.
+
+         E não \`log\` nem \`feed\`, que é a tentação óbvia numa conversa: os dois
+         trazem semântica viva embutida e passariam a anunciar CADA trecho que
+         chega durante o streaming. Quem anuncia aqui é
+         \`.nds-chat-thread-announcer\`, uma vez, quando a resposta termina.
+         \`group\` nomeia sem falar e sem tocar na semântica de lista do \`<ol>\`
+         que mora dentro. -->
     <div
       #viewport
       class="nds-chat-thread-viewport"
       tabindex="0"
+      role="group"
+      [attr.aria-label]="regionLabel()"
       (scroll)="onScroll()"
     >
       <ol #list class="nds-chat-thread-list">
@@ -348,6 +367,14 @@ export class NdsChatThread implements AfterViewInit, OnDestroy {
    * na raiz.
    */
   readonly size = input<ChatThreadSize | undefined>(undefined);
+  /**
+   * Nome acessível da área que rola, que entra na ordem de tabulação.
+   *
+   * Tem padrão porque o design system sabe o que a região é — uma conversa — e
+   * porque quem compõe não pensa em nomear um elemento que não se vê. Dê nomes
+   * DISTINTOS quando houver mais de uma conversa na mesma tela.
+   */
+  readonly regionLabel = input<string>(LABELS_CHAT_THREAD_DEFAULT.region);
 
   /**
    * A validação de endereço, no ponto em que ele encosta no DOM.

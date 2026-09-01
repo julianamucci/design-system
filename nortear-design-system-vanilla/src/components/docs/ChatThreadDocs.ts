@@ -366,7 +366,7 @@ export interface ChatThreadOptions {
             {
               title: 'createChatThread',
               cols,
-              items: ['messages', 'labels', 'id', 'role', 'streaming', 'toolCalls', 'sources', 'actions', 'error', 'class']
+              items: ['messages', 'labels', 'id', 'role', 'streaming', 'toolCalls', 'sources', 'actions', 'error', 'regionLabel', 'class']
                 .map(k => ({
                   name: t(`props.table.${k}.name`),
                   type: t(`props.table.${k}.type`),
