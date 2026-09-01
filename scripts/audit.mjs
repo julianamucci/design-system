@@ -5638,9 +5638,42 @@ if (args.includes('--inline-inventory')) {
   process.exit(0);
 }
 
+/**
+ * Slug que não existe em lugar nenhum não é slug LIMPO — é slug AUSENTE.
+ *
+ * `runAudit` audita o que encontra, e para um slug sem arquivo nenhum ele
+ * encontra nada e devolve `[]`. Lido de fora, `{"document-reference": []}` é
+ * indistinguível de "auditado, zero achados", e foi assim que uma porta tomou
+ * por verde a ausência da peça que ela tinha ido construir. O portão auditava o
+ * que existe; ausência ele não via.
+ *
+ * A guarda pede as DUAS pontas vazias: nenhum arquivo nas cinco stacks E nenhum
+ * `translations.json` compartilhado. Componente em construção tem uma das duas
+ * — conteúdo antes do código ou código antes do conteúdo —, e reprovar ali
+ * seria ruído em cima de trabalho legítimo.
+ *
+ * Fora de `--all` de propósito: lá os slugs saem de quem TEM
+ * `translations.json`, então a condição nunca dispara e a varredura pagaria
+ * cinco `filesForSlug` por slug para nada.
+ */
+function auditSlugInexistente(slug) {
+  if (STACKS.some((stack) => filesForSlug(slug, stack).all.length > 0)) return [];
+  if (existsSync(join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json'))) return [];
+  return [{
+    category: 'quality', severity: 'high', slug, stack: 'todas',
+    file: `nortear-design-system-*/src/components/{ui,docs}/${slug}*`,
+    rule: 'slug_inexistente',
+    message:
+      `Nenhum arquivo nas cinco stacks e nenhum docs/shared/content/${slug}/translations.json. ` +
+      `Não há o que auditar: lista vazia AQUI significa ausente, não limpo. ` +
+      `Se o slug deveria existir, ele não foi construído; se colapsou na triagem, ` +
+      `não rode o auditor contra ele.`,
+  }];
+}
+
 const allViolations = {};
 for (const s of slugs) {
-  allViolations[s] = runAudit(s, category);
+  allViolations[s] = all ? runAudit(s, category) : [...auditSlugInexistente(s), ...runAudit(s, category)];
 }
 
 // Infra é slug-independente: roda 1x por processo, sob "_infra".
