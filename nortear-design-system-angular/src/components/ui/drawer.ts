@@ -356,9 +356,25 @@ export class NdsDrawerDescription {}
     class: 'nds-overflow-y nds-px-4',
     tabindex: '0',
     '[attr.data-slot]': '"drawer-body"',
+    '[attr.role]': 'ariaLabel() ? "group" : null',
+    '[attr.aria-label]': 'ariaLabel() || null',
   },
 })
-export class NdsDrawerBody {}
+export class NdsDrawerBody {
+  /**
+   * Nome acessível da região que rola. Sem padrão, de propósito.
+   *
+   * O conteúdo é o que quem monta pôs lá dentro, e só ali se sabe o que é;
+   * padrão genérico anunciaria sem informar. Sem nome NÃO emitimos papel
+   * nenhum — nome em elemento sem papel é atributo proibido, e o axe acusa
+   * `aria-prohibited-attr`.
+   *
+   * Divergência de API de framework, registrada e não "alinhada": aqui é
+   * `input` com apelido, para que o markup escrito continue idêntico ao das
+   * outras stacks.
+   */
+  readonly ariaLabel = input<string>('', { alias: 'aria-label' });
+}
 
 /** Rodapé de ações — cancelar e ação primária. */
 @Directive({

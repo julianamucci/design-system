@@ -117,11 +117,17 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
  * `min-height: 0` que faz o corpo ceder altura dentro do flex em coluna em vez
  * de esticar o painel e empurrar o rodapé (com as ações) para fora da tela.
  */
-function DrawerBody({ className, ...props }: React.ComponentProps<"div">) {
+function DrawerBody({
+  className,
+  "aria-label": ariaLabel,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="drawer-body"
       tabIndex={0}
+      role={ariaLabel ? "group" : undefined}
+      aria-label={ariaLabel}
       className={cn("nds-drawer-body", className)}
       {...props}
     />

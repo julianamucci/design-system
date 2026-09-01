@@ -18,9 +18,30 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		"aria-label": ariaLabel,
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+		/**
+		 * O nome vem de quem compõe, por `aria-label`, e NÃO tem padrão.
+		 *
+		 * O conteúdo do painel é o que quem monta pôs lá dentro, e só ali se sabe o que
+		 * é. Padrão genérico ("Conteúdo") anunciaria sem informar. Também não herdamos o
+		 * título do painel: em quatro das cinco stacks o id dele é gerado pela lib por
+		 * dentro e não alcança este subcomponente sem inventar um contexto — e o título já
+		 * foi anunciado na abertura, então repeti-lo aqui informaria pouco pelo que custa.
+		 *
+		 * O que MUDOU é que o nome agora chega. Antes, um `aria-label` escrito aqui caía
+		 * num `div` sem papel e era DESCARTADO pelo leitor de tela — atributo proibido,
+		 * que o axe acusa como `aria-prohibited-attr`. Quem tentava nomear a região não
+		 * tinha como saber que não funcionou. Agora o papel vem junto com o nome.
+		 *
+		 * `group` e não `region`: o corpo já vive dentro de um diálogo nomeado, e um
+		 * marco aninhado num diálogo não acrescenta navegação — acrescenta entrada na
+		 * lista.
+		 */
+		"aria-label"?: string;
+	} = $props();
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -28,6 +49,8 @@
 	bind:this={ref}
 	data-slot="drawer-body"
 	tabindex="0"
+	role={ariaLabel ? "group" : undefined}
+	aria-label={ariaLabel}
 	class={cn("nds-drawer-body", className)}
 	{...restProps}
 >
