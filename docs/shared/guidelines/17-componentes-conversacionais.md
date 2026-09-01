@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (78)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (86)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -308,9 +308,17 @@ falta, nomeada — nunca uma folha nova.
 | `orb` | `connection-state` mais o medidor de nível do `composer-voice` — e a faixa standalone é **um `<canvas>` e mais nada**: o ponto de estado, o texto "Connecting..." e os botões de conectar, mudo e desligar a fonte só publica na faixa de runtime, e a §1 manda ler a outra. O que existe de portável é a linha do estado, e ela é `.nds-connection-state` nó por nó: `.nds-connection-state-dot` colorido pelo estado e `aria-hidden`, `.nds-connection-state-label` com `role="status"` levando a PALAVRA, `.nds-connection-state-action` para conectar ou desligar. O `connecting` da fonte não pede um quarto estado — `ConnectionState` já registra, com todas as letras, que a primeira tentativa desenha como a quinta. O nível de áudio entra por `--nds-voice-level`, que `.nds-composer-voice-bar` já lê como DADO de runtime, decorativo e `aria-hidden`, com o quadro de repouso sob `prefers-reduced-motion` já medido; mudo é `aria-pressed` no alternador, como o ditado já faz. **Falta uma utilitária, e está nomeada**: o medidor construído é uma fileira de cinco barras de 2 px escopada ao trilho do composer — uma forma do tamanho de foco, lendo o mesmo `--nds-voice-level` num `scale()`, é classe que falta, nunca folha. Ficam de fora o `variant` (`blue`, `violet`, `emerald`), que é paleta fora dos 42 tokens de tema (§9), e a animação em WebGL, que é código e dependência (§6) e cujo quadro de repouso é um círculo colorido — e cor sozinha não descreve estado (regra 4 da §8). Veio da família 7 — ver 5.3 |
 | `voice-conversation` | a tela de uma chamada, e ela compõe CINCO peças já construídas: `connection-state` no `connecting`; `thinking-indicator` no `thinking`, que é exatamente "o lugar da resposta enquanto ela não chegou"; `agent-status` no `speaking`, cujo `stop` de `AgentStatusIntent` é o "interromper" da fonte, com rótulo que diz o que faz em vez de um alvo sem nome; `composer-voice` no `listening`, com o alternador de `aria-pressed`, o nível e a palavra do estado; e `chat-thread` na transcrição. `VoiceTurn` — `{ id, role, text }` — é o `SharedTurn` de `shared-conversation` de novo: o papel em duas palavras onde `ChatRole` tem três, e o turno inteiro numa cadeia onde `ChatMessageOptions` tem nove campos e `MessagePartKind` sete espécies de parte, com o `text` cru levando fala de modelo à tela sem `createMarkdown` e sem `isSafeUrl`. A legenda que nomeia o turno é a PALAVRA que as três linhas de estado já carregam, e "Mic off" é o rótulo do alternador quando mudo. `amplitude` é `--nds-voice-level`; `muted` é o booleano do alternador; `onToggleMute` e `onEnd` são espaço de ação (§2). Sem turno nenhum, `empty.css`. Veio da família 7 — ver 5.3 |
 | `checkpoint-history` | `.nds-item-group` de `.nds-item` `data-size="sm"`, uma linha por ponto de retorno — a mesma fila que `subagent-list`, `background-inbox` e o histórico de `schedule-card` já montam nesta tabela. O rótulo é `.nds-item-title`; o carimbo e a contagem de arquivos, os dois já escritos por quem monta, são `.nds-badge` com `.nds-font-mono`; restaurar é `.nds-button` `.nds-button-ghost` em `.nds-item-actions`, aparecendo no `:hover` E no `:focus-within` e permanecendo na ordem de foco, que é a regra 3 da §8 e o que `.nds-chat-message-actions` já desenha. A linha corrente leva `aria-current="true"`, `.nds-item-muted` e a palavra "atual" em `.nds-badge` — a palavra, porque as linhas à frente se separam das outras só por opacidade e por um furo no ponto, que a regra 4 da §8 recusa; é a mesma decisão que `agent-plan` escreveu ao dizer que "onde estamos" também precisa chegar ao olho. Sem ponto nenhum, `empty.css`, como na décima sétima e na vigésima terceira. `Checkpoint` não declara estado NENHUM: os três desenhos saem da POSIÇÃO da linha em relação a `currentId`, que é a comparação com um contador da décima primeira correção, e `files: number` obrigaria a peça a escrever "4 arquivos", que é decisão de idioma. Veio da família 2 — ver 5.3 |
+| `spec-sheet` | `.nds-card` com uma lista de definição dentro. `.nds-card-header` leva o título em `.nds-card-title` e a legenda em `.nds-card-description`, a segunda linha que a grade do cabeçalho já abre com `:has(> .nds-card-description)`; o corpo é um `<dl>`, com o rótulo em `<dt>` levando `.nds-font-mono` e o valor em `<dd>` alinhado ao fim. **A lista de definição é a decisão desta linha, e esta casa já a tomou duas vezes**: "Rótulo: valor" põe o pareamento na pontuação, e pontuação não sobrevive à navegação por lista de um leitor de tela — é a decisão 2 do `approval-card` e a decisão 1 do `message-timing`, palavra por palavra. `emphasis` é `.nds-font-semibold` mais `--foreground` contra o `--muted-foreground` das outras linhas — peso E cor, porque brilho sozinho é a codificação que a regra 4 da §8 recusa; e ele é o booleano que só ENFEITA, que é a oitava forma do sinal. `visibleCount` é revelação, e revelação é `13-animacao.md`. **Falta uma utilitária, e está nomeada**: nada em `docs/shared/styles/` desenha lista de definição fora de `.nds-approval-card-scope` e `.nds-message-timing-stats`, as duas escopadas à própria peça — o par termo/valor genérico é utilitária, nunca folha. Veio da família 4 — ver 5.3 |
+| `comparison-card` | `.nds-grid[data-cols="2"]` de `.nds-card`, um cartão por opção. O `auto-fit` com `minmax` que aquela utilitária já declara empilha sozinho quando a coluna encolhe, pelo espaço do container e sem consulta de mídia, onde a fonte crava um ponto de quebra. Cada cartão leva o nome em `.nds-card-title`, a linha embaixo em `.nds-card-description` e os traços em `.nds-item-group` de `.nds-item` `data-size="sm"`, com o ícone do lucide em `.nds-item-media` `.nds-item-media-icon`; a recomendada leva `aria-current` e a PALAVRA em `.nds-badge`, e não o tingido sozinho. O traço ausente é o rótulo comum atrás do ícone de menos — forma e palavra, onde a fonte o separa do presente por ícone e opacidade. `reason` é o `<p>` abaixo da grade. **Onde a composição fica mais fina que a fonte**: lá `traitLabels` só aparece como recuo do que falta, então a correspondência posicional entre um cartão e outro nunca chega a quem lê — quando o produto quiser dizê-la, é `table` com uma coluna por opção e os rótulos na primeira, que é a mesma fila com cabeçalho. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 4 — ver 5.3 |
+| `score-breakdown` | `.nds-item-group` de `context-display` na forma `bar`, com o cabeçalho acima — é a família 5 com outro denominador, exatamente o que a linha de `retrieval-chunks` nesta tabela já previa. O total é `.nds-context-display-value`, o teto é `.nds-context-display-detail` e o veredito é `.nds-badge`, que chega como PALAVRA pela própria fonte (`verdict` é `string`); a cor da etiqueta segue a palavra, e não um limiar, porque na fonte os dois são independentes e podem discordar na mesma tela. Cada critério é `.nds-context-display[data-form="bar"]` com o rótulo, o peso em `.nds-badge` com `.nds-font-mono` e a nota em `.nds-item-description`. A conta é `spentFraction` de `token-budget.ts`, que já recebe um par de números sem exigir `TokenUsage`; **`fractionLevel` NÃO se reaproveita**, e o motivo vale escrito: lá a fração alta é ruim e aqui é boa, e limiar com a polaridade invertida é outro cálculo, não outro valor. `weight` não entra na largura da barra — a própria fonte declara que dois critérios de mesma nota desenham barras idênticas por mais diferente que seja o peso. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 4 — ver 5.3 |
+| `recommendation-card` | `approval-card`, campo por campo. `.nds-approval-card-ask` com `role="status"` leva a pergunta em `.nds-approval-card-question`; o corpo entra pelo encaixe entre `-ask` e `-actions` que `elicitation-form` já nomeou nesta tabela, e pelo mesmo motivo, que a região viva fecha antes dele; aceitar e ver alternativas são `.nds-approval-card-actions`, o espaço de `HTMLElement[]` da §2. O assentado NÃO é estado: é o `.nds-badge` que ocupa a fila de ações depois de decidido, a mesma leitura que `reviewable-diff` já fez nesta tabela. As três barrinhas de confiança não se reproduzem — a própria fonte declara que são "uma forma fixa, três alturas, sempre as mesmas", e não a leitura de valor nenhum; quem carrega a confiança é a palavra, que já chega pronta, num `.nds-badge`. O controle sem manipulador vai DESABILITADO, e não vivo: a fonte desta entrada deixa "o botão desenhado, sem nada a chamar", e controle cujo nome promete o que ele não faz é o defeito que a regra 7 da §8 recusa — a fonte de `canvas-split`, nesta mesma tabela, já desabilita os dela pelo mesmo motivo, e desabilitar em vez de sumir mantém a largura da linha estável entre os dois casos. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 4 — ver 5.3 |
+| `timeline` | `.nds-agent-plan`, uma linha por evento, com o instante à esquerda. O `<ol class="nds-agent-plan">` já tem o ponto (`.nds-agent-plan-marker`, redondo e tingido por estado), o título (`.nds-agent-plan-label`), a nota (`.nds-agent-plan-detail`) e `aria-current="step"` no corrente; `when` é `PlanStepState` com duas palavras a menos — `past` é `done`, `now` é `running`, `future` é `pending` —, e o instante, que chega já escrito como texto, é `.nds-badge` com `.nds-font-mono`, como em `schedule-card`. **A FONTE CHAMA DE EIXO O QUE OS TIPOS PROVAM NÃO SER**: `time` é `string`, a peça nunca ordena por ele, e as linhas ficam igualmente espaçadas — nenhum valor decide posição nenhuma. **Não se monta com `stepper`**, e é a armadilha desta linha: `.nds-stepper-trigger` é um `<button>`, e evento de linha do tempo não tem chamada de volta nenhuma — a fila ganharia N controles que não fazem nada, que é o defeito que `message-branches` recusou noutro traje. **Falta uma utilitária, e está nomeada**: o trilho vertical entre dois pontos, que `.nds-agent-plan` não desenha e que `.nds-stepper-separator` só sabe na horizontal (`height: 1px` com `min-width`) — regra de uma linha na calha do plano, utilitária e nunca folha. Veio da família 4 — ver 5.3 |
+| `file-tree` | `.nds-item-group` de `.nds-item` `data-size="sm"`, com o cabeçalho de totais acima. O nome é `.nds-item-title` com `.nds-font-mono` e `.nds-truncate`; a pasta é a mesma linha com `.nds-item-muted` e o ícone do lucide em `.nds-item-media` `.nds-item-media-icon`; os dois contadores vão em `.nds-item-actions`, num `.nds-cluster[data-spacing="xs"]` de `.nds-badge nds-badge-success` / `.nds-badge nds-badge-destructive` com `.nds-font-mono` — o desenho que a sexta correção deu a `TimelineStat` e que `code-diff` já reusa nesta tabela. O cabeçalho é o mesmo par mais a contagem de arquivos, derivada do arranjo: a própria fonte a escreve com `reduce`, do lado de fora da peça. **NÃO HÁ ÁRVORE**, e a fonte o diz numa frase: a linha de pasta é "um cabeçalho estático, não interativo, nunca um pai de verdade das linhas abaixo, e nunca recolhe" — sem `role="tree"`, sem `aria-level`, sem `aria-expanded`, e sem ajudante de caminho para árvore em lugar nenhum da biblioteca. **Falta uma utilitária, e está nomeada**: recuo por linha a partir de propriedade personalizada — `.nds-sidebar-menu-sub` recua ANINHANDO marcação, e nada em `docs/shared/styles/` recua uma lista plana por um número; vale reparar que o ajudante da própria fonte só emite `depth` 0 e 1. Veio da família 4 — ver 5.3 |
+| `artifact-card` | `.nds-item` `.nds-item-outline`, a mesma fila que `background-inbox`, `checkpoint-history` e `document-reference` já montam nesta tabela. O ícone é `.nds-item-media` `.nds-item-media-icon`, o título é `.nds-item-title`, que já corta em uma linha, e a legenda é `.nds-item-description`; a contagem de palavras é `.nds-badge` com `.nds-font-mono`. O estado é `RunStatus` inteiro no lugar do booleano da fonte, que ela mesma preenche mapeando QUATRO palavras para `false`. A seta que só aparece no `:hover` vai também no `:focus-within` e fica na ordem de foco (regra 3 da §8), e o cartão que a fonte desenha com resposta de botão sem manipulador nenhum é `.nds-item` como `<button>`, com nome acessível textual (regra 7 da §8). O brilho de "escrevendo" é revelação, e revelação é `13-animacao.md`. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 4 — ver 5.3 |
+| `canvas-split` | `resizable` com `chat-thread` num painel e `.nds-card` no outro — a mesma composição que `assistant-sidebar` já resolveu nesta tabela. `.nds-resizable[data-direction="horizontal"]` leva dois `.nds-resizable-panel` com `--panel-size`, e o punho é `.nds-resizable-handle` com `role="separator"` e `tabindex="0"`, que desde o conserto de contraste desenha em `--ring` e passa dos 3:1 que a WCAG 1.4.11 pede de um controle que se precisa achar para arrastar. **A peça dá MENOS que o painel redimensionável, e não outro nome para ele**: não há punho, não há tamanho de painel e não há chamada de volta de redimensionamento em lugar nenhum da fonte — o que ela tem é uma consulta de mídia, e `.nds-grid[data-cols="2"]` já empilha sozinha pelo espaço do container, sem ponto de quebra, para quem não quiser o punho. O documento é `.nds-card`: título em `.nds-card-title` `.nds-truncate`, versão e a palavra do estado em `.nds-badge` dentro de `.nds-card-action`, copiar e fechar ali ao lado, e o corpo em `.nds-card-content`. `speaker` é `ChatRole` achatado pela TERCEIRA vez, depois de `SharedTurn` e `VoiceTurn`, e com a mesma perda; o cursor piscando é `13-animacao.md`, e desliga em `prefers-reduced-motion` (regra 8 da §8). Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 4 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As famílias novas (42)
+### 5.2 As famílias novas (34)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -347,7 +355,7 @@ desta tabela, nunca pelo próprio delta.
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (13 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox`, `elicitation-form`, `schedule-card` e `checkpoint-history` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation` (1 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1 na décima sexta, na décima oitava e na vigésima primeira; `web-search`, `research-report`, `memory-chips`, `speaker-identity` e `mcp-server-panel` saíram em LOTE na vigésima oitava, ver 5.3 —, **1 componente**) | Em que a resposta se apoia. **A folha está de pé com uma entrada só**, e a pergunta que a décima oitava abriu está respondida: das nove entradas originais, oito colapsaram e uma sobreviveu. `Citation` continua sendo o teste — nenhuma das oito a carregava, e a que ficou coube nela sem sobra. Base em `hover-card`, `popover`, `badge`: MATERIAL, e é por isso que a família nasceu, ao contrário da 6. O que era peça pronta estava nas ENTRADAS, não nesta coluna — ver 5.3 |
-| **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph` (absorve `heat-graph`, que é a mesma grade com menos — ver 5.3), `artifact-card`, `canvas-split` (12 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1 na vigésima segunda e na vigésima quarta, e `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview` e `image-generation` na vigésima sétima, em lote, ver 5.3 —, **11 componentes**). **As três primeiras sobreviventes da família estão medidas** — `flow-graph`, `trace-waterfall` e `activity-graph`, na trigésima primeira —, e é uma delas que funda a folha | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart` — e essa coluna é MISTA, o que a vigésima sétima mediu entrada por entrada: `card` é material, `table` e `chart` são peças prontas. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Dependências — §6, e o parágrafo que a vigésima sétima acrescentou lá**: das quatro entradas que a seção nomeia, três já foram triadas e nenhuma pedia decisão da dona |
+| **4. Resposta estruturada** | `resposta-estruturada.css` | `flow-graph`, `trace-waterfall`, `activity-graph` (absorve `heat-graph`, que é a mesma grade com menos — ver 5.3) (4 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1 na vigésima segunda e na vigésima quarta, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview` e `image-generation` na vigésima sétima, e `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `artifact-card` e `canvas-split` na trigésima segunda, as duas últimas em lote, ver 5.3 —, **3 componentes**, e a família está FECHADA). **As três sobreviventes estão medidas** — `flow-graph`, `trace-waterfall` e `activity-graph`, na trigésima primeira —, e é uma delas que funda a folha. É a última família a fechar e a que mais encolheu: dezoito entradas quando a vigésima sétima a abriu, três componentes no fim | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart` — e essa coluna é MISTA, o que a vigésima sétima mediu entrada por entrada: `card` é material, `table` e `chart` são peças prontas. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Dependências — §6, e os dois parágrafos que a vigésima sétima e a trigésima primeira acrescentaram lá**: as quatro entradas que a seção nomeia estão triadas, mais a quinta que a trigésima primeira encontrou, e nenhuma pediu decisão da dona. O que separa as três que ficaram das dezesseis que saíram é a pergunta da trigésima primeira, corrigida pela trigésima segunda: não é posicionar contra empilhar — é **quem CALCULA a posição** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
 | **6. Navegação da conversa** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As oito saíram para a 5.1: `message-branches` na vigésima quinta; `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation` e `onboarding` na vigésima sexta, em lote (0 no catálogo, **0 componentes**) | Era "achar e trocar de lugar sem perder o seu", com base em `sidebar`, `command`, `pagination` e `stepper.css` — e as quatro bases eram as próprias peças. `conversa-nav.css` não é fundada. Ver 5.3 |
 | **7. Voz** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As três saíram para a 5.1: `read-aloud` na décima nona; `orb` e `voice-conversation` na vigésima nona, em lote (0 no catálogo, **0 componentes**) | Era "áudio ao vivo, com estado de conexão e legenda", com base em `media-player` — e as três palavras do eixo já tinham dono no dia em que a linha foi escrita: a fonte ao vivo é `stream` no próprio `media-player`, o estado da ligação é `connection-state` da família 2, e a legenda é `<track>`. `voz.css` não é fundada. Ver 5.3 |
@@ -5308,6 +5316,343 @@ future`, que é dot mais conector por linha e é onde `.nds-stepper-separator` �
 As outras seis empilham.
 
 
+**Trigésima segunda correção, o terceiro lote da família 4, o quinto em LOTE, e a
+que FECHA a leitura do catálogo**: as oito entradas que restavam colapsam —
+`spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`,
+`timeline`, `file-tree`, `artifact-card` e `canvas-split`. São a quadragésima
+primeira à quadragésima oitava travessia de 5.2 para 5.1, e as contagens mudam
+uma vez só, ao fim do lote: a família 4 vai de **12 entradas e 11 componentes**
+para **4 e 3**, a 5.2 perde 8 entradas e a 5.1 ganha as mesmas 8. **Depois deste
+bloco não há mais nada por ler**: as 120 entradas estão triadas, as cinco
+famílias que nasceram estão fechadas, e as duas que não nasceram continuam na
+tabela pelo motivo de sempre.
+
+**O MECANISMO, e ele NÃO é o do lote das seis molduras nem o avesso dele.** Lá a
+peça recebia o conteúdo inteiro e não sobrava desenho para ser dela; na trigésima
+primeira a peça recebia dados e o desenho era o que ela fazia com eles. Aqui a
+peça recebe dados e **desenha o que já estava no dado**: um par rótulo-e-valor
+por linha, uma pergunta com dois botões, uma fila de cartões, um cartão com
+ícone e legenda. Nenhuma delas põe em pixel uma relação que o dado não carrega —
+que é, palavra por palavra, o eixo que a trigésima primeira escreveu para a
+folha. Duas parecem pôr, e é aí que este lote vale o custo.
+
+**1. `spec-sheet` — colapsa em `.nds-card` mais lista de definição.**
+
+- **A favor**: é a forma estruturada mais comum do catálogo por declaração da
+  própria fonte ("a resposta que um resultado de ferramenta alcança logo depois
+  de uma tabela"), e o par rótulo-monoespaçado com valor alinhado ao fim não tem
+  utilitária nesta casa: as duas listas de definição que existem —
+  `.nds-approval-card-scope` e `.nds-message-timing-stats` — estão escopadas cada
+  uma à sua peça, e a terceira ocorrência é justamente o que costuma promover
+  regra a utilitária.
+- **Contra**: o que ela desenha é `title`, `subtitle` e uma fila de
+  `{ label, value }`. Não há unidade, não há teto, não há agrupamento, não há
+  ordem que a peça imponha, e `emphasis` é a única variação de linha — um
+  booleano que não descreve o item, só o realça, que é a oitava forma do sinal.
+  `.nds-card-header` já abre a segunda linha com `:has(> .nds-card-description)`,
+  e o corpo é um `<dl>`.
+- **Colapsa**, com uma utilitária nomeada. E o que fica registrado é que a falta
+  era de UTILITÁRIA e não de peça: uma regra de duas colunas num `<dl>` não é
+  desenho próprio, é a terceira vez que a mesma regra se escreve.
+- **A evidência que teria virado o voto**: a peça sabendo o que a linha significa
+  — unidade, comparação com outra ficha, agrupamento em seções, ordenação por
+  valor. Procurada nos TIPOS: `SpecRow` é `{ label: string; value: string;
+  emphasis?: boolean }`, e `label` serve de chave do React, o que a fonte
+  transforma em regra de uso ("mantenha os rótulos únicos") em vez de estrutura.
+
+**2. `comparison-card` — colapsa em `.nds-grid[data-cols="2"]` de `.nds-card`.**
+
+- **A favor**: é a única das oito que põe N objetos em CORRESPONDÊNCIA — o traço
+  `i` de cada opção pareado com `traitLabels[i]` —, e correspondência posicional
+  entre colunas é o que uma matriz é. Se ela desenhasse a matriz, teria eixo.
+- **Contra**: ela não a desenha. `traitLabels` **nunca aparece como cabeçalho**:
+  a anatomia põe, em cada linha de cada cartão, o valor da opção, e o rótulo
+  comum só entra como recuo quando o traço falta. A correspondência existe no
+  arranjo e não chega a quem lê — duas linhas de cartões vizinhos podem nem ter a
+  mesma altura. O que sobra é N cartões numa grade, com `recommendedId`
+  decidindo qual leva a palavra "escolha", e uma frase embaixo.
+- **Colapsa**, e a composição fica mais fina que a fonte de duas maneiras: a
+  grade do design system empilha pelo espaço do CONTAINER, sem o ponto de quebra
+  de viewport que a fonte crava, e quem quiser a correspondência dita em voz alta
+  tem `table` com uma coluna por opção — que é a matriz que a entrada sugere e
+  não desenha.
+- **A sobreposição com `spec-sheet`, medida e resolvida**, porque este lote existe
+  para isso: são a mesma fila de atributos, uma vez e N vezes. `spec-sheet` é um
+  objeto rotulado; `comparison-card` é N objetos com os rótulos içados para fora.
+  A diferença entre as duas é o CONTAINER — `<dl>` contra grade de cartões —, e
+  diferença que é só container é a definição de composição. Nenhuma das duas
+  precisa da outra, e nenhuma das duas precisa de folha.
+- **A evidência que teria virado o voto**: a matriz de verdade — cabeçalho de
+  coluna renderizado uma vez, linhas alinhadas entre opções, primeira coluna
+  pegajosa, uma rolagem horizontal única para N opções. Procurada na anatomia:
+  não há `<table>`, não há linha de cabeçalho, e a fonte declara que a peça não
+  tem `visibleCount` nem recorte — todo cartão e todo traço desenham sempre.
+
+**3. `score-breakdown` — colapsa em `.nds-item-group` de `context-display`, e é a
+travessia mais limpa das oito porque atravessa de FAMÍLIA.**
+
+- **A favor**: tem denominador. `total` contra `outOf`, uma barra por critério
+  contra o mesmo teto, e uma etiqueta de veredito — que é literalmente o eixo da
+  família 5 ("o mesmo número em formas diferentes"), com a diferença de que aqui
+  há VÁRIAS medições contra um teto só, o que nenhuma peça daquela folha faz:
+  `context-breakdown` reparte um total em parcelas que somam, e estas não somam.
+- **Contra**: `.nds-context-display[data-form="bar"]` é exatamente uma medição
+  contra um teto, e N delas numa fila é `.nds-item-group`, não geometria nova. A
+  conta já está construída e já é genérica: `spentFraction(spent, budget)` de
+  `token-budget.ts` recebe um par de números e não exige `TokenUsage`. E a
+  própria linha de `retrieval-chunks`, na 5.1, já havia escrito a saída antes de
+  alguém ler esta entrada: "se o produto quiser a pontuação em barra, ela é
+  `.nds-context-display[data-form="bar"]` com outro denominador, que é a família
+  5 e não esta".
+- **Colapsa.** E duas medidas fecham o assunto pelo lado de dentro da fonte:
+  `weight` **não entra na largura da barra** — a fonte declara que dois critérios
+  de mesma nota desenham barras idênticas por mais diferente que seja o peso, de
+  modo que a única coisa que faria a repartição ser uma repartição não é
+  desenhada; e a cor da etiqueta sai de um limiar sobre `total / outOf` enquanto
+  a PALAVRA sai de `verdict`, dois campos independentes que podem discordar na
+  mesma tela. O design system fica com a palavra, que é a regra 4 da §8.
+- **Uma nota para quem construir, e ela não é adiamento**: `fractionLevel` de
+  `token-budget.ts` NÃO se reaproveita, porque lá a fração alta é ruim e aqui é
+  boa. Limiar com a polaridade invertida é outro cálculo, não outro valor — e
+  como o veredito chega escrito, não há cálculo nenhum a fazer.
+- **A sobreposição com `recommendation-card`, medida e resolvida**: a segunda que
+  este lote existia para medir, e ela se dissolve em vez de se decidir. Uma MEDE
+  com denominador; a outra não mede nada — a "confiança" dela é uma forma fixa de
+  três alturas, por declaração da fonte, e o único dado é uma palavra. Não são
+  duas vistas de uma coisa: uma é medição e a outra é pergunta, e cada uma achou
+  dono num lugar diferente, `medicao.css` e `agent-run.css`.
+- **A evidência que teria virado o voto**: a repartição sendo repartição — barras
+  que somassem o total, ou largura que lesse o peso. Procurada, e a fonte
+  responde antes da pergunta, no texto da anatomia: cada barra é escalada contra
+  o `outOf` geral, "não contra o peso do critério nem contra um máximo próprio".
+
+**4. `recommendation-card` — colapsa em `approval-card`.**
+
+- **A favor**: é a peça que pergunta e RECOMENDA ao mesmo tempo, e a fonte lhe dá
+  um segundo desenho para depois da resposta — o visto com a palavra do assentado
+  —, que `approval-card` não tem por escrito.
+- **Contra**: campo por campo, é o cartão de autorização. `question` é
+  `.nds-approval-card-question`; o corpo é o encaixe entre a pergunta e os
+  controles que `elicitation-form` já nomeou; aceitar e ver alternativas são
+  `.nds-approval-card-actions`, o espaço de `HTMLElement[]` da §2. E o segundo
+  desenho **não é estado**: é o `.nds-badge` que ocupa a fila de ações depois de
+  decidido, exatamente a leitura que `reviewable-diff` fez na vigésima quarta.
+- **Colapsa**, e o achatamento é dos mais claros da campanha: `state = idle |
+  accepted` são dois desenhos onde `RunStatus` tem cinco e `ToolCallState` tem
+  quatro — e o que se perde não é só `failed`: **não há `declined`**, numa peça
+  que desenha um botão de alternativas. Uma recomendação recusada não tem como
+  desenhar.
+- **A evidência que teria virado o voto**: a confiança sendo dado. Procurada na
+  anatomia, e a fonte a nega em uma frase: as três barras são "uma forma fixa,
+  três alturas, sempre as mesmas, e não a leitura de um valor numérico de
+  confiança; só o texto de `confidenceLabel` vem do dado".
+
+**5. `timeline` — colapsa em `.nds-agent-plan`, e é a primeira das duas que
+PARECEM posicionar.**
+
+- **A favor**: é a primeira entrada desta família em que `.nds-stepper-separator`
+   — o único conector desta casa, medido na trigésima primeira — encosta no
+  assunto, e a única das oito com trilho: ponto por linha e uma linha ligando um
+  ponto ao seguinte, sólida no passado e vazada no futuro. E a fonte a apresenta
+  como eixo, com todas as letras: "eventos num eixo de tempo", "um eixo
+  vertical".
+- **Contra, e é o achado deste lote**: **a fonte chama de eixo o que os tipos
+  provam não ser.** `time` é `string`; a peça "nunca ordena por `time` nem por
+  `when`"; as linhas ficam igualmente espaçadas na ordem do arranjo. Nenhum valor
+  decide posição nenhuma — o lugar de um evento é o índice dele. E o resto já
+  está construído: `.nds-agent-plan` tem o ponto redondo tingido por estado, o
+  título, a nota e `aria-current="step"`, e `when` é `PlanStepState` com duas
+  palavras a menos (`past` é `done`, `now` é `running`, `future` é `pending`;
+  faltam `failed` e `skipped`).
+- **Colapsa**, com uma utilitária nomeada — o trilho vertical, que
+  `.nds-agent-plan` não desenha e que `.nds-stepper-separator` só sabe na
+  horizontal (`height: 1px` com `min-width`). E o que decide vale escrito, porque
+  é a distinção contra `flow-graph`: **conector que só liga vizinhos não carrega
+  informação — a ordem já a carrega.** A aresta de `flow-graph` carrega, porque
+  fila não se ramifica nem se reencontra; um traço entre a linha 3 e a linha 4 de
+  um `<ol>` diz o que o `<ol>` já disse.
+- **E a armadilha, que fica registrada porque é convidativa**: não se monta com
+  `stepper`. `.nds-stepper-trigger` é um `<button>`, e evento de linha do tempo
+  não tem chamada de volta nenhuma — a composição ganharia N controles que não
+  fazem nada, que é o mesmo defeito que `message-branches` recusou noutro traje
+  ao não se compor com `createPagination`.
+- **A evidência que teria virado o voto**: o instante virando coordenada — `time`
+  numérico, linhas espaçadas pelo intervalo entre elas, dois eventos próximos
+  desenhando perto. Procurada nos tipos e no texto: `time` é `string` "mostrada
+  na coluna de tempo, em monoespaçado", e a ordenação é de quem monta.
+
+**6. `file-tree` — colapsa em `.nds-item-group`, e é a segunda que PARECE
+posicionar.**
+
+- **A favor**: recuo por `depth`, que é a única das oito em que a posição de uma
+  linha carrega uma relação — contenção. E o par `totalAdditions` /
+  `totalDeletions` no cabeçalho é `TimelineStat` exato, o tipo que a vigésima
+  segunda e a vigésima quarta deixaram sem casa.
+- **Contra**: a contenção é falsa, e a fonte a desmente em uma frase — a linha de
+  pasta é "um cabeçalho estático, não interativo, **nunca um pai de verdade** das
+  linhas abaixo, e nunca recolhe". `depth` e `kind` são campos independentes que
+  quem monta atribui a cada nó; `path` só serve de chave, e "nada da posição de
+  uma linha é derivado dele". Não há `role="tree"`, não há `aria-level`, não há
+  `aria-expanded`, e a biblioteca não tem ajudante de caminho para árvore — o
+  `buildFileTree` do exemplo mora no arquivo de quem chama, e só emite `depth` 0
+  e 1. O que resta é uma fila plana com `padding-inline-start` por linha.
+- **Colapsa**, com uma utilitária nomeada (recuo por propriedade personalizada;
+  `.nds-sidebar-menu-sub` recua ANINHANDO marcação, e nada em
+  `docs/shared/styles/` recua uma lista plana por um número).
+- **A pista do `TimelineStat`, respondida, e a resposta é não.** Ele não se muda
+  para cá, e por três medidas: `file-tree` não declara o tipo — declara dois
+  `number` soltos no cabeçalho, sem o `file` que o par carrega, e repete o par
+  numa segunda escala por nó (`additions?`, `deletions?`); os totais são
+  agregado, e a própria fonte os escreve com `reduce` fora da peça, que é o
+  "agregado que é leitura rende função, não desenho" da décima sétima; e a
+  entrada colapsa, de modo que não sobra peça a carregar tipo nenhum. **O tipo
+  continua sem casa de TIPO e com casa de DESENHO**, que é o `.nds-cluster` de
+  dois `.nds-badge` que a sexta correção lhe deu na 5.1 — e esta é a terceira
+  fonte seguida a carregar a forma sem carregar o tipo. Fica assim, e agora
+  definitivamente: não há mais entrada por ler que possa querê-lo.
+- **A evidência que teria virado o voto**: a árvore sendo árvore — pastas que
+  recolhessem, `aria-level` por linha, ou a peça derivando `depth` de `path`.
+  Procurada nos três lugares, e a fonte nega os três por escrito.
+
+**7. `artifact-card` — colapsa em `.nds-item`, e é a mais barata de ler das oito.**
+
+- **A favor**: "o documento que o modelo está escrevendo enquanto você lê" é um
+  momento de produto de verdade, e a peça tem um desenho que muda enquanto ele
+  corre — a legenda dá lugar à contagem de palavras com brilho.
+- **Contra**: é ícone, título, legenda e uma seta, que é `.nds-item`
+  `.nds-item-outline` — a mesma fila que `background-inbox`, `checkpoint-history`
+  e `document-reference` já montam. E os dois defeitos que ela traz o design
+  system já resolve por regra: a seta só existe no `:hover`, onde a regra 3 da §8
+  pede `:focus-within` e ordem de foco, e o cartão "carrega estilo de pairar e de
+  pressionar como se fosse um botão, mas não declara manipulador nenhum" —
+  palavras da fonte —, onde `.nds-item` como `<button>` com nome textual é a
+  saída (regra 7 da §8).
+- **Colapsa**, e `generating: boolean` entra na tabela do sinal como o caso mais
+  literal dela: a faixa de runtime da PRÓPRIA fonte declara quatro palavras
+  (`running`, `requires-action`, `incomplete`, `complete`) e mapeia três delas
+  para `false`, escrevendo "qualquer outra coisa vira `false`". O sinal fala
+  pelas duas bocas na mesma página, como já falara uma vez.
+- **A evidência que teria virado o voto**: o cartão sabendo o que há dentro do
+  artefato — prévia, contagem por espécie, versão comparável. Procurada nos
+  tipos: `title`, `meta`, `generating`, `words`, e "todas as outras props de
+  `div` são repassadas à raiz".
+
+**8. `canvas-split` — colapsa em `resizable` mais `chat-thread` mais `.nds-card`.**
+
+- **A favor**: é a única entrada das 120 que desenha a CONVERSA e o ARTEFATO na
+  mesma tela, e o par tem geometria: uma calha estreita de mensagens ao lado de
+  um documento largo, que empilha quando não cabe.
+- **Contra, e a hipótese que este lote existia para medir cai pelo lado
+  inesperado**: `canvas-split` **não é `resizable` com outro nome — é MENOS que
+  ele**. Não há punho, não há tamanho de painel, não há chamada de volta de
+  redimensionamento: a fonte declara uma consulta de mídia e nada mais ("abaixo
+  de `md` empilham, em `md` e acima viram linha"). O painel redimensionável
+  construído tem punho com `role="separator"` e `tabindex="0"`, tamanho por
+  `--panel-size` e, desde o conserto de contraste, uma linha em `--ring` que
+  passa dos 3:1 da WCAG 1.4.11 — e `.nds-grid[data-cols="2"]`, para quem não
+  quiser punho, já empilha pelo espaço do CONTAINER, sem ponto de quebra de
+  viewport. A composição fica mais fina que a fonte nos dois caminhos.
+- **Colapsa.** E `speaker: "user" | "assistant"` é o achatamento de `ChatRole`
+  pela TERCEIRA vez, depois de `SharedTurn` e `VoiceTurn`, com a mesma perda e no
+  mesmo campo — o que faz dele o achatamento mais repetido do catálogo inteiro.
+- **A evidência que teria virado o voto**: a divisão sendo da peça — tamanho
+  guardado, punho, mínimo por painel, ou o documento e a conversa rolando
+  acoplados. Procurada na tabela de partes: `CanvasSplit`, `CanvasSplitThread` e
+  `CanvasSplitDocument` recebem `className` e mais nada.
+
+**ONDE A PERGUNTA "POSICIONA OU EMPILHA" FALHOU, e é o que este lote acrescenta
+ao instrumento.** Ela previu SOBREVIVÊNCIA para duas das oito, e errou nas duas:
+`file-tree` posiciona por `depth` e `timeline` desenha um trilho, e as duas
+colapsaram. Nas outras seis ela acertou ao dizer "empilha", mas dizer "empilha"
+é dizer o resultado, não a razão. O conserto é de VERBO, e mantém a leitura da
+trigésima primeira inteira:
+
+> **A peça CALCULA a posição a partir do dado, ou recebe a posição pronta?**
+
+Nas três sobreviventes quem calcula é a peça: o traço da aresta sai de dois `id`
+de nó, a barra sai de `startMs / totalMs`, a célula sai de uma data mapeada numa
+grade de semanas. Nas duas que enganaram, a posição chega pronta — `depth` é um
+inteiro que quem monta atribui, e o lugar de um evento é o índice dele no
+arranjo. E isto **não contradiz** a trigésima primeira, que já havia escrito, de
+`flow-graph`, que "o que decide não é a posição, é a ARESTA": as coordenadas de
+`flow-graph` também chegam prontas, e não foram elas que decidiram. O que este
+lote faz é generalizar aquela frase de uma entrada para a família.
+
+Vale dizer também **onde ela ficou calada**: em `score-breakdown` e em
+`recommendation-card` a pergunta não tinha o que responder — nenhuma das duas
+posiciona nem empilha, uma mede e a outra pergunta —, e quem decidiu foi o dono
+do assunto noutra família. Terceira vez na campanha que um instrumento fica mudo
+e a regra vale igual: **instrumento calado não é instrumento a favor.**
+
+**E o SINAL, que neste lote se comportou ao contrário do anterior.** Na trigésima
+primeira ele falou duas vezes e errou as duas — foi a primeira vez que errou.
+Aqui falou quatro vezes e acertou as quatro: `timeline`, `recommendation-card`,
+`artifact-card` e `canvas-split` estão na tabela abaixo. Ficou MUDO em três —
+`comparison-card`, `score-breakdown` e `file-tree` não declaram estado nenhum —, e
+em `spec-sheet` apareceu na oitava forma, o booleano que só enfeita. Lido junto
+com o lote anterior, o registro fecha uma leitura: **o sinal erra onde a peça
+sobrevive por desenho, e acerta onde ela colapsa** — o que não o torna circular,
+porque em nenhum dos dois casos ele decidiu sozinho.
+
+**O QUE A FOLHA GANHA DESTE LOTE: nada, e isso é resultado.**
+`resposta-estruturada.css` continua com as três regras que a trigésima primeira
+mediu e com as seis linhas que ela escreveu para quem a funda. Nenhuma das oito
+acrescenta regra, porque nenhuma delas põe em pixel uma relação — e a folha nasce
+com o eixo que já tinha, agora sem risco de que uma entrada por ler o alargue.
+**Três utilitárias ficam nomeadas na 5.1, e nenhuma é da folha**: a lista de
+definição genérica (`spec-sheet`), o trilho vertical do plano (`timeline`) e o
+recuo por linha a partir de propriedade personalizada (`file-tree`).
+
+**E a §6 não muda, medido e não previsto**, porque ela já errou duas vezes nesta
+mesma família: procurado o nome de biblioteca nas oito páginas, **nenhuma cita
+uma**. Nem pacote de terceiro, nem primitivo importado, nem renderizador — as
+oito desenham com marcação e folha de estilo próprias. Nenhuma decisão de
+dependência vai para a dona neste lote, e com ele a seção fica fechada: as cinco
+entradas que já tinham sido medidas continuam sendo as únicas do catálogo em que
+o assunto aparece.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 13, 3 tem 1, 4 tem 4, 5 tem 5, 6 tem 0 e 7 tem 0 — **34** na 5.2. A
+5.1 vai a **86** (84 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. Os componentes a construir somam **27**, em **cinco**
+folhas — `composer.css`, `agent-run.css`, `evidencia.css`, `medicao.css` e
+`resposta-estruturada.css`, a única que ainda não nasceu. **Os dois cabeçalhos
+foram mexidos nesta correção**, e foi a primeira vez que isso pôde ser feito com
+segurança: é a última triagem, e nenhuma outra porta os disputa.
+
+**Reversível**, como as outras trinta e uma, e aqui em duas alturas. Por entrada:
+`spec-sheet` desdobra se a ficha ganhar unidade, seção ou comparação entre
+fichas; `comparison-card` desdobra se a matriz for desenhada como matriz —
+cabeçalho içado, linhas alinhadas, rolagem única; `score-breakdown` desdobra se
+as parcelas passarem a somar ou a largura passar a ler o peso, e nesse dia ela
+vai para a família 5 e não para esta; `recommendation-card` desdobra se o
+assentado deixar de ser palavra; `timeline` desdobra se o instante virar
+coordenada; `file-tree` desdobra se a pasta virar pai de verdade — recolher,
+`aria-level`, profundidade derivada do caminho; `artifact-card` não tem gatilho
+plausível; `canvas-split` desdobra se a divisão passar a ser da peça. Pela
+família: a 4 fica de pé com as três da trigésima primeira, e só deixa de existir
+se as três desdobrarem.
+
+**O que esta leitura NÃO decide, e é a primeira vez que a resposta é "nada"**: não
+resta entrada por triar em nenhuma das sete famílias. O que sobra é construir — e
+a próxima decisão desta guideline não é de triagem, é a primeira peça de
+`resposta-estruturada.css`, com as duas perguntas que a trigésima primeira deixou
+explicitamente para o dia da construção: se o intervalo (`startMs`/`durationMs`
+contra um total) entra em `chat-protocol.ts`, e se a classificação de contagem em
+nível vira primitivo.
+
+**E o registro de método, que vale uma oitava vez, e desta vez é sobre uma pista
+recebida pronta.** O briefing trazia duas pistas medidas por quem triou antes —
+`file-tree` como casa de `TimelineStat`, e `timeline` encostando no
+`.nds-stepper-separator` —, e as duas estavam CERTAS no que afirmavam e ERRADAS
+no que sugeriam: `file-tree` de fato declara o par exato, e `timeline` de fato é
+a primeira a encostar no conector; nenhuma das duas coisas fez a entrada
+sobreviver. **Pista é onde olhar, nunca o que concluir** — e a disciplina que
+sobrou é a mesma da sexta correção, que recusou decidir uma peça de dentro da
+triagem de outra: quem herda uma pista herda a obrigação de medi-la, não a de
+confirmá-la.
+
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
 O critério é um só, e é a parte que dura: **booleano onde este vocabulário já tem
@@ -5368,6 +5713,10 @@ a lista nomeada acima, e nenhuma das duas precisa de um total escrito por cima.)
 | `mcp-server-panel` | quatro palavras de estado onde a faixa de runtime da própria fonte declara seis — e ela publica o `switch` que dobra as duas que sobram | a espera por uma PESSOA separada da espera por uma nova tentativa, e o erro separado do desligado |
 | `web-preview` | `loading: boolean` | `idle`, `stopped`, `failed` — e `failed` é o pior: a prévia que quebrou desenha igual à que ainda está chegando, para sempre |
 | `image-generation` | `generating: boolean` | `idle`, `stopped`, `failed` |
+| `timeline` | `when = past\|now\|future` — e `past` é `done`, `now` é `running`, `future` é `pending`, os três renomeados de uma vez | `failed`, `skipped` — a MESMA perda, no mesmo tipo, de `research-report` |
+| `recommendation-card` | `state = idle\|accepted` | `running`, `failed` — e `declined`, numa peça que desenha o botão de alternativas: uma recomendação recusada não tem como desenhar |
+| `artifact-card` | `generating: boolean` — e a faixa de runtime da PRÓPRIA fonte declara quatro palavras e manda mapear três delas para `false`, escrevendo "qualquer outra coisa vira `false`" | `idle`, `stopped`, `failed` |
+| `canvas-split` | `speaker: "user"\|"assistant"`, com `saved: boolean` e `writing: boolean` ao lado | `system` — a TERCEIRA vez que `ChatRole` achata no mesmo campo, depois de `shared-conversation` e `voice-conversation`, o que faz dele o achatamento mais repetido do catálogo |
 
 Em todas elas o achatamento não é economia — é sinal de que a entrada foi
 desenhada para uma tela só, sem o vocabulário que a família já tem. E todas
@@ -5765,16 +6114,36 @@ construída conserta (leva o vocabulário inteiro, como a família 2 fez sete
 vezes), não o que a reprova. Em cada linha daquela tabela, o que sobrava
 depois de tirar as palavras perdidas era empilhamento; aqui sobra geometria.
 
+**E O LOTE QUE FECHOU O CATÁLOGO, em que ele se comportou ao contrário**, medido
+no terceiro lote da família 4 (o das oito últimas entradas). Falou quatro vezes e
+acertou as quatro — `timeline`, `recommendation-card`, `artifact-card` e
+`canvas-split` estão na tabela acima, e `artifact-card` é o caso mais literal
+dela, com a faixa de runtime da própria página declarando quatro palavras e
+mandando mapear três para `false`. Ficou MUDO em três: `comparison-card`,
+`score-breakdown` e `file-tree` não declaram booleano, união nem estado, e
+nenhuma delas deixa assinatura a que apontar — pela sub-regra da décima,
+decidiram os três testes sozinhos. E em `spec-sheet` apareceu na **oitava forma,
+terceiro ramo**: `emphasis` não descreve o item nem parte a lista — enfeita uma
+linha, como `route` enfeitava a de `map-answer`.
+
+Lido junto com o lote anterior, o registro fecha uma leitura sobre o próprio
+instrumento: **ele erra onde a peça sobrevive por desenho e acerta onde ela
+colapsa.** Não é circular, porque em nenhum dos dois lotes ele decidiu sozinho —
+é só a consequência de medir vocabulário numa família cuja identidade é
+geometria. Onde a entrada não tem geometria, o achatamento é o que sobra para
+ver; onde tem, ele é o que a peça construída conserta.
+
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
 contador posicional que parta a lista em dois desenhos, mandam aplicar os três
 testes com atenção — não decidem sozinhos, mas preveem.
 
-O critério, para as famílias que faltam: **uma entrada do catálogo vira
-slug quando tem desenho, estado ou vocabulário próprios.** Se a diferença cabe
-num argumento do que já existe, ela é variante — vira story e linha na tabela,
-não peça. Ao decidir isso durante a construção, corrija a tabela de 5.2 no
-mesmo passo; não anote para depois.
+O critério, que a partir da trigésima segunda correção não serve mais para triar
+— não resta entrada — e passa a servir só para a construção: **uma entrada do
+catálogo vira slug quando tem desenho, estado ou vocabulário próprios.** Se a
+diferença cabe num argumento do que já existe, ela é variante — vira story e
+linha na tabela, não peça. Ao decidir isso durante a construção, corrija a tabela
+de 5.2 no mesmo passo; não anote para depois.
 
 E o contrário também vale: peça que na leitura parecia uma e ao construir
 mostrou ser duas se DESDOBRA aqui, com o motivo.
