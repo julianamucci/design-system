@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (52)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (53)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -282,9 +282,10 @@ falta, nomeada — nunca uma folha nova.
 | `read-aloud` | `media-player` `kind="audio"` — sem superfície, a barra É o componente inteiro, e ali já estão os quatro nós que a fonte desenha: `.nds-media-player-button` para tocar e pausar, `.nds-media-player-seek` para a posição, `.nds-media-player-time` para o par decorrido/duração e `.nds-media-player-rate` para a velocidade, que é um `<select>` sobre `rates` e carrega o VALOR, onde a fonte tem um botão que cicla às cegas. Fala sintetizada não tem fim conhecido — a duração só se sabe quando termina, e muda com a velocidade —, então o caminho é o da fonte ao vivo que esta base já resolve: `data-live`, o aviso de transmissão no lugar do relógio e o slider fora de cena. A palavra sendo lida é a marca dentro do `markdown` de `.nds-chat-message-content`; as palavras já ditas NÃO esmaecem, porque opacidade é a codificação que a regra 4 da §8 troca pela palavra. **Falta uma utilitária, e está nomeada**: nada em `docs/shared/styles/` realça palavra dentro de texto corrido — o único `<mark>` desenhado está escopado a `.nds-editor-content .ProseMirror`, e o amarelo do navegador ignora o tema, como aquela folha já registra. **Pede uma opção** no `media-player`: um terceiro motor, que RELATA o próprio estado em vez de ser lido de um elemento, porque fala sintetizada não é elemento de mídia nem quadro de outra origem — `PlayerState` já é a costura e a folha já diz que o motor é substituível. Nem classe nova além da nomeada, nem folha nova. Veio da família 7 — ver 5.3 |
 | `retrieval-chunks` | `.nds-stack[data-spacing="sm"]` com três blocos que já existem. O termo procurado é `.nds-badge` com o ícone lucide de banco de dados, que `.nds-badge > svg` já dimensiona e alinha; a linha de estado é `agent-status`, que traz `RunStatus` inteiro no lugar do booleano da fonte, com a contagem de trechos ao lado; e a fila é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"` — `.nds-item-title` com o título da fonte, `.nds-item-description` com o trecho, que já corta em duas linhas com `-webkit-line-clamp: 2`, e `.nds-item-actions` com o lugar e a pontuação em `.nds-badge` com `.nds-font-mono`. Cada linha é uma `Citation`, com `ChatSource` inteiro no lugar da cadeia sem endereço da fonte, e `isSafeUrl` no ponto em que o endereço encosta no DOM. Nenhuma classe nova, e — ao contrário de `document-reference` — nenhuma nomeada como faltando: não há ícone por linha nem linha corrente. Se o produto quiser a pontuação em barra, ela é `.nds-context-display[data-form="bar"]` com outro denominador, que é a família 5 e não esta. Veio da família 3 — ver 5.3 |
 | `elicitation-form` | `approval-card` com um corpo de campos entre a pergunta e os controles. `.nds-approval-card-ask` leva o pedido em `.nds-approval-card-question` e o servidor em `.nds-approval-card-scope`, um par de termo e valor; os campos são `.nds-field-group` de `createFormField`, que já monta `<label for>`, já dá id à descrição e à mensagem de erro e já as costura no `aria-describedby` do controle; os controles são `.nds-approval-card-actions`, o mesmo espaço de `HTMLElement[]` que a família inteira usa. A fonte não guarda valor e não valida — `onAccept()` e `onDecline()` não recebem argumento —, então o que sobra dela é moldura, pergunta e espaço, que o cartão já é; esquema que virasse campo seria geração de formulário, e a §2 a mantém de fora. Os campos entram como IRMÃOS de `-ask`, nunca dentro: a região viva fecha antes deles (decisão 1 daquele bloco), e formulário recitado num anúncio é pior que botão recitado. **Falta uma opção, e está nomeada**: `createApprovalCard` não tem por onde receber um corpo — pede `fields?: HTMLElement[]` apensado entre `-ask` e `-actions`, onde a raiz já é a pilha e o `gap` dela já é o afastamento; nem classe nova, nem folha nova. Veio da família 2 — ver 5.3 |
+| `confidence-marker` | `markdown` com o gatilho de explicação que esta base já compõe. Cada afirmação é um `<button>` em linha dentro do parágrafo, com a cadeia que `hover-card.fixtures.ts` e `hover-card.source.ts` já escrevem literalmente e nesta ordem — `.nds-underline-dotted` `.nds-cursor-help` `.nds-bg-transparent` `.nds-border-none` `.nds-p-0` —, e o nível troca só a decoração: `.nds-underline` para o que se apoia em fonte, `.nds-underline-dotted` para o que não se apoia, as duas com o mesmo deslocamento que cinco folhas já aplicam. O nível chega também como PALAVRA — `.nds-badge` em linha, como `directive-text` acima nesta tabela, ou `.nds-sr-only` quando o parágrafo não pode ser interrompido —, porque a fonte declara três níveis e desenha duas decorações, deixando o terceiro por conta da cor, que a regra 3 desta folha troca pela palavra e a regra 4 da §8 proíbe (WCAG 1.4.1). A base da afirmação é `.nds-popover-content` num encaixe ABAIXO do parágrafo, ligado por `aria-describedby`: encaixe, e não caixa flutuante, é o que faz a revelação não cobrir o texto que se está lendo, que é a decisão 4 do bloco da citação em linha. O espaço se reserva com `min-block-size`, nunca com a altura fixa da fonte, porque o encaixe carrega texto (§9). Nenhuma classe nova, e nenhuma nomeada como faltando: se o produto quiser três decorações em vez de duas palavras, a que falta é `.nds-underline-dashed` em `utilities.css`, ao lado das duas que já estão lá — utilitária, nunca folha. Veio da família 3 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (68)
+### 5.2 As sete famílias novas (67)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -294,7 +295,7 @@ slug produz 83 folhas e nenhum sistema.
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `schedule-card`, `checkpoint-history`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (15 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox` e `elicitation-form` saíram para a 5.1, ver 5.3 —, **11 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
-| **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (7 no catálogo — `document-reference` e `retrieval-chunks` saíram para a 5.1, ver 5.3 —, **7 componentes**) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
+| **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
 | **6. Navegação da conversa** | `conversa-nav.css` | `message-branches`, `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (8) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
@@ -2694,6 +2695,200 @@ correção mandou fazer para pegar esse erro, e vale como regra e não como
 anedota: some família a família antes de escrever o número, mesmo quando o
 cabeçalho parece certo.
 
+**Vigésima primeira correção, e a décima quinta que atravessa de 5.2 para 5.1**:
+`confidence-marker` é `markdown` com o gatilho de explicação que esta base já
+compõe — e as duas contagens mudam junto, 68 → 67 e 52 → 53. É a terceira a sair
+da família 3, e a primeira em toda a campanha em que a entrada colapsa contra uma
+cadeia de utilitárias que a base já escreve LITERALMENTE, na mesma ordem, no
+arquivo de exemplo de outra peça.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`ConfidenceClaim { id, text, confidence: "grounded" | "inferred" | "uncertain",
+basis: string }` e, no componente, `claims: readonly ConfidenceClaim[]`,
+`hoveredId: string`, `onHover?: (id: string) => void` e `className`. Quatro
+entradas no componente, quatro campos na linha, e UMA chamada de volta — chamada
+com o id ao entrar e ao focar, e com a cadeia VAZIA ao sair e ao desfocar. A
+metade de runtime é um render de FERRAMENTA (`cite_claims`, `result.claims`), e
+não porta (§1). A anatomia são dois blocos: um parágrafo em que cada afirmação é
+um botão em linha, sublinhado pelo nível; e, abaixo dele, um encaixe de ALTURA
+FIXA que mostra a base da afirmação sob o ponteiro ou o foco, ou nada — fixa,
+diz a fonte, para que revelar "never shifts the paragraph above".
+
+**A FONTE DECLARA TRÊS PALAVRAS E DESENHA DUAS** — "solid for grounded and
+inferred, dotted for uncertain" —, e é essa medida dupla que decide todo o resto.
+
+Antes dos três testes, as duas perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **O nível de confiança é vocabulário desta casa? É — e não é desta peça.**
+  Nada em `chat-protocol.ts` diz o quanto se pode confiar numa afirmação; a
+  primeira linha do cabeçalho desta folha reservou o lugar antes de existir peça
+  ("o quanto se pode confiar"), e a regra 4 da §8 já nomeia "nível de confiança"
+  entre o que não pode ser só cor. Até aqui, aprova. O que reprova é o passo
+  seguinte, e ele é a fórmula da oitava correção palavra por palavra: **ordinal
+  sem grandeza vira etiqueta; ordinal com grandeza vira o medidor que já
+  existe.** `ConfidenceClaim` não tem número nenhum — nem fração, nem teto, nem
+  limiar —, então é o primeiro caminho, e etiqueta é `.nds-badge`. E a casa da
+  palavra é `chat-protocol.ts`, que é a FUNDAÇÃO e não um slug: vale o que a
+  décima sétima fez com a contagem da caixa — a casa dela é o protocolo no dia em
+  que uma peça precisar dela —, e escrever fundação em volta de uma peça que não
+  é peça é justamente o que a décima nona recusou fazer com `voz.css`.
+  **Vocabulário que a fundação hospeda não é vocabulário próprio de quem o
+  desenha**; foi assim que `approval-card` ficou sem nenhum e continuou de pé.
+- **Viver DENTRO do texto corrido basta, depois da décima terceira? Não — e é
+  aqui que a leitura da família se corrige.** A décima oitava fechou dizendo que
+  nesta família o que tem desenho próprio é o que vive dentro do texto corrido, e
+  o que mora ao lado é lista. Esta entrada vive dentro do texto corrido e colapsa
+  do mesmo jeito, porque o que a décima terceira mediu não foi o LUGAR, foi a
+  FORMA do gatilho: a marca da citação é um glifo de um caractere que precisa de
+  24 px de parada de toque dentro de uma caixa de linha de 20 px, e é essa briga
+  que nada nesta base concilia. Uma afirmação é uma FRASE — já ocupa a caixa de
+  linha inteira, quebra entre linhas como qualquer link de parágrafo, e é o alvo
+  em linha que a 2.5.8 dispensa por estar preso à entrelinha do texto em volta.
+  **Dentro do texto corrido, quem tem desenho próprio é o que INTERROMPE o
+  parágrafo, não o que É o parágrafo.**
+
+Os três testes, todos negativos:
+
+- **Desenho, não, e a medida é a mais direta desta seção inteira.** O gatilho da
+  afirmação já existe nesta base, montado, com esta função e nesta ordem:
+  `hover-card.fixtures.ts` e `hover-card.source.ts` escrevem `nds-text-primary
+  nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help
+  nds-bg-transparent nds-border-none nds-p-0` — um botão sem cromo nenhum, dentro
+  de texto corrido, sublinhado pontilhado, que revela uma explicação sem navegar.
+  E o docblock de `utilities.css` já escreveu o PORQUÊ do pontilhado, que é
+  exatamente o que a fonte pede do nível: "o sinal visual de 'passe o mouse para
+  saber mais' — distingue o gatilho de HoverCard/Tooltip de um link que navega".
+  As duas decorações que a fonte usa são `.nds-underline` e
+  `.nds-underline-dotted`, com o mesmo deslocamento que cinco folhas já aplicam
+  ao seu link.
+
+  O resto compõe sozinho. O parágrafo é `markdown`, e tem de ser, porque a
+  resposta é Markdown. A base é `.nds-popover-content`, e aqui vale o sinal que
+  esta campanha já leu nove vezes: **a fonte declara que a pastilha da base lê as
+  superfícies `floating` e `mono` compartilhadas de `surfaces.tsx`**. Superfície
+  compartilhada declarada na origem — e, ao contrário do que a décima terceira
+  encontrou na citação em linha, aqui ela cobre a ÚNICA caixa que a peça tem: lá
+  a origem não tinha o que oferecer para a marca dentro da frase, aqui ela
+  oferece tudo o que há.
+
+  Dois traços a composição não copia, os dois por decisão já escrita. O encaixe
+  da base é de altura FIXA na fonte, e altura fixa em coisa que carrega texto é o
+  que a §9 proíbe (WCAG 1.4.4): reserva-se o espaço com `min-block-size`, e o
+  objetivo — não empurrar o parágrafo ao revelar — se atende igual. E o terceiro
+  nível, que na fonte se separa dos outros dois só por cor: a regra 3 desta folha
+  o troca pela palavra e a regra 4 da §8 o proíbe. Tirada a cor, sobram duas
+  decorações para três níveis, e quem carrega o nível é a palavra — em
+  `.nds-badge` em linha, que é o que a 5.1 já respondeu em `directive-text`, ou
+  em `.nds-sr-only`.
+
+  **Nenhuma classe nova, e nenhuma nomeada como faltando** — a segunda entrada
+  seguida assim, depois de `retrieval-chunks`. Se o produto quiser três
+  decorações em vez de duas mais a palavra, a que falta é `.nds-underline-dashed`
+  em `utilities.css`, ao lado das duas que já estão lá: utilitária nomeada, que é
+  o que o cabeçalho da 5.1 manda, e nunca folha.
+
+- **Estado, não.** Não há máquina de estados: `hoveredId` mais `onHover` é
+  disclosure de seleção única, que a §2 autoriza a ser interno e obriga a ser
+  controlável. E é o MESMO desenho que a décima terceira já recusou uma vez —
+  `openIndex: number | null`, um só índice para o parágrafo inteiro. Aqui a fonte
+  endereça por id em vez de índice, o que é melhor, e continua sendo um revelado
+  por vez, o que é decisão de quem monta.
+
+  O sinal do achatamento fica MUDO, e por um motivo que não tinha aparecido: não
+  há booleano nem união encolhida porque não há união DESTA casa para encolher —
+  `RunStatus` e `ToolCallState` não têm o que dizer sobre uma afirmação graduada.
+  Mudo não prevê nada (nona e décima terceira), então vale a sub-regra: que
+  assinatura sobrou no lugar do estado? `onHover(id)` / `onHover("")` é abrir e
+  fechar, o par que a §2 exige de TODA peça desta família — o limite exato que a
+  décima terceira mediu em `onOpenIndexChange`. Não aponta dono, e quem decide
+  são os três testes sozinhos. O que esta leitura ACRESCENTA ao instrumento está
+  na seção do sinal, logo abaixo: aqui a união não é achatada pelo TIPO, é
+  achatada pelo DESENHO.
+
+- **Vocabulário, não — e a ausência é a notícia, ao contrário da décima
+  terceira.** Lá `Citation` e `ChatSource` descreviam a entrada inteira e
+  descreviam MELHOR, e caber sem sobra foi lido como prova de que a fundação
+  estava certa. Aqui a entrada não carrega `Citation` NENHUMA: não há fonte, não
+  há trecho, não há âncora, não há `url`. `basis: string` é a cadeia de exibição
+  que fica no lugar dos três — a sexta forma do sinal que a décima sexta nomeou,
+  tipo mais estreito que o do vocabulário, agora na forma mais extrema: lá
+  `DocumentAnchor.page` estreitava UM campo, e aqui uma cadeia ocupa o lugar de
+  um objeto inteiro. É a terceira vez que a segunda regra desta folha fica sem
+  objeto, e a primeira em que ela fica sem objeto porque não há endereço nenhum a
+  recusar.
+
+  Sobram `id` e `text`. `id` é endereço de linha, que `ChatToolCall.id`,
+  `PlanStep.id` e o `id` da décima oitava já declaram com o mesmo docblock.
+  `text` é a notícia ao contrário, e a décima terceira já escreveu a frase: **o
+  design system não pode ficar dono do texto da resposta, que é do modelo e é
+  desenhado pelo Markdown ou pela conversa.** Lá o parágrafo estava preso no
+  arquivo instalado e a peça sobreviveu virando a MARCA em vez do parágrafo; aqui
+  o parágrafo chega por prop, o que é melhor, e ainda assim a peça é dona dele —
+  um arranjo de afirmações não sabe desenhar um link, uma lista ou um trecho de
+  código, que é o que uma resposta tem dentro. **Aplicada a mesma correção que
+  salvou a irmã, o que sobra é a marca sobre uma frase, e a marca é a cadeia de
+  utilitárias de cima.**
+
+E o teste da família, que é o quarto: **ela responde ao eixo pela metade, e a
+metade que falta é a fundação.** "Em que a resposta se apoia" é o eixo, e o campo
+que diria em que ela se apoia é uma cadeia livre. A linha da 5.2 diz que todas as
+peças desta família carregam `Citation`, e esta é a primeira lida que não carrega
+— e não por descuido da triagem: a fonte não tem o objeto. Corrigido o campo,
+`basis` vira `Citation`, e a caixa que mostra fonte, trecho e lugar é a que a
+citação em linha já desenha. Vale o traço nos formatos que a décima primeira, a
+décima segunda, a décima quinta e a décima oitava nomearam — repetir não é
+desenhar, emparelhar não é desenhar, estreitar não é desenhar —, com esta sendo a
+primeira em que o que se estreita é o vocabulário INTEIRO num campo só.
+
+**As duas cláusulas que apontavam para cá, respondidas — e as duas fecham a
+décima oitava:**
+
+- **O primeiro gatilho NÃO dispara.** A condição era que ao construir
+  `confidence-marker` aparecesse fila de trechos com desenho, estado ou
+  vocabulário próprios. Não aparece fila nenhuma: esta fonte não tem lista, tem
+  um parágrafo e um encaixe. `retrieval-chunks` continua na 5.1, e a cláusula
+  perde o terceiro dos três nomes que mandava verificar — sobram `web-search` e
+  `research-report`.
+- **O segundo gatilho NÃO dispara, e é a herança que a décima oitava deixou em
+  aberto de propósito.** A condição era: se `confidence-marker` fixar a pontuação
+  como vocabulário desta família, quem desenha a pontuação passa a ser ela.
+  **Não fixa, e a resposta é mais simples do que a pergunta: esta fonte não tem
+  pontuação.** `ConfidenceClaim` não declara número nenhum — a confiança aqui é
+  ordinal de três palavras, sem grandeza por trás, e não uma fração de 0 a 1. As
+  duas nem medem a mesma coisa: uma pontuação de relevância diz o quanto um
+  trecho se PARECE com o que se procurou, e um nível de confiança diz o quanto
+  uma afirmação se APOIA no que se recuperou. A linha de `retrieval-chunks` na
+  5.1 fica exatamente como está, apontando `.nds-badge` com `.nds-font-mono` para
+  a pontuação como texto, e `.nds-context-display[data-form="bar"]` (família 5)
+  para o dia em que o produto quiser barra. O terceiro caminho que aquela
+  correção abriu está fechado, e fechado por leitura da fonte.
+
+**Reversível**, como as outras vinte: se ao construir `web-search`,
+`research-report`, `memory-chips`, `speaker-identity` ou `mcp-server-panel`
+aparecer graduação de afirmação com desenho, estado ou vocabulário próprios — uma
+marca sobre uma frase que não caiba na cadeia de utilitárias do gatilho de
+explicação, um nível que a palavra não carregue, ou GRANDEZA numérica por trás do
+nível, que é o que falta aqui para ele deixar de ser etiqueta —,
+`confidence-marker` desdobra de volta para a 5.2, com o motivo.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 15, 3 tem 6, 4 tem 20, 5 tem 5, 6 tem 8 e 7 tem 2 — **67** na 5.2.
+A 5.1 vai a **53** (51 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. A família 3 fica com **6 componentes**, e as sete somam 61.
+
+**E a leitura de família que esta correção obriga a ATUALIZAR, porque corrige a
+que a décima oitava escreveu.** Aquela dizia que nesta família o desenho próprio
+está dentro do texto corrido e a lista está ao lado; esta entrada vive dentro do
+texto corrido e colapsa, então a divisa não era essa. A divisa medida é a FORMA
+do gatilho: **o que interrompe o parágrafo tem geometria própria; o que É o
+parágrafo, ou o que mora numa fila ao lado dele, não tem.** Três das nove
+entradas originais da família 3 colapsaram e uma sobreviveu, e a pergunta que a
+décima oitava deixou de pé — se a folha desta família vai ter uma entrada só —
+fica mais aguda e continua sem resposta: ela se decide ao ler `web-search` e
+`research-report`, e decidi-la aqui seria decidir uma peça antes de ler a fonte
+dela, que é o que a sexta correção recusou fazer com `TimelineStat`.
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
 Apareceu dez vezes: **oito** como achatamento, sempre igual, e **duas** pelo
@@ -2879,6 +3074,23 @@ conte também os que ele deixa de MONTAR — uma resposta longa, um número, uma
 data, uma escolha múltipla. E quando a união enumera espécies de CONTROLE em vez
 de estados, o que ela descreve não é vocabulário: é um gerador de formulário, que
 a §2 já mantém do lado de fora.
+
+**Sétima forma do sinal, medida na vigésima primeira correção, e a primeira em
+que o achatamento não está no TIPO**: `confidence-marker` declara três níveis —
+`grounded`, `inferred`, `uncertain` — e desenha DOIS, "solid for grounded and
+inferred, dotted for uncertain", deixando o terceiro por conta da cor. Nas oito
+da tabela a fonte achatava um vocabulário que esta casa tem; aqui o vocabulário é
+NOVO, não há nada a perder deste lado, e quem o achata é o desenho da própria
+fonte. O efeito é o mesmo, e a leitura que o pega é a que a décima primeira já
+escreveu: **conte quantos desenhos DISTINTOS a peça sabe fazer, não quantas
+palavras ela declara** — só que ali a contagem se fazia contra `RunStatus`, e
+aqui se faz contra a própria união declarada, duas linhas acima na mesma página.
+Não entra na contagem da abertura desta seção, e é preciso dizer por quê: aquelas
+são entradas que perdem palavras DESTE vocabulário, e esta não perde nenhuma —
+perde as suas. **União declarada maior que o número de desenhos não é vocabulário
+grande; é vocabulário que a fonte não usa** — e, quando o que fecha a diferença é
+a cor, a regra 4 da §8 apaga o resto (WCAG 1.4.1), que foi a leitura da décima
+segunda em `agent-handoff`.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
