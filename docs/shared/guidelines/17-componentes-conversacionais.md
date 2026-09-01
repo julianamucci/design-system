@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (51)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (52)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -281,9 +281,10 @@ falta, nomeada — nunca uma folha nova.
 | `background-inbox` | `.nds-card` com `.nds-item-group` de `agent-status` — uma linha por execução. `.nds-card-header` leva o título e a contagem em `.nds-badge` com `.nds-font-mono` dentro de `.nds-card-action`, o mesmo encaixe do distintivo de versão; `.nds-card-content` recebe a lista, e cada `.nds-item` `.nds-item-outline` `data-size="sm"` leva o título em `.nds-item-title`, que já corta em uma linha, o resumo em `.nds-item-description` e, em `.nds-item-actions`, o `agent-status` inteiro — a PALAVRA do estado, o relógio já escrito e a ação que muda com ele, que são as três partes do eixo da família. Sem execução nenhuma, `empty.css`. A contagem do cabeçalho é conta sobre `RunStatus`, do tamanho de `isRunFinished`, e a casa dela é `chat-protocol.ts` no dia em que uma peça precisar dela — agregado que é leitura rende função, não desenho. Veio da família 2 — ver 5.3 |
 | `read-aloud` | `media-player` `kind="audio"` — sem superfície, a barra É o componente inteiro, e ali já estão os quatro nós que a fonte desenha: `.nds-media-player-button` para tocar e pausar, `.nds-media-player-seek` para a posição, `.nds-media-player-time` para o par decorrido/duração e `.nds-media-player-rate` para a velocidade, que é um `<select>` sobre `rates` e carrega o VALOR, onde a fonte tem um botão que cicla às cegas. Fala sintetizada não tem fim conhecido — a duração só se sabe quando termina, e muda com a velocidade —, então o caminho é o da fonte ao vivo que esta base já resolve: `data-live`, o aviso de transmissão no lugar do relógio e o slider fora de cena. A palavra sendo lida é a marca dentro do `markdown` de `.nds-chat-message-content`; as palavras já ditas NÃO esmaecem, porque opacidade é a codificação que a regra 4 da §8 troca pela palavra. **Falta uma utilitária, e está nomeada**: nada em `docs/shared/styles/` realça palavra dentro de texto corrido — o único `<mark>` desenhado está escopado a `.nds-editor-content .ProseMirror`, e o amarelo do navegador ignora o tema, como aquela folha já registra. **Pede uma opção** no `media-player`: um terceiro motor, que RELATA o próprio estado em vez de ser lido de um elemento, porque fala sintetizada não é elemento de mídia nem quadro de outra origem — `PlayerState` já é a costura e a folha já diz que o motor é substituível. Nem classe nova além da nomeada, nem folha nova. Veio da família 7 — ver 5.3 |
 | `retrieval-chunks` | `.nds-stack[data-spacing="sm"]` com três blocos que já existem. O termo procurado é `.nds-badge` com o ícone lucide de banco de dados, que `.nds-badge > svg` já dimensiona e alinha; a linha de estado é `agent-status`, que traz `RunStatus` inteiro no lugar do booleano da fonte, com a contagem de trechos ao lado; e a fila é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"` — `.nds-item-title` com o título da fonte, `.nds-item-description` com o trecho, que já corta em duas linhas com `-webkit-line-clamp: 2`, e `.nds-item-actions` com o lugar e a pontuação em `.nds-badge` com `.nds-font-mono`. Cada linha é uma `Citation`, com `ChatSource` inteiro no lugar da cadeia sem endereço da fonte, e `isSafeUrl` no ponto em que o endereço encosta no DOM. Nenhuma classe nova, e — ao contrário de `document-reference` — nenhuma nomeada como faltando: não há ícone por linha nem linha corrente. Se o produto quiser a pontuação em barra, ela é `.nds-context-display[data-form="bar"]` com outro denominador, que é a família 5 e não esta. Veio da família 3 — ver 5.3 |
+| `elicitation-form` | `approval-card` com um corpo de campos entre a pergunta e os controles. `.nds-approval-card-ask` leva o pedido em `.nds-approval-card-question` e o servidor em `.nds-approval-card-scope`, um par de termo e valor; os campos são `.nds-field-group` de `createFormField`, que já monta `<label for>`, já dá id à descrição e à mensagem de erro e já as costura no `aria-describedby` do controle; os controles são `.nds-approval-card-actions`, o mesmo espaço de `HTMLElement[]` que a família inteira usa. A fonte não guarda valor e não valida — `onAccept()` e `onDecline()` não recebem argumento —, então o que sobra dela é moldura, pergunta e espaço, que o cartão já é; esquema que virasse campo seria geração de formulário, e a §2 a mantém de fora. Os campos entram como IRMÃOS de `-ask`, nunca dentro: a região viva fecha antes deles (decisão 1 daquele bloco), e formulário recitado num anúncio é pior que botão recitado. **Falta uma opção, e está nomeada**: `createApprovalCard` não tem por onde receber um corpo — pede `fields?: HTMLElement[]` apensado entre `-ask` e `-actions`, onde a raiz já é a pilha e o `gap` dela já é o afastamento; nem classe nova, nem folha nova. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (69)
+### 5.2 As sete famílias novas (68)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -292,7 +293,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `schedule-card`, `checkpoint-history`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (16 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff` e `background-inbox` saíram para a 5.1, ver 5.3 —, **12 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `schedule-card`, `checkpoint-history`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (15 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox` e `elicitation-form` saíram para a 5.1, ver 5.3 —, **11 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (7 no catálogo — `document-reference` e `retrieval-chunks` saíram para a 5.1, ver 5.3 —, **7 componentes**) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
@@ -2452,9 +2453,250 @@ tem 5, 6 tem 8 e 7 tem 2 — **69** na 5.2. A 5.1 vai a **51** (49 linhas contad
 no arquivo, e duas delas carregam duas entradas). Somam 120. A família 7 fica com
 **2 componentes**, e as sete somam 63.
 
+**Vigésima correção, e a décima quarta que atravessa de 5.2 para 5.1**:
+`elicitation-form` é `approval-card` com um corpo de campos — e as duas contagens
+mudam junto, 69 → 68 e 51 → 52. É a terceira que colapsa numa peça da PRÓPRIA
+família 2 já construída, e a primeira em que a peça de destino é uma que a §7 já
+nomeia na mesma linha que a entrada.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`ElicitationState = "request" | "accepted" | "declined"`; `ElicitationField {
+name, label, value: string, kind: "text" | "choice" | "toggle", options?,
+required? }`; e no componente `server: string`, `message: string`, `fields:
+readonly ElicitationField[]`, `state`, `onAccept?: () => void`, `onDecline?: ()
+=> void` e `className`. Sete entradas no componente, DUAS chamadas de volta — e
+as duas **sem argumento nenhum**. A anatomia é um painel com quatro partes:
+cabeçalho com ícone de tomada e o nome do servidor; um parágrafo com o pedido;
+um contêiner com uma linha por campo; e um rodapé que leva os controles em
+`request` e é SUBSTITUÍDO inteiro por uma frase de confirmação em `accepted` e
+em `declined`.
+
+**A FONTE NÃO GUARDA VALOR NENHUM, e é essa medida que decide todo o resto.**
+Ela escreve de quem é o formulário: "you own the field list, the values inside
+it, and which of the two settled states it shows". As duas chamadas de volta não
+recebem argumento — `onAccept()` e `onDecline()` —, então o que a pessoa digitou
+nunca sai da peça: quem lê o campo é quem o montou. E a validação está do outro
+lado da fronteira também: barrar o envio com campo obrigatório vazio é da faixa
+de runtime, e é ela que "devolve erros de validação em vez de enviar". O
+componente standalone não valida, não guarda e não devolve. **O que ele faz com
+os campos é desenhá-los** — e desenhar campo é o que `field`, `form`, `input`,
+`textarea`, `select`, `radio-group`, `toggle-group` e `checkbox` já fazem nas
+cinco.
+
+Isso responde de saída o risco que a §2 põe nesta entrada, e responde pela
+fonte: um formulário que VALIDASSE, que guardasse valor, que soubesse o tipo de
+cada campo a partir de um esquema traria runtime junto — e a fonte já tirou os
+três de dentro dele. Esquema que vira campo é geração de formulário, não desenho
+de componente. Tirados o esquema e a política, o que sobra é uma moldura com uma
+pergunta, campos que quem monta põe, e dois controles — que é o cartão de
+autorização com um terceiro filho.
+
+Antes dos três testes, as três perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **O corpo de campos é desenho, ou é conteúdo? É conteúdo, e trocar o corpo de
+  uma peça por outro conteúdo é MONTAGEM**, que a §2 já entrega a quem consome.
+  O cartão de autorização não desenha os controles dele: recebe `HTMLElement[]`
+  prontos. Um corpo de campos é o mesmo contrato um degrau acima na marcação, e
+  a raiz já é a pilha que o acomoda.
+- **`kind` é vocabulário, ou é esquema? É esquema, e ele ESTREITA.** Três
+  espécies de campo onde o design system tem uma dúzia de primitivos de
+  formulário. Uma união que enumera espécies de campo não descreve conversa
+  nenhuma: descreve um gerador.
+- **O estado assentado é da pergunta, ou do produto? É do produto, e a §7 o põe
+  do lado de fora por escrito.** O que acontece depois de responder — se aparece
+  uma confirmação, se o cartão sai da tela, se a resposta vale para as próximas
+  — é a lista literal do que o cartão de autorização já recusa fazer, e o
+  docblock dele diz uma delas com todas as letras: a peça não se desabilita
+  depois de respondida.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montado inteiro, o formulário não deixa buraco — e a fonte
+  mesma já diz de que ele é feito, como a quinta, a sétima, a décima, a décima
+  primeira, a décima segunda, a décima quarta, a décima quinta, a décima sétima,
+  a décima oitava e a décima nona correções já leram nas suas: o painel, os
+  rótulos dos campos
+  e o botão de enviar leem os tokens compartilhados `paper`, `mono` e
+  `inkButton` de `surfaces.tsx`, e os campos leem `field`. Superfície
+  compartilhada declarada na origem — o oposto exato do que a nona leu em
+  `computer-use`.
+
+  A composição são três filhos da mesma pilha. `.nds-approval-card` é a moldura
+  de atenção e já é coluna com `gap`, então um terceiro filho entra sem regra
+  nova. `.nds-approval-card-ask` leva o pedido em `.nds-approval-card-question`,
+  que a folha já escreve em `--foreground` sobre a moldura de atenção, e o
+  servidor em `.nds-approval-card-scope`, um par de termo e valor — que é
+  exatamente o que aquela lista é, e a décima primeira e a décima segunda
+  correções já puseram cadeia técnica de agente em lugar equivalente. Os campos
+  são `.nds-field-group` de `createFormField`, que já monta `<label for>`, já dá
+  id à descrição e à mensagem de erro e já as costura no `aria-describedby` do
+  controle. E o rodapé é `.nds-approval-card-actions`, o espaço de
+  `HTMLElement[]` que a §2 fixou para a família inteira. Nenhuma classe nova,
+  nenhuma nomeada como faltando.
+
+  Há UM buraco, e ele é de OPÇÃO, não de classe, como o da sétima e o da décima
+  quarta correções: `createApprovalCard` monta `-ask` e `-actions` por dentro e
+  não tem por onde receber um corpo. A composição pede **uma opção**
+  `fields?: HTMLElement[]`, apensada entre os dois — a raiz já é a pilha, o
+  afastamento já é o `gap` dela, e os campos trazem o próprio agrupamento em
+  `.nds-field-group`. É o mesmo contrato de espaço que a §2 fixou para a família,
+  na mesma forma do `actions?` que a sétima nomeou para o `code-block` e do
+  `railEnd?` que a décima quarta nomeou para o composer. É o que a 5.1 manda
+  nomear, e está nomeado lá.
+
+  E o LUGAR dessa opção é decisão de acessibilidade, não de ordem: os campos
+  entram como IRMÃOS de `-ask`, nunca dentro dela. A decisão 1 daquele bloco
+  fecha a região viva antes dos controles porque "botão dentro de anúncio é
+  rótulo recitado que ninguém pode apertar dali", e campo dentro de anúncio é
+  pior — o anúncio recita o formulário inteiro justamente na hora em que ele
+  precisa ser respondido. A decisão 3 já fixa a ordem da marcação: pergunta,
+  alcance, controles; o corpo entra entre o alcance e os controles, que é onde o
+  olho e a tabulação já o esperam.
+
+  Três traços a composição não reproduz, os três por decisão já escrita. O
+  **ícone de tomada** ao lado do nome do servidor é ícone que repete a palavra
+  vizinha, que a sexta correção já recusou. O **asterisco** do campo obrigatório
+  é glifo, e glifo não chega a quem ouve (regra 7 da §8, WCAG 1.1.1) —
+  obrigatoriedade é `required` no controle, que o campo do design system já
+  carrega. E o **campo de alternância lendo verdade da cadeia literal `"true"`**
+  é o componente decidindo o que uma cadeia significa, que é a mesma classe de
+  decisão que esta família tirou dos componentes quando fixou que valor formatado
+  chega escrito.
+
+  Onde fonte e composição DISCORDAM, a composição está mais fina, como na
+  oitava, na décima primeira, na décima quarta, na décima quinta e na décima
+  sétima — e aqui no que mais custa: **a fonte não anuncia a pergunta.** Não há
+  região viva no painel, e uma pergunta é um impasse dos dois lados, que é
+  exatamente o motivo pelo qual a decisão 1 do cartão de autorização abriu a
+  terceira exceção desta folha. Pergunta que aparece e não se anuncia é pergunta
+  que ninguém responde: quem não vê a tela fica esperando uma resposta que está
+  esperando por ela.
+
+- **Estado, não.** É o parágrafo do sinal, e ele decide sozinho — com uma forma
+  que a tabela ainda não tinha. `"request" | "accepted" | "declined"` são três
+  palavras, e só a primeira é do vocabulário: `request` é `ToolCallState`
+  `pending`, exatamente, e a folha já escreveu que o cartão de autorização É o
+  outro lado dele — `waitsForPerson` é verdadeiro só ali. As outras duas não são
+  estados da PERGUNTA: são o que acontece depois de respondê-la, que é a §7
+  inteira. E o que se perde não é pouco: `running` — a resposta enviada, com o
+  servidor trabalhando nela — e `failed` — a resposta recusada. A fonte admite
+  `failed` na própria faixa de runtime, que "devolve erros de validação em vez de
+  enviar", e não o desenha em lugar nenhum: um formulário cujo envio pode ser
+  recusado e que não tem desenho para a recusa. Vale medir a perda contra a irmã
+  em que a peça colapsa: o cartão de autorização não tem máquina de estados
+  NENHUMA de propósito — a folha removeu todo eixo de estado —, e quem carrega o
+  estado é a chamada, no grupo, de onde ela sai quando deixa `pending`. Aqui a
+  fonte trouxe um eixo de estado de volta para dentro da pergunta, e o trouxe
+  pela metade.
+
+- **Vocabulário, não, e ele ESTREITA duas vezes.** `ElicitationField { name,
+  label, value, kind, options?, required? }` não é vocabulário de conversa: é o
+  descritor de um campo de formulário, e o design system já o tem — `name`,
+  `label`, `required` e a descrição são o que `createFormField` recebe, e
+  `options` é o que `select`, `radio-group` e `toggle-group` recebem. Um tipo
+  compartilhado para isso não seria protocolo; seria uma segunda declaração da
+  API de formulário do sistema, escrita em `chat-protocol.ts`, longe de onde ela
+  é usada. E os dois estreitamentos são a sexta forma do sinal, que a décima
+  sexta correção acrescentou:
+
+  - `kind: "text" | "choice" | "toggle"` são três espécies onde o design system
+    tem `input`, `textarea`, `number-field`, `input-otp`, `select`, `combobox`,
+    `radio-group`, `checkbox`, `switch`, `slider`, `toggle-group` e
+    `tags-input`. Conte os valores que o tipo deixa de poder expressar: uma
+    resposta longa, um número, uma data, uma escolha múltipla. E o custo não
+    para no alcance — um componente que traduz `kind` em controle é gerador de
+    formulário, e a §2 é literal a respeito.
+  - `value: string` faz o trabalho dos três de uma vez, e a fonte diz o preço:
+    no campo de alternância ela lê a verdade da cadeia literal `"true"`.
+    Booleano estreitado a cadeia de exibição, com o componente decidindo o que a
+    cadeia significa.
+
+  `server` e `message` são cadeias soltas: a primeira é dado de produto, que a
+  §7 entrega a quem monta, como a etiqueta de política da décima e a tabela de
+  faixas da oitava; a segunda é a pergunta, e a folha já a tem. É a distância
+  inteira para `computer-use`, que sobreviveu por ter `x` e `y` sem par em lugar
+  nenhum: aqui todo campo tem par, e quase todos têm par na mesma folha ou na
+  folha de formulário.
+
+E o teste da família, que é o quarto: **ela responde ao eixo, e responde pela
+mesma amarra que segura a peça em que colapsa.** Diz o que está acontecendo — a
+máquina parou e espera por uma pessoa —, e essa é a amarra que a quinta correção
+nomeou ao comparar `agent-card` com o cartão de autorização: não há máquina de
+estados, mas há uma chamada de pé, esperando. Não diz há quanto tempo, e não
+deve: a decisão 4 daquele bloco já recusou o relógio, porque uma pergunta com
+prazo se responde pelo silêncio e o que o silêncio significa é política de
+produto. E o que fazer a respeito é o espaço de controles, que já é o mesmo. É a
+mesma leitura da sexta, da sétima, da décima primeira, da décima segunda, da
+décima quarta, da décima quinta e da décima sétima: `elicitation-form` não sai
+por não pertencer à família — sai por já estar construída dentro dela.
+
+**E POR QUE MIGRA EM VEZ DE SER ABSORVIDA**, que é a pergunta que esta entrada
+obriga a responder, porque a peça de destino já absorveu uma. `permission-grant`
+foi absorvida na quarta correção pelo critério escrito lá: teria "a mesma
+marcação, o mesmo vocabulário (nenhum) e a mesma docs page, com outro título" —
+nada a acrescentar, nada a compor. Aqui não é o caso, e a diferença se mede em
+dois lugares: a composição precisa de uma opção nova no cartão, e traz para
+dentro dele uma família de primitivos que ele não conhece — `field`, `form` e os
+controles. Uma docs page desta entrada mostraria `.nds-field-group` e
+`createFormField`, que a docs page do cartão de autorização não mostra e não
+deve mostrar. **Absorção é para quem não acrescenta nada; a 5.1 é para quem
+compõe mais de uma peça** — foi por isso que `tool-timeline` foi para a 5.1
+sendo `tool-group` aberto, em vez de ser absorvida por ele.
+
+**As reversibilidades que apontavam para cá, respondidas:**
+
+- **`guardrail-notice` (décima) CONFIRMA, e não desdobra.** A condição era
+  recusa com desenho, estado ou vocabulário próprios: uma parada que chegue como
+  DADO em vez de decisão de quem monta, um estado de recusa que `RunStatus` não
+  modele, ou alternativa que seja resposta a uma pergunta de pé em vez de
+  próximo pedido. As três ficam mudas, e a terceira pelo motivo mais forte:
+  **esta entrada É a pergunta de pé**, e não tem alternativa nenhuma — não há
+  lista de próximos pedidos, há dois controles. `declined` parece a primeira
+  condição e não é: ele não é uma parada de política que chegue como dado, é o
+  registro de que a pergunta foi respondida, que a §7 já mantém do lado de fora
+  nas duas peças. E não é estado que `RunStatus` não modele: quem recusa é uma
+  pessoa, e pessoa que interrompe é `stopped`, "o mais literal dos cinco".
+- **`background-inbox` (décima sétima) CONFIRMA.** A condição era trabalho em
+  segundo plano com ponto de entrada que saia da conversa, estado por execução
+  que `RunStatus` não modele, ou não-lido chegando como vocabulário. Nenhum dos
+  três: aqui não há segundo plano nenhum — a máquina parou e está esperando na
+  frente de quem lê —, não há lista, e não há nada por ler depois.
+- **`permission-grant` (quarta) não é tocada.** A condição era diferença de
+  desenho, estado ou vocabulário aparecer numa peça vizinha. A diferença que
+  apareceu é um terceiro filho e uma opção, e ela não separa uma concessão de
+  permissão de uma autorização: as duas continuam sendo pergunta, alcance e
+  controles, sem corpo. Opção que a concessão não usa não a torna outra peça.
+
+**Reversível**, como as outras dezenove: se ao construir `schedule-card` ou
+`checkpoint-history` — as duas que faltam na família — aparecer pergunta com
+corpo de desenho, estado ou vocabulário próprios: um corpo que não caiba na
+pilha do cartão sem regra nova além da opção nomeada, um estado da pergunta que
+`ToolCallState` não modele, ou o que se responde chegando como VOCABULÁRIO em
+vez de campo do sistema —, `elicitation-form` desdobra de volta para a 5.2, com
+o motivo. E há um segundo gatilho, deste lado: se o cartão de autorização
+precisar de desenho próprio para hospedar um corpo — e não só da opção e do
+`.nds-field-group` que já agrupa —, o formulário vira variante DELE, e continua
+não sendo peça.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 15, 3 tem 7, 4 tem 20, 5 tem 5, 6 tem 8 e 7 tem 2 — **68** na 5.2.
+A 5.1 vai a **52** (50 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. A família 2 fica com **11 componentes**, e as sete somam
+62.
+
+E um registro de método, porque três portas escreveram nesta seção no mesmo dia
+e as três mexeram nas mesmas duas contagens: **o cabeçalho não é fonte, a tabela
+é.** Houve uma janela em que a 5.1 e a 5.2 discordavam das próprias tabelas em
+uma entrada cada, nos dois sentidos — de modo que o total continuava fechando em
+120 e nada denunciava o descompasso. É exatamente o que a décima primeira
+correção mandou fazer para pegar esse erro, e vale como regra e não como
+anedota: some família a família antes de escrever o número, mesmo quando o
+cabeçalho parece certo.
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
-Apareceu nove vezes: **sete** como achatamento, sempre igual, e **duas** pelo
+Apareceu dez vezes: **oito** como achatamento, sempre igual, e **duas** pelo
 avesso — `mobile-composer` e `read-aloud` —, que são as que fecham a sub-regra. Por isso vira critério:
 **booleano onde este vocabulário já tem cinco palavras.**
 
@@ -2467,9 +2709,10 @@ avesso — `mobile-composer` e `read-aloud` —, que são as que fecham a sub-re
 | `agent-handoff` | `settled: boolean` — e os dois desenhos diferem só em cor e opacidade | `idle`, `stopped`, `failed` |
 | `background-inbox` | `state = running\|ready\|failed` — e `ready` é `complete` renomeada | `idle`, `stopped` |
 | `retrieval-chunks` | `searching: boolean` — e a faixa de runtime da própria fonte declara quatro palavras | `idle`, `stopped`, `failed` |
+| `elicitation-form` | `state = request\|accepted\|declined` — e só `request` é do vocabulário | `running`, `failed` |
 
-Nas sete, o achatamento não é economia — é sinal de que a entrada foi
-desenhada para uma tela só, sem o vocabulário que a família já tem. E as sete
+Nas oito, o achatamento não é economia — é sinal de que a entrada foi
+desenhada para uma tela só, sem o vocabulário que a família já tem. E as oito
 colapsaram pelos testes normais; o booleano só chegou antes.
 
 **A quarta é o limite da forma**, medida na décima primeira correção, e vale
@@ -2615,6 +2858,27 @@ base: `onRateChange?: () => void` não devolve a velocidade escolhida, onde a ba
 tem um `<select>` sobre `rates: number[]` que carrega o valor. Vale o mesmo
 alargamento: **o estreitamento se mede contra o que já está construído, e não só
 contra `chat-protocol.ts`.**
+
+**Décima aparição, e a oitava que é achatamento, medida na vigésima
+correção**: `elicitation-form` declara três palavras, e só a primeira é do
+vocabulário — `request` é `ToolCallState` `pending`. As outras duas não são
+estados da peça: são o que acontece depois de respondê-la, que é a §7. Perde
+`running` e `failed`, e `failed` é o caso em que a fonte se contradiz sozinha —
+a faixa de runtime dela devolve erro de validação em vez de enviar, e a forma
+standalone não tem desenho nenhum para a recusa. **Estado que a própria fonte
+produz e não desenha é estado que ela não tem**, e é a terceira vez seguida,
+depois do agregado da décima sétima e das quatro palavras que a décima oitava
+achou na faixa de runtime, que o defeito se mede DENTRO da fonte e não só contra
+o vocabulário.
+
+E nela o estreitamento vem junto, na sexta forma que a décima sexta acrescentou,
+e desta vez sobre uma união que não é de estados: `kind: "text" | "choice" |
+"toggle"` são três espécies de campo onde o design system tem uma dúzia de
+primitivos de formulário. Ao contar os valores que o tipo deixa de expressar,
+conte também os que ele deixa de MONTAR — uma resposta longa, um número, uma
+data, uma escolha múltipla. E quando a união enumera espécies de CONTROLE em vez
+de estados, o que ela descreve não é vocabulário: é um gerador de formulário, que
+a §2 já mantém do lado de fora.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
