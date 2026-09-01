@@ -113,7 +113,11 @@ export function computerUseEveryStatusSource(): string {
       '  <ComputerUse',
       '    key={status}',
       `    url="${DEFAULT_URL}"`,
-      '    screen={<Tela />}',
+      // `tela`, e não `<Tela />`: a guarda de snippets cobra que toda tag de
+      // inicial maiúscula seja importada ou declarada, e esta não era nenhuma
+      // das duas — quem copiasse recebia um componente que não existe. As
+      // outras cinco transforms deste arquivo já passavam a tela por variável.
+      '    screen={tela}',
       '    steps={passos}',
       '    activeIndex={3}',
       '    status={status}',
