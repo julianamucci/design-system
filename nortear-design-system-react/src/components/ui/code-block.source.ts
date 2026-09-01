@@ -131,6 +131,58 @@ export function codeBlockPaletteSource(): string {
 }
 
 /**
+ * Trecho de diferencial: a segunda linha sai e a terceira entra no lugar dela.
+ *
+ * É o menor trecho em que as TRÊS espécies convivem — sem a linha de contexto
+ * ao lado das duas marcadas, o exemplo não mostraria que a linha inalterada
+ * continua sem marca e sem palavra.
+ */
+const DIFF_CODE = `const items = await load();
+const total = items.length;
+const total = items.filter(Boolean).length;
+render(items, total);`;
+
+/**
+ * Espécie por linha.
+ *
+ * Forma própria, e não a transform do meta, porque `lineKinds` é indexado por
+ * LINHA: o exemplo só ensina alguma coisa se a lista e o trecho aparecerem
+ * juntos, e um trecho vindo dos controls os separaria.
+ */
+export function codeBlockLineKindsSource(): string {
+  return jsxSnippet(
+    cabecalhoCom(DIFF_CODE),
+    tagCodeBlock([
+      propText("language", "ts"),
+      'lineKinds={["context", "removed", "added", "context"]}',
+    ]),
+  );
+}
+
+/**
+ * Fila de controles no cabeçalho.
+ *
+ * O que o exemplo ensina é a ORDEM: quem compõe entrega os controles e o
+ * componente os põe ANTES do copiar, que segue ancorado no canto do bloco
+ * (WCAG 3.2.4). Forma própria porque a prop recebe marcação, e marcação não
+ * cabe num control do painel.
+ */
+export function codeBlockHeaderActionsSource(): string {
+  return jsxSnippet(
+    `${IMPORT}
+import { Button } from "@/components/ui/button";
+
+const source = \`${literalDeTemplate(CODE_BASE)}\`;`,
+    `<CodeBlock
+  code={source}
+  language="ts"
+  title="lista.ts"
+  actions={<Button variant="ghost" size="sm">Executar</Button>}
+/>`,
+  );
+}
+
+/**
  * Bloco que sai da tela. A story existe para provar que o temporizador do
  * "Copiado!" é cancelado no unmount — o que se ensina aqui é a montagem
  * condicional, porque a limpeza é do componente e não pede nada de quem usa.

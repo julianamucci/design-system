@@ -87,6 +87,66 @@ export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
 }
 
 /**
+ * Trecho de diferencial das stories de espécie de linha.
+ *
+ * A segunda linha sai e a terceira entra no lugar dela — é o menor trecho em
+ * que as TRÊS espécies convivem, e sem as três a story não mostraria que a
+ * linha inalterada continua sem marca e sem palavra.
+ */
+const DIFF_CODE = [
+  'const items = await load();',
+  'const total = items.length;',
+  'const total = items.filter(Boolean).length;',
+  'render(items, total);',
+].join('\n');
+
+/**
+ * Espécie por linha.
+ *
+ * Forma própria, e não `codeBlockSourceWith`, porque `lineKinds` é indexado por
+ * LINHA: o snippet só ensina alguma coisa se a lista e o trecho aparecerem
+ * juntos, e um trecho vindo dos controls do Playground os separaria.
+ */
+export function codeBlockLineKindsSource(): string {
+  const lines = options([
+    ['code', 'source'],
+    ['language', text('ts')],
+    ['lineKinds', "['context', 'removed', 'added', 'context']"],
+  ]);
+
+  return snippet(
+    importing('code-block', 'createCodeBlock'),
+    `const source = ${codeLiteral(DIFF_CODE)};`,
+    `const bloco = ${callLine('createCodeBlock', lines)};`,
+    appendLine('bloco'),
+  );
+}
+
+/**
+ * Fila de controles no cabeçalho.
+ *
+ * O que o exemplo ensina é a ORDEM: quem compõe entrega os controles e a
+ * fábrica os põe ANTES do copiar, que segue ancorado no canto do bloco. Forma
+ * própria porque `actions` recebe elementos, e elemento não cabe num control do
+ * Playground.
+ */
+export function codeBlockHeaderActionsSource(): string {
+  const lines = options([
+    ['code', 'source'],
+    ['language', text('ts')],
+    ['title', text('lista.ts')],
+    ['actions', `[createButton({ variant: 'ghost', size: 'sm', label: 'Executar' })]`],
+  ]);
+
+  return snippet(
+    [importing('code-block', 'createCodeBlock'), importing('button', 'createButton')].join('\n'),
+    `const source = ${codeLiteral(TRECHO_DEFAULT)};`,
+    `const bloco = ${callLine('createCodeBlock', lines)};`,
+    appendLine('bloco'),
+  );
+}
+
+/**
  * O mesmo bloco, mais a saída dele da página.
  *
  * Forma própria porque o assunto da story é o que acontece DEPOIS: a

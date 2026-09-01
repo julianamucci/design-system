@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  codeBlockHeaderActionsSource,
+  codeBlockLineKindsSource,
   codeBlockPaletteSource,
   codeBlockRemovivelSource,
   codeBlockSource,
@@ -71,5 +73,22 @@ describe('transforms das stories de paleta e de remoção', () => {
     expect(saida).toContain('let visivel = $state(true);');
     expect(saida).toContain('{#if visivel}');
     expect(saida).toContain('<CodeBlock code={source} language="ts" />');
+  });
+});
+
+describe('transforms das opções de espécie e de fila', () => {
+  it('a lista de espécies aparece junto do trecho que ela indexa', () => {
+    const saida = codeBlockLineKindsSource();
+    expect(saida).toContain(`lineKinds={['context', 'removed', 'added', 'context']}`);
+    // Uma entrada por linha: lista e trecho precisam ter o mesmo comprimento,
+    // senão o exemplo ensina uma classificação que não fecha.
+    expect(saida).toContain('const total = items.filter(Boolean).length;');
+  });
+
+  it('a fila do cabeçalho vem pelo encaixe, com o botão importado', () => {
+    const saida = codeBlockHeaderActionsSource();
+    expect(saida).toContain('import { Button } from "@/components/ui/button";');
+    expect(saida).toContain('{#snippet actions()}');
+    expect(saida).toContain('<Button variant="ghost" size="sm">Executar</Button>');
   });
 });

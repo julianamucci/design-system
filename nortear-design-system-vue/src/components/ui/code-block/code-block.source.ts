@@ -103,6 +103,57 @@ export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) =>
   );
 };
 
+/**
+ * Trecho de diferencial: a segunda linha sai e a terceira entra no lugar dela.
+ *
+ * É o menor trecho em que as TRÊS espécies convivem — sem a linha de contexto
+ * ao lado das duas marcadas, o exemplo não mostraria que a linha inalterada
+ * continua sem marca e sem palavra.
+ */
+const DIFF_CODE = `const items = await load();
+const total = items.length;
+const total = items.filter(Boolean).length;
+render(items, total);`
+
+/**
+ * Espécie por linha.
+ *
+ * Forma própria, e não a transform do meta, porque `lineKinds` é indexado por
+ * LINHA: o exemplo só ensina alguma coisa se a lista e o trecho aparecerem
+ * juntos, e um trecho vindo dos controls os separaria.
+ */
+export function codeBlockLineKindsSource(): string {
+  return vueSnippet(
+    `${IMPORT}\n\nconst source = ${codeLiteral(DIFF_CODE)}`,
+    block('source', [
+      attr('language', 'ts'),
+      `:line-kinds="['context', 'removed', 'added', 'context']"`,
+    ]),
+  )
+}
+
+/**
+ * Fila de controles no cabeçalho.
+ *
+ * O que o exemplo ensina é a ORDEM: quem compõe entrega os controles pelo
+ * encaixe nomeado e o componente os põe ANTES do copiar, que segue ancorado no
+ * canto do bloco (WCAG 3.2.4). Forma própria porque encaixe não é atributo, e
+ * a transform do meta só sabe montar atributos.
+ */
+export function codeBlockHeaderActionsSource(): string {
+  return vueSnippet(
+    `import { Button } from '@/components/ui/button'
+${IMPORT}
+
+const source = ${codeLiteral(CODE_DEFAULT)}`,
+    `<CodeBlock :code="source" language="ts" title="lista.ts">
+  <template #actions>
+    <Button variant="ghost" size="sm">Executar</Button>
+  </template>
+</CodeBlock>`,
+  )
+}
+
 const PALETTE_TRECHOS = `const trechos = [
   {
     language: 'ts',

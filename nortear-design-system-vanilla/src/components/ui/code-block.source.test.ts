@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   codeBlockWithRemovalSnippet,
+  codeBlockHeaderActionsSource,
+  codeBlockLineKindsSource,
   codeBlockSnippet,
   codeBlockSource,
   codeBlockSourceWith,
@@ -69,6 +71,24 @@ describe('codeBlockSnippet', () => {
     const code = codeBlockSnippet({ code: 'const s = `${x}`;' });
     expect(code).toContain('\\`');
     expect(code).toContain('\\${');
+  });
+});
+
+describe('codeBlockLineKindsSource', () => {
+  it('mostra a lista de espécies junto do trecho que ela indexa', () => {
+    const code = codeBlockLineKindsSource();
+    expect(code).toContain("lineKinds: ['context', 'removed', 'added', 'context']");
+    // Uma entrada por linha: lista e trecho precisam ter o mesmo comprimento,
+    // senão o exemplo ensina uma classificação que não fecha.
+    expect(code).toContain('const total = items.filter(Boolean).length;');
+  });
+});
+
+describe('codeBlockHeaderActionsSource', () => {
+  it('ensina a importar o botão que ele monta na fila', () => {
+    const code = codeBlockHeaderActionsSource();
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain("actions: [createButton({ variant: 'ghost', size: 'sm', label: 'Executar' })]");
   });
 });
 

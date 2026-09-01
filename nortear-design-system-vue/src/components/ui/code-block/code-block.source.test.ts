@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  codeBlockHeaderActionsSource,
+  codeBlockLineKindsSource,
   codeBlockPaletteSource,
   codeBlockRemovidoSource,
   codeBlockRolagemSource,
@@ -173,12 +175,29 @@ describe('transforms das stories de composição própria', () => {
     expect(saida).not.toContain('clearTimeout');
   });
 
+  it('a lista de espécies aparece junto do trecho que ela indexa', () => {
+    const saida = codeBlockLineKindsSource();
+    expect(saida).toContain(`:line-kinds="['context', 'removed', 'added', 'context']"`);
+    // Uma entrada por linha: lista e trecho precisam ter o mesmo comprimento,
+    // senão o exemplo ensina uma classificação que não fecha.
+    expect(saida).toContain('const total = items.filter(Boolean).length;');
+  });
+
+  it('a fila do cabeçalho vem pelo encaixe nomeado, com o botão importado', () => {
+    const saida = codeBlockHeaderActionsSource();
+    expect(saida).toContain(`import { Button } from '@/components/ui/button'`);
+    expect(saida).toContain('<template #actions>');
+    expect(saida).toContain('<Button variant="ghost" size="sm">Executar</Button>');
+  });
+
   it('nenhum snippet carrega valor de design em style inline', () => {
     for (const saida of [
       codeBlockSource(),
       codeBlockPaletteSource(),
       codeBlockRolagemSource(),
       codeBlockRemovidoSource(),
+      codeBlockLineKindsSource(),
+      codeBlockHeaderActionsSource(),
     ]) {
       expect(saida).not.toContain('style="');
     }

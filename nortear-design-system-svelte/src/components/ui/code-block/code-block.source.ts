@@ -61,6 +61,52 @@ export function codeBlockSource(_gerado?: string, ctx?: { args?: Partial<CodeBlo
 }
 
 /**
+ * Story `WithLineKinds`: espécie por linha.
+ *
+ * Forma própria, e não a transform do meta, porque `lineKinds` é indexado por
+ * LINHA — o exemplo só ensina alguma coisa se a lista e o trecho aparecerem
+ * juntos, e um trecho vindo dos controls os separaria. Aqui o trecho entra
+ * inteiro, ao contrário de `FONTE`: são as quatro linhas que a lista classifica.
+ */
+export function codeBlockLineKindsSource(): string {
+  return svelteSnippet(
+    `${IMPORT}
+
+const source = \`const items = await load();
+const total = items.length;
+const total = items.filter(Boolean).length;
+render(items, total);\`;`,
+    block([
+      'code={source}',
+      'language="ts"',
+      `lineKinds={['context', 'removed', 'added', 'context']}`,
+    ]),
+  );
+}
+
+/**
+ * Story `WithHeaderActions`: fila de controles no cabeçalho.
+ *
+ * O que o exemplo ensina é a ORDEM: quem compõe entrega os controles pelo
+ * encaixe e o componente os põe ANTES do copiar, que segue ancorado no canto do
+ * bloco (WCAG 3.2.4). Forma própria porque encaixe não é atributo, e a
+ * transform do meta só sabe montar atributos.
+ */
+export function codeBlockHeaderActionsSource(): string {
+  return svelteSnippet(
+    `${IMPORT}
+import { Button } from "@/components/ui/button";
+
+${FONTE}`,
+    `<CodeBlock code={source} language="ts" title="lista.ts">
+  {#snippet actions()}
+    <Button variant="ghost" size="sm">Executar</Button>
+  {/snippet}
+</CodeBlock>`,
+  );
+}
+
+/**
  * Stories `LightPalette` e `DarkPalette`: vários blocos empilhados, um por
  * linguagem, mais um com linha em destaque — os dois fundos que a paleta de
  * sintaxe precisa atravessar.

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  codeBlockHeaderActionsSource,
+  codeBlockLineKindsSource,
   codeBlockPaletteSource,
   codeBlockRemovivelSource,
   codeBlockRolagemSource,
@@ -11,6 +13,8 @@ const ALL = [
   codeBlockRolagemSource,
   codeBlockPaletteSource,
   codeBlockRemovivelSource,
+  codeBlockLineKindsSource,
+  codeBlockHeaderActionsSource,
 ];
 
 describe('codeBlockSource', () => {
@@ -99,6 +103,24 @@ describe('overrides de story', () => {
     expect(saida).toContain('{visivel && <CodeBlock code={source} language="ts" />}');
     expect(saida).toContain('<Button variant="outline"');
     expect(saida).not.toContain('setTimeout');
+  });
+});
+
+describe('codeBlockLineKindsSource', () => {
+  it('mostra a lista de espécies junto do trecho que ela indexa', () => {
+    const saida = codeBlockLineKindsSource();
+    expect(saida).toContain('lineKinds={["context", "removed", "added", "context"]}');
+    // Uma entrada por linha: lista e trecho precisam ter o mesmo comprimento,
+    // senão o exemplo ensina uma classificação que não fecha.
+    expect(saida).toContain('const total = items.filter(Boolean).length;');
+  });
+});
+
+describe('codeBlockHeaderActionsSource', () => {
+  it('ensina a importar o botão que ele monta na fila', () => {
+    const saida = codeBlockHeaderActionsSource();
+    expect(saida).toContain('import { Button } from "@/components/ui/button";');
+    expect(saida).toContain('actions={<Button variant="ghost" size="sm">Executar</Button>}');
   });
 });
 

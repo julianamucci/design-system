@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect } from 'storybook/test';
+import { expect, userEvent } from 'storybook/test';
 import { createCodeBlock } from './code-block';
-import { codeBlockSource, codeBlockSourceWith } from './code-block.source';
+import { createButton } from './button';
+import {
+  codeBlockHeaderActionsSource,
+  codeBlockLineKindsSource,
+  codeBlockSource,
+  codeBlockSourceWith,
+} from './code-block.source';
 import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -44,6 +50,24 @@ const RANGE_CODE = [
 
 const FOOTER_NOTE = 'A ação de copiar leva apenas o código.';
 
+/**
+ * Trecho de diferencial: a segunda linha sai e a terceira entra no lugar dela.
+ *
+ * É o menor trecho em que as TRÊS espécies convivem — sem a linha de contexto
+ * ao lado das duas marcadas, a story não mostraria que a linha inalterada
+ * continua sem marca e sem palavra.
+ */
+const DIFF_CODE = `const items = await load();
+const total = items.length;
+const total = items.filter(Boolean).length;
+render(items, total);`;
+
+/** Espécie de cada linha de `DIFF_CODE`, na ordem em que elas aparecem. */
+const DIFF_KINDS = ['context', 'removed', 'added', 'context'] as const;
+
+/** Texto visível do controle que a composição acrescenta ao cabeçalho. */
+const RUN_LABEL = 'Executar';
+
 const root = (canvasElement: HTMLElement): HTMLElement =>
   canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
 
@@ -52,6 +76,30 @@ const linesChecked = (canvasElement: HTMLElement): number[] =>
   [...root(canvasElement).querySelectorAll('.nds-code-block-line')]
     .map((el, i) => (el.getAttribute('data-highlighted') === 'true' ? i + 1 : 0))
     .filter((n) => n > 0);
+
+/** Botões da fila do cabeçalho, na ordem em que o DOM os traz. */
+const headerControls = (canvasElement: HTMLElement): HTMLButtonElement[] => [
+  ...root(canvasElement).querySelectorAll<HTMLButtonElement>('.nds-code-block-actions button'),
+];
+
+/** Espécie declarada em cada linha, na ordem do trecho. */
+const lineKindsOf = (canvasElement: HTMLElement): Array<string | null> =>
+  [...root(canvasElement).querySelectorAll('.nds-code-block-line')].map((el) =>
+    el.getAttribute('data-kind'),
+  );
+
+/** O que a calha MOSTRA, sem a palavra que só o leitor de tela recebe. */
+const gutterMarks = (canvasElement: HTMLElement): string[] =>
+  [...root(canvasElement).querySelectorAll('.nds-code-block-gutter')].map((el) => {
+    const word = el.querySelector('.nds-sr-only')?.textContent ?? '';
+    return (el.textContent ?? '').replace(word, '').trim();
+  });
+
+/** O que a calha ANUNCIA. Vazio na linha de contexto, que não fala. */
+const gutterWords = (canvasElement: HTMLElement): string[] =>
+  [...root(canvasElement).querySelectorAll('.nds-code-block-gutter')].map(
+    (el) => el.querySelector('.nds-sr-only')?.textContent ?? '',
+  );
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
@@ -202,6 +250,91 @@ export const WithoutFooter: Story = {
     await step('Sem observação o bloco não cria a faixa inferior', async () => {
       // Faixa vazia deixaria uma borda solta abaixo do código.
       await expect(root(canvasElement).querySelector('.nds-code-block-footer')).toBeNull();
+    });
+  },
+};
+
+export const WithHeaderActions: Story = {
+  parameters: {
+    // Forma própria: `actions` recebe elementos, e elemento não cabe num
+    // control do Playground — o snippet do meta esconderia a opção inteira.
+    docs: { source: { transform: codeBlockHeaderActionsSource } },
+  },
+  render: () =>
+    createCodeBlock({
+      code: COMPOSITION_CODE,
+      language: 'ts',
+      title: 'lista.ts',
+      actions: [createButton({ variant: 'ghost', size: 'sm', label: RUN_LABEL })],
+    }),
+  play: async ({ canvasElement, step }) => {
+    await step('Os controles de quem compõe entram na fila, antes do copiar', async () => {
+      const controls = headerControls(canvasElement);
+      await expect(controls).toHaveLength(2);
+      await expect(controls[0]).toHaveTextContent(RUN_LABEL);
+      // O copiar segue ANCORADO no fim da fila: quem aprendeu que ele é o
+      // último controle do cabeçalho continua com essa verdade quando a
+      // composição acrescenta outro (WCAG 3.2.4).
+      await expect(controls[1]).toHaveAttribute('data-slot', 'code-block-copy');
+    });
+
+    await step('A ordem de foco segue a visual', async () => {
+      // O foco é posto na mão a cada rodada, e não herdado do passo anterior: o
+      // painel Interactions reexecuta no MESMO DOM, e um Tab que partisse de
+      // onde a rodada passada parou inverteria o resultado na segunda vez.
+      const controls = headerControls(canvasElement);
+      controls[0].focus();
+      await userEvent.tab();
+      await expect(controls[1]).toHaveFocus();
+    });
+
+    await step('O rótulo do arquivo continua no cabeçalho, ao lado da fila', async () => {
+      await expect(root(canvasElement).querySelector('.nds-code-block-title')).toHaveTextContent(
+        'lista.ts',
+      );
+    });
+  },
+};
+
+export const WithLineKinds: Story = {
+  parameters: {
+    // `lineKinds` é indexado por linha: o snippet só ensina alguma coisa com a
+    // lista e o trecho juntos, e o do meta separaria os dois.
+    docs: { source: { transform: codeBlockLineKindsSource } },
+  },
+  render: () => createCodeBlock({ code: DIFF_CODE, language: 'ts', lineKinds: DIFF_KINDS }),
+  play: async ({ canvasElement, step }) => {
+    await step('Cada linha carrega a espécie que a entrada declarou', async () => {
+      await expect(root(canvasElement)).toHaveAttribute('data-line-kinds', 'true');
+      await expect(lineKindsOf(canvasElement)).toEqual([...DIFF_KINDS]);
+    });
+
+    await step('A calha troca o número pelo sinal, e o sinal é lido', async () => {
+      await expect(gutterMarks(canvasElement)).toEqual(['', '−', '+', '']);
+      // Contexto não fala: marca vazia e palavra vazia. Anunciar "contexto" em
+      // cada linha inalterada tornaria o bloco ilegível por voz.
+      await expect(gutterWords(canvasElement)).toEqual([
+        '',
+        'Linha removida',
+        'Linha adicionada',
+        '',
+      ]);
+      // Número de linha é redundante com a posição e sai da leitura; sinal de
+      // diferencial não é redundante com nada, e por isso a calha deixa de ser
+      // aria-hidden no modo de espécie.
+      const gutter = root(canvasElement).querySelectorAll('.nds-code-block-gutter')[2];
+      await expect(gutter).not.toHaveAttribute('aria-hidden');
+    });
+
+    await step('A distinção não é só cor', async () => {
+      // Barra de acento na lateral além do fundo, nas duas espécies marcadas — e
+      // nenhuma na de contexto, senão a barra deixaria de distinguir (WCAG 1.4.1).
+      const lines = [
+        ...root(canvasElement).querySelectorAll<HTMLElement>('.nds-code-block-line'),
+      ];
+      await expect(getComputedStyle(lines[1]).boxShadow).not.toBe('none');
+      await expect(getComputedStyle(lines[2]).boxShadow).not.toBe('none');
+      await expect(getComputedStyle(lines[0]).boxShadow).toBe('none');
     });
   },
 };
