@@ -106,21 +106,39 @@ function ResizablePanelGroup({
   )
 }
 
+/**
+ * Nome acessível do painel que rola. Sem padrão, de propósito.
+ *
+ * O painel é uma MOLDURA: o que rola dentro dele é o que quem monta compôs, e só
+ * ali se sabe o que é. Padrão genérico ("Painel") anunciaria sem informar — e num
+ * layout de três painéis os três diriam a mesma coisa. Sem nome NÃO emitimos papel
+ * nenhum: nome em elemento sem papel é atributo proibido, e o axe acusa
+ * `aria-prohibited-attr`.
+ *
+ * `group` e não `region`: painel de layout é recurso de composição, não seção de
+ * conteúdo, e um layout redimensionável tem vários. Quem quiser marco envolve o
+ * conteúdo num `<section>` nomeado.
+ */
 function ResizablePanel({
   tabIndex = 0,
+  "aria-label": ariaLabel,
   className,
   defaultSize,
   minSize,
   maxSize,
   collapsedSize,
   ...props
-}: ResizablePrimitive.PanelProps & { tabIndex?: number }) {
+}: ResizablePrimitive.PanelProps & { tabIndex?: number; "aria-label"?: string }) {
   return (
     <ResizablePrimitive.Panel
       data-slot="resizable-panel"
       // O painel rola; região rolável precisa estar na ordem de tabulação
       // (WCAG 2.1.1). A classe é que traz o `overflow: auto` do contrato.
+      // Papel e nome são a outra metade: foco sozinho faz uma parada que o
+      // leitor de tela não sabe anunciar.
       tabIndex={tabIndex}
+      role={ariaLabel ? "group" : undefined}
+      aria-label={ariaLabel}
       className={cn("nds-resizable-panel", className)}
       defaultSize={emPorcentagem(defaultSize)}
       minSize={emPorcentagem(minSize)}

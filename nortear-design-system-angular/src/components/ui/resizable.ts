@@ -332,6 +332,8 @@ export class NdsResizable implements AfterContentInit {
   standalone: true,
   host: {
     class: 'nds-resizable-panel',
+    '[attr.role]': 'ariaLabel() ? "group" : null',
+    '[attr.aria-label]': 'ariaLabel() || null',
     // O painel rola (`overflow: auto` no CSS compartilhado). Região rolável
     // precisa ser alcançável por teclado, senão o conteúdo escondido fica
     // inacessível a quem não usa mouse — é o que o Vanilla também faz.
@@ -341,6 +343,18 @@ export class NdsResizable implements AfterContentInit {
   },
 })
 export class NdsResizablePanel {
+  /**
+   * Nome acessível do painel que rola. Sem padrão, de propósito.
+   *
+   * O painel é uma MOLDURA: o que rola dentro é o que quem monta compôs, e só
+   * ali se sabe o que é. Padrão genérico ("Painel") anunciaria sem informar — e
+   * num layout de três painéis os três diriam a mesma coisa. Sem nome NÃO
+   * emitimos papel nenhum; o axe acusa `aria-prohibited-attr`.
+   *
+   * `group` e não `region`: painel de layout é recurso de composição, não
+   * seção de conteúdo, e um layout redimensionável tem vários.
+   */
+  readonly ariaLabel = input<string>('', { alias: 'aria-label' });
   /** Tamanho inicial em porcentagem. Sem valor, divide a sobra com os iguais. */
   readonly defaultSize = input<number | undefined>(undefined);
   /** Mínimo em porcentagem — é o que impede o painel de sumir. */

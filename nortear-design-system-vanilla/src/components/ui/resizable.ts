@@ -15,6 +15,24 @@ export type ResizablePanel = {
   minSize?: number;
   /** Máximo em porcentagem. */
   maxSize?: number;
+  /**
+   * Nome acessível DESTE painel. Sem padrão, de propósito.
+   *
+   * O painel rola e por isso entra na ordem de tabulação (WCAG 2.1.1); uma
+   * parada de teclado precisa de papel e nome, que é a regra 6 da §8. O que
+   * rola dentro é o que quem monta compôs, e só ali se sabe o que é — padrão
+   * genérico ("Painel") anunciaria sem informar, e num layout de três os três
+   * diriam a mesma coisa. Sem nome NÃO emitimos papel nenhum: nome em elemento
+   * sem papel é atributo proibido, e o axe acusa `aria-prohibited-attr`.
+   *
+   * Mora no painel, e não num array paralelo em `ResizablePanelOptions`, para
+   * que nome e conteúdo não possam sair de sincronia por índice — o divisor usa
+   * array porque divisor não é objeto que quem consome receba, e painel é.
+   *
+   * `group` e não `region`: painel de layout é recurso de composição, não
+   * seção de conteúdo.
+   */
+  'aria-label'?: string;
 };
 
 export type ResizablePanelOptions = {
@@ -150,6 +168,15 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
     // precisa ser alcançável por teclado, senão o conteúdo escondido fica
     // inacessível a quem não usa mouse (WCAG 2.1.1).
     panelEl.setAttribute('tabindex', '0');
+    // Papel e nome são a outra metade de `tabindex`: foco sozinho faz uma
+    // parada de teclado que o leitor de tela não sabe anunciar (regra 6 da §8).
+    // Sem nome não emitimos papel — nome em elemento sem papel é atributo
+    // proibido, e o axe acusa `aria-prohibited-attr`.
+    const panelLabel = panel['aria-label'];
+    if (panelLabel) {
+      panelEl.setAttribute('role', 'group');
+      panelEl.setAttribute('aria-label', panelLabel);
+    }
     panelEl.appendChild(panel.content);
     panelEls.push(panelEl);
     root.appendChild(panelEl);
