@@ -682,7 +682,7 @@ Os três testes, e o primeiro é POSITIVO, o primeiro em quatro leituras:
   superfícies compartilhadas (`paper`, `field`, `mono`; `codeScroll`/`codeSurface`,
   com a observação de que reapontá-las "restila todo outro elemento que rola
   saída"). Aqui ela declara o contrário: os pontos de janela e a cor do cursor
-  são "literal Tailwind classes on the element itself", e restilá-los exige
+  são classes utilitárias literais *no próprio elemento*, e restilá-los exige
   editar as cadeias de classe do componente. Origem que não tem superfície
   compartilhada para oferecer é origem que desenhou algo próprio.
 - **Estado, não** — e desta vez isso não decide nada, porque o critério é uma
