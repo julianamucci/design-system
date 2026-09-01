@@ -222,7 +222,11 @@ export const Rejoin: Story = {
 
     await step('O nó de reencontro diz que depende dos dois lados', async () => {
       const analysisNode = piece.querySelector<HTMLElement>(
-        '[data-slot="flow-graph-node"][data-node-id="analysisNode"]',
+        // `analise` é o id da fixture, e NÃO o nome da variável acima: a
+        // varredura de tradução de identificadores renomeou os dois de uma vez,
+        // e o seletor passou a não casar com nada. O `!` logo abaixo fazia a
+        // story lançar em vez de reprovar, e nenhum build alcança string.
+        '[data-slot="flow-graph-node"][data-node-id="analise"]',
       )!;
       const reading = analysisNode.querySelector<HTMLElement>(
         '[data-slot="flow-graph-node-reading"]',
