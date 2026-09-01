@@ -224,7 +224,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (41)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (42)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -270,9 +270,10 @@ falta, nomeada — nunca uma folha nova.
 | `agent-card` | `card` + `item` (identidade, e uma linha por habilidade) + `badge` + `connection-state`. Veio da família 2 — ver 5.3 |
 | `tool-timeline` | `tool-group` aberto — as chamadas já chegam na ordem em que aconteceram — com `agent-status` acima (o rótulo que muda enquanto corre, e o relógio) e `.nds-cluster` de `.nds-badge` para as estatísticas de arquivo. Veio da família 2 — ver 5.3 |
 | `code-runner` | `code-block` (o trecho, sempre visível, com a linguagem no rótulo do cabeçalho) + `terminal-block` (a saída pré-formatada, o cursor e como terminou) + `agent-status` (o relógio e o botão de executar, que é o `start` de `AgentStatusIntent`). Pede **uma opção** `actions?: HTMLElement[]` no cabeçalho do `code-block`, onde `.nds-code-block-actions` já é a fila — nem classe nova, nem folha nova. Veio da família 2 — ver 5.3 |
+| `reasoning-effort` | `toggle-group` `type: 'single'` para escolher o nível — que é CONTROLE, e o catálogo já tem outro escrevendo o mesmo campo — mais `context-display` na forma `bar` para o gasto contra o teto do nível escolhido, que é token contra teto como as irmãs. Veio da família 5 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (79)
+### 5.2 As sete famílias novas (78)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -284,7 +285,7 @@ slug produz 83 folhas e nenhum sistema.
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (20 no catálogo — `agent-card`, `tool-timeline` e `code-runner` saíram para a 5.1, ver 5.3 —, **16 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
-| **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner`, `reasoning-effort` (6) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha |
+| **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
 | **6. Navegação da conversa** | `conversa-nav.css` | `message-branches`, `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (8) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
 | **7. Voz** | `voz.css` | `orb`, `voice-conversation`, `read-aloud` (3) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
 
@@ -523,6 +524,119 @@ estado que `RunStatus` não modele, vocabulário de execução que `code-block` 
 `terminal-block` não deem —, `code-runner` desdobra de volta para a 5.2, com o
 motivo.
 
+**Oitava correção, e a quarta que atravessa de 5.2 para 5.1**: `reasoning-effort`
+é `toggle-group` + `context-display` — e as duas contagens mudam junto, 79 → 78
+e 41 → 42. É a primeira correção que sai de uma família que não é a 2, e a
+primeira em que a entrada se parte em DUAS metades com donos diferentes.
+
+O que a fonte descreve, lida inteira antes de decidir — e ela abre dizendo as
+duas coisas na mesma linha: "o quanto pensar, e quanto desse orçamento a
+execução gastou de fato". Os tipos são `EffortLevel { key, label, budget }`,
+`selectedKey: string`, `spent: number` e `onSelect: (key) => void`. A anatomia é
+um cabeçalho com o rótulo e "gasto / orçamento", uma fileira com um botão por
+nível e `aria-pressed` no ativo, e uma faixa de preenchimento cuja largura é
+`spent` sobre o `budget` do nível casado, recortada entre 0 e 100%.
+
+**A PRÓPRIA FONTE DECLARA A COSTURA**, e é ela que decide todo o resto:
+"selecionar um nível e ler quanto aquilo custou são duas preocupações
+separadas — a primeira é um registro, a segunda é dado de uso do adaptador".
+Não é uma peça com duas partes; são duas peças encostadas, e a fonte diz qual é
+qual.
+
+A primeira pergunta da triagem tem, então, resposta escrita na origem: **a
+metade que dá nome à entrada é CONTROLE, e não medição.** `onSelect` mais um
+botão por nível com `aria-pressed` é um segmentado de escolha única, e o DS tem
+`toggle-group` `type: 'single'` fechado nas cinco — com `role="toolbar"`,
+navegação por seta e o `aria-pressed` que a fonte pede, que vem do `toggle`. E
+não é semelhança de desenho: o catálogo tem OUTRA entrada escrevendo o mesmo
+campo. A fonte diz, no exemplo, que o seletor de modelo
+(`/elements/model-selector`, já na 5.1) grava `config.reasoningEffort` "pelo
+controle de esforço dele", e que montar os dois de uma vez registra dois
+provedores do mesmo campo — "mantenha só um ligado". Uma entrada que o próprio
+catálogo manda não montar ao lado da outra não é uma segunda peça; é a mesma
+decisão em dois lugares. Aqui esse lugar já existe e já fechou nas cinco:
+`composer-model-picker`, que é o controle do trilho que diz quem responde, e
+cujo docblock já escreveu que ele não troca de modelo — avisa e devolve o
+controle.
+
+A segunda pergunta — se a metade que mede tem GRANDEZA — tem resposta sim, e é
+ela que fecha o caso em vez de abrir. `spent` é `reasoningTokens` e `budget` é
+um número de tokens por faixa: é token contra teto, que é a conta de
+`token-budget.ts` e que três peças desta folha já leem. Se "esforço" fosse só um
+rótulo ordinal — baixo, médio, alto — sem número por trás, a resposta seria
+`badge` e não medidor; como tem número, a resposta é a peça de medição que já
+desenha exatamente esse número. **Ordinal sem grandeza vira etiqueta; ordinal
+com grandeza vira o medidor que já existe** — nos dois caminhos não sobra peça
+nova.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, a peça não deixa buraco. A raiz é
+  `.nds-stack[data-spacing="sm"]` — a fonte declara `flex flex-col gap-2.5`, que
+  é a pilha e nada mais. O segmentado é `.nds-toggle-group` com
+  `type: 'single'`, e aqui vale a leitura da quinta correção, porque a fonte
+  mesma diz de que ele é feito: "a trilha do segmentado usa a superfície `field`
+  compartilhada, e as contagens usam o token `mono`, os dois de `surfaces.tsx`".
+  Superfície compartilhada declarada na origem. O cabeçalho com o rótulo e
+  "gasto / orçamento" mais a faixa de preenchimento são
+  `.nds-context-display[data-form="bar"]` inteiro, e com uma parte a mais em vez
+  de a menos: título em `.nds-sr-only`, valor em texto, detalhe ligando gasto e
+  teto, trilho `.nds-context-display-bar` com o preenchimento lendo
+  `--nds-context-used` por herança, e a palavra do nível em `.nds-badge`.
+  Nenhuma classe nova, nenhuma nomeada como faltando.
+
+  O único ponto em que fonte e folha DISCORDAM é ponto em que a folha já está
+  mais fina: com `selectedKey` sem nível correspondente, a fonte resolve o
+  orçamento para 0 e deixa a faixa recolhida em 0% — que é exatamente o desenho
+  que a decisão 5 desta folha proíbe, porque trilho vazio lê como "não gastou
+  nada" quando o que se sabe é "não se sabe quanto cabe". `spentFraction` já
+  devolve `null` para teto zero, e sem fração a peça não monta medidor nenhum. A
+  composição não herda o defeito da fonte.
+- **Estado, não.** E aqui o sinal mais barato desta seção NÃO apareceu: não há
+  booleano de estado nem união com uma palavra a menos, porque não há máquina de
+  estados nenhuma. `selectedKey: string` não descreve o mundo — é o valor
+  escolhido de um grupo de escolha única, que `toggle-group` já carrega em
+  `defaultValue`, `onValueChange` e `setValue`, e o `setValue` que NÃO dispara o
+  evento é justamente o que faz o segmentado espelhar uma escolha vinda de fora,
+  que é o caso desta peça quando o esforço registrado volta aplicado. `spent` e
+  `budget` não são estado: são a medição e o teto, o par de números soltos que
+  `spentFraction` e `remainingUnits` já recebem.
+- **Vocabulário, não.** `EffortLevel { key, label, budget }` é dois vocabulários
+  existentes grudados: `key` e `label` são `value` e `label` de
+  `ToggleGroupItem`, mesmo par e mesmo sentido; `budget` é o teto que
+  `TokenUsage.limit` e o segundo par de `token-budget.ts` já recebem. E a fonte
+  diz, sem que seja preciso deduzir, que este campo não é vocabulário de
+  conversa: "`budget` não tem contrapartida em runtime: é um fato sobre as SUAS
+  faixas de esforço, então fica definido pela aplicação de qualquer jeito".
+  Tabela de faixas da aplicação não é protocolo, é dado de produto — e a §2 já o
+  entrega a quem monta.
+
+E o teste da família, que é o quarto: **ela responde a DOIS eixos, e a nenhum
+inteiro.** O eixo da 5 é o mesmo número em formas diferentes; metade desta
+entrada não é número em forma nenhuma — é uma escolha, que é o eixo do trilho do
+composer. A outra metade é número, e é o número que `context-display` já
+desenha, com outro teto. Vale comparar com `message-timing`, que passou por esta
+mesma pergunta no sentido contrário e FICOU: lá a peça media uma grandeza que
+nenhuma irmã media, e não tinha dono. Aqui as duas metades têm dono, e são dois
+donos diferentes.
+
+Some a isso o que a §1 tira, como já tirou de `agent-card`: a metade maior do
+"Getting started" da fonte é registrar `config.reasoningEffort` no
+`modelContext`, e o próprio texto avisa que o registro só vale para a execução
+SEGUINTE. Isso é runtime, não porta, e a §2 é literal a respeito — um controle
+que registrasse o esforço traria de volta exatamente o runtime que esta família
+existe para não ter. Depois que o registro sai, o que resta é um segmentado
+controlado e uma barra de fração.
+
+**Reversível**, como as outras sete: se ao construir a família 3 ou a 4 aparecer
+orçamento de raciocínio com desenho, estado ou vocabulário próprios — um nível
+que MUDE o que o medidor significa em vez de só trocar o denominador, um estado
+que a fração não modele, uma grandeza que `token-budget.ts` não receba —,
+`reasoning-effort` desdobra de volta para a 5.2, com o motivo. E há um segundo
+gatilho, deste lado: se `composer-model-picker` ganhar o controle de esforço que
+a fonte descreve e ele pedir desenho próprio, a metade de controle vira variante
+DELE — e continua não sendo peça da 5.
+
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
 `stopped`** e **`tool-error` é `ToolCallState` `failed`**. Os dois estados já
@@ -558,6 +672,13 @@ O caso do `code-runner` é o mais claro, porque o que ele perde é o pior possí
 `stopped` é o Ctrl-C, e um trecho de código que roda é a coisa mais
 interrompível desta família. Uma entrada que não sabe modelar a própria
 interrupção não é uma peça — é uma foto de uma peça.
+
+**E o contrário, medido na oitava correção**: `reasoning-effort` não tem
+booleano, não tem união encolhida e não tem máquina de estados nenhuma — o sinal
+ficou MUDO, e a entrada colapsou pelos três testes do mesmo jeito. A ausência de
+sinal não é aprovação; é ausência de sinal. Lá o que previa era outra coisa, e
+está no mesmo lugar: os tipos declaravam um `onSelect`, e retorno de escolha é a
+assinatura de um controle, não de uma medição.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, ou uma união com uma palavra a menos que `RunStatus`/`ToolCallState`,
