@@ -812,3 +812,361 @@
   color: hsl(var(--muted-foreground));
   line-height: var(--line-height-normal);
 }
+
+/* ── Grade de atividade ───────────────────────────────────────────────────────
+ *
+ * Um ano de trabalho numa grade de datas: uma casa por dia, uma coluna por
+ * semana, a força da tinta dizendo quanto aconteceu. Vocabulário: `ActivityDay`,
+ * em `@shared/primitives/chat-protocol`; a conta — a casa de cada dia, o nível
+ * de cada contagem, a coluna de cada rótulo de mês — em
+ * `@shared/primitives/activity-calendar`.
+ *
+ *   <div class="nds-activity-graph" data-slot="activity-graph"
+ *        style="--activity-graph-levels: 4">
+ *     <p class="nds-activity-graph-total" data-slot="activity-graph-total">
+ *       312 contribuições entre 1 de jan de 2026 e 31 de mar de 2026
+ *     </p>
+ *
+ *     <div class="nds-activity-graph-viewport" data-slot="activity-graph-viewport"
+ *          tabindex="0" role="group" aria-label="Atividade do trimestre">
+ *       <div class="nds-activity-graph-calendar" data-slot="activity-graph-calendar"
+ *            style="--activity-graph-weeks: 13">
+ *
+ *         <ol class="nds-activity-graph-months" data-slot="activity-graph-months"
+ *             aria-hidden="true">
+ *           <li class="nds-activity-graph-month" data-slot="activity-graph-month"
+ *               style="--activity-graph-month-column: 1;
+ *                      --activity-graph-month-span: 5">jan</li>
+ *         </ol>
+ *
+ *         <ol class="nds-activity-graph-weekdays" data-slot="activity-graph-weekdays"
+ *             aria-hidden="true">
+ *           <li class="nds-activity-graph-weekday" data-slot="activity-graph-weekday"
+ *               style="--activity-graph-weekday-row: 2">seg</li>
+ *         </ol>
+ *
+ *         <ol class="nds-activity-graph-days" data-slot="activity-graph-days">
+ *           <li class="nds-activity-graph-day" data-slot="activity-graph-day"
+ *               data-level="3" data-date="2026-03-04"
+ *               style="--activity-graph-day-column: 10;
+ *                      --activity-graph-day-row: 4;
+ *                      --activity-graph-day-level: 3">
+ *             <span class="nds-sr-only" data-slot="activity-graph-day-reading">
+ *               9 contribuições em 4 de março de 2026. Intensidade alta.
+ *             </span>
+ *           </li>
+ *         </ol>
+ *
+ *       </div>
+ *     </div>
+ *
+ *     <div class="nds-activity-graph-legend" data-slot="activity-graph-legend">
+ *       <span class="nds-activity-graph-legend-end"
+ *             data-slot="activity-graph-legend-end">menos</span>
+ *       <ol class="nds-activity-graph-scale" data-slot="activity-graph-scale">
+ *         <li class="nds-activity-graph-swatch" data-slot="activity-graph-swatch"
+ *             data-level="3" style="--activity-graph-day-level: 3">
+ *           <span class="nds-sr-only">Alta</span>
+ *         </li>
+ *       </ol>
+ *       <span class="nds-activity-graph-legend-end"
+ *             data-slot="activity-graph-legend-end">mais</span>
+ *     </div>
+ *   </div>
+ *
+ * POR QUE ESTA PEÇA EXISTE, e não é um tipo a mais no gráfico. O teste não é se
+ * a peça existente PODERIA crescer até cobrir a entrada — tudo pode crescer —, é
+ * se o DESENHO já existe. Medido antes de construir: `chart` tem oito tipos e
+ * nenhum é mapa de calor, e `calendar` é uma `<table>` de mês para ESCOLHER
+ * data, com navegação e células que são botões. Um mapa de calendário daria ao
+ * gráfico um sistema de coordenadas que ele não tem, uma forma de dado que ele
+ * não aceita e uma legenda de níveis: isso não é um argumento, é outra peça
+ * morando dentro dele.
+ *
+ * E ELA ABSORVE O MAPA DE CALOR do catálogo, que é a mesma grade sabendo menos:
+ * um prop só, sem classe de quem consome, sem `data-slot` na raiz, janela fixa
+ * nos 365 dias que terminam hoje e cinco cores em hexadecimal puro, sem modo
+ * escuro. A própria fonte dele manda quem quiser uma versão restilizável começar
+ * por esta. Mesma grade, mesmos dados, uma sabe menos: é absorção.
+ *
+ * A JANELA É DADO, E É O CORAÇÃO DA ABSORÇÃO. Nada aqui olha o relógio: quem
+ * monta declara o primeiro e o último dia, e é isso que permite pedir o
+ * trimestre passado — e é isso que faz a fotografia da documentação ser a mesma
+ * amanhã.
+ *
+ * A CASA NÃO É PARADA DE TECLADO, e esta é a leitura da triagem que a construção
+ * corrigiu. A triagem aprovou a peça em parte por a fonte dizer que a dica
+ * aparece "ao passar o ponteiro OU AO FOCAR uma célula", e leu nisso que as
+ * células são focalizáveis. O que aquele argumento carregava de verdade era o
+ * NOME — célula com nome próprio é DOM, e não marca de gráfico —, e o nome está
+ * aqui, dentro de cada casa, em texto que só quem ouve recebe. O FOCO não veio
+ * junto, e não vem: um ano são 365 paradas de tabulação que não levam a lugar
+ * nenhum, exatamente o que a decisão 4 do grafo desta mesma folha recusa por uma
+ * dúzia. Quem lê por leitor de tela alcança a lista inteira sem foco nenhum, e
+ * quem usa teclado alcança o que precisa alcançar, que é a rolagem.
+ *
+ * A DICA POR PONTEIRO NÃO ENTRA NA PEÇA, pela mesma conta. Uma dica que só
+ * existe no `:hover` não existe para o teclado (regra 3 da §8 da guideline 17), e
+ * a única forma de dar teclado a ela seria a grade de foco que o parágrafo acima
+ * recusa. Quem quiser a dica compõe: a casa tem `data-slot` e `data-date`, e o
+ * design system já tem com que fazê-la.
+ *
+ * O ALVO DE TOQUE DE 24 px NÃO SE APLICA AQUI (WCAG 2.5.8), e vale escrever
+ * porque é onde esta família mais escorrega: o critério vale para alvo de
+ * PONTEIRO, e a casa não é alvo de nada — ela não abre, não escolhe e não
+ * navega. Uma grade de 53 semanas com casas de 24 px teria 1.272 px de largura e
+ * deixaria de caber em qualquer conversa.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   `data-level`     Na casa e na amostra da legenda: de zero ao número de
+ *                    degraus da escala. Lido por atributo porque é ESTADO do
+ *                    componente, igual nas cinco stacks — e é ele que separa a
+ *                    casa apagada, que não tem tinta nenhuma, das pintadas.
+ *   `data-date`      Na casa. É o endereço dela, e é por ele que quem compõe uma
+ *                    dica encontra o dia.
+ *   `aria-busy`      Na raiz, enquanto a grade ainda se escreve. É o que
+ *                    substitui a região viva que a regra 5 recusa.
+ *   `aria-hidden`    Nas duas fileiras de rótulo. Elas são âncora para o olho: o
+ *                    dia inteiro — data e contagem — já está dentro de cada casa,
+ *                    e ler "jan, fev, mar, seg, qua, sex" antes de 90 casas seria
+ *                    ruído sem informação.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. O NÍVEL NÃO É SÓ COR, E NÃO É SÓ PALAVRA — ele é as duas, e a segunda é
+ *    obrigatória. Cinco níveis distinguidos só por intensidade de tinta é o
+ *    defeito exato que a regra 4 desta folha proíbe (WCAG 1.4.1), e é o defeito
+ *    da fonte. Aqui a força da tinta anda junto do TAMANHO do quadrado pintado
+ *    dentro da casa — a casa é sempre a mesma, e o que cresce é a tinta —, e a
+ *    palavra do nível chega inteira a quem ouve, dentro da casa e dentro de cada
+ *    amostra da legenda.
+ * 2. CADA CASA DIZ O DIA E A CONTAGEM EM PALAVRAS. É o que faz a grade se
+ *    reconstruir de ouvido: percorrida a lista, cada dia disse a data, quanto
+ *    aconteceu e com que força foi pintado.
+ * 3. É UMA LISTA ORDENADA, e a ordem é a do calendário — do primeiro dia da
+ *    janela ao último, e não coluna por coluna. A posição na grade é para o olho;
+ *    a ordem no DOM é a ordem de leitura (WCAG 1.3.2).
+ * 4. A LEGENDA É LIDA, e não é decoração. As duas pontas — "menos" e "mais" —
+ *    são texto visível, e cada amostra carrega a palavra do seu nível para quem
+ *    não distingue as cinco forças. Sem isso a escala existiria só para quem vê.
+ * 5. AS FILEIRAS DE RÓTULO SAEM DA LEITURA. Mês e dia da semana são âncora para
+ *    o olho encontrar a coluna; para quem ouve, a data inteira já vem em cada
+ *    casa, e repeti-la em duas fileiras seria dizer a mesma coisa três vezes.
+ * 6. NADA AQUI É REGIÃO VIVA. Uma grade que se reanunciasse a cada casa é
+ *    impossível de ouvir. Enquanto se escreve, a raiz é `aria-busy`.
+ */
+
+.nds-activity-graph {
+  /*
+   * O TAMANHO DA CASA, e é a única superfície de customização da peça.
+   *
+   * É ele que decide quando a grade passa a ser mais larga que a conversa: 53
+   * semanas de casa pequena cabem apertado, e de casa grande rolam. Altura fixa
+   * é legítima aqui porque a casa não carrega texto — o que ela carrega é a
+   * frase que só quem ouve recebe, e essa não ocupa espaço (WCAG 1.4.4).
+   */
+  --activity-graph-cell: var(--spacing-3);
+  /* O vão entre casas, e ele é o que faz a grade parecer uma grade em vez de um
+     bloco contínuo. */
+  --activity-graph-gap: var(--spacing-0-5);
+
+  display: block;
+  font-size: var(--text-label);
+}
+
+.nds-activity-graph-total {
+  /*
+   * QUANTO ACONTECEU NA JANELA, dito em palavras e visível. Sem ele a grade
+   * mostra densidade relativa e nunca diz relativa a quanto — e a janela, que é
+   * dado e não o relógio de hoje, também precisa ser dita.
+   */
+  margin: 0;
+  margin-block-end: var(--spacing-2);
+  color: hsl(var(--muted-foreground));
+  line-height: var(--line-height-normal);
+}
+
+.nds-activity-graph-viewport {
+  /*
+   * A ÚNICA CAMADA QUE ROLA (regra 3 da folha). Só no eixo em linha: a grade tem
+   * sete linhas e ponto, então nada aqui cresce na vertical.
+   */
+  overflow-x: auto;
+  /* A rolagem para na peça e não é encadeada para a conversa atrás dela —
+     mesma decisão das duas irmãs desta folha. */
+  overscroll-behavior-inline: contain;
+
+  padding: var(--spacing-3);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted));
+}
+
+.nds-activity-graph-viewport:focus-visible {
+  /* Para dentro, como nas irmãs: a moldura já encosta na borda da peça, e um
+     anel para fora sairia por baixo do que estiver ao lado. */
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+.nds-activity-graph-calendar {
+  /*
+   * A ÂNCORA DAS TRÊS FILEIRAS: os rótulos de mês em cima, os de dia à esquerda,
+   * as casas no canto que sobra. `max-content` nas duas primeiras faixas porque
+   * elas são texto e crescem com a fonte do navegador; a terceira é a grade.
+   */
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-template-rows: max-content max-content;
+  gap: var(--spacing-1);
+  /* Largura do conteúdo, e é ela que decide quando a camada rola: a grade tem
+     tamanho próprio, e não se estica para preencher a camada. */
+  inline-size: max-content;
+}
+
+.nds-activity-graph-months {
+  grid-column: 2;
+  grid-row: 1;
+
+  /*
+   * AS MESMAS COLUNAS DAS CASAS, e é por isso que a faixa repete a mesma largura
+   * de casa e o mesmo vão: um rótulo que não caísse sobre a sua semana apontaria
+   * para o mês errado, que é pior que não ter rótulo.
+   */
+  display: grid;
+  grid-template-columns: repeat(var(--activity-graph-weeks, 1), var(--activity-graph-cell));
+  gap: var(--activity-graph-gap);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nds-activity-graph-month {
+  grid-column: var(--activity-graph-month-column) / span var(--activity-graph-month-span);
+  /*
+   * O RÓTULO NÃO EMPURRA A COLUNA. Ele começa na semana do mês e transborda para
+   * a direita quando o mês é curto — a faixa é `aria-hidden` e serve ao olho, e
+   * uma coluna esticada por causa de um nome desalinharia a grade inteira das
+   * casas logo abaixo.
+   */
+  min-inline-size: 0;
+  white-space: nowrap;
+  color: hsl(var(--muted-foreground));
+  line-height: var(--line-height-normal);
+}
+
+.nds-activity-graph-weekdays {
+  grid-column: 1;
+  grid-row: 2;
+
+  /* As mesmas sete linhas das casas, pelo mesmo motivo dos meses. */
+  display: grid;
+  grid-template-rows: repeat(7, var(--activity-graph-cell));
+  gap: var(--activity-graph-gap);
+  align-items: center;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nds-activity-graph-weekday {
+  grid-row: var(--activity-graph-weekday-row);
+  padding-inline-end: var(--spacing-1);
+  white-space: nowrap;
+  color: hsl(var(--muted-foreground));
+  line-height: var(--line-height-normal);
+}
+
+.nds-activity-graph-days {
+  grid-column: 2;
+  grid-row: 2;
+
+  display: grid;
+  /*
+   * As duas contagens chegam por propriedade personalizada porque `repeat()`
+   * aceita substituição de propriedade personalizada no contador, mas não aceita
+   * `calc()` — o número tem de chegar pronto. As linhas são SETE e ponto: uma
+   * semana não muda de tamanho.
+   */
+  grid-template-columns: repeat(var(--activity-graph-weeks, 1), var(--activity-graph-cell));
+  grid-template-rows: repeat(7, var(--activity-graph-cell));
+  gap: var(--activity-graph-gap);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nds-activity-graph-day,
+.nds-activity-graph-swatch {
+  /*
+   * A CASA É SEMPRE DO MESMO TAMANHO, e o que muda é a TINTA dentro dela. É essa
+   * separação que dá ao nível um canal que não é cor: um quadrado que cresce se
+   * lê em tons de cinza, e é o que a decisão 1 desta peça exige.
+   *
+   * Sem texto dentro — a frase que a casa carrega é `.nds-sr-only` —, então
+   * medida fixa é legítima (WCAG 1.4.4). E não é alvo de ponteiro, então o piso
+   * de 24 px não se aplica (WCAG 2.5.8).
+   */
+  inline-size: var(--activity-graph-cell);
+  block-size: var(--activity-graph-cell);
+  border-radius: var(--radius-xs);
+  /* O chão da casa: ele não muda com o nível, e é o que faz o quadrado de tinta
+     ter contra o que ser medido. */
+  background-color: hsl(var(--background));
+
+  /*
+   * A TINTA, e ela cresce nos DOIS canais ao mesmo tempo.
+   *
+   * O tamanho vai de uma fração da casa até a casa inteira, e a opacidade
+   * acompanha — as duas contas moram aqui, e o que entra por elemento é o NÚMERO
+   * do nível (regra 2 da folha). O piso de opacidade não é zero de propósito: o
+   * nível mais fraco tem de se ver no escuro, e opacidade baixa some ali.
+   */
+  background-image: linear-gradient(
+    hsl(var(--primary) / calc(0.4 + 0.6 * var(--activity-graph-day-level, 0) / var(--activity-graph-levels, 4))),
+    hsl(var(--primary) / calc(0.4 + 0.6 * var(--activity-graph-day-level, 0) / var(--activity-graph-levels, 4)))
+  );
+  background-size:
+    calc((var(--activity-graph-day-level, 0) + 1) / (var(--activity-graph-levels, 4) + 1) * 100%)
+    calc((var(--activity-graph-day-level, 0) + 1) / (var(--activity-graph-levels, 4) + 1) * 100%);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.nds-activity-graph-day[data-level="0"],
+.nds-activity-graph-swatch[data-level="0"] {
+  /*
+   * O DIA APAGADO NÃO TEM TINTA NENHUMA, e não uma tinta pequena. É o que separa
+   * "não aconteceu nada" de "aconteceu pouco" sem depender de distinguir dois
+   * tons quase iguais — e é o degrau que a fonte não tinha, porque lá o nível
+   * zero é só o primeiro dos cinco hexadecimais.
+   */
+  background-image: none;
+}
+
+.nds-activity-graph-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-block-start: var(--spacing-2);
+  color: hsl(var(--muted-foreground));
+  line-height: var(--line-height-normal);
+}
+
+.nds-activity-graph-legend-end {
+  white-space: nowrap;
+}
+
+.nds-activity-graph-scale {
+  display: flex;
+  align-items: center;
+  gap: var(--activity-graph-gap);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

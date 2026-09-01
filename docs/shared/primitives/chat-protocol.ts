@@ -690,3 +690,37 @@ export interface TraceSpan {
   depth: number;
   state: ToolCallState;
 }
+
+// ─── Atividade por dia ────────────────────────────────────────────────────────
+
+/**
+ * Quanta coisa aconteceu num dia.
+ *
+ * NÃO CARREGA GEOMETRIA, e é a diferença em relação aos três tipos acima: a casa
+ * de calendário em que este dia cai não está aqui, porque ela não é declarada —
+ * ela se DEDUZ da data e da janela, e essa dedução é a conta que mora em
+ * `activity-calendar.ts`. Quem monta declara o que mediu; a grade é consequência.
+ *
+ * Entra neste arquivo pelo critério de sempre: ser a origem única do que mais de
+ * uma stack vai reescrever. `PlanStep` e `JobCount` são igualmente de uma peça
+ * só e estão aqui pelo mesmo motivo.
+ *
+ * A DATA É UM DIA CIVIL, e não um instante. Ano-mês-dia em quatro-dois-dois
+ * (`2026-03-04`), sem hora e sem fuso — porque a pergunta que um mapa de
+ * calendário responde é "o que aconteceu naquele dia", e um carimbo de instante
+ * arrastaria fuso para dentro de uma peça que só desenha casas. Guardar o
+ * instante e converter em dia é decisão de produto, e produto envelhece por
+ * produto.
+ *
+ * NÃO CARREGA ESTADO, e não é achatamento: um dia não está em curso nem falhou.
+ * O que ele tem é uma contagem, e o NÍVEL — a força da tinta na casa — não mora
+ * aqui porque não é dado: é uma classificação da contagem contra uma escala que
+ * quem monta declara. Guardá-lo aqui deixaria duas verdades sobre a mesma casa,
+ * livres para discordar.
+ */
+export interface ActivityDay {
+  /** O dia, em ano-mês-dia: `2026-03-04`. */
+  date: string;
+  /** Quanta coisa aconteceu nele. Dias repetidos SOMAM, ver `activity-calendar.ts`. */
+  count: number;
+}

@@ -1,0 +1,2027 @@
+{
+  "pt-BR": {
+    "title": "Grade de atividade",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Um período de trabalho numa grade de datas: uma casa por dia, uma coluna por semana, e a força da tinta dizendo quanto aconteceu.",
+    "seo": {
+      "title": "Grade de atividade — a casa, a escala e a janela declarada",
+      "description": "A peça de grade de atividade: uma casa por dia numa janela que quem monta declara, uma escala de níveis que não se deriva do maior valor, e a leitura em palavras que leva a densidade a quem não vê o desenho."
+    },
+    "labels": {
+      "region": "Atividade do trimestre",
+      "total": "{count} contribuições entre {start} e {end}",
+      "dateFormat": "{day} de {month} de {year}",
+      "none": "Sem atividade em {date}.",
+      "one": "{count} contribuição em {date}. Intensidade {level}.",
+      "many": "{count} contribuições em {date}. Intensidade {level}.",
+      "legendLess": "Menos",
+      "legendMore": "Mais",
+      "months": {
+        "short": {
+          "m1": "jan",
+          "m2": "fev",
+          "m3": "mar",
+          "m4": "abr",
+          "m5": "mai",
+          "m6": "jun",
+          "m7": "jul",
+          "m8": "ago",
+          "m9": "set",
+          "m10": "out",
+          "m11": "nov",
+          "m12": "dez"
+        },
+        "long": {
+          "m1": "janeiro",
+          "m2": "fevereiro",
+          "m3": "março",
+          "m4": "abril",
+          "m5": "maio",
+          "m6": "junho",
+          "m7": "julho",
+          "m8": "agosto",
+          "m9": "setembro",
+          "m10": "outubro",
+          "m11": "novembro",
+          "m12": "dezembro"
+        }
+      },
+      "weekdays": {
+        "d0": "dom",
+        "d1": "seg",
+        "d2": "ter",
+        "d3": "qua",
+        "d4": "qui",
+        "d5": "sex",
+        "d6": "sáb"
+      },
+      "levels": {
+        "l0": "Nenhuma",
+        "l1": "Baixa",
+        "l2": "Média",
+        "l3": "Alta",
+        "l4": "Muito alta"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "quarter": "Um trimestre de trabalho, com os cinco níveis da escala",
+        "empty": "A mesma janela sem atividade nenhuma",
+        "month": "Um mês só, porque a janela é dado",
+        "wide": "Um ano inteiro, mais largo que a conversa"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A frase do total abre a peça. Ela diz quanto aconteceu e em que janela — sem ela, a grade mostra densidade relativa e nunca diz relativa a quanto.",
+      "item2": "A camada que rola envolve o calendário. Ela é a única que rola, recebe foco pelo teclado e tem papel e nome — sem eles, quem chega ali ouvindo não sabe onde entrou.",
+      "item3": "As duas fileiras de rótulo — os meses em cima, os dias da semana à esquerda — são âncora para o olho, e ficam fora do que é lido em voz: a data inteira já vem dentro de cada casa.",
+      "item4": "Cada casa é um dia. A posição chega em coluna e linha, e a força da tinta chega como um número de nível — a conta que o transforma em tamanho e em opacidade mora na folha.",
+      "item5": "A legenda fecha a peça, e é lida: as duas pontas são texto visível, e cada amostra carrega a palavra do seu nível para quem não distingue as forças.",
+      "structureCode": {
+        "web": "<div class=\"nds-activity-graph\" data-slot=\"activity-graph\"\n     style=\"--activity-graph-levels: 4\">\n  <p class=\"nds-activity-graph-total\" data-slot=\"activity-graph-total\">312 contribuições entre 1 de janeiro de 2026 e 31 de março de 2026</p>\n\n  <div class=\"nds-activity-graph-viewport\" data-slot=\"activity-graph-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Atividade do trimestre\">\n    <div class=\"nds-activity-graph-calendar\" data-slot=\"activity-graph-calendar\"\n         style=\"--activity-graph-weeks: 13\">\n\n      <ol class=\"nds-activity-graph-months\" data-slot=\"activity-graph-months\"\n          aria-hidden=\"true\">\n        <li class=\"nds-activity-graph-month\" data-slot=\"activity-graph-month\"\n            style=\"--activity-graph-month-column: 1;\n                   --activity-graph-month-span: 5\">jan</li>\n      </ol>\n\n      <ol class=\"nds-activity-graph-weekdays\" data-slot=\"activity-graph-weekdays\"\n          aria-hidden=\"true\">\n        <li class=\"nds-activity-graph-weekday\" data-slot=\"activity-graph-weekday\"\n            style=\"--activity-graph-weekday-row: 2\">seg</li>\n      </ol>\n\n      <ol class=\"nds-activity-graph-days\" data-slot=\"activity-graph-days\">\n        <li class=\"nds-activity-graph-day\" data-slot=\"activity-graph-day\"\n            data-level=\"3\" data-date=\"2026-03-04\"\n            style=\"--activity-graph-day-column: 10;\n                   --activity-graph-day-row: 4;\n                   --activity-graph-day-level: 3\">\n          <span class=\"nds-sr-only\"\n                data-slot=\"activity-graph-day-reading\">9 contribuições em 4 de março de 2026. Intensidade Alta.</span>\n        </li>\n      </ol>\n\n    </div>\n  </div>\n\n  <div class=\"nds-activity-graph-legend\" data-slot=\"activity-graph-legend\">\n    <span class=\"nds-activity-graph-legend-end\"\n          data-slot=\"activity-graph-legend-end\">Menos</span>\n    <ol class=\"nds-activity-graph-scale\" data-slot=\"activity-graph-scale\">\n      <li class=\"nds-activity-graph-swatch\" data-slot=\"activity-graph-swatch\"\n          data-level=\"3\" style=\"--activity-graph-day-level: 3\">\n        <span class=\"nds-sr-only\"\n              data-slot=\"activity-graph-swatch-reading\">Alta</span>\n      </li>\n    </ol>\n    <span class=\"nds-activity-graph-legend-end\"\n          data-slot=\"activity-graph-legend-end\">Mais</span>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando o que importa é a densidade ao longo do tempo — em que semanas houve trabalho, onde ficaram os vazios, quando foi o pico.",
+        "item2": "Declare a janela. Ela é dado, e é o que permite mostrar um período que não termina hoje.",
+        "item3": "Declare a escala, e mantenha a mesma escala entre duas grades que devem ser comparadas — escala derivada do maior valor faz a mesma contagem pintar diferente em cada uma.",
+        "item4": "Dê à camada que rola um nome que diga onde a pessoa entrou.",
+        "item5": "Escreva uma palavra por nível, e uma a mais para o nível vazio: é ela que chega a quem não distingue as forças da tinta."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Por quê"
+        },
+        "item1": {
+          "s": "Mostrar a densidade de um período numa grade de datas",
+          "u": "Grade de atividade",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Comparar números, proporções ou séries",
+          "u": "Gráfico",
+          "a": "Lá o desenho sai de valores medidos contra eixos; aqui sai de uma contagem por dia numa grade de calendário."
+        },
+        "item3": {
+          "s": "Escolher uma data",
+          "u": "Calendário",
+          "a": "Lá as casas são botões de seleção, com navegação por mês; aqui elas são leitura, e nenhuma delas faz nada."
+        },
+        "item4": {
+          "s": "Mostrar quando cada trecho aconteceu dentro de um todo",
+          "u": "Cascata de trechos",
+          "a": "Lá o eixo é contínuo e o que informa é o começo; aqui o eixo é o calendário e o que informa é a densidade."
+        },
+        "item5": {
+          "s": "Mostrar o quanto um trabalho longo já andou",
+          "u": "Progresso do trabalho",
+          "a": "Lá há uma conta com um total; aqui há uma contagem por dia, e contagem por dia não se soma numa fração."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "region": {
+            "name": "Nome da camada",
+            "format": "O que a pessoa alcançou, e não o que o elemento faz",
+            "good": "Atividade do trimestre",
+            "bad": "Região de rolagem"
+          },
+          "total": {
+            "name": "Frase do total",
+            "format": "Uma frase com o total e as duas pontas da janela marcadas",
+            "good": "{count} contribuições entre {start} e {end}",
+            "bad": "312"
+          },
+          "day": {
+            "name": "Frase da casa",
+            "format": "Uma frase com a contagem, a data e o nível marcados, e uma frase própria para o dia vazio",
+            "good": "{count} contribuições em {date}. Intensidade {level}.",
+            "bad": "{count}/{date}"
+          },
+          "level": {
+            "name": "Palavra do nível",
+            "format": "Uma palavra por degrau da escala, mais uma para o vazio",
+            "good": "Muito alta",
+            "bad": "Verde-escuro"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Declare a janela, e mantenha-a quando quiser mostrar um período que já passou.",
+        "item2": "Declare a escala em contagens, e use a mesma nas grades que se comparam.",
+        "item3": "Dê à camada que rola um nome que diga onde a pessoa entrou.",
+        "item4": "Escreva a palavra de cada nível: ela é o que chega a quem não distingue as forças."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não derive a escala do maior valor: a mesma contagem passaria a pintar diferente em cada grade.",
+        "item2": "Não prenda a janela ao relógio: uma grade que muda sozinha todo dia não pode ser fotografada nem comparada.",
+        "item3": "Não distinga o nível só por cor: quem não a vê fica sem a informação inteira.",
+        "item4": "Não anuncie cada casa que muda — uma grade que se reanuncia a cada dia é impossível de ouvir."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "Cada casa diz, em palavras, a data, a contagem e a força com que foi pintada — a grade se reconstrói de ouvido.",
+        "dont": "Só a tinta diz quanto aconteceu, e quem lê de ouvido recebe uma lista de casas sem número nenhum."
+      },
+      "pair2": {
+        "do": "A camada que rola tem papel, nome e parada de teclado, na mesma linha.",
+        "dont": "A camada rola sem nome, e quem chega ali por teclado não sabe onde está."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "withLabels": "Os rótulos",
+      "basicCode": {
+        "vanilla": "import { createActivityGraph } from '@/components/ui/activity-graph';\n\nconst activityGraph = createActivityGraph({\n  days: atividade,\n  start: '2026-01-01',\n  end: '2026-03-31',\n  thresholds: [1, 4, 8, 13],\n  status: 'complete',\n  labels: rotulos,\n});\n\n// Sem janela, ou sem escala, não há grade — e a fábrica devolve nada. Sem\n// ATIVIDADE, no entanto, há: um período em que nada aconteceu é a resposta.\nif (activityGraph) document.querySelector('#app')?.append(activityGraph);",
+        "react": "import { ActivityGraph } from \"@/components/ui/activity-graph\";\n\n<ActivityGraph\n  days={atividade}\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\nimport { ActivityGraph } from '@/components/ui/activity-graph';\n</script>\n\n<template>\n  <ActivityGraph\n    :days=\"atividade\"\n    start=\"2026-01-01\"\n    end=\"2026-03-31\"\n    :thresholds=\"[1, 4, 8, 13]\"\n    status=\"complete\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { ActivityGraph } from '@/components/ui/activity-graph';\n</script>\n\n<ActivityGraph\n  days={atividade}\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsActivityGraph\n  [days]=\"atividade\"\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  [thresholds]=\"degraus\"\n  status=\"complete\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabelsCode": {
+        "vanilla": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos = {\n  region: 'Atividade do trimestre',\n  total: '{count} contribuições entre {start} e {end}',\n  dateFormat: '{day} de {month} de {year}',\n  monthsShort: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],\n  monthsLong: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],\n  weekdaysShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],\n  none: 'Sem atividade em {date}.',\n  one: '{count} contribuição em {date}. Intensidade {level}.',\n  many: '{count} contribuições em {date}. Intensidade {level}.',\n  levels: ['Nenhuma', 'Baixa', 'Média', 'Alta', 'Muito alta'],\n  legendLess: 'Menos',\n  legendMore: 'Mais',\n};",
+        "react": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos: ActivityGraphLabels = {\n  region: \"Atividade do trimestre\",\n  total: \"{count} contribuições entre {start} e {end}\",\n  dateFormat: \"{day} de {month} de {year}\",\n  monthsShort: [\"jan\", \"fev\", \"mar\", \"abr\", \"mai\", \"jun\", \"jul\", \"ago\", \"set\", \"out\", \"nov\", \"dez\"],\n  monthsLong: [\"janeiro\", \"fevereiro\", \"março\", \"abril\", \"maio\", \"junho\", \"julho\", \"agosto\", \"setembro\", \"outubro\", \"novembro\", \"dezembro\"],\n  weekdaysShort: [\"dom\", \"seg\", \"ter\", \"qua\", \"qui\", \"sex\", \"sáb\"],\n  none: \"Sem atividade em {date}.\",\n  one: \"{count} contribuição em {date}. Intensidade {level}.\",\n  many: \"{count} contribuições em {date}. Intensidade {level}.\",\n  levels: [\"Nenhuma\", \"Baixa\", \"Média\", \"Alta\", \"Muito alta\"],\n  legendLess: \"Menos\",\n  legendMore: \"Mais\",\n};",
+        "vue": "<script setup lang=\"ts\">\n// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos: ActivityGraphLabels = {\n  region: 'Atividade do trimestre',\n  total: '{count} contribuições entre {start} e {end}',\n  dateFormat: '{day} de {month} de {year}',\n  monthsShort: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],\n  monthsLong: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],\n  weekdaysShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],\n  none: 'Sem atividade em {date}.',\n  one: '{count} contribuição em {date}. Intensidade {level}.',\n  many: '{count} contribuições em {date}. Intensidade {level}.',\n  levels: ['Nenhuma', 'Baixa', 'Média', 'Alta', 'Muito alta'],\n  legendLess: 'Menos',\n  legendMore: 'Mais',\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n  // dos dois é a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n  // então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n  // ouvindo não sabe onde entrou.\n  //\n  // A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n  // tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n  //\n  // Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n  // coluna para o olho, e a longa entra na frase que quem ouve recebe.\n  const rotulos: ActivityGraphLabels = {\n    region: 'Atividade do trimestre',\n    total: '{count} contribuições entre {start} e {end}',\n    dateFormat: '{day} de {month} de {year}',\n    monthsShort: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],\n    monthsLong: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],\n    weekdaysShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],\n    none: 'Sem atividade em {date}.',\n    one: '{count} contribuição em {date}. Intensidade {level}.',\n    many: '{count} contribuições em {date}. Intensidade {level}.',\n    levels: ['Nenhuma', 'Baixa', 'Média', 'Alta', 'Muito alta'],\n    legendLess: 'Menos',\n    legendMore: 'Mais',\n  };\n</script>",
+        "angular": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: ActivityGraphLabels = {\n  region: 'Atividade do trimestre',\n  total: '{count} contribuições entre {start} e {end}',\n  dateFormat: '{day} de {month} de {year}',\n  monthsShort: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],\n  monthsLong: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],\n  weekdaysShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],\n  none: 'Sem atividade em {date}.',\n  one: '{count} contribuição em {date}. Intensidade {level}.',\n  many: '{count} contribuições em {date}. Intensidade {level}.',\n  levels: ['Nenhuma', 'Baixa', 'Média', 'Alta', 'Muito alta'],\n  legendLess: 'Menos',\n  legendMore: 'Mais',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda no desenho"
+      },
+      "empty": {
+        "label": "Vazio",
+        "trigger": "O dia não teve atividade, ou teve menos que o primeiro degrau da escala.",
+        "behavior": "A casa fica sem tinta nenhuma — e não com uma tinta pequena, que é o que separa \"não aconteceu nada\" de \"aconteceu pouco\"."
+      },
+      "low": {
+        "label": "Fraco",
+        "trigger": "O dia alcançou os primeiros degraus da escala.",
+        "behavior": "Um quadrado pequeno, com a tinta mais clara, centrado na casa."
+      },
+      "high": {
+        "label": "Forte",
+        "trigger": "O dia alcançou os últimos degraus da escala.",
+        "behavior": "O quadrado cresce até preencher a casa, e a tinta chega à força cheia."
+      },
+      "busy": {
+        "label": "Escrevendo",
+        "trigger": "A execução que escreve a grade ainda corre.",
+        "behavior": "A peça se declara ocupada, e nada nela é anunciado enquanto isso."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Nome",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "days": {
+          "name": "days",
+          "type": "readonly ActivityDay[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que aconteceu, dia a dia. Dia fora da janela sai, dia repetido soma, e a lista pode vir vazia — vazio não é ausência de resposta, é a resposta de um período em que nada aconteceu."
+        },
+        "start": {
+          "name": "start",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O primeiro dia da janela, em ano-mês-dia. É dado, e não o relógio de hoje."
+        },
+        "end": {
+          "name": "end",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O último dia da janela, em ano-mês-dia. Fim antes do começo não é janela, e a peça não desenha nada."
+        },
+        "thresholds": {
+          "name": "thresholds",
+          "type": "readonly number[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os degraus da escala, em contagem. Obrigatório: uma escala derivada do maior valor faria a mesma contagem pintar com forças diferentes em duas grades lado a lado."
+        },
+        "weekStart": {
+          "name": "weekStart",
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Em que dia a semana começa, com zero no domingo. As sete linhas giram junto."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que pé está a execução que escreve a grade. Decide uma coisa só: se a peça se declara ocupada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ActivityGraphLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os moldes e as palavras de tela. Obrigatório, porque tudo aqui é texto."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome da camada que rola. Obrigatório: sem ele, a parada de teclado chega a quem ouve sem dizer onde a pessoa entrou."
+        },
+        "labelsTotal": {
+          "name": "total",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase visível do total, com o lugar da soma e das duas pontas da janela marcados."
+        },
+        "labelsDateFormat": {
+          "name": "dateFormat",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O molde de uma data, com o dia, o mês e o ano marcados na ordem em que o idioma os diz."
+        },
+        "labelsMonthsShort": {
+          "name": "monthsShort",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os doze meses, curtos, para os rótulos de coluna. O primeiro é janeiro."
+        },
+        "labelsMonthsLong": {
+          "name": "monthsLong",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os doze meses, por extenso, para a frase que quem ouve recebe."
+        },
+        "labelsWeekdaysShort": {
+          "name": "weekdaysShort",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os sete dias da semana, curtos. O primeiro é domingo, independente de onde a semana começa."
+        },
+        "labelsNone": {
+          "name": "none",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase do dia sem atividade. Ela é própria, e não a frase de contagem com um zero dentro."
+        },
+        "labelsOne": {
+          "name": "one",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase do dia com uma ocorrência."
+        },
+        "labelsMany": {
+          "name": "many",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase do dia com mais de uma."
+        },
+        "labelsLevels": {
+          "name": "levels",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada nível, do vazio ao teto da escala — uma a mais que os degraus. É ela que impede a força da tinta de ser só cor."
+        },
+        "labelsLegendLess": {
+          "name": "legendLess",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A ponta fraca da legenda, visível."
+        },
+        "labelsLegendMore": {
+          "name": "legendMore",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A ponta forte da legenda, visível."
+        },
+        "dayDate": {
+          "name": "date",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O dia, em ano-mês-dia. Um dia civil, sem hora e sem fuso."
+        },
+        "dayCount": {
+          "name": "count",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Quanto aconteceu nele. Dias repetidos somam."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A peça desenha os dias que recebe na janela que recebe. Ela não olha o relógio, não deriva a escala, não mede elemento, não anima e não abre dica. Mostrar outro período é passar outra janela.",
+      "extensibilityCode": {
+        "vanilla": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. Trocar a janela é remontar a peça com outra janela — o componente\n// desenha o que recebe.\nfunction mostrarTrimestre(inicio, fim) {\n  const proxima = createActivityGraph({\n    days: atividade,\n    start: inicio,\n    end: fim,\n    thresholds: [1, 4, 8, 13],\n    status: 'complete',\n    labels: rotulos,\n  });\n  if (proxima) grade.replaceWith(proxima);\n}",
+        "react": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\nconst [janela, setJanela] = useState({ start: \"2026-01-01\", end: \"2026-03-31\" });\n\n<ActivityGraph\n  days={atividade}\n  start={janela.start}\n  end={janela.end}\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\nconst janela = ref({ start: '2026-01-01', end: '2026-03-31' });\n</script>\n\n<template>\n  <ActivityGraph\n    :days=\"atividade\"\n    :start=\"janela.start\"\n    :end=\"janela.end\"\n    :thresholds=\"[1, 4, 8, 13]\"\n    status=\"complete\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n  // nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n  // cadeias. O componente desenha o que recebe.\n  import { ActivityGraph } from '@/components/ui/activity-graph';\n\n  let janela = $state({ start: '2026-01-01', end: '2026-03-31' });\n</script>\n\n<ActivityGraph\n  days={atividade}\n  start={janela.start}\n  end={janela.end}\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "angular": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\n//\n// TUDO É MEMBRO DE CLASSE, e nenhum deles é constante no topo do arquivo:\n// expressão de template só enxerga membro, e um binding para uma constante\n// importada não resolve.\nreadonly atividade: readonly ActivityDay[] = [/* o que aconteceu, dia a dia */];\n\nreadonly degraus: readonly number[] = [1, 4, 8, 13];\n\nreadonly janela = signal({ start: '2026-01-01', end: '2026-03-31' });\n\n// No template, a janela entra como os membros que são:\n//\n//   <div\n//     ndsActivityGraph\n//     [days]=\"atividade\"\n//     [start]=\"janela().start\"\n//     [end]=\"janela().end\"\n//     [thresholds]=\"degraus\"\n//     status=\"complete\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-activity-graph",
+          "description": "Corpo do texto da peça inteira."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-activity-graph",
+          "description": "Tamanho da casa, e é ele que decide quando a grade passa a rolar."
+        },
+        "spacing05": {
+          "token": "--spacing-0-5",
+          "value": ".nds-activity-graph",
+          "description": "Vão entre casas, e é ele que faz a grade parecer uma grade."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-activity-graph-total",
+          "description": "Respiro entre a frase do total e a camada que rola."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-activity-graph-total",
+          "description": "Cor da frase do total, dos rótulos de mês e de dia, e da legenda."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-activity-graph-total",
+          "description": "Entrelinha do texto, e é ela que faz a linha crescer com a fonte do navegador."
+        },
+        "spacing3Viewport": {
+          "token": "--spacing-3",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Respiro interno da camada que rola."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Contorno da camada que rola."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Arredondamento da camada que rola."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Fundo da camada que rola, que separa a peça da conversa atrás dela."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Anel de foco da camada que rola, desenhado para dentro."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-activity-graph-calendar",
+          "description": "Respiro entre as fileiras de rótulo e a grade de casas."
+        },
+        "radiusXs": {
+          "token": "--radius-xs",
+          "value": ".nds-activity-graph-day",
+          "description": "Arredondamento da casa e da amostra da legenda."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-activity-graph-day",
+          "description": "Chão da casa, que não muda com o nível e é contra o que a tinta se mede."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-activity-graph-day",
+          "description": "A tinta, cuja opacidade e cujo tamanho crescem juntos com o nível."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-activity-graph {\n  /* O TAMANHO DA CASA, e é ele que decide quando a grade passa a ser mais larga\n     que a conversa. Altura fixa é legítima aqui porque a casa não carrega texto\n     — o que ela carrega é a frase que só quem ouve recebe. */\n  --activity-graph-cell: var(--spacing-2);\n  /* O vão entre casas, que é o que faz a grade parecer uma grade. */\n  --activity-graph-gap: var(--spacing-px);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Uma casa mais escura que a vizinha não é lida: densidade não tem palavra. A regra desta peça é que a estrutura acessível é a MESMA estrutura — cada dia é um item de lista de verdade, na ordem do calendário, e o que a tinta diz sem palavras ele diz com palavras dentro de si.",
+      "items": {
+        "item1": "Cada casa carrega, em texto que só quem ouve recebe, a data, a contagem e a palavra do nível com que foi pintada.",
+        "item2": "O nível chega em dois canais para quem vê — a força da tinta e o tamanho do quadrado dentro da casa — e em palavra para quem ouve. Nunca só em cor.",
+        "item3": "O dia sem atividade tem frase própria, e a casa dele fica sem tinta nenhuma: é o que separa \"não aconteceu nada\" de \"aconteceu pouco\".",
+        "item4": "A camada que rola tem papel, nome e parada de teclado. O papel é o que torna o nome legal: sobre um elemento sem papel, o nome é descartado.",
+        "item5": "Nenhuma casa entra na ordem de foco. Um ano são centenas de paradas que não levam a lugar nenhum, e o nome de cada casa já chega sem foco algum.",
+        "item6": "Os rótulos de mês e de dia da semana ficam fora do que é lido em voz: eles são âncora para o olho, e a data inteira já vem em cada casa.",
+        "item7": "A legenda é lida: as duas pontas são texto visível, e cada amostra carrega a palavra do seu nível.",
+        "item8": "A ordem das casas no código é a do calendário, do primeiro dia da janela ao último — e ela é a ordem de leitura."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Para uma vez, na camada que rola. Nenhuma casa recebe foco, porque nenhuma casa faz nada.",
+        "enter": "Não faz nada: a peça é de leitura e não oferece ação.",
+        "arrows": "Rolam a grade quando ela é mais larga que a conversa, com o foco na camada."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A camada que rola declara papel de grupo e leva o nome que quem monta passou. Grupo, e não região: uma página com dezenas destas viraria dezenas de marcos homônimos.",
+        "item2": "A raiz se declara ocupada enquanto a execução corre, e nada nela é região viva.",
+        "item3": "As duas fileiras de rótulo saem inteiras da árvore de acessibilidade."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A lista é anunciada com a contagem de dias, e cada dia é lido como data, contagem e nível.",
+        "item2": "Nada é anunciado enquanto a grade se escreve; quem quiser anunciar o fim escreve uma frase, uma vez, do lado de fora.",
+        "item3": "Nenhuma coordenada é lida: a coluna e a linha são para os olhos, e o que elas dizem já chegou como data."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chart": {
+          "name": "Gráfico",
+          "description": "Quando o desenho sai de valores medidos contra eixos, e não de uma contagem por dia."
+        },
+        "calendar": {
+          "name": "Calendário",
+          "description": "Quando as casas são para escolher uma data, e não para ler densidade."
+        },
+        "traceWaterfall": {
+          "name": "Cascata de trechos",
+          "description": "Quando o eixo é contínuo e o que informa é quando cada trecho começou."
+        },
+        "jobProgress": {
+          "name": "Progresso do trabalho",
+          "description": "Quando há uma conta com um total, e não uma contagem por dia."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O teste que aprovou esta peça não foi se o gráfico poderia crescer até cobri-la — tudo pode crescer —, foi se o desenho já existia. Ele tem oito tipos e nenhum é mapa de calor, e o calendário desta casa é uma tabela de mês para escolher data.",
+      "item2": "Ela absorve o mapa de calor do catálogo, que é a mesma grade sabendo menos: um prop só, sem classe de quem consome, janela fixa nos 365 dias que terminam hoje e cinco cores em hexadecimal puro, sem modo escuro. A própria fonte dele manda quem quiser uma versão restilizável começar por esta.",
+      "item3": "A janela é dado, e é o coração da absorção: nada aqui olha o relógio, então a fotografia da documentação é a mesma amanhã.",
+      "item4": "A escala é obrigatória e não se deriva do maior valor. Derivada, a mesma contagem pintaria com forças diferentes em duas grades lado a lado — e comparar duas grades é para o que um mapa de calendário serve.",
+      "item5": "A casa não é parada de teclado, e isso corrige uma leitura da triagem. Ela aprovou a peça em parte por a fonte dizer que a dica aparece ao passar o ponteiro ou ao FOCAR uma célula; o que aquele argumento carregava de verdade era o nome próprio de cada casa, e o nome está aqui. O foco não veio junto: um ano são centenas de paradas que não levam a lugar nenhum.",
+      "item6": "A dica por ponteiro não entra na peça, pela mesma conta: dica que só existe ao passar o ponteiro não existe para o teclado, e a única forma de dar teclado a ela seria a grade de foco que a decisão acima recusa. Quem quiser a dica compõe — a casa tem endereço próprio.",
+      "item7": "O alvo de toque de 24 px não se aplica aqui: o critério vale para alvo de ponteiro, e a casa não abre, não escolhe e não navega. Uma grade de 53 semanas com casas de 24 px teria mais de mil pixels de largura e deixaria de caber em qualquer conversa.",
+      "item8": "A classificação da contagem em nível virou primitivo compartilhado, e não arquivo próprio: a regra cabe em duas frases e renderia cinco implementações que divergem nas bordas, mas um módulo com uma função de três linhas é o que a guideline já dispensou uma vez. Ela mora ao lado da geometria do calendário, que é onde é usada."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma janela e a atividade dela",
+          "result": "Há uma casa por dia da janela, na ordem do calendário",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar uma janela sem atividade nenhuma",
+          "result": "A grade continua desenhada, com todas as casas apagadas",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar um dia fora da janela",
+          "result": "Ele não é desenhado, e não entra no total",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar contagens que alcançam degraus diferentes da escala",
+          "result": "Cada casa recebe o nível que a escala manda",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar a peça",
+          "result": "Cada casa carrega a data, a contagem e a palavra do nível, em texto que só quem ouve recebe",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Montar a peça",
+          "result": "A camada que rola tem papel de grupo, nome e parada de teclado, e é a única parada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar o estado em que a execução corre",
+          "result": "A peça se declara ocupada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar a peça com um fim anterior ao começo, ou sem escala",
+          "result": "Não há grade, e nada é desenhado",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Montar a peça",
+          "result": "A legenda tem uma amostra por nível, e cada uma diz a sua palavra",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Passar uma janela mais larga que a conversa",
+          "result": "Uma só camada rola, e é a que tem nome e foco",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "Cada casa diz a contagem e o nível em palavra, e não só pela tinta",
+        "item2": "O dia sem atividade tem frase própria, e casa sem tinta nenhuma",
+        "item3": "Os rótulos de mês e de dia da semana estão fora do que é lido em voz",
+        "item4": "A camada que rola tem papel e nome, e o papel é o que torna o nome legal",
+        "item5": "Nada dentro da peça é região viva",
+        "item6": "Nenhuma casa entra na ordem de foco",
+        "item7": "Cada amostra da legenda carrega a palavra do seu nível"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a grade, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — a escala inteira, do vazio ao nível cheio",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — a janela sem atividade nenhuma",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — enquanto a grade se escreve, com a execução ocupada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composições — um mês só, porque a janela é dado",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — um ano inteiro, rolando",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Composições — a semana começando na segunda",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composições — a casa apertada por quem consome",
+          "priority": "medium"
+        }
+      }
+    }
+  },
+  "en": {
+    "title": "Activity graph",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "A stretch of work on a grid of dates: one cell per day, one column per week, and the strength of the ink saying how much happened.",
+    "seo": {
+      "title": "Activity graph — the cell, the scale and the declared window",
+      "description": "The activity graph piece: one cell per day inside a window the composer declares, a scale of levels that is never derived from the largest value, and the spoken reading that carries the density to whoever cannot see the drawing."
+    },
+    "labels": {
+      "region": "Quarter activity",
+      "total": "{count} contributions between {start} and {end}",
+      "dateFormat": "{month} {day}, {year}",
+      "none": "No activity on {date}.",
+      "one": "{count} contribution on {date}. Intensity {level}.",
+      "many": "{count} contributions on {date}. Intensity {level}.",
+      "legendLess": "Less",
+      "legendMore": "More",
+      "months": {
+        "short": {
+          "m1": "Jan",
+          "m2": "Feb",
+          "m3": "Mar",
+          "m4": "Apr",
+          "m5": "May",
+          "m6": "Jun",
+          "m7": "Jul",
+          "m8": "Aug",
+          "m9": "Sep",
+          "m10": "Oct",
+          "m11": "Nov",
+          "m12": "Dec"
+        },
+        "long": {
+          "m1": "January",
+          "m2": "February",
+          "m3": "March",
+          "m4": "April",
+          "m5": "May",
+          "m6": "June",
+          "m7": "July",
+          "m8": "August",
+          "m9": "September",
+          "m10": "October",
+          "m11": "November",
+          "m12": "December"
+        }
+      },
+      "weekdays": {
+        "d0": "Sun",
+        "d1": "Mon",
+        "d2": "Tue",
+        "d3": "Wed",
+        "d4": "Thu",
+        "d5": "Fri",
+        "d6": "Sat"
+      },
+      "levels": {
+        "l0": "None",
+        "l1": "Low",
+        "l2": "Medium",
+        "l3": "High",
+        "l4": "Very high"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "quarter": "A quarter of work, with all five levels of the scale",
+        "empty": "The same window with no activity at all",
+        "month": "A single month, because the window is data",
+        "wide": "A whole year, wider than the conversation"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The total sentence opens the piece. It says how much happened and in which window — without it, the grid shows relative density and never says relative to how much.",
+      "item2": "The scrolling layer wraps the calendar. It is the only one that scrolls, it takes keyboard focus and it carries a role and a name — without them, whoever lands there by ear does not know where they are.",
+      "item3": "The two label rows — months on top, weekdays on the left — are anchors for the eye, and stay out of what is read aloud: the whole date already arrives inside each cell.",
+      "item4": "Each cell is a day. The position arrives as a column and a row, and the strength of the ink arrives as a level number — the arithmetic that turns it into size and opacity lives in the stylesheet.",
+      "item5": "The legend closes the piece, and it is read: both ends are visible text, and each swatch carries the word for its level for whoever cannot tell the strengths apart.",
+      "structureCode": {
+        "web": "<div class=\"nds-activity-graph\" data-slot=\"activity-graph\"\n     style=\"--activity-graph-levels: 4\">\n  <p class=\"nds-activity-graph-total\" data-slot=\"activity-graph-total\">312 contributions between January 1, 2026 and March 31, 2026</p>\n\n  <div class=\"nds-activity-graph-viewport\" data-slot=\"activity-graph-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Quarter activity\">\n    <div class=\"nds-activity-graph-calendar\" data-slot=\"activity-graph-calendar\"\n         style=\"--activity-graph-weeks: 13\">\n\n      <ol class=\"nds-activity-graph-months\" data-slot=\"activity-graph-months\"\n          aria-hidden=\"true\">\n        <li class=\"nds-activity-graph-month\" data-slot=\"activity-graph-month\"\n            style=\"--activity-graph-month-column: 1;\n                   --activity-graph-month-span: 5\">Jan</li>\n      </ol>\n\n      <ol class=\"nds-activity-graph-weekdays\" data-slot=\"activity-graph-weekdays\"\n          aria-hidden=\"true\">\n        <li class=\"nds-activity-graph-weekday\" data-slot=\"activity-graph-weekday\"\n            style=\"--activity-graph-weekday-row: 2\">Mon</li>\n      </ol>\n\n      <ol class=\"nds-activity-graph-days\" data-slot=\"activity-graph-days\">\n        <li class=\"nds-activity-graph-day\" data-slot=\"activity-graph-day\"\n            data-level=\"3\" data-date=\"2026-03-04\"\n            style=\"--activity-graph-day-column: 10;\n                   --activity-graph-day-row: 4;\n                   --activity-graph-day-level: 3\">\n          <span class=\"nds-sr-only\"\n                data-slot=\"activity-graph-day-reading\">9 contributions on March 4, 2026. Intensity High.</span>\n        </li>\n      </ol>\n\n    </div>\n  </div>\n\n  <div class=\"nds-activity-graph-legend\" data-slot=\"activity-graph-legend\">\n    <span class=\"nds-activity-graph-legend-end\"\n          data-slot=\"activity-graph-legend-end\">Less</span>\n    <ol class=\"nds-activity-graph-scale\" data-slot=\"activity-graph-scale\">\n      <li class=\"nds-activity-graph-swatch\" data-slot=\"activity-graph-swatch\"\n          data-level=\"3\" style=\"--activity-graph-day-level: 3\">\n        <span class=\"nds-sr-only\"\n              data-slot=\"activity-graph-swatch-reading\">High</span>\n      </li>\n    </ol>\n    <span class=\"nds-activity-graph-legend-end\"\n          data-slot=\"activity-graph-legend-end\">More</span>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when what matters is density over time — which weeks had work, where the gaps sit, when the peak was.",
+        "item2": "Declare the window. It is data, and it is what lets you show a period that does not end today.",
+        "item3": "Declare the scale, and keep the same scale across two grids meant to be compared — a scale derived from the largest value makes the same count paint differently in each one.",
+        "item4": "Give the scrolling layer a name that says where the person landed.",
+        "item5": "Write one word per level, and one more for the empty level: that is what reaches whoever cannot tell the ink strengths apart."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Why"
+        },
+        "item1": {
+          "s": "Show the density of a period on a grid of dates",
+          "u": "Activity graph",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Compare numbers, proportions or series",
+          "u": "Chart",
+          "a": "There the drawing comes from values measured against axes; here it comes from a count per day on a calendar grid."
+        },
+        "item3": {
+          "s": "Pick a date",
+          "u": "Calendar",
+          "a": "There the cells are selection buttons with month navigation; here they are reading, and none of them does anything."
+        },
+        "item4": {
+          "s": "Show when each span happened inside a whole",
+          "u": "Trace waterfall",
+          "a": "There the axis is continuous and the start is what informs; here the axis is the calendar and density is what informs."
+        },
+        "item5": {
+          "s": "Show how far a long job has come",
+          "u": "Job progress",
+          "a": "There is a sum with a total there; here there is a count per day, and a count per day does not add up to a fraction."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "region": {
+            "name": "Layer name",
+            "format": "What the person reached, not what the element does",
+            "good": "Quarter activity",
+            "bad": "Scroll region"
+          },
+          "total": {
+            "name": "Total sentence",
+            "format": "A sentence with the total and both ends of the window marked",
+            "good": "{count} contributions between {start} and {end}",
+            "bad": "312"
+          },
+          "day": {
+            "name": "Cell sentence",
+            "format": "A sentence with the count, the date and the level marked, and its own sentence for an empty day",
+            "good": "{count} contributions on {date}. Intensity {level}.",
+            "bad": "{count}/{date}"
+          },
+          "level": {
+            "name": "Level word",
+            "format": "One word per step of the scale, plus one for the empty level",
+            "good": "Very high",
+            "bad": "Dark green"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Declare the window, and keep it when showing a period that has already passed.",
+        "item2": "Declare the scale in counts, and use the same one across grids that are compared.",
+        "item3": "Give the scrolling layer a name that says where the person landed.",
+        "item4": "Write the word for each level: it is what reaches whoever cannot tell the strengths apart."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not derive the scale from the largest value: the same count would start painting differently in each grid.",
+        "item2": "Do not tie the window to the clock: a grid that changes by itself every day cannot be captured or compared.",
+        "item3": "Do not tell levels apart by colour alone: whoever cannot see it loses the whole information.",
+        "item4": "Do not announce every cell that changes — a grid that re-announces itself every day is impossible to listen to."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "Each cell says, in words, the date, the count and the strength it was painted with — the grid rebuilds itself by ear.",
+        "dont": "Only the ink says how much happened, and whoever reads by ear receives a list of cells with no number at all."
+      },
+      "pair2": {
+        "do": "The scrolling layer carries a role, a name and a keyboard stop, on the same line.",
+        "dont": "The layer scrolls without a name, and whoever lands there by keyboard does not know where they are."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "withLabels": "The labels",
+      "basicCode": {
+        "vanilla": "import { createActivityGraph } from '@/components/ui/activity-graph';\n\nconst activityGraph = createActivityGraph({\n  days: atividade,\n  start: '2026-01-01',\n  end: '2026-03-31',\n  thresholds: [1, 4, 8, 13],\n  status: 'complete',\n  labels: rotulos,\n});\n\n// Sem janela, ou sem escala, não há grade — e a fábrica devolve nada. Sem\n// ATIVIDADE, no entanto, há: um período em que nada aconteceu é a resposta.\nif (activityGraph) document.querySelector('#app')?.append(activityGraph);",
+        "react": "import { ActivityGraph } from \"@/components/ui/activity-graph\";\n\n<ActivityGraph\n  days={atividade}\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\nimport { ActivityGraph } from '@/components/ui/activity-graph';\n</script>\n\n<template>\n  <ActivityGraph\n    :days=\"atividade\"\n    start=\"2026-01-01\"\n    end=\"2026-03-31\"\n    :thresholds=\"[1, 4, 8, 13]\"\n    status=\"complete\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { ActivityGraph } from '@/components/ui/activity-graph';\n</script>\n\n<ActivityGraph\n  days={atividade}\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsActivityGraph\n  [days]=\"atividade\"\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  [thresholds]=\"degraus\"\n  status=\"complete\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabelsCode": {
+        "vanilla": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos = {\n  region: 'Quarter activity',\n  total: '{count} contributions between {start} and {end}',\n  dateFormat: '{month} {day}, {year}',\n  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],\n  monthsLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],\n  weekdaysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],\n  none: 'No activity on {date}.',\n  one: '{count} contribution on {date}. Intensity {level}.',\n  many: '{count} contributions on {date}. Intensity {level}.',\n  levels: ['None', 'Low', 'Medium', 'High', 'Very high'],\n  legendLess: 'Less',\n  legendMore: 'More',\n};",
+        "react": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos: ActivityGraphLabels = {\n  region: \"Quarter activity\",\n  total: \"{count} contributions between {start} and {end}\",\n  dateFormat: \"{month} {day}, {year}\",\n  monthsShort: [\"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\"],\n  monthsLong: [\"January\", \"February\", \"March\", \"April\", \"May\", \"June\", \"July\", \"August\", \"September\", \"October\", \"November\", \"December\"],\n  weekdaysShort: [\"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"],\n  none: \"No activity on {date}.\",\n  one: \"{count} contribution on {date}. Intensity {level}.\",\n  many: \"{count} contributions on {date}. Intensity {level}.\",\n  levels: [\"None\", \"Low\", \"Medium\", \"High\", \"Very high\"],\n  legendLess: \"Less\",\n  legendMore: \"More\",\n};",
+        "vue": "<script setup lang=\"ts\">\n// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos: ActivityGraphLabels = {\n  region: 'Quarter activity',\n  total: '{count} contributions between {start} and {end}',\n  dateFormat: '{month} {day}, {year}',\n  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],\n  monthsLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],\n  weekdaysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],\n  none: 'No activity on {date}.',\n  one: '{count} contribution on {date}. Intensity {level}.',\n  many: '{count} contributions on {date}. Intensity {level}.',\n  levels: ['None', 'Low', 'Medium', 'High', 'Very high'],\n  legendLess: 'Less',\n  legendMore: 'More',\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n  // dos dois é a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n  // então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n  // ouvindo não sabe onde entrou.\n  //\n  // A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n  // tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n  //\n  // Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n  // coluna para o olho, e a longa entra na frase que quem ouve recebe.\n  const rotulos: ActivityGraphLabels = {\n    region: 'Quarter activity',\n    total: '{count} contributions between {start} and {end}',\n    dateFormat: '{month} {day}, {year}',\n    monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],\n    monthsLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],\n    weekdaysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],\n    none: 'No activity on {date}.',\n    one: '{count} contribution on {date}. Intensity {level}.',\n    many: '{count} contributions on {date}. Intensity {level}.',\n    levels: ['None', 'Low', 'Medium', 'High', 'Very high'],\n    legendLess: 'Less',\n    legendMore: 'More',\n  };\n</script>",
+        "angular": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: ActivityGraphLabels = {\n  region: 'Quarter activity',\n  total: '{count} contributions between {start} and {end}',\n  dateFormat: '{month} {day}, {year}',\n  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],\n  monthsLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],\n  weekdaysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],\n  none: 'No activity on {date}.',\n  one: '{count} contribution on {date}. Intensity {level}.',\n  many: '{count} contributions on {date}. Intensity {level}.',\n  levels: ['None', 'Low', 'Medium', 'High', 'Very high'],\n  legendLess: 'Less',\n  legendMore: 'More',\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes in the drawing"
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "The day had no activity, or less than the first step of the scale.",
+        "behavior": "The cell takes no ink at all — not a small amount of ink, which is what sets \"nothing happened\" apart from \"little happened\"."
+      },
+      "low": {
+        "label": "Weak",
+        "trigger": "The day reached the first steps of the scale.",
+        "behavior": "A small square, in the lighter ink, centred in the cell."
+      },
+      "high": {
+        "label": "Strong",
+        "trigger": "The day reached the last steps of the scale.",
+        "behavior": "The square grows to fill the cell, and the ink reaches full strength."
+      },
+      "busy": {
+        "label": "Writing",
+        "trigger": "The run that writes the grid is still going.",
+        "behavior": "The piece declares itself busy, and nothing inside it is announced meanwhile."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Name",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "days": {
+          "name": "days",
+          "type": "readonly ActivityDay[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "What happened, day by day. A day outside the window drops out, a repeated day adds up, and the list may arrive empty — empty is not the absence of an answer, it is the answer for a period where nothing happened."
+        },
+        "start": {
+          "name": "start",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The first day of the window, as year-month-day. It is data, not today’s clock."
+        },
+        "end": {
+          "name": "end",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The last day of the window, as year-month-day. An end before the start is not a window, and the piece draws nothing."
+        },
+        "thresholds": {
+          "name": "thresholds",
+          "type": "readonly number[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The steps of the scale, in counts. Required: a scale derived from the largest value would make the same count paint with different strengths in two grids side by side."
+        },
+        "weekStart": {
+          "name": "weekStart",
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Which day the week starts on, with zero for Sunday. The seven rows rotate with it."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where the run that writes the grid stands. It decides one thing only: whether the piece declares itself busy."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ActivityGraphLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The templates and the words on screen. Required, because everything here is text."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the scrolling layer. Required: without it the keyboard stop reaches listeners without saying where the person landed."
+        },
+        "labelsTotal": {
+          "name": "total",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The visible total sentence, with the place of the sum and of both ends of the window marked."
+        },
+        "labelsDateFormat": {
+          "name": "dateFormat",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The template of a date, with day, month and year marked in the order the language says them."
+        },
+        "labelsMonthsShort": {
+          "name": "monthsShort",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The twelve months, short, for the column labels. January is first."
+        },
+        "labelsMonthsLong": {
+          "name": "monthsLong",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The twelve months, spelled out, for the sentence listeners receive."
+        },
+        "labelsWeekdaysShort": {
+          "name": "weekdaysShort",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The seven weekdays, short. Sunday is first, whatever day the week starts on."
+        },
+        "labelsNone": {
+          "name": "none",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The sentence for a day with no activity. It is its own, not the count sentence with a zero in it."
+        },
+        "labelsOne": {
+          "name": "one",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The sentence for a day with one occurrence."
+        },
+        "labelsMany": {
+          "name": "many",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The sentence for a day with more than one."
+        },
+        "labelsLevels": {
+          "name": "levels",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each level, from empty to the top of the scale — one more than the steps. It is what stops the strength of the ink from being colour alone."
+        },
+        "labelsLegendLess": {
+          "name": "legendLess",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The weak end of the legend, visible."
+        },
+        "labelsLegendMore": {
+          "name": "legendMore",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The strong end of the legend, visible."
+        },
+        "dayDate": {
+          "name": "date",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The day, as year-month-day. A civil day, with no time and no timezone."
+        },
+        "dayCount": {
+          "name": "count",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "How much happened on it. Repeated days add up."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The piece draws the days it receives inside the window it receives. It does not look at the clock, does not derive the scale, does not measure elements, does not animate and does not open tooltips. Showing another period is passing another window.",
+      "extensibilityCode": {
+        "vanilla": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. Trocar a janela é remontar a peça com outra janela — o componente\n// desenha o que recebe.\nfunction mostrarTrimestre(inicio, fim) {\n  const proxima = createActivityGraph({\n    days: atividade,\n    start: inicio,\n    end: fim,\n    thresholds: [1, 4, 8, 13],\n    status: 'complete',\n    labels: rotulos,\n  });\n  if (proxima) grade.replaceWith(proxima);\n}",
+        "react": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\nconst [janela, setJanela] = useState({ start: \"2026-01-01\", end: \"2026-03-31\" });\n\n<ActivityGraph\n  days={atividade}\n  start={janela.start}\n  end={janela.end}\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\nconst janela = ref({ start: '2026-01-01', end: '2026-03-31' });\n</script>\n\n<template>\n  <ActivityGraph\n    :days=\"atividade\"\n    :start=\"janela.start\"\n    :end=\"janela.end\"\n    :thresholds=\"[1, 4, 8, 13]\"\n    status=\"complete\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n  // nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n  // cadeias. O componente desenha o que recebe.\n  import { ActivityGraph } from '@/components/ui/activity-graph';\n\n  let janela = $state({ start: '2026-01-01', end: '2026-03-31' });\n</script>\n\n<ActivityGraph\n  days={atividade}\n  start={janela.start}\n  end={janela.end}\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "angular": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\n//\n// TUDO É MEMBRO DE CLASSE, e nenhum deles é constante no topo do arquivo:\n// expressão de template só enxerga membro, e um binding para uma constante\n// importada não resolve.\nreadonly atividade: readonly ActivityDay[] = [/* o que aconteceu, dia a dia */];\n\nreadonly degraus: readonly number[] = [1, 4, 8, 13];\n\nreadonly janela = signal({ start: '2026-01-01', end: '2026-03-31' });\n\n// No template, a janela entra como os membros que são:\n//\n//   <div\n//     ndsActivityGraph\n//     [days]=\"atividade\"\n//     [start]=\"janela().start\"\n//     [end]=\"janela().end\"\n//     [thresholds]=\"degraus\"\n//     status=\"complete\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-activity-graph",
+          "description": "Type size for the whole piece."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-activity-graph",
+          "description": "Size of the cell, and what decides when the grid starts scrolling."
+        },
+        "spacing05": {
+          "token": "--spacing-0-5",
+          "value": ".nds-activity-graph",
+          "description": "Gap between cells, and what makes the grid read as a grid."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-activity-graph-total",
+          "description": "Breathing room between the total sentence and the scrolling layer."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-activity-graph-total",
+          "description": "Colour of the total sentence, of the month and weekday labels, and of the legend."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-activity-graph-total",
+          "description": "Line height of the text, and what makes the line grow with the browser font."
+        },
+        "spacing3Viewport": {
+          "token": "--spacing-3",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Inner padding of the scrolling layer."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Outline of the scrolling layer."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Corner radius of the scrolling layer."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Background of the scrolling layer, which sets the piece apart from the conversation behind it."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Focus ring of the scrolling layer, drawn inwards."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-activity-graph-calendar",
+          "description": "Breathing room between the label rows and the grid of cells."
+        },
+        "radiusXs": {
+          "token": "--radius-xs",
+          "value": ".nds-activity-graph-day",
+          "description": "Corner radius of the cell and of the legend swatch."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-activity-graph-day",
+          "description": "Ground of the cell, which does not change with the level and is what the ink is measured against."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-activity-graph-day",
+          "description": "The ink, whose opacity and size grow together with the level."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-activity-graph {\n  /* O TAMANHO DA CASA, e é ele que decide quando a grade passa a ser mais larga\n     que a conversa. Altura fixa é legítima aqui porque a casa não carrega texto\n     — o que ela carrega é a frase que só quem ouve recebe. */\n  --activity-graph-cell: var(--spacing-2);\n  /* O vão entre casas, que é o que faz a grade parecer uma grade. */\n  --activity-graph-gap: var(--spacing-px);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "A cell darker than its neighbour is not read: density has no words. The rule for this piece is that the accessible structure is the SAME structure — each day is a real list item, in calendar order, and what the ink says without words it says with words inside itself.",
+      "items": {
+        "item1": "Each cell carries, in text only listeners receive, the date, the count and the word for the level it was painted with.",
+        "item2": "The level arrives in two channels for whoever sees — the strength of the ink and the size of the square inside the cell — and in a word for whoever listens. Never in colour alone.",
+        "item3": "A day with no activity has its own sentence, and its cell takes no ink at all: that is what sets \"nothing happened\" apart from \"little happened\".",
+        "item4": "The scrolling layer carries a role, a name and a keyboard stop. The role is what makes the name legal: on an element with no role, the name is discarded.",
+        "item5": "No cell enters the focus order. A year is hundreds of stops leading nowhere, and each cell’s name already arrives without any focus.",
+        "item6": "The month and weekday labels stay out of what is read aloud: they are anchors for the eye, and the whole date already arrives in each cell.",
+        "item7": "The legend is read: both ends are visible text, and each swatch carries the word for its level.",
+        "item8": "The order of the cells in the code is calendar order, from the first day of the window to the last — and that is the reading order."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Stops once, on the scrolling layer. No cell takes focus, because no cell does anything.",
+        "enter": "Does nothing: the piece is read-only and offers no action.",
+        "arrows": "Scroll the grid when it is wider than the conversation, with focus on the layer."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The scrolling layer declares a group role and carries the name the composer passed. Group, not region: a page with dozens of these would become dozens of namesake landmarks.",
+        "item2": "The root declares itself busy while the run is going, and nothing inside it is a live region.",
+        "item3": "Both label rows leave the accessibility tree entirely."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The list is announced with the day count, and each day is read as date, count and level.",
+        "item2": "Nothing is announced while the grid writes itself; whoever wants to announce the end writes one sentence, once, on the outside.",
+        "item3": "No coordinate is read: the column and the row are for the eyes, and what they say already arrived as a date."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "chart": {
+          "name": "Chart",
+          "description": "When the drawing comes from values measured against axes, not from a count per day."
+        },
+        "calendar": {
+          "name": "Calendar",
+          "description": "When the cells are for picking a date, not for reading density."
+        },
+        "traceWaterfall": {
+          "name": "Trace waterfall",
+          "description": "When the axis is continuous and what informs is when each span started."
+        },
+        "jobProgress": {
+          "name": "Job progress",
+          "description": "When there is a sum with a total, not a count per day."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "The test that approved this piece was not whether the chart could grow to cover it — everything can grow — but whether the drawing already existed. It has eight types and none is a heat map, and the calendar in this house is a month table for picking a date.",
+      "item2": "It absorbs the catalogue’s heat map, which is the same grid knowing less: a single prop, no consumer class, a window fixed to the 365 days ending today, and five raw hex colours with no dark mode. Its own source tells anyone wanting a restylable version to start from this one.",
+      "item3": "The window is data, and that is the heart of the absorption: nothing here looks at the clock, so the documentation capture is the same tomorrow.",
+      "item4": "The scale is required and is never derived from the largest value. Derived, the same count would paint with different strengths in two grids side by side — and comparing two grids is what a calendar heat map is for.",
+      "item5": "The cell is not a keyboard stop, and this corrects a reading from the triage. It approved the piece partly because the source says the tooltip appears on hover or on FOCUSING a cell; what that argument actually carried was each cell’s own name, and the name is here. The focus did not come along: a year is hundreds of stops leading nowhere.",
+      "item6": "The pointer tooltip does not enter the piece, by the same arithmetic: a tooltip that only exists on hover does not exist for the keyboard, and the only way to give it a keyboard would be the focus grid the decision above refuses. Whoever wants the tooltip composes it — the cell has its own address.",
+      "item7": "The 24 px touch target does not apply here: the criterion is for pointer targets, and the cell does not open, choose or navigate. A grid of 53 weeks with 24 px cells would be over a thousand pixels wide and would stop fitting in any conversation.",
+      "item8": "Classifying a count into a level became a shared primitive, and not a file of its own: the rule fits in two sentences and would render five implementations that diverge at the edges, but a module with a three-line function is what the guideline has already dispensed with once. It lives beside the calendar geometry, which is where it is used."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function verifies in each story.",
+        "item1": {
+          "action": "Pass a window and its activity",
+          "result": "There is one cell per day of the window, in calendar order",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass a window with no activity at all",
+          "result": "The grid is still drawn, with every cell empty",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass a day outside the window",
+          "result": "It is not drawn, and it does not enter the total",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass counts reaching different steps of the scale",
+          "result": "Each cell takes the level the scale dictates",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mount the piece",
+          "result": "Each cell carries the date, the count and the level word, in text only listeners receive",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Mount the piece",
+          "result": "The scrolling layer carries a group role, a name and a keyboard stop, and it is the only stop",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass the state where the run is going",
+          "result": "The piece declares itself busy",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the piece with an end before the start, or with no scale",
+          "result": "There is no grid, and nothing is drawn",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Mount the piece",
+          "result": "The legend has one swatch per level, and each one says its word",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pass a window wider than the conversation",
+          "result": "One layer only scrolls, and it is the one with a name and focus",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "Each cell says the count and the level in a word, not only through the ink",
+        "item2": "A day with no activity has its own sentence, and a cell with no ink at all",
+        "item3": "The month and weekday labels are out of what is read aloud",
+        "item4": "The scrolling layer carries a role and a name, and the role is what makes the name legal",
+        "item5": "Nothing inside the piece is a live region",
+        "item6": "No cell enters the focus order",
+        "item7": "Each legend swatch carries the word for its level"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Captured by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the grid, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the whole scale, from empty to full level",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — the window with no activity at all",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — while the grid writes itself, with the run busy",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Compositions — a single month, because the window is data",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — a whole year, scrolling",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Compositions — the week starting on Monday",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Compositions — the cell tightened by the consumer",
+          "priority": "medium"
+        }
+      }
+    }
+  },
+  "es": {
+    "title": "Rejilla de actividad",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "Un período de trabajo en una rejilla de fechas: una casilla por día, una columna por semana, y la fuerza de la tinta diciendo cuánto ocurrió.",
+    "seo": {
+      "title": "Rejilla de actividad — la casilla, la escala y la ventana declarada",
+      "description": "La pieza de rejilla de actividad: una casilla por día en una ventana que declara quien la monta, una escala de niveles que no se deriva del valor mayor, y la lectura en palabras que lleva la densidad a quien no ve el dibujo."
+    },
+    "labels": {
+      "region": "Actividad del trimestre",
+      "total": "{count} contribuciones entre {start} y {end}",
+      "dateFormat": "{day} de {month} de {year}",
+      "none": "Sin actividad el {date}.",
+      "one": "{count} contribución el {date}. Intensidad {level}.",
+      "many": "{count} contribuciones el {date}. Intensidad {level}.",
+      "legendLess": "Menos",
+      "legendMore": "Más",
+      "months": {
+        "short": {
+          "m1": "ene",
+          "m2": "feb",
+          "m3": "mar",
+          "m4": "abr",
+          "m5": "may",
+          "m6": "jun",
+          "m7": "jul",
+          "m8": "ago",
+          "m9": "sep",
+          "m10": "oct",
+          "m11": "nov",
+          "m12": "dic"
+        },
+        "long": {
+          "m1": "enero",
+          "m2": "febrero",
+          "m3": "marzo",
+          "m4": "abril",
+          "m5": "mayo",
+          "m6": "junio",
+          "m7": "julio",
+          "m8": "agosto",
+          "m9": "septiembre",
+          "m10": "octubre",
+          "m11": "noviembre",
+          "m12": "diciembre"
+        }
+      },
+      "weekdays": {
+        "d0": "dom",
+        "d1": "lun",
+        "d2": "mar",
+        "d3": "mié",
+        "d4": "jue",
+        "d5": "vie",
+        "d6": "sáb"
+      },
+      "levels": {
+        "l0": "Ninguna",
+        "l1": "Baja",
+        "l2": "Media",
+        "l3": "Alta",
+        "l4": "Muy alta"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "quarter": "Un trimestre de trabajo, con los cinco niveles de la escala",
+        "empty": "La misma ventana sin actividad alguna",
+        "month": "Un solo mes, porque la ventana es dato",
+        "wide": "Un año entero, más ancho que la conversación"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La frase del total abre la pieza. Dice cuánto ocurrió y en qué ventana — sin ella, la rejilla muestra densidad relativa y nunca dice relativa a cuánto.",
+      "item2": "La capa que se desplaza envuelve el calendario. Es la única que se desplaza, recibe foco por teclado y tiene rol y nombre — sin ellos, quien llega ahí escuchando no sabe dónde entró.",
+      "item3": "Las dos filas de etiquetas — los meses arriba, los días de la semana a la izquierda — son ancla para el ojo, y quedan fuera de lo que se lee en voz: la fecha entera ya llega dentro de cada casilla.",
+      "item4": "Cada casilla es un día. La posición llega como columna y fila, y la fuerza de la tinta llega como un número de nivel — la cuenta que lo convierte en tamaño y opacidad vive en la hoja.",
+      "item5": "La leyenda cierra la pieza, y se lee: las dos puntas son texto visible, y cada muestra lleva la palabra de su nivel para quien no distingue las fuerzas.",
+      "structureCode": {
+        "web": "<div class=\"nds-activity-graph\" data-slot=\"activity-graph\"\n     style=\"--activity-graph-levels: 4\">\n  <p class=\"nds-activity-graph-total\" data-slot=\"activity-graph-total\">312 contribuciones entre 1 de enero de 2026 y 31 de marzo de 2026</p>\n\n  <div class=\"nds-activity-graph-viewport\" data-slot=\"activity-graph-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Actividad del trimestre\">\n    <div class=\"nds-activity-graph-calendar\" data-slot=\"activity-graph-calendar\"\n         style=\"--activity-graph-weeks: 13\">\n\n      <ol class=\"nds-activity-graph-months\" data-slot=\"activity-graph-months\"\n          aria-hidden=\"true\">\n        <li class=\"nds-activity-graph-month\" data-slot=\"activity-graph-month\"\n            style=\"--activity-graph-month-column: 1;\n                   --activity-graph-month-span: 5\">ene</li>\n      </ol>\n\n      <ol class=\"nds-activity-graph-weekdays\" data-slot=\"activity-graph-weekdays\"\n          aria-hidden=\"true\">\n        <li class=\"nds-activity-graph-weekday\" data-slot=\"activity-graph-weekday\"\n            style=\"--activity-graph-weekday-row: 2\">lun</li>\n      </ol>\n\n      <ol class=\"nds-activity-graph-days\" data-slot=\"activity-graph-days\">\n        <li class=\"nds-activity-graph-day\" data-slot=\"activity-graph-day\"\n            data-level=\"3\" data-date=\"2026-03-04\"\n            style=\"--activity-graph-day-column: 10;\n                   --activity-graph-day-row: 4;\n                   --activity-graph-day-level: 3\">\n          <span class=\"nds-sr-only\"\n                data-slot=\"activity-graph-day-reading\">9 contribuciones el 4 de marzo de 2026. Intensidad Alta.</span>\n        </li>\n      </ol>\n\n    </div>\n  </div>\n\n  <div class=\"nds-activity-graph-legend\" data-slot=\"activity-graph-legend\">\n    <span class=\"nds-activity-graph-legend-end\"\n          data-slot=\"activity-graph-legend-end\">Menos</span>\n    <ol class=\"nds-activity-graph-scale\" data-slot=\"activity-graph-scale\">\n      <li class=\"nds-activity-graph-swatch\" data-slot=\"activity-graph-swatch\"\n          data-level=\"3\" style=\"--activity-graph-day-level: 3\">\n        <span class=\"nds-sr-only\"\n              data-slot=\"activity-graph-swatch-reading\">Alta</span>\n      </li>\n    </ol>\n    <span class=\"nds-activity-graph-legend-end\"\n          data-slot=\"activity-graph-legend-end\">Más</span>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala cuando lo que importa es la densidad a lo largo del tiempo — en qué semanas hubo trabajo, dónde quedaron los vacíos, cuándo fue el pico.",
+        "item2": "Declara la ventana. Es dato, y es lo que permite mostrar un período que no termina hoy.",
+        "item3": "Declara la escala, y mantén la misma escala entre dos rejillas que deban compararse — una escala derivada del valor mayor hace que el mismo conteo pinte distinto en cada una.",
+        "item4": "Dale a la capa que se desplaza un nombre que diga dónde entró la persona.",
+        "item5": "Escribe una palabra por nivel, y una más para el nivel vacío: es la que llega a quien no distingue las fuerzas de la tinta."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Por qué"
+        },
+        "item1": {
+          "s": "Mostrar la densidad de un período en una rejilla de fechas",
+          "u": "Rejilla de actividad",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Comparar números, proporciones o series",
+          "u": "Gráfico",
+          "a": "Allí el dibujo sale de valores medidos contra ejes; aquí sale de un conteo por día en una rejilla de calendario."
+        },
+        "item3": {
+          "s": "Elegir una fecha",
+          "u": "Calendario",
+          "a": "Allí las casillas son botones de selección con navegación por mes; aquí son lectura, y ninguna hace nada."
+        },
+        "item4": {
+          "s": "Mostrar cuándo ocurrió cada tramo dentro de un todo",
+          "u": "Cascada de tramos",
+          "a": "Allí el eje es continuo y lo que informa es el inicio; aquí el eje es el calendario y lo que informa es la densidad."
+        },
+        "item5": {
+          "s": "Mostrar cuánto ha avanzado un trabajo largo",
+          "u": "Progreso del trabajo",
+          "a": "Allí hay una cuenta con un total; aquí hay un conteo por día, y un conteo por día no suma una fracción."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "region": {
+            "name": "Nombre de la capa",
+            "format": "Lo que la persona alcanzó, y no lo que hace el elemento",
+            "good": "Actividad del trimestre",
+            "bad": "Región de desplazamiento"
+          },
+          "total": {
+            "name": "Frase del total",
+            "format": "Una frase con el total y las dos puntas de la ventana marcadas",
+            "good": "{count} contribuciones entre {start} y {end}",
+            "bad": "312"
+          },
+          "day": {
+            "name": "Frase de la casilla",
+            "format": "Una frase con el conteo, la fecha y el nivel marcados, y una frase propia para el día vacío",
+            "good": "{count} contribuciones el {date}. Intensidad {level}.",
+            "bad": "{count}/{date}"
+          },
+          "level": {
+            "name": "Palabra del nivel",
+            "format": "Una palabra por escalón de la escala, más una para el vacío",
+            "good": "Muy alta",
+            "bad": "Verde oscuro"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Declara la ventana, y mantenla cuando quieras mostrar un período que ya pasó.",
+        "item2": "Declara la escala en conteos, y usa la misma en las rejillas que se comparan.",
+        "item3": "Dale a la capa que se desplaza un nombre que diga dónde entró la persona.",
+        "item4": "Escribe la palabra de cada nivel: es la que llega a quien no distingue las fuerzas."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No derives la escala del valor mayor: el mismo conteo pasaría a pintar distinto en cada rejilla.",
+        "item2": "No ates la ventana al reloj: una rejilla que cambia sola cada día no se puede fotografiar ni comparar.",
+        "item3": "No distingas el nivel solo por color: quien no lo ve se queda sin la información entera.",
+        "item4": "No anuncies cada casilla que cambia — una rejilla que se reanuncia cada día es imposible de escuchar."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "Cada casilla dice, en palabras, la fecha, el conteo y la fuerza con que fue pintada — la rejilla se reconstruye de oído.",
+        "dont": "Solo la tinta dice cuánto ocurrió, y quien lee de oído recibe una lista de casillas sin número alguno."
+      },
+      "pair2": {
+        "do": "La capa que se desplaza tiene rol, nombre y parada de teclado, en la misma línea.",
+        "dont": "La capa se desplaza sin nombre, y quien llega ahí por teclado no sabe dónde está."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "withLabels": "Las etiquetas",
+      "basicCode": {
+        "vanilla": "import { createActivityGraph } from '@/components/ui/activity-graph';\n\nconst activityGraph = createActivityGraph({\n  days: atividade,\n  start: '2026-01-01',\n  end: '2026-03-31',\n  thresholds: [1, 4, 8, 13],\n  status: 'complete',\n  labels: rotulos,\n});\n\n// Sem janela, ou sem escala, não há grade — e a fábrica devolve nada. Sem\n// ATIVIDADE, no entanto, há: um período em que nada aconteceu é a resposta.\nif (activityGraph) document.querySelector('#app')?.append(activityGraph);",
+        "react": "import { ActivityGraph } from \"@/components/ui/activity-graph\";\n\n<ActivityGraph\n  days={atividade}\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\nimport { ActivityGraph } from '@/components/ui/activity-graph';\n</script>\n\n<template>\n  <ActivityGraph\n    :days=\"atividade\"\n    start=\"2026-01-01\"\n    end=\"2026-03-31\"\n    :thresholds=\"[1, 4, 8, 13]\"\n    status=\"complete\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { ActivityGraph } from '@/components/ui/activity-graph';\n</script>\n\n<ActivityGraph\n  days={atividade}\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsActivityGraph\n  [days]=\"atividade\"\n  start=\"2026-01-01\"\n  end=\"2026-03-31\"\n  [thresholds]=\"degraus\"\n  status=\"complete\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabelsCode": {
+        "vanilla": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos = {\n  region: 'Actividad del trimestre',\n  total: '{count} contribuciones entre {start} y {end}',\n  dateFormat: '{day} de {month} de {year}',\n  monthsShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],\n  monthsLong: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],\n  weekdaysShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],\n  none: 'Sin actividad el {date}.',\n  one: '{count} contribución el {date}. Intensidad {level}.',\n  many: '{count} contribuciones el {date}. Intensidad {level}.',\n  levels: ['Ninguna', 'Baja', 'Media', 'Alta', 'Muy alta'],\n  legendLess: 'Menos',\n  legendMore: 'Más',\n};",
+        "react": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos: ActivityGraphLabels = {\n  region: \"Actividad del trimestre\",\n  total: \"{count} contribuciones entre {start} y {end}\",\n  dateFormat: \"{day} de {month} de {year}\",\n  monthsShort: [\"ene\", \"feb\", \"mar\", \"abr\", \"may\", \"jun\", \"jul\", \"ago\", \"sep\", \"oct\", \"nov\", \"dic\"],\n  monthsLong: [\"enero\", \"febrero\", \"marzo\", \"abril\", \"mayo\", \"junio\", \"julio\", \"agosto\", \"septiembre\", \"octubre\", \"noviembre\", \"diciembre\"],\n  weekdaysShort: [\"dom\", \"lun\", \"mar\", \"mié\", \"jue\", \"vie\", \"sáb\"],\n  none: \"Sin actividad el {date}.\",\n  one: \"{count} contribución el {date}. Intensidad {level}.\",\n  many: \"{count} contribuciones el {date}. Intensidad {level}.\",\n  levels: [\"Ninguna\", \"Baja\", \"Media\", \"Alta\", \"Muy alta\"],\n  legendLess: \"Menos\",\n  legendMore: \"Más\",\n};",
+        "vue": "<script setup lang=\"ts\">\n// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\nconst rotulos: ActivityGraphLabels = {\n  region: 'Actividad del trimestre',\n  total: '{count} contribuciones entre {start} y {end}',\n  dateFormat: '{day} de {month} de {year}',\n  monthsShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],\n  monthsLong: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],\n  weekdaysShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],\n  none: 'Sin actividad el {date}.',\n  one: '{count} contribución el {date}. Intensidad {level}.',\n  many: '{count} contribuciones el {date}. Intensidad {level}.',\n  levels: ['Ninguna', 'Baja', 'Media', 'Alta', 'Muy alta'],\n  legendLess: 'Menos',\n  legendMore: 'Más',\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n  // dos dois é a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n  // então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n  // ouvindo não sabe onde entrou.\n  //\n  // A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n  // tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n  //\n  // Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n  // coluna para o olho, e a longa entra na frase que quem ouve recebe.\n  const rotulos: ActivityGraphLabels = {\n    region: 'Actividad del trimestre',\n    total: '{count} contribuciones entre {start} y {end}',\n    dateFormat: '{day} de {month} de {year}',\n    monthsShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],\n    monthsLong: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],\n    weekdaysShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],\n    none: 'Sin actividad el {date}.',\n    one: '{count} contribución el {date}. Intensidad {level}.',\n    many: '{count} contribuciones el {date}. Intensidad {level}.',\n    levels: ['Ninguna', 'Baja', 'Media', 'Alta', 'Muy alta'],\n    legendLess: 'Menos',\n    legendMore: 'Más',\n  };\n</script>",
+        "angular": "// A JANELA E A ESCALA SÃO DADO, e os rótulos são texto de interface — nenhum\n// dos dois é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a grade é mais larga que a conversa,\n// então ela rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou.\n//\n// A PALAVRA DE CADA NÍVEL é o que impede a força da tinta de ser só cor: são\n// tantas palavras quantos são os degraus da escala, MAIS UMA para o nível zero.\n//\n// Os meses vêm em duas formas porque servem a duas leituras: a curta rotula a\n// coluna para o olho, e a longa entra na frase que quem ouve recebe.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: ActivityGraphLabels = {\n  region: 'Actividad del trimestre',\n  total: '{count} contribuciones entre {start} y {end}',\n  dateFormat: '{day} de {month} de {year}',\n  monthsShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],\n  monthsLong: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],\n  weekdaysShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],\n  none: 'Sin actividad el {date}.',\n  one: '{count} contribución el {date}. Intensidad {level}.',\n  many: '{count} contribuciones el {date}. Intensidad {level}.',\n  levels: ['Ninguna', 'Baja', 'Media', 'Alta', 'Muy alta'],\n  legendLess: 'Menos',\n  legendMore: 'Más',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia en el dibujo"
+      },
+      "empty": {
+        "label": "Vacío",
+        "trigger": "El día no tuvo actividad, o tuvo menos que el primer escalón de la escala.",
+        "behavior": "La casilla queda sin tinta alguna — y no con poca tinta, que es lo que separa \"no ocurrió nada\" de \"ocurrió poco\"."
+      },
+      "low": {
+        "label": "Débil",
+        "trigger": "El día alcanzó los primeros escalones de la escala.",
+        "behavior": "Un cuadrado pequeño, con la tinta más clara, centrado en la casilla."
+      },
+      "high": {
+        "label": "Fuerte",
+        "trigger": "El día alcanzó los últimos escalones de la escala.",
+        "behavior": "El cuadrado crece hasta llenar la casilla, y la tinta llega a fuerza plena."
+      },
+      "busy": {
+        "label": "Escribiendo",
+        "trigger": "La ejecución que escribe la rejilla aún corre.",
+        "behavior": "La pieza se declara ocupada, y nada en ella se anuncia mientras tanto."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Nombre",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "days": {
+          "name": "days",
+          "type": "readonly ActivityDay[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que ocurrió, día a día. El día fuera de la ventana sale, el día repetido suma, y la lista puede llegar vacía — vacío no es ausencia de respuesta, es la respuesta de un período en el que no ocurrió nada."
+        },
+        "start": {
+          "name": "start",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El primer día de la ventana, en año-mes-día. Es dato, y no el reloj de hoy."
+        },
+        "end": {
+          "name": "end",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El último día de la ventana, en año-mes-día. Un fin anterior al inicio no es ventana, y la pieza no dibuja nada."
+        },
+        "thresholds": {
+          "name": "thresholds",
+          "type": "readonly number[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los escalones de la escala, en conteo. Obligatorio: una escala derivada del valor mayor haría que el mismo conteo pintara con fuerzas distintas en dos rejillas lado a lado."
+        },
+        "weekStart": {
+          "name": "weekStart",
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "En qué día empieza la semana, con cero en domingo. Las siete filas giran con él."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está la ejecución que escribe la rejilla. Decide una sola cosa: si la pieza se declara ocupada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ActivityGraphLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "Las plantillas y las palabras de pantalla. Obligatorio, porque todo aquí es texto."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre de la capa que se desplaza. Obligatorio: sin él, la parada de teclado llega a quien escucha sin decir dónde entró la persona."
+        },
+        "labelsTotal": {
+          "name": "total",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase visible del total, con el lugar de la suma y de las dos puntas de la ventana marcados."
+        },
+        "labelsDateFormat": {
+          "name": "dateFormat",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La plantilla de una fecha, con el día, el mes y el año marcados en el orden en que el idioma los dice."
+        },
+        "labelsMonthsShort": {
+          "name": "monthsShort",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los doce meses, cortos, para las etiquetas de columna. El primero es enero."
+        },
+        "labelsMonthsLong": {
+          "name": "monthsLong",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los doce meses, completos, para la frase que recibe quien escucha."
+        },
+        "labelsWeekdaysShort": {
+          "name": "weekdaysShort",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los siete días de la semana, cortos. El primero es domingo, sea cual sea el día en que empieza la semana."
+        },
+        "labelsNone": {
+          "name": "none",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase del día sin actividad. Es propia, y no la frase de conteo con un cero dentro."
+        },
+        "labelsOne": {
+          "name": "one",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase del día con una ocurrencia."
+        },
+        "labelsMany": {
+          "name": "many",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase del día con más de una."
+        },
+        "labelsLevels": {
+          "name": "levels",
+          "type": "readonly string[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada nivel, del vacío al techo de la escala — una más que los escalones. Es la que impide que la fuerza de la tinta sea solo color."
+        },
+        "labelsLegendLess": {
+          "name": "legendLess",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La punta débil de la leyenda, visible."
+        },
+        "labelsLegendMore": {
+          "name": "legendMore",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La punta fuerte de la leyenda, visible."
+        },
+        "dayDate": {
+          "name": "date",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El día, en año-mes-día. Un día civil, sin hora y sin huso."
+        },
+        "dayCount": {
+          "name": "count",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Cuánto ocurrió en él. Los días repetidos suman."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La pieza dibuja los días que recibe en la ventana que recibe. No mira el reloj, no deriva la escala, no mide elementos, no anima y no abre pistas. Mostrar otro período es pasar otra ventana.",
+      "extensibilityCode": {
+        "vanilla": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. Trocar a janela é remontar a peça com outra janela — o componente\n// desenha o que recebe.\nfunction mostrarTrimestre(inicio, fim) {\n  const proxima = createActivityGraph({\n    days: atividade,\n    start: inicio,\n    end: fim,\n    thresholds: [1, 4, 8, 13],\n    status: 'complete',\n    labels: rotulos,\n  });\n  if (proxima) grade.replaceWith(proxima);\n}",
+        "react": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\nconst [janela, setJanela] = useState({ start: \"2026-01-01\", end: \"2026-03-31\" });\n\n<ActivityGraph\n  days={atividade}\n  start={janela.start}\n  end={janela.end}\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\nconst janela = ref({ start: '2026-01-01', end: '2026-03-31' });\n</script>\n\n<template>\n  <ActivityGraph\n    :days=\"atividade\"\n    :start=\"janela.start\"\n    :end=\"janela.end\"\n    :thresholds=\"[1, 4, 8, 13]\"\n    status=\"complete\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n  // nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n  // cadeias. O componente desenha o que recebe.\n  import { ActivityGraph } from '@/components/ui/activity-graph';\n\n  let janela = $state({ start: '2026-01-01', end: '2026-03-31' });\n</script>\n\n<ActivityGraph\n  days={atividade}\n  start={janela.start}\n  end={janela.end}\n  thresholds={[1, 4, 8, 13]}\n  status=\"complete\"\n  labels={rotulos}\n/>",
+        "angular": "// A JANELA É DADO, e é o que esta peça tem que um mapa de calor fixo não tem:\n// nada aqui olha o relógio, então pedir o trimestre passado é trocar duas\n// cadeias. O componente desenha o que recebe.\n//\n// TUDO É MEMBRO DE CLASSE, e nenhum deles é constante no topo do arquivo:\n// expressão de template só enxerga membro, e um binding para uma constante\n// importada não resolve.\nreadonly atividade: readonly ActivityDay[] = [/* o que aconteceu, dia a dia */];\n\nreadonly degraus: readonly number[] = [1, 4, 8, 13];\n\nreadonly janela = signal({ start: '2026-01-01', end: '2026-03-31' });\n\n// No template, a janela entra como os membros que são:\n//\n//   <div\n//     ndsActivityGraph\n//     [days]=\"atividade\"\n//     [start]=\"janela().start\"\n//     [end]=\"janela().end\"\n//     [thresholds]=\"degraus\"\n//     status=\"complete\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-activity-graph",
+          "description": "Tamaño de texto de la pieza entera."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-activity-graph",
+          "description": "Tamaño de la casilla, y lo que decide cuándo la rejilla empieza a desplazarse."
+        },
+        "spacing05": {
+          "token": "--spacing-0-5",
+          "value": ".nds-activity-graph",
+          "description": "Espacio entre casillas, y lo que hace que la rejilla se lea como rejilla."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-activity-graph-total",
+          "description": "Espacio entre la frase del total y la capa que se desplaza."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-activity-graph-total",
+          "description": "Color de la frase del total, de las etiquetas de mes y de día, y de la leyenda."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-activity-graph-total",
+          "description": "Interlineado del texto, y lo que hace crecer la línea con la fuente del navegador."
+        },
+        "spacing3Viewport": {
+          "token": "--spacing-3",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Relleno interno de la capa que se desplaza."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Contorno de la capa que se desplaza."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Redondeo de la capa que se desplaza."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Fondo de la capa que se desplaza, que separa la pieza de la conversación detrás de ella."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-activity-graph-viewport",
+          "description": "Anillo de foco de la capa que se desplaza, dibujado hacia dentro."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-activity-graph-calendar",
+          "description": "Espacio entre las filas de etiquetas y la rejilla de casillas."
+        },
+        "radiusXs": {
+          "token": "--radius-xs",
+          "value": ".nds-activity-graph-day",
+          "description": "Redondeo de la casilla y de la muestra de la leyenda."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-activity-graph-day",
+          "description": "Suelo de la casilla, que no cambia con el nivel y es contra lo que se mide la tinta."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-activity-graph-day",
+          "description": "La tinta, cuya opacidad y tamaño crecen juntos con el nivel."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-activity-graph {\n  /* O TAMANHO DA CASA, e é ele que decide quando a grade passa a ser mais larga\n     que a conversa. Altura fixa é legítima aqui porque a casa não carrega texto\n     — o que ela carrega é a frase que só quem ouve recebe. */\n  --activity-graph-cell: var(--spacing-2);\n  /* O vão entre casas, que é o que faz a grade parecer uma grade. */\n  --activity-graph-gap: var(--spacing-px);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Una casilla más oscura que la vecina no se lee: la densidad no tiene palabra. La regla de esta pieza es que la estructura accesible es la MISMA estructura — cada día es un elemento de lista de verdad, en orden de calendario, y lo que la tinta dice sin palabras él lo dice con palabras dentro de sí.",
+      "items": {
+        "item1": "Cada casilla lleva, en texto que solo recibe quien escucha, la fecha, el conteo y la palabra del nivel con que fue pintada.",
+        "item2": "El nivel llega en dos canales para quien ve — la fuerza de la tinta y el tamaño del cuadrado dentro de la casilla — y en palabra para quien escucha. Nunca solo en color.",
+        "item3": "El día sin actividad tiene frase propia, y su casilla queda sin tinta alguna: es lo que separa \"no ocurrió nada\" de \"ocurrió poco\".",
+        "item4": "La capa que se desplaza tiene rol, nombre y parada de teclado. El rol es lo que hace legal el nombre: sobre un elemento sin rol, el nombre se descarta.",
+        "item5": "Ninguna casilla entra en el orden de foco. Un año son cientos de paradas que no llevan a ningún sitio, y el nombre de cada casilla ya llega sin foco alguno.",
+        "item6": "Las etiquetas de mes y de día de la semana quedan fuera de lo que se lee en voz: son ancla para el ojo, y la fecha entera ya llega en cada casilla.",
+        "item7": "La leyenda se lee: las dos puntas son texto visible, y cada muestra lleva la palabra de su nivel.",
+        "item8": "El orden de las casillas en el código es el del calendario, del primer día de la ventana al último — y ese es el orden de lectura."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Para una vez, en la capa que se desplaza. Ninguna casilla recibe foco, porque ninguna casilla hace nada.",
+        "enter": "No hace nada: la pieza es de lectura y no ofrece acción.",
+        "arrows": "Desplazan la rejilla cuando es más ancha que la conversación, con el foco en la capa."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La capa que se desplaza declara rol de grupo y lleva el nombre que pasó quien la monta. Grupo, y no región: una página con decenas de estas se volvería decenas de hitos homónimos.",
+        "item2": "La raíz se declara ocupada mientras la ejecución corre, y nada en ella es región viva.",
+        "item3": "Las dos filas de etiquetas salen enteras del árbol de accesibilidad."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La lista se anuncia con el conteo de días, y cada día se lee como fecha, conteo y nivel.",
+        "item2": "Nada se anuncia mientras la rejilla se escribe; quien quiera anunciar el final escribe una frase, una vez, por fuera.",
+        "item3": "Ninguna coordenada se lee: la columna y la fila son para los ojos, y lo que dicen ya llegó como fecha."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "chart": {
+          "name": "Gráfico",
+          "description": "Cuando el dibujo sale de valores medidos contra ejes, y no de un conteo por día."
+        },
+        "calendar": {
+          "name": "Calendario",
+          "description": "Cuando las casillas son para elegir una fecha, y no para leer densidad."
+        },
+        "traceWaterfall": {
+          "name": "Cascada de tramos",
+          "description": "Cuando el eje es continuo y lo que informa es cuándo empezó cada tramo."
+        },
+        "jobProgress": {
+          "name": "Progreso del trabajo",
+          "description": "Cuando hay una cuenta con un total, y no un conteo por día."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "La prueba que aprobó esta pieza no fue si el gráfico podría crecer hasta cubrirla — todo puede crecer —, fue si el dibujo ya existía. Él tiene ocho tipos y ninguno es mapa de calor, y el calendario de esta casa es una tabla de mes para elegir fecha.",
+      "item2": "Ella absorbe el mapa de calor del catálogo, que es la misma rejilla sabiendo menos: un solo prop, sin clase de quien consume, ventana fija en los 365 días que terminan hoy y cinco colores en hexadecimal puro, sin modo oscuro. Su propia fuente manda a quien quiera una versión reestilizable empezar por esta.",
+      "item3": "La ventana es dato, y es el corazón de la absorción: nada aquí mira el reloj, así que la fotografía de la documentación es la misma mañana.",
+      "item4": "La escala es obligatoria y no se deriva del valor mayor. Derivada, el mismo conteo pintaría con fuerzas distintas en dos rejillas lado a lado — y comparar dos rejillas es para lo que sirve un mapa de calor de calendario.",
+      "item5": "La casilla no es parada de teclado, y eso corrige una lectura del triaje. Él aprobó la pieza en parte porque la fuente dice que la pista aparece al pasar el puntero o al ENFOCAR una celda; lo que aquel argumento cargaba de verdad era el nombre propio de cada casilla, y el nombre está aquí. El foco no vino con él: un año son cientos de paradas que no llevan a ningún sitio.",
+      "item6": "La pista por puntero no entra en la pieza, por la misma cuenta: una pista que solo existe al pasar el puntero no existe para el teclado, y la única forma de darle teclado sería la rejilla de foco que la decisión anterior rechaza. Quien quiera la pista la compone — la casilla tiene dirección propia.",
+      "item7": "El objetivo táctil de 24 px no se aplica aquí: el criterio vale para objetivo de puntero, y la casilla no abre, no elige y no navega. Una rejilla de 53 semanas con casillas de 24 px tendría más de mil píxeles de ancho y dejaría de caber en cualquier conversación.",
+      "item8": "La clasificación del conteo en nivel se volvió primitivo compartido, y no archivo propio: la regla cabe en dos frases y rendiría cinco implementaciones que divergen en los bordes, pero un módulo con una función de tres líneas es lo que la guía ya descartó una vez. Vive junto a la geometría del calendario, que es donde se usa."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una ventana y su actividad",
+          "result": "Hay una casilla por día de la ventana, en orden de calendario",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar una ventana sin actividad alguna",
+          "result": "La rejilla sigue dibujada, con todas las casillas vacías",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar un día fuera de la ventana",
+          "result": "No se dibuja, y no entra en el total",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar conteos que alcanzan escalones distintos de la escala",
+          "result": "Cada casilla recibe el nivel que manda la escala",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar la pieza",
+          "result": "Cada casilla lleva la fecha, el conteo y la palabra del nivel, en texto que solo recibe quien escucha",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Montar la pieza",
+          "result": "La capa que se desplaza tiene rol de grupo, nombre y parada de teclado, y es la única parada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar el estado en que la ejecución corre",
+          "result": "La pieza se declara ocupada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar la pieza con un fin anterior al inicio, o sin escala",
+          "result": "No hay rejilla, y no se dibuja nada",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Montar la pieza",
+          "result": "La leyenda tiene una muestra por nivel, y cada una dice su palabra",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pasar una ventana más ancha que la conversación",
+          "result": "Una sola capa se desplaza, y es la que tiene nombre y foco",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que afirma la play.",
+        "item1": "Cada casilla dice el conteo y el nivel en palabra, y no solo por la tinta",
+        "item2": "El día sin actividad tiene frase propia, y casilla sin tinta alguna",
+        "item3": "Las etiquetas de mes y de día de la semana están fuera de lo que se lee en voz",
+        "item4": "La capa que se desplaza tiene rol y nombre, y el rol es lo que hace legal el nombre",
+        "item5": "Nada dentro de la pieza es región viva",
+        "item6": "Ninguna casilla entra en el orden de foco",
+        "item7": "Cada muestra de la leyenda lleva la palabra de su nivel"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la rejilla, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — la escala entera, del vacío al nivel lleno",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — la ventana sin actividad alguna",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — mientras la rejilla se escribe, con la ejecución ocupada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composiciones — un solo mes, porque la ventana es dato",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — un año entero, desplazándose",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Composiciones — la semana empezando en lunes",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composiciones — la casilla apretada por quien consume",
+          "priority": "medium"
+        }
+      }
+    }
+  }
+}
