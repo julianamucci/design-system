@@ -228,14 +228,15 @@ const stateItems = computed(() => [
 ]);
 
 const modeItems = computed(() => [
-  { name: tContent('variants.items.single.label'),      description: stripHtml(tContent('variants.items.single.description')),      code: codeSingle      },
-  { name: tContent('variants.items.multiple.label'),    description: stripHtml(tContent('variants.items.multiple.description')),    code: codeMultiple    },
-  { name: tContent('variants.items.controlled.label'),  description: stripHtml(tContent('variants.items.controlled.description')),  code: codeControlled  },
-  { name: tContent('variants.items.defaultOpen.label'), description: stripHtml(tContent('variants.items.defaultOpen.description')), code: codeSingle      },
+  { trackId: 'single', name: tContent('variants.items.single.label'),      description: stripHtml(tContent('variants.items.single.description')),      code: codeSingle      },
+  { trackId: 'multiple', name: tContent('variants.items.multiple.label'),    description: stripHtml(tContent('variants.items.multiple.description')),    code: codeMultiple    },
+  { trackId: 'controlled', name: tContent('variants.items.controlled.label'),  description: stripHtml(tContent('variants.items.controlled.description')),  code: codeControlled  },
+  { trackId: 'defaultOpen', name: tContent('variants.items.defaultOpen.label'), description: stripHtml(tContent('variants.items.defaultOpen.description')), code: codeSingle      },
 ]);
 
 const compositionItems = computed(() => [
   {
+    trackId: 'iconTrigger',
     name: tContent('variants.compositions.iconTrigger.name'),
     description: tContent('variants.compositions.iconTrigger.description'),
     useWhen: tContent('variants.compositions.iconTrigger.use'),
@@ -250,6 +251,7 @@ const compositionItems = computed(() => [
 </Accordion>`,
   },
   {
+    trackId: 'badgeTrigger',
     name: tContent('variants.compositions.badgeTrigger.name'),
     description: tContent('variants.compositions.badgeTrigger.description'),
     useWhen: tContent('variants.compositions.badgeTrigger.use'),
@@ -264,6 +266,7 @@ const compositionItems = computed(() => [
 </Accordion>`,
   },
   {
+    trackId: 'richContent',
     name: tContent('variants.compositions.richContent.name'),
     description: tContent('variants.compositions.richContent.description'),
     useWhen: tContent('variants.compositions.richContent.use'),
@@ -295,6 +298,7 @@ const compositionItems = computed(() => [
 </Accordion>`,
   },
   {
+    trackId: 'faq',
     name: tContent('variants.compositions.faq.name'),
     description: tContent('variants.compositions.faq.description'),
     useWhen: tContent('variants.compositions.faq.use'),

@@ -223,10 +223,11 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.default'),       description: stripHtml(tContent('variants.styles.default')),       code: codeDefault       },
-  { name: tContent('variants.items.withShortcut'),  description: stripHtml(tContent('variants.styles.withShortcut')),  code: codeWithShortcut  },
-  { name: tContent('variants.items.longText'),      description: stripHtml(tContent('variants.styles.longText')),      code: codeLongText      },
+  { trackId: 'default', name: tContent('variants.items.default'),       description: stripHtml(tContent('variants.styles.default')),       code: codeDefault       },
+  { trackId: 'withShortcut', name: tContent('variants.items.withShortcut'),  description: stripHtml(tContent('variants.styles.withShortcut')),  code: codeWithShortcut  },
+  { trackId: 'longText', name: tContent('variants.items.longText'),      description: stripHtml(tContent('variants.styles.longText')),      code: codeLongText      },
   {
+    trackId: 'positioningSides',
     name: tContent('variants.items.positioningSides.name'),
     description: tContent('variants.items.positioningSides.description'),
     useWhen: tContent('variants.items.positioningSides.use'),
@@ -290,18 +291,21 @@ const codeCompSides = `<div class="nds-grid nds-w-full" style="place-items: cent
 
 const compositionItems = computed(() => [
   {
+    trackId: 'iconButtonWithShortcut',
     name: tContent('variants.compositions.iconButtonWithShortcut.name'),
     description: tContent('variants.compositions.iconButtonWithShortcut.description'),
     useWhen: tContent('variants.compositions.iconButtonWithShortcut.use'),
     code: codeCompIconShortcut,
   },
   {
+    trackId: 'formFieldHelp',
     name: tContent('variants.compositions.formFieldHelp.name'),
     description: tContent('variants.compositions.formFieldHelp.description'),
     useWhen: tContent('variants.compositions.formFieldHelp.use'),
     code: codeCompFormHelp,
   },
   {
+    trackId: 'metricDescription',
     name: tContent('variants.compositions.metricDescription.name'),
     description: tContent('variants.compositions.metricDescription.description'),
     useWhen: tContent('variants.compositions.metricDescription.use'),

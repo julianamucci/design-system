@@ -263,14 +263,14 @@ const variantItems = computed(() => [
     name: tContent('variants.items.withTitle.name'),
     description: tContent('variants.items.withTitle.description'),
     useWhen: tContent('variants.items.withTitle.use'),
-    trackId: 'with-title',
+    trackId: 'withTitle',
     code: `<CodeBlock\n  :code="source"\n  language="ts"\n  title="lista.ts"\n/>`,
   },
   {
     name: tContent('variants.items.withoutNumbers.name'),
     description: tContent('variants.items.withoutNumbers.description'),
     useWhen: tContent('variants.items.withoutNumbers.use'),
-    trackId: 'without-numbers',
+    trackId: 'withoutNumbers',
     code: `<CodeBlock\n  :code="source"\n  language="ts"\n  :show-line-numbers="false"\n/>`,
   },
   {
@@ -284,7 +284,7 @@ const variantItems = computed(() => [
     name: tContent('variants.items.withFooter.name'),
     description: tContent('variants.items.withFooter.description'),
     useWhen: tContent('variants.items.withFooter.use'),
-    trackId: 'with-footer',
+    trackId: 'withFooter',
     code: `<CodeBlock\n  :code="source"\n  language="ts"\n  footer="A ação de copiar leva apenas o código."\n/>`,
   },
 ]);

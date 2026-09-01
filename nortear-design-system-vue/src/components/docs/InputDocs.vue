@@ -258,24 +258,28 @@ const codeCompWithPrefix = `<div class="nds-stack nds-w-full nds-max-w-sm" data-
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withLabel',
     name: tContent('variants.compositions.withLabel.name'),
     description: tContent('variants.compositions.withLabel.description'),
     useWhen: tContent('variants.compositions.withLabel.use'),
     code: codeCompWithLabel,
   },
   {
+    trackId: 'withHint',
     name: tContent('variants.compositions.withHint.name'),
     description: tContent('variants.compositions.withHint.description'),
     useWhen: tContent('variants.compositions.withHint.use'),
     code: codeCompWithHint,
   },
   {
+    trackId: 'errorMessage',
     name: tContent('variants.compositions.errorMessage.name'),
     description: tContent('variants.compositions.errorMessage.description'),
     useWhen: tContent('variants.compositions.errorMessage.use'),
     code: codeCompWithError,
   },
   {
+    trackId: 'withPrefix',
     name: tContent('variants.compositions.withPrefix.name'),
     description: tContent('variants.compositions.withPrefix.description'),
     useWhen: tContent('variants.compositions.withPrefix.use'),

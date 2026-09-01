@@ -304,6 +304,7 @@ const variantItems = computed(() => [
   { name: 'inline',   description: stripHtml(tContent('variants.items.inline')),   code: codeInline   },
   { name: 'palette',  description: stripHtml(tContent('variants.items.palette')),  code: codePalette  },
   {
+    trackId: 'withGroups',
     name: tContent('variants.items.withGroups.name'),
     description: tContent('variants.items.withGroups.description'),
     useWhen: tContent('variants.items.withGroups.use'),

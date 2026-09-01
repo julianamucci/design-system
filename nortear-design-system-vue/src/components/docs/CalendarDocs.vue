@@ -276,12 +276,14 @@ const variantItems = computed(() => [
   { name: 'layout=dropdown', description: stripHtml(tContent('variants.items.captionDropdown')), code: codeLayoutDropdown },
   { name: 'numberOfMonths',  description: stripHtml(tContent('variants.items.numberOfMonths')),  code: codeNumberOfMonths },
   {
+    trackId: 'inlineBordered',
     name: tContent('variants.items.inlineBordered.name'),
     description: tContent('variants.items.inlineBordered.description'),
     useWhen: tContent('variants.items.inlineBordered.use'),
     code: codeInlineBordered,
   },
   {
+    trackId: 'disabledPast',
     name: tContent('variants.items.disabledPast.name'),
     description: tContent('variants.items.disabledPast.description'),
     useWhen: tContent('variants.items.disabledPast.use'),

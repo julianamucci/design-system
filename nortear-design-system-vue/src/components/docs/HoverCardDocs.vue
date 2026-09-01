@@ -186,27 +186,31 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.default'),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
-  { name: tContent('variants.items.withDelay'), description: stripHtml(tContent('variants.styles.withDelay')), code: codeWithDelay },
+  { trackId: 'default', name: tContent('variants.items.default'),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
+  { trackId: 'withDelay', name: tContent('variants.items.withDelay'), description: stripHtml(tContent('variants.styles.withDelay')), code: codeWithDelay },
   {
+    trackId: 'userProfile',
     name: tContent('variants.items.userProfile.name'),
     description: tContent('variants.items.userProfile.description'),
     useWhen: tContent('variants.items.userProfile.use'),
     code: codeCompUserProfile,
   },
   {
+    trackId: 'linkPreview',
     name: tContent('variants.items.linkPreview.name'),
     description: tContent('variants.items.linkPreview.description'),
     useWhen: tContent('variants.items.linkPreview.use'),
     code: codeCompLinkPreview,
   },
   {
+    trackId: 'definitionTooltip',
     name: tContent('variants.items.definitionTooltip.name'),
     description: tContent('variants.items.definitionTooltip.description'),
     useWhen: tContent('variants.items.definitionTooltip.use'),
     code: codeCompDefinition,
   },
   {
+    trackId: 'metricExplainer',
     name: tContent('variants.items.metricExplainer.name'),
     description: tContent('variants.items.metricExplainer.description'),
     useWhen: tContent('variants.items.metricExplainer.use'),

@@ -357,6 +357,7 @@ const variantItems = computed(() => [
   { name: 'scatter', description: stripHtml(tContent('variants.items.scatter')), code: codeScatterChart },
   { name: 'pie-nest', description: stripHtml(tContent('variants.items.pieNest')), code: codeNestChart },
   {
+    trackId: 'smallInline',
     name: tContent('variants.items.smallInline.name'),
     description: tContent('variants.items.smallInline.description'),
     useWhen: tContent('variants.items.smallInline.use'),
@@ -393,6 +394,7 @@ const codeCompSmallInline = `<div class="nds-cluster nds-rounded-md nds-border-d
 
 const compositionItems = computed(() => [
   {
+    trackId: 'inCard',
     name: tContent('variants.compositions.inCard.name'),
     description: tContent('variants.compositions.inCard.description'),
     useWhen: tContent('variants.compositions.inCard.use'),

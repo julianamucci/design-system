@@ -229,31 +229,35 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: stripHtml(tContent('variants.items.default')),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
-  { name: stripHtml(tContent('variants.items.withCounter')), description: stripHtml(tContent('variants.styles.withCounter')), code: codeWithCounter },
-  { name: stripHtml(tContent('variants.items.noResize')),    description: stripHtml(tContent('variants.styles.noResize')),    code: codeNoResize    },
+  { trackId: 'default', name: stripHtml(tContent('variants.items.default')),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
+  { trackId: 'withCounter', name: stripHtml(tContent('variants.items.withCounter')), description: stripHtml(tContent('variants.styles.withCounter')), code: codeWithCounter },
+  { trackId: 'noResize', name: stripHtml(tContent('variants.items.noResize')),    description: stripHtml(tContent('variants.styles.noResize')),    code: codeNoResize    },
 ]);
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withLabel',
     name: tContent('variants.compositions.withLabel.name'),
     description: tContent('variants.compositions.withLabel.description'),
     useWhen: tContent('variants.compositions.withLabel.use'),
     code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-label">Descrição</Label>\n  <Textarea\n    id="ta-label"\n    class="nds-resize-y nds-min-h-30"\n    placeholder="ex: Descreva o produto..."\n  />\n</div>`,
   },
   {
+    trackId: 'withHint',
     name: tContent('variants.compositions.withHint.name'),
     description: tContent('variants.compositions.withHint.description'),
     useWhen: tContent('variants.compositions.withHint.use'),
     code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea\n    id="ta-hint"\n    class="nds-resize-y nds-min-h-30"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="nds-text-caption nds-text-muted-foreground">\n    Descreva o produto com clareza, destacando os principais atributos.\n  </p>\n</div>`,
   },
   {
+    trackId: 'withError',
     name: tContent('variants.compositions.withError.name'),
     description: tContent('variants.compositions.withError.description'),
     useWhen: tContent('variants.compositions.withError.use'),
     code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-error">Descrição</Label>\n  <Textarea\n    id="ta-error"\n    aria-invalid="true"\n    aria-describedby="ta-error-error"\n    class="nds-resize-y nds-min-h-30"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="nds-text-caption nds-text-destructive" id="ta-error-error">\n    A descrição é obrigatória e deve ter pelo menos 20 caracteres.\n  </p>\n</div>`,
   },
   {
+    trackId: 'inForm',
     name: tContent('variants.compositions.inForm.name'),
     description: tContent('variants.compositions.inForm.description'),
     useWhen: tContent('variants.compositions.inForm.use'),

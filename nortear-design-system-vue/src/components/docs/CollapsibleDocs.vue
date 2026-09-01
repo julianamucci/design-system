@@ -223,6 +223,7 @@ const variantItems = computed(() => [
     code: codeControlled,
   },
   {
+    trackId: 'customButton',
     name: tContent('variants.items.customButton.name'),
     description: tContent('variants.items.customButton.description'),
     useWhen: tContent('variants.items.customButton.use'),
@@ -283,18 +284,21 @@ const codeRichContent = `<Collapsible class="nds-w-full nds-max-w-sm">
 
 const compositionItems = computed(() => [
   {
+    trackId: 'iconTrigger',
     name: tContent('variants.compositions.iconTrigger.name'),
     description: tContent('variants.compositions.iconTrigger.description'),
     useWhen: tContent('variants.compositions.iconTrigger.use'),
     code: codeIconTrigger,
   },
   {
+    trackId: 'rotatingChevron',
     name: tContent('variants.compositions.rotatingChevron.name'),
     description: tContent('variants.compositions.rotatingChevron.description'),
     useWhen: tContent('variants.compositions.rotatingChevron.use'),
     code: codeRotatingChevron,
   },
   {
+    trackId: 'richContent',
     name: tContent('variants.compositions.richContent.name'),
     description: tContent('variants.compositions.richContent.description'),
     useWhen: tContent('variants.compositions.richContent.use'),

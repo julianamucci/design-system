@@ -222,6 +222,7 @@ const variantItems = computed(() => [
   { name: 'single',     description: stripHtml(tContent('variants.items.single')),     code: codeSingle     },
   { name: 'multi',      description: stripHtml(tContent('variants.items.multi')),      code: codeMulti      },
   {
+    trackId: 'autoplay',
     name: tContent('variants.items.autoplay.name'),
     description: tContent('variants.items.autoplay.description'),
     useWhen: tContent('variants.items.autoplay.use'),
@@ -312,12 +313,14 @@ import Autoplay from "embla-carousel-autoplay";
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withDots',
     name: tContent('variants.compositions.withDots.name'),
     description: tContent('variants.compositions.withDots.description'),
     useWhen: tContent('variants.compositions.withDots.use'),
     code: codeCompositionWithDots,
   },
   {
+    trackId: 'gallery',
     name: tContent('variants.compositions.gallery.name'),
     description: tContent('variants.compositions.gallery.description'),
     useWhen: tContent('variants.compositions.gallery.use'),

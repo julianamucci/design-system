@@ -217,9 +217,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.default'),  description: stripHtml(tContent('variants.styles.default')),  code: codeDefault  },
-  { name: tContent('variants.items.line'),     description: stripHtml(tContent('variants.styles.line')),     code: codeLine     },
-  { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
+  { trackId: 'default', name: tContent('variants.items.default'),  description: stripHtml(tContent('variants.styles.default')),  code: codeDefault  },
+  { trackId: 'line', name: tContent('variants.items.line'),     description: stripHtml(tContent('variants.styles.line')),     code: codeLine     },
+  { trackId: 'vertical', name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
 ]);
 
 const codeIconTrigger = `<Tabs default-value="profile" class="nds-w-full" style="max-width: 36rem">
@@ -266,12 +266,14 @@ const codeBadgeTrigger = `<Tabs default-value="inbox" class="nds-w-full" style="
 
 const compositionItems = computed(() => [
   {
+    trackId: 'iconTrigger',
     name: tContent('variants.compositions.iconTrigger.name'),
     description: tContent('variants.compositions.iconTrigger.description'),
     useWhen: tContent('variants.compositions.iconTrigger.use'),
     code: codeIconTrigger,
   },
   {
+    trackId: 'badgeTrigger',
     name: tContent('variants.compositions.badgeTrigger.name'),
     description: tContent('variants.compositions.badgeTrigger.description'),
     useWhen: tContent('variants.compositions.badgeTrigger.use'),

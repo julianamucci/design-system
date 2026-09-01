@@ -186,21 +186,25 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   {
+    trackId: 'sixDigits',
     name: tContent('variants.items.sixDigits'),
     description: stripHtml(tContent('variants.styles.sixDigits')),
     code: '<InputOTP :max-length="6" inputmode="numeric" autocomplete="one-time-code" />',
   },
   {
+    trackId: 'fourDigits',
     name: tContent('variants.items.fourDigits'),
     description: stripHtml(tContent('variants.styles.fourDigits')),
     code: '<InputOTP :max-length="4" inputmode="numeric" />',
   },
   {
+    trackId: 'withSeparator',
     name: tContent('variants.items.withSeparator'),
     description: stripHtml(tContent('variants.styles.withSeparator')),
     code: '<InputOTP :max-length="6">\n  <InputOTPGroup>...</InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>...</InputOTPGroup>\n</InputOTP>',
   },
   {
+    trackId: 'alphanumeric',
     name: tContent('variants.items.alphanumeric'),
     description: stripHtml(tContent('variants.styles.alphanumeric')),
     code: 'import { REGEXP_ONLY_DIGITS_AND_CHARS } from "vue-input-otp";\n<InputOTP :max-length="6" :pattern="REGEXP_ONLY_DIGITS_AND_CHARS" inputmode="text" />',
@@ -256,24 +260,28 @@ const codeCompResend = `<div class="nds-stack" data-spacing="sm">
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withLabel',
     name: tContent('variants.compositions.withLabel.name'),
     description: tContent('variants.compositions.withLabel.description'),
     useWhen: tContent('variants.compositions.withLabel.use'),
     code: codeCompLabel,
   },
   {
+    trackId: 'withHelpText',
     name: tContent('variants.compositions.withHelpText.name'),
     description: tContent('variants.compositions.withHelpText.description'),
     useWhen: tContent('variants.compositions.withHelpText.use'),
     code: codeCompHelp,
   },
   {
+    trackId: 'withErrorMessage',
     name: tContent('variants.compositions.withErrorMessage.name'),
     description: tContent('variants.compositions.withErrorMessage.description'),
     useWhen: tContent('variants.compositions.withErrorMessage.use'),
     code: codeCompError,
   },
   {
+    trackId: 'withResendButton',
     name: tContent('variants.compositions.withResendButton.name'),
     description: tContent('variants.compositions.withResendButton.description'),
     useWhen: tContent('variants.compositions.withResendButton.use'),

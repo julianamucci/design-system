@@ -212,27 +212,31 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
-  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
+  { trackId: 'horizontal', name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
+  { trackId: 'vertical', name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
   {
+    trackId: 'linkSimples',
     name: tContent('variants.items.linkSimples.name'),
     description: tContent('variants.items.linkSimples.description'),
     useWhen: tContent('variants.items.linkSimples.use'),
     code: simpleCodeLink,
   },
   {
+    trackId: 'comDropdown',
     name: tContent('variants.items.comDropdown.name'),
     description: tContent('variants.items.comDropdown.description'),
     useWhen: tContent('variants.items.comDropdown.use'),
     code: codeWithDropdown,
   },
   {
+    trackId: 'megaMenuGrid',
     name: tContent('variants.items.megaMenuGrid.name'),
     description: tContent('variants.items.megaMenuGrid.description'),
     useWhen: tContent('variants.items.megaMenuGrid.use'),
     code: codeMegaMenuGrid,
   },
   {
+    trackId: 'comCardDestacado',
     name: tContent('variants.items.comCardDestacado.name'),
     description: tContent('variants.items.comCardDestacado.description'),
     useWhen: tContent('variants.items.comCardDestacado.use'),

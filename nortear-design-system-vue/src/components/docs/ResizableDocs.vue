@@ -244,9 +244,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
-  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
-  { name: tContent('variants.items.nested'),     description: stripHtml(tContent('variants.styles.nested')),     code: codeNested     },
+  { trackId: 'horizontal', name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
+  { trackId: 'vertical', name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
+  { trackId: 'nested', name: tContent('variants.items.nested'),     description: stripHtml(tContent('variants.styles.nested')),     code: codeNested     },
 ]);
 
 const stateItems = computed(() => [

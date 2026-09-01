@@ -307,11 +307,11 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.basic.label'),           description: tContent('variants.items.basic.description'),           code: codeBasic           },
-  { name: tContent('variants.items.withFooter.label'),      description: tContent('variants.items.withFooter.description'),      code: codeWithFooter      },
-  { name: tContent('variants.items.withSrOnlyCaption.label'), description: tContent('variants.items.withSrOnlyCaption.description'), code: codeWithSrOnlyCaption },
-  { name: tContent('variants.items.withInlineActions.label'), description: tContent('variants.items.withInlineActions.description'), code: codeWithActions   },
-  { name: tContent('variants.items.withEmptyState.label'),  description: tContent('variants.items.withEmptyState.description'),  code: codeEmpty           },
+  { trackId: 'basic', name: tContent('variants.items.basic.label'),           description: tContent('variants.items.basic.description'),           code: codeBasic           },
+  { trackId: 'withFooter', name: tContent('variants.items.withFooter.label'),      description: tContent('variants.items.withFooter.description'),      code: codeWithFooter      },
+  { trackId: 'withSrOnlyCaption', name: tContent('variants.items.withSrOnlyCaption.label'), description: tContent('variants.items.withSrOnlyCaption.description'), code: codeWithSrOnlyCaption },
+  { trackId: 'withInlineActions', name: tContent('variants.items.withInlineActions.label'), description: tContent('variants.items.withInlineActions.description'), code: codeWithActions   },
+  { trackId: 'withEmptyState', name: tContent('variants.items.withEmptyState.label'),  description: tContent('variants.items.withEmptyState.description'),  code: codeEmpty           },
 ]);
 
 const codeCompFilterableToolbar = `<div class="nds-stack" data-spacing="sm">
@@ -400,24 +400,28 @@ const codeCompWithPagination = `<div class="nds-stack" data-spacing="sm">
 
 const compositionItems = computed(() => [
   {
+    trackId: 'filterableToolbar',
     name: tContent('variants.compositions.filterableToolbar.name'),
     description: tContent('variants.compositions.filterableToolbar.description'),
     useWhen: tContent('variants.compositions.filterableToolbar.use'),
     code: codeCompFilterableToolbar,
   },
   {
+    trackId: 'sortableHeaders',
     name: tContent('variants.compositions.sortableHeaders.name'),
     description: tContent('variants.compositions.sortableHeaders.description'),
     useWhen: tContent('variants.compositions.sortableHeaders.use'),
     code: codeCompSortableHeaders,
   },
   {
+    trackId: 'selectableRows',
     name: tContent('variants.compositions.selectableRows.name'),
     description: tContent('variants.compositions.selectableRows.description'),
     useWhen: tContent('variants.compositions.selectableRows.use'),
     code: codeCompSelectableRows,
   },
   {
+    trackId: 'withPagination',
     name: tContent('variants.compositions.withPagination.name'),
     description: tContent('variants.compositions.withPagination.description'),
     useWhen: tContent('variants.compositions.withPagination.use'),

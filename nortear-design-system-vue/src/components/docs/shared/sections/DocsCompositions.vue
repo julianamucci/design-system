@@ -8,6 +8,12 @@ interface DocsCompositionItem {
   /** Situação de uso recomendada — renderizada após "Quando usar:" abaixo da descrição. */
   useWhen?: string;
   code?: string;
+  /**
+   * Chave estável do evento de tracking, repassada ao DocsVariants. Sem ela o
+   * id cai em `name`, que vem traduzido — o mesmo botão sairia com um valor
+   * por idioma. As outras 4 stacks já declaravam o campo.
+   */
+  trackId?: string;
 }
 
 /**

@@ -241,10 +241,10 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
-  { name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeRight.replace('"right"', '"left"') },
-  { name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeRight.replace('"right"', '"top"') },
-  { name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeRight.replace('"right"', '"bottom"') },
+  { trackId: 'right', name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
+  { trackId: 'left', name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeRight.replace('"right"', '"left"') },
+  { trackId: 'top', name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeRight.replace('"right"', '"top"') },
+  { trackId: 'bottom', name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeRight.replace('"right"', '"bottom"') },
 ]);
 
 const codeCompAdvancedFilters = `<Sheet>
@@ -294,12 +294,14 @@ const codeCompSecondaryNav = `<Sheet>
 
 const compositionItems = computed(() => [
   {
+    trackId: 'advancedFilters',
     name: tContent('variants.compositions.advancedFilters.name'),
     description: tContent('variants.compositions.advancedFilters.description'),
     useWhen: tContent('variants.compositions.advancedFilters.use'),
     code: codeCompAdvancedFilters,
   },
   {
+    trackId: 'secondaryNavigation',
     name: tContent('variants.compositions.secondaryNavigation.name'),
     description: tContent('variants.compositions.secondaryNavigation.description'),
     useWhen: tContent('variants.compositions.secondaryNavigation.use'),

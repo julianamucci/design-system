@@ -298,12 +298,14 @@ const variantItems = computed(() => [
   { name: 'none',      description: tContent('variants.items.none'),      code: codeCollapsibleNone  },
   { name: 'right',     description: tContent('variants.items.right'),     code: codeSideRight        },
   {
+    trackId: 'withSubMenu',
     name: tContent('variants.items.withSubMenu.name'),
     description: tContent('variants.items.withSubMenu.description'),
     useWhen: tContent('variants.items.withSubMenu.use'),
     code: codeCompositionWithSubMenu,
   },
   {
+    trackId: 'withBadges',
     name: tContent('variants.items.withBadges.name'),
     description: tContent('variants.items.withBadges.description'),
     useWhen: tContent('variants.items.withBadges.use'),
@@ -524,12 +526,14 @@ const codeCompositionWithBadges = `<SidebarMenuItem>
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withGroups',
     name: tContent('variants.compositions.withGroups.name'),
     description: tContent('variants.compositions.withGroups.description'),
     useWhen: tContent('variants.compositions.withGroups.use'),
     code: codeCompositionWithGroups,
   },
   {
+    trackId: 'withSearch',
     name: tContent('variants.compositions.withSearch.name'),
     description: tContent('variants.compositions.withSearch.description'),
     useWhen: tContent('variants.compositions.withSearch.use'),

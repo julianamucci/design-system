@@ -213,9 +213,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: stripHtml(tContent('variants.items.default')),         description: stripHtml(tContent('variants.styles.default')),         code: codeDefault         },
-  { name: stripHtml(tContent('variants.items.withDescription')), description: stripHtml(tContent('variants.styles.withDescription')), code: codeWithDescription },
-  { name: stripHtml(tContent('variants.items.sm')),              description: stripHtml(tContent('variants.styles.sm')),              code: codeSm              },
+  { trackId: 'default', name: stripHtml(tContent('variants.items.default')),         description: stripHtml(tContent('variants.styles.default')),         code: codeDefault         },
+  { trackId: 'withDescription', name: stripHtml(tContent('variants.items.withDescription')), description: stripHtml(tContent('variants.styles.withDescription')), code: codeWithDescription },
+  { trackId: 'sm', name: stripHtml(tContent('variants.items.sm')),              description: stripHtml(tContent('variants.styles.sm')),              code: codeSm              },
 ]);
 
 const codeCompWithLabel = `<div class="nds-cluster" data-spacing="sm">
@@ -270,24 +270,28 @@ const codeCompInForm = `<form class="nds-stack nds-w-sm" data-spacing="sm" @subm
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withLabel',
     name: tContent('variants.compositions.withLabel.name'),
     description: tContent('variants.compositions.withLabel.description'),
     useWhen: tContent('variants.compositions.withLabel.use'),
     code: codeCompWithLabel,
   },
   {
+    trackId: 'withoutLabel',
     name: tContent('variants.compositions.withoutLabel.name'),
     description: tContent('variants.compositions.withoutLabel.description'),
     useWhen: tContent('variants.compositions.withoutLabel.use'),
     code: codeCompWithoutLabel,
   },
   {
+    trackId: 'settingsList',
     name: tContent('variants.compositions.settingsList.name'),
     description: tContent('variants.compositions.settingsList.description'),
     useWhen: tContent('variants.compositions.settingsList.use'),
     code: codeCompSettingsList,
   },
   {
+    trackId: 'inForm',
     name: tContent('variants.compositions.inForm.name'),
     description: tContent('variants.compositions.inForm.description'),
     useWhen: tContent('variants.compositions.inForm.use'),

@@ -164,6 +164,7 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   {
+    trackId: 'default',
     name: tContent('variants.items.default.label'),
     description: stripHtml(tContent('variants.items.default.description')),
     code: codeDefault,

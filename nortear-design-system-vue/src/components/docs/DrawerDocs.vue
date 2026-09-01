@@ -225,11 +225,12 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeBottom },
-  { name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeBottom.replace('<Drawer>', '<Drawer direction="top">') },
-  { name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeBottom.replace('<Drawer>', '<Drawer direction="left">') },
-  { name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
+  { trackId: 'bottom', name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeBottom },
+  { trackId: 'top', name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeBottom.replace('<Drawer>', '<Drawer direction="top">') },
+  { trackId: 'left', name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeBottom.replace('<Drawer>', '<Drawer direction="left">') },
+  { trackId: 'right', name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
   {
+    trackId: 'withScroll',
     name: tContent('variants.items.withScroll.name'),
     description: tContent('variants.items.withScroll.description'),
     useWhen: tContent('variants.items.withScroll.use'),
@@ -308,12 +309,14 @@ const codeCompWithScroll = `<Drawer>
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withForm',
     name: tContent('variants.compositions.withForm.name'),
     description: tContent('variants.compositions.withForm.description'),
     useWhen: tContent('variants.compositions.withForm.use'),
     code: codeCompWithForm,
   },
   {
+    trackId: 'withConfirmation',
     name: tContent('variants.compositions.withConfirmation.name'),
     description: tContent('variants.compositions.withConfirmation.description'),
     useWhen: tContent('variants.compositions.withConfirmation.use'),

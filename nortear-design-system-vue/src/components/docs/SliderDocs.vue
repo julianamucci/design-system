@@ -255,10 +255,11 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.single'),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
-  { name: tContent('variants.items.range'),    description: stripHtml(tContent('variants.styles.range')),    code: codeRange    },
-  { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
+  { trackId: 'single', name: tContent('variants.items.single'),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
+  { trackId: 'range', name: tContent('variants.items.range'),    description: stripHtml(tContent('variants.styles.range')),    code: codeRange    },
+  { trackId: 'vertical', name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
   {
+    trackId: 'brightness',
     name: tContent('variants.items.brightness.name'),
     description: tContent('variants.items.brightness.description'),
     useWhen: tContent('variants.items.brightness.use'),
@@ -311,12 +312,14 @@ const codeCompForm = `<form aria-label="Configurações de áudio" @submit.preve
 
 const compositionItems = computed(() => [
   {
+    trackId: 'volume',
     name: tContent('variants.compositions.volume.name'),
     description: tContent('variants.compositions.volume.description'),
     useWhen: tContent('variants.compositions.volume.use'),
     code: codeCompVolume,
   },
   {
+    trackId: 'form',
     name: tContent('variants.compositions.form.name'),
     description: tContent('variants.compositions.form.description'),
     useWhen: tContent('variants.compositions.form.use'),

@@ -350,6 +350,7 @@ const variantItems = computed(() => [
 
 const compositionItems = computed(() => [
   {
+    trackId: 'inForm',
     name: tContent('variants.compositions.inForm.name'),
     description: tContent('variants.compositions.inForm.description'),
     useWhen: tContent('variants.compositions.inForm.use'),

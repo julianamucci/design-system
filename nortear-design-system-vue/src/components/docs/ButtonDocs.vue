@@ -191,6 +191,7 @@ const variantItems = computed(() => [
   { name: 'secondary',   description: stripHtml(tContent('variants.items.secondary')),   code: codeSecondary   },
   { name: 'ghost',       description: stripHtml(tContent('variants.items.ghost')),       code: codeGhost       },
   {
+    trackId: 'asLink',
     name: tContent('variants.items.asLink.name'),
     description: tContent('variants.items.asLink.description'),
     useWhen: tContent('variants.items.asLink.use'),
@@ -211,24 +212,28 @@ const sizeItems = computed(() => [
 
 const compositionItems = computed(() => [
   {
+    trackId: 'iconLeft',
     name: tContent('variants.compositions.iconLeft.name'),
     description: tContent('variants.compositions.iconLeft.description'),
     useWhen: tContent('variants.compositions.iconLeft.use'),
     code: `<Button>\n  <Plus aria-hidden="true" />\n  Adicionar item\n</Button>`,
   },
   {
+    trackId: 'iconRight',
     name: tContent('variants.compositions.iconRight.name'),
     description: tContent('variants.compositions.iconRight.description'),
     useWhen: tContent('variants.compositions.iconRight.use'),
     code: `<Button variant="outline">\n  Próximo\n  <ChevronRight aria-hidden="true" />\n</Button>`,
   },
   {
+    trackId: 'destructiveWithIcon',
     name: tContent('variants.compositions.destructiveWithIcon.name'),
     description: tContent('variants.compositions.destructiveWithIcon.description'),
     useWhen: tContent('variants.compositions.destructiveWithIcon.use'),
     code: `<Button variant="destructive">\n  <Trash2 aria-hidden="true" />\n  Excluir\n</Button>`,
   },
   {
+    trackId: 'actionPair',
     name: tContent('variants.compositions.actionPair.name'),
     description: tContent('variants.compositions.actionPair.description'),
     useWhen: tContent('variants.compositions.actionPair.use'),

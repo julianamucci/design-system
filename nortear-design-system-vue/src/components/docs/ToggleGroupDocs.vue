@@ -240,9 +240,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: stripHtml(tContent('variants.items.single')),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
-  { name: stripHtml(tContent('variants.items.multiple')), description: stripHtml(tContent('variants.styles.multiple')), code: codeMultiple },
-  { name: stripHtml(tContent('variants.items.vertical')), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
+  { trackId: 'single', name: stripHtml(tContent('variants.items.single')),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
+  { trackId: 'multiple', name: stripHtml(tContent('variants.items.multiple')), description: stripHtml(tContent('variants.styles.multiple')), code: codeMultiple },
+  { trackId: 'vertical', name: stripHtml(tContent('variants.items.vertical')), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
 ]);
 
 const codeAlignmentBar = `<ToggleGroup type="single" variant="outline" default-value="left" aria-label="Alinhamento do texto">
@@ -284,18 +284,21 @@ const codeFilterWithText = `<div class="nds-stack nds-w-2xs" data-spacing="sm">
 
 const compositionItems = computed(() => [
   {
+    trackId: 'alignmentBar',
     name: tContent('variants.compositions.alignmentBar.name'),
     description: tContent('variants.compositions.alignmentBar.description'),
     useWhen: tContent('variants.compositions.alignmentBar.use'),
     code: codeAlignmentBar,
   },
   {
+    trackId: 'viewMode',
     name: tContent('variants.compositions.viewMode.name'),
     description: tContent('variants.compositions.viewMode.description'),
     useWhen: tContent('variants.compositions.viewMode.use'),
     code: codeViewMode,
   },
   {
+    trackId: 'filterWithText',
     name: tContent('variants.compositions.filterWithText.name'),
     description: tContent('variants.compositions.filterWithText.description'),
     useWhen: tContent('variants.compositions.filterWithText.use'),

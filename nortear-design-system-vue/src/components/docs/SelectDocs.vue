@@ -252,9 +252,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.default'),    description: stripHtml(tContent('variants.styles.default')),    code: codeDefault    },
-  { name: tContent('variants.items.withGroups'), description: stripHtml(tContent('variants.styles.withGroups')), code: codeWithGroups },
-  { name: tContent('variants.items.withIcon'),   description: stripHtml(tContent('variants.styles.withIcon')),   code: codeWithIcon   },
+  { trackId: 'default', name: tContent('variants.items.default'),    description: stripHtml(tContent('variants.styles.default')),    code: codeDefault    },
+  { trackId: 'withGroups', name: tContent('variants.items.withGroups'), description: stripHtml(tContent('variants.styles.withGroups')), code: codeWithGroups },
+  { trackId: 'withIcon', name: tContent('variants.items.withIcon'),   description: stripHtml(tContent('variants.styles.withIcon')),   code: codeWithIcon   },
 ]);
 
 const codeCompInForm = `<form
@@ -282,6 +282,7 @@ const codeCompInForm = `<form
 
 const compositionItems = computed(() => [
   {
+    trackId: 'inForm',
     name: tContent('variants.compositions.inForm.name'),
     description: tContent('variants.compositions.inForm.description'),
     useWhen: tContent('variants.compositions.inForm.use'),

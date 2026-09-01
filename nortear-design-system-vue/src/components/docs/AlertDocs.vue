@@ -222,8 +222,8 @@ const variantItems = computed(() => [
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
   { name: 'info',        description: stripHtml(tContent('variants.items.info')),        code: codeInfo         },
-  { name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
-  { name: tContent('variants.items.dismissible.name'), description: tContent('variants.items.dismissible.description'), useWhen: tContent('variants.items.dismissible.use'), code: codeDismissible },
+  { trackId: 'withoutTitle', name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
+  { trackId: 'dismissible', name: tContent('variants.items.dismissible.name'), description: tContent('variants.items.dismissible.description'), useWhen: tContent('variants.items.dismissible.use'), code: codeDismissible },
 ]);
 
 // Primeira emissão real do evento alert_dismiss — o primitivo não importa
@@ -247,12 +247,14 @@ function onDemonstrationDismiss() {
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withIcon',
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
     code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
   },
   {
+    trackId: 'withAction',
     name: tContent('variants.compositions.withAction.name'),
     description: tContent('variants.compositions.withAction.description'),
     useWhen: tContent('variants.compositions.withAction.use'),

@@ -293,24 +293,28 @@ const variantItems = computed(() => [
   { name: 'destructive',  description: stripHtml(tContent('variants.items.destructive')),  code: codeDestructive   },
   { name: 'Label',        description: stripHtml(tContent('variants.items.label')),         code: codeLabel         },
   {
+    trackId: 'withCheckbox',
     name: tContent('variants.items.withCheckbox.name'),
     description: tContent('variants.items.withCheckbox.description'),
     useWhen: tContent('variants.items.withCheckbox.use'),
     code: codeCompositionCheckbox,
   },
   {
+    trackId: 'withRadio',
     name: tContent('variants.items.withRadio.name'),
     description: tContent('variants.items.withRadio.description'),
     useWhen: tContent('variants.items.withRadio.use'),
     code: codeCompositionRadio,
   },
   {
+    trackId: 'withSubmenu',
     name: tContent('variants.items.withSubmenu.name'),
     description: tContent('variants.items.withSubmenu.description'),
     useWhen: tContent('variants.items.withSubmenu.use'),
     code: codeCompositionSubmenu,
   },
   {
+    trackId: 'withShortcuts',
     name: tContent('variants.items.withShortcuts.name'),
     description: tContent('variants.items.withShortcuts.description'),
     useWhen: tContent('variants.items.withShortcuts.use'),

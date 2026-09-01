@@ -154,18 +154,21 @@ const variantItems = computed(() => [
 
 const compositionItems = computed(() => [
   {
+    trackId: 'withIcon',
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
     code: `<Badge>\n  <Check class="nds-icon-sm" aria-hidden="true" />\n  Ativo\n</Badge>`,
   },
   {
+    trackId: 'withCounter',
     name: tContent('variants.compositions.withCounter.name'),
     description: tContent('variants.compositions.withCounter.description'),
     useWhen: tContent('variants.compositions.withCounter.use'),
     code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
   },
   {
+    trackId: 'asTrigger',
     name: tContent('variants.compositions.asTrigger.name'),
     description: tContent('variants.compositions.asTrigger.description'),
     useWhen: tContent('variants.compositions.asTrigger.use'),

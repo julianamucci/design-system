@@ -254,7 +254,7 @@ const compositionItems = computed(() => [
   },
   {
     name: tContent('variants.compositions.withDescriptions.name'),
-    trackId: 'with-descriptions',
+    trackId: 'withDescriptions',
     description: tContent('variants.compositions.withDescriptions.description'),
     useWhen: tContent('variants.compositions.withDescriptions.use'),
     code: stepperWithDescriptionsSource(),

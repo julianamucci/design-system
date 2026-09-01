@@ -251,9 +251,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.default'),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
-  { name: tContent('variants.items.withTitle'), description: stripHtml(tContent('variants.styles.withTitle')), code: codeWithTitle },
-  { name: tContent('variants.items.form'),      description: stripHtml(tContent('variants.styles.form')),      code: codeForm      },
+  { trackId: 'default', name: tContent('variants.items.default'),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
+  { trackId: 'withTitle', name: tContent('variants.items.withTitle'), description: stripHtml(tContent('variants.styles.withTitle')), code: codeWithTitle },
+  { trackId: 'form', name: tContent('variants.items.form'),      description: stripHtml(tContent('variants.styles.form')),      code: codeForm      },
 ]);
 
 const codeEditProfile = `<Popover>
@@ -356,10 +356,10 @@ const codeQuickSettings = `<Popover>
 </Popover>`;
 
 const compositionItems = computed(() => [
-  { name: tContent('variants.compositions.editProfile.name'),   description: tContent('variants.compositions.editProfile.description'),   useWhen: tContent('variants.compositions.editProfile.use'),   code: codeEditProfile   },
-  { name: tContent('variants.compositions.tableFilter.name'),   description: tContent('variants.compositions.tableFilter.description'),   useWhen: tContent('variants.compositions.tableFilter.use'),   code: codeTableFilter   },
-  { name: tContent('variants.compositions.colorPicker.name'),   description: tContent('variants.compositions.colorPicker.description'),   useWhen: tContent('variants.compositions.colorPicker.use'),   code: codeColorPicker   },
-  { name: tContent('variants.compositions.quickSettings.name'), description: tContent('variants.compositions.quickSettings.description'), useWhen: tContent('variants.compositions.quickSettings.use'), code: codeQuickSettings },
+  { trackId: 'editProfile', name: tContent('variants.compositions.editProfile.name'),   description: tContent('variants.compositions.editProfile.description'),   useWhen: tContent('variants.compositions.editProfile.use'),   code: codeEditProfile   },
+  { trackId: 'tableFilter', name: tContent('variants.compositions.tableFilter.name'),   description: tContent('variants.compositions.tableFilter.description'),   useWhen: tContent('variants.compositions.tableFilter.use'),   code: codeTableFilter   },
+  { trackId: 'colorPicker', name: tContent('variants.compositions.colorPicker.name'),   description: tContent('variants.compositions.colorPicker.description'),   useWhen: tContent('variants.compositions.colorPicker.use'),   code: codeColorPicker   },
+  { trackId: 'quickSettings', name: tContent('variants.compositions.quickSettings.name'), description: tContent('variants.compositions.quickSettings.description'), useWhen: tContent('variants.compositions.quickSettings.use'), code: codeQuickSettings },
 ]);
 
 const stateItems = computed(() => [

@@ -221,27 +221,31 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault },
-  { name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: codeDestructive },
+  { trackId: 'default', name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault },
+  { trackId: 'destructive', name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: codeDestructive },
   {
+    trackId: 'withLabel',
     name: tContent('variants.items.withLabel.name'),
     description: tContent('variants.items.withLabel.description'),
     useWhen: tContent('variants.items.withLabel.use'),
     code: codeCompWithLabel,
   },
   {
+    trackId: 'withCheckboxItems',
     name: tContent('variants.items.withCheckboxItems.name'),
     description: tContent('variants.items.withCheckboxItems.description'),
     useWhen: tContent('variants.items.withCheckboxItems.use'),
     code: codeCompCheckbox,
   },
   {
+    trackId: 'withRadioGroup',
     name: tContent('variants.items.withRadioGroup.name'),
     description: tContent('variants.items.withRadioGroup.description'),
     useWhen: tContent('variants.items.withRadioGroup.use'),
     code: codeCompRadio,
   },
   {
+    trackId: 'withShortcuts',
     name: tContent('variants.items.withShortcuts.name'),
     description: tContent('variants.items.withShortcuts.description'),
     useWhen: tContent('variants.items.withShortcuts.use'),

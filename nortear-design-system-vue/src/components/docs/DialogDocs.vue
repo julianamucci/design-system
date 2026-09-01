@@ -293,6 +293,7 @@ const variantItems = computed(() => [
   { name: 'withDestructiveAction', description: stripHtml(tContent('variants.items.withDestructiveAction')), code: codeDefault },
   { name: 'customCloseInFooter',   description: stripHtml(tContent('variants.items.customCloseInFooter')),   code: codeDefault },
   {
+    trackId: 'confirmEmail',
     name: tContent('variants.items.confirmEmail.name'),
     description: tContent('variants.items.confirmEmail.description'),
     useWhen: tContent('variants.items.confirmEmail.use'),
@@ -336,6 +337,7 @@ const codeCompositionMediaPreview = `<Dialog>
 
 const compositionItems = computed(() => [
   {
+    trackId: 'mediaPreview',
     name: tContent('variants.compositions.mediaPreview.name'),
     description: tContent('variants.compositions.mediaPreview.description'),
     useWhen: tContent('variants.compositions.mediaPreview.use'),

@@ -254,21 +254,24 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
-  { name: tContent('variants.items.directional'), description: stripHtml(tContent('variants.styles.directional')), code: codeDirectional },
+  { trackId: 'default', name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
+  { trackId: 'directional', name: tContent('variants.items.directional'), description: stripHtml(tContent('variants.styles.directional')), code: codeDirectional },
   {
+    trackId: 'simple',
     name: tContent('variants.items.simple.name'),
     description: stripHtml(tContent('variants.items.simple.description')),
     useWhen: tContent('variants.items.simple.use'),
     code: codeCompSimple,
   },
   {
+    trackId: 'withEllipsis',
     name: tContent('variants.items.withEllipsis.name'),
     description: stripHtml(tContent('variants.items.withEllipsis.description')),
     useWhen: tContent('variants.items.withEllipsis.use'),
     code: codeCompEllipsis,
   },
   {
+    trackId: 'interactive',
     name: tContent('variants.items.interactive.name'),
     description: stripHtml(tContent('variants.items.interactive.description')),
     useWhen: tContent('variants.items.interactive.use'),

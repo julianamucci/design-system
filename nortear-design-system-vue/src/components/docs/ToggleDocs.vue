@@ -196,10 +196,11 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: stripHtml(tContent('variants.items.default')),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
-  { name: stripHtml(tContent('variants.items.outline')),   description: stripHtml(tContent('variants.styles.outline')),   code: codeOutline   },
-  { name: stripHtml(tContent('variants.items.withLabel')), description: stripHtml(tContent('variants.styles.withLabel')), code: codeWithLabel },
+  { trackId: 'default', name: stripHtml(tContent('variants.items.default')),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
+  { trackId: 'outline', name: stripHtml(tContent('variants.items.outline')),   description: stripHtml(tContent('variants.styles.outline')),   code: codeOutline   },
+  { trackId: 'withLabel', name: stripHtml(tContent('variants.items.withLabel')), description: stripHtml(tContent('variants.styles.withLabel')), code: codeWithLabel },
   {
+    trackId: 'sizes',
     name: tContent('variants.items.sizes.name'),
     description: tContent('variants.items.sizes.description'),
     useWhen: tContent('variants.items.sizes.use'),
@@ -235,12 +236,14 @@ const codeFilterList = `<div class="nds-stack nds-w-2xs" data-spacing="sm">
 
 const compositionItems = computed(() => [
   {
+    trackId: 'toolbar',
     name: tContent('variants.compositions.toolbar.name'),
     description: tContent('variants.compositions.toolbar.description'),
     useWhen: tContent('variants.compositions.toolbar.use'),
     code: codeToolbar,
   },
   {
+    trackId: 'filterList',
     name: tContent('variants.compositions.filterList.name'),
     description: tContent('variants.compositions.filterList.description'),
     useWhen: tContent('variants.compositions.filterList.use'),
