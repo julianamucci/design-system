@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (45)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (46)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -275,9 +275,10 @@ falta, nomeada — nunca uma folha nova.
 | `guardrail-notice` | `alert` na variante `warning` — o escudo âmbar entra na coluna que `:has(> svg)` abre, o título é `.nds-alert-title`, a explicação é o `<p>` de `.nds-alert-description`, que a fonte também desenha sempre — mais `.nds-badge` no encaixe `.nds-alert-action`, que o alerta já encosta no fim da linha do cabeçalho com `:has()`, para a etiqueta da política; e as alternativas são `follow-up-suggestions`, que a própria fonte chama de "próximos pedidos sugeridos" e que esta tabela já resolveu em lista de `button` / `pill.css`. Irmã de `error-state` na origem, e a diferença que a fonte reivindica contra ele é a variante. Veio da família 2 — ver 5.3 |
 | `subagent-list` | `.nds-item-group` de `job-progress` — uma linha por trabalhador. `.nds-item` `.nds-item-outline` dá a superfície de cada cartão; dentro dela `job-progress` leva o nome (`.nds-job-progress-label`), a PALAVRA do estado e a barra do sistema com nome acessível; `.nds-item-actions` leva o modelo em `.nds-badge` com `.nds-font-mono`. A lista é plana na fonte, e o agregado dela é ENTRADA, não leitura. Veio da família 2 — ver 5.3 |
 | `agent-handoff` | `.nds-stack` com três partes: a linha da passagem é `.nds-cluster[data-spacing="xs"]` de dois `.nds-badge` com a seta do lucide entre eles, decorativa, e a relação em `.nds-sr-only`; a palavra do estado é `agent-status`, que traz `RunStatus` inteiro no lugar do booleano da fonte; o motivo é a descrição de `.nds-item`, e o que foi levado junto é `.nds-item-group` de linhas com `.nds-font-mono` e `.nds-truncate`. Veio da família 2 — ver 5.3 |
+| `edit-message` | `composer` com `value` — o texto de antes chega pela mesma prop por onde um rascunho volta ao campo — mais `railStart` para o controle de cancelar e uma frase a mais em `.nds-composer-hint`, que é a DESCRIÇÃO do campo e por isso chega antes da tecla de envio, e não depois. A bolha em repouso é a mensagem do `chat-thread` com o controle de editar em `actions` (`.nds-chat-message-actions`), como `message-actions` acima nesta tabela; trocar uma forma pela outra é montagem de quem consome. Quantas réplicas o envio descarta é dado de produto (§7) e entra na frase como `{max}` já entra. Pede **uma opção** `railEnd?: HTMLElement[]` no trilho do `composer`, onde `.nds-composer-rail-end` já é a fila — nem classe nova, nem folha nova. Veio da família 1 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (75)
+### 5.2 As sete famílias novas (74)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -285,7 +286,7 @@ slug produz 83 folhas e nenhum sistema.
 
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
-| **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
+| **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `message-queue` (12 no catálogo — `edit-message` saiu para a 5.1, ver 5.3 —, **10 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (17 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list` e `agent-handoff` saíram para a 5.1, ver 5.3 —, **13 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
@@ -1197,8 +1198,10 @@ com **13 componentes**, e as sete somam 69.
 
 **Décima terceira correção, e a segunda em que a peça SOBREVIVE**:
 `inline-citation` abre a família 3 e não colapsa. **Nenhuma contagem muda** — a
-5.1 fica em **45**, a 5.2 em **75**, a família 3 nos seus **9**. Somando as sete:
-11 + 13 + 9 + 20 + 5 + 8 + 3 = **69 componentes**; 45 + 75 = **120 entradas**.
+5.1 fica em **45**, a 5.2 em **75**, a família 3 nos seus **9**. Somando as
+sete: 11 + 13 + 9 + 20 + 5 + 8 + 3 = **69 componentes**; 45 + 75 = **120
+entradas**. (Números desta correção, não os de hoje: a décima quarta os moveu —
+ver adiante.)
 
 O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
 `Source { domain, title, snippet }` e `InlineCitation { sources, openIndex:
@@ -1294,6 +1297,173 @@ prévia que caiba num cartão de ponteiro, sem alvo de toque em conflito com a
 entrelinha, e sem o caminho de abertura por clique —, `inline-citation` colapsa
 para a 5.1, com o motivo.
 
+**Décima quarta correção, e a oitava que atravessa de 5.2 para 5.1**:
+`edit-message` é `composer` com `value` + `chat-thread` com `actions` — e as duas
+contagens mudam junto, 75 → 74 e 45 → 46. É a primeira que sai da família 1, e a
+primeira em que a entrada colapsa na peça que DÁ NOME à família.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia: `value:
+string`, `discardedReplies: number`, `editing: boolean`, `onValueChange`,
+`onSave`, `onCancel`, `onStartEdit` e `className`. Oito entradas, quatro delas
+chamadas de volta, e nenhum tipo declarado. A anatomia são duas formas no mesmo
+lugar: em repouso, a bolha enviada dentro de um `<button>`; editando, um
+`<textarea>`, uma linha dizendo quantas réplicas o envio descarta — **omitida
+inteira** quando o número é zero, que é a mesma costura que a décima leu no aviso
+e a décima segunda na passagem — e uma fileira com Cancelar e Enviar.
+
+**O QUE A FONTE CHAMA DE DESCARTE NÃO DESCARTA NADA**, e é essa medida que decide
+todo o resto. Ela mesma escreve: com runtime, enviar a edição acrescenta a
+reescrita como IRMÃ da original sob o mesmo pai, a original e tudo abaixo dela
+continuam na história da thread, alcançáveis pelo seletor de ramo, e "nada é de
+fato descartado, só deixa de ser o ramo que está mostrado". O número não é
+consequência que a peça conheça: é contagem que quem monta faz sobre a própria
+transcrição, e a fonte manda fazê-la assim — passe "a contagem que corresponda ao
+que o SEU aplicativo de fato faz com um reenvio; alguns realmente apagam". A §7 é
+literal a respeito, e esta entrada está listada lá: o que acontece com as
+réplicas é política de produto, e o desenho para antes disso.
+
+Antes dos três testes, as duas perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **O que a edição ACRESCENTA ao campo? Três argumentos, e nenhum é desenho.** O
+  texto de antes é `value` — e não por analogia: o docblock do campo já escreveu
+  que `setValue` "é por aqui que um rascunho volta", porque `draft-restore`, na
+  mesma família, existe para devolver texto ao campo. Cancelar é um controle no
+  trilho, que é o espaço que a §4.2 fixou e que o campo já expõe. E o aviso é uma
+  frase a mais na dica. Trocar a bolha pela moldura é MONTAGEM, e a §2 já a
+  entrega a quem consome — o componente desenha o que recebe, e `draft-restore`
+  já escreveu que tirar a peça da tela depois da resposta é de quem monta.
+
+  Vale o traço que a décima primeira nomeou, porque aqui ele aparece na forma
+  mais barata de todas: **pré-carregar não é desenhar.** Um campo que abre com
+  texto dentro é `value`, e se isso bastasse para criar peça, cada origem de
+  texto que cai no campo teria a sua — o rascunho recuperado, a mensagem retirada
+  da fila, o comando escolhido no seletor.
+
+- **O que sobra de próprio depois da §7? A frase do aviso — e a frase tem dono.**
+  Tirada a política, sobra uma linha de texto que diz o que o botão de enviar vai
+  fazer. Isso é exatamente o que a decisão 2 da folha desta família define como
+  dica: "`Enter envia` é comportamento, e quem não vê a tela precisa saber disso
+  ANTES de apertar Enter — por isso ela entra em `aria-describedby`". "Enviar
+  descarta duas respostas" é a mesma classe de informação, no mesmo momento, para
+  a mesma tecla. E o número entra nela como `{max}` já entra:
+  `.nds-composer-hint` é a única linha desta família que já recebe um número de
+  fora e o costura numa frase estática.
+
+  A cláusula inversa, que era a que podia salvar a peça, também não salva: se o
+  produto quiser um aviso mais alto que uma linha de dica, `alert` na variante
+  `warning` já o cobre, e a décima correção já mediu esse encaixe inteiro para
+  `guardrail-notice` — escudo por `:has(> svg)`, título em `.nds-alert-title`,
+  explicação em `.nds-alert-description`. `approval-card` NÃO cobre, e é bom
+  dizer por quê: ele é uma pergunta com a máquina parada dos dois lados, "sem
+  ele, NADA MAIS ACONTECE". Aqui nada está de pé — quem edita já está editando, e
+  pode fechar o campo e seguir. Nos dois caminhos a resposta é peça que já
+  existe.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, a edição não deixa buraco — e a fonte mesma
+  já diz de que ela é feita, pela sexta vez nesta seção, e desta vez na forma
+  mais forte: a superfície `field` de `surfaces.tsx` "é a única superfície que
+  qualquer um dos dois estados usa". Não é uma parte declarada compartilhada, são
+  TODAS. É a leitura da quinta, da sétima, da décima, da décima primeira e da
+  décima segunda correções, e o oposto exato do que a nona leu em `computer-use`.
+  E a coincidência de nome não é coincidência: a moldura daqui chama-se
+  `.nds-composer-field`, e a folha já escreveu que ela é do CONJUNTO e não do
+  campo — moldura, fundo e anel de foco no `:focus-within`, que é o que a fonte
+  desenha nos dois estados.
+
+  As duas formas já estão desenhadas aqui. A moldura editando é `createComposer`
+  inteiro: `.nds-composer-field` com o `<textarea>` sem borda própria,
+  `.nds-composer-rail` com começo e fim, `.nds-composer-counter` quando há teto, e
+  `.nds-composer-hint` embaixo. `rows` já é contagem de linha, então o campo
+  cresce com a fonte do navegador e não tem altura fixa — a regra 1 da §9
+  atendida pela peça que já a atende. A bolha em repouso é a mensagem do
+  `chat-thread` com o controle de editar em `actions`, que é o encaixe
+  `.nds-chat-message-actions` — e `message-actions` já está nesta mesma tabela,
+  resolvido nele. Nenhuma classe nova, nenhuma nomeada como faltando.
+
+  Há UM buraco, e ele é de OPÇÃO, não de classe, como o da sétima correção:
+  `createComposer` monta o fim do trilho por dentro, com o contador e o envio, e
+  só o começo recebe controle de fora. Cancelar cabe hoje em `railStart`, e a
+  composição monta assim sem mudança nenhuma; reproduzir a adjacência da fonte —
+  os dois controles juntos no fim — pede uma opção `railEnd?: HTMLElement[]`,
+  onde `.nds-composer-rail-end` já é a fila, já tem o espaçamento e já encosta à
+  direita com `margin-inline-start: auto`. É o mesmo contrato de espaço que a §2
+  fixou para a família, na mesma forma que o `actions?: HTMLElement[]` que a
+  sétima correção nomeou para o `code-block`. É o que a 5.1 manda nomear, e está
+  nomeado lá.
+
+  Um traço da fonte a composição não reproduz, e por decisão já escrita: a bolha
+  inteira dentro de um `<button>`. Nome acessível é o nome, não o conteúdo (regra
+  7 da §8), e um botão cujo nome é o texto da mensagem muda de nome a cada
+  mensagem; pior, mensagem tem ligação e trecho selecionável dentro, e controle
+  aninhado em controle não tem como ser alcançado por teclado. A própria fonte
+  não faz isso na sua faixa de runtime, onde o gatilho é um botão de ícone com
+  nome acessível DENTRO da bolha — que é o encaixe de `actions`. A composição
+  segue a metade da fonte que está certa.
+
+  E onde fonte e composição DISCORDAM, a composição está mais fina, como na
+  oitava e na décima primeira: lá o aviso é um `<div>` solto entre o campo e os
+  botões, que quem lê por audição só encontra se sair do campo e varrer a tela;
+  aqui ele é a descrição do campo, e chega no foco — antes da tecla, que é o
+  momento em que ele serve para alguma coisa.
+
+- **Estado, não** — e aqui o sinal ficou MUDO pela quinta vez. `editing: boolean`
+  é o único booleano da fonte e não achata vocabulário nenhum: não há palavra de
+  conversa para "editando", nem em `RunStatus` nem em `ToolCallState`. É
+  disclosure — duas formas no mesmo lugar —, que a §2 autoriza a ser interno e
+  obriga a ser controlável, e é a mesma leitura que a décima terceira fez em
+  `inline-citation`. A tabela do sinal não ganha linha. `discardedReplies` também
+  não é estado: é um número que chega escrito numa frase, como `{max}` chega na
+  dica.
+
+  E pela quinta vez o que informa é PARA ONDE a ausência leva — só que desta vez
+  ela leva a DOIS lugares, e é a primeira entrada em que a sub-regra fala pela
+  metade. `onStartEdit` e `onCancel` são o par de abrir e fechar que a §2 exige
+  de TODA peça desta família, e por isso não apontam dono nenhum: é o limite que
+  a décima terceira mediu em `onOpenIndexChange`. Mas `onValueChange` e `onSave`
+  apontam um, e apontam o mais específico que houve até aqui — são `onInput` e
+  `onSubmit` de `ComposerOptions`, mesmo nome, mesmo sentido e mesma regra de que
+  limpar o campo é de quem consome. Assinatura de campo de texto é assinatura de
+  UM tipo de peça, e o dono dela já está construído, nesta família. Onde sobra
+  mais de uma chamada de volta, leia cada uma: as que a família inteira tem ficam
+  caladas, e basta UMA que nomeie dono.
+
+- **Vocabulário, não.** Nenhum tipo novo, e a fonte nem declara um — são duas
+  cadeias de texto contando `className`, um número, um booleano e quatro chamadas
+  de volta, que é a forma mais rala das treze leituras. `value` é
+  `ComposerOptions.value`, mesmo nome e mesmo sentido. `discardedReplies` é dado
+  de produto, e a §7 o entrega a quem monta, como a oitava correção fez com a
+  tabela de faixas de esforço e a décima com a etiqueta de política — e este é o
+  caso mais explícito dos três, porque a fonte escreve com todas as letras que a
+  contagem depende do que o aplicativo faz. `editing` é disclosure. É a distância
+  inteira para `computer-use`, que sobreviveu por ter `x` e `y` sem par em lugar
+  nenhum; aqui todo campo tem par, e quase todos têm par na mesma folha.
+
+E o teste da família, que é o quarto: **ela responde ao eixo, e responde com a
+peça que É o eixo.** O eixo da 1 é uma superfície de entrada com um trilho de
+controles, e tudo pende de `textarea`; esta entrada é essa superfície, com texto
+dentro. É a mesma leitura da sexta, da sétima, da décima primeira e da décima
+segunda, e a diferença para `agent-card` continua sendo esta: `edit-message` não
+sai por não pertencer à família, sai por já estar construída dentro dela — só que
+desta vez não numa irmã, e sim na peça de que a família tomou o nome.
+
+**Reversível**, como as outras treze: se ao construir `mobile-composer` — a última
+que falta na família — aparecer edição com desenho, estado ou vocabulário
+próprios — uma moldura que só exista para editar, um estado da edição que a troca
+de forma não modele, ou o descarte chegando como VOCABULÁRIO em vez de número de
+produto —, `edit-message` desdobra de volta para a 5.2, com o motivo. E há um
+segundo gatilho, deste lado: se o campo precisar de desenho próprio para dizer
+que está reescrevendo um turno em vez de escrever um novo — e não só do `value`,
+do `railStart` e da dica —, a edição vira variante DELE, e continua não sendo
+peça.
+
+Contagens, somadas família a família: 1 tem 12, 2 tem 17, 3 tem 9, 4 tem 20, 5
+tem 5, 6 tem 8 e 7 tem 3 — **74** na 5.2. A 5.1 vai a **46** (44 linhas contadas
+no arquivo, e duas delas carregam duas entradas). Somam 120. A família 1 fica com
+**10 componentes**, e as sete somam 68.
+
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
 `stopped`** e **`tool-error` é `ToolCallState` `failed`**. Os dois estados já
@@ -1386,6 +1556,17 @@ desta família, então ele não aponta dono nenhum. `onSelect` e `onPick` aponta
 um; `activeIndex` sobre um par de coordenadas era eixo sem dono; este não aponta
 e não é eixo. Onde a assinatura que sobrou é a que a família inteira já tem, a
 sub-regra fica calada também, e quem decide são os três testes sozinhos.
+
+**Quinto sinal mudo, medido na décima quarta correção**, e é o primeiro em que a
+sub-regra fala PELA METADE: `edit-message` declara um booleano — `editing` — que
+não achata vocabulário nenhum, porque não há palavra de conversa para "editando";
+é disclosure, como no caso anterior. Colapsou. E o que sobrou no lugar do estado
+foram QUATRO chamadas de volta, não uma: `onStartEdit` e `onCancel` são o par de
+abrir e fechar que a família inteira tem, e ficam calados pelo limite que a
+décima terceira mediu; `onValueChange` e `onSave` são `onInput` e `onSubmit` de
+um campo de texto, que é assinatura de UM tipo de peça e nomeia um dono
+construído. Onde sobra mais de uma, leia cada uma: as da família ficam caladas, e
+basta UMA que nomeie dono para a sub-regra falar.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
