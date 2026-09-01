@@ -8,7 +8,7 @@ import {
   SITE_PLACEHOLDER,
   SITE_PREFIX,
 } from './input-group.fixtures';
-import { inputGroupSourceWith } from './input-group.source';
+import { inputGroupSource, inputGroupSourceWith } from './input-group.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -24,6 +24,10 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      // A transform do META vale para todas as stories do arquivo; cada
+      // story sobrescreve só quando as opções fixas dela diferem. Sem
+      // esta linha o painel Code volta a despejar o `outerHTML`.
+      source: { transform: inputGroupSource },
       description: {
         component:
           'As quatro posições do addon. As duas em linha mantêm tudo numa fila; as duas em bloco ocupam a largura inteira e fazem o grupo virar coluna — decisão da folha compartilhada, sem opção de direção para passar.',

@@ -192,17 +192,26 @@ export const Playground: Story = {
       // A escrita e as duas leituras acontecem AQUI, de uma vez, e nunca dentro
       // de um `waitFor`: condição que mexe no DOM reagenda a si mesma por
       // observador de mutação, o prazo nunca chega e a aba morre sem reportar.
-      // O knob é `--type-base`, a MESMA propriedade que as classes de escala
-      // do design system trocam — não um `font-size` cravado, que sairia do
-      // tema e ainda seria valor de design em estilo em linha.
+      // O knob é `--text-control`, e a escolha tem motivo — a primeira versão
+      // usava `--type-base` e NÃO MEDIA NADA. Substituição de `var()` acontece
+      // no elemento onde o `var()` está escrito: `--text-control` é declarado
+      // uma vez só, em `:root` de `tokens.css`, como
+      // `calc(var(--type-base) * 0.875)`. O valor resolve ali, e o que os
+      // descendentes herdam já vem resolvido — redefinir `--type-base` no meio
+      // da árvore não mexe em `--text-control` nenhum. `--text-control` é o
+      // degrau que o campo e o addon leem de verdade (`input.css`,
+      // `input-group.css`), então é ele que faz a moldura crescer.
+      //
+      // Custom property, e não `font-size` cravado: valor de design em estilo
+      // em linha sairia do tema e da densidade, e tem portão próprio.
       const host = group.parentElement as HTMLElement;
-      const originalBase = host.style.getPropertyValue('--type-base');
+      const originalSize = host.style.getPropertyValue('--text-control');
 
       const before = group.getBoundingClientRect().height;
-      host.style.setProperty('--type-base', '2rem');
+      host.style.setProperty('--text-control', '2rem');
       const after = group.getBoundingClientRect().height;
-      if (originalBase) host.style.setProperty('--type-base', originalBase);
-      else host.style.removeProperty('--type-base');
+      if (originalSize) host.style.setProperty('--text-control', originalSize);
+      else host.style.removeProperty('--text-control');
 
       await expect(after).toBeGreaterThan(before);
 

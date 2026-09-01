@@ -17,7 +17,7 @@ import {
   SITE_PREFIX,
 } from './input-group.fixtures';
 import { createInputGroupButton } from './input-group';
-import { inputGroupSourceWith } from './input-group.source';
+import { inputGroupSource, inputGroupSourceWith } from './input-group.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -34,6 +34,10 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      // A transform do META vale para todas as stories do arquivo; cada
+      // story sobrescreve só quando as opções fixas dela diferem. Sem
+      // esta linha o painel Code volta a despejar o `outerHTML`.
+      source: { transform: inputGroupSource },
       description: {
         component:
           'Busca, senha, formato e área de texto. O grupo só ganha nome acessível quando guarda mais de um controle — nas composições de campo simples ele fica sem nome de propósito.',

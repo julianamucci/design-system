@@ -9,7 +9,7 @@ import {
   SITE_PLACEHOLDER,
   SITE_PREFIX,
 } from './input-group.fixtures';
-import { inputGroupSourceWith } from './input-group.source';
+import { inputGroupSource, inputGroupSourceWith } from './input-group.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -31,6 +31,10 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      // A transform do META vale para todas as stories do arquivo; cada
+      // story sobrescreve só quando as opções fixas dela diferem. Sem
+      // esta linha o painel Code volta a despejar o `outerHTML`.
+      source: { transform: inputGroupSource },
       description: {
         component:
           'Repouso, inválido e desabilitado. O estado mora sempre no CAMPO — a moldura só reage a ele —, e nunca depende só de cor: inválido tem texto ligado ao campo, desabilitado sai da ordem de tabulação.',
