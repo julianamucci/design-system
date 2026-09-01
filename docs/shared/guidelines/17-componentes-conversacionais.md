@@ -317,7 +317,7 @@ geometria, estados, tokens e — o que mais importa — a folha. Construir slug 
 slug produz 83 folhas e nenhum sistema.
 
 **Eram sete, e são cinco.** A 6 dissolveu-se inteira na vigésima sexta correção
-e a 7 na vigésima sétima, e as linhas delas ficam na tabela como `diff-hunks.ts`
+e a 7 na vigésima nona, e as linhas delas ficam na tabela como `diff-hunks.ts`
 ficou na §3.2, pelo mesmo motivo: quem vier atrás precisa saber que foram
 consideradas e por que não nasceram. Família que perde todas as entradas não
 nasce menor — não nasce.
@@ -338,10 +338,10 @@ desta tabela, nunca pelo próprio delta.
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (13 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox`, `elicitation-form`, `schedule-card` e `checkpoint-history` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation` (1 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1 na décima sexta, na décima oitava e na vigésima primeira; `web-search`, `research-report`, `memory-chips`, `speaker-identity` e `mcp-server-panel` saíram em LOTE na vigésima sétima, ver 5.3 —, **1 componente**) | Em que a resposta se apoia. **A folha está de pé com uma entrada só**, e a pergunta que a décima oitava abriu está respondida: das nove entradas originais, oito colapsaram e uma sobreviveu. `Citation` continua sendo o teste — nenhuma das oito a carregava, e a que ficou coube nela sem sobra. Base em `hover-card`, `popover`, `badge`: MATERIAL, e é por isso que a família nasceu, ao contrário da 6. O que era peça pronta estava nas ENTRADAS, não nesta coluna — ver 5.3 |
-| **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `artifact-card`, `canvas-split` (12 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1 na vigésima segunda e na vigésima quarta, e `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview` e `image-generation` na vigésima sétima, em lote, ver 5.3 —, **12 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart` — e essa coluna é MISTA, o que a vigésima sétima mediu entrada por entrada: `card` é material, `table` e `chart` são peças prontas. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Dependências — §6, e o parágrafo que a vigésima sétima acrescentou lá**: das quatro entradas que a seção nomeia, três já foram triadas e nenhuma pedia decisão da dona |
+| **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph` (absorve `heat-graph`, que é a mesma grade com menos — ver 5.3), `artifact-card`, `canvas-split` (12 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1 na vigésima segunda e na vigésima quarta, e `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview` e `image-generation` na vigésima sétima, em lote, ver 5.3 —, **11 componentes**). **As três primeiras sobreviventes da família estão medidas** — `flow-graph`, `trace-waterfall` e `activity-graph`, na vigésima oitava —, e é uma delas que funda a folha | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart` — e essa coluna é MISTA, o que a vigésima sétima mediu entrada por entrada: `card` é material, `table` e `chart` são peças prontas. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Dependências — §6, e o parágrafo que a vigésima sétima acrescentou lá**: das quatro entradas que a seção nomeia, três já foram triadas e nenhuma pedia decisão da dona |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
 | **6. Navegação da conversa** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As oito saíram para a 5.1: `message-branches` na vigésima quinta; `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation` e `onboarding` na vigésima sexta, em lote (0 no catálogo, **0 componentes**) | Era "achar e trocar de lugar sem perder o seu", com base em `sidebar`, `command`, `pagination` e `stepper.css` — e as quatro bases eram as próprias peças. `conversa-nav.css` não é fundada. Ver 5.3 |
-| **7. Voz** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As três saíram para a 5.1: `read-aloud` na décima nona; `orb` e `voice-conversation` na vigésima sétima, em lote (0 no catálogo, **0 componentes**) | Era "áudio ao vivo, com estado de conexão e legenda", com base em `media-player` — e as três palavras do eixo já tinham dono no dia em que a linha foi escrita: a fonte ao vivo é `stream` no próprio `media-player`, o estado da ligação é `connection-state` da família 2, e a legenda é `<track>`. `voz.css` não é fundada. Ver 5.3 |
+| **7. Voz** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As três saíram para a 5.1: `read-aloud` na décima nona; `orb` e `voice-conversation` na vigésima nona, em lote (0 no catálogo, **0 componentes**) | Era "áudio ao vivo, com estado de conexão e legenda", com base em `media-player` — e as três palavras do eixo já tinham dono no dia em que a linha foi escrita: a fonte ao vivo é `stream` no próprio `media-player`, o estado da ligação é `connection-state` da família 2, e a legenda é `<track>`. `voz.css` não é fundada. Ver 5.3 |
 
 ### 5.3 A triagem se corrige DURANTE a construção, e a correção se escreve
 
@@ -4320,6 +4320,13 @@ A 5.1 vai a **70** (68 linhas contadas no arquivo, e duas delas carregam duas
 entradas). Somam 120. Os componentes a construir somam **44**, em **seis** folhas
 — e `resposta-estruturada.css` é uma das que ainda não nasceram.
 
+*(Estes três totais valem para o INSTANTE deste lote, e já não valem: outras duas
+portas estavam escrevendo as famílias 2, 3 e 7 na mesma passada, e fecharam
+depois. O que continua sendo desta leitura é a linha da família 4. Os totais se
+leem das tabelas, depois — é a mesma regra que a vigésima quarta escreveu, e esta
+é a prova dela pelo avesso: eu a segui contra o briefing e ainda assim publiquei
+número que envelheceu em minutos, porque medi árvore com porta viva dentro.)*
+
 **Reversível**, como as outras vinte e seis, e aqui em duas alturas. Por entrada:
 `diagram` desdobra se ao compor aparecer vista que a peça CALCULE — enquadre
 automático, origem de escala seguindo o ponteiro, limites próprios —, e
@@ -4702,14 +4709,19 @@ as linhas da 5.1, lembrando das que carregam duas entradas, na hora em que
 precisar. É a mesma disciplina que o parêntese da 5.2 já manda: reconte família a
 família a partir da tabela, nunca pelo próprio delta.
 
-**Vigésima sétima correção, a segunda em LOTE, e a segunda que dissolve uma
+**Vigésima nona correção, a quarta em LOTE, e a segunda que dissolve uma
 FAMÍLIA inteira**: `orb` e `voice-conversation` colapsam, e a 7 deixa de existir.
-São a vigésima sétima e a vigésima oitava travessias de 5.2 para 5.1, e as
-contagens mudam uma vez só, ao fim do lote. `voz.css` não é fundada, e as folhas
-novas desta guideline passam de seis para cinco.
+São as duas travessias seguintes de 5.2 para 5.1, e as contagens mudam uma vez
+só, ao fim do lote. `voz.css` não é fundada, e as folhas novas desta guideline
+passam de seis para cinco.
 
-**O MECANISMO, e ele NÃO é o da vigésima sexta**: lá a 5.2 tinha dado à família
-quatro bases e as quatro eram as próprias peças, e o corolário mandou perguntar,
+**O ordinal desta correção saiu da POSIÇÃO no arquivo, e não de delta**: três
+portas escreveram nesta seção na mesma passada e as três reivindicaram a
+vigésima sétima, que é o mesmo defeito de contador compartilhado que a vigésima
+terceira registrou. Quem reconciliar, reconcilie por ordem de leitura.
+
+**O MECANISMO, e ele NÃO é o da vigésima sexta correção**: lá a 5.2 tinha dado à
+família quatro bases e as quatro eram as próprias peças, e o corolário mandou perguntar,
 ao abrir uma folha, se as bases da coluna do eixo são MATERIAL ou PEÇAS. A 7
 declara uma base só, `media-player`, e ela É peça — então o instrumento previa o
 desfecho a que se chegou. **Previu certo pelo motivo errado, e é isso que vale
@@ -4754,16 +4766,17 @@ o que todo aplicativo já tinha, aqui descreve o que ESTE design system já tinh
   `status.type`, `isMuted` e `mode` —, e a própria fonte exporta a resolução como
   FUNÇÃO (`deriveVoiceOrbState`), o que a classifica: agregado que é leitura
   rende função, não desenho — a leitura que a vigésima sexta fez em
-  `conversation-search`. `volume` entra por
-  `--nds-voice-level`, que `.nds-composer-voice-bar` já lê, com o mesmo docblock
-  ("o nível é valor de runtime, e entra por custom property"), a mesma decisão de
+  `conversation-search`. `volume` entra por `--nds-voice-level`, que
+  `.nds-composer-voice-bar` já lê, com o mesmo docblock ("o nível é valor de
+  runtime, e entra por custom property"), a mesma decisão de
   ser `aria-hidden` e o mesmo quadro de repouso sob movimento reduzido — peça
   desta campanha, construída oito correções antes desta. `variant` é uma paleta
   de três cores nomeadas fora do tema, que a §9 fecha em uma frase. E o `<canvas>`
   é código: a fonte diz que a peça "owns the WebGL animation", e o que a §1 pega
   é desenho, nunca implementação — aqui não há um sem o outro.
-- **Colapsa**, e o teste que decide é o do quadro de repouso. `prefers-reduced-motion`
-  é o que a própria linha da 5.2 destacava para esta família, e sob ele o orb é um
+- **Colapsa**, e o teste que decide é o do quadro de repouso.
+  `prefers-reduced-motion` é o que a própria linha da 5.2 destacava para esta
+  família, e sob ele o orb é um
   círculo colorido: cinco estados separados por cor, que é o que a regra 4 da §8
   proíbe e o que a decisão 4 do `connection-state` já escreveu para o ponto de 8
   px. Uma peça cuja informação inteira desaparece quando a animação para não
@@ -4898,7 +4911,7 @@ que se está medindo também precisa ser conferida** — a vigésima sexta escre
 metade fácil desta regra, que é conferir primeiro a afirmação que favorece o
 desfecho a que se chega; a metade que faltava é que nenhuma se confere sozinha.
 
-**Vigésima oitava correção, e a vigésima nona travessia de 5.2 para 5.1**:
+**Trigésima correção, e a travessia seguinte de 5.2 para 5.1**:
 `checkpoint-history` é `.nds-item-group` de `.nds-item` com a linha corrente
 marcada — e as duas contagens mudam junto. É a quinta que colapsa numa peça da
 PRÓPRIA família 2 já construída, a última entrada que faltava dela, e **com ela a
@@ -4964,8 +4977,8 @@ Os três testes, todos negativos:
 
   A composição é `.nds-item-group` de `.nds-item` `data-size="sm"`, a mesma fila
   que `subagent-list`, `background-inbox` e o histórico de `schedule-card` já
-  montam. O rótulo é `.nds-item-title`; o carimbo e a contagem, já escritos, são `.nds-badge`
-  com `.nds-font-mono`, onde a quinta, a décima primeira, a décima segunda, a
+  montam. O rótulo é `.nds-item-title`; o carimbo e a contagem, já escritos, são
+  `.nds-badge` com `.nds-font-mono`, onde a quinta, a décima primeira, a décima segunda, a
   décima sétima, a décima oitava e a vigésima terceira já puseram todo valor
   técnico; restaurar é `.nds-button` `.nds-button-ghost` em `.nds-item-actions`. A
   linha corrente leva `aria-current="true"` e `.nds-item-muted`, que é o fundo
@@ -4984,7 +4997,7 @@ Os três testes, todos negativos:
   por `opacity` e nunca por `display`. A fonte diz "hover or focus", e é a
   diferença entre focar o botão e focar a LINHA que a decide.
 
-- **Estado, não, e o sinal fica MUDO, e é o mais mudo desde
+- **Estado, não, e o sinal fica MUDO — e é o mais mudo desde
   `message-branches`.** `Checkpoint` não declara booleano, união nem tipo de
   estado: são três cadeias e um número. Pela sub-regra da décima, olha-se a
   assinatura que sobrou no lugar do estado, e é `onRestore(id)`. Ela nomeia um
@@ -5067,6 +5080,215 @@ entrada e a 5.1 ganha uma. As famílias 3 e 4 estavam sendo escritas por outras
 duas portas enquanto esta lia a fonte, e os números delas não saem de delta desta
 passada: leem-se das linhas, depois — **contador compartilhado não se lê duas
 vezes: lê-se uma, depois.**
+
+
+**O segundo lote da família 4, e o primeiro da campanha inteira em que peças
+SOBREVIVEM em bloco**: `flow-graph`, `trace-waterfall` e `activity-graph` são
+slugs, e `activity-graph` absorve `heat-graph`. Nenhuma entrada atravessa para a
+5.1; o que muda na linha da família 4 é só a absorção — 12 entradas, **11
+componentes**. E o que isso decide é maior que a contagem: **`resposta-estruturada.css`
+tem eixo e vai nascer**, depois de três leituras seguidas que a deixaram por
+fundar.
+
+*(Nota de numeração, e ela é do método: três portas escreveram "vigésima sétima
+correção" nesta mesma rodada — a que colapsou as seis molduras da família 4, a
+que fechou a família 3 e a que dissolveu a família 7 — e uma escreveu "vigésima
+oitava". Este bloco não reivindica ordinal; a reconciliação atribui as cinco. Ele
+se refere ao primeiro lote da família 4 como **o lote das seis molduras**, e não
+pela ordinal, porque ordinal escrita em paralelo é contador compartilhado com
+outro nome.)*
+
+**O MECANISMO, e ele é o avesso exato do lote das seis molduras**: lá a peça
+recebia o conteúdo inteiro e não sobrava desenho para ser dela; aqui a peça
+recebe DADOS e o desenho é o que ela faz com eles. As três põem em pixel uma
+relação que não está no dado — adjacência, intervalo sobre um eixo comum,
+densidade numa grade de datas —, e nenhuma dessas três relações existe em canto
+nenhum desta casa. Escrito como pergunta, para as nove que faltam da família 4:
+**a peça POSICIONA alguma coisa, ou só empilha?** Empilhar é `.nds-stack`,
+`.nds-item-group` e `.nds-card`, e foi o que colapsou seis vezes seguidas.
+Posicionar é o que esta família tem de próprio, e é a razão de a 5.2 lhe ter dado
+uma folha desde o começo.
+
+**1. `flow-graph` — SOBREVIVE, e é a mais clara das três.**
+
+- **A favor**: nós em coordenadas de grade (`column`, `row`) que quem monta
+  escolhe, com uma curva por aresta ligando os que dependem um do outro, e o
+  traço da aresta acendendo só quando as duas pontas estão visíveis. **Nada em
+  `docs/shared/styles/` liga dois retângulos.** Medido: o único conector do
+  design system é `.nds-stepper-separator`, uma linha de 1 px entre etapas
+  ADJACENTES de uma fila linear, e `chart` tem oito tipos — `bar`, `line`,
+  `area`, `pie`, `pie-nest`, `funnel`, `radar`, `scatter` — e nenhum é grafo.
+- **Contra**: `agent-plan` já desenha trabalho em etapas com estado por etapa, e
+  `PlanStep` tem cinco palavras onde esta tem três. Se o que a entrada
+  acrescentasse fosse só a posição, seria `agent-plan` com layout.
+- **Sobrevive**, e o que decide não é a posição, é a ARESTA. `FlowEdge` é
+  `{ from, to }`: adjacência, uma relação entre dois itens, e `chat-protocol.ts`
+  não tem como dizer "este depende daquele" — `PlanStep` é fila ordenada e ordem
+  não é dependência, porque fila não se ramifica nem se reencontra, que é
+  literalmente o que a fonte declara ("branches that fan out and rejoin"). É a
+  leitura da nona ampliada: lá o eixo novo era um PONTO; aqui é um ponto mais uma
+  RELAÇÃO, e relação é a primeira coisa deste catálogo que não cabe num campo de
+  item nenhum.
+- **O achatamento existe e não segurou**: `done | active | pending` são três
+  desenhos onde `ToolCallState` tem quatro e `PlanStepState` tem cinco; `active`
+  é `running` com outro nome, e o que se perde é `failed` — um nó de trabalho que
+  quebrou desenha igual a um que terminou. **O sinal previu e errou**, e é a
+  primeira vez na campanha que ele erra: pela abertura da própria seção do sinal,
+  ele "não decide sozinho, mas prevê", e aqui o desenho e o vocabulário decidiram
+  contra. A peça construída leva `ToolCallState` inteiro, como sete peças da
+  família 2 já levam no lugar do booleano da fonte.
+- **A evidência que teria virado o voto**: as arestas serem de quem monta, como
+  a superfície de `computer-use` é. Procurada na anatomia: o `<svg>` das curvas é
+  filho da raiz, e o brilho de cada traço é calculado pela peça a partir de
+  `visibleCount` — quem não desenha as arestas não sabe acender nenhuma.
+
+**2. `trace-waterfall` — SOBREVIVE.**
+
+- **A favor**: uma barra por linha POSICIONADA em `startMs / totalMs` e larga em
+  `durationMs / totalMs`, todas contra o mesmo eixo, com recuo por `depth`. É
+  intervalo, e intervalo não existe neste vocabulário: `chat-protocol.ts` sabe
+  dizer estado e duração, e não sabe dizer QUANDO dentro de quê.
+- **Contra**: `progress` é barra, `job-progress` é barra com rótulo e palavra de
+  estado, e `message-timing` já mede o tempo de uma resposta.
+- **Sobrevive**, e as três objeções caem pela mesma medida. `progress` preenche
+  a partir do zero — `.nds-progress-indicator` é `transform: translateX(calc((var(--value) - 100) * 1%))`,
+  que é uma barra ancorada no início e não tem como começar no meio; medido no
+  repositório inteiro, **a única coisa que o design system posiciona por
+  deslocamento é `.nds-computer-use-mark`**, com `inset-inline-start: calc(var(--computer-use-mark-x) * 1%)`.
+  E `message-timing` não tem eixo nenhum: é um `<dl>` de pares termo/valor, e a
+  folha da família 5 diz por escrito que ali "não há medidor que troque de forma"
+  e "não há teto de que caiba uma fração". Barra com começo é outro desenho, não
+  outra variante.
+- **O achatamento também existe aqui e também não segurou**: `running |
+  completed | failed` são três onde `ToolCallState` tem quatro, e `completed` é
+  `done` renomeada; falta `pending` — o trecho que ainda não começou, que num
+  eixo de tempo é justamente o que se quer ver. Segunda vez no mesmo lote que o
+  sinal prevê e erra.
+- **E ela traz de brinde as duas regras que a folha vai ter de reger**, o que
+  ajuda a fundá-la: a fila de N barras num eixo largo é região que ROLA, e vai
+  com papel e nome (regra 6 da §8), e a cor da barra é a única diferença entre os
+  três estados na fonte, o que a regra 4 recusa (WCAG 1.4.1) — entra palavra ao
+  lado, como `agent-status` já faz.
+- **A evidência que teria virado o voto**: as barras não dividirem eixo — cada
+  linha com a própria escala, que seria `progress` numa tabela. Procurada: a
+  fonte diz o contrário em três lugares, e o mais claro é o exemplo de mostrar
+  só os últimos trechos, em que `totalMs` continua sendo o total real "para que
+  as barras restantes guardem a posição verdadeira no eixo em vez de
+  reescalarem".
+
+**3. `activity-graph` — SOBREVIVE, absorvendo `heat-graph`.**
+
+- **A absorção primeiro, porque é barata**: `heat-graph` declara UM prop,
+  `data`. Não tem `className`, não tem `data-slot` na raiz — a própria fonte diz
+  que as duas ausências são únicas no catálogo —, tem janela fixa nos 365 dias
+  que terminam hoje, e a escala de cinco níveis é "cinco valores hexadecimais
+  puros, sem variante para o modo escuro". `activity-graph` é a mesma grade com
+  janela declarável (`start`, `end`), título, total, `className` e uma escala que
+  conhece os dois modos. E quem fecha é a fonte de `heat-graph`, mandando quem
+  quiser uma versão restilizável começar por `activity-graph` "em vez de bifurcar
+  esta, que é fixa". **Mesma grade, mesmos dados, uma sabe menos**: é absorção,
+  como `agent-status` absorveu `stopped-run`.
+- **A favor**: uma grade de uma célula por dia, uma coluna por semana, com
+  rótulos de mês posicionados sobre as colunas, rótulos de dia em linhas
+  alternadas, legenda de cinco níveis entre "menos" e "mais", e dica por célula.
+  Nada nesta casa desenha isso: `chart` não tem tipo de mapa de calor entre os
+  oito, e `calendar` é uma `<table>` de mês para ESCOLHER data, com navegação e
+  células que são botões de seleção — outra geometria e outro propósito.
+- **Contra, e é a objeção séria desta**: `chart` já delega desenho a uma
+  biblioteca que sabe fazer mapa de calor em coordenada de calendário. Um valor
+  novo em `ChartType` seria "um argumento do que já existe", que é o critério de
+  variante.
+- **Sobrevive**, e a resposta a essa objeção é o que esta leitura acrescenta ao
+  instrumento. **O teste não é se a peça existente PODERIA crescer até cobrir a
+  entrada — tudo pode crescer. É se o desenho já existe.** As opções nomeadas
+  pela campanha até aqui foram sempre aditivas sobre um desenho INALTERADO:
+  `actions` numa fila de cabeçalho que já estava lá, `railEnd` num trilho que já
+  estava lá, `lineKinds` ao lado de `highlightLines`. Um mapa de calor de
+  calendário daria a `chart` um sistema de coordenadas que ele não tem, uma forma
+  de dado que ele não aceita (`{ date, count }` onde `ChartDataPoint` é
+  `{ label, value }`) e uma legenda de níveis — isso não é um argumento, é outra
+  peça morando dentro de `chart`.
+- **E há uma medida que fecha do lado da acessibilidade**: as células são
+  focalizáveis e cada uma tem nome próprio ("N contribuições em tal dia"), e o
+  desenho de `chart` entrega isso a uma tela desenhada por biblioteca, cuja
+  resposta acessível é a `ChartTable`. Célula com nome é DOM, não marca de
+  gráfico.
+- **A evidência que teria virado o voto**: a grade ser lida como um todo e não
+  célula a célula — sem foco por dia, sem nome por dia, com a leitura acessível
+  saindo de uma tabela ao lado. Procurada na fonte: "Hovering **or focusing** a
+  cell shows a tooltip".
+- **Sinal mudo**, o décimo terceiro: não há booleano, não há união, não há estado
+  nenhum, e no lugar dele não sobra assinatura — `activity-graph` não tem uma só
+  chamada de volta. Pela sub-regra da décima, quando não sobra nada a que apontar,
+  decidem os três testes; decidiram pelo desenho.
+
+**UMA DEPENDÊNCIA QUE A §6 NÃO VIU, e é a quinta.** As duas fontes de mapa de
+calor envolvem o pacote **`heat-graph`** — a de `heat-graph` se descreve como
+"uma composição fina sobre os primitivos do pacote `heat-graph`" (`Root`,
+`MonthLabels`, `DayLabels`, `Grid`/`Cell`, `Legend`, `Tooltip`), e
+`activity-graph` "constrói o próprio calendário sobre os mesmos primitivos". A
+§6 diz o contrário, em letras: que `activity-graph` e `heat-graph` "se desenham
+com SVG e CSS próprios". **Não se desenham.** É o segundo conserto na mesma
+seção em duas leituras, e a leitura de método é a mesma: aquela tabela previu o
+que cada assunto pediria, e previsão não é fonte lida.
+
+**E isso NÃO vira pergunta para a dona**, pelo teste que a própria §6 define: a
+saída sem dependência existe e é barata. Uma grade de 53 colunas por 7 linhas com
+cinco níveis de tinta é `display: grid` mais uma classificação de contagem em
+nível — não é analisar uma linguagem, que é o que fazia `mermaid-diagram`
+depender de verdade da biblioteca dela. **Onde a saída é uma folha de estilo, não
+há decisão a tomar**; onde a saída seria reescrever um analisador, há. Nenhuma
+dependência nova entra por esta família.
+
+**O QUE A FOLHA VAI TER DE REGER, medido nas três e escrito aqui para quem a
+funda** — porque folha escrita antes de qualquer peça é previsão, e esta rodada
+já mostrou duas vezes o que previsão vira:
+
+1. **O eixo**: as três põem em pixel uma RELAÇÃO que o dado não carrega —
+   adjacência, intervalo num eixo comum, densidade numa grade de datas. É por isso
+   que dividem folha, e é o que separa a família 4 das outras cinco: as outras
+   desenham o que está acontecendo; esta desenha a FORMA de uma resposta.
+2. **Conteúdo que transborda**: as três são mais largas que a conversa, e as três
+   rolam. Uma só camada rola, com `tabindex="0"`, `role="group"` e nome acessível
+   (regra 6 da §8, e `group` e não `region` pela leitura da vigésima segunda).
+3. **Cor que carrega significado**: estado de nó, estado de trecho e nível de
+   densidade são, nas três fontes, diferença SÓ de cor. As três levam palavra ao
+   lado (regra 4 da §8, WCAG 1.4.1), e a escala de intensidade do mapa de calor se
+   verifica nos dois modos e em todos os temas, que é o que a §9 já reservava para
+   ela.
+4. **Sem região viva**, por default (regra 1 da §8): as três se escrevem sozinhas
+   enquanto uma execução corre, e uma grade que se reanuncia a cada célula é
+   impossível de ouvir.
+5. **O contador de revelação não entra na peça.** As três fontes declaram
+   `visibleCount`, e ele aparece em sete das dezoito entradas originais desta
+   família. Revelação é `13-animacao.md`, e a §2 já decide o resto: o componente
+   desenha o que recebe. Quem quiser revelar passa menos itens.
+6. **Vocabulário**: as três achatam estado, e as três levam `ToolCallState`
+   inteiro no lugar — é o movimento que a família 2 já fez sete vezes. O intervalo
+   (`startMs`/`durationMs` contra um total) é candidato a `chat-protocol.ts`, e a
+   classificação de contagem em nível é candidata a primitivo (`§3.2`), porque é
+   decisão que rende cinco `if`. **As duas se decidem ao construir a PRIMEIRA
+   peça, não aqui.**
+
+**Reversível**, como as outras. Por entrada: se ao construir `flow-graph` as
+arestas puderem ser passadas prontas por quem monta sem a peça perder o cálculo
+do traço, ela desdobra para a 5.1 em `computer-use`. Se `trace-waterfall` for
+montada e a fila de barras couber em `data-table` com uma coluna de barra sem
+perder o eixo compartilhado, ela desdobra. Se `activity-graph` for construída e o
+que sair for um `chart` com um tipo a mais e nada de DOM por célula, ela desdobra
+e leva `heat-graph` junto. Pela família: a 4 fica de pé com qualquer uma das três,
+e só deixa de existir se as três desdobrarem.
+
+**O que esta leitura NÃO decide**: as nove restantes — `spec-sheet`,
+`comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`,
+`file-tree`, `artifact-card` e `canvas-split` (oito entradas, oito componentes,
+mais `heat-graph` já absorvida). Duas notas medidas de passagem para quem abrir a
+próxima, e as duas são da pergunta deste lote: `file-tree` POSICIONA por `depth`
+e declara `totalAdditions`/`totalDeletions`, que é o par exato de `TimelineStat`,
+sem casa desde a vigésima segunda; e `timeline` declara `when: past | now |
+future`, que é dot mais conector por linha e é onde `.nds-stepper-separator` — o
+único conector desta casa — encosta pela primeira vez num assunto desta família.
+As outras seis empilham.
 
 
 ### O sinal mais barato de que uma entrada vai colapsar
@@ -5433,8 +5655,8 @@ a lista, ligando os pontos na ordem em que chegaram. A própria fonte o chama de
 da oitava forma ganha um terceiro ramo: ele descreve o item, ORDENA a lista, ou
 só a enfeita? Os dois últimos são de quem monta.
 
-**As duas aparições da vigésima sétima correção, medidas em lote, e as duas
-falam pelas DUAS bocas.** `orb` declara cinco palavras em
+**As duas aparições da correção que dissolveu a família 7, medidas em lote, e as
+duas falam pelas DUAS bocas.** `orb` declara cinco palavras em
 `state`, e elas são o produto ACHATADO de três eixos que a faixa de runtime da
 MESMA página mantém separados: `status.type` — com o encerrado carregando ainda
 `finished | cancelled | error` —, `isMuted` e `mode`. Perde `reconnecting`, que
@@ -5464,9 +5686,9 @@ peça de pé, e a entrada nova não muda nenhuma. **A identidade se mede também
 contra a mecânica, e não só contra o campo** — a décima quinta mediu o nome, a
 décima nona mediu o dono, e esta mede a decisão.
 
-**O sinal MUDO da vigésima oitava correção**, e o primeiro em
-que o dono que sobra não é componente nem guideline transversal: `checkpoint-history`
-não declara booleano, união nem tipo de estado — três cadeias e um número —, e os
+**O sinal MUDO da correção de `checkpoint-history`**, e o primeiro em que o dono
+que sobra não é componente nem guideline transversal: a entrada não declara
+booleano, união nem tipo de estado — três cadeias e um número —, e os
 três desenhos saem da POSIÇÃO da linha contra `currentId`, que é a quarta forma, da
 décima primeira, com três desenhos em vez de dois. Pela sub-regra da décima, a
 assinatura que sobra é `onRestore(id)`, e ela nomeia dono como as cinco chamadas de
@@ -5476,6 +5698,25 @@ na vigésima segunda, é o terceiro lugar em que um dono mora, e o mais perto de
 casa. Não entra na tabela da abertura desta seção, e é preciso dizer por quê:
 aquelas são entradas que PERDEM palavras deste vocabulário, e esta não declara
 nenhuma para perder.
+
+**AS DUAS PRIMEIRAS VEZES EM QUE O SINAL PREVIU E ERROU**, medidas no segundo
+lote da família 4 (o das três sobreviventes). `flow-graph` declara `done |
+active | pending` — três desenhos onde `ToolCallState` tem quatro e
+`PlanStepState` tem cinco, com `active` sendo `running` renomeada e `failed` de
+fora. `trace-waterfall` declara `running | completed | failed` — três onde
+`ToolCallState` tem quatro, com `completed` sendo `done` renomeada e `pending` de
+fora. Pela tabela acima, as duas deveriam colapsar. **As duas sobreviveram**,
+porque o desenho e o vocabulário decidiram contra: nada nesta casa liga dois
+retângulos, e nada posiciona uma barra por deslocamento fora de
+`.nds-computer-use-mark`.
+
+Isso não enfraquece o instrumento — CONFIRMA o que a abertura dele já dizia, e
+que catorze acertos seguidos tinham feito parecer forte demais: **ele prevê, não
+decide.** A leitura prática, para quem vier: quando o achatamento aparecer numa
+entrada que também POSICIONA alguma coisa, o achatamento é o que a peça
+construída conserta (leva o vocabulário inteiro, como a família 2 fez sete
+vezes), não o que a reprova. Onde ele reprovou catorze vezes, o que sobrava
+depois de tirar as palavras perdidas era empilhamento; aqui sobra geometria.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
