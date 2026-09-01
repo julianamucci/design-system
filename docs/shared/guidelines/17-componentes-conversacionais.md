@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (44)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (45)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -274,9 +274,10 @@ falta, nomeada — nunca uma folha nova.
 | `reasoning-effort` | `toggle-group` `type: 'single'` para escolher o nível — que é CONTROLE, e o catálogo já tem outro escrevendo o mesmo campo — mais `context-display` na forma `bar` para o gasto contra o teto do nível escolhido, que é token contra teto como as irmãs. Veio da família 5 — ver 5.3 |
 | `guardrail-notice` | `alert` na variante `warning` — o escudo âmbar entra na coluna que `:has(> svg)` abre, o título é `.nds-alert-title`, a explicação é o `<p>` de `.nds-alert-description`, que a fonte também desenha sempre — mais `.nds-badge` no encaixe `.nds-alert-action`, que o alerta já encosta no fim da linha do cabeçalho com `:has()`, para a etiqueta da política; e as alternativas são `follow-up-suggestions`, que a própria fonte chama de "próximos pedidos sugeridos" e que esta tabela já resolveu em lista de `button` / `pill.css`. Irmã de `error-state` na origem, e a diferença que a fonte reivindica contra ele é a variante. Veio da família 2 — ver 5.3 |
 | `subagent-list` | `.nds-item-group` de `job-progress` — uma linha por trabalhador. `.nds-item` `.nds-item-outline` dá a superfície de cada cartão; dentro dela `job-progress` leva o nome (`.nds-job-progress-label`), a PALAVRA do estado e a barra do sistema com nome acessível; `.nds-item-actions` leva o modelo em `.nds-badge` com `.nds-font-mono`. A lista é plana na fonte, e o agregado dela é ENTRADA, não leitura. Veio da família 2 — ver 5.3 |
+| `agent-handoff` | `.nds-stack` com três partes: a linha da passagem é `.nds-cluster[data-spacing="xs"]` de dois `.nds-badge` com a seta do lucide entre eles, decorativa, e a relação em `.nds-sr-only`; a palavra do estado é `agent-status`, que traz `RunStatus` inteiro no lugar do booleano da fonte; o motivo é a descrição de `.nds-item`, e o que foi levado junto é `.nds-item-group` de linhas com `.nds-font-mono` e `.nds-truncate`. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (76)
+### 5.2 As sete famílias novas (75)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -285,7 +286,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (18 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice` e `subagent-list` saíram para a 5.1, ver 5.3 —, **14 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (17 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list` e `agent-handoff` saíram para a 5.1, ver 5.3 —, **13 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
@@ -364,11 +365,14 @@ monoespaçadas e um botão.
 `agent-handoff` aparecer identidade de agente com desenho, estado ou vocabulário
 próprios, `agent-card` desdobra de volta para a 5.2, com o motivo.
 
-**VERIFICADO pela metade, e não desdobra**: `subagent-list` foi triada na
-décima primeira correção. A identidade de agente que ela apresenta é
-`{ name, model }` — duas cadeias de texto, sem estado e sem desenho próprio —, e
-o modelo cai onde a quinta correção já o havia posto, em `.nds-font-mono`.
-`agent-handoff` continua de pé como a outra verificação prevista.
+**VERIFICADO nas duas, e não desdobra**: `subagent-list` foi triada na décima
+primeira correção e `agent-handoff` na décima segunda, que é a última verificação
+prevista aqui. Na primeira a identidade de agente é `{ name, model }` — duas
+cadeias de texto, sem estado e sem desenho próprio —, e o modelo cai onde esta
+correção já o havia posto, em `.nds-font-mono`. Na segunda ela é `from` e `to`:
+duas cadeias soltas, sem sequer um campo ao lado. O que muda de aparência lá não
+é a identidade, é a PASSAGEM. Com as duas cláusulas respondidas, `agent-card`
+fica na 5.1.
 
 **Sexta correção, e a segunda que atravessa de 5.2 para 5.1**: `tool-timeline`
 é `tool-group` aberto — e as duas contagens mudam junto, 81 → 80 e 39 → 40.
@@ -1027,7 +1031,169 @@ delas carregam duas entradas). Somam 120. A família 2 fica com **14
 componentes**, e as sete somam 70. (A décima correção escreveu "40 linhas" ao
 chegar a 43; eram 41. O total estava certo, a contagem de linhas não — e é o
 tipo de erro que só aparece quando alguém soma de novo, que é por isso que esta
-seção manda somar família a família.)
+seção manda somar família a família. Números desta correção, não os de hoje: a
+décima segunda os moveu — ver adiante.)
+
+**Décima segunda correção, e a sétima que atravessa de 5.2 para 5.1**:
+`agent-handoff` é `.nds-cluster` de `.nds-badge` + `agent-status` + `.nds-item`
+— e as duas contagens mudam junto, 76 → 75 e 44 → 45. É a segunda das duas
+verificações que a quinta correção marcou, e com ela aquela cláusula fecha.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia: `from`,
+`to`, `reason`, `carried: readonly string[]` e `settled: boolean`. Cinco
+entradas — três cadeias de texto, um arranjo de cadeias e um booleano. Chamada
+de volta, NENHUMA: é a segunda entrada triada que não devolve nada a quem monta,
+depois da lista de trabalhadores. E é a primeira sem metade de runtime alguma —
+a fonte documenta só a forma standalone e diz dela que é apresentacional de
+ponta a ponta, que quem monta decide quando a passagem acontece e fornece todos
+os campos. A anatomia é uma linha com a etiqueta de quem tinha o controle, uma
+seta e a etiqueta de quem passa a ter; um parágrafo com o motivo; e um terceiro
+bloco com uma linha por item levado, **omitido inteiro** quando o arranjo vem
+vazio — passe um arranjo vazio "para não desenhar seção nenhuma", diz a fonte, e
+é a mesma costura que a décima leu no aviso.
+
+**O SINAL MAIS BARATO DISPAROU pela quinta vez, e desta vez o achatamento não
+tem PALAVRA do outro lado.** Contando desenhos DISTINTOS em vez de campos
+declarados, que é como a décima primeira mandou contar, `settled` sabe fazer
+dois: em trânsito, com a seta e a etiqueta de destino tingidas; assentado, com a
+etiqueta de origem esmaecida, a seta neutra e o destino em etiqueta cheia. Dois
+contra os cinco de `RunStatus`, e os três que se perdem são `idle` — a passagem
+anunciada e ainda não começada —, `stopped` — a passagem cancelada, com o
+controle voltando — e `failed` — o destino que não assumiu. É pior que nas
+outras quatro por um motivo que se mede: lá o estado achatado ao menos ia parar
+numa palavra, e aqui os dois desenhos se distinguem **só por cor e opacidade**,
+que é exatamente o que a regra 4 da §8 proíbe (WCAG 1.4.1) e o que a decisão 2
+do estado da execução, nesta mesma folha, já trocou pela palavra. A própria
+fonte escreve o preço numa linha: `settled` "só controla estilo".
+
+Antes dos três testes, as duas perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **É EVENTO ou é PEÇA? É evento, e a fonte o diz na primeira linha:** a
+  passagem "marca o MOMENTO em que o controle passa de um agente para outro".
+  Momento não tem duração, não tem ação e não tem estado que ande sozinho — e é
+  por isso que esta entrada não tem relógio, não tem chamada de volta e não tem
+  máquina de estados, enquanto as irmãs da família têm as três. Onde o momento é
+  desenhado é §7, e quem monta o põe no fio: o `chat-thread` já desenha o papel
+  `system` como "um aviso no meio do fluxo, não uma fala", centralizado, sem
+  retrato e sem bolha. Vale ser exato sobre o alcance disso — o conteúdo daquela
+  mensagem é Markdown, então ela não HOSPEDA a linha de etiquetas; o que ela dá
+  é o LUGAR, e lugar não é desenho. A composição é um bloco irmão, posto no fio
+  por quem monta.
+- **A transição tem desenho próprio? A seta é ORDEM, não coordenada.** Duas
+  etiquetas com um glifo entre elas é o que o `.nds-cluster` já descreve na
+  própria documentação — "toolbars, tags, breadcrumbs, grupos de botões" — e o
+  que o `breadcrumb` já desenha item a item. Aqui está a distância inteira para
+  `computer-use`, que sobreviveu na nona correção: lá a posição era DADO num
+  espaço contínuo que nada no design system conhece; aqui a direção é a ordem de
+  dois vizinhos, que a posição no arranjo já dá. É a mesma medida da sexta
+  correção — "o único eixo temporal da peça é a ORDEM DO ARRANJO" — e a mesma
+  resposta. E se houvesse estado da própria passagem, pedido e aceito e recusado,
+  aí sim haveria o que medir contra o vocabulário; não há: há `settled`.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, a passagem não deixa buraco — e a fonte
+  mesma já diz de que ela é feita, pela quinta vez nesta seção: a etiqueta de
+  origem "usa sempre a superfície `field` compartilhada", a de destino passa à
+  mesma superfície depois de assentar, e o rótulo do que foi levado usa o token
+  `mono`. Superfície compartilhada declarada na origem — a mesma leitura da
+  quinta, da sétima, da décima e da décima primeira correções, e o oposto exato
+  do que a nona leu em `computer-use`.
+
+  A composição são três partes empilhadas em `.nds-stack[data-spacing="sm"]`,
+  que é a raiz que a oitava correção já leu para uma pilha e nada mais. A linha
+  da passagem é `.nds-cluster[data-spacing="xs"]` com `.nds-badge` de cada lado
+  e o ícone do lucide entre eles, `aria-hidden`, com a relação em `.nds-sr-only`
+  — seta é glifo, e glifo não chega a quem ouve (regra 7 da §8, WCAG 1.1.1). A
+  palavra do estado é `agent-status` inteiro, que já traz `RunStatus`, o ponto
+  decorativo, o relógio já escrito quando há um, e a ação que muda com o estado.
+  O motivo é `.nds-item-description` sob `.nds-item-title`, porque título mais
+  uma linha de explicação É a linha de item — a mesma leitura que a quinta
+  correção fez de `AgentSkill`. E o que foi levado junto é `.nds-item-group` de
+  `.nds-item` `data-size="sm"`, com `.nds-font-mono` e `.nds-truncate` no
+  identificador técnico, que é onde a quinta e a décima primeira correções já
+  puseram cadeia técnica de agente. Nenhuma classe nova, nenhuma nomeada como
+  faltando.
+
+  Dois traços a composição não reproduz, os dois por decisão já escrita. A
+  transição de meio segundo entre os dois desenhos é animação
+  (`13-animacao.md`), e a 5.1 já leu revelação como animação em
+  `streaming-text`, `loading-state` e `number-ticker`. E a distinção por cor e
+  opacidade é a codificação que a regra 4 da §8 troca pela palavra — a
+  composição não herda o defeito da fonte, e desta vez o defeito é de
+  acessibilidade, não de fineza.
+- **Estado, não.** É o parágrafo do sinal, e ele decide sozinho: dois desenhos
+  contra os cinco de `RunStatus`, com `idle`, `stopped` e `failed` perdidos.
+  Vale medir o tamanho da perda contra a irmã em que a peça colapsa: o estado da
+  execução existe justamente porque parado oferece continuar e falhado oferece
+  tentar de novo, e uma passagem de controle é das coisas mais interrompíveis
+  desta família — quem entrega pode desistir, e quem recebe pode recusar. A
+  fonte não desenha nem uma nem outra. É a mesma frase que a sétima correção
+  escreveu sobre `code-runner` e a décima primeira sobre a lista de
+  trabalhadores, e pela mesma razão.
+- **Vocabulário, não.** Nenhum tipo novo, e a fonte nem declara um — são quatro
+  cadeias soltas, um arranjo de cadeias e um booleano, que é a mesma forma que a
+  décima leu no aviso. `from` e `to` são o nome de um agente em cadeia de texto,
+  e a quinta correção já julgou identidade de agente depois de a §1 tirar dali a
+  única coisa que teria desenho próprio, a marca; a décima primeira repetiu o
+  julgamento com `{ name, model }`. `reason` é a descrição de `.nds-item`.
+  `carried: readonly string[]` é a mesma forma e a mesma regra de
+  `TerminalBlockOptions.lines`, das alternativas do aviso e do arranjo de
+  progresso da lista: arranjo de cadeias, e quem fatia é quem consome. `settled`
+  não é vocabulário, é `RunStatus` achatado. É a distância inteira para
+  `computer-use`, que sobreviveu por ter `x` e `y` sem par em lugar nenhum.
+
+E o teste da família, que é o quarto: **ela responde a um terço do eixo, e
+responde com a peça desta folha que já o responde inteiro.** Diz o que está
+acontecendo — o controle mudou de mãos —, e é isso que o estado da execução diz,
+com cinco palavras em vez de dois estilos; não diz há quanto tempo, como
+`tool-timeline`, `computer-use` e `subagent-list` também não diziam; e não
+oferece ação nenhuma, porque não tem chamada de volta nenhuma, ao passo que o
+estado da execução já oferece parar, continuar e tentar de novo. É a mesma
+leitura da sexta, da sétima e da décima primeira, e a diferença para
+`agent-card` continua sendo esta: `agent-handoff` não sai por não pertencer à
+família, sai por já estar construída dentro dela.
+
+E vale o traço que a décima primeira nomeou, porque aqui ele aparece no
+singular: **repetir não é desenhar, e emparelhar também não.** Duas etiquetas
+lado a lado não são uma segunda peça de identidade; se fossem, o estado da
+ligação teria uma irmã chamada "par de ligações". O que faria um par virar
+desenho é o que o par acrescenta sobre os itens — um vínculo que a ordem não
+descreva, um estado da relação que os itens não tenham —, e nenhum dos dois está
+aqui: a relação é a ordem, e o estado é da execução.
+
+**As reversibilidades que apontavam para cá, respondidas:**
+
+- **`agent-card` (quinta) CONFIRMA, e a cláusula dele fecha.** A condição era
+  identidade de agente com desenho, estado ou vocabulário próprios. Aqui a
+  identidade são duas cadeias soltas, sem campo ao lado, sem estado e sem
+  desenho além da etiqueta — menos ainda do que os `{ name, model }` da décima
+  primeira. O que muda de aparência não é a identidade, é a passagem, e o que
+  ela muda é cor e opacidade. As duas verificações previstas confirmaram, e
+  `agent-card` fica na 5.1.
+- **`subagent-list` (décima primeira) CONFIRMA.** A condição era trabalho
+  paralelo com aninhamento de verdade, estado por trabalhador que `RunStatus`
+  não modele, ou agregado que seja LEITURA. Não há trabalho paralelo nenhum
+  nesta: a passagem é sequencial e tem exatamente dois lados, um que larga e um
+  que pega. Nem aninhamento, nem agregado, nem estado por lado.
+- **`permission-grant` (quarta) e `guardrail-notice` (décima) não são
+  tocadas**: nada aqui é pergunta com consequência nem recusa de política.
+
+**Reversível**, como as outras onze: se ao construir `background-inbox` ou
+`checkpoint-history` aparecer troca de controle com desenho, estado ou
+vocabulário próprios — uma passagem que chegue com estado que `RunStatus` não
+modele, um encadeamento de mais de dois lados que a ordem do arranjo não
+descreva, ou o que foi levado chegando como VOCABULÁRIO em vez de cadeia solta
+—, `agent-handoff` desdobra de volta para a 5.2, com o motivo. E há um segundo
+gatilho, deste lado: se `agent-status` precisar de desenho próprio para dizer
+que o estado é de uma PASSAGEM e não de uma execução, a linha das etiquetas vira
+variante DELE — e continua não sendo peça.
+
+Contagens, somadas família a família: 1 tem 13, 2 tem 17, 3 tem 9, 4 tem 20, 5
+tem 5, 6 tem 8 e 7 tem 3 — **75** na 5.2. A 5.1 vai a **45** (43 linhas contadas
+no arquivo, e duas delas carregam duas entradas). Somam 120. A família 2 fica
+com **13 componentes**, e as sete somam 69.
 
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
@@ -1047,7 +1213,7 @@ exatamente o que 5.1 existe para evitar.
 
 ### O sinal mais barato de que uma entrada vai colapsar
 
-Apareceu três vezes, sempre igual, e por isso vira critério: **booleano onde
+Apareceu cinco vezes, sempre igual, e por isso vira critério: **booleano onde
 este vocabulário já tem cinco palavras.**
 
 | entrada | o que a fonte declara | o que ela perde |
@@ -1056,9 +1222,10 @@ este vocabulário já tem cinco palavras.**
 | `tool-timeline` | `streaming: boolean` | `stopped`, `failed`, `complete` |
 | `code-runner` | `RunState = idle\|running\|ok\|error` | `stopped` |
 | `subagent-list` | `i < completedCount` — nem campo é | `idle`, `stopped`, `failed` |
+| `agent-handoff` | `settled: boolean` — e os dois desenhos diferem só em cor e opacidade | `idle`, `stopped`, `failed` |
 
-Nas quatro, o achatamento não é economia — é sinal de que a entrada foi
-desenhada para uma tela só, sem o vocabulário que a família já tem. E as quatro
+Nas cinco, o achatamento não é economia — é sinal de que a entrada foi
+desenhada para uma tela só, sem o vocabulário que a família já tem. E as cinco
 colapsaram pelos testes normais; o booleano só chegou antes.
 
 **A quarta é o limite da forma**, medida na décima primeira correção, e vale
@@ -1069,6 +1236,14 @@ sem escrever o tipo é achatar do mesmo jeito, e ainda amarra o desenho à ORDEM
 do arranjo: a própria fonte manda terminar os itens em ordem "para que os vistos
 caiam nos cartões certos". Ao ler os tipos, conte quantos desenhos DISTINTOS a
 peça sabe fazer, não quantas palavras ela declara.
+
+**A quinta é o pior dos cinco quanto ao que resta**, medida na décima segunda
+correção: nas outras quatro os desenhos achatados ainda chegavam a uma palavra —
+"em andamento", "concluído" —, e nesta os dois se separam só por cor e opacidade.
+Achatar cinco estados em dois já custa informação; achatá-los em dois que a regra
+4 da §8 não deixa desenhar assim custa a informação inteira para quem não
+enxerga a diferença de cor. Quando o achatamento e a codificação por cor
+aparecem juntos, o que a fonte tem não é um estado pequeno: é nenhum.
 
 O caso do `code-runner` é o mais claro, porque o que ele perde é o pior possível:
 `stopped` é o Ctrl-C, e um trecho de código que roda é a coisa mais
