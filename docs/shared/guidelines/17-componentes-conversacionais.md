@@ -314,7 +314,15 @@ falta, nomeada — nunca uma folha nova.
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
-slug produz 83 folhas e nenhum sistema.
+slug produz **uma folha por componente em vez de uma por família**, e isso não é
+sistema, é pilha.
+
+*(Aqui havia "83 folhas". Saiu pelo mesmo motivo que os outros números móveis
+desta seção: era a contagem de uma leitura do catálogo que a construção corrigiu
+trinta vezes, e ninguém a atualizou. O argumento nunca dependeu do valor — a
+razão entre componentes e folhas está nos números que a tabela abaixo carrega, e
+ela só ficou mais forte à medida que a triagem encolheu o catálogo sem encolher
+o número de famílias.)*
 
 **Eram sete, e são cinco.** A 6 dissolveu-se inteira na vigésima sexta correção
 e a 7 na vigésima nona, e as linhas delas ficam na tabela como `diff-hunks.ts`
