@@ -294,6 +294,12 @@ falta, nomeada — nunca uma folha nova.
 | `thread-list-sidebar` | `sidebar` com `thread-list` dentro, e é a única entrada das 120 que **não tem faixa standalone nenhuma** — a fonte diz isso na primeira linha e manda compor o `Sidebar` à mão. O que ela acrescenta ao que envolve é cabeçalho, rodapé e trilho; tudo o mais é repassado, e os três repassados são `data-side`, `data-variant` e `data-collapsible`, que `.nds-sidebar-root` já lê, com `.nds-sidebar-rail` sumindo em `[data-collapsible="offcanvas"]` exatamente como a fonte descreve. A marca no cabeçalho e o link de suporte no rodapé são conteúdo de quem monta, e a própria fonte os chama de espaço reservado. Veio da família 6 — ver 5.3 |
 | `shared-conversation` | `.nds-card` com `chat-thread` dentro. `.nds-card-header` leva o título em `.nds-card-title` `.nds-truncate`, quem compartilhou e quando em `.nds-card-description` e o ícone de elo em `.nds-card-action` — a grade já abre a segunda coluna e a segunda linha com `:has()`; `.nds-card-content` recebe a conversa; `.nds-card-footer` leva `.nds-badge` com a palavra e o botão de continuar. Somente leitura NÃO é estado do `chat-thread`: o campo de entrada é peça à parte (§4.2), e transcrição sem composer já é transcrição que não se responde. `SharedTurn` — `{ id, role, text }`, com o papel em duas palavras — estreita duas coisas de uma vez: `ChatRole`, que tem três, e `ChatMessageOptions`, que tem nove campos mais as partes que `MessagePartKind` enumera; e o `text` cru levaria fala de modelo à tela sem `createMarkdown` e sem `isSafeUrl`. Sem turno nenhum, `empty.css`, que a fonte admite não ter. Veio da família 6 — ver 5.3 |
 | `onboarding` | `.nds-card` com `stepper` no cabeçalho. `.nds-stepper` é o `<ol>` de etapas com `data-state` `active` e `completed`, `.nds-stepper-indicator` numerado e `.nds-stepper-separator` entre elas — e entrega mais que os pontos da fonte, que são `aria-hidden`, não são botões e por isso não deixam voltar; a posição em palavra é `.nds-badge` com `.nds-font-mono` no molde `{index} de {total}`. O título da etapa é `.nds-card-title`, a explicação é `.nds-card-description`, o exemplo é `.nds-item` `.nds-item-muted`, e pular e avançar são `.nds-card-footer` com `.nds-button` `.nds-button-ghost` e `.nds-button`. Com zero etapas, `empty.css` — a fonte não desenha nada. É a entrada com menos conversa dentro de todas as 120: a própria fonte diz que as etapas são conteúdo de quem escreve e que não há nada a ler do runtime. Veio da família 6 — ver 5.3 |
+| `diagram` | `.nds-card` com o desenho pronto dentro de uma `scroll-area`. `.nds-card-header` leva o título em `.nds-card-title` `.nds-truncate` e, em `.nds-card-action`, um `.nds-cluster[data-spacing="xs"]` com a porcentagem em `.nds-badge` com `.nds-font-mono` — o mesmo par que uma dúzia de linhas desta tabela já usa para contador — e os quatro controles em `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm` com nome acessível TEXTUAL (regra 7 da §8); o corpo é `.nds-card-content` com a região que rola, porque desenho ampliado é o que mais transborda desta família, e ela vai com papel e nome (regra 6 da §8). A AMPLIAÇÃO NÃO É DA PEÇA: a fonte a declara obrigatória e não a limita — "does not clamp `zoom` itself" —, então o número é de quem monta e o que sobra é uma multiplicação. **Faltam duas utilitárias, e estão nomeadas**: nada em `docs/shared/styles/` aplica `transform: scale()` a partir de propriedade personalizada — `.nds-hover-scale-105` é a única escala declarada, e é de `:hover` —, e `.nds-dialog-content` está preso em `max-width: 32rem` sem variante de tamanho, onde `.nds-scroll-area` já tem `data-size`; é dela que a vista de tela cheia precisa. Utilitária e variante, nunca folha. Veio da família 4 — ver 5.3 |
+| `mermaid-diagram` | os três desenhos que a fonte declara, e os três já existem: enquanto chega, `skeleton`; quando não se lê, `code-block` com a fonte crua, que é onde `syntax-highlighter` acima nesta tabela já resolveu realce sem dependência nova; e quando se lê, o SVG pronto na moldura de `diagram`, nesta mesma tabela. Tirado o renderizador que a §6 mantém do lado de fora, o que resta é `diagram` com outro nome — e é a própria fonte que fecha a leitura, exportando a moldura sozinha (`MermaidZoom`) e mandando embrulhar nela um SVG que já se tenha. Das quatro que a §6 nomeia, é a ÚNICA cuja faixa standalone de fato carrega biblioteca; ver 5.3. `streaming` é revelação, e revelação é `13-animacao.md`. Veio da família 4 — ver 5.3 |
+| `math-block` | `.nds-item-group` de `.nds-item` `data-size="sm"`, com a legenda acima em `.nds-badge` com `.nds-font-mono`. Cada passo é `.nds-item-title` com a expressão e `.nds-item-description` com a nota, que já corta em duas linhas. A NOTAÇÃO NÃO É DA PEÇA: `Frac`, `Sup` e `Sub` são exports separados que quem monta assembla e passa PRONTOS, e a anatomia só põe `{step.expression}` dentro de um `<span>` — a faixa com runtime, que é a que o modelo alimenta, só consegue mandar texto cru, e a fonte diz com todas as letras que uma fração chegando por ali desenha como caracteres soltos. Nenhum `role="math"`, nenhum MathML, nenhum nome acessível em lugar nenhum dela. Vale a frase que a décima nona e a vigésima quinta já escreveram, num traje novo: **a expressão não é da peça.** `visibleSteps` é revelação, e revelação é `13-animacao.md`. Veio da família 4 — ver 5.3 |
+| `map-answer` | `computer-use` com a lista embaixo, e o encaixe é campo por campo. `.nds-computer-use-screen` é o quadro, com `--computer-use-aspect` declarado pela peça; `.nds-computer-use-surface` recebe a grade de fios de quem monta — que na fonte é pano de fundo esquemático e decorativo, e é também por onde um mapa de verdade entra sem que o design system decida telha de terceiro (§6) —; `.nds-computer-use-trail` leva um `.nds-computer-use-mark` por ponto, posicionado por `--computer-use-mark-x` e `--computer-use-mark-y` em porcentagem do quadro, com `data-active="true"` no corrente, que já cresce e destaca. A lista é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"`, com o rótulo em `.nds-item-title` e o detalhe em `.nds-item-description`, e a linha corrente leva `aria-current`, que é PALAVRA e não só fundo. A linha tracejada é "conectividade decorativa, não caminho calculado" por declaração da própria fonte, e quem tem as coordenadas para desenhá-la é quem passa a superfície. **Falta uma opção, e uma utilitária JÁ nomeada**: `.nds-computer-use-mark` é `aria-hidden` e decorativo, e escolher pelo quadro pede que ele vire `<button>` com nome textual e alvo de 24 px (regras 7 e 10 da §8); e `.nds-item` não tem regra para `[aria-current]`, que é a MESMA que `document-reference` já nomeou nesta tabela. Manter as marcas decorativas e deixar a escolha nas linhas é onde a composição fica mais fina que a fonte, que põe cada ponto DUAS vezes na ordem de foco com o mesmo nome. Veio da família 4 — ver 5.3 |
+| `web-preview` | `.nds-card` com `.nds-input-group` no cabeçalho. O endereço é `.nds-input-group-control` somente leitura com `.nds-font-mono` e `.nds-truncate`; recarregar é `.nds-input-group-addon[data-align="inline-start"]` e abrir fora é `[data-align="inline-end"]`, os dois com `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm` e nome acessível textual; o corpo é `.nds-card-content` com o quadro de quem monta, e enquanto carrega, `skeleton` por cima. O ISOLAMENTO NÃO É DA PEÇA, e a fonte o diz duas vezes: o elemento desenha o que recebe "exatamente como veio, sem isolamento próprio", e a caixa de areia mora na faixa com runtime, que a §1 manda não ler como se fosse a peça. Quem monta isola, e o endereço passa por `isSafeUrl` no ponto em que encosta no DOM. Veio da família 4 — ver 5.3 |
+| `image-generation` | `skeleton`, e é a mais barata de ler das 120 depois de `thread-list-sidebar`. **A peça nunca desenha imagem nenhuma**, e a fonte declara os quatro motivos: não aceita endereço de imagem, o degradê atrás da grade de pontos é um gráfico decorativo FIXO presente nos dois estados, "1024 × 1024" é literal no código e não campo, e o botão de gerar de novo não tem manipulador. O que resta é `.nds-aspect-ratio` com `--ratio` e `.nds-skeleton[data-shape="fill"]` dentro, mais a linha de baixo com o texto do pedido e um `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm`. A própria fonte manda entregar a imagem de verdade a `image`, que esta tabela já resolveu em `aspect-ratio` + `skeleton` + `dialog`. A grade de 64 pontos com atraso escalonado é `13-animacao.md`, e desliga em `prefers-reduced-motion` (regra 8 da §8). Veio da família 4 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
 ### 5.2 As famílias novas (56)
@@ -323,7 +329,7 @@ desta tabela, nunca pelo próprio delta.
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `checkpoint-history`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (14 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox`, `elicitation-form` e `schedule-card` saíram para a 5.1, ver 5.3 —, **10 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
-| **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (18 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1, ver 5.3 —, **18 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Atenção às dependências — §6** |
+| **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `artifact-card`, `canvas-split` (12 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1 na vigésima segunda e na vigésima quarta, e `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview` e `image-generation` na vigésima sétima, em lote, ver 5.3 —, **12 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart` — e essa coluna é MISTA, o que a vigésima sétima mediu entrada por entrada: `card` é material, `table` e `chart` são peças prontas. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Dependências — §6, e o parágrafo que a vigésima sétima acrescentou lá**: das quatro entradas que a seção nomeia, três já foram triadas e nenhuma pedia decisão da dona |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
 | **6. Navegação da conversa** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As oito saíram para a 5.1: `message-branches` na vigésima quinta; `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation` e `onboarding` na vigésima sexta, em lote (0 no catálogo, **0 componentes**) | Era "achar e trocar de lugar sem perder o seu", com base em `sidebar`, `command`, `pagination` e `stepper.css` — e as quatro bases eram as próprias peças. `conversa-nav.css` não é fundada. Ver 5.3 |
 | **7. Voz** | `voz.css` | `orb`, `voice-conversation` (2 no catálogo — `read-aloud` saiu para a 5.1, ver 5.3 —, **2 componentes**) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
@@ -4073,12 +4079,278 @@ comum. Uma a uma, cada colapso pareceria coincidência; sete de uma vez, nenhum
 parece.
 
 
+**Vigésima sétima correção, a segunda em LOTE, e a primeira que lê a família 4
+pelo lado que não é código**: seis entradas colapsam — `diagram`,
+`mermaid-diagram`, `math-block`, `map-answer`, `web-preview` e
+`image-generation`. São a vigésima sétima à trigésima segunda travessia de 5.2
+para 5.1, e as contagens mudam uma vez só, ao fim do lote: 56 → 50 e 64 → 70.
+`resposta-estruturada.css` **continua por fundar**, pela terceira leitura seguida
+desta família — e isso deixou de ser resultado neutro: restam doze entradas, e a
+folha só nasce quando uma delas trouxer o que estas seis não trouxeram.
+
+**O MECANISMO, escrito uma vez porque quatro das seis colapsam por ele: a peça é
+a MOLDURA de um conteúdo que ela não produz.** `diagram` recebe o gráfico já
+desenhado, `mermaid-diagram` recebe o SVG (ou o texto que não deu para ler),
+`web-preview` recebe o quadro e `image-generation` não recebe nem isso — nunca
+desenha imagem nenhuma. Nas quatro, o que a entrada acrescenta ao conteúdo é
+cabeçalho, corpo e uma linha de estado de carregamento, que é `.nds-card` com os
+encaixes que a grade dele já abre com `:has()`. É parente do mecanismo da
+vigésima sexta e vale distinguir os dois, porque a defesa é outra: **lá a base
+declarada ERA a peça; aqui a peça não tem base nenhuma, porque não tem conteúdo
+próprio.** Moldura em volta de material de terceiro é o caso em que a §2 já
+mandava olhar — "o componente desenha o que recebe" —, e quando ele recebe TUDO,
+não sobra desenho para ser dele.
+
+**1. `diagram` — colapsa, e é a que mais parecia dona de alguma coisa.**
+
+- **A favor**: é a única das dezoito que tem VISTA — uma caixa com fator de
+  escala, onde o conteúdo é maior que a moldura. Ampliar, repor e abrir em tela
+  cheia é um trio que nenhum componente do design system tem: `scroll-area` rola
+  mas não escala, `dialog` abre mas não amplia, `aspect-ratio` fixa proporção mas
+  não transforma. E um desenho que chega com 2000 px de largura numa coluna de
+  700 é o caso mais literal de "conteúdo que transborda", que é uma das duas
+  regras que a folha desta família teria de reger.
+- **Contra**: a peça não é dona da ampliação. `zoom` é obrigatório e a fonte diz
+  em letras que ela **não o limita** — "does not clamp `zoom` itself, so an
+  out-of-range value is whatever the caller passed in" —, e o exemplo da própria
+  página põe o `clamp` no lado de fora. Sobra uma multiplicação, quatro botões e
+  uma porcentagem arredondada. O cabeçalho é `.nds-card-header` com
+  `.nds-card-action`; os botões são `.nds-button-ghost` `.nds-button-icon-sm`; a
+  porcentagem é `.nds-badge` com `.nds-font-mono`, o par que uma dúzia de linhas
+  da 5.1 já usa; o transbordo é `scroll-area`; a tela cheia é `dialog`.
+- **Colapsa**, com duas utilitárias nomeadas (a escala a partir de propriedade
+  personalizada, e a variante de tamanho de `.nds-dialog-content`, hoje preso em
+  `max-width: 32rem`). E o que decide vale escrito, porque é a distinção contra a
+  nona: **vista que ESCALA não é geometria própria, porque a peça não calcula
+  posição nenhuma.** Em `computer-use` o quadro é da peça e a marca só significa
+  dentro dele; aqui não há coordenada, há um multiplicador que o chamador
+  segura. A vigésima sexta já tinha medido um degrau desse mesmo lance —
+  "porcentagem sobre espaço alheio é projeção" —, e este é o degrau abaixo: nem
+  projeção há.
+- **A evidência que teria virado o voto**: a peça computando a vista — um enquadre
+  que se ajustasse ao conteúdo, um ponto de origem da escala seguindo o ponteiro,
+  limites que ela mesma impusesse. Procurada na fonte e nos tipos: `zoom` é
+  `number` sem faixa, os três `on*` de escala não recebem argumento nenhum, e o
+  quarto só liga ou desliga um botão.
+
+**2. `mermaid-diagram` — colapsa em `diagram` mais `code-block` mais `skeleton`.**
+
+- **A favor**: é a única entrada das 120 que RENDERIZA um formato, e a única cuja
+  faixa standalone carrega biblioteca de verdade. E o `MermaidZoom` que ela
+  exporta tem comportamento que nenhuma outra tem: sobreposição em tela cheia,
+  roda para ampliar entre 0,5× e 4× centrada no ponteiro, arrastar para
+  deslocar, armadilha de foco e `Escape`.
+- **Contra**: tirada a biblioteca — e a §6 a mantém de fora —, os três desenhos
+  que a fonte declara são três peças que já existem, e ela os nomeia um por um:
+  esqueleto enquanto chega, fonte crua quando não dá para ler, SVG quando dá. O
+  primeiro é `skeleton`; o segundo é `code-block`, que a 5.1 já deu a
+  `syntax-highlighter` sem dependência nova; o terceiro é a moldura da entrada
+  anterior. E a fonte fecha a leitura sozinha: exporta `MermaidZoom` separado e
+  manda embrulhar nele **um SVG que já se tenha**, que é literalmente a saída da
+  §6 escrita pelo autor da peça.
+- **Colapsa.** Sem o renderizador, é `diagram` com outro nome — e `diagram` já
+  colapsou uma linha acima. **Entrada cuja identidade inteira é a biblioteca não
+  sobrevive à decisão de não trazer a biblioteca**, e é a primeira vez que a §6
+  decide um veredito em vez de só custar peso.
+- E `streaming: boolean` é a terceira aparição do sinal PELO AVESSO, depois de
+  `mobile-composer` e `read-aloud`: é o mesmo booleano que o dono já declara, com
+  o mesmo nome — a 5.1 escreve `streaming-text` como "`chat-thread`,
+  `streaming: true` + `aria-busy`" desde a primeira redação.
+- **A evidência que teria virado o voto**: desenho da moldura que sobrevivesse à
+  saída da §6 — uma calha por nó, um mapa do gráfico, alguma coisa que soubesse
+  o que há dentro do SVG. Procurada: os `data-slot` da anatomia são três estados
+  e um botão de expandir, e o conteúdo é opaco nos três.
+
+**3. `math-block` — colapsa em `.nds-item-group`.**
+
+- **A favor**: notação matemática é vocabulário que esta casa não tem em canto
+  nenhum, e a fonte exporta `Frac`, `Sup` e `Sub` — uma fração empilhada com
+  risco no meio é geometria tipográfica que nenhum `.nds-*` desenha. E uma
+  derivação lida em voz alta é um problema de acessibilidade real, do tamanho de
+  MathML.
+- **Contra**: nada disso é da peça. `Frac`, `Sup` e `Sub` são exports
+  SEPARADOS que quem monta assembla e passa prontos; a anatomia põe
+  `{step.expression}` dentro de um `<span>` e mais nada; e a faixa com runtime —
+  a que o modelo alimenta — só consegue mandar texto cru, o que a própria fonte
+  admite ao dizer que uma fração chegando por ali desenha como caracteres
+  soltos. Não há `role="math"`, não há MathML, não há nome acessível em lugar
+  nenhum: a promessa de acessibilidade do assunto está inteira DO LADO DE FORA da
+  peça. O que resta é uma legenda monoespaçada e uma fila de linhas com título e
+  nota, que é `.nds-item-group` de `.nds-item`.
+- **Colapsa.** Vale a frase da décima nona e da vigésima quinta num traje novo:
+  **a expressão não é da peça.**
+- **A evidência que teria virado o voto**: a peça sendo dona da notação — saída
+  em MathML, ou `Frac` dentro da árvore dela com alinhamento próprio de linha de
+  base. Procurada nos tipos: `expression` é `ReactNode`, que é a assinatura de
+  quem não olha para dentro.
+
+**4. `map-answer` — colapsa em `computer-use` mais `.nds-item-group`, e é a que
+exigiu mais leitura das seis.**
+
+- **A favor**: geometria declarada, que foi o que fez `computer-use` sobreviver na
+  nona — pontos em porcentagem dentro de um quadro. E mais que aquela: N marcas
+  simultâneas em vez de um trajeto, marcas que são CONTROLES com nome, uma linha
+  ligando pontos (a única aresta da família fora de `flow-graph`), e a mesma
+  escolha alcançável de dois lugares, marca e linha da lista.
+- **Contra**: `MapPin` é `ComputerStep` campo por campo — `label`/`action` como
+  texto primário, `detail`/`target` como secundário, `x` e `y` em porcentagem do
+  quadro, e um `id`. A árvore construída já tem tudo: `.nds-computer-use-screen`
+  com `--computer-use-aspect`, `.nds-computer-use-trail` com uma
+  `.nds-computer-use-mark` por ponto posicionada por
+  `--computer-use-mark-x`/`-y`, e `data-active="true"` no corrente, que já cresce
+  e destaca. E o que a peça desenha por conta própria é DECORATIVO por
+  declaração dela: a grade de fios é pano de fundo esquemático, e a linha é
+  "conectividade decorativa, não caminho calculado", sempre na ordem do arranjo.
+  **Geometria decorativa não é geometria**, porque não carrega informação — e a
+  informação que sobra é x, y, qual é o corrente, e uma fila de rótulos.
+- **Colapsa**, com uma opção nomeada (a marca virando `<button>` com nome textual
+  e alvo de 24 px) e uma utilitária que `document-reference` já nomeou
+  (`.nds-item` sem regra para `[aria-current]`). E a composição fica mais fina
+  que a fonte no mesmo movimento: lá cada ponto aparece DUAS vezes na ordem de
+  foco, com o mesmo nome, porque a marca e a linha da lista são dois controles
+  para uma coisa só.
+- **E ela acrescenta um degrau à sub-regra da décima**, que é o que faz esta
+  leitura valer o custo: `onSelect` é a quinta chamada de volta de escolha da
+  campanha, depois de `onSelect`, `onPick`, `onJump`, `onIndexChange` e
+  `onActiveIndexChange` — e **a primeira que não aponta dono nenhum**, porque
+  nada nesta casa escolhe um ponto sobre uma superfície. Pela décima terceira,
+  assinatura que não aponta dono deixa a sub-regra calada, e quem decide são os
+  três testes sozinhos. Decidiram pela identidade do tipo, não pela chamada de
+  volta. **Sub-regra calada não é sub-regra a favor**, e esta é a segunda vez que
+  isso precisa ser dito.
+- **A evidência que teria virado o voto**: projeção de verdade — latitude e
+  longitude com um sistema de coordenadas, ou pontos que se movessem sob
+  deslocamento e ampliação do quadro. Procurada nos tipos, e a fonte responde
+  antes da pergunta: "`x`: Horizontal position, 0 to 100 percent. **Not
+  longitude.**", e o mesmo para `y`.
+
+**5. `web-preview` — colapsa em `.nds-card` mais `.nds-input-group`.**
+
+- **A favor**: é a única entrada da família que mostra PROCEDÊNCIA do que desenha
+   — um endereço que quem lê pode conferir antes de confiar no que está abaixo —,
+  e a faixa com runtime traz `SafeContentFrame`, que é isolamento de verdade, com
+  origem por render e descarte.
+- **Contra**: o isolamento não é da peça, e a fonte o diz duas vezes: o conteúdo
+  é desenhado "exatamente como veio, sem isolamento próprio". `SafeContentFrame`
+  é da faixa com runtime, que a §1 manda não ler como se fosse a peça. O que
+  resta é um cabeçalho de botão, campo e botão — que é `.nds-input-group` com
+  `.nds-input-group-addon` nas duas pontas, `data-align` já resolvido — mais um
+  corpo e um brilho de carregamento, que é `skeleton`.
+- **Colapsa.** E `loading: boolean` entra na tabela do sinal: dois desenhos onde
+  `RunStatus` tem cinco palavras, e o que se perde é `failed` acima de tudo —
+  uma prévia que quebrou desenha igual a uma que ainda está chegando, para
+  sempre.
+- **A evidência que teria virado o voto**: a peça participando do isolamento —
+  uma origem que ela verificasse, um estado de bloqueio, alguma coisa que
+  ligasse a barra de endereço ao que está desenhado embaixo. Procurada:
+  `origin` é uma cadeia mostrada, e a fonte diz que o quadro é de quem monta.
+
+**6. `image-generation` — colapsa em `skeleton`, e é a mais barata de ler das 120
+depois de `thread-list-sidebar`.**
+
+- **A favor**: a grade de 8×8 pontos pulsando com atraso escalonado é uma
+  animação que nenhum `.nds-*` tem, e "a moldura que guarda o lugar de uma
+  imagem que ainda não chegou" é um momento de produto de verdade.
+- **Contra**: **a peça nunca desenha imagem nenhuma**, e a fonte declara os
+  quatro motivos numa frase cada — não aceita endereço de imagem, o degradê
+  atrás dos pontos é um gráfico decorativo FIXO presente nos dois estados,
+  "1024 × 1024" é literal no código e não campo, e o botão de gerar de novo não
+  tem manipulador. É um marcador de lugar: `.nds-aspect-ratio` com
+  `.nds-skeleton[data-shape="fill"]` dentro. E a própria fonte manda entregar a
+  imagem de verdade a `image`, que a 5.1 já resolveu.
+- **Colapsa**, e `generating: boolean` entra na tabela do sinal ao lado de
+  `loading`: perde `failed` e `stopped`, que numa geração de imagem são
+  justamente o que se espera poder mostrar.
+- **A evidência que teria virado o voto**: a peça recebendo a imagem e desenhando
+  a passagem — o borrão resolvendo sobre o arquivo que chegou. Procurada: não há
+  prop de imagem, e a fonte diz isso com todas as letras.
+
+**O TESTE MATERIAL-CONTRA-PEÇA, aplicado entrada por entrada, e o que ele
+respondeu — que é a leitura mais valiosa deste lote.** A vigésima sexta deixou o
+corolário: ao abrir uma folha, pergunte se as bases da coluna do eixo são
+material ou peças prontas. A família 4 declara `card`, `table` e `chart`, e essa
+coluna é a única MISTA das seis — `card` é material, `table` e `chart` são peças.
+Aplicado às seis:
+
+| entrada | em que ela colapsa | material ou peça | o teste previu? |
+|---|---|---|---|
+| `diagram` | `card` + `scroll-area` + `dialog` | material + peças | pela metade |
+| `mermaid-diagram` | `diagram` + `code-block` + `skeleton` | peças | sim |
+| `math-block` | `item` | material | **não** |
+| `map-answer` | `computer-use` + `item` | peça | sim |
+| `web-preview` | `card` + `input-group` | material | **não** |
+| `image-generation` | `skeleton` | peça | sim |
+
+Três de seis. E o que as três falhas ensinam é o LIMITE do corolário, que a
+vigésima sexta não podia ver porque lá as quatro bases eram peças: **base
+material prevê que a família PODE existir, nunca que a entrada vai sobreviver.**
+Material sustenta família; sustentar não é preencher. `math-block` e
+`web-preview` caem sobre material puro e colapsam assim mesmo, porque o que
+faltava não era onde pôr — era o que pôr. Dito ao contrário, que é como se usa:
+**a coluna do eixo prevê colapso quando nomeia uma peça, e não prevê nada quando
+nomeia material.** É a mesma assimetria que o sinal mudo tem desde a nona, e vale
+a mesma disciplina: quando ela fica calada, decidem os três testes sozinhos.
+
+**O QUE A §6 EXIGE, MEDIDO NAS FONTES, e ela precisa de conserto.** A seção nomeia
+quatro entradas que "pedem biblioteca que o repositório não tem". Lidas as quatro
+páginas em cru, na faixa standalone: `mermaid-diagram` de fato analisa o texto e
+desenha o SVG, e é a única. `diagram` a §6 já sabia que não tinha. **`math-block`
+e `map-answer` também não têm** — a primeira não menciona KaTeX em linha nenhuma
+e recebe a expressão pronta como `ReactNode`; a segunda não menciona biblioteca
+de mapa nenhuma e desenha uma grade de fios com marcas em porcentagem, dizendo
+nos tipos que `x` e `y` **não** são longitude e latitude. A coluna "saída sem
+dependência" descrevia, nessas duas, o que a fonte JÁ É — não uma saída a tomar.
+A consequência prática é a melhor possível: **nenhuma decisão de dependência
+precisou ir para a dona neste lote**, e das quatro só sobra `mermaid-diagram`,
+que colapsou justamente por causa da biblioteca. O parágrafo de conserto está na
+§6.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 14, 3 tem 6, 4 tem 12, 5 tem 5, 6 tem 0 e 7 tem 2 — **50** na 5.2.
+A 5.1 vai a **70** (68 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. Os componentes a construir somam **44**, em **seis** folhas
+— e `resposta-estruturada.css` é uma das que ainda não nasceram.
+
+**Reversível**, como as outras vinte e seis, e aqui em duas alturas. Por entrada:
+`diagram` desdobra se ao compor aparecer vista que a peça CALCULE — enquadre
+automático, origem de escala seguindo o ponteiro, limites próprios —, e
+`mermaid-diagram` desdobra junto, porque depende dela. `map-answer` desdobra se
+aparecer projeção de verdade, ou pontos que se movam sob deslocamento e
+ampliação. `math-block` desdobra se a notação entrar na árvore da peça (MathML,
+`Frac` alinhado por ela). `web-preview` e `image-generation` não têm gatilho
+plausível: as duas são molduras de conteúdo que elas declaram não receber. Pela
+família: a 4 continua de pé com doze entradas, então nenhum desdobramento precisa
+fundar nada — quem desdobrar entra na folha que a primeira sobrevivente fundar.
+
+**O que esta leitura NÃO decide**: as doze restantes da família 4 —
+`spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`,
+`timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`,
+`heat-graph`, `artifact-card` e `canvas-split`. Duas notas medidas de passagem,
+para quem abrir a próxima, e as duas saíram dos TIPOS, não da anatomia: (a) o
+contador de revelação — `visibleCount`, `visibleSteps` — aparece em **sete** das
+dezoito entradas originais desta família, e nas duas que ele apareceu aqui o dono
+foi sempre o mesmo, `13-animacao.md`; é o assunto mais repetido da família e não
+é desenho de nenhuma delas. (b) `TimelineStat`, que a vigésima segunda e a
+vigésima quarta deixaram sem casa, tem candidato: `file-tree` declara
+`totalAdditions` e `totalDeletions` no cabeçalho, que é o par exato. Nenhuma das
+seis deste lote o quis.
+
+**E o registro de método, que vale uma sétima vez, e desta vez sobre uma
+afirmação do próprio arquivo.** O pedido trazia a §6 como coisa a ler antes de
+decidir, e a §6 é do arquivo, não de quem pediu. Ela estava errada em duas das
+quatro linhas, e errada do lado que mais atrapalha: descrevia como "saída" o que
+a fonte já era, o que faz a leitura começar procurando um contorno para um
+problema que não existe. **Seção que descreve fonte que ninguém leu envelhece
+como contagem** — e o conserto foi o mesmo de sempre, abrir as quatro páginas e
+procurar o nome da biblioteca. Custou quatro `grep`.
+
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
-Apareceu catorze vezes: **doze** como achatamento, sempre igual, e **três** pelo
-avesso — `mobile-composer`, `read-aloud` e `schedule-card`, que declara as duas
-formas de uma vez e por isso conta nas duas; as duas primeiras são as que fecham
-a sub-regra. Por isso vira critério:
+Apareceu dezessete vezes: **catorze** como achatamento, sempre igual, e **quatro**
+pelo avesso — `mobile-composer`, `read-aloud`, `mermaid-diagram` e
+`schedule-card`, que declara as duas formas de uma vez e por isso conta nas duas;
+as três primeiras são as que fecham a sub-regra. Por isso vira critério:
 **booleano onde este vocabulário já tem cinco palavras.**
 
 | entrada | o que a fonte declara | o que ela perde |
@@ -4095,9 +4367,11 @@ a sub-regra. Por isso vira critério:
 | `reviewable-diff` | `HunkDecision = pending\|kept\|discarded` — e só `pending` é do vocabulário | `running`, `failed` |
 | `thread-list` | `isRunning: boolean`, e só na faixa de RUNTIME — a standalone não tem estado nenhum | `idle`, `stopped`, `failed`, `complete` |
 | `shared-conversation` | `role: "user"\|"assistant"` — a primeira união achatada que não é de estados | `system` |
+| `web-preview` | `loading: boolean` | `idle`, `stopped`, `failed` — e `failed` é o pior: a prévia que quebrou desenha igual à que ainda está chegando, para sempre |
+| `image-generation` | `generating: boolean` | `idle`, `stopped`, `failed` |
 
-Nas doze, o achatamento não é economia — é sinal de que a entrada foi
-desenhada para uma tela só, sem o vocabulário que a família já tem. E as doze
+Nas catorze, o achatamento não é economia — é sinal de que a entrada foi
+desenhada para uma tela só, sem o vocabulário que a família já tem. E as catorze
 colapsaram pelos testes normais; o booleano só chegou antes.
 
 **A quarta é o limite da forma**, medida na décima primeira correção, e vale
@@ -4399,6 +4673,36 @@ estreitamento e vira identidade. **Quando o tipo estreitado é o do dono, pare d
 contar o que se perde e repare em quem já declara aquilo** — é a leitura da
 décima quinta e da décima nona, e o teto dela.
 
+**Décima e décima primeira aparições do avesso — e a terceira e quarta contando
+todas —, medidas na vigésima sétima**: `mermaid-diagram` declara
+`streaming: boolean`, e o dono já o declara com o MESMO nome — a 5.1 escreve
+`streaming-text` como "`chat-thread`, `streaming: true` + `aria-busy`" desde a
+primeira redação. É a leitura da décima quinta e da décima nona pela terceira
+vez, e agora com três donos diferentes: o `composer`, peça desta campanha; o
+`media-player`, componente que o design system já tinha; e o `chat-thread`, que é
+a primeira peça da própria família. **A pergunta "quem já declara este booleano?"
+varre a casa inteira, e ela mesma.**
+
+**Décimo segundo sinal mudo, medido na vigésima sétima**, e ele acrescenta o
+degrau que faltava à sub-regra da décima: `map-answer` não declara booleano de
+estado nem união nenhuma, e a assinatura que sobra no lugar é `onSelect` — a
+quinta chamada de volta de escolha da campanha, depois de `onSelect`, `onPick`,
+`onJump`, `onIndexChange` e `onActiveIndexChange`. **É a primeira que não aponta
+dono nenhum**, porque nada nesta casa escolhe um ponto sobre uma superfície. Pela
+décima terceira, assinatura que não aponta dono deixa a sub-regra calada, e
+decidem os três testes sozinhos — e decidiram pela identidade de `MapPin` com
+`ComputerStep`, campo por campo, que é a sexta forma na largura que a vigésima
+sexta chamou de identidade. Escrito para quem vier: **sub-regra calada não é
+sub-regra a favor.** Quatro das cinco chamadas de escolha nomearam dono e as
+quatro entradas colapsaram; esta não nomeou, e colapsou igual.
+
+E `route: boolean`, na mesma entrada, é a oitava forma que `thread-search`
+inaugurou, num grau a menos: ele não descreve o item nem parte a lista — DECORA
+a lista, ligando os pontos na ordem em que chegaram. A própria fonte o chama de
+"conectividade decorativa, não caminho calculado". Ao ler um booleano, a pergunta
+da oitava forma ganha um terceiro ramo: ele descreve o item, ORDENA a lista, ou
+só a enfeita? Os dois últimos são de quem monta.
+
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
 contador posicional que parta a lista em dois desenhos, mandam aplicar os três
@@ -4427,15 +4731,28 @@ decidida sem informação.
 
 ## 6. Dependências novas — decidir antes, não durante
 
-Quatro peças da família 4 pedem biblioteca que o repositório não tem. Nenhuma
-entra sem decisão explícita da dona, e três têm saída sem dependência:
+Quatro entradas do catálogo pareciam pedir biblioteca que o repositório não tem —
+as quatro da família 4, e as quatro já triadas, todas na 5.1 desde a vigésima
+sétima. Nenhuma dependência entra sem decisão explícita da dona, e três têm saída
+sem dependência:
 
 | Peça | Dependência natural | Saída sem dependência |
 |---|---|---|
-| `mermaid-diagram` | `mermaid` (~600 kB) | O consumidor passa o SVG já renderizado; o componente desenha a moldura, o zoom e o modo de tela cheia |
-| `math-block` | `katex` (~280 kB + fontes) | Idem — a peça é a moldura e o passo a passo, não o renderizador |
-| `map-answer` | `maplibre-gl` (~800 kB) | Idem, e aqui a saída é a melhor: mapa embutido carrega telha de terceiro, o que é decisão de privacidade além de peso |
+| `mermaid-diagram` | `mermaid` (~600 kB) — **e é a única das quatro que a fonte de fato carrega** | O consumidor passa o SVG já renderizado; o componente desenha a moldura, o zoom e o modo de tela cheia |
+| `math-block` | `katex` (~280 kB + fontes) — dependência NATURAL do assunto, não da fonte | A fonte **já é** a saída: `expression` chega pronto e a peça o põe num `<span>` |
+| `map-answer` | `maplibre-gl` (~800 kB) — dependência NATURAL do assunto, não da fonte | A fonte **já é** a saída: grade esquemática com marcas em porcentagem, e os tipos dizem que `x` e `y` não são longitude e latitude. A saída continua sendo a melhor: mapa embutido carrega telha de terceiro, o que é decisão de privacidade além de peso |
 | `diagram` | nenhuma | Já é assim na fonte: "you hand it the rendered graphic" |
+
+**Conserto medido na vigésima sétima correção, lendo as quatro páginas em cru.**
+Esta tabela foi escrita prevendo o que cada assunto PEDIRIA, e três das quatro
+linhas descreviam como "saída sem dependência" aquilo que a fonte já é. Só
+`mermaid-diagram` analisa alguma coisa; `math-block` não menciona KaTeX em linha
+nenhuma e `map-answer` não menciona biblioteca de mapa nenhuma. A consequência
+prática: **nenhuma decisão de dependência foi para a dona neste lote**, e a única
+entrada que a dependência decidia colapsou por causa dela. Vale como aviso de
+método para as doze que faltam da família 4: a coluna "dependência natural" diz o
+que o ASSUNTO costuma pedir, e isso não é leitura da fonte — leia a página antes
+de tratar a saída como contorno.
 
 **A saída é a regra, e a dependência é a exceção**: `10-performance.md` mede o
 bundle das docs pages, e um DS que embute três renderizadores para desenhar três
