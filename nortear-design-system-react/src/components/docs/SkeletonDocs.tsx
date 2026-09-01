@@ -416,6 +416,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         componentSlug="skeleton"
         items={[
           {
+            trackId: "rectangle",
             name: tContent("variants.items.rectangle"),
             description: stripHtml(tContent("variants.styles.rectangle")),
             code: codeRectangle,
@@ -426,6 +427,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             ),
           },
           {
+            trackId: "circle",
             name: tContent("variants.items.circle"),
             description: stripHtml(tContent("variants.styles.circle")),
             code: codeCircle,
@@ -436,6 +438,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             ),
           },
           {
+            trackId: "line",
             name: tContent("variants.items.line"),
             description: stripHtml(tContent("variants.styles.line")),
             code: codeLine,

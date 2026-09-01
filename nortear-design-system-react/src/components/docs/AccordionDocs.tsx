@@ -432,6 +432,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             title={tContent("variants.title")}
             items={[
               {
+                trackId: "single",
                 name: tContent("variants.items.single.label"),
                 description: stripHtml(tContent("variants.items.single.description")),
                 code: codeSingle,
@@ -451,6 +452,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
+                trackId: "multiple",
                 name: tContent("variants.items.multiple.label"),
                 description: stripHtml(tContent("variants.items.multiple.description")),
                 code: codeMultiple,
@@ -468,6 +470,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
+                trackId: "controlled",
                 name: tContent("variants.items.controlled.label"),
                 description: stripHtml(tContent("variants.items.controlled.description")),
                 code: codeControlled,
@@ -481,6 +484,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
+                trackId: "defaultOpen",
                 name: tContent("variants.items.defaultOpen.label"),
                 description: stripHtml(tContent("variants.items.defaultOpen.description")),
                 code: codeDefaultOpen,
@@ -507,6 +511,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             componentSlug="accordion"
             items={[
               {
+                trackId: "iconTrigger",
                 name: tContent("variants.compositions.iconTrigger.name"),
                 description: tContent("variants.compositions.iconTrigger.description"),
                 useWhen: tContent("variants.compositions.iconTrigger.use"),
@@ -572,6 +577,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
+                trackId: "badgeTrigger",
                 name: tContent("variants.compositions.badgeTrigger.name"),
                 description: tContent("variants.compositions.badgeTrigger.description"),
                 useWhen: tContent("variants.compositions.badgeTrigger.use"),
@@ -619,6 +625,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
+                trackId: "richContent",
                 name: tContent("variants.compositions.richContent.name"),
                 description: tContent("variants.compositions.richContent.description"),
                 useWhen: tContent("variants.compositions.richContent.use"),
@@ -688,6 +695,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
+                trackId: "faq",
                 name: tContent("variants.compositions.faq.name"),
                 description: tContent("variants.compositions.faq.description"),
                 useWhen: tContent("variants.compositions.faq.use"),

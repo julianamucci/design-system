@@ -645,6 +645,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             ),
           },
           {
+            trackId: "autoplay",
             name: tContent("variants.items.autoplay.name"),
             description: tContent("variants.items.autoplay.description"),
             useWhen: tContent("variants.items.autoplay.use"),
@@ -691,6 +692,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         componentSlug="carousel"
         items={[
           {
+            trackId: "withDots",
             name: tContent("variants.compositions.withDots.name"),
             description: tContent("variants.compositions.withDots.description"),
             useWhen: tContent("variants.compositions.withDots.use"),
@@ -751,6 +753,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             ),
           },
           {
+            trackId: "gallery",
             name: tContent("variants.compositions.gallery.name"),
             description: tContent("variants.compositions.gallery.description"),
             useWhen: tContent("variants.compositions.gallery.use"),

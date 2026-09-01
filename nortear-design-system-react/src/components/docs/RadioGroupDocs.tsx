@@ -553,6 +553,7 @@ interface RadioGroupItemProps {
         componentSlug="radio-group"
         items={[
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,
@@ -574,6 +575,7 @@ interface RadioGroupItemProps {
             ),
           },
           {
+            trackId: "horizontal",
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: horizontalCode,
@@ -598,6 +600,7 @@ interface RadioGroupItemProps {
             ),
           },
           {
+            trackId: "withDescription",
             name: tContent("variants.items.withDescription"),
             description: stripHtml(tContent("variants.styles.withDescription")),
             code: codeWithDescription,
@@ -642,6 +645,7 @@ interface RadioGroupItemProps {
         componentSlug="radio-group"
         items={[
           {
+            trackId: "inForm",
             name: tContent("variants.compositions.inForm.name"),
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),

@@ -530,6 +530,7 @@ interface PopoverContentProps {
         componentSlug="popover"
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -556,6 +557,7 @@ interface PopoverContentProps {
             ),
           },
           {
+            trackId: "withTitle",
             name: tContent("variants.items.withTitle"),
             description: stripHtml(tContent("variants.styles.withTitle")),
             code: codeWithTitle,
@@ -584,6 +586,7 @@ interface PopoverContentProps {
             ),
           },
           {
+            trackId: "form",
             name: tContent("variants.items.form"),
             description: stripHtml(tContent("variants.styles.form")),
             code: codeForm,
@@ -631,6 +634,7 @@ interface PopoverContentProps {
         componentSlug="popover"
         items={[
           {
+            trackId: "editProfile",
             name: tContent("variants.compositions.editProfile.name"),
             description: tContent("variants.compositions.editProfile.description"),
             useWhen: tContent("variants.compositions.editProfile.use"),
@@ -703,6 +707,7 @@ interface PopoverContentProps {
             ),
           },
           {
+            trackId: "tableFilter",
             name: tContent("variants.compositions.tableFilter.name"),
             description: tContent("variants.compositions.tableFilter.description"),
             useWhen: tContent("variants.compositions.tableFilter.use"),
@@ -766,6 +771,7 @@ interface PopoverContentProps {
             ),
           },
           {
+            trackId: "colorPicker",
             name: tContent("variants.compositions.colorPicker.name"),
             description: tContent("variants.compositions.colorPicker.description"),
             useWhen: tContent("variants.compositions.colorPicker.use"),
@@ -834,6 +840,7 @@ interface PopoverContentProps {
             ),
           },
           {
+            trackId: "quickSettings",
             name: tContent("variants.compositions.quickSettings.name"),
             description: tContent("variants.compositions.quickSettings.description"),
             useWhen: tContent("variants.compositions.quickSettings.use"),

@@ -478,6 +478,7 @@ interface TabsContentProps {
         title={tContent("variants.title")}
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -507,6 +508,7 @@ interface TabsContentProps {
             ),
           },
           {
+            trackId: "line",
             name: tContent("variants.items.line"),
             description: stripHtml(tContent("variants.styles.line")),
             code: codeLine,
@@ -536,6 +538,7 @@ interface TabsContentProps {
             ),
           },
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,
@@ -578,6 +581,7 @@ interface TabsContentProps {
         componentSlug="tabs"
         items={[
           {
+            trackId: "iconTrigger",
             name: tContent("variants.compositions.iconTrigger.name"),
             description: tContent("variants.compositions.iconTrigger.description"),
             useWhen: tContent("variants.compositions.iconTrigger.use"),
@@ -665,6 +669,7 @@ interface TabsContentProps {
             ),
           },
           {
+            trackId: "badgeTrigger",
             name: tContent("variants.compositions.badgeTrigger.name"),
             description: tContent("variants.compositions.badgeTrigger.description"),
             useWhen: tContent("variants.compositions.badgeTrigger.use"),

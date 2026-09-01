@@ -587,6 +587,7 @@ type PaginationDirectionalProps =
         componentSlug="pagination"
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -603,6 +604,7 @@ type PaginationDirectionalProps =
             ),
           },
           {
+            trackId: "directional",
             name: tContent("variants.items.directional"),
             description: stripHtml(tContent("variants.styles.directional")),
             code: codeDirectional,
@@ -620,6 +622,7 @@ type PaginationDirectionalProps =
             ),
           },
           {
+            trackId: "simple",
             name: tContent("variants.items.simple.name"),
             description: tContent("variants.items.simple.description"),
             useWhen: tContent("variants.items.simple.use"),
@@ -668,6 +671,7 @@ type PaginationDirectionalProps =
             ),
           },
           {
+            trackId: "withEllipsis",
             name: tContent("variants.items.withEllipsis.name"),
             description: tContent("variants.items.withEllipsis.description"),
             useWhen: tContent("variants.items.withEllipsis.use"),
@@ -719,6 +723,7 @@ type PaginationDirectionalProps =
             ),
           },
           {
+            trackId: "interactive",
             name: tContent("variants.items.interactive.name"),
             description: tContent("variants.items.interactive.description"),
             useWhen: tContent("variants.items.interactive.use"),

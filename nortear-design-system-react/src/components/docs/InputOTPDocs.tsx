@@ -498,6 +498,7 @@ interface InputOTPProps {
         componentSlug="input-otp"
         items={[
           {
+            trackId: "sixDigits",
             name: tContent("variants.items.sixDigits"),
             description: stripHtml(tContent("variants.styles.sixDigits")),
             code: codeSixDigits,
@@ -508,6 +509,7 @@ interface InputOTPProps {
             ),
           },
           {
+            trackId: "fourDigits",
             name: tContent("variants.items.fourDigits"),
             description: stripHtml(tContent("variants.styles.fourDigits")),
             code: codeFourDigits,
@@ -518,6 +520,7 @@ interface InputOTPProps {
             ),
           },
           {
+            trackId: "withSeparator",
             name: tContent("variants.items.withSeparator"),
             description: stripHtml(tContent("variants.styles.withSeparator")),
             code: codeWithSeparator,
@@ -528,6 +531,7 @@ interface InputOTPProps {
             ),
           },
           {
+            trackId: "alphanumeric",
             name: tContent("variants.items.alphanumeric"),
             description: stripHtml(tContent("variants.styles.alphanumeric")),
             code: codeAlpha,
@@ -547,6 +551,7 @@ interface InputOTPProps {
         componentSlug="input-otp"
         items={[
           {
+            trackId: "withLabel",
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
@@ -577,6 +582,7 @@ interface InputOTPProps {
             ),
           },
           {
+            trackId: "withHelpText",
             name: tContent("variants.compositions.withHelpText.name"),
             description: tContent("variants.compositions.withHelpText.description"),
             useWhen: tContent("variants.compositions.withHelpText.use"),
@@ -614,6 +620,7 @@ interface InputOTPProps {
             ),
           },
           {
+            trackId: "withErrorMessage",
             name: tContent("variants.compositions.withErrorMessage.name"),
             description: tContent("variants.compositions.withErrorMessage.description"),
             useWhen: tContent("variants.compositions.withErrorMessage.use"),
@@ -653,6 +660,7 @@ interface InputOTPProps {
             ),
           },
           {
+            trackId: "withResendButton",
             name: tContent("variants.compositions.withResendButton.name"),
             description: tContent("variants.compositions.withResendButton.description"),
             useWhen: tContent("variants.compositions.withResendButton.use"),

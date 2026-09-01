@@ -598,6 +598,7 @@ interface ContextMenuCheckboxItemProps
             ),
           },
           {
+            trackId: "withCheckbox",
             name: tContent("variants.items.withCheckbox.name"),
             description: tContent("variants.items.withCheckbox.description"),
             useWhen: tContent("variants.items.withCheckbox.use"),
@@ -621,6 +622,7 @@ const [showRulers, setShowRulers] = useState(false);
             preview: <CheckboxDemo tContent={tContent} />,
           },
           {
+            trackId: "withRadio",
             name: tContent("variants.items.withRadio.name"),
             description: tContent("variants.items.withRadio.description"),
             useWhen: tContent("variants.items.withRadio.use"),
@@ -642,6 +644,7 @@ const [showRulers, setShowRulers] = useState(false);
             preview: <RadioDemo tContent={tContent} />,
           },
           {
+            trackId: "withSubmenu",
             name: tContent("variants.items.withSubmenu.name"),
             description: tContent("variants.items.withSubmenu.description"),
             useWhen: tContent("variants.items.withSubmenu.use"),
@@ -679,6 +682,7 @@ const [showRulers, setShowRulers] = useState(false);
             ),
           },
           {
+            trackId: "withShortcuts",
             name: tContent("variants.items.withShortcuts.name"),
             description: tContent("variants.items.withShortcuts.description"),
             useWhen: tContent("variants.items.withShortcuts.use"),

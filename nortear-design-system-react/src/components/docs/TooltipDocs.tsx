@@ -446,6 +446,7 @@ interface TooltipContentProps {
           componentSlug="tooltip"
           items={[
             {
+              trackId: "default",
               name: tContent("variants.items.default"),
               description: stripHtml(tContent("variants.styles.default")),
               code: codeDefault,
@@ -463,6 +464,7 @@ interface TooltipContentProps {
               ),
             },
             {
+              trackId: "withShortcut",
               name: tContent("variants.items.withShortcut"),
               description: stripHtml(tContent("variants.styles.withShortcut")),
               code: codeWithShortcut,
@@ -484,6 +486,7 @@ interface TooltipContentProps {
               ),
             },
             {
+              trackId: "longText",
               name: tContent("variants.items.longText"),
               description: stripHtml(tContent("variants.styles.longText")),
               code: codeLongText,
@@ -507,6 +510,7 @@ interface TooltipContentProps {
               ),
             },
             {
+              trackId: "positioningSides",
               name: tContent("variants.items.positioningSides.name"),
               description: tContent("variants.items.positioningSides.description"),
               useWhen: tContent("variants.items.positioningSides.use"),
@@ -549,6 +553,7 @@ interface TooltipContentProps {
           componentSlug="tooltip"
           items={[
             {
+              trackId: "iconButtonWithShortcut",
               name: tContent("variants.compositions.iconButtonWithShortcut.name"),
               description: tContent("variants.compositions.iconButtonWithShortcut.description"),
               useWhen: tContent("variants.compositions.iconButtonWithShortcut.use"),
@@ -584,6 +589,7 @@ interface TooltipContentProps {
               ),
             },
             {
+              trackId: "formFieldHelp",
               name: tContent("variants.compositions.formFieldHelp.name"),
               description: tContent("variants.compositions.formFieldHelp.description"),
               useWhen: tContent("variants.compositions.formFieldHelp.use"),
@@ -650,6 +656,7 @@ interface TooltipContentProps {
               ),
             },
             {
+              trackId: "metricDescription",
               name: tContent("variants.compositions.metricDescription.name"),
               description: tContent("variants.compositions.metricDescription.description"),
               useWhen: tContent("variants.compositions.metricDescription.use"),

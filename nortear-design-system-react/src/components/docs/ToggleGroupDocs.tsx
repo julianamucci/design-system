@@ -492,6 +492,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
         title={tContent("variants.title")}
         items={[
           {
+            trackId: "single",
             name: tContent("variants.items.single"),
             description: stripHtml(tContent("variants.styles.single")),
             code: codeSingle,
@@ -510,6 +511,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             ),
           },
           {
+            trackId: "multiple",
             name: tContent("variants.items.multiple"),
             description: stripHtml(tContent("variants.styles.multiple")),
             code: codeMultiple,
@@ -528,6 +530,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             ),
           },
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,
@@ -557,6 +560,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
         componentSlug="toggle-group"
         items={[
           {
+            trackId: "alignmentBar",
             name: tContent("variants.compositions.alignmentBar.name"),
             description: tContent("variants.compositions.alignmentBar.description"),
             useWhen: tContent("variants.compositions.alignmentBar.use"),
@@ -576,6 +580,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             ),
           },
           {
+            trackId: "viewMode",
             name: tContent("variants.compositions.viewMode.name"),
             description: tContent("variants.compositions.viewMode.description"),
             useWhen: tContent("variants.compositions.viewMode.use"),
@@ -594,6 +599,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             ),
           },
           {
+            trackId: "filterWithText",
             name: tContent("variants.compositions.filterWithText.name"),
             description: tContent("variants.compositions.filterWithText.description"),
             useWhen: tContent("variants.compositions.filterWithText.use"),

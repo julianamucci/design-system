@@ -716,6 +716,7 @@ interface CommandDialogProps
             ),
           },
           {
+            trackId: "withGroups",
             name: tContent("variants.items.withGroups.name"),
             description: tContent("variants.items.withGroups.description"),
             useWhen: tContent("variants.items.withGroups.use"),

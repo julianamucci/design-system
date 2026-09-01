@@ -705,6 +705,7 @@ declare function buildRadarOption(o: {
             ),
           },
           {
+            trackId: "smallInline",
             name: tContent("variants.items.smallInline.name"),
             description: tContent("variants.items.smallInline.description"),
             useWhen: tContent("variants.items.smallInline.use"),
@@ -743,6 +744,7 @@ declare function buildRadarOption(o: {
         componentSlug="chart"
         items={[
           {
+            trackId: "inCard",
             name: tContent("variants.compositions.inCard.name"),
             description: tContent("variants.compositions.inCard.description"),
             useWhen: tContent("variants.compositions.inCard.use"),

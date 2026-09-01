@@ -527,6 +527,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             preview: <ControlledDemo tContent={tContent} />,
           },
           {
+            trackId: "customButton",
             name: tContent("variants.items.customButton.name"),
             description: tContent("variants.items.customButton.description"),
             useWhen: tContent("variants.items.customButton.use"),
@@ -563,6 +564,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         componentSlug="collapsible"
         items={[
           {
+            trackId: "iconTrigger",
             name: tContent("variants.compositions.iconTrigger.name"),
             description: tContent("variants.compositions.iconTrigger.description"),
             useWhen: tContent("variants.compositions.iconTrigger.use"),
@@ -600,6 +602,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             ),
           },
           {
+            trackId: "rotatingChevron",
             name: tContent("variants.compositions.rotatingChevron.name"),
             description: tContent("variants.compositions.rotatingChevron.description"),
             useWhen: tContent("variants.compositions.rotatingChevron.use"),
@@ -655,6 +658,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             ),
           },
           {
+            trackId: "richContent",
             name: tContent("variants.compositions.richContent.name"),
             description: tContent("variants.compositions.richContent.description"),
             useWhen: tContent("variants.compositions.richContent.use"),

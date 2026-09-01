@@ -853,6 +853,7 @@ interface ComboboxContentProps {
         componentSlug="combobox"
         items={[
           {
+            trackId: "single",
             name: tContent("variants.items.single"),
             description: stripHtml(tContent("variants.styles.single")),
             code: codeSingle,
@@ -867,6 +868,7 @@ interface ComboboxContentProps {
             ),
           },
           {
+            trackId: "multiple",
             name: tContent("variants.items.multiple"),
             description: stripHtml(tContent("variants.styles.multiple")),
             code: codeMultiple,
@@ -883,6 +885,7 @@ interface ComboboxContentProps {
             ),
           },
           {
+            trackId: "grouped",
             name: tContent("variants.items.grouped"),
             description: stripHtml(tContent("variants.styles.grouped")),
             code: codeGrouped,
@@ -906,6 +909,7 @@ interface ComboboxContentProps {
         componentSlug="combobox"
         items={[
           {
+            trackId: "inForm",
             name: tContent("variants.compositions.inForm.name"),
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),

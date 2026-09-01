@@ -296,6 +296,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
         componentSlug="label"
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default.label"),
             description: tContent("variants.note"),
             code: codeDefault,

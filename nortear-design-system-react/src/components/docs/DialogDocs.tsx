@@ -694,6 +694,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             ),
           },
           {
+            trackId: "confirmEmail",
             name: tContent("variants.items.confirmEmail.name"),
             description: tContent("variants.items.confirmEmail.description"),
             useWhen: tContent("variants.items.confirmEmail.use"),
@@ -749,6 +750,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         componentSlug="dialog"
         items={[
           {
+            trackId: "mediaPreview",
             name: tContent("variants.compositions.mediaPreview.name"),
             description: tContent("variants.compositions.mediaPreview.description"),
             useWhen: tContent("variants.compositions.mediaPreview.use"),

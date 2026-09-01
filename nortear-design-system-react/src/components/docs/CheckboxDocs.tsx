@@ -502,6 +502,7 @@ export function CheckboxDocs() {
             componentSlug="checkbox"
             items={[
               {
+                trackId: "fieldset",
                 name: tContent("variants.compositions.fieldset.name"),
                 description: tContent("variants.compositions.fieldset.description"),
                 useWhen: tContent("variants.compositions.fieldset.use"),
@@ -539,6 +540,7 @@ export function CheckboxDocs() {
                 ),
               },
               {
+                trackId: "selectAll",
                 name: tContent("variants.compositions.selectAll.name"),
                 description: tContent("variants.compositions.selectAll.description"),
                 useWhen: tContent("variants.compositions.selectAll.use"),
@@ -566,6 +568,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 preview: <SelectAllPreview />,
               },
               {
+                trackId: "inList",
                 name: tContent("variants.compositions.inList.name"),
                 description: tContent("variants.compositions.inList.description"),
                 useWhen: tContent("variants.compositions.inList.use"),

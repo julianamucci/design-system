@@ -395,6 +395,7 @@ import { Plus } from "lucide-react";`;
                 preview: <Button variant="ghost">{tContent("demonstration.labels.ghost")}</Button>,
               },
               {
+                trackId: "asLink",
                 name: tContent("variants.items.asLink.name"),
                 description: tContent("variants.items.asLink.description"),
                 useWhen: tContent("variants.items.asLink.use"),
@@ -489,6 +490,7 @@ import { Plus } from "lucide-react";`;
             componentSlug="button"
             items={[
               {
+                trackId: "iconLeft",
                 name: tContent("variants.compositions.iconLeft.name"),
                 description: tContent("variants.compositions.iconLeft.description"),
                 useWhen: tContent("variants.compositions.iconLeft.use"),
@@ -501,6 +503,7 @@ import { Plus } from "lucide-react";`;
                 ),
               },
               {
+                trackId: "iconRight",
                 name: tContent("variants.compositions.iconRight.name"),
                 description: tContent("variants.compositions.iconRight.description"),
                 useWhen: tContent("variants.compositions.iconRight.use"),
@@ -513,6 +516,7 @@ import { Plus } from "lucide-react";`;
                 ),
               },
               {
+                trackId: "destructiveWithIcon",
                 name: tContent("variants.compositions.destructiveWithIcon.name"),
                 description: tContent("variants.compositions.destructiveWithIcon.description"),
                 useWhen: tContent("variants.compositions.destructiveWithIcon.use"),
@@ -525,6 +529,7 @@ import { Plus } from "lucide-react";`;
                 ),
               },
               {
+                trackId: "actionPair",
                 name: tContent("variants.compositions.actionPair.name"),
                 description: tContent("variants.compositions.actionPair.description"),
                 useWhen: tContent("variants.compositions.actionPair.use"),

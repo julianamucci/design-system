@@ -577,7 +577,7 @@ export function CodeBlockDocs() {
           {
             // trackId, e não `name`: o nome vem traduzido e o mesmo evento sairia
             // com um valor por idioma.
-            trackId: "with-title",
+            trackId: "withTitle",
             name: tContent("variants.items.withTitle.name"),
             description: tContent("variants.items.withTitle.description"),
             useWhen: tContent("variants.items.withTitle.use"),
@@ -596,7 +596,7 @@ export function CodeBlockDocs() {
             ),
           },
           {
-            trackId: "without-numbers",
+            trackId: "withoutNumbers",
             name: tContent("variants.items.withoutNumbers.name"),
             description: tContent("variants.items.withoutNumbers.description"),
             useWhen: tContent("variants.items.withoutNumbers.use"),
@@ -634,7 +634,7 @@ export function CodeBlockDocs() {
             ),
           },
           {
-            trackId: "with-footer",
+            trackId: "withFooter",
             name: tContent("variants.items.withFooter.name"),
             description: tContent("variants.items.withFooter.description"),
             useWhen: tContent("variants.items.withFooter.use"),

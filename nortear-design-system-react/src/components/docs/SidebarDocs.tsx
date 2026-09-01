@@ -874,6 +874,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             preview: <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" side="right" defaultOpen={true} navLabel={`side="right"`} />,
           },
           {
+            trackId: "withSubMenu",
             name: tContent("variants.items.withSubMenu.name"),
             description: tContent("variants.items.withSubMenu.description"),
             useWhen: tContent("variants.items.withSubMenu.use"),
@@ -903,6 +904,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             preview: <PreviewWithSubMenu navLabel={tContent("variants.items.withSubMenu.name")} />,
           },
           {
+            trackId: "withBadges",
             name: tContent("variants.items.withBadges.name"),
             description: tContent("variants.items.withBadges.description"),
             useWhen: tContent("variants.items.withBadges.use"),
@@ -925,6 +927,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
         componentSlug="sidebar"
         items={[
           {
+            trackId: "withGroups",
             name: tContent("variants.compositions.withGroups.name"),
             description: tContent("variants.compositions.withGroups.description"),
             useWhen: tContent("variants.compositions.withGroups.use"),
@@ -965,6 +968,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             preview: <PreviewWithGroups navLabel={tContent("variants.compositions.withGroups.name")} />,
           },
           {
+            trackId: "withSearch",
             name: tContent("variants.compositions.withSearch.name"),
             description: tContent("variants.compositions.withSearch.description"),
             useWhen: tContent("variants.compositions.withSearch.use"),

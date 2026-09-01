@@ -505,6 +505,7 @@ export function SheetDocs() {
         componentSlug="sheet"
         items={[
           {
+            trackId: "right",
             name: tContent("variants.items.right"),
             description: stripHtml(tContent("variants.styles.right")),
             code: codeRight,
@@ -521,6 +522,7 @@ export function SheetDocs() {
             ),
           },
           {
+            trackId: "left",
             name: tContent("variants.items.left"),
             description: stripHtml(tContent("variants.styles.left")),
             code: codeLeft,
@@ -537,6 +539,7 @@ export function SheetDocs() {
             ),
           },
           {
+            trackId: "top",
             name: tContent("variants.items.top"),
             description: stripHtml(tContent("variants.styles.top")),
             code: codeTop,
@@ -553,6 +556,7 @@ export function SheetDocs() {
             ),
           },
           {
+            trackId: "bottom",
             name: tContent("variants.items.bottom"),
             description: stripHtml(tContent("variants.styles.bottom")),
             code: codeBottom,
@@ -577,6 +581,7 @@ export function SheetDocs() {
         componentSlug="sheet"
         items={[
           {
+            trackId: "advancedFilters",
             name: tContent("variants.compositions.advancedFilters.name"),
             description: tContent("variants.compositions.advancedFilters.description"),
             useWhen: tContent("variants.compositions.advancedFilters.use"),
@@ -613,6 +618,7 @@ export function SheetDocs() {
             ),
           },
           {
+            trackId: "secondaryNavigation",
             name: tContent("variants.compositions.secondaryNavigation.name"),
             description: tContent("variants.compositions.secondaryNavigation.description"),
             useWhen: tContent("variants.compositions.secondaryNavigation.use"),

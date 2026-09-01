@@ -496,6 +496,7 @@ interface MenubarItemProps {
         componentSlug="menubar"
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -506,6 +507,7 @@ interface MenubarItemProps {
             ),
           },
           {
+            trackId: "destructive",
             name: tContent("variants.items.destructive"),
             description: stripHtml(tContent("variants.styles.destructive")),
             code: codeDestructive,
@@ -516,6 +518,7 @@ interface MenubarItemProps {
             ),
           },
           {
+            trackId: "withShortcuts",
             name: tContent("variants.items.withShortcuts.name"),
             description: tContent("variants.items.withShortcuts.description"),
             useWhen: tContent("variants.items.withShortcuts.use"),
@@ -557,6 +560,7 @@ interface MenubarItemProps {
             ),
           },
           {
+            trackId: "withCheckbox",
             name: tContent("variants.items.withCheckbox.name"),
             description: tContent("variants.items.withCheckbox.description"),
             useWhen: tContent("variants.items.withCheckbox.use"),
@@ -598,6 +602,7 @@ interface MenubarItemProps {
             ),
           },
           {
+            trackId: "withRadio",
             name: tContent("variants.items.withRadio.name"),
             description: tContent("variants.items.withRadio.description"),
             useWhen: tContent("variants.items.withRadio.use"),
@@ -631,6 +636,7 @@ interface MenubarItemProps {
             ),
           },
           {
+            trackId: "editorComplete",
             name: tContent("variants.items.editorComplete.name"),
             description: tContent("variants.items.editorComplete.description"),
             useWhen: tContent("variants.items.editorComplete.use"),

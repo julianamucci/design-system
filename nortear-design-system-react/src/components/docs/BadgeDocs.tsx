@@ -353,6 +353,7 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
         componentSlug="badge"
         items={[
           {
+            trackId: "withIcon",
             name: tContent("variants.compositions.withIcon.name"),
             description: tContent("variants.compositions.withIcon.description"),
             useWhen: tContent("variants.compositions.withIcon.use"),
@@ -365,6 +366,7 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             ),
           },
           {
+            trackId: "withCounter",
             name: tContent("variants.compositions.withCounter.name"),
             description: tContent("variants.compositions.withCounter.description"),
             useWhen: tContent("variants.compositions.withCounter.use"),
@@ -379,6 +381,7 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             ),
           },
           {
+            trackId: "asTrigger",
             name: tContent("variants.compositions.asTrigger.name"),
             description: tContent("variants.compositions.asTrigger.description"),
             useWhen: tContent("variants.compositions.asTrigger.use"),

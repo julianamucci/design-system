@@ -496,6 +496,7 @@ function Textarea({
         title={tContent("variants.title")}
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -511,6 +512,7 @@ function Textarea({
             ),
           },
           {
+            trackId: "withCounter",
             name: tContent("variants.items.withCounter"),
             description: stripHtml(tContent("variants.styles.withCounter")),
             code: codeWithCounter,
@@ -534,6 +536,7 @@ function Textarea({
             ),
           },
           {
+            trackId: "noResize",
             name: tContent("variants.items.noResize"),
             description: stripHtml(tContent("variants.styles.noResize")),
             code: codeNoResize,
@@ -558,6 +561,7 @@ function Textarea({
         componentSlug="textarea"
         items={[
           {
+            trackId: "withLabel",
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
@@ -581,6 +585,7 @@ function Textarea({
             ),
           },
           {
+            trackId: "withHint",
             name: tContent("variants.compositions.withHint.name"),
             description: tContent("variants.compositions.withHint.description"),
             useWhen: tContent("variants.compositions.withHint.use"),
@@ -610,6 +615,7 @@ function Textarea({
             ),
           },
           {
+            trackId: "withError",
             name: tContent("variants.compositions.withError.name"),
             description: tContent("variants.compositions.withError.description"),
             useWhen: tContent("variants.compositions.withError.use"),
@@ -643,6 +649,7 @@ function Textarea({
             ),
           },
           {
+            trackId: "inForm",
             name: tContent("variants.compositions.inForm.name"),
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),

@@ -533,6 +533,7 @@ interface SliderProps {
         componentSlug="slider"
         items={[
           {
+            trackId: "single",
             name: tContent("variants.items.single"),
             description: stripHtml(tContent("variants.styles.single")),
             code: codeSingle,
@@ -543,6 +544,7 @@ interface SliderProps {
             ),
           },
           {
+            trackId: "range",
             name: tContent("variants.items.range"),
             description: stripHtml(tContent("variants.styles.range")),
             code: codeRange,
@@ -558,6 +560,7 @@ interface SliderProps {
             ),
           },
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,
@@ -574,6 +577,7 @@ interface SliderProps {
             ),
           },
           {
+            trackId: "brightness",
             name: tContent("variants.items.brightness.name"),
             description: tContent("variants.items.brightness.description"),
             useWhen: tContent("variants.items.brightness.use"),
@@ -597,6 +601,7 @@ interface SliderProps {
         componentSlug="slider"
         items={[
           {
+            trackId: "volume",
             name: tContent("variants.compositions.volume.name"),
             description: tContent("variants.compositions.volume.description"),
             useWhen: tContent("variants.compositions.volume.use"),
@@ -618,6 +623,7 @@ interface SliderProps {
             preview: <VolumeDemo label="Volume" />,
           },
           {
+            trackId: "form",
             name: tContent("variants.compositions.form.name"),
             description: tContent("variants.compositions.form.description"),
             useWhen: tContent("variants.compositions.form.use"),

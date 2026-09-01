@@ -477,6 +477,7 @@ interface ScrollBarProps {
         title={tContent("variants.title")}
         items={[
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,
@@ -495,6 +496,7 @@ interface ScrollBarProps {
             ),
           },
           {
+            trackId: "horizontal",
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: horizontalCode,
@@ -519,6 +521,7 @@ interface ScrollBarProps {
             ),
           },
           {
+            trackId: "both",
             name: tContent("variants.items.both"),
             description: stripHtml(tContent("variants.styles.both")),
             code: codeBoth,

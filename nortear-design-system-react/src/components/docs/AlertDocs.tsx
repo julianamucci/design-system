@@ -515,6 +515,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 ),
               },
               {
+                trackId: "withoutTitle",
                 name: tContent("states.withoutTitle.label"),
                 description: tContent("states.withoutTitle.behavior"),
                 code: codeWithoutTitle,
@@ -535,6 +536,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             componentSlug="alert"
             items={[
               {
+                trackId: "withIcon",
                 name: tContent("variants.compositions.withIcon.name"),
                 description: tContent("variants.compositions.withIcon.description"),
                 useWhen: tContent("variants.compositions.withIcon.use"),
@@ -548,6 +550,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 ),
               },
               {
+                trackId: "withAction",
                 name: tContent("variants.compositions.withAction.name"),
                 description: tContent("variants.compositions.withAction.description"),
                 useWhen: tContent("variants.compositions.withAction.use"),

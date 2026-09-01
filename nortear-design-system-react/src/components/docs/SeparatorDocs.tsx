@@ -360,6 +360,7 @@ export function SeparatorDocs() {
         componentSlug="separator"
         items={[
           {
+            trackId: "horizontal",
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: horizontalCode,
@@ -372,6 +373,7 @@ export function SeparatorDocs() {
             ),
           },
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,

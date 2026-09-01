@@ -550,6 +550,7 @@ interface PanelResizeHandleProps {
         title={tContent("variants.title")}
         items={[
           {
+            trackId: "horizontal",
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: horizontalCode,
@@ -576,6 +577,7 @@ interface PanelResizeHandleProps {
             ),
           },
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,
@@ -602,6 +604,7 @@ interface PanelResizeHandleProps {
             ),
           },
           {
+            trackId: "nested",
             name: tContent("variants.items.nested"),
             description: stripHtml(tContent("variants.styles.nested")),
             code: codeNested,

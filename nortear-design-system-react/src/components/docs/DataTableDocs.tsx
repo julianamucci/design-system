@@ -601,6 +601,7 @@ type DataTableColumnMeta = {
             preview: PreviewBasic,
           },
           {
+            trackId: "editableSheet",
             name: tContent("variants.items.editableSheet.name"),
             description: tContent("variants.items.editableSheet.description"),
             useWhen: tContent("variants.items.editableSheet.use"),
@@ -608,6 +609,7 @@ type DataTableColumnMeta = {
             preview: PreviewBasic,
           },
           {
+            trackId: "virtualizedLog",
             name: tContent("variants.items.virtualizedLog.name"),
             description: tContent("variants.items.virtualizedLog.description"),
             useWhen: tContent("variants.items.virtualizedLog.use"),
@@ -624,6 +626,7 @@ type DataTableColumnMeta = {
             ),
           },
           {
+            trackId: "pinnedKey",
             name: tContent("variants.items.pinnedKey.name"),
             description: tContent("variants.items.pinnedKey.description"),
             useWhen: tContent("variants.items.pinnedKey.use"),
@@ -640,6 +643,7 @@ type DataTableColumnMeta = {
         componentSlug="data-table"
         items={[
           {
+            trackId: "selectionWithActions",
             name: tContent("variants.compositions.selectionWithActions.name"),
             description: tContent("variants.compositions.selectionWithActions.description"),
             useWhen: tContent("variants.compositions.selectionWithActions.use"),

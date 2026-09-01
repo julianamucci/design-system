@@ -440,6 +440,7 @@ import { Label } from "@/components/ui/label";`;
         title={tContent("variants.title")}
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -451,6 +452,7 @@ import { Label } from "@/components/ui/label";`;
             ),
           },
           {
+            trackId: "withDescription",
             name: tContent("variants.items.withDescription"),
             description: stripHtml(tContent("variants.styles.withDescription")),
             code: codeWithDescription,
@@ -467,6 +469,7 @@ import { Label } from "@/components/ui/label";`;
             ),
           },
           {
+            trackId: "sm",
             name: tContent("variants.items.sm"),
             description: stripHtml(tContent("variants.styles.sm")),
             code: codeSm,
@@ -489,6 +492,7 @@ import { Label } from "@/components/ui/label";`;
         componentSlug="switch"
         items={[
           {
+            trackId: "withLabel",
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
@@ -506,6 +510,7 @@ import { Label } from "@/components/ui/label";`;
             ),
           },
           {
+            trackId: "withoutLabel",
             name: tContent("variants.compositions.withoutLabel.name"),
             description: tContent("variants.compositions.withoutLabel.description"),
             useWhen: tContent("variants.compositions.withoutLabel.use"),
@@ -513,6 +518,7 @@ import { Label } from "@/components/ui/label";`;
             preview: <Switch id="doc-no-label" aria-label="Ativar modo escuro" />,
           },
           {
+            trackId: "settingsList",
             name: tContent("variants.compositions.settingsList.name"),
             description: tContent("variants.compositions.settingsList.description"),
             useWhen: tContent("variants.compositions.settingsList.use"),
@@ -565,6 +571,7 @@ import { Label } from "@/components/ui/label";`;
             ),
           },
           {
+            trackId: "inForm",
             name: tContent("variants.compositions.inForm.name"),
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),

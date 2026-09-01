@@ -544,7 +544,7 @@ interface StepperItemProps {
               "variants.compositions.withDescriptions.description",
             ),
             useWhen: tContent("variants.compositions.withDescriptions.use"),
-            trackId: "with-descriptions",
+            trackId: "withDescriptions",
             code: codeWithDescriptions,
             preview: stepperTrail({ value: 2, labels: stateLabels, withHints: true }),
           },

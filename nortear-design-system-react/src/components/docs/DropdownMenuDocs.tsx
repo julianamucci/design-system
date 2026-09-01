@@ -504,6 +504,7 @@ interface DropdownMenuItemProps {
         componentSlug="dropdown-menu"
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -514,6 +515,7 @@ interface DropdownMenuItemProps {
             ),
           },
           {
+            trackId: "destructive",
             name: tContent("variants.items.destructive"),
             description: stripHtml(tContent("variants.styles.destructive")),
             code: codeDestructive,
@@ -524,6 +526,7 @@ interface DropdownMenuItemProps {
             ),
           },
           {
+            trackId: "withLabel",
             name: tContent("variants.items.withLabel.name"),
             description: tContent("variants.items.withLabel.description"),
             useWhen: tContent("variants.items.withLabel.use"),
@@ -569,6 +572,7 @@ interface DropdownMenuItemProps {
             ),
           },
           {
+            trackId: "withCheckboxItems",
             name: tContent("variants.items.withCheckboxItems.name"),
             description: tContent("variants.items.withCheckboxItems.description"),
             useWhen: tContent("variants.items.withCheckboxItems.use"),
@@ -625,6 +629,7 @@ interface DropdownMenuItemProps {
             ),
           },
           {
+            trackId: "withRadioGroup",
             name: tContent("variants.items.withRadioGroup.name"),
             description: tContent("variants.items.withRadioGroup.description"),
             useWhen: tContent("variants.items.withRadioGroup.use"),
@@ -660,6 +665,7 @@ interface DropdownMenuItemProps {
             ),
           },
           {
+            trackId: "withShortcuts",
             name: tContent("variants.items.withShortcuts.name"),
             description: tContent("variants.items.withShortcuts.description"),
             useWhen: tContent("variants.items.withShortcuts.use"),

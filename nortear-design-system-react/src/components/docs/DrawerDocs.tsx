@@ -431,6 +431,7 @@ interface DrawerProps {
         componentSlug="drawer"
         items={[
           {
+            trackId: "bottom",
             name: tContent("variants.items.bottom"),
             description: stripHtml(tContent("variants.styles.bottom")),
             code: codeBottom,
@@ -441,6 +442,7 @@ interface DrawerProps {
             ),
           },
           {
+            trackId: "top",
             name: tContent("variants.items.top"),
             description: stripHtml(tContent("variants.styles.top")),
             code: codeTop,
@@ -451,6 +453,7 @@ interface DrawerProps {
             ),
           },
           {
+            trackId: "left",
             name: tContent("variants.items.left"),
             description: stripHtml(tContent("variants.styles.left")),
             code: codeLeft,
@@ -461,6 +464,7 @@ interface DrawerProps {
             ),
           },
           {
+            trackId: "right",
             name: tContent("variants.items.right"),
             description: stripHtml(tContent("variants.styles.right")),
             code: codeRight,
@@ -471,6 +475,7 @@ interface DrawerProps {
             ),
           },
           {
+            trackId: "withScroll",
             name: tContent("variants.items.withScroll.name"),
             description: tContent("variants.items.withScroll.description"),
             useWhen: tContent("variants.items.withScroll.use"),
@@ -539,6 +544,7 @@ interface DrawerProps {
         componentSlug="drawer"
         items={[
           {
+            trackId: "withForm",
             name: tContent("variants.compositions.withForm.name"),
             description: tContent("variants.compositions.withForm.description"),
             useWhen: tContent("variants.compositions.withForm.use"),
@@ -600,6 +606,7 @@ interface DrawerProps {
             ),
           },
           {
+            trackId: "withConfirmation",
             name: tContent("variants.compositions.withConfirmation.name"),
             description: tContent("variants.compositions.withConfirmation.description"),
             useWhen: tContent("variants.compositions.withConfirmation.use"),

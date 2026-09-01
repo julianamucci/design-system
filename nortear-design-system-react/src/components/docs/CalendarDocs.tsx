@@ -499,6 +499,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             preview: previewNumberOfMonths,
           },
           {
+            trackId: "inlineBordered",
             name: tContent("variants.items.inlineBordered.name"),
             description: tContent("variants.items.inlineBordered.description"),
             useWhen: tContent("variants.items.inlineBordered.use"),
@@ -521,6 +522,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             ),
           },
           {
+            trackId: "disabledPast",
             name: tContent("variants.items.disabledPast.name"),
             description: tContent("variants.items.disabledPast.description"),
             useWhen: tContent("variants.items.disabledPast.use"),

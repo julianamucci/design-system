@@ -534,6 +534,7 @@ interface NavigationMenuLinkProps
         componentSlug="navigation-menu"
         items={[
           {
+            trackId: "horizontal",
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: horizontalCode,
@@ -544,6 +545,7 @@ interface NavigationMenuLinkProps
             ),
           },
           {
+            trackId: "vertical",
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
             code: verticalCode,
@@ -554,6 +556,7 @@ interface NavigationMenuLinkProps
             ),
           },
           {
+            trackId: "linkSimples",
             name: tContent("variants.items.linkSimples.name"),
             description: tContent("variants.items.linkSimples.description"),
             useWhen: tContent("variants.items.linkSimples.use"),
@@ -589,6 +592,7 @@ interface NavigationMenuLinkProps
             ),
           },
           {
+            trackId: "comDropdown",
             name: tContent("variants.items.comDropdown.name"),
             description: tContent("variants.items.comDropdown.description"),
             useWhen: tContent("variants.items.comDropdown.use"),
@@ -634,6 +638,7 @@ interface NavigationMenuLinkProps
             ),
           },
           {
+            trackId: "megaMenuGrid",
             name: tContent("variants.items.megaMenuGrid.name"),
             description: tContent("variants.items.megaMenuGrid.description"),
             useWhen: tContent("variants.items.megaMenuGrid.use"),
@@ -714,6 +719,7 @@ interface NavigationMenuLinkProps
             ),
           },
           {
+            trackId: "comCardDestacado",
             name: tContent("variants.items.comCardDestacado.name"),
             description: tContent("variants.items.comCardDestacado.description"),
             useWhen: tContent("variants.items.comCardDestacado.use"),

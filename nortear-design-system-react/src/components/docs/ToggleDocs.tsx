@@ -431,6 +431,7 @@ import { Bold } from "lucide-react";`;
         componentSlug="toggle"
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -441,6 +442,7 @@ import { Bold } from "lucide-react";`;
             ),
           },
           {
+            trackId: "outline",
             name: tContent("variants.items.outline"),
             description: stripHtml(tContent("variants.styles.outline")),
             code: codeOutline,
@@ -451,6 +453,7 @@ import { Bold } from "lucide-react";`;
             ),
           },
           {
+            trackId: "withLabel",
             name: tContent("variants.items.withLabel"),
             description: stripHtml(tContent("variants.styles.withLabel")),
             code: codeWithLabel,
@@ -462,6 +465,7 @@ import { Bold } from "lucide-react";`;
             ),
           },
           {
+            trackId: "sizes",
             name: tContent("variants.items.sizes.name"),
             description: tContent("variants.items.sizes.description"),
             useWhen: tContent("variants.items.sizes.use"),
@@ -500,6 +504,7 @@ import { Bold } from "lucide-react";`;
         componentSlug="toggle"
         items={[
           {
+            trackId: "toolbar",
             name: tContent("variants.compositions.toolbar.name"),
             description: tContent("variants.compositions.toolbar.description"),
             useWhen: tContent("variants.compositions.toolbar.use"),
@@ -529,6 +534,7 @@ import { Bold } from "lucide-react";`;
             ),
           },
           {
+            trackId: "filterList",
             name: tContent("variants.compositions.filterList.name"),
             description: tContent("variants.compositions.filterList.description"),
             useWhen: tContent("variants.compositions.filterList.use"),

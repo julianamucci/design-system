@@ -453,6 +453,7 @@ interface ProgressProps extends Progress.Root.Props {
         componentSlug="progress"
         items={[
           {
+            trackId: "determinate",
             name: tContent("variants.items.determinate"),
             description: stripHtml(tContent("variants.styles.determinate")),
             code: codeDeterminate,
@@ -463,6 +464,7 @@ interface ProgressProps extends Progress.Root.Props {
             ),
           },
           {
+            trackId: "withLabel",
             name: tContent("variants.items.withLabel"),
             description: stripHtml(tContent("variants.styles.withLabel")),
             code: codeWithLabel,
@@ -479,6 +481,7 @@ interface ProgressProps extends Progress.Root.Props {
             ),
           },
           {
+            trackId: "semantic",
             name: tContent("variants.items.semantic"),
             description: stripHtml(tContent("variants.styles.semantic")),
             code: codeSemantic,

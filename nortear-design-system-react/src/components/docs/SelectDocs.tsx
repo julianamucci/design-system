@@ -570,6 +570,7 @@ interface SelectContentProps {
         componentSlug="select"
         items={[
           {
+            trackId: "default",
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
@@ -589,6 +590,7 @@ interface SelectContentProps {
             ),
           },
           {
+            trackId: "withGroups",
             name: tContent("variants.items.withGroups"),
             description: stripHtml(tContent("variants.styles.withGroups")),
             code: codeWithGroups,
@@ -615,6 +617,7 @@ interface SelectContentProps {
             ),
           },
           {
+            trackId: "withIcon",
             name: tContent("variants.items.withIcon"),
             description: stripHtml(tContent("variants.styles.withIcon")),
             code: codeWithIcon,
@@ -649,6 +652,7 @@ interface SelectContentProps {
         componentSlug="select"
         items={[
           {
+            trackId: "inForm",
             name: tContent("variants.compositions.inForm.name"),
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),

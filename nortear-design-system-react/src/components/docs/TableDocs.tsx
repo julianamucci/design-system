@@ -584,6 +584,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         componentSlug="table"
         items={[
           {
+            trackId: "basic",
             name: tContent("variants.items.basic.label"),
             description: stripHtml(tContent("variants.items.basic.description")),
             code: codeBasic,
@@ -614,6 +615,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
+            trackId: "withFooter",
             name: tContent("variants.items.withFooter.label"),
             description: stripHtml(tContent("variants.items.withFooter.description")),
             code: codeWithFooter,
@@ -650,6 +652,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
+            trackId: "withSrOnlyCaption",
             name: tContent("variants.items.withSrOnlyCaption.label"),
             description: stripHtml(tContent("variants.items.withSrOnlyCaption.description")),
             code: codeSrOnlyCaption,
@@ -680,6 +683,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
+            trackId: "withInlineActions",
             name: tContent("variants.items.withInlineActions.label"),
             description: stripHtml(tContent("variants.items.withInlineActions.description")),
             code: codeWithActions,
@@ -722,6 +726,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
+            trackId: "withEmptyState",
             name: tContent("variants.items.withEmptyState.label"),
             description: stripHtml(tContent("variants.items.withEmptyState.description")),
             code: codeEmpty,
@@ -761,6 +766,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         componentSlug="table"
         items={[
           {
+            trackId: "filterableToolbar",
             name: tContent("variants.compositions.filterableToolbar.name"),
             description: tContent("variants.compositions.filterableToolbar.description"),
             useWhen: tContent("variants.compositions.filterableToolbar.use"),
@@ -826,6 +832,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
+            trackId: "sortableHeaders",
             name: tContent("variants.compositions.sortableHeaders.name"),
             description: tContent("variants.compositions.sortableHeaders.description"),
             useWhen: tContent("variants.compositions.sortableHeaders.use"),
@@ -888,6 +895,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
+            trackId: "selectableRows",
             name: tContent("variants.compositions.selectableRows.name"),
             description: tContent("variants.compositions.selectableRows.description"),
             useWhen: tContent("variants.compositions.selectableRows.use"),
@@ -962,6 +970,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
+            trackId: "withPagination",
             name: tContent("variants.compositions.withPagination.name"),
             description: tContent("variants.compositions.withPagination.description"),
             useWhen: tContent("variants.compositions.withPagination.use"),

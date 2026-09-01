@@ -647,6 +647,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         componentSlug="input"
         items={[
           {
+            trackId: "withLabel",
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
@@ -659,6 +660,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             ),
           },
           {
+            trackId: "withHint",
             name: tContent("variants.compositions.withHint.name"),
             description: tContent("variants.compositions.withHint.description"),
             useWhen: tContent("variants.compositions.withHint.use"),
@@ -672,6 +674,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             ),
           },
           {
+            trackId: "errorMessage",
             name: tContent("variants.compositions.errorMessage.name"),
             description: tContent("variants.compositions.errorMessage.description"),
             useWhen: tContent("variants.compositions.errorMessage.use"),
@@ -693,6 +696,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             ),
           },
           {
+            trackId: "withPrefix",
             name: tContent("variants.compositions.withPrefix.name"),
             description: tContent("variants.compositions.withPrefix.description"),
             useWhen: tContent("variants.compositions.withPrefix.use"),
