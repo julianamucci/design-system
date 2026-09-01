@@ -1,7 +1,5 @@
-import type { VariantProps } from 'class-variance-authority'
 import type { HTMLAttributes } from 'vue'
 import type { ButtonVariants } from '@/components/ui/button'
-import { cva } from 'class-variance-authority'
 
 export { default as InputGroup } from './InputGroup.vue'
 export { default as InputGroupAddon } from './InputGroupAddon.vue'
@@ -10,46 +8,35 @@ export { default as InputGroupInput } from './InputGroupInput.vue'
 export { default as InputGroupText } from './InputGroupText.vue'
 export { default as InputGroupTextarea } from './InputGroupTextarea.vue'
 
-export const inputGroupAddonVariants = cva(
-  'nds-input-group-addon',
-  {
-    variants: {
-      align: {
-        'inline-start': '',
-        'inline-end': '',
-        'block-start': '',
-        'block-end': '',
-      },
-    },
-    defaultVariants: {
-      align: 'inline-start',
-    },
-  },
-)
+/**
+ * Onde o addon fica. As duas em bloco fazem o grupo virar coluna.
+ *
+ * Correção: aqui havia um `cva` com as QUATRO posições mapeadas para string
+ * vazia. Código morto que fingia existir uma classe por posição — a folha
+ * `docs/shared/styles/nds/input-group.css` posiciona o addon por `[data-align]`
+ * e por mais nada. Um `cva` de variantes vazias é pior do que nenhum: quem lê
+ * procura a classe que ele promete, não acha, e conclui que a folha está
+ * incompleta.
+ */
+export type InputGroupAlign = 'inline-start' | 'inline-end' | 'block-start' | 'block-end'
 
-export type InputGroupVariants = VariantProps<typeof inputGroupAddonVariants>
-
-export const inputGroupButtonVariants = cva(
-  'nds-input-group-button',
-  {
-    variants: {
-      size: {
-        'xs': '',
-        'sm': '',
-        'icon-xs': '',
-        'icon-sm': '',
-      },
-    },
-    defaultVariants: {
-      size: 'xs',
-    },
-  },
-)
-
-export type InputGroupButtonVariants = VariantProps<typeof inputGroupButtonVariants>
+/**
+ * Medidas do botão apertado que cabem dentro da moldura.
+ *
+ * Mesma correção: o `cva` de tamanho também tinha todas as variantes vazias. A
+ * medida do botão é do `Button` — é ele que rende `nds-button-xs` e companhia —,
+ * e `.nds-input-group-button` só APERTA o espaçamento por cima disso.
+ */
+export type InputGroupButtonSize = 'xs' | 'sm' | 'icon-xs' | 'icon-sm'
 
 export interface InputGroupButtonProps {
   variant?: ButtonVariants['variant']
-  size?: InputGroupButtonVariants['size']
+  size?: InputGroupButtonSize
+  /**
+   * Tipo nativo do botão. Nasce `'button'` para que o botão do addon não
+   * submeta o formulário em volta; quem precisa de um botão de envio dentro da
+   * moldura declara `type="submit"`.
+   */
+  type?: 'button' | 'submit' | 'reset'
   class?: HTMLAttributes['class']
 }
