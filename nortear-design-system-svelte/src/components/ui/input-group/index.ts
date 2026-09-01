@@ -20,3 +20,9 @@ export {
 	Text as InputGroupText,
 	Textarea as InputGroupTextarea,
 };
+
+// Os tipos saem do bloco `module` de cada peça, e não de um `cva`: a posição do
+// addon e a medida do botão não têm classe própria por variante — a primeira
+// mora em `[data-align]`, que a folha lê, e a segunda é repassada ao Button.
+export type { InputGroupAlign } from "./input-group-addon.svelte";
+export type { InputGroupButtonSize } from "./input-group-button.svelte";
