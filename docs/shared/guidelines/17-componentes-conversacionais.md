@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (43)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (44)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -273,9 +273,10 @@ falta, nomeada — nunca uma folha nova.
 | `code-runner` | `code-block` (o trecho, sempre visível, com a linguagem no rótulo do cabeçalho) + `terminal-block` (a saída pré-formatada, o cursor e como terminou) + `agent-status` (o relógio e o botão de executar, que é o `start` de `AgentStatusIntent`). Pede **uma opção** `actions?: HTMLElement[]` no cabeçalho do `code-block`, onde `.nds-code-block-actions` já é a fila — nem classe nova, nem folha nova. Veio da família 2 — ver 5.3 |
 | `reasoning-effort` | `toggle-group` `type: 'single'` para escolher o nível — que é CONTROLE, e o catálogo já tem outro escrevendo o mesmo campo — mais `context-display` na forma `bar` para o gasto contra o teto do nível escolhido, que é token contra teto como as irmãs. Veio da família 5 — ver 5.3 |
 | `guardrail-notice` | `alert` na variante `warning` — o escudo âmbar entra na coluna que `:has(> svg)` abre, o título é `.nds-alert-title`, a explicação é o `<p>` de `.nds-alert-description`, que a fonte também desenha sempre — mais `.nds-badge` no encaixe `.nds-alert-action`, que o alerta já encosta no fim da linha do cabeçalho com `:has()`, para a etiqueta da política; e as alternativas são `follow-up-suggestions`, que a própria fonte chama de "próximos pedidos sugeridos" e que esta tabela já resolveu em lista de `button` / `pill.css`. Irmã de `error-state` na origem, e a diferença que a fonte reivindica contra ele é a variante. Veio da família 2 — ver 5.3 |
+| `subagent-list` | `.nds-item-group` de `job-progress` — uma linha por trabalhador. `.nds-item` `.nds-item-outline` dá a superfície de cada cartão; dentro dela `job-progress` leva o nome (`.nds-job-progress-label`), a PALAVRA do estado e a barra do sistema com nome acessível; `.nds-item-actions` leva o modelo em `.nds-badge` com `.nds-font-mono`. A lista é plana na fonte, e o agregado dela é ENTRADA, não leitura. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (77)
+### 5.2 As sete famílias novas (76)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -284,7 +285,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (19 no catálogo — `agent-card`, `tool-timeline`, `code-runner` e `guardrail-notice` saíram para a 5.1, ver 5.3 —, **15 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (18 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice` e `subagent-list` saíram para a 5.1, ver 5.3 —, **14 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
@@ -362,6 +363,12 @@ monoespaçadas e um botão.
 **Reversível**, como as outras quatro: se ao construir `subagent-list` ou
 `agent-handoff` aparecer identidade de agente com desenho, estado ou vocabulário
 próprios, `agent-card` desdobra de volta para a 5.2, com o motivo.
+
+**VERIFICADO pela metade, e não desdobra**: `subagent-list` foi triada na
+décima primeira correção. A identidade de agente que ela apresenta é
+`{ name, model }` — duas cadeias de texto, sem estado e sem desenho próprio —, e
+o modelo cai onde a quinta correção já o havia posto, em `.nds-font-mono`.
+`agent-handoff` continua de pé como a outra verificação prevista.
 
 **Sexta correção, e a segunda que atravessa de 5.2 para 5.1**: `tool-timeline`
 é `tool-group` aberto — e as duas contagens mudam junto, 81 → 80 e 39 → 40.
@@ -882,6 +889,146 @@ tem 5, 6 tem 8 e 7 tem 3 — **77** na 5.2. A 5.1 vai a **43** (40 linhas, e dua
 delas carregam duas entradas). Somam 120. A família 2 fica com **15
 componentes**.
 
+**Décima primeira correção, e a sexta que atravessa de 5.2 para 5.1**:
+`subagent-list` é `.nds-item-group` de `job-progress` — e as duas contagens
+mudam junto, 77 → 76 e 43 → 44. É a primeira em que a entrada colapsa numa peça
+da PRÓPRIA família 2, já construída, repetida numa lista.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`agents: readonly SubagentItem[]`, `completedCount: number`,
+`progress: readonly number[]`, `showSummary: boolean`, `summaryAgent:
+SubagentItem` — e `SubagentItem` é `{ name, model }`. Chamada de volta, NENHUMA:
+é a primeira entrada triada que não devolve nada a quem monta. A anatomia é uma
+pilha de cartões, um por trabalhador, cada um com ícone de concluído ou roda, o
+nome, o modelo e uma barra; mais um cartão de síntese no fim quando
+`showSummary`. A metade de runtime junta várias chamadas de despacho de um mesmo
+turno numa lista só — não porta (§1) —, e a forma standalone, que é a única que
+se lê, já é um componente controlado.
+
+**O SINAL MAIS BARATO DISPAROU, e mais alto que nas três da tabela.** Ali o
+achatamento era um booleano ou uma união com uma palavra a menos; aqui o estado
+por trabalhador nem chega a ser um campo: é `i < completedCount`, uma POSIÇÃO no
+arranjo. Duas palavras onde `RunStatus` tem cinco, e as três que se perdem são
+`idle`, `stopped` e `failed` — quem ainda não começou desenha igual a quem corre,
+e quem quebrou desenha igual aos dois. A própria fonte escreve a amarra que o
+achatamento cria: termine-os em ordem "para que os vistos caiam nos cartões
+certos". Trabalhador que fecha em segundo não tem como ser desenhado concluído.
+E a faixa de runtime dela achata de novo, do outro lado: das quatro palavras do
+estado da chamada ela lê só a de concluído, e joga "requer ação" e "incompleto"
+no mesmo balde do que ainda corre — que é exatamente onde moram parado e falhou.
+
+Antes dos três testes, as duas perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **Hierarquia é desenho próprio? NÃO HÁ HIERARQUIA.** A raiz é uma caixa, os
+  cartões são irmãos dentro dela, e o de síntese é mais um irmão no fim. Nenhum
+  aninhamento, nenhum vínculo de quem chamou quem — quem despachou foi o turno,
+  e o turno está por fora da peça. Fosse árvore, seria estrutura que lista plana
+  não tem, e aí valeria discutir desenho próprio; é lista plana, e lista plana é
+  o que `.nds-item-group` já é.
+- **O agregado é vocabulário próprio? ELE NEM É DESENHADO.** `completedCount` é
+  ENTRADA — decide qual cartão leva visto —, e não leitura: não há "3 de 5
+  terminaram" em parte nenhuma da anatomia. E se houvesse, contar quantos de um
+  `RunStatus[]` acabaram é conta sobre o vocabulário, do mesmo tamanho de
+  `isRunFinished`, `canWithdraw` e `isStepFinished`, e a casa dela seria
+  `chat-protocol.ts`. Conta não é peça — e esta entrada nem conta é.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, a pilha não deixa buraco — e a fonte mesma
+  já diz de que ela é feita, pela quarta vez nesta seção: cada cartão usa "a
+  superfície `paper` compartilhada" e o token `mono` no rótulo do modelo, e
+  reapontá-los em `surfaces.tsx` "restila todos os cartões daqui junto com todo
+  outro elemento construído sobre eles". Superfície compartilhada declarada na
+  origem — a mesma leitura da quinta, da sétima e da décima correções, e o
+  oposto exato do que a nona leu em `computer-use`.
+
+  A composição é a lista: `.nds-item-group` empilha, como já empilhava as linhas
+  de habilidade na quinta correção; cada `.nds-item` `.nds-item-outline`
+  `data-size="sm"` é a superfície de um cartão; `.nds-item-content` recebe um
+  `job-progress` inteiro, que traz as três partes que importam — o nome em
+  `.nds-job-progress-label`, a PALAVRA do estado em `.nds-job-progress-status` e
+  a barra do design system com `role="progressbar"` e o nome do trabalhador como
+  nome acessível —; e `.nds-item-actions` recebe o modelo em `.nds-badge` com
+  `.nds-font-mono`, que é onde a quinta correção já havia posto o modelo de um
+  agente. O cartão de síntese é mais uma linha da mesma forma. Nenhuma classe
+  nova, nenhuma nomeada como faltando.
+
+  Dois traços a composição não reproduz, os dois por decisão já escrita. O ícone
+  de visto ou roda em cada cartão é codificação icônica de estado, e a decisão 2
+  do andamento de trabalho longo já trocou isso pela PALAVRA (WCAG 1.4.1) — pelo
+  mesmo motivo pelo qual a sexta correção recusou o ícone que repetia o verbo ao
+  lado. E a altura mínima da raiz, que a fonte põe para a tela não pular quando
+  o cartão de síntese aparece, guarda espaço para uma linha que quem monta pode
+  não passar: a aparição é animação (`13-animacao.md`), e reservar altura para
+  uma ausência é desenhar o que não está lá.
+
+  Onde fonte e composição DISCORDAM, a composição está mais fina, como na
+  oitava correção. O `progress[i]` da fonte é porcentagem sem denominador, e ela
+  mesma admite por quê: com runtime, o estado da chamada "só distingue correndo
+  de concluído", então a barra vale 0 ou 100 e uma porcentagem viva "precisa do
+  seu próprio canal". Aqui o número chega como `JobCount` — quantas de quantas
+  —, e quando não se sabe de quantas `jobProgressValue` devolve a barra
+  indeterminada em vez de um zero que se lê como "acabou de começar". Onde só há
+  porcentagem, ela é `{ done, total: 100 }`, e a conta ao lado é decorativa por
+  decisão 3 daquele bloco.
+- **Estado, não.** É o parágrafo do sinal, e ele decide sozinho: dois estados
+  posicionais contra os cinco de `RunStatus`, com `idle`, `stopped` e `failed`
+  perdidos. Vale medir o tamanho da perda contra a irmã em que a peça colapsa:
+  `job-progress` existe justamente porque parado oferece retomar e falhado
+  oferece tentar de novo, e um despacho de trabalhadores paralelos é das coisas
+  mais interrompíveis desta família — a mesma frase que a sétima correção
+  escreveu sobre `code-runner`, e pela mesma razão. `showSummary: boolean` não
+  salva o caso: não é estado, é visibilidade, e a fonte reconhece o preço num
+  parágrafo próprio — "esta versão não tem como marcar a própria síntese como
+  concluída, só mostrá-la ou escondê-la". A composição não tem esse limite,
+  porque a linha de síntese é uma linha como as outras e carrega as cinco
+  palavras.
+- **Vocabulário, não.** `SubagentItem { name, model }` são duas cadeias de
+  texto: `name` é `JobProgressOptions.label`, mesmo sentido e mesmo papel de nome
+  acessível da barra; `model` é dado de produto, e a quinta correção já julgou o
+  modelo de um agente como `.nds-font-mono`, depois de a §1 tirar dali a única
+  coisa que teria desenho próprio — a marca. `progress: readonly number[]`
+  alinhado por índice com `agents` é a mesma forma e a mesma regra de
+  `TerminalBlockOptions.lines` e das alternativas do aviso: arranjo de valores
+  soltos, e quem fatia é quem consome. `completedCount` não é vocabulário, é a
+  codificação posicional que `RunStatus` por linha substitui exatamente. É a
+  distância inteira para `computer-use`, que sobreviveu por ter `x` e `y` sem par
+  em lugar nenhum.
+
+E o teste da família, que é o quarto: **ela responde ao eixo, e responde com a
+peça desta folha que já o responde.** Diz o que está acontecendo — por
+trabalhador, e com cinco palavras em vez de duas; não diz há quanto tempo, como
+`tool-timeline` e `computer-use` também não diziam; e não oferece ação nenhuma,
+porque não tem chamada de volta nenhuma, ao passo que `job-progress` já oferece
+parar, retomar e tentar de novo. É a mesma leitura da sexta e da sétima
+correções, e a diferença para `agent-card` continua sendo esta: `subagent-list`
+não sai por não pertencer à família, sai por já estar construída dentro dela —
+uma vez, e a lista é a repetição.
+
+E há um traço a mais, que é da lista e não da peça: **repetir não é desenhar.**
+Uma peça existir no plural não a torna uma segunda peça; se torna, `agent-plan`
+teria uma irmã chamada "lista de passos". O que faria uma lista virar desenho é
+o que a lista acrescenta sobre os itens — aninhamento, agregado lido, ordenação
+que muda o sentido —, e nenhum dos três está aqui.
+
+**Reversível**, como as outras nove: se ao construir `agent-handoff`,
+`background-inbox` ou `checkpoint-history` aparecer trabalho paralelo com desenho,
+estado ou vocabulário próprios — aninhamento de verdade, dizendo quem despachou
+quem; um estado por trabalhador que `RunStatus` não modele; ou um agregado que
+seja LEITURA em vez de entrada —, `subagent-list` desdobra de volta para a 5.2,
+com o motivo. E há um segundo gatilho, deste lado: se `job-progress` precisar de
+desenho próprio para viver em lista — e não só do `.nds-item-group` que já
+empilha —, a lista vira variante DELE, e continua não sendo peça.
+
+Contagens, somadas família a família: 1 tem 13, 2 tem 18, 3 tem 9, 4 tem 20, 5
+tem 5, 6 tem 8 e 7 tem 3 — **76** na 5.2. A 5.1 vai a **44** (42 linhas, e duas
+delas carregam duas entradas). Somam 120. A família 2 fica com **14
+componentes**, e as sete somam 70. (A décima correção escreveu "40 linhas" ao
+chegar a 43; eram 41. O total estava certo, a contagem de linhas não — e é o
+tipo de erro que só aparece quando alguém soma de novo, que é por isso que esta
+seção manda somar família a família.)
+
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
 `stopped`** e **`tool-error` é `ToolCallState` `failed`**. Os dois estados já
@@ -908,10 +1055,20 @@ este vocabulário já tem cinco palavras.**
 | `agent-card` | `connected: boolean` | `reconnecting` |
 | `tool-timeline` | `streaming: boolean` | `stopped`, `failed`, `complete` |
 | `code-runner` | `RunState = idle\|running\|ok\|error` | `stopped` |
+| `subagent-list` | `i < completedCount` — nem campo é | `idle`, `stopped`, `failed` |
 
-Nas três, o achatamento não é economia — é sinal de que a entrada foi desenhada
-para uma tela só, sem o vocabulário que a família já tem. E as três colapsaram
-pelos testes normais; o booleano só chegou antes.
+Nas quatro, o achatamento não é economia — é sinal de que a entrada foi
+desenhada para uma tela só, sem o vocabulário que a família já tem. E as quatro
+colapsaram pelos testes normais; o booleano só chegou antes.
+
+**A quarta é o limite da forma**, medida na décima primeira correção, e vale
+guardá-la porque o sinal pode vir sem campo nenhum: lá o estado por item não é
+um booleano declarado, é uma comparação com um contador — quem está antes do
+corte desenha concluído, quem está depois desenha correndo. Achatar para dois
+sem escrever o tipo é achatar do mesmo jeito, e ainda amarra o desenho à ORDEM
+do arranjo: a própria fonte manda terminar os itens em ordem "para que os vistos
+caiam nos cartões certos". Ao ler os tipos, conte quantos desenhos DISTINTOS a
+peça sabe fazer, não quantas palavras ela declara.
 
 O caso do `code-runner` é o mais claro, porque o que ele perde é o pior possível:
 `stopped` é o Ctrl-C, e um trecho de código que roda é a coisa mais
@@ -947,8 +1104,9 @@ dono, e aquela sobreviveu. Não é um quarto teste — é onde olhar quando o si
 não fala.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
-estado, ou uma união com uma palavra a menos que `RunStatus`/`ToolCallState`,
-manda aplicar os três testes com atenção — não decide sozinho, mas prevê.
+estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
+contador posicional que parta a lista em dois desenhos, mandam aplicar os três
+testes com atenção — não decidem sozinhos, mas preveem.
 
 O critério, para as seis famílias que faltam: **uma entrada do catálogo vira
 slug quando tem desenho, estado ou vocabulário próprios.** Se a diferença cabe
