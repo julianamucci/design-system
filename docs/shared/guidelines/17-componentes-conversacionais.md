@@ -224,7 +224,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (40)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (41)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -269,9 +269,10 @@ falta, nomeada — nunca uma folha nova.
 | `generative-ui` | não é peça: é a regra de que resposta estruturada usa os primitivos do DS |
 | `agent-card` | `card` + `item` (identidade, e uma linha por habilidade) + `badge` + `connection-state`. Veio da família 2 — ver 5.3 |
 | `tool-timeline` | `tool-group` aberto — as chamadas já chegam na ordem em que aconteceram — com `agent-status` acima (o rótulo que muda enquanto corre, e o relógio) e `.nds-cluster` de `.nds-badge` para as estatísticas de arquivo. Veio da família 2 — ver 5.3 |
+| `code-runner` | `code-block` (o trecho, sempre visível, com a linguagem no rótulo do cabeçalho) + `terminal-block` (a saída pré-formatada, o cursor e como terminou) + `agent-status` (o relógio e o botão de executar, que é o `start` de `AgentStatusIntent`). Pede **uma opção** `actions?: HTMLElement[]` no cabeçalho do `code-block`, onde `.nds-code-block-actions` já é a fila — nem classe nova, nem folha nova. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (80)
+### 5.2 As sete famílias novas (79)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -280,7 +281,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `code-runner`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (21 no catálogo — `agent-card` e `tool-timeline` saíram para a 5.1, ver 5.3 —, **17 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (20 no catálogo — `agent-card`, `tool-timeline` e `code-runner` saíram para a 5.1, ver 5.3 —, **16 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner`, `reasoning-effort` (6) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha |
@@ -420,11 +421,107 @@ continua sendo sobre a execução, e por isso não vira cartão nem coisa nova:
 vira story de composição da peça que já diz o que o agente fez, aberta em vez
 de recolhida.
 
-**Reversível**, como as outras cinco: se ao construir `code-runner` ou
-`computer-use` aparecer sequência de passos com desenho, estado ou vocabulário
-próprios — um trilho de verdade, um carimbo que chegue como DADO, um estado por
-passo que `ToolCallState` não modele —, `tool-timeline` desdobra de volta para
-a 5.2, com o motivo.
+**Reversível**, como as outras cinco: se ao construir `computer-use` aparecer
+sequência de passos com desenho, estado ou vocabulário próprios — um trilho de
+verdade, um carimbo que chegue como DADO, um estado por passo que
+`ToolCallState` não modele —, `tool-timeline` desdobra de volta para a 5.2, com
+o motivo. `code-runner` era a outra verificação prevista aqui, e já foi feita: a
+fonte dele não tem passo nenhum — tem um trecho, um estado e linhas de saída —,
+então não desdobra nada. Ver a sétima correção, logo abaixo.
+
+**Sétima correção, e a terceira que atravessa de 5.2 para 5.1**: `code-runner`
+é `code-block` + `terminal-block` — e as duas contagens mudam junto, 80 → 79 e
+40 → 41.
+
+O que a fonte descreve, lido inteiro antes de decidir: um cabeçalho com a
+linguagem, um distintivo de duração e um botão de executar que vira roda
+enquanto corre; o trecho de código, SEMPRE visível; e um bloco de saída que só
+monta depois que o estado deixa `idle`. Os tipos são `state: RunState`
+(`"idle" | "running" | "ok" | "error"`), `output: readonly string[]`,
+`language`, `code`, `durationMs` e `onRun`.
+
+**A METADE MAIOR DA FONTE É RUNTIME**, e é ela que dá o nome à peça: registrar
+uma entrada `"human"` no toolkit, deixar a chamada aberta até que alguém aperte
+o botão, chamar `addResult` uma vez, rodar `runInSandbox`. Nada disso porta
+(§1), e aqui a §2 é literal — um executor que executasse traria exatamente o
+runtime que esta família existe para não ter. O que sobra na forma standalone,
+que é a única que se lê ("Como ler a fonte", §1), é um componente controlado de
+sete props, e cinco delas já têm dono nesta folha.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montado inteiro, o executor não deixa buraco — e a fonte
+  mesma já diz de que ele é feito: o bloco de saída rola pelo par
+  `codeScroll`/`codeSurface` de `surfaces.tsx`, e ela acrescenta que
+  reapontar esses tokens "restila este e todo outro elemento que rola saída
+  pré-formatada do mesmo jeito". É superfície COMPARTILHADA declarada na
+  origem, que foi o que a quinta correção leu em `agent-card`. As duas metades
+  já estão desenhadas aqui: o trecho sempre visível é `.nds-code-block-root` —
+  cabeçalho com rótulo (`.nds-code-block-title`, onde a linguagem entra), caixa
+  que rola nos dois eixos com `tabindex="0"` e `lang="en"`, e ainda realce por
+  gramática, que a fonte nem tem; a saída é `.nds-terminal-block-output` —
+  `<pre>` monoespaçado, `role="group"` nomeado pelo que rodou, `tabindex="0"`,
+  `white-space: pre` e `overscroll-behavior: contain` —, com
+  `.nds-terminal-block-cursor` enquanto corre, que é o caret piscando da fonte
+  (decisão 4), e `.nds-terminal-block-result` dizendo como terminou. O
+  distintivo de duração é `.nds-agent-status-elapsed`, o relógio que já mora
+  nesta folha e já sai do que é lido em voz (regra 9 da §8). O botão de executar
+  é `button` dentro de `.nds-code-block-actions`, que o cabeçalho já encosta à
+  direita com `margin-inline-start: auto`.
+
+  Há UM buraco, e ele é de OPÇÃO, não de classe: `createCodeBlock` monta a fila
+  de ações por dentro e só põe o copiar nela. A composição pede
+  `actions?: HTMLElement[]` no cabeçalho do `code-block` — a classe, o
+  espaçamento e o encaixe já existem, e é o mesmo contrato de espaço que a §2
+  fixou para a família inteira. Uma opção numa fábrica que já tem a fila; nem
+  classe nova, nem folha nova. É o que a 5.1 manda nomear, e está nomeado lá.
+
+  Dois traços da fonte a composição não reproduz, os dois por decisão já
+  escrita. A entrada escalonada das linhas a 80 ms é revelação, e revelação é
+  animação e recorte, não peça — mesma leitura que a 5.1 já fez em
+  `streaming-text`, `loading-state` e `number-ticker`, e mesma razão pela qual
+  a decisão 10 do bloco de terminal recusou o degradê das linhas antigas. E a
+  saída em vermelho quando quebra é cor sozinha carregando estado, que a decisão
+  5 já trocou pela PALAVRA (WCAG 1.4.1).
+- **Estado, não.** `RunState` é `RunStatus` com uma palavra A MENOS, e o
+  mapeamento é exato: `idle` é `idle`, `running` é `running`, `ok` é `complete`,
+  `error` é `failed`. O que se perde é `stopped` — e não há lugar pior para
+  perdê-lo. O bloco de terminal já escreveu que `stopped` é "o mais literal dos
+  cinco: é o Ctrl-C, que é interrupção de pessoa e não falha da máquina"; um
+  trecho de código que roda é a coisa mais interrompível desta família, e a
+  fonte simplesmente não desenha a execução interrompida. É o mesmo defeito de
+  `streaming: boolean` no `tool-timeline` e de `connected: boolean` no
+  `agent-card`: vocabulário achatado, na mesma folha e pelo mesmo motivo.
+
+  E a regra de visibilidade que a fonte pendura no estado — a saída só monta
+  quando sai de `idle` — já está escrita aqui, e mais fina: a caixa existe
+  quando há linha OU quando corre, porque comando que terminou sem escrever nada
+  é caso real, e caixa vazia com parada de tabulação dentro é dar foco a lugar
+  nenhum (decisão 3). Em `ok` sem saída a fonte monta a caixa vazia; a decisão
+  daqui não.
+- **Vocabulário, não.** Nenhum tipo novo, e não por aproximação: `code` e
+  `language` são `CodeBlockOptions.code` e `.language`, mesmo nome e mesmo
+  sentido; `output: readonly string[]` é `TerminalBlockOptions.lines`, mesmo
+  tipo e mesma regra de que quem fatia é quem consome; `onRun` é
+  `onAction('start')` do estado da execução, cujo `AgentStatusIntent` já cobre
+  retomar e refazer de propósito, porque a diferença entre os dois é política de
+  produto. Só `durationMs` parece próprio, e é o contrário: é a forma que esta
+  folha JÁ REJEITOU — a duração chega em `elapsed`, string já escrita, porque
+  formato de duração é decisão de idioma e um componente que o formatasse
+  decidiria idioma em cinco lugares.
+
+E o teste da família, que é o quarto: ela responde ao eixo — o que está
+acontecendo, há quanto tempo, e o que eu posso fazer a respeito — e responde com
+as três peças que já o respondem, uma para cada terço da pergunta. É a mesma
+leitura da sexta correção, e a diferença para `agent-card` continua sendo esta:
+`code-runner` não sai por não pertencer à família, sai por já estar construído
+dentro dela.
+
+**Reversível**, como as outras seis: se ao construir `computer-use` aparecer
+execução com controle PRÓPRIO — um botão que só faça sentido preso ao trecho, um
+estado que `RunStatus` não modele, vocabulário de execução que `code-block` e
+`terminal-block` não deem —, `code-runner` desdobra de volta para a 5.2, com o
+motivo.
 
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
