@@ -603,6 +603,186 @@ function auditAnalyticsPayloads() {
   return violations;
 }
 
+// ─── Analytics: trackId dos itens de DocsVariants / DocsCompositions ────────
+// Irmã de `i18n_text_in_payload`, pelo mesmo princípio e por outro caminho:
+// lá o texto traduzido entra no payload por `track(...)`; aqui ele entra pelo
+// `data-track-id`, que nas cinco stacks é montado como
+// `${slug}:code:${item.trackId ?? item.name}`. Como `name` é texto traduzido,
+// um item sem `trackId` emite um snippet_id POR IDIOMA no GA4.
+//
+// O valor estável é a CHAVE do item no translations.json, usada literalmente
+// (camelCase, como está autorada): é extração pura, sem conversão feita à mão,
+// e por isso as cinco stacks convergem lendo o mesmo conteúdo. A segunda metade
+// da regra existe porque presença sozinha não basta — `trackId: 'with-title'`
+// contra a chave `withTitle` reintroduz a divergência no eixo entre stacks.
+//
+// A regra só olha item COM `code`: sem snippet não há toggle, e sem toggle não
+// há evento. E só olha `name` alimentado por tradução — `name: 'default'` ou
+// `name: role` já são valores de API, estáveis por construção.
+
+/** Neutraliza comentários e literais preservando offsets, para varrer estrutura. */
+function mascararFonte(src) {
+  const out = src.split('');
+  let i = 0;
+  const n = src.length;
+  while (i < n) {
+    const c = src[i];
+    const c2 = src.slice(i, i + 2);
+    if (src.slice(i, i + 4) === '<!--') {
+      while (i < n && src.slice(i, i + 3) !== '-->') { if (src[i] !== '\n') out[i] = ' '; i++; }
+      for (let k = 0; k < 3 && i < n; k++, i++) out[i] = ' ';
+      continue;
+    }
+    if (c2 === '//') { while (i < n && src[i] !== '\n') { out[i] = ' '; i++; } continue; }
+    if (c2 === '/*') {
+      while (i < n && src.slice(i, i + 2) !== '*/') { if (src[i] !== '\n') out[i] = ' '; i++; }
+      for (let k = 0; k < 2 && i < n; k++, i++) out[i] = ' ';
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      const q = c; out[i] = ' '; i++;
+      while (i < n && src[i] !== q) {
+        if (src[i] === '\\') { out[i] = ' '; i++; if (i < n) { out[i] = ' '; i++; } continue; }
+        if (src[i] !== '\n') out[i] = ' ';
+        i++;
+      }
+      if (i < n) { out[i] = ' '; i++; }
+      continue;
+    }
+    if (c === '`') {
+      out[i] = ' '; i++;
+      let d = 0;
+      while (i < n) {
+        if (src[i] === '\\') { out[i] = ' '; i++; if (i < n) { out[i] = ' '; i++; } continue; }
+        if (src.slice(i, i + 2) === '${') { d++; i += 2; continue; }
+        if (d > 0 && src[i] === '}') { d--; i++; continue; }
+        if (d > 0) { i++; continue; }
+        if (src[i] === '`') { out[i] = ' '; i++; break; }
+        if (src[i] !== '\n') out[i] = ' ';
+        i++;
+      }
+      continue;
+    }
+    i++;
+  }
+  return out.join('');
+}
+
+/** Propriedades de primeiro nível de um literal de objeto. */
+function propsDeObjeto(masked, src, start, end) {
+  const segs = [];
+  let depth = 0, segStart = start + 1;
+  for (let i = start + 1; i < end; i++) {
+    const c = masked[i];
+    if (c === '{' || c === '[' || c === '(') depth++;
+    else if (c === '}' || c === ']' || c === ')') depth--;
+    else if (c === ',' && depth === 0) { segs.push([segStart, i]); segStart = i + 1; }
+  }
+  segs.push([segStart, end]);
+  const res = {};
+  for (const [a, b] of segs) {
+    const sm = masked.slice(a, b);
+    const m = sm.match(/^(\s*)([A-Za-z_$][\w$]*)\s*:/);
+    if (!m) continue;
+    const valStart = a + sm.indexOf(':', m.index + m[1].length) + 1;
+    res[m[2]] = { keyOff: a + m[1].length, value: src.slice(valStart, b).trim() };
+  }
+  return res;
+}
+
+const ITEM_I18N_RX = /(?:^|[^\w$.])\$?t(?:[A-Z][\w$]*)?\s*\(/;
+const ITEM_PATH_RX = /\(\s*['"`]([A-Za-z0-9_$.\-]+)['"`]/;
+const ITEM_INTERP_RX = /\$\{\s*([A-Za-z_$][\w$]*)\s*\}/;
+
+const _dictCache = new Map();
+function dicionarioDoSlug(slug) {
+  if (!_dictCache.has(slug)) {
+    const p = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+    let v = null;
+    if (existsSync(p)) { try { v = JSON.parse(readFileSync(p, 'utf8')); } catch { v = null; } }
+    _dictCache.set(slug, v);
+  }
+  return _dictCache.get(slug);
+}
+const _walk = (n, ps) => ps.reduce((c, k) => (c && typeof c === 'object') ? c[k] : undefined, n);
+
+function auditDocsItemTrackId() {
+  const violations = [];
+  const LOCALES = ['pt-BR', 'en', 'es'];
+
+  for (const stack of STACKS) {
+    for (const file of globStack(stack, 'components/docs', null)) {
+      const norm = file.replace(/\\/g, '/');
+      if (/\.(stories|test|spec)\./.test(norm) || norm.endsWith('.mdx')) continue;
+      if (norm.includes('/components/docs/shared/')) continue;
+      const src = readFile(file);
+      if (!src) continue;
+      if (!/DocsVariants|DocsCompositions|docs-variants|docs-compositions/.test(src)) continue;
+
+      const slugs = [...new Set([...src.matchAll(/content\/([a-z0-9-]+)\/translations\.json/g)].map(m => m[1]))];
+      const slug = slugs.length === 1 ? slugs[0] : null;
+      const masked = mascararFonte(src);
+
+      const stk = [];
+      for (let i = 0; i < masked.length; i++) {
+        if (masked[i] === '{') { stk.push(i); continue; }
+        if (masked[i] !== '}') continue;
+        const s = stk.pop();
+        if (s === undefined) continue;
+
+        const pr = propsDeObjeto(masked, src, s, i);
+        if (!pr.name || !pr.description || !pr.code) continue;
+        const nameVal = pr.name.value.replace(/\s+/g, ' ');
+        if (!ITEM_I18N_RX.test(nameVal)) continue;   // valor de API, já estável
+        const line = src.slice(0, pr.name.keyOff).split('\n').length;
+
+        if (!pr.trackId) {
+          violations.push({
+            category: 'analytics', severity: 'medium', slug: slug ?? '_infra', stack,
+            file: relative(ROOT, file), line, rule: 'docs_item_track_id_missing',
+            message:
+              'Item de DocsVariants/DocsCompositions tem `code` e `name` traduzido, mas não tem `trackId` — ' +
+              'o data-track-id cai em `name` e o mesmo botão emite um snippet_id por idioma no GA4. ' +
+              'Use a chave do item no translations.json, literal (camelCase).',
+          });
+          continue;
+        }
+
+        // Presença não basta: o valor tem de ser a chave do conteúdo.
+        // Só verificável quando o caminho é estático e resolve no dicionário;
+        // item de laço (`trackId: key`) e caminho interpolado ficam de fora.
+        const lit = pr.trackId.value.trim().replace(/,$/, '').match(/^(['"])([A-Za-z0-9_-]+)\1$/);
+        if (!lit || ITEM_INTERP_RX.test(nameVal) || !slug) continue;
+        const dict = dicionarioDoSlug(slug);
+        if (!dict) continue;
+        const pm = nameVal.match(ITEM_PATH_RX);
+        if (!pm) continue;
+        const parts = pm[1].split('.');
+        const last = parts[parts.length - 1];
+        const full = LOCALES.map(L => _walk(dict[L], parts));
+        const parent = LOCALES.map(L => _walk(dict[L], parts.slice(0, -1)));
+        if (full.some(v => v === undefined)) continue;
+        const folha = full.every(v => typeof v === 'string');
+        const paiObj = parent.every(v => v && typeof v === 'object' && !Array.isArray(v));
+        const chave = (folha && /^(name|label|title)$/.test(last) && paiObj && parts.length >= 2)
+          ? parts[parts.length - 2] : last;
+        const holder = LOCALES.map(L => _walk(dict[L], chave === last ? parts.slice(0, -1) : parts.slice(0, -2)));
+        if (!holder.every(h => h && typeof h === 'object' && Object.prototype.hasOwnProperty.call(h, chave))) continue;
+        if (lit[2] !== chave) {
+          violations.push({
+            category: 'analytics', severity: 'medium', slug, stack,
+            file: relative(ROOT, file), line, rule: 'docs_item_track_id_divergente',
+            message:
+              `trackId '${lit[2]}' não é a chave do item no translations.json ('${chave}'). ` +
+              'O id sairia diferente entre as stacks para o mesmo item — use a chave, literal.',
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 // ─── Analytics: infra (slug-independente) ───────────────────────────────────
 // Regras POSITIVAS de instrumentação: verificam que o mecanismo de tracking
 // está montado, não apenas que não há tracking errado. Sem elas, uma página com
@@ -5825,7 +6005,7 @@ if (!category || category === 'security') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'analytics') {
-  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads()];
+  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
