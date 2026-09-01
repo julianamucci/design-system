@@ -303,7 +303,11 @@
     `aria-live` embutido e anunciariam cada trecho do texto que ainda chega. Quem
     anuncia é `.nds-chat-thread-announcer`, uma vez, quando a resposta termina.
     `group` nomeia sem falar e sem tocar na semântica de lista do `<ol>` dentro.
+
+    A diretiva abaixo cala um falso positivo: a regra do compilador só aceita
+    papel de widget, e nem `region` nem `group` a dispensam.
   -->
+  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div
     bind:this={viewportEl}
     class="nds-chat-thread-viewport"

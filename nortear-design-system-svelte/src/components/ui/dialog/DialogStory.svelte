@@ -74,13 +74,22 @@
           </div>
         </form>
       {:else if variant === 'withScrollContent'}
+        <!-- Story, e não primitivo — mas story é o que se copia, e esta ensinava
+             duas coisas erradas. `region` DENTRO de um diálogo já nomeado vira
+             marco aninhado: não acrescenta navegação, só entrada na lista. E
+             "Conteúdo rolável" nomeia o MECANISMO — quem chegou por Tab já sabe
+             que rola; o que não sabe é o que rola.
+
+             A diretiva cala um falso positivo: a regra do compilador só aceita
+             papel de widget. -->
+        <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
         <div
           class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
           data-slot="dialog-body"
           data-spacing="sm"
           tabindex="0"
-          role="region"
-          aria-label="Conteúdo rolável"
+          role="group"
+          aria-label="Termos de uso"
         >
           {#each Array.from({ length: 14 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a height disponível em viewport.</p>

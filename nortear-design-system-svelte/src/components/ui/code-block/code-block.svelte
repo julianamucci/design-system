@@ -191,7 +191,13 @@
 	     landmark, e uma página de documentação tem dezenas de blocos — seriam
 	     dezenas de entradas de mesmo papel e mesmo nome na lista de regiões do
 	     leitor, que é o que o docblock da `scroll-area` já avisa que torna a
-	     lista inútil. -->
+	     lista inútil.
+
+	     A diretiva abaixo cala o aviso porque ele é falso positivo AQUI: papel e
+	     nome estão postos, e é só a regra do compilador que não reconhece papel
+	     que não seja de widget. Aviso conhecido convivendo com o build é como o
+	     repositório perde o aviso NOVO. -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div class="nds-code-block-scroll" role="group" aria-label={regionLabel} tabindex="0">
 		<!-- lang="en": o conteúdo é código — identificador e palavra reservada.
 		     Sem isto, a voz do leitor de tela em pt-BR tenta pronunciá-lo como
