@@ -263,6 +263,17 @@ interface AnalyticsEvents {
     total?: number;
     location?: string;
   };
+  /**
+   * Selecao de etapa no Stepper. O payload carrega so valor estavel — numero da
+   * etapa e total —, nunca o titulo traduzido, que dividiria um evento em tres
+   * no GA4.
+   */
+  step_change: {
+    component: 'stepper';
+    step: number;
+    total?: number;
+    location?: string;
+  };
 
   /** Disparado ao focar um campo de formulário (apenas funis críticos). */
   field_focus: {

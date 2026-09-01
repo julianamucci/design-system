@@ -107,4 +107,16 @@
 .nds-stepper {
   display: flex;
   gap: var(--spacing-2);
+
+  /* A raiz e `<ol>`, e a folha nunca zerou o que o navegador aplica a lista:
+     o `padding-inline-start` e o `margin-block` do agente do usuario entravam
+     em todo Stepper e deslocavam a primeira etapa. Nao ha reset global de lista
+     neste projeto — cada folha zera a sua (o mesmo bloco existe em
+     `.nds-breadcrumb-list`), entao a ausencia aqui era omissao, nao heranca.
+     O marcador some por outro caminho: `.nds-stepper-item` e `display: flex`,
+     que sobrepoe o `list-item`. O `list-style` fica assim mesmo, para o caso de
+     alguem trocar o display do item. */
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }

@@ -1,0 +1,1508 @@
+{
+  "pt-BR": {
+    "title": "Stepper",
+    "category": "Navegação",
+    "type": "Componente",
+    "description": "Indicador de progresso por etapas para fluxos sequenciais, com etapa concluída, atual e ainda não alcançada distinguíveis sem depender de cor.",
+    "seo": {
+      "title": "Stepper — Navegação",
+      "description": "Documentação do Stepper: etapas em lista ordenada, indicador, título, descrição e traço, com a etapa atual marcada por aria-current e conformidade WCAG 2.2 AA.",
+      "aiSummary": "Componente Stepper com raiz em lista ordenada, item por etapa, controle focável, indicador numerado, título, descrição e traço separador. A etapa atual recebe aria-current=\"step\"; a concluída troca o número por uma marca de verificação e um rótulo só para leitor de tela.",
+      "aiEntities": "Stepper, wizard, etapas, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current step, lista ordenada"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "flow": "Progresso do cadastro",
+        "account": "Conta",
+        "accountHint": "Seus dados",
+        "address": "Endereço",
+        "addressHint": "Onde entregar",
+        "payment": "Pagamento",
+        "paymentHint": "Forma de pagar",
+        "review": "Revisão",
+        "reviewHint": "Confira e envie",
+        "completed": "Etapa concluída",
+        "current": "Etapa atual",
+        "back": "Voltar",
+        "next": "Avançar"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Stepper</strong> — raiz em lista ordenada; agrupa as etapas na ordem em que acontecem e carrega o nome acessível do fluxo.",
+      "item2": "<strong>StepperItem</strong> — uma etapa. É onde mora o estado, em <code>data-state</code>, e a indisponibilidade, em <code>data-disabled</code>.",
+      "item3": "<strong>StepperTrigger</strong> — o controle da etapa. É ele que recebe foco, e é ele que marca a etapa atual.",
+      "item4": "<strong>StepperIndicator</strong> — círculo com o número da etapa; concluída, o número dá lugar a uma marca de verificação.",
+      "item5": "<strong>StepperTitle</strong> — nome curto da etapa.",
+      "item6": "<strong>StepperDescription</strong> — texto de apoio da etapa, opcional.",
+      "item7": "<strong>StepperSeparator</strong> — traço entre uma etapa e a seguinte. É desenho, e fica fora da árvore de acessibilidade.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": {
+        "react": "<Stepper\n  value={2}\n  aria-label=\"Progresso do cadastro\"\n  labels={{ completed: 'Etapa concluída', current: 'Etapa atual' }}\n  onStepSelect={irPara}\n>\n  <StepperItem step={1}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Conta</StepperTitle>\n      <StepperDescription>Seus dados</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem step={2}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Endereço</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "vue": "<Stepper\n  :value=\"2\"\n  aria-label=\"Progresso do cadastro\"\n  :labels=\"{ completed: 'Etapa concluída', current: 'Etapa atual' }\"\n  @step-select=\"irPara\"\n>\n  <StepperItem :step=\"1\">\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Conta</StepperTitle>\n      <StepperDescription>Seus dados</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem :step=\"2\">\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Endereço</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "svelte": "<Stepper\n  value={2}\n  aria-label=\"Progresso do cadastro\"\n  labels={{ completed: 'Etapa concluída', current: 'Etapa atual' }}\n  onStepSelect={irPara}\n>\n  <StepperItem step={1}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Conta</StepperTitle>\n      <StepperDescription>Seus dados</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem step={2}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Endereço</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "vanilla": "// <ol class=\\\"nds-stepper\\\"> › <li class=\\\"nds-stepper-item\\\"> › <button class=\\\"nds-stepper-trigger\\\">\nconst stepper = createStepper({\n  'aria-label': 'Progresso do cadastro',\n  labels: { completed: 'Etapa concluída', current: 'Etapa atual' },\n  onStepSelect: irPara,\n});\n\nconst conta = createStepperItem({ step: 1 });\nconst gatilhoConta = createStepperTrigger();\ngatilhoConta.append(\n  createStepperIndicator(),\n  createStepperTitle({ text: 'Conta' }),\n  createStepperDescription({ text: 'Seus dados' }),\n);\nconta.append(gatilhoConta, createStepperSeparator());\n\nstepper.append(conta);\n\n// Resolve o estado de cada etapa a partir do valor atual do fluxo.\nsetStepperValue(stepper, 2);",
+        "angular": "<ol\n  ndsStepper\n  [value]=\"2\"\n  aria-label=\"Progresso do cadastro\"\n  [labels]=\"{ completed: 'Etapa concluída', current: 'Etapa atual' }\"\n  (stepSelect)=\"irPara()\"\n>\n  <li ndsStepperItem [step]=\"1\">\n    <button ndsStepperTrigger>\n      <span ndsStepperIndicator></span>\n      <span ndsStepperTitle>Conta</span>\n      <span ndsStepperDescription>Seus dados</span>\n    </button>\n    <div ndsStepperSeparator></div>\n  </li>\n\n  <li ndsStepperItem [step]=\"2\">\n    <button ndsStepperTrigger>\n      <span ndsStepperIndicator></span>\n      <span ndsStepperTitle>Endereço</span>\n    </button>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use quando o fluxo tem ordem obrigatória e a pessoa precisa saber onde está e quanto falta.",
+        "item2": "Entre três e seis etapas. Com duas, o indicador não informa nada; acima de seis, o rótulo não cabe e o fluxo pede outra divisão.",
+        "item3": "Dê nome ao fluxo na raiz — sem ele, o leitor de tela anuncia uma lista sem dizer de que progresso se trata.",
+        "item4": "Passe os rótulos de estado do fluxo na raiz. A marca de verificação é visual; sem eles, quem usa leitor de tela não distingue concluída de futura.",
+        "item5": "Marque como indisponível a etapa que ainda não pode ser aberta, em vez de deixá-la focável sem destino."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Cadastro dividido em etapas obrigatórias",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Seções independentes, em qualquer ordem",
+          "u": "Não",
+          "a": "Tabs"
+        },
+        "item3": {
+          "s": "Posição da pessoa numa hierarquia de páginas",
+          "u": "Não",
+          "a": "Breadcrumb"
+        },
+        "item4": {
+          "s": "Operação única com duração mensurável",
+          "u": "Não",
+          "a": "Progress"
+        },
+        "item5": {
+          "s": "Fluxo longo, de oito etapas ou mais",
+          "u": "Não",
+          "a": "Agrupar em fases e usar um Stepper por fase"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "StepperTitle",
+            "format": "Substantivo · sem ponto · máx. 2 palavras",
+            "good": "\"Conta\", \"Pagamento\"",
+            "bad": "\"Etapa 1\", \"Preencha seus dados de conta\""
+          },
+          "description": {
+            "name": "StepperDescription",
+            "format": "Frase curta · sem ponto · máx. 4 palavras",
+            "good": "\"Seus dados\", \"Onde entregar\"",
+            "bad": "\"Clique aqui\", \"Etapa opcional do formulário de cadastro\""
+          },
+          "stateLabel": {
+            "name": "Rótulo de estado",
+            "format": "Adjetivo de estado · lido só por leitor de tela",
+            "good": "\"Etapa concluída\", \"Etapa atual\"",
+            "bad": "\"OK\", \"Feito!\""
+          },
+          "flowName": {
+            "name": "Nome do fluxo",
+            "format": "Substantivo + complemento · descreve o progresso",
+            "good": "\"Progresso do cadastro\"",
+            "bad": "\"Stepper\", \"Etapas\""
+          }
+        }
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "Distinga os estados por forma e por palavra, não só por cor.",
+        "dont": "Não deixe a diferença entre concluída e futura só na cor do círculo."
+      },
+      "pair2": {
+        "do": "Marque a etapa atual com aria-current para o leitor de tela.",
+        "dont": "Não anuncie a troca de etapa por região viva — o indicador se reanuncia a cada avanço e corta a leitura do resto da tela."
+      },
+      "pair3": {
+        "do": "Torne indisponível a etapa que ainda não pode ser aberta.",
+        "dont": "Não deixe um controle focável que não leva a lugar nenhum."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Composições",
+      "compositions": {
+        "wizard": "Fluxo completo — o indicador acima do painel da etapa, com os controles de voltar e avançar embaixo.",
+        "withDescriptions": "Etapas com texto de apoio sob o título, para quando o nome sozinho não basta."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "inactive": {
+        "label": "Inactive",
+        "trigger": "Etapa depois da atual",
+        "behavior": "Ainda não alcançada — círculo neutro com o número da etapa."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "Etapa igual ao valor atual",
+        "behavior": "Etapa atual — círculo no primário e <code>aria-current=\"step\"</code> no controle."
+      },
+      "completed": {
+        "label": "Completed",
+        "trigger": "Etapa anterior à atual, ou marcada como concluída",
+        "behavior": "Concluída — o número dá lugar a uma marca de verificação, e o traço até a próxima etapa acompanha a cor."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Etapa marcada como indisponível",
+        "behavior": "Indisponível — o controle sai da ordem de tabulação e o item deixa de responder ao ponteiro."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "number",
+          "default": "1",
+          "required": "Não",
+          "description": "Número da etapa atual, contando de 1. É dele que cada etapa deriva o próprio estado."
+        },
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "Nome acessível do fluxo, na raiz. Sem ele o leitor de tela anuncia só uma lista."
+        },
+        "onStepSelect": {
+          "type": "(step: number) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback de seleção de etapa, disparado pelo controle. Sem ele os controles continuam focáveis e sem efeito, então declare-o ou marque as etapas como indisponíveis."
+        },
+        "labels": {
+          "type": "{ completed?: string; current?: string }",
+          "default": "—",
+          "required": "Não",
+          "description": "Palavras de estado do fluxo, na raiz — <code>completed</code> e <code>current</code>. Ficam só para leitor de tela e são o que separa concluída de futura para quem não vê a marca."
+        },
+        "step": {
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Número desta etapa, no item. Define a posição e, comparado ao valor atual, o estado."
+        },
+        "completed": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Força a etapa a contar como concluída mesmo estando depois da atual, no item."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Torna a etapa indisponível, no item: o controle sai da ordem de tabulação e o ponteiro deixa de alcançá-la."
+        },
+        "class": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes .nds-* adicionais."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": {
+        "react": "// Etapa fora de ordem marcada como concluída\n<StepperItem step={4} completed>…</StepperItem>\n\n// Etapa que ainda não pode ser aberta\n<StepperItem step={3} disabled>…</StepperItem>\n\n// Indicador com conteúdo próprio no lugar do número\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
+        "vue": "<!-- Etapa fora de ordem marcada como concluída -->\n<StepperItem :step=\"4\" completed>…</StepperItem>\n\n<!-- Etapa que ainda não pode ser aberta -->\n<StepperItem :step=\"3\" disabled>…</StepperItem>\n\n<!-- Indicador com conteúdo próprio no lugar do número -->\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
+        "svelte": "<!-- Etapa fora de ordem marcada como concluída -->\n<StepperItem step={4} completed>…</StepperItem>\n\n<!-- Etapa que ainda não pode ser aberta -->\n<StepperItem step={3} disabled>…</StepperItem>\n\n<!-- Indicador com conteúdo próprio no lugar do número -->\n<StepperIndicator>{#snippet children()}<CreditCard aria-hidden=\"true\" />{/snippet}</StepperIndicator>",
+        "vanilla": "// Etapa fora de ordem marcada como concluída\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Etapa que ainda não pode ser aberta\nconst bloqueada = createStepperItem({ step: 3, disabled: true });\n\n// Indicador com conteúdo próprio no lugar do número\nconst indicador = createStepperIndicator();\nindicador.replaceChildren(iconeCartao());",
+        "angular": "<!-- Etapa fora de ordem marcada como concluída -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Etapa que ainda não pode ser aberta -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicador com conteúdo próprio no lugar do número -->\n<span ndsStepperIndicator><nds-icon name=\"credit-card\" /></span>"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "gap": {
+          "class": ".nds-stepper",
+          "part": "Espaço entre uma etapa e a seguinte"
+        },
+        "itemGap": {
+          "class": ".nds-stepper-item",
+          "part": "Espaço entre o controle da etapa e o traço"
+        },
+        "triggerGap": {
+          "class": ".nds-stepper-trigger",
+          "part": "Espaço interno e distância entre indicador, título e descrição"
+        },
+        "triggerRadius": {
+          "class": ".nds-stepper-trigger",
+          "part": "Arredondamento do alvo de foco"
+        },
+        "ring": {
+          "class": ".nds-stepper-trigger:focus-visible",
+          "part": "Cor do anel de foco"
+        },
+        "ringHalo": {
+          "class": ".nds-stepper-trigger:focus-visible",
+          "part": "Halo que separa o anel do fundo"
+        },
+        "indicatorSize": {
+          "class": ".nds-stepper-indicator",
+          "part": "Diâmetro do círculo, em unidade relativa — acompanha a densidade e o tamanho de fonte"
+        },
+        "indicatorRadius": {
+          "class": ".nds-stepper-indicator",
+          "part": "Arredondamento que fecha o círculo"
+        },
+        "indicatorBg": {
+          "class": ".nds-stepper-indicator",
+          "part": "Fundo da etapa ainda não alcançada"
+        },
+        "indicatorFg": {
+          "class": ".nds-stepper-indicator",
+          "part": "Número da etapa ainda não alcançada"
+        },
+        "activeBg": {
+          "class": ".nds-stepper-item[data-state=\"active\"] .nds-stepper-indicator",
+          "part": "Fundo do indicador da etapa atual"
+        },
+        "activeFg": {
+          "class": ".nds-stepper-item[data-state=\"active\"] .nds-stepper-indicator",
+          "part": "Número da etapa atual"
+        },
+        "completedBg": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-indicator",
+          "part": "Fundo do indicador da etapa concluída"
+        },
+        "completedFg": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-indicator",
+          "part": "Marca de verificação da etapa concluída"
+        },
+        "titleSize": {
+          "class": ".nds-stepper-title",
+          "part": "Tamanho do nome da etapa"
+        },
+        "titleWeight": {
+          "class": ".nds-stepper-title",
+          "part": "Peso do nome da etapa"
+        },
+        "descriptionSize": {
+          "class": ".nds-stepper-description",
+          "part": "Tamanho do texto de apoio"
+        },
+        "descriptionColor": {
+          "class": ".nds-stepper-description",
+          "part": "Cor do texto de apoio"
+        },
+        "separator": {
+          "class": ".nds-stepper-separator",
+          "part": "Cor do traço entre etapas"
+        },
+        "separatorLength": {
+          "class": ".nds-stepper-separator",
+          "part": "Comprimento mínimo do traço"
+        },
+        "separatorCompleted": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-separator",
+          "part": "Cor do traço que sai de uma etapa concluída"
+        },
+        "separatorDisabled": {
+          "class": ".nds-stepper-item[data-disabled] .nds-stepper-separator",
+          "part": "Cor do traço de uma etapa indisponível"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* O traço ocupa a largura que sobra: para uma linha contínua entre\n   etapas, deixe o item crescer. */\n.checkout-stepper .nds-stepper-item { flex: 1; }\n.checkout-stepper .nds-stepper-item:last-child { flex: 0; }\n\n/* Em telas estreitas, só a etapa atual mantém o rótulo visível. */\n@media (max-width: 40rem) {\n  .checkout-stepper .nds-stepper-item:not([data-state=\"active\"]) .nds-stepper-title,\n  .checkout-stepper .nds-stepper-description { display: none; }\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.2 AA: 1.3.1, 1.4.1, 1.4.4, 2.1.1, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "A raiz é uma lista ordenada — a ordem e a contagem das etapas são anunciadas pela própria estrutura, sem texto extra.",
+        "item2": "<code>aria-current=\"step\"</code> no controle da etapa atual; nenhum outro controle o carrega.",
+        "item3": "Estado nunca depende só de cor — a etapa concluída troca o número por uma marca de verificação, e o rótulo de estado leva a palavra ao leitor de tela.",
+        "item4": "Indicador e traço são desenho e ficam fora da árvore de acessibilidade.",
+        "item5": "Etapa indisponível sai da ordem de tabulação, em vez de virar uma parada de foco sem destino.",
+        "item6": "Não há região viva — o avanço de etapa não se reanuncia por cima da leitura do resto da tela.",
+        "item7": "O círculo do indicador é dimensionado em unidade relativa e cresce junto com o texto até 200%."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Move o foco para o controle da próxima etapa disponível.",
+        "shiftTab": "Move o foco para o controle da etapa anterior disponível.",
+        "enter": "Seleciona a etapa em foco.",
+        "space": "Seleciona a etapa em foco."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "list": "A raiz é uma lista ordenada, e cada etapa é um item dessa lista",
+        "current": "<code>aria-current=\"step\"</code> no controle da etapa atual",
+        "hidden": "<code>aria-hidden=\"true\"</code> no indicador e no traço",
+        "label": "Nome acessível do fluxo na raiz, fornecido pela aplicação"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "announce": "Anuncia o nome do fluxo, a quantidade de etapas e a posição de cada uma",
+        "current": "Anuncia \"etapa atual\" no controle que carrega aria-current",
+        "completed": "Anuncia o rótulo de estado das etapas concluídas",
+        "disabled": "Anuncia as etapas indisponíveis como indisponíveis, e o foco não pousa nelas"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "tabs": {
+          "name": "Tabs",
+          "description": "Seções independentes, acessíveis em qualquer ordem."
+        },
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Posição numa hierarquia de páginas, não num fluxo."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Progresso contínuo de uma operação única."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Campos e validação de cada etapa do fluxo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>O estado é derivado, não escrito à mão</strong> — cada etapa compara o próprio número com o valor atual do fluxo e chega sozinha a concluída, atual ou ainda não alcançada. Marcar concluída explicitamente só é necessário quando o fluxo aceita ordem fora do comum.",
+      "item2": "<strong>A raiz é uma lista ordenada</strong> — o recuo e o marcador que o navegador aplica a listas são removidos na folha compartilhada; o item vira caixa flexível e o marcador deixa de existir.",
+      "item3": "<strong>O traço mora dentro da etapa</strong>, depois do controle, e não entre as etapas. Assim ele herda o estado do item que o precede e acompanha a cor de uma etapa concluída sem regra extra.",
+      "item4": "<strong>Sem região viva</strong> — a mudança de etapa não é anunciada pelo indicador. Quem anuncia o avanço é o painel que trocou de conteúdo, e é para ele que a aplicação move o foco.",
+      "item5": "<strong>O círculo tem dimensão fixa de propósito</strong>, e ela é relativa: o token de espaçamento é declarado em <code>rem</code>, então o indicador cresce com a densidade e com o tamanho de fonte do navegador, sem prender o texto que vive fora dele."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos disparados pelas páginas de documentação que usam o componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "step_change": {
+          "trigger": "Pessoa seleciona uma etapa na demonstração",
+          "payload": "{ component: \"stepper\", step, total, location }"
+        },
+        "docs_section_viewed": {
+          "trigger": "Seção da página fica visível por dois segundos contínuos",
+          "payload": "{ section_id, component_name: \"stepper\", locale }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada posição do fluxo.",
+        "item1": {
+          "action": "Renderizar com o valor na segunda etapa",
+          "result": "A primeira etapa fica concluída, a segunda atual e as seguintes ainda não alcançadas",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Selecionar o controle de uma etapa disponível",
+          "result": "O callback de seleção recebe o número daquela etapa",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Marcar uma etapa como indisponível",
+          "result": "O controle não recebe foco e a seleção não dispara",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Marcar como concluída uma etapa posterior à atual",
+          "result": "A etapa mostra a marca de verificação em vez do número",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "A raiz é uma lista ordenada com um item por etapa",
+        "item3": "Exatamente um controle carrega aria-current=\"step\"",
+        "item4": "Indicador e traço têm aria-hidden=\"true\"",
+        "item5": "A etapa indisponível está fora da ordem de tabulação",
+        "item6": "Nenhum elemento do indicador declara aria-live ou role de status"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "required": "Obrigatório",
+        "description": "Estados que o Chromatic deve capturar.",
+        "item1": {
+          "story": "Playground",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Completed",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Wizard",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Boas práticas",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "compositions": "Composições",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Stepper",
+    "category": "Navigation",
+    "type": "Component",
+    "description": "Step progress indicator for sequential flows, where completed, current and upcoming steps are told apart without relying on colour.",
+    "seo": {
+      "title": "Stepper — Navigation",
+      "description": "Stepper documentation: steps in an ordered list, indicator, title, description and connector, with the current step marked by aria-current and WCAG 2.2 AA conformance.",
+      "aiSummary": "Stepper component with an ordered-list root, one item per step, a focusable control, a numbered indicator, title, description and connector line. The current step gets aria-current=\"step\"; a completed one swaps the number for a check mark plus a screen-reader-only label.",
+      "aiEntities": "Stepper, wizard, steps, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current step, ordered list"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "flow": "Sign-up progress",
+        "account": "Account",
+        "accountHint": "Your details",
+        "address": "Address",
+        "addressHint": "Where to deliver",
+        "payment": "Payment",
+        "paymentHint": "How to pay",
+        "review": "Review",
+        "reviewHint": "Check and submit",
+        "completed": "Completed step",
+        "current": "Current step",
+        "back": "Back",
+        "next": "Next"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Stepper</strong> — ordered-list root; groups the steps in the order they happen and carries the accessible name of the flow.",
+      "item2": "<strong>StepperItem</strong> — one step. This is where the state lives, in <code>data-state</code>, and unavailability, in <code>data-disabled</code>.",
+      "item3": "<strong>StepperTrigger</strong> — the step control. It is what takes focus, and what marks the current step.",
+      "item4": "<strong>StepperIndicator</strong> — circle with the step number; once completed, the number gives way to a check mark.",
+      "item5": "<strong>StepperTitle</strong> — short name of the step.",
+      "item6": "<strong>StepperDescription</strong> — optional supporting text for the step.",
+      "item7": "<strong>StepperSeparator</strong> — connector between one step and the next. It is decoration, and stays out of the accessibility tree.",
+      "structureLabel": "Basic structure:",
+      "structureCode": {
+        "react": "<Stepper\n  value={2}\n  aria-label=\"Sign-up progress\"\n  labels={{ completed: 'Completed step', current: 'Current step' }}\n  onStepSelect={goTo}\n>\n  <StepperItem step={1}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Account</StepperTitle>\n      <StepperDescription>Your details</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem step={2}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Address</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "vue": "<Stepper\n  :value=\"2\"\n  aria-label=\"Sign-up progress\"\n  :labels=\"{ completed: 'Completed step', current: 'Current step' }\"\n  @step-select=\"goTo\"\n>\n  <StepperItem :step=\"1\">\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Account</StepperTitle>\n      <StepperDescription>Your details</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem :step=\"2\">\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Address</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "svelte": "<Stepper\n  value={2}\n  aria-label=\"Sign-up progress\"\n  labels={{ completed: 'Completed step', current: 'Current step' }}\n  onStepSelect={goTo}\n>\n  <StepperItem step={1}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Account</StepperTitle>\n      <StepperDescription>Your details</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem step={2}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Address</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "vanilla": "// <ol class=\\\"nds-stepper\\\"> › <li class=\\\"nds-stepper-item\\\"> › <button class=\\\"nds-stepper-trigger\\\">\nconst stepper = createStepper({\n  'aria-label': 'Sign-up progress',\n  labels: { completed: 'Completed step', current: 'Current step' },\n  onStepSelect: goTo,\n});\n\nconst account = createStepperItem({ step: 1 });\nconst accountTrigger = createStepperTrigger();\naccountTrigger.append(\n  createStepperIndicator(),\n  createStepperTitle({ text: 'Account' }),\n  createStepperDescription({ text: 'Your details' }),\n);\naccount.append(accountTrigger, createStepperSeparator());\n\nstepper.append(account);\n\n// Resolve o estado de cada etapa a partir do valor atual do fluxo.\nsetStepperValue(stepper, 2);",
+        "angular": "<ol\n  ndsStepper\n  [value]=\"2\"\n  aria-label=\"Sign-up progress\"\n  [labels]=\"{ completed: 'Completed step', current: 'Current step' }\"\n  (stepSelect)=\"goTo()\"\n>\n  <li ndsStepperItem [step]=\"1\">\n    <button ndsStepperTrigger>\n      <span ndsStepperIndicator></span>\n      <span ndsStepperTitle>Account</span>\n      <span ndsStepperDescription>Your details</span>\n    </button>\n    <div ndsStepperSeparator></div>\n  </li>\n\n  <li ndsStepperItem [step]=\"2\">\n    <button ndsStepperTrigger>\n      <span ndsStepperIndicator></span>\n      <span ndsStepperTitle>Address</span>\n    </button>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use it when the flow has a required order and the person needs to know where they are and how much is left.",
+        "item2": "Between three and six steps. With two the indicator says nothing; above six the labels stop fitting and the flow needs another split.",
+        "item3": "Name the flow on the root — without it the screen reader announces a list without saying which progress it is.",
+        "item4": "Pass the state labels of the flow on the root. The check mark is visual; without them, screen reader users cannot tell completed from upcoming.",
+        "item5": "Mark as unavailable any step that cannot be opened yet, instead of leaving it focusable with nowhere to go."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Sign-up split into required steps",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Independent sections, in any order",
+          "u": "No",
+          "a": "Tabs"
+        },
+        "item3": {
+          "s": "Position within a page hierarchy",
+          "u": "No",
+          "a": "Breadcrumb"
+        },
+        "item4": {
+          "s": "Single operation with measurable duration",
+          "u": "No",
+          "a": "Progress"
+        },
+        "item5": {
+          "s": "Long flow, eight steps or more",
+          "u": "No",
+          "a": "Group into phases and use one Stepper per phase"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "title": {
+            "name": "StepperTitle",
+            "format": "Noun · no full stop · max. 2 words",
+            "good": "\"Account\", \"Payment\"",
+            "bad": "\"Step 1\", \"Fill in your account details\""
+          },
+          "description": {
+            "name": "StepperDescription",
+            "format": "Short phrase · no full stop · max. 4 words",
+            "good": "\"Your details\", \"Where to deliver\"",
+            "bad": "\"Click here\", \"Optional step of the sign-up form\""
+          },
+          "stateLabel": {
+            "name": "State label",
+            "format": "State adjective · read only by screen readers",
+            "good": "\"Completed step\", \"Current step\"",
+            "bad": "\"OK\", \"Done!\""
+          },
+          "flowName": {
+            "name": "Flow name",
+            "format": "Noun + complement · describes the progress",
+            "good": "\"Sign-up progress\"",
+            "bad": "\"Stepper\", \"Steps\""
+          }
+        }
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "Tell the states apart by shape and by word, not by colour alone.",
+        "dont": "Do not leave the difference between completed and upcoming in the colour of the circle only."
+      },
+      "pair2": {
+        "do": "Mark the current step with aria-current for the screen reader.",
+        "dont": "Do not announce the step change through a live region — the indicator re-announces itself on every advance and cuts across the rest of the screen."
+      },
+      "pair3": {
+        "do": "Make unavailable any step that cannot be opened yet.",
+        "dont": "Do not leave a focusable control that goes nowhere."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Compositions",
+      "compositions": {
+        "wizard": "Full flow — the indicator above the step panel, with back and next controls underneath.",
+        "withDescriptions": "Steps with supporting text under the title, for when the name alone is not enough."
+      }
+    },
+    "states": {
+      "title": "States",
+      "inactive": {
+        "label": "Inactive",
+        "trigger": "Step after the current one",
+        "behavior": "Not reached yet — neutral circle with the step number."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "Step equal to the current value",
+        "behavior": "Current step — circle in the primary colour and <code>aria-current=\"step\"</code> on the control."
+      },
+      "completed": {
+        "label": "Completed",
+        "trigger": "Step before the current one, or marked as completed",
+        "behavior": "Completed — the number gives way to a check mark, and the connector to the next step follows the colour."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Step marked as unavailable",
+        "behavior": "Unavailable — the control leaves the tab order and the item stops responding to the pointer."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behaviour"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "number",
+          "default": "1",
+          "required": "No",
+          "description": "Number of the current step, counting from 1. Each step derives its own state from it."
+        },
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "Accessible name of the flow, on the root. Without it the screen reader announces only a list."
+        },
+        "onStepSelect": {
+          "type": "(step: number) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Step selection callback, fired by the control. Without it the controls stay focusable and inert, so declare it or mark the steps as unavailable."
+        },
+        "labels": {
+          "type": "{ completed?: string; current?: string }",
+          "default": "—",
+          "required": "No",
+          "description": "State words of the flow, on the root — <code>completed</code> and <code>current</code>. They stay screen-reader only and are what separates completed from upcoming for anyone who cannot see the mark."
+        },
+        "step": {
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "Number of this step, on the item. Sets the position and, compared with the current value, the state."
+        },
+        "completed": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Forces the step to count as completed even when it sits after the current one, on the item."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Makes the step unavailable, on the item: the control leaves the tab order and the pointer no longer reaches it."
+        },
+        "class": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional .nds-* classes."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": {
+        "react": "// Out-of-order step marked as completed\n<StepperItem step={4} completed>…</StepperItem>\n\n// Step that cannot be opened yet\n<StepperItem step={3} disabled>…</StepperItem>\n\n// Indicator with its own content instead of the number\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
+        "vue": "<!-- Out-of-order step marked as completed -->\n<StepperItem :step=\"4\" completed>…</StepperItem>\n\n<!-- Step that cannot be opened yet -->\n<StepperItem :step=\"3\" disabled>…</StepperItem>\n\n<!-- Indicator with its own content instead of the number -->\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
+        "svelte": "<!-- Out-of-order step marked as completed -->\n<StepperItem step={4} completed>…</StepperItem>\n\n<!-- Step that cannot be opened yet -->\n<StepperItem step={3} disabled>…</StepperItem>\n\n<!-- Indicator with its own content instead of the number -->\n<StepperIndicator>{#snippet children()}<CreditCard aria-hidden=\"true\" />{/snippet}</StepperIndicator>",
+        "vanilla": "// Out-of-order step marked as completed\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Step that cannot be opened yet\nconst blocked = createStepperItem({ step: 3, disabled: true });\n\n// Indicator with its own content instead of the number\nconst indicator = createStepperIndicator();\nindicator.replaceChildren(cardIcon());",
+        "angular": "<!-- Out-of-order step marked as completed -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Step that cannot be opened yet -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicator with its own content instead of the number -->\n<span ndsStepperIndicator><nds-icon name=\"credit-card\" /></span>"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Applied to",
+        "gap": {
+          "class": ".nds-stepper",
+          "part": "Space between one step and the next"
+        },
+        "itemGap": {
+          "class": ".nds-stepper-item",
+          "part": "Space between the step control and the connector"
+        },
+        "triggerGap": {
+          "class": ".nds-stepper-trigger",
+          "part": "Inner space and distance between indicator, title and description"
+        },
+        "triggerRadius": {
+          "class": ".nds-stepper-trigger",
+          "part": "Rounding of the focus target"
+        },
+        "ring": {
+          "class": ".nds-stepper-trigger:focus-visible",
+          "part": "Focus ring colour"
+        },
+        "ringHalo": {
+          "class": ".nds-stepper-trigger:focus-visible",
+          "part": "Halo separating the ring from the background"
+        },
+        "indicatorSize": {
+          "class": ".nds-stepper-indicator",
+          "part": "Circle diameter, in a relative unit — follows density and font size"
+        },
+        "indicatorRadius": {
+          "class": ".nds-stepper-indicator",
+          "part": "Rounding that closes the circle"
+        },
+        "indicatorBg": {
+          "class": ".nds-stepper-indicator",
+          "part": "Background of a step not reached yet"
+        },
+        "indicatorFg": {
+          "class": ".nds-stepper-indicator",
+          "part": "Number of a step not reached yet"
+        },
+        "activeBg": {
+          "class": ".nds-stepper-item[data-state=\"active\"] .nds-stepper-indicator",
+          "part": "Indicator background of the current step"
+        },
+        "activeFg": {
+          "class": ".nds-stepper-item[data-state=\"active\"] .nds-stepper-indicator",
+          "part": "Number of the current step"
+        },
+        "completedBg": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-indicator",
+          "part": "Indicator background of a completed step"
+        },
+        "completedFg": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-indicator",
+          "part": "Check mark of a completed step"
+        },
+        "titleSize": {
+          "class": ".nds-stepper-title",
+          "part": "Size of the step name"
+        },
+        "titleWeight": {
+          "class": ".nds-stepper-title",
+          "part": "Weight of the step name"
+        },
+        "descriptionSize": {
+          "class": ".nds-stepper-description",
+          "part": "Size of the supporting text"
+        },
+        "descriptionColor": {
+          "class": ".nds-stepper-description",
+          "part": "Colour of the supporting text"
+        },
+        "separator": {
+          "class": ".nds-stepper-separator",
+          "part": "Colour of the connector between steps"
+        },
+        "separatorLength": {
+          "class": ".nds-stepper-separator",
+          "part": "Minimum length of the connector"
+        },
+        "separatorCompleted": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-separator",
+          "part": "Colour of the connector leaving a completed step"
+        },
+        "separatorDisabled": {
+          "class": ".nds-stepper-item[data-disabled] .nds-stepper-separator",
+          "part": "Colour of the connector of an unavailable step"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": {
+        "web": "/* The connector takes the leftover width: for a continuous line between\n   steps, let the item grow. */\n.checkout-stepper .nds-stepper-item { flex: 1; }\n.checkout-stepper .nds-stepper-item:last-child { flex: 0; }\n\n/* On narrow screens, only the current step keeps its label visible. */\n@media (max-width: 40rem) {\n  .checkout-stepper .nds-stepper-item:not([data-state=\"active\"]) .nds-stepper-title,\n  .checkout-stepper .nds-stepper-description { display: none; }\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.2 AA: 1.3.1, 1.4.1, 1.4.4, 2.1.1, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "The root is an ordered list — the order and the count of steps are announced by the structure itself, with no extra text.",
+        "item2": "<code>aria-current=\"step\"</code> on the control of the current step; no other control carries it.",
+        "item3": "State never depends on colour alone — a completed step swaps the number for a check mark, and the state label carries the word to the screen reader.",
+        "item4": "Indicator and connector are decoration and stay out of the accessibility tree.",
+        "item5": "An unavailable step leaves the tab order instead of becoming a focus stop with nowhere to go.",
+        "item6": "There is no live region — advancing a step does not re-announce itself over the reading of the rest of the screen.",
+        "item7": "The indicator circle is sized in a relative unit and grows together with the text up to 200%."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Moves focus to the control of the next available step.",
+        "shiftTab": "Moves focus to the control of the previous available step.",
+        "enter": "Selects the focused step.",
+        "space": "Selects the focused step."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "list": "The root is an ordered list, and each step is an item of that list",
+        "current": "<code>aria-current=\"step\"</code> on the control of the current step",
+        "hidden": "<code>aria-hidden=\"true\"</code> on the indicator and the connector",
+        "label": "Accessible name of the flow on the root, provided by the application"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "announce": "Announces the flow name, how many steps there are and the position of each one",
+        "current": "Announces \"current step\" on the control carrying aria-current",
+        "completed": "Announces the state label of completed steps",
+        "disabled": "Announces unavailable steps as unavailable, and focus does not land on them"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "tabs": {
+          "name": "Tabs",
+          "description": "Independent sections, reachable in any order."
+        },
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Position in a page hierarchy, not in a flow."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Continuous progress of a single operation."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Fields and validation for each step of the flow."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>State is derived, not written by hand</strong> — each step compares its own number with the current value of the flow and reaches completed, current or not-yet-reached on its own. Marking completed explicitly is only needed when the flow accepts an unusual order.",
+      "item2": "<strong>The root is an ordered list</strong> — the indent and the marker the browser applies to lists are removed in the shared sheet; the item becomes a flex box and the marker stops existing.",
+      "item3": "<strong>The connector lives inside the step</strong>, after the control, not between the steps. That way it inherits the state of the item preceding it and follows the colour of a completed step with no extra rule.",
+      "item4": "<strong>No live region</strong> — the step change is not announced by the indicator. What announces the advance is the panel whose content changed, and that is where the application moves focus.",
+      "item5": "<strong>The circle has a fixed dimension on purpose</strong>, and it is relative: the spacing token is declared in <code>rem</code>, so the indicator grows with density and with the browser font size, without trapping the text that lives outside it."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Events fired by the documentation pages that use the component.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "step_change": {
+          "trigger": "Person selects a step in the demonstration",
+          "payload": "{ component: \"stepper\", step, total, location }"
+        },
+        "docs_section_viewed": {
+          "trigger": "Page section stays visible for two continuous seconds",
+          "payload": "{ section_id, component_name: \"stepper\", locale }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behaviour",
+        "description": "What must happen at each position of the flow.",
+        "item1": {
+          "action": "Render with the value on the second step",
+          "result": "The first step is completed, the second current and the following ones not reached yet",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Select the control of an available step",
+          "result": "The selection callback receives the number of that step",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Mark a step as unavailable",
+          "result": "The control does not take focus and selection does not fire",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mark as completed a step after the current one",
+          "result": "The step shows the check mark instead of the number",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools must confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "The root is an ordered list with one item per step",
+        "item3": "Exactly one control carries aria-current=\"step\"",
+        "item4": "Indicator and connector have aria-hidden=\"true\"",
+        "item5": "The unavailable step is out of the tab order",
+        "item6": "No element of the indicator declares aria-live or a status role"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "required": "Required",
+        "description": "States Chromatic must capture.",
+        "item1": {
+          "story": "Playground",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Completed",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Wizard",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Best practices",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "compositions": "Compositions",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Stepper",
+    "category": "Navegación",
+    "type": "Componente",
+    "description": "Indicador de progreso por etapas para flujos secuenciales, donde la etapa completada, la actual y la aún no alcanzada se distinguen sin depender del color.",
+    "seo": {
+      "title": "Stepper — Navegación",
+      "description": "Documentación del Stepper: etapas en lista ordenada, indicador, título, descripción y trazo, con la etapa actual marcada por aria-current y conformidad WCAG 2.2 AA.",
+      "aiSummary": "Componente Stepper con raíz en lista ordenada, un elemento por etapa, control enfocable, indicador numerado, título, descripción y trazo separador. La etapa actual recibe aria-current=\"step\"; la completada cambia el número por una marca de verificación y una etiqueta solo para lector de pantalla.",
+      "aiEntities": "Stepper, wizard, etapas, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current step, lista ordenada"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "flow": "Progreso del registro",
+        "account": "Cuenta",
+        "accountHint": "Tus datos",
+        "address": "Dirección",
+        "addressHint": "Dónde entregar",
+        "payment": "Pago",
+        "paymentHint": "Forma de pago",
+        "review": "Revisión",
+        "reviewHint": "Revisa y envía",
+        "completed": "Etapa completada",
+        "current": "Etapa actual",
+        "back": "Volver",
+        "next": "Continuar"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Stepper</strong> — raíz en lista ordenada; agrupa las etapas en el orden en que ocurren y lleva el nombre accesible del flujo.",
+      "item2": "<strong>StepperItem</strong> — una etapa. Aquí vive el estado, en <code>data-state</code>, y la indisponibilidad, en <code>data-disabled</code>.",
+      "item3": "<strong>StepperTrigger</strong> — el control de la etapa. Es el que recibe el foco y el que marca la etapa actual.",
+      "item4": "<strong>StepperIndicator</strong> — círculo con el número de la etapa; una vez completada, el número deja paso a una marca de verificación.",
+      "item5": "<strong>StepperTitle</strong> — nombre corto de la etapa.",
+      "item6": "<strong>StepperDescription</strong> — texto de apoyo de la etapa, opcional.",
+      "item7": "<strong>StepperSeparator</strong> — trazo entre una etapa y la siguiente. Es decoración y queda fuera del árbol de accesibilidad.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": {
+        "react": "<Stepper\n  value={2}\n  aria-label=\"Progreso del registro\"\n  labels={{ completed: 'Etapa completada', current: 'Etapa actual' }}\n  onStepSelect={irA}\n>\n  <StepperItem step={1}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Cuenta</StepperTitle>\n      <StepperDescription>Tus datos</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem step={2}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Dirección</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "vue": "<Stepper\n  :value=\"2\"\n  aria-label=\"Progreso del registro\"\n  :labels=\"{ completed: 'Etapa completada', current: 'Etapa actual' }\"\n  @step-select=\"irA\"\n>\n  <StepperItem :step=\"1\">\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Cuenta</StepperTitle>\n      <StepperDescription>Tus datos</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem :step=\"2\">\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Dirección</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "svelte": "<Stepper\n  value={2}\n  aria-label=\"Progreso del registro\"\n  labels={{ completed: 'Etapa completada', current: 'Etapa actual' }}\n  onStepSelect={irA}\n>\n  <StepperItem step={1}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Cuenta</StepperTitle>\n      <StepperDescription>Tus datos</StepperDescription>\n    </StepperTrigger>\n    <StepperSeparator />\n  </StepperItem>\n\n  <StepperItem step={2}>\n    <StepperTrigger>\n      <StepperIndicator />\n      <StepperTitle>Dirección</StepperTitle>\n    </StepperTrigger>\n  </StepperItem>\n</Stepper>",
+        "vanilla": "// <ol class=\\\"nds-stepper\\\"> › <li class=\\\"nds-stepper-item\\\"> › <button class=\\\"nds-stepper-trigger\\\">\nconst stepper = createStepper({\n  'aria-label': 'Progreso del registro',\n  labels: { completed: 'Etapa completada', current: 'Etapa actual' },\n  onStepSelect: irA,\n});\n\nconst cuenta = createStepperItem({ step: 1 });\nconst gatilloCuenta = createStepperTrigger();\ngatilloCuenta.append(\n  createStepperIndicator(),\n  createStepperTitle({ text: 'Cuenta' }),\n  createStepperDescription({ text: 'Tus datos' }),\n);\ncuenta.append(gatilloCuenta, createStepperSeparator());\n\nstepper.append(cuenta);\n\n// Resolve o estado de cada etapa a partir do valor atual do fluxo.\nsetStepperValue(stepper, 2);",
+        "angular": "<ol\n  ndsStepper\n  [value]=\"2\"\n  aria-label=\"Progreso del registro\"\n  [labels]=\"{ completed: 'Etapa completada', current: 'Etapa actual' }\"\n  (stepSelect)=\"irA()\"\n>\n  <li ndsStepperItem [step]=\"1\">\n    <button ndsStepperTrigger>\n      <span ndsStepperIndicator></span>\n      <span ndsStepperTitle>Cuenta</span>\n      <span ndsStepperDescription>Tus datos</span>\n    </button>\n    <div ndsStepperSeparator></div>\n  </li>\n\n  <li ndsStepperItem [step]=\"2\">\n    <button ndsStepperTrigger>\n      <span ndsStepperIndicator></span>\n      <span ndsStepperTitle>Dirección</span>\n    </button>\n  </li>\n</ol>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Úsalo cuando el flujo tiene un orden obligatorio y la persona necesita saber dónde está y cuánto falta.",
+        "item2": "Entre tres y seis etapas. Con dos, el indicador no informa nada; por encima de seis, la etiqueta no cabe y el flujo pide otra división.",
+        "item3": "Dale nombre al flujo en la raíz — sin él, el lector de pantalla anuncia una lista sin decir de qué progreso se trata.",
+        "item4": "Pasa las etiquetas de estado del flujo en la raíz. La marca de verificación es visual; sin ellas, quien usa lector de pantalla no distingue completada de futura.",
+        "item5": "Marca como no disponible la etapa que aún no puede abrirse, en lugar de dejarla enfocable sin destino."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Registro dividido en etapas obligatorias",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Secciones independientes, en cualquier orden",
+          "u": "No",
+          "a": "Tabs"
+        },
+        "item3": {
+          "s": "Posición dentro de una jerarquía de páginas",
+          "u": "No",
+          "a": "Breadcrumb"
+        },
+        "item4": {
+          "s": "Operación única con duración medible",
+          "u": "No",
+          "a": "Progress"
+        },
+        "item5": {
+          "s": "Flujo largo, de ocho etapas o más",
+          "u": "No",
+          "a": "Agrupar en fases y usar un Stepper por fase"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "StepperTitle",
+            "format": "Sustantivo · sin punto · máx. 2 palabras",
+            "good": "\"Cuenta\", \"Pago\"",
+            "bad": "\"Etapa 1\", \"Completa tus datos de cuenta\""
+          },
+          "description": {
+            "name": "StepperDescription",
+            "format": "Frase corta · sin punto · máx. 4 palabras",
+            "good": "\"Tus datos\", \"Dónde entregar\"",
+            "bad": "\"Haz clic aquí\", \"Etapa opcional del formulario de registro\""
+          },
+          "stateLabel": {
+            "name": "Etiqueta de estado",
+            "format": "Adjetivo de estado · leído solo por lector de pantalla",
+            "good": "\"Etapa completada\", \"Etapa actual\"",
+            "bad": "\"OK\", \"¡Listo!\""
+          },
+          "flowName": {
+            "name": "Nombre del flujo",
+            "format": "Sustantivo + complemento · describe el progreso",
+            "good": "\"Progreso del registro\"",
+            "bad": "\"Stepper\", \"Etapas\""
+          }
+        }
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "Distingue los estados por forma y por palabra, no solo por color.",
+        "dont": "No dejes la diferencia entre completada y futura solo en el color del círculo."
+      },
+      "pair2": {
+        "do": "Marca la etapa actual con aria-current para el lector de pantalla.",
+        "dont": "No anuncies el cambio de etapa por región viva — el indicador se reanuncia en cada avance y corta la lectura del resto de la pantalla."
+      },
+      "pair3": {
+        "do": "Haz no disponible la etapa que aún no puede abrirse.",
+        "dont": "No dejes un control enfocable que no lleva a ningún sitio."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Composiciones",
+      "compositions": {
+        "wizard": "Flujo completo — el indicador sobre el panel de la etapa, con los controles de volver y continuar debajo.",
+        "withDescriptions": "Etapas con texto de apoyo bajo el título, para cuando el nombre por sí solo no basta."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "inactive": {
+        "label": "Inactive",
+        "trigger": "Etapa posterior a la actual",
+        "behavior": "Aún no alcanzada — círculo neutro con el número de la etapa."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "Etapa igual al valor actual",
+        "behavior": "Etapa actual — círculo en el primario y <code>aria-current=\"step\"</code> en el control."
+      },
+      "completed": {
+        "label": "Completed",
+        "trigger": "Etapa anterior a la actual, o marcada como completada",
+        "behavior": "Completada — el número deja paso a una marca de verificación, y el trazo hasta la siguiente etapa acompaña el color."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Etapa marcada como no disponible",
+        "behavior": "No disponible — el control sale del orden de tabulación y el elemento deja de responder al puntero."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "number",
+          "default": "1",
+          "required": "No",
+          "description": "Número de la etapa actual, contando desde 1. De él cada etapa deriva su propio estado."
+        },
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Nombre accesible del flujo, en la raíz. Sin él el lector de pantalla anuncia solo una lista."
+        },
+        "onStepSelect": {
+          "type": "(step: number) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback de selección de etapa, disparado por el control. Sin él los controles siguen siendo enfocables y sin efecto, así que decláralo o marca las etapas como no disponibles."
+        },
+        "labels": {
+          "type": "{ completed?: string; current?: string }",
+          "default": "—",
+          "required": "No",
+          "description": "Palabras de estado del flujo, en la raíz — <code>completed</code> y <code>current</code>. Quedan solo para lector de pantalla y son lo que separa completada de futura para quien no ve la marca."
+        },
+        "step": {
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Número de esta etapa, en el elemento. Define la posición y, comparado con el valor actual, el estado."
+        },
+        "completed": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Fuerza que la etapa cuente como completada aunque esté después de la actual, en el elemento."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Hace la etapa no disponible, en el elemento: el control sale del orden de tabulación y el puntero deja de alcanzarla."
+        },
+        "class": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases .nds-* adicionales."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": {
+        "react": "// Etapa fuera de orden marcada como completada\n<StepperItem step={4} completed>…</StepperItem>\n\n// Etapa que aún no puede abrirse\n<StepperItem step={3} disabled>…</StepperItem>\n\n// Indicador con contenido propio en lugar del número\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
+        "vue": "<!-- Etapa fuera de orden marcada como completada -->\n<StepperItem :step=\"4\" completed>…</StepperItem>\n\n<!-- Etapa que aún no puede abrirse -->\n<StepperItem :step=\"3\" disabled>…</StepperItem>\n\n<!-- Indicador con contenido propio en lugar del número -->\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
+        "svelte": "<!-- Etapa fuera de orden marcada como completada -->\n<StepperItem step={4} completed>…</StepperItem>\n\n<!-- Etapa que aún no puede abrirse -->\n<StepperItem step={3} disabled>…</StepperItem>\n\n<!-- Indicador con contenido propio en lugar del número -->\n<StepperIndicator>{#snippet children()}<CreditCard aria-hidden=\"true\" />{/snippet}</StepperIndicator>",
+        "vanilla": "// Etapa fuera de orden marcada como completada\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Etapa que aún no puede abrirse\nconst bloqueada = createStepperItem({ step: 3, disabled: true });\n\n// Indicador con contenido propio en lugar del número\nconst indicador = createStepperIndicator();\nindicador.replaceChildren(iconoTarjeta());",
+        "angular": "<!-- Etapa fuera de orden marcada como completada -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Etapa que aún no puede abrirse -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicador con contenido propio en lugar del número -->\n<span ndsStepperIndicator><nds-icon name=\"credit-card\" /></span>"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "gap": {
+          "class": ".nds-stepper",
+          "part": "Espacio entre una etapa y la siguiente"
+        },
+        "itemGap": {
+          "class": ".nds-stepper-item",
+          "part": "Espacio entre el control de la etapa y el trazo"
+        },
+        "triggerGap": {
+          "class": ".nds-stepper-trigger",
+          "part": "Espacio interno y distancia entre indicador, título y descripción"
+        },
+        "triggerRadius": {
+          "class": ".nds-stepper-trigger",
+          "part": "Redondeo del objetivo de foco"
+        },
+        "ring": {
+          "class": ".nds-stepper-trigger:focus-visible",
+          "part": "Color del anillo de foco"
+        },
+        "ringHalo": {
+          "class": ".nds-stepper-trigger:focus-visible",
+          "part": "Halo que separa el anillo del fondo"
+        },
+        "indicatorSize": {
+          "class": ".nds-stepper-indicator",
+          "part": "Diámetro del círculo, en unidad relativa — acompaña la densidad y el tamaño de fuente"
+        },
+        "indicatorRadius": {
+          "class": ".nds-stepper-indicator",
+          "part": "Redondeo que cierra el círculo"
+        },
+        "indicatorBg": {
+          "class": ".nds-stepper-indicator",
+          "part": "Fondo de la etapa aún no alcanzada"
+        },
+        "indicatorFg": {
+          "class": ".nds-stepper-indicator",
+          "part": "Número de la etapa aún no alcanzada"
+        },
+        "activeBg": {
+          "class": ".nds-stepper-item[data-state=\"active\"] .nds-stepper-indicator",
+          "part": "Fondo del indicador de la etapa actual"
+        },
+        "activeFg": {
+          "class": ".nds-stepper-item[data-state=\"active\"] .nds-stepper-indicator",
+          "part": "Número de la etapa actual"
+        },
+        "completedBg": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-indicator",
+          "part": "Fondo del indicador de la etapa completada"
+        },
+        "completedFg": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-indicator",
+          "part": "Marca de verificación de la etapa completada"
+        },
+        "titleSize": {
+          "class": ".nds-stepper-title",
+          "part": "Tamaño del nombre de la etapa"
+        },
+        "titleWeight": {
+          "class": ".nds-stepper-title",
+          "part": "Peso del nombre de la etapa"
+        },
+        "descriptionSize": {
+          "class": ".nds-stepper-description",
+          "part": "Tamaño del texto de apoyo"
+        },
+        "descriptionColor": {
+          "class": ".nds-stepper-description",
+          "part": "Color del texto de apoyo"
+        },
+        "separator": {
+          "class": ".nds-stepper-separator",
+          "part": "Color del trazo entre etapas"
+        },
+        "separatorLength": {
+          "class": ".nds-stepper-separator",
+          "part": "Longitud mínima del trazo"
+        },
+        "separatorCompleted": {
+          "class": ".nds-stepper-item[data-state=\"completed\"] .nds-stepper-separator",
+          "part": "Color del trazo que sale de una etapa completada"
+        },
+        "separatorDisabled": {
+          "class": ".nds-stepper-item[data-disabled] .nds-stepper-separator",
+          "part": "Color del trazo de una etapa no disponible"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* El trazo ocupa el ancho sobrante: para una línea continua entre\n   etapas, deja crecer el elemento. */\n.checkout-stepper .nds-stepper-item { flex: 1; }\n.checkout-stepper .nds-stepper-item:last-child { flex: 0; }\n\n/* En pantallas estrechas, solo la etapa actual mantiene la etiqueta visible. */\n@media (max-width: 40rem) {\n  .checkout-stepper .nds-stepper-item:not([data-state=\"active\"]) .nds-stepper-title,\n  .checkout-stepper .nds-stepper-description { display: none; }\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.2 AA: 1.3.1, 1.4.1, 1.4.4, 2.1.1, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "La raíz es una lista ordenada — el orden y la cantidad de etapas los anuncia la propia estructura, sin texto extra.",
+        "item2": "<code>aria-current=\"step\"</code> en el control de la etapa actual; ningún otro control lo lleva.",
+        "item3": "El estado nunca depende solo del color — la etapa completada cambia el número por una marca de verificación, y la etiqueta de estado lleva la palabra al lector de pantalla.",
+        "item4": "Indicador y trazo son decoración y quedan fuera del árbol de accesibilidad.",
+        "item5": "La etapa no disponible sale del orden de tabulación, en lugar de volverse una parada de foco sin destino.",
+        "item6": "No hay región viva — el avance de etapa no se reanuncia por encima de la lectura del resto de la pantalla.",
+        "item7": "El círculo del indicador se dimensiona en unidad relativa y crece junto con el texto hasta el 200%."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Mueve el foco al control de la siguiente etapa disponible.",
+        "shiftTab": "Mueve el foco al control de la etapa anterior disponible.",
+        "enter": "Selecciona la etapa enfocada.",
+        "space": "Selecciona la etapa enfocada."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "list": "La raíz es una lista ordenada, y cada etapa es un elemento de esa lista",
+        "current": "<code>aria-current=\"step\"</code> en el control de la etapa actual",
+        "hidden": "<code>aria-hidden=\"true\"</code> en el indicador y en el trazo",
+        "label": "Nombre accesible del flujo en la raíz, proporcionado por la aplicación"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "announce": "Anuncia el nombre del flujo, cuántas etapas hay y la posición de cada una",
+        "current": "Anuncia \"etapa actual\" en el control que lleva aria-current",
+        "completed": "Anuncia la etiqueta de estado de las etapas completadas",
+        "disabled": "Anuncia las etapas no disponibles como no disponibles, y el foco no se posa en ellas"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "tabs": {
+          "name": "Tabs",
+          "description": "Secciones independientes, accesibles en cualquier orden."
+        },
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Posición en una jerarquía de páginas, no en un flujo."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Progreso continuo de una operación única."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Campos y validación de cada etapa del flujo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>El estado es derivado, no escrito a mano</strong> — cada etapa compara su propio número con el valor actual del flujo y llega sola a completada, actual o aún no alcanzada. Marcar completada explícitamente solo es necesario cuando el flujo acepta un orden fuera de lo común.",
+      "item2": "<strong>La raíz es una lista ordenada</strong> — el sangrado y el marcador que el navegador aplica a las listas se eliminan en la hoja compartida; el elemento pasa a ser caja flexible y el marcador deja de existir.",
+      "item3": "<strong>El trazo vive dentro de la etapa</strong>, después del control, y no entre las etapas. Así hereda el estado del elemento que lo precede y acompaña el color de una etapa completada sin regla extra.",
+      "item4": "<strong>Sin región viva</strong> — el cambio de etapa no lo anuncia el indicador. Quien anuncia el avance es el panel que cambió de contenido, y es hacia él que la aplicación mueve el foco.",
+      "item5": "<strong>El círculo tiene dimensión fija a propósito</strong>, y es relativa: el token de espaciado se declara en <code>rem</code>, así que el indicador crece con la densidad y con el tamaño de fuente del navegador, sin atrapar el texto que vive fuera de él."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos disparados por las páginas de documentación que usan el componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "step_change": {
+          "trigger": "La persona selecciona una etapa en la demostración",
+          "payload": "{ component: \"stepper\", step, total, location }"
+        },
+        "docs_section_viewed": {
+          "trigger": "La sección de la página queda visible durante dos segundos continuos",
+          "payload": "{ section_id, component_name: \"stepper\", locale }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Qué debe ocurrir en cada posición del flujo.",
+        "item1": {
+          "action": "Renderizar con el valor en la segunda etapa",
+          "result": "La primera etapa queda completada, la segunda actual y las siguientes aún no alcanzadas",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Seleccionar el control de una etapa disponible",
+          "result": "El callback de selección recibe el número de esa etapa",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Marcar una etapa como no disponible",
+          "result": "El control no recibe foco y la selección no se dispara",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Marcar como completada una etapa posterior a la actual",
+          "result": "La etapa muestra la marca de verificación en lugar del número",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "La raíz es una lista ordenada con un elemento por etapa",
+        "item3": "Exactamente un control lleva aria-current=\"step\"",
+        "item4": "Indicador y trazo tienen aria-hidden=\"true\"",
+        "item5": "La etapa no disponible está fuera del orden de tabulación",
+        "item6": "Ningún elemento del indicador declara aria-live ni role de status"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "required": "Obligatorio",
+        "description": "Estados que Chromatic debe capturar.",
+        "item1": {
+          "story": "Playground",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Completed",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Wizard",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Buenas prácticas",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "compositions": "Composiciones",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
