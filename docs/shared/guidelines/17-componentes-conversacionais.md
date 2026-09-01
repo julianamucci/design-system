@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (42)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (43)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -272,9 +272,10 @@ falta, nomeada — nunca uma folha nova.
 | `tool-timeline` | `tool-group` aberto — as chamadas já chegam na ordem em que aconteceram — com `agent-status` acima (o rótulo que muda enquanto corre, e o relógio) e `.nds-cluster` de `.nds-badge` para as estatísticas de arquivo. Veio da família 2 — ver 5.3 |
 | `code-runner` | `code-block` (o trecho, sempre visível, com a linguagem no rótulo do cabeçalho) + `terminal-block` (a saída pré-formatada, o cursor e como terminou) + `agent-status` (o relógio e o botão de executar, que é o `start` de `AgentStatusIntent`). Pede **uma opção** `actions?: HTMLElement[]` no cabeçalho do `code-block`, onde `.nds-code-block-actions` já é a fila — nem classe nova, nem folha nova. Veio da família 2 — ver 5.3 |
 | `reasoning-effort` | `toggle-group` `type: 'single'` para escolher o nível — que é CONTROLE, e o catálogo já tem outro escrevendo o mesmo campo — mais `context-display` na forma `bar` para o gasto contra o teto do nível escolhido, que é token contra teto como as irmãs. Veio da família 5 — ver 5.3 |
+| `guardrail-notice` | `alert` na variante `warning` — o escudo âmbar entra na coluna que `:has(> svg)` abre, o título é `.nds-alert-title`, a explicação é o `<p>` de `.nds-alert-description`, que a fonte também desenha sempre — mais `.nds-badge` no encaixe `.nds-alert-action`, que o alerta já encosta no fim da linha do cabeçalho com `:has()`, para a etiqueta da política; e as alternativas são `follow-up-suggestions`, que a própria fonte chama de "próximos pedidos sugeridos" e que esta tabela já resolveu em lista de `button` / `pill.css`. Irmã de `error-state` na origem, e a diferença que a fonte reivindica contra ele é a variante. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (78)
+### 5.2 As sete famílias novas (77)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -283,7 +284,7 @@ slug produz 83 folhas e nenhum sistema.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `edit-message`, `message-queue` (13 no catálogo, **11 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `guardrail-notice`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (20 no catálogo — `agent-card`, `tool-timeline` e `code-runner` saíram para a 5.1, ver 5.3 —, **16 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `subagent-list`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `agent-handoff`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (19 no catálogo — `agent-card`, `tool-timeline`, `code-runner` e `guardrail-notice` saíram para a 5.1, ver 5.3 —, **15 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
@@ -742,6 +743,144 @@ legenda não diz.
 
 Contagens: nada muda. A 5.1 fica onde a oitava correção a deixou, em **42**,
 e a 5.2 em **78**; a família 2 continua com **16 componentes**. Somam 120.
+(Números desta correção, não os de hoje: a décima os moveu — ver adiante.)
+
+**Décima correção, e a quinta que atravessa de 5.2 para 5.1**: `guardrail-notice`
+é `alert` `warning` + `follow-up-suggestions` — e as duas contagens mudam junto,
+78 → 77 e 42 → 43. É a primeira em que a peça se parte entre duas entradas que
+JÁ ESTÃO na 5.1, e não entre uma da 5.1 e um primitivo.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia: `title`,
+`explanation`, `policy`, `alternatives: readonly string[]` e
+`onPick: (alternative: string) => void`. Cinco entradas, quatro delas cadeia de
+texto. A anatomia é uma linha de cabeçalho com escudo, título e etiqueta da
+política; um parágrafo de explicação, SEMPRE desenhado; e um terceiro bloco com
+o rótulo "tente em vez disso" e um botão por alternativa, **omitido inteiro**
+quando a lista vem vazia — "the notice then ends after the explanation
+paragraph", diz a fonte, e é ela mesma quem marca a costura.
+
+**A EXECUÇÃO JÁ TERMINOU**, e é essa medida que decide todo o resto. A metade de
+runtime da fonte não detecta nada acontecendo: ela lê o estado FINAL da mensagem
+— `type === "incomplete"` com `reason === "content-filter"` — e o `onPick`
+"envia o texto como uma nova mensagem de quem pergunta e começa uma execução com
+ela, igual ao que aconteceria se a pessoa tivesse digitado e enviado". Nada está
+pendurado esperando resposta. Quem lê pode ignorar o aviso inteiro, escrever
+outra coisa, e o produto fica exatamente no estado em que estava.
+
+**A primeira pergunta da triagem tem, então, resposta na fonte: é AVISO, não é
+pergunta.** Uma pergunta espera pela resposta; esta não espera por nada. É
+justamente o contrário do cartão de autorização, cuja região viva existe porque
+"sem ele, NADA MAIS ACONTECE" — um impasse dos dois lados, com a máquina parada.
+Aqui não há impasse: escolher uma alternativa não desbloqueia turno nenhum,
+ABRE um turno novo. E `onPick` devolvendo a cadeia escolhida não é o evento da
+escolha do cartão, que diz qual controle respondeu à pergunta que estava de pé;
+é o texto do próximo pedido.
+
+A segunda pergunta — o que resta de próprio depois da §7 — tem resposta na fonte
+também, e escrita: título, explicação e alternativas "is content your app
+supplies; the runtime only tells you that the stop happened". O que a barreira
+bloqueou, se dá para insistir, o que a alternativa oferece em troca: tudo
+política de produto, tudo do lado de fora pela §7. E a `policy` é o caso mais
+literal de todos — é uma cadeia de produto (`"content-filter"`, `"policy"`)
+mostrada como etiqueta curta. Tirada a política e tirado o runtime, sobra uma
+caixa de atenção com ícone, título, parágrafo, etiqueta e uma fileira de botões.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montado inteiro, o aviso não deixa buraco — e a fonte mesma
+  já diz de que ele é feito, como a quinta e a sétima correções leram nas suas:
+  a raiz é "a superfície `paper` compartilhada", e o tom âmbar do escudo e o
+  `mono` da etiqueta "vêm os dois de `surfaces.tsx`". Superfície compartilhada
+  declarada na origem — o oposto exato do que a nona correção leu em
+  `computer-use`, que declarava classe utilitária literal no próprio elemento.
+
+  As duas metades já estão desenhadas aqui. A caixa é `.nds-alert` na variante
+  `nds-alert-warning`, e o âmbar não é semelhança: a variante existe, é a cor de
+  atenção do sistema, e a fonte separa a si mesma de `error-state` exatamente
+  por ser parada de política e não erro de transporte — enquanto `error-state`,
+  que já está nesta tabela, é o mesmo alerta na variante destrutiva. **A
+  diferença que a fonte reivindica contra a irmã é um argumento do que já
+  existe**, que é o critério desta seção, palavra por palavra. `:has(> svg)`
+  abre a coluna do escudo e o pinta com a cor da variante; `.nds-alert-title`
+  leva o título — em `--foreground`, porque a folha já mediu que 14px semibold
+  em cor semântica reprova os 4.5:1; `.nds-alert-description` leva a explicação
+  em `<p>` de margem zerada, e é uma grade feita para empilhar os filhos com
+  afastamento constante, então o rótulo e a fileira de botões entram nela sem
+  regra nova. A etiqueta da política é `.nds-badge` dentro de
+  `.nds-alert-action`, que o alerta já posiciona no fim da linha do cabeçalho
+  com `:has()` — o MESMO encaixe que a quinta correção leu em `.nds-card-action`
+  para o distintivo de versão. As alternativas são `follow-up-suggestions`, que
+  não é peça a inventar: é entrada do catálogo já resolvida nesta tabela em
+  lista de `button` / `pill.css`, e a fonte chama as suas de "próximos pedidos
+  sugeridos", que é a definição daquela. Nenhuma classe nova, nenhuma nomeada
+  como faltando.
+
+  Um traço da fonte a composição não reproduz, e por decisão já escrita: ela
+  desenha os botões A PARTIR das cadeias, e ainda os desenha quando não há
+  `onPick`, inertes. A §2 dá o espaço em vez do controle — `HTMLElement[]`,
+  como o cartão de autorização e a conversa —, e botão que não faz nada é
+  parada de tabulação sem destino, que é a mesma decisão 3 do bloco de terminal
+  ("caixa vazia com parada de tabulação dentro é dar foco a lugar nenhum"). A
+  composição não herda o defeito da fonte.
+- **Estado, não** — e aqui o sinal ficou MUDO pela terceira vez. Não há booleano
+  de estado, não há união encolhida, não há máquina de estados nenhuma: a peça
+  não RECEBE estado. O único estado da fonte está na mensagem, não no
+  componente, e é a união de encerramento (`cancelled`, `length`, `error`,
+  `other`, `content-filter`) que a §1 já deixa do lado de fora com o resto do
+  runtime — "standalone você decide quando mostrar", diz a fonte.
+
+  E pela terceira vez o que informa é PARA ONDE a ausência leva. No
+  `reasoning-effort` ela expunha um `onSelect`, que é assinatura de controle e
+  tinha dono; no `computer-use` ela expunha um PONTO, que era eixo que este
+  vocabulário nunca teve. Aqui ela expõe um `onPick` que devolve a cadeia
+  escolhida para virar a próxima mensagem — assinatura de sugestão de
+  continuação, e o dono dela é `follow-up-suggestions`, na 5.1. Mesma forma do
+  `reasoning-effort`: a ausência de estado descobriu uma chamada de volta cujo
+  dono já existe.
+- **Vocabulário, não.** Nenhum tipo novo, e a fonte nem declara um: são quatro
+  cadeias soltas e um arranjo de cadeias. `alternatives: readonly string[]` é a
+  mesma forma e a mesma regra de `TerminalBlockOptions.lines`, que a sétima
+  correção já leu — arranjo de cadeias, e quem fatia é quem consome. `policy`
+  não é vocabulário nem por engano: é dado de produto, e a §7 o entrega a quem
+  monta, como a oitava correção fez com a tabela de faixas de esforço. É a
+  distância inteira para `computer-use`, que sobreviveu por ter `x` e `y` sem
+  par em lugar nenhum.
+
+E o teste da família, que é o quarto — e este é o mais forte dos quatro, porque
+é NEGATIVO: **ela não responde ao eixo.** As demais dizem o que está
+acontecendo, há quanto tempo, e o que fazer a respeito. Aqui não está
+acontecendo nada — a execução terminou —, não há duração nenhuma, e o que se
+oferece não age sobre o que aconteceu: começa outra coisa. `tool-timeline` e
+`computer-use` também não tinham duração, mas as duas eram sobre uma execução em
+CURSO; esta é sobre uma que parou.
+
+Vale a comparação que a quinta correção montou e que aqui se fecha do outro
+lado. `approval-card` também não tem máquina de estados e mesmo assim ficou na
+família: ele é o OUTRO LADO de `ToolCallState` `pending`, e é essa amarra que o
+segura — há uma chamada de pé, esperando. `agent-card` saiu por não ter amarra
+nenhuma. Esta não tem amarra nenhuma **pelo motivo oposto ao dele**: lá nada
+tinha começado, aqui tudo já acabou. Nos dois extremos do eixo, o que sobra não
+é peça desta família.
+
+Some a isso o que a §1 tira, como tirou de `agent-card`: a metade que dá nome à
+entrada — reconhecer a parada de política pelo `reason` da mensagem — é runtime,
+não porta, e a §2 é literal a respeito. Um aviso que soubesse RECONHECER a
+barreira traria de volta exatamente o runtime que esta família existe para não
+ter.
+
+**Reversível**, como as outras oito: se ao construir `elicitation-form` ou
+`checkpoint-history` aparecer recusa com desenho, estado ou vocabulário próprios
+— uma parada que chegue como DADO em vez de decisão de quem monta, um estado de
+recusa que `RunStatus` não modele, alternativa que seja resposta a uma pergunta
+de pé em vez de próximo pedido —, `guardrail-notice` desdobra de volta para a
+5.2, com o motivo. E há um segundo gatilho, deste lado: se `follow-up-suggestions`
+pedir desenho próprio ao ser montada, a metade das alternativas vira variante
+DELA — e continua não sendo peça da 2.
+
+Contagens, somadas família a família: 1 tem 13, 2 tem 19, 3 tem 9, 4 tem 20, 5
+tem 5, 6 tem 8 e 7 tem 3 — **77** na 5.2. A 5.1 vai a **43** (40 linhas, e duas
+delas carregam duas entradas). Somam 120. A família 2 fica com **15
+componentes**.
 
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
@@ -796,6 +935,16 @@ ausência de estado leva. No `reasoning-effort` ela expunha um `onSelect`, que �
 assinatura de controle e por isso tinha dono; aqui ela expõe um PONTO, que é um
 eixo que este vocabulário nunca teve. Achatar um vocabulário existente é sinal;
 não tocar nele não é sinal de nada.
+
+**Terceiro sinal mudo, medido na décima correção**, e ele fecha a sub-regra:
+`guardrail-notice` não declara estado NENHUM — a peça não recebe estado, e a
+única união da fonte está na mensagem, fora dela. Colapsou. Com três leituras
+mudas e dois desfechos, o que a ausência de estado faz é **empurrar a decisão
+para a assinatura que sobrou no lugar dela**, e aí valem os três testes de
+sempre: `onSelect` e `onPick` são chamadas de volta cujo dono já existia, e as
+duas entradas colapsaram; `activeIndex` sobre um par de coordenadas era eixo sem
+dono, e aquela sobreviveu. Não é um quarto teste — é onde olhar quando o sinal
+não fala.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, ou uma união com uma palavra a menos que `RunStatus`/`ToolCallState`,
