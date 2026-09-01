@@ -117,11 +117,17 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
  * `scrollable-region-focusable` do axe). O `flex` do CSS compartilhado é o que
  * mantém o rodapé no lugar enquanto o corpo rola.
  */
-function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
+function SheetBody({
+  className,
+  "aria-label": ariaLabel,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-body"
       tabIndex={0}
+      role={ariaLabel ? "group" : undefined}
+      aria-label={ariaLabel}
       className={cn("nds-sheet-body", className)}
       {...props}
     />

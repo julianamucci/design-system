@@ -21,6 +21,24 @@ export type SheetOptions = {
   content: HTMLElement;
   footer?: HTMLElement;
   /**
+   * Nome acessível do CORPO que rola. Sem padrão, de propósito.
+   *
+   * O corpo entra na ordem de tabulação porque rola (WCAG 2.1.1), e uma parada
+   * de teclado precisa de papel e nome — a regra 6 da §8. O conteúdo é o que
+   * quem monta pôs lá dentro, e só ali se sabe o que é; padrão genérico
+   * ("Conteúdo") anunciaria sem informar.
+   *
+   * Não herdamos o título do painel: ele já foi anunciado na abertura, e
+   * repeti-lo aqui informaria pouco pelo que custa. Sem nome NÃO emitimos papel
+   * nenhum — `aria-label` em elemento sem papel é atributo proibido, e o axe
+   * acusa `aria-prohibited-attr`.
+   *
+   * `group` e não `region`: o corpo já vive dentro de um diálogo nomeado, e um
+   * marco aninhado num diálogo não acrescenta navegação, só entrada na lista.
+   */
+  bodyLabel?: string;
+
+  /**
    * Nome acessível do botão de fechar.
    *
    * Era a string `Fechar` cravada aqui dentro, e essa era a única string de
@@ -101,6 +119,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     description,
     content,
     footer,
+    bodyLabel,
     closeLabel = 'Fechar',
     onOpenChange,
     onClose,
@@ -200,6 +219,10 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     bodyEl.className = 'nds-sheet-body';
     bodyEl.dataset.slot = 'sheet-body';
     bodyEl.setAttribute('tabindex', '0');
+    if (bodyLabel) {
+      bodyEl.setAttribute('role', 'group');
+      bodyEl.setAttribute('aria-label', bodyLabel);
+    }
     bodyEl.appendChild(content);
     panelEl.appendChild(bodyEl);
 
