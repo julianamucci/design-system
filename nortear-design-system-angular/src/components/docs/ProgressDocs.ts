@@ -528,7 +528,7 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
         name: t('variants.items.withLabel'),
         description: stripHtml(t('variants.styles.withLabel')),
         code: CODE_WITH_LABEL,
-        trackId: 'with-label',
+        trackId: 'withLabel',
         preview: this.tplVarWithLabel(),
       },
       {

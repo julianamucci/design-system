@@ -885,7 +885,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
         name: t('variants.compositions.inForm.name'),
         description: t('variants.compositions.inForm.description'),
         useWhen: t('variants.compositions.inForm.use'),
-        trackId: 'in-form',
+        trackId: 'inForm',
         code: CODE_IN_FORM,
         preview: this.tplCompForm(),
       },

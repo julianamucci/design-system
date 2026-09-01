@@ -652,7 +652,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
         name: t('states.withoutTitle.label'),
         description: stripHtml(t('states.withoutTitle.behavior')),
         code: CODE_NO_TITLE,
-        trackId: 'without-title',
+        trackId: 'withoutTitle',
         preview: this.tplVarSemTitulo(),
       },
     ];

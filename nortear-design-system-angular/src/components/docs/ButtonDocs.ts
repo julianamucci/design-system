@@ -562,7 +562,7 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
       { name: t('variants.items.destructive'), description: t('variants.items.destructive'), trackId: 'destructive', preview: this.tplVarDestructive() },
       { name: t('variants.items.outline'),     description: t('variants.items.outline'),     trackId: 'outline',     preview: this.tplVarOutline()     },
       { name: t('variants.items.ghost'),       description: t('variants.items.ghost'),       trackId: 'ghost',       preview: this.tplVarGhost()       },
-      { name: t('variants.items.asLink.name'), description: t('variants.items.asLink.description'), trackId: 'link', preview: this.tplVarLink()        },
+      { name: t('variants.items.asLink.name'), description: t('variants.items.asLink.description'), trackId: 'asLink', preview: this.tplVarLink()        },
     ];
   });
 
@@ -593,28 +593,28 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
         name: t('variants.compositions.iconLeft.name'),
         description: t('variants.compositions.iconLeft.description'),
         useWhen: t('variants.compositions.iconLeft.use'),
-        trackId: 'icon-left',
+        trackId: 'iconLeft',
         preview: this.tplCompIconLeft(),
       },
       {
         name: t('variants.compositions.iconRight.name'),
         description: t('variants.compositions.iconRight.description'),
         useWhen: t('variants.compositions.iconRight.use'),
-        trackId: 'icon-right',
+        trackId: 'iconRight',
         preview: this.tplCompIconRight(),
       },
       {
         name: t('variants.compositions.actionPair.name'),
         description: t('variants.compositions.actionPair.description'),
         useWhen: t('variants.compositions.actionPair.use'),
-        trackId: 'action-pair',
+        trackId: 'actionPair',
         preview: this.tplCompActionPair(),
       },
       {
         name: t('variants.compositions.destructiveWithIcon.name'),
         description: t('variants.compositions.destructiveWithIcon.description'),
         useWhen: t('variants.compositions.destructiveWithIcon.use'),
-        trackId: 'destructive-with-icon',
+        trackId: 'destructiveWithIcon',
         preview: this.tplCompDestructiveIcon(),
       },
     ];

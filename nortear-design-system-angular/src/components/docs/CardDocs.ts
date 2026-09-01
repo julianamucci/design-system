@@ -507,8 +507,8 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
     return [
       { name: t('variants.items.default'),    description: t('variants.items.default'),    code: CODE_DEFAULT, trackId: 'default',     preview: this.tplVarDefault() },
       { name: t('variants.items.sm'),         description: t('variants.items.sm'),         trackId: 'sm',         preview: this.tplVarSm()     },
-      { name: t('variants.items.withFooter'), description: t('variants.items.withFooter'), code: CODE_FOOTER,  trackId: 'with-footer', preview: this.tplVarFooter() },
-      { name: t('variants.items.withAction'), description: t('variants.items.withAction'), code: CODE_ACTION,  trackId: 'with-action', preview: this.tplVarAction() },
+      { name: t('variants.items.withFooter'), description: t('variants.items.withFooter'), code: CODE_FOOTER,  trackId: 'withFooter', preview: this.tplVarFooter() },
+      { name: t('variants.items.withAction'), description: t('variants.items.withAction'), code: CODE_ACTION,  trackId: 'withAction', preview: this.tplVarAction() },
     ];
   });
 

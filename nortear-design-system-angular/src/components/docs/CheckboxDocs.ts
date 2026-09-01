@@ -426,8 +426,8 @@ export class NdsCheckboxDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { name: t('variants.items.default'),         description: t('variants.items.default'),         trackId: 'default',          preview: this.tplVarDefault()         },
-      { name: t('variants.items.withLabel'),       description: t('variants.items.withLabel'),       trackId: 'with-label',       preview: this.tplVarWithLabel()       },
-      { name: t('variants.items.withDescription'), description: t('variants.items.withDescription'), trackId: 'with-description', preview: this.tplVarWithDescription() },
+      { name: t('variants.items.withLabel'),       description: t('variants.items.withLabel'),       trackId: 'withLabel',       preview: this.tplVarWithLabel()       },
+      { name: t('variants.items.withDescription'), description: t('variants.items.withDescription'), trackId: 'withDescription', preview: this.tplVarWithDescription() },
     ];
   });
 

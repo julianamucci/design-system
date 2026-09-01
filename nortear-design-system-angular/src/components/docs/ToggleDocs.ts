@@ -493,7 +493,7 @@ export class NdsToggleDocs implements AfterViewInit, OnDestroy {
       {
         name: t('variants.items.withLabel'),
         description: stripHtml(t('variants.styles.withLabel')),
-        trackId: 'with-label',
+        trackId: 'withLabel',
         preview: this.tplVarWithLabel(),
       },
       {

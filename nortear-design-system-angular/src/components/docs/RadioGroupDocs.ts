@@ -676,7 +676,7 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
         name: t('variants.compositions.inForm.name'),
         description: t('variants.compositions.inForm.description'),
         useWhen: t('variants.compositions.inForm.use'),
-        trackId: 'in-form',
+        trackId: 'inForm',
         preview: this.tplCompInForm(),
       },
     ];
