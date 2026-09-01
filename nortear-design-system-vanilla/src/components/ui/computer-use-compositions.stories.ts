@@ -89,7 +89,18 @@ export const BesideRunStatus: Story = {
       await expect(
         canvasElement.querySelector('[data-slot="agent-status-action"]'),
       ).not.toBeNull();
-      await expect(piece.querySelector('button')).toBeNull();
+      // A tela de demonstração tem um botão dentro, e ele é da FOTO: `inert` o
+      // tira da ordem de foco e da árvore de acessibilidade. O que a asserção
+      // cobra é que a peça não ofereça ação PRÓPRIA — nada fora da tela.
+      //
+      // A versão anterior perguntava por qualquer `button` e teria reprovado na
+      // primeira vez que a suíte de navegador rodasse, acusando a foto. As
+      // quatro portas acharam isto ao traduzir; aqui ficou porque a referência
+      // já estava commitada.
+      const own = [...piece.querySelectorAll('button')].filter(
+        (el) => el.closest('[inert]') === null,
+      );
+      await expect(own).toEqual([]);
     });
 
     await step('Nenhuma contém a outra', async () => {
