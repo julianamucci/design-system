@@ -989,7 +989,21 @@ function createChartTable(opts: ChartOptions, describes: string): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'chart-data';
   wrapper.className = showData ? 'nds-table-wrapper' : 'nds-sr-only';
-  if (showData) wrapper.tabIndex = 0;
+  // Papel e nome só quando a tabela é VISÍVEL, e o nome é a descrição que já
+  // existe — a mesma que nomeia o desenho e que é a legenda da tabela. Não
+  // há prop nova: quem descreveu o gráfico já descreveu esta região.
+  //
+  // Escondida (`.nds-sr-only`) a caixa não rola e não recebe foco, então
+  // não é região de rolagem e não leva papel nenhum: papel sem foco seria
+  // ruído no leitor de tela.
+  //
+  // `group` e não `region` — `region` com nome vira marco, e um painel
+  // empilha vários gráficos.
+  if (showData) {
+    wrapper.tabIndex = 0;
+    wrapper.setAttribute('role', 'group');
+    wrapper.setAttribute('aria-label', describes);
+  }
 
   const table = document.createElement('table');
   table.className = 'nds-table';

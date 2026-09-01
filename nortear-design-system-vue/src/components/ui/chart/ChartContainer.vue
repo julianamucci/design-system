@@ -537,7 +537,23 @@ const heightStyle = computed(() =>
 
       <!-- Alternativa textual equivalente. Não é enfeite: é o mesmo dado, em
            forma que leitor de tela, busca e cópia alcançam. -->
-      <div :class="dataClass" :tabindex="showData ? 0 : undefined" data-slot="chart-data">
+      <!-- Papel e nome só quando a tabela é VISÍVEL, e o nome é a descrição que já
+         existe — a mesma que nomeia o desenho e que é a legenda da tabela. Não
+         há prop nova: quem descreveu o gráfico já descreveu esta região.
+
+         Escondida (`.nds-sr-only`) a caixa não rola e não recebe foco, então
+         não é região de rolagem e não leva papel nenhum: papel sem foco seria
+         ruído no leitor de tela.
+
+         `group` e não `region` — `region` com nome vira marco, e um painel
+         empilha vários gráficos. -->
+      <div
+        :class="dataClass"
+        :tabindex="showData ? 0 : undefined"
+        :role="showData ? 'group' : undefined"
+        :aria-label="showData ? accessibleLabel : undefined"
+        data-slot="chart-data"
+      >
         <table class="nds-table">
           <caption>{{ accessibleLabel }}</caption>
           <thead>
