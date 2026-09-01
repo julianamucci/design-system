@@ -206,7 +206,7 @@ O composer aceita `railStart`, e é por ali que `composer-model-picker` e
 não atalho: uma prop por controle faria o composer crescer para sempre, e o
 controle deixaria de servir a quem não tem campo de texto.
 
-A consequência prática vale para as sete famílias: **peça que se encaixa é peça
+A consequência prática vale para as seis famílias: **peça que se encaixa é peça
 autônoma**, e o teste é perguntar se ela faz sentido montada sozinha. Se fizer,
 ela não toca o arquivo do hospedeiro — o que, de quebra, é o que permite
 construí-la em paralelo com as irmãs.
@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (57)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (64)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -287,13 +287,25 @@ falta, nomeada — nunca uma folha nova.
 | `schedule-card` | `.nds-card` com o interruptor no cabeçalho e `.nds-item-group` de `agent-status` embaixo. `.nds-card-header` leva o nome em `.nds-card-title` `.nds-truncate` e a cadência em `.nds-card-description`, com o `switch` em `.nds-card-action` — a grade já abre a segunda coluna com `:has(> .nds-card-action)` e a segunda linha com `:has(> .nds-card-description)`, e a ação já ocupa as duas linhas com `justify-self: end`, sem regra nova. A linha da próxima execução é `.nds-item` `data-size="sm"` com o rótulo em `.nds-item-title` e o instante em `.nds-badge` com `.nds-font-mono`, chegando já escrito como texto — a decisão da contagem do estado da ligação, que é onde esta família já resolveu tempo FUTURO; pausado, o instante dá lugar à PALAVRA, e não ao esmaecimento, que a regra 4 da §8 recusa. O ícone de relógio entra em `.nds-badge > svg`, que já o dimensiona. O histórico é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"`, com o carimbo em `.nds-item-title` e `agent-status` em `.nds-item-actions` — `RunStatus` inteiro no lugar do booleano da fonte, que separa o que falhou do que alguém interrompeu. Sem execução nenhuma, `empty.css`. O que a cadência agenda e o que pausar faz é produto (§7), e a própria fonte já o põe fora da peça. Veio da família 2 — ver 5.3 |
 | `reviewable-diff` | `.nds-card` com um `code-block` por trecho. `.nds-card-header` leva o nome do arquivo em `.nds-card-title` com `.nds-font-mono` e `.nds-truncate`, e a contagem do que já foi decidido em `.nds-badge` com `.nds-font-mono` dentro de `.nds-card-action`, o encaixe que a grade do cabeçalho já abre com `:has(> .nds-card-action)`; `.nds-card-content` recebe `.nds-stack[data-spacing="sm"]` de um `.nds-code-block-root` por trecho, com o intervalo em `.nds-code-block-title` monoespaçado — cadeia que a fonte imprime e nunca reparte, logo nenhum `@@` a interpretar — e, em `.nds-code-block-actions`, os dois controles enquanto o trecho está pendente ou o `.nds-badge` do que foi decidido depois, que é a fila de `actions?: HTMLElement[]` da §2 e não um estado; `.nds-card-footer` leva o que falta decidir e o botão de aplicar. As linhas usam a espécie por linha que `code-diff` já nomeou nesta tabela, dentro de `.nds-code-block-scroll` — que a fonte desta entrada não tem, e é onde a composição fica mais fina que ela. O trecho descartado **não esmaece**: opacidade sozinha separando duas decisões é a codificação que a regra 4 da §8 recusa e que a décima segunda já mediu, e a palavra já está ao lado. A contagem do cabeçalho e o portão do rodapé são derivados de `hunks`, como a própria fonte declara — agregado que é leitura rende função, não desenho. Nenhuma classe nova e nenhuma nomeada como faltando: as opções que `code-runner` e `code-diff` pediam ao `code-block` — `actions`, `lineKinds`, a palavra na calha e o nome da região que rola — já estão de pé. Veio da família 4 — ver 5.3 |
 | `message-branches` | `.nds-cluster[data-spacing="xs"]` de três nós dentro do encaixe `actions` da mensagem do `chat-thread` — que é `.nds-chat-message-actions`, e é onde a PRÓPRIA fonte manda pôr a peça ("put it in the assistant message's action row, next to copy and regenerate"). Os dois controles são `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm` com os chevrons do lucide e nome acessível TEXTUAL (regra 7 da §8); o quadrado de 32 px já passa do alvo de 24 px da regra 10, onde a fonte desenha 24 exatos. A posição é `.nds-badge` com `.nds-font-mono`, o mesmo par que sete linhas desta tabela já usam para contador, e o molde é `{index} de {total}`, que `computer-use` já escreve — palavra do idioma, onde a fonte crava uma barra que em voz alta vira "três barra seis". A resposta ativa NÃO é da peça: é `.nds-chat-message-content`, com `createMarkdown` e `isSafeUrl`, e a própria fonte a dispensa no seu exemplo "stepper only" (`[&>p]:hidden`) e não a tem na faixa de runtime, onde o corpo vem do turno. **Não se compõe com `createPagination`**, e é a única armadilha desta linha: aquele produz `<nav role="navigation">`, e um seletor por turno numa conversa de cinquenta renderia cinquenta landmarks homônimos — a mesma leitura que a vigésima segunda correção fez ao escolher `group` em vez de `region`. O que se aproveita de `pagination` é o CONTRATO (`total`, `current`, `onPageChange`), não o landmark nem a fila de números. Dar a volta nas pontas não se reproduz: um "anterior" que na primeira leva à última é controle cujo nome mente, e a faixa de runtime da própria fonte desabilita nas pontas. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 6 — ver 5.3 |
+| `regenerate-menu` | `composer-model-picker` no encaixe `actions` da mensagem do `chat-thread`, que é `.nds-chat-message-actions`. A API da fonte é a do seletor já CONSTRUÍDO, campo por campo: `options` é `models`, `currentId` é `value`, `onPick` é `onValueChange`, e `open` com `onOpenChange` têm o mesmo nome dos dois lados. `RegenerateOption` — `{ id, label, detail }` — é `ModelOption` sem `badge`, sem `unavailable` e sem `unavailableReason`, e é essa falta que deixa a opção apagada sem poder dizer por que não pode ser escolhida, que é a decisão 2 daquele bloco. O gatilho é `.nds-button` `.nds-button-ghost` com nome acessível TEXTUAL que diz o que ele escolhe (regra 7 da §8, e decisão 1 do bloco), e a marca do escolhido é `aria-selected` na `.nds-composer-model-option`, não a palavra "current" no lugar do detalhe — que a própria fonte admite ser indistinguível de um detalhe que por acaso diga "current". A fonte também não tem clique fora, `Escape` nem cursor de teclado, e diz isso com todas as letras; o seletor construído tem os três. **Falta uma opção, e está nomeada**: `.nds-composer-model-panel` só abre PARA CIMA (`inset-block-end: calc(100% + …)`), porque o composer mora no pé da conversa — numa fila de ações no meio da thread, ou na barra de ferramentas que o docblock do seletor já prevê, o painel precisa da forma para baixo, como `.nds-input-group-addon` já faz com `data-align`. Nem classe nova, nem folha nova. Veio da família 6 — ver 5.3 |
+| `conversation-search` | `.nds-input-group` com o trio de passos ao lado e o trecho corrente abaixo. O campo é `.nds-input-group-control` com a lupa em `.nds-input-group-addon` `data-align="inline-start"`; a posição é `.nds-badge` com `.nds-font-mono` no molde `{index} de {total}`, palavra do idioma onde a fonte crava uma barra; anterior e próximo são `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm` com nome acessível textual — o mesmo trio que `message-branches` resolveu nesta tabela, em `.nds-cluster` e sem classe nova. O trecho corrente é `.nds-item` `.nds-item-muted` com o achado marcado dentro do texto em volta. Os três campos do achado — antes, achado, depois — são `slice` sobre o `excerpt` de `Citation`, e a posição é `(i / (n − 1)) × 100`: a própria fonte calcula os quatro no exemplo, nas DUAS faixas, e agregado que é leitura rende função, não desenho. **Falta uma utilitária, e é a MESMA que `read-aloud` já nomeou**: nada em `docs/shared/styles/` realça palavra dentro de texto corrido fora de `.nds-editor-content .ProseMirror mark`, onde o par de `--accent` a 0.2 com `--accent-foreground` já está medido e explicado — o conserto é levantá-lo para `utilities.css`, utilitária e nunca folha. A trilha de marcas ao lado NÃO se reproduz como a fonte a desenha: ela mora dentro da barra de busca, longe do container que diz mapear; as marcas não são botões e não têm rótulo; e a diferença entre a corrente e as outras é opacidade, que a regra 4 da §8 recusa. Marca sobre a extensão da conversa é a extensão que `ThreadMetrics` já descreve em `chat-scroll.ts`, e se um produto a quiser ela é OPÇÃO do `chat-thread`, na região que rola. Veio da família 6 — ver 5.3 |
+| `thread-search` | `command`. A caixa é `.nds-command-input` com `role="combobox"`, a fila é `.nds-command-list` com `role="listbox"`, cada bloco é `.nds-command-group` com `.nds-command-group-heading` — e o bloco fixado é um grupo como os outros, com o próprio rótulo, que é como a fonte já o desenha —, a linha é `.nds-command-item` com `role="option"` e `aria-selected`, e o vazio é `.nds-command-empty`. `pinned` não é estado: é em qual grupo a linha cai, e quem o escreve é quem passa o arranjo. O teclado é o do próprio `command`, e é aí que a composição fica mais fina que a fonte em dois pontos que ela mesma declara: lá "andar é escolher" — a seta troca de conversa a cada toque, sem passo de destaque —, e não há vazio de "nenhuma conversa" distinto do vazio de "nenhum resultado", que `empty.css` separa. **Falta uma utilitária, e está nomeada**: `.nds-command-item` não tem segunda linha, onde `.nds-item-description` já desenha uma — é dela que a prévia da conversa precisa. Veio da família 6 — ver 5.3 |
+| `thread-list` | `sidebar`, nó por nó. O painel é `.nds-sidebar-static`; o botão de nova conversa e a busca são `.nds-sidebar-header` com `.nds-button` e `.nds-sidebar-input`; o dia é `.nds-sidebar-group` com `.nds-sidebar-group-label`; a fila é `.nds-sidebar-menu` de `.nds-sidebar-menu-item`, com o título em `.nds-sidebar-menu-button` levando `data-active="true"` e `aria-current` na conversa aberta — os dois, porque um pinta e o outro é a palavra; o instante, que chega já formatado, é `.nds-sidebar-menu-button-badge`; e renomear, arquivar e apagar entram por `.nds-sidebar-menu-action` `.nds-sidebar-menu-action-hover` com um `dropdown-menu`, cujo bloco já aparece no `:focus-within` que a regra 3 da §8 exige. Sem conversa nenhuma, `empty.css`. `unread` não ganha ponto sozinho — ponto é cor, e a regra 4 da §8 pede a palavra junto, em `.nds-sr-only` ou na contagem do distintivo que já está ali. A faixa standalone entrega menos que a de runtime em três pontos: sem busca, com um rótulo "Hoje" fixo sobre qualquer data, e com os ícones de renomear e apagar sem manipulador — a própria fonte diz que são apresentação. Veio da família 6 — ver 5.3 |
+| `thread-list-sidebar` | `sidebar` com `thread-list` dentro, e é a única entrada das 120 que **não tem faixa standalone nenhuma** — a fonte diz isso na primeira linha e manda compor o `Sidebar` à mão. O que ela acrescenta ao que envolve é cabeçalho, rodapé e trilho; tudo o mais é repassado, e os três repassados são `data-side`, `data-variant` e `data-collapsible`, que `.nds-sidebar-root` já lê, com `.nds-sidebar-rail` sumindo em `[data-collapsible="offcanvas"]` exatamente como a fonte descreve. A marca no cabeçalho e o link de suporte no rodapé são conteúdo de quem monta, e a própria fonte os chama de espaço reservado. Veio da família 6 — ver 5.3 |
+| `shared-conversation` | `.nds-card` com `chat-thread` dentro. `.nds-card-header` leva o título em `.nds-card-title` `.nds-truncate`, quem compartilhou e quando em `.nds-card-description` e o ícone de elo em `.nds-card-action` — a grade já abre a segunda coluna e a segunda linha com `:has()`; `.nds-card-content` recebe a conversa; `.nds-card-footer` leva `.nds-badge` com a palavra e o botão de continuar. Somente leitura NÃO é estado do `chat-thread`: o campo de entrada é peça à parte (§4.2), e transcrição sem composer já é transcrição que não se responde. `SharedTurn` — `{ id, role, text }`, com o papel em duas palavras — estreita duas coisas de uma vez: `ChatRole`, que tem três, e `ChatMessageOptions`, que tem nove campos mais as partes que `MessagePartKind` enumera; e o `text` cru levaria fala de modelo à tela sem `createMarkdown` e sem `isSafeUrl`. Sem turno nenhum, `empty.css`, que a fonte admite não ter. Veio da família 6 — ver 5.3 |
+| `onboarding` | `.nds-card` com `stepper` no cabeçalho. `.nds-stepper` é o `<ol>` de etapas com `data-state` `active` e `completed`, `.nds-stepper-indicator` numerado e `.nds-stepper-separator` entre elas — e entrega mais que os pontos da fonte, que são `aria-hidden`, não são botões e por isso não deixam voltar; a posição em palavra é `.nds-badge` com `.nds-font-mono` no molde `{index} de {total}`. O título da etapa é `.nds-card-title`, a explicação é `.nds-card-description`, o exemplo é `.nds-item` `.nds-item-muted`, e pular e avançar são `.nds-card-footer` com `.nds-button` `.nds-button-ghost` e `.nds-button`. Com zero etapas, `empty.css` — a fonte não desenha nada. É a entrada com menos conversa dentro de todas as 120: a própria fonte diz que as etapas são conteúdo de quem escreve e que não há nada a ler do runtime. Veio da família 6 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (63)
+### 5.2 As famílias novas (56)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
 slug produz 83 folhas e nenhum sistema.
+
+**Eram sete, e são seis.** A 6 dissolveu-se inteira na vigésima sexta correção, e
+a linha dela fica na tabela como `diff-hunks.ts` ficou na §3.2, pelo mesmo
+motivo: quem vier atrás precisa saber que ela foi considerada e por que não
+nasceu. Família que perde todas as entradas não nasce menor — não nasce.
 
 **O que o parêntese de cada linha conta, porque a redação engana**: "(N no
 catálogo)" é o que a família tem **AGORA**, depois das saídas — nunca o que ela
@@ -313,7 +325,7 @@ desta tabela, nunca pelo próprio delta.
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (18 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1, ver 5.3 —, **18 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
-| **6. Navegação da conversa** | `conversa-nav.css` | `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (7 no catálogo — `message-branches` saiu para a 5.1, ver 5.3 —, **7 componentes**) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
+| **6. Navegação da conversa** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As oito saíram para a 5.1: `message-branches` na vigésima quinta; `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation` e `onboarding` na vigésima sexta, em lote (0 no catálogo, **0 componentes**) | Era "achar e trocar de lugar sem perder o seu", com base em `sidebar`, `command`, `pagination` e `stepper.css` — e as quatro bases eram as próprias peças. `conversa-nav.css` não é fundada. Ver 5.3 |
 | **7. Voz** | `voz.css` | `orb`, `voice-conversation` (2 no catálogo — `read-aloud` saiu para a 5.1, ver 5.3 —, **2 componentes**) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
 
 ### 5.3 A triagem se corrige DURANTE a construção, e a correção se escreve
@@ -3746,7 +3758,9 @@ continua por fundar.** A 5.2 dá quatro bases à família 6 — `sidebar`, `comm
 delas. O que ela mede é que `pagination` entra na família como CONTRATO (`total`,
 `current`, `onPageChange`) e não como markup: o `<nav>` com nome que serve a um
 rodapé de tabela é o que não pode ser repetido por turno. Quem fundar
-`conversa-nav.css` escreva isso no cabeçalho — e repare que as sete que ficam são
+`conversa-nav.css` escreva isso no cabeçalho — **e a vigésima sexta respondeu que
+ninguém funda: a folha não nasce, e a leitura ficou na linha desta entrada na
+5.1** — e repare que as sete que ficam são
 todas de nível de CONVERSA, não de turno: buscar, listar, retomar, compartilhar,
 apresentar. A única que era de dentro do turno saiu, e o eixo da folha fica mais
 estreito e mais nítido por causa disso.
@@ -3766,6 +3780,8 @@ Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos
 tem 11, 2 tem 14, 3 tem 6, 4 tem 18, 5 tem 5, 6 tem 7 e 7 tem 2 — **63** na 5.2.
 A 5.1 vai a **57** (55 linhas contadas no arquivo, e duas delas carregam duas
 entradas). Somam 120. A família 6 fica com **7 componentes**, e as sete somam 57.
+(Números desta correção, não os de hoje: a vigésima sexta dissolveu a família 6
+inteira, e a 5.2 passou a 56.)
 
 E o registro de método vale uma quinta vez, e desta vez contra o BRIEFING e não
 contra a árvore, que estava limpa: o pedido desta correção trazia que `pagination`
@@ -3779,9 +3795,287 @@ contava "nove triagens seguidas" colapsadas; são ONZE — da décima quarta à
 vigésima quarta, sem sobrevivência no meio, e a última foi a décima terceira.
 
 
+**Vigésima sexta correção, a primeira em LOTE, e a primeira que dissolve uma
+FAMÍLIA inteira**: as sete entradas que restavam da família 6 colapsam, e a 6
+deixa de existir. São a vigésima à vigésima sexta travessia de 5.2 para 5.1, e
+as contagens mudam uma vez só, ao fim do lote: 63 → 56 e 57 → 64.
+`conversa-nav.css` não é fundada, e as folhas novas desta guideline passam de
+sete para seis.
+
+**O MECANISMO, escrito uma vez porque seis das sete colapsam por ele**: a 5.2 deu
+à família 6 quatro bases — `sidebar`, `command`, `pagination` e `stepper.css` —
+antes de existir uma linha dela, e **as quatro bases eram as próprias peças**.
+`message-branches` bateu em `pagination` na vigésima quinta; `thread-search` é
+`command`; `thread-list` e `thread-list-sidebar` são `sidebar`; `onboarding` é
+`stepper`. Não é coincidência de leitura, e o motivo é anterior a esta campanha:
+as outras seis famílias descrevem coisas que só existem porque um modelo
+responde — a superfície de entrada, o estado da execução, a evidência, a
+medição, a voz —, e a 6 descrevia ACHAR E TROCAR DE LUGAR, que todo aplicativo
+já tinha antes de haver conversa. Um design system de propósito geral resolve
+navegação porque é obrigado a resolvê-la primeiro. **Base declarada antes de
+construir é previsão; quando a previsão nomeia uma peça inteira em vez de um
+material, ela já é o veredito** — e é isso que a 5.2 não sabia estar dizendo
+quando escreveu aquela coluna.
+
+O corolário para as folhas que faltam: ao abrir uma, leia a coluna do eixo comum
+da própria 5.2 e pergunte se as bases ali são MATERIAL (`collapsible`,
+`progress`, `badge`, `card`, `table`, `chart` — pedaços de que se monta) ou PEÇAS
+(`sidebar`, `command`, `stepper` — telas prontas). Material sustenta família;
+peça pronta é o dono.
+
+**1. `regenerate-menu` — colapsa, e é a mais direta das sete.**
+
+- **A favor**: é o controle que CRIA o ramo, e a vigésima quinta o nomeou como a
+  irmã mais próxima de `message-branches` e um dos gatilhos para desdobrá-la. Se
+  alguma da família tinha desenho próprio, seria a que abre um menu dentro da
+  fila de ações de um turno.
+- **Contra**: a API é a de `composer-model-picker`, CONSTRUÍDO nesta campanha,
+  campo por campo — `options`/`models`, `currentId`/`value`,
+  `onPick`/`onValueChange`, e `open` com `onOpenChange` idênticos dos dois lados.
+  `RegenerateOption` é `ModelOption` sem `badge`, sem `unavailable` e sem
+  `unavailableReason`. E o seletor foi feito AUTÔNOMO de propósito: o docblock
+  dele diz, com essas palavras, que existe para "ter o seletor sem ter o campo —
+  numa barra de ferramentas, numa página de ajustes".
+- **Colapsa.** É a leitura da décima quinta e da décima nona na largura máxima:
+  lá o que se repetia era um booleano com o mesmo nome do dono; aqui é a API
+  inteira. **Booleano igual ao do dono é a mesma peça; API igual à do dono não é
+  nem discussão.**
+- **A evidência que teria virado o voto**: um segundo eixo no menu que o seletor
+  não tenha — regenerar escrevendo dois campos diferentes de uma vez —, ou um
+  estado por opção que `ModelOption` não modele, como uma alternativa já tentada
+  neste turno com o resultado ao lado. Procurada nos tipos: `RegenerateOption`
+  tem três cadeias e nada disso. O que a fonte tem A MAIS é `detail`, que é
+  `description` com outro nome.
+
+**2. `conversation-search` — colapsa, e foi a que chegou mais perto.**
+
+- **A favor**: é a única das sete com GEOMETRIA declarada — `position: number`,
+  de 0 a 100, uma marca por achado numa trilha lateral "com forma de barra de
+  rolagem". Foi geometria em porcentagem que fez `computer-use` sobreviver na
+  nona, e nada em `docs/shared/styles/` desenha marca sobre trilha fora de
+  `.nds-computer-use-trail`, que é escopada. Soma-se a isso um vocabulário que
+  parece novo — antes, achado, depois — e a única coisa que a família prometia e
+  nenhuma peça construída entrega: achar dentro de uma conversa longa.
+- **Contra**: quatro coisas, e a última decide. (a) A barra é o trio que a
+  vigésima quinta acabou de resolver — campo, contador e dois controles —, agora
+  com `.nds-input-group` em volta. (b) `activeIndex` sobre `hits[]` é índice
+  sobre arranjo plano, que aquela mesma correção classificou como a coordenada
+  que a fila já tinha; e `onStep(delta)` é ainda menos que `onPageChange`, porque
+  a peça declara não fazer conta de índice nenhuma. (c) O realce dentro do texto
+  é utilitária que falta, JÁ nomeada por `read-aloud`, e a abertura da 5.1 é
+  literal: buraco vira classe nomeada, nunca folha. (d) **Os dois campos que
+  pareciam vocabulário são `slice`** — a fonte calcula `before`, `match` e
+  `after` com três fatias sobre uma cadeia, e a posição com `(i / (n − 1)) ×
+  100`, nas DUAS faixas, no próprio exemplo. Agregado que é leitura rende
+  função, não desenho, pela quarta vez.
+- E a geometria não resiste ao lugar em que a fonte a põe: a trilha mora DENTRO
+  da barra de busca, longe do container que diz mapear; as marcas não são botões
+  e não têm rótulo; e a corrente se separa das outras por opacidade, que a regra
+  4 da §8 recusa e que a décima segunda já mediu. Marca sobre a extensão da
+  conversa é a extensão que `ThreadMetrics` descreve em `chat-scroll.ts`, que é o
+  primitivo em que esta família foi fundada. **O eixo tem dono, e o dono é a peça
+  ao lado.**
+- **Colapsa** — e a distinção contra a nona vale escrita, porque as duas têm
+  porcentagem: em `computer-use` o quadro É da peça, com `--computer-use-aspect`
+  declarado por ela, e o ponto só significa dentro dele; aqui a peça não é dona
+  do espaço a que a posição se refere. **Porcentagem sobre espaço alheio não é
+  geometria própria: é projeção, e projeção é opção de quem desenha o espaço.**
+- **A evidência que teria virado o voto**: a trilha desenhada SOBRE a região que
+  rola, ancorada no `scrollHeight` real, com as marcas sendo controles — um jeito
+  de saltar por elas pelo teclado. Procurada na fonte: são `<span>` sem rótulo, e
+  a fonte manda o consumidor rolar sozinho com `scrollIntoView` a partir de um
+  `data-message-id` que é da faixa de runtime.
+
+**3. `thread-search` — colapsa em `command`.**
+
+- **A favor**: filtro, blocos com rótulo, linha com título e prévia, teclado que
+  dá a volta nas duas pontas, e um bloco fixado que vem sempre primeiro.
+  `pinned: boolean` parece estado por linha, que é o que `command` não tem.
+- **Contra**: `command.css` já é a árvore inteira — `.nds-command-input` com
+  `role="combobox"`, `.nds-command-list` com `role="listbox"`,
+  `.nds-command-group` com `.nds-command-group-heading`, `.nds-command-item` com
+  `role="option"` e `aria-selected`, e `.nds-command-empty`. E `pinned` não é
+  estado: a própria fonte diz que a linha fixada "renderiza no bloco fixado em
+  vez do seu grupo" — é em qual grupo ela cai, decidido por quem passa o arranjo.
+  `onSelect` é a chamada de volta de escolha que já nomeou dono três vezes, e é
+  literalmente o mesmo nome da oitava.
+- **Colapsa**, com uma utilitária nomeada: `.nds-command-item` não tem segunda
+  linha, e `.nds-item-description` tem. Onde a composição fica mais fina que a
+  fonte são dois pontos que ela mesma declara: lá andar É escolher (a seta troca
+  de conversa a cada toque, sem passo de destaque), e não existe vazio de
+  "nenhuma conversa" distinto do vazio de "nenhum resultado".
+- **A evidência que teria virado o voto**: um estado por conversa que `command`
+  não pudesse carregar — a que está gerando agora, a arquivada, a que falhou —,
+  com desenho por estado. Procurada nos tipos da faixa standalone:
+  `SearchableThread` tem cinco campos e nenhum é estado. A palavra que faltava
+  está na faixa de runtime (`isRunning`), e o que a standalone faz com ela é
+  escrevê-la como texto de prévia.
+
+**4. `thread-list` — colapsa em `sidebar`, nó por nó.**
+
+- **A favor**: é a superfície mais usada de um produto de conversa e a que dá
+  nome à família. A faixa de runtime tem agrupamento por dia, busca, renomear no
+  lugar, arquivar, apagar, fiapo de execução por linha e `aria-current` — mais
+  anatomia que várias entradas que sobreviveram.
+- **Contra**: a §1 manda ler a standalone, e a standalone é `{ title, time,
+  unread }` com um índice: sem busca, com um rótulo "Hoje" fixo sobre qualquer
+  data, e com os ícones de renomear e apagar declarados como apresentação, sem
+  manipulador. E mesmo a faixa RICA é `sidebar` inteira: `.nds-sidebar-static`,
+  `.nds-sidebar-header` com `.nds-sidebar-input`, `.nds-sidebar-group` com
+  `-group-label`, `.nds-sidebar-menu` de `-menu-item`, `-menu-button` com
+  `data-active="true"`, `-menu-button-badge` para o instante e `-menu-action`
+  `-menu-action-hover` para a fila do menu. Não sobra um nó.
+- **Colapsa.** `onActiveIndexChange` é a quinta chamada de volta de escolha da
+  campanha, e o dono não está a uma pasta de distância: está na coluna de bases
+  da própria linha da família.
+- **A evidência que teria virado o voto**: uma linha que carregasse estado de
+  EXECUÇÃO com desenho — a conversa que responde enquanto se olha outra —, porque
+  isso é `RunStatus` numa fila e nenhum menu de barra lateral desenha. Procurada:
+  existe, e está do lado errado. `s.threadListItem.isRunning` é da faixa de
+  runtime, é um booleano onde `RunStatus` tem cinco palavras, e a faixa
+  standalone não o tem — ela tem `unread`, que é outro assunto e ainda por cima
+  só cor.
+
+**E a herança da décima sétima, respondida aqui, que era o que faltava.** A caixa
+de execuções em segundo plano projeta o estado da lista de conversas, e aquela
+correção deixou escrito que, se aquilo reaparecesse como FILTRO de `thread-list`,
+o conserto seria na família 6. **Não reaparece.** A faixa standalone não tem
+filtro nenhum, e o filtro da faixa de runtime casa TEXTO contra o título — nada
+de estado. A lista não tem vocabulário de execução para filtrar: o mais perto é o
+`isRunning` acima, que é um fiapo por linha e não uma projeção. A décima sétima
+fica de pé onde está: `background-inbox` é `.nds-card` com `.nds-item-group` de
+`agent-status`, e quem quiser saber quais conversas estão trabalhando põe
+`agent-status` na linha — a peça que aquela composição já usa —, não um filtro
+numa fila que não sabe o que é uma execução. **A cláusula fecha CONFIRMANDO a
+correção que a abriu**, e é a segunda vez na campanha que uma herança fecha
+assim, depois da décima primeira.
+
+**5. `thread-list-sidebar` — colapsa, e é a mais barata de ler das 120.**
+
+- **A favor**: nenhum que sobreviva à primeira linha da fonte.
+- **Contra**: **ela não tem faixa standalone.** É a única entrada das 120 assim,
+  e a §1 é literal sobre qual das duas se lê. O que resta é casca: cabeçalho,
+  rodapé, trilho, e todo o resto repassado ao `Sidebar` que ela envolve — `side`,
+  `variant` e `collapsible`, que `.nds-sidebar-root` já lê como `data-side`,
+  `data-variant` e `data-collapsible`, com o trilho sumindo em `offcanvas`
+  exatamente como a fonte descreve. A marca do cabeçalho e o link do rodapé a
+  própria fonte chama de espaço reservado.
+- **Colapsa.** Entrada sem faixa standalone não é peça deste porte: é a
+  demonstração de composição de duas outras, que é o que a 5.1 produz.
+- **A evidência que teria virado o voto**: uma casca com desenho que o `sidebar`
+  não tenha — largura própria, colapso próprio, uma segunda coluna. Procurada: os
+  três nomes de prop que ela repassa são os três `data-*` que a folha já lê.
+
+**E a reversibilidade da décima quinta, que apontava para cá, respondida**:
+`mobile-composer` desdobraria se `thread-list-sidebar` mostrasse superfície de
+toque com desenho, estado ou vocabulário próprios. Não mostra nada — não tem
+superfície própria, e a forma de telefone que existe é a do `sidebar`, que já
+resolve o assunto num `sheet` com as consultas de mídia da própria folha.
+**`mobile-composer` CONFIRMA na 5.1**, e resta um só gatilho para ela: o
+`voice-conversation` da família 7.
+
+**6. `shared-conversation` — colapsa em `card` mais `chat-thread`.**
+
+- **A favor**: uma transcrição de outra pessoa, com procedência — quem
+  compartilhou e quando — e uma porta para continuar. "Somente leitura" parece um
+  estado que o `chat-thread` não tem.
+- **Contra**: somente leitura não é estado da thread. O campo de entrada é peça à
+  parte por decisão registrada na §4.2, e transcrição sem composer já é
+  transcrição que não se responde — não há o que acrescentar. O resto é
+  cabeçalho, corpo e rodapé, que é `card` com os encaixes que a grade dele já
+  abre com `:has()`. E `SharedTurn` é o estreitamento mais largo depois do da
+  vigésima quinta, em duas direções ao mesmo tempo: o papel em duas palavras onde
+  `ChatRole` tem três, e o turno inteiro em `{ id, role, text }` onde
+  `ChatMessageOptions` tem nove campos e `MessagePartKind` sete espécies de parte
+  — com o `text` cru levando fala de modelo à tela sem `createMarkdown` e sem
+  `isSafeUrl`.
+- **Colapsa.** É a segunda entrada do lote cujo corpo é "a lista de mensagens de
+  outra pessoa", e vale a frase que a décima nona e a vigésima quinta já
+  escreveram: **o parágrafo não é da peça.**
+- **A evidência que teria virado o voto**: procedência com desenho — assinatura,
+  selo de integridade, instante em que o compartilhamento expira, alguma coisa
+  que dissesse que ESTA transcrição é aquela e não outra. Procurada: `sharedBy` e
+  `sharedAt` são duas cadeias "já formatadas" que truncam no cabeçalho, e
+  `onContinue` é um botão.
+
+**7. `onboarding` — colapsa em `stepper` mais `card`, e é a que menos pertence a
+esta guideline.**
+
+- **A favor**: um passo por vez, com progresso, pular e avançar, é uma tela que o
+  design system não tem montada em lugar nenhum; e `stepper.css` existe como
+  folha, sem componente com stories por cima.
+- **Contra**: `.nds-stepper` é o `<ol>` de etapas com `data-state` `active` e
+  `completed`, indicador numerado e separador — e entrega MAIS que a fonte, cujos
+  pontos são `aria-hidden`, não são botões e por isso não deixam voltar (a
+  própria fonte diz que um controle de voltar teria de ser escrito por fora). O
+  resto é `card` com rodapé de dois botões, e "n de m" é o distintivo
+  monoespaçado que sete linhas da 5.1 já usam. `index` sobre arranjo plano é a
+  coordenada da fila; `onNext` e `onSkip` são sinais puros que não mudam nada,
+  como a fonte declara.
+- E há o que a separa das outras seis: **ela não é conversa.** A fonte diz, sobre
+  a própria faixa de runtime, que as etapas "são conteúdo que você escreve, não
+  estado que o runtime guarda", e que não há nada a ler do estado. Peça sem
+  vocabulário desta família e sem estado de runtime nenhum é um assistente de
+  primeiro uso — e assistente de primeiro uso o design system já desenha.
+- **Colapsa.**
+- **A evidência que teria virado o voto**: uma etapa que ENSINASSE mostrando — um
+  turno de exemplo vivo, um composer que responde, alguma coisa que precisasse do
+  vocabulário da conversa para desenhar. Procurada: `OnboardingStep` são três
+  cadeias, e a terceira, o exemplo trabalhado, é texto dentro de um quadro.
+
+**As duas sobreposições que o lote existia para medir, medidas:**
+
+- **`conversation-search` e `thread-search` são DUAS peças, e não uma com dois
+  escopos** — e a suspeita estava errada em espécie, não em grau. Uma procura
+  DENTRO de um texto e devolve posições nele (`{ before, match, after, position }`,
+  com `onStep(delta)` andando por elas); a outra escolhe um item numa fila
+  (`{ id, title, group, preview, pinned }`, com `onSelect(id)`). Não compartilham
+  um campo, não compartilham um controle e não colapsam no mesmo lugar. **Nem
+  toda dupla com a mesma palavra no nome é uma dupla**: "busca" aqui é palavra do
+  produto, não do desenho.
+- **`thread-list` e `thread-list-sidebar` SÃO uma dentro da outra, e a fonte diz
+  isso primeiro.** A segunda não tem faixa standalone, envolve a primeira e
+  repassa tudo ao `Sidebar`. As duas colapsam no mesmo dono, e a de dentro é o
+  menu daquele dono. É o único caso do lote em que ler as duas juntas custou
+  menos que ler uma.
+
+**A terceira herança, da vigésima quinta, respondida**: aquela correção mandou
+quem fundasse `conversa-nav.css` escrever no cabeçalho que `pagination` entra
+como contrato e não como markup. **Ninguém funda.** A leitura sobrevive e muda de
+casa: não é do cabeçalho de uma folha, é da linha de `message-branches` na 5.1,
+onde já está escrita.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 14, 3 tem 6, 4 tem 18, 5 tem 5, 6 tem 0 e 7 tem 2 — **56** na 5.2.
+A 5.1 vai a **64** (62 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. Os componentes a construir somam **50**, em **seis** folhas.
+
+**Reversível**, como as outras vinte e cinco, e aqui em duas alturas. Por
+entrada: se ao compor qualquer uma das sete numa story aparecer desenho, estado
+ou vocabulário que a base não comporte, ela desdobra para a 5.2, com o motivo.
+Pela família: a 6 só volta a existir se DUAS ou mais desdobrarem — uma sozinha
+não funda folha de família, e a §4 é explícita quanto a isso. A candidata mais
+provável é `conversation-search`, e o gatilho dela está nomeado acima: marcas que
+sejam controles, sobre a região que de fato rola.
+
+**E o registro de método, que vale uma sexta vez e desta vez em duas direções.**
+O pedido trazia duas leituras já formadas — que `conversation-search` e
+`thread-search` podiam ser a mesma peça com dois escopos, e que
+`thread-list-sidebar` podia ser `thread-list` dentro de `sidebar`. A primeira
+estava errada, a segunda estava certa, e as duas empurravam para o mesmo lado
+(menos peças), que é o lado a que se chegou. **Afirmação que favorece o desfecho
+a que se chega é a que menos se confere**, e a defesa é conferi-la primeiro: a
+primeira caiu ao comparar os campos dos dois tipos, a segunda passou ao ler a
+primeira linha da fonte. E o lote não produziu leitura rasa, pelo motivo que a
+abertura previa: três das sete (`thread-search`, `thread-list`, `onboarding`) só
+se leem bem uma contra a outra, porque é a repetição delas que expõe o mecanismo
+comum. Uma a uma, cada colapso pareceria coincidência; sete de uma vez, nenhum
+parece.
+
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
-Apareceu doze vezes: **dez** como achatamento, sempre igual, e **três** pelo
+Apareceu catorze vezes: **doze** como achatamento, sempre igual, e **três** pelo
 avesso — `mobile-composer`, `read-aloud` e `schedule-card`, que declara as duas
 formas de uma vez e por isso conta nas duas; as duas primeiras são as que fecham
 a sub-regra. Por isso vira critério:
@@ -3799,9 +4093,11 @@ a sub-regra. Por isso vira critério:
 | `elicitation-form` | `state = request\|accepted\|declined` — e só `request` é do vocabulário | `running`, `failed` |
 | `schedule-card` | `ok: boolean` por execução passada — e `enabled: boolean` ao lado, que é o do `switch` | `idle`, `running`, `stopped` |
 | `reviewable-diff` | `HunkDecision = pending\|kept\|discarded` — e só `pending` é do vocabulário | `running`, `failed` |
+| `thread-list` | `isRunning: boolean`, e só na faixa de RUNTIME — a standalone não tem estado nenhum | `idle`, `stopped`, `failed`, `complete` |
+| `shared-conversation` | `role: "user"\|"assistant"` — a primeira união achatada que não é de estados | `system` |
 
-Nas dez, o achatamento não é economia — é sinal de que a entrada foi
-desenhada para uma tela só, sem o vocabulário que a família já tem. E as dez
+Nas doze, o achatamento não é economia — é sinal de que a entrada foi
+desenhada para uma tela só, sem o vocabulário que a família já tem. E as doze
 colapsaram pelos testes normais; o booleano só chegou antes.
 
 **A quarta é o limite da forma**, medida na décima primeira correção, e vale
@@ -3940,7 +4236,7 @@ em `PlayerState`. É a leitura da décima quinta repetida, e a repetição ESTEN
 sub-regra num ponto: lá o dono era o `composer`, peça desta campanha; aqui é um
 componente que o design system já tinha antes dela. **A identidade se mede contra
 quem desenha a superfície, seja ela nova ou velha** — e a pergunta "quem já
-declara este booleano?" não se limita às sete famílias.
+declara este booleano?" não se limita às seis famílias.
 
 E a sexta forma — tipo mais estreito — apareceu na mesma leitura, também contra a
 base: `onRateChange?: () => void` não devolve a velocidade escolhida, onde a base
@@ -4066,12 +4362,49 @@ fala de modelo num `<p>` cru, onde esta casa passa tudo por `createMarkdown` com
 mesma frase — **o parágrafo não é da peça.**
 
 
+**Décima terceira e décima quarta aparições, as duas de achatamento, medidas em
+LOTE na vigésima sexta correção.** `shared-conversation` é a primeira em que a
+união achatada NÃO é de estados: `role` em duas palavras onde `ChatRole` tem
+três, e o que se perde é `system`. Vale o alargamento — **o achatamento se conta
+contra qualquer união deste vocabulário, e não só contra `RunStatus` e
+`ToolCallState`.** E `thread-list` é a primeira em que a palavra que falta não
+está achatada na faixa que se lê: está achatada na OUTRA. `isRunning: boolean` é
+da faixa de runtime, e a standalone não tem estado nenhum — a linha da conversa
+que está respondendo agora desenha igual à que está parada há um mês. É a
+décima oitava levada ao limite: quando a fonte se contradiz entre as faixas quem
+perde é a standalone, e aqui ela nem chegou a perder, porque nunca teve.
+
+**E uma forma nova, a oitava, medida na mesma correção**: `thread-search` declara
+`pinned: boolean`, e ele não é estado nem é do dono — é uma PARTIÇÃO do arranjo.
+A própria fonte diz que a linha marcada "renderiza no bloco fixado em vez do seu
+grupo": o booleano não descreve a linha, escolhe em qual grupo ela cai, e quem o
+escreve é quem passa o arranjo. Ao ler um booleano, pergunte se ele descreve o
+item ou se ele ORDENA a lista — o segundo é entrada de quem monta, e some no dia
+em que a lista chega já partida.
+
+**Nono, décimo e décimo primeiro sinais mudos, medidos em lote na vigésima
+sexta**: `conversation-search`, `onboarding` e `thread-list-sidebar` não declaram
+booleano, união nem tipo de estado, e colapsaram os três. Pela sub-regra da
+décima, o que sobra no lugar do estado aponta o dono em dois deles —
+`onStep(delta)` e o par `onNext`/`onSkip` são sinais de controle sem conta
+nenhuma por trás, e a própria fonte declara que uma "não faz conta de índice" e
+a outra "não avança sozinha". No terceiro não sobra nada, porque
+`thread-list-sidebar` não tem faixa standalone para ter assinatura. **Entrada que
+não tem a faixa que a §1 manda ler não precisa de sub-regra: ela já respondeu.**
+
+E a sexta forma — tipo mais estreito — apareceu na mesma correção na largura
+máxima possível: `RegenerateOption` não estreita um campo nem uma união,
+estreita a API INTEIRA de uma peça construída, e nessa largura deixa de ser
+estreitamento e vira identidade. **Quando o tipo estreitado é o do dono, pare de
+contar o que se perde e repare em quem já declara aquilo** — é a leitura da
+décima quinta e da décima nona, e o teto dela.
+
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
 contador posicional que parta a lista em dois desenhos, mandam aplicar os três
 testes com atenção — não decidem sozinhos, mas preveem.
 
-O critério, para as seis famílias que faltam: **uma entrada do catálogo vira
+O critério, para as famílias que faltam: **uma entrada do catálogo vira
 slug quando tem desenho, estado ou vocabulário próprios.** Se a diferença cabe
 num argumento do que já existe, ela é variante — vira story e linha na tabela,
 não peça. Ao decidir isso durante a construção, corrija a tabela de 5.2 no
@@ -4082,7 +4415,7 @@ mostrou ser duas se DESDOBRA aqui, com o motivo.
 
 Ordem entre famílias — a que evita retrabalho:
 **3.1 fundação → 1 composer → 2 execução → 5 medição → 3 evidência → 4 resposta
-estruturada → 6 navegação → 7 voz.**
+estruturada → 7 voz.**
 O composer primeiro porque fecha o ciclo com o `chat-thread` que já existe (dá
 para usar o produto ao fim da família 1); execução e medição em seguida porque
 são as que mais reaproveitam `chat-protocol.ts` e endurecem o vocabulário
@@ -4153,7 +4486,7 @@ todas; `01-acessibilidade.md` continua valendo por cima.
    estado — por isso somem por `opacity`, nunca por `display` ou `visibility`.
 4. **Estado nunca é só cor.** `running` / `done` / `failed`, adição e remoção num
    diff, nível de confiança, célula quente num heat map: sempre acompanhados de
-   ícone, texto ou padrão. Vale para as sete famílias, e é o defeito mais provável
+   ícone, texto ou padrão. Vale para as seis famílias, e é o defeito mais provável
    da 4 (WCAG 1.4.1).
 5. **Disclosure é `<details>`/`<summary>` ou botão com `aria-expanded`** — nunca
    `div` com `onclick`. Chamada de ferramenta, grupo, raciocínio, bloco de diff,
@@ -4189,7 +4522,7 @@ todas; `01-acessibilidade.md` continua valendo por cima.
   map desenham com opacidade sobre `--muted`, e opacidade baixa some no escuro.
   Toda escala de intensidade se verifica nos dois modos, em todos os temas
   (`docs/shared/testing/cor.ts`).
-- Tokens novos, nenhum. As sete folhas usam o que os 42 tokens de tema já dão. Se
+- Tokens novos, nenhum. As seis folhas usam o que os 42 tokens de tema já dão. Se
   uma cor parecer faltar, ela quase sempre é `--muted` com borda, e não um token
   novo — token novo obriga `16-novo-tema.md` inteiro, em todos os temas.
 
