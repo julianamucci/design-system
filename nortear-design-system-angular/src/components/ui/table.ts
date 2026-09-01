@@ -56,9 +56,27 @@ import {
     class: 'nds-table-wrapper',
     '[attr.data-slot]': '"table-container"',
     '[attr.tabindex]': '"0"',
+    '[attr.role]': 'regionLabel() ? "group" : null',
+    '[attr.aria-label]': 'regionLabel() || null',
   },
 })
-export class NdsTableWrapper {}
+export class NdsTableWrapper {
+  /**
+   * Nome acessível do container que rola. Sem padrão, de propósito.
+   *
+   * O container é o WRAPPER, e não a `<table>`: cada um tem o seu nome, e um
+   * nome escrito na tabela nomeia a TABELA — comportamento certo, que não se
+   * quer roubar. Por isso a entrada tem nome próprio e não é `aria-label`.
+   *
+   * O nome é do CONTEÚDO ("Faturas de 2026"), e o design system não tem como
+   * sabê-lo; padrão genérico ("Tabela") anunciaria sem informar. Sem nome NÃO
+   * emitimos papel nenhum — o axe acusa `aria-prohibited-attr`.
+   *
+   * `group` e não `region`: uma tela de relatório empilha várias tabelas, e
+   * seriam vários marcos onde não há várias seções.
+   */
+  readonly regionLabel = input<string>('');
+}
 
 /** A tabela em si — `<table ndsTable>`. Só ela carrega classe; o CSS alcança as
  * seções por descendência (`.nds-table thead tr`, `.nds-table td`…). */
