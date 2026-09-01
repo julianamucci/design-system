@@ -295,6 +295,17 @@ Construir **por família**, não por slug. Dentro de uma família as peças divi
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
 slug produz 83 folhas e nenhum sistema.
 
+**O que o parêntese de cada linha conta, porque a redação engana**: "(N no
+catálogo)" é o que a família tem **AGORA**, depois das saídas — nunca o que ela
+tinha no começo, apesar de "no catálogo" sugerir o contrário. **N** são as
+entradas restantes e conta para a soma de 63; **componentes** são menos que N
+quando uma entrada absorveu outra, e é essa a contagem do que há para construir.
+Duas portas já leram este parêntese ao contrário, e uma terceira deixou a
+família 6 declarando 8 entradas com 7 componentes depois de a saída já ter sido
+escrita — soma 121, invisível porque o cabeçalho continuava dizendo 120. Ao
+mover uma entrada, mexa nos DOIS números e reconte família a família a partir
+desta tabela, nunca pelo próprio delta.
+
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
@@ -302,7 +313,7 @@ slug produz 83 folhas e nenhum sistema.
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (18 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1, ver 5.3 —, **18 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
-| **6. Navegação da conversa** | `conversa-nav.css` | `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (8 no catálogo — `message-branches` saiu para a 5.1, ver 5.3 —, **7 componentes**) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
+| **6. Navegação da conversa** | `conversa-nav.css` | `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (7 no catálogo — `message-branches` saiu para a 5.1, ver 5.3 —, **7 componentes**) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
 | **7. Voz** | `voz.css` | `orb`, `voice-conversation` (2 no catálogo — `read-aloud` saiu para a 5.1, ver 5.3 —, **2 componentes**) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
 
 ### 5.3 A triagem se corrige DURANTE a construção, e a correção se escreve
