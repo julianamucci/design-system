@@ -4,6 +4,7 @@ import {
   LONG_LABEL_EDGES,
   LONG_LABEL_NODES,
   REJOIN_EDGES,
+  REJOIN_MERGE_ID,
   REJOIN_NODES,
   flowGraphLabels,
   mountFlowGraph,
@@ -221,12 +222,14 @@ export const Rejoin: Story = {
     });
 
     await step('O nó de reencontro diz que depende dos dois lados', async () => {
+      // O id vem da FIXTURE, e não escrito aqui: a varredura de tradução de
+      // identificadores já renomeou a variável e levou junto o literal dentro
+      // da string, deixando o seletor sem casar com nada — e o `!` fazia a
+      // story lançar em vez de reprovar. Nenhum build alcança string, então
+      // quem impede a volta do defeito é a asserção sair do mesmo lugar que o
+      // dado.
       const analysisNode = piece.querySelector<HTMLElement>(
-        // `analise` é o id da fixture, e NÃO o nome da variável acima: a
-        // varredura de tradução de identificadores renomeou os dois de uma vez,
-        // e o seletor passou a não casar com nada. O `!` logo abaixo fazia a
-        // story lançar em vez de reprovar, e nenhum build alcança string.
-        '[data-slot="flow-graph-node"][data-node-id="analise"]',
+        `[data-slot="flow-graph-node"][data-node-id="${REJOIN_MERGE_ID}"]`,
       )!;
       const reading = analysisNode.querySelector<HTMLElement>(
         '[data-slot="flow-graph-node-reading"]',

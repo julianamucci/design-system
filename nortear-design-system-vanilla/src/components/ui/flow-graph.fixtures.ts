@@ -111,6 +111,17 @@ export const REJOIN_NODES: readonly FlowNode[] = [
   { id: 'ajuste', label: 'Ajustar a análise', column: 1, row: 2, state: 'running' },
 ];
 
+/**
+ * O id do nó em que os dois ramos se reencontram.
+ *
+ * Existe como constante, e não como cadeia escrita na story, porque a asserção
+ * e o dado que a produz não podem divergir: escrito à mão, o seletor já apontou
+ * para um id inexistente depois de uma varredura de renomeação, e a story
+ * passou a LANÇAR em vez de reprovar — defeito que nenhum build alcança, porque
+ * mora dentro de uma string.
+ */
+export const REJOIN_MERGE_ID = 'analise';
+
 /** As ligações do ramo que volta. */
 export const REJOIN_EDGES = [
   { from: 'entrada', to: 'analise' },
