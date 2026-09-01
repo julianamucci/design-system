@@ -419,6 +419,7 @@ export function createAlertDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'withoutTitle',
               name: t('states.withoutTitle.label'),
               description: t('states.withoutTitle.behavior'),
               code: codeWithoutTitle,
@@ -435,6 +436,7 @@ export function createAlertDocs(): HTMLElement {
           componentSlug: 'alert',
           items: [
             {
+              trackId: 'withIcon',
               name: t('variants.compositions.withIcon.name'),
               description: t('variants.compositions.withIcon.description'),
               useWhen: t('variants.compositions.withIcon.use'),
@@ -446,6 +448,7 @@ export function createAlertDocs(): HTMLElement {
               previewFactory: () => buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
+              trackId: 'withAction',
               name: t('variants.compositions.withAction.name'),
               description: t('variants.compositions.withAction.description'),
               useWhen: t('variants.compositions.withAction.use'),

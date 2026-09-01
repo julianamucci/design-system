@@ -466,6 +466,7 @@ const intervalo = createSlider({
           componentSlug: 'slider',
           items: [
             {
+              trackId: 'single',
               name: stripHtml(t('variants.items.single')),
               description: stripHtml(t('variants.styles.single')),
               code: `createSlider({ min: 0, max: 100, value: 50, 'aria-label': 'Volume' });`,
@@ -481,6 +482,7 @@ const intervalo = createSlider({
                 }),
             },
             {
+              trackId: 'range',
               name: stripHtml(t('variants.items.range')),
               description:
                 stripHtml(t('variants.styles.range')) +
@@ -534,6 +536,7 @@ const intervalo = createSlider({
               },
             },
             {
+              trackId: 'vertical',
               name: stripHtml(t('variants.items.vertical')),
               description: stripHtml(t('variants.styles.vertical')),
               code: `createSlider({
@@ -592,6 +595,7 @@ const intervalo = createSlider({
           componentSlug: 'slider',
           items: [
             {
+              trackId: 'volume',
               name: stripHtml(t('variants.compositions.volume.name')),
               description: stripHtml(t('variants.compositions.volume.description')),
               useWhen: stripHtml(t('variants.compositions.volume.use')),
@@ -612,6 +616,7 @@ const intervalo = createSlider({
                 }),
             },
             {
+              trackId: 'form',
               name: stripHtml(t('variants.compositions.form.name')),
               description: stripHtml(t('variants.compositions.form.description')),
               useWhen: stripHtml(t('variants.compositions.form.use')),

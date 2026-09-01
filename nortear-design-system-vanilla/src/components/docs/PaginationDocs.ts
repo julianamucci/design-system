@@ -384,6 +384,7 @@ const nav = createPagination({
           componentSlug: 'pagination',
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
@@ -398,6 +399,7 @@ const nav = createPagination({
               },
             },
             {
+              trackId: 'directional',
               name: t('variants.items.directional'),
               description: stripHtml(t('variants.styles.directional')),
               code: codeDirectional,

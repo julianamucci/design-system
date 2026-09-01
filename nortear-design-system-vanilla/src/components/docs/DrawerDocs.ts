@@ -384,6 +384,7 @@ const drawer = createDrawer({
           componentSlug: 'drawer',
           items: [
             {
+              trackId: 'bottom',
               name: t('variants.items.bottom'),
               description: t('variants.styles.bottom'),
               code: codeBottom,
@@ -397,6 +398,7 @@ const drawer = createDrawer({
               }),
             },
             {
+              trackId: 'top',
               name: t('variants.items.top'),
               description: t('variants.styles.top'),
               code: codeOther,
@@ -410,6 +412,7 @@ const drawer = createDrawer({
               }),
             },
             {
+              trackId: 'left',
               name: t('variants.items.left'),
               description: t('variants.styles.left'),
               code: codeOther,
@@ -423,6 +426,7 @@ const drawer = createDrawer({
               }),
             },
             {
+              trackId: 'right',
               name: t('variants.items.right'),
               description: t('variants.styles.right'),
               code: codeOther,
@@ -543,6 +547,7 @@ const drawer = createDrawer({
           componentSlug: 'drawer',
           items: [
             {
+              trackId: 'withForm',
               name: stripHtml(t('variants.compositions.withForm.name')),
               description: stripHtml(t('variants.compositions.withForm.description')),
               useWhen: stripHtml(t('variants.compositions.withForm.use')),
@@ -574,6 +579,7 @@ form.dataset.spacing = 'sm';
               },
             },
             {
+              trackId: 'withConfirmation',
               name: stripHtml(t('variants.compositions.withConfirmation.name')),
               description: stripHtml(t('variants.compositions.withConfirmation.description')),
               useWhen: stripHtml(t('variants.compositions.withConfirmation.use')),

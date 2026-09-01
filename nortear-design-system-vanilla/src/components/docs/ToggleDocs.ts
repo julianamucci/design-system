@@ -428,6 +428,7 @@ const toggle = createToggle({
           componentSlug: 'toggle',
           items: [
             {
+              trackId: 'default',
               name: stripHtml(t('variants.items.default')),
               description: stripHtml(t('variants.styles.default')),
               code: `const t = createToggle({
@@ -443,6 +444,7 @@ const toggle = createToggle({
               }),
             },
             {
+              trackId: 'outline',
               name: stripHtml(t('variants.items.outline')),
               description: stripHtml(t('variants.styles.outline')),
               code: `const t = createToggle({
@@ -457,6 +459,7 @@ const toggle = createToggle({
               }),
             },
             {
+              trackId: 'withLabel',
               name: stripHtml(t('variants.items.withLabel')),
               description: stripHtml(t('variants.styles.withLabel')),
               code: `// Ícone + texto visível — não precisa de aria-label
@@ -514,6 +517,7 @@ row.dataset.spacing = 'sm';
           componentSlug: 'toggle',
           items: [
             {
+              trackId: 'toolbar',
               name: stripHtml(t('variants.compositions.toolbar.name')),
               description: stripHtml(t('variants.compositions.toolbar.description')),
               useWhen: stripHtml(t('variants.compositions.toolbar.use')),
@@ -549,6 +553,7 @@ toolbar.dataset.spacing = 'xs';
               },
             },
             {
+              trackId: 'filterList',
               name: stripHtml(t('variants.compositions.filterList.name')),
               description: stripHtml(t('variants.compositions.filterList.description')),
               useWhen: stripHtml(t('variants.compositions.filterList.use')),

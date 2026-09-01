@@ -439,6 +439,7 @@ export function createDataTableDocs(): HTMLElement {
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'data-table',
           items: ['selectionWithActions'].map((key) => ({
+            trackId: key,
             name: t(`variants.compositions.${key}.name`),
             description: stripHtml(t(`variants.compositions.${key}.description`)),
             useWhen: t(`variants.compositions.${key}.use`),

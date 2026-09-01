@@ -323,6 +323,7 @@ export function createAccordionDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'single',
               name: t('variants.items.single.label'),
               description: stripHtml(t('variants.items.single.description')),
               code: codeSingle,
@@ -335,6 +336,7 @@ export function createAccordionDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'multiple',
               name: t('variants.items.multiple.label'),
               description: stripHtml(t('variants.items.multiple.description')),
               code: codeMultiple,
@@ -347,6 +349,7 @@ export function createAccordionDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'controlled',
               name: t('variants.items.controlled.label'),
               description: stripHtml(t('variants.items.controlled.description')),
               code: codeControlled,
@@ -359,6 +362,7 @@ export function createAccordionDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'defaultOpen',
               name: t('variants.items.defaultOpen.label'),
               description: stripHtml(t('variants.items.defaultOpen.description')),
               code: codeSingle,
@@ -489,6 +493,7 @@ export function createAccordionDocs(): HTMLElement {
           componentSlug: 'accordion',
           items: [
             {
+              trackId: 'iconTrigger',
               name: t('variants.compositions.iconTrigger.name'),
               description: stripHtml(t('variants.compositions.iconTrigger.description')),
               useWhen: stripHtml(t('variants.compositions.iconTrigger.use')),
@@ -514,6 +519,7 @@ export function createAccordionDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'badgeTrigger',
               name: t('variants.compositions.badgeTrigger.name'),
               description: stripHtml(t('variants.compositions.badgeTrigger.description')),
               useWhen: stripHtml(t('variants.compositions.badgeTrigger.use')),
@@ -545,6 +551,7 @@ export function createAccordionDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'richContent',
               name: t('variants.compositions.richContent.name'),
               description: stripHtml(t('variants.compositions.richContent.description')),
               useWhen: stripHtml(t('variants.compositions.richContent.use')),
@@ -585,6 +592,7 @@ export function createAccordionDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'faq',
               name: t('variants.compositions.faq.name'),
               description: stripHtml(t('variants.compositions.faq.description')),
               useWhen: stripHtml(t('variants.compositions.faq.use')),

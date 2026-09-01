@@ -438,12 +438,14 @@ createHoverCard({ trigger, content });`;
           componentSlug: 'hover-card',
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
               previewFactory: () => buildProfilePreview(),
             },
             {
+              trackId: 'withDelay',
               name: t('variants.items.withDelay'),
               description: stripHtml(t('variants.styles.withDelay')),
               code: codeWithDelay,

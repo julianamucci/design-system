@@ -544,6 +544,7 @@ campo.destroy();`,
           componentSlug: 'select',
           items: [
             {
+              trackId: 'default',
               name: stripHtml(t('variants.items.default')),
               description: stripHtml(t('variants.styles.default')),
               code: `createSelect({ placeholder: 'Selecione...', 'aria-label': 'Estado', items });`,
@@ -561,6 +562,7 @@ campo.destroy();`,
                 }),
             },
             {
+              trackId: 'withGroups',
               name: stripHtml(t('variants.items.withGroups')),
               description: stripHtml(t('variants.styles.withGroups')),
               code: `createSelect({\n  placeholder: 'Selecione...',\n  'aria-label': 'Região',\n  items: [\n    { type: 'group', label: 'Sudeste', items: [\n      { value: 'sp', label: 'São Paulo' },\n      { value: 'rj', label: 'Rio de Janeiro' },\n    ] },\n    { type: 'separator' },\n    { type: 'group', label: 'Sul', items: [\n      { value: 'rs', label: 'Rio Grande do Sul' },\n      { value: 'sc', label: 'Santa Catarina' },\n    ] },\n  ],\n});`,
@@ -589,6 +591,7 @@ campo.destroy();`,
                 }),
             },
             {
+              trackId: 'withIcon',
               name: stripHtml(t('variants.items.withIcon')),
               description: stripHtml(t('variants.styles.withIcon')),
               code: `createSelect({\n  placeholder: 'Selecione...',\n  'aria-label': 'Canal de contato',\n  items: [\n    // Um ou mais traçados 24×24. O desenho é decorativo: entra aria-hidden,\n    // e o nome acessível da opção continua sendo só o rótulo.\n    { value: 'email', label: 'E-mail', icon: ['m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7', 'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z'] },\n    { value: 'chat', label: 'Chat', icon: 'M7.9 20A9 9 0 1 0 4 16.1L2 22Z' },\n  ],\n});`,
@@ -617,6 +620,7 @@ campo.destroy();`,
           componentSlug: 'select',
           items: [
             {
+              trackId: 'inForm',
               name: stripHtml(t('variants.compositions.inForm.name')),
               description: stripHtml(t('variants.compositions.inForm.description')),
               useWhen: stripHtml(t('variants.compositions.inForm.use')),

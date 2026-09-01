@@ -405,6 +405,7 @@ export function createTabsDocs(): HTMLElement {
           componentSlug: 'tabs',
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
@@ -423,6 +424,7 @@ export function createTabsDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'line',
               name: t('variants.items.line'),
               description: stripHtml(t('variants.styles.line')),
               code: codeLine,
@@ -442,6 +444,7 @@ export function createTabsDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'vertical',
               name: t('variants.items.vertical'),
               description: stripHtml(t('variants.styles.vertical')),
               code: verticalCode,
@@ -526,6 +529,7 @@ Object.entries(badgeMap).forEach(([value, cfg]) => {
           componentSlug: 'tabs',
           items: [
             {
+              trackId: 'iconTrigger',
               name: t('variants.compositions.iconTrigger.name'),
               description: t('variants.compositions.iconTrigger.description'),
               useWhen: t('variants.compositions.iconTrigger.use'),
@@ -564,6 +568,7 @@ Object.entries(badgeMap).forEach(([value, cfg]) => {
               },
             },
             {
+              trackId: 'badgeTrigger',
               name: t('variants.compositions.badgeTrigger.name'),
               description: t('variants.compositions.badgeTrigger.description'),
               useWhen: t('variants.compositions.badgeTrigger.use'),

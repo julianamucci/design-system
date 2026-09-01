@@ -419,6 +419,7 @@ export function createCollapsibleDocs(): HTMLElement {
           componentSlug: 'collapsible',
           items: [
             {
+              trackId: 'uncontrolled',
               name: stripHtml(t('variants.items.uncontrolled')).slice(0, 40) + '…',
               description: stripHtml(t('variants.items.uncontrolled')),
               code: codeUncontrolled,
@@ -440,6 +441,7 @@ export function createCollapsibleDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'controlled',
               name: stripHtml(t('variants.items.controlled')).slice(0, 40) + '…',
               description: stripHtml(t('variants.items.controlled')),
               code: codeControlled,
@@ -490,6 +492,7 @@ export function createCollapsibleDocs(): HTMLElement {
           componentSlug: 'collapsible',
           items: [
             {
+              trackId: 'iconTrigger',
               name: t('variants.compositions.iconTrigger.name'),
               description: t('variants.compositions.iconTrigger.description'),
               useWhen: t('variants.compositions.iconTrigger.use'),
@@ -504,6 +507,7 @@ export function createCollapsibleDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'rotatingChevron',
               name: t('variants.compositions.rotatingChevron.name'),
               description: t('variants.compositions.rotatingChevron.description'),
               useWhen: t('variants.compositions.rotatingChevron.use'),
@@ -556,6 +560,7 @@ export function createCollapsibleDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'richContent',
               name: t('variants.compositions.richContent.name'),
               description: t('variants.compositions.richContent.description'),
               useWhen: t('variants.compositions.richContent.use'),

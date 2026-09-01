@@ -505,6 +505,7 @@ export function createToggleGroupDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'single',
               name: stripHtml(t('variants.items.single')),
               description: stripHtml(t('variants.styles.single')),
               code: `const group = createToggleGroup({
@@ -533,6 +534,7 @@ export function createToggleGroupDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'multiple',
               name: stripHtml(t('variants.items.multiple')),
               description: stripHtml(t('variants.styles.multiple')),
               code: `const group = createToggleGroup({
@@ -561,6 +563,7 @@ export function createToggleGroupDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'vertical',
               name: stripHtml(t('variants.items.vertical')),
               description: stripHtml(t('variants.styles.vertical')),
               code: `const group = createToggleGroup({
@@ -598,6 +601,7 @@ export function createToggleGroupDocs(): HTMLElement {
           componentSlug: 'toggle-group',
           items: [
             {
+              trackId: 'alignmentBar',
               name: t('variants.compositions.alignmentBar.name'),
               description: t('variants.compositions.alignmentBar.description'),
               useWhen: t('variants.compositions.alignmentBar.use'),
@@ -632,6 +636,7 @@ injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);`,
               },
             },
             {
+              trackId: 'viewMode',
               name: t('variants.compositions.viewMode.name'),
               description: t('variants.compositions.viewMode.description'),
               useWhen: t('variants.compositions.viewMode.use'),
@@ -673,6 +678,7 @@ injectIconsAndText(group, [
               },
             },
             {
+              trackId: 'filterWithText',
               name: t('variants.compositions.filterWithText.name'),
               description: t('variants.compositions.filterWithText.description'),
               useWhen: t('variants.compositions.filterWithText.use'),

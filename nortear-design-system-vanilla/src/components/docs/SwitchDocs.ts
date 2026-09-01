@@ -417,6 +417,7 @@ label.textContent = 'Receber notificações';`,
           title: t('variants.title'),
           items: [
             {
+              trackId: 'default',
               name: stripHtml(t('variants.items.default')),
               description: stripHtml(t('variants.styles.default')),
               code: `const sw = createSwitch({ id: 'notif', checked: false });
@@ -430,6 +431,7 @@ label.textContent = 'Receber notificações';`,
               }),
             },
             {
+              trackId: 'withDescription',
               name: stripHtml(t('variants.items.withDescription')),
               description: stripHtml(t('variants.styles.withDescription')),
               code: `// Layout em painel: Label + descrição à esquerda · Switch à direita
@@ -445,6 +447,7 @@ const sw = createSwitch({ id: 'marketing' });`,
               }),
             },
             {
+              trackId: 'sm',
               name: stripHtml(t('variants.items.sm')),
               description: stripHtml(t('variants.styles.sm')),
               // O degrau vem da opção `size`, que a factory traduz em
@@ -472,6 +475,7 @@ const sw = createSwitch({ id: 'marketing' });`,
           componentSlug: 'switch',
           items: [
             {
+              trackId: 'withLabel',
               name: t('variants.compositions.withLabel.name'),
               description: t('variants.compositions.withLabel.description'),
               useWhen: t('variants.compositions.withLabel.use'),
@@ -498,6 +502,7 @@ const sw = createSwitch({ id: 'marketing' });`,
               },
             },
             {
+              trackId: 'withoutLabel',
               name: t('variants.compositions.withoutLabel.name'),
               description: t('variants.compositions.withoutLabel.description'),
               useWhen: t('variants.compositions.withoutLabel.use'),
@@ -515,6 +520,7 @@ const sw = createSwitch({ id: 'marketing' });`,
               },
             },
             {
+              trackId: 'settingsList',
               name: t('variants.compositions.settingsList.name'),
               description: t('variants.compositions.settingsList.description'),
               useWhen: t('variants.compositions.settingsList.use'),
@@ -592,6 +598,7 @@ const sw = createSwitch({ id: 'marketing' });`,
               },
             },
             {
+              trackId: 'inForm',
               name: t('variants.compositions.inForm.name'),
               description: t('variants.compositions.inForm.description'),
               useWhen: t('variants.compositions.inForm.use'),

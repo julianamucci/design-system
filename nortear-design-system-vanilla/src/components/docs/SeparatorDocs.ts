@@ -456,12 +456,14 @@ export function createSeparatorDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'horizontal',
               name: t('variants.items.horizontal'),
               description: DOMPurify.sanitize(t('variants.styles.horizontal')),
               code: horizontalCode,
               previewFactory: () => buildHorizontalDemo(t('variants.items.horizontal')),
             },
             {
+              trackId: 'vertical',
               name: t('variants.items.vertical'),
               description: DOMPurify.sanitize(t('variants.styles.vertical')),
               code: verticalCode,

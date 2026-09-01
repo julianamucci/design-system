@@ -563,7 +563,7 @@ export function createStepperDocs(): HTMLElement {
               name: t('variants.compositions.withDescriptions.name'),
               description: t('variants.compositions.withDescriptions.description'),
               useWhen: t('variants.compositions.withDescriptions.use'),
-              trackId: 'with-descriptions',
+              trackId: 'withDescriptions',
               code: stepperSnippet({
                 'aria-label': t('demonstration.labels.flow'),
                 value: 2,

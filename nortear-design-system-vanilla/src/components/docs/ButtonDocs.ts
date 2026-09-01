@@ -483,6 +483,7 @@ export function createButtonDocs(): HTMLElement {
           componentSlug: 'button',
           items: [
             {
+              trackId: 'iconLeft',
               name: t('variants.compositions.iconLeft.name'),
               description: t('variants.compositions.iconLeft.description'),
               useWhen: t('variants.compositions.iconLeft.use'),
@@ -502,6 +503,7 @@ export function createButtonDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'iconRight',
               name: t('variants.compositions.iconRight.name'),
               description: t('variants.compositions.iconRight.description'),
               useWhen: t('variants.compositions.iconRight.use'),
@@ -521,6 +523,7 @@ export function createButtonDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'destructiveWithIcon',
               name: t('variants.compositions.destructiveWithIcon.name'),
               description: t('variants.compositions.destructiveWithIcon.description'),
               useWhen: t('variants.compositions.destructiveWithIcon.use'),
@@ -540,6 +543,7 @@ export function createButtonDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'actionPair',
               name: t('variants.compositions.actionPair.name'),
               description: t('variants.compositions.actionPair.description'),
               useWhen: t('variants.compositions.actionPair.use'),

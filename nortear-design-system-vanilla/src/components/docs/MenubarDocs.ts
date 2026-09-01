@@ -514,6 +514,7 @@ const panel = bar.querySelector('[role="menu"]');
           componentSlug: 'menubar',
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
@@ -539,6 +540,7 @@ const panel = bar.querySelector('[role="menu"]');
               },
             },
             {
+              trackId: 'destructive',
               name: t('variants.items.destructive'),
               description:
                 stripHtml(t('variants.styles.destructive')) +

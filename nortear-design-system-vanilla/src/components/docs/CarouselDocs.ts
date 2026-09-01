@@ -626,6 +626,7 @@ const carousel = createCarousel({ items });`;
           componentSlug: 'carousel',
           items: [
             {
+              trackId: 'withDots',
               name: stripHtml(t('variants.compositions.withDots.name')),
               description: stripHtml(t('variants.compositions.withDots.description')),
               useWhen: stripHtml(t('variants.compositions.withDots.use')),
@@ -633,6 +634,7 @@ const carousel = createCarousel({ items });`;
               previewFactory: buildDotsPreview,
             },
             {
+              trackId: 'gallery',
               name: stripHtml(t('variants.compositions.gallery.name')),
               description: stripHtml(t('variants.compositions.gallery.description')),
               useWhen: stripHtml(t('variants.compositions.gallery.use')),

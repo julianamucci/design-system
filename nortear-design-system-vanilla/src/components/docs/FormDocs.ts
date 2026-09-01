@@ -436,6 +436,7 @@ export function createFormDocs(): HTMLElement {
           componentSlug: 'form',
           items: [
             {
+              trackId: 'fieldset',
               name: t('variants.compositions.fieldset.name'),
               description: t('variants.compositions.fieldset.description'),
               useWhen: t('variants.compositions.fieldset.use'),

@@ -460,6 +460,7 @@ export function createScrollAreaDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'vertical',
               name: stripHtml(t('variants.items.vertical')),
               description: stripHtml(t('variants.styles.vertical')),
               code: verticalCode,
@@ -470,6 +471,7 @@ export function createScrollAreaDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'horizontal',
               name: stripHtml(t('variants.items.horizontal')),
               description: stripHtml(t('variants.styles.horizontal')),
               code: horizontalCode,
@@ -480,6 +482,7 @@ export function createScrollAreaDocs(): HTMLElement {
               }),
             },
             {
+              trackId: 'both',
               name: stripHtml(t('variants.items.both')),
               description: stripHtml(t('variants.styles.both')),
               code: codeBoth,

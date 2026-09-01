@@ -326,6 +326,7 @@ export function createLabelDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default.label'),
               description: DOMPurify.sanitize(t('variants.items.default.description')),
               code: codeDefault,

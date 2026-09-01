@@ -528,6 +528,7 @@ export function createInputDocs(): HTMLElement {
           componentSlug: 'input',
           items: [
             {
+              trackId: 'withLabel',
               name: t('variants.compositions.withLabel.name'),
               description: t('variants.compositions.withLabel.description'),
               useWhen: t('variants.compositions.withLabel.use'),
@@ -546,6 +547,7 @@ export function createInputDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'withHint',
               name: t('variants.compositions.withHint.name'),
               description: t('variants.compositions.withHint.description'),
               useWhen: t('variants.compositions.withHint.use'),
@@ -567,6 +569,7 @@ export function createInputDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'errorMessage',
               name: t('variants.compositions.errorMessage.name'),
               description: t('variants.compositions.errorMessage.description'),
               useWhen: t('variants.compositions.errorMessage.use'),
@@ -591,6 +594,7 @@ export function createInputDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'withPrefix',
               name: t('variants.compositions.withPrefix.name'),
               description: t('variants.compositions.withPrefix.description'),
               useWhen: t('variants.compositions.withPrefix.use'),

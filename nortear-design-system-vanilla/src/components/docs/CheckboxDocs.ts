@@ -437,6 +437,7 @@ label.textContent = 'Aceito os termos e condições';`,
           componentSlug: 'checkbox',
           items: [
             {
+              trackId: 'fieldset',
               name: t('variants.compositions.fieldset.name'),
               description: t('variants.compositions.fieldset.description'),
               useWhen: t('variants.compositions.fieldset.use'),
@@ -496,6 +497,7 @@ label.textContent = 'Aceito os termos e condições';`,
               },
             },
             {
+              trackId: 'selectAll',
               name: t('variants.compositions.selectAll.name'),
               description: t('variants.compositions.selectAll.description'),
               useWhen: t('variants.compositions.selectAll.use'),
@@ -585,6 +587,7 @@ label.textContent = 'Aceito os termos e condições';`,
               },
             },
             {
+              trackId: 'inList',
               name: t('variants.compositions.inList.name'),
               description: t('variants.compositions.inList.description'),
               useWhen: t('variants.compositions.inList.use'),

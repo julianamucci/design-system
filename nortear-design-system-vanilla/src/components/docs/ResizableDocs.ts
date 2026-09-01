@@ -417,18 +417,21 @@ const root = createResizablePanel({
           title: t('variants.title'),
           items: [
             {
+              trackId: 'horizontal',
               name: t('variants.items.horizontal'),
               description: stripHtml(t('variants.styles.horizontal')),
               code: horizontalCode,
               previewFactory: () => buildHorizontalDemo(),
             },
             {
+              trackId: 'vertical',
               name: t('variants.items.vertical'),
               description: stripHtml(t('variants.styles.vertical')),
               code: verticalCode,
               previewFactory: () => buildVerticalDemo(),
             },
             {
+              trackId: 'nested',
               name: t('variants.items.nested'),
               description: stripHtml(t('variants.styles.nested')),
               code: codeNested,

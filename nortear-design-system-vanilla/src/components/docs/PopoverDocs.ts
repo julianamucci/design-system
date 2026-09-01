@@ -464,18 +464,21 @@ createPopover({ trigger, content: form });`;
           title: t('variants.title'),
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
               previewFactory: () => buildDefaultPopover(),
             },
             {
+              trackId: 'withTitle',
               name: t('variants.items.withTitle'),
               description: stripHtml(t('variants.styles.withTitle')),
               code: codeWithTitle,
               previewFactory: () => buildWithTitlePopover(),
             },
             {
+              trackId: 'form',
               name: t('variants.items.form'),
               description: stripHtml(t('variants.styles.form')),
               code: codeForm,
@@ -779,6 +782,7 @@ createPopover({ trigger, content });`;
           componentSlug: 'popover',
           items: [
             {
+              trackId: 'editProfile',
               name: stripHtml(t('variants.compositions.editProfile.name')),
               description: stripHtml(t('variants.compositions.editProfile.description')),
               useWhen: stripHtml(t('variants.compositions.editProfile.use')),
@@ -786,6 +790,7 @@ createPopover({ trigger, content });`;
               previewFactory: () => buildEditProfilePreview(),
             },
             {
+              trackId: 'tableFilter',
               name: stripHtml(t('variants.compositions.tableFilter.name')),
               description: stripHtml(t('variants.compositions.tableFilter.description')),
               useWhen: stripHtml(t('variants.compositions.tableFilter.use')),
@@ -793,6 +798,7 @@ createPopover({ trigger, content });`;
               previewFactory: () => buildTableFilterPreview(),
             },
             {
+              trackId: 'colorPicker',
               name: stripHtml(t('variants.compositions.colorPicker.name')),
               description: stripHtml(t('variants.compositions.colorPicker.description')),
               useWhen: stripHtml(t('variants.compositions.colorPicker.use')),
@@ -800,6 +806,7 @@ createPopover({ trigger, content });`;
               previewFactory: () => buildColorPickerPreview(),
             },
             {
+              trackId: 'quickSettings',
               name: stripHtml(t('variants.compositions.quickSettings.name')),
               description: stripHtml(t('variants.compositions.quickSettings.description')),
               useWhen: stripHtml(t('variants.compositions.quickSettings.use')),

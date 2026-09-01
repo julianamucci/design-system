@@ -426,12 +426,14 @@ createDropdownMenu({
           componentSlug: 'dropdown-menu',
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
               previewFactory: () => buildDemoMenu(t('variants.items.default')),
             },
             {
+              trackId: 'destructive',
               name: t('variants.items.destructive'),
               description: stripHtml(t('variants.styles.destructive')),
               code: codeDestructive,

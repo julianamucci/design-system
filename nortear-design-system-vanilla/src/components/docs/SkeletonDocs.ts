@@ -428,18 +428,21 @@ export function createSkeletonDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'rectangle',
               name: t('variants.items.rectangle'),
               description: DOMPurify.sanitize(t('variants.styles.rectangle')),
               code: codeRect,
               previewFactory: () => buildRectangleVariant(),
             },
             {
+              trackId: 'circle',
               name: t('variants.items.circle'),
               description: DOMPurify.sanitize(t('variants.styles.circle')),
               code: codeCircle,
               previewFactory: () => buildCircleVariant(),
             },
             {
+              trackId: 'line',
               name: t('variants.items.line'),
               description: DOMPurify.sanitize(t('variants.styles.line')),
               code: codeLine,

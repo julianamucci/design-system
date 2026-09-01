@@ -400,6 +400,7 @@ export function createRadioGroupDocs(): HTMLElement {
           componentSlug: 'radio-group',
           items: [
             {
+              trackId: 'vertical',
               name: stripHtml(t('variants.items.vertical')),
               description: stripHtml(t('variants.styles.vertical')),
               code: `createRadioGroup({ name: 'payment', legend: 'Forma de pagamento', items });`,
@@ -415,6 +416,7 @@ export function createRadioGroupDocs(): HTMLElement {
                 }),
             },
             {
+              trackId: 'horizontal',
               name: stripHtml(t('variants.items.horizontal')),
               description: stripHtml(t('variants.styles.horizontal')),
               code: `createRadioGroup({\n  name: 'delivery',\n  legend: 'Forma de entrega',\n  orientation: 'horizontal',\n  items,\n});`,
@@ -431,6 +433,7 @@ export function createRadioGroupDocs(): HTMLElement {
                 }),
             },
             {
+              trackId: 'withDescription',
               name: stripHtml(t('variants.items.withDescription')),
               description: stripHtml(t('variants.styles.withDescription')),
               code: `// Factory não expõe \`description\` por item — composição manual:\nconst group = createRadioGroup({\n  name: 'delivery',\n  legend: 'Forma de entrega',\n  items,\n});\n// percorra as .nds-radio-row e injete <p> de descrição ao lado do <label>`,
@@ -557,6 +560,7 @@ form.addEventListener('submit', (e) => {
           componentSlug: 'radio-group',
           items: [
             {
+              trackId: 'inForm',
               name: t('variants.compositions.inForm.name'),
               description: t('variants.compositions.inForm.description'),
               useWhen: t('variants.compositions.inForm.use'),

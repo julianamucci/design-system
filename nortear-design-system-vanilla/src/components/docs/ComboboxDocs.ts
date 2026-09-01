@@ -744,7 +744,7 @@ field.destroy();`,
               name: stripHtml(t('variants.compositions.inForm.name')),
               description: stripHtml(t('variants.compositions.inForm.description')),
               useWhen: stripHtml(t('variants.compositions.inForm.use')),
-              trackId: 'in-form',
+              trackId: 'inForm',
               code: `const form = document.createElement('form');
 form.className = 'nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4';
 form.dataset.spacing = 'md';

@@ -461,7 +461,7 @@ export function createCodeBlockDocs(): HTMLElement {
               name: t('variants.items.withTitle.name'),
               // O nome é traduzido; sem trackId o mesmo evento sairia com um
               // valor por idioma. A chave é a mesma do data-track-id do preview.
-              trackId: 'with-title',
+              trackId: 'withTitle',
               description: t('variants.items.withTitle.description'),
               useWhen: t('variants.items.withTitle.use'),
               code:
@@ -478,7 +478,7 @@ export function createCodeBlockDocs(): HTMLElement {
             },
             {
               name: t('variants.items.withoutNumbers.name'),
-              trackId: 'without-numbers',
+              trackId: 'withoutNumbers',
               description: t('variants.items.withoutNumbers.description'),
               useWhen: t('variants.items.withoutNumbers.use'),
               code:
@@ -512,7 +512,7 @@ export function createCodeBlockDocs(): HTMLElement {
             },
             {
               name: t('variants.items.withFooter.name'),
-              trackId: 'with-footer',
+              trackId: 'withFooter',
               description: t('variants.items.withFooter.description'),
               useWhen: t('variants.items.withFooter.use'),
               code:

@@ -453,6 +453,7 @@ textarea.addEventListener('input', () => {
           componentSlug: 'textarea',
           items: [
             {
+              trackId: 'default',
               name: stripHtml(t('variants.items.default')),
               description: stripHtml(t('variants.styles.default')),
               code: `const textarea = createTextarea({
@@ -467,6 +468,7 @@ textarea.addEventListener('input', () => {
               }),
             },
             {
+              trackId: 'withCounter',
               name: stripHtml(t('variants.items.withCounter')),
               description: stripHtml(t('variants.styles.withCounter')),
               code: `const textarea = createTextarea({
@@ -495,6 +497,7 @@ textarea.addEventListener('input', () => {
               }),
             },
             {
+              trackId: 'noResize',
               name: stripHtml(t('variants.items.noResize')),
               description: stripHtml(t('variants.styles.noResize')),
               code: `const textarea = createTextarea({
@@ -650,6 +653,7 @@ form.addEventListener('submit', (e) => {
           componentSlug: 'textarea',
           items: [
             {
+              trackId: 'withLabel',
               name: t('variants.compositions.withLabel.name'),
               description: t('variants.compositions.withLabel.description'),
               useWhen: t('variants.compositions.withLabel.use'),
@@ -667,6 +671,7 @@ form.addEventListener('submit', (e) => {
               },
             },
             {
+              trackId: 'withHint',
               name: t('variants.compositions.withHint.name'),
               description: t('variants.compositions.withHint.description'),
               useWhen: t('variants.compositions.withHint.use'),
@@ -685,6 +690,7 @@ form.addEventListener('submit', (e) => {
               },
             },
             {
+              trackId: 'withError',
               name: t('variants.compositions.withError.name'),
               description: t('variants.compositions.withError.description'),
               useWhen: t('variants.compositions.withError.use'),
@@ -704,6 +710,7 @@ form.addEventListener('submit', (e) => {
               },
             },
             {
+              trackId: 'inForm',
               name: t('variants.compositions.inForm.name'),
               description: t('variants.compositions.inForm.description'),
               useWhen: t('variants.compositions.inForm.use'),

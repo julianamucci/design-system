@@ -692,6 +692,7 @@ card.appendChild(content);`;
           componentSlug: 'chart',
           items: [
             {
+              trackId: 'inCard',
               name: stripHtml(t('variants.compositions.inCard.name')),
               description: stripHtml(t('variants.compositions.inCard.description')),
               useWhen: stripHtml(t('variants.compositions.inCard.use')),

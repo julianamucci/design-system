@@ -447,12 +447,14 @@ export function createProgressDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'determinate',
               name: t('variants.items.determinate'),
               description: DOMPurify.sanitize(t('variants.styles.determinate')),
               code: codeDeterminate,
               previewFactory: () => buildProgress({ value: 42, 'aria-label': 'Progresso do upload' }),
             },
             {
+              trackId: 'withLabel',
               name: t('variants.items.withLabel'),
               description: DOMPurify.sanitize(t('variants.styles.withLabel')),
               code: codeWithLabel,
@@ -460,6 +462,7 @@ export function createProgressDocs(): HTMLElement {
                 buildLabeled({ value: 42, labelText: t('demonstration.labels.upload'), 'aria-label': t('demonstration.labels.upload') }),
             },
             {
+              trackId: 'semantic',
               name: t('variants.items.semantic'),
               description: DOMPurify.sanitize(t('variants.styles.semantic')),
               code: codeSemantic,

@@ -401,6 +401,7 @@ export function createTableDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
+              trackId: 'basic',
               name: t('variants.items.basic.label'),
               description: DOMPurify.sanitize(t('variants.items.basic.description')),
               code: codeBasica,
@@ -430,6 +431,7 @@ export function createTableDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'withFooter',
               name: t('variants.items.withFooter.label'),
               description: DOMPurify.sanitize(t('variants.items.withFooter.description')),
               code: codeFooter,
@@ -467,6 +469,7 @@ export function createTableDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'withSrOnlyCaption',
               name: t('variants.items.withSrOnlyCaption.label'),
               description: DOMPurify.sanitize(t('variants.items.withSrOnlyCaption.description')),
               code: codeSrOnly,
@@ -496,6 +499,7 @@ export function createTableDocs(): HTMLElement {
               },
             },
             {
+              trackId: 'withInlineActions',
               name: t('variants.items.withInlineActions.label'),
               description: DOMPurify.sanitize(t('variants.items.withInlineActions.description')),
               code: codeActions,
@@ -734,6 +738,7 @@ container.appendChild(pagination);`;
           componentSlug: 'table',
           items: [
             {
+              trackId: 'filterableToolbar',
               name: t('variants.compositions.filterableToolbar.name'),
               description: DOMPurify.sanitize(t('variants.compositions.filterableToolbar.description')),
               useWhen: DOMPurify.sanitize(t('variants.compositions.filterableToolbar.use')),
@@ -741,6 +746,7 @@ container.appendChild(pagination);`;
               previewFactory: buildFilterableToolbarPreview,
             },
             {
+              trackId: 'sortableHeaders',
               name: t('variants.compositions.sortableHeaders.name'),
               description: DOMPurify.sanitize(t('variants.compositions.sortableHeaders.description')),
               useWhen: DOMPurify.sanitize(t('variants.compositions.sortableHeaders.use')),
@@ -748,6 +754,7 @@ container.appendChild(pagination);`;
               previewFactory: buildSortableHeadersPreview,
             },
             {
+              trackId: 'selectableRows',
               name: t('variants.compositions.selectableRows.name'),
               description: DOMPurify.sanitize(t('variants.compositions.selectableRows.description')),
               useWhen: DOMPurify.sanitize(t('variants.compositions.selectableRows.use')),
@@ -755,6 +762,7 @@ container.appendChild(pagination);`;
               previewFactory: buildSelectableRowsPreview,
             },
             {
+              trackId: 'withPagination',
               name: t('variants.compositions.withPagination.name'),
               description: DOMPurify.sanitize(t('variants.compositions.withPagination.description')),
               useWhen: DOMPurify.sanitize(t('variants.compositions.withPagination.use')),

@@ -513,6 +513,7 @@ createDialog({
           componentSlug: 'dialog',
           items: [
             {
+              trackId: 'mediaPreview',
               name: stripHtml(t('variants.compositions.mediaPreview.name')),
               description: stripHtml(t('variants.compositions.mediaPreview.description')),
               useWhen: stripHtml(t('variants.compositions.mediaPreview.use')),

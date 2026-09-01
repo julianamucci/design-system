@@ -434,18 +434,21 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
           componentSlug: 'tooltip',
           items: [
             {
+              trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
               previewFactory: () => buildDefaultTooltip(),
             },
             {
+              trackId: 'withShortcut',
               name: t('variants.items.withShortcut'),
               description: stripHtml(t('variants.styles.withShortcut')),
               code: codeShortcut,
               previewFactory: () => buildWithShortcutTooltip(),
             },
             {
+              trackId: 'longText',
               name: t('variants.items.longText'),
               description: stripHtml(t('variants.styles.longText')),
               code: codeLong,
@@ -606,6 +609,7 @@ createTooltip({
           componentSlug: 'tooltip',
           items: [
             {
+              trackId: 'iconButtonWithShortcut',
               name: stripHtml(t('variants.compositions.iconButtonWithShortcut.name')),
               description: stripHtml(t('variants.compositions.iconButtonWithShortcut.description')),
               useWhen: stripHtml(t('variants.compositions.iconButtonWithShortcut.use')),
@@ -613,6 +617,7 @@ createTooltip({
               previewFactory: buildIconShortcutPreview,
             },
             {
+              trackId: 'formFieldHelp',
               name: stripHtml(t('variants.compositions.formFieldHelp.name')),
               description: stripHtml(t('variants.compositions.formFieldHelp.description')),
               useWhen: stripHtml(t('variants.compositions.formFieldHelp.use')),
@@ -620,6 +625,7 @@ createTooltip({
               previewFactory: buildFormHelpPreview,
             },
             {
+              trackId: 'metricDescription',
               name: stripHtml(t('variants.compositions.metricDescription.name')),
               description: stripHtml(t('variants.compositions.metricDescription.description')),
               useWhen: stripHtml(t('variants.compositions.metricDescription.use')),

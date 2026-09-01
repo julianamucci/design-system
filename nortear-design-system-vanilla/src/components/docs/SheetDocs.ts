@@ -380,6 +380,7 @@ createSheet({
           title: t('variants.title'),
           items: [
             {
+              trackId: 'right',
               name: t('variants.items.right'),
               description: stripHtml(t('variants.styles.right')),
               code: codeRight,
@@ -393,6 +394,7 @@ createSheet({
               }),
             },
             {
+              trackId: 'left',
               name: t('variants.items.left'),
               description: stripHtml(t('variants.styles.left')),
               code: codeLeft,
@@ -406,6 +408,7 @@ createSheet({
               }),
             },
             {
+              trackId: 'top',
               name: t('variants.items.top'),
               description: stripHtml(t('variants.styles.top')),
               code: codeTop,
@@ -419,6 +422,7 @@ createSheet({
               }),
             },
             {
+              trackId: 'bottom',
               name: t('variants.items.bottom'),
               description: stripHtml(t('variants.styles.bottom')),
               code: codeBottom,
@@ -457,6 +461,7 @@ createSheet({
           componentSlug: 'sheet',
           items: [
             {
+              trackId: 'advancedFilters',
               name: stripHtml(t('variants.compositions.advancedFilters.name')),
               description: stripHtml(t('variants.compositions.advancedFilters.description')),
               useWhen: stripHtml(t('variants.compositions.advancedFilters.use')),
@@ -488,6 +493,7 @@ createSheet({
               }),
             },
             {
+              trackId: 'secondaryNavigation',
               name: stripHtml(t('variants.compositions.secondaryNavigation.name')),
               description: stripHtml(t('variants.compositions.secondaryNavigation.description')),
               useWhen: stripHtml(t('variants.compositions.secondaryNavigation.use')),

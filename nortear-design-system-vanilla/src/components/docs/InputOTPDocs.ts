@@ -333,24 +333,28 @@ const otp = createInputOTP({ length: 6 });`;
           title: t('variants.title'),
           items: [
             {
+              trackId: 'sixDigits',
               name: t('variants.items.sixDigits'),
               description: stripHtml(t('variants.styles.sixDigits')),
               code: codeSix,
               previewFactory: () => buildSixDigits(),
             },
             {
+              trackId: 'fourDigits',
               name: t('variants.items.fourDigits'),
               description: stripHtml(t('variants.styles.fourDigits')),
               code: codeFour,
               previewFactory: () => buildFourDigits(),
             },
             {
+              trackId: 'withSeparator',
               name: t('variants.items.withSeparator'),
               description: stripHtml(t('variants.styles.withSeparator')),
               code: codeSep,
               previewFactory: () => buildWithSeparator(),
             },
             {
+              trackId: 'alphanumeric',
               name: t('variants.items.alphanumeric'),
               description:
                 stripHtml(t('variants.styles.alphanumeric')) +
@@ -444,6 +448,7 @@ row.append(note, btn);`;
           componentSlug: 'input-otp',
           items: [
             {
+              trackId: 'withLabel',
               name: t('variants.compositions.withLabel.name'),
               description: stripHtml(t('variants.compositions.withLabel.description')),
               useWhen: stripHtml(t('variants.compositions.withLabel.use')),
@@ -464,6 +469,7 @@ row.append(note, btn);`;
               },
             },
             {
+              trackId: 'withHelpText',
               name: t('variants.compositions.withHelpText.name'),
               description: stripHtml(t('variants.compositions.withHelpText.description')),
               useWhen: stripHtml(t('variants.compositions.withHelpText.use')),
@@ -487,6 +493,7 @@ row.append(note, btn);`;
               },
             },
             {
+              trackId: 'withErrorMessage',
               name: t('variants.compositions.withErrorMessage.name'),
               description: stripHtml(t('variants.compositions.withErrorMessage.description')),
               useWhen: stripHtml(t('variants.compositions.withErrorMessage.use')),
@@ -511,6 +518,7 @@ row.append(note, btn);`;
               },
             },
             {
+              trackId: 'withResendButton',
               name: t('variants.compositions.withResendButton.name'),
               description: stripHtml(t('variants.compositions.withResendButton.description')),
               useWhen: stripHtml(t('variants.compositions.withResendButton.use')),

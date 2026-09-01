@@ -584,6 +584,7 @@ content.insertBefore(card, content.firstChild);`;
           componentSlug: 'navigation-menu',
           items: [
             {
+              trackId: 'horizontal',
               name: t('variants.items.horizontal'),
               description: stripHtml(t('variants.styles.horizontal')),
               code: horizontalCode,
@@ -599,6 +600,7 @@ content.insertBefore(card, content.firstChild);`;
               },
             },
             {
+              trackId: 'vertical',
               name: t('variants.items.vertical'),
               description: stripHtml(t('variants.styles.vertical')),
               code: verticalCode,

@@ -400,6 +400,7 @@ export function createBadgeDocs(): HTMLElement {
           componentSlug: 'badge',
           items: [
             {
+              trackId: 'withIcon',
               name: t('variants.compositions.withIcon.name'),
               description: t('variants.compositions.withIcon.description'),
               useWhen: t('variants.compositions.withIcon.use'),
@@ -409,6 +410,7 @@ export function createBadgeDocs(): HTMLElement {
               previewFactory: () => createBadge({ variant: 'default', children: [createCheckSvg() as unknown as HTMLElement, 'Ativo'] }),
             },
             {
+              trackId: 'withCounter',
               name: t('variants.compositions.withCounter.name'),
               description: t('variants.compositions.withCounter.description'),
               useWhen: t('variants.compositions.withCounter.use'),
@@ -424,6 +426,7 @@ export function createBadgeDocs(): HTMLElement {
                 }),
             },
             {
+              trackId: 'asTrigger',
               name: t('variants.compositions.asTrigger.name'),
               description: t('variants.compositions.asTrigger.description'),
               useWhen: t('variants.compositions.asTrigger.use'),

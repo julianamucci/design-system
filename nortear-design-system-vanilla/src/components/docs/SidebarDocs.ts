@@ -943,6 +943,7 @@ export function createSidebarDocs(): HTMLElement {
           componentSlug: 'sidebar',
           items: [
             {
+              trackId: 'withGroups',
               name: stripHtml(t('variants.compositions.withGroups.name')),
               description: stripHtml(t('variants.compositions.withGroups.description')),
               useWhen: stripHtml(t('variants.compositions.withGroups.use')),
@@ -950,6 +951,7 @@ export function createSidebarDocs(): HTMLElement {
               previewFactory: buildWithGroups,
             },
             {
+              trackId: 'withSearch',
               name: stripHtml(t('variants.compositions.withSearch.name')),
               description: stripHtml(t('variants.compositions.withSearch.description')),
               useWhen: stripHtml(t('variants.compositions.withSearch.use')),
