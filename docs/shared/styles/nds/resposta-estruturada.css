@@ -463,3 +463,352 @@
   background-position: center, center;
   background-repeat: no-repeat;
 }
+
+/* ── Cascata de trechos ───────────────────────────────────────────────────────
+ *
+ * O tempo de uma execução repartido entre trechos que se aninham e se
+ * sobrepõem: uma linha por trecho, uma barra POSICIONADA no eixo comum, e o
+ * recuo dizendo quem está dentro de quem. Vocabulário: `TraceSpan`, em
+ * `@shared/primitives/chat-protocol`; a conta — encostar o recuo na origem,
+ * recortar a barra no eixo, garantir a barra mínima — em
+ * `@shared/primitives/trace-waterfall-axis`.
+ *
+ *   <div class="nds-trace-waterfall" data-slot="trace-waterfall">
+ *     <p class="nds-trace-waterfall-axis" data-slot="trace-waterfall-axis">
+ *       Eixo de 1200 ms
+ *     </p>
+ *     <div class="nds-trace-waterfall-viewport" data-slot="trace-waterfall-viewport"
+ *          tabindex="0" role="group" aria-label="Tempo do atendimento">
+ *       <ol class="nds-trace-waterfall-rows" data-slot="trace-waterfall-rows">
+ *
+ *         <li class="nds-trace-waterfall-row" data-slot="trace-waterfall-row"
+ *             data-state="done" data-span-id="catalogo"
+ *             style="--trace-waterfall-row-indent: 1">
+ *           <span class="nds-trace-waterfall-name" data-slot="trace-waterfall-name">
+ *             <span class="nds-trace-waterfall-marker"
+ *                   data-slot="trace-waterfall-marker" aria-hidden="true"></span>
+ *             <span class="nds-trace-waterfall-label"
+ *                   data-slot="trace-waterfall-label">Consultar o catálogo</span>
+ *           </span>
+ *
+ *           <span class="nds-trace-waterfall-track"
+ *                 data-slot="trace-waterfall-track" aria-hidden="true">
+ *             <span class="nds-trace-waterfall-bar" data-slot="trace-waterfall-bar"
+ *                   style="--trace-waterfall-bar-start: 9.167;
+ *                          --trace-waterfall-bar-size: 26.667"></span>
+ *           </span>
+ *
+ *           <span class="nds-trace-waterfall-duration"
+ *                 data-slot="trace-waterfall-duration">320 ms</span>
+ *           <span class="nds-sr-only" data-slot="trace-waterfall-row-reading">
+ *             Concluído. Começa em 110 ms e dura 320 ms.
+ *           </span>
+ *         </li>
+ *
+ *       </ol>
+ *     </div>
+ *   </div>
+ *
+ * POR QUE ESTA PEÇA EXISTE, e não é a barra de progresso numa tabela. O que
+ * decide é o COMEÇO. Medido no repositório antes de construir:
+ * `.nds-progress-indicator` é `transform: translateX(calc((var(--value) - 100) *
+ * 1%))` — uma barra ANCORADA NO ZERO por construção, que preenche a partir do
+ * início e não sabe começar no meio de um eixo. E a medição do tempo de uma
+ * resposta, na família 5, não tem eixo nenhum: é um `<dl>` de pares termo/valor,
+ * e a folha daquela família diz por escrito que ali "não há medidor que troque
+ * de forma" e "não há teto de que caiba uma fração". Barra com começo é outro
+ * desenho, não outra variante — e a única coisa que este design system já
+ * posicionava por deslocamento era a marca da tela do computador.
+ *
+ * O EIXO É UM SÓ, E ELE CHEGA DE FORA. `totalMs` não é derivado dos trechos: é
+ * ele que faz as barras dividirem uma régua só, e é ele que continua sendo o
+ * total verdadeiro quando quem monta mostra apenas parte do rastro. Derivado, o
+ * eixo encolheria a cada trecho retirado e as barras restantes reescalariam —
+ * perdendo exatamente a posição que a peça existe para mostrar.
+ *
+ * A COLUNA DO EIXO É A MESMA EM TODAS AS LINHAS, e é isso que faz duas barras
+ * poderem ser comparadas com o olho. A grade é declarada UMA VEZ na lista, e
+ * cada linha herda as três colunas por `subgrid` — sem isso cada linha
+ * dimensionaria as próprias colunas pelo próprio conteúdo, o rótulo mais longo
+ * empurraria só a sua régua, e a comparação entre linhas deixaria de existir. É
+ * a razão de a lista ser a grade e a linha ser subgrade, e não o contrário.
+ *
+ * O RÓTULO NÃO QUEBRA, e essa é a divergência deliberada em relação ao grafo,
+ * onde ele quebra. Lá o nó é uma caixa numa casa de grade cuja largura é a do
+ * rótulo, e quebrar é o que impede a coluna de esticar; aqui a linha tem largura
+ * de sobra à direita, e quebrar o rótulo faria a linha crescer em altura e
+ * desalinhar a régua da vizinha. Rótulo longo ALARGA a coluna, a peça passa a
+ * ser mais larga que a conversa, e a camada rola — que é o comportamento que a
+ * regra 3 desta folha já prevê. Cortar, nunca: um trecho pela metade é um nome
+ * pela metade.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   `data-state`     Na linha: `pending`, `running`, `done` ou `failed`. Lido
+ *                    por atributo porque é ESTADO do componente, igual nas cinco
+ *                    stacks — e é o vocabulário inteiro de `ToolCallState`, não
+ *                    os três da fonte.
+ *   `aria-busy`      Na raiz, enquanto o rastro ainda se escreve. É o que
+ *                    substitui a região viva que a regra 5 recusa.
+ *   `aria-hidden`    Na régua inteira. Barra não se lê; o que se lê é a frase
+ *                    dentro de cada linha.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. A POSIÇÃO NÃO É DESENHO PARA QUEM OUVE — ELA É FRASE DENTRO DA LINHA. Cada
+ *    linha carrega, em texto que só quem ouve recebe, a palavra do seu estado, o
+ *    instante em que começa e quanto dura. É o que faz a cascata inteira se
+ *    reconstruir de ouvido: percorrida a lista, cada trecho disse onde está no
+ *    eixo, e a sobreposição entre dois deles é dedutível dos números.
+ * 2. A ORDEM É A DE DECLARAÇÃO, e a peça não ordena por começo. A posição no
+ *    eixo é livre; a ordem no DOM não é, porque ela é a ordem de leitura (WCAG
+ *    1.3.2). Ordenar seria a peça reescrevendo o rastro de quem monta.
+ * 3. É UMA LISTA ORDENADA, pelo mesmo motivo.
+ * 4. A LINHA NÃO É FOCALIZÁVEL, e quem recebe o foco é a camada que rola. Uma
+ *    linha não faz nada — não abre, não escolhe, não navega —, e uma dúzia de
+ *    paradas de tabulação que não levam a lugar nenhum é ruído para quem usa
+ *    teclado. O que o teclado precisa alcançar é a rolagem, e isso a regra 3
+ *    desta folha já garante.
+ * 5. O ESTADO TEM FORMA, E NÃO SÓ COR (WCAG 1.4.1), em DOIS lugares por linha. A
+ *    marca ao lado do rótulo repete o vocabulário de formas do grafo — cheia,
+ *    anel, anel interrompido, cruz —, e a barra acrescenta o seu: contorno
+ *    interrompido para o que não começou, listras para o que está correndo,
+ *    preenchimento cheio para o que terminou ou quebrou. `done` e `failed`
+ *    diferem por cor NA BARRA e por forma NA MARCA, e é o par que resolve.
+ * 6. A COR DE `done` NA BARRA É `--primary`, E NÃO `--success`, e essa é a
+ *    divergência deliberada em relação ao grafo. Num rastro quase todo trecho
+ *    terminou: se a barra de `done` fosse verde, a régua inteira ficaria verde e
+ *    a cor deixaria de significar coisa alguma — afogando justamente os dois
+ *    estados que se quer enxergar, o que corre e o que quebrou. A MARCA continua
+ *    verde, como no grafo, porque ali ela divide espaço com as outras três
+ *    formas e informa.
+ * 7. A DURAÇÃO VISÍVEL É NÚMERO TABULAR. Ela troca a cada trecho, e algarismo de
+ *    largura variável faz a coluna dançar entre linhas que deveriam alinhar.
+ * 8. NADA AQUI É REGIÃO VIVA. Um rastro ganha trecho enquanto a resposta é
+ *    gerada, e narrar cada trecho é a mesma armadilha do relógio ao vivo.
+ *    Enquanto se escreve, a raiz é `aria-busy`.
+ */
+
+.nds-trace-waterfall {
+  /*
+   * A LARGURA MÍNIMA DO NOME e a DO EIXO, e são as duas superfícies de
+   * customização da peça.
+   *
+   * Mínimas e não fixas: a coluna do nome cresce com o rótulo mais longo e a do
+   * eixo reparte o que sobrar, e as duas só param de encolher aqui. É este par
+   * que decide quando a cascata passa a ser mais larga que a conversa e a
+   * camada começa a rolar — um rastro de rótulos curtos e pouco recuo cabe; um
+   * de nomes longos ou muito aninhado rola, e é o que se quer.
+   */
+  --trace-waterfall-name-min: var(--spacing-24);
+  --trace-waterfall-axis-min: var(--spacing-40);
+
+  display: block;
+  font-size: var(--text-label);
+}
+
+.nds-trace-waterfall-axis {
+  /*
+   * A RÉGUA DITA EM PALAVRAS, e ela é visível de propósito. Sem ela, "todas as
+   * barras contra o mesmo eixo" é uma afirmação que só quem escreveu o dado
+   * consegue conferir — a peça mostra posições relativas e nunca diz relativas
+   * a QUÊ. Uma linha basta, e ela vale para quem vê e para quem ouve.
+   */
+  margin: 0;
+  margin-block-end: var(--spacing-2);
+  color: hsl(var(--muted-foreground));
+  line-height: var(--line-height-normal);
+}
+
+.nds-trace-waterfall-viewport {
+  /*
+   * A ÚNICA CAMADA QUE ROLA (regra 3 da folha). Só no eixo em linha: as linhas
+   * da cascata crescem com o conteúdo e a página as acompanha, então uma
+   * rolagem vertical aqui seria uma segunda camada dentro da conversa.
+   */
+  overflow-x: auto;
+  /* A rolagem para na peça e não é encadeada para a conversa atrás dela —
+     mesma decisão do grafo, e pelo mesmo motivo. */
+  overscroll-behavior-inline: contain;
+
+  padding: var(--spacing-3);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted));
+}
+
+.nds-trace-waterfall-viewport:focus-visible {
+  /* Para dentro, como no grafo: a moldura já encosta na borda da peça, e um
+     anel para fora sairia por baixo do que estiver ao lado. */
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+.nds-trace-waterfall-rows {
+  /*
+   * A GRADE MORA NA LISTA, e cada linha a herda por `subgrid` (ver o cabeçalho
+   * deste bloco). Três colunas: o nome, a régua e a duração.
+   *
+   * A coluna do nome é `max-content` com um piso no próprio elemento, e não
+   * `minmax(piso, max-content)`: sob dimensionamento por conteúdo mínimo — que é
+   * o que `inline-size: min-content` logo abaixo pede — a forma com `minmax`
+   * resolveria no piso e o rótulo longo transbordaria a coluna em vez de
+   * alargá-la. Com `max-content`, ele alarga, a peça passa da conversa e a
+   * camada rola, que é o desenho que se quer.
+   */
+  display: grid;
+  grid-template-columns:
+    max-content
+    minmax(var(--trace-waterfall-axis-min), 1fr)
+    max-content;
+  column-gap: var(--spacing-3);
+  row-gap: var(--spacing-2);
+
+  /*
+   * O TAMANHO DO DESENHO, e é ele que decide quando a camada rola. Mesmo par do
+   * grafo: `min-content` é a soma das larguras mínimas das colunas, e
+   * `min-inline-size` estica de volta até a camada quando a cascata é mais
+   * estreita que ela.
+   */
+  inline-size: min-content;
+  min-inline-size: 100%;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nds-trace-waterfall-row {
+  /* A LINHA É SUBGRADE: ela ocupa as três colunas da lista e as herda em vez de
+     dimensionar as suas. É o que mantém a régua de todas as linhas na mesma
+     posição, que é a condição para comparar duas barras com o olho. */
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+}
+
+.nds-trace-waterfall-name {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  /*
+   * O RECUO É O DEGRAU, e a conta mora aqui: o que entra por elemento é um
+   * NÚMERO de degraus, e a multiplicação que o transforma em distância pode
+   * mudar sem tocar nas cinco stacks. Mesma decisão de
+   * `--flow-graph-node-column` e de `--computer-use-mark-x`.
+   */
+  padding-inline-start: calc(var(--trace-waterfall-row-indent, 0) * var(--spacing-4));
+  /* O PISO DA COLUNA DO NOME, no elemento e não na trilha da grade — ver a nota
+     de `grid-template-columns` acima. */
+  min-inline-size: var(--trace-waterfall-name-min);
+}
+
+.nds-trace-waterfall-marker {
+  flex-shrink: 0;
+  inline-size: var(--spacing-3);
+  block-size: var(--spacing-3);
+  border-radius: var(--radius-full);
+  border: 2px solid hsl(var(--muted-foreground));
+}
+
+.nds-trace-waterfall-label {
+  /*
+   * NUNCA QUEBRA E NUNCA É CORTADO (ver o cabeçalho): a coluna alarga, a peça
+   * passa da conversa e a camada rola. Quebrar faria a linha crescer em altura e
+   * desalinhar a régua da vizinha; cortar esconderia o que distingue dois
+   * trechos que começam igual.
+   */
+  white-space: nowrap;
+  line-height: var(--line-height-normal);
+  color: hsl(var(--foreground));
+}
+
+.nds-trace-waterfall-track {
+  /* A RÉGUA de uma linha, e ela é a mesma em todas — é o fundo contínuo que
+     mostra, sem palavra nenhuma, que as barras dividem um eixo só. */
+  position: relative;
+  display: block;
+  /* Sem texto dentro, então altura fixa é legítima aqui: a regra de 1.4.4 vale
+     para o que carrega texto, e o rótulo está na coluna ao lado. */
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--background));
+}
+
+.nds-trace-waterfall-bar {
+  /*
+   * A BARRA COMEÇA ONDE O DADO MANDA. Os dois números chegam em porcentagem do
+   * eixo, já recortados pela conta compartilhada, e a folha os transforma em
+   * posição — que é a única coisa que este design system posicionava por
+   * deslocamento antes desta peça.
+   */
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(var(--trace-waterfall-bar-start, 0) * 1%);
+  inline-size: calc(var(--trace-waterfall-bar-size, 0) * 1%);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--primary));
+}
+
+/* Os quatro estados: FORMA primeiro, cor como reforço (decisões 5 e 6). */
+
+.nds-trace-waterfall-row[data-state="pending"] .nds-trace-waterfall-marker {
+  border-style: dashed;
+}
+.nds-trace-waterfall-row[data-state="pending"] .nds-trace-waterfall-bar {
+  /* O que não começou não tem tinta: contorno interrompido, e nada dentro. */
+  background-color: transparent;
+  border: 1px dashed hsl(var(--muted-foreground));
+}
+
+.nds-trace-waterfall-row[data-state="running"] .nds-trace-waterfall-marker {
+  border-color: hsl(var(--primary));
+}
+.nds-trace-waterfall-row[data-state="running"] .nds-trace-waterfall-bar {
+  /*
+   * LISTRAS, e elas são forma e não movimento: o que corre ainda não tem
+   * comprimento definitivo, e a hachura diz isso sem animar nada — animação
+   * contínua é assunto de `13-animacao.md`, e some com `prefers-reduced-motion`
+   * levando junto a informação, se fosse ela a carregá-la.
+   */
+  background-image: repeating-linear-gradient(
+    45deg,
+    hsl(var(--primary)) 0 var(--spacing-1),
+    hsl(var(--primary-foreground)) var(--spacing-1) var(--spacing-2)
+  );
+}
+
+.nds-trace-waterfall-row[data-state="done"] .nds-trace-waterfall-marker {
+  /* Cheia: é a forma que separa "terminou" de "está indo", sem depender da
+     cor. */
+  background-color: hsl(var(--success));
+  border-color: hsl(var(--success));
+}
+
+.nds-trace-waterfall-row[data-state="failed"] .nds-trace-waterfall-marker {
+  border-color: hsl(var(--destructive));
+  /* A CRUZ, e ela é forma e não cor: dois traços cruzados dentro do anel. Um
+     gradiente cônico desenharia isso com uma declaração, mas some em modo de
+     alto contraste forçado; dois fundos lineares sobrevivem. */
+  background-image:
+    linear-gradient(to bottom, hsl(var(--destructive)), hsl(var(--destructive))),
+    linear-gradient(to right, hsl(var(--destructive)), hsl(var(--destructive)));
+  background-size: 2px 100%, 100% 2px;
+  background-position: center, center;
+  background-repeat: no-repeat;
+}
+.nds-trace-waterfall-row[data-state="failed"] .nds-trace-waterfall-bar {
+  background-color: hsl(var(--destructive));
+}
+
+.nds-trace-waterfall-duration {
+  /*
+   * Número TABULAR (decisão 7): a duração troca a cada linha, e algarismo de
+   * largura variável faz a coluna dançar entre linhas que deveriam alinhar.
+   */
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: hsl(var(--muted-foreground));
+  line-height: var(--line-height-normal);
+}

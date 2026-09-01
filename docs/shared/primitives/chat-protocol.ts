@@ -639,3 +639,54 @@ export interface FlowEdge {
   /** Endereço do nó que depende. */
   to: string;
 }
+
+// ─── Intervalo num eixo de tempo ──────────────────────────────────────────────
+
+/**
+ * Um trecho de uma execução: o que ele é, QUANDO ele começou e quanto durou.
+ *
+ * É O TERCEIRO TIPO DESTE ARQUIVO QUE CARREGA GEOMETRIA, e entra pelo critério
+ * que os dois primeiros fixaram: o critério nunca foi "é conversa", é ser a
+ * ORIGEM ÚNICA do que mais de uma stack vai reescrever. Cinco stacks escrevendo
+ * o próprio par começo/duração é como se produz cinco geometrias que discordam,
+ * e geometria que discorda não aparece em teste — aparece como barra fora de
+ * lugar numa foto.
+ *
+ * O INTERVALO É PLANO, e não um `TimeSpan` aninhado. A forma foi decidida com a
+ * peça na mão, e o que decidiu foi o precedente deste arquivo mais a falta de um
+ * segundo consumidor: `ComputerStep` carrega `x` e `y` soltos, `FlowNode` carrega
+ * `column` e `row` soltos, e nenhum dos dois embrulha a geometria num tipo
+ * próprio. Um `TimeSpan` seria o primeiro objeto de geometria aninhado do
+ * vocabulário, custaria um nível a mais em toda chamada, e a única peça que sabe
+ * dizer QUANDO dentro de quê é esta — a medição do tempo de uma resposta, na
+ * família 5, é um par termo/valor sem eixo nenhum, e não tem começo para guardar.
+ * Tipo que embrulha dois campos para um consumidor só não é vocabulário: é
+ * indireção.
+ *
+ * O TOTAL NÃO MORA AQUI, e essa é a outra metade da mesma decisão. O total é
+ * propriedade do EIXO, não do trecho: é ele que faz as barras dividirem uma
+ * régua só, e é ele que continua sendo o total verdadeiro quando quem monta
+ * mostra apenas os últimos trechos — sem isso as barras restantes reescalariam e
+ * perderiam a posição real. Um total por trecho seriam N verdades sobre a mesma
+ * régua, que é exatamente o que `FlowEdge` recusa ao não carregar estado próprio.
+ *
+ * A BASE DA CONTAGEM DO RECUO NÃO IMPORTA, como no grafo: `depth` é RELATIVO
+ * entre os trechos, e quem desenha encosta o menor no zero.
+ *
+ * O ESTADO É `ToolCallState` INTEIRO. A fonte do catálogo achata em três — em
+ * curso, concluído e falhou — e o que falta lá é `pending`: o trecho que ainda
+ * não começou, que num eixo de tempo é justamente o que se quer ver.
+ */
+export interface TraceSpan {
+  /** Endereço do trecho, para atualizar o certo quando dois têm o mesmo rótulo. */
+  id: string;
+  /** O que este trecho é, como uma pessoa o chamaria. */
+  label: string;
+  /** Quando ele começou, em milissegundos desde a origem do eixo. */
+  startMs: number;
+  /** Quanto ele durou, em milissegundos. */
+  durationMs: number;
+  /** O recuo do trecho, em degraus. Relativo aos demais. */
+  depth: number;
+  state: ToolCallState;
+}

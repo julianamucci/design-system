@@ -1,0 +1,1865 @@
+{
+  "pt-BR": {
+    "title": "Cascata de trechos",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O tempo de uma execução repartido entre trechos que se aninham e se sobrepõem: uma linha por trecho, uma barra posicionada no eixo comum, e o recuo dizendo quem está dentro de quem.",
+    "seo": {
+      "title": "Cascata de trechos — o começo, a duração e o eixo comum",
+      "description": "A peça de cascata de trechos: barras posicionadas no eixo que quem monta declara, recuo mostrando o aninhamento, e a leitura em palavras que leva a posição a quem não vê o desenho."
+    },
+    "labels": {
+      "region": "Tempo do atendimento",
+      "axis": "Eixo de {total} ms",
+      "duration": "{duration} ms",
+      "reading": "Começa em {start} ms e dura {duration} ms.",
+      "clipped": "Continua fora da janela mostrada.",
+      "state": {
+        "pending": "Por começar",
+        "running": "Em andamento",
+        "done": "Concluído",
+        "failed": "Falhou"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "order": "Enquanto o agente trabalha, com dois trechos que se sobrepõem",
+        "failure": "Quando um dos trechos quebra",
+        "partial": "O rastro mostrado pela metade, com o mesmo eixo",
+        "wide": "Quando o rastro é mais largo que a conversa"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A régua dita em palavras abre a peça. Ela diz contra que eixo as barras estão posicionadas — sem ela, a posição é relativa a algo que ninguém consegue conferir.",
+      "item2": "A camada que rola envolve a fila de linhas. Ela é a única que rola, recebe foco pelo teclado e tem papel e nome — sem eles, quem chega ali ouvindo não sabe onde entrou.",
+      "item3": "Cada linha traz a marca do estado, o nome recuado conforme o aninhamento, a régua da linha e a duração. A grade das três colunas é declarada uma vez na lista e herdada por todas as linhas, que é o que mantém as barras comparáveis.",
+      "item4": "A barra começa onde o trecho começa e termina onde ele termina. As duas coordenadas chegam em porcentagem do eixo, e a conta que as transforma em posição mora na folha.",
+      "item5": "A frase que só quem ouve recebe repete, em números, a posição que a barra mostra — e avisa quando o trecho continua fora da janela.",
+      "structureCode": {
+        "web": "<div class=\"nds-trace-waterfall\" data-slot=\"trace-waterfall\" aria-busy=\"true\">\n  <p class=\"nds-trace-waterfall-axis\" data-slot=\"trace-waterfall-axis\">Eixo de 1200 ms</p>\n\n  <div class=\"nds-trace-waterfall-viewport\" data-slot=\"trace-waterfall-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Tempo do atendimento\">\n    <ol class=\"nds-trace-waterfall-rows\" data-slot=\"trace-waterfall-rows\">\n\n      <li class=\"nds-trace-waterfall-row\" data-slot=\"trace-waterfall-row\"\n          data-span-id=\"catalogo\" data-state=\"done\"\n          style=\"--trace-waterfall-row-indent: 1\">\n        <span class=\"nds-trace-waterfall-name\" data-slot=\"trace-waterfall-name\">\n          <span class=\"nds-trace-waterfall-marker\"\n                data-slot=\"trace-waterfall-marker\" aria-hidden=\"true\"></span>\n          <span class=\"nds-trace-waterfall-label\"\n                data-slot=\"trace-waterfall-label\">Consultar o catálogo</span>\n        </span>\n\n        <span class=\"nds-trace-waterfall-track\"\n              data-slot=\"trace-waterfall-track\" aria-hidden=\"true\">\n          <span class=\"nds-trace-waterfall-bar\" data-slot=\"trace-waterfall-bar\"\n                style=\"--trace-waterfall-bar-start: 9.167;\n                       --trace-waterfall-bar-size: 26.667\"></span>\n        </span>\n\n        <span class=\"nds-trace-waterfall-duration\"\n              data-slot=\"trace-waterfall-duration\">320 ms</span>\n        <span class=\"nds-sr-only\"\n              data-slot=\"trace-waterfall-row-reading\">Concluído. Começa em 110 ms e dura 320 ms.</span>\n      </li>\n\n    </ol>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando o que importa é quando cada trecho aconteceu dentro de um todo — dois trechos que correm ao mesmo tempo, um que espera, um que consumiu quase todo o tempo.",
+        "item2": "Declare o eixo, e mantenha o mesmo eixo entre duas cascatas que devem ser comparadas com o olho.",
+        "item3": "Declare os trechos na ordem em que devem ser ouvidos: a peça não os reordena.",
+        "item4": "Dê à camada que rola um nome que diga onde a pessoa entrou.",
+        "item5": "Para mostrar o rastro aos poucos, passe menos trechos e mantenha o eixo — as barras que sobram guardam a posição verdadeira."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Por quê"
+        },
+        "item1": {
+          "s": "Mostrar quando cada trecho aconteceu dentro de um todo, com sobreposição e aninhamento",
+          "u": "Cascata de trechos",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar o quanto de um trabalho já foi feito, numa fração única",
+          "u": "Barra de progresso",
+          "a": "Ali a barra preenche a partir do começo e não sabe começar no meio; aqui o começo é a informação."
+        },
+        "item3": {
+          "s": "Mostrar quanto uma resposta levou, em pares de rótulo e valor",
+          "u": "Medição da resposta",
+          "a": "Ali não há eixo, e portanto não há posição; aqui há uma régua que todos os trechos dividem."
+        },
+        "item4": {
+          "s": "Mostrar trabalho que se ramifica e volta a se juntar",
+          "u": "Grafo de fluxo",
+          "a": "Ali a informação é qual passo depende de qual; aqui é quando cada trecho aconteceu."
+        },
+        "item5": {
+          "s": "Mostrar o que o agente pretende fazer, passo a passo, sem tempo",
+          "u": "Plano do agente",
+          "a": "Ali a ordem é a informação inteira; aqui a ordem é só a de leitura, e o que informa é a posição no eixo."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "region": {
+            "name": "Nome da camada",
+            "format": "O que a pessoa alcançou, e não o que o elemento faz",
+            "good": "Tempo do atendimento",
+            "bad": "Região de rolagem"
+          },
+          "label": {
+            "name": "Rótulo do trecho",
+            "format": "Uma ação curta, no infinitivo, como uma pessoa a chamaria",
+            "good": "Consultar o catálogo",
+            "bad": "catalogService.query()"
+          },
+          "axis": {
+            "name": "Frase da régua",
+            "format": "Uma frase com o lugar do total marcado, e a unidade escrita",
+            "good": "Eixo de {total} ms",
+            "bad": "1200"
+          },
+          "reading": {
+            "name": "Leitura da linha",
+            "format": "Uma frase com o começo e a duração marcados, na ordem em que se lê",
+            "good": "Começa em {start} ms e dura {duration} ms.",
+            "bad": "110/320"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Declare o eixo, e mantenha-o quando mostrar só parte do rastro.",
+        "item2": "Declare os trechos na ordem em que eles devem ser ouvidos.",
+        "item3": "Use as quatro palavras de estado, inclusive a do trecho que ainda não começou — num eixo de tempo é justamente ele que se quer ver.",
+        "item4": "Dê à camada que rola um nome que diga onde a pessoa entrou."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não derive o eixo dos trechos: mostrar metade do rastro passaria a reescalar as barras.",
+        "item2": "Não ordene os trechos por começo dentro da peça: a ordem de declaração é a ordem de leitura.",
+        "item3": "Não anuncie cada trecho novo — um rastro ganha trecho mais depressa do que se lê.",
+        "item4": "Não distinga estado só por cor: quem não a vê fica sem a informação inteira."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "Cada linha diz, em palavras, o estado e a posição no eixo em números — a cascata se reconstrói de ouvido.",
+        "dont": "Só a barra diz onde o trecho está, e quem lê de ouvido recebe uma lista de nomes sem tempo nenhum."
+      },
+      "pair2": {
+        "do": "A camada que rola tem papel, nome e parada de teclado, na mesma linha.",
+        "dont": "A camada rola sem nome, e quem chega ali por teclado não sabe onde está."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "withLabels": "Os rótulos",
+      "basicCode": {
+        "vanilla": "import { createTraceWaterfall } from '@/components/ui/trace-waterfall';\n\nconst traceWaterfall = createTraceWaterfall({\n  spans: trechos,\n  totalMs: 1200,\n  status: 'running',\n  labels: rotulos,\n});\n\n// Sem trecho, ou sem eixo, não há cascata — e a fábrica devolve nada.\nif (traceWaterfall) document.querySelector('#app')?.append(traceWaterfall);",
+        "react": "import { TraceWaterfall } from \"@/components/ui/trace-waterfall\";\n\n<TraceWaterfall\n  spans={trechos}\n  totalMs={1200}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\nimport { TraceWaterfall } from '@/components/ui/trace-waterfall';\n</script>\n\n<template>\n  <TraceWaterfall\n    :spans=\"trechos\"\n    :total-ms=\"1200\"\n    status=\"running\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { TraceWaterfall } from '@/components/ui/trace-waterfall';\n</script>\n\n<TraceWaterfall\n  spans={trechos}\n  totalMs={1200}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsTraceWaterfall\n  [spans]=\"trechos\"\n  [totalMs]=\"1200\"\n  status=\"running\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabelsCode": {
+        "vanilla": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos = {\n  region: 'Tempo do atendimento',\n  axis: 'Eixo de {total} ms',\n  duration: '{duration} ms',\n  reading: 'Começa em {start} ms e dura {duration} ms.',\n  clipped: 'Continua fora da janela mostrada.',\n  state: {\n    pending: 'Por começar',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};",
+        "react": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos: TraceWaterfallLabels = {\n  region: \"Tempo do atendimento\",\n  axis: \"Eixo de {total} ms\",\n  duration: \"{duration} ms\",\n  reading: \"Começa em {start} ms e dura {duration} ms.\",\n  clipped: \"Continua fora da janela mostrada.\",\n  state: {\n    pending: \"Por começar\",\n    running: \"Em andamento\",\n    done: \"Concluído\",\n    failed: \"Falhou\",\n  },\n};",
+        "vue": "<script setup lang=\"ts\">\n// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos: TraceWaterfallLabels = {\n  region: 'Tempo do atendimento',\n  axis: 'Eixo de {total} ms',\n  duration: '{duration} ms',\n  reading: 'Começa em {start} ms e dura {duration} ms.',\n  clipped: 'Continua fora da janela mostrada.',\n  state: {\n    pending: 'Por começar',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n  // a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n  // conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n  // chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n  // o mesmo nome são duas paradas indistinguíveis.\n  //\n  // A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n  // eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n  //\n  // A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n  // RECORTE avisa que o trecho continua fora da janela mostrada.\n  const rotulos: TraceWaterfallLabels = {\n    region: 'Tempo do atendimento',\n    axis: 'Eixo de {total} ms',\n    duration: '{duration} ms',\n    reading: 'Começa em {start} ms e dura {duration} ms.',\n    clipped: 'Continua fora da janela mostrada.',\n    state: {\n      pending: 'Por começar',\n      running: 'Em andamento',\n      done: 'Concluído',\n      failed: 'Falhou',\n    },\n  };\n</script>",
+        "angular": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: TraceWaterfallLabels = {\n  region: 'Tempo do atendimento',\n  axis: 'Eixo de {total} ms',\n  duration: '{duration} ms',\n  reading: 'Começa em {start} ms e dura {duration} ms.',\n  clipped: 'Continua fora da janela mostrada.',\n  state: {\n    pending: 'Por começar',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda no desenho"
+      },
+      "pending": {
+        "label": "Por começar",
+        "trigger": "O trecho ainda não começou, e o eixo já reservou o lugar dele.",
+        "behavior": "A marca e a barra ficam com o traço interrompido, e a barra não tem tinta dentro."
+      },
+      "running": {
+        "label": "Em andamento",
+        "trigger": "O trecho começou e ainda não terminou.",
+        "behavior": "A marca vira um anel e a barra ganha hachura, que é a forma de dizer que o comprimento ainda não é definitivo."
+      },
+      "done": {
+        "label": "Concluído",
+        "trigger": "O trecho terminou.",
+        "behavior": "A marca fica cheia e a barra fica sólida."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "O trecho quebrou antes de terminar.",
+        "behavior": "A marca ganha a cruz e a barra troca de cor — a forma separa o que quebrou do que terminou, e a cor reforça."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Nome",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "spans": {
+          "name": "spans",
+          "type": "readonly TraceSpan[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os trechos, na ordem em que devem ser ouvidos. Sem trecho nenhum não há cascata, e a peça não desenha nada."
+        },
+        "totalMs": {
+          "name": "totalMs",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "O eixo, em milissegundos. É ele que as barras dividem, e ele não é derivado dos trechos: eixo sem extensão não posiciona nada, e a peça não desenha."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que pé está a execução que escreve o rastro. Decide uma coisa só: se a peça se declara ocupada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "TraceWaterfallLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os moldes e as palavras de tela. Obrigatório, porque tudo aqui é texto."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome da camada que rola. Obrigatório: sem ele, a parada de teclado chega a quem ouve sem dizer onde a pessoa entrou."
+        },
+        "labelsAxis": {
+          "name": "axis",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase visível da régua, com o lugar do total marcado."
+        },
+        "labelsDuration": {
+          "name": "duration",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O molde da duração visível de cada linha, com o lugar do número marcado."
+        },
+        "labelsReading": {
+          "name": "reading",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase que leva a posição a quem não vê a barra, com o começo e a duração marcados."
+        },
+        "labelsClipped": {
+          "name": "clipped",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A frase do trecho que não coube no eixo. Quem vê nota que a barra encosta na borda; quem ouve receberia a duração inteira sem saber disso."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada estado, que é o que chega a quem não vê a forma."
+        },
+        "spanId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "Endereço do trecho, para atualizar o certo quando dois têm o mesmo rótulo."
+        },
+        "spanLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que este trecho é, como uma pessoa o chamaria."
+        },
+        "spanStart": {
+          "name": "startMs",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Quando o trecho começou, em milissegundos desde a origem do eixo."
+        },
+        "spanDuration": {
+          "name": "durationMs",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Quanto o trecho durou, em milissegundos."
+        },
+        "spanDepth": {
+          "name": "depth",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "O recuo do trecho, em degraus. Relativo aos demais: quem desenha encosta o menor na origem, e a base da contagem não importa."
+        },
+        "spanState": {
+          "name": "state",
+          "type": "'pending' | 'running' | 'done' | 'failed'",
+          "default": "—",
+          "required": "Sim",
+          "description": "Em que pé está este trecho."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A peça desenha os trechos que recebe na régua que recebe. Ela não ordena, não deriva o eixo, não mede elemento, não anima entrada e não conta tempo. Mostrar o rastro aos poucos é passar menos trechos, mantendo o eixo.",
+      "extensibilityCode": {
+        "vanilla": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nlet revelados = 1;\n\nfunction revelar() {\n  revelados += 1;\n  const proxima = createTraceWaterfall({\n    spans: trechos.slice(0, revelados),\n    totalMs: 1200,\n    status: revelados >= trechos.length ? 'complete' : 'running',\n    labels: rotulos,\n  });\n  if (proxima) cascata.replaceWith(proxima);\n}",
+        "react": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nconst [revelados, setRevelados] = useState(1);\n\nconst revelar = () => setRevelados((atual) => Math.min(atual + 1, trechos.length));\n\n<TraceWaterfall\n  spans={trechos.slice(0, revelados)}\n  totalMs={1200}\n  status={revelados >= trechos.length ? \"complete\" : \"running\"}\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nconst revelados = ref(1);\n\nconst visiveis = computed(() => trechos.slice(0, revelados.value));\n\nfunction revelar() {\n  revelados.value = Math.min(revelados.value + 1, trechos.length);\n}\n</script>\n\n<template>\n  <TraceWaterfall\n    :spans=\"visiveis\"\n    :total-ms=\"1200\"\n    :status=\"revelados >= trechos.length ? 'complete' : 'running'\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n  //\n  // O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras\n  // que sobraram guardam a posição verdadeira em vez de reescalarem para ocupar\n  // a régua inteira. Quem quiser a entrada animada resolve na folha de animação,\n  // que é a dona do assunto — o componente desenha o que recebe.\n  import { TraceWaterfall } from '@/components/ui/trace-waterfall';\n\n  let revelados = $state(1);\n\n  const visiveis = $derived(trechos.slice(0, revelados));\n\n  function revelar() {\n    revelados = Math.min(revelados + 1, trechos.length);\n  }\n</script>\n\n<TraceWaterfall\n  spans={visiveis}\n  totalMs={1200}\n  status={revelados >= trechos.length ? 'complete' : 'running'}\n  labels={rotulos}\n/>",
+        "angular": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\n//\n// TUDO É MEMBRO DE CLASSE, e nenhum deles é constante no topo do arquivo:\n// expressão de template só enxerga membro, e um binding para uma constante\n// importada não resolve.\nreadonly trechos: readonly TraceSpan[] = [/* os trechos do rastro */];\n\nreadonly revelados = signal(1);\n\nreadonly visiveis = computed(() => this.trechos.slice(0, this.revelados()));\n\nreadonly estado = computed<RunStatus>(() =>\n  this.revelados() >= this.trechos.length ? 'complete' : 'running',\n);\n\nrevelar(): void {\n  this.revelados.update((atual) => Math.min(atual + 1, this.trechos.length));\n}\n\n// No template, os quatro entram como os membros que são:\n//\n//   <div\n//     ndsTraceWaterfall\n//     [spans]=\"visiveis()\"\n//     [totalMs]=\"1200\"\n//     [status]=\"estado()\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-trace-waterfall",
+          "description": "Corpo do texto da peça inteira."
+        },
+        "spacing24": {
+          "token": "--spacing-24",
+          "value": ".nds-trace-waterfall",
+          "description": "Largura mínima da coluna do nome, e uma das duas que decidem quando a cascata passa a rolar."
+        },
+        "spacing40": {
+          "token": "--spacing-40",
+          "value": ".nds-trace-waterfall",
+          "description": "Largura mínima da coluna do eixo, e a outra das duas."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-trace-waterfall-axis",
+          "description": "Respiro entre a frase da régua e a primeira linha."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-trace-waterfall-axis",
+          "description": "Entrelinha do texto da peça, e é ela que faz a linha crescer com a fonte do navegador."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Respiro interno da camada que rola."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Contorno da camada que rola."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Arredondamento da camada que rola."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Fundo da camada que rola, que separa a peça da conversa atrás dela."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Anel de foco da camada que rola, desenhado para dentro."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-trace-waterfall-name",
+          "description": "Tamanho de um degrau de recuo. É por ele que o número de degraus é multiplicado."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Arredondamento da marca de estado, da régua e da barra."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Contorno da marca em repouso, cor da frase da régua e da duração, e traço da barra do trecho que não começou."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-trace-waterfall-label",
+          "description": "Cor do rótulo de cada trecho."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-trace-waterfall-track",
+          "description": "Fundo da régua de cada linha, que é o que mostra o eixo compartilhado."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "Preenchimento da barra do trecho concluído, e uma das duas faixas da hachura do que está em andamento."
+        },
+        "primaryForeground": {
+          "token": "--primary-foreground",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "A outra faixa da hachura do trecho em andamento."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "Largura de cada faixa da hachura."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Preenchimento da marca do trecho concluído."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Cruz da marca e preenchimento da barra do trecho que quebrou."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-trace-waterfall {\n  /* As duas larguras MÍNIMAS, e são elas que decidem quando a cascata passa a\n     ser mais larga que a conversa e a camada começa a rolar. Mínimas e não\n     fixas: a coluna do nome cresce com o rótulo mais longo e a do eixo reparte\n     o que sobrar. */\n  --trace-waterfall-name-min: var(--spacing-16);\n  --trace-waterfall-axis-min: var(--spacing-20);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Uma barra deslocada num eixo não é lida: posição não tem palavra. A regra desta peça é que a estrutura acessível é a MESMA estrutura — cada trecho é um item de lista de verdade, na ordem em que foi declarado, e o que a posição diz sem palavras ele diz com palavras dentro de si.",
+      "items": {
+        "item1": "Cada linha carrega, em texto que só quem ouve recebe, a palavra do seu estado, o instante em que começa e quanto dura.",
+        "item2": "A régua é dita em palavras, visível, acima das linhas. Sem ela os números de cada linha não teriam contra o que ser lidos.",
+        "item3": "A barra e a régua da linha ficam fora do que é lido em voz — elas dizem em desenho a mesma posição que a frase diz em números.",
+        "item4": "A camada que rola tem papel, nome e parada de teclado. O papel é o que torna o nome legal: sobre um elemento sem papel, o nome é descartado.",
+        "item5": "O nome da camada é de quem monta, porque duas peças destas na mesma tela com o mesmo nome são duas paradas indistinguíveis.",
+        "item6": "Nenhuma linha entra na ordem de foco: uma linha não faz nada, e uma dúzia de paradas que não levam a lugar nenhum é ruído para quem usa teclado.",
+        "item7": "A ordem dos trechos no código é a ordem de leitura, e a peça não os reordena por começo.",
+        "item8": "Cada estado tem forma própria em dois lugares — a marca ao lado do nome e o preenchimento da barra — e a cor é reforço, nunca o portador."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Para uma vez, na camada que rola. Nenhuma linha recebe foco, porque nenhuma linha faz nada.",
+        "enter": "Não faz nada: a peça é de leitura e não oferece ação.",
+        "arrows": "Rolam a cascata quando ela é mais larga que a conversa, com o foco na camada."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A camada que rola declara papel de grupo e leva o nome que quem monta passou. Grupo, e não região: uma página com dezenas destas viraria dezenas de marcos homônimos.",
+        "item2": "A raiz se declara ocupada enquanto a execução corre, e nada nela é região viva.",
+        "item3": "A régua de cada linha sai inteira da árvore de acessibilidade."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A lista é anunciada com a contagem de trechos, e cada trecho é lido como nome, estado, começo e duração.",
+        "item2": "Nada é anunciado enquanto o rastro se escreve; quem quiser anunciar o fim escreve uma frase, uma vez, do lado de fora.",
+        "item3": "Nenhuma porcentagem é lida: a posição é para os olhos, e o que ela diz já chegou em milissegundos."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "flowGraph": {
+          "name": "Grafo de fluxo",
+          "description": "Quando a informação é qual passo depende de qual, e não quando cada um aconteceu."
+        },
+        "agentPlan": {
+          "name": "Plano do agente",
+          "description": "Quando o trabalho é uma fila ordenada e não há eixo de tempo nenhum."
+        },
+        "messageTiming": {
+          "name": "Medição da resposta",
+          "description": "Quando o que se mostra é quanto uma resposta levou, em pares de rótulo e valor."
+        },
+        "progress": {
+          "name": "Barra de progresso",
+          "description": "Quando há uma fração única que avança do começo ao fim, sem trechos dentro."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O que faz esta peça existir não é a barra: é o começo. Medido antes de construir, a barra de progresso desta casa preenche a partir do zero por construção, e não tem como começar no meio de um eixo.",
+      "item2": "A medição do tempo de uma resposta, que era a outra objeção, não tem eixo: ela é um par de rótulo e valor, e não há teto de que caiba uma fração.",
+      "item3": "O eixo não é derivado dos trechos, e essa é a decisão que separa esta peça de uma fila de barras. Derivado, ele encolheria a cada trecho retirado, e as barras restantes reescalariam — perdendo exatamente a posição que a peça existe para mostrar.",
+      "item4": "O intervalo entrou no vocabulário compartilhado como dois campos soltos no trecho, e não como um tipo próprio: os dois tipos de geometria que já moravam ali carregam as coordenadas soltas, e um tipo que embrulha dois campos para um consumidor só é indireção, não vocabulário.",
+      "item5": "O total mora na peça e não no trecho, porque ele é propriedade da régua. Um total por trecho seriam várias verdades sobre o mesmo eixo.",
+      "item6": "A cor do trecho concluído é a da marca principal, e não a de sucesso, e é a divergência deliberada em relação ao grafo: num rastro quase todo trecho terminou, e a régua inteira verde afogaria os dois estados que se quer enxergar.",
+      "item7": "A barra do trecho instantâneo desenha com a menor largura visível, e é o único lugar onde a conta mente sobre a duração. Largura zero diria que não houve trecho, que não é o que o dado diz."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar trechos e um eixo",
+          "result": "Há uma linha por trecho, e cada barra fica na fração do eixo que o dado manda",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar um trecho que termina depois do fim do eixo",
+          "result": "A barra é recortada no eixo, e a linha avisa em palavras que ele continua fora",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar recuos que não começam na origem",
+          "result": "A cascata inteira encosta na origem, sem degraus vazios à esquerda",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar a peça",
+          "result": "Cada linha carrega a palavra do estado, o começo e a duração, em texto que só quem ouve recebe",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar a peça",
+          "result": "A camada que rola tem papel de grupo, nome e parada de teclado",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar o estado em que a execução corre",
+          "result": "A peça se declara ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar um estado em que a execução já não corre",
+          "result": "A peça deixa de se declarar ocupada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar a peça sem trecho, ou com um eixo sem extensão",
+          "result": "Não há cascata, e nada é desenhado",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Passar os quatro estados de trecho",
+          "result": "Cada um chega ao desenho com a sua palavra e a sua marca",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Passar um rastro mais largo que a conversa",
+          "result": "Uma só camada rola, e é a que tem nome e foco",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "Cada linha diz o seu estado em palavra, e não só pela marca",
+        "item2": "Cada linha diz o começo e a duração em números, e não só pela barra",
+        "item3": "A régua de cada linha está fora do que é lido em voz",
+        "item4": "A camada que rola tem papel e nome, e o papel é o que torna o nome legal",
+        "item5": "Nada dentro da peça é região viva",
+        "item6": "Nenhuma linha entra na ordem de foco",
+        "item7": "Os trechos são uma lista ordenada, na ordem em que foram declarados"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a cascata, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os quatro, na mesma régua",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — um trecho que quebrou",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — em andamento, com a execução ocupada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composições — o rastro pela metade, com o mesmo eixo",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — mais largo que a conversa, rolando",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Composições — rótulos longos, que alargam a coluna",
+          "priority": "high"
+        },
+        "item8": {
+          "story": "Composições — um trecho recortado pela janela do eixo",
+          "priority": "medium"
+        }
+      }
+    }
+  },
+  "en": {
+    "title": "Trace waterfall",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The time of a run split across spans that nest and overlap: one row per span, one bar placed on the shared axis, and the indent saying which one sits inside which.",
+    "seo": {
+      "title": "Trace waterfall — the start, the duration and the shared axis",
+      "description": "The trace waterfall piece: bars placed on the axis the composer declares, indentation showing the nesting, and the spoken reading that carries the position to whoever cannot see the drawing."
+    },
+    "labels": {
+      "region": "Support timing",
+      "axis": "{total} ms axis",
+      "duration": "{duration} ms",
+      "reading": "Starts at {start} ms and lasts {duration} ms.",
+      "clipped": "It continues outside the window shown.",
+      "state": {
+        "pending": "Not started",
+        "running": "In progress",
+        "done": "Done",
+        "failed": "Failed"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "order": "While the agent works, with two spans overlapping",
+        "failure": "When one of the spans breaks",
+        "partial": "The trace shown half way, on the same axis",
+        "wide": "When the trace is wider than the conversation"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The ruler spelled out in words opens the piece. It says which axis the bars are placed against — without it, the position is relative to something nobody can check.",
+      "item2": "The scrolling layer wraps the row list. It is the only one that scrolls, it takes keyboard focus and it carries a role and a name — without them, whoever lands there by ear does not know where they are.",
+      "item3": "Each row carries the state marker, the name indented by its nesting, the row ruler and the duration. The three-column grid is declared once on the list and inherited by every row, which is what keeps the bars comparable.",
+      "item4": "The bar starts where the span starts and ends where it ends. Both coordinates arrive as a percentage of the axis, and the arithmetic that turns them into a position lives in the stylesheet.",
+      "item5": "The sentence only listeners receive repeats, in numbers, the position the bar shows — and it warns when the span continues outside the window.",
+      "structureCode": {
+        "web": "<div class=\"nds-trace-waterfall\" data-slot=\"trace-waterfall\" aria-busy=\"true\">\n  <p class=\"nds-trace-waterfall-axis\" data-slot=\"trace-waterfall-axis\">1200 ms axis</p>\n\n  <div class=\"nds-trace-waterfall-viewport\" data-slot=\"trace-waterfall-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Support timing\">\n    <ol class=\"nds-trace-waterfall-rows\" data-slot=\"trace-waterfall-rows\">\n\n      <li class=\"nds-trace-waterfall-row\" data-slot=\"trace-waterfall-row\"\n          data-span-id=\"catalogo\" data-state=\"done\"\n          style=\"--trace-waterfall-row-indent: 1\">\n        <span class=\"nds-trace-waterfall-name\" data-slot=\"trace-waterfall-name\">\n          <span class=\"nds-trace-waterfall-marker\"\n                data-slot=\"trace-waterfall-marker\" aria-hidden=\"true\"></span>\n          <span class=\"nds-trace-waterfall-label\"\n                data-slot=\"trace-waterfall-label\">Search the catalogue</span>\n        </span>\n\n        <span class=\"nds-trace-waterfall-track\"\n              data-slot=\"trace-waterfall-track\" aria-hidden=\"true\">\n          <span class=\"nds-trace-waterfall-bar\" data-slot=\"trace-waterfall-bar\"\n                style=\"--trace-waterfall-bar-start: 9.167;\n                       --trace-waterfall-bar-size: 26.667\"></span>\n        </span>\n\n        <span class=\"nds-trace-waterfall-duration\"\n              data-slot=\"trace-waterfall-duration\">320 ms</span>\n        <span class=\"nds-sr-only\"\n              data-slot=\"trace-waterfall-row-reading\">Done. Starts at 110 ms and lasts 320 ms.</span>\n      </li>\n\n    </ol>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when what matters is when each span happened inside a whole — two spans running at once, one waiting, one that ate almost all the time.",
+        "item2": "Declare the axis, and keep the same axis across two waterfalls meant to be compared by eye.",
+        "item3": "Declare the spans in the order they should be heard: the piece does not reorder them.",
+        "item4": "Give the scrolling layer a name that says where the person landed.",
+        "item5": "To reveal the trace little by little, pass fewer spans and keep the axis — the remaining bars hold their true position."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Why"
+        },
+        "item1": {
+          "s": "Show when each span happened inside a whole, with overlap and nesting",
+          "u": "Trace waterfall",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Show how much of a job is done, as a single fraction",
+          "u": "Progress bar",
+          "a": "There the bar fills from the start and cannot begin midway; here the start is the information."
+        },
+        "item3": {
+          "s": "Show how long a reply took, as label and value pairs",
+          "u": "Message timing",
+          "a": "There is no axis there, and so no position; here there is a ruler every span shares."
+        },
+        "item4": {
+          "s": "Show work that branches and rejoins",
+          "u": "Flow graph",
+          "a": "There the information is which step depends on which; here it is when each span happened."
+        },
+        "item5": {
+          "s": "Show what the agent means to do, step by step, with no time",
+          "u": "Agent plan",
+          "a": "There the order is the whole information; here the order is only reading order, and what informs is the position on the axis."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "region": {
+            "name": "Layer name",
+            "format": "What the person reached, not what the element does",
+            "good": "Support timing",
+            "bad": "Scroll region"
+          },
+          "label": {
+            "name": "Span label",
+            "format": "A short action, as a person would name it",
+            "good": "Search the catalogue",
+            "bad": "catalogService.query()"
+          },
+          "axis": {
+            "name": "Ruler sentence",
+            "format": "A sentence with the place of the total marked, and the unit spelled out",
+            "good": "{total} ms axis",
+            "bad": "1200"
+          },
+          "reading": {
+            "name": "Row reading",
+            "format": "A sentence with the start and the duration marked, in reading order",
+            "good": "Starts at {start} ms and lasts {duration} ms.",
+            "bad": "110/320"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Declare the axis, and keep it when showing only part of the trace.",
+        "item2": "Declare the spans in the order they should be heard.",
+        "item3": "Use all four state words, including the one for the span that has not started — on a time axis that is exactly what you want to see.",
+        "item4": "Give the scrolling layer a name that says where the person landed."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not derive the axis from the spans: showing half the trace would start rescaling the bars.",
+        "item2": "Do not sort the spans by start inside the piece: declaration order is reading order.",
+        "item3": "Do not announce every new span — a trace gains spans faster than anyone can read.",
+        "item4": "Do not tell states apart by colour alone: whoever cannot see it loses the whole information."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "Each row says, in words, its state and its position on the axis in numbers — the waterfall rebuilds itself by ear.",
+        "dont": "Only the bar says where the span is, and whoever reads by ear receives a list of names with no time at all."
+      },
+      "pair2": {
+        "do": "The scrolling layer carries a role, a name and a keyboard stop, on the same line.",
+        "dont": "The layer scrolls without a name, and whoever lands there by keyboard does not know where they are."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "withLabels": "The labels",
+      "basicCode": {
+        "vanilla": "import { createTraceWaterfall } from '@/components/ui/trace-waterfall';\n\nconst traceWaterfall = createTraceWaterfall({\n  spans: trechos,\n  totalMs: 1200,\n  status: 'running',\n  labels: rotulos,\n});\n\n// Sem trecho, ou sem eixo, não há cascata — e a fábrica devolve nada.\nif (traceWaterfall) document.querySelector('#app')?.append(traceWaterfall);",
+        "react": "import { TraceWaterfall } from \"@/components/ui/trace-waterfall\";\n\n<TraceWaterfall\n  spans={trechos}\n  totalMs={1200}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\nimport { TraceWaterfall } from '@/components/ui/trace-waterfall';\n</script>\n\n<template>\n  <TraceWaterfall\n    :spans=\"trechos\"\n    :total-ms=\"1200\"\n    status=\"running\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { TraceWaterfall } from '@/components/ui/trace-waterfall';\n</script>\n\n<TraceWaterfall\n  spans={trechos}\n  totalMs={1200}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsTraceWaterfall\n  [spans]=\"trechos\"\n  [totalMs]=\"1200\"\n  status=\"running\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabelsCode": {
+        "vanilla": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos = {\n  region: 'Support timing',\n  axis: '{total} ms axis',\n  duration: '{duration} ms',\n  reading: 'Starts at {start} ms and lasts {duration} ms.',\n  clipped: 'It continues outside the window shown.',\n  state: {\n    pending: 'Not started',\n    running: 'In progress',\n    done: 'Done',\n    failed: 'Failed',\n  },\n};",
+        "react": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos: TraceWaterfallLabels = {\n  region: \"Support timing\",\n  axis: \"{total} ms axis\",\n  duration: \"{duration} ms\",\n  reading: \"Starts at {start} ms and lasts {duration} ms.\",\n  clipped: \"It continues outside the window shown.\",\n  state: {\n    pending: \"Not started\",\n    running: \"In progress\",\n    done: \"Done\",\n    failed: \"Failed\",\n  },\n};",
+        "vue": "<script setup lang=\"ts\">\n// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos: TraceWaterfallLabels = {\n  region: 'Support timing',\n  axis: '{total} ms axis',\n  duration: '{duration} ms',\n  reading: 'Starts at {start} ms and lasts {duration} ms.',\n  clipped: 'It continues outside the window shown.',\n  state: {\n    pending: 'Not started',\n    running: 'In progress',\n    done: 'Done',\n    failed: 'Failed',\n  },\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n  // a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n  // conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n  // chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n  // o mesmo nome são duas paradas indistinguíveis.\n  //\n  // A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n  // eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n  //\n  // A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n  // RECORTE avisa que o trecho continua fora da janela mostrada.\n  const rotulos: TraceWaterfallLabels = {\n    region: 'Support timing',\n    axis: '{total} ms axis',\n    duration: '{duration} ms',\n    reading: 'Starts at {start} ms and lasts {duration} ms.',\n    clipped: 'It continues outside the window shown.',\n    state: {\n      pending: 'Not started',\n      running: 'In progress',\n      done: 'Done',\n      failed: 'Failed',\n    },\n  };\n</script>",
+        "angular": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: TraceWaterfallLabels = {\n  region: 'Support timing',\n  axis: '{total} ms axis',\n  duration: '{duration} ms',\n  reading: 'Starts at {start} ms and lasts {duration} ms.',\n  clipped: 'It continues outside the window shown.',\n  state: {\n    pending: 'Not started',\n    running: 'In progress',\n    done: 'Done',\n    failed: 'Failed',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes in the drawing"
+      },
+      "pending": {
+        "label": "Not started",
+        "trigger": "The span has not started, and the axis already holds its place.",
+        "behavior": "The marker and the bar take a broken stroke, and the bar carries no ink inside."
+      },
+      "running": {
+        "label": "In progress",
+        "trigger": "The span has started and has not finished.",
+        "behavior": "The marker becomes a ring and the bar takes hatching, which is the shape that says the length is not final yet."
+      },
+      "done": {
+        "label": "Done",
+        "trigger": "The span finished.",
+        "behavior": "The marker fills in and the bar goes solid."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The span broke before finishing.",
+        "behavior": "The marker takes the cross and the bar changes colour — the shape sets apart what broke from what finished, and the colour reinforces it."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Name",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "spans": {
+          "name": "spans",
+          "type": "readonly TraceSpan[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The spans, in the order they should be heard. With no spans there is no waterfall, and the piece draws nothing."
+        },
+        "totalMs": {
+          "name": "totalMs",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "The axis, in milliseconds. It is what the bars share, and it is not derived from the spans: an axis with no extent places nothing, and the piece draws nothing."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where the run that writes the trace stands. It decides one thing only: whether the piece declares itself busy."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "TraceWaterfallLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The templates and the words on screen. Required, because everything here is text."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the scrolling layer. Required: without it the keyboard stop reaches listeners without saying where the person landed."
+        },
+        "labelsAxis": {
+          "name": "axis",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The visible ruler sentence, with the place of the total marked."
+        },
+        "labelsDuration": {
+          "name": "duration",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The template of the visible duration on each row, with the place of the number marked."
+        },
+        "labelsReading": {
+          "name": "reading",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The sentence that carries the position to whoever cannot see the bar, with the start and the duration marked."
+        },
+        "labelsClipped": {
+          "name": "clipped",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The sentence for the span that did not fit the axis. Whoever sees notices the bar touching the edge; whoever listens would receive the whole duration without knowing."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each state, which is what reaches whoever cannot see the shape."
+        },
+        "spanId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The address of the span, so the right one updates when two share a label."
+        },
+        "spanLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What this span is, as a person would name it."
+        },
+        "spanStart": {
+          "name": "startMs",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "When the span started, in milliseconds from the origin of the axis."
+        },
+        "spanDuration": {
+          "name": "durationMs",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "How long the span lasted, in milliseconds."
+        },
+        "spanDepth": {
+          "name": "depth",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "The indent of the span, in steps. Relative to the others: whoever draws puts the smallest at the origin, and the counting base does not matter."
+        },
+        "spanState": {
+          "name": "state",
+          "type": "'pending' | 'running' | 'done' | 'failed'",
+          "default": "—",
+          "required": "Yes",
+          "description": "Where this span stands."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The piece draws the spans it receives on the ruler it receives. It does not sort, does not derive the axis, does not measure elements, does not animate entrances and does not count time. Showing the trace little by little is passing fewer spans, keeping the axis.",
+      "extensibilityCode": {
+        "vanilla": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nlet revelados = 1;\n\nfunction revelar() {\n  revelados += 1;\n  const proxima = createTraceWaterfall({\n    spans: trechos.slice(0, revelados),\n    totalMs: 1200,\n    status: revelados >= trechos.length ? 'complete' : 'running',\n    labels: rotulos,\n  });\n  if (proxima) cascata.replaceWith(proxima);\n}",
+        "react": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nconst [revelados, setRevelados] = useState(1);\n\nconst revelar = () => setRevelados((atual) => Math.min(atual + 1, trechos.length));\n\n<TraceWaterfall\n  spans={trechos.slice(0, revelados)}\n  totalMs={1200}\n  status={revelados >= trechos.length ? \"complete\" : \"running\"}\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nconst revelados = ref(1);\n\nconst visiveis = computed(() => trechos.slice(0, revelados.value));\n\nfunction revelar() {\n  revelados.value = Math.min(revelados.value + 1, trechos.length);\n}\n</script>\n\n<template>\n  <TraceWaterfall\n    :spans=\"visiveis\"\n    :total-ms=\"1200\"\n    :status=\"revelados >= trechos.length ? 'complete' : 'running'\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n  //\n  // O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras\n  // que sobraram guardam a posição verdadeira em vez de reescalarem para ocupar\n  // a régua inteira. Quem quiser a entrada animada resolve na folha de animação,\n  // que é a dona do assunto — o componente desenha o que recebe.\n  import { TraceWaterfall } from '@/components/ui/trace-waterfall';\n\n  let revelados = $state(1);\n\n  const visiveis = $derived(trechos.slice(0, revelados));\n\n  function revelar() {\n    revelados = Math.min(revelados + 1, trechos.length);\n  }\n</script>\n\n<TraceWaterfall\n  spans={visiveis}\n  totalMs={1200}\n  status={revelados >= trechos.length ? 'complete' : 'running'}\n  labels={rotulos}\n/>",
+        "angular": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\n//\n// TUDO É MEMBRO DE CLASSE, e nenhum deles é constante no topo do arquivo:\n// expressão de template só enxerga membro, e um binding para uma constante\n// importada não resolve.\nreadonly trechos: readonly TraceSpan[] = [/* os trechos do rastro */];\n\nreadonly revelados = signal(1);\n\nreadonly visiveis = computed(() => this.trechos.slice(0, this.revelados()));\n\nreadonly estado = computed<RunStatus>(() =>\n  this.revelados() >= this.trechos.length ? 'complete' : 'running',\n);\n\nrevelar(): void {\n  this.revelados.update((atual) => Math.min(atual + 1, this.trechos.length));\n}\n\n// No template, os quatro entram como os membros que são:\n//\n//   <div\n//     ndsTraceWaterfall\n//     [spans]=\"visiveis()\"\n//     [totalMs]=\"1200\"\n//     [status]=\"estado()\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-trace-waterfall",
+          "description": "Type size for the whole piece."
+        },
+        "spacing24": {
+          "token": "--spacing-24",
+          "value": ".nds-trace-waterfall",
+          "description": "Minimum width of the name column, one of the two that decide when the waterfall starts scrolling."
+        },
+        "spacing40": {
+          "token": "--spacing-40",
+          "value": ".nds-trace-waterfall",
+          "description": "Minimum width of the axis column, the other of the two."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-trace-waterfall-axis",
+          "description": "Breathing room between the ruler sentence and the first row."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-trace-waterfall-axis",
+          "description": "Line height of the text, and what makes the row grow with the browser font."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Inner padding of the scrolling layer."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Outline of the scrolling layer."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Corner radius of the scrolling layer."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Background of the scrolling layer, which sets the piece apart from the conversation behind it."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Focus ring of the scrolling layer, drawn inwards."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-trace-waterfall-name",
+          "description": "Size of one indent step. It is what the step count is multiplied by."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Corner radius of the state marker, the ruler and the bar."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Marker outline at rest, colour of the ruler sentence and the duration, and stroke of the bar of a span that has not started."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-trace-waterfall-label",
+          "description": "Colour of each span label."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-trace-waterfall-track",
+          "description": "Background of each row ruler, which is what shows the shared axis."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "Fill of the bar of a finished span, and one of the two stripes in the hatching of one in progress."
+        },
+        "primaryForeground": {
+          "token": "--primary-foreground",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "The other stripe in the hatching of a span in progress."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "Width of each stripe in the hatching."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Fill of the marker of a finished span."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Cross on the marker and fill of the bar of a span that broke."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-trace-waterfall {\n  /* As duas larguras MÍNIMAS, e são elas que decidem quando a cascata passa a\n     ser mais larga que a conversa e a camada começa a rolar. Mínimas e não\n     fixas: a coluna do nome cresce com o rótulo mais longo e a do eixo reparte\n     o que sobrar. */\n  --trace-waterfall-name-min: var(--spacing-16);\n  --trace-waterfall-axis-min: var(--spacing-20);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "A bar offset on an axis is not read: position has no words. The rule for this piece is that the accessible structure is the SAME structure — each span is a real list item, in the order it was declared, and what the position says without words it says with words inside itself.",
+      "items": {
+        "item1": "Each row carries, in text only listeners receive, the word for its state, the moment it starts and how long it lasts.",
+        "item2": "The ruler is spelled out in words, visible, above the rows. Without it the numbers on each row would have nothing to be read against.",
+        "item3": "The bar and the row ruler stay out of what is read aloud — they say in drawing the same position the sentence says in numbers.",
+        "item4": "The scrolling layer carries a role, a name and a keyboard stop. The role is what makes the name legal: on an element with no role, the name is discarded.",
+        "item5": "The layer name belongs to the composer, because two of these pieces on the same screen with the same name are two indistinguishable stops.",
+        "item6": "No row enters the focus order: a row does nothing, and a dozen stops leading nowhere are noise for keyboard users.",
+        "item7": "The order of the spans in the code is the reading order, and the piece does not reorder them by start.",
+        "item8": "Each state has its own shape in two places — the marker beside the name and the fill of the bar — and colour is reinforcement, never the carrier."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Stops once, on the scrolling layer. No row takes focus, because no row does anything.",
+        "enter": "Does nothing: the piece is read-only and offers no action.",
+        "arrows": "Scroll the waterfall when it is wider than the conversation, with focus on the layer."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The scrolling layer declares a group role and carries the name the composer passed. Group, not region: a page with dozens of these would become dozens of namesake landmarks.",
+        "item2": "The root declares itself busy while the run is going, and nothing inside it is a live region.",
+        "item3": "The ruler of each row leaves the accessibility tree entirely."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The list is announced with the span count, and each span is read as name, state, start and duration.",
+        "item2": "Nothing is announced while the trace writes itself; whoever wants to announce the end writes one sentence, once, on the outside.",
+        "item3": "No percentage is read: the position is for the eyes, and what it says already arrived in milliseconds."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "flowGraph": {
+          "name": "Flow graph",
+          "description": "When the information is which step depends on which, not when each one happened."
+        },
+        "agentPlan": {
+          "name": "Agent plan",
+          "description": "When the work is an ordered queue and there is no time axis at all."
+        },
+        "messageTiming": {
+          "name": "Message timing",
+          "description": "When what is shown is how long a reply took, as label and value pairs."
+        },
+        "progress": {
+          "name": "Progress bar",
+          "description": "When there is a single fraction moving from start to end, with no spans inside."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "What makes this piece exist is not the bar: it is the start. Measured before building, the progress bar in this house fills from zero by construction, and cannot begin midway on an axis.",
+      "item2": "Message timing, the other objection, has no axis: it is a label and value pair, and there is no ceiling for a fraction to fit into.",
+      "item3": "The axis is not derived from the spans, and that is the decision that separates this piece from a queue of bars. Derived, it would shrink with every span removed, and the remaining bars would rescale — losing exactly the position the piece exists to show.",
+      "item4": "The interval entered the shared vocabulary as two loose fields on the span, not as a type of its own: the two geometry types already living there carry their coordinates loose, and a type wrapping two fields for a single consumer is indirection, not vocabulary.",
+      "item5": "The total lives on the piece and not on the span, because it belongs to the ruler. One total per span would be several truths about the same axis.",
+      "item6": "The colour of a finished span is the primary one, not the success one, and that is the deliberate divergence from the flow graph: in a trace almost every span has finished, and a whole green ruler would drown the two states you want to see.",
+      "item7": "The bar of an instant span draws at the smallest visible width, and it is the only place where the arithmetic lies about the duration. Zero width would say there was no span, which is not what the data says."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function verifies in each story.",
+        "item1": {
+          "action": "Pass spans and an axis",
+          "result": "There is one row per span, and each bar sits at the fraction of the axis the data dictates",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass a span ending after the end of the axis",
+          "result": "The bar is clipped to the axis, and the row says in words that it continues outside",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass indents that do not start at the origin",
+          "result": "The whole waterfall touches the origin, with no empty steps on the left",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mount the piece",
+          "result": "Each row carries the state word, the start and the duration, in text only listeners receive",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mount the piece",
+          "result": "The scrolling layer carries a group role, a name and a keyboard stop",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass the state where the run is going",
+          "result": "The piece declares itself busy",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass a state where the run is no longer going",
+          "result": "The piece stops declaring itself busy",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the piece with no spans, or with an axis with no extent",
+          "result": "There is no waterfall, and nothing is drawn",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pass all four span states",
+          "result": "Each one reaches the drawing with its word and its marker",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pass a trace wider than the conversation",
+          "result": "One layer only scrolls, and it is the one with a name and focus",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "Each row says its state in a word, not only through the marker",
+        "item2": "Each row says the start and the duration in numbers, not only through the bar",
+        "item3": "The ruler of each row is out of what is read aloud",
+        "item4": "The scrolling layer carries a role and a name, and the role is what makes the name legal",
+        "item5": "Nothing inside the piece is a live region",
+        "item6": "No row enters the focus order",
+        "item7": "The spans are an ordered list, in the order they were declared"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Captured by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the waterfall, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — all four, on the same ruler",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — a span that broke",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — in progress, with the run busy",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Compositions — the trace half way, on the same axis",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — wider than the conversation, scrolling",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Compositions — long labels, widening the column",
+          "priority": "high"
+        },
+        "item8": {
+          "story": "Compositions — a span clipped by the window of the axis",
+          "priority": "medium"
+        }
+      }
+    }
+  },
+  "es": {
+    "title": "Cascada de tramos",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "El tiempo de una ejecución repartido entre tramos que se anidan y se solapan: una fila por tramo, una barra colocada en el eje común, y la sangría diciendo quién está dentro de quién.",
+    "seo": {
+      "title": "Cascada de tramos — el inicio, la duración y el eje común",
+      "description": "La pieza de cascada de tramos: barras colocadas en el eje que declara quien la monta, sangría mostrando el anidamiento, y la lectura en palabras que lleva la posición a quien no ve el dibujo."
+    },
+    "labels": {
+      "region": "Tiempo de la atención",
+      "axis": "Eje de {total} ms",
+      "duration": "{duration} ms",
+      "reading": "Empieza en {start} ms y dura {duration} ms.",
+      "clipped": "Continúa fuera de la ventana mostrada.",
+      "state": {
+        "pending": "Sin empezar",
+        "running": "En curso",
+        "done": "Completado",
+        "failed": "Falló"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "order": "Mientras el agente trabaja, con dos tramos que se solapan",
+        "failure": "Cuando uno de los tramos se rompe",
+        "partial": "El rastro mostrado a medias, con el mismo eje",
+        "wide": "Cuando el rastro es más ancho que la conversación"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La regla dicha en palabras abre la pieza. Dice contra qué eje están colocadas las barras — sin ella, la posición es relativa a algo que nadie puede comprobar.",
+      "item2": "La capa que se desplaza envuelve la lista de filas. Es la única que se desplaza, recibe foco por teclado y tiene rol y nombre — sin ellos, quien llega ahí escuchando no sabe dónde entró.",
+      "item3": "Cada fila trae la marca del estado, el nombre sangrado según el anidamiento, la regla de la fila y la duración. La rejilla de las tres columnas se declara una vez en la lista y la heredan todas las filas, que es lo que mantiene las barras comparables.",
+      "item4": "La barra empieza donde empieza el tramo y termina donde él termina. Las dos coordenadas llegan en porcentaje del eje, y la cuenta que las convierte en posición vive en la hoja.",
+      "item5": "La frase que solo recibe quien escucha repite, en números, la posición que muestra la barra — y avisa cuando el tramo continúa fuera de la ventana.",
+      "structureCode": {
+        "web": "<div class=\"nds-trace-waterfall\" data-slot=\"trace-waterfall\" aria-busy=\"true\">\n  <p class=\"nds-trace-waterfall-axis\" data-slot=\"trace-waterfall-axis\">Eje de 1200 ms</p>\n\n  <div class=\"nds-trace-waterfall-viewport\" data-slot=\"trace-waterfall-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Tiempo de la atención\">\n    <ol class=\"nds-trace-waterfall-rows\" data-slot=\"trace-waterfall-rows\">\n\n      <li class=\"nds-trace-waterfall-row\" data-slot=\"trace-waterfall-row\"\n          data-span-id=\"catalogo\" data-state=\"done\"\n          style=\"--trace-waterfall-row-indent: 1\">\n        <span class=\"nds-trace-waterfall-name\" data-slot=\"trace-waterfall-name\">\n          <span class=\"nds-trace-waterfall-marker\"\n                data-slot=\"trace-waterfall-marker\" aria-hidden=\"true\"></span>\n          <span class=\"nds-trace-waterfall-label\"\n                data-slot=\"trace-waterfall-label\">Consultar el catálogo</span>\n        </span>\n\n        <span class=\"nds-trace-waterfall-track\"\n              data-slot=\"trace-waterfall-track\" aria-hidden=\"true\">\n          <span class=\"nds-trace-waterfall-bar\" data-slot=\"trace-waterfall-bar\"\n                style=\"--trace-waterfall-bar-start: 9.167;\n                       --trace-waterfall-bar-size: 26.667\"></span>\n        </span>\n\n        <span class=\"nds-trace-waterfall-duration\"\n              data-slot=\"trace-waterfall-duration\">320 ms</span>\n        <span class=\"nds-sr-only\"\n              data-slot=\"trace-waterfall-row-reading\">Completado. Empieza en 110 ms y dura 320 ms.</span>\n      </li>\n\n    </ol>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsala cuando lo que importa es cuándo ocurrió cada tramo dentro de un todo — dos tramos que corren a la vez, uno que espera, uno que consumió casi todo el tiempo.",
+        "item2": "Declara el eje, y mantén el mismo eje entre dos cascadas que deban compararse a ojo.",
+        "item3": "Declara los tramos en el orden en que deben escucharse: la pieza no los reordena.",
+        "item4": "Dale a la capa que se desplaza un nombre que diga dónde entró la persona.",
+        "item5": "Para mostrar el rastro poco a poco, pasa menos tramos y mantén el eje — las barras que quedan guardan la posición verdadera."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Por qué"
+        },
+        "item1": {
+          "s": "Mostrar cuándo ocurrió cada tramo dentro de un todo, con solapamiento y anidamiento",
+          "u": "Cascada de tramos",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar cuánto de un trabajo ya se hizo, en una fracción única",
+          "u": "Barra de progreso",
+          "a": "Allí la barra se llena desde el inicio y no sabe empezar a la mitad; aquí el inicio es la información."
+        },
+        "item3": {
+          "s": "Mostrar cuánto tardó una respuesta, en pares de etiqueta y valor",
+          "u": "Medición de la respuesta",
+          "a": "Allí no hay eje, y por tanto no hay posición; aquí hay una regla que todos los tramos comparten."
+        },
+        "item4": {
+          "s": "Mostrar trabajo que se ramifica y vuelve a juntarse",
+          "u": "Grafo de flujo",
+          "a": "Allí la información es qué paso depende de cuál; aquí es cuándo ocurrió cada tramo."
+        },
+        "item5": {
+          "s": "Mostrar lo que el agente pretende hacer, paso a paso, sin tiempo",
+          "u": "Plan del agente",
+          "a": "Allí el orden es toda la información; aquí el orden es solo el de lectura, y lo que informa es la posición en el eje."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "region": {
+            "name": "Nombre de la capa",
+            "format": "Lo que la persona alcanzó, y no lo que hace el elemento",
+            "good": "Tiempo de la atención",
+            "bad": "Región de desplazamiento"
+          },
+          "label": {
+            "name": "Etiqueta del tramo",
+            "format": "Una acción corta, en infinitivo, como la llamaría una persona",
+            "good": "Consultar el catálogo",
+            "bad": "catalogService.query()"
+          },
+          "axis": {
+            "name": "Frase de la regla",
+            "format": "Una frase con el lugar del total marcado, y la unidad escrita",
+            "good": "Eje de {total} ms",
+            "bad": "1200"
+          },
+          "reading": {
+            "name": "Lectura de la fila",
+            "format": "Una frase con el inicio y la duración marcados, en el orden en que se lee",
+            "good": "Empieza en {start} ms y dura {duration} ms.",
+            "bad": "110/320"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Declara el eje, y mantenlo cuando muestres solo parte del rastro.",
+        "item2": "Declara los tramos en el orden en que deben escucharse.",
+        "item3": "Usa las cuatro palabras de estado, incluida la del tramo que aún no empezó — en un eje de tiempo es justo ese el que se quiere ver.",
+        "item4": "Dale a la capa que se desplaza un nombre que diga dónde entró la persona."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No derives el eje de los tramos: mostrar la mitad del rastro pasaría a reescalar las barras.",
+        "item2": "No ordenes los tramos por inicio dentro de la pieza: el orden de declaración es el de lectura.",
+        "item3": "No anuncies cada tramo nuevo — un rastro gana tramos más rápido de lo que se lee.",
+        "item4": "No distingas el estado solo por color: quien no lo ve se queda sin la información entera."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "Cada fila dice, en palabras, su estado y su posición en el eje en números — la cascada se reconstruye de oído.",
+        "dont": "Solo la barra dice dónde está el tramo, y quien lee de oído recibe una lista de nombres sin tiempo alguno."
+      },
+      "pair2": {
+        "do": "La capa que se desplaza tiene rol, nombre y parada de teclado, en la misma línea.",
+        "dont": "La capa se desplaza sin nombre, y quien llega ahí por teclado no sabe dónde está."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "withLabels": "Las etiquetas",
+      "basicCode": {
+        "vanilla": "import { createTraceWaterfall } from '@/components/ui/trace-waterfall';\n\nconst traceWaterfall = createTraceWaterfall({\n  spans: trechos,\n  totalMs: 1200,\n  status: 'running',\n  labels: rotulos,\n});\n\n// Sem trecho, ou sem eixo, não há cascata — e a fábrica devolve nada.\nif (traceWaterfall) document.querySelector('#app')?.append(traceWaterfall);",
+        "react": "import { TraceWaterfall } from \"@/components/ui/trace-waterfall\";\n\n<TraceWaterfall\n  spans={trechos}\n  totalMs={1200}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\nimport { TraceWaterfall } from '@/components/ui/trace-waterfall';\n</script>\n\n<template>\n  <TraceWaterfall\n    :spans=\"trechos\"\n    :total-ms=\"1200\"\n    status=\"running\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  import { TraceWaterfall } from '@/components/ui/trace-waterfall';\n</script>\n\n<TraceWaterfall\n  spans={trechos}\n  totalMs={1200}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsTraceWaterfall\n  [spans]=\"trechos\"\n  [totalMs]=\"1200\"\n  status=\"running\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabelsCode": {
+        "vanilla": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos = {\n  region: 'Tiempo de la atención',\n  axis: 'Eje de {total} ms',\n  duration: '{duration} ms',\n  reading: 'Empieza en {start} ms y dura {duration} ms.',\n  clipped: 'Continúa fuera de la ventana mostrada.',\n  state: {\n    pending: 'Sin empezar',\n    running: 'En curso',\n    done: 'Completado',\n    failed: 'Falló',\n  },\n};",
+        "react": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos: TraceWaterfallLabels = {\n  region: \"Tiempo de la atención\",\n  axis: \"Eje de {total} ms\",\n  duration: \"{duration} ms\",\n  reading: \"Empieza en {start} ms y dura {duration} ms.\",\n  clipped: \"Continúa fuera de la ventana mostrada.\",\n  state: {\n    pending: \"Sin empezar\",\n    running: \"En curso\",\n    done: \"Completado\",\n    failed: \"Falló\",\n  },\n};",
+        "vue": "<script setup lang=\"ts\">\n// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\nconst rotulos: TraceWaterfallLabels = {\n  region: 'Tiempo de la atención',\n  axis: 'Eje de {total} ms',\n  duration: '{duration} ms',\n  reading: 'Empieza en {start} ms y dura {duration} ms.',\n  clipped: 'Continúa fuera de la ventana mostrada.',\n  state: {\n    pending: 'Sin empezar',\n    running: 'En curso',\n    done: 'Completado',\n    failed: 'Falló',\n  },\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n  // a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n  // conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n  // chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n  // o mesmo nome são duas paradas indistinguíveis.\n  //\n  // A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n  // eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n  //\n  // A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n  // RECORTE avisa que o trecho continua fora da janela mostrada.\n  const rotulos: TraceWaterfallLabels = {\n    region: 'Tiempo de la atención',\n    axis: 'Eje de {total} ms',\n    duration: '{duration} ms',\n    reading: 'Empieza en {start} ms y dura {duration} ms.',\n    clipped: 'Continúa fuera de la ventana mostrada.',\n    state: {\n      pending: 'Sin empezar',\n      running: 'En curso',\n      done: 'Completado',\n      failed: 'Falló',\n    },\n  };\n</script>",
+        "angular": "// Cinco moldes e as quatro palavras, e todos são de interface — nenhum deles é\n// a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: a cascata é mais larga que a\n// conversa, então ela rola, e o que rola é parada de teclado. Sem nome, quem\n// chega ali ouvindo não sabe onde entrou — e duas peças destas na mesma tela com\n// o mesmo nome são duas paradas indistinguíveis.\n//\n// A RÉGUA DITA EM PALAVRAS é visível: sem ela, \"todas as barras contra o mesmo\n// eixo\" é uma afirmação que só quem escreveu o dado consegue conferir.\n//\n// A LEITURA leva a posição em números a quem não vê a barra, e a FRASE DO\n// RECORTE avisa que o trecho continua fora da janela mostrada.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: TraceWaterfallLabels = {\n  region: 'Tiempo de la atención',\n  axis: 'Eje de {total} ms',\n  duration: '{duration} ms',\n  reading: 'Empieza en {start} ms y dura {duration} ms.',\n  clipped: 'Continúa fuera de la ventana mostrada.',\n  state: {\n    pending: 'Sin empezar',\n    running: 'En curso',\n    done: 'Completado',\n    failed: 'Falló',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia en el dibujo"
+      },
+      "pending": {
+        "label": "Sin empezar",
+        "trigger": "El tramo aún no empezó, y el eje ya reservó su lugar.",
+        "behavior": "La marca y la barra quedan con el trazo interrumpido, y la barra no tiene tinta dentro."
+      },
+      "running": {
+        "label": "En curso",
+        "trigger": "El tramo empezó y aún no terminó.",
+        "behavior": "La marca pasa a ser un anillo y la barra gana rayado, que es la forma de decir que la longitud aún no es definitiva."
+      },
+      "done": {
+        "label": "Completado",
+        "trigger": "El tramo terminó.",
+        "behavior": "La marca queda llena y la barra queda sólida."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "El tramo se rompió antes de terminar.",
+        "behavior": "La marca gana la cruz y la barra cambia de color — la forma separa lo que se rompió de lo que terminó, y el color refuerza."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Nombre",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "spans": {
+          "name": "spans",
+          "type": "readonly TraceSpan[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los tramos, en el orden en que deben escucharse. Sin tramos no hay cascada, y la pieza no dibuja nada."
+        },
+        "totalMs": {
+          "name": "totalMs",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "El eje, en milisegundos. Es lo que comparten las barras, y no se deriva de los tramos: un eje sin extensión no coloca nada, y la pieza no dibuja."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está la ejecución que escribe el rastro. Decide una sola cosa: si la pieza se declara ocupada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "TraceWaterfallLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "Las plantillas y las palabras de pantalla. Obligatorio, porque todo aquí es texto."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre de la capa que se desplaza. Obligatorio: sin él, la parada de teclado llega a quien escucha sin decir dónde entró la persona."
+        },
+        "labelsAxis": {
+          "name": "axis",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase visible de la regla, con el lugar del total marcado."
+        },
+        "labelsDuration": {
+          "name": "duration",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La plantilla de la duración visible de cada fila, con el lugar del número marcado."
+        },
+        "labelsReading": {
+          "name": "reading",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase que lleva la posición a quien no ve la barra, con el inicio y la duración marcados."
+        },
+        "labelsClipped": {
+          "name": "clipped",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La frase del tramo que no cupo en el eje. Quien ve nota que la barra toca el borde; quien escucha recibiría la duración entera sin saberlo."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada estado, que es lo que llega a quien no ve la forma."
+        },
+        "spanId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La dirección del tramo, para actualizar el correcto cuando dos comparten etiqueta."
+        },
+        "spanLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué es este tramo, como lo llamaría una persona."
+        },
+        "spanStart": {
+          "name": "startMs",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Cuándo empezó el tramo, en milisegundos desde el origen del eje."
+        },
+        "spanDuration": {
+          "name": "durationMs",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Cuánto duró el tramo, en milisegundos."
+        },
+        "spanDepth": {
+          "name": "depth",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "La sangría del tramo, en escalones. Relativa a las demás: quien dibuja apoya la menor en el origen, y la base del conteo no importa."
+        },
+        "spanState": {
+          "name": "state",
+          "type": "'pending' | 'running' | 'done' | 'failed'",
+          "default": "—",
+          "required": "Sí",
+          "description": "En qué punto está este tramo."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La pieza dibuja los tramos que recibe en la regla que recibe. No ordena, no deriva el eje, no mide elementos, no anima la entrada y no cuenta tiempo. Mostrar el rastro poco a poco es pasar menos tramos, manteniendo el eje.",
+      "extensibilityCode": {
+        "vanilla": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nlet revelados = 1;\n\nfunction revelar() {\n  revelados += 1;\n  const proxima = createTraceWaterfall({\n    spans: trechos.slice(0, revelados),\n    totalMs: 1200,\n    status: revelados >= trechos.length ? 'complete' : 'running',\n    labels: rotulos,\n  });\n  if (proxima) cascata.replaceWith(proxima);\n}",
+        "react": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nconst [revelados, setRevelados] = useState(1);\n\nconst revelar = () => setRevelados((atual) => Math.min(atual + 1, trechos.length));\n\n<TraceWaterfall\n  spans={trechos.slice(0, revelados)}\n  totalMs={1200}\n  status={revelados >= trechos.length ? \"complete\" : \"running\"}\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\nconst revelados = ref(1);\n\nconst visiveis = computed(() => trechos.slice(0, revelados.value));\n\nfunction revelar() {\n  revelados.value = Math.min(revelados.value + 1, trechos.length);\n}\n</script>\n\n<template>\n  <TraceWaterfall\n    :spans=\"visiveis\"\n    :total-ms=\"1200\"\n    :status=\"revelados >= trechos.length ? 'complete' : 'running'\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n  //\n  // O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras\n  // que sobraram guardam a posição verdadeira em vez de reescalarem para ocupar\n  // a régua inteira. Quem quiser a entrada animada resolve na folha de animação,\n  // que é a dona do assunto — o componente desenha o que recebe.\n  import { TraceWaterfall } from '@/components/ui/trace-waterfall';\n\n  let revelados = $state(1);\n\n  const visiveis = $derived(trechos.slice(0, revelados));\n\n  function revelar() {\n    revelados = Math.min(revelados + 1, trechos.length);\n  }\n</script>\n\n<TraceWaterfall\n  spans={visiveis}\n  totalMs={1200}\n  status={revelados >= trechos.length ? 'complete' : 'running'}\n  labels={rotulos}\n/>",
+        "angular": "// REVELAR É PASSAR MENOS TRECHOS, e não existe contador de revelação na peça.\n//\n// O EIXO CONTINUA O MESMO, e é isso que faz a revelação funcionar: as barras que\n// sobraram guardam a posição verdadeira em vez de reescalarem para ocupar a\n// régua inteira. Quem quiser a entrada animada resolve na folha de animação, que\n// é a dona do assunto — o componente desenha o que recebe.\n//\n// TUDO É MEMBRO DE CLASSE, e nenhum deles é constante no topo do arquivo:\n// expressão de template só enxerga membro, e um binding para uma constante\n// importada não resolve.\nreadonly trechos: readonly TraceSpan[] = [/* os trechos do rastro */];\n\nreadonly revelados = signal(1);\n\nreadonly visiveis = computed(() => this.trechos.slice(0, this.revelados()));\n\nreadonly estado = computed<RunStatus>(() =>\n  this.revelados() >= this.trechos.length ? 'complete' : 'running',\n);\n\nrevelar(): void {\n  this.revelados.update((atual) => Math.min(atual + 1, this.trechos.length));\n}\n\n// No template, os quatro entram como os membros que são:\n//\n//   <div\n//     ndsTraceWaterfall\n//     [spans]=\"visiveis()\"\n//     [totalMs]=\"1200\"\n//     [status]=\"estado()\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-trace-waterfall",
+          "description": "Tamaño de texto de la pieza entera."
+        },
+        "spacing24": {
+          "token": "--spacing-24",
+          "value": ".nds-trace-waterfall",
+          "description": "Ancho mínimo de la columna del nombre, una de las dos que deciden cuándo la cascada empieza a desplazarse."
+        },
+        "spacing40": {
+          "token": "--spacing-40",
+          "value": ".nds-trace-waterfall",
+          "description": "Ancho mínimo de la columna del eje, la otra de las dos."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-trace-waterfall-axis",
+          "description": "Espacio entre la frase de la regla y la primera fila."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-trace-waterfall-axis",
+          "description": "Interlineado del texto, y lo que hace crecer la fila con la fuente del navegador."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Relleno interno de la capa que se desplaza."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Contorno de la capa que se desplaza."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Redondeo de la capa que se desplaza."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Fondo de la capa que se desplaza, que separa la pieza de la conversación detrás de ella."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-trace-waterfall-viewport",
+          "description": "Anillo de foco de la capa que se desplaza, dibujado hacia dentro."
+        },
+        "spacing4": {
+          "token": "--spacing-4",
+          "value": ".nds-trace-waterfall-name",
+          "description": "Tamaño de un escalón de sangría. Es por él que se multiplica el número de escalones."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Redondeo de la marca de estado, de la regla y de la barra."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Contorno de la marca en reposo, color de la frase de la regla y de la duración, y trazo de la barra del tramo que no empezó."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-trace-waterfall-label",
+          "description": "Color de la etiqueta de cada tramo."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-trace-waterfall-track",
+          "description": "Fondo de la regla de cada fila, que es lo que muestra el eje compartido."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "Relleno de la barra del tramo completado, y una de las dos franjas del rayado del que está en curso."
+        },
+        "primaryForeground": {
+          "token": "--primary-foreground",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "La otra franja del rayado del tramo en curso."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-trace-waterfall-bar",
+          "description": "Ancho de cada franja del rayado."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Relleno de la marca del tramo completado."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-trace-waterfall-marker",
+          "description": "Cruz de la marca y relleno de la barra del tramo que se rompió."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-trace-waterfall {\n  /* As duas larguras MÍNIMAS, e são elas que decidem quando a cascata passa a\n     ser mais larga que a conversa e a camada começa a rolar. Mínimas e não\n     fixas: a coluna do nome cresce com o rótulo mais longo e a do eixo reparte\n     o que sobrar. */\n  --trace-waterfall-name-min: var(--spacing-16);\n  --trace-waterfall-axis-min: var(--spacing-20);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Una barra desplazada en un eje no se lee: la posición no tiene palabra. La regla de esta pieza es que la estructura accesible es la MISMA estructura — cada tramo es un elemento de lista de verdad, en el orden en que fue declarado, y lo que la posición dice sin palabras él lo dice con palabras dentro de sí.",
+      "items": {
+        "item1": "Cada fila lleva, en texto que solo recibe quien escucha, la palabra de su estado, el instante en que empieza y cuánto dura.",
+        "item2": "La regla se dice en palabras, visible, encima de las filas. Sin ella los números de cada fila no tendrían contra qué leerse.",
+        "item3": "La barra y la regla de la fila quedan fuera de lo que se lee en voz — dicen en dibujo la misma posición que la frase dice en números.",
+        "item4": "La capa que se desplaza tiene rol, nombre y parada de teclado. El rol es lo que hace legal el nombre: sobre un elemento sin rol, el nombre se descarta.",
+        "item5": "El nombre de la capa es de quien monta, porque dos piezas de estas en la misma pantalla con el mismo nombre son dos paradas indistinguibles.",
+        "item6": "Ninguna fila entra en el orden de foco: una fila no hace nada, y una docena de paradas que no llevan a ningún sitio es ruido para quien usa teclado.",
+        "item7": "El orden de los tramos en el código es el orden de lectura, y la pieza no los reordena por inicio.",
+        "item8": "Cada estado tiene forma propia en dos lugares — la marca junto al nombre y el relleno de la barra — y el color es refuerzo, nunca el portador."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Para una vez, en la capa que se desplaza. Ninguna fila recibe foco, porque ninguna fila hace nada.",
+        "enter": "No hace nada: la pieza es de lectura y no ofrece acción.",
+        "arrows": "Desplazan la cascada cuando es más ancha que la conversación, con el foco en la capa."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La capa que se desplaza declara rol de grupo y lleva el nombre que pasó quien la monta. Grupo, y no región: una página con decenas de estas se volvería decenas de hitos homónimos.",
+        "item2": "La raíz se declara ocupada mientras la ejecución corre, y nada en ella es región viva.",
+        "item3": "La regla de cada fila sale entera del árbol de accesibilidad."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La lista se anuncia con el conteo de tramos, y cada tramo se lee como nombre, estado, inicio y duración.",
+        "item2": "Nada se anuncia mientras el rastro se escribe; quien quiera anunciar el final escribe una frase, una vez, por fuera.",
+        "item3": "Ningún porcentaje se lee: la posición es para los ojos, y lo que dice ya llegó en milisegundos."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "flowGraph": {
+          "name": "Grafo de flujo",
+          "description": "Cuando la información es qué paso depende de cuál, y no cuándo ocurrió cada uno."
+        },
+        "agentPlan": {
+          "name": "Plan del agente",
+          "description": "Cuando el trabajo es una fila ordenada y no hay eje de tiempo alguno."
+        },
+        "messageTiming": {
+          "name": "Medición de la respuesta",
+          "description": "Cuando lo que se muestra es cuánto tardó una respuesta, en pares de etiqueta y valor."
+        },
+        "progress": {
+          "name": "Barra de progreso",
+          "description": "Cuando hay una fracción única que avanza del inicio al final, sin tramos dentro."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Lo que hace existir a esta pieza no es la barra: es el inicio. Medido antes de construir, la barra de progreso de esta casa se llena desde cero por construcción, y no puede empezar a la mitad de un eje.",
+      "item2": "La medición del tiempo de una respuesta, que era la otra objeción, no tiene eje: es un par de etiqueta y valor, y no hay techo en el que quepa una fracción.",
+      "item3": "El eje no se deriva de los tramos, y esa es la decisión que separa esta pieza de una fila de barras. Derivado, encogería con cada tramo retirado, y las barras restantes reescalarían — perdiendo justo la posición que la pieza existe para mostrar.",
+      "item4": "El intervalo entró en el vocabulario compartido como dos campos sueltos en el tramo, y no como un tipo propio: los dos tipos de geometría que ya vivían allí llevan las coordenadas sueltas, y un tipo que envuelve dos campos para un solo consumidor es indirección, no vocabulario.",
+      "item5": "El total vive en la pieza y no en el tramo, porque es propiedad de la regla. Un total por tramo serían varias verdades sobre el mismo eje.",
+      "item6": "El color del tramo completado es el de la marca principal, y no el de éxito, y es la divergencia deliberada frente al grafo: en un rastro casi todo tramo terminó, y la regla entera verde ahogaría los dos estados que se quieren ver.",
+      "item7": "La barra del tramo instantáneo se dibuja con el menor ancho visible, y es el único lugar donde la cuenta miente sobre la duración. Ancho cero diría que no hubo tramo, que no es lo que dice el dato."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar tramos y un eje",
+          "result": "Hay una fila por tramo, y cada barra queda en la fracción del eje que manda el dato",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar un tramo que termina después del final del eje",
+          "result": "La barra se recorta en el eje, y la fila avisa en palabras que continúa fuera",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar sangrías que no empiezan en el origen",
+          "result": "La cascada entera se apoya en el origen, sin escalones vacíos a la izquierda",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar la pieza",
+          "result": "Cada fila lleva la palabra del estado, el inicio y la duración, en texto que solo recibe quien escucha",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar la pieza",
+          "result": "La capa que se desplaza tiene rol de grupo, nombre y parada de teclado",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar el estado en que la ejecución corre",
+          "result": "La pieza se declara ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar un estado en que la ejecución ya no corre",
+          "result": "La pieza deja de declararse ocupada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar la pieza sin tramos, o con un eje sin extensión",
+          "result": "No hay cascada, y no se dibuja nada",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pasar los cuatro estados de tramo",
+          "result": "Cada uno llega al dibujo con su palabra y su marca",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pasar un rastro más ancho que la conversación",
+          "result": "Una sola capa se desplaza, y es la que tiene nombre y foco",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en toda story, más lo que afirma la play.",
+        "item1": "Cada fila dice su estado en palabra, y no solo por la marca",
+        "item2": "Cada fila dice el inicio y la duración en números, y no solo por la barra",
+        "item3": "La regla de cada fila está fuera de lo que se lee en voz",
+        "item4": "La capa que se desplaza tiene rol y nombre, y el rol es lo que hace legal el nombre",
+        "item5": "Nada dentro de la pieza es región viva",
+        "item6": "Ninguna fila entra en el orden de foco",
+        "item7": "Los tramos son una lista ordenada, en el orden en que fueron declarados"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la cascada, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cuatro, en la misma regla",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — un tramo que se rompió",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — en curso, con la ejecución ocupada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composiciones — el rastro a medias, con el mismo eje",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — más ancho que la conversación, desplazándose",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Composiciones — etiquetas largas, que ensanchan la columna",
+          "priority": "high"
+        },
+        "item8": {
+          "story": "Composiciones — un tramo recortado por la ventana del eje",
+          "priority": "medium"
+        }
+      }
+    }
+  }
+}
