@@ -48,20 +48,20 @@ Accordion (type, collapsible, defaultValue)
 - O chevron rotativo no `AccordionTrigger` é aplicado automaticamente — não adicionar manualmente
 - Máximo de 8–10 itens por Accordion — acima disso, considerar organização por categorias ou busca
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - Aplicados automaticamente: `role="button"`, `aria-expanded`, `aria-controls` no trigger e `role="region"` no content — não reimplementar
 - `AccordionTrigger` renderiza um `<button>` — acessibilidade por teclado nativa
 - Navegação por teclado nativa: `Tab` move entre triggers, `Enter`/`Space` expande/colapsa, `Arrow Down`/`Up` move entre triggers
 - Animação de abertura respeita `prefers-reduced-motion` automaticamente
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - `AccordionTrigger`: pergunta direta (FAQ) ou frase nominal (documentação)
 - FAQ: frase interrogativa completa — "Como faço para redefinir minha senha?"
 - Documentação: substantivo ou frase nominal — "Especificações técnicas", "Política de devolução"
 - Sem ponto final em frases nominais; com ponto de interrogação em perguntas
 - `AccordionContent`: resposta objetiva, máximo 3–4 linhas — conteúdo longo sugere que o item deveria ser uma página própria
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 - `accordion_expand` ao abrir, `accordion_collapse` ao fechar, ambos com `label` (texto do trigger)
 - Detectar direção do toggle via `data-state` do trigger antes do clique
 
@@ -88,31 +88,31 @@ Accordion (type, collapsible, defaultValue)
 
 ```
 Collapsible (open, onOpenChange, defaultOpen)
-├── CollapsibleTrigger  (asChild + Button — padrão recomendado)
+├── CollapsibleTrigger  (as-child + Button — padrão recomendado)
 └── CollapsibleContent
 ```
 
 **Regras**:
-- `CollapsibleTrigger asChild` com `<Button>` — aproveita estilos, estados de foco e acessibilidade do Button
+- `CollapsibleTrigger as-child` com `<Button>` — aproveita estilos, estados de foco e acessibilidade do Button
 - Modo controlado (`open + onOpenChange`) quando o estado influencia outros elementos da UI
 - Modo não-controlado (`defaultOpen`) quando a seção é independente e o estado não precisa ser compartilhado
-- Sempre incluir um elemento com texto ou `sr-only` no trigger — nunca trigger apenas com ícone sem label
+- Sempre incluir um elemento com texto no trigger, visível ou visualmente oculto com `.nds-sr-only` — nunca trigger apenas com ícone sem nome acessível
 - Ícone deve indicar visualmente o estado atual: chevron para baixo (fechado) / para cima (aberto)
-- Ícone giratório via `data-state`: `[[data-state=open]_&]:rotate-180` no chevron (alternativa CSS pura)
+- Ícone giratório: `.nds-chevron` no chevron. A folha gira 180° quando o ancestral está em `data-state="open"` ou `aria-expanded="true"`, e traz a transição — não reimplementar a rotação por estado
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-expanded` e `aria-controls` aplicados automaticamente no `CollapsibleTrigger` — não reimplementar
-- Trigger com apenas ícone: `<span class="sr-only">` descrevendo a ação e o objeto — "Exibir filtros avançados"
+- Trigger com apenas ícone: um `<span class="nds-sr-only">` descrevendo a ação e o objeto — "Exibir filtros avançados"
 - `aria-label` no Button quando o estado muda o label: `isOpen ? "Ocultar..." : "Exibir..."`
-- Animação de abertura: aplicar `motion-reduce:animate-none` se adicionar animações customizadas além do padrão
+- Animação de abertura: a folha já para sob `prefers-reduced-motion`. Animação personalizada acrescentada por cima tem de parar sob a mesma condição — se vier de utilitária de animação avulsa, somar `.nds-motion-reduce-none`
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Label do trigger: verbo no infinitivo + objeto — "Exibir filtros avançados", "Ocultar detalhes"
 - Alternar o label com o estado: "Exibir" quando fechado, "Ocultar" quando aberto
 - Evitar labels genéricos: "Ver mais", "Toggle", "Expandir" sem contexto
 - Header da seção: substantivo ou frase nominal que descreve o conteúdo — "Filtros avançados", "Informações técnicas"
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 - `collapsible_toggle` com `label` e `value` ("open"|"closed")
 - Rastrear apenas quando a seção tem importância na jornada do usuário — não rastrear colapsáveis decorativos
 
@@ -129,14 +129,14 @@ Collapsible (open, onOpenChange, defaultOpen)
 | Alternância entre views paralelas | Tabs |
 | Etapas sequenciais obrigatórias | Stepper |
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+**Acessibilidade transversal** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-expanded` e `aria-controls` aplicados automaticamente em ambos — nunca adicionar manualmente
 - Triggers sempre são `<button>` — navegação por teclado nativa garantida
 - Ícones de estado (`ChevronDown`) sempre com `aria-hidden="true"` — o estado é comunicado via `aria-expanded`
 - Labels de trigger devem descrever o conteúdo, não a ação mecânica: "Detalhes do pedido" em vez de "Clique para expandir"
-- Animações respeitam `prefers-reduced-motion`; animações customizadas adicionadas precisam de `motion-reduce:animate-none`
+- As folhas `.nds-*` já param a animação sob `prefers-reduced-motion`; animação personalizada acrescentada por cima tem de parar sob a mesma condição
 
-**Analytics transversal** (ver `21-analytics.md`):
+**Analytics transversal** (ver `../../docs/shared/guidelines/07-analytics.md`):
 
 | Componente | Evento | Payload |
 |------------|--------|---------|
@@ -144,7 +144,7 @@ Collapsible (open, onOpenChange, defaultOpen)
 | Accordion | `accordion_collapse` | `label` |
 | Collapsible | `collapsible_toggle` | `label`, `value` ("open"\|"closed") |
 
-**UX Writing transversal** (ver `19-tom-de-voz.md`):
+**UX Writing transversal** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Triggers de Accordion: frase interrogativa (FAQ) ou frase nominal (documentação)
 - Triggers de Collapsible: verbo + objeto alternado com o estado ("Exibir" / "Ocultar")
 - Conteúdo expansível: objetivo e conciso — conteúdo longo sugere que o item merece página própria

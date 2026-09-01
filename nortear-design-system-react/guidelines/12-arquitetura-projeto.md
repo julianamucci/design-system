@@ -261,4 +261,4 @@ Responsabilidades atuais:
 | Docs page não carrega | `withAutoDocsTab` não importado | Verificar `parameters.docs.page: withAutoDocsTab(ComponenteDocs)` |
 | i18n não funciona na docs page | `translations.json` ausente | Criar `src/components/docs/content/{slug}/translations.json` |
 | Violação de a11y bloqueia CI | `parameters.a11y.test: 'error'` | Corrigir a violação; ou para falso positivo: `parameters.a11y.config.rules` |
-| Focus ring não aparece | Falta classe `focus-visible:ring-2` | Seguir `11-acessibilidade.md` e `03-sistema-design.md` |
+| Anel de foco não aparece | Falta `.nds-focus-ring` no elemento interativo | Seguir `docs/shared/guidelines/01-acessibilidade.md` e `03-sistema-design.md` |

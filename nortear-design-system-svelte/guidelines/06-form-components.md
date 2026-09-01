@@ -31,7 +31,7 @@
   - Portão: `button_gap_apertado` no `audit.mjs`.
 - Botão icon-only: `aria-label` obrigatório e contextual (verbo + objeto + identificador)
 - Ícones internos: sempre `aria-hidden="true"`
-- Em submit, refletir estado de loading com `disabled` e ícone `Loader2 animate-spin`
+- Em submit, refletir o estado de carregamento com `disabled` e um ícone de espera em rotação (`.nds-animate-spin`) — a folha já para a rotação sob `prefers-reduced-motion`
 
 **Acessibilidade**:
 - `aria-label` contextual em botões ambíguos
@@ -80,7 +80,7 @@
 **Regras**:
 - `Label` sempre associado via `for`/`id`
 - Placeholder: exemplo real — nunca instrução (ex: "ex: ana@empresa.com", não "Digite seu e-mail")
-- Tokens obrigatórios: `bg-input border-input`
+- Tokens obrigatórios: `--input` no fundo e `--border` no contorno — lidos pela folha `.nds-input`, nunca por classe de cor no template
 - Nunca altura fixa — usar `padding-block` + `line-height` (WCAG 1.4.4)
 
 ---

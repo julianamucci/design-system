@@ -36,16 +36,16 @@
 **Tema personalizado** (ver `03-sistema-design.md`):
 - Os links dentro do Breadcrumb devem herdar as variáveis de cor, hover e transição definidas para o componente Link no tema personalizado — consistência visual entre todos os links da aplicação.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Labels: substantivos ou frases nominais curtas, sem verbo, sem ponto final.
 - Evitar abreviações — "Visão geral" em vez de "Vis. geral".
 - O item atual deve refletir exatamente o `<h1>` da página.
 
-**SEO** (ver `20-seo-geo.md`):
+**SEO** (ver `docs/shared/guidelines/06-seo-geo.md`):
 - Único componente de navegação com impacto direto em rich snippets — o Google exibe o caminho quando há Schema.org `BreadcrumbList`.
 - O JSON-LD é gerado automaticamente pelo hook `useSeoEffect` (`@/lib/use-seo.ts`) ao passar o parâmetro `breadcrumb`. **Não** injete o script manualmente com `useEffect`.
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Rastrear apenas os itens clicáveis — nunca o item atual (último).
 - Evento: `navigation_click` com `label` (texto do link) e `destination` (path).
 
@@ -91,12 +91,12 @@ Menubar (aria-label="Menu principal")
 
 - Atalhos no `MenubarShortcut` são apenas visuais — a lógica do atalho deve ser implementada separadamente.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Triggers da barra: substantivos, sem verbo, sem ponto final. Ex.: "Arquivo", "Editar", "Exibir".
 - Itens do menu: verbos no infinitivo descrevendo a ação. Ex.: "Salvar", "Abrir novo", "Exportar como PDF".
 - Atalhos: usar símbolos padrão do sistema (`⌘`, `Ctrl`, `⇧`, `⌥`).
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento: `menu_item_click` com `label` (texto do item) e `menu` (nome do menu pai).
 
 ---
@@ -140,12 +140,12 @@ Menubar (aria-label="Menu principal")
 - O componente aplica `role="navigation"`, `aria-expanded` e gerencia foco nos submenus automaticamente.
 - Submenus fecham com `Escape` — comportamento nativo do primitivo headless, não sobrescrever.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Labels: substantivos ou frases nominais curtas, sem verbo, sem ponto final.
 - Máximo 2 palavras por item de nível principal.
 - Itens de submenu podem ser mais descritivos: "Cores do sistema", "Escala tipográfica".
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento: `navigation_click` com `label` e `destination`.
 
 ---
@@ -184,12 +184,12 @@ Menubar (aria-label="Menu principal")
 - `aria-disabled` + `pointer-events-none` em vez de `disabled` — mantém o elemento no fluxo do Tab.
 - `PaginationEllipsis` com `aria-hidden="true"` — é decorativo.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - "Anterior" e "Próxima" — sem abreviações, sem ponto final.
 - Botões numerados: apenas o número — o contexto vem do `aria-label`.
 - Ellipsis: `…` (reticências tipográficas), não `...` (três pontos).
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento: `page_change` com `page` (página de destino) e `total_pages`.
 - Disparar ao confirmar a mudança, não ao clicar — evitar disparos em cliques rápidos.
 
@@ -298,13 +298,13 @@ Tabs
 - O foco vai automaticamente para o `TabsContent` ativo ao pressionar `Tab` — não adicionar `tabIndex` manual nos painéis.
 - Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Labels: substantivos ou gerúndios curtos, máximo 2 palavras, sem ponto final.
 - Exemplos corretos: "Visão geral", "Propriedades", "Exemplos", "Configurações".
 - Exemplos incorretos: "Ver a visão geral", "Clique para ver propriedades".
 - Evitar labels genéricos: "Aba 1", "Tab A", "Outros".
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento: `tab_change` com `label` (texto da tab), `index` (posição base 0) e `total` (total de tabs).
 - Não disparar na tab inicial — apenas nas mudanças subsequentes.
 
@@ -316,7 +316,7 @@ Tabs
 - Todo componente de navegação vive dentro de um `<nav>` com `aria-label` único e descritivo — nunca dois `<nav>` sem `aria-label` na mesma página
 - `aria-current="page"` no item que representa a página ou estado ativo — obrigatório em Breadcrumb, Navigation Menu, Pagination e Sidebar
 - Ícones decorativos dentro de componentes de navegação: sempre `aria-hidden="true"`
-- Focus ring obrigatório em todos os elementos interativos: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
+- Anel de foco obrigatório em todos os elementos interativos: `.nds-focus-ring` (2px de `--ring` em `:focus-visible`, com halo de `--background` por fora)
 
 **Analytics transversal**:
 

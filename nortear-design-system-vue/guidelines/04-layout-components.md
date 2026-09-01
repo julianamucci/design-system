@@ -20,8 +20,8 @@
 **Regras**:
 - Sempre que exibir imagem, vídeo ou iframe com proporção conhecida
 - Não aplicar tokens de cor diretamente no AspectRatio — estilizar o elemento filho
-- Imagens dentro: usar `object-cover` para preencher sem distorcer
-- `rounded-md` no elemento filho, não no container
+- Imagens dentro: `object-fit: cover` para preencher sem distorcer — a folha `.nds-aspect-ratio` já estica o filho para o container inteiro (`position: absolute; inset: 0`)
+- Cantos arredondados no elemento filho, não no container: `.nds-rounded-md`
 - Usar `ImageWithFallback` (`/components/figma/ImageWithFallback`) para imagens
 - Nunca usar `user-scalable=no` no viewport — impede zoom em mobile
 
@@ -52,31 +52,31 @@ Card
 └── CardFooter
 ```
 
-**Tokens obrigatórios** (ver `16-padroes-design-sistema.md`):
+**Tokens obrigatórios** (ver `../../docs/shared/guidelines/04-padroes-design-sistema.md`) — não há utilitária de cor de superfície; quem lê o token é a folha do componente:
 
-| Elemento | Token |
-|----------|-------|
-| Fundo | `bg-card` |
-| Texto | `text-card-foreground` |
-| Borda | `border-border` |
-| Texto secundário (CardDescription) | `text-muted-foreground` |
-| Divisor do footer | `border-t border-border` |
+| Elemento | Token | Quem aplica |
+|----------|-------|-------------|
+| Fundo | `--card` | `.nds-card` |
+| Texto | `--card-foreground` | `.nds-card` |
+| Borda | `--border` | `.nds-card` |
+| Texto secundário (CardDescription) | `--muted-foreground` | `.nds-card-description` |
+| Divisor do footer | `--border` | `.nds-card-footer` |
 
 **Regras**:
 - Quando o conteúdo forma unidade semântica — produto, perfil, artigo, métrica
 - Botões dentro do Card devem ter `aria-label` contextual incluindo o identificador do card
-- Card inteiramente clicável: usar `<a>` ou `role="button"` com `aria-label` descritivo no container, não apenas `cursor-pointer`
+- Card inteiramente clicável: usar `<a>` ou `role="button"` com `aria-label` descritivo no container — cursor de mão sozinho não é affordance, nem é anunciado
 - Imagens dentro: sempre com `alt` adequado
 
 **Acessibilidade**:
 - Usar o `CardTitle` como âncora de contexto via `aria-labelledby` ou incluir o título no `aria-label` dos botões — nunca apenas "Excluir"
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - `CardTitle`: substantivo ou frase nominal, sem verbo, sem ponto final
 - `CardDescription`: complemento direto do título, máximo 2 linhas, ponto final
 - Labels dos botões no footer: verbos no infinitivo, máximo 3 palavras
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 - Rastrear o conteúdo interativo dentro do card — nunca o card em si
 - Card inteiramente clicável: `data-track="card_click"` com `data-track-label` idêntico ao `CardTitle` e ao `aria-label`
 - Botões dentro: `data-track="button_click"` com `data-track-label` contextual
@@ -123,14 +123,14 @@ ResizablePanelGroup (direction)
 **API e exemplos**: `src/components/ui/scroll-area/scroll-area.vue` + stories + `ScrollAreaDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Regras**:
-- Sempre definir altura específica no container pai — sem isso, o ScrollArea não funciona
-- `overflow-hidden` no container pai + `h-full` no ScrollArea
+- A altura vem do preset da folha: `.nds-scroll-area[data-size="xs|sm|md|lg|xl"]`. Sem altura declarada não há o que rolar, e o componente vira um `div` comum
+- O recorte é da raiz e a rolagem é do viewport interno — a folha já faz os dois; não recriar com utilitária de overflow por fora
 - Não aninhar ScrollAreas — causa scroll duplo e desorientação
-- Tabelas dentro de ScrollArea: usar `overflow-x-auto` no wrapper da tabela, não outro ScrollArea
+- Tabelas dentro de ScrollArea: envolver a tabela em `.nds-table-wrapper`, não em outro ScrollArea
 
 **Acessibilidade**:
 - O ScrollArea expõe atributos de rolagem corretamente para tecnologias assistivas
-- Para scroll horizontal: adicionar `tabIndex={0}` para que usuários de teclado possam focar e rolar com teclas de direção
+- Para scroll horizontal: `tabindex="0"` no elemento que de fato rola, para que quem usa teclado possa focá-lo e rolar com as setas (WCAG 2.1.1; axe `scrollable-region-focusable`). Uma só camada recebe o `tabindex` — duas produzem parada dupla no Tab
 - Garantir que o conteúdo dentro é navegável por Tab sem que o scroll quebre o fluxo visual
 - Em mobile: preferir scroll nativo da página quando possível — ScrollArea pode dificultar gestos de swipe
 
@@ -142,7 +142,7 @@ ResizablePanelGroup (direction)
 
 **Propósito**: divisor visual e semântico entre grupos de conteúdo relacionado.
 
-**Quando usar**: separar grupos de itens em menus, dividir seções em formulários, delimitar áreas em layouts. Não usar apenas como decoração — para divisão puramente visual, usar bordas CSS ou espaçamento (`my-*`, `py-*`).
+**Quando usar**: separar grupos de itens em menus, dividir seções em formulários, delimitar áreas em layouts. Não usar apenas como decoração — para divisão puramente visual, o espaçamento resolve: `.nds-stack` com o `data-spacing` adequado entre os grupos.
 
 **API e exemplos**: `src/components/ui/separator/separator.vue` + stories + `SeparatorDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
@@ -157,7 +157,7 @@ ResizablePanelGroup (direction)
 - Separator semântico (divide conteúdo relacionado): manter o `role="separator"` padrão
 - Separator decorativo (apenas visual, sem significado): adicionar `aria-hidden="true"`
 
-**Tokens**: o componente aplica `bg-border` automaticamente via CSS do tema. Não sobrescrever com valores hardcoded.
+**Tokens**: `.nds-separator[data-orientation="horizontal"|"vertical"]` desenha o filete lendo `--border` — é a folha que decide espessura e cor. Não recriar a régua com um elemento de 1px pintado à mão, nem sobrescrever com valor fixo.
 
 **Analytics**: elemento estático passivo — não dispara eventos.
 
@@ -192,23 +192,23 @@ SidebarProvider (no root da aplicação)
 - Collapsible obrigatório em categorias com subitens
 - 280px fixo em desktop (push mode), overlay em mobile — gerenciados pelo SidebarProvider
 
-**Acessibilidade** (ver `11-acessibilidade.md` → "Estrutura acessível da SPA"):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md` → "Estrutura acessível da SPA"):
 - Item ativo: `aria-current="page"` — anuncia ao leitor de tela qual seção está selecionada
 - Botão de toggle: `aria-expanded` + `aria-label` contextual ("Expandir navegação principal" / "Recolher navegação principal")
 - Itens com ícone na sidebar colapsada: `aria-label` com o nome da seção — ícone sozinho não é acessível
 - Skip link na aplicação aponta para `#main-content`, pulando a sidebar
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Labels de menu: substantivos ou frases nominais curtas, sem verbo, sem ponto final. Ex: "Componentes", "Design Tokens", "Visão geral"
 - `aria-label` do toggle: contextual e descritivo — não apenas "Menu"
 - Tooltips de ícones no modo colapsado: nome exato da seção
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 - Clique em item de menu: `navigation_click` com `label` (nome da seção) e `destination` (path)
-- A função de navegação deve disparar `page_view` internamente — ver `11-acessibilidade.md` → "Anúncio de mudança de página"
+- A função de navegação deve disparar `page_view` internamente — ver `../../docs/shared/guidelines/01-acessibilidade.md` → "Anúncio de mudança de página"
 - Não rastrear duplamente: `navigation_click` + `page_view` são eventos distintos com propósitos distintos
 
-**SEO** (ver `20-seo-geo.md`):
+**SEO** (ver `../../docs/shared/guidelines/06-seo-geo.md`):
 - A estrutura `<nav aria-label="Navegação principal">` é lida por crawlers e reforça a arquitetura de informação
 - Os itens de menu refletem a hierarquia de conteúdo — manter nomes consistentes com os títulos das páginas que representam
 
@@ -217,14 +217,14 @@ SidebarProvider (no root da aplicação)
 ## Regras transversais de Layout Components
 
 **Tokens** (todos os componentes):
-- Nunca valores hardcoded de cor — sempre variáveis CSS do sistema
-- `bg-card`, `bg-muted`, `bg-background` conforme hierarquia visual
-- `border-border` em todas as bordas
-- `text-foreground`, `text-card-foreground`, `text-muted-foreground`
+- Nunca valores fixos de cor — sempre os tokens do tema, lidos pela folha do componente
+- Superfície conforme a hierarquia visual: `--card` para painel de conteúdo, `--muted` para área rebaixada, `--background` para o fundo da página. Não existe utilitária de superfície: a cor entra pela classe do componente (`.nds-card`, `.nds-popover-content`, `.nds-input`), nunca por uma classe de fundo avulsa
+- `--border` em todas as bordas
+- Texto: `--foreground` no corrido, `--card-foreground` dentro do Card, `--muted-foreground` no secundário
 
 **Acessibilidade transversal**:
 - Componentes de container (Card, ScrollArea, AspectRatio) não são interativos por si — a interatividade e os `aria-label` estão no conteúdo dentro deles
-- Ordem do DOM sempre reflete a ordem visual — nunca usar `order-*` ou `flex-row-reverse` (ver `16-padroes-design-sistema.md`)
+- Ordem do DOM sempre reflete a ordem visual — nunca reordenar só no estilo (ver `../../docs/shared/guidelines/04-padroes-design-sistema.md`)
 - `aria-label` de qualquer elemento interativo dentro de um container de layout deve incluir o contexto que o container fornece visualmente
 
 **Analytics transversal**:

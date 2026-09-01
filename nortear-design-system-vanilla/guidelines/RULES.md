@@ -7,7 +7,7 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 ## 1. Stack obrigatória
 
 - **Componentes**: funções TypeScript que criam/retornam `HTMLElement` — padrão `createNomeComponente(options): HTMLElement`
-- **Estilos**: CSS standalone via classes `.nds-*` definidas em `src/styles/components/*.css`. O projeto não usa nenhum framework de classe utilitária — classe sem o prefixo `nds-` é inerte em runtime. Nunca estilos inline arbitrários (exceto CSS custom properties dinâmicas)
+- **Estilos**: CSS standalone via classes `.nds-*` definidas em `docs/shared/styles/nds/*.css` (alias `@shared/styles/nds/`, importado por `src/styles/globals.css`). O projeto não usa nenhum framework de classe utilitária — classe sem o prefixo `nds-` é inerte em runtime. Nunca estilos inline arbitrários (exceto CSS custom properties dinâmicas)
 - **Ícones**: exclusivamente `lucide` (pacote vanilla) — `import { icons } from 'lucide'` — zero exceções
 - **Formulários**: HTML nativo + Zod para validação de schema — sem biblioteca de formulários
 - **Tipografia**: fonte do sistema definida no CSS base — usar classes `.nds-text-*` / `.nds-leading-*` (sem valores arbitrários ou classes utilitárias de outro framework)
@@ -19,10 +19,14 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 
 Formato obrigatório: **HSL sem vírgulas** (`220 44% 57%`). Proibidos: rgba, oklch, hex.
 
-Tokens de superfície:
-- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `bg-card text-card-foreground`
-- Menus e overlays flutuantes (Dropdown, Popover, Tooltip, etc.): `bg-popover text-popover-foreground`
-- Inputs: `bg-input border-input`
+Tokens de superfície — **não há utilitária de cor de fundo**. Quem lê o token é a
+folha do componente; aplicar a classe do componente é o que aplica a superfície:
+- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `.nds-dialog-content`, `.nds-sheet-content`, `.nds-card` (`--card` / `--card-foreground` no Card; ver a pendência medida em `10-overlay-components.md` para os painéis modais)
+- Menus e overlays flutuantes (Dropdown, Popover, Tooltip, etc.): `.nds-dropdown-menu-content`, `.nds-popover-content`, `.nds-tooltip-content` (`--popover` / `--popover-foreground`)
+- Inputs: `.nds-input` (`--input` no fundo, `--border` no contorno)
+
+Camadas de empilhamento saem da escada de tokens (`--z-dropdown` … `--z-toast`),
+lida pela folha. Número escrito no call site sai da escada.
 
 Tokens de cor de estado aplicados via `className` — nunca via atributo ou style direto:
 - Warning/Success em Alert: **opção** `variant: 'warning'` / `variant: 'success'` da factory (desde PATCHES.md#alert-five-variants — nunca via className). Badge tem `warning` e `success` como variantes próprias, e ambas escrevem só a cor da borda; caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc., ver guideline 04 §Tokens de Componente)
@@ -43,11 +47,11 @@ Regras permanentes:
 - Ícones decorativos: sempre `aria-hidden="true"` via `setAttribute('aria-hidden', 'true')`
 - Ícones funcionais (sem texto adjacente): `aria-label` obrigatório no elemento pai
 - Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
-- `motion-reduce:animate-none` em toda animação customizada
-- Focus ring obrigatório: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` — sem opacidade
+- Toda animação respeita `prefers-reduced-motion: reduce`. As folhas `.nds-*` já cumprem a regra por conta própria — não há classe a pendurar no elemento. Só animação AUTORAL, fora das folhas, precisa se declarar, e para isso existe `.nds-motion-reduce-none`
+- Anel de foco obrigatório em todo componente interativo: 2px lendo `--ring` em 100% da cor, pelo `:focus-visible` da folha do componente ou por `.nds-focus-ring`. Opacidade (`/50`, `/30`) derruba o indicador de foco abaixo dos 3:1 de WCAG 1.4.11
 - `role="dialog"` + `aria-labelledby` + `aria-describedby` obrigatórios em todo Dialog/Sheet/Drawer
 - Títulos e descrições de dialog devem ter `id` para referência em `aria-labelledby` / `aria-describedby`
-- Tabelas: `<caption>` obrigatório (pode ser `sr-only`); `scope="col"` em todo `<th>`
+- Tabelas: `<caption>` obrigatório (pode ficar fora da tela via `.nds-sr-only`); `scope="col"` em todo `<th>`
 
 Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
 
@@ -73,7 +77,7 @@ Referência: `02-template-caracteres-especiais.md`.
 
 ## 5. Alinhamento de botões
 
-- Primário sempre à **direita** — usar `justify-end` ou `ml-auto`
+- Primário sempre à **direita** — `.nds-cluster` com `data-justify="end"` no par de ações, ou `.nds-spacer-start` no botão primário quando ele divide a fileira com outro conteúdo. **Não existem utilitárias avulsas de alinhamento** (`.nds-justify-*`, `.nds-items-*`): o alinhamento é `data-*` do cluster
 - DOM segue a ordem visual — `flex-row-reverse` **proibido**
 - Ordem no DOM: `[secundário] [primário]` — confirmação sempre à direita
 

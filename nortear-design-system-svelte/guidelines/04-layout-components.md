@@ -26,8 +26,8 @@ AspectRatio
 
 **Regras**:
 - Não aplicar tokens de cor diretamente no `AspectRatio` — estilizar o elemento filho
-- Imagens dentro: usar `object-cover` para preencher sem distorcer
-- `rounded-md` no elemento filho, não no container
+- Imagens dentro: `object-fit: cover` para preencher sem distorcer
+- Arredondamento (`.nds-rounded-md`) no elemento filho, nunca no container — o container só reserva a proporção; o recorte é de quem desenha
 
 **Acessibilidade**:
 - Imagem informativa: `alt` descritivo do conteúdo, não da aparência
@@ -56,15 +56,15 @@ Card
 └── CardFooter
 ```
 
-**Tokens obrigatórios**:
+**Tokens obrigatórios** — lidos pela folha `.nds-card`, não por classe de cor no template:
 
 | Elemento | Token |
 |---|---|
-| Fundo | `bg-card` |
-| Texto | `text-card-foreground` |
-| Borda | `border-border` |
-| Texto secundário | `text-muted-foreground` na `CardDescription` |
-| Divisor do footer | `border-t border-border` |
+| Fundo | `--card` |
+| Texto | `--card-foreground` |
+| Borda | `--border` |
+| Texto secundário da `CardDescription` | `--muted-foreground` |
+| Divisor do rodapé | `--border`, na borda superior do rodapé |
 
 **Acessibilidade**:
 - Botões dentro do Card com `aria-label` contextual incluindo o identificador do card
@@ -130,9 +130,9 @@ ScrollArea
 
 **Propósito**: navegação lateral para aplicações com múltiplas seções — persistente em desktop, colapsável em mobile.
 
-**API e exemplos**: `src/components/ui/sidebar/` + stories + `SidebarDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras. Ver também `STORYBOOK-ARCHITECTURE.md`.
+**API e exemplos**: `src/components/ui/sidebar/` + stories + `SidebarDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Stack**: estado de colapso via Pinia (`useAppSidebar`); responsiva pelo breakpoint `md`.
+**Estado**: o provider publica um estado compartilhado em contexto — aberto/fechado, e o modo (coluna em tela larga, gaveta em tela estreita). O corte entre os dois modos é uma **consulta de mídia**, entregue como prop ao provider e com padrão próprio do componente: consulta explícita, e não aritmética de breakpoint espalhada pelos filhos.
 
 **Regras**:
 - Link ativo: `aria-current="page"` no item correspondente à rota atual

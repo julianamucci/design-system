@@ -18,10 +18,10 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 
 Formato obrigatório: **HSL sem vírgulas** (`220 44% 57%`). Proibidos: rgba, oklch, hex.
 
-Tokens de superfície:
-- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `bg-card text-card-foreground`
-- Menus e overlays flutuantes (DropdownMenu, Popover, Tooltip, etc.): `bg-popover text-popover-foreground`
-- Inputs: `bg-input border-input`
+Tokens de superfície — quem lê o token é a folha do componente; a superfície nunca é repintada por fora:
+- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `.nds-card` e as folhas de painel leem `--card` / `--card-foreground`
+- Menus e overlays flutuantes: `.nds-popover-content`, `.nds-dropdown-menu-content`, `.nds-tooltip-content` leem `--popover` / `--popover-foreground`. Não há utilitária para essa superfície, e é de propósito: overlay flutuante sem a folha certa também perde elevação, raio e animação de entrada
+- Inputs: `.nds-input` lê `--background` no fundo e `--input` (com `--border` de reserva) na borda
 
 Tokens de cor de estado aplicados via `className` — nunca via prop inexistente:
 - Warning/Success em Alert: **prop** `variant="warning"` / `variant="success"` (desde PATCHES.md#alert-five-variants — nunca via className). Badge tem `warning` e `success` como variante própria — cinco no total, com `default`, `destructive` e `info`; caso pontual sobrescreve as vars internas escopadas (`--badge-border` etc., ver guideline 04 §Tokens de Componente)
@@ -43,9 +43,9 @@ Regras permanentes:
 - Ícones funcionais (sem texto adjacente): `aria-label` obrigatório no elemento pai
 - Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
 - Respeitar `prefers-reduced-motion` em toda animação customizada fora dos primitivos `@base-ui/react`
-- Focus ring obrigatório: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` — sem opacidade
+- Anel de foco obrigatório: `.nds-focus-ring` — 2px de `--ring` em `:focus-visible`, com halo de `--background` por fora, e sempre com a cor cheia (nunca `/50` ou `/30`)
 - `DialogTitle` e `DialogDescription` obrigatórios em todo Dialog, Sheet, Drawer — são a base do `aria-labelledby`
-- `TableCaption` obrigatório em toda Table (pode ser `sr-only`)
+- `TableCaption` obrigatório em toda Table (pode ficar visualmente oculta com `.nds-sr-only`)
 - `scope="col"` em todo `TableHead`
 - `TooltipProvider` no root — em Storybook: via `decorator` em `preview.ts`; em App.tsx sandbox: no topo do JSX
 - `aria-invalid` dentro de `FormField`: automático via `FormControl` — não adicionar manualmente. Fora de `FormField`: adicionar manualmente com `aria-errormessage`
@@ -71,8 +71,8 @@ Referência: `02-jsx-caracteres-especiais.md`.
 
 ## 5. Alinhamento de botões
 
-- Primário sempre à **direita** — usar `justify-end` ou `ml-auto`
-- DOM segue a ordem visual — `flex-row-reverse` **proibido**
+- Primário sempre à **direita** — o par de ações é um `.nds-cluster` com `data-justify="end"`; empurrar um item sozinho é `.nds-spacer-start`
+- DOM segue a ordem visual — inverter a direção do flex para conseguir o alinhamento é **proibido**
 - Ordem no DOM: `[secundário] [primário]` — confirmação sempre à direita
 
 ---
@@ -84,7 +84,7 @@ Ao editar qualquer seção de um arquivo existente:
 - Preservar exports, interfaces e props intactos
 - Não modificar código fora do escopo solicitado
 
-Referência: `14-categoria-showcase.md` (padrões gerais de edição).
+Estas três regras valem para qualquer edição parcial, em qualquer arquivo do projeto.
 
 ---
 
@@ -94,14 +94,18 @@ Nunca inventar props que não existem. Casos frequentes:
 
 | Componente | Prop inexistente | Correto |
 |------------|-----------------|---------|
-| Avatar | `size` | var interna escopada: `--avatar-size` (guideline 04) |
-| Badge | `size` | `className` customizado |
-| Label | `font-bold` | `font-medium` (padrão do design system) |
+| Badge | `size` | não há tamanho por prop; caso pontual sobrescreve as vars internas escopadas (`--badge-border` etc.) |
+| Label | peso em negrito | o peso do rótulo vem da folha `.nds-label` (`--font-weight-medium`); não sobrescrever |
 | Sonner | posição `top-right` | padrão é `bottom-right` |
 | Drawer | prop `side` | `direction` no `<Drawer>` |
 | Select | busca integrada | usar Combobox |
 
-`CollapsibleTrigger`, `DialogTrigger`, `SheetTrigger`, `AlertDialogTrigger`, `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`: sempre com `asChild`.
+Para usar um componente existente como gatilho, sem elemento extra no DOM, há **duas formas nesta stack, e elas não são intercambiáveis**:
+
+| Gatilho | Como compor |
+|---|---|
+| `CollapsibleTrigger`, `DialogTrigger`, `AlertDialogTrigger`, `DropdownMenuTrigger`, `PopoverTrigger`, `HoverCardTrigger` | `asChild` — o wrapper do design system mantém essa ponte |
+| `SheetTrigger`, `TooltipTrigger` | `render={<Button />}` — não há ponte `asChild`; a prop seria ignorada em silêncio |
 
 Referência por categoria: `04-layout-components.md` a `10-overlay-components.md`.
 

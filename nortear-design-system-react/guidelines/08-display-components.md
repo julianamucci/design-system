@@ -10,30 +10,40 @@
 
 **Estrutura de subcomponentes**:
 ```
-Avatar
+Avatar (size)
 ├── AvatarImage    (imagem — exibida quando carregada com sucesso)
 └── AvatarFallback (fallback — exibido enquanto carrega ou quando falha)
+
+AvatarGroup                (fila de avatares sobrepostos)
+├── Avatar
+├── Avatar
+└── AvatarGroupCount       (o "+N" ao fim da fila)
+
+AvatarBadge                (indicador de status — filho do Avatar)
 ```
 
-**Tamanhos** (var interna `--avatar-size`, override escopado — guideline 04 §Tokens de Componente; não existe prop `size`):
+**Tamanhos** — prop `size`, que chega ao DOM como `data-size` e é lida pelos presets da folha `.nds-avatar`:
 
-| Override | Uso |
-|---|---|
-| `--avatar-size: var(--spacing-6)` (24px) | Compacto — listas densas |
-| padrão interno: `var(--spacing-8)` (32px) | Padrão |
-| `--avatar-size: var(--spacing-10)` (40px) | Destaque |
-| `--avatar-size: var(--spacing-12)` (48px) | Perfil / cabeçalho |
+| `size` | Diâmetro | Uso |
+|---|---|---|
+| `"sm"` | 24px | Compacto — listas densas |
+| `"md"` (padrão) | 32px | Padrão |
+| `"lg"` | 40px | Destaque |
+| `"xl"` | 48px | Perfil |
+| `"2xl"` | 64px | Cabeçalho de perfil |
+
+**Por que preset, e não altura por classe**: a medida saiu da classe de altura e virou preset na folha porque o avatar é peça sem fluxo de texto — a medida é dele, e precisa responder à densidade junto com o resto do sistema. Cada preset ajusta também a tipografia das iniciais (proporcional a `--avatar-size`), o `AvatarBadge` e o `AvatarGroupCount`, coisas que uma altura solta deixaria para trás. A story `avatar-sizes.stories.tsx` afirma o `data-size` no DOM, então API e folha não podem divergir em silêncio.
 
 **Regras**:
-- Tamanho padrão `var(--spacing-8)` (32px) — aplicado internamente; não existe prop `size`. Sobrescreva `--avatar-size` escopado ao contexto, nunca classe de altura.
+- Tamanho padrão `size="md"` (32px). Fora dos cinco presets, sobrescreva a var escopada `--avatar-size` (`docs/shared/guidelines/04-padroes-design-sistema.md` § Tokens de Componente) — nunca uma classe de altura, que não leva junto as iniciais, o badge nem o contador do grupo.
 - `AvatarFallback` obrigatório — sem ele, falha de imagem resulta em elemento vazio.
 - `delayMs={600}` no `AvatarFallback` — previne flash do fallback durante carregamento normal de rede.
-- Formato circular padrão: `rounded-full` já aplicado internamente.
+- Formato circular: a folha já aplica `--radius-full`; a imagem e o fallback herdam o recorte.
 - Indicador de status: elemento separado posicionado absolutamente — não é prop do Avatar.
 - Geração de iniciais: primeira letra do nome + primeira letra do sobrenome. "João da Silva" → "JS" (não "JO"); nome único → 2 primeiras letras.
-- Grupo de avatares sobrepostos: `flex -space-x-2` + `ring-2 ring-background` em cada Avatar.
+- Grupo de avatares sobrepostos: use `AvatarGroup`. A sobreposição e o contorno em `--background` que separa um avatar do vizinho já vêm da folha `.nds-avatar-group`; para um anel avulso fora do grupo existe `.nds-ring-background`.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `alt` obrigatório no `AvatarImage` — sem ele, leitores de tela anunciam a URL.
 - Avatar informativo: `alt="Foto de perfil de [Nome]"`.
 - Avatar decorativo (aparência, sem identidade): `alt=""`.
@@ -61,16 +71,18 @@ Carousel (opts, plugins, orientation, setApi)
 └── CarouselNext
 ```
 
-**Tamanho dos itens** (via `basis-*` no `CarouselItem`):
+**Tamanho dos itens** — o slide nasce ocupando a caixa inteira (`.nds-carousel-slide`); mais de um por vez se pede com as utilitárias responsivas de base:
 
-| Classe | Itens visíveis |
+| Classe no `CarouselItem` | Itens visíveis |
 |---|---|
-| (sem `basis`) | 1 (padrão) |
-| `basis-1/2` | 2 |
-| `basis-1/3` | 3 |
-| `md:basis-1/2 lg:basis-1/3` | Responsivo |
+| (nenhuma) | 1 — padrão |
+| `.nds-basis-full` | 1, explicitamente |
+| `.nds-md-basis-half` | 2, a partir de 768px |
+| `.nds-lg-basis-third` | 3, a partir de 1024px |
 
-**Espaçamento entre itens** (padrão Embla): `-ml-4` no `CarouselContent` + `pl-4` em cada `CarouselItem`.
+O slide **só encolhe, nunca aumenta**: um slide maior que o próprio recorte transborda, e transbordo vira barra de rolagem nova.
+
+**Espaçamento entre itens**: já resolvido pela folha — o track compensa com margem negativa o recuo que cada slide aplica, o que deixa o primeiro slide rente à borda. Não acrescentar recuo à mão.
 
 **Opções do Embla** (via prop `opts`): `loop: true`, `align: "start" | "center"`.
 
@@ -80,14 +92,14 @@ Carousel (opts, plugins, orientation, setApi)
 - `stopOnInteraction: true` no Autoplay — para ao usuário interagir.
 - `aria-label` obrigatório nos botões de navegação.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - Aplica `role="group"` e `aria-roledescription="slide"` em cada `CarouselItem`.
 - `CarouselPrevious` e `CarouselNext` precisam de `aria-label` descritivo.
 - Touch/swipe nativo do Embla; alternativa por teclado via Arrow keys nos botões de navegação.
 - Dots customizados: `role="tablist"` no wrapper + `role="tab"` + `aria-selected` em cada botão.
-- `motion-reduce`: o Embla respeita `prefers-reduced-motion` automaticamente.
+- Sob `prefers-reduced-motion: reduce` o deslize passa a ser instantâneo: o motor anima quadro a quadro em JS, então a preferência é lida no próprio componente — nenhuma media query alcançaria isso.
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento `slide_change` com `index`, `total` e `trigger` ("button" ou "swipe").
 - Subscrever via `api.on("select", ...)` após receber o `CarouselApi` por `setApi`.
 
@@ -132,7 +144,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 - Renderer `svg` para relatório, impressão e exportação; `canvas` só para dataset grande ou animação pesada.
 - Para tipos não cobertos (dispersão, radar, mapa de calor), registre o módulo extra da lib antes de usar.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `role="img"` mais descrição no container: sem nome acessível o desenho é conteúdo perdido. A descrição diz o que o gráfico mostra, não que é um gráfico.
 - A informação nunca vive só na cor (WCAG 1.4.1): a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
 - Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do CONTORNO das formas em `--foreground`, não da cor de série — as cores da paleta ficam em torno de 2:1 contra o fundo e sozinhas não sustentam o critério.
@@ -153,7 +165,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 
 **Estrutura de subcomponentes**:
 ```
-<div className="overflow-x-auto">
+div.nds-table-wrapper
 └── Table
     ├── TableCaption    (descrição da tabela — lida por leitores de tela)
     ├── TableHeader
@@ -168,8 +180,8 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 ```
 
 **Regras**:
-- `<div className="overflow-x-auto">` envolvendo a tabela — scroll horizontal em mobile obrigatório.
-- `TableCaption` obrigatório — pode ser `sr-only` quando o contexto visual já é claro.
+- `.nds-table-wrapper` envolvendo a tabela — é ele que rola na horizontal quando a tabela não cabe, e é obrigatório em telas estreitas.
+- `TableCaption` obrigatório — pode ficar visualmente oculto (`.nds-sr-only`) quando o contexto visual já é claro.
 - `scope="col"` em todos os `TableHead` — associa cabeçalhos às células para leitores de tela.
 - Estado vazio obrigatório — nunca tabela vazia sem mensagem.
 - `aria-label` contextual nos botões de ação por linha — "Ações para fatura INV001".
@@ -177,13 +189,13 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 
 **Ordenação, filtros, paginação**: o `Table` é apenas a camada visual (HTML semântico + estilo). Para interação rica, usar `DataTable` (`@tanstack/react-table`). Quando integrar manualmente com `@tanstack/react-table`, o `TableHead` deve receber `aria-sort` dinâmico (`"ascending"` / `"descending"` / `"none"`). Acima de 20 linhas, usar `Pagination` com `getPaginationRowModel()`.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `TableCaption` lida pelos leitores de tela antes das células — descreve o propósito da tabela.
 - `scope="col"` em `TableHead` — obrigatório para mapear cabeçalhos às células.
 - Botões de ação por linha: `aria-label` contextual incluindo o identificador da linha.
 - Ordenação: `aria-sort="ascending"` / `"descending"` / `"none"` nos `TableHead` com ordenação ativa.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Cabeçalhos de coluna: substantivos curtos, sem ponto final, capitalização na primeira palavra.
 - Estado vazio: "Nenhum [item] encontrado." — tom encorajador quando há CTA disponível.
 - Botão de ação: `aria-label` contextual — "Editar fatura INV001", não apenas "Editar".
@@ -204,7 +216,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 ```
 DataTable
 ├── Toolbar (GlobalFilter + DropdownMenu de visibilidade/pin)
-├── Container rolável (overflow-y quando virtualizado)
+├── div.nds-data-table-scroll     (dono da rolagem vertical quando virtualizado)
 │   └── Table (primitive)
 │       ├── TableHeader (row de cabeçalhos + row de filtros opcional)
 │       └── TableBody (linhas reais + padding rows quando virtualizado)
@@ -248,11 +260,11 @@ DataTable
 - `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde.
 - Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática e o handle fica imprevisível.
 - Selects de filtro recebem `filterFn: "equals"` automaticamente; texto usa `includesString`.
-- O componente aplica `table-fixed` ao usar `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — força layout O(1) por coluna e evita travamento em datasets grandes.
+- O componente aplica `.nds-table-fixed` (`table-layout: fixed`) ao usar `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — força layout O(1) por coluna e evita travamento em datasets grandes.
 - `data` nunca é mutado pelo componente — para edição inline, atualize o array externamente via `onCellEdit`.
 - `virtualized` e `enablePagination` são mutuamente exclusivos; ativar virtualização desliga paginação automaticamente.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - Tabela semântica via primitive `Table` — `<th>`, `<tr>`, `<td>` reais
 - `aria-sort="ascending|descending|none"` no `<th>` ordenável — anunciado pelo leitor de tela
 - `aria-label` contextual obrigatório nos botões: "Ordenar por <em>coluna</em>", "Filtrar <em>coluna</em>", "Selecionar linha", "Próxima página"
@@ -268,14 +280,14 @@ DataTable
 
 ## Regras transversais de Display Components
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+**Acessibilidade transversal** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `AvatarImage`: `alt` obrigatório em todos os casos (descritivo ou vazio para decorativo)
-- `Chart`: `aria-label` no `ChartContainer` + `<p className="sr-only">` com resumo dos dados
+- `Chart`: `aria-label` no `ChartContainer` + um parágrafo visualmente oculto (`.nds-sr-only`) com o resumo dos dados
 - `Table`: `TableCaption` obrigatório + `scope="col"` nos cabeçalhos
 - Carousel: `aria-label` nos botões de navegação
-- `motion-reduce`: Chart via `isAnimationActive={false}`, Carousel via comportamento nativo do Embla
+- Movimento reduzido: sob `prefers-reduced-motion: reduce`, o Chart desliga a animação de entrada das séries e o Carousel zera a duração do deslize — o motor anima quadro a quadro em JS, e nenhuma media query alcançaria isso
 
-**Analytics transversal** (ver `21-analytics.md`):
+**Analytics transversal** (ver `docs/shared/guidelines/07-analytics.md`):
 
 | Componente | Evento | Quando |
 |------------|--------|--------|

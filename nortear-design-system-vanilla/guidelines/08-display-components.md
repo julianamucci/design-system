@@ -11,10 +11,13 @@
 **Estrutura**:
 
 ```
-span wrapper (relative, rounded-full, overflow-hidden)
-├── img (quando src + onload OK)
-└── fallback (span com iniciais, bg-muted)
+span.nds-avatar (data-size)
+├── img.nds-avatar-image (quando src + onload OK)
+├── span.nds-avatar-fallback (iniciais ou ícone)
+└── span.nds-avatar-badge (opcional — sinal de estado no canto)
 ```
+
+Em fila, os avatares vão dentro de `.nds-avatar-group`, que sobrepõe cada um ao anterior; o excedente é `.nds-avatar-group-count` (+N).
 
 **Opts da factory**:
 
@@ -22,15 +25,17 @@ span wrapper (relative, rounded-full, overflow-hidden)
 |---|---|---|
 | `src` | — | URL da imagem |
 | `alt` | — | Texto alternativo |
-| `fallback` | — | Iniciais (obrigatório) |
-| `size` | `default` | `sm` (24px), `default` (40px), `lg` (64px) |
+| `fallbackText` | — | Iniciais (obrigatório) |
+| `size` | `md` | `sm` (24px), `md` (32px), `lg` (40px), `xl` (48px), `2xl` (64px) — sai como `data-size` |
+| `delayMs` | — | Espera antes de mostrar o fallback, para a imagem rápida não fazer as iniciais piscarem |
 
 **Regras**:
-- Sempre `rounded-full` + `overflow-hidden`
-- Tamanhos múltiplos de 8 (8-grid): 24, 40, 64
+- **O tamanho é opção da fábrica, não classe.** Ele sai como `data-size` no root, e a folha `avatar.css` resolve a medida numa custom property (`--avatar-size`) que a tipografia das iniciais e o sinal de estado acompanham por cálculo. Medida escrita no call site quebra essa cadeia: o círculo muda e as iniciais não
+- Cinco degraus, todos na grade de 8: 24, 32, 40, 48 e 64px. Medida fora deles vem da custom property `--avatar-size`, nunca de um número solto
+- O círculo é da folha: raio `--radius-full` e recorte no filho, não no root — recorte no root cortava o sinal de estado, que é posicionado justamente fora do círculo
 - Fallback obrigatório mesmo quando `src` existe — exibido se a imagem falhar (`onerror`)
-- Imagem em `object-cover` para preservar proporção
-- Tokens: `bg-muted text-muted-foreground` no fallback
+- A imagem preserva proporção pelo `object-fit: cover` declarado em `.nds-avatar-image`; nada a acrescentar no call site
+- O fallback lê `--muted` / `--muted-foreground` pela própria folha
 
 **Acessibilidade**:
 - `alt` descritivo na `<img>` (nome do usuário)
@@ -47,14 +52,14 @@ span wrapper (relative, rounded-full, overflow-hidden)
 **Estrutura**:
 
 ```
-div wrapper (overflow-auto)
-└── table
-    ├── caption (obrigatório, sr-only se captionHidden)
+div.nds-table-wrapper                        (rola na horizontal, tabindex="0")
+└── table.nds-table
+    ├── caption (obrigatório; .nds-sr-only quando captionHidden)
     ├── thead
     │   └── tr
     │       └── th scope="col" (texto da coluna)
     └── tbody
-        └── tr (hover:bg-muted/50, border-b)
+        └── tr                               (a folha já dá o realce ao passar o ponteiro)
             └── td
 ```
 
@@ -63,17 +68,17 @@ div wrapper (overflow-auto)
 | Nome | Default | Função |
 |---|---|---|
 | `caption` | — | Descrição da tabela (obrigatório) |
-| `captionHidden` | `false` | Aplica `sr-only` no caption |
+| `captionHidden` | `false` | Aplica `.nds-sr-only` no caption |
 | `headers` | — | Cabeçalhos das colunas |
 | `rows` | — | Array de arrays (células) |
 
 **Regras**:
-- `<caption>` obrigatório (pode ser `sr-only` via `captionHidden: true`)
+- `<caption>` obrigatório (pode ficar fora da tela via `captionHidden: true`, que aplica `.nds-sr-only`)
 - `scope="col"` em todo `<th>` de coluna
-- Padding em `--spacing-2` por célula; cabeçalho com altura em `--spacing-10`
-- Wrapper com `overflow-auto` para responsividade horizontal
-- Última linha sem border-bottom (`[&_tr:last-child]:border-0`)
-- Tokens: `text-muted-foreground` no cabeçalho; corpo em `text-foreground`
+- Padding por célula em `--spacing-*`; o cabeçalho não recebe altura fixa — ela é resultado do padding e da entrelinha, para a tabela crescer com a fonte do navegador (WCAG 1.4.4)
+- A rolagem horizontal é do `.nds-table-wrapper`, e é ele quem tem `tabindex="0"`. Uma camada rolando por tabela — camada rolável sem foco reprova WCAG 2.1.1 (axe `scrollable-region-focusable`), e duas camadas roláveis aninhadas prendem o teclado
+- Realce ao passar o ponteiro, linha selecionada, divisa entre linhas e a supressão da divisa na última já vêm de `.nds-table`. Nada disso se declara no call site
+- Tokens lidos pela folha: `--muted-foreground` no cabeçalho e na legenda, `--foreground` no corpo, `--border` nas divisas, `--muted` no realce
 
 **Acessibilidade**:
 - `<caption>` obrigatório
@@ -127,7 +132,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 - Renderer `svg` para relatório, impressão e exportação; `canvas` só para dataset grande ou animação pesada.
 - Para tipos não cobertos (dispersão, radar, mapa de calor), registre o módulo extra da lib antes de usar.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="img"` mais descrição no container: sem nome acessível o desenho é conteúdo perdido. A descrição diz o que o gráfico mostra, não que é um gráfico.
 - A informação nunca vive só na cor (WCAG 1.4.1): a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
 - Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do CONTORNO das formas em `--foreground`, não da cor de série — as cores da paleta ficam em torno de 2:1 contra o fundo e sozinhas não sustentam o critério.
@@ -175,7 +180,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 - Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática
 - Selects de filtro recebem `filterFn: 'equals'` automaticamente; texto usa `includesString`
 - Tokens 8-grid obrigatórios em CSS — `--spacing-1/2/4/6/8/10/24`. Off-grid (3, 5, 7, 9) são bugs
-- Estilos em `src/styles/components/data-table.css` registrado em `globals.css` — classes `.nds-data-table-*`
+- Estilos em `docs/shared/styles/nds/data-table.css`, alcançado por `globals.css` pelo alias `@shared/styles/nds/` — classes `.nds-data-table-*`
 - `data` nunca é mutado pelo componente — para edição inline, atualize o array externamente no handler de `onCellEdit`
 - Para markup rico, use `meta.renderCell` retornando `HTMLElement` (preferido) ou `string` (escape automático)
 - `virtualized` e `enablePagination` são mutuamente exclusivos; virtualização desativa paginação

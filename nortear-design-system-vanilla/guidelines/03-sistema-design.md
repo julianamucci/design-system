@@ -50,12 +50,21 @@ canvas.style.color = `hsl(var(--chart-1))`;
 
 ## Tokens de superfície — uso obrigatório
 
-| Contexto | Classes `.nds-*` |
-|----------|-----------------|
-| Painéis de conteúdo (Dialog, Sheet, Drawer, Card) | `bg-card text-card-foreground` |
-| Menus e overlays flutuantes (Dropdown, Popover, Tooltip) | `bg-popover text-popover-foreground` |
-| Inputs | `bg-input border-input` |
-| Página principal | `bg-background text-foreground` |
+**Não existe utilitária de cor de superfície.** Cor de fundo mora na folha do
+componente, e é ela que lê o token. Aplicar a classe do componente é o que
+aplica a superfície correta; não há classe avulsa a acrescentar.
+
+| Contexto | Quem lê o token | Tokens |
+|----------|-----------------|--------|
+| Painéis de conteúdo (Dialog, Sheet, Drawer, Card) | `.nds-dialog-content`, `.nds-sheet-content`, `.nds-card` | `--card` / `--card-foreground` |
+| Menus e overlays flutuantes (Dropdown, Popover, Tooltip) | `.nds-dropdown-menu-content`, `.nds-popover-content`, `.nds-tooltip-content` | `--popover` / `--popover-foreground` |
+| Inputs | `.nds-input` | `--input` (fundo) / `--border` (contorno) |
+| Página principal | `.nds-page` sobre o `<body>` do tema | `--background` / `--foreground` |
+
+Superfícies auxiliares seguem o mesmo desenho: o trilho de abas é
+`.nds-tabs-list`, o fallback de avatar é `.nds-avatar-fallback` e o placeholder
+de carregamento é `.nds-skeleton` — todos leem `--muted` / `--muted-foreground`
+por conta própria.
 
 ## Tokens de cor de estado
 

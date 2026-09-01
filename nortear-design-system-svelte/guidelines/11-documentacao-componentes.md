@@ -143,35 +143,36 @@ parameters: {
     return () => observer.disconnect();
   });
 </script>
+```
 
-<div class="ds-docs p-8 max-w-5xl mx-auto">
-  <DocsHeader
-    title={tContent('title')}
-    description={tContent('description')}
-    category={tContent('category')}
-    type={tContent('type')}
-  />
+A página não monta o layout à mão: quem o monta é `DocsPageLayout`, e a árvore
+que ele produz é esta.
 
-  <div class="flex gap-16 items-start">
-    <nav
-      aria-label="Navegação das seções do componente"
-      class="sticky top-8 w-52 shrink-0 self-start space-y-5"
-    >
-      <DocsNav groups={navGroups} {activeSection} />
-    </nav>
-
-    <div class="ds-docs flex-1 min-w-0 space-y-12">
-      <!-- Containers de seção, na ordem canônica -->
-    </div>
-  </div>
-</div>
+```
+div.sb-unstyled.ds-docs.nds-page          (data-width="wide")
+├── header                                 (DocsHeader)
+└── div.nds-sidebar-layout                 (data-sidebar-sticky="true")
+    ├── nav.nds-stack                      (data-spacing="md", aria-label)
+    │   └── DocsNav
+    └── main.ds-docs.nds-stack             (data-spacing="2xl", tabindex="-1", aria-labelledby)
 ```
 
 **Regras do layout:**
-- `<nav>` com `sticky top-8 w-52 shrink-0 self-start` é obrigatório — sem ele, `DocsNav` rola junto com a página
-- `aria-label` no `<nav>` diferencia a navegação de outras `<nav>`
-- `flex-1 min-w-0` no conteúdo permite overflow responsivo
-- `.ds-docs` aplica resets tipográficos específicos da doc
+- A **folha faz o sticky**: `.nds-sidebar-layout[data-sidebar-sticky="true"]` gruda
+  a navegação, e — o detalhe que uma classe solta não tinha — **desliga** o sticky
+  quando a tela estreita empilha os dois. Fixar largura, deslocamento e alinhamento
+  no `<nav>` acerta a tela larga e deixa o conteúdo passar por trás da nav na estreita.
+- `aria-label` no `<nav>` diferencia esta navegação de outras `<nav>` da página.
+- O conteúdo é `<main>`, e não uma `<div>`: é o alvo do link "Ir para o conteúdo".
+  `tabindex="-1"` permite o foco programático sem entrar na ordem de tabulação, e
+  `aria-labelledby` aponta para o `<h1>` do cabeçalho, para o leitor anunciar
+  "principal, <título da página>".
+- O ritmo vertical é `data-spacing` no `.nds-stack` — `md` na navegação, `2xl` entre
+  as seções. Espaçamento é escala do sistema, não margem escrita por página.
+- `sb-unstyled` é a saída oficial do Storybook para desligar as regras de prosa dos
+  blocos de documentação na subárvore; `.ds-docs` aplica os resets tipográficos da doc.
+- `data-width` no `.nds-page` define a medida da coluna — `wide` para página de
+  componente.
 
 ---
 
@@ -271,7 +272,7 @@ O container renderiza cada par com `{@render pair.doPreview()}` e `{@render pair
 
 O campo `code` é **opcional** — quando presente, o container renderiza um botão "Ver código" que expande um bloco de código.
 
-**Layout obrigatório: vertical (`space-y-4`).** Cada card ocupa largura total — não usar grid.
+**Layout obrigatório: vertical.** O container empilha os itens com o ritmo do sistema (`.nds-stack`) — cada card ocupa largura total, não usar grade.
 
 **DocsExamples foi removido:** exemplos de código agora ficam embutidos em cada item de `DocsVariants` via o campo `code`.
 
@@ -300,7 +301,7 @@ O campo `code` é **opcional** — quando presente, o container renderiza um bot
 
 ### 8. Estados (`id="estados"`)
 
-Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplica.
+Labels da primeira coluna: texto em peso médio (nunca badge) — o container já aplica o peso; passe texto plano.
 
 ```svelte
 <DocsStates
@@ -436,13 +437,13 @@ Componentes como **Accordion** (Bits UI `Accordion`, `AccordionItem`, `Accordion
 5. **`DocsTokens`** — 7 tokens; incluir `--animate-accordion-up` / `--animate-accordion-down`.
 6. **Analytics** — além dos eventos de docs, `accordion_expand { label }` ao expandir e `accordion_collapse { label }` ao fechar.
 7. **Wrapper story** — `AccordionStory.svelte` recebe `type`, `collapsible`, `defaultValue`, `items[]`. `AccordionControlledStory.svelte` usa `$state` + `onValueChange` de Bits UI. `AccordionBadgeStory.svelte` para composição com Badge.
-8. **Stories** — arquivos: `.stories.ts`, `-modos`, `-estados`, `-composicoes`. Omitir `-variantes` e `-tamanhos`.
+8. **Stories** — arquivos: `.stories.ts`, `-variants`, `-states`, `-compositions`. Omitir `-sizes`.
 9. **Play function** — 6 critérios: abrir, fechar (collapsible), modo single alterna, disabled bloqueia, Enter, Space.
 10. **Chave de tradução conflitante** — usar `props.table.type_prop` para a prop `type` (evita colidir com a chave de coluna `type`).
 
 ### Conteúdo HTML dentro de primitivos headless
 
-Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize com `DOMPurify.sanitize` **no próprio arquivo**, sem helper local — um wrapper esconde o sanitizador do SAST (ver `09-seguranca-xss.md`): `{@html DOMPurify.sanitize(value)}`. Componentes do primitivo headless (`bits-ui`) que já renderizam children internamente podem precisar de um `<span>{@html …}</span>` como filho.
+Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize com `DOMPurify.sanitize` **no próprio arquivo**, sem helper local — um wrapper esconde o sanitizador do SAST (ver `../../docs/shared/guidelines/09-seguranca-xss.md`): `{@html DOMPurify.sanitize(value)}`. Componentes do primitivo headless (`bits-ui`) que já renderizam children internamente podem precisar de um `<span>{@html …}</span>` como filho.
 
 ### Alert e não-interativos
 
@@ -460,7 +461,7 @@ Componentes como **Badge** (single root `<div>`) são rótulos visuais compactos
 4. **`DocsProps`** — 1 única table para `Badge`: `variant`, `class`, children Snippet. Nota de extensibilidade (`props.extensibility`) deixa claro que o root aceita atributos HTML nativos (`onclick`, `aria-*`, `data-*`); para interação, preferir envolver em `<button>`/`<a>`.
 5. **Play function** — estrutura e a11y, sem interação: cada variante aplica classes corretas; `getByText` confirma o rótulo; ícone filho com `aria-hidden="true"`.
 6. **`DocsAnalytics`** — Badge é estrutural: listar apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir `badge_click` (payload: `{ label, variant }`) **apenas** quando envolvido em trigger clicável.
-7. **Stories** — **omitir `badge-tamanhos` e `badge-estados`**. Arquivos obrigatórios: `badge.stories.ts` (Playground com `parameters.docs.page: withAutoDocsTab(BadgeDocs)` + `tags: ["autodocs"]`), `badge-variants.stories.ts` (Default, Destructive, Semantics), `badge-compositions.stories.ts` (WithIcon, WithCounter, AsButton).
+7. **Stories** — **omitir `badge-sizes` e `badge-states`**. Arquivos obrigatórios: `badge.stories.ts` (Playground com `parameters.docs.page: withAutoDocsTab(BadgeDocs)` + `tags: ["autodocs"]`), `badge-variants.stories.ts` (Default, Destructive, Semantics), `badge-compositions.stories.ts` (WithIcon, WithCounter, AsButton).
 8. **Sem foco próprio** — `keyboardItems` no `DocsAccessibility` pode usar `{ key: "—", description: "sem tab stops próprios" }` ou ser omitido. Foco vem do wrapper interativo pai.
 9. **Cor ≠ significado** — WCAG 1.4.1: texto deve comunicar estado sem depender de cor (ex: "Ativo" em vez de só fundo verde). Documentar em `accessibility.item2` e em par Do/Don't.
 
@@ -475,7 +476,7 @@ Componentes como **AlertDialog** (implementado sobre bits-ui) são overlays de d
 5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, radius.
 6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
 7. **`DocsAccessibility`** — `role="alertdialog"` anuncia imediatamente. Foco inicial no Cancel.
-8. **Stories** — omitir `alert-dialog-tamanhos` e `alert-dialog-variantes`. Usar `AlertDialogStory.svelte` wrapper com prop `defaultOpen` para Chromatic capturar o modal visível. Arquivos: `.stories.ts`, `-composicoes`, `-estados`.
+8. **Stories** — omitir `alert-dialog-sizes` e `alert-dialog-variants`. Usar `AlertDialogStory.svelte` wrapper com prop `defaultOpen` para Chromatic capturar o modal visível. Arquivos: `.stories.ts`, `-compositions`, `-states`.
 9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
 10. **Analytics de produto** — além dos eventos de docs: `dialog_open { component, location, label }`, `dialog_confirm { ... }`, `dialog_close { ..., trigger: "cancel_button" | "escape" }`.
 
@@ -483,32 +484,32 @@ Componentes como **AlertDialog** (implementado sobre bits-ui) são overlays de d
 
 Componentes como **AspectRatio** (base: `bits-ui`) preservam proporção largura/altura do filho. Não têm estado, não disparam eventos, não possuem `cva()` nem prop `size` — toda interação é do filho.
 
-1. **`DocsDemonstration`** — grid responsivo (`grid-cols-1 sm:grid-cols-2 gap-6`) com 4 ratios canônicos. Labels acima de cada preview em `<p class="text-xs font-medium text-muted-foreground">`. Ratios 1/1 e 3/4 ficam dentro de `max-w-[220px]` / `max-w-[260px]`.
-2. **`DocsAnatomy`** — 3 items: Root (`data-slot="aspect-ratio"` com `padding-bottom` calculado), inner `absolute inset-0` e o filho (`img | video | iframe`).
+1. **`DocsDemonstration`** — grade responsiva de duas colunas (`.nds-grid-responsive-2`) com 4 ratios canônicos. Rótulo acima de cada preview, em texto de legenda (`.nds-text-caption`) na cor `--muted-foreground`. Os ratios verticais (1/1 e 3/4) precisam de um teto de largura para não dominarem a linha — **não existe utilitária de largura máxima nessas medidas**; enquanto não houver, mantenha os quatro previews na mesma medida da grade em vez de crayonizar um valor.
+2. **`DocsAnatomy`** — 3 items: Root (`data-slot="aspect-ratio"`, que reserva a proporção), a camada interna que preenche o Root e o filho (`img | video | iframe`).
 3. **`DocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio. Passar apenas `guidelines`, `scenarios` (5 linhas) e `do`/`dont` (4 items cada).
 4. **`DocsVariants`** — renderizar como "Ratios Canônicos". `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`). Sem `cva()` — o nome é o próprio ratio. `variants.note` no JSON deixa explícito que são padrões canônicos.
 5. **`DocsStates`** — 3 linhas descrevendo **ownership transfer** ao filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. `states.note` explica que o componente é stateless.
 6. **`DocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `children` snippet (obrigatório), `asChild` (boolean), `class` (string).
-7. **`DocsTokens`** — AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder** (skeleton): `--radius` → `rounded-md`, `--border` → `border`, `--muted` → `bg-muted`. `tokens.note` explica que o container é transparente sem filho. `customizationCode` instrui a aplicar borda/radius no filho.
+7. **`DocsTokens`** — AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder**: `--radius` (arredondamento, via `.nds-rounded-md`), `--border` (contorno) e `--primary` (o fundo do esqueleto é ele em opacidade baixa, lido pela folha `.nds-skeleton`). `tokens.note` explica que o container é transparente sem filho. `customizationCode` instrui a aplicar borda e arredondamento no filho.
 8. **`DocsAccessibility`** — `keyboardItems` com linha `{ key: "—", description: "sem tab stops próprios" }` + nota sobre foco delegado ao filho. Foca em `data-slot="aspect-ratio"` e `alt`/`title` do filho.
 9. **`DocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: stripHtml($tStore('analytics.note')), payload: '—' }`. Não listar `docs_page_view`/`docs_section_viewed` aqui.
-10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless).
-11. **`rounded-md` / `border` no filho** — regra visual absoluta: nunca aplicar no wrapper AspectRatio.
+10. **Stories** — criar apenas `.stories.ts`, `-variants` e `-compositions`. **Omitir** `-sizes` (sem `size`) e `-states` (stateless).
+11. **Arredondamento e contorno no filho** — regra visual absoluta: nunca no wrapper AspectRatio. O wrapper só reserva a proporção; quem desenha é o filho, e é nele que o recorte tem de acontecer.
 
 ### Componentes Display Compositionais com Estados (padrão Avatar)
 
-Componentes como **Avatar** (base: `bits-ui` — `Avatar`, `AvatarImage`, `AvatarFallback`) são displays passivos com **composições** em vez de variantes `cva()`. Têm tamanho padrão (`h-10 w-10`) no Root e estados internos de carregamento.
+Componentes como **Avatar** (base: `bits-ui` — `Avatar`, `AvatarImage`, `AvatarFallback`) são displays passivos com **composições** em vez de variantes. Têm um preset de tamanho no Root e estados internos de carregamento.
 
-1. **Sem `cva()` / sem prop `size`** — o Root aplica `h-10 w-10` fixo. Tamanhos (`h-6 w-6`, `h-8 w-8`, `h-10 w-10`, `h-12 w-12`) vêm **sempre** via `class`. **Não criar prop `size`.**
+1. **Tamanho é a prop `size`**, com cinco presets — `sm` (24px), `md` (padrão, 32px), `lg` (40px), `xl` (48px), `2xl` (64px). A prop não escreve uma altura: publica o preset no DOM, e a folha `.nds-avatar` deriva dele o diâmetro, o corpo das iniciais, o tamanho do selo de status e o recuo do grupo empilhado. Por isso classe utilitária de altura e largura é a **forma morta**: acerta o círculo e deixa os outros três no tamanho antigo — desalinhamento que só aparece na composição, nunca no avatar sozinho.
 2. **`DocsVariants`** — **title**: "Composições". `items` com 5 entradas: `image`, `initials`, `icon`, `group`, `withStatus`. Cada snippet `variantN()` monta a composição completa usando o componente real (`<Avatar>` + filhos). Sem `cva()`.
 3. **`DocsAnatomy`** — 4 items: `Avatar` (Root), `AvatarImage`, `AvatarFallback`, e o sibling de status ou o ring em grupos. `structureCode` com `<Avatar><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
 4. **`DocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error`. Em Svelte 5, o `onLoadingStatusChange` do `AvatarImage` do bits-ui dispara o gatilho; o próprio componente decide qual filho renderizar.
-5. **`DocsProps`** — 3 tables: `Avatar` (`class`, children Snippet), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `class`), `AvatarFallback` (`delayMs`, `class`, children Snippet). `src`/`alt` obrigatórios. Usar `delayMs={600}` como valor canônico.
-6. **`DocsTokens`** — 7 tokens: `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius` (`rounded-full` fixo), `--ring`.
+5. **`DocsProps`** — 3 tables: `Avatar` (`size`, `delayMs`, `class`, children Snippet), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `class`), `AvatarFallback` (`class`, children Snippet). `src`/`alt` obrigatórios. `delayMs` fica na raiz, não no fallback — é a espera antes de o fallback aparecer, e `600` é o valor canônico.
+6. **`DocsTokens`** — 7 tokens: `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius` (o avatar é sempre circular), `--ring`.
 7. **`DocsAccessibility`** — (a) `alt` descritivo (`"Foto de perfil de [Nome]"`) em `AvatarImage` quando é única pista visual; (b) `alt=""` + `AvatarFallback aria-hidden="true"` quando o nome está ao lado; (c) `<span aria-label="…">` no indicador de status; (d) grupo com `role="group" aria-label="…"` no wrapper; (e) contraste iniciais ≥ 4.5:1.
 8. **`DocsAnalytics`** — Avatar é passivo: apenas eventos da docs. Incluir `avatar_click` só quando envolvido por link/botão em produto.
 9. **`DocsDoDont`** — pares canônicos: (a) "com fallback" vs "sem fallback"; (b) "iniciais 2 letras maiúsculas" vs "iniciais minúsculas/3+ letras".
-10. **Stories** — 4 arquivos: `avatar.stories.ts` (+ `withAutoDocsTab(AvatarDocs)`), `avatar-composicoes.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.ts` (Size6, Size8, Size10 default, Size12), `avatar-estados.stories.ts` (Loaded, Loading com `delayMs`, Failed, NoImage). **Não criar `avatar-variantes.stories.ts`**. Apenas o principal leva `tags: ["autodocs"]`. Quando for preciso wrapper de interação, usar `AvatarStory.svelte`.
+10. **Stories** — 4 arquivos: `avatar.stories.ts` (+ `withAutoDocsTab(AvatarDocs)`), `avatar-compositions.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-sizes.stories.ts` (uma story por preset: Sm, Md como padrão, Lg, Xl, TwoXl), `avatar-states.stories.ts` (Loaded, Loading com `delayMs`, Failed, NoImage). **Não criar arquivo de variantes** — o Avatar não tem variante, tem composições e presets de tamanho. Apenas o principal leva `tags: ["autodocs"]`. Quando for preciso wrapper de interação, usar `AvatarStory.svelte`.
 11. **`AvatarFallback` obrigatório** — toda instância com `AvatarImage` precisa de `AvatarFallback` irmão. Sem ele, falha/demora resulta em container vazio. Documentar em par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira letra do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
 
@@ -553,13 +554,13 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: o `C
 
 6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. O estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
 
-7. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual `sr-only` à parte. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada por padrão pelo bloco `aria` do `option`, e a legenda nomeia cada série por escrito.
+7. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual fora da tela (`.nds-sr-only`) à parte. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada por padrão pelo bloco `aria` do `option`, e a legenda nomeia cada série por escrito.
 
 8. **`DocsTestes`** — `functional` (6 items), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`). Iteração via `$derived` array.
 
 9. **`{@html}` obrigatoriamente sanitizado** — todos os campos HTML do translations.json (`anatomy.item*`, `notes.tip*`, `accessibility.item*`) passam por `DOMPurify.sanitize()` antes de `{@html}`, com o import e a chamada no próprio arquivo.
 
-10. **Stories Svelte** — criar 5 arquivos em `src/components/ui/chart/`: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-variantes.stories.ts` (Bar, Line, Area, Pie), `chart-composicoes.stories.ts` (SingleSeries, MultiSeries, InCard, SmallInline), `chart-estados.stories.ts` (Empty, Loading, SingleSeries, MultiSeries) e `chart-configuracoes.stories.ts` (renderer, altura, legenda). Não criar `-tamanhos` — não há prop `size`.
+10. **Stories Svelte** — criar 5 arquivos em `src/components/ui/chart/`: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-variants.stories.ts` (Bar, Line, Area, Pie), `chart-compositions.stories.ts` (SingleSeries, MultiSeries, InCard, SmallInline), `chart-states.stories.ts` (Empty, Loading, SingleSeries, MultiSeries) e `chart-settings.stories.ts` (renderer, altura, legenda). Não criar `-sizes` — não há prop `size`.
 
 11. **Altura é entrada do componente** — prop `height` (ou `style`), nunca classe utilitária de altura: o design system não tem utility de altura para gráfico, e sem valor vale o piso de `.nds-chart`.
 
@@ -572,12 +573,12 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: o `C
 ## Proibições
 
 - ❌ **NUNCA** reimplemente inline o HTML de uma seção — use o container
-- ❌ **NUNCA** copie classes utilitárias dos containers para o template da docs
+- ❌ **NUNCA** copie as classes dos containers para o template da docs
 - ❌ **NUNCA** use `<pre><code>` em blocos de código (exceto `structureCode` em `DocsAnatomy`)
 - ❌ **NUNCA** itere pares Do/Don't em um único grid — deixe `DocsDoDont` fazer o split
 - ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre o componente real
 - ❌ **NUNCA** use `export let` — use sempre `$props()` (Svelte 5)
-- ❌ **NUNCA** omita o wrapper `<nav sticky>` do `DocsNav`
+- ❌ **NUNCA** monte o layout à mão em vez de usar `DocsPageLayout` — é ele que traz o `<nav>` rotulado, o `<main>` alcançável pelo skip link e o sticky que se desliga na tela estreita
 - ❌ **NUNCA** use `{@html ...}` sem `DOMPurify.sanitize()` — e nunca por trás de um helper local, que esconde o sanitizador do SAST
 
 ## Checklist Final
@@ -586,11 +587,11 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: o `C
 - [ ] Nenhum HTML de seção inline no template
 - [ ] `DocsHeader` com category/type/installNote
 - [ ] `DocsDemonstration` com children snippet usando o componente real
-- [ ] `DocsVariants` com layout vertical (`space-y-4`) e campo `code` opcional por item
+- [ ] `DocsVariants` com layout vertical e campo `code` opcional por item
 - [ ] `DocsDoDont` com snippets individuais por par (`preview: snippetRef`)
 - [ ] `DocsProps` com tables array (múltiplos para componentes compostos)
-- [ ] `DocsStates` — labels em texto plano (container já aplica `font-medium`)
-- [ ] Layout `flex gap-16 items-start` com `<nav sticky top-8 w-52 shrink-0 self-start>`
+- [ ] `DocsStates` — labels em texto plano (o container já aplica o peso)
+- [ ] Layout vindo de `DocsPageLayout` — `.nds-sidebar-layout[data-sidebar-sticky="true"]`, `<nav>` rotulado e `<main>` com `tabindex="-1"`
 - [ ] Svelte 5 runes: `$props`, `$state`, `$derived`, `$effect`
 - [ ] `applySeo` em `$effect` — reativo ao `$locale`
 - [ ] `track('docs_page_view')` em `$effect` reativo ao locale

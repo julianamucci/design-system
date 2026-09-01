@@ -1,10 +1,10 @@
 # Sistema de Design - Tema Padrão
 
-## Organização CSS com @layer
-* **@layer base**: Elementos HTML base e reset do tema
-* **@layer components**: Componentes reutilizáveis (.card, .btn, etc.)
-* **@layer utilities**: Classes utilitárias (.font-*, .animate-*, etc.)
-* **Evite !important**: Use especificidade adequada em vez de forçar estilos
+## Organização CSS
+O `src/styles/globals.css` não define estilo próprio de componente: ele importa, nesta ordem, as fontes, `@shared/tokens/tokens.css`, `@shared/themes/index.css` e `@shared/styles/nds/index.css` — e só então acrescenta o reset de base e a blindagem contra o CSS que o Storybook injeta.
+* **Tokens antes de tudo**: as custom properties e os temas precisam existir antes de qualquer folha que as leia
+* **`nds/index.css` tem ordem sensível à cascata**: os `@import` de lá seguem a ordem da stack de referência; não reordenar
+* **Evite `!important`**: use especificidade adequada em vez de forçar estilos
 
 ## Cores e Variáveis
 
@@ -93,16 +93,16 @@ Esta regra se aplica a:
   - `--font-body-pt-serif` (PT Serif) - Serif clássica para textos longos
   - `--font-body-lexend` (Lexend) - Sans-serif otimizada para legibilidade
 * **Importação automática**: Todas as fontes são carregadas via Google Fonts no `globals.css`
-* **Aplicação**: Use `font-family: var(--font-token-name)` em CSS ou inline styles
+* **Aplicação**: `font-family: var(--font-token-name)` na folha de estilo — nunca no atributo `style`, que passa por cima do tema e da densidade
 * **Fallbacks**: Todas as fontes incluem fallbacks do sistema automaticamente
 
 ## Classes Utilitárias Customizadas
-* **@layer components** (reutilizáveis):
-  - **Componentes**: `.card`, `.btn`, `.input`
-  - **Estados**: `.success`, `.warning`, `.error`
-* **@layer utilities** (modificadores):
-  - **Animações**: `.animate-pulse`, `.animate-spin`
-  - **Tipografia**: `.font-normal`, `.font-medium`, `.font-semibold`, `.font-bold`
+Todas vivem em `docs/shared/styles/nds/` e carregam o prefixo `.nds-`. Antes de escrever qualquer classe, procure a utilitária lá: se não existir, **nomeie a falta** em vez de escrever o valor à mão.
+* **Componentes**: cada um tem folha própria (`.nds-card`, `.nds-button`, `.nds-input`, `.nds-alert`…), que é quem lê os tokens de cor e de medida
+* **Composição de layout**: `.nds-stack` e `.nds-cluster`, ajustados por `data-spacing`, `data-align` e `data-justify` — não há utilitária avulsa de `gap`, de alinhamento nem de grade de colunas
+* **Animações** (`utilities.css`): `.nds-animate-pulse`, `.nds-animate-spin`, `.nds-animate-in`, `.nds-animate-out` — todas já param sob `prefers-reduced-motion: reduce`
+* **Tipografia** (`typography.css`): escada de texto em `.nds-text-h1`…`.nds-text-h4`, `.nds-text-lead`, `.nds-text-body`, `.nds-text-caption`, `.nds-text-label`, `.nds-text-code`; pesos em `.nds-font-normal`, `.nds-font-medium`, `.nds-font-semibold`, `.nds-font-bold`; monoespaçada em `.nds-font-mono`
+* **Cor** (`colors.css`): utilitárias de texto, fundo, borda e sombra, todas lendo token. Servem para composição pontual — nunca para repintar um componente que já tem folha
 
 ## Responsividade Integrada
 * **Mobile-first**: Design responsivo integrado

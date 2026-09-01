@@ -71,6 +71,22 @@ Nortear não tem reatividade automática. A docs page:
 
 ## Estrutura Obrigatória da Docs Page
 
+A árvore da página não se monta à mão. Ela é o que `createDocsPageLayout`
+devolve, e é esta:
+
+```
+div.sb-unstyled.ds-docs.nds-page          (data-width="wide")
+├── header                                 (DocsHeader)
+└── div.nds-sidebar-layout                 (data-sidebar-sticky="true")
+    ├── nav.nds-stack                      (data-spacing="md", aria-label)
+    │   └── DocsNav
+    └── main.ds-docs.nds-stack             (data-spacing="2xl", tabindex="-1", aria-labelledby)
+```
+
+O manejo devolve `root`, `headerSlot`, `main`, `rebuildNav()`,
+`setActiveSection()` e `destroy()`. A docs page preenche o `headerSlot`, pendura
+as seções no `main` e não constrói coluna nenhuma.
+
 ```ts
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -80,11 +96,11 @@ import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '../../../docs/shared/content/<slug>/translations.json';
 // imports dos containers (listados acima)
 import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
-import { createDocsNav } from '@/components/docs/shared/DocsNav';
+import { createDocsPageLayout } from '@/components/docs/shared/sections/DocsPageLayout';
 
 export function createAlertDocs(): HTMLElement {
-  const root = document.createElement('div');
-  root.className = 'ds-docs p-8 max-w-5xl mx-auto';
+  // O layout já nasce com header slot, nav e <main>. Nada de coluna à mão.
+  const layout = createDocsPageLayout({ navGroups: [], componentSlug: '<slug>' });
 
   function render() {
     const locale = getCurrentLocale() as 'pt-BR' | 'en' | 'es';
@@ -104,26 +120,14 @@ export function createAlertDocs(): HTMLElement {
       page_title: `${tContent('title')} · Design System`,
     });
 
-    // Reset do DOM
-    root.innerHTML = '';
-
-    // Header (fora do nav)
-    root.appendChild(createDocsHeader({
+    // Header — vai no slot do layout, não no root
+    layout.headerSlot.replaceChildren(createDocsHeader({
       title: tContent('title'),
       description: tContent('description'),
       category: tContent('category'),
       type: tContent('type'),
       installNote: 'npx nortear add <slug>',
     }));
-
-    // Container de duas colunas
-    const layout = document.createElement('div');
-    layout.className = 'flex gap-16 items-start';
-
-    // Nav sticky
-    const nav = document.createElement('nav');
-    nav.setAttribute('aria-label', 'Navegação das seções do componente');
-    nav.className = 'sticky top-8 w-52 shrink-0 self-start space-y-5';
 
     const navGroups = [
       { label: tNav('nav.overview'), sections: [
@@ -149,13 +153,11 @@ export function createAlertDocs(): HTMLElement {
         { id: 'testes',    label: tNav('nav.testes') },
       ]},
     ];
-    const docsNav = createDocsNav({ groups: navGroups });
-    nav.appendChild(docsNav.element);
-    layout.appendChild(nav);
+    layout.rebuildNav(navGroups);
 
-    // Conteúdo principal
-    const content = document.createElement('div');
-    content.className = 'ds-docs flex-1 min-w-0 space-y-12';
+    // Conteúdo principal — o <main> do layout, esvaziado a cada render
+    const content = layout.main;
+    content.replaceChildren();
 
     content.appendChild(createDocsDemonstration({
       title: tContent('demonstration.title'),
@@ -168,14 +170,11 @@ export function createAlertDocs(): HTMLElement {
 
     // demais containers...
 
-    layout.appendChild(content);
-    root.appendChild(layout);
-
     // IntersectionObserver para active section + analytics
     const ids = navGroups.flatMap(g => g.sections.map(s => s.id));
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) if (entry.isIntersecting) {
-        docsNav.setActiveSection(entry.target.id);
+        layout.setActiveSection(entry.target.id);
         track('docs_section_viewed', { section_id: entry.target.id, component_name: '<slug>', locale });
         break;
       }
@@ -186,16 +185,19 @@ export function createAlertDocs(): HTMLElement {
   render();
   const unsubscribe = subscribeLocale(() => render());
 
-  // Cleanup ao remover do DOM (via MutationObserver ou Storybook teardown)
-  return root;
+  // Cleanup ao remover do DOM (via MutationObserver ou Storybook teardown):
+  // além do unsubscribe, chamar layout.destroy() para soltar o observador de
+  // cliques do tracking.
+  return layout.root;
 }
 ```
 
 **Regras do layout:**
-- `<nav>` com `sticky top-8 w-52 shrink-0 self-start` é obrigatório — sem ele, `DocsNav` rola junto com a página
-- `aria-label` no `<nav>` diferencia a navegação de outras `<nav>`
-- `flex-1 min-w-0` no conteúdo permite overflow responsivo
-- `.ds-docs` aplica resets tipográficos específicos da doc
+- **O layout vem de `createDocsPageLayout` — não se remonta.** A coluna fixa é `.nds-sidebar-layout[data-sidebar-sticky="true"]`: a folha resolve as duas colunas, o vão entre elas, a largura da barra lateral, o grudar da navegação ao rolar e o empilhar em tela estreita. Cada docs page que montasse a sua própria divergiria da vizinha na primeira mudança de largura
+- O ritmo vertical é `.nds-stack` com `data-spacing` — `md` entre os grupos da navegação, `2xl` entre as seções do conteúdo. Não há classe de espaço vertical avulsa no sistema
+- `aria-label` no `<nav>` diferencia a navegação de outras `<nav>` da página
+- O conteúdo é o landmark `<main>`, com `tabindex="-1"` (recebe o foco do atalho "Ir para o conteúdo" sem entrar na ordem de tabulação) e `aria-labelledby` apontando ao `<h1>` do header — o leitor de tela anuncia "principal, <título da página>" ao cair ali
+- `.sb-unstyled` desliga o estilo de prosa que o Storybook injeta na subárvore; `.ds-docs` aplica os resets tipográficos da doc; `.nds-page` dá largura máxima e respiro lateral, com `data-width="wide"`
 
 ---
 
@@ -222,10 +224,12 @@ content.appendChild(createDocsDemonstration({
   title: tContent('demonstration.title'),
   demoFactory: () => {
     const alert = createAlert({ variant: 'default' });
-    alert.innerHTML = `
-      <h5 class="mb-1 font-medium leading-none tracking-tight">${tContent('demonstration.exampleTitle')}</h5>
-      <div class="text-sm [&_p]:leading-relaxed">${tContent('demonstration.exampleDescription')}</div>
-    `;
+    // Título e descrição já têm classe própria na folha do Alert; não há
+    // tipografia a acrescentar no call site.
+    alert.innerHTML = DOMPurify.sanitize(`
+      <h5 class="nds-alert-title">${tContent('demonstration.exampleTitle')}</h5>
+      <section class="nds-alert-description"><p>${tContent('demonstration.exampleDescription')}</p></section>
+    `);
     return alert;
   },
 }));
@@ -301,7 +305,7 @@ content.appendChild(createDocsImport({
 
 O campo `code` é **opcional** — quando presente, o container renderiza um botão "Ver código" que expande um bloco de código via `toggle`.
 
-**Layout obrigatório: vertical (`space-y-4`).** Cada card ocupa largura total — não usar grid.
+**Layout obrigatório: vertical.** O container empilha os itens num `.nds-stack`; cada card ocupa largura total — não usar grade.
 
 **DocsExamples foi removido:** exemplos de código agora ficam embutidos em cada item de `DocsVariants` via o campo `code`.
 
@@ -327,7 +331,7 @@ content.appendChild(createDocsVariants({
 
 ### 8. Estados (`id="estados"`)
 
-O container já aplica `font-medium` na primeira coluna — não passe classes de badge.
+O container já dá o peso de fonte da primeira coluna — passe texto plano, sem classe de badge.
 
 ```ts
 content.appendChild(createDocsStates({
@@ -515,34 +519,34 @@ Componentes como **AlertDialog** (implementação vanilla-TS com foco-trap manua
 
 ### Containers Passivos Stateless (padrão AspectRatio)
 
-Componentes como **AspectRatio** usam a factory `createAspectRatio({ ratio, content, className })` de `./aspect-ratio`. Preservam proporção largura/altura do filho via `padding-bottom: (1 / ratio) * 100%` + inner `position: absolute; inset: 0`. Sem estado, sem eventos, sem `cva()`, sem `size`.
+Componentes como **AspectRatio** usam a factory `createAspectRatio({ ratio, content, className })` de `./aspect-ratio`. A proporção é a propriedade CSS nativa `aspect-ratio`, lida da custom property `--ratio` que a fábrica escreve no root; `.nds-aspect-ratio > *` já põe o filho em `position: absolute; inset: 0` e 100% nos dois eixos. Sem estado, sem eventos, sem variante, sem `size`.
 
-1. **`createDocsDemonstration`** — `demoFactory` retorna grid responsivo (`grid-cols-1 sm:grid-cols-2 gap-6`) com 4 ratios canônicos. Labels em `<p class="text-xs font-medium text-muted-foreground">`. Ratios 1/1 e 3/4 em wrapper `max-w-[220px]` / `max-w-[260px]`.
-2. **`createDocsAnatomy`** — 3 items: Root (wrapper com `padding-bottom` calculado manualmente), inner `absolute inset-0` e o filho (`img | video | iframe`). `structureCode` mostra a hierarquia.
+1. **`createDocsDemonstration`** — `demoFactory` retorna uma grade responsiva `.nds-grid-responsive-2` com 4 ratios canônicos. Os rótulos usam a escada tipográfica do sistema (`.nds-text-caption`) em `--muted-foreground`. **Não existe utilitária de largura máxima arbitrária** — os degraus disponíveis são `.nds-max-w-*`; ratio que precise de moldura menor escolhe o degrau, nunca uma medida escrita.
+2. **`createDocsAnatomy`** — 2 items: Root (`.nds-aspect-ratio`, que carrega `--ratio`) e o filho (`img | video | iframe`), que a folha posiciona e estica. `structureCode` mostra a hierarquia. Não há item de "inner": ele não existe no markup, e listá-lo descrevia uma peça que nunca foi construída.
 3. **`createDocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio. Passar apenas `guidelines`, `scenarios` (5 linhas) e `do`/`dont` (4 items cada).
 4. **`createDocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`). Cada `previewFactory` chama `createAspectRatio({ ratio, content: imgEl })`. `variants.note` no JSON deixa explícito que são padrões canônicos.
 5. **`createDocsStates`** — 3 linhas descrevendo **ownership transfer** ao filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. `states.note` explica que o componente é stateless.
 6. **`createDocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `content` (`HTMLElement`, obrigatório — **não existe** `asChild` no Nortear), `className` (string), e opcionalmente demais atributos HTML. Documentar a diferença frente às demais stacks (`content` em vez de `children`).
-7. **`createDocsTokens`** — Nortear AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder**: `--radius` → `nds-rounded-md`, `--border` → `nds-border`, `--muted` → `nds-bg-muted`. `tokens.note` no JSON explica que sem `content` o container é transparente. `customizationCode` instrui a aplicar classes no elemento passado como `content`, nunca no wrapper.
+7. **`createDocsTokens`** — o AspectRatio não usa token próprio: a única entrada do wrapper é `--ratio`. Documentar os tokens que aparecem **quando ele é usado como placeholder** — `--radius` (via `.nds-rounded-md`), `--border` e `--muted`, estes dois lidos pela folha de quem envolve. `tokens.note` no JSON explica que sem `content` o container é transparente. `customizationCode` instrui a aplicar classes no elemento passado como `content`, nunca no wrapper.
 8. **`createDocsAccessibility`** — `keyboardItems` com linha `{ key: "—", description: "sem tab stops próprios" }` + nota sobre foco delegado ao filho. Foca em `data-slot="aspect-ratio"` e `alt`/`title` do elemento `content`.
 9. **`createDocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: stripHtml(t('analytics.note')), payload: '—' }`. Não listar `docs_page_view`/`docs_section_viewed` aqui.
-10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless). Previews chamam `createAspectRatio({ ratio, content })` onde `content` é criado via `document.createElement('img')` com `alt`, `loading="lazy"`, `decoding="async"` e classes `rounded-md object-cover w-full h-full`.
-11. **`rounded-md` / `border` no `content`** — regra visual absoluta: nunca aplicar no wrapper AspectRatio; aplicar sempre no elemento `HTMLElement` passado como `content`.
+10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless). Previews chamam `createAspectRatio({ ratio, content })` onde `content` é criado via `document.createElement('img')` com `alt`, `loading="lazy"`, `decoding="async"`, `.nds-rounded-md` e as utilitárias de preenchimento (`.nds-w-full`, `.nds-h-full`). O recorte (`object-fit: cover`) **não tem utilitária no sistema** — enquanto não houver, ele vem da folha de quem consome, nunca de valor no call site.
+11. **Raio e contorno vão no `content`** — regra visual absoluta: nunca no wrapper AspectRatio; sempre no elemento `HTMLElement` passado como `content`.
 
 ### Componentes Display Compositionais com Estados (padrão Avatar)
 
-Componentes como **Avatar** usam as factories vanilla-TS `createAvatar`, `createAvatarRoot`, `createAvatarImage`, `createAvatarFallback` de `./avatar`. São displays passivos com **composições** em vez de variantes `cva()`. O Root aplica `h-10 w-10` por padrão.
+Componentes como **Avatar** usam as factories vanilla-TS `createAvatar`, `createAvatarRoot`, `createAvatarImage`, `createAvatarFallback` de `./avatar`. São displays passivos com **composições** em vez de variantes de cor. O Root nasce em 32px, e cresce ou encolhe por degrau nomeado.
 
-1. **Sem `cva()` / sem `size`** — `createAvatarRoot` sempre renderiza `h-10 w-10`. Outros tamanhos (`h-6 w-6`, `h-8 w-8`, `h-12 w-12`) vêm via `className`. **Não aceitar `size` na factory.**
-2. **`createDocsVariants`** — `items` com 5 entradas: `com imagem`, `com iniciais`, `com ícone`, `agrupamento`, `com status`. Cada `previewFactory` retorna um `HTMLElement` montado via as factories de avatar (ou combinações manuais com `document.createElement` para wrappers como `flex -space-x-2` e `relative inline-block`). Sem `cva()`.
+1. **Sem variante de cor, mas COM `size`** — `createAvatarRoot` e `createAvatar` aceitam `size` (`sm` 24px, `md` 32px, `lg` 40px, `xl` 48px, `2xl` 64px), que chega ao DOM como `data-size` no root. A folha `avatar.css` traduz o degrau numa custom property (`--avatar-size`) da qual a tipografia das iniciais e o sinal de estado derivam por cálculo. **Por isso o tamanho não pode vir por classe de medida no `className`**: o círculo mudaria e as iniciais e o sinal ficariam para trás, presos ao valor antigo. Degrau nomeado é o que mantém as três medidas em sincronia.
+2. **`createDocsVariants`** — `items` com 5 entradas: `com imagem`, `com iniciais`, `com ícone`, `agrupamento`, `com status`. Cada `previewFactory` retorna um `HTMLElement` montado via as factories de avatar. A fila sobreposta é `.nds-avatar-group` (a folha faz a sobreposição e o excedente `+N` em `.nds-avatar-group-count`), e o sinal de estado é `.nds-avatar-badge`, filho do próprio avatar — não um irmão dentro de um wrapper montado à mão. Sem variante de cor.
 3. **`createDocsAnatomy`** — 4 items: Root (`createAvatarRoot`), Image (`createAvatarImage`), Fallback (`createAvatarFallback`), e o sibling de status ou o ring em grupos.
 4. **`createDocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error`. Como a base é vanilla, o fallback troca via listener `onerror` da `<img>` (a própria factory cuida disso quando `createAvatar` é chamado com `src` + `fallbackText`).
-5. **`createDocsProps`** — 3 tables: `createAvatarRoot` (`className`), `createAvatarImage` (`src`, `alt`, `className`), `createAvatarFallback` (`text`, `className`). A factory de alto nível `createAvatar({ src, alt, fallbackText, className })` pode ser documentada em nota ou em um 4º table — escolher uma das abordagens e manter consistente. **Não existe `delayMs` na factory vanilla** — documentar ausência em `notes` quando for relevante (outras stacks aceitam `delayMs`).
-6. **`createDocsTokens`** — 7 tokens: `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius` (`rounded-full` fixo), `--ring`.
+5. **`createDocsProps`** — 3 tables: `createAvatarRoot` (`size`, `className`), `createAvatarImage` (`src`, `alt`, `className`), `createAvatarFallback` (`text`, `className`). A factory de alto nível `createAvatar({ src, alt, fallbackText, size, delayMs, className })` pode ser documentada em nota ou num 4º table — escolher uma das abordagens e manter consistente. `delayMs` é a espera antes de mostrar as iniciais, para que a imagem rápida não faça o fallback piscar.
+6. **`createDocsTokens`** — 7 tokens: `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius-full` (o círculo, fixo pela folha), `--ring`.
 7. **`createDocsAccessibility`** — (a) `alt` descritivo em `createAvatarImage` quando é única pista visual; (b) `alt=""` + `setAttribute('aria-hidden', 'true')` no fallback quando o nome está visível; (c) `setAttribute('aria-label', 'Online')` no `<span>` de status; (d) `role="group"` + `aria-label` no wrapper de grupo; (e) contraste iniciais ≥ 4.5:1.
 8. **`createDocsAnalytics`** — Avatar é passivo: apenas eventos da docs. Incluir `avatar_click` só quando envolvido por link/botão em produto.
 9. **`createDocsDoDont`** — pares canônicos: (a) "com fallback" (`createAvatar({ src, alt, fallbackText })`) vs "sem fallback" (`createAvatarRoot()` + `createAvatarImage()` sem `createAvatarFallback`); (b) "iniciais 2 letras maiúsculas" vs "iniciais minúsculas/3+ letras".
-10. **Stories** — 4 arquivos: `avatar.stories.ts` (Playground + `withAutoDocsTab`), `avatar-composicoes.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.ts` (Size6, Size8, Size10 default, Size12), `avatar-estados.stories.ts` (Loaded, Loading, Failed, NoImage). **Não criar `avatar-variantes.stories.ts`**. Apenas o principal leva `tags: ["autodocs"]`. As sub-stories chamam a factory que constrói o elemento e fazem `render: () => el`.
+10. **Stories** — 4 arquivos: `avatar.stories.ts` (Playground + `withAutoDocsTab`), `avatar-compositions.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-sizes.stories.ts` (Sm, Md, Lg, Xl, TwoXl — um por degrau de `data-size`), `avatar-states.stories.ts` (Loaded, Loading, Failed, NoImage). **Não criar story de variantes de cor**. Apenas o principal leva `tags: ["autodocs"]`. As sub-stories chamam a factory que constrói o elemento e fazem `render: () => el`.
 11. **`AvatarFallback` obrigatório** — toda composição com `createAvatarImage` deve incluir `createAvatarFallback` irmão. Sem ele, erro de `src` deixa o container vazio. Documentar em par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
 
@@ -595,7 +599,7 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: a fa
 
 6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. Estado `loading` usa `Skeleton` (factory `createSkeleton`) com as mesmas dimensões do container. O estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
 
-7. **`createDocsAccessibility`** — `keyboardItems` com 4 entradas. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual `sr-only` à parte. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada pelo bloco `aria` do objeto de configuração, e a legenda nomeia cada série por escrito. Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do **contorno** das formas em `--foreground`, não da cor de série.
+7. **`createDocsAccessibility`** — `keyboardItems` com 4 entradas. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual à parte, fora da tela por `.nds-sr-only`. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada pelo bloco `aria` do objeto de configuração, e a legenda nomeia cada série por escrito. Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do **contorno** das formas em `--foreground`, não da cor de série.
 
 8. **`notes.tip3`** — nota crítica sobre a superfície da API do Vanilla (`createChart(opts)` + `buildChartOption(opts)`), renderizada de forma destacada (borda diferente ou ícone de aviso no callout).
 
@@ -617,7 +621,7 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: a fa
 - ❌ **NUNCA** itere pares Do/Don't em um único grid — deixe `createDocsDoDont` fazer o split
 - ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre a factory do componente real
 - ❌ **NUNCA** use `innerHTML` com string não sanitizada vinda de `translations.json`
-- ❌ **NUNCA** omita o wrapper `<nav sticky>` do `DocsNav`
+- ❌ **NUNCA** monte a coluna de navegação à mão — o `<nav>` e o grudar ao rolar vêm de `createDocsPageLayout`
 - ❌ **NUNCA** retorne a mesma referência em múltiplas chamadas de factory — crie novos elementos
 
 ## Checklist Final
@@ -626,11 +630,11 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: a fa
 - [ ] Nenhum HTML de seção inline no consumidor
 - [ ] `createDocsHeader` com category/type/installNote
 - [ ] `createDocsDemonstration` com `demoFactory` retornando o componente real
-- [ ] `createDocsVariants` com layout vertical (`space-y-4`) e campo `code` opcional por item
+- [ ] `createDocsVariants` empilhado na vertical (`.nds-stack`) e campo `code` opcional por item
 - [ ] `createDocsDoDont` com `doPreviewFactory` / `dontPreviewFactory` por par
 - [ ] `createDocsProps` com tables array (múltiplos para componentes compostos)
-- [ ] `createDocsStates` — labels em texto plano (container aplica `font-medium`)
-- [ ] Layout `flex gap-16 items-start` com `<nav sticky top-8 w-52 shrink-0 self-start>`
+- [ ] `createDocsStates` — labels em texto plano (o container dá o peso da primeira coluna)
+- [ ] Página montada por `createDocsPageLayout` — header no `headerSlot`, seções no `main`, navegação por `rebuildNav()`
 - [ ] `applySeo` chamado no início + ao trocar locale
 - [ ] `track('docs_page_view')` chamado no início + ao trocar locale
 - [ ] IntersectionObserver dispara `track('docs_section_viewed')`

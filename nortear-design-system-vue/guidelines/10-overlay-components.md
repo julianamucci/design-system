@@ -6,26 +6,21 @@
 
 ### Tokens de fundo por tipo de overlay
 
-| Tipo de overlay | Token correto | Componentes |
-|-----------------|---------------|-------------|
-| Painel de conteúdo (modal, lateral) | `bg-card text-card-foreground` | Dialog, Sheet, Drawer |
-| Menu e overlay flutuante | `bg-popover text-popover-foreground` | DropdownMenu, ContextMenu, Popover, HoverCard, Command, Tooltip |
+Não existe utilitária de cor de superfície: quem lê o token é a folha de cada overlay. A tabela diz qual token vale e qual seletor o aplica.
 
-> Sobrescrever o token errado quebra a coerência do tema, especialmente em dark mode. Menus e overlays flutuantes usam `bg-popover` por padrão — não sobrescrever.
+| Tipo de overlay | Tokens | Quem aplica |
+|-----------------|--------|-------------|
+| Painel de conteúdo (modal, lateral) | `--card` / `--card-foreground` | `.nds-dialog-content` · `.nds-sheet-content` · `.nds-drawer-content` |
+| Menu e overlay flutuante | `--popover` / `--popover-foreground` | `.nds-dropdown-menu-content` (também é o painel do ContextMenu) · `.nds-popover-content` · `.nds-hover-card-content` · `.nds-command` · `.nds-tooltip-content` |
+| Fundo escurecido atrás do modal | opacidade sobre preto, definida na folha | `.nds-dialog-overlay` |
+
+> Pintar a superfície por fora quebra a coerência do tema, e o modo escuro é onde isso aparece primeiro. A cor entra pela classe do componente — nunca por uma classe de fundo avulsa, nem por um valor cravado no estilo.
 
 ### Padding consistente entre header, content e footer
 
-Todos os painéis de conteúdo devem usar tokens de padding do projeto para garantir alinhamento visual entre cabeçalho, corpo e rodapé.
+O respiro interno de cada painel é da folha do próprio overlay, e sai da escada de espaçamento do tema (`--spacing-*`) — não de uma classe de padding aplicada por fora, que sairia do passo quando a densidade mudasse.
 
-| Componente | Token aplicado |
-|------------|----------------|
-| `DialogContent` | `p-[var(--overlay-padding)]` |
-| `DrawerHeader` / `DrawerFooter` | `p-[var(--overlay-padding)]` |
-| `SheetHeader` / `SheetFooter` | `p-[var(--overlay-padding)]` |
-| `PopoverContent` | `p-[var(--overlay-padding-sm)]` |
-| `HoverCardContent` | `p-[var(--overlay-padding-sm)]` |
-
-Valores: `--overlay-padding: 1.5rem` (24px) e `--overlay-padding-sm: 1rem` (16px), definidos no `globals.css`.
+Esta seção já prescreveu um par de tokens de overlay (`--overlay-padding` e `--overlay-padding-sm`) como obrigatórios, com valores fixos e origem no `globals.css`. **Nenhum dos dois existe** — não há uma única declaração deles no repositório, e nunca houve seletor que os lesse. A regra que sobra é a de fato: alinhamento entre cabeçalho, corpo e rodapé se obtém deixando o respiro na folha, e conferindo que o corpo não reintroduza recuo próprio.
 
 ### Comportamento de teclado — todos os overlays
 
@@ -60,7 +55,7 @@ Comportamentos gerenciados automaticamente pelo Reka UI ou Vaul — não reimple
 
 ```
 AlertDialog
-├── AlertDialogTrigger (asChild obrigatório)
+├── AlertDialogTrigger (as-child obrigatório)
 └── AlertDialogContent
     ├── AlertDialogHeader
     │   ├── AlertDialogTitle       (obrigatório)
@@ -71,12 +66,12 @@ AlertDialog
 ```
 
 **Regras**:
-- `AlertDialogTrigger asChild` obrigatório
-- **Consistência visual trigger → action**: trigger `destructive` → `AlertDialogAction` `destructive`. Aplicar via `className` diretamente no `AlertDialogAction` — ele tem estilo próprio que pode sobrescrever o Button filho
+- `AlertDialogTrigger as-child` obrigatório
+- **Consistência visual trigger → action**: trigger `destructive` → `AlertDialogAction` `destructive`. Aplicar a variante diretamente no `AlertDialogAction` — ele tem estilo próprio que pode sobrescrever o Button filho
 - `AlertDialogCancel` antes do `AlertDialogAction` no DOM — confirmação sempre à direita
 - Não usar para confirmações reversíveis — reservar para ações de alto impacto
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - Focus trap e retorno de foco ao trigger automáticos
 - `AlertDialogTitle` obrigatório — base do `aria-labelledby`. `AlertDialogDescription` é opcional e recomendado: quando existe alimenta o `aria-describedby`, e quando não existe o painel omite o atributo. O primitivo desta stack gera o id da descrição sozinho e ligaria o atributo mesmo sem descrição — o wrapper do design system corta isso, porque referência para id ausente reprova no axe e não anuncia nada
 - `aria-label` contextual no `AlertDialogAction` quando o texto do botão sozinho não tem contexto suficiente
@@ -137,7 +132,7 @@ Command
 
 - **Não é escolha de valor**: lista de opções de formulário com busca é `Combobox`, que tem campo, chips, estado vazio e serialização próprios. Command é para executar ação, não para preencher campo
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - Filtro fuzzy e navegação por Arrow keys nativos do componente
 - `CommandShortcut` é apenas visual — a lógica do atalho deve ser implementada via listener global
 - O papel de combobox fica no CAMPO DE BUSCA, ligado à lista real, com a opção ativa apontada por `aria-activedescendant` — o foco não sai do campo
@@ -173,11 +168,11 @@ ContextMenu
 
 **Regras**:
 - Evitar submenus — aumentam a carga cognitiva e dificultam navegação por teclado
-- Item destrutivo: `className="text-destructive focus:text-destructive"` — sem variante de prop
+- Item destrutivo: `data-variant="destructive"` no item. A folha `.nds-dropdown-menu-item[data-variant="destructive"]` pinta texto e ícone e mantém a cor no estado destacado — não pintar o item por fora
 - Sempre oferecer alternativa explícita (botão, ícone de ação) para as mesmas ações do menu
 - `ContextMenuShortcut` é apenas visual — implementar o atalho via listener global
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 
 > **Aviso crítico**: ContextMenu ativado por right-click é inacessível em touch devices e não é descobrível por usuários que navegam apenas por teclado. **Toda ação disponível no ContextMenu deve ter uma alternativa acessível** — botão visível, ícone de ação na linha ou DropdownMenu.
 
@@ -204,7 +199,7 @@ ContextMenu
 
 ```
 Dialog (open, onOpenChange)
-├── DialogTrigger (asChild obrigatório)
+├── DialogTrigger (as-child obrigatório)
 └── DialogContent
     ├── DialogHeader
     │   ├── DialogTitle       (obrigatório para acessibilidade)
@@ -216,13 +211,13 @@ Dialog (open, onOpenChange)
 ```
 
 **Regras**:
-- `DialogTrigger asChild` obrigatório — evita renderizar um `<button>` extra dentro do trigger
+- `DialogTrigger as-child` obrigatório — evita renderizar um `<button>` extra dentro do trigger
 - `DialogTitle` e `DialogDescription` obrigatórios — sem eles o Reka emite warning e leitores de tela não têm contexto
-- Máximo 80% da viewport: `sm:max-w-[425px]` ou similar
+- Teto de largura pela escada do sistema: `.nds-max-w-lg` no conteúdo. Sem teto, o modal estica com a janela e a linha de texto passa do confortável
 - Botão de fechar nativo (X) sempre visível — não remover salvo instrução específica
-- Scroll interno via `overflow-y-auto` no conteúdo — nunca no `DialogContent` inteiro
+- Rolagem interna: `.nds-dialog-body-scroll` no CORPO do modal — nunca no `DialogContent` inteiro, que levaria cabeçalho e rodapé junto. A folha define o teto de altura e o respiro para a barra não encostar no texto
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - Focus trap automático — ao abrir, foco vai para o primeiro elemento focável
 - Ao fechar, foco retorna ao `DialogTrigger` automaticamente
 - `Escape` fecha o Dialog — comportamento nativo, não sobrescrever
@@ -267,7 +262,7 @@ Dialog (open, onOpenChange)
 
 ```
 Drawer (direction)
-├── DrawerTrigger (asChild)
+├── DrawerTrigger (as-child)
 └── DrawerContent
     ├── DrawerHeader
     │   ├── DrawerTitle       (obrigatório)
@@ -289,7 +284,7 @@ Drawer (direction)
 - `direction` na prop do `Drawer` (não no `DrawerContent`)
 - Handle de arrastar: automático apenas em `direction="bottom"` — não aparece em outras direções
 - `DrawerTitle` e `DrawerDescription` obrigatórios para acessibilidade
-- Botões alinhados à direita via `flex justify-end` no footer
+- Botões alinhados à direita no rodapé: `.nds-cluster` com `data-justify="end"`. A ordem no DOM segue a ordem visual — `[secundário] [primário]`, confirmação à direita
 - `DrawerClose` envolve o botão de cancelar para fechar o Drawer automaticamente
 
 ---
@@ -306,7 +301,7 @@ Drawer (direction)
 
 ```
 DropdownMenu
-├── DropdownMenuTrigger (asChild obrigatório)
+├── DropdownMenuTrigger (as-child obrigatório)
 └── DropdownMenuContent (align)
     ├── DropdownMenuLabel
     ├── DropdownMenuGroup
@@ -319,12 +314,12 @@ DropdownMenu
 ```
 
 **Regras**:
-- `DropdownMenuTrigger asChild` obrigatório
+- `DropdownMenuTrigger as-child` obrigatório
 - Preferência: sem ícones nos itens, salvo instrução específica
-- Item destrutivo: `className="text-destructive focus:text-destructive"` — sem prop de variante
+- Item destrutivo: `data-variant="destructive"` no item. A folha `.nds-dropdown-menu-item[data-variant="destructive"]` pinta texto e ícone e mantém a cor no estado destacado — não pintar o item por fora
 - `align="end"` no `DropdownMenuContent` quando o trigger é um botão de ação de linha
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-label` contextual no trigger quando é icon-only — "Ações para [item]"
 - `role="menu"` e `role="menuitem"` aplicados automaticamente
 - Arrow keys navegam entre itens — comportamento nativo
@@ -345,7 +340,7 @@ DropdownMenu
 
 ```
 HoverCard (openDelay, closeDelay)
-├── HoverCardTrigger (asChild)
+├── HoverCardTrigger (as-child)
 └── HoverCardContent (side, align)
 ```
 
@@ -361,7 +356,7 @@ HoverCard (openDelay, closeDelay)
 - Nunca usar o HoverCard como **único meio** de acessar informação crítica — deve ser complementar
 - Em touch: suprimir ou substituir por outro padrão (Tooltip via tap, link explícito)
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="tooltip"` e gerenciamento de foco automáticos
 - Conteúdo do HoverCard não é lido proativamente por leitores de tela — informação crítica deve estar disponível de outra forma
 
@@ -388,17 +383,17 @@ HoverCard (openDelay, closeDelay)
 
 ```
 Popover
-├── PopoverTrigger (asChild)
+├── PopoverTrigger (as-child)
 └── PopoverContent (side, align, sideOffset)
 ```
 
 **Regras**:
-- `PopoverTrigger asChild` para usar o Button como trigger sem elemento extra
+- `PopoverTrigger as-child` para usar o Button como trigger sem elemento extra
 - `side` e `align` no `PopoverContent` controlam o posicionamento — auto-flip nativo (collision detection)
 - Não usar para ações críticas ou destrutivas — usar Dialog ou AlertDialog
 - Fechar ao clicar fora é comportamento nativo — não reimplementar
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="dialog"` no `PopoverContent` e gerenciamento de foco automáticos
 - `Escape` fecha o Popover e retorna foco ao trigger
 
@@ -423,7 +418,7 @@ Popover
 
 ```
 Sheet
-├── SheetTrigger (asChild)
+├── SheetTrigger (as-child)
 └── SheetContent (side)
     ├── SheetHeader
     │   ├── SheetTitle       (obrigatório)
@@ -443,7 +438,7 @@ Sheet
 **Regras**:
 - `side` fica no `SheetContent`, não no `Sheet`
 - `SheetTitle` e `SheetDescription` obrigatórios para acessibilidade
-- Botões alinhados à direita via `flex justify-end` no footer
+- Botões alinhados à direita no rodapé: `.nds-cluster` com `data-justify="end"`. A ordem no DOM segue a ordem visual — `[secundário] [primário]`, confirmação à direita
 - Overlay (backdrop) escuro automático — não desabilitar
 - `Escape` fecha o Sheet — comportamento nativo
 
@@ -466,19 +461,19 @@ Sheet
 ```
 TooltipProvider (no root da aplicação)
 └── Tooltip
-    ├── TooltipTrigger (asChild)
+    ├── TooltipTrigger (as-child)
     └── TooltipContent (side)
 ```
 
 **Regras**:
 - `TooltipProvider` no root obrigatório
-- `TooltipTrigger asChild` para usar componentes existentes como trigger
+- `TooltipTrigger as-child` para usar componentes existentes como trigger
 - Conteúdo máximo: 2 linhas de texto — para mais, usar Popover
 - **Não usar em touch devices** — o Tooltip não aparece sem hover
 - Texto do tooltip: complementa o label, não repete — "Salvar" no botão, "Salvar como rascunho" no tooltip
-- Botão desabilitado: envolver em `<span tabIndex={0}>` para que o tooltip funcione (`disabled` bloqueia eventos de pointer)
+- Botão desabilitado: envolver em um `<span tabindex="0">` para que o tooltip funcione — `disabled` bloqueia os eventos de ponteiro do próprio botão
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="tooltip"` aplicado e conexão via `aria-describedby` automática
 - Tooltip aparece no foco por teclado além do hover — comportamento nativo
 - **Nunca usar o Tooltip como único portador de informação crítica** — deve complementar, não substituir
@@ -522,10 +517,10 @@ Para overlays que precisam funcionar em ambos os contextos, renderizar `Dialog` 
 | Busca rápida / command palette | Command |
 
 **Tokens de fundo** (ver regra global no início deste arquivo):
-- Painéis (Dialog, Sheet, Drawer): `bg-card text-card-foreground`
-- Menus e overlays flutuantes (DropdownMenu, ContextMenu, Popover, HoverCard, Command, Tooltip): `bg-popover text-popover-foreground` (padrão — não sobrescrever)
+- Painéis (Dialog, Sheet, Drawer): `--card` / `--card-foreground`, lidos pela folha de cada painel
+- Menus e overlays flutuantes (DropdownMenu, ContextMenu, Popover, HoverCard, Command, Tooltip): `--popover` / `--popover-foreground`, lidos pela folha de cada painel — não sobrescrever por fora
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+**Acessibilidade transversal** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - Focus trap automático em Dialog, Sheet, Drawer — não reimplementar
 - `Escape` fecha todos os overlays — comportamento nativo do Reka/Vaul
 - `DialogTitle` / `SheetTitle` / `DrawerTitle` obrigatórios — base para `aria-labelledby`

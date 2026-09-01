@@ -23,7 +23,7 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 ┌─────────────────────────────────────────┐
 │         Browser (Cliente)                │
 ├─────────────────────────────────────────┤
-│  React 18+ (UI Framework)               │
+│  React 19 (UI Framework)                │
 │  ├── State Management (useState)        │
 │  ├── Effects (useEffect)                │
 │  └── Component Composition              │
@@ -504,14 +504,14 @@ const doubleCount = count * 2; // ✅ Simples e correto
 // ✅ Componente principal pequeno
 export function PageDocs() {
   return (
-    <div className="flex-1 h-full overflow-auto">
-      <div className="p-8 max-w-4xl mx-auto space-y-12">
-        <HeaderSection />
-        <DemoSection />
-        <GuidelinesSection />
-        <ExamplesSection />
-        <PropertiesSection />
-      </div>
+    // .nds-page já traz largura máxima, centralização, recuo lateral
+    // responsivo e o ritmo vertical entre os filhos diretos.
+    <div className="nds-page">
+      <HeaderSection />
+      <DemoSection />
+      <GuidelinesSection />
+      <ExamplesSection />
+      <PropertiesSection />
     </div>
   );
 }
@@ -527,7 +527,7 @@ function DemoSection() { }
 
 ### 1. React vs. Outras Frameworks
 
-**Escolhido**: React 18+
+**Escolhido**: React 19
 
 **Alternativas consideradas**:
 - Vue.js
@@ -947,7 +947,7 @@ preview.ts
 | Decisão | Escolha | Alternativa | Razão |
 |---------|---------|-------------|-------|
 | **Docs interface** | Storybook 10 | SPA customizada | Stories + docs integrados, a11y, Chromatic |
-| **Framework** | React 18 | Vue, Svelte | Ecossistema, @base-ui/react |
+| **Framework** | React 19 | Vue, Svelte | Ecossistema, @base-ui/react |
 | **Styling** | CSS standalone `.nds-*` | CSS-in-JS | Performance, DX |
 | **State (i18n)** | Zustand | Context API | Leve, sem boilerplate |
 | **State (tema)** | Storybook toolbar | useState | Persistido via `globals` na URL |

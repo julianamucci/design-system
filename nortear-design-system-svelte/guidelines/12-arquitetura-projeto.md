@@ -1,6 +1,6 @@
 # Arquitetura do Projeto — Design System Svelte (Storybook-Centric)
 
-> **Referência primária:** Leia `STORYBOOK-ARCHITECTURE.md` antes de qualquer tarefa de documentação ou stories.
+> **Referência primária:** o índice em `Guidelines.md` — ele aponta a guideline de cada assunto antes de qualquer tarefa de documentação ou stories.
 
 ---
 
@@ -44,38 +44,37 @@ nortear-design-system-svelte/
 │   └── test-runner.ts           # axe-playwright: a11y em todas as stories
 │
 ├── src/
-│   ├── lib/
-│   │   ├── components/
-│   │   │   ├── ui/              # Primitivos (Bits UI) + stories
-│   │   │   │   ├── alert/
-│   │   │   │   │   ├── index.ts
-│   │   │   │   │   ├── Alert.svelte
-│   │   │   │   │   ├── AlertTitle.svelte
-│   │   │   │   │   └── AlertDescription.svelte
-│   │   │   │   ├── alert.stories.ts
-│   │   │   │   ├── alert-variantes.stories.ts
-│   │   │   │   ├── alert-estados.stories.ts
-│   │   │   │   └── alert-composicoes.stories.ts
-│   │   │   │
-│   │   │   ├── docs/            # Páginas de documentação
-│   │   │   │   ├── AlertDocs.svelte
-│   │   │   │   ├── content/
-│   │   │   │   │   └── alert/
-│   │   │   │   │       └── translations.json
-│   │   │   │   └── shared/
-│   │   │   │       ├── DocsHeader.svelte
-│   │   │   │       ├── DocsSection.svelte
-│   │   │   │       └── DocsNav.svelte
-│   │   │   │
-│   │   │   └── product/
-│   │   │       └── LanguageSwitcher.svelte
+│   ├── components/
+│   │   ├── ui/                  # Primitivos (Bits UI) + stories, uma pasta por slug
+│   │   │   └── alert/
+│   │   │       ├── index.ts
+│   │   │       ├── alert.svelte
+│   │   │       ├── alert-title.svelte
+│   │   │       ├── alert-description.svelte
+│   │   │       ├── alert.source.ts        # transforms do painel Code
+│   │   │       ├── AlertStory.svelte      # wrappers de story
+│   │   │       ├── alert.stories.ts
+│   │   │       ├── alert-variants.stories.ts
+│   │   │       ├── alert-states.stories.ts
+│   │   │       └── alert-compositions.stories.ts
 │   │   │
+│   │   ├── docs/                # Páginas de documentação
+│   │   │   ├── AlertDocs.svelte
+│   │   │   ├── DocsNav.svelte
+│   │   │   └── sections/        # os 15 containers genéricos + DocsPageLayout
+│   │   │
+│   │   └── product/
+│   │       └── LanguageSwitcher.svelte
+│   │
+│   ├── lib/
 │   │   ├── i18n.ts              # Store Svelte 5 + hook useTranslation
 │   │   ├── analytics.ts         # Wrapper GA4 tipado
-│   │   ├── use-seo.ts           # applyStorybookSeo (detecta iframe)
+│   │   ├── docs-tracking.ts     # tracking automático via data-track*
+│   │   ├── use-seo.ts           # applySeo (detecta iframe)
 │   │   ├── use-active-section.svelte.ts # IntersectionObserver (onActive / onDwell)
 │   │   ├── motion.ts            # prefersReducedMotion() + tokens de duração
 │   │   ├── strip-html.ts        # texto puro a partir de string com marcação
+│   │   ├── story-source.ts      # helpers dos transforms de snippet
 │   │   ├── withAutoDocsTab.ts   # HOC Storybook: aba "API Reference"
 │   │   └── utils.ts             # cn() e utilitários
 │   │
@@ -84,11 +83,17 @@ nortear-design-system-svelte/
 │   │
 │   └── styles/
 │       ├── globals.css          # .nds-* + tokens CSS
-│       └── storybook-docs.css   # Overrides para Docs tab
+│       ├── storybook-docs.css   # Overrides para Docs tab
+│       └── themes/              # temas de marca
 │
 ├── chromatic.config.json
-└── STORYBOOK-ARCHITECTURE.md
+└── guidelines/                  # estas guidelines
 ```
+
+O conteúdo por componente **não fica na stack**: mora em
+`docs/shared/content/<slug>/translations.json`, na raiz do repositório, e é lido
+por todas as stacks. Docs page que importa tradução de dentro de `src/` está
+duplicando conteúdo compartilhado.
 
 ---
 
@@ -120,13 +125,13 @@ storySort: {
 
 ## Adicionar Novo Componente (5 passos)
 
-**1.** Criar `src/lib/components/docs/NovoComponenteDocs.svelte`
+**1.** Criar `src/components/docs/NovoComponenteDocs.svelte`
 
-**2.** Criar `src/lib/components/docs/content/novo-componente/translations.json`
+**2.** Criar `docs/shared/content/novo-componente/translations.json` (raiz do repositório)
 
 **3.** Criar a story principal:
 ```ts
-// src/lib/components/ui/novo-componente.stories.ts
+// src/components/ui/novo-componente/novo-componente.stories.ts
 const meta = {
   title: 'UI/NovoComponente',
   component: NovoComponente,
@@ -141,7 +146,7 @@ export const Playground: Story = {
 };
 ```
 
-**4.** Criar arquivos de variações (`-variantes`, `-tamanhos`, `-estados`, `-composicoes`)
+**4.** Criar arquivos de variações (`-variants`, `-sizes`, `-states`, `-compositions`)
 
 **5.** Verificar no Storybook (`npm run storybook`)
 
@@ -163,5 +168,5 @@ export const Playground: Story = {
 | Tema não aplica no Docs tab | Verificar URL: `?globals=theme:dark;brand:tema-um` |
 | Sidebar mostra componente fora de ordem | Verificar `title` no meta e ordem no `storySort` |
 | Docs page não carrega | Verificar `parameters.docs.page: withAutoDocsTab(ComponenteDocs)` |
-| i18n não funciona | Criar `content/{slug}/translations.json` |
+| i18n não funciona | Criar `docs/shared/content/{slug}/translations.json` na raiz do repositório |
 | Violação de a11y bloqueia CI | Corrigir a violação ou configurar `parameters.a11y.config.rules` |

@@ -129,7 +129,8 @@ render: (args) => createButton(args)
 // ✅ CORRETO — retorna HTMLElement composto
 render: (args) => {
   const container = document.createElement('div');
-  container.className = 'flex gap-4';
+  container.className = 'nds-cluster';
+  container.dataset.spacing = 'md';
   container.appendChild(createButton({ ...args, variant: 'default' }));
   container.appendChild(createButton({ ...args, variant: 'outline' }));
   return container;

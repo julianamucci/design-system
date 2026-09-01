@@ -38,28 +38,18 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 - Aplicação de classes de tema no `<html>`
 
 **Estrutura do template**:
-```html
-<div class="flex h-screen overflow-hidden">
-  <!-- Sidebar (aside) -->
-  <aside>
-    <!-- Logo -->
-    <!-- nav com botões de categoria accordion -->
-    <!-- ThemeSelector -->
-  </aside>
 
-  <!-- Main area -->
-  <div class="flex-1 flex flex-col">
-    <header><!-- dark mode toggle --></header>
-    <main id="main-content">
-      <HomePage v-if="currentPage === 'home'" />
-      <Suspense v-else-if="currentComponent">
-        <component :is="currentComponent" />
-        <template #fallback>...</template>
-      </Suspense>
-    </main>
-  </div>
-</div>
 ```
+div            (moldura da aplicação, altura da janela, sem rolagem própria)
+├── link de pular para o conteúdo   (visível só no foco)
+├── aside      (sidebar: logo, nav de categorias em accordion, ThemeSelector)
+└── div        (área principal)
+    ├── header (alternância de modo claro/escuro)
+    └── main#main-content
+        └── página inicial, ou a docs page carregada sob demanda com fallback
+```
+
+O vocabulário do design system para esta forma é a família `.nds-app-*` (`.nds-app`, `.nds-app-sidebar`, `.nds-app-main`, `.nds-app-content`, `.nds-app-header`), na folha `app-shell.css`. O `App.vue` desta stack ainda não a adota por inteiro — é sandbox, não produto, e por isso não passou pela migração. Vale registrar a diferença em vez de descrevê-la como se já estivesse feita.
 
 ---
 
@@ -79,13 +69,7 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 
 ### 3. ComponentDemo.vue — Wrapper para Demos
 
-```html
-<template>
-  <div class="flex items-center justify-center p-10 mt-6 border rounded-xl bg-background shadow-sm">
-    <slot />
-  </div>
-</template>
-```
+Um `Card` com a classe `.nds-docs-demo` e o marcador `data-docs-preview="demonstracao"`, envolvendo o slot. A moldura — respiro, borda, raio e elevação — é da folha `docs-demo.css`; o wrapper não declara nada por conta própria.
 
 ---
 
@@ -94,7 +78,7 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 **Localização**: `src/components/docs/shared/DocsNav.vue`
 **Props**: `groups: Array<{ label, sections: Array<{ id, label }> }>`, `activeSection: string`
 
-Navegação lateral (sidebar) que deve ser envolvida por um wrapper `<nav>` com `sticky top-8 w-52 shrink-0 self-start` no layout de duas colunas (`flex gap-16 items-start`). Usa `IntersectionObserver` via `onMounted/onUnmounted` para detectar seção ativa.
+Navegação lateral das seções, montada dentro do `<nav>` que o `DocsPageLayout` já provê. As duas colunas e a fixação da navegação são de `.nds-sidebar-layout[data-sidebar-sticky="true"]` — a folha faz o sticky, a largura da coluna e o alinhamento ao topo; o `<nav>` só carrega `.nds-stack` com `data-spacing="md"` e o `aria-label`. Usa `IntersectionObserver` via `onMounted`/`onUnmounted` para detectar a seção ativa.
 
 ---
 

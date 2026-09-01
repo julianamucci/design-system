@@ -3,8 +3,8 @@
 ## Organização CSS com @layer
 
 * **@layer base**: Elementos HTML base e reset do tema
-* **@layer components**: Componentes reutilizáveis (.card, .btn, etc.)
-* **@layer utilities**: Classes utilitárias (.font-*, .animate-*, etc.)
+* **@layer components**: Folhas de componente do sistema (`.nds-card`, `.nds-button`, etc.)
+* **@layer utilities**: Classes utilitárias do sistema (`.nds-font-medium`, `.nds-animate-spin`, etc.)
 * **Evite !important**: Use especificidade adequada em vez de forçar estilos
 
 ## Cores e Variáveis
@@ -50,12 +50,16 @@
 
 ## Tokens de superfície — uso obrigatório
 
-| Contexto | Classes utilitárias |
-|----------|-----------------|
-| Painéis de conteúdo (Dialog, Sheet, Drawer, Card) | `bg-card text-card-foreground` |
-| Menus e overlays flutuantes (Dropdown, Popover, Tooltip) | `bg-popover text-popover-foreground` |
-| Inputs | `bg-input border-input` |
-| Página principal | `bg-background text-foreground` |
+Cor de superfície **não tem classe utilitária**: ela mora na folha do componente,
+que lê o token. Por isso a regra nomeia o par token + seletor, e não uma classe
+de fundo — não existe utilitária de fundo em opacidade cheia no sistema.
+
+| Contexto | Tokens | Seletor que os lê |
+|----------|--------|-------------------|
+| Painéis de conteúdo (Dialog, Sheet, Drawer, Card) | `--card` / `--card-foreground` | `.nds-card` e a folha de painel de cada overlay |
+| Menus e overlays flutuantes (Dropdown, Popover, Tooltip) | `--popover` / `--popover-foreground` | `.nds-popover-content`, `.nds-dropdown-menu-content`, `.nds-tooltip-content` |
+| Inputs | `--input` (fundo) / `--border` (contorno) | `.nds-input` |
+| Superfície de página | `--background` / `--foreground` | folha de shell da aplicação |
 
 ## Tokens de cor de estado
 
@@ -69,8 +73,12 @@ PATCHES.md#alert-five-variants) — nunca classes soltas:
 </Alert>
 
 <!-- ❌ ERRADO — classes soltas (bg-warning/10 etc. nem existem mais no CSS) -->
-<Alert variant="warning">Atenção</Alert>
+<Alert class="bg-warning/10 border-warning text-warning">Atenção</Alert>
 ```
+
+> O bloco errado fica registrado de propósito: essas classes vieram da lib de
+> utilitárias que saiu do projeto e **não existem mais** na folha. Escritas hoje
+> não pintam nada — o alerta sai sem cor de estado e ninguém vê erro.
 
 ## Tipografia
 
@@ -86,7 +94,18 @@ PATCHES.md#alert-five-variants) — nunca classes soltas:
   - `--font-body-lxgw` (LXGW WenKai TC)
   - `--font-body-pt-serif` (PT Serif)
   - `--font-body-lexend` (Lexend)
-* **Aplicação em Svelte**: `style="font-family: var(--font-token-name)"`
+* **Como a família chega ao componente**: a classe `fonte-*` no `<html>` resolve
+  `--font-family`, e as folhas `.nds-*` já leem `var(--font-family)`. Trocar a
+  fonte é trocar essa classe — nenhum componente declara família própria.
+* **Amostra de uma família específica** (vitrine de tipografia): classe
+  `.nds-font-sample`, que lê `--font-family-active`. Texto em fonte monoespaçada:
+  `.nds-font-mono`.
+* **Não há utilitária de família por token** (`--font-display`, `--font-body-*`
+  não têm classe equivalente). Enquanto não houver, `style="font-family:
+  var(--font-display)"` é **último recurso declarado**, não a recomendação:
+  `var(--token)` em estilo inline é a exceção tolerada da regra da casa, e o
+  inline continua vencendo a folha — a declaração deixa de acompanhar tema,
+  densidade e escala tipográfica.
 
 ## Temas Personalizados
 

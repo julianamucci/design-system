@@ -5,8 +5,8 @@
 * **É OBRIGATÓRIO usar os estilos do arquivo `./styles/globals.css`**
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca `lucide-svelte` para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
-* **É OBRIGATÓRIO que todos os componentes interativos tenham `focus-visible` com 2px de espessura (ring-2)**
-* **É OBRIGATÓRIO que todos os componentes interativos usem `focus-visible:ring-ring` com 100% da cor (SEM opacidade como /50 ou /30)**
+* **É OBRIGATÓRIO que todo componente interativo aplique a classe `.nds-focus-ring`** — é ela que desenha o anel de foco do sistema, com **2px de espessura** e afastamento do contorno. O anel é do sistema, não do componente: reimplementar por componente é como as espessuras divergem.
+* **É OBRIGATÓRIO que o anel use o token `--ring` com 100% da cor (SEM opacidade como /50 ou /30)** — opacidade derruba o contraste do indicador de foco abaixo do mínimo exigido (WCAG 2.4.11)
 * **COMPATIBILIDADE MOBILE OBRIGATÓRIO**: Sempre que possível prefira "popover" a "hover card" ou "tooltip" para melhor compatibilidade com uso mobile
 * Use melhores práticas de layout flexbox e semântica web para compor páginas
 * Sistema de espaçamento baseado em múltiplos de 8px

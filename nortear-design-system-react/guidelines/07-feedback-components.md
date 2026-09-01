@@ -49,12 +49,12 @@ Alert
 **Regras**:
 - Ícone colocado como **filho direto** do `<Alert>`, antes de `AlertTitle` — sem `<div>` wrapper.
 - `AlertTitle` é opcional — omitir quando a `AlertDescription` já é autoexplicativa.
-- Para variantes success e warning, usar `bg-*/10` e `border-*/30` para fundo suave — não fundo sólido.
+- Fundo suave, nunca sólido: a variante troca as vars escopadas `--alert-bg`, `--alert-fg`, `--alert-body-fg` e `--alert-border`, e a folha aplica a cor semântica com as opacidades de `--alert-bg-alpha` e `--alert-border-alpha`. Escolher a variante é tudo o que se faz; não repintar o alerta por fora.
 
 **Posicionamento do ícone (unificado via `.nds-alert`)**:
 O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nds-alert:has(> svg)` abre automaticamente uma coluna de grid para o ícone (16px + `column-gap` de 8px) — sem posicionamento manual. O SVG recebe um `translate` vertical leve para alinhar com a primeira linha do título. Todas as stacks compartilham o mesmo CSS `.nds-alert` (`docs/shared/styles/nds/alert.css`).
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - O componente aplica `role="alert"` automaticamente — o leitor de tela anuncia o conteúdo ao ser inserido no DOM.
 - Para alerts inseridos dinamicamente (não renderizados na montagem), adicionar `aria-live="polite"` no container pai.
 - `aria-live="assertive"` apenas para erros críticos que exigem atenção imediata (ex.: falha de pagamento).
@@ -131,7 +131,7 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 - Consistência obrigatória: mesma semântica de cor em todo o produto (não usar `destructive` para promoções).
 - Badge clicável (link ou filtro): **nunca** pôr o manipulador de clique no Badge — envolvê-lo em `<a>` ou `<button>`, que é quem recebe foco, teclado e nome acessível.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - Badge puramente decorativo (repetindo informação já visível): `aria-hidden="true"`.
 - Badge de status sem contexto visual adjacente: `aria-label` descritivo — ex.: `aria-label="Status: Ativo"`.
 - Ícones dentro do badge: `aria-hidden="true"` — o texto do badge já descreve o estado.
@@ -155,16 +155,33 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 
 | Prop | Função |
 |---|---|
-| `value` | Número 0–100. `undefined` para indeterminate (animar via CSS) |
-| `className` | Cor do indicador via `[&>div]:bg-*` (sem variantes nativas de cor) |
+| `value` | Número 0–100. Omitir (ou `undefined`) para o estado indeterminado |
+
+**Estrutura de subcomponentes** (a raiz monta trilha e indicador sozinha quando ninguém os compõe):
+```
+Progress (value)
+├── ProgressLabel      (opcional — nomeia o que está sendo medido)
+├── ProgressValue      (opcional — o número, alinhado à direita)
+└── ProgressTrack
+    └── ProgressIndicator
+```
+
+**Estado por atributo** (a folha `.nds-progress` é quem desenha):
+
+| Atributo | Efeito |
+|---|---|
+| `data-variant="success"` | Barra em `--success`; a trilha permanece neutra |
+| `data-variant="destructive"` | Barra em `--destructive`; a trilha permanece neutra |
+| `data-indeterminate` | Traço curto percorrendo a trilha, sem `aria-valuenow` |
 
 **Regras**:
 - `value` aceita número de 0 a 100.
-- Para indeterminate: omitir `value` ou passar `undefined` e animar o indicador via CSS (`[&>div]:animate-indeterminate`).
+- Indeterminado: omitir `value` e marcar `data-indeterminate`. A animação é da folha; não escrever uma própria, e não deixar `aria-valuenow` no elemento — número que ninguém sabe é pior que "ocupado".
 - Sempre exibir porcentagem ou rótulo textual próximo ao componente — o Progress não exibe texto por padrão.
-- Cor do indicador customizada via `[&>div]:bg-*` — o componente não tem variantes de cor nativas.
+- Cor da barra: só pelas variantes acima. **Não existe variante `warning`**, e é decisão medida: no tema claro padrão o amarelo não alcança os 3:1 exigidos entre a parte cheia e a vazia (WCAG 1.4.11), e uma barra que não se distingue da trilha não informa nada.
+- A trilha nunca acompanha a cor da variante — é o que garante que o contraste barra-contra-trilha não dependa de qual variante alguém escolheu.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - Aplica `role="progressbar"`, `aria-valuenow`, `aria-valuemin` e `aria-valuemax` automaticamente via prop `value`.
 - `aria-label` obrigatório — descreve o que está sendo medido.
 - `aria-live="polite"` no elemento que exibe o valor textual — anuncia mudanças.
@@ -182,15 +199,16 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 
 **Regras**:
 - Dimensões do Skeleton devem aproximar as do conteúdo final — evita layout shift ao carregar.
-- `rounded-full` para avatares e ícones circulares, `rounded-md` para retângulos.
+- Forma e largura vêm por atributo, não por classe de medida: `data-shape="text|heading|avatar|fill"` e `data-width="full|3-4|2-3|1-2|1-3"`. O esqueleto circular é o `data-shape="avatar"`.
+- O Skeleton **não recebe altura**: `text` e `heading` derivam da escada de texto por `padding-block`, para o bloco crescer junto quando a pessoa aumenta a fonte do navegador (WCAG 1.4.4). Cravar altura reintroduz o salto de layout que o esqueleto existia para evitar.
 - Não aninhar Skeletons em estruturas muito complexas — 2–3 elementos por bloco são suficientes.
-- Animação padrão: `animate-pulse` — aplicada automaticamente pelo componente.
+- A pulsação é da folha `.nds-skeleton`, aplicada automaticamente.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
-- `aria-hidden="true"` nos Skeletons — são decorativos.
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
+- O Skeleton já nasce com `aria-hidden="true"` — é ruído para leitor de tela, e quem anuncia é a região que o contém.
 - `aria-busy="true"` no container pai enquanto o conteúdo carrega — anuncia o estado de loading.
 - `aria-label` no container descrevendo o que está carregando — "Carregando lista de usuários".
-- `motion-reduce:animate-none` obrigatório — usuários com distúrbios vestibulares podem desativar animações.
+- A pulsação para sozinha sob `prefers-reduced-motion: reduce`: a folha já traz a regra. Qualquer animação **personalizada** acrescentada por cima precisa parar sob a mesma preferência — quem tem distúrbio vestibular sente o movimento que a folha não conhece.
 
 **Analytics**: passivo — não dispara eventos. Rastrear tempo de carregamento no callback que substitui o Skeleton pelo conteúdo real.
 
@@ -233,7 +251,7 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 - Nunca usar toast para mensagens que exigem leitura longa — máximo 1 frase.
 - `richColors` no `<Toaster />` para aplicar as cores do tema automaticamente.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - O Sonner usa `aria-live="polite"` internamente — toasts são anunciados ao leitor de tela sem interromper o fluxo.
 - Toasts com ação (`action.label`) são focáveis por teclado.
 - Não usar Sonner para erros de formulário — usar `FormMessage`.
@@ -261,12 +279,12 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 | Inserido no fluxo da página | Sobreposto, não bloqueia |
 | Erros críticos, avisos importantes | Sucesso, info, avisos não-críticos |
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+**Acessibilidade transversal** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
 - `aria-hidden="true"` em Skeleton e em ícones decorativos dentro de Alerts e Badges
 - `aria-busy="true"` no container durante loading (Skeleton, Progress)
 - `aria-live="polite"` para mudanças dinâmicas não críticas; `aria-live="assertive"` apenas para erros críticos
-- `motion-reduce:animate-none` obrigatório em Skeleton
+- Animação personalizada acrescentada a Skeleton, Progress ou Toast tem de parar sob `prefers-reduced-motion: reduce` — as folhas `.nds-*` já param as suas
 
 **Analytics transversal** (ver `../../docs/shared/guidelines/07-analytics.md`):
 

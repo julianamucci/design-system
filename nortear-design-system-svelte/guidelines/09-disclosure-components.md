@@ -26,7 +26,7 @@ Accordion (type, collapsible?)
 
 **Regras**:
 - `collapsible` obrigatório em `type="single"` — permite fechar o item aberto (UX acessível)
-- Animações de expand/collapse: `motion-reduce:animate-none` em animações customizadas
+- Animação de abrir e fechar tem de parar sob `prefers-reduced-motion` — a folha do accordion já para a sua; animação personalizada por cima é responsabilidade de quem a escreveu
 
 **Acessibilidade**:
 - Bits UI aplica automaticamente `role="region"`, `aria-expanded`, `aria-controls`, `aria-labelledby`

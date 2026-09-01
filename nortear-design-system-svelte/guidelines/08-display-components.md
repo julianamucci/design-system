@@ -11,15 +11,25 @@
 **Estrutura**:
 
 ```
-Avatar (class="h-X w-X")
+Avatar (size)
 ├── AvatarImage (src, alt)
 └── AvatarFallback (iniciais ou aria-label)
 ```
 
+**Tamanhos** — presets da prop `size`:
+
+| `size` | Diâmetro |
+|---|---|
+| `sm` | 24px |
+| `md` (padrão) | 32px |
+| `lg` | 40px |
+| `xl` | 48px |
+| `2xl` | 64px |
+
 **Regras**:
 - `AvatarImage`: `alt` obrigatório e descritivo
 - `AvatarFallback`: iniciais do nome ou `aria-label` descritivo
-- Tamanho: via `class="h-X w-X"` — **nunca** prop `size` (não existe)
+- Tamanho: **sempre** pela prop `size` — nunca por classe utilitária de altura e largura. O preset não muda só o diâmetro: a folha deriva dele o corpo das iniciais, o tamanho do selo de status e o recuo do grupo empilhado. Fixar altura por fora acerta o círculo e deixa esses três para trás, e o desalinhamento só aparece na composição.
 - Fallback é obrigatório sempre que houver `AvatarImage`
 
 ---
@@ -35,15 +45,18 @@ Avatar (class="h-X w-X")
 ```
 Carousel (aria-label)
 ├── CarouselContent
-│   └── CarouselItem (basis-1/N)
+│   └── CarouselItem
 ├── CarouselPrevious (aria-label)
 └── CarouselNext (aria-label)
 ```
 
+**Regras**:
+- Quantos itens cabem por vez é decisão da folha do slide, não do template — o dimensionamento é do componente
+
 **Acessibilidade**:
 - `aria-label` descritivo no `<Carousel>`
 - `aria-label` nos botões de navegação
-- `motion-reduce:animate-none` em animações personalizadas
+- Animação personalizada tem de parar sob `prefers-reduced-motion` — as folhas do sistema já param a sua
 
 ---
 
@@ -57,7 +70,7 @@ Carousel (aria-label)
 
 ```
 Table
-├── TableCaption (sr-only se necessário, sempre presente)
+├── TableCaption (fora da tela se necessário, sempre presente)
 ├── TableHeader
 │   └── TableRow
 │       └── TableHead (scope="col")
@@ -67,7 +80,7 @@ Table
 ```
 
 **Acessibilidade obrigatória**:
-- `TableCaption` em toda tabela (pode ser `sr-only`)
+- `TableCaption` em toda tabela — pode ficar fora da tela (`.nds-sr-only`), anunciada pelo leitor e invisível na página, mas nunca ausente
 - `scope="col"` em todo `TableHead` de coluna
 - `scope="row"` em `TableHead` de linha (quando aplicável)
 
@@ -112,7 +125,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 - Renderer `svg` para relatório, impressão e exportação; `canvas` só para dataset grande ou animação pesada.
 - Para tipos não cobertos (dispersão, radar, mapa de calor), registre o módulo extra da lib antes de usar.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="img"` mais descrição no container: sem nome acessível o desenho é conteúdo perdido. A descrição diz o que o gráfico mostra, não que é um gráfico.
 - A informação nunca vive só na cor (WCAG 1.4.1): a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
 - Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do CONTORNO das formas em `--foreground`, não da cor de série — as cores da paleta ficam em torno de 2:1 contra o fundo e sozinhas não sustentam o critério.
@@ -143,7 +156,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 | `editable` | `boolean` | Marca a coluna como editável inline |
 | `format` | `(value, row) => string` | Formata o texto da célula (sem JSX/snippet) |
 | `badgeVariant` | `(value, row) => 'default' \| 'destructive' \| 'warning' \| 'success' \| 'info'` | Envolve a célula em `<Badge>` com a variant retornada — substituto do `cell` renderer das outras stacks |
-| `cellClass` | `string` | Classes utilitárias extras no `<td>` |
+| `cellClass` | `string` | Classes `.nds-*` extras no `<td>` |
 
 
 **Nome da tabela e identidade da linha** (todas opcionais):
@@ -162,7 +175,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 - `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde
 - Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática
 - Selects de filtro recebem `filterFn: 'equals'` automaticamente; texto usa `includesString`
-- Aplica `table-fixed` em `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — evita travamento em datasets grandes
+- Passa a `table-layout: fixed` em `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — evita travamento em datasets grandes
 - `data` nunca é mutado pelo componente — para edição inline, atualize o `$state` externamente no `onCellEdit`
 - `virtualized` e `enablePagination` são mutuamente exclusivos; virtualização desativa paginação
 - Para markup rico (ícones, links), use `meta.badgeVariant` ou `meta.cellClass`. `cell` Snippet ainda não é suportado pelo wrapper local

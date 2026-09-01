@@ -10,7 +10,7 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 - **Estilos**: usar `./styles/globals.css` — nunca CSS inline arbitrário
 - **Ícones**: exclusivamente `lucide-svelte` — zero exceções
 - **Formulários**: Superforms + Zod — validação tipada com schema Zod
-- **Tipografia**: fonte do sistema definida no CSS base — não usar classes utilitárias de tamanho ou line-height (`text-2xl`, `leading-none`)
+- **Tipografia**: a escada de texto vem dos tokens (`--text-h1` … `--text-label`) e os elementos HTML já a herdam do CSS base. Não escrever tamanho nem `line-height` por cima: a escada responde ao eixo de fonte e à densidade, e um valor cravado sai fora dos dois
 
 ---
 
@@ -18,13 +18,14 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 
 Formato obrigatório: **HSL sem vírgulas** (`220 44% 57%`). Proibidos: rgba, oklch, hex.
 
-Tokens de superfície:
-- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `bg-card text-card-foreground`
-- Menus e overlays flutuantes (DropdownMenu, Popover, Tooltip, etc.): `bg-popover text-popover-foreground`
-- Inputs: `bg-input border-input`
+Tokens de superfície — não há classe utilitária de cor de fundo; quem aplica é a
+folha do componente, lendo o token:
+- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `--card` / `--card-foreground`
+- Menus e overlays flutuantes (DropdownMenu, Popover, Tooltip, etc.): `--popover` / `--popover-foreground`
+- Inputs: `--input` no fundo, `--border` no contorno
 
 Tokens de cor de estado aplicados via `class` — nunca via prop inexistente:
-- Warning/Success em Alert: **prop** `variant="warning"` / `variant="success"` (desde PATCHES.md#alert-five-variants — nunca via class). Badge também: `variant="warning"` / `variant="success"` / `variant="info"` — nele a cor sai na BORDA, não no preenchimento (ver guideline 07 §Badge). Caso pontual sobrescreve a var interna escopada (`--badge-border`, ver guideline 04 §Tokens de Componente)
+- Warning/Success em Alert: **prop** `variant="warning"` / `variant="success"` (desde PATCHES.md#alert-five-variants — nunca via class). Badge também: `variant="warning"` / `variant="success"` / `variant="info"` — nele a cor sai na BORDA, não no preenchimento (ver guideline 07 §Badge). Caso pontual sobrescreve a var interna escopada (`--badge-border`, ver `07-feedback-components.md` §Badge)
 
 Referência completa: `03-sistema-design.md` e `../../docs/shared/guidelines/04-padroes-design-sistema.md`.
 
@@ -42,10 +43,10 @@ Regras permanentes:
 - Ícones decorativos: sempre `aria-hidden="true"`
 - Ícones funcionais (sem texto adjacente): `aria-label` obrigatório no elemento pai
 - Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
-- `motion-reduce:animate-none` em toda animação customizada fora dos componentes Bits UI
-- Focus ring obrigatório: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` — sem opacidade
+- Toda animação personalizada tem de parar sob `prefers-reduced-motion` — as folhas `.nds-*` já param as suas; o que se escreve por fora é responsabilidade de quem escreveu
+- Anel de foco obrigatório: classe `.nds-focus-ring`, com 2px de espessura e o token `--ring` em cor cheia — sem opacidade
 - `Dialog.Title` e `Dialog.Description` obrigatórios em todo Dialog, Sheet, Drawer (Bits UI)
-- `TableCaption` obrigatório em toda Table (pode ser `sr-only`)
+- `TableCaption` obrigatório em toda Table — pode ficar fora da tela (`.nds-sr-only`), nunca ausente
 - `scope="col"` em todo cabeçalho de coluna de tabela
 
 Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
@@ -69,8 +70,8 @@ Expressões Svelte `{variavel}` são seguras — o compilador escapa automaticam
 
 ## 5. Alinhamento de botões
 
-- Primário sempre à **direita** — usar `justify-end` ou `ml-auto`
-- DOM segue a ordem visual — `flex-row-reverse` **proibido**
+- Primário sempre à **direita** — o alinhamento sai do `.nds-cluster` que agrupa os botões, com `data-justify="end"`
+- DOM segue a ordem visual — inverter a direção do flex é **proibido**: o leitor de tela e o Tab andam pela ordem do DOM, e ela passaria a discordar do que se vê
 - Ordem no DOM: `[secundário] [primário]` — confirmação sempre à direita
 
 ---
@@ -92,10 +93,16 @@ Nunca inventar props que não existem. Casos frequentes:
 
 | Componente | Prop inexistente | Correto |
 |------------|-----------------|---------|
-| Avatar | `size` | var interna escopada: `--avatar-size` (guideline 04) |
-| Badge | `size` | `class` customizado |
+| Badge | `size` | `class` própria |
 | Drawer | prop `side` | `direction` no `<Drawer.Root>` |
 | Select | busca integrada | usar Combobox |
+
+**O Avatar TEM prop `size`** — `sm` / `md` / `lg` / `xl` / `2xl`, com o padrão em
+`md`. A regra antiga mandava o contrário e proibia a API que o componente
+realmente expõe. O preset não escreve uma altura: a folha deriva dele o diâmetro,
+o corpo das iniciais, o selo de status e o recuo do grupo empilhado — e é por isso
+que fixar altura por fora desalinha os três últimos. Detalhe em
+`08-display-components.md` §Avatar.
 
 Triggers de overlays sempre com `asChild` quando necessário:
 `Collapsible.Trigger`, `Dialog.Trigger`, `Sheet.Trigger`, `AlertDialog.Trigger`, `DropdownMenu.Trigger`, `Popover.Trigger`, `Tooltip.Trigger`

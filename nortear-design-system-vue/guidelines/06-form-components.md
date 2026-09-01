@@ -31,21 +31,21 @@
   - Portão: `button_gap_apertado` no `audit.mjs`.
 - Máximo 1 botão `default` (primário) por seção
 - Ícones apenas quando essenciais ao contexto — não decorativos por padrão
-- Alinhamento: primário sempre à direita — ver `16-padroes-design-sistema.md` → "Alinhamento de Grupos de Botões"
+- Alinhamento: primário sempre à direita — ver `../../docs/shared/guidelines/04-padroes-design-sistema.md` → "Alinhamento de Grupos de Botões"
 - Botão icon-only: `aria-label` obrigatório com verbo + objeto + identificador
 - Submit dentro de Form: `disabled` ligado a `form.formState.isSubmitting`
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-label` **contextual** em botões ambíguos — descreve a ação **e o objeto**, nunca apenas a ação
 - Ícones dentro do botão: sempre `aria-hidden="true"` — o label do botão já descreve a ação
 - Nunca usar `aria-label` que apenas repete o texto visível
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Verbos no infinitivo, máximo 3 palavras, sem pontuação
 - Correto: "Salvar", "Criar conta", "Excluir item"
 - Incorreto: "Clique aqui", "OK", "Sim", "Enviar formulário de cadastro"
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 - Evento: `button_click` com `component`, `variant`, `location`, `label`
 - `data-track-label` deve ser idêntico ao `aria-label` ou ao texto visível
 - Não rastrear cliques em botões `disabled`
@@ -117,15 +117,15 @@ Popover
 | `disabled` | `false` | Desabilita interação |
 
 **Regras**:
-- `Checkbox` sempre acompanhado de `Label` com `htmlFor` correspondente ao `id`
+- `Checkbox` sempre acompanhado de `Label` com `for` correspondente ao `id`
 - `checked="indeterminate"` para seleção parcial de grupo (nem todos marcados)
 - Agrupar checkboxes relacionados em `<fieldset>` + `<legend>`
 
 **Acessibilidade**: aplica `role="checkbox"` e `aria-checked` automaticamente, incluindo `"mixed"` para indeterminate.
 
-**UX Writing** (ver `19-tom-de-voz.md`): label descreve o estado ativo — "Receber notificações por email" em vez de "Email".
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`): label descreve o estado ativo — "Receber notificações por email" em vez de "Email".
 
-**Analytics** (ver `21-analytics.md`): `field_change` com `component`, `location`, `field_name`, `value` (string).
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `field_change` com `component`, `location`, `field_name`, `value` (string).
 
 ---
 
@@ -156,9 +156,9 @@ Form
 - Submit bloqueado enquanto submetendo
 - Para formulários multi-etapa, validar apenas os campos da etapa atual antes de avançar (não submeter o form inteiro entre etapas)
 
-**UX Writing das mensagens de erro** (ver `19-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+**UX Writing das mensagens de erro** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 
 | Evento | Quando |
 |--------|--------|
@@ -179,20 +179,26 @@ Form
 - Placeholder: exemplo real do formato — nunca instrução ("Digite seu email")
 - Placeholder **não substitui** Label — ambos são obrigatórios
 - Ícones: apenas em formulários pequenos (login, busca) — não em formulários longos de cadastro
-- Ícone posicionado **à esquerda** via padrão `relative/absolute/pl-*`
-- Formulários de busca: sempre com botão de submit (pode ser `sr-only` visualmente)
+- Ícone posicionado **à esquerda**: `.nds-icon-input-start` — a folha reserva o recuo do texto e ancora o ícone; recuo cravado à mão descola quando a densidade muda
+- Formulários de busca: sempre com botão de submit (pode ficar visualmente oculto com `.nds-sr-only`)
 
-**Tokens** (ver `16-padroes-design-sistema.md`):
-- Fundo: `bg-input` · Borda: `border-input` · Texto: `text-foreground`
-- Placeholder: `placeholder:text-muted-foreground`
-- Focus: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
+**Tokens** (ver `../../docs/shared/guidelines/04-padroes-design-sistema.md`) — não há utilitária de cor de superfície; quem lê o token é `.nds-input`:
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+| Elemento | Token |
+|----------|-------|
+| Fundo | `--input` |
+| Borda | `--border` |
+| Texto | `--foreground` |
+| Texto de exemplo (placeholder) | `--muted-foreground` |
+
+- Anel de foco: `.nds-focus-ring` — 2px, cor cheia de `--ring`, com afastamento
+
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `FormControl` aplica `aria-invalid` e `aria-errormessage` automaticamente dentro de `FormField`
 - `aria-required="true"` em campos obrigatórios
 - Nunca rastrear `value` de campos sensíveis: senha, CPF, cartão de crédito
 
-**Analytics** (ver `21-analytics.md`): apenas em funis críticos, `field_focus` / `field_blur` com `field_name`. Nunca o valor.
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): apenas em funis críticos, `field_focus` / `field_blur` com `field_name`. Nunca o valor.
 
 ---
 
@@ -232,13 +238,13 @@ InputOTP (maxLength, pattern)
 **API e exemplos**: `src/components/ui/label/label.vue` + stories + `LabelDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Regras**:
-- `htmlFor` obrigatório fora de `FormField` — associa o label ao campo via `id`
+- `for` obrigatório fora de `FormField` — associa o label ao campo via `id`
 - Dentro de `FormField`, usar `FormLabel` — associação automática via contexto interno
 - Posicionar **acima** do campo (padrão) ou à esquerda em layouts horizontais
-- Peso tipográfico: `font-medium` — não sobrescrever para `font-bold`
+- Peso tipográfico: da folha `.nds-label`, que já aplica o peso médio do sistema — não sobrescrever para negrito, que hierarquiza o rótulo acima do próprio dado
 - Indicador de obrigatório: `*` com `aria-hidden="true"`; aplicar `aria-required="true"` no campo
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Substantivo ou frase nominal curta, sem dois-pontos, sem ponto final
 - Capitalização apenas na primeira palavra
 - Correto: "Nome completo", "Email profissional"
@@ -258,18 +264,18 @@ InputOTP (maxLength, pattern)
 
 ```
 RadioGroup[aria-label] (value, onValueChange)
-└── RadioGroupItem (value, id) + Label[htmlFor]
+└── RadioGroupItem (value, id) + Label[for]
 ```
 
 **Regras**:
-- `RadioGroupItem` sempre com `Label` associado via `htmlFor` + `id`
+- `RadioGroupItem` sempre com `Label` associado via `for` + `id`
 - **Não pré-selecionar** por padrão — apenas quando existe um default genuíno de negócio. Pré-seleção forçada cria erros silenciosos em formulários
 - 4+ opções: orientação vertical
-- 2–3 opções curtas: pode usar `flex gap-6`
+- 2–3 opções curtas: pode dispor na horizontal, com `.nds-cluster` e `data-spacing="lg"`
 
 **Acessibilidade**: aplica `role="radiogroup"` e `role="radio"` automaticamente. Arrow keys navegam entre opções — comportamento nativo.
 
-**Analytics** (ver `21-analytics.md`): `field_change` com `field_name` e `value`.
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `field_change` com `field_name` e `value`.
 
 ---
 
@@ -301,7 +307,7 @@ Select (value, onValueChange)
 
 **Acessibilidade**: aplica `role="combobox"` no trigger e `role="listbox"` + `role="option"` no conteúdo. Arrow keys navegam entre opções — comportamento nativo.
 
-**Analytics** (ver `21-analytics.md`): `option_select` com `field_name`, `value`, `label`.
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `option_select` com `field_name`, `value`, `label`.
 
 ---
 
@@ -390,7 +396,7 @@ O texto de busca e o filtro moram na RAIZ porque as duas coisas são lidas por m
 - Ao passar `filter`, o filtro do primitivo é desligado e cada opção passa a decidir a própria presença — e o grupo se esconde quando todos os filhos somem. Cabeçalho de grupo sozinho na lista é o defeito clássico de filtrar item a item.
 - Chip é rótulo de opção escolhida, não texto livre. Valor digitado que vira etiqueta é outro componente.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="combobox"` vai no INPUT, não num wrapper nem num botão — é o padrão ARIA 1.2.
 - O foco NUNCA sai do campo de texto: a opção ativa é apontada por `aria-activedescendant` e realçada por `[data-highlighted]`. Mover o foco para a opção quebraria a digitação, que é o ponto do componente.
 - `aria-expanded` acompanha a lista aberta ou fechada; `aria-autocomplete="list"` declara que digitar filtra; `aria-selected="true"` na opção escolhida; `aria-invalid="true"` quando a validação reprova.
@@ -402,7 +408,7 @@ O texto de busca e o filtro moram na RAIZ porque as duas coisas são lidas por m
 - O chip e a opção não embrulham o texto em nós `combobox-chip-text` e `combobox-item-text`: o texto chega pelo slot padrão, lado a lado com o botão de remover ou com a marca de escolhido, que é a forma que o conteúdo compartilhado ensina. Nenhuma folha e nenhum atributo de acessibilidade dependem daqueles nós.
 - O campo escondido do formulário é emitido pelo primitivo quando a raiz tem `name`, sem `data-slot="combobox-hidden-input"`.
 
-**Analytics** (ver `21-analytics.md`): `option_select` com `{ component: "combobox", field_name, value, label, location }` ao escolher uma opção; `field_change` com `{ component: "combobox", field_name, value, location }` ao remover um chip ou limpar o campo.
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `option_select` com `{ component: "combobox", field_name, value, label, location }` ao escolher uma opção; `field_change` com `{ component: "combobox", field_name, value, location }` ao remover um chip ou limpar o campo.
 
 ---
 
@@ -426,7 +432,7 @@ O texto de busca e o filtro moram na RAIZ porque as duas coisas são lidas por m
 - `aria-live="polite"` no elemento que exibe o valor — anuncia ao leitor de tela
 - Definir `min`, `max` e `step` explicitamente
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-label` obrigatório quando não há label visível associado
 - `aria-valuetext` para valores que precisam de contexto ("50 por cento" em vez de "50")
 - Arrow keys ajustam em `step`, `Shift+Arrow` em 10× step — comportamento nativo
@@ -444,13 +450,13 @@ O texto de busca e o filtro moram na RAIZ porque as duas coisas são lidas por m
 **API e exemplos**: `src/components/ui/switch/switch.vue` + stories + `SwitchDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Regras**:
-- `Switch` sempre com `Label` associado via `htmlFor`
+- `Switch` sempre com `Label` associado via `for`
 - Label descreve o estado **ativo**: "Receber notificações" (não "Notificações")
 - Efeito imediato ao alternar — não usar dentro de formulários com submit para preferências
 
 **Acessibilidade**: aplica `role="switch"` e `aria-checked` automaticamente via `data-state`.
 
-**Analytics** (ver `21-analytics.md`): `field_change` com `field_name` e `value` (string).
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `field_change` com `field_name` e `value` (string).
 
 ---
 
@@ -510,7 +516,7 @@ ToggleGroup (type="single" | "multiple")
 
 **Acessibilidade**: aplica `aria-pressed` no `Toggle` e `aria-selected` no `ToggleGroupItem`. Arrow keys navegam entre itens do grupo.
 
-**Analytics** (ver `21-analytics.md`): `field_change` com `field_name` e `value` (string ou array.join(",")).
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `field_change` com `field_name` e `value` (string ou array.join(",")).
 
 ---
 
@@ -535,19 +541,28 @@ Para formulários com múltiplas etapas sequenciais, o `Form` deste arquivo se i
 FormField > FormItem > FormLabel + FormControl + FormDescription + FormMessage
 ```
 
-**Tokens obrigatórios** (ver `16-padroes-design-sistema.md`):
-- Input/Textarea/Select: `bg-input border-input text-foreground placeholder:text-muted-foreground`
-- Focus: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
-- Erro: `border-destructive` no campo, `text-destructive` na mensagem
-- Label: `font-medium` — não sobrescrever para `font-bold`
+**Tokens obrigatórios** (ver `../../docs/shared/guidelines/04-padroes-design-sistema.md`):
+Não existe utilitária de cor de superfície: quem lê o token é a folha do próprio controle (`.nds-input`, `.nds-textarea`, `.nds-select-trigger`, `.nds-label`).
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+| Elemento | Token | Quem aplica |
+|----------|-------|-------------|
+| Fundo do campo | `--input` | `.nds-input` · `.nds-textarea` · `.nds-select-trigger` |
+| Borda do campo | `--border` | idem |
+| Texto do campo | `--foreground` | idem |
+| Texto de exemplo (placeholder) | `--muted-foreground` | idem |
+| Campo com erro | `--destructive` na borda | o controle com `aria-invalid="true"` |
+| Mensagem de erro | `--destructive` no texto | `.nds-form-error` |
+
+- Anel de foco: `.nds-focus-ring` — 2px, cor cheia de `--ring`, com afastamento
+- Rótulo: peso médio, da folha `.nds-label` — não sobrescrever para negrito
+
+**Acessibilidade transversal** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `FormControl` aplica `aria-invalid` e `aria-describedby` automaticamente — nunca adicionar manualmente
 - `aria-required="true"` em campos obrigatórios
 - `aria-live="polite"` em contadores e mensagens dinâmicas
 - Nunca rastrear `value` de campos sensíveis (senha, CPF, cartão)
 
-**Analytics transversal** (ver `21-analytics.md`):
+**Analytics transversal** (ver `../../docs/shared/guidelines/07-analytics.md`):
 
 | Evento | Quando disparar | Componentes |
 |--------|----------------|-------------|
@@ -560,7 +575,7 @@ FormField > FormItem > FormLabel + FormControl + FormDescription + FormMessage
 | `field_error` | Ao exibir erro | Qualquer campo com FormMessage |
 | `option_select` | Ao selecionar opção | Select |
 
-**UX Writing transversal** (ver `19-tom-de-voz.md`):
+**UX Writing transversal** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Labels: substantivos, sem dois-pontos, capitalização na primeira palavra
 - Placeholders: exemplos reais, nunca instruções
 - Mensagens de erro: causa + orientação, sem culpar o usuário

@@ -32,20 +32,20 @@
 - Máximo 1 botão `default` (primário) por seção.
 - Ícones apenas quando essenciais ao contexto — não decorativos por padrão.
 - Estilo personalizado via classe `.btn` do tema.
-- Alinhamento: primário sempre à direita — ver `16-padroes-design-sistema.md` → "Alinhamento de Grupos de Botões".
+- Alinhamento: primário sempre à direita — ver `docs/shared/guidelines/04-padroes-design-sistema.md` → "Alinhamento de Grupos de Botões".
 - Submit em formulários: `type="submit"` + `disabled` durante `form.formState.isSubmitting`.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-label` **contextual** em botões ambíguos — descreve a ação **e o objeto**, nunca apenas a ação. Ex.: `"Excluir produto Cadeira Gamer Pro"`, não `"Excluir"`.
 - Ícones dentro do botão: sempre `aria-hidden="true"` — o label do botão já descreve a ação.
 - Botão icon-only: `aria-label` obrigatório com verbo + objeto + identificador.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Verbos no infinitivo, máximo 3 palavras, sem pontuação.
 - Correto: "Salvar", "Criar conta", "Excluir item".
 - Incorreto: "Clique aqui", "OK", "Sim", "Enviar formulário de cadastro".
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento `button_click` com `component`, `variant`, `location`, `label`.
 - `data-track-label` idêntico ao `aria-label` ou ao texto visível.
 - Não rastrear cliques em botões `disabled`.
@@ -82,7 +82,7 @@
 
 **Propósito**: seleção de data via campo de texto com calendar popover — padrão composto de `Calendar + Popover + Button`.
 
-**API e exemplos**: `src/components/ui/date-picker.tsx` (composição) + stories + `DatePickerDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: o DatePicker **não é um primitivo** — não há `date-picker.tsx` nem docs page própria. É um padrão de composição, e vive nas stories de composição do Calendar (`src/components/ui/calendar-compositions.stories.tsx`). Esta guideline cobre apenas decisões e regras.
 
 **Estrutura de subcomponentes**:
 ```
@@ -122,7 +122,7 @@ Popover
 
 **Acessibilidade**: aplica `role="checkbox"` e `aria-checked` automaticamente, incluindo `"mixed"` para indeterminate.
 
-**UX Writing** (ver `19-tom-de-voz.md`): label descreve o estado ativo — "Receber notificações por email" em vez de "Email".
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`): label descreve o estado ativo — "Receber notificações por email" em vez de "Email".
 
 **Analytics**: evento `field_change` com `field_name` e `value` (boolean → string).
 
@@ -154,7 +154,7 @@ Form
 - Submit bloqueado com `form.formState.isSubmitting`.
 - Validação via `zodResolver(schema)` no `useForm`.
 
-**UX Writing das mensagens de erro** (ver `19-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+**UX Writing das mensagens de erro** (ver `docs/shared/guidelines/05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
 
 **Analytics**:
 
@@ -177,18 +177,28 @@ Form
 - Placeholder: exemplo real do formato — nunca instrução ("Digite seu email").
 - Placeholder **não substitui** Label — ambos são obrigatórios.
 - Ícones: apenas em formulários pequenos (login, busca) — não em formulários longos de cadastro.
-- Ícone posicionado **à esquerda** via padrão `relative/absolute/pl-*`.
-- Formulários de busca: sempre com botão de submit (pode ser `sr-only` visualmente).
-- Estilo personalizado via classe `.input` do tema.
+- Ícone posicionado **à esquerda**: envolva o campo num `.nds-input-group` e ponha o ícone num `.nds-input-group-addon` com `data-align="inline-start"`. A moldura e o anel de foco passam a viver no grupo; o controle interno recebe `.nds-input-group-control` e fica sem borda própria. Posicionar o ícone por sobreposição absoluta e abrir espaço com recuo à mão é o padrão antigo — ele não acompanha o crescimento do texto.
+- Formulários de busca: sempre com botão de submit (pode ficar visualmente oculto com `.nds-sr-only`).
 - `autoComplete` adequado ao tipo de campo.
 
-**Tokens** (ver `16-padroes-design-sistema.md`): `bg-input border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`.
+**Tokens** (ver `docs/shared/guidelines/04-padroes-design-sistema.md`) — todos aplicados pela folha `.nds-input`; não repintar o campo por fora:
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+| Slot | Token lido |
+|---|---|
+| Fundo | `--background` |
+| Borda | `--input`, com `--border` de reserva |
+| Texto | `--foreground` |
+| Placeholder | `--muted-foreground` |
+| Hover e foco | `--ring` |
+| Estado inválido (`aria-invalid="true"`) | `--destructive` |
+
+A altura do campo é **resultado** de `padding-block` mais `line-height`, nunca uma altura declarada: é o que faz o campo crescer junto com a fonte do navegador em 200% (WCAG 1.4.4).
+
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `FormControl` aplica `aria-invalid` e `aria-errormessage` automaticamente dentro de `FormField`.
 - `aria-required="true"` em campos obrigatórios.
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Apenas em funis críticos: `field_focus` e `field_blur` com `field_name`.
 - Nunca rastrear `value` de campos sensíveis: senha, CPF, cartão de crédito.
 
@@ -234,10 +244,10 @@ InputOTP (maxLength, pattern)
 - `htmlFor` obrigatório fora de `FormField` — associa o label ao campo via `id`.
 - Dentro de `FormField`, usar `FormLabel` — associação automática via contexto interno.
 - Posicionar **acima** do campo (padrão) ou à esquerda em layouts horizontais.
-- Peso tipográfico: `font-medium` — padrão do design system, não sobrescrever para `font-bold`.
-- Asterisco de obrigatório: `<span aria-hidden="true">*</span>` com `text-destructive`; campo recebe `aria-required="true"`.
+- Peso tipográfico: a folha `.nds-label` já aplica `--font-weight-medium` — não sobrescrever para negrito.
+- Asterisco de obrigatório: um `<span>` com `aria-hidden="true"` colorido por `--destructive` (utilitária `.nds-text-destructive`); o campo é quem recebe `aria-required="true"`. O asterisco é sinal visual, e sozinho não informa nada a quem usa leitor de tela.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Substantivo ou frase nominal curta, sem dois-pontos, sem ponto final.
 - Capitalização apenas na primeira palavra.
 - Correto: "Nome completo", "Email profissional".
@@ -261,7 +271,7 @@ RadioGroup (aria-label / value / onValueChange)
 - `RadioGroupItem` sempre com `Label` associado via `htmlFor` + `id`.
 - **Não pré-selecionar** por padrão — apenas quando existe um default genuíno de negócio. Pré-seleção forçada cria erros silenciosos.
 - 4+ opções: orientação vertical (padrão).
-- 2–3 opções curtas: pode usar `flex gap-6` horizontal.
+- 2–3 opções curtas: pode ficar na horizontal, num `.nds-cluster` com `data-spacing` folgado.
 
 **Acessibilidade**: aplica `role="radiogroup"` e `role="radio"` automaticamente. Arrow keys navegam entre opções.
 
@@ -389,7 +399,7 @@ Nos dois casos os botões de limpar e de abrir a lista ficam na primeira linha �
 - Chip é rótulo de opção escolhida, não texto livre. Valor digitado que vira etiqueta é outro componente.
 - Com `FormField`, o valor do campo entra em `value` e o `onChange` em `onValueChange` — nunca dois donos do mesmo valor.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `role="combobox"` vai no INPUT, não num wrapper nem num botão — é o padrão ARIA 1.2.
 - O foco NUNCA sai do campo de texto: a opção ativa é apontada por `aria-activedescendant` e realçada por `[data-highlighted]`. Mover o foco para a opção quebraria a digitação, que é o ponto do componente.
 - `aria-expanded` acompanha a lista aberta ou fechada; `aria-autocomplete="list"` declara que digitar filtra; `aria-selected="true"` na opção escolhida; `aria-invalid="true"` quando a validação reprova.
@@ -426,7 +436,7 @@ Nos dois casos os botões de limpar e de abrir a lista ficam na primeira linha �
 - `aria-live="polite"` no elemento que exibe o valor — anuncia ao leitor de tela.
 - Definir `min`, `max` e `step` explicitamente.
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-label` obrigatório quando não há label visível associado.
 - `aria-valuetext` para valores que precisam de contexto ("50 por cento" em vez de "50").
 - Arrow keys ajustam em `step`, `Shift+Arrow` em 10× step — comportamento nativo.
@@ -526,19 +536,20 @@ Para formulários com múltiplas etapas sequenciais, o `Form` se integra com o `
 FormField > FormItem > FormLabel + FormControl + FormDescription + FormMessage
 ```
 
-**Tokens obrigatórios** (ver `16-padroes-design-sistema.md`):
-- Input/Textarea/Select: `bg-input border-input text-foreground placeholder:text-muted-foreground`
-- Focus: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
-- Erro: `border-destructive` no campo, `text-destructive` na mensagem
-- Label: `font-medium` — não sobrescrever para `font-bold`
+**Tokens obrigatórios** (ver `docs/shared/guidelines/04-padroes-design-sistema.md`) — quem os aplica é a folha de cada campo:
+- Input, Textarea e Select: `--background` no fundo, `--input` na borda, `--foreground` no texto, `--muted-foreground` no placeholder
+- Foco: 2px de `--ring` em `:focus-visible` — nas folhas de campo, pela própria folha; em elementos interativos sem folha própria, pela utilitária `.nds-focus-ring`
+- Erro: `--destructive` na borda do campo (via `aria-invalid="true"`) e no texto da mensagem
+- Label: `--font-weight-medium`, aplicado por `.nds-label` — não sobrescrever para negrito
+- Nenhum campo interativo declara altura: ela sai de `padding-block` mais `line-height`, para o campo crescer com a fonte do navegador (WCAG 1.4.4)
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+**Acessibilidade transversal** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `FormControl` aplica `aria-invalid` e `aria-describedby` automaticamente — nunca adicionar manualmente
 - `aria-required="true"` em campos obrigatórios
 - `aria-live="polite"` em contadores e mensagens dinâmicas
 - Nunca rastrear `value` de campos sensíveis (senha, CPF, cartão)
 
-**Analytics transversal** (ver `21-analytics.md`):
+**Analytics transversal** (ver `docs/shared/guidelines/07-analytics.md`):
 
 | Evento | Quando disparar | Componentes |
 |--------|----------------|-------------|
@@ -551,7 +562,7 @@ FormField > FormItem > FormLabel + FormControl + FormDescription + FormMessage
 | `field_error` | Ao exibir erro | Qualquer campo com FormMessage |
 | `option_select` | Ao selecionar opção | Select |
 
-**UX Writing transversal** (ver `19-tom-de-voz.md`):
+**UX Writing transversal** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Labels: substantivos, sem dois-pontos, capitalização na primeira palavra
 - Placeholders: exemplos reais, nunca instruções
 - Mensagens de erro: causa + orientação, sem culpar o usuário

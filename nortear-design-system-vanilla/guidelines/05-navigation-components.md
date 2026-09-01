@@ -29,7 +29,7 @@ nav (aria-label="Localização na página")
 - Separadores são `aria-hidden="true"` (decorativos)
 - Item atual: `<span aria-current="page">`, nunca `<a>`
 - Gap entre itens em `--spacing-1.5` (8-grid)
-- Cor: itens navegáveis em `text-muted-foreground`; item atual em `text-foreground font-medium`
+- Cor: itens navegáveis em `--muted-foreground`; item atual em `--foreground` — ambos resolvidos pela folha `breadcrumb.css`, não por classe no call site. O item atual se distingue pela cor mais forte e por `aria-current`, não por peso de fonte
 - Não truncar labels — se necessário, usar overflow horizontal com scroll
 
 **Acessibilidade**:
@@ -69,7 +69,7 @@ Tabs (container)
 | `class` | — | Classes `.nds-*` adicionais na raiz |
 
 **Regras**:
-- TabList em `inline-flex` com `bg-muted` e `p-1` (8-grid)
+- O trilho é `.nds-tabs-list`: a folha `tabs.css` resolve o `inline-flex`, o fundo em `--muted` e o respiro interno de 8-grid. `data-variant="line"` troca o trilho pelo traço sob a aba ativa
 - Cada Tab com `aria-selected` e `aria-controls` apontando ao painel
 - Cada TabPanel com `aria-labelledby` apontando ao botão da tab
 - Painel inativo: `hidden = true` (não usar apenas `display: none` via classe)

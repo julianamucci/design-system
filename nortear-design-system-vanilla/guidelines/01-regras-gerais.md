@@ -2,11 +2,10 @@
 
 * **SEU PAPEL**: Manter a consistência do projeto seguindo ESTRITAMENTE o que está definido nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
 * **É OBRIGATÓRIO que funções de criação de componentes sigam o padrão `createNomeComponente(options): HTMLElement`**
-* **É OBRIGATÓRIO usar as classes `.nds-*` definidas em `./styles/components/*.css`** — CSS standalone; o projeto não usa nenhum framework de classe utilitária, e classe sem o prefixo `nds-` é inerte em runtime
+* **É OBRIGATÓRIO usar as classes `.nds-*` definidas em `docs/shared/styles/nds/*.css`** (alias `@shared/styles/nds/`, importado por `src/styles/globals.css`) — CSS standalone; o projeto não usa nenhum framework de classe utilitária, e classe sem o prefixo `nds-` é inerte em runtime
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca `lucide` (vanilla) para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
-* **É OBRIGATÓRIO que todos os componentes interativos tenham `focus-visible` com 2px de espessura (ring-2)**
-* **É OBRIGATÓRIO que todos os componentes interativos usem `focus-visible:ring-ring` com 100% da cor (SEM opacidade como /50 ou /30)**
+* **É OBRIGATÓRIO que todo componente interativo tenha anel de foco visível de 2px** — pela utilitária `.nds-focus-ring` ou pela regra `:focus-visible` da própria folha do componente. O anel lê `--ring` com **100% da cor**: opacidade (`/50`, `/30`) derruba o contraste do indicador de foco abaixo dos 3:1 de WCAG 1.4.11
 * **COMPATIBILIDADE MOBILE OBRIGATÓRIO**: Sempre que possível prefira "popover" a "hover card" ou "tooltip" para melhor compatibilidade com uso mobile
 * Use melhores práticas de layout flexbox e semântica web para compor páginas
 * Sistema de espaçamento baseado em múltiplos de 8px
@@ -18,16 +17,22 @@
 
 ## Padrão de criação de componentes
 
-Todos os componentes são **funções TypeScript** que criam e retornam `HTMLElement`:
+Todos os componentes são **funções TypeScript** que criam e retornam `HTMLElement`.
+
+A fábrica faz três coisas, e só três: **monta o elemento**, **escolhe as classes
+`.nds-*`** (base + modificador de variante + modificador de tamanho) e **liga os
+ouvintes**. Ela não escreve declaração de estilo nenhuma — quem resolve cor,
+espaçamento, raio, foco e estado é a folha do componente em
+`docs/shared/styles/nds/`.
 
 ```ts
-// ✅ Padrão obrigatório
+// ✅ Padrão obrigatório — a fábrica compõe classes, a folha resolve o desenho
 export interface ButtonOptions {
   label: string;
-  variant?: 'default' | 'outline' | 'ghost' | 'destructive';
-  size?: 'sm' | 'default' | 'lg';
+  variant?: 'default' | 'secondary' | 'outline' | 'ghost' | 'link' | 'destructive';
+  size?: 'xs' | 'sm' | 'default' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent) => void;
 }
 
 export function createButton(options: ButtonOptions): HTMLButtonElement {
@@ -35,26 +40,36 @@ export function createButton(options: ButtonOptions): HTMLButtonElement {
 
   const btn = document.createElement('button');
   btn.type = 'button';
+  // `.nds-button` é a base; `.nds-button-<variante>` e `.nds-button-<tamanho>`
+  // são modificadores. O tamanho `default` não tem classe: o dimensionamento
+  // base já mora em `.nds-button`.
   btn.className = cn(
-    'inline-flex items-center justify-center rounded-md font-medium transition-colors',
-    'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-    variant === 'default' && 'bg-primary text-primary-foreground hover:bg-primary/90',
-    variant === 'outline' && 'border border-input bg-background hover:bg-accent',
-    size === 'sm' && 'h-8 px-3 text-sm',
-    size === 'default' && 'h-9 px-4',
-    size === 'lg' && 'h-10 px-6',
-    disabled && 'pointer-events-none opacity-50'
+    'nds-button',
+    size !== 'default' && `nds-button-${size}`,
+    `nds-button-${variant}`,
   );
-  btn.disabled = disabled;
+  btn.disabled = disabled;                    // `:disabled` é seletor da folha
   btn.textContent = label;
 
-  if (onClick) {
-    btn.addEventListener('click', onClick);
-  }
+  if (onClick) btn.addEventListener('click', onClick);
 
   return btn;
 }
 ```
+
+**Por que não há `height` no exemplo, e por que não pode haver.** A altura de um
+primitivo com texto é **resultado** de `padding-block` + `line-height`, nunca um
+número escrito. Com altura fixa, aumentar o tamanho de fonte do navegador faz o
+texto crescer dentro de uma caixa que não cresce: ele estoura ou é recortado, e
+o componente reprova WCAG 1.4.4 (Resize Text 200%). A folha `button.css` carrega
+esse aviso no cabeçalho justamente para que ninguém o reintroduza. Tokens
+`--height-*` continuam válidos para contêiner (card, modal, barra lateral) e
+para ícone, que não têm texto para crescer.
+
+**Estado é atributo, não classe.** `disabled`, `aria-pressed`, `aria-expanded`,
+`aria-invalid`, `aria-busy` e `data-state` vão no elemento, e a folha responde a
+eles por seletor. Fábrica que troca de classe para pintar estado duplica o que a
+folha já sabe fazer e sai de sincronia na primeira mudança de tema.
 
 ## Estado de componente: `data-*` attributes
 
@@ -116,5 +131,5 @@ el.innerHTML = `<span>${inputDoUsuario}</span>`;
 el.textContent = inputDoUsuario;
 
 // ✅ innerHTML com conteúdo controlado (sem dados externos)
-el.innerHTML = `<span class="font-mono">${sanitizedMarkdown}</span>`;
+el.innerHTML = `<span class="nds-font-mono">${sanitizedMarkdown}</span>`;
 ```

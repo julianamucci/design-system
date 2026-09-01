@@ -49,7 +49,18 @@ O ComponentDocs é um componente React que renderiza a documentação completa. 
 
 #### Layout obrigatório: `DocsPageLayout`
 
-O ComponentDocs delega toda a estrutura visual ao container `DocsPageLayout`, que aplica o wrapper `.nds-page`, o `.nds-sidebar-layout` (nav sticky à esquerda + conteúdo à direita) e o ritmo vertical entre seções (`.nds-stack` com `data-spacing="2xl"`).
+O ComponentDocs delega toda a estrutura visual ao container `DocsPageLayout`. Esta é a árvore que ele monta — a única forma válida da página, e a razão de nenhuma docs page escrever layout próprio:
+
+```
+div.sb-unstyled.ds-docs.nds-page          (data-width="wide")
+├── header                                 (DocsHeader)
+└── div.nds-sidebar-layout                 (data-sidebar-sticky="true")
+    ├── nav.nds-stack                      (data-spacing="md", aria-label)
+    │   └── DocsNav
+    └── main.ds-docs.nds-stack             (data-spacing="2xl", tabindex="-1", aria-labelledby)
+```
+
+A nav gruda no alto pela folha, por `data-sidebar-sticky="true"` no `.nds-sidebar-layout` — não por classes de posicionamento e largura escritas na própria nav. O `<main>` é o alvo do "Ir para o conteúdo": `tabindex="-1"` permite o foco programático sem entrar na ordem de tabulação, e `aria-labelledby` o liga ao `h1` do `DocsHeader`, para o leitor de tela anunciar "principal, <título da página>".
 
 ```tsx
 export function NomeComponenteDocs() {
@@ -156,7 +167,7 @@ const activeSection = useActiveSection(allSectionIds, handleSectionChange);
 
 ### Navegação Interna (Sidebar)
 
-A navegação é um `<nav>` sticky que usa `IntersectionObserver` para destacar a seção visível (scroll-spy). O componente `DocsNav` cuida do HTML; a docs page fornece os grupos:
+A navegação é o `<nav>` que o `DocsPageLayout` monta — ele gruda no alto pela folha, e usa `IntersectionObserver` para destacar a seção visível (scroll-spy). O componente `DocsNav` cuida do HTML; a docs page fornece os grupos:
 
 ```tsx
 const navGroups = useMemo(() => [
@@ -266,7 +277,7 @@ Renderizado pelo `DocsHeader` já antes do layout de duas colunas (ver bloco de 
 
 **Regras:**
 - `items` é um array de strings com HTML inline (`<strong>`, `<code>`). O container sanitiza e renderiza como lista numerada
-- `structureCode` é renderizado em `<pre>` (diagrama ASCII); o container adiciona `overflow-x-auto`
+- `structureCode` é renderizado em `<pre>` (diagrama ASCII); o container já cuida da rolagem horizontal do bloco
 - Uma entrada por sub-componente / parte anatômica
 
 ---
@@ -384,7 +395,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 ```
 
 **Regras:**
-- Layout vertical (`space-y-4`) — uma variante por linha em card dedicado
+- Layout vertical — uma variante por linha, em card dedicado; o ritmo entre as linhas é do container
 - Cada card: preview do componente real + nome + descrição + toggle "Ver código" (opcional)
 - `code` é opcional — se presente, exibe botão de toggle que mostra o snippet colapsável
 - Uma entrada por valor de `cva()` — jamais gerar variantes com `<div>` estilizadas
@@ -412,7 +423,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 ```
 
 **Regras:**
-- A primeira coluna (`label`) é renderizada em `font-medium` simples — o container **não** aplica badge/pill
+- A primeira coluna (`label`) sai em peso médio, texto simples — o container **não** aplica badge nem pill
 - Componentes não interativos (ex: Alert, Badge): omitir `disabled`/`loading`
 - Componentes puramente estruturais (ex: Separator): omitir a seção inteira
 
@@ -452,7 +463,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 - Use múltiplas entradas em `tables` para componentes compostos (ex: Alert tem 3 tabelas: Alert, AlertTitle, AlertDescription; Sonner tem 2: Toaster provider + toast() API)
 - `interfaceCode` opcional — bloco em `<code>` mostrando a interface TypeScript
 - `extensibilityNotes` aceita HTML (sanitizado pelo container)
-- Nome da prop: renderizado em `font-mono font-bold text-primary` pelo container
+- Nome da prop: o container o renderiza em fonte monoespaçada, peso forte e cor `--primary`
 
 ---
 
@@ -531,7 +542,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 />
 ```
 
-Cada nota é um callout com borda esquerda colorida (`border-l-4 border-primary/40`). `content` aceita HTML sanitizado.
+Cada nota é um callout com barra colorida à esquerda, desenhada pelo container. `content` aceita HTML sanitizado.
 
 ---
 
@@ -722,8 +733,8 @@ export const Default: Story = {
 - [ ] `useTranslation` com `uiTranslations + componentTranslations`
 - [ ] `track('docs_page_view', ...)` em `useEffect([locale])`
 - [ ] `useActiveSection` ligado ao `IntersectionObserver` + `track('docs_section_viewed', ...)`
-- [ ] `<nav aria-label>` com `sticky top-8 w-52 shrink-0` envolvendo `<DocsNav>`
-- [ ] Wrapper `.ds-docs` aplicado no container `flex-1`
+- [ ] `DocsPageLayout` usado como raiz — é ele que monta o `<nav>` e o `<main>`; não escrever essa árvore à mão
+- [ ] `.ds-docs` já vem do próprio `DocsPageLayout` — não adicionar de novo
 - [ ] `navGroups` com `id` que batem exatamente com os containers renderizados
 - [ ] Demonstração, variantes e Do/Don't usam o **componente real** de `@/components/ui/<slug>` — nunca HTML inline com classes manuais
 - [ ] Até 5 arquivos de stories criados (menos se não aplicável)
@@ -772,7 +783,7 @@ Componentes como **Table** têm múltiplos sub-componentes (`Table`, `TableHeade
 
 1. **`DocsAnatomy`** — 8 items (um por sub-componente). `structureCode` mostra JSX aninhado.
 2. **`DocsVariants`** — **title**: "Composições e Tamanhos". `items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Cada `preview` monta a tabela completa.
-3. **Densidades** — segunda chamada de `DocsVariants` com composições aplicando `className="h-8|h-10|h-12"` no `TableHead`/`TableCell`. Esclarecer que densidade **não** é prop do componente.
+3. **Densidades** — segunda chamada de `DocsVariants` mostrando a mesma tabela sob cada densidade do sistema. Densidade **não** é prop do componente, e também não é altura escrita na célula: ela vem das classes `densidade-*` no `<html>`, que reescalam a escada `--spacing-*` e a tipografia, e a linha responde sozinha. Cravar altura na célula quebraria justamente o que a seção existe para mostrar — e altura fixa não cresce quando a pessoa aumenta a fonte do navegador (WCAG 1.4.4).
 4. **`DocsStates`** — apenas estados estruturais: `hover`, `selected` (via `data-state`), `empty`, `scroll`. Omitir `disabled`/`loading`.
 5. **`DocsProps`** — 8 entradas em `tables`, uma por sub-componente, documentando `className`, `children`, `colSpan`, `rowSpan`, `scope`, `data-state`. Sem props customizadas.
 6. **`DocsAnalytics`** — explicitar na descrição que Table é estrutural e não emite eventos próprios.
@@ -808,14 +819,14 @@ Componentes como **Alert** (`Alert` + `AlertTitle` + `AlertDescription`) são ba
 6. **`DocsAnalytics`** — Alert é estrutural: listar apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir `alert_dismiss` (payload: `{ label: string }`) apenas se o alerta tiver ação de dismissal.
 7. **Stories** — omitir `alert-tamanhos`. Arquivos: `.stories.tsx`, `-variantes`, `-composicoes`, `-estados`.
 8. **`role="alert"` + WCAG 4.1.3** — inserção dinâmica no DOM é anunciada por leitores de tela (ARIA Live Region implícita). Cobrir na seção de Acessibilidade e verificar com `getByRole('alert')`.
-9. **Ícone via CSS absoluto** — `[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4` no `alertVariants` posiciona qualquer SVG filho direto. Texto recuado via `[&>svg~*]:pl-7`. Documentar em `notes.note2` e na Anatomia.
+9. **Ícone por coluna de grade, não por posicionamento absoluto** — `.nds-alert:has(> svg)` abre uma coluna de 16px com 8px de folga, e o SVG recebe um deslocamento vertical leve para alinhar com a primeira linha do título. Não há recuo manual no texto: título e descrição já nascem na segunda coluna. Documentar em `notes.note2` e na Anatomia.
 
 ### Componentes de Feedback Não-Interativos Inline (padrão Badge)
 
 Componentes como **Badge** (`Badge`) são rótulos visuais compactos para status, contagens, categorias ou tags. Não têm `size` prop, não recebem foco, não têm `disabled`/`loading`. Nome, categoria **Feedback**, translations em `docs/shared/content/badge/translations.json`.
 
 1. **`DocsAnatomy`** — 4 items: `Badge` (`<span>` inline-flex), conteúdo (texto/número), ícone opcional (com `aria-hidden="true"`), prop `variant`. `structureCode` mostra `<Badge variant="...">Icon + Texto</Badge>`.
-2. **`DocsVariants`** — 5 entradas nativas do `cva()`: `default`, `destructive`, `warning`, `success`, `info`. Cada `preview` renderiza o componente real importado de `@/components/ui/badge` com texto curto apropriado (ver `demonstration.labels.*`). **Omitir seção de tamanhos** — Badge não tem prop `size`; dimensão é única (`text-xs font-semibold px-2.5 py-0.5`).
+2. **`DocsVariants`** — 5 entradas nativas do `cva()`: `default`, `destructive`, `warning`, `success`, `info`. Cada `preview` renderiza o componente real importado de `@/components/ui/badge` com texto curto apropriado (ver `demonstration.labels.*`). **Omitir seção de tamanhos** — Badge não tem prop `size`; a caixa é única e vem da folha `.nds-badge` (texto de 12px em peso médio, recuo de 8px na linha e 2px no bloco, borda de 2px). A altura é resultado desse recuo com a entrelinha, nunca uma medida declarada.
 3. **`DocsCompositions`** — 3 composições: `withIcon`, `asTrigger`, `withCounter`. **Omitir `disabled`/`loading`** — Badge é não-interativo por padrão. A seção documenta composições comuns, não estados funcionais.
 4. **`DocsProps`** — 1 única tabela para `Badge`: `variant` (`"default" | "destructive" | "warning" | "success" | "info"`), `className`, `children`. Nota de extensibilidade (`extensibilityNotes` / `props.extensibility`) deixa claro que `Badge` estende `HTMLAttributes<HTMLSpanElement>` — aceita `onClick`, `aria-*`, `data-*`, mas para interação prefira envolver em `<button>` ou `<a>` ao invés de `onClick` direto.
 5. **Play function** — estrutura e a11y, sem interação de clique:
@@ -824,7 +835,7 @@ Componentes como **Badge** (`Badge`) são rótulos visuais compactos para status
    - `getByText` confirma que o rótulo comunica o estado sem depender da cor
 6. **`DocsAnalytics`** — Badge é estrutural: listar apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir `badge_click` (payload: `{ label, variant }`) **apenas** quando o Badge funcionar como trigger clicável (envolto em `<button>` ou `<a>`).
 7. **Stories** — **omitir `badge-tamanhos` e `badge-estados`**. Arquivos obrigatórios: `badge.stories.tsx` (Playground com `parameters.docs.page: withAutoDocsTab(BadgeDocs)` + `tags: ["autodocs"]`), `badge-variants.stories.tsx` (Default, Destructive e Semantics — as três semânticas juntas numa story só, porque o que elas prometem é serem distinguíveis ENTRE SI), `badge-compositions.stories.tsx` (WithIcon, WithCounter, AsButton — uma por composição).
-8. **Sem foco próprio** — Badge é `<span>`; `keyboardItems` no `DocsAccessibility` pode usar `{ key: "—", description: "sem tab stops próprios; quando envolvido em button/a, o pai gerencia foco" }` ou ser omitido. O wrapper interativo (`<button>`, `<a>`) é quem ganha `focus:ring-*`.
+8. **Sem foco próprio** — Badge é `<span>`; `keyboardItems` no `DocsAccessibility` pode usar `{ key: "—", description: "sem tab stops próprios; quando envolvido em button/a, o pai gerencia foco" }` ou ser omitido. O wrapper interativo (`<button>`, `<a>`) é quem ganha o anel de foco.
 9. **Cor ≠ significado** — WCAG 1.4.1: o texto do Badge deve comunicar o estado sem depender da cor (ex: "Ativo" em vez de só fundo verde). Documentar em `accessibility.item2` e em um par Do/Don't.
 
 ### Componentes Modais de Confirmação (padrão AlertDialog)
@@ -846,17 +857,17 @@ Componentes como **AlertDialog** são overlays de decisão forçada.
 
 Componentes como **AspectRatio** preservam proporção largura/altura do filho. É uma implementação local — nenhuma lib headless por baixo: um `div` com `data-slot="aspect-ratio"`, classe `.nds-aspect-ratio` e a custom property `--ratio` alimentada pela prop. Não têm estado próprio, não disparam eventos, não possuem `cva()` nem prop `size` — toda interação é do filho.
 
-1. **`DocsDemonstration`** — grid responsivo (`grid-cols-1 sm:grid-cols-2 gap-6`) com 4 ratios canônicos rotulados. Labels acima de cada preview em `<p className="text-xs font-medium text-muted-foreground">`. Para ratios que crescem muito (1/1, 3/4), envolver em wrapper `max-w-[220px]` / `max-w-[260px]` para evitar cartazes gigantes.
-2. **`DocsAnatomy`** — 3 items: Root (wrapper com `padding-bottom` calculado), inner `absolute inset-0` e o filho (`img | video | iframe`). `structureCode` mostra a hierarquia em 3 níveis.
+1. **`DocsDemonstration`** — grade responsiva de duas colunas (`.nds-grid-responsive-2`) com 4 ratios canônicos rotulados. O rótulo acima de cada preview é um parágrafo em `.nds-text-caption` com `.nds-text-muted-foreground`. Para ratios que crescem muito (1/1, 3/4), conter o preview com uma utilitária de largura máxima (`.nds-max-w-2xs`, `.nds-max-w-xs`) — nunca uma medida escrita à mão.
+2. **`DocsAnatomy`** — 2 items: o container (`.nds-aspect-ratio`, que declara `aspect-ratio: var(--ratio)`) e o filho (`img | video | iframe`), que a folha estica para preencher o container. Não há terceiro nível: a proporção vem da propriedade `aspect-ratio` nativa, e não do antigo truque de `padding-bottom` com um elemento interno.
 3. **`DocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio (`alt`/`title`/captions são do filho). Manter `guidelines`, `scenarios` (5 linhas) e par `do`/`dont` (4 items cada).
-4. **`DocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`) — o `name` é o ratio em si, não um token `default`/`destructive`. Cada `preview` usa `ImageWithFallback` dentro de um wrapper `max-w-*` proporcional ao ratio. A chave `variants.note` deixa explícito no JSON que são padrões canônicos, não variantes `cva()` — a docs page consome via o próprio container.
+4. **`DocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`) — o `name` é o ratio em si, não um token `default`/`destructive`. Cada `preview` usa `ImageWithFallback` dentro de um wrapper com utilitária de largura máxima (`.nds-max-w-*`) proporcional ao ratio. A chave `variants.note` deixa explícito no JSON que são padrões canônicos, não variantes `cva()` — a docs page consome via o próprio container.
 5. **`DocsStates`** — 3 linhas descrevendo **ownership transfer** para o filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. A coluna "Gatilho" descreve o estado do filho, e "Comportamento" descreve o comportamento do container (que é sempre inerte). `states.note` explica no JSON que o componente é stateless.
 6. **`DocsProps`** — 1 tabela única com 3 linhas: `ratio` (number, obrigatório), `children` (ReactNode, obrigatório) e `className` (string); o resto são atributos nativos de `div`. `interfaceCode` mostra a interface do próprio componente. Sem múltiplas tabelas (é um elemento único, não uma composição).
-7. **`DocsTokens`** — AspectRatio não usa tokens próprios (container transparente). A tabela documenta apenas tokens aplicáveis **quando o componente é usado como placeholder** (skeleton): `--radius` → `rounded-md`, `--border` → `border border-border`, `--muted` → `bg-muted`. `tokens.note` no JSON deixa claro que sem filho o container é transparente. `customizationCode` instrui a aplicar classes de borda/radius **no filho, nunca no wrapper**.
+7. **`DocsTokens`** — AspectRatio não usa tokens próprios (container transparente). A tabela documenta apenas os tokens aplicáveis **quando o componente é usado como esqueleto de carregamento**: `--radius` (arredondamento), `--border` (contorno) e `--muted` (preenchimento). `tokens.note` no JSON deixa claro que sem filho o container é transparente. `customizationCode` instrui a aplicar classes de borda/radius **no filho, nunca no wrapper**.
 8. **`DocsAccessibility`** — `keyboardItems` com uma linha explicando que não há tab stops próprios (`key: "—"`) e uma nota sobre foco passar diretamente ao filho (video/link/iframe). `accessibility.aria.item*` foca em `data-slot="aspect-ratio"` e nas regras de `alt`/`title` do filho.
 9. **`DocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: t('analytics.note'), payload: '—' }`. A chave `analytics.note` contém a explicação "container passivo não dispara eventos próprios". Não listar `docs_page_view`/`docs_section_viewed` aqui — estes já são do layer de docs, não do componente.
 10. **Stories** — criar apenas `aspect-ratio.stories.tsx`, `aspect-ratio-variantes.stories.tsx` e `aspect-ratio-composicoes.stories.tsx`. **Omitir** `-tamanhos` (não tem prop `size`) e `-estados` (stateless). Apenas o arquivo principal leva `tags: ["autodocs"]` + `withAutoDocsTab(AspectRatioDocs)`.
-11. **`rounded-md` / `border` no filho** — regra visual absoluta. Nunca aplicar no wrapper AspectRatio (o raio cortaria o cálculo de `padding-bottom` e borderia um container vazio). Documentado nos pares Do/Don't e em `notes`.
+11. **Arredondamento e contorno vão no filho** — regra visual absoluta. Nunca no container AspectRatio: ele é transparente e sem conteúdo próprio, então a borda desenharia um retângulo vazio em volta da mídia e o raio recortaria o container, não a imagem. Documentado nos pares Do/Don't e em `notes`.
 12. **`ImageWithFallback`** — em React, usar sempre `@/components/figma/ImageWithFallback` para `<img>` dentro de AspectRatio (loading lazy/decoding async já embutidos). Nunca `<img>` cru em docs previews.
 
 ### Componentes de Navegação Hierárquica Compostos (padrão Breadcrumb)
@@ -864,16 +875,16 @@ Componentes como **AspectRatio** preservam proporção largura/altura do filho. 
 Componentes como **Breadcrumb** (`Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbPage`, `BreadcrumbSeparator`, `BreadcrumbEllipsis`) são compostos por sub-componentes e **não usam `cva()`**. A aparência é uniforme; o que varia é a **composição** (com/sem ellipsis, separador customizado, colapso responsivo). Categoria **Navigation**, translations em `docs/shared/content/breadcrumb/translations.json`.
 
 1. **Sem `cva()` / sem prop `variant`** — a aparência do Breadcrumb é consistente. Não criar prop `variant` nem `size`. Customização de separador e níveis vêm por **composição** (children) e `className`.
-2. **`DocsAnatomy`** — 7 items: `Breadcrumb` (nav), `BreadcrumbList` (ol), `BreadcrumbItem` (li), `BreadcrumbLink` (a), `BreadcrumbPage` (span + aria-current), `BreadcrumbSeparator` (li + aria-hidden, ChevronRight default), `BreadcrumbEllipsis` (span + sr-only). `structureCode` mostra a hierarquia `nav > ol > li > (a | span)` com separadores intercalados.
+2. **`DocsAnatomy`** — 7 items: `Breadcrumb` (nav), `BreadcrumbList` (ol), `BreadcrumbItem` (li), `BreadcrumbLink` (a), `BreadcrumbPage` (span + aria-current), `BreadcrumbSeparator` (li + aria-hidden, ChevronRight default), `BreadcrumbEllipsis` (span + texto visualmente oculto). `structureCode` mostra a hierarquia `nav > ol > li > (a | span)` com separadores intercalados.
 3. **`DocsVariants`** — **title**: "Configurações Disponíveis". `items` com 4 entradas: `default`, `withEllipsis`, `customSeparator`, `responsive`. Cada `preview` monta a composição completa com links reais e último item como `BreadcrumbPage`. **Nota obrigatória** em `variants.note`: "O Breadcrumb não tem variantes visuais — o que varia é a composição."
 4. **`DocsStates`** — 4 configurações: `simple`, `withEllipsis`, `customSeparator`, `asChildLink`. Não são estados funcionais — são padrões de composição. Omitir `disabled`/`loading`/`error`.
 5. **`DocsProps`** — 7 tables (uma por subcomponente): `Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbLink` (com `href`, `render`), `BreadcrumbPage`, `BreadcrumbSeparator` (com `children` para separador custom), `BreadcrumbEllipsis`. Todos aceitam `className` + atributos HTML nativos.
-6. **`DocsTokens`** — 7 tokens: `--muted-foreground` (links inativos), `--foreground` (hover e página atual), `--ring` (focus), `--text-sm` (fonte da lista), espaçamento `gap-1.5` entre itens, e `size-3.5` (separador) / `size-5` (ellipsis) para ícones.
+6. **`DocsTokens`** — 7 tokens: `--muted-foreground` (links inativos), `--foreground` (hover e página atual), `--ring` (foco), `--text-control` (fonte da lista), `--spacing-1-5` (folga entre itens) e as medidas de ícone do separador (14px) e das reticências (`--spacing-5`).
 7. **`DocsAccessibility`** — regras obrigatórias:
    - `<nav aria-label="breadcrumb">` no root
    - `aria-current="page"` no `BreadcrumbPage` (aplicado automaticamente)
    - `aria-hidden="true"` + `role="presentation"` em `BreadcrumbSeparator` e `BreadcrumbEllipsis`
-   - Texto `sr-only "More"` dentro do `BreadcrumbEllipsis`
+   - Texto visualmente oculto (`.nds-sr-only`) dentro do `BreadcrumbEllipsis`, nomeando a ação de expandir
    - Contraste 4.5:1 em links inativos (`muted-foreground` sobre `background`)
 8. **`DocsAnalytics`** — eventos de produto:
    - `navigation_click` (payload `{ component: 'breadcrumb', label, destination, location }`) em clique de `BreadcrumbLink`
@@ -892,10 +903,10 @@ Componentes como **Avatar** (`Avatar`, `AvatarImage`, `AvatarFallback`, sobre o 
 
 1. **Sem `cva()`; o tamanho é `data-size`, não classe** — o Root expõe `size` (`sm` 24 · `md` 32 padrão · `lg` 40 · `xl` 48 · `2xl` 64) e o traduz em `data-size`, que o CSS compartilhado consome. **Não** documentar tamanho como classe de altura/largura: classe fora do vocabulário `.nds-*` é inerte, e `data-size="default"` não casa com seletor nenhum.
 2. **`DocsVariants`** — **title**: "Composições" ou equivalente. `items` com 5 entradas canônicas: `image`, `initials`, `icon`, `group`, `withStatus`. Cada `preview` monta a composição completa (Root + filhos + wrappers absolutos quando aplicável). Não há variantes `cva()`.
-3. **`DocsAnatomy`** — 4 items: `Avatar` (Root), `AvatarImage`, `AvatarFallback`, e o elemento sibling de status (quando aplicável) / ring em grupos. `structureCode` mostra a hierarquia `<Avatar><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
+3. **`DocsAnatomy`** — 4 items: `Avatar` (raiz, que recebe `size` e o emite como `data-size`), `AvatarImage`, `AvatarFallback` e `AvatarBadge` — o indicador de status é **filho** do Avatar, posicionado pela folha no canto, e a raiz não o recorta. Para fila de avatares, `AvatarGroup` com `AvatarGroupCount` ao fim. `structureCode` mostra a hierarquia `<Avatar size="…"><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
 4. **`DocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error` — Avatar é passivo. A coluna "Gatilho" descreve o estado da imagem (`onLoadingStatusChange`); "Comportamento" descreve qual filho o primitivo renderiza.
 5. **`DocsProps`** — 3 tables: `Avatar` (`size`, `className`, `children`), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `className`), `AvatarFallback` (`delayMs`, `className`, `children`). `src` e `alt` são **obrigatórios** em `AvatarImage`. `delayMs={600}` é o valor canônico no `AvatarFallback`.
-6. **`DocsTokens`** — 7 tokens: `--muted` (`bg-muted` no Fallback), `--muted-foreground` (texto das iniciais), `--background` (`ring-background` em grupos e status), `--border`, `--primary` (indicador de status online), `--radius` (formato circular fixo), `--ring` (foco herdado do link/botão que envolve o Avatar).
+6. **`DocsTokens`** — 7 tokens: `--muted` (fundo do Fallback), `--muted-foreground` (texto das iniciais), `--background` (contorno que separa avatares sobrepostos e halo do badge de status), `--border`, `--primary` (indicador de status online), `--radius-full` (formato circular) e `--spacing-*` (a escada de onde saem os cinco presets de `--avatar-size`: 24, 32, 40, 48 e 64px).
 7. **`DocsAccessibility`** — regras obrigatórias: (a) `alt` descritivo (`"Foto de perfil de [Nome]"`) em `AvatarImage` quando é a única pista visual; (b) `alt=""` + `AvatarFallback aria-hidden="true"` quando o nome já está visível ao lado; (c) indicador de status com `<span aria-label="Online">` (ou equivalente); (d) grupo opcional com `role="group" aria-label="Participantes"` no wrapper; (e) contraste das iniciais ≥ 4.5:1.
 8. **`DocsAnalytics`** — Avatar é passivo: listar apenas os eventos da docs (`docs_page_view`, `docs_section_viewed`, `language_switched`). Incluir `avatar_click` (`{ component: 'avatar', location, label }`) **apenas** quando o Avatar está envolvido por link/botão em produto.
 9. **`DocsDoDont`** — pares canônicos: (a) "com fallback de iniciais" vs "sem fallback" (imagem quebrada resulta em container vazio); (b) "iniciais como 2 letras maiúsculas" vs "iniciais em minúsculas/3+ letras".
@@ -910,7 +921,7 @@ Componentes como **Calendar** (`react-day-picker v9`: `Calendar`, `CalendarDayBu
 1. **Sem `cva()` / sem prop `size` ou `variant`** — o Root aplica classes funcionais via `classNames` map (override por slot do `react-day-picker`) e `buttonVariant` reutiliza as variantes do `Button`. **Não criar prop `variant` no Calendar.**
 2. **`DocsVariants`** — **title**: "Modos e Layouts". `items` com 6 entradas não-exclusivas: `single`, `multiple`, `range` (modos), `captionDropdown`, `withWeekNumber`, `numberOfMonths` (layouts/config). Cada `preview` renderiza o Calendar real com a prop correspondente. Não há variantes `cva()`. **Nota obrigatória** em `variants.note`: "O Calendar não tem variantes `cva()` — o que varia é a composição/props".
 3. **`DocsAnatomy`** — 6 items: `Calendar` (Root), `Nav`, `MonthCaption`, `Weekdays`, `Day` (célula), `DayButton` (botão interno). `structureCode` mostra `<Calendar mode="single" selected onSelect locale />` com comentários dos valores aceitos por prop.
-4. **`DocsStates`** — 6 linhas: `default`, `selected`, `disabled`, `today`, `outside`, `rangeMiddle`. A coluna "Gatilho" descreve a prop/condição (`selected` contém a data, `disabled` casa, `showOutsideDays` ativo, etc.); "Comportamento" descreve classes e atributos ARIA (`aria-selected`, `aria-disabled`, `bg-primary`, `bg-muted`, `opacity-50`).
+4. **`DocsStates`** — 6 linhas: `default`, `selected`, `disabled`, `today`, `outside`, `rangeMiddle`. A coluna "Gatilho" descreve a prop/condição (`selected` contém a data, `disabled` casa, `showOutsideDays` ativo, etc.); "Comportamento" descreve os atributos ARIA (`aria-selected`, `aria-disabled`) e o efeito visual em palavras — preenchimento com `--primary` na seleção, `--muted` no dia de hoje e no miolo do intervalo, opacidade reduzida no desabilitado.
 5. **`DocsProps`** — **2 tabelas**: `Calendar` (Root — 11 props: `mode`, `selected`, `onSelect`, `locale`, `disabled`, `showOutsideDays`, `captionLayout`, `buttonVariant`, `numberOfMonths`, `className`, `classNames`) e `CalendarDayButton` (subcomponente auxiliar exportado). `mode`, `selected` e `onSelect` **são interdependentes** — o tipo de `selected` depende do `mode`. Documentar explicitamente na descrição da prop.
 6. **`DocsTokens`** — 7 tokens: `--primary` + `--primary-foreground` (seleção), `--muted` (hoje + range middle), `--muted-foreground` (outside days + weekdays), `--foreground` (default), `--ring` (focus no DayButton), `--radius-md` (`--cell-radius` local), `--cell-size` (variável local que define o tamanho fixo de cada célula).
 7. **`DocsAccessibility`** — regras obrigatórias: (a) `role="grid"` no container (herdado do react-day-picker); (b) Arrow keys navegam entre dias/semanas; (c) Page Up/Down muda mês (Shift para ano); (d) Home/End vão para início/fim da semana; (e) `aria-label` do DayButton traz a data por extenso **no locale ativo**; (f) `aria-selected` e `aria-disabled` automáticos; (g) Chevrons dos botões de navegação com `aria-hidden="true"`. `keyboardItems` cobre 5 entradas: `arrows`, `pageUpDown`, `homeEnd`, `enter`, `tab`.
@@ -935,12 +946,12 @@ Componentes como **Calendar** (`react-day-picker v9`: `Calendar`, `CalendarDayBu
 
 Componentes como **Card** (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter`) são containers estruturais compostos. **Não usam `cva()`** — em vez disso, têm prop `size="default"|"sm"` que propaga via `data-size` no root e subcomponentes reagem via seletores `group-data-[size=sm]/card`. Categoria **Layout**, translations em `docs/shared/content/card/translations.json`.
 
-1. **Sem `cva()` / com prop `size`** — a variação visual vem da prop `size` em vez de variants de `cva()`. O Card aplica `data-size={size}` no root e os subcomponentes consultam esse atributo via `group-data-[size=sm]/card:*` (padding, font-size). **Não criar variantes `cva()`.**
+1. **Sem `cva()` / com prop `size`** — a variação visual vem da prop `size`, não de variantes de `cva()`. O Card emite `data-size` na raiz e a folha ajusta recuo e tipografia dos subcomponentes por descendência desse atributo. **Não criar variantes `cva()`.**
 2. **`DocsVariants`** — **title**: "Tamanhos e Composições". `items` com 5 entradas: `default`, `sm` (tamanhos), `withFooter`, `withAction`, `withImage` (composições). A nota (`variants.note`) deixa claro que não são variantes `cva()` — são `size` + composição de subcomponentes.
 3. **`DocsAnatomy`** — 7 items (um por subcomponente): Card (root), CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter. `structureCode` mostra a composição hierárquica.
 4. **`DocsStates`** — 5 linhas: `default`, `small`, `interactive`, `withImage`, `withFooter`. Omitir `disabled`/`loading` (Card é passivo).
 5. **`DocsProps`** — **7 tabelas** (uma por subcomponente). O Card tem `size` + `className` + `children`; demais subcomponentes aceitam `className` + atributos HTML nativos de `<div>`. Todos estendem `React.ComponentProps<"div">` via `...props`.
-6. **`DocsTokens`** — 7 tokens: `--radius-card` (CSS var local aplicada via `rounded-(--radius-card)`), `--card` (fundo), `--card-foreground` (texto), `--muted` (footer `bg-muted/50`), `--muted-foreground` (CardDescription), `--foreground` (ring `ring-foreground/10`), `--border` (divisor acima do CardFooter).
+6. **`DocsTokens`** — 7 tokens: `--radius-card` (arredondamento do cartão), `--card` (fundo), `--card-foreground` (texto), `--muted` (fundo do rodapé, a meia opacidade), `--muted-foreground` (CardDescription), `--foreground` (o contorno de 1px a 10%, que a folha expõe como `--card-ring`) e `--border` (divisor acima do CardFooter).
 7. **`DocsAccessibility`** — regras obrigatórias:
    - Container **passivo** — Card não recebe foco nem eventos de teclado
    - `CardTitle` como âncora via `aria-labelledby` quando o Card é anunciado como região
@@ -950,10 +961,10 @@ Componentes como **Card** (`Card`, `CardHeader`, `CardTitle`, `CardDescription`,
 8. **`DocsAnalytics`** — Card é estrutural: listar apenas `docs_page_view`/`docs_section_viewed`/`language_switched` por padrão. Incluir `button_click` (quando há Button no footer) e `card_click` (quando o Card inteiro é navegável via wrapper `<a>`/`<button>`).
 9. **`DocsDoDont`** — pares canônicos: (a) Card com título + descrição + ações vs Card como divisor visual; (b) botões com `aria-label` contextual vs botões ambíguos em listas.
 10. **Stories** — criar 4 arquivos: `card.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(CardDocs)`), `card-tamanhos.stories.tsx` (Default, Small), `card-composicoes.stories.tsx` (WithFooter, WithAction, WithImage, ProductCard, MetricCard, ProfileCard), `card-estados.stories.tsx` (Default, Clickable, WithFooter). **Não criar** `card-variantes.stories.tsx` — Card não tem `cva()`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
-11. **`data-size` contagioso** — regra visual absoluta: a prop `size` só fica no Card root. Os subcomponentes **nunca** aceitam prop `size` — eles reagem via `group-data-[size=sm]/card:*` consultando o atributo do root. Documentar em `notes.tip3`.
-12. **`CardFooter` detecta-se via `has-`** — o Card usa `has-data-[slot=card-footer]:pb-0` para absorver o padding inferior quando o footer existe. Sem isso, o footer dobra o espaçamento visual. Documentar em `notes.tip1`.
-13. **Imagem como primeiro/último filho** — o Card aplica `*:[img:first-child]:rounded-t-(--radius-card)` e `*:[img:last-child]:rounded-b-(--radius-card)` + remove o padding correspondente (`has-[>img:first-child]:pt-0`). Não precisa classes manuais nas imagens. Documentar em `notes.tip2`.
-14. **`CardAction` como grid slot** — `grid-cols-[1fr_auto]` ativado apenas quando `CardAction` está presente (via `has-data-[slot=card-action]`). A ação fica à direita mantendo ordem DOM original — leitores de tela anunciam na ordem lógica (título → descrição → ação), não na ordem visual (título → ação → descrição).
+11. **`data-size` contagioso** — regra visual absoluta: a prop `size` só fica no Card raiz. Os subcomponentes **nunca** aceitam prop `size`; quem os ajusta é a folha, por descendência do atributo da raiz (`.nds-card[data-size="sm"] .nds-card-title` e semelhantes). Documentar em `notes.tip3`.
+12. **`CardFooter` detecta-se pelo próprio seletor** — `.nds-card:has(> .nds-card-footer)` zera o recuo inferior do cartão quando o rodapé existe. Sem isso, o rodapé dobra o espaçamento visual. Documentar em `notes.tip1`.
+13. **Imagem como primeiro/último filho** — `.nds-card:has(> img:first-child)` zera o recuo superior e `:has(> img:last-child)` o inferior; a imagem rompe o recuo lateral para sangrar até as bordas e herda o arredondamento do lado em que está. Não é preciso classe nenhuma na imagem. Documentar em `notes.tip2`.
+14. **`CardAction` como coluna de grade** — `.nds-card-header:has(> .nds-card-action)` passa o cabeçalho para duas colunas (texto e ação) só quando a ação existe. A ação fica à direita mantendo a ordem original do DOM — leitores de tela anunciam na ordem lógica (título → descrição → ação), não na ordem visual (título → ação → descrição).
 
 ### Componentes de Visualização de Dados (padrão Chart)
 

@@ -47,20 +47,20 @@ Accordion (multiple?, defaultValue?, value?, onValueChange?)
 - Máximo de 8–10 itens — acima disso, considere categorizar ou adicionar busca
 - Não aninhar Accordions
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - O base-ui aplica automaticamente `role="button"`, `aria-expanded`, `aria-controls` no trigger e `role="region"` no content — não reimplementar
 - `AccordionTrigger` renderiza um `<button>` nativo — teclado funciona out of the box
 - Navegação por teclado: `Tab` move entre triggers, `Enter`/`Space` expande/colapsa, `↓`/`↑` movem entre triggers quando o foco está dentro do accordion
 - Animação respeita `prefers-reduced-motion` automaticamente (via CSS)
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - `AccordionTrigger`: pergunta direta (FAQ) ou frase nominal (documentação)
 - FAQ: frase interrogativa completa — "Como faço para redefinir minha senha?"
 - Documentação: substantivo ou frase nominal — "Especificações técnicas", "Política de devolução"
 - Sem ponto final em frases nominais; com ponto de interrogação em perguntas
 - `AccordionContent`: resposta objetiva, máximo 3–4 linhas — conteúdo longo sugere que o item deveria ser uma página própria
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Dispare eventos no consumidor via `onValueChange` — não monkey-patch `onClick` no trigger.
 - Eventos: `accordion_expand` / `accordion_collapse` com `label` e `value`.
 - No modo single o array tem 0 ou 1 elemento; no modo multiple pode ter N. Compare o tamanho antes/depois para detectar expand vs collapse.
@@ -103,28 +103,28 @@ Collapsible (open?, onOpenChange?, defaultOpen?)
 | `defaultOpen` | `false` | Modo não-controlado. Use quando a seção é autossuficiente e o consumidor não precisa do estado. |
 | `disabled` | `false` | Bloqueia interação. |
 
-> **API base-ui**: o componente usa `@base-ui/react/collapsible`. A prop `asChild` foi removida na migração base-nova — para usar um Button como trigger, use `render={<Button />}`. O trigger emite `data-state="open"|"closed"` (CSS pode usar `[data-state=open]:rotate-180`).
+> **API base-ui**: o componente usa `@base-ui/react/collapsible`. A lib expõe a composição por `render={<Button />}`; o `CollapsibleTrigger` desta stack mantém `asChild` como ponte sobre ela, e as duas formas valem. O trigger emite `data-state="open"|"closed"`, que é o gancho para girar o chevron pelo seletor de estado — nunca por classe alternada em JS.
 
 **Regras de uso**:
-- `CollapsibleTrigger` deve ter label acessível — texto visível ou `<span className="sr-only">` quando for só ícone
+- `CollapsibleTrigger` deve ter nome acessível — texto visível, ou um `<span>` visualmente oculto com `.nds-sr-only` quando o gatilho for só ícone
 - Ícone do trigger deve indicar o estado: chevron para baixo (fechado) / para cima (aberto) — via classe condicional ou seletor `[data-state=open]`
 - Modo controlado quando o estado precisa ser sincronizado com outro elemento da UI
 - Modo não-controlado para seções independentes (filtros, detalhes opcionais)
 - Não usar para múltiplas seções relacionadas — esse é o caso do Accordion
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - O base-ui aplica `aria-expanded` e `aria-controls` automaticamente — não reimplementar
-- Trigger apenas com ícone: incluir `<span className="sr-only">` descrevendo a ação completa ("Exibir filtros avançados", não apenas "Expandir")
+- Trigger apenas com ícone: incluir um `<span>` com `.nds-sr-only` descrevendo a ação completa ("Exibir filtros avançados", não apenas "Expandir")
 - Alterar o label conforme o estado: "Exibir" quando fechado, "Ocultar" quando aberto
-- Animações customizadas no `CollapsibleContent` precisam de `motion-reduce:animate-none` ou `motion-reduce:transition-none`
+- A folha do Collapsible já para a própria animação sob `prefers-reduced-motion: reduce`. Animação personalizada acrescentada ao `CollapsibleContent` tem de parar sob a mesma preferência — a folha não conhece o que foi escrito por cima dela
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Label do trigger: verbo no infinitivo + objeto — "Exibir filtros avançados", "Ocultar detalhes"
 - Alternar o label com o estado: "Exibir" quando fechado, "Ocultar" quando aberto
 - Evitar labels genéricos: "Ver mais", "Toggle", "Expandir" sem contexto
 - Header da seção (texto irmão do trigger): substantivo ou frase nominal — "Filtros avançados", "Informações técnicas"
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento `collapsible_toggle` via `onOpenChange`, com `label` e `value` ("open" / "closed").
 - Rastreie apenas quando a seção tem importância na jornada — não rastreie colapsáveis decorativos ou de baixo valor de negócio.
 
@@ -149,14 +149,14 @@ Collapsible (open?, onOpenChange?, defaultOpen?)
 | Alternância entre views paralelas | Tabs |
 | Etapas sequenciais obrigatórias | Stepper |
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+**Acessibilidade transversal** (ver `docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-expanded` e `aria-controls` aplicados automaticamente pelo base-ui em ambos — nunca adicionar manualmente
 - Triggers sempre são `<button>` — navegação por teclado nativa garantida
 - Ícones de estado (`ChevronDown`) sempre com `aria-hidden="true"` — o estado é comunicado via `aria-expanded`
 - Labels de trigger devem descrever o conteúdo, não a ação mecânica: "Detalhes do pedido" em vez de "Clique para expandir"
-- Animações respeitam `prefers-reduced-motion` por default — animações customizadas adicionadas precisam de `motion-reduce:animate-none`
+- As folhas `.nds-*` já respeitam `prefers-reduced-motion: reduce`; animação personalizada acrescentada por cima precisa parar sob a mesma preferência
 
-**Analytics transversal** (ver `21-analytics.md`):
+**Analytics transversal** (ver `docs/shared/guidelines/07-analytics.md`):
 
 | Componente | Evento | Payload |
 |------------|--------|---------|
@@ -164,7 +164,7 @@ Collapsible (open?, onOpenChange?, defaultOpen?)
 | Accordion | `accordion_collapse` | `label` |
 | Collapsible | `collapsible_toggle` | `label`, `value` ("open"\|"closed") |
 
-**UX Writing transversal** (ver `19-tom-de-voz.md`):
+**UX Writing transversal** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Triggers de Accordion: frase interrogativa (FAQ) ou frase nominal (documentação)
 - Triggers de Collapsible: verbo + objeto alternado com o estado ("Exibir" / "Ocultar")
 - Conteúdo expansível: objetivo e conciso — conteúdo longo sugere que o item merece página própria

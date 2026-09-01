@@ -85,39 +85,25 @@ render: (args) => ({
 
 ## Estrutura Obrigatória da Docs Page
 
-### Layout do `<template>`
+### Árvore do layout
 
-```vue
-<template>
-  <div class="ds-docs p-8 max-w-5xl mx-auto">
-    <DocsHeader
-      :title="tContent('title')"
-      :description="tContent('description')"
-      :category="tContent('category')"
-      :type="tContent('type')"
-    />
+A moldura não se monta à mão em cada página: ela é o `DocsPageLayout`, com um slot para o cabeçalho e o slot padrão para as seções. A árvore que ele produz é esta, e é a mesma nas cinco stacks:
 
-    <div class="flex gap-16 items-start">
-      <nav
-        aria-label="Navegação das seções do componente"
-        class="sticky top-8 w-52 shrink-0 self-start space-y-5"
-      >
-        <DocsNav :groups="navGroups" :active-section="activeSection" />
-      </nav>
-
-      <div class="ds-docs flex-1 min-w-0 space-y-12">
-        <!-- Containers de seção, na ordem canônica -->
-      </div>
-    </div>
-  </div>
-</template>
+```
+div.sb-unstyled.ds-docs.nds-page          (data-width="wide")
+├── header                                 (DocsHeader)
+└── div.nds-sidebar-layout                 (data-sidebar-sticky="true")
+    ├── nav.nds-stack                      (data-spacing="md", aria-label)
+    │   └── DocsNav
+    └── main.ds-docs.nds-stack             (data-spacing="2xl", tabindex="-1", aria-labelledby)
 ```
 
 **Regras do layout:**
-- `<nav>` com `sticky top-8 w-52 shrink-0 self-start` é obrigatório — sem ele, `DocsNav` rola junto com a página
-- `aria-label` no `<nav>` diferencia a navegação de outras `<nav>`
-- `flex-1 min-w-0` no conteúdo permite overflow responsivo (tabelas e blocos de código)
-- `.ds-docs` aplica resets tipográficos específicos da doc
+- As duas colunas e o comportamento fixo da navegação são de `.nds-sidebar-layout[data-sidebar-sticky="true"]` — a folha faz a fixação, a largura da coluna e o alinhamento ao topo. Esta seção já prescreveu essas quatro coisas como classes obrigatórias na `<nav>`; era a forma antiga, e reproduzi-la hoje disputa com a folha em vez de somar a ela
+- O ritmo vertical vem de `.nds-stack` com `data-spacing`: `md` entre os blocos da navegação, `2xl` entre as seções do conteúdo. Não substituir por margem avulsa entre irmãos
+- `aria-label` no `<nav>` diferencia esta navegação das outras `<nav>` da página
+- O conteúdo é um `<main>`, não um `<div>`: é o marco de conteúdo, alvo do "Ir para o conteúdo" do Storybook. `tabindex="-1"` o mantém fora da ordem de tabulação mas focável por programa, e `aria-labelledby` aponta para o `<h1>` do cabeçalho, para o leitor anunciar "principal, [título da página]"
+- `sb-unstyled` desliga as regras tipográficas do Storybook na subárvore; `.ds-docs` aplica os resets tipográficos da doc; `.nds-page[data-width="wide"]` dá o teto de largura e o recuo lateral
 
 ### `<script setup>` — contrato obrigatório
 
@@ -324,7 +310,7 @@ Passe a demo via slot padrão. A demo **DEVE** importar o componente real de `@/
 
 Slot `#variant-preview-{index}` por variante. O campo `code` é **opcional** — quando presente, o container renderiza um botão "Ver código" que expande um bloco de código.
 
-**Layout obrigatório: vertical (`space-y-4`).** Cada card ocupa largura total — não usar grid.
+**Layout obrigatório: vertical.** `.nds-stack` com `data-spacing="md"` — cada card ocupa largura total, não usar grade.
 
 **DocsExamples foi removido:** exemplos de código agora ficam embutidos em cada item de `DocsVariants` via o campo `code`.
 
@@ -351,7 +337,7 @@ Slot `#variant-preview-{index}` por variante. O campo `code` é **opcional** —
 
 ### 8. Estados (`id="estados"`)
 
-Tabela de estados — label da primeira coluna é `font-medium` (nunca badge).
+Tabela de estados — o rótulo da primeira coluna vai em peso médio (`.nds-font-medium`), nunca em badge.
 
 ```vue
 <DocsStates
@@ -377,7 +363,7 @@ Tabela de estados — label da primeira coluna é `font-medium` (nunca badge).
       cols: { prop: 'Prop', type: 'Tipo', default: 'Padrão', required: 'Obrig.', description: 'Descrição' },
       items: [
         { name: 'variant', type: '\"default\" | \"destructive\"', defaultValue: '\"default\"', required: 'Não', description: 'Controla cor e ícone' },
-        { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: 'Classes adicionais' },
+        { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: 'Classes adicionais' },
       ]
     },
     { title: 'AlertTitle', cols: {...}, items: [...] },
@@ -497,7 +483,7 @@ Componentes como **Accordion** implementam ARIA Disclosure via sub-componentes (
 2. **`DocsAnatomy`** — 4 items: Root, Item, Trigger, Content.
 3. **`DocsStates`** — `closed`, `open`, `focus`, `disabled`. Omitir `loading`.
 4. **`DocsProps`** — 4 tables: `Accordion` (Root), `AccordionItem`, `AccordionTrigger`, `AccordionContent`.
-5. **`DocsTokens`** — 7 tokens; incluir `--animate-accordion-up` / `--animate-accordion-down`.
+5. **`DocsTokens`** — 7 tokens. Os de movimento são `--duration-panel` e `--ease-size`, que a folha `accordion.css` consome nas animações de abrir e fechar. Esta linha já mandou documentar `--animate-accordion-up` / `--animate-accordion-down`: **não existem** — a animação virou `@keyframes` nomeado dentro da folha, e o que resta de customizável é o par duração/curva.
 6. **Analytics** — além dos eventos de docs, `accordion_expand { label }` ao expandir e `accordion_collapse { label }` ao fechar.
 7. **Stories** — arquivos: `.stories.ts`, `-modos`, `-estados`, `-composicoes`. Omitir `-variantes` e `-tamanhos`.
 8. **Play function** — 6 critérios: clicar trigger fechado abre; clicar aberto (collapsible) fecha; modo single alterna; disabled bloqueia; Enter expande; Space expande. Verificar `aria-expanded` via `toHaveAttribute`.
@@ -532,9 +518,9 @@ Componentes como **Badge** (single root `<div>`) são rótulos visuais compactos
 Componentes como **AlertDialog** são overlays de decisão forçada — não possuem `cva()` próprio; severidade vem do `Button` usado em Trigger/Action.
 
 1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`) como padrões contextuais. Cada `preview` usa `:default-open="true"` no Root para Chromatic capturar o modal aberto.
-2. **`DocsAnatomy`** — 9 items: Root, Trigger, Content, Header, Title, Description, Footer, Cancel, Action. `structureCode` mostra JSX aninhado completo.
+2. **`DocsAnatomy`** — 9 items: Root, Trigger, Content, Header, Title, Description, Footer, Cancel, Action. `structureCode` mostra a árvore aninhada completa.
 3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
-4. **`DocsProps`** — 5 tables: Root (`open`, `defaultOpen`, `onOpenChange`), Trigger (`asChild`), Content (`className`), Action (`onClick`, `className`), Cancel (`onClick`, `className`).
+4. **`DocsProps`** — 5 tables: Root (`open`, `default-open`, `@update:open`), Trigger (`as-child`), Content (`class`), Action (`@click`, `class`), Cancel (`@click`, `class`).
 5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, radius.
 6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
 7. **`DocsAccessibility`** — `role="alertdialog"` anuncia imediatamente sem exigir foco (diferente de `dialog`). Foco inicial no Cancel.
@@ -546,32 +532,33 @@ Componentes como **AlertDialog** são overlays de decisão forçada — não pos
 
 Componentes como **AspectRatio** (base: `reka-ui`) preservam proporção largura/altura do filho. Não têm estado, não disparam eventos, não possuem `cva()` nem prop `size` — toda interação é do filho.
 
-1. **`DocsDemonstration`** — grid responsivo (`grid-cols-1 sm:grid-cols-2 gap-6`) com 4 ratios canônicos rotulados. Labels em `<p class="text-xs font-medium text-muted-foreground">`. Ratios que crescem muito (1/1, 3/4) usam wrapper `max-w-[220px]` / `max-w-[260px]`.
-2. **`DocsAnatomy`** — 3 items: Root (`data-slot="aspect-ratio"` com `padding-bottom` calculado pelo Reka), inner `absolute inset-0` e o filho (`img | video | iframe`).
+1. **`DocsDemonstration`** — grade responsiva: `.nds-grid-responsive-2` mais `.nds-sm-grid-2`, com 4 ratios canônicos rotulados. Rótulos em `<p class="nds-text-caption nds-font-medium nds-text-muted-foreground">`. Ratios que crescem muito (1/1, 3/4) recebem um teto de largura da escada — `.nds-max-w-3xs`, e não uma medida cravada por fora.
+2. **`DocsAnatomy`** — 3 items: Root (`data-slot="aspect-ratio"`, com a proporção declarada nativamente pela folha via `--ratio`), o filho estirado sobre o container inteiro pela própria folha, e o conteúdo (`img | video | iframe`). O truque antigo de recuo inferior calculado saiu junto com a lib.
 3. **`DocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio. Passar apenas `guidelines`, `scenarios` (5 linhas) e `do`/`dont` (4 items cada).
 4. **`DocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`). O `name` é o próprio ratio. `variants.note` no JSON deixa explícito que são padrões canônicos, não `cva()`.
 5. **`DocsStates`** — 3 linhas descrevendo **ownership transfer** ao filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. Coluna "Gatilho" descreve o estado do filho; "Comportamento" descreve a inércia do container. `states.note` explica que o componente é stateless.
-6. **`DocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `children` / slot (obrigatório), `asChild` (boolean, default false), `class` (string).
-7. **`DocsTokens`** — AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder** (skeleton): `--radius` → `rounded-md`, `--border` → `border border-border`, `--muted` → `bg-muted`. `tokens.note` no JSON deixa claro que o container é transparente sem filho. `customizationCode` instrui a aplicar borda/radius **no filho**, nunca no wrapper.
+6. **`DocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `children` / slot (obrigatório), `as-child` (boolean, default false), `class` (string).
+7. **`DocsTokens`** — AspectRatio não usa tokens próprios. Documentar apenas os que valem **quando usado como placeholder**, onde quem os lê é a folha `.nds-skeleton`: `--radius`, `--border` e `--muted`. `tokens.note` no JSON deixa claro que o container é transparente sem filho. `customizationCode` instrui a aplicar borda/radius **no filho**, nunca no wrapper.
 8. **`DocsAccessibility`** — `keyboardItems` com linha `{ key: "—", description: "sem tab stops próprios" }` + nota sobre foco passar ao filho. `accessibility.aria.item*` foca em `data-slot="aspect-ratio"` e `alt`/`title` do filho.
 9. **`DocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: tContent('analytics.note'), payload: '—' }`. Não listar `docs_page_view`/`docs_section_viewed` aqui (são do layer de docs, não do componente).
 10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless). Só o arquivo principal leva `tags: ["autodocs"]`.
-11. **`rounded-md` / `border` no filho** — regra visual absoluta: nunca aplicar no wrapper AspectRatio.
+11. **Raio e borda no filho** — regra visual absoluta: `.nds-rounded-md` e a borda vão no elemento de dentro, nunca no wrapper AspectRatio.
 
 ### Componentes Display Compositionais com Estados (padrão Avatar)
 
-Componentes como **Avatar** (base: `reka-ui` — `Avatar`, `AvatarImage`, `AvatarFallback`) são displays passivos com **composições** em vez de variantes `cva()`. Têm tamanho padrão (`h-10 w-10`) aplicado no Root e estados internos de carregamento.
+Componentes como **Avatar** (`Avatar`, `AvatarImage`, `AvatarFallback`, mais `AvatarBadge`, `AvatarGroup` e `AvatarGroupCount`) são displays passivos com **composições** em vez de variantes de aparência. Têm eixo de tamanho por preset e estados internos de carregamento.
 
-1. **Sem `cva()` / sem prop `size`** — o Root aplica `h-10 w-10` fixo. Tamanhos (`h-6 w-6`, `h-8 w-8`, `h-10 w-10`, `h-12 w-12`) vêm **sempre** via `class`. **Não criar prop `size`.**
+1. **Tamanho é prop, não classe** — o Avatar TEM prop `size`, com `sm` (24px), `md` (32px, padrão), `lg` (40px), `xl` (48px) e `2xl` (64px). Ela chega ao DOM como `data-size`, e a folha `.nds-avatar[data-size]` define `--avatar-size`; dela derivam também o corpo das iniciais, o badge de status e o contador do grupo. Esta seção já mandou o contrário — "sem prop `size`, o Root aplica `h-10 w-10` fixo, tamanhos vêm sempre via `class`" — e era falso nos dois sentidos: a prop existe e a utilitária de altura foi retirada de propósito, porque mudava o círculo e deixava iniciais e badge no tamanho antigo. A forma antiga é ativamente proibida: `avatar.source.test.ts` afirma que os construtores de snippet **não contêm** `nds-size-`.
+   - Consequência para a docs page: a seção de tamanhos documenta os cinco presets como valores da prop, e o eixo de composições segue separado dela.
 2. **`DocsVariants`** — **title**: "Composições". `items` com 5 entradas: `image`, `initials`, `icon`, `group`, `withStatus`. Cada slot `#variant-preview-N` monta a composição completa usando o componente real. Sem `cva()`.
-3. **`DocsAnatomy`** — 4 items: `Avatar` (Root), `AvatarImage`, `AvatarFallback`, e o sibling de status ou o ring em grupos. `structureCode` mostra `<Avatar><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
+3. **`DocsAnatomy`** — 4 items: `Avatar` (Root), `AvatarImage`, `AvatarFallback` e `AvatarBadge` (indicador de status, filho do Root; em grupo, o anel de separação é da folha `.nds-avatar-group`). `structureCode` mostra `<Avatar><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
 4. **`DocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error`. `onLoadingStatusChange` é o gatilho do estado; o `reka-ui` decide qual filho renderizar.
-5. **`DocsProps`** — 3 tables: `Avatar` (`class`, default slot), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `class`), `AvatarFallback` (`delayMs`, `class`, default slot). `src` e `alt` obrigatórios em `AvatarImage`. Usar `delayMs={600}` como valor canônico.
-6. **`DocsTokens`** — 7 tokens: `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius` (`rounded-full` fixo), `--ring`.
+5. **`DocsProps`** — 3 tables: `Avatar` (`class`, default slot), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `class`), `AvatarFallback` (`delay-ms`, `class`, default slot). Incluir também a prop `size` na tabela do `Avatar`. `src` e `alt` obrigatórios em `AvatarImage`. Usar `delay-ms="600"` como valor canônico.
+6. **`DocsTokens`** — `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius-full` (o círculo é fixo) e `--ring`. Somar `--avatar-size`, que é o ponto de customização do tamanho fora dos cinco presets.
 7. **`DocsAccessibility`** — obrigatórios: (a) `alt` descritivo (`"Foto de perfil de [Nome]"`) no `AvatarImage` quando é única pista visual; (b) `alt=""` + `AvatarFallback aria-hidden="true"` quando o nome está visível ao lado; (c) `<span :aria-label="…">` no indicador de status; (d) grupo com `role="group" :aria-label="…"` no wrapper (opcional, contextual); (e) contraste das iniciais ≥ 4.5:1.
 8. **`DocsAnalytics`** — Avatar é passivo: apenas eventos da docs (`docs_page_view`, `docs_section_viewed`, `language_switched`). Incluir `avatar_click` **apenas** quando envolvido por link/botão em produto.
 9. **`DocsDoDont`** — pares canônicos: (a) "com fallback" vs "sem fallback" (imagem quebrada = container vazio); (b) "iniciais 2 letras maiúsculas" vs "iniciais minúsculas/3+ letras".
-10. **Stories** — 4 arquivos: `avatar.stories.ts` (+ `withAutoDocsTab(AvatarDocs)`), `avatar-composicoes.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.ts` (Size6, Size8, Size10 default, Size12), `avatar-estados.stories.ts` (Loaded, Loading com `delayMs`, Failed, NoImage). **Não criar `avatar-variantes.stories.ts`**. Apenas o principal leva `tags: ["autodocs"]`. Se precisar de wrapper de interação, criar `AvatarStory.vue`.
+10. **Stories** — 4 arquivos: `avatar.stories.ts` (+ `withAutoDocsTab(AvatarDocs)`), `avatar-composicoes.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.ts` (uma story por preset: `sm`, `md` como padrão, `lg`, `xl`, `2xl`), `avatar-estados.stories.ts` (Loaded, Loading com `delay-ms`, Failed, NoImage). **Não criar `avatar-variantes.stories.ts`**. Apenas o principal leva `tags: ["autodocs"]`. Se precisar de wrapper de interação, criar `AvatarStory.vue`.
 11. **`AvatarFallback` obrigatório** — regra absoluta: toda instância com `AvatarImage` precisa de `AvatarFallback` irmão. Sem ele, falha/demora de `src` resulta em container vazio. Documentar em par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira letra do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
 
@@ -611,7 +598,7 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: o `C
 
 5. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. O estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
 
-6. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual `sr-only` à parte. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
+6. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual à parte, visualmente oculto com `.nds-sr-only`. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
 
 7. **`DocsNotes`** — 5 tips (`notes.tip1`–`tip5`). A altura é entrada do componente (prop `height` ou `style`), nunca classe utilitária de altura: o design system não tem utility de altura para gráfico, e sem valor vale o piso de `.nds-chart`.
 
@@ -642,11 +629,11 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: o `C
 - [ ] Nenhum HTML de seção inline no `<template>` da docs
 - [ ] `DocsHeader` com category/type
 - [ ] `DocsDemonstration` com slot padrão usando o componente real
-- [ ] `DocsVariants` com layout vertical (`space-y-4`) e campo `code` opcional por item
+- [ ] `DocsVariants` com layout vertical (`.nds-stack` `data-spacing="md"`) e campo `code` opcional por item
 - [ ] `DocsDoDont` com slots `#do-preview-N` / `#dont-preview-N` (um por par)
 - [ ] `DocsProps` com tables array (múltiplos para componentes compostos)
-- [ ] `DocsStates` — labels `font-medium`, sem badges
-- [ ] Layout `flex gap-16 items-start` com `<nav sticky top-8 w-52 shrink-0 self-start>`
+- [ ] `DocsStates` — rótulos em peso médio (`.nds-font-medium`), sem badges
+- [ ] Layout montado pelo `DocsPageLayout`: `.nds-sidebar-layout[data-sidebar-sticky="true"]` com `<nav class="nds-stack" data-spacing="md">` e `<main class="nds-stack" data-spacing="2xl" tabindex="-1">`
 - [ ] `locale` de `useTranslation()`, nunca de Pinia
 - [ ] `useSeoEffect` com computed reativo ao locale
 - [ ] `watch(locale)` dispara `track('docs_page_view')`

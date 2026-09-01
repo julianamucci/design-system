@@ -13,8 +13,8 @@
 **Estrutura**:
 
 ```
-div container (divide-y divide-border)
-└── AccordionItem (data-value)
+div container
+└── .nds-accordion-item (data-value) — a folha divide um item do outro
     ├── button trigger (aria-expanded, aria-controls)
     │   ├── label
     │   └── chevron (aria-hidden, transition-transform)
@@ -37,12 +37,12 @@ div container (divide-y divide-border)
 - `aria-controls` no trigger aponta ao ID do content
 - Content com `role="region"` + `aria-labelledby` apontando ao trigger
 - Colapsado: `content.hidden = true` (não apenas classe CSS)
-- Animação do chevron com `motion-reduce:transition-none`
+- O giro do chevron é da folha: `.nds-accordion-icon` gira por `data-state`, e o bloco `@media (prefers-reduced-motion: reduce)` de `accordion.css` já o para. A redução de movimento é regra do sistema, cumprida em cada folha — não é uma classe a pendurar no elemento. Só animação AUTORAL, fora das folhas, precisa se declarar, e para isso existe `.nds-motion-reduce-none`
 - Padding do trigger e content em `--spacing-4` (8-grid)
 
 **Acessibilidade**:
 - Navegação por teclado: Setas ↑↓ entre triggers, Home/End para primeiro/último
-- Foco visível obrigatório: `ring-2 ring-ring ring-offset-2`
+- Foco visível obrigatório no trigger: anel de 2px lendo `--ring` em 100% da cor, pelo `:focus-visible` da folha do accordion ou por `.nds-focus-ring`
 - Conteúdo focável dentro do panel é alcançável apenas quando expandido
 
 **Analytics**: emitir `accordion_expand` / `accordion_collapse` com `{ label }` no clique.

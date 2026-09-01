@@ -6,10 +6,16 @@
 
 ### Tokens de fundo por tipo
 
-| Tipo de overlay | Token correto | Componentes |
-|-----------------|---------------|-------------|
-| Painel de conteúdo (modal, lateral) | `bg-card text-card-foreground` | Dialog, Sheet, Drawer |
-| Menu e overlay flutuante | `bg-popover text-popover-foreground` | DropdownMenu, Popover, Tooltip, Command |
+A cor de superfície não tem classe utilitária: quem a aplica é a folha do
+componente, lendo o token. A regra é qual PAR de tokens vale para cada tipo.
+
+| Tipo de overlay | Tokens | Componentes |
+|-----------------|--------|-------------|
+| Painel de conteúdo (modal, lateral) | `--card` / `--card-foreground` | Dialog, Sheet, Drawer |
+| Menu e overlay flutuante | `--popover` / `--popover-foreground` | DropdownMenu, Popover, Tooltip, Command |
+
+O véu atrás do painel modal é da folha `.nds-dialog-overlay` — não se escreve
+uma cor semitransparente no template.
 
 ### Comportamento de teclado
 
@@ -39,13 +45,13 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 ```
 AlertDialog
 ├── AlertDialogTrigger (asChild → Button)
-└── AlertDialogContent (bg-card text-card-foreground)
+└── AlertDialogContent (superfície --card / --card-foreground)
     ├── AlertDialogHeader
     │   ├── AlertDialogTitle
     │   └── AlertDialogDescription
     └── AlertDialogFooter
         ├── AlertDialogCancel
-        └── AlertDialogAction (bg-destructive em ações destrutivas)
+        └── AlertDialogAction (variante destrutiva do botão em ações destrutivas)
 ```
 
 **Regras de UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
@@ -69,7 +75,7 @@ AlertDialog
 ```
 Dialog
 ├── DialogTrigger (asChild → Button)
-└── DialogContent (bg-card text-card-foreground)
+└── DialogContent (superfície --card / --card-foreground)
     ├── DialogHeader
     │   ├── DialogTitle (obrigatório)
     │   └── DialogDescription (obrigatório)
@@ -97,7 +103,7 @@ Dialog
 ```
 Drawer (direction: top | bottom | left | right)
 ├── DrawerTrigger (asChild → Button)
-└── DrawerContent (bg-card text-card-foreground)
+└── DrawerContent (superfície --card / --card-foreground)
     ├── DrawerHeader
     │   ├── DrawerTitle
     │   └── DrawerDescription
@@ -128,12 +134,12 @@ DropdownMenu
     ├── DropdownMenuLabel
     ├── DropdownMenuSeparator
     ├── DropdownMenuItem
-    └── DropdownMenuItem (text-destructive em ações destrutivas)
+    └── DropdownMenuItem (variante destrutiva em ações destrutivas)
 ```
 
 **Regras**:
 - Trigger icon-only requer `aria-label` contextual
-- Itens destrutivos usam `text-destructive focus:text-destructive`
+- Item destrutivo se declara pela variante do item — a folha o pinta em `--destructive` e mantém a cor no estado focado. A cor não é o único sinal: o texto do item diz a consequência ("Excluir conta"), não só "Excluir"
 
 ---
 
@@ -165,7 +171,7 @@ Popover
 ```
 Sheet
 ├── SheetTrigger (asChild → Button)
-└── SheetContent (side: left | right | top | bottom, bg-card text-card-foreground)
+└── SheetContent (side: left | right | top | bottom; superfície --card / --card-foreground)
     ├── SheetHeader
     │   ├── SheetTitle (obrigatório)
     │   └── SheetDescription (obrigatório)

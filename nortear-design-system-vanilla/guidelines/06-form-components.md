@@ -27,7 +27,7 @@ button
 | `ghost` | Ação terciária / icon-only |
 | `link` | Ação textual |
 
-**Tamanhos**: `sm`, `default`, `lg`, `icon`.
+**Tamanhos**: `xs`, `sm`, `default`, `lg`, mais a família só de ícone — `icon-xs`, `icon-sm`, `icon`, `icon-lg`.
 
 **Regras**:
 - Espaçamento entre botões: **mínimo `--spacing-4`** (16px), ou seja `data-spacing="md"` no cluster que os agrupa. Abaixo disso o par lê como um controle segmentado, e a área de erro entre dois alvos adjacentes encolhe. Vale para par de ações, fileira de variantes e barra de ferramentas.
@@ -39,7 +39,7 @@ button
   - Portão: `button_gap_apertado` no `audit.mjs`.
 - Padding vertical via `--spacing-*`, nunca altura fixa (ver memória "nunca usar altura fixa em primitivos")
 - Icon-only requer `aria-label` descritivo
-- Ícone interno: `aria-hidden="true"`, dimensões `h-4 w-4` (ou `h-5 w-5` em `lg`)
+- Ícone interno: `aria-hidden="true"`. O tamanho é da folha — `.nds-button > svg` dá 16px, e cada degrau de tamanho ajusta o seu; medida escrita no call site briga com o degrau escolhido
 - Ação destrutiva: confirmação por Dialog antes da execução
 - Gap entre ícone e label em `--spacing-2`
 
@@ -61,9 +61,9 @@ button
 **Estrutura**:
 
 ```
-wrapper (space-y-2)
+wrapper .nds-stack (data-spacing="sm")
 ├── label (htmlFor=id)
-├── input (id, type, name)
+├── input .nds-input (id, type, name)
 └── p#<id>-error (role="alert", quando há erro)
 ```
 
@@ -82,8 +82,8 @@ wrapper (space-y-2)
 - `<label>` sempre associado via `htmlFor`/`id` (nunca placeholder como label)
 - Placeholder deve ser exemplo real — `'ex: ana@empresa.com'`, não `'Digite seu e-mail'`
 - Padding vertical em `--spacing-1`, horizontal em `--spacing-3`; nunca altura fixa
-- Tokens obrigatórios: `bg-input`, `border-input`
-- Foco visível: `ring-2 ring-ring ring-offset-2`
+- A superfície é da folha: `.nds-input` lê `--input` no fundo e `--border` no contorno. Não há utilitária de cor de superfície a acrescentar
+- Foco visível de 2px lendo `--ring` em 100% da cor — vem do `:focus-visible` de `.nds-input`, ou de `.nds-focus-ring` onde o campo for montado à mão
 - Estado de erro: `aria-invalid="true"` + `aria-describedby` para a mensagem
 
 **Acessibilidade**:
@@ -203,7 +203,7 @@ O campo de texto mora DENTRO de `combobox-chips`, e não ao lado dela. A caixa d
 **Estrutura**:
 
 ```
-form (noValidate, space-y-4)
+form .nds-stack (noValidate, data-spacing="md")
 ├── Input fields (cada um com errorId)
 ├── submit button
 └── erros inline (inseridos via showFieldError)

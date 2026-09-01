@@ -127,7 +127,7 @@ O contador é o número à direita do texto, **dentro** da mesma etiqueta. Ele �
 
 **Regras**:
 - Estrutura do skeleton deve refletir a estrutura do conteúdo final (preserva layout)
-- Animação respeita `motion-reduce`
+- A pulsação vem da folha `.nds-skeleton`, que já para sob `prefers-reduced-motion` — animação personalizada por cima tem de parar também
 
 **Acessibilidade**:
 - `aria-busy="true"` no container pai enquanto carregando

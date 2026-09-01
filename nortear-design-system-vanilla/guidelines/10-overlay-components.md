@@ -6,10 +6,20 @@
 
 ### Tokens de fundo por tipo
 
-| Tipo de overlay | Token correto | Uso |
+**Nenhuma cor de fundo se escreve no call site.** Cada overlay tem folha, e é a
+folha que lê o token. Aplicar a classe do painel é o que aplica a superfície.
+
+| Tipo de overlay | Quem lê o token | Tokens |
 |---|---|---|
-| Painel de conteúdo (modal, lateral) | `bg-card text-card-foreground` | Dialog, Sheet, Drawer |
-| Menu e overlay flutuante | `bg-popover text-popover-foreground` | Dropdown, Popover, Tooltip |
+| Painel de conteúdo (modal, lateral) | `.nds-dialog-content`, `.nds-alert-dialog-content`, `.nds-sheet-content` | superfície do painel + `-foreground` do par |
+| Menu e overlay flutuante | `.nds-dropdown-menu-content`, `.nds-popover-content`, `.nds-tooltip-content` | `--popover` / `--popover-foreground` |
+| Véu atrás do painel modal | `.nds-dialog-overlay`, `.nds-alert-dialog-overlay`, `.nds-sheet-overlay` | resolvido pela folha — **nunca** um valor no call site |
+
+> **Pendência medida.** As três folhas de painel modal não concordam entre si
+> hoje: `dialog.css` lê `--popover`, enquanto `alert-dialog.css` e `sheet.css`
+> leem `--background`. Nenhuma lê `--card`, que é o que esta guideline pedia
+> antes. Enquanto a divergência existir, a regra que vale é a estrutural — a
+> classe do painel resolve a superfície, e ninguém pinta fundo por fora.
 
 ### Comportamento de teclado — implementar manualmente
 
@@ -20,14 +30,14 @@ Em Vanilla TS, os comportamentos de teclado são implementados explicitamente em
 - **Restaurar foco**: ao fechar, devolver o foco ao elemento que abriu o overlay
 - **Click fora**: backdrop fecha overlay; Tooltip não fecha por click
 
-### Z-index padrão
+### Camadas — token, nunca número
 
-| Camada | Z-index |
-|---|---|
-| Dropdown / Popover / Tooltip | `50` |
-| Backdrop de Dialog/Sheet | `50` |
-| Dialog/Sheet painel | `50` |
-| Toast | `50` (acima de overlays não-modais) |
+Da mais baixa para a mais alta: `--z-dropdown` → `--z-sticky` → `--z-fixed` →
+`--z-modal-backdrop` → `--z-modal` → `--z-popover` → `--z-tooltip` → `--z-toast`.
+Cada folha lê o seu degrau; a ordem é a garantia de que o balão de um controle
+dentro do modal aparece por cima dele, e de que o aviso temporário aparece por
+cima de tudo. Empatar tudo num número só desfaz essa garantia. **Não existe
+utilitária de camada** (`.nds-z-*`): quem precisa de um degrau usa o token.
 
 ---
 
@@ -40,9 +50,9 @@ Em Vanilla TS, os comportamentos de teclado são implementados explicitamente em
 **Estrutura**:
 
 ```
-backdrop (fixed inset-0, bg-black/80)
-dialog (role="dialog", aria-modal, aria-labelledby, aria-describedby)
-├── close button (absolute top-right, aria-label="Fechar dialog")
+.nds-dialog-overlay (data-state)                  ← véu; a folha o cobre e o pinta
+.nds-dialog-content (role="dialog", aria-modal, aria-labelledby, aria-describedby)
+├── close button (canto superior, aria-label="Fechar dialog")
 ├── h2 title (id referenciado por aria-labelledby)
 ├── p description (id referenciado por aria-describedby)
 ├── content
@@ -61,12 +71,12 @@ dialog (role="dialog", aria-modal, aria-labelledby, aria-describedby)
 
 **Regras**:
 - `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + `aria-describedby` (todos obrigatórios)
-- Backdrop opaco em `bg-black/80`; click fecha
-- Escape fecha; Tab/Shift+Tab faz focus trap
+- O véu é `.nds-dialog-overlay`, e só isso. **Cor literal é proibida** — o próprio sistema exige token, e a folha `dialog.css` já resolve a cobertura, o desfoque e a camada. Escrever `preto a 80%` no call site tira o véu do tema: ele deixa de responder ao modo escuro e às marcas, e vira o único ponto da página imune à troca de tema
+- Clique no véu fecha; Escape fecha; Tab/Shift+Tab faz focus trap
 - Foco inicial: close button ou primeiro elemento focável
 - Ao fechar: restaurar foco ao trigger original
-- Painel: `bg-card text-card-foreground`, `rounded-lg`, padding em `--spacing-6`
-- Largura máxima `max-w-lg`; centralizado via `translate-x-[-50%] translate-y-[-50%]`
+- O painel é `.nds-dialog-content`: superfície, raio e respiro interno vêm da folha, não do call site
+- **Posição e largura também são da folha.** Ela centraliza o painel e limita a largura; conta de centralização escrita à mão duplica o que a folha faz e sai de sincronia com a variante lateral. Quando a largura precisa mudar num caso pontual, o degrau é `.nds-max-w-lg` (ou o vizinho na escada `.nds-max-w-*`) — nunca uma medida solta
 - Não aninhar Dialogs — usar fluxo sequencial
 
 **Acessibilidade**:
@@ -150,12 +160,12 @@ A fábrica devolve `open()`, `close()`, `toggle()` e `isOpen()` além do `destro
 **Estrutura**:
 
 ```
-div wrapper (relative inline-block)
+div wrapper
 ├── trigger (aria-haspopup, aria-expanded)
-└── menu (role="menu", absolute, bg-popover, hidden quando fechado)
-    ├── button (role="menuitem")
-    ├── hr (role="separator") — opcional
-    └── button (role="menuitem", destructive opcional)
+└── .nds-dropdown-menu-content (role="menu", data-side, data-align; hidden quando fechado)
+    ├── .nds-dropdown-menu-item (role="menuitem")
+    ├── .nds-dropdown-menu-separator (role="separator") — opcional
+    └── .nds-dropdown-menu-item[data-variant="destructive"]
 ```
 
 **Opts da factory**:
@@ -181,11 +191,12 @@ A conta de posição é a mesma do Popover e do Tooltip, e mora num lugar só (`
 - Trigger com `aria-haspopup="true"` + `aria-expanded` atualizado
 - Menu com `role="menu"`; itens com `role="menuitem"`
 - Separadores com `role="separator"` e `aria-hidden="true"`
-- Tokens: `bg-popover text-popover-foreground`; hover `bg-accent text-accent-foreground`
-- Itens destrutivos: `text-destructive` no estado normal e hover
+- A superfície é da folha: `.nds-dropdown-menu-content` lê `--popover` / `--popover-foreground`
+- O realce do item — ponteiro em cima ou foco de teclado — é de `.nds-dropdown-menu-item`, que responde a `:hover`, `:focus` e `[data-highlighted]` lendo `--accent` / `--accent-foreground`. Os três precisam existir: só `:hover` deixa quem navega por teclado sem saber onde está
+- Item destrutivo se marca por `data-variant="destructive"`, e a folha pinta com `--destructive` no estado normal e no realce. Não é classe de cor solta
 - Click fora fecha; Escape fecha e devolve foco ao trigger
 - Navegação por teclado: Setas ↑↓ entre itens, Enter executa
-- Largura mínima `min-w-[8rem]`; padding dos itens em `--spacing-2 × --spacing-1.5`
+- Largura mínima e respiro interno dos itens vêm da folha; medida no call site desalinha um menu do outro
 
 **Acessibilidade**:
 - `role="menu"` + `role="menuitem"` obrigatórios
@@ -273,9 +284,9 @@ div wrapper (relative inline-block)
 - Aparece em hover **e** focus; desaparece em mouseleave **e** blur
 - Não pode conter conteúdo interativo (botões, links) — usar Popover nesses casos
 - Texto curto (máx ~50 chars); para conteúdo longo, usar Popover
-- Tokens: `bg-popover text-popover-foreground`, `border-border`, `text-xs`
-- Posição padrão: acima do trigger (`bottom-full mb-2`)
-- Z-index `50`
+- A superfície é de `.nds-tooltip-content`, que lê `--popover` / `--popover-foreground` e `--border`; o corpo do balão está na escada tipográfica do sistema (`.nds-text-caption`), não num tamanho escrito
+- A posição é de `.nds-tooltip-positioner`, alimentado pelo cálculo compartilhado de `src/lib/floating.ts` — o mesmo do Popover e do menu. Deslocamento escrito à mão ignora a borda da janela e o balão sai da tela na primeira dobra
+- A camada vem de `--z-tooltip`, lido pela folha
 - A espera de abertura é POR CHAMADA (`delayDuration`, padrão 300ms) — nunca uma constante de módulo, que obrigaria a página inteira ao mesmo tempo
 - Um conjunto de balões (barra de ícones, régua de ações) compartilha a espera por um provedor: dentro da janela de `skipDelayDuration` o balão seguinte abre na hora, porque quem já parou uma vez não precisa provar de novo
 - Marcação dentro do balão — um atalho em `<kbd>`, uma palavra em `<strong>` — entra como ELEMENTO já montado, nunca como HTML em string (guideline 09)

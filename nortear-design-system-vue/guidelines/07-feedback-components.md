@@ -52,9 +52,10 @@ Alert (variant)
 **Regras**:
 - Ícone colocado como **filho direto** do `<Alert>`, antes de `AlertTitle` — sem `<div>` wrapper
 - `AlertTitle` é opcional — omitir quando a `AlertDescription` já é autoexplicativa
-- Para variantes success e warning, usar `bg-*/10` e `border-*/30` para fundo suave — não fundo sólido
+- O fundo suave e a borda de cada variante são da folha (`.nds-alert-success`, `.nds-alert-warning`, e assim por diante) — a prop `variant` é o único ponto de entrada. Nunca pintar o fundo por fora, nem em sólido: sobre superfície sólida o texto corrido perde os 4.5:1
+- Texto corrido dentro do alerta é sempre `--foreground`. Ícone e título podem carregar a cor semântica, porque são elementos curtos e respondem ao piso de 3:1; descrição e corpo, não — o contraste não pode depender da variante escolhida
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="alert"` aplicado automaticamente — leitores de tela anunciam o conteúdo ao ser inserido no DOM
 - Para alerts inseridos dinamicamente, adicionar `aria-live="polite"` no container pai
 - `aria-live="assertive"` apenas para erros críticos que exigem atenção imediata
@@ -157,7 +158,7 @@ depender da variante escolhida.
 - Consistência obrigatória: mesma semântica de cor em todo o produto (não usar `destructive` para promoções)
 - Badge clicável (filtro, chip, gatilho): envolver a etiqueta em `<button>`, nunca pendurar clique na própria etiqueta — quem tem foco, teclado e evento é o elemento de fora
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - Badge puramente decorativo (repetindo informação já visível): `aria-hidden="true"`
 - Badge de status sem contexto visual adjacente: `aria-label` descritivo — ex: `aria-label="Status: Ativo"`
 - Ícones dentro do badge: `aria-hidden="true"` — o texto do badge já descreve o estado
@@ -185,7 +186,7 @@ depender da variante escolhida.
 - Sempre exibir porcentagem ou rótulo textual próximo ao componente — o Progress não exibe texto por padrão
 - Cor do indicador customizada via `[&>div]:bg-*` — o componente não tem variantes de cor nativas
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `role="progressbar"`, `aria-valuenow`, `aria-valuemin` e `aria-valuemax` aplicados automaticamente via prop `value`
 - `aria-label` obrigatório — descreve o que está sendo medido
 - `aria-live="polite"` no elemento que exibe o valor textual — anuncia mudanças ao leitor de tela
@@ -204,16 +205,17 @@ depender da variante escolhida.
 **API e exemplos**: `src/components/ui/skeleton/skeleton.vue` + stories + `SkeletonDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Regras**:
-- Dimensões do Skeleton devem aproximar as do conteúdo final — evita layout shift ao carregar
-- `rounded-full` para avatares e ícones circulares, `rounded-md` para retângulos
+- Dimensões do Skeleton devem aproximar as do conteúdo final — evita salto de layout ao carregar. Elas vêm dos presets da folha `.nds-skeleton`, não de medida cravada: `data-shape="text|heading|avatar|fill"` para a forma e `data-width="full|3-4|2-3|1-2|1-3"` para a largura
+- A forma do bloco vem do `data-shape`: `avatar` já nasce circular e com a medida da escada de tamanhos; `fill` preenche um container que já estabelece a caixa (AspectRatio, célula, slot de card). Não recriar círculo nem proporção por fora
+- Variar a largura entre linhas é o que faz o bloco parecer parágrafo em vez de tabela — usar mais de um `data-width` num mesmo bloco de texto
 - Não aninhar Skeletons em estruturas muito complexas — 2–3 elementos por bloco são suficientes
-- Animação padrão: `animate-pulse` — aplicada automaticamente pelo componente
+- Animação padrão: pulsação de opacidade, da própria folha — o componente não precisa de classe de animação avulsa
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `aria-hidden="true"` nos Skeletons — são decorativos, leitores de tela não devem anunciá-los
 - `aria-busy="true"` no container pai enquanto o conteúdo carrega — anuncia o estado de loading
 - `aria-label` no container descrevendo o que está carregando — "Carregando lista de usuários"
-- `motion-reduce:animate-none` obrigatório — usuários com distúrbios vestibulares podem desativar animações
+- A pulsação para sob `prefers-reduced-motion`, e a folha `.nds-skeleton` já faz isso: quem tem distúrbio vestibular desliga a animação no sistema operacional e o esqueleto fica estático. Animação personalizada acrescentada por cima tem de parar sob a mesma condição — se vier de utilitária de animação avulsa, somar `.nds-motion-reduce-none`
 
 **Analytics**: passivo — não dispara eventos. Rastrear tempo de carregamento no callback que substitui o Skeleton pelo conteúdo real, não no componente.
 
@@ -258,7 +260,7 @@ depender da variante escolhida.
 - Nunca usar toast para mensagens que exigem leitura longa — máximo 1 frase
 - `richColors` no `<Toaster />` para aplicar as cores do tema automaticamente
 
-**Acessibilidade** (ver `11-acessibilidade.md`):
+**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - O Sonner usa `aria-live="polite"` internamente — toasts são anunciados ao leitor de tela sem interromper o fluxo
 - Toasts com ação (`action.label`) são focáveis por teclado — o usuário pode Tab para o botão de ação
 - Não usar Sonner para erros de formulário — usar `FormMessage` que já gerencia `aria-invalid`
@@ -286,12 +288,12 @@ depender da variante escolhida.
 | Inserido no fluxo da página | Sobreposto, não bloqueia |
 | Erros críticos, avisos importantes | Sucesso, info, avisos não-críticos |
 
-**Acessibilidade transversal** (ver `11-acessibilidade.md`):
+**Acessibilidade transversal** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
 - `aria-hidden="true"` em Skeleton e em ícones decorativos dentro de Alerts e Badges
 - `aria-busy="true"` no container durante loading (Skeleton, Progress)
 - `aria-live="polite"` para mudanças dinâmicas não críticas; `aria-live="assertive"` apenas para erros críticos
-- `motion-reduce:animate-none` obrigatório em Skeleton
+- Animação personalizada tem de parar sob `prefers-reduced-motion` — as folhas `.nds-*` já param; o que se acrescenta por cima delas, não
 
 **Analytics transversal** (ver `../../docs/shared/guidelines/07-analytics.md`):
 

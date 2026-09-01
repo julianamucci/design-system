@@ -11,17 +11,18 @@
 **Estrutura**:
 
 ```
-AspectRatio
-└── child (img | video | iframe) — position: absolute; inset: 0; object-cover
+.nds-aspect-ratio (a razão vem da custom property --ratio)
+└── child (img | video | iframe) — a folha já o põe em absolute/inset e 100%
 ```
 
 **Ratios comuns**: `16/9`, `1`, `4/3`, `3/4`.
 
 **Regras**:
-- O container é `position: relative` com `padding-bottom` calculado por `(1 / ratio) * 100%`
-- O child fica em `position: absolute; inset: 0` e ocupa 100% do container
-- Não definir altura fixa no container — a razão é controlada por padding
-- Tokens: usar utilitários `.nds-*` (`nds-object-cover`, `nds-w-full`, `nds-h-full`) quando disponíveis em `styles/components/utilities.css`; caso contrário, aplicar CSS inline com tokens (`width: 100%`, `height: 100%`, `object-fit: cover`). Margens externas via classes 8-grid (`--spacing-*`)
+- A razão é a propriedade CSS nativa `aspect-ratio`, lida da custom property `--ratio` no root. Não é o truque de `padding-bottom`: `aspect-ratio` respeita `min-height` e `max-height`, o truque não
+- A razão entra pela opção da fábrica, que escreve `--ratio`. Custom property não é valor de design solto — é a entrada do componente
+- O child não precisa de classe de posicionamento: `.nds-aspect-ratio > *` já resolve `position: absolute`, `inset: 0` e 100% nos dois eixos
+- Não definir altura fixa no container — a altura é consequência da largura e da razão
+- O recorte da imagem (`object-fit: cover`) é responsabilidade do elemento passado como conteúdo, não do wrapper. **Falta utilitária de `object-fit` no sistema** — enquanto não houver, o recorte vem da folha de quem consome, nunca de valor no call site
 
 **Acessibilidade**:
 - Imagem informativa: `alt` descritivo
@@ -39,12 +40,13 @@ AspectRatio
 **Estrutura**:
 
 ```
-Card (bg-card text-card-foreground border-border rounded-lg shadow-sm)
-├── CardHeader (opcional)
-│   ├── CardTitle (h3)
-│   └── CardDescription (p, text-muted-foreground)
-├── CardContent (opcional)
-└── CardFooter (opcional, border-t)
+.nds-card (data-size opcional)
+├── .nds-card-header (opcional)
+│   ├── .nds-card-title (h3)
+│   ├── .nds-card-description
+│   └── .nds-card-action (opcional, encosta na 2ª coluna)
+├── .nds-card-content (opcional)
+└── .nds-card-footer (opcional)
 ```
 
 **Opts da factory**:
@@ -60,9 +62,10 @@ O Card é composto por sub-fábricas (`createCardHeader`, `createCardTitle`, `cr
 Sub-fábricas: todas aceitam `class` (e o mesmo apelido). `createCardTitle` aceita ainda `text` e `level` (1 a 6, padrão 3); `createCardDescription` aceita `text`.
 
 **Regras**:
-- Tokens obrigatórios: `bg-card text-card-foreground border-border`
-- Padding interno fixo em `--spacing-6` (24px) — não criar variações ad-hoc
-- 8-grid: `space-y-1.5` entre título e descrição, `p-6` em header/content/footer
+- A superfície é da folha: `.nds-card` lê `--card` e `--card-foreground`, e o contorno é um anel de 1px em `--foreground / 0.1` mais `--elevation-sm`. Não há classe de fundo a acrescentar, e o raio vem de `--radius-card` — nunca de uma utilitária de raio
+- Padding interno em `--spacing-4` (16px), propagado do root aos filhos. `data-size="sm"` é o único degrau alternativo — não criar variações ad-hoc
+- 8-grid: gap de `--spacing-1` (4px) entre título e descrição, `--spacing-4` (16px) entre os blocos do card
+- Cartão dentro de cartão usa `.nds-card-nested`: o filho desconta o inset em vez de repetir o raio do pai
 - Card clicável inteiro: usar `<a>` ou `<button>` como wrapper; nunca `<div>` com `onclick`
 - Conteúdo aninhado herda tokens — não sobrescrever `color` em descendentes
 
@@ -81,7 +84,7 @@ Sub-fábricas: todas aceitam `class` (e o mesmo apelido). `createCardTitle` acei
 **Estrutura**:
 
 ```
-Separator (<hr> | <div role="separator">)
+.nds-separator (<hr> | <div role="separator">) — data-orientation, data-emphasis
 └── (sem children)
 ```
 
@@ -93,9 +96,10 @@ Separator (<hr> | <div role="separator">)
 | `decorative` | `false` | Adiciona `aria-hidden="true"` |
 
 **Regras**:
-- Horizontal: `h-px bg-border` + margem vertical em `--spacing-4`
-- Vertical: `w-px bg-border` + `self-stretch` + margem horizontal em `--spacing-2`
-- Sempre usar token `bg-border` — nunca cor literal
+- A orientação sai como `data-orientation="horizontal" | "vertical"` no elemento; `.nds-separator` resolve espessura, eixo e o esticar no eixo cruzado. Não há classe de altura, largura nem de alinhamento a acrescentar
+- A cor vem do token `--border`, lido pela própria folha — nunca cor literal, nunca declaração no call site
+- `data-emphasis="strong"` é o único degrau de reforço; peso fora dele não existe
+- Divisor entre irmãos de uma lista é caso da folha do componente que os agrupa (o Accordion separa pelo `.nds-accordion-item`, o texto corrido pelo `.nds-divider`), não deste primitivo
 - Decorativo (`aria-hidden="true"`) quando o separador é puramente visual
 
 **Acessibilidade**:
@@ -132,7 +136,7 @@ Separator (<hr> | <div role="separator">)
 - A altura é **obrigatória** para haver rolagem, e vem da escada nomeada — nunca de um número escrito no call site. Os degraus são os tokens `--box-height-*`; uma medida fora deles vem da custom property `--box-height` no root
 - O degrau mora no **root**: a folha resolve `block-size` ali, e o viewport é `height: 100%` por ela. Repetir a medida no viewport é declaração morta
 - Não usar `overflow: scroll` (scrollbar sempre visível) — usar `overflow: auto`
-- Border opcional via token `border-border`
+- Contorno opcional lê o token `--border`, pela folha do componente que envolve a área
 
 **Acessibilidade**:
 - Conteúdo rolável deve ser alcançável por teclado (foco em elementos internos rola o container)

@@ -18,8 +18,8 @@
 | `3/4` | Imagens de retrato |
 
 **Regras**:
-- Imagem dentro: usar `object-cover` para preencher sem distorcer.
-- `rounded-md` no elemento filho, não no container.
+- Imagem dentro: `object-fit: cover` para preencher sem distorcer.
+- O arredondamento vai no elemento filho, não no container — `.nds-rounded-md`.
 - Não aplicar tokens de cor diretamente no AspectRatio — estilizar o filho.
 - Para imagens, preferir o componente `ImageWithFallback` do projeto (`/components/figma/ImageWithFallback.tsx`).
 
@@ -50,31 +50,31 @@ Card
 └── CardFooter
 ```
 
-**Tokens obrigatórios** (ver `03-sistema-design.md`):
+**Tokens** (ver `03-sistema-design.md`) — quem lê os tokens é a folha do componente. O Card não recebe classe de cor: `.nds-card` já pinta fundo, texto e borda, e repintar por fora só cria uma segunda fonte de verdade para a mesma superfície.
 
-| Slot | Token |
-|---|---|
-| Fundo | `bg-card` |
-| Texto | `text-card-foreground` |
-| Borda | `border-border` |
-| Texto secundário (`CardDescription`) | `text-muted-foreground` |
-| Divisor do footer | `border-t border-border` |
+| Slot | Seletor que aplica | Token lido |
+|---|---|---|
+| Fundo | `.nds-card` | `--card` |
+| Texto | `.nds-card` | `--card-foreground` |
+| Borda | `.nds-card` | `--border` |
+| Texto secundário (`CardDescription`) | `.nds-card-description` | `--muted-foreground` |
+| Divisor do rodapé (`CardFooter`) | `.nds-card-footer` | `--border` |
 
 **Regras**:
 - Não usar como decoração ou apenas para criar divisão visual.
-- Card inteiramente clicável: usar `<a>` ou `role="button"` com `aria-label` descritivo no container, não apenas `cursor-pointer`.
+- Card inteiramente clicável: usar `<a>` ou `role="button"` com `aria-label` descritivo no container. Cursor de ponteiro é aparência, não affordance — sozinho não torna o card operável por teclado nem anunciável por leitor de tela.
 
 **Acessibilidade**:
-- Botões dentro do Card (Editar, Excluir, Ver mais) precisam de `aria-label` contextual incluindo o identificador do card — nunca apenas "Excluir" (ver `11-acessibilidade.md` → "Premissa fundamental").
+- Botões dentro do Card (Editar, Excluir, Ver mais) precisam de `aria-label` contextual incluindo o identificador do card — nunca apenas "Excluir" (ver `docs/shared/guidelines/01-acessibilidade.md` → "Premissa fundamental").
 - Usar o `CardTitle` como âncora de contexto via `aria-labelledby` ou incluir o título no `aria-label` do botão.
 - Imagens dentro do card: sempre com `alt` adequado.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - `CardTitle`: substantivo ou frase nominal, sem verbo, sem ponto final.
 - `CardDescription`: complemento direto do título, máximo 2 linhas, ponto final.
 - Labels dos botões no footer: verbos no infinitivo, máximo 3 palavras.
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Rastrear o conteúdo interativo dentro do card — nunca o card em si.
 - Card inteiramente clicável: `data-track="card_click"` com `data-track-label` idêntico ao `CardTitle` e ao `aria-label`.
 - Botões dentro: `data-track="button_click"` com `data-track-label` contextual.
@@ -118,9 +118,9 @@ ResizablePanelGroup
 
 **Regras**:
 - Sempre definir altura específica no container pai — sem isso, o ScrollArea não funciona.
-- `overflow-hidden` no container pai + `h-full` no ScrollArea.
+- `.nds-overflow-hidden` no container pai + `.nds-h-full` no ScrollArea.
 - Não aninhar ScrollAreas — causa scroll duplo e desorientação.
-- Tabelas dentro de ScrollArea: usar `overflow-x-auto` no wrapper da tabela, não outro ScrollArea.
+- Tabelas dentro de ScrollArea: a rolagem horizontal é do wrapper da tabela (`.nds-table-wrapper`), nunca de outro ScrollArea.
 
 **Acessibilidade**:
 - O ScrollArea expõe atributos de rolagem corretamente para tecnologias assistivas.
@@ -150,7 +150,7 @@ ResizablePanelGroup
 - Separator semântico (divide conteúdo relacionado): manter o `role="separator"` padrão.
 - Separator decorativo (apenas visual, sem significado): `aria-hidden="true"`.
 
-**Tokens**: o componente aplica `bg-border` automaticamente via CSS do tema. Não sobrescrever com valores hardcoded.
+**Tokens**: a folha `.nds-separator[data-orientation="horizontal"|"vertical"]` desenha a linha lendo `--border` e põe a espessura de 1px no eixo certo. Não substituir por um elemento de 1px pintado à mão, nem sobrescrever a cor com valor literal.
 
 **Analytics**: elemento estático passivo — não dispara eventos.
 
@@ -182,29 +182,29 @@ SidebarProvider
 - Collapsible obrigatório em categorias com subitens.
 - 280px fixo em desktop (push mode), overlay em mobile — gerenciados pelo SidebarProvider.
 
-**Acessibilidade** (ver `11-acessibilidade.md` → "Estrutura acessível da SPA"):
+**Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md` → "Estrutura acessível da SPA"):
 - Item ativo: `aria-current="page"` — anuncia ao leitor de tela qual seção está selecionada.
 - Botão de toggle: `aria-expanded` + `aria-label` contextual ("Expandir navegação principal" / "Recolher navegação principal").
 - Itens com ícone na sidebar colapsada: `aria-label` com o nome da seção — ícone sozinho não é acessível.
 - Skip link na aplicação aponta para `#main-content`, pulando a sidebar.
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Labels de menu: substantivos ou frases nominais curtas, sem verbo, sem ponto final. Ex.: "Componentes", "Design Tokens", "Visão geral".
 - `aria-label` do toggle: contextual e descritivo — não apenas "Menu".
 - Tooltips de ícones no modo colapsado: nome exato da seção.
 
 **Docs page — previews de Sidebar usam `contain: layout` obrigatoriamente**:
 
-O componente `Sidebar` usa `position: fixed; inset-y: 0` internamente, o que faz o painel escapar de qualquer container e se sobrepor ao layout da docs page. Para conter a sidebar dentro do preview, aplique `style={{ contain: 'layout' }}` no div wrapper (todas as stacks).
+O componente `Sidebar` usa `position: fixed` com o `inset` vertical zerado, o que faz o painel escapar de qualquer container e se sobrepor ao layout da docs page. Para conter a sidebar dentro do preview, o elemento que envolve o preview declara `contain: layout`.
 
-**Por que `contain: layout`**: a spec CSS Containment Level 2 garante que elementos `position: fixed` dentro de um container com `contain: layout` sejam posicionados relativamente àquele container, não ao viewport. `overflow: hidden` sozinho **não** é suficiente — fixed bypassa overflow. Não existe classe utilitária `.nds-*` para isso; use `style` inline.
+**Por que `contain: layout`**: a spec CSS Containment Level 2 garante que elementos `position: fixed` dentro de um container com `contain: layout` sejam posicionados relativamente àquele container, não ao viewport. `overflow: hidden` sozinho **não** é suficiente — fixed ignora overflow. Não existe utilitária `.nds-*` para containment; `contain` é propriedade mecânica e não valor de design, então declará-la no atributo `style` do wrapper não fere a regra de tokenização.
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Clique em item de menu: `navigation_click` com `label` (nome da seção) e `destination` (path).
-- O handler de navegação deve disparar `page_view` — ver `11-acessibilidade.md` → "Anúncio de mudança de página".
+- O handler de navegação deve disparar `page_view` — ver `docs/shared/guidelines/01-acessibilidade.md` → "Anúncio de mudança de página".
 - Não rastrear duplamente: `navigation_click` + `page_view` são eventos distintos com propósitos distintos.
 
-**SEO** (ver `20-seo-geo.md`):
+**SEO** (ver `docs/shared/guidelines/06-seo-geo.md`):
 - A estrutura `<nav aria-label="Navegação principal">` é lida por crawlers e reforça a arquitetura de informação do produto.
 - Os itens de menu refletem a hierarquia de conteúdo — manter nomes consistentes com os títulos das páginas que representam.
 
@@ -213,14 +213,14 @@ O componente `Sidebar` usa `position: fixed; inset-y: 0` internamente, o que faz
 ## Regras transversais de Layout Components
 
 **Tokens** (todos os componentes):
-- Nunca valores hardcoded de cor — sempre variáveis CSS do sistema
-- `bg-card`, `bg-muted`, `bg-background` conforme hierarquia visual
-- `border-border` em todas as bordas
-- `text-foreground`, `text-card-foreground`, `text-muted-foreground`
+- Nunca valor literal de cor — sempre as custom properties do tema
+- A superfície é escolhida pela folha do componente entre `--card`, `--muted` e `--background`, conforme a hierarquia visual. As utilitárias de cor de `colors.css` existem para composição pontual — não para repintar um componente que já tem folha
+- `--border` em todas as bordas
+- Texto: `--foreground` no corpo, `--card-foreground` dentro do card, `--muted-foreground` no secundário
 
 **Acessibilidade transversal**:
 - Componentes de container (Card, ScrollArea, AspectRatio) não são interativos por si — a interatividade e os `aria-label` estão no conteúdo dentro deles
-- Ordem do DOM sempre reflete a ordem visual — nunca usar `order-*` ou `flex-row-reverse` (ver `03-sistema-design.md`)
+- Ordem do DOM sempre reflete a ordem visual — nunca reordenar pela propriedade `order` nem invertendo a direção do flex (ver `03-sistema-design.md`)
 - `aria-label` de qualquer elemento interativo dentro de um container de layout deve incluir o contexto que o container fornece visualmente
 
 **Analytics transversal**:

@@ -94,16 +94,21 @@ Esta regra se aplica a:
   - `--font-body-pt-serif` (PT Serif) - Serif clássica para textos longos
   - `--font-body-lexend` (Lexend) - Sans-serif otimizada para legibilidade
 * **Importação automática**: Todas as fontes são carregadas via Google Fonts no `globals.css`
-* **Aplicação**: Use `font-family: var(--font-token-name)` em CSS ou inline styles
+* **Aplicação**: `font-family: var(--font-token-name)` na folha, nunca em `style` inline — inline vence a folha, e a declaração deixa de acompanhar a troca de fonte pela barra de ferramentas
 * **Fallbacks**: Todas as fontes incluem fallbacks do sistema automaticamente
 
 ## Classes Utilitárias Customizadas
-* **@layer components** (reutilizáveis):
-  - **Componentes**: `.card`, `.btn`, `.input`
-  - **Estados**: `.success`, `.warning`, `.error`
-* **@layer utilities** (modificadores):
-  - **Animações**: `.animate-pulse`, `.animate-spin`
-  - **Tipografia**: `.font-normal`, `.font-medium`, `.font-semibold`, `.font-bold`
+
+O vocabulário é `.nds-*`, definido em `docs/shared/styles/nds/` — uma folha por componente, mais `utilities.css`, `typography.css`, `spacing.css`, `colors.css` e `layout.css`.
+
+* **Classe de componente**: `.nds-card`, `.nds-button`, `.nds-input`, `.nds-badge` — é ela que lê os tokens de superfície. Não existe utilitária de cor de fundo em opacidade cheia
+* **Estado semântico**: não é classe própria, é variante do componente — `variant="success"` no Alert, `data-variant="destructive"` no item de menu
+* **Animações**: `.nds-animate-pulse`, `.nds-animate-spin`, `.nds-animate-in`, `.nds-animate-out`. Só o par `in`/`out` para sozinho sob `prefers-reduced-motion`; para as outras duas, quem desliga é `.nds-motion-reduce-none`, que zera animação e transição sob a preferência. Vale saber a diferença antes de assumir que o sistema cobre — a folha de cada componente costuma trazer o próprio `@media`, mas a utilitária avulsa não
+* **Tipografia**: `.nds-font-normal`, `.nds-font-medium`, `.nds-font-semibold`, `.nds-font-bold`, `.nds-font-mono`; a escada de tamanho é `.nds-text-*`
+* **Layout**: `.nds-stack` e `.nds-cluster`, com `data-spacing` / `data-align` / `data-justify` — em vez de utilitária de gap por valor, que o sistema não tem
+* **Foco**: `.nds-focus-ring` e `.nds-focus-ring-inset`
+
+Esta seção já listou `.card`, `.btn`, `.input`, `.success`, `.animate-pulse` e a família `.font-*` sem prefixo, agrupadas por `@layer`. **Nenhuma delas existe** — eram nomes da era anterior à migração, e a folha que as definia saiu do projeto.
 
 ## Responsividade Integrada
 * **Mobile-first**: Design responsivo integrado

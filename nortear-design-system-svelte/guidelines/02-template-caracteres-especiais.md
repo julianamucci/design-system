@@ -52,7 +52,7 @@ A diretiva `{@html}` injeta HTML bruto sem escape. **Usar somente com conteúdo 
 
 > `DOMPurify.sanitize` é importado e chamado **no próprio arquivo**, sem helper
 > local intermediário. Um wrapper esconde o sanitizador das ferramentas de
-> SAST, que voltam a reportar o fluxo como XSS. Ver `09-seguranca-xss.md`.
+> SAST, que voltam a reportar o fluxo como XSS. Ver `../../docs/shared/guidelines/09-seguranca-xss.md`.
 
 ## Atributos dinâmicos
 

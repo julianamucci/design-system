@@ -19,11 +19,11 @@
 **Estrutura**:
 
 ```
-div role=(alert | status | note — default alert)
-├── icon (opcional, aria-hidden, posicionado absolute left)
-└── content (pl-7 quando há icon)
-    ├── h5 title (opcional)
-    └── div description
+.nds-alert role=(alert | status | note — default alert)
+├── svg icon (opcional, aria-hidden — a folha o põe na coluna da esquerda)
+├── h5.nds-alert-title (opcional)
+└── section.nds-alert-description
+    └── p (texto corrido)
 ```
 
 **Variantes**:
@@ -185,13 +185,14 @@ div role="progressbar" (aria-valuenow, aria-valuemin=0, aria-valuemax=100)
 **Estrutura**:
 
 ```
-div (animate-pulse, bg-muted, rounded-md)
+div.nds-skeleton (data-shape, data-width)
 ```
 
 **Regras**:
-- Dimensões devem aproximar o conteúdo real (evita layout shift)
-- Usar `bg-muted` + `animate-pulse` (não criar gradientes customizados)
-- `motion-reduce`: respeitar `prefers-reduced-motion` — usar `.nds-animate-pulse` ou keyframe próprio que zere a animação dentro de `@media (prefers-reduced-motion: reduce)`
+- A caixa deve aproximar o conteúdo real (evita layout shift), e a escolha entra por `data-shape` e `data-width` — atributo, nunca medida escrita no call site
+- Fundo e pulsação são da folha `skeleton.css`: fundo em `--primary / 0.1` e a animação própria dela. Não criar gradiente customizado nem trocar a animação
+- O esqueleto não recebe `height`: a altura sai de padding + tipografia, para o bloco crescer junto quando a pessoa aumenta a fonte do navegador (WCAG 1.4.4). `data-shape="avatar"` é a exceção prevista — peça sem fluxo de texto tem medida
+- A pulsação já para em `prefers-reduced-motion: reduce`, pela própria folha. A redução de movimento é regra do sistema, cumprida em cada folha — não é uma classe a pendurar no elemento. Só animação autoral, fora das folhas, precisa se declarar, e para isso existe `.nds-motion-reduce-none`
 - Para listas, repetir Skeleton com o mesmo shape do item real
 
 **Acessibilidade**:
@@ -209,18 +210,23 @@ div (animate-pulse, bg-muted, rounded-md)
 **Estrutura**:
 
 ```
-div role="status" aria-live="polite" (fixed top-4 right-4, z-50)
-├── icon opcional
-└── message
+div.nds-toaster (data-position)                     ← a região, uma por página
+└── div.nds-toast role="status" aria-live="polite" (data-type)
+    ├── span.nds-toast-icon (opcional)
+    ├── div.nds-toast-content
+    │   ├── p.nds-toast-title
+    │   ├── p.nds-toast-description (opcional)
+    │   └── button.nds-toast-action (opcional)
+    └── button.nds-toast-close (aria-label)
 ```
 
-**Tipos**: `default`, `success`, `error`, `warning`.
+**Tipos**: `default`, `success`, `error`, `warning` — saem como `data-type` no aviso.
 
 **Regras**:
-- Posição padrão: `fixed top-4 right-4` (top-right)
+- Quem posiciona é a REGIÃO, não o aviso: `.nds-toaster` é fixa e escolhe o canto por `data-position` (`top-right`, `top-left`, `top-center`, `bottom-right`, `bottom-left`, `bottom-center`). O aviso individual não carrega posição
+- A camada vem do token `--z-toast`, lido pela folha. Número de empilhamento escrito no call site sai do sistema de camadas e passa por cima de overlay modal sem que ninguém veja
 - Duração default 4000ms; nunca inferior a 3000ms (acessibilidade de leitura)
 - Erros críticos: usar Alert ou Dialog, não Toast
-- Z-index `50` (acima de overlays normais, abaixo de Dialog modal)
 - Não empilhar mais de 3 toasts simultâneos — enfileirar
 
 **Acessibilidade**:

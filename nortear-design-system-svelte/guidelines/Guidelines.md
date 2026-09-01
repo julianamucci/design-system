@@ -2,7 +2,8 @@
 
 Stack: **Svelte 5 + Bits UI + lucide-svelte + Zod + Storybook 10**
 
-> **Leia primeiro**: [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) — Storybook é a interface principal.
+> **Leia primeiro**: [`RULES.md`](./RULES.md) — as regras que valem em toda interação, e
+> [`12-arquitetura-projeto.md`](./12-arquitetura-projeto.md) — Storybook é a interface principal.
 
 ---
 
@@ -10,15 +11,25 @@ Stack: **Svelte 5 + Bits UI + lucide-svelte + Zod + Storybook 10**
 
 ### Compartilhadas (todas as stacks)
 
-Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Vanilla:
+Em `docs/shared/guidelines/` — valem para todas as stacks do design system:
 
-- **[01-acessibilidade.md](../../../docs/shared/guidelines/01-acessibilidade.md)** — WCAG 2.2 AA
-- **[02-alinhamento-botoes.md](../../../docs/shared/guidelines/02-alinhamento-botoes.md)** — Hierarquia visual de botões
-- **[03-edicoes-parciais.md](../../../docs/shared/guidelines/03-edicoes-parciais.md)** — Preservação de conteúdo em edições parciais
-- **[04-padroes-design-sistema.md](../../../docs/shared/guidelines/04-padroes-design-sistema.md)** — Design tokens e padrões visuais
-- **[05-tom-de-voz.md](../../../docs/shared/guidelines/05-tom-de-voz.md)** — Tom de voz e terminologia
-- **[06-seo-geo.md](../../../docs/shared/guidelines/06-seo-geo.md)** — SEO e GEO (Storybook iframe + useSeoEffect)
-- **[07-analytics.md](../../../docs/shared/guidelines/07-analytics.md)** — Nomenclatura de eventos e payloads
+- **[01-acessibilidade.md](../../docs/shared/guidelines/01-acessibilidade.md)** — WCAG 2.2 AA
+- **[02-alinhamento-botoes.md](../../docs/shared/guidelines/02-alinhamento-botoes.md)** — Hierarquia visual de botões
+- **[03-edicoes-parciais.md](../../docs/shared/guidelines/03-edicoes-parciais.md)** — Preservação de conteúdo em edições parciais
+- **[04-padroes-design-sistema.md](../../docs/shared/guidelines/04-padroes-design-sistema.md)** — Design tokens e padrões visuais
+- **[05-tom-de-voz.md](../../docs/shared/guidelines/05-tom-de-voz.md)** — Tom de voz e terminologia
+- **[06-seo-geo.md](../../docs/shared/guidelines/06-seo-geo.md)** — SEO e GEO (Storybook iframe + useSeoEffect)
+- **[07-analytics.md](../../docs/shared/guidelines/07-analytics.md)** — Nomenclatura de eventos e payloads
+- **[08-docs-pages-foundations.md](../../docs/shared/guidelines/08-docs-pages-foundations.md)** — Fundamentos das docs pages
+- **[09-seguranca-xss.md](../../docs/shared/guidelines/09-seguranca-xss.md)** — Sanitização no call site, sem wrapper
+- **[10-performance.md](../../docs/shared/guidelines/10-performance.md)** — Bundle, renderização e carregamento
+- **[11-consistencia-cross-stack.md](../../docs/shared/guidelines/11-consistencia-cross-stack.md)** — Divergências entre stacks
+- **[12-tokenizacao-dimensoes.md](../../docs/shared/guidelines/12-tokenizacao-dimensoes.md)** — Dimensões por token, nunca por estilo inline
+- **[13-animacao.md](../../docs/shared/guidelines/13-animacao.md)** — Durações, curvas e movimento reduzido
+- **[14-taxonomia-secoes.md](../../docs/shared/guidelines/14-taxonomia-secoes.md)** — As seções canônicas de uma docs page
+- **[15-nova-stack.md](../../docs/shared/guidelines/15-nova-stack.md)** — Como nasce uma stack
+- **[16-novo-tema.md](../../docs/shared/guidelines/16-novo-tema.md)** — Como nasce um tema de marca
+- **[17-componentes-conversacionais.md](../../docs/shared/guidelines/17-componentes-conversacionais.md)** — Família de componentes conversacionais
 
 ### 1. Fundamentos (Svelte)
 
@@ -41,6 +52,7 @@ Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Vanilla:
 - **[11-documentacao-componentes.md](./11-documentacao-componentes.md)** — Template de ComponentDocs Svelte + stories
 - **[12-arquitetura-projeto.md](./12-arquitetura-projeto.md)** — Arquitetura Storybook-centric Svelte
 - **[13-system-design.md](./13-system-design.md)** — Padrões Svelte 5: runes, stores, $effect, $derived
+- **[RULES.md](./RULES.md)** — As regras permanentes do projeto, em resumo
 
 ---
 
@@ -69,5 +81,8 @@ Ao adicionar novas regras:
 - Se a regra é específica do Svelte/Bits UI → adicionar neste diretório
 - Atualizar este `Guidelines.md` se necessário
 
-Alguns componentes base do Bits UI podem ter estilos (ex: gap/tipografia) definidos como padrão.
-Certifique-se de definir explicitamente qualquer informação de estilo das guidelines no Svelte gerado para sobrescrever os padrões.
+Os primitivos do Bits UI trazem estilos próprios em alguns pontos (espaçamento,
+tipografia). Onde eles divergirem do design system, o ajuste vai para a folha
+`.nds-*` do componente — nunca para um estilo escrito no template ou na story.
+Estilo escrito por fora vence a folha, e a declaração deixa de acompanhar tema,
+densidade e escala tipográfica.

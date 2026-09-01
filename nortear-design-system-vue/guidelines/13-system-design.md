@@ -2,8 +2,8 @@
 
 Este documento descreve o System Design do projeto para Vue 3.
 
-**Para estrutura de pastas e componentes principais, consulte**: `15-arquitetura-projeto.md`
-**Para tokens CSS e padrões visuais, consulte**: `16-padroes-design-sistema.md`
+**Para estrutura de pastas e componentes principais, consulte**: `12-arquitetura-projeto.md`
+**Para tokens CSS e padrões visuais, consulte**: `../../docs/shared/guidelines/04-padroes-design-sistema.md`
 
 ---
 

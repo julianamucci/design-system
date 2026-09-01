@@ -32,8 +32,8 @@ span.innerHTML = dadoDoUsuario;
 ```ts
 // ✅ OK — conteúdo interno controlado (sem dados do usuário)
 el.innerHTML = `
-  <div class="flex items-center gap-2">
-    <span class="font-mono">variant=&quot;default&quot;</span>
+  <div class="nds-cluster" data-spacing="sm" data-align="center">
+    <span class="nds-font-mono">variant=&quot;default&quot;</span>
   </div>
 `;
 

@@ -112,7 +112,11 @@ export default {
 {#if DocsPage}
   <svelte:component this={DocsPage} />
 {:else}
-  <div class="animate-pulse bg-muted rounded h-96" aria-busy="true" aria-label="Carregando..." />
+  <div class="nds-stack" data-spacing="md" role="status" aria-busy="true" aria-label="Carregando...">
+    <div class="nds-skeleton" data-shape="heading" data-width="1-2"></div>
+    <div class="nds-skeleton" data-shape="text" data-width="full"></div>
+    <div class="nds-skeleton" data-shape="text" data-width="3-4"></div>
+  </div>
 {/if}
 ```
 
@@ -198,7 +202,7 @@ document.documentElement.classList.add('dark');
 ```
 
 A chamada fica no call site, sem helper local intermediário — um wrapper
-esconde o sanitizador das ferramentas de SAST. Ver `09-seguranca-xss.md`.
+esconde o sanitizador das ferramentas de SAST. Ver `../../docs/shared/guidelines/09-seguranca-xss.md`.
 
 ---
 
@@ -207,9 +211,9 @@ esconde o sanitizador das ferramentas de SAST. Ver `09-seguranca-xss.md`.
 **Complexidade**: O(1) — criar os arquivos, o Storybook registra automaticamente.
 
 ```
-1. src/lib/components/docs/NovoComponenteDocs.svelte  ← docs page (14 seções)
-2. src/lib/components/docs/content/{slug}/translations.json
-3. src/lib/components/ui/novo-componente.stories.ts   ← story principal + Playground
-4. src/lib/components/ui/novo-componente-{variantes,tamanhos,estados,composicoes}.stories.ts
+1. src/components/docs/NovoComponenteDocs.svelte      ← docs page (15 seções)
+2. docs/shared/content/{slug}/translations.json       ← conteúdo compartilhado pelas stacks
+3. src/components/ui/{slug}/{slug}.stories.ts         ← story principal + Playground
+4. src/components/ui/{slug}/{slug}-{variants,sizes,states,compositions}.stories.ts
 5. Verificar no Storybook: npm run storybook
 ```
