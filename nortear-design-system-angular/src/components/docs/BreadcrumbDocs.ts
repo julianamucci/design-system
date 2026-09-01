@@ -907,7 +907,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'navigationMenu', name: 'NavigationMenu', path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-      { key: 'stepper',        name: 'Stepper',        path: '?path=/docs/ui-stepper--docs'        },
+      { key: 'stepper',        name: 'Stepper',        path: '?path=/docs/primitives-navigation-stepper--docs'        },
       { key: 'tabs',           name: 'Tabs',           path: '?path=/docs/primitives-navigation-tabs--docs'           },
       { key: 'dropdownMenu',   name: 'DropdownMenu',   path: '?path=/docs/primitives-overlay-dropdownmenu--docs'   },
     ].map(({ key, name, path }) => ({

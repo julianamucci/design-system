@@ -1,22 +1,58 @@
-<script lang="ts" setup>
-import type { StepperTriggerProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { reactiveOmit } from '@vueuse/core'
-import { StepperTrigger, useForwardProps } from 'reka-ui'
-import { cn } from '@/lib/utils'
+<script setup lang="ts">
+import { computed, inject, type HTMLAttributes } from 'vue';
+import { cn } from '@/lib/utils';
+import { STEPPER_ITEM_KEY, STEPPER_KEY } from './stepper.context';
 
-const props = defineProps<StepperTriggerProps & { class?: HTMLAttributes['class'] }>()
+/**
+ * Controle da etapa.
+ *
+ * `type="button"` explícito: dentro de um `<form>` — que é o caso de todo
+ * wizard — um botão sem `type` é `submit`, e clicar numa etapa enviaria o
+ * formulário.
+ *
+ * O `.nds-sr-only` leva ao leitor de tela a palavra que a marca de verificação
+ * só diz por desenho. Ele fica sempre no DOM, vazio quando a etapa ainda não
+ * foi alcançada, para que a troca de estado não insira nó no meio do conteúdo
+ * que quem consome montou.
+ */
+const props = defineProps<{
+  class?: HTMLAttributes['class'];
+}>();
 
-const delegatedProps = reactiveOmit(props, 'class')
+const root = inject(STEPPER_KEY, null);
+const item = inject(STEPPER_ITEM_KEY, null);
 
-const forwarded = useForwardProps(delegatedProps)
+const state = computed(() => item?.state.value ?? 'inactive');
+const disabled = computed(() => item?.disabled.value ?? false);
+
+const stateLabel = computed(() => {
+  const labels = root?.labels.value ?? {};
+  if (state.value === 'completed') return labels.completed ?? '';
+  if (state.value === 'active') return labels.current ?? '';
+  return '';
+});
+
+function handleClick() {
+  if (disabled.value || !item || !root) return;
+  root.select(item.step.value);
+}
 </script>
 
 <template>
-  <StepperTrigger
-    v-bind="forwarded"
+  <button
+    type="button"
+    data-slot="stepper-trigger"
+    :aria-current="state === 'active' ? 'step' : undefined"
+    :disabled="disabled"
     :class="cn('nds-stepper-trigger', props.class)"
+    @click="handleClick"
   >
+    <span
+      class="nds-sr-only"
+      data-slot="stepper-state-label"
+    >
+      {{ stateLabel }}
+    </span>
     <slot />
-  </StepperTrigger>
+  </button>
 </template>

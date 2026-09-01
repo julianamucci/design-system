@@ -762,7 +762,7 @@ interface BreadcrumbEllipsisProps {
     title={$tStore('related.title')}
     items={[
       { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-      { name: 'Stepper',        description: $tStore('related.stepper'),        path: '?path=/docs/ui-stepper--docs'        },
+      { name: 'Stepper',        description: $tStore('related.stepper'),        path: '?path=/docs/primitives-navigation-stepper--docs'        },
       { name: 'Tabs',           description: $tStore('related.tabs'),           path: '?path=/docs/primitives-navigation-tabs--docs'           },
       { name: 'DropdownMenu',   description: toPlainText($tStore('related.dropdownMenu')),   path: '?path=/docs/primitives-overlay-dropdownmenu--docs'   },
     ]}

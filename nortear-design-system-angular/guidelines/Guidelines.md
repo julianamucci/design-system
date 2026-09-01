@@ -63,7 +63,7 @@ Registradas aqui para que ninguém procure seção que não existe:
 | Assunto | Situação neste stack |
 |---|---|
 | `02-…-caracteres-especiais` | Cobre também os blocos `@` e a interpolação `{{ }}`, que são exclusivos do Angular. A parte de `<`/`>`/`&` é a mesma das outras |
-| Componente **Stepper** | Não existe neste stack. Só o Vue o tem, e o CSS compartilhado (`nds/stepper.css`) está lá aguardando. Por isso `05-navigation-components.md` não traz a seção |
+| Componente **Stepper** | Escrito em Angular puro — o Radix NG não tem Stepper, e o estado de cada etapa é derivado por sinal a partir do valor do fluxo. A seção está em `05-navigation-components.md` |
 | Componente **Chart** | Mesma lib das outras stacks (`echarts`), API diferente: um componente com entradas declarativas, sem `ChartContainer` + `buildXOption`. A seção em `08-display-components.md` descreve a forma daqui |
 | **DataTable** | Motor de tabela escrito em signals, sem biblioteca de tabela headless. Quatro recursos que o Vanilla tem não existem aqui — listados na própria seção |
 | **Validação de formulário** | `@angular/forms`, sem biblioteca de schema. `06-form-components.md` descreve o que existe |

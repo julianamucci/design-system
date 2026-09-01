@@ -1,9 +1,5 @@
 # Navigation Components (Nortear — Angular)
 
-> **Stepper não existe neste stack.** As guidelines de React e Vue listam Stepper no índice desta categoria, e o CSS compartilhado (`docs/shared/styles/nds/stepper.css`) está lá. Só o Vue tem o componente. Não há seção de Stepper aqui porque não há Stepper aqui — descrever um componente ausente é pior que omiti-lo. Quando ele for portado, esta seção nasce junto com o código.
-
----
-
 ## Breadcrumb
 
 **Propósito**: indicar a posição na hierarquia de navegação. Use para hierarquias de mais de dois níveis; para um ou dois, um botão "Voltar" comunica melhor.
@@ -84,6 +80,70 @@ O par valor/mudança de valor vem do primitivo headless nas diretivas raiz e de 
 - Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
 
 **Analytics**: `tab_change` com origem e destino no payload — valores estáveis, não o rótulo traduzido.
+
+---
+
+## Stepper
+
+**Propósito**: mostrar a posição num fluxo de ordem obrigatória, e quanto ainda falta. Para seções acessíveis em qualquer ordem, use Tabs; para a posição numa hierarquia de páginas, Breadcrumb; para uma operação única de duração mensurável, Progress.
+
+**Peças**: `ol[ndsStepper]`, `li[ndsStepperItem]`, `button[ndsStepperTrigger]`, `span[ndsStepperIndicator]`, `span[ndsStepperTitle]`, `span[ndsStepperDescription]`, `div[ndsStepperSeparator]`.
+
+Sem primitivo headless: o Radix NG não tem Stepper, e não há foco a governar nem ARIA a gerar que a marcação nativa já não anuncie. O estado de cada etapa é derivado por sinal, com a etapa injetando a raiz.
+
+**Estrutura**:
+
+```
+ol[ndsStepper]                        (aria-label, data-value)
+└── li[ndsStepperItem]                (data-step, data-state, data-completed, data-disabled)
+    ├── button[ndsStepperTrigger]     (type="button", aria-current="step" só na atual)
+    │   ├── span                      (.nds-sr-only — palavra de estado)
+    │   ├── span[ndsStepperIndicator] (aria-hidden)
+    │   ├── span[ndsStepperTitle]
+    │   └── span[ndsStepperDescription]
+    └── div[ndsStepperSeparator]      (aria-hidden)
+```
+
+O traço mora DENTRO do item, depois do gatilho — é isso que o faz herdar o estado do item que o precede sem regra de CSS extra.
+
+**Entradas**:
+
+| Peça | Nome | Default | Função |
+|---|---|---|---|
+| `ndsStepper` | `value` | `1` | Número da etapa atual, contando de 1 |
+| `ndsStepper` | `labels` | `{}` | Palavras de estado (`completed`, `current`) lidas só por leitor de tela |
+| `ndsStepperItem` | `step` | — | Número desta etapa; obrigatório |
+| `ndsStepperItem` | `completed` | `false` | Conta como concluída mesmo estando depois da atual |
+| `ndsStepperItem` | `disabled` | `false` | Indisponível: o gatilho sai da ordem de tabulação |
+| `ndsStepperIndicator` | `custom` | `false` | Libera conteúdo próprio no lugar do número |
+
+**Saídas**:
+
+| Peça | Nome | Carga | Quando |
+|---|---|---|---|
+| `ndsStepper` | `stepSelect` | `number` | Um gatilho disponível é acionado |
+
+O nome acessível do fluxo é o atributo nativo `aria-label` escrito na raiz, não um input: um input homônimo daria dois jeitos de dizer a mesma coisa, com um vencendo em silêncio.
+
+**Regras**:
+- Entre três e seis etapas; com duas o indicador não informa nada, e acima de seis o rótulo não cabe
+- O estado é DERIVADO do valor do fluxo — marcar `completed` à mão só cabe quando o fluxo aceita ordem fora do comum
+- Etapa que ainda não pode ser aberta é `disabled`, não um controle focável sem destino
+- Sem `stepSelect`, os gatilhos continuam focáveis e sem efeito: declare a saída ou marque as etapas como indisponíveis
+
+**Acessibilidade**:
+- A raiz é lista ordenada: a ordem e a contagem das etapas são anunciadas pela própria estrutura
+- `aria-current="step"` — o token da WAI-ARIA para posição num processo — só no gatilho da etapa atual
+- Estado nunca depende só de cor: a concluída troca o número por uma marca de verificação (forma) e a palavra de `labels` vai ao leitor de tela (programático)
+- Indicador e traço são desenho e levam `aria-hidden="true"`
+- Não há região viva: quem anuncia o avanço é o painel que trocou de conteúdo, e é para ele que a aplicação move o foco
+- Etapa indisponível usa o `disabled` nativo — aqui não há navegação por setas em que ela precise ser alcançada para ser anunciada
+
+**O gatilho é sempre um botão, e a lacuna que isso deixa**: a folha declara UMA forma de gatilho, e ela é de controle — `cursor: pointer`, `border: 0`, anel de `:focus-visible` (que só faz sentido em quem recebe foco) e `pointer-events: none` no item indisponível (regra que só existe para quem recebe ponteiro). Não há nela uma segunda forma, inerte.
+
+Segue disso que **o design system NÃO oferece um indicador de etapas não navegável**. Oferecê-lo exigiria uma segunda forma declarada em `stepper.css`, e inventá-la sem consumidor seria desenho especulativo — hoje a única composição do catálogo que usa stepper (`onboarding`, §5.1 da guideline 17) trata a forma interativa como vantagem, e não como custo. Enquanto essa segunda forma não existir, a alternativa para um fluxo sem navegação é marcar as etapas como indisponíveis; um Stepper sem callback de seleção rende N paradas de tabulação que não levam a lugar nenhum, e isso é defeito de uso, não modo suportado.
+
+**Analytics**: `step_change` com o número da etapa e o total no payload — valores estáveis, nunca o título traduzido.
 
 ---
 

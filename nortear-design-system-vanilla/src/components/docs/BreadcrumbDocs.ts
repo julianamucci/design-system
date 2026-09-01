@@ -713,7 +713,7 @@ export interface BreadcrumbEllipsisOptions {
           title: t('related.title'),
           items: [
             { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-            { name: 'Stepper', description: toPlainText(t('related.stepper')), path: '?path=/docs/ui-stepper--docs' },
+            { name: 'Stepper', description: toPlainText(t('related.stepper')), path: '?path=/docs/primitives-navigation-stepper--docs' },
             { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/primitives-navigation-tabs--docs' },
             { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
           ],

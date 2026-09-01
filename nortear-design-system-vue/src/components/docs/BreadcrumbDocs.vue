@@ -357,7 +357,7 @@ const keyboardItems = computed(() => [
 
 const relatedItems = computed(() => [
   { name: 'NavigationMenu', description: toPlainText(tContent('related.navigationMenu')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-  { name: 'Stepper',        description: toPlainText(tContent('related.stepper')),        path: '?path=/docs/ui-stepper--docs'        },
+  { name: 'Stepper',        description: toPlainText(tContent('related.stepper')),        path: '?path=/docs/primitives-navigation-stepper--docs'        },
   { name: 'Tabs',           description: toPlainText(tContent('related.tabs')),           path: '?path=/docs/primitives-navigation-tabs--docs'           },
   { name: 'DropdownMenu',   description: toPlainText(tContent('related.dropdownMenu')),   path: '?path=/docs/primitives-overlay-dropdownmenu--docs'   },
 ]);

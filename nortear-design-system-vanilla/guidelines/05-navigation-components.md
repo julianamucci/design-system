@@ -87,6 +87,65 @@ Tabs (container)
 
 ---
 
+## Stepper
+
+**Propósito**: mostrar a posição num fluxo de ordem obrigatória, e quanto ainda falta. Para seções acessíveis em qualquer ordem, use Tabs; para a posição numa hierarquia de páginas, Breadcrumb; para uma operação única de duração mensurável, Progress.
+
+**Peças**: `createStepper`, `createStepperItem`, `createStepperTrigger`, `createStepperIndicator`, `createStepperTitle`, `createStepperDescription`, `createStepperSeparator`, mais `setStepperValue` e `getStepperValue`.
+
+Esta stack não tem runtime reativo, e é por isso que a montagem é de DUAS FASES: monta-se a árvore e depois se chama `setStepperValue(raiz, valor)`, que resolve o estado de cada etapa, o `aria-current`, o `disabled`, a palavra de estado e o conteúdo do indicador. É a divergência de API desta stack, e é declarada — as outras quatro derivam por reatividade.
+
+**Estrutura**:
+
+```
+ol.nds-stepper                       (aria-label, data-value)
+└── li.nds-stepper-item              (data-step, data-state, data-completed, data-disabled)
+    ├── button.nds-stepper-trigger   (type="button", aria-current="step" só na atual)
+    │   ├── span.nds-sr-only         (palavra de estado)
+    │   ├── span.nds-stepper-indicator   (aria-hidden)
+    │   ├── span.nds-stepper-title
+    │   └── span.nds-stepper-description
+    └── div.nds-stepper-separator    (aria-hidden)
+```
+
+O traço mora DENTRO do item, depois do gatilho — é isso que o faz herdar o estado do item que o precede sem regra de CSS extra.
+
+**Props**:
+
+| Peça | Nome | Default | Função |
+|---|---|---|---|
+| `setStepperValue` | `value` | `1` | Número da etapa atual, contando de 1 — aplicado depois de montar a árvore |
+| `createStepper` | `aria-label` | — | Nome acessível do fluxo; obrigatório |
+| `createStepper` | `labels` | `{}` | Palavras de estado (`completed`, `current`) lidas só por leitor de tela |
+| `createStepper` | `onStepSelect` | — | Recebe o número da etapa quando um gatilho disponível é acionado |
+| `createStepperItem` | `step` | — | Número desta etapa; obrigatório |
+| `createStepperItem` | `completed` | `false` | Conta como concluída mesmo estando depois da atual |
+| `createStepperItem` | `disabled` | `false` | Indisponível: o gatilho sai da ordem de tabulação |
+
+Os rótulos de estado moram na RAIZ, e não no gatilho: o estado de uma etapa muda quando o fluxo avança, e uma palavra fixa por gatilho estaria errada no passo seguinte.
+
+**Regras**:
+- Entre três e seis etapas; com duas o indicador não informa nada, e acima de seis o rótulo não cabe
+- O estado é DERIVADO do valor do fluxo — marcar `completed` à mão só cabe quando o fluxo aceita ordem fora do comum
+- Etapa que ainda não pode ser aberta é `disabled`, não um controle focável sem destino
+- Sem `onStepSelect`, os gatilhos continuam focáveis e sem efeito: declare o callback ou marque as etapas como indisponíveis
+
+**Acessibilidade**:
+- A raiz é lista ordenada: a ordem e a contagem das etapas são anunciadas pela própria estrutura
+- `aria-current="step"` — o token da WAI-ARIA para posição num processo — só no gatilho da etapa atual
+- Estado nunca depende só de cor: a concluída troca o número por uma marca de verificação (forma) e a palavra de `labels` vai ao leitor de tela (programático)
+- Indicador e traço são desenho e levam `aria-hidden="true"`
+- Não há região viva: quem anuncia o avanço é o painel que trocou de conteúdo, e é para ele que a aplicação move o foco
+- Etapa indisponível usa o `disabled` nativo — aqui não há navegação por setas em que ela precise ser alcançada para ser anunciada
+
+**O gatilho é sempre um botão, e a lacuna que isso deixa**: a folha declara UMA forma de gatilho, e ela é de controle — `cursor: pointer`, `border: 0`, anel de `:focus-visible` (que só faz sentido em quem recebe foco) e `pointer-events: none` no item indisponível (regra que só existe para quem recebe ponteiro). Não há nela uma segunda forma, inerte.
+
+Segue disso que **o design system NÃO oferece um indicador de etapas não navegável**. Oferecê-lo exigiria uma segunda forma declarada em `stepper.css`, e inventá-la sem consumidor seria desenho especulativo — hoje a única composição do catálogo que usa stepper (`onboarding`, §5.1 da guideline 17) trata a forma interativa como vantagem, e não como custo. Enquanto essa segunda forma não existir, a alternativa para um fluxo sem navegação é marcar as etapas como indisponíveis; um Stepper sem callback de seleção rende N paradas de tabulação que não levam a lugar nenhum, e isso é defeito de uso, não modo suportado.
+
+**Analytics**: `step_change` com o número da etapa e o total no payload — valores estáveis, nunca o título traduzido.
+
+---
+
 ## Pagination
 
 **Propósito**: navegar entre páginas de uma lista paginada. Para listas curtas (<20 itens), prefira scroll contínuo.

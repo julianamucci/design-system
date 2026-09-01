@@ -1,20 +1,23 @@
-<script lang="ts" setup>
-import type { StepperSeparatorProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { reactiveOmit } from '@vueuse/core'
-import { StepperSeparator, useForwardProps } from 'reka-ui'
-import { cn } from '@/lib/utils'
+<script setup lang="ts">
+import type { HTMLAttributes } from 'vue';
+import { cn } from '@/lib/utils';
 
-const props = defineProps<StepperSeparatorProps & { class?: HTMLAttributes['class'] }>()
-
-const delegatedProps = reactiveOmit(props, 'class')
-
-const forwarded = useForwardProps(delegatedProps)
+/**
+ * Traço até a próxima etapa.
+ *
+ * É desenho, e por isso sai da árvore de acessibilidade. Mora DENTRO do item,
+ * depois do gatilho, e não entre os itens: assim herda o estado da etapa que o
+ * precede e acompanha a cor de uma etapa concluída sem regra extra.
+ */
+const props = defineProps<{
+  class?: HTMLAttributes['class'];
+}>();
 </script>
 
 <template>
-  <StepperSeparator
-    v-bind="forwarded"
+  <div
+    data-slot="stepper-separator"
+    aria-hidden="true"
     :class="cn('nds-stepper-separator', props.class)"
   />
 </template>

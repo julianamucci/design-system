@@ -895,7 +895,7 @@ interface TabsContentProps {
           {
             name: tContent("related.items.stepper.name"),
             description: toPlainText(tContent("related.items.stepper.description")),
-            path: "?path=/docs/ui-stepper--docs",
+            path: "?path=/docs/primitives-navigation-stepper--docs",
           },
           {
             name: tContent("related.items.accordion.name"),

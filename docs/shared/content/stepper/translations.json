@@ -56,6 +56,20 @@
         "item4": "Passe os rótulos de estado do fluxo na raiz. A marca de verificação é visual; sem eles, quem usa leitor de tela não distingue concluída de futura.",
         "item5": "Marque como indisponível a etapa que ainda não pode ser aberta, em vez de deixá-la focável sem destino."
       },
+      "do": {
+        "title": "Use quando",
+        "item1": "O fluxo tem ordem obrigatória e a pessoa precisa saber onde está",
+        "item2": "São de três a seis etapas, cada uma com um nome curto",
+        "item3": "Cada etapa tem um resultado próprio, concluído antes de seguir",
+        "item4": "Vale mostrar o que já ficou para trás e o que ainda falta"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "As seções são independentes e valem em qualquer ordem — use <code>Tabs</code>",
+        "item2": "O que se mostra é a posição numa hierarquia de páginas — use <code>Breadcrumb</code>",
+        "item3": "É uma operação única com duração mensurável — use <code>Progress</code>",
+        "item4": "O fluxo tem oito etapas ou mais — agrupe em fases e use um Stepper por fase"
+      },
       "scenarios": {
         "title": "Tabela de Cenários",
         "cols": {
@@ -144,8 +158,16 @@
     "variants": {
       "title": "Composições",
       "compositions": {
-        "wizard": "Fluxo completo — o indicador acima do painel da etapa, com os controles de voltar e avançar embaixo.",
-        "withDescriptions": "Etapas com texto de apoio sob o título, para quando o nome sozinho não basta."
+        "wizard": {
+          "name": "Fluxo completo",
+          "description": "Indicador acima do painel da etapa, dentro de um <code>Card</code>, com dois <code>Button</code> de voltar e avançar embaixo. A cada troca o foco vai para o painel, e não para o indicador — quem anuncia o avanço é o conteúdo que mudou.",
+          "use": "Cadastro em etapas, checkout, configuração inicial de conta."
+        },
+        "withDescriptions": {
+          "name": "Com descrição na etapa",
+          "description": "<code>StepperDescription</code> sob o <code>StepperTitle</code> de cada etapa, para quando o nome sozinho não basta. A descrição é curta: cabe embaixo do título sem empurrar as etapas vizinhas.",
+          "use": "Fluxos em que cada etapa pede um dado que o nome não explica sozinho."
+        }
       }
     },
     "states": {
@@ -238,8 +260,8 @@
         "react": "// Etapa fora de ordem marcada como concluída\n<StepperItem step={4} completed>…</StepperItem>\n\n// Etapa que ainda não pode ser aberta\n<StepperItem step={3} disabled>…</StepperItem>\n\n// Indicador com conteúdo próprio no lugar do número\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
         "vue": "<!-- Etapa fora de ordem marcada como concluída -->\n<StepperItem :step=\"4\" completed>…</StepperItem>\n\n<!-- Etapa que ainda não pode ser aberta -->\n<StepperItem :step=\"3\" disabled>…</StepperItem>\n\n<!-- Indicador com conteúdo próprio no lugar do número -->\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
         "svelte": "<!-- Etapa fora de ordem marcada como concluída -->\n<StepperItem step={4} completed>…</StepperItem>\n\n<!-- Etapa que ainda não pode ser aberta -->\n<StepperItem step={3} disabled>…</StepperItem>\n\n<!-- Indicador com conteúdo próprio no lugar do número -->\n<StepperIndicator>{#snippet children()}<CreditCard aria-hidden=\"true\" />{/snippet}</StepperIndicator>",
-        "vanilla": "// Etapa fora de ordem marcada como concluída\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Etapa que ainda não pode ser aberta\nconst bloqueada = createStepperItem({ step: 3, disabled: true });\n\n// Indicador com conteúdo próprio no lugar do número\nconst indicador = createStepperIndicator();\nindicador.replaceChildren(iconeCartao());",
-        "angular": "<!-- Etapa fora de ordem marcada como concluída -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Etapa que ainda não pode ser aberta -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicador com conteúdo próprio no lugar do número -->\n<span ndsStepperIndicator><nds-icon name=\"credit-card\" /></span>"
+        "vanilla": "// Etapa fora de ordem marcada como concluída\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Etapa que ainda não pode ser aberta\nconst bloqueada = createStepperItem({ step: 3, disabled: true });\n\n// Indicador com conteúdo próprio no lugar do número\n// `content` marca o indicador como `data-custom`; sem isso\n// `setStepperValue` reescreveria o icone no proximo avanco.\nconst indicator = createStepperIndicator({ content: iconeCartao() });",
+        "angular": "<!-- Etapa fora de ordem marcada como concluída -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Etapa que ainda não pode ser aberta -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicador com conteúdo próprio no lugar do número -->\n<span ndsStepperIndicator [custom]=\"true\">\n  <svg class=\"nds-icon\" aria-hidden=\"true\" viewBox=\"0 0 24 24\">…</svg>\n</span>"
       }
     },
     "tokens": {
@@ -558,6 +580,20 @@
         "item4": "Pass the state labels of the flow on the root. The check mark is visual; without them, screen reader users cannot tell completed from upcoming.",
         "item5": "Mark as unavailable any step that cannot be opened yet, instead of leaving it focusable with nowhere to go."
       },
+      "do": {
+        "title": "Use when",
+        "item1": "The flow has a required order and the person needs to know where they are",
+        "item2": "There are three to six steps, each with a short name",
+        "item3": "Each step has its own outcome, completed before moving on",
+        "item4": "It is worth showing what is behind and what is still ahead"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "The sections are independent and valid in any order — use <code>Tabs</code>",
+        "item2": "What is shown is a position in a page hierarchy — use <code>Breadcrumb</code>",
+        "item3": "It is a single operation with a measurable duration — use <code>Progress</code>",
+        "item4": "The flow has eight steps or more — group into phases and use one Stepper per phase"
+      },
       "scenarios": {
         "title": "Scenario Table",
         "cols": {
@@ -646,8 +682,16 @@
     "variants": {
       "title": "Compositions",
       "compositions": {
-        "wizard": "Full flow — the indicator above the step panel, with back and next controls underneath.",
-        "withDescriptions": "Steps with supporting text under the title, for when the name alone is not enough."
+        "wizard": {
+          "name": "Full flow",
+          "description": "Indicator above the step panel, inside a <code>Card</code>, with two <code>Button</code> controls for back and next underneath. On every change focus goes to the panel, not to the indicator — what announces the advance is the content that changed.",
+          "use": "Multi-step sign-up, checkout, initial account setup."
+        },
+        "withDescriptions": {
+          "name": "With step description",
+          "description": "<code>StepperDescription</code> under the <code>StepperTitle</code> of each step, for when the name alone is not enough. The description is short: it fits under the title without pushing the neighbouring steps.",
+          "use": "Flows where each step asks for data the name does not explain on its own."
+        }
       }
     },
     "states": {
@@ -740,8 +784,8 @@
         "react": "// Out-of-order step marked as completed\n<StepperItem step={4} completed>…</StepperItem>\n\n// Step that cannot be opened yet\n<StepperItem step={3} disabled>…</StepperItem>\n\n// Indicator with its own content instead of the number\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
         "vue": "<!-- Out-of-order step marked as completed -->\n<StepperItem :step=\"4\" completed>…</StepperItem>\n\n<!-- Step that cannot be opened yet -->\n<StepperItem :step=\"3\" disabled>…</StepperItem>\n\n<!-- Indicator with its own content instead of the number -->\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
         "svelte": "<!-- Out-of-order step marked as completed -->\n<StepperItem step={4} completed>…</StepperItem>\n\n<!-- Step that cannot be opened yet -->\n<StepperItem step={3} disabled>…</StepperItem>\n\n<!-- Indicator with its own content instead of the number -->\n<StepperIndicator>{#snippet children()}<CreditCard aria-hidden=\"true\" />{/snippet}</StepperIndicator>",
-        "vanilla": "// Out-of-order step marked as completed\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Step that cannot be opened yet\nconst blocked = createStepperItem({ step: 3, disabled: true });\n\n// Indicator with its own content instead of the number\nconst indicator = createStepperIndicator();\nindicator.replaceChildren(cardIcon());",
-        "angular": "<!-- Out-of-order step marked as completed -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Step that cannot be opened yet -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicator with its own content instead of the number -->\n<span ndsStepperIndicator><nds-icon name=\"credit-card\" /></span>"
+        "vanilla": "// Out-of-order step marked as completed\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Step that cannot be opened yet\nconst blocked = createStepperItem({ step: 3, disabled: true });\n\n// Indicator with its own content instead of the number\n// `content` marca o indicador como `data-custom`; sem isso\n// `setStepperValue` reescreveria o icone no proximo avanco.\nconst indicator = createStepperIndicator({ content: cardIcon() });",
+        "angular": "<!-- Out-of-order step marked as completed -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Step that cannot be opened yet -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicator with its own content instead of the number -->\n<span ndsStepperIndicator [custom]=\"true\">\n  <svg class=\"nds-icon\" aria-hidden=\"true\" viewBox=\"0 0 24 24\">…</svg>\n</span>"
       }
     },
     "tokens": {
@@ -1060,6 +1104,20 @@
         "item4": "Pasa las etiquetas de estado del flujo en la raíz. La marca de verificación es visual; sin ellas, quien usa lector de pantalla no distingue completada de futura.",
         "item5": "Marca como no disponible la etapa que aún no puede abrirse, en lugar de dejarla enfocable sin destino."
       },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "El flujo tiene un orden obligatorio y la persona necesita saber dónde está",
+        "item2": "Son de tres a seis etapas, cada una con un nombre corto",
+        "item3": "Cada etapa tiene un resultado propio, completado antes de seguir",
+        "item4": "Vale la pena mostrar lo que quedó atrás y lo que aún falta"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Las secciones son independientes y valen en cualquier orden — usa <code>Tabs</code>",
+        "item2": "Lo que se muestra es la posición en una jerarquía de páginas — usa <code>Breadcrumb</code>",
+        "item3": "Es una operación única con duración medible — usa <code>Progress</code>",
+        "item4": "El flujo tiene ocho etapas o más — agrupa en fases y usa un Stepper por fase"
+      },
       "scenarios": {
         "title": "Tabla de Escenarios",
         "cols": {
@@ -1148,8 +1206,16 @@
     "variants": {
       "title": "Composiciones",
       "compositions": {
-        "wizard": "Flujo completo — el indicador sobre el panel de la etapa, con los controles de volver y continuar debajo.",
-        "withDescriptions": "Etapas con texto de apoyo bajo el título, para cuando el nombre por sí solo no basta."
+        "wizard": {
+          "name": "Flujo completo",
+          "description": "Indicador sobre el panel de la etapa, dentro de un <code>Card</code>, con dos <code>Button</code> de volver y continuar debajo. En cada cambio el foco va al panel, no al indicador — quien anuncia el avance es el contenido que cambió.",
+          "use": "Registro por etapas, checkout, configuración inicial de cuenta."
+        },
+        "withDescriptions": {
+          "name": "Con descripción en la etapa",
+          "description": "<code>StepperDescription</code> bajo el <code>StepperTitle</code> de cada etapa, para cuando el nombre por sí solo no basta. La descripción es corta: cabe bajo el título sin empujar las etapas vecinas.",
+          "use": "Flujos donde cada etapa pide un dato que el nombre no explica por sí solo."
+        }
       }
     },
     "states": {
@@ -1242,8 +1308,8 @@
         "react": "// Etapa fuera de orden marcada como completada\n<StepperItem step={4} completed>…</StepperItem>\n\n// Etapa que aún no puede abrirse\n<StepperItem step={3} disabled>…</StepperItem>\n\n// Indicador con contenido propio en lugar del número\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
         "vue": "<!-- Etapa fuera de orden marcada como completada -->\n<StepperItem :step=\"4\" completed>…</StepperItem>\n\n<!-- Etapa que aún no puede abrirse -->\n<StepperItem :step=\"3\" disabled>…</StepperItem>\n\n<!-- Indicador con contenido propio en lugar del número -->\n<StepperIndicator><CreditCard aria-hidden=\"true\" /></StepperIndicator>",
         "svelte": "<!-- Etapa fuera de orden marcada como completada -->\n<StepperItem step={4} completed>…</StepperItem>\n\n<!-- Etapa que aún no puede abrirse -->\n<StepperItem step={3} disabled>…</StepperItem>\n\n<!-- Indicador con contenido propio en lugar del número -->\n<StepperIndicator>{#snippet children()}<CreditCard aria-hidden=\"true\" />{/snippet}</StepperIndicator>",
-        "vanilla": "// Etapa fuera de orden marcada como completada\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Etapa que aún no puede abrirse\nconst bloqueada = createStepperItem({ step: 3, disabled: true });\n\n// Indicador con contenido propio en lugar del número\nconst indicador = createStepperIndicator();\nindicador.replaceChildren(iconoTarjeta());",
-        "angular": "<!-- Etapa fuera de orden marcada como completada -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Etapa que aún no puede abrirse -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicador con contenido propio en lugar del número -->\n<span ndsStepperIndicator><nds-icon name=\"credit-card\" /></span>"
+        "vanilla": "// Etapa fuera de orden marcada como completada\nconst extra = createStepperItem({ step: 4, completed: true });\n\n// Etapa que aún no puede abrirse\nconst bloqueada = createStepperItem({ step: 3, disabled: true });\n\n// Indicador con contenido propio en lugar del número\n// `content` marca o indicador como `data-custom`; sem isso\n// `setStepperValue` reescreveria o icone no proximo avanco.\nconst indicator = createStepperIndicator({ content: iconoTarjeta() });",
+        "angular": "<!-- Etapa fuera de orden marcada como completada -->\n<li ndsStepperItem [step]=\"4\" [completed]=\"true\">…</li>\n\n<!-- Etapa que aún no puede abrirse -->\n<li ndsStepperItem [step]=\"3\" [disabled]=\"true\">…</li>\n\n<!-- Indicador con contenido propio en lugar del número -->\n<span ndsStepperIndicator [custom]=\"true\">\n  <svg class=\"nds-icon\" aria-hidden=\"true\" viewBox=\"0 0 24 24\">…</svg>\n</span>"
       }
     },
     "tokens": {

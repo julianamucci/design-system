@@ -209,66 +209,62 @@ nav[aria-label="Navegação de páginas"]
 
 ## Stepper
 
-**Propósito**: guia visual de progresso em processos sequenciais com etapas definidas.
+**Propósito**: mostrar a posição num fluxo de ordem obrigatória, e quanto ainda falta. Para seções acessíveis em qualquer ordem, use Tabs; para a posição numa hierarquia de páginas, Breadcrumb; para uma operação única de duração mensurável, Progress.
 
-**Quando usar**: fluxos com 3–7 etapas obrigatórias em ordem — onboarding, checkout, formulários multi-etapa, wizards de configuração. Para etapas opcionais ou em qualquer ordem, considerar `Tabs`.
+**Peças**: `Stepper`, `StepperItem`, `StepperTrigger`, `StepperIndicator`, `StepperTitle`, `StepperDescription`, `StepperSeparator`.
 
-**API e exemplos**: `src/components/ui/stepper/stepper.vue` + stories + `StepperDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+Sem primitivo headless: o `reka-ui` tem Stepper, e ele foi RETIRADO, e não há foco a governar nem ARIA a gerar que a marcação nativa já não anuncie. O estado de cada etapa é derivado por `provide`/`inject` — a raiz publica o valor, o item compara e resolve.
 
-> **Componente customizado**: o Stepper não faz parte do Reka UI oficial — é um componente criado especificamente para este projeto.
+O wrapper anterior era `reka-ui`, e saiu por quatro divergências medidas no fonte compilado, duas delas intransponíveis por prop: o `StepperRoot` emite uma região viva fixa (`aria-live="polite" role="status"`, "Step N of M", em inglês cravado) que nenhuma prop desliga; o item marca `aria-current="true"` onde o token correto é `step`; a raiz e o item saíam como `div` onde a folha declara `ol`/`li`; e o nome acessível vinha cravado como "progress".
 
-**Critério de decisão — Stepper vs Tabs vs Accordion**:
-
-| Situação | Componente |
-|----------|------------|
-| Etapas sequenciais obrigatórias | Stepper |
-| Views paralelas sem ordem definida | Tabs |
-| Conteúdo que pode ser expandido independentemente | Accordion |
-
-**Estrutura de subcomponentes**:
+**Estrutura**:
 
 ```
-div[role="group"][aria-label="Etapa N de M: <título>"]
-├── Stepper (steps, currentStep, orientation)
-│   └── StepperItem (step)
-│       └── StepperSeparator (aria-hidden)
-├── p.sr-only[aria-live="polite"]   (anúncio complementar)
-├── div[role="region"][aria-label]   (conteúdo da etapa)
-└── botões "Anterior" / "Próximo" / "Finalizar"
+ol.nds-stepper                       (aria-label, data-value)
+└── li.nds-stepper-item              (data-step, data-state, data-completed, data-disabled)
+    ├── button.nds-stepper-trigger   (type="button", aria-current="step" só na atual)
+    │   ├── span.nds-sr-only         (palavra de estado)
+    │   ├── span.nds-stepper-indicator   (aria-hidden)
+    │   ├── span.nds-stepper-title
+    │   └── span.nds-stepper-description
+    └── div.nds-stepper-separator    (aria-hidden)
 ```
+
+O traço mora DENTRO do item, depois do gatilho — é isso que o faz herdar o estado do item que o precede sem regra de CSS extra.
+
+**Props**:
+
+| Peça | Nome | Default | Função |
+|---|---|---|---|
+| `Stepper` | `value` | `1` | Número da etapa atual, contando de 1 |
+| `Stepper` | `aria-label` | — | Nome acessível do fluxo; obrigatório |
+| `Stepper` | `labels` | `{}` | Palavras de estado (`completed`, `current`) lidas só por leitor de tela |
+| `Stepper` | `@step-select` | — | Emite o número da etapa quando um gatilho disponível é acionado |
+| `StepperItem` | `step` | — | Número desta etapa; obrigatório |
+| `StepperItem` | `completed` | `false` | Conta como concluída mesmo estando depois da atual |
+| `StepperItem` | `disabled` | `false` | Indisponível: o gatilho sai da ordem de tabulação |
+
+Os rótulos de estado moram na RAIZ, e não no gatilho: o estado de uma etapa muda quando o fluxo avança, e uma palavra fixa por gatilho estaria errada no passo seguinte.
 
 **Regras**:
-- 3–7 etapas — menos de 3 não justifica Stepper, mais de 7 sobrecarrega cognitivamente
-- Orientação `horizontal` por padrão; `vertical` para etapas com descrições longas ou mobile
-- Sempre fornecer botões "Anterior" e "Próximo" além da navegação visual
-- "Anterior" com `disabled` na primeira etapa
-- "Próximo" substituído por "Finalizar" na última etapa
-- Não permitir navegação para etapas futuras não liberadas — usar `disabled` no `StepperItem`
-
-**Estados visuais obrigatórios** (tokens do `16-padroes-design-sistema.md`):
-
-| Estado | Classes |
-|--------|---------|
-| Concluída | `border-primary bg-primary text-primary-foreground` + ícone `Check` |
-| Atual | `border-primary bg-background text-primary` + número da etapa |
-| Futura | `border-muted-foreground/25 bg-background text-muted-foreground` + número da etapa |
+- Entre três e seis etapas; com duas o indicador não informa nada, e acima de seis o rótulo não cabe
+- O estado é DERIVADO do valor do fluxo — marcar `completed` à mão só cabe quando o fluxo aceita ordem fora do comum
+- Etapa que ainda não pode ser aberta é `disabled`, não um controle focável sem destino
+- Sem ouvinte de `step-select`, os gatilhos continuam focáveis e sem efeito: declare o ouvinte ou marque as etapas como indisponíveis
 
 **Acessibilidade**:
-- `role="group"` com `aria-label` dinâmico no container indicando etapa atual e total — anuncia ao leitor de tela onde o usuário está no processo
-- `aria-label` em cada `StepperItem` descrevendo número, título e estado ("concluída", "atual", "pendente")
-- `StepperSeparator` com `aria-hidden="true"` — é decorativo
-- `role="region"` com `aria-label` no container do conteúdo da etapa — separa semanticamente o indicador do conteúdo
-- `aria-label` contextual nos botões: "Voltar para etapa anterior", "Avançar para [nome da próxima etapa]", "Finalizar processo"
+- A raiz é lista ordenada: a ordem e a contagem das etapas são anunciadas pela própria estrutura
+- `aria-current="step"` — o token da WAI-ARIA para posição num processo — só no gatilho da etapa atual
+- Estado nunca depende só de cor: a concluída troca o número por uma marca de verificação (forma) e a palavra de `labels` vai ao leitor de tela (programático)
+- Indicador e traço são desenho e levam `aria-hidden="true"`
+- Não há região viva: quem anuncia o avanço é o painel que trocou de conteúdo, e é para ele que a aplicação move o foco
+- Etapa indisponível usa o `disabled` nativo — aqui não há navegação por setas em que ela precise ser alcançada para ser anunciada
 
-**UX Writing** (ver `19-tom-de-voz.md`):
-- Títulos de etapa: frase nominal curta, máximo 3 palavras, sem verbo, sem ponto. Ex: "Dados pessoais", "Endereço", "Pagamento"
-- Descrição opcional: complemento direto do título, máximo 1 linha
-- Botão final: sempre "Finalizar" — não "Concluir", "Enviar" ou "Confirmar"
-- Botão de retorno: sempre "Anterior" — não "Voltar" nem "← Anterior"
+**O gatilho é sempre um botão, e a lacuna que isso deixa**: a folha declara UMA forma de gatilho, e ela é de controle — `cursor: pointer`, `border: 0`, anel de `:focus-visible` (que só faz sentido em quem recebe foco) e `pointer-events: none` no item indisponível (regra que só existe para quem recebe ponteiro). Não há nela uma segunda forma, inerte.
 
-**Analytics** (ver `21-analytics.md`):
-- Evento: `step_change` com `step` (índice de destino, base 0), `total_steps` e `direction` ("next" ou "prev")
-- Disparar ao confirmar a mudança de etapa — não ao clicar, pois pode haver validação bloqueando
+Segue disso que **o design system NÃO oferece um indicador de etapas não navegável**. Oferecê-lo exigiria uma segunda forma declarada em `stepper.css`, e inventá-la sem consumidor seria desenho especulativo — hoje a única composição do catálogo que usa stepper (`onboarding`, §5.1 da guideline 17) trata a forma interativa como vantagem, e não como custo. Enquanto essa segunda forma não existir, a alternativa para um fluxo sem navegação é marcar as etapas como indisponíveis; um Stepper sem callback de seleção rende N paradas de tabulação que não levam a lugar nenhum, e isso é defeito de uso, não modo suportado.
+
+**Analytics**: `step_change` com o número da etapa e o total no payload — valores estáveis, nunca o título traduzido.
 
 ---
 

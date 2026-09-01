@@ -833,7 +833,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           {
             name: "Stepper",
             description: toPlainText(tContent("related.stepper")),
-            path: "?path=/docs/ui-stepper--docs",
+            path: "?path=/docs/primitives-navigation-stepper--docs",
           },
           {
             name: "Tabs",

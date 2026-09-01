@@ -29,4 +29,4 @@ Guidelines compartilhadas (todas as stacks):
 - `../docs/shared/guidelines/09-seguranca-xss.md`
 - `../docs/shared/guidelines/12-tokenizacao-dimensoes.md` — dimensões em token, e a **regra canônica de `style` inline com valor de design**: proibido nas cinco stacks, em primitivo, story e docs page. Portão `inline_style_design_value` do `audit.mjs`.
 
-**Pendências**: nenhuma de implementação. As abertas são de conteúdo compartilhado e de auditoria, detalhadas em `../.pipeline-context/_ordem.md`. As lacunas de componente conhecidas (Stepper ausente, quatro recursos de DataTable, paleta de série sem variante escura, alça de Resizable desabilitada, bridge do Docs tab sem teste) estão registradas nas guidelines das respectivas categorias.
+**Pendências**: nenhuma de implementação. As abertas são de conteúdo compartilhado e de auditoria, detalhadas em `../.pipeline-context/_ordem.md`. As lacunas de componente conhecidas (quatro recursos de DataTable, paleta de série sem variante escura, alça de Resizable desabilitada, bridge do Docs tab sem teste) estão registradas nas guidelines das respectivas categorias.

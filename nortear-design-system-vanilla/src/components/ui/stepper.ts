@@ -54,6 +54,24 @@ import { cn } from '@/lib/utils';
 //    círculo cresce com a densidade e com o tamanho de fonte do navegador.
 //    Título e descrição vivem FORA dele e nunca são recortados.
 //
+// 8. O GATILHO É SEMPRE `<button>`, NAS CINCO STACKS — e a folha é quem
+//    decide. Ela declara UMA forma de gatilho, e essa forma é a de um
+//    controle: `cursor: pointer`, `border: 0`, fundo transparente e um anel de
+//    `:focus-visible` (que só faz sentido em quem recebe foco), mais
+//    `pointer-events: none` no item indisponível — regra que só existe para
+//    quem recebe ponteiro. Não há na folha uma segunda forma, inerte.
+//
+//    O CUSTO DISSO, dito na cara: um Stepper sem `onStepSelect` rende N
+//    paradas de tabulação que não levam a lugar nenhum. Por isso a ausência do
+//    callback está documentada como defeito de uso, e não como modo suportado:
+//    ou se liga a seleção, ou se marcam as etapas como indisponíveis.
+//
+//    O QUE NÃO DECIDI, e é da dona: se o design system deve passar a oferecer
+//    um indicador de etapas SOMENTE-LEITURA, sem controle nenhum. Isso pede
+//    uma segunda forma declarada em `stepper.css`, e inventar aqui uma classe
+//    que a folha não tem seria justamente crayonizar o valor. Enquanto essa
+//    forma não existir, um indicador não navegável não é este componente.
+//
 // A opção de classe é `class`, como nas outras fábricas desta stack, com
 // `className` aceito como apelido; quando os dois vêm, `class` vence.
 
@@ -146,6 +164,10 @@ function createIconLucide(nodes: LucideIconNode[]): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
+  // Sem dimensao o SVG estica para o circulo inteiro de `--spacing-8` (32px) e a
+  // marca fica do tamanho do indicador. `.nds-icon` a fixa em 1rem, e por ser
+  // rem ela cresce junto com o circulo quando a densidade ou a fonte mudam.
+  svg.setAttribute('class', 'nds-icon');
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS(SVG_NS, tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
