@@ -80,6 +80,7 @@
 @import "./agent-run.css";
 @import "./medicao.css";
 @import "./evidencia.css";
+@import "./resposta-estruturada.css";
 
 /*
  * As utilities entram POR ÚLTIMO, e isso é desenho, não acidente.

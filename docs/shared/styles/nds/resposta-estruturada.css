@@ -1,0 +1,465 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Resposta estruturada — a folha da família 4 da guideline 17.
+ *
+ * O EIXO: A FORMA DE UMA RESPOSTA. As outras folhas desta família desenham o
+ * que está ACONTECENDO — a execução, o composer, a evidência, a medição. Esta
+ * desenha o que o modelo respondeu quando a resposta não é texto: um fluxo de
+ * trabalho que se ramifica, um tempo repartido entre trechos, um ano de
+ * atividade numa grade de datas.
+ *
+ * E O QUE FAZ AS PEÇAS DAQUI DIVIDIREM UMA FOLHA É MAIS ESTREITO QUE ISSO, e
+ * vale escrever com todas as letras porque foi medido a duro: **a peça daqui
+ * POSICIONA alguma coisa.** Ela põe em pixel uma RELAÇÃO que o dado não carrega
+ * — adjacência entre dois itens, um intervalo contra um eixo comum, uma
+ * densidade numa casa de calendário —, e essa relação não existe em canto
+ * nenhum desta casa. Seis entradas desta mesma família colapsaram em bloco
+ * antes desta folha nascer, e o que as separou das que ficaram foi exatamente
+ * essa pergunta: a peça POSICIONA, ou só EMPILHA? Empilhar é `.nds-stack`,
+ * `.nds-item-group` e `.nds-card`, e nada disso pede folha nova.
+ *
+ * É por isso que elas dividem geometria, e é por isso que moram numa folha só e
+ * não uma por slug: o que se repete entre elas não é a aparência — um grafo não
+ * se parece com um calendário —, é o SISTEMA DE COORDENADAS e tudo o que ele
+ * arrasta junto: um conteúdo mais largo que a conversa, uma camada que rola, um
+ * estado que só a cor distinguiria, e um desenho que quem não o vê precisa
+ * receber por outro caminho.
+ *
+ * A FOLHA ESTÁ ABERTA PARA MAIS DO QUE JÁ TEM. As peças de posição desta
+ * família ainda estão sendo triadas, e pelo menos duas encostam no mesmo eixo
+ * sem estarem confirmadas — uma que posiciona por profundidade, outra que
+ * marca um ponto e um trecho de linha por vez. Esta folha não afirma cobri-las;
+ * o que ela faz é não fechar a porta: nada aqui presume grade retangular, nada
+ * presume que a relação seja binária, e as regras de 1 a 6 abaixo valem para
+ * qualquer coisa que ponha em pixel algo que o dado não diz.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * AS SEIS REGRAS QUE ATRAVESSAM A FAMÍLIA INTEIRA
+ *
+ * 1. A COORDENADA É DADO, E DADO CHEGA DE FORA (§2 da guideline 17). Nenhuma
+ *    peça daqui calcula disposição, escolhe coluna, resolve colisão ou distribui
+ *    nó nenhum. Quem monta o grafo sabe a forma dele; uma peça que a calculasse
+ *    traria algoritmo de layout junto, e algoritmo de layout envelhece por
+ *    produto — que é o mesmo motivo pelo qual nenhuma peça desta família busca,
+ *    conecta, persiste ou agenda.
+ *
+ * 2. A COORDENADA NÃO É VALOR DE DESENHO, E ENTRA POR PROPRIEDADE
+ *    PERSONALIZADA. É onde esta família mais tenta escorregar: uma posição por
+ *    elemento parece pedir `style` inline, e `style` inline vence a folha e leva
+ *    embora o tema, a densidade e a escala de tipo. O que entra por elemento é
+ *    `--flow-graph-node-column`, um NÚMERO; a conta que o transforma em posição
+ *    mora aqui, onde pode mudar sem tocar nas cinco stacks. É a mesma decisão
+ *    que `--computer-use-mark-x` já pagou na folha da família 2.
+ *
+ *    E há uma armadilha ao verificar isso, que esta campanha já pagou:
+ *    **propriedade personalizada declarada dentro do próprio seletor vence a
+ *    herança.** Uma story que declare `--flow-graph-column-min` num invólucro
+ *    nunca alcança o elemento que já a declara em si mesmo, e a asserção que
+ *    provar o contrário tem de ler o valor COMPUTADO, nunca o atributo.
+ *
+ * 3. O CONTEÚDO TRANSBORDA, E UMA SÓ CAMADA ROLA — com `tabindex="0"`,
+ *    `role="group"` e NOME ACESSÍVEL (regra 6 da §8 da guideline 17, axe
+ *    `scrollable-region-focusable`). As peças daqui são, por construção, mais
+ *    largas que a conversa em que estão.
+ *
+ *    `group` E NÃO `region`, e isso é decisão: uma página de documentação tem
+ *    dezenas destas peças, e `region` com nome vira dezenas de marcos homônimos
+ *    na lista que se navega por marco — o que é pior que não ter nenhum.
+ *
+ *    O PAPEL É O QUE TORNA O NOME LEGAL, e é a metade que já falhou aqui perto.
+ *    Num conserto recente do sistema, duas peças tinham a instrução "papel e
+ *    nome são de quem compõe" e nenhuma das duas funcionava: o corpo era um
+ *    `div` sem papel, e sobre um `div` sem papel o `aria-label` é simplesmente
+ *    DESCARTADO (`aria-prohibited-attr`). A regra desta folha é o par: quem
+ *    escreve `tabindex="0"` escreve `role="group"` e o nome na mesma linha.
+ *
+ *    O nome vem de QUEM COMPÕE, porque o design system não pode sabê-lo — duas
+ *    peças destas na mesma tela com o mesmo nome são duas paradas de teclado
+ *    indistinguíveis para quem navega ouvindo. Nas peças daqui ele é
+ *    OBRIGATÓRIO na assinatura, e não um padrão silencioso: a lição da conversa
+ *    é que ninguém que monta pensa em nomear uma camada que não se vê, e o que
+ *    faz alguém pensar é a chamada não compilar sem ela.
+ *
+ * 4. COR NUNCA CARREGA SOZINHA (regra 4 da §8, WCAG 1.4.1). Nas três fontes
+ *    desta família o estado de um nó, o estado de um trecho e o nível de uma
+ *    célula são diferença SÓ de cor. Aqui não são: cada estado ganha também
+ *    FORMA — preenchimento, contorno, traço interrompido — e a PALAVRA chega a
+ *    quem ouve. Vale nas duas pontas de uma relação e na relação em si: num
+ *    grafo, o defeito mora no nó, na aresta e no estado de cada um.
+ *
+ *    E o traço que liga duas coisas é OBJETO GRÁFICO QUE INFORMA (WCAG 1.4.11):
+ *    ele não é borda de enfeite, é a relação inteira. Por isso ele não usa
+ *    `--border`, que é o token do contorno decorativo desta casa, e sim
+ *    `--muted-foreground`, que já se mede contra o fundo como texto de apoio.
+ *
+ * 5. NADA AQUI É REGIÃO VIVA, por default (regra 1 da §8). As peças desta
+ *    família se escrevem sozinhas enquanto uma execução corre — nó vira nó,
+ *    barra vira barra, célula vira célula —, e uma grade que se reanunciasse a
+ *    cada casa é impossível de ouvir. Enquanto se escreve, o elemento é
+ *    `aria-busy`; quem quiser anunciar o fim escreve uma frase, uma vez, do lado
+ *    de fora.
+ *
+ * 6. O CONTADOR DE REVELAÇÃO NÃO ENTRA NA PEÇA. As três fontes desta família
+ *    declaram um `visibleCount`, e ele aparece em sete das dezoito entradas
+ *    originais. O dono dele é `13-animacao.md`, e a §2 já decide o resto: **o
+ *    componente desenha o que recebe.** Quem quiser revelar aos poucos passa
+ *    MENOS itens — e é aí que a regra deixa de ser burocracia e vira desenho:
+ *    tirado o contador, some junto com ele o segundo tom de traço que existia
+ *    só para mostrar a aresta ADIANTE da revelação. Sem revelação não há
+ *    adiante. A aresta que perde uma ponta simplesmente não é desenhada.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * O DESENHO NÃO É LIDO, E ISSO É O PROBLEMA DIFÍCIL DESTA FAMÍLIA
+ *
+ * Uma lista lida sozinha: a ordem dos elementos É a informação. Uma posição
+ * não. Um grafo desenhado em SVG, uma barra deslocada num eixo, uma casa mais
+ * escura que a vizinha — nada disso chega a quem lê de ouvido, e nada disso se
+ * conserta com um `aria-label` numa caixa que ninguém alcança.
+ *
+ * A regra desta folha é que **a estrutura acessível é a MESMA estrutura**, e
+ * não uma segunda ao lado: os elementos posicionados são DOM de verdade, na
+ * ordem em que quem monta os declarou, e o que a posição diz sem palavras cada
+ * um deles diz COM palavras, dentro de si. O desenho que sobra — a curva, o
+ * traço, o degradê — é decorativo por consequência, e sai da árvore de
+ * acessibilidade inteiro, numa camada só.
+ *
+ * O corolário obriga quem monta, e por isso está escrito também nas docs pages:
+ * **a ordem de declaração é a ordem de leitura.** A posição é livre; a ordem no
+ * DOM não é (WCAG 1.3.2).
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * A CLASSE ANDA JUNTO DO `data-slot` EM TODA A ÁRVORE, e a folha estiliza pela
+ * CLASSE — nunca por `[data-slot="…"]`. No Angular quase toda peça liga
+ * `data-slot` por host binding, e o atributo estático do template disputa com
+ * ele: uma regra presa ao atributo pode simplesmente não aplicar ali, e já
+ * custou a um botão o alvo de toque de 24 px (WCAG 2.5.8). O que a folha lê por
+ * atributo é ARIA e `data-*` de ESTADO, que são iguais nas cinco porque
+ * descrevem o componente, não a marcação.
+ *
+ * SEM ALTURA FIXA em nada que carregue texto (WCAG 1.4.4): a caixa de um nó, de
+ * um rótulo ou de uma etiqueta é `padding-block` mais `line-height`, e cresce
+ * com a fonte do navegador. O que esta família tem de dimensão é LARGURA MÍNIMA
+ * de coluna e tamanho de marca sem texto dentro.
+ *
+ * Derivado do catálogo Elements da assistant-ui (MIT),
+ * `Copyright (c) 2025 AgentbaseAI Inc.` — o desenho e os estados; nunca o
+ * código, que é preso a um runtime de React.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Grafo de fluxo ───────────────────────────────────────────────────────────
+ *
+ * O trabalho que se ramifica e volta a se juntar: um nó por passo, na casa da
+ * grade que quem monta escolheu, e uma curva por dependência. Vocabulário:
+ * `FlowNode` e `FlowEdge`, em `@shared/primitives/chat-protocol`; a conta —
+ * deslocar para a origem, descartar aresta órfã, desenhar a curva — em
+ * `@shared/primitives/flow-graph-edges`.
+ *
+ *   <div class="nds-flow-graph" data-slot="flow-graph">
+ *     <div class="nds-flow-graph-viewport" data-slot="flow-graph-viewport"
+ *          tabindex="0" role="group" aria-label="Fluxo do atendimento">
+ *       <div class="nds-flow-graph-canvas" data-slot="flow-graph-canvas"
+ *            style="--flow-graph-columns: 4; --flow-graph-rows: 3">
+ *
+ *         <svg class="nds-flow-graph-edges" data-slot="flow-graph-edges"
+ *              viewBox="0 0 4 3" preserveAspectRatio="none"
+ *              aria-hidden="true" focusable="false">
+ *           <path class="nds-flow-graph-edge" data-slot="flow-graph-edge"
+ *                 d="M 0.5 1.5 C 1 1.5 1 0.5 1.5 0.5"
+ *                 vector-effect="non-scaling-stroke" />
+ *         </svg>
+ *
+ *         <ol class="nds-flow-graph-nodes" data-slot="flow-graph-nodes">
+ *           <li class="nds-flow-graph-node" data-slot="flow-graph-node"
+ *               data-state="done"
+ *               style="--flow-graph-node-column: 1; --flow-graph-node-row: 2">
+ *             <span class="nds-flow-graph-node-marker"
+ *                   data-slot="flow-graph-node-marker" aria-hidden="true"></span>
+ *             <span class="nds-flow-graph-node-label"
+ *                   data-slot="flow-graph-node-label">Ler o pedido</span>
+ *             <span class="nds-sr-only"
+ *                   data-slot="flow-graph-node-reading">Concluído.</span>
+ *           </li>
+ *         </ol>
+ *
+ *       </div>
+ *     </div>
+ *   </div>
+ *
+ * POR QUE ESTA PEÇA EXISTE, e não é o plano do agente com coordenadas. O que
+ * decide não é a posição — é a ARESTA. `FlowEdge` é `{ from, to }`: uma relação
+ * entre dois itens, e o vocabulário desta família não tinha como dizer "este
+ * depende daquele". `PlanStep` é fila ordenada, e ordem não é dependência
+ * porque fila não se ramifica nem se reencontra — que é literalmente o assunto
+ * desta peça. Medido antes de construir: o único conector do design system é
+ * `.nds-stepper-separator`, uma linha de 1 px entre etapas ADJACENTES de uma
+ * fila linear, e `chart` tem oito tipos e nenhum deles é grafo.
+ *
+ * A GRADE NÃO TEM VÃO, E A FOLGA É MARGEM DO NÓ. Parece detalhe e é o que faz o
+ * desenho fechar: o `<svg>` das arestas é esticado sobre a grade
+ * (`preserveAspectRatio="none"`) e trabalha em coordenadas de CASA — o centro
+ * da casa `(c, r)` é `(c + 0,5; r + 0,5)`. Isso só é verdade se as casas
+ * ladrilharem a área inteira, sem `gap` entre elas. Com vão, o centro da casa
+ * deixaria de ser calculável sem MEDIR o elemento, e medir traria observador de
+ * redimensionamento, quadro de animação e cinco implementações de uma conta que
+ * hoje não precisa de navegador nenhum para ser testada.
+ *
+ * O TRAÇO NÃO ENGROSSA COM A DISTORÇÃO. Esticar um `viewBox` quadrado sobre uma
+ * área que não é quadrada deforma tudo, inclusive a espessura da linha —
+ * `vector-effect="non-scaling-stroke"` é o que a mantém em espessura de tela.
+ * A CURVA se deforma, e essa deformação é aceita: ela continua sendo uma curva
+ * que sai de um nó e chega a outro, que é toda a informação que ela carrega.
+ *
+ * A CURVA PASSA POR BAIXO DOS NÓS, e é por isso que o nó tem fundo opaco. Ela
+ * nasce no CENTRO da casa de origem e morre no centro da casa de destino, não
+ * na borda da caixa — a borda depende da largura do rótulo, que é texto e não
+ * se sabe de antemão. Escondida atrás de uma caixa opaca, ela aparece
+ * exatamente saindo da borda dela, que é o desenho que se queria.
+ *
+ * O QUE É ATRIBUTO, E O QUE ELE DECIDE
+ *
+ *   `data-state`     No nó: `pending`, `running`, `done` ou `failed`. Lido por
+ *                    atributo porque é ESTADO do componente, igual nas cinco
+ *                    stacks — e é o vocabulário inteiro de `ToolCallState`, não
+ *                    os três da fonte.
+ *   `aria-busy`      Na raiz, enquanto o grafo ainda se escreve. É o que
+ *                    substitui a região viva que a regra 5 recusa.
+ *   `aria-hidden`    No `<svg>` inteiro. Curva não se lê; o que se lê é a frase
+ *                    dentro de cada nó.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. A ARESTA NÃO É DESENHO PARA QUEM OUVE — ELA É FRASE DENTRO DO NÓ. Cada nó
+ *    carrega, em texto que só quem ouve recebe, a palavra do seu estado e os
+ *    rótulos dos nós de que ele DEPENDE. É o que faz o grafo inteiro se
+ *    reconstruir de ouvido: percorrida a lista, cada ligação foi dita
+ *    exatamente uma vez.
+ * 2. SÓ AS ARESTAS QUE CHEGAM, e nunca as que saem. Dizer as duas direções
+ *    anunciaria cada ligação DUAS vezes sem acrescentar relação nenhuma — e num
+ *    grafo que se ramifica isso dobra justamente onde ele é mais denso.
+ * 3. É UMA LISTA ORDENADA, e a ordem é a de declaração. A posição na grade é
+ *    livre; a ordem no DOM não é, porque ela é a ordem de leitura (WCAG 1.3.2).
+ *    Quem monta declara os nós na ordem em que quer que sejam ouvidos.
+ * 4. O NÓ NÃO É FOCALIZÁVEL, e quem recebe o foco é a camada que rola. Um nó
+ *    não faz nada — não abre, não escolhe, não navega —, e uma dúzia de paradas
+ *    de tabulação que não levam a lugar nenhum é ruído para quem usa teclado. O
+ *    que o teclado precisa alcançar é a rolagem, e isso a regra 3 desta folha
+ *    já garante. Quem lê por leitor de tela alcança a lista sem foco nenhum.
+ * 5. O ESTADO TEM FORMA, E NÃO SÓ COR (WCAG 1.4.1). A marca de `done` é cheia,
+ *    a de `running` é um anel, a de `pending` é um anel interrompido e a de
+ *    `failed` é uma cruz — e o contorno da caixa acompanha. A cor é reforço nas
+ *    quatro, nunca o portador.
+ * 6. A PALAVRA DO ESTADO NÃO É VISÍVEL, e essa é a divergência deliberada em
+ *    relação ao plano do agente, que a põe numa etiqueta ao lado do rótulo. Ali
+ *    o passo é uma LINHA de lista, com largura de sobra à direita. Aqui o nó é
+ *    uma caixa numa grade cuja largura é a do rótulo: uma etiqueta por nó
+ *    dobraria a largura de todas as colunas, e um grafo que não cabe na tela
+ *    deixa de ser lido como grafo. A forma resolve para quem vê; a frase resolve
+ *    para quem ouve; e ninguém fica com a cor sozinha.
+ * 7. NADA AQUI É REGIÃO VIVA. Um fluxo troca de nó enquanto a resposta é gerada,
+ *    e narrar cada troca é a mesma armadilha do relógio ao vivo. Enquanto se
+ *    escreve, a raiz é `aria-busy`.
+ * 8. O RÓTULO DO NÓ NÃO É CORTADO. Ele quebra em várias linhas, como o passo do
+ *    plano — um passo pela metade é uma instrução pela metade —, e é isso que
+ *    faz a linha da grade crescer com a fonte do navegador em vez de espremer.
+ */
+
+.nds-flow-graph {
+  /*
+   * A LARGURA MÍNIMA DA COLUNA, e é a única superfície de customização da peça.
+   *
+   * Mínima e não fixa: as colunas repartem a largura disponível em partes
+   * iguais e só param de encolher aqui — é este número que decide quando o
+   * grafo passa a ser mais largo que a conversa e a camada começa a rolar. Um
+   * grafo de rótulos curtos cabe; um de oito colunas rola, e é o que se quer.
+   */
+  --flow-graph-column-min: var(--spacing-24);
+
+  display: block;
+  font-size: var(--text-label);
+}
+
+.nds-flow-graph-viewport {
+  /*
+   * A ÚNICA CAMADA QUE ROLA (regra 3 da folha). Só no eixo em linha: as linhas
+   * da grade crescem com o conteúdo e a página as acompanha, então uma rolagem
+   * vertical aqui seria uma segunda camada dentro da conversa.
+   */
+  overflow-x: auto;
+  /*
+   * A rolagem para na peça e não é encadeada para a conversa atrás dela —
+   * mesma decisão do corpo do bloco de código, e pelo mesmo motivo: quem
+   * arrasta um grafo até o fim não quer que a conversa comece a andar.
+   */
+  overscroll-behavior-inline: contain;
+
+  padding: var(--spacing-3);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted));
+}
+
+.nds-flow-graph-viewport:focus-visible {
+  /* Para dentro, como a conversa: a moldura já encosta na borda da peça, e um
+     anel para fora sairia por baixo do que estiver ao lado. */
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+.nds-flow-graph-canvas {
+  /* Âncora do `<svg>`, que é posicionado sobre a grade inteira — inclusive
+     sobre a parte dela que só aparece rolando. */
+  position: relative;
+  /*
+   * O TAMANHO DO DESENHO, e é ele que decide quando a camada rola.
+   *
+   * `min-content` é a soma das larguras mínimas das colunas; `min-inline-size`
+   * estica de volta até a camada que rola quando o grafo é mais estreito que
+   * ela. O par diz, em duas linhas: ocupe a largura disponível, e passe dela
+   * quando as colunas encostarem no mínimo. Sem ele o desenho ficaria preso à
+   * largura da camada e a grade transbordaria por fora do `<svg>`, que é
+   * dimensionado por este elemento.
+   */
+  inline-size: min-content;
+  min-inline-size: 100%;
+}
+
+.nds-flow-graph-edges {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  /* Atrás das caixas: a curva nasce no centro de uma casa e morre no centro da
+     outra, e é a caixa opaca por cima que a faz aparecer saindo da borda. */
+  z-index: 0;
+  /* Camada de desenho: nada nela responde a ponteiro, e sem isto ela cobriria a
+     seleção de texto dos rótulos que estão por baixo dela na área vazia. */
+  pointer-events: none;
+}
+
+.nds-flow-graph-edge {
+  fill: none;
+  /*
+   * OBJETO GRÁFICO QUE INFORMA, e não borda de enfeite (WCAG 1.4.11, regra 4
+   * desta folha): a aresta É a relação, e sem ela o grafo vira seis caixas
+   * soltas. Por isso `--muted-foreground`, que já se mede contra o fundo, e não
+   * `--border`, que é o contorno decorativo desta casa.
+   */
+  stroke: hsl(var(--muted-foreground));
+  /* Em espessura de tela, apesar da distorção do `viewBox` esticado — é o que
+     `vector-effect="non-scaling-stroke"` na marcação garante. */
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.nds-flow-graph-nodes {
+  position: relative;
+  /* Sobre as curvas. */
+  z-index: 1;
+
+  display: grid;
+  /*
+   * SEM `gap`, e é a decisão que faz o `<svg>` fechar com a grade (ver o bloco
+   * acima). A folga entre as caixas é margem do nó, logo abaixo.
+   *
+   * As duas contagens chegam por propriedade personalizada porque `repeat()`
+   * aceita substituição de propriedade personalizada no contador, mas não
+   * aceita `calc()` — o número tem de chegar pronto.
+   */
+  grid-template-columns: repeat(
+    var(--flow-graph-columns, 1),
+    minmax(var(--flow-graph-column-min), 1fr)
+  );
+  /*
+   * `1fr` numa grade de altura automática iguala todas as linhas à mais alta, e
+   * é disso que a conta das arestas depende: com linhas de alturas diferentes o
+   * centro da casa deixaria de estar a meia altura dela. Não é altura fixa — a
+   * linha inteira cresce com o rótulo mais alto, e portanto com a fonte do
+   * navegador (WCAG 1.4.4).
+   */
+  grid-template-rows: repeat(var(--flow-graph-rows, 1), 1fr);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nds-flow-graph-node {
+  grid-column-start: var(--flow-graph-node-column);
+  grid-row-start: var(--flow-graph-node-row);
+
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  /* Centrada na casa nos dois eixos: é o centro da casa que a curva procura. */
+  align-self: center;
+  justify-self: stretch;
+  /* A FOLGA DA GRADE, e é margem porque a casa não pode ter vão. */
+  margin: var(--spacing-2);
+
+  /* Sem altura: `padding-block` mais a entrelinha do rótulo (WCAG 1.4.4). */
+  padding-block: var(--spacing-2);
+  padding-inline: var(--spacing-3);
+
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  /* OPACO de propósito: é o que recorta a curva na borda da caixa. */
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.nds-flow-graph-node-marker {
+  flex-shrink: 0;
+  inline-size: var(--spacing-3);
+  block-size: var(--spacing-3);
+  border-radius: var(--radius-full);
+  border: 2px solid hsl(var(--muted-foreground));
+}
+
+.nds-flow-graph-node-label {
+  /*
+   * NUNCA CORTADO (decisão 8). O rótulo quebra, e palavra comprida quebra
+   * dentro de si em vez de esticar a coluna — um nó pela metade é uma instrução
+   * pela metade, e reticências num grafo escondem justamente o que distingue
+   * dois ramos.
+   */
+  overflow-wrap: anywhere;
+  line-height: var(--line-height-normal);
+}
+
+/* Os quatro estados: FORMA primeiro, cor como reforço (decisão 5). */
+
+.nds-flow-graph-node[data-state="pending"] {
+  border-style: dashed;
+}
+.nds-flow-graph-node[data-state="pending"] .nds-flow-graph-node-marker {
+  border-style: dashed;
+}
+
+.nds-flow-graph-node[data-state="running"] {
+  border-color: hsl(var(--primary));
+}
+.nds-flow-graph-node[data-state="running"] .nds-flow-graph-node-marker {
+  border-color: hsl(var(--primary));
+}
+
+.nds-flow-graph-node[data-state="done"] .nds-flow-graph-node-marker {
+  /* Cheia: é a forma que separa "terminou" de "está indo", sem depender da
+     cor. */
+  background-color: hsl(var(--success));
+  border-color: hsl(var(--success));
+}
+
+.nds-flow-graph-node[data-state="failed"] {
+  border-color: hsl(var(--destructive));
+}
+.nds-flow-graph-node[data-state="failed"] .nds-flow-graph-node-marker {
+  border-color: hsl(var(--destructive));
+  /* A CRUZ, e ela é forma e não cor: dois traços cruzados dentro do anel. Um
+     gradiente cônico desenharia isso com uma declaração, mas some em modo de
+     alto contraste forçado; dois fundos lineares sobrevivem. */
+  background-image:
+    linear-gradient(to bottom, hsl(var(--destructive)), hsl(var(--destructive))),
+    linear-gradient(to right, hsl(var(--destructive)), hsl(var(--destructive)));
+  background-size: 2px 100%, 100% 2px;
+  background-position: center, center;
+  background-repeat: no-repeat;
+}

@@ -1,0 +1,1787 @@
+{
+  "pt-BR": {
+    "title": "Grafo de fluxo",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "O trabalho que se ramifica e volta a se juntar: um nó por passo, na casa da grade que quem monta escolheu, e uma curva por dependência.",
+    "seo": {
+      "title": "Grafo de fluxo — o nó, a casa e a dependência",
+      "description": "A peça de grafo de fluxo: nós posicionados numa grade que quem monta declara, curvas ligando o que depende de quê, e a leitura em palavras que leva o grafo a quem não vê o desenho."
+    },
+    "labels": {
+      "region": "Fluxo do atendimento",
+      "dependsOn": "Depende de {sources}.",
+      "state": {
+        "pending": "Por fazer",
+        "running": "Em andamento",
+        "done": "Concluído",
+        "failed": "Falhou"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "order": "Enquanto o agente trabalha, com dois caminhos em paralelo",
+        "failure": "Quando um dos caminhos quebra",
+        "partial": "O grafo mostrado pela metade, com menos nós",
+        "wide": "Quando o fluxo é mais largo que a conversa"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A camada que rola envolve o grafo inteiro. Ela é a única que rola, recebe foco pelo teclado e tem papel e nome — sem eles, quem chega ali ouvindo não sabe onde entrou.",
+      "item2": "O desenho ocupa a largura disponível e passa dela quando as colunas encostam na largura mínima. É aí que a rolagem começa.",
+      "item3": "As curvas ficam numa camada só, atrás das caixas, e saem inteiras do que é lido em voz. Cada uma nasce no centro de uma casa e morre no centro da outra.",
+      "item4": "Os nós são uma lista ordenada, e a ordem é a de declaração — ela é a ordem de leitura, e a posição na grade não é lida por ninguém.",
+      "item5": "Cada nó traz a marca do estado, que carrega forma e não só cor, o rótulo por extenso e uma frase que só quem ouve recebe: a palavra do estado e de quais nós ele depende.",
+      "structureCode": {
+        "web": "<div class=\"nds-flow-graph\" data-slot=\"flow-graph\" aria-busy=\"true\">\n  <div class=\"nds-flow-graph-viewport\" data-slot=\"flow-graph-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Fluxo do atendimento\">\n    <div class=\"nds-flow-graph-canvas\" data-slot=\"flow-graph-canvas\"\n         style=\"--flow-graph-columns: 4; --flow-graph-rows: 3\">\n\n      <svg class=\"nds-flow-graph-edges\" data-slot=\"flow-graph-edges\"\n           viewBox=\"0 0 4 3\" preserveAspectRatio=\"none\"\n           aria-hidden=\"true\" focusable=\"false\">\n        <path class=\"nds-flow-graph-edge\" data-slot=\"flow-graph-edge\"\n              d=\"M 0.5 1.5 C 1 1.5 1 0.5 1.5 0.5\"\n              vector-effect=\"non-scaling-stroke\"></path>\n      </svg>\n\n      <ol class=\"nds-flow-graph-nodes\" data-slot=\"flow-graph-nodes\">\n        <li class=\"nds-flow-graph-node\" data-slot=\"flow-graph-node\"\n            data-state=\"done\"\n            style=\"--flow-graph-node-column: 1; --flow-graph-node-row: 2\">\n          <span class=\"nds-flow-graph-node-marker\"\n                data-slot=\"flow-graph-node-marker\" aria-hidden=\"true\"></span>\n          <span class=\"nds-flow-graph-node-label\"\n                data-slot=\"flow-graph-node-label\">Ler o pedido</span>\n          <span class=\"nds-sr-only\"\n                data-slot=\"flow-graph-node-reading\">Concluído.</span>\n        </li>\n      </ol>\n\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Diretrizes",
+        "item1": "Use quando o trabalho se ramifica e volta a se juntar — dois caminhos que correm em paralelo, uma decisão com dois desfechos, um passo que espera por dois outros.",
+        "item2": "Escolha a casa de cada nó: a peça não dispõe nada, e quem monta o grafo é quem sabe a forma dele.",
+        "item3": "Declare os nós na ordem em que quer que sejam ouvidos. A posição é livre; a ordem no código é a ordem de leitura.",
+        "item4": "Dê nome à camada que rola, e um nome diferente para cada grafo da mesma tela.",
+        "item5": "Para mostrar o grafo aos poucos, passe menos nós. As ligações que perderam uma ponta somem sozinhas."
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar trabalho que se ramifica e se reencontra, com o que depende de quê",
+          "u": "Grafo de fluxo",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar o que o agente pretende fazer, passo a passo, em fila",
+          "u": "Plano do agente",
+          "a": "Ali a ordem é a informação e nada se ramifica; aqui a informação é qual passo depende de qual."
+        },
+        "item3": {
+          "s": "Listar o que o agente fez, com estado por chamada",
+          "u": "Grupo de chamadas",
+          "a": "Ali cada linha é uma chamada e nenhuma depende da outra."
+        },
+        "item4": {
+          "s": "Comparar números, proporções ou séries",
+          "u": "Gráfico",
+          "a": "Ali o desenho sai de valores medidos; aqui sai de uma relação entre itens."
+        },
+        "item5": {
+          "s": "Mostrar o quanto um trabalho longo já andou",
+          "u": "Progresso do trabalho",
+          "a": "Ali há uma conta com um total; aqui há uma relação entre passos, e relação não se soma."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "region": {
+            "name": "Nome da camada",
+            "format": "O que a pessoa alcançou, e não o que o elemento faz",
+            "good": "Fluxo do atendimento",
+            "bad": "Região de rolagem"
+          },
+          "label": {
+            "name": "Rótulo do nó",
+            "format": "Uma ação curta, no infinitivo, como uma pessoa a chamaria",
+            "good": "Conferir o estoque",
+            "bad": "verificarDisponibilidadeDeItens()"
+          },
+          "dependsOn": {
+            "name": "Molde da dependência",
+            "format": "Uma frase com o lugar da lista de rótulos marcado",
+            "good": "Depende de {sources}.",
+            "bad": "Dependências: 2"
+          },
+          "state": {
+            "name": "Palavra do estado",
+            "format": "Uma palavra por estado, que é o que chega a quem não vê a marca",
+            "good": "Em andamento",
+            "bad": "Azul"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Dê à camada que rola um nome que diga onde a pessoa entrou.",
+        "item2": "Declare os nós na ordem em que eles devem ser ouvidos.",
+        "item3": "Use as quatro palavras de estado, inclusive a de falha — um caminho que quebrou não é um caminho que terminou.",
+        "item4": "Deixe o rótulo curto: ele decide a largura de todas as colunas."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não calcule a disposição na peça: a casa de cada nó é dado que chega de fora.",
+        "item2": "Não anuncie cada nó que muda — um fluxo troca de nó mais depressa do que se lê.",
+        "item3": "Não use a mesma palavra para dois grafos da mesma tela: duas paradas de teclado com o mesmo nome são indistinguíveis.",
+        "item4": "Não distinga estado só por cor: quem não a vê fica sem a informação inteira."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "Cada nó diz, em palavras, o estado e de quais nós ele depende — o grafo se reconstrói de ouvido.",
+        "dont": "Só a curva liga um nó ao outro, e quem lê de ouvido recebe uma lista de caixas soltas."
+      },
+      "pair2": {
+        "do": "A camada que rola tem papel, nome e parada de teclado, na mesma linha.",
+        "dont": "A camada rola sem nome, e quem chega ali por teclado não sabe onde está."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createFlowGraph } from '@/components/ui/flow-graph';\n\nconst flowGraph = createFlowGraph({\n  nodes: nos,\n  edges: arestas,\n  status: 'running',\n  labels: rotulos,\n});\n\n// Sem nó nenhum não há grafo, e a fábrica devolve nada.\nif (flowGraph) document.querySelector('#app')?.append(flowGraph);",
+        "react": "import { FlowGraph } from \"@/components/ui/flow-graph\";\n\n<FlowGraph\n  nodes={nos}\n  edges={arestas}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "vue": "<FlowGraph\n  :nodes=\"nos\"\n  :edges=\"arestas\"\n  status=\"running\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<script lang=\"ts\">\n  import { FlowGraph } from '@/components/ui/flow-graph';\n</script>\n\n<FlowGraph\n  nodes={nos}\n  edges={arestas}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsFlowGraph\n  [nodes]=\"nos\"\n  [edges]=\"arestas\"\n  status=\"running\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "vanilla": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};",
+        "react": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos: FlowGraphLabels = {\n  region: \"Fluxo do atendimento\",\n  dependsOn: \"Depende de {sources}.\",\n  state: {\n    pending: \"Por fazer\",\n    running: \"Em andamento\",\n    done: \"Concluído\",\n    failed: \"Falhou\",\n  },\n};",
+        "vue": "<script setup lang=\"ts\">\n// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos: FlowGraphLabels = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n  // então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n  // ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n  // nome são duas paradas indistinguíveis.\n  //\n  // O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n  // apresenta a lista é do idioma, e os rótulos são dado.\n  //\n  // A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\n  const rotulos: FlowGraphLabels = {\n    region: 'Fluxo do atendimento',\n    dependsOn: 'Depende de {sources}.',\n    state: {\n      pending: 'Por fazer',\n      running: 'Em andamento',\n      done: 'Concluído',\n      failed: 'Falhou',\n    },\n  };\n</script>",
+        "angular": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: FlowGraphLabels = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "pending": {
+        "label": "Por fazer",
+        "trigger": "O passo ainda não começou, e pode ser que espere por outro.",
+        "behavior": "A caixa e a marca ficam com o traço interrompido, que é a forma que separa o que ainda não aconteceu."
+      },
+      "running": {
+        "label": "Em andamento",
+        "trigger": "O passo está sendo executado agora.",
+        "behavior": "A caixa e a marca trocam de cor para a de destaque, e a marca continua sendo um anel — a forma não muda, e é a palavra que fecha a leitura."
+      },
+      "done": {
+        "label": "Concluído",
+        "trigger": "O passo terminou e produziu o que devia.",
+        "behavior": "A marca fica cheia, que é a forma que separa o que terminou do que ainda está indo."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "O passo quebrou, e o caminho que passava por ele parou ali.",
+        "behavior": "A caixa muda de cor e a marca ganha uma cruz — é o estado que a referência não tem, e sem ele um caminho quebrado desenharia igual a um que terminou."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "nodes": {
+          "name": "nodes",
+          "type": "readonly FlowNode[]",
+          "default": "—",
+          "required": "Sim",
+          "description": "Os nós, na ordem em que devem ser ouvidos. Sem nó nenhum não há grafo, e a peça não desenha nada."
+        },
+        "edges": {
+          "name": "edges",
+          "type": "readonly FlowEdge[]",
+          "default": "[]",
+          "required": "Não",
+          "description": "As dependências. A ligação cuja ponta não veio na lista de nós é descartada — não é erro, é o grafo mostrado pela metade."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que pé está a execução que escreve o grafo. Decide se a peça se declara ocupada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "FlowGraphLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome da camada que rola, o molde da dependência e a palavra de cada estado."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O nome da camada que rola. Obrigatório: sem ele, a parada de teclado chega a quem ouve sem dizer onde a pessoa entrou."
+        },
+        "labelsDependsOn": {
+          "name": "dependsOn",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O molde da dependência. A lista de rótulos é substituída no lugar marcado."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra de cada um dos quatro estados, que é o que chega a quem não vê a forma da marca."
+        },
+        "nodeId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O endereço do nó. É por ele que as ligações o encontram."
+        },
+        "nodeLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que este passo é, como uma pessoa o chamaria. Nunca é cortado: ele quebra em várias linhas."
+        },
+        "nodeColumn": {
+          "name": "column",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "A casa da grade na horizontal. É relativa às demais: o conjunto inteiro é deslocado até encostar na origem."
+        },
+        "nodeRow": {
+          "name": "row",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "A casa da grade na vertical, também relativa às demais."
+        },
+        "nodeState": {
+          "name": "state",
+          "type": "'pending' | 'running' | 'done' | 'failed'",
+          "default": "—",
+          "required": "Sim",
+          "description": "Em que pé está este passo. Os quatro têm forma própria, e não só cor."
+        },
+        "edgeFrom": {
+          "name": "from",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O endereço do nó de que se depende."
+        },
+        "edgeTo": {
+          "name": "to",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O endereço do nó que depende. É na leitura deste que a ligação é dita."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A peça desenha os nós que recebe nas casas que recebe e as ligações que têm as duas pontas. Ela não dispõe, não mede elemento, não anima entrada, não conta tempo e não avança sozinha. Mostrar o grafo aos poucos é passar menos nós.",
+      "extensibilityCode": {
+        "vanilla": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nlet revelados = 1;\n\nfunction revelar() {\n  revelados += 1;\n  const proximo = createFlowGraph({\n    nodes: nos.slice(0, revelados),\n    edges: arestas,\n    status: revelados >= nos.length ? 'complete' : 'running',\n    labels: rotulos,\n  });\n  if (proximo) grafo.replaceWith(proximo);\n}",
+        "react": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nconst [revelados, setRevelados] = useState(1);\n\nconst revelar = () => setRevelados((atual) => Math.min(atual + 1, nos.length));\n\n<FlowGraph\n  nodes={nos.slice(0, revelados)}\n  edges={arestas}\n  status={revelados >= nos.length ? \"complete\" : \"running\"}\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nconst revelados = ref(1);\n\nconst visiveis = computed(() => nos.slice(0, revelados.value));\n\nfunction revelar() {\n  revelados.value = Math.min(revelados.value + 1, nos.length);\n}\n</script>\n\n<template>\n  <FlowGraph\n    :nodes=\"visiveis\"\n    :edges=\"arestas\"\n    :status=\"revelados >= nos.length ? 'complete' : 'running'\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n  //\n  // A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n  // desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n  // acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n  // a dona do assunto — o componente desenha o que recebe.\n  import { FlowGraph } from '@/components/ui/flow-graph';\n\n  let revelados = $state(1);\n\n  const visiveis = $derived(nos.slice(0, revelados));\n\n  function revelar() {\n    revelados = Math.min(revelados + 1, nos.length);\n  }\n</script>\n\n<FlowGraph\n  nodes={visiveis}\n  edges={arestas}\n  status={revelados >= nos.length ? 'complete' : 'running'}\n  labels={rotulos}\n/>",
+        "angular": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nreadonly revelados = signal(1);\n\nreadonly visiveis = computed(() => nos.slice(0, this.revelados()));\n\nrevelar(): void {\n  this.revelados.update((atual) => Math.min(atual + 1, nos.length));\n}\n\n// No template, os dois entram como os sinais que são:\n//\n//   <div\n//     ndsFlowGraph\n//     [nodes]=\"visiveis()\"\n//     [edges]=\"arestas\"\n//     [status]=\"revelados() >= nos.length ? 'complete' : 'running'\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-flow-graph",
+          "description": "Tamanho do texto da peça inteira."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-flow-graph-node-label",
+          "description": "Entrelinha do rótulo, que é o que faz a caixa crescer com a fonte do navegador em vez de ter altura."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-flow-graph-node",
+          "description": "A folga entre as caixas, que é margem do nó porque a grade não pode ter vão, e o espaço entre a marca e o rótulo."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Respiro interno da camada que rola, o respiro horizontal da caixa e o tamanho da marca."
+        },
+        "spacing24": {
+          "token": "--spacing-24",
+          "value": ".nds-flow-graph",
+          "description": "Largura mínima de coluna, e é ela que decide quando o grafo passa a rolar."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Superfície da camada que rola, atrás do desenho."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-flow-graph-node",
+          "description": "Fundo da caixa do nó. Opaco de propósito: é ele que recorta a curva na borda dela."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-flow-graph-node",
+          "description": "Cor do rótulo. Texto corrido em container de estado nunca carrega a cor semântica."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-flow-graph-edge",
+          "description": "Cor do traço da ligação e do contorno da marca. É objeto gráfico que informa, e por isso não usa a cor do contorno decorativo."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Contorno da camada que rola e da caixa do nó em repouso."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-flow-graph-node",
+          "description": "Contorno da caixa e da marca do passo em andamento."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-flow-graph-node-marker",
+          "description": "Preenchimento da marca do passo concluído."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-flow-graph-node",
+          "description": "Contorno da caixa e a cruz dentro da marca do passo que falhou."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Anel de foco da camada que rola, desenhado para dentro para não sair por baixo do que estiver ao lado."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Arredondamento da camada que rola."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-flow-graph-node",
+          "description": "Arredondamento da caixa do nó."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-flow-graph-node-marker",
+          "description": "Forma redonda da marca."
+        },
+        "spacing16": {
+          "token": "--spacing-16",
+          "value": ".nds-flow-graph",
+          "description": "Largura mínima de coluna mais apertada, no exemplo de customização."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-flow-graph {\n  /* A largura MÍNIMA de coluna, e é ela que decide quando o grafo passa a ser\n     mais largo que a conversa e a camada começa a rolar. Mínima e não fixa: as\n     colunas repartem a largura disponível em partes iguais e só param de\n     encolher aqui. */\n  --flow-graph-column-min: var(--spacing-16);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Um grafo desenhado não é lido: posição não tem ordem, e curva não tem palavra. A regra desta peça é que a estrutura acessível é a MESMA estrutura — cada nó é um item de lista de verdade, na ordem em que foi declarado, e o que a posição diz sem palavras ele diz com palavras dentro de si.",
+      "items": {
+        "item1": "Cada nó carrega, em texto que só quem ouve recebe, a palavra do seu estado e os rótulos dos nós de que ele depende.",
+        "item2": "Só as ligações que chegam são ditas. Cada uma aparece exatamente uma vez, e dizer as duas direções anunciaria tudo em dobro.",
+        "item3": "As curvas ficam fora do que é lido em voz, numa camada só — elas dizem em desenho a mesma relação que a frase diz em palavras.",
+        "item4": "A camada que rola tem papel, nome e parada de teclado. O papel é o que torna o nome legal: sobre um elemento sem papel, o nome é descartado.",
+        "item5": "O nome da camada é de quem monta, porque duas peças destas na mesma tela com o mesmo nome são duas paradas indistinguíveis.",
+        "item6": "Nenhum nó entra na ordem de foco: um nó não faz nada, e uma dúzia de paradas que não levam a lugar nenhum é ruído para quem usa teclado.",
+        "item7": "A ordem dos nós no código é a ordem de leitura. A posição na grade é livre; a ordem, não.",
+        "item8": "Cada estado tem forma própria — cheia, anel, traço interrompido, cruz — e a cor é reforço, nunca o portador."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Para uma vez, na camada que rola. Nenhum nó recebe foco, porque nenhum nó faz nada.",
+        "enter": "Não faz nada: a peça é de leitura e não oferece ação.",
+        "arrows": "Rolam o grafo quando ele é mais largo que a conversa, com o foco na camada."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A camada que rola declara papel de grupo e leva o nome que quem monta passou. Grupo, e não região: uma página com dezenas destas viraria dezenas de marcos homônimos.",
+        "item2": "A raiz se declara ocupada enquanto a execução corre, e nada nela é região viva.",
+        "item3": "O desenho das ligações sai inteiro da árvore de acessibilidade, numa camada só."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "A lista é anunciada com a contagem de nós, e cada nó é lido como rótulo, estado e de quem ele depende.",
+        "item2": "Nada é anunciado enquanto o grafo se escreve; quem quiser anunciar o fim escreve uma frase, uma vez, do lado de fora.",
+        "item3": "Nenhuma coordenada é lida: a posição é para os olhos, e o que ela diz já chegou em palavras."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentPlan": {
+          "name": "Plano do agente",
+          "description": "Quando o trabalho é uma fila ordenada e nada se ramifica nem se reencontra."
+        },
+        "toolGroup": {
+          "name": "Grupo de chamadas",
+          "description": "Quando o que se mostra é a lista do que o agente fez, com estado por chamada e sem relação entre elas."
+        },
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "Quando o assunto é a resposta inteira — em que pé está, há quanto tempo, e onde ficam as ações."
+        },
+        "chart": {
+          "name": "Gráfico",
+          "description": "Quando o desenho sai de valores medidos, e não de uma relação entre itens."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "O que faz esta peça existir não é a posição: é a ligação. Dizer que um passo depende de outro é uma relação entre dois itens, e nada no vocabulário desta família sabia dizer isso — uma fila ordenada não se ramifica nem se reencontra.",
+      "item2": "Antes de construir, foi medido: o único conector do design system é a linha de 1 px entre etapas vizinhas de uma fila linear, e o gráfico tem oito tipos e nenhum deles é grafo.",
+      "item3": "A grade não tem vão entre as casas, e a folga é margem da caixa. É o que faz o desenho das curvas fechar com a grade sem medir elemento nenhum — com vão, o centro de uma casa deixaria de ser calculável, e medir traria observador de redimensionamento e cinco implementações de uma conta que hoje se testa sem navegador.",
+      "item4": "A curva passa por baixo das caixas, e por isso a caixa é opaca. Ela nasce no centro de uma casa e morre no centro da outra, não na borda — a borda depende da largura do rótulo, que é texto e não se sabe de antemão.",
+      "item5": "A palavra do estado não é visível, e é a divergência deliberada em relação ao plano do agente. Ali o passo é uma linha de lista, com largura de sobra; aqui a caixa tem a largura do rótulo, e uma etiqueta por nó dobraria a largura de toda coluna — um grafo que não cabe na tela deixa de ser lido como grafo.",
+      "item6": "A referência achata o estado em três, e o que se perde é a falha: um passo que quebrou desenharia igual a um que terminou. A peça leva os quatro.",
+      "item7": "Não existe contador de revelação. Ele é da folha de animação, e sem ele some junto o segundo tom de traço que existia só para mostrar a ligação adiante da revelação — sem revelação não há adiante."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar nós e ligações",
+          "result": "Há um nó por nó e uma curva por ligação com as duas pontas",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar uma ligação cuja ponta não veio na lista de nós",
+          "result": "Ela não é desenhada, e a peça não quebra",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Passar coordenadas que não começam na origem",
+          "result": "O grafo inteiro encosta na origem, sem colunas vazias à esquerda",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar um nó que depende de outros",
+          "result": "Ele carrega a palavra do estado e os rótulos de que depende, em texto que só quem ouve recebe",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar a peça",
+          "result": "A camada que rola tem papel de grupo, nome e parada de teclado",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar o estado em que a execução corre",
+          "result": "A peça se declara ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar um estado em que a execução já não corre",
+          "result": "A peça deixa de se declarar ocupada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar a peça sem nó nenhum",
+          "result": "Não há grafo, e nada é desenhado",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Passar os quatro estados de nó",
+          "result": "Cada um chega ao desenho com a sua palavra e a sua marca",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Passar um grafo mais largo que a conversa",
+          "result": "Uma só camada rola, e é a que tem nome e foco",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "Cada nó diz o seu estado em palavra, e não só pela marca",
+        "item2": "Cada ligação é dita exatamente uma vez, do lado que chega",
+        "item3": "O desenho das ligações está fora do que é lido em voz",
+        "item4": "A camada que rola tem papel e nome, e o papel é o que torna o nome legal",
+        "item5": "Nada dentro da peça é região viva",
+        "item6": "Nenhum nó entra na ordem de foco",
+        "item7": "Os nós são uma lista ordenada, na ordem em que foram declarados"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — o grafo, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os quatro, na mesma grade",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — um caminho que quebrou",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — em andamento, com a execução ocupada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composições — o grafo pela metade, com as ligações órfãs ausentes",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — mais largo que a conversa, rolando",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Composições — rótulos longos, que quebram em vez de cortar",
+          "priority": "high"
+        },
+        "item8": {
+          "story": "Composições — um ramo que volta para uma coluna anterior",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Flow graph",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "Work that branches and rejoins: one node per step, on the grid cell the composer chose, and one curve per dependency.",
+    "seo": {
+      "title": "Flow graph — the node, the cell and the dependency",
+      "description": "The flow graph piece: nodes placed on a grid the composer declares, curves linking what depends on what, and the spoken reading that carries the graph to whoever cannot see the drawing."
+    },
+    "labels": {
+      "region": "Support flow",
+      "dependsOn": "Depends on {sources}.",
+      "state": {
+        "pending": "To do",
+        "running": "In progress",
+        "done": "Done",
+        "failed": "Failed"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "order": "While the agent works, with two paths running in parallel",
+        "failure": "When one of the paths breaks",
+        "partial": "The graph shown half way, with fewer nodes",
+        "wide": "When the flow is wider than the conversation"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The scrolling layer wraps the whole graph. It is the only one that scrolls, it takes keyboard focus and it carries a role and a name — without them, whoever lands there by ear does not know where they are.",
+      "item2": "The drawing takes the available width and goes past it once the columns reach the minimum width. That is where scrolling starts.",
+      "item3": "The curves live in a single layer behind the boxes, and they leave the spoken reading entirely. Each one is born at the centre of one cell and dies at the centre of another.",
+      "item4": "The nodes are an ordered list, and the order is the declared one — it is the reading order, and nobody reads the position on the grid.",
+      "item5": "Each node carries the state marker, which holds shape and not only colour, the label in full, and a sentence only listeners receive: the word for the state and which nodes it depends on.",
+      "structureCode": {
+        "web": "<div class=\"nds-flow-graph\" data-slot=\"flow-graph\" aria-busy=\"true\">\n  <div class=\"nds-flow-graph-viewport\" data-slot=\"flow-graph-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Fluxo do atendimento\">\n    <div class=\"nds-flow-graph-canvas\" data-slot=\"flow-graph-canvas\"\n         style=\"--flow-graph-columns: 4; --flow-graph-rows: 3\">\n\n      <svg class=\"nds-flow-graph-edges\" data-slot=\"flow-graph-edges\"\n           viewBox=\"0 0 4 3\" preserveAspectRatio=\"none\"\n           aria-hidden=\"true\" focusable=\"false\">\n        <path class=\"nds-flow-graph-edge\" data-slot=\"flow-graph-edge\"\n              d=\"M 0.5 1.5 C 1 1.5 1 0.5 1.5 0.5\"\n              vector-effect=\"non-scaling-stroke\"></path>\n      </svg>\n\n      <ol class=\"nds-flow-graph-nodes\" data-slot=\"flow-graph-nodes\">\n        <li class=\"nds-flow-graph-node\" data-slot=\"flow-graph-node\"\n            data-state=\"done\"\n            style=\"--flow-graph-node-column: 1; --flow-graph-node-row: 2\">\n          <span class=\"nds-flow-graph-node-marker\"\n                data-slot=\"flow-graph-node-marker\" aria-hidden=\"true\"></span>\n          <span class=\"nds-flow-graph-node-label\"\n                data-slot=\"flow-graph-node-label\">Ler o pedido</span>\n          <span class=\"nds-sr-only\"\n                data-slot=\"flow-graph-node-reading\">Concluído.</span>\n        </li>\n      </ol>\n\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Guidelines",
+        "item1": "Use it when work branches and rejoins — two paths running in parallel, a decision with two outcomes, a step waiting on two others.",
+        "item2": "Choose each node’s cell: the piece lays nothing out, and whoever builds the graph is the one who knows its shape.",
+        "item3": "Declare the nodes in the order you want them heard. Position is free; the order in code is the reading order.",
+        "item4": "Name the scrolling layer, and give a different name to each graph on the same screen.",
+        "item5": "To reveal the graph gradually, pass fewer nodes. Links that lost an endpoint disappear on their own."
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Show work that branches and rejoins, with what depends on what",
+          "u": "Flow graph",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Show what the agent intends to do, step by step, in a queue",
+          "u": "Agent plan",
+          "a": "There the order is the information and nothing branches; here the information is which step depends on which."
+        },
+        "item3": {
+          "s": "List what the agent did, with a state per call",
+          "u": "Tool group",
+          "a": "There each row is a call and none depends on another."
+        },
+        "item4": {
+          "s": "Compare numbers, proportions or series",
+          "u": "Chart",
+          "a": "There the drawing comes from measured values; here it comes from a relation between items."
+        },
+        "item5": {
+          "s": "Show how far a long job has come",
+          "u": "Job progress",
+          "a": "There it is a count against a total; here it is a relation between steps, and a relation does not add up."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "region": {
+            "name": "Layer name",
+            "format": "What the person reached, not what the element does",
+            "good": "Support flow",
+            "bad": "Scroll region"
+          },
+          "label": {
+            "name": "Node label",
+            "format": "A short action, as a person would name it",
+            "good": "Check the stock",
+            "bad": "verifyItemAvailability()"
+          },
+          "dependsOn": {
+            "name": "Dependency template",
+            "format": "A sentence with the place for the list of labels marked",
+            "good": "Depends on {sources}.",
+            "bad": "Dependencies: 2"
+          },
+          "state": {
+            "name": "State word",
+            "format": "One word per state, which is what reaches whoever cannot see the marker",
+            "good": "In progress",
+            "bad": "Blue"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Give the scrolling layer a name that says where the person landed.",
+        "item2": "Declare the nodes in the order they should be heard.",
+        "item3": "Use all four state words, the failure one included — a path that broke is not a path that finished.",
+        "item4": "Keep the label short: it decides the width of every column."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not compute the layout in the piece: each node’s cell is data that arrives from outside.",
+        "item2": "Do not announce every node that changes — a flow changes node faster than it can be read.",
+        "item3": "Do not use the same word for two graphs on the same screen: two keyboard stops with the same name are indistinguishable.",
+        "item4": "Do not tell states apart by colour alone: whoever cannot see it is left without the information."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "Each node says, in words, its state and which nodes it depends on — the graph rebuilds itself by ear.",
+        "dont": "Only the curve links one node to another, and whoever reads by ear receives a list of loose boxes."
+      },
+      "pair2": {
+        "do": "The scrolling layer carries role, name and keyboard stop, on the same line.",
+        "dont": "The layer scrolls without a name, and whoever arrives by keyboard does not know where they are."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createFlowGraph } from '@/components/ui/flow-graph';\n\nconst flowGraph = createFlowGraph({\n  nodes: nos,\n  edges: arestas,\n  status: 'running',\n  labels: rotulos,\n});\n\n// Sem nó nenhum não há grafo, e a fábrica devolve nada.\nif (flowGraph) document.querySelector('#app')?.append(flowGraph);",
+        "react": "import { FlowGraph } from \"@/components/ui/flow-graph\";\n\n<FlowGraph\n  nodes={nos}\n  edges={arestas}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "vue": "<FlowGraph\n  :nodes=\"nos\"\n  :edges=\"arestas\"\n  status=\"running\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<script lang=\"ts\">\n  import { FlowGraph } from '@/components/ui/flow-graph';\n</script>\n\n<FlowGraph\n  nodes={nos}\n  edges={arestas}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsFlowGraph\n  [nodes]=\"nos\"\n  [edges]=\"arestas\"\n  status=\"running\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "vanilla": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};",
+        "react": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos: FlowGraphLabels = {\n  region: \"Fluxo do atendimento\",\n  dependsOn: \"Depende de {sources}.\",\n  state: {\n    pending: \"Por fazer\",\n    running: \"Em andamento\",\n    done: \"Concluído\",\n    failed: \"Falhou\",\n  },\n};",
+        "vue": "<script setup lang=\"ts\">\n// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos: FlowGraphLabels = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n  // então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n  // ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n  // nome são duas paradas indistinguíveis.\n  //\n  // O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n  // apresenta a lista é do idioma, e os rótulos são dado.\n  //\n  // A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\n  const rotulos: FlowGraphLabels = {\n    region: 'Fluxo do atendimento',\n    dependsOn: 'Depende de {sources}.',\n    state: {\n      pending: 'Por fazer',\n      running: 'Em andamento',\n      done: 'Concluído',\n      failed: 'Falhou',\n    },\n  };\n</script>",
+        "angular": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: FlowGraphLabels = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "pending": {
+        "label": "To do",
+        "trigger": "The step has not started, and it may be waiting on another.",
+        "behavior": "The box and the marker take a broken stroke, which is the shape that sets apart what has not happened yet."
+      },
+      "running": {
+        "label": "In progress",
+        "trigger": "The step is being executed right now.",
+        "behavior": "The box and the marker switch to the accent colour, and the marker stays a ring — the shape does not change, and it is the word that closes the reading."
+      },
+      "done": {
+        "label": "Done",
+        "trigger": "The step finished and produced what it should.",
+        "behavior": "The marker becomes solid, which is the shape that sets apart what finished from what is still going."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The step broke, and the path going through it stopped there.",
+        "behavior": "The box changes colour and the marker gains a cross — it is the state the reference does not have, and without it a broken path would look like one that finished."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "nodes": {
+          "name": "nodes",
+          "type": "readonly FlowNode[]",
+          "default": "—",
+          "required": "Yes",
+          "description": "The nodes, in the order they should be heard. With no node there is no graph, and the piece draws nothing."
+        },
+        "edges": {
+          "name": "edges",
+          "type": "readonly FlowEdge[]",
+          "default": "[]",
+          "required": "No",
+          "description": "The dependencies. A link whose endpoint did not arrive in the node list is dropped — it is not an error, it is the graph shown half way."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where the run writing the graph stands. It decides whether the piece declares itself busy."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "FlowGraphLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the scrolling layer, the dependency template and the word for each state."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The name of the scrolling layer. Required: without it the keyboard stop reaches listeners without saying where the person landed."
+        },
+        "labelsDependsOn": {
+          "name": "dependsOn",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The dependency template. The list of labels is substituted at the marked place."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word for each of the four states, which is what reaches whoever cannot see the shape of the marker."
+        },
+        "nodeId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The node’s address. It is how the links find it."
+        },
+        "nodeLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What this step is, as a person would name it. It is never truncated: it wraps across lines."
+        },
+        "nodeColumn": {
+          "name": "column",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "The grid cell across. It is relative to the others: the whole set is shifted until it touches the origin."
+        },
+        "nodeRow": {
+          "name": "row",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "The grid cell down, also relative to the others."
+        },
+        "nodeState": {
+          "name": "state",
+          "type": "'pending' | 'running' | 'done' | 'failed'",
+          "default": "—",
+          "required": "Yes",
+          "description": "Where this step stands. All four have their own shape, and not only colour."
+        },
+        "edgeFrom": {
+          "name": "from",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The address of the node being depended on."
+        },
+        "edgeTo": {
+          "name": "to",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The address of the node that depends. It is in this one’s reading that the link is spoken."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The piece draws the nodes it receives on the cells it receives, and the links that have both endpoints. It does not lay out, measure elements, animate entrances, count time or advance on its own. Showing the graph gradually means passing fewer nodes.",
+      "extensibilityCode": {
+        "vanilla": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nlet revelados = 1;\n\nfunction revelar() {\n  revelados += 1;\n  const proximo = createFlowGraph({\n    nodes: nos.slice(0, revelados),\n    edges: arestas,\n    status: revelados >= nos.length ? 'complete' : 'running',\n    labels: rotulos,\n  });\n  if (proximo) grafo.replaceWith(proximo);\n}",
+        "react": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nconst [revelados, setRevelados] = useState(1);\n\nconst revelar = () => setRevelados((atual) => Math.min(atual + 1, nos.length));\n\n<FlowGraph\n  nodes={nos.slice(0, revelados)}\n  edges={arestas}\n  status={revelados >= nos.length ? \"complete\" : \"running\"}\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nconst revelados = ref(1);\n\nconst visiveis = computed(() => nos.slice(0, revelados.value));\n\nfunction revelar() {\n  revelados.value = Math.min(revelados.value + 1, nos.length);\n}\n</script>\n\n<template>\n  <FlowGraph\n    :nodes=\"visiveis\"\n    :edges=\"arestas\"\n    :status=\"revelados >= nos.length ? 'complete' : 'running'\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n  //\n  // A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n  // desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n  // acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n  // a dona do assunto — o componente desenha o que recebe.\n  import { FlowGraph } from '@/components/ui/flow-graph';\n\n  let revelados = $state(1);\n\n  const visiveis = $derived(nos.slice(0, revelados));\n\n  function revelar() {\n    revelados = Math.min(revelados + 1, nos.length);\n  }\n</script>\n\n<FlowGraph\n  nodes={visiveis}\n  edges={arestas}\n  status={revelados >= nos.length ? 'complete' : 'running'}\n  labels={rotulos}\n/>",
+        "angular": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nreadonly revelados = signal(1);\n\nreadonly visiveis = computed(() => nos.slice(0, this.revelados()));\n\nrevelar(): void {\n  this.revelados.update((atual) => Math.min(atual + 1, nos.length));\n}\n\n// No template, os dois entram como os sinais que são:\n//\n//   <div\n//     ndsFlowGraph\n//     [nodes]=\"visiveis()\"\n//     [edges]=\"arestas\"\n//     [status]=\"revelados() >= nos.length ? 'complete' : 'running'\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-flow-graph",
+          "description": "Text size for the whole piece."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-flow-graph-node-label",
+          "description": "Label leading, which is what makes the box grow with the browser font instead of having a height."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-flow-graph-node",
+          "description": "The gap between boxes, which is a node margin because the grid cannot have gutters, and the space between marker and label."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Inner breathing room of the scrolling layer, the horizontal breathing room of the box and the size of the marker."
+        },
+        "spacing24": {
+          "token": "--spacing-24",
+          "value": ".nds-flow-graph",
+          "description": "Minimum column width, and it is what decides when the graph starts to scroll."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Surface of the scrolling layer, behind the drawing."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-flow-graph-node",
+          "description": "Background of the node box. Opaque on purpose: it is what clips the curve at its edge."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-flow-graph-node",
+          "description": "Label colour. Running text in a state container never carries the semantic colour."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-flow-graph-edge",
+          "description": "Colour of the link stroke and of the marker outline. It is a graphical object that informs, so it does not use the decorative border colour."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Outline of the scrolling layer and of the resting node box."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-flow-graph-node",
+          "description": "Outline of the box and marker of the step in progress."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-flow-graph-node-marker",
+          "description": "Fill of the marker of the finished step."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-flow-graph-node",
+          "description": "Outline of the box and the cross inside the marker of the step that failed."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Focus ring of the scrolling layer, drawn inwards so it does not slip under whatever sits beside it."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Corner rounding of the scrolling layer."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-flow-graph-node",
+          "description": "Corner rounding of the node box."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-flow-graph-node-marker",
+          "description": "Round shape of the marker."
+        },
+        "spacing16": {
+          "token": "--spacing-16",
+          "value": ".nds-flow-graph",
+          "description": "A tighter minimum column width, in the customisation example."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-flow-graph {\n  /* A largura MÍNIMA de coluna, e é ela que decide quando o grafo passa a ser\n     mais largo que a conversa e a camada começa a rolar. Mínima e não fixa: as\n     colunas repartem a largura disponível em partes iguais e só param de\n     encolher aqui. */\n  --flow-graph-column-min: var(--spacing-16);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "A drawn graph is not read: position has no order, and a curve has no words. The rule of this piece is that the accessible structure is the SAME structure — each node is a real list item, in the order it was declared, and what the position says without words it says with words inside itself.",
+      "items": {
+        "item1": "Each node carries, in text only listeners receive, the word for its state and the labels of the nodes it depends on.",
+        "item2": "Only incoming links are spoken. Each appears exactly once, and saying both directions would announce everything twice over.",
+        "item3": "The curves stay out of the spoken reading, in a single layer — they say in drawing the same relation the sentence says in words.",
+        "item4": "The scrolling layer carries role, name and keyboard stop. The role is what makes the name legal: on an element without a role, the name is discarded.",
+        "item5": "The layer name belongs to whoever composes, because two of these on the same screen with the same name are two indistinguishable stops.",
+        "item6": "No node enters the focus order: a node does nothing, and a dozen stops leading nowhere are noise for keyboard users.",
+        "item7": "The order of the nodes in code is the reading order. Position on the grid is free; the order is not.",
+        "item8": "Each state has its own shape — solid, ring, broken stroke, cross — and colour is reinforcement, never the carrier."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Stops once, on the scrolling layer. No node takes focus, because no node does anything.",
+        "enter": "Does nothing: the piece is for reading and offers no action.",
+        "arrows": "Scroll the graph when it is wider than the conversation, with focus on the layer."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The scrolling layer declares a group role and carries the name the composer passed. Group, and not region: a page with dozens of these would become dozens of homonymous landmarks.",
+        "item2": "The root declares itself busy while the run is going, and nothing in it is a live region.",
+        "item3": "The drawing of the links leaves the accessibility tree entirely, in a single layer."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The list is announced with its node count, and each node is read as label, state and what it depends on.",
+        "item2": "Nothing is announced while the graph writes itself; whoever wants to announce the end writes one sentence, once, outside.",
+        "item3": "No coordinate is read: position is for the eyes, and what it says has already arrived in words."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "agentPlan": {
+          "name": "Agent plan",
+          "description": "When the work is an ordered queue and nothing branches or rejoins."
+        },
+        "toolGroup": {
+          "name": "Tool group",
+          "description": "When what is shown is the list of what the agent did, with a state per call and no relation between them."
+        },
+        "agentStatus": {
+          "name": "Run status",
+          "description": "When the subject is the whole answer — where it stands, for how long, and where the actions are."
+        },
+        "chart": {
+          "name": "Chart",
+          "description": "When the drawing comes from measured values, and not from a relation between items."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "What makes this piece exist is not the position: it is the link. Saying that one step depends on another is a relation between two items, and nothing in this family’s vocabulary could say that — an ordered queue neither branches nor rejoins.",
+      "item2": "Measured before building: the only connector in the design system is the 1 px line between neighbouring steps of a linear queue, and the chart has eight types and none of them is a graph.",
+      "item3": "The grid has no gutter between cells, and the breathing room is a box margin. That is what makes the curves close with the grid without measuring any element — with a gutter, the centre of a cell would stop being computable, and measuring would bring a resize observer and five implementations of a calculation that today is tested without a browser.",
+      "item4": "The curve passes under the boxes, which is why the box is opaque. It is born at the centre of one cell and dies at the centre of another, not at the edge — the edge depends on the label width, which is text and is not known in advance.",
+      "item5": "The state word is not visible, and that is the deliberate divergence from the agent plan. There the step is a list row, with width to spare; here the box is as wide as the label, and a badge per node would double the width of every column — a graph that does not fit on screen stops being read as a graph.",
+      "item6": "The reference flattens the state into three, and what is lost is failure: a step that broke would look like one that finished. The piece carries all four.",
+      "item7": "There is no reveal counter. It belongs to the animation sheet, and with it goes the second stroke tone that existed only to show the link ahead of the reveal — with no reveal there is no ahead."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the page.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "On interacting with the demonstration.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass nodes and links",
+          "result": "There is one node per node and one curve per link with both endpoints",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass a link whose endpoint did not arrive in the node list",
+          "result": "It is not drawn, and the piece does not break",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pass coordinates that do not start at the origin",
+          "result": "The whole graph touches the origin, with no empty columns on the left",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass a node that depends on others",
+          "result": "It carries the word for the state and the labels it depends on, in text only listeners receive",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mount the piece",
+          "result": "The scrolling layer has a group role, a name and a keyboard stop",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass the state in which the run is going",
+          "result": "The piece declares itself busy",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass a state in which the run is no longer going",
+          "result": "The piece stops declaring itself busy",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Mount the piece with no node at all",
+          "result": "There is no graph, and nothing is drawn",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pass the four node states",
+          "result": "Each reaches the drawing with its word and its marker",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pass a graph wider than the conversation",
+          "result": "A single layer scrolls, and it is the one with the name and the focus",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "Each node says its state in a word, and not only through the marker",
+        "item2": "Each link is spoken exactly once, on the incoming side",
+        "item3": "The drawing of the links is out of the spoken reading",
+        "item4": "The scrolling layer has role and name, and the role is what makes the name legal",
+        "item5": "Nothing inside the piece is a live region",
+        "item6": "No node enters the focus order",
+        "item7": "The nodes are an ordered list, in the order they were declared"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in every theme and mode.",
+        "item1": {
+          "story": "Playground — the graph, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — all four, on the same grid",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — a path that broke",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — in progress, with the run busy",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Compositions — the graph half way, with the orphan links absent",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — wider than the conversation, scrolling",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Compositions — long labels, wrapping instead of truncating",
+          "priority": "high"
+        },
+        "item8": {
+          "story": "Compositions — a branch that goes back to an earlier column",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Grafo de flujo",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "El trabajo que se ramifica y vuelve a juntarse: un nodo por paso, en la casilla de la cuadrícula que eligió quien lo monta, y una curva por dependencia.",
+    "seo": {
+      "title": "Grafo de flujo — el nodo, la casilla y la dependencia",
+      "description": "La pieza de grafo de flujo: nodos colocados en una cuadrícula que declara quien la monta, curvas que unen lo que depende de qué, y la lectura en palabras que lleva el grafo a quien no ve el dibujo."
+    },
+    "labels": {
+      "region": "Flujo de la atención",
+      "dependsOn": "Depende de {sources}.",
+      "state": {
+        "pending": "Por hacer",
+        "running": "En curso",
+        "done": "Completado",
+        "failed": "Falló"
+      }
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "order": "Mientras el agente trabaja, con dos caminos en paralelo",
+        "failure": "Cuando uno de los caminos se rompe",
+        "partial": "El grafo mostrado a medias, con menos nodos",
+        "wide": "Cuando el flujo es más ancho que la conversación"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La capa que se desplaza envuelve el grafo entero. Es la única que se desplaza, recibe foco por teclado y tiene rol y nombre — sin ellos, quien llega ahí oyendo no sabe dónde entró.",
+      "item2": "El dibujo ocupa el ancho disponible y lo supera cuando las columnas llegan al ancho mínimo. Ahí empieza el desplazamiento.",
+      "item3": "Las curvas están en una sola capa, detrás de las cajas, y salen enteras de lo que se lee en voz. Cada una nace en el centro de una casilla y muere en el centro de otra.",
+      "item4": "Los nodos son una lista ordenada, y el orden es el de declaración — es el orden de lectura, y nadie lee la posición en la cuadrícula.",
+      "item5": "Cada nodo trae la marca del estado, que lleva forma y no solo color, la etiqueta completa y una frase que solo recibe quien escucha: la palabra del estado y de qué nodos depende.",
+      "structureCode": {
+        "web": "<div class=\"nds-flow-graph\" data-slot=\"flow-graph\" aria-busy=\"true\">\n  <div class=\"nds-flow-graph-viewport\" data-slot=\"flow-graph-viewport\"\n       tabindex=\"0\" role=\"group\" aria-label=\"Fluxo do atendimento\">\n    <div class=\"nds-flow-graph-canvas\" data-slot=\"flow-graph-canvas\"\n         style=\"--flow-graph-columns: 4; --flow-graph-rows: 3\">\n\n      <svg class=\"nds-flow-graph-edges\" data-slot=\"flow-graph-edges\"\n           viewBox=\"0 0 4 3\" preserveAspectRatio=\"none\"\n           aria-hidden=\"true\" focusable=\"false\">\n        <path class=\"nds-flow-graph-edge\" data-slot=\"flow-graph-edge\"\n              d=\"M 0.5 1.5 C 1 1.5 1 0.5 1.5 0.5\"\n              vector-effect=\"non-scaling-stroke\"></path>\n      </svg>\n\n      <ol class=\"nds-flow-graph-nodes\" data-slot=\"flow-graph-nodes\">\n        <li class=\"nds-flow-graph-node\" data-slot=\"flow-graph-node\"\n            data-state=\"done\"\n            style=\"--flow-graph-node-column: 1; --flow-graph-node-row: 2\">\n          <span class=\"nds-flow-graph-node-marker\"\n                data-slot=\"flow-graph-node-marker\" aria-hidden=\"true\"></span>\n          <span class=\"nds-flow-graph-node-label\"\n                data-slot=\"flow-graph-node-label\">Ler o pedido</span>\n          <span class=\"nds-sr-only\"\n                data-slot=\"flow-graph-node-reading\">Concluído.</span>\n        </li>\n      </ol>\n\n    </div>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Directrices",
+        "item1": "Úsalo cuando el trabajo se ramifica y vuelve a juntarse — dos caminos en paralelo, una decisión con dos desenlaces, un paso que espera a otros dos.",
+        "item2": "Elige la casilla de cada nodo: la pieza no dispone nada, y quien monta el grafo es quien sabe su forma.",
+        "item3": "Declara los nodos en el orden en que quieres que se escuchen. La posición es libre; el orden en el código es el orden de lectura.",
+        "item4": "Dale nombre a la capa que se desplaza, y un nombre distinto a cada grafo de la misma pantalla.",
+        "item5": "Para mostrar el grafo poco a poco, pasa menos nodos. Los enlaces que perdieron un extremo desaparecen solos."
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar trabajo que se ramifica y se reencuentra, con qué depende de qué",
+          "u": "Grafo de flujo",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Mostrar lo que el agente pretende hacer, paso a paso, en fila",
+          "u": "Plan del agente",
+          "a": "Allí el orden es la información y nada se ramifica; aquí la información es qué paso depende de cuál."
+        },
+        "item3": {
+          "s": "Listar lo que el agente hizo, con estado por llamada",
+          "u": "Grupo de llamadas",
+          "a": "Allí cada fila es una llamada y ninguna depende de otra."
+        },
+        "item4": {
+          "s": "Comparar números, proporciones o series",
+          "u": "Gráfico",
+          "a": "Allí el dibujo sale de valores medidos; aquí sale de una relación entre elementos."
+        },
+        "item5": {
+          "s": "Mostrar cuánto ha avanzado un trabajo largo",
+          "u": "Progreso del trabajo",
+          "a": "Allí hay una cuenta contra un total; aquí hay una relación entre pasos, y una relación no se suma."
+        }
+      },
+      "uxWriting": {
+        "title": "Escritura",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "region": {
+            "name": "Nombre de la capa",
+            "format": "Lo que la persona alcanzó, y no lo que hace el elemento",
+            "good": "Flujo de la atención",
+            "bad": "Región de desplazamiento"
+          },
+          "label": {
+            "name": "Etiqueta del nodo",
+            "format": "Una acción corta, como la nombraría una persona",
+            "good": "Revisar el stock",
+            "bad": "verificarDisponibilidadDeItems()"
+          },
+          "dependsOn": {
+            "name": "Plantilla de dependencia",
+            "format": "Una frase con el lugar de la lista de etiquetas marcado",
+            "good": "Depende de {sources}.",
+            "bad": "Dependencias: 2"
+          },
+          "state": {
+            "name": "Palabra del estado",
+            "format": "Una palabra por estado, que es lo que llega a quien no ve la marca",
+            "good": "En curso",
+            "bad": "Azul"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Dale a la capa que se desplaza un nombre que diga dónde entró la persona.",
+        "item2": "Declara los nodos en el orden en que deben escucharse.",
+        "item3": "Usa las cuatro palabras de estado, incluida la de fallo — un camino que se rompió no es un camino que terminó.",
+        "item4": "Deja la etiqueta corta: ella decide el ancho de todas las columnas."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No calcules la disposición en la pieza: la casilla de cada nodo es dato que llega de fuera.",
+        "item2": "No anuncies cada nodo que cambia — un flujo cambia de nodo más rápido de lo que se lee.",
+        "item3": "No uses la misma palabra para dos grafos de la misma pantalla: dos paradas de teclado con el mismo nombre son indistinguibles.",
+        "item4": "No distingas estados solo por color: quien no lo ve se queda sin la información entera."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "Cada nodo dice, en palabras, su estado y de qué nodos depende — el grafo se reconstruye de oído.",
+        "dont": "Solo la curva une un nodo con otro, y quien lee de oído recibe una lista de cajas sueltas."
+      },
+      "pair2": {
+        "do": "La capa que se desplaza lleva rol, nombre y parada de teclado, en la misma línea.",
+        "dont": "La capa se desplaza sin nombre, y quien llega por teclado no sabe dónde está."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createFlowGraph } from '@/components/ui/flow-graph';\n\nconst flowGraph = createFlowGraph({\n  nodes: nos,\n  edges: arestas,\n  status: 'running',\n  labels: rotulos,\n});\n\n// Sem nó nenhum não há grafo, e a fábrica devolve nada.\nif (flowGraph) document.querySelector('#app')?.append(flowGraph);",
+        "react": "import { FlowGraph } from \"@/components/ui/flow-graph\";\n\n<FlowGraph\n  nodes={nos}\n  edges={arestas}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "vue": "<FlowGraph\n  :nodes=\"nos\"\n  :edges=\"arestas\"\n  status=\"running\"\n  :labels=\"rotulos\"\n/>",
+        "svelte": "<script lang=\"ts\">\n  import { FlowGraph } from '@/components/ui/flow-graph';\n</script>\n\n<FlowGraph\n  nodes={nos}\n  edges={arestas}\n  status=\"running\"\n  labels={rotulos}\n/>",
+        "angular": "<div\n  ndsFlowGraph\n  [nodes]=\"nos\"\n  [edges]=\"arestas\"\n  status=\"running\"\n  [labels]=\"rotulos\"\n></div>"
+      },
+      "withLabels": "Las etiquetas",
+      "withLabelsCode": {
+        "vanilla": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};",
+        "react": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos: FlowGraphLabels = {\n  region: \"Fluxo do atendimento\",\n  dependsOn: \"Depende de {sources}.\",\n  state: {\n    pending: \"Por fazer\",\n    running: \"Em andamento\",\n    done: \"Concluído\",\n    failed: \"Falhou\",\n  },\n};",
+        "vue": "<script setup lang=\"ts\">\n// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\nconst rotulos: FlowGraphLabels = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};\n</script>",
+        "svelte": "<script lang=\"ts\">\n  // Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n  //\n  // O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n  // então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n  // ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n  // nome são duas paradas indistinguíveis.\n  //\n  // O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n  // apresenta a lista é do idioma, e os rótulos são dado.\n  //\n  // A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\n  const rotulos: FlowGraphLabels = {\n    region: 'Fluxo do atendimento',\n    dependsOn: 'Depende de {sources}.',\n    state: {\n      pending: 'Por fazer',\n      running: 'Em andamento',\n      done: 'Concluído',\n      failed: 'Falhou',\n    },\n  };\n</script>",
+        "angular": "// Três coisas, e as três são de interface — nenhuma delas é a fala do agente.\n//\n// O NOME DA CAMADA QUE ROLA é obrigatório: o grafo é mais largo que a conversa,\n// então ele rola, e o que rola é parada de teclado. Sem nome, quem chega ali\n// ouvindo não sabe onde entrou — e duas peças destas na mesma tela com o mesmo\n// nome são duas paradas indistinguíveis.\n//\n// O MOLDE DA DEPENDÊNCIA leva a lista de rótulos no lugar marcado: a palavra que\n// apresenta a lista é do idioma, e os rótulos são dado.\n//\n// A PALAVRA DE CADA ESTADO é o que chega a quem não vê a forma da marca.\n//\n// Membro de classe, e não constante no topo do arquivo: expressão de template\n// só enxerga membro, e um binding para uma constante importada não resolve.\nreadonly rotulos: FlowGraphLabels = {\n  region: 'Fluxo do atendimento',\n  dependsOn: 'Depende de {sources}.',\n  state: {\n    pending: 'Por fazer',\n    running: 'Em andamento',\n    done: 'Concluído',\n    failed: 'Falhou',\n  },\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "pending": {
+        "label": "Por hacer",
+        "trigger": "El paso aún no empezó, y puede que espere a otro.",
+        "behavior": "La caja y la marca quedan con el trazo interrumpido, que es la forma que separa lo que aún no ocurrió."
+      },
+      "running": {
+        "label": "En curso",
+        "trigger": "El paso se está ejecutando ahora.",
+        "behavior": "La caja y la marca cambian al color de énfasis, y la marca sigue siendo un anillo — la forma no cambia, y es la palabra la que cierra la lectura."
+      },
+      "done": {
+        "label": "Completado",
+        "trigger": "El paso terminó y produjo lo que debía.",
+        "behavior": "La marca queda llena, que es la forma que separa lo que terminó de lo que sigue en curso."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "El paso se rompió, y el camino que pasaba por él se detuvo ahí.",
+        "behavior": "La caja cambia de color y la marca gana una cruz — es el estado que la referencia no tiene, y sin él un camino roto se dibujaría igual que uno que terminó."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "nodes": {
+          "name": "nodes",
+          "type": "readonly FlowNode[]",
+          "default": "—",
+          "required": "Sí",
+          "description": "Los nodos, en el orden en que deben escucharse. Sin ningún nodo no hay grafo, y la pieza no dibuja nada."
+        },
+        "edges": {
+          "name": "edges",
+          "type": "readonly FlowEdge[]",
+          "default": "[]",
+          "required": "No",
+          "description": "Las dependencias. El enlace cuyo extremo no llegó en la lista de nodos se descarta — no es error, es el grafo mostrado a medias."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está la ejecución que escribe el grafo. Decide si la pieza se declara ocupada."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "FlowGraphLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre de la capa que se desplaza, la plantilla de dependencia y la palabra de cada estado."
+        },
+        "labelsRegion": {
+          "name": "region",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "El nombre de la capa que se desplaza. Obligatorio: sin él la parada de teclado llega a quien escucha sin decir dónde entró la persona."
+        },
+        "labelsDependsOn": {
+          "name": "dependsOn",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La plantilla de dependencia. La lista de etiquetas se sustituye en el lugar marcado."
+        },
+        "labelsState": {
+          "name": "state",
+          "type": "Record<ToolCallState, string>",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra de cada uno de los cuatro estados, que es lo que llega a quien no ve la forma de la marca."
+        },
+        "nodeId": {
+          "name": "id",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La dirección del nodo. Es por ella que los enlaces lo encuentran."
+        },
+        "nodeLabel": {
+          "name": "label",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Qué es este paso, como lo nombraría una persona. Nunca se corta: se parte en varias líneas."
+        },
+        "nodeColumn": {
+          "name": "column",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "La casilla de la cuadrícula en horizontal. Es relativa a las demás: el conjunto entero se desplaza hasta tocar el origen."
+        },
+        "nodeRow": {
+          "name": "row",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "La casilla de la cuadrícula en vertical, también relativa a las demás."
+        },
+        "nodeState": {
+          "name": "state",
+          "type": "'pending' | 'running' | 'done' | 'failed'",
+          "default": "—",
+          "required": "Sí",
+          "description": "En qué punto está este paso. Los cuatro tienen forma propia, y no solo color."
+        },
+        "edgeFrom": {
+          "name": "from",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La dirección del nodo del que se depende."
+        },
+        "edgeTo": {
+          "name": "to",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La dirección del nodo que depende. Es en la lectura de este donde se dice el enlace."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La pieza dibuja los nodos que recibe en las casillas que recibe y los enlaces que tienen los dos extremos. No dispone, no mide elementos, no anima entradas, no cuenta tiempo y no avanza sola. Mostrar el grafo poco a poco es pasar menos nodos.",
+      "extensibilityCode": {
+        "vanilla": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nlet revelados = 1;\n\nfunction revelar() {\n  revelados += 1;\n  const proximo = createFlowGraph({\n    nodes: nos.slice(0, revelados),\n    edges: arestas,\n    status: revelados >= nos.length ? 'complete' : 'running',\n    labels: rotulos,\n  });\n  if (proximo) grafo.replaceWith(proximo);\n}",
+        "react": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nconst [revelados, setRevelados] = useState(1);\n\nconst revelar = () => setRevelados((atual) => Math.min(atual + 1, nos.length));\n\n<FlowGraph\n  nodes={nos.slice(0, revelados)}\n  edges={arestas}\n  status={revelados >= nos.length ? \"complete\" : \"running\"}\n  labels={rotulos}\n/>",
+        "vue": "<script setup lang=\"ts\">\n// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nconst revelados = ref(1);\n\nconst visiveis = computed(() => nos.slice(0, revelados.value));\n\nfunction revelar() {\n  revelados.value = Math.min(revelados.value + 1, nos.length);\n}\n</script>\n\n<template>\n  <FlowGraph\n    :nodes=\"visiveis\"\n    :edges=\"arestas\"\n    :status=\"revelados >= nos.length ? 'complete' : 'running'\"\n    :labels=\"rotulos\"\n  />\n</template>",
+        "svelte": "<script lang=\"ts\">\n  // REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n  //\n  // A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n  // desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n  // acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n  // a dona do assunto — o componente desenha o que recebe.\n  import { FlowGraph } from '@/components/ui/flow-graph';\n\n  let revelados = $state(1);\n\n  const visiveis = $derived(nos.slice(0, revelados));\n\n  function revelar() {\n    revelados = Math.min(revelados + 1, nos.length);\n  }\n</script>\n\n<FlowGraph\n  nodes={visiveis}\n  edges={arestas}\n  status={revelados >= nos.length ? 'complete' : 'running'}\n  labels={rotulos}\n/>",
+        "angular": "// REVELAR É PASSAR MENOS NÓS, e não existe contador de revelação na peça.\n//\n// A aresta que perde uma ponta some sozinha, então o grafo pela metade se\n// desenha sem nenhuma regra a mais: quem monta corta a lista, e o resto\n// acompanha. Quem quiser a entrada animada resolve na folha de animação, que é\n// a dona do assunto — o componente desenha o que recebe.\nreadonly revelados = signal(1);\n\nreadonly visiveis = computed(() => nos.slice(0, this.revelados()));\n\nrevelar(): void {\n  this.revelados.update((atual) => Math.min(atual + 1, nos.length));\n}\n\n// No template, os dois entram como os sinais que são:\n//\n//   <div\n//     ndsFlowGraph\n//     [nodes]=\"visiveis()\"\n//     [edges]=\"arestas\"\n//     [status]=\"revelados() >= nos.length ? 'complete' : 'running'\"\n//     [labels]=\"rotulos\"\n//   ></div>"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-flow-graph",
+          "description": "Tamaño del texto de toda la pieza."
+        },
+        "lineHeightNormal": {
+          "token": "--line-height-normal",
+          "value": ".nds-flow-graph-node-label",
+          "description": "Interlineado de la etiqueta, que es lo que hace crecer la caja con la fuente del navegador en vez de tener altura."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-flow-graph-node",
+          "description": "El hueco entre las cajas, que es margen del nodo porque la cuadrícula no puede tener separación, y el espacio entre la marca y la etiqueta."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Respiro interno de la capa que se desplaza, el respiro horizontal de la caja y el tamaño de la marca."
+        },
+        "spacing24": {
+          "token": "--spacing-24",
+          "value": ".nds-flow-graph",
+          "description": "Ancho mínimo de columna, y es lo que decide cuándo el grafo empieza a desplazarse."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Superficie de la capa que se desplaza, detrás del dibujo."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-flow-graph-node",
+          "description": "Fondo de la caja del nodo. Opaco a propósito: es lo que recorta la curva en su borde."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-flow-graph-node",
+          "description": "Color de la etiqueta. El texto corrido en un contenedor de estado nunca lleva el color semántico."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-flow-graph-edge",
+          "description": "Color del trazo del enlace y del contorno de la marca. Es objeto gráfico que informa, y por eso no usa el color del contorno decorativo."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Contorno de la capa que se desplaza y de la caja del nodo en reposo."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-flow-graph-node",
+          "description": "Contorno de la caja y de la marca del paso en curso."
+        },
+        "success": {
+          "token": "--success",
+          "value": ".nds-flow-graph-node-marker",
+          "description": "Relleno de la marca del paso completado."
+        },
+        "destructive": {
+          "token": "--destructive",
+          "value": ".nds-flow-graph-node",
+          "description": "Contorno de la caja y la cruz dentro de la marca del paso que falló."
+        },
+        "ring": {
+          "token": "--ring",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Anillo de foco de la capa que se desplaza, dibujado hacia dentro para no quedar debajo de lo que esté al lado."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-flow-graph-viewport",
+          "description": "Redondeo de la capa que se desplaza."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-flow-graph-node",
+          "description": "Redondeo de la caja del nodo."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-flow-graph-node-marker",
+          "description": "Forma redonda de la marca."
+        },
+        "spacing16": {
+          "token": "--spacing-16",
+          "value": ".nds-flow-graph",
+          "description": "Ancho mínimo de columna más ajustado, en el ejemplo de personalización."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-flow-graph {\n  /* A largura MÍNIMA de coluna, e é ela que decide quando o grafo passa a ser\n     mais largo que a conversa e a camada começa a rolar. Mínima e não fixa: as\n     colunas repartem a largura disponível em partes iguais e só param de\n     encolher aqui. */\n  --flow-graph-column-min: var(--spacing-16);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Un grafo dibujado no se lee: la posición no tiene orden, y una curva no tiene palabras. La regla de esta pieza es que la estructura accesible es la MISMA estructura — cada nodo es un elemento de lista de verdad, en el orden en que fue declarado, y lo que la posición dice sin palabras él lo dice con palabras dentro de sí.",
+      "items": {
+        "item1": "Cada nodo lleva, en texto que solo recibe quien escucha, la palabra de su estado y las etiquetas de los nodos de los que depende.",
+        "item2": "Solo se dicen los enlaces que llegan. Cada uno aparece exactamente una vez, y decir las dos direcciones anunciaría todo por partida doble.",
+        "item3": "Las curvas quedan fuera de lo que se lee en voz, en una sola capa — dicen en dibujo la misma relación que la frase dice en palabras.",
+        "item4": "La capa que se desplaza lleva rol, nombre y parada de teclado. El rol es lo que hace legal el nombre: sobre un elemento sin rol, el nombre se descarta.",
+        "item5": "El nombre de la capa es de quien monta, porque dos piezas de estas en la misma pantalla con el mismo nombre son dos paradas indistinguibles.",
+        "item6": "Ningún nodo entra en el orden de foco: un nodo no hace nada, y una docena de paradas que no llevan a ningún sitio son ruido para quien usa teclado.",
+        "item7": "El orden de los nodos en el código es el orden de lectura. La posición en la cuadrícula es libre; el orden, no.",
+        "item8": "Cada estado tiene forma propia — llena, anillo, trazo interrumpido, cruz — y el color es refuerzo, nunca el portador."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Para una vez, en la capa que se desplaza. Ningún nodo recibe foco, porque ningún nodo hace nada.",
+        "enter": "No hace nada: la pieza es de lectura y no ofrece acción.",
+        "arrows": "Desplazan el grafo cuando es más ancho que la conversación, con el foco en la capa."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La capa que se desplaza declara rol de grupo y lleva el nombre que pasó quien la monta. Grupo, y no región: una página con decenas de estas se convertiría en decenas de hitos homónimos.",
+        "item2": "La raíz se declara ocupada mientras la ejecución corre, y nada en ella es región viva.",
+        "item3": "El dibujo de los enlaces sale entero del árbol de accesibilidad, en una sola capa."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "La lista se anuncia con su recuento de nodos, y cada nodo se lee como etiqueta, estado y de quién depende.",
+        "item2": "Nada se anuncia mientras el grafo se escribe; quien quiera anunciar el final escribe una frase, una vez, fuera.",
+        "item3": "No se lee ninguna coordenada: la posición es para los ojos, y lo que dice ya llegó en palabras."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentPlan": {
+          "name": "Plan del agente",
+          "description": "Cuando el trabajo es una fila ordenada y nada se ramifica ni se reencuentra."
+        },
+        "toolGroup": {
+          "name": "Grupo de llamadas",
+          "description": "Cuando lo que se muestra es la lista de lo que hizo el agente, con estado por llamada y sin relación entre ellas."
+        },
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "Cuando el asunto es la respuesta entera — en qué punto está, desde cuándo, y dónde están las acciones."
+        },
+        "chart": {
+          "name": "Gráfico",
+          "description": "Cuando el dibujo sale de valores medidos, y no de una relación entre elementos."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Lo que hace existir a esta pieza no es la posición: es el enlace. Decir que un paso depende de otro es una relación entre dos elementos, y nada en el vocabulario de esta familia sabía decirlo — una fila ordenada no se ramifica ni se reencuentra.",
+      "item2": "Medido antes de construir: el único conector del design system es la línea de 1 px entre etapas vecinas de una fila lineal, y el gráfico tiene ocho tipos y ninguno es un grafo.",
+      "item3": "La cuadrícula no tiene separación entre casillas, y el hueco es margen de la caja. Es lo que hace que el dibujo de las curvas cierre con la cuadrícula sin medir ningún elemento — con separación, el centro de una casilla dejaría de ser calculable, y medir traería un observador de redimensionamiento y cinco implementaciones de una cuenta que hoy se prueba sin navegador.",
+      "item4": "La curva pasa por debajo de las cajas, y por eso la caja es opaca. Nace en el centro de una casilla y muere en el centro de otra, no en el borde — el borde depende del ancho de la etiqueta, que es texto y no se sabe de antemano.",
+      "item5": "La palabra del estado no es visible, y es la divergencia deliberada respecto al plan del agente. Allí el paso es una fila de lista, con ancho de sobra; aquí la caja tiene el ancho de la etiqueta, y una insignia por nodo duplicaría el ancho de cada columna — un grafo que no cabe en la pantalla deja de leerse como grafo.",
+      "item6": "La referencia aplana el estado en tres, y lo que se pierde es el fallo: un paso que se rompió se dibujaría igual que uno que terminó. La pieza lleva los cuatro.",
+      "item7": "No existe contador de revelación. Es de la hoja de animación, y con él se va el segundo tono de trazo que existía solo para mostrar el enlace por delante de la revelación — sin revelación no hay delante."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección queda visible durante dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar nodos y enlaces",
+          "result": "Hay un nodo por nodo y una curva por enlace con los dos extremos",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar un enlace cuyo extremo no llegó en la lista de nodos",
+          "result": "No se dibuja, y la pieza no se rompe",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pasar coordenadas que no empiezan en el origen",
+          "result": "El grafo entero toca el origen, sin columnas vacías a la izquierda",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar un nodo que depende de otros",
+          "result": "Lleva la palabra del estado y las etiquetas de las que depende, en texto que solo recibe quien escucha",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Montar la pieza",
+          "result": "La capa que se desplaza tiene rol de grupo, nombre y parada de teclado",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar el estado en que la ejecución corre",
+          "result": "La pieza se declara ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar un estado en que la ejecución ya no corre",
+          "result": "La pieza deja de declararse ocupada",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Montar la pieza sin ningún nodo",
+          "result": "No hay grafo, y no se dibuja nada",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pasar los cuatro estados de nodo",
+          "result": "Cada uno llega al dibujo con su palabra y su marca",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pasar un grafo más ancho que la conversación",
+          "result": "Una sola capa se desplaza, y es la que tiene nombre y foco",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que afirma la play.",
+        "item1": "Cada nodo dice su estado en palabra, y no solo por la marca",
+        "item2": "Cada enlace se dice exactamente una vez, del lado que llega",
+        "item3": "El dibujo de los enlaces está fuera de lo que se lee en voz",
+        "item4": "La capa que se desplaza tiene rol y nombre, y el rol es lo que hace legal el nombre",
+        "item5": "Nada dentro de la pieza es región viva",
+        "item6": "Ningún nodo entra en el orden de foco",
+        "item7": "Los nodos son una lista ordenada, en el orden en que fueron declarados"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — el grafo, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cuatro, en la misma cuadrícula",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — un camino que se rompió",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — en curso, con la ejecución ocupada",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Composiciones — el grafo a medias, con los enlaces huérfanos ausentes",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — más ancho que la conversación, desplazándose",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Composiciones — etiquetas largas, que se parten en vez de cortarse",
+          "priority": "high"
+        },
+        "item8": {
+          "story": "Composiciones — una rama que vuelve a una columna anterior",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

@@ -580,3 +580,62 @@ export interface ComputerStep {
   /** Distância do topo, em porcentagem da altura do quadro. */
   y: number;
 }
+
+// ─── Grafo de dependência ─────────────────────────────────────────────────────
+
+/**
+ * Um nó de um grafo de trabalho: o que se faz, onde ele fica e em que pé está.
+ *
+ * É O SEGUNDO TIPO DESTE ARQUIVO QUE CARREGA GEOMETRIA, e entra pelo mesmo
+ * critério com que `ComputerStep` entrou: o critério nunca foi "é conversa", é
+ * ser a origem única do que mais de uma stack vai reescrever. Cinco stacks
+ * escrevendo o próprio par de coordenadas é como se produz cinco geometrias que
+ * discordam, e geometria que discorda não aparece em teste — aparece como nó
+ * fora de lugar numa foto.
+ *
+ * A COORDENADA É DE QUEM MONTA, e não da peça. Quem desenha o grafo não calcula
+ * disposição: calcular traria algoritmo de layout para dentro do design system,
+ * e algoritmo de layout envelhece por produto. `column` e `row` são a casa da
+ * grade em que o nó cai, e a peça só as lê.
+ *
+ * A BASE DA CONTAGEM NÃO IMPORTA, e é decisão. As coordenadas são RELATIVAS
+ * entre si: quem desenha desloca o grafo inteiro para que a menor coluna e a
+ * menor linha caiam na origem. Zero, um ou negativo descrevem o mesmo grafo, e
+ * exigir uma base seria exigir que quem monta soubesse de uma convenção que não
+ * muda nada do que ele vê.
+ *
+ * O ESTADO É `ToolCallState` INTEIRO. A fonte do catálogo achata em três —
+ * feito, em curso e por fazer —, e o que se perde ali é `failed`: um nó de
+ * trabalho que quebrou desenharia igual a um que terminou. É o mesmo movimento
+ * que a família 2 já fez sete vezes.
+ */
+export interface FlowNode {
+  /** Endereço do nó. É por ele que as arestas o encontram, e é obrigatório. */
+  id: string;
+  /** O que este passo é, como uma pessoa o chamaria. */
+  label: string;
+  /** A casa da grade na horizontal. Relativa às demais. */
+  column: number;
+  /** A casa da grade na vertical. Relativa às demais. */
+  row: number;
+  state: ToolCallState;
+}
+
+/**
+ * Uma dependência entre dois nós: o de onde a seta sai e o para onde ela chega.
+ *
+ * É A PRIMEIRA RELAÇÃO DESTE VOCABULÁRIO, e é o que ele não sabia dizer.
+ * `PlanStep` é fila ordenada, e ordem não é dependência: uma fila não se
+ * ramifica nem se reencontra. Um par de endereços diz "este depende daquele" —
+ * uma relação entre dois itens, e não mais um campo dentro de um item.
+ *
+ * NÃO CARREGA ESTADO. O estado mora nos nós, e uma aresta com estado próprio
+ * poderia discordar das duas pontas — dizer que o caminho falhou entre dois nós
+ * concluídos. Duas verdades sobre a mesma coisa é como elas divergem.
+ */
+export interface FlowEdge {
+  /** Endereço do nó de que se depende. */
+  from: string;
+  /** Endereço do nó que depende. */
+  to: string;
+}
