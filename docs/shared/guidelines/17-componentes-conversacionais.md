@@ -539,6 +539,30 @@ e as stories de variante chamam-se `Mentions` e `Commands`. Dar slug próprio a
 cada uma criaria duas docs pages para um componente com dois ajustes — que é
 exatamente o que 5.1 existe para evitar.
 
+### O sinal mais barato de que uma entrada vai colapsar
+
+Apareceu três vezes, sempre igual, e por isso vira critério: **booleano onde
+este vocabulário já tem cinco palavras.**
+
+| entrada | o que a fonte declara | o que ela perde |
+|---|---|---|
+| `agent-card` | `connected: boolean` | `reconnecting` |
+| `tool-timeline` | `streaming: boolean` | `stopped`, `failed`, `complete` |
+| `code-runner` | `RunState = idle\|running\|ok\|error` | `stopped` |
+
+Nas três, o achatamento não é economia — é sinal de que a entrada foi desenhada
+para uma tela só, sem o vocabulário que a família já tem. E as três colapsaram
+pelos testes normais; o booleano só chegou antes.
+
+O caso do `code-runner` é o mais claro, porque o que ele perde é o pior possível:
+`stopped` é o Ctrl-C, e um trecho de código que roda é a coisa mais
+interrompível desta família. Uma entrada que não sabe modelar a própria
+interrupção não é uma peça — é uma foto de uma peça.
+
+**Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
+estado, ou uma união com uma palavra a menos que `RunStatus`/`ToolCallState`,
+manda aplicar os três testes com atenção — não decide sozinho, mas prevê.
+
 O critério, para as seis famílias que faltam: **uma entrada do catálogo vira
 slug quando tem desenho, estado ou vocabulário próprios.** Se a diferença cabe
 num argumento do que já existe, ela é variante — vira story e linha na tabela,
