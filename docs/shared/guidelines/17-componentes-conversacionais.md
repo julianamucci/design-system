@@ -300,6 +300,14 @@ falta, nomeada — nunca uma folha nova.
 | `map-answer` | `computer-use` com a lista embaixo, e o encaixe é campo por campo. `.nds-computer-use-screen` é o quadro, com `--computer-use-aspect` declarado pela peça; `.nds-computer-use-surface` recebe a grade de fios de quem monta — que na fonte é pano de fundo esquemático e decorativo, e é também por onde um mapa de verdade entra sem que o design system decida telha de terceiro (§6) —; `.nds-computer-use-trail` leva um `.nds-computer-use-mark` por ponto, posicionado por `--computer-use-mark-x` e `--computer-use-mark-y` em porcentagem do quadro, com `data-active="true"` no corrente, que já cresce e destaca. A lista é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"`, com o rótulo em `.nds-item-title` e o detalhe em `.nds-item-description`, e a linha corrente leva `aria-current`, que é PALAVRA e não só fundo. A linha tracejada é "conectividade decorativa, não caminho calculado" por declaração da própria fonte, e quem tem as coordenadas para desenhá-la é quem passa a superfície. **Falta uma opção, e uma utilitária JÁ nomeada**: `.nds-computer-use-mark` é `aria-hidden` e decorativo, e escolher pelo quadro pede que ele vire `<button>` com nome textual e alvo de 24 px (regras 7 e 10 da §8); e `.nds-item` não tem regra para `[aria-current]`, que é a MESMA que `document-reference` já nomeou nesta tabela. Manter as marcas decorativas e deixar a escolha nas linhas é onde a composição fica mais fina que a fonte, que põe cada ponto DUAS vezes na ordem de foco com o mesmo nome. Veio da família 4 — ver 5.3 |
 | `web-preview` | `.nds-card` com `.nds-input-group` no cabeçalho. O endereço é `.nds-input-group-control` somente leitura com `.nds-font-mono` e `.nds-truncate`; recarregar é `.nds-input-group-addon[data-align="inline-start"]` e abrir fora é `[data-align="inline-end"]`, os dois com `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm` e nome acessível textual; o corpo é `.nds-card-content` com o quadro de quem monta, e enquanto carrega, `skeleton` por cima. O ISOLAMENTO NÃO É DA PEÇA, e a fonte o diz duas vezes: o elemento desenha o que recebe "exatamente como veio, sem isolamento próprio", e a caixa de areia mora na faixa com runtime, que a §1 manda não ler como se fosse a peça. Quem monta isola, e o endereço passa por `isSafeUrl` no ponto em que encosta no DOM. Veio da família 4 — ver 5.3 |
 | `image-generation` | `skeleton`, e é a mais barata de ler das 120 depois de `thread-list-sidebar`. **A peça nunca desenha imagem nenhuma**, e a fonte declara os quatro motivos: não aceita endereço de imagem, o degradê atrás da grade de pontos é um gráfico decorativo FIXO presente nos dois estados, "1024 × 1024" é literal no código e não campo, e o botão de gerar de novo não tem manipulador. O que resta é `.nds-aspect-ratio` com `--ratio` e `.nds-skeleton[data-shape="fill"]` dentro, mais a linha de baixo com o texto do pedido e um `.nds-button` `.nds-button-ghost` `.nds-button-icon-sm`. A própria fonte manda entregar a imagem de verdade a `image`, que esta tabela já resolveu em `aspect-ratio` + `skeleton` + `dialog`. A grade de 64 pontos com atraso escalonado é `13-animacao.md`, e desliga em `prefers-reduced-motion` (regra 8 da §8). Veio da família 4 — ver 5.3 |
+| `web-search` | `.nds-chat-sources` com o termo procurado acima e o estado ao lado. A fila é a lista de fontes de um turno, que esta tabela já aponta em `sources`: `<ol class="nds-chat-sources">` com um `.nds-chat-source` por achado, e o `data-unsafe` que ela já carrega é justamente o que a segunda regra da folha da família 3 manda — o endereço recusado continua legível e deixa de ser link. Quando o produto quiser a fila alta em vez de etiquetas, cada linha é `.nds-item` com `.nds-avatar` `.nds-avatar-fallback` na inicial do domínio dentro de `.nds-item-media`, `.nds-item-title` no título e `.nds-item-description` no endereço. O termo procurado é `.nds-badge` com `.nds-font-mono` e a lupa do lucide — não é campo, porque não se edita o que já se procurou. O estado é `.nds-agent-status`, CONSTRUÍDO: ponto decorativo, rótulo em PALAVRA e relógio, com o `prefers-reduced-motion` da regra 8 da §8 já resolvido, onde a fonte deixa um "Searching" que só cintila. A contagem de fontes lidas é `.nds-badge` `.nds-font-mono` derivada do arranjo, e não o texto literal "Read 3 sources" que a fonte crava no arquivo instalado. A revelação um a um NÃO é peça: `visibleResults` é recorte do arranjo, e quem o move é o relógio de quem monta — a mesma leitura de `streaming` no `chat-thread`, que esta tabela já registra. `cycle` não atravessa: é chave de reconciliação do React, e o dono do assunto é `13-animacao.md`, como a vigésima segunda já leu no mesmo campo. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 3 — ver 5.3 |
+| `research-report` | `.nds-agent-plan`, passo por passo, com uma linha de contagem acima. O `<ol class="nds-agent-plan">` já é a fila de seções: `.nds-agent-plan-marker` decorativo, `.nds-agent-plan-label` no título da seção, o estado em PALAVRA num `.nds-badge` e `.nds-agent-plan-detail` na prévia — quatro partes para as quatro que a fonte desenha —, e `aria-current="step"` na seção em curso, que é o que responde "onde estamos" sem depender do brilho do título, que é como a fonte separa dois dos três estados. O vocabulário é `PlanStep`: `heading` é `label`, `preview` é `detail`, e `pending\|writing\|done` é `PlanStepState` sem `failed` e sem `skipped` — uma seção que o agente decidiu não escrever é exatamente `skipped`, o estado que justifica o tipo existir, e ele continua na lista com o motivo em vez de sumir. A linha de contagem é `.nds-badge` com `.nds-font-mono` no molde `{feitas} de {total}`, palavra do idioma onde a fonte crava uma barra, com a contagem de fontes lidas ao lado. A contagem por seção é `.nds-badge` `.nds-font-mono` e some quando é zero, como a fonte já faz. **`Citation` não aparece nenhuma vez**: `sources` é número, e número não diz em que a seção se apoia — quando o produto quiser dizer, a fila de fontes da seção é `.nds-chat-sources`, acima nesta tabela. A borda entre linhas é o `gap` do `.nds-agent-plan`. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 3 — ver 5.3 |
+| `memory-chips` | `.nds-composer-context`, CONSTRUÍDO, com outro conteúdo dentro. A `<ul class="nds-composer-context">` com nome é a fila de etiquetas do que vai junto sem ser carga, e cada `.nds-composer-context-item` já tem ícone decorativo, `.nds-composer-context-label`, `.nds-composer-context-detail` e `.nds-composer-context-remove` levando o nome do item no rótulo — que é literalmente o `Forget "…"` que a fonte escreve. O que a fonte chama de `change` cai no `data-automatic` que aquela folha já declara, e a decisão dela é a que falta aqui: o item que a pessoa não pôs "ganha a marca de automático, que é texto, não só a cor mais fraca", onde a fonte separa `existing` de `added` só por tinta e ainda desenha `added` e `updated` idênticos — que a regra 3 da folha da família 3 e a regra 4 da §8 recusam (WCAG 1.4.1). Sobrando duas palavras para três, quem carrega a terceira é `.nds-badge` em linha. O cabeçalho "lembrou N" é contagem derivada do arranjo, e contagem é `.nds-badge` `.nds-font-mono`; o nome da fila já vai no `aria-label` do `<ul>`, que é o que faz o leitor de tela anunciar quantas são antes de percorrê-las. O alvo de toque de 24 px do botão de esquecer é o mesmo que `.nds-composer-context-remove` já resolve (WCAG 2.5.8). **Não se monta com `.nds-tags-input-item`**, e é a única armadilha desta linha: aquele chip mora numa moldura de campo, e uma fila que não se digita não é entrada de texto. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 3 — ver 5.3 |
+| `speaker-identity` | `chat-thread`, turno por turno. O `<li class="nds-chat-message" data-role="…">` já é a linha inteira: `.nds-chat-message-avatar` no distintivo com o ícone de quem fala, `.nds-chat-message-header` com `.nds-chat-message-author` no nome e o segundo campo ao lado — onde a thread já põe a hora e a fonte quer o modelo ou a duração —, e `.nds-chat-message-content` no corpo, que passa por `createMarkdown` com `isSafeUrl` onde a fonte entrega uma cadeia crua e, na linha de ferramenta, o JSON do argumento. O `kind` é `ChatRole` achatado e renomeado: `agent` é `assistant`, `system` se perde, e `tool` não é papel de quem fala — é `ChatToolCall`, que a mensagem já mostra em `.nds-chat-message-tools` e em `tool-group`. O agente de dentro é o que `subagent-list` e `agent-handoff` já resolveram nesta tabela, em `.nds-item-group` com o modelo em `.nds-font-mono`; o distintivo redondo contra o quadrado é `.nds-avatar` contra `.nds-item-media-icon`, as duas formas já lado a lado, e é a única distinção da fonte que não é tinta. **A hierarquia não se reproduz porque a fonte não a tem**: a faixa de runtime aninha, e a standalone que a §1 manda ler recebe o arranjo já achatado pelo exemplo da própria fonte. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 3 — ver 5.3 |
+| `mcp-server-panel` | `accordion` de abertura única com `connection-state` por linha. O `.nds-accordion` é o `expandedId` da fonte; `.nds-accordion-trigger` traz o chevron e o `aria-expanded` que a regra 5 da §8 exige, e `.nds-accordion-content` o que se abre. O estado da linha é `.nds-connection-state`, CONSTRUÍDO — ponto decorativo, rótulo em PALAVRA dentro do `role="status"`, contagem para a próxima tentativa e o botão de ação —, e é ele que resolve as duas coisas que a fonte deixa em aberto: o ponto colorido com texto só para leitor de tela vira palavra visível, e a ação mora na mesma linha. `McpServerStatus` é `ConnectionState` com os pares trocados de nome — `connecting` é `reconnecting`, e `isRetryScheduled` é quem decide se há o que contar; `failed` é `disconnected` — e `needs-auth` é `waitsForPerson`, que `ToolCallState` `pending` já define junto com o desenho que a fonte erra: quem espera por uma pessoa **nasce aberto**, porque pedir autorização dentro de uma caixa fechada é pedir sem mostrar, que é a decisão 3 do `tool-group`. O cabeçalho "N de M ligados" é `.nds-badge` `.nds-font-mono` com a palavra do idioma; o transporte e a fila de ferramentas são `.nds-badge` num `.nds-cluster`, e as ferramentas chegam como cadeias, sem estado nenhum a desenhar. A versão cheia desta lista é `mcp-config`, acima nesta tabela, em `dialog` + `form` + `badge`. Nenhuma classe nova, e nenhuma nomeada como faltando. Veio da família 3 — ver 5.3 |
+| `orb` | `connection-state` mais o medidor de nível do `composer-voice` — e a faixa standalone é **um `<canvas>` e mais nada**: o ponto de estado, o texto "Connecting..." e os botões de conectar, mudo e desligar a fonte só publica na faixa de runtime, e a §1 manda ler a outra. O que existe de portável é a linha do estado, e ela é `.nds-connection-state` nó por nó: `.nds-connection-state-dot` colorido pelo estado e `aria-hidden`, `.nds-connection-state-label` com `role="status"` levando a PALAVRA, `.nds-connection-state-action` para conectar ou desligar. O `connecting` da fonte não pede um quarto estado — `ConnectionState` já registra, com todas as letras, que a primeira tentativa desenha como a quinta. O nível de áudio entra por `--nds-voice-level`, que `.nds-composer-voice-bar` já lê como DADO de runtime, decorativo e `aria-hidden`, com o quadro de repouso sob `prefers-reduced-motion` já medido; mudo é `aria-pressed` no alternador, como o ditado já faz. **Falta uma utilitária, e está nomeada**: o medidor construído é uma fileira de cinco barras de 2 px escopada ao trilho do composer — uma forma do tamanho de foco, lendo o mesmo `--nds-voice-level` num `scale()`, é classe que falta, nunca folha. Ficam de fora o `variant` (`blue`, `violet`, `emerald`), que é paleta fora dos 42 tokens de tema (§9), e a animação em WebGL, que é código e dependência (§6) e cujo quadro de repouso é um círculo colorido — e cor sozinha não descreve estado (regra 4 da §8). Veio da família 7 — ver 5.3 |
+| `voice-conversation` | a tela de uma chamada, e ela compõe CINCO peças já construídas: `connection-state` no `connecting`; `thinking-indicator` no `thinking`, que é exatamente "o lugar da resposta enquanto ela não chegou"; `agent-status` no `speaking`, cujo `stop` de `AgentStatusIntent` é o "interromper" da fonte, com rótulo que diz o que faz em vez de um alvo sem nome; `composer-voice` no `listening`, com o alternador de `aria-pressed`, o nível e a palavra do estado; e `chat-thread` na transcrição. `VoiceTurn` — `{ id, role, text }` — é o `SharedTurn` de `shared-conversation` de novo: o papel em duas palavras onde `ChatRole` tem três, e o turno inteiro numa cadeia onde `ChatMessageOptions` tem nove campos e `MessagePartKind` sete espécies de parte, com o `text` cru levando fala de modelo à tela sem `createMarkdown` e sem `isSafeUrl`. A legenda que nomeia o turno é a PALAVRA que as três linhas de estado já carregam, e "Mic off" é o rótulo do alternador quando mudo. `amplitude` é `--nds-voice-level`; `muted` é o booleano do alternador; `onToggleMute` e `onEnd` são espaço de ação (§2). Sem turno nenhum, `empty.css`. Veio da família 7 — ver 5.3 |
+| `checkpoint-history` | `.nds-item-group` de `.nds-item` `data-size="sm"`, uma linha por ponto de retorno — a mesma fila que `subagent-list`, `background-inbox` e o histórico de `schedule-card` já montam nesta tabela. O rótulo é `.nds-item-title`; o carimbo e a contagem de arquivos, os dois já escritos por quem monta, são `.nds-badge` com `.nds-font-mono`; restaurar é `.nds-button` `.nds-button-ghost` em `.nds-item-actions`, aparecendo no `:hover` E no `:focus-within` e permanecendo na ordem de foco, que é a regra 3 da §8 e o que `.nds-chat-message-actions` já desenha. A linha corrente leva `aria-current="true"`, `.nds-item-muted` e a palavra "atual" em `.nds-badge` — a palavra, porque as linhas à frente se separam das outras só por opacidade e por um furo no ponto, que a regra 4 da §8 recusa; é a mesma decisão que `agent-plan` escreveu ao dizer que "onde estamos" também precisa chegar ao olho. Sem ponto nenhum, `empty.css`, como na décima sétima e na vigésima terceira. `Checkpoint` não declara estado NENHUM: os três desenhos saem da POSIÇÃO da linha em relação a `currentId`, que é a comparação com um contador da décima primeira correção, e `files: number` obrigaria a peça a escrever "4 arquivos", que é decisão de idioma. Veio da família 2 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
 ### 5.2 As famílias novas (56)
@@ -308,10 +316,11 @@ Construir **por família**, não por slug. Dentro de uma família as peças divi
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
 slug produz 83 folhas e nenhum sistema.
 
-**Eram sete, e são seis.** A 6 dissolveu-se inteira na vigésima sexta correção, e
-a linha dela fica na tabela como `diff-hunks.ts` ficou na §3.2, pelo mesmo
-motivo: quem vier atrás precisa saber que ela foi considerada e por que não
-nasceu. Família que perde todas as entradas não nasce menor — não nasce.
+**Eram sete, e são cinco.** A 6 dissolveu-se inteira na vigésima sexta correção
+e a 7 na vigésima sétima, e as linhas delas ficam na tabela como `diff-hunks.ts`
+ficou na §3.2, pelo mesmo motivo: quem vier atrás precisa saber que foram
+consideradas e por que não nasceram. Família que perde todas as entradas não
+nasce menor — não nasce.
 
 **O que o parêntese de cada linha conta, porque a redação engana**: "(N no
 catálogo)" é o que a família tem **AGORA**, depois das saídas — nunca o que ela
@@ -327,12 +336,12 @@ desta tabela, nunca pelo próprio delta.
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
-| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `checkpoint-history`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (14 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox`, `elicitation-form` e `schedule-card` saíram para a 5.1, ver 5.3 —, **10 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
-| **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
+| **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (13 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox`, `elicitation-form`, `schedule-card` e `checkpoint-history` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
+| **3. Evidência e procedência** | `evidencia.css` | `inline-citation` (1 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1 na décima sexta, na décima oitava e na vigésima primeira; `web-search`, `research-report`, `memory-chips`, `speaker-identity` e `mcp-server-panel` saíram em LOTE na vigésima sétima, ver 5.3 —, **1 componente**) | Em que a resposta se apoia. **A folha está de pé com uma entrada só**, e a pergunta que a décima oitava abriu está respondida: das nove entradas originais, oito colapsaram e uma sobreviveu. `Citation` continua sendo o teste — nenhuma das oito a carregava, e a que ficou coube nela sem sobra. Base em `hover-card`, `popover`, `badge`: MATERIAL, e é por isso que a família nasceu, ao contrário da 6. O que era peça pronta estava nas ENTRADAS, não nesta coluna — ver 5.3 |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `artifact-card`, `canvas-split` (12 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1 na vigésima segunda e na vigésima quarta, e `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview` e `image-generation` na vigésima sétima, em lote, ver 5.3 —, **12 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart` — e essa coluna é MISTA, o que a vigésima sétima mediu entrada por entrada: `card` é material, `table` e `chart` são peças prontas. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Dependências — §6, e o parágrafo que a vigésima sétima acrescentou lá**: das quatro entradas que a seção nomeia, três já foram triadas e nenhuma pedia decisão da dona |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
 | **6. Navegação da conversa** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As oito saíram para a 5.1: `message-branches` na vigésima quinta; `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation` e `onboarding` na vigésima sexta, em lote (0 no catálogo, **0 componentes**) | Era "achar e trocar de lugar sem perder o seu", com base em `sidebar`, `command`, `pagination` e `stepper.css` — e as quatro bases eram as próprias peças. `conversa-nav.css` não é fundada. Ver 5.3 |
-| **7. Voz** | `voz.css` | `orb`, `voice-conversation` (2 no catálogo — `read-aloud` saiu para a 5.1, ver 5.3 —, **2 componentes**) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
+| **7. Voz** *(DISSOLVIDA — não nasce)* | nenhuma | Nenhuma. As três saíram para a 5.1: `read-aloud` na décima nona; `orb` e `voice-conversation` na vigésima sétima, em lote (0 no catálogo, **0 componentes**) | Era "áudio ao vivo, com estado de conexão e legenda", com base em `media-player` — e as três palavras do eixo já tinham dono no dia em que a linha foi escrita: a fonte ao vivo é `stream` no próprio `media-player`, o estado da ligação é `connection-state` da família 2, e a legenda é `<track>`. `voz.css` não é fundada. Ver 5.3 |
 
 ### 5.3 A triagem se corrige DURANTE a construção, e a correção se escreve
 
@@ -4345,6 +4354,721 @@ como contagem** — e o conserto foi o mesmo de sempre, abrir as quatro páginas
 procurar o nome da biblioteca. Custou quatro `grep`.
 
 
+**Vigésima sétima correção, a segunda em LOTE, e a que FECHA a família 3**: as
+cinco entradas que restavam colapsam, e a família fica com uma peça —
+`inline-citation`, construída nas cinco stacks. São a vigésima sétima à trigésima
+primeira travessia de 5.2 para 5.1, e as contagens mudam uma vez só, ao fim do
+lote: a família 3 vai de **6 entradas e 6 componentes** para **1 e 1**, a 5.2
+perde 5 entradas e a 5.1 ganha as mesmas 5.
+
+**A folha NÃO se dissolve, e é a diferença que vale guardar contra a família 6.**
+Lá `conversa-nav.css` nunca foi fundada e as oito entradas saíram; aqui
+`evidencia.css` está escrita, `inline-citation` está de pé nas cinco stacks, e
+uma família com uma peça é uma família pequena — não uma família que não nasceu.
+A pergunta que a décima oitava abriu e a vigésima primeira deixou mais aguda —
+se esta folha vai ter uma entrada só — está respondida, e a resposta é sim.
+
+**O MECANISMO, escrito uma vez porque as cinco colapsam por ele**: quatro das
+cinco caem em cima de peças que esta campanha JÁ CONSTRUIU — `web-search` em
+`.nds-chat-sources`, `research-report` em `.nds-agent-plan`, `speaker-identity`
+em `.nds-chat-message`, `mcp-server-panel` em `.nds-connection-state` — e a
+quinta, `memory-chips`, em `.nds-composer-context`, que também está de pé. Não é
+o mesmo mecanismo da família 6, e a diferença importa mais que a semelhança. Lá a
+5.2 nomeou quatro bases e as quatro eram as peças: o veredito estava escrito na
+coluna do eixo antes de existir uma linha da família. Aqui a coluna ACERTOU —
+`hover-card`, `popover` e `badge` são material, e foi por isso que a família
+nasceu e ficou de pé com uma peça. **O que a coluna não podia dizer é que as
+ENTRADAS eram peças de outras famílias vestidas de evidência**: um relatório é um
+plano, um painel de servidores é um estado de ligação, uma lista de quem fala é a
+própria conversa. O corolário da vigésima sexta se corrige sem se perder: **a
+coluna das bases prevê se uma FAMÍLIA pode existir; ela não prevê se uma ENTRADA
+pode.** Para a entrada a pergunta é outra, e é mais barata — QUAL peça já
+construída desenha isto? —, e das cinco, quatro tinham dono que a 5.2 nunca
+nomeou.
+
+**A SEGUNDA MEDIDA, e é nova: nas cinco, a faixa STANDALONE é a achatada.** A §1
+manda ler a standalone, e manda por um bom motivo — é a conversão que o
+assistant-ui já pagou, e ela chega controlada e sem estado interno. Este lote
+mostra o custo dela, cinco vezes de cinco: `searching: boolean` esconde as quatro
+palavras de `status.type`, que a faixa de runtime da mesma página declara;
+`turns` chega PLANO onde o aninhamento existe na outra faixa, e é o exemplo da
+própria fonte que o achata; o estado do servidor tem quatro palavras onde a
+faixa de runtime tem seis, e a fonte publica o `switch` que joga duas fora; a
+fila de ferramentas é arranjo de cadeias onde a outra faixa tem nome, descrição e
+esquema; e o chip de memória perde os argumentos tipados da chamada que o
+escreveu. A décima oitava já tinha visto metade disso em `thread-list` — a
+palavra que faltava estava achatada na outra faixa —, e ali era uma. **A faixa
+standalone está pronta para o React, e o que ela terminou de fazer foi jogar fora
+justamente o vocabulário que esta casa já tem.** A instrução da §1 continua
+valendo, porque o runtime não porta; o que não vale é a leitura que ela convida,
+de que a standalone é o trabalho acabado. Para as famílias que faltam: leia a
+standalone para o DESENHO, e confira os tipos da faixa de runtime para saber
+quantas palavras a fonte tinha antes de escolher desenhar menos.
+
+**1. `web-search` — colapsa, e é a que mais parecia a família.**
+
+- **A favor**: o cabeçalho desta folha reservou o lugar dela antes de existir
+  peça — "o que foi procurado e o que voltou" é uma das cinco coisas que ele diz
+  que procedência significa, e nenhuma outra entrada das 120 mostra uma busca
+  ACONTECENDO dentro da resposta. E ela traz o que parecia geometria temporal:
+  uma fila que admite uma linha por vez, com espaço reservado para não empurrar o
+  texto abaixo, e uma chave que faz a entrada tocar de novo. Nada em
+  `docs/shared/styles/` desenha uma lista que cresce um item por vez.
+- **Contra**: o achado da fonte é título mais domínio — `ChatSource` com o
+  endereço ACHATADO em cadeia de exibição, que é palavra por palavra o defeito
+  que a décima terceira reprovou em `Source { domain, title, snippet }`: "perde o
+  `url`, que é o que faz uma procedência ser verificável". É a sexta forma do
+  sinal, e é a quarta vez nesta família que a segunda regra da folha fica sem
+  objeto — só que pior que na décima sexta, onde o endereço simplesmente não
+  existia: aqui existe mutilado, e endereço mutilado convida a peça a desenhar um
+  link que ela não pode abrir. A revelação um a um não é estado: a contagem de
+  visíveis é recorte do arranjo, o relógio que a move está no exemplo de quem
+  MONTA, e a mesma leitura já pôs `streaming-text` na 5.1. E o estado que sobra é
+  `searching: boolean`, idêntico ao de `retrieval-chunks`, que já está na tabela
+  do sinal — **primeira repetição de um achatamento idêntico entre duas entradas
+  da mesma família.** Montada, ela é a fila de fontes de um turno com o termo
+  procurado acima: `.nds-chat-sources`, que a 5.1 já aponta em `sources`, com
+  `.nds-agent-status` para o estado e `.nds-badge` `.nds-font-mono` para a
+  contagem.
+- **Colapsa.** E há duas correções de fonte junto, as duas já escritas nesta
+  seção: a linha "leu N fontes" é texto literal no arquivo instalado, não
+  derivado do arranjo — o espécime da décima terceira outra vez, e componente
+  cujo texto mora no arquivo instalado não é componente; e `cycle` é chave de
+  reconciliação do React, que a vigésima segunda já mandou para `13-animacao.md`
+  no mesmo campo e com o mesmo nome.
+- **A evidência que teria virado o voto**: um campo por achado que a lista de
+  fontes não segure — um trecho com âncora, que seria `Citation` e faria da linha
+  uma citação; uma pontuação de relevância COM grandeza, que é o que a vigésima
+  primeira nomeou como o que falta para um ordinal deixar de ser etiqueta; ou um
+  estado de busca que a peça possua, e não quem monta. Procurada nos tipos: o
+  achado tem duas cadeias e mais nada; a contagem de visíveis é de quem monta, no
+  exemplo da própria fonte; e peça que buscasse sozinha bate na primeira regra
+  desta folha, que é anterior a qualquer teste.
+
+**2. `research-report` — colapsa, e é a que responde a sobreposição do lote.**
+
+- **A favor**: é a única entrada da família que prende evidência a uma SEÇÃO —
+  granularidade que nem a marca em linha (por frase) nem a lista de fontes (por
+  turno) têm. E é a que chega mais perto de ter máquina de estados própria: três
+  palavras com um glifo por linha, mudando enquanto a resposta se escreve.
+- **Contra**: o desenho é `.nds-agent-plan`, construído nesta campanha, parte por
+  parte — marcador decorativo, rótulo, estado em `.nds-badge`, detalhe embaixo. A
+  seção da fonte é `PlanStep` campo a campo: o título é `label`, a prévia é
+  `detail`, o endereço é `id`. E o docblock daquela folha já absorveu `todo-list`
+  com a frase que serve uma terceira vez: "plano e lista de tarefas têm o mesmo
+  desenho, os mesmos estados e o mesmo vocabulário; o que muda é quando a lista
+  aparece e quem a propôs, e isso é política de produto, não forma." A união é
+  `PlanStepState` estreitada — `writing` é `running` renomeada, como `ready` era
+  `complete` em `background-inbox` —, e o que ela perde é `failed` e `skipped`,
+  que é justamente o estado que o docblock diz JUSTIFICAR o tipo existir. Pior: a
+  fonte declara três palavras e desenha DUAS, e diz por quê — `pending` apaga o
+  título, `writing` e `done` o desenham igual —, deixando a terceira por conta de
+  um glifo sem palavra. É a sétima forma do sinal, a mesma de
+  `confidence-marker`, e a resposta do `.nds-agent-plan` já está escrita: "o
+  marcador é decorativo e o estado é palavra em `.nds-badge`".
+- **Colapsa.** E o teste da família reprova sozinho: a contagem por seção e o
+  total lido são CONTAGENS de evidência, nunca a evidência — e a fonte diz que os
+  dois números nunca são conferidos um contra o outro. "Em que a resposta se
+  apoia" respondido com um número é o eixo não respondido, e esta é a segunda
+  entrada da família sem `Citation` nenhuma, depois da vigésima primeira.
+- **A evidência que teria virado o voto**: a contagem de fontes sendo `Citation[]`
+  em vez de número, que faria da linha um passo de plano com fontes e forçaria
+  campo novo ou peça nova; um estado que um passo não saiba estar (uma seção em
+  REVISÃO, uma bloqueada por outra); ou PROFUNDIDADE — um sumário com níveis, que
+  é o que separaria um sumário de uma lista plana, e que `.nds-agent-plan` não
+  desenha. Procurada nos tipos: o arranjo de seções é PLANO, sem campo de pai, de
+  nível ou de profundidade; a contagem é número; e as três palavras da união já
+  estão todas em `PlanStepState`. A faixa de runtime não acrescenta nada —
+  transmite os mesmos argumentos.
+
+**3. `memory-chips` — colapsa, e é a única das cinco em que quem lê MUDA aquilo
+que a resposta vai usar.**
+
+- **A favor**: é a única com uma chamada de volta que decide produto — esquecer
+  um fato —, e a única entrada da família em que quem lê altera aquilo em que a
+  próxima resposta vai se apoiar. Uma peça que EDITA procedência seria nova, e a
+  folha nunca previu uma. A espécie da mudança também parecia vocabulário desta
+  casa: o que aconteceu com um fato lembrado neste turno não está em
+  `chat-protocol.ts`.
+- **Contra**: a fonte declara três palavras e desenha duas, e as duas se separam
+  **só por cor** — os chips acrescentados e os atualizados dividem a mesma tinta,
+  e a própria fonte escreve que quem consome não sabe distingui-los por ela. É a
+  sétima forma do sinal com o agravante que a décima segunda mediu em
+  `agent-handoff`: quando o achatamento e a codificação por cor aparecem juntos, o
+  que a fonte tem não é um estado pequeno, é nenhum (regra 3 desta folha, regra 4
+  da §8, WCAG 1.4.1). Tirada a cor, a espécie é palavra, e palavra sem grandeza é
+  `.nds-badge` — a fórmula da oitava, repetida pela décima oitava e pela vigésima
+  primeira. O que sobra é endereço, texto e etiqueta, com um botão de remover que
+  leva o nome do item: `.nds-composer-context`, CONSTRUÍDO, com ícone, rótulo,
+  detalhe e `.nds-composer-context-remove` — cuja decisão 3 é exatamente a
+  correção que falta aqui, "ele ganha a marca de automático, que é texto, não só
+  a cor mais fraca". A fonte ainda declara compartilhadas as três únicas peças de
+  cromo que tem — a superfície do chip, a do botão e a do cabeçalho —, que é o
+  sinal lido na quinta, na sétima, na décima e na vigésima primeira, e aqui ele
+  cobre a peça inteira.
+- **A objeção séria, e ela vem da própria folha do composer**: aquele docblock diz
+  que a fila de anexos e a de contexto têm a MESMA geometria e ainda assim são
+  duas peças, porque "o que as separa está no protocolo, não na folha" — anexo é
+  carga, tem bytes, progresso e falha; contexto é referência. Um terceiro caso
+  caberia. Mas o critério é o mesmo e responde: o chip de memória não tem estado,
+  não tem progresso e não tem o que esperar. É referência — cai do lado do
+  contexto, e não abre um terceiro lado.
+- **Colapsa.** E o teste da família reprova antes de tudo: memória não é
+  procedência. O cabeçalho desta folha enumera o que o eixo significa — o
+  documento, o trecho, o lugar dentro dele, o quanto se pode confiar, o que foi
+  procurado e o que voltou —, e um fato lembrado sobre QUEM PERGUNTA não é
+  nenhum dos cinco. Não tem fonte, trecho, âncora nem endereço; e onde
+  `confidence-marker` ainda tinha uma cadeia fazendo as vezes de `Citation`, aqui
+  não há nem isso. Terceira entrada da família sem `Citation`.
+- **A evidência que teria virado o voto**: um terceiro desenho para a terceira
+  palavra — algo que mostrasse o fato ANTES e DEPOIS de ser atualizado, que seria
+  diferença e portanto assunto da família 4 —, ou uma âncora do fato para o turno
+  que o escreveu, que seria a procedência do próprio fato e poria a peça no eixo
+  com uma forma que a família não tem. Procurada nos tipos: o chip tem três
+  campos, a espécie da mudança não carrega carga nenhuma, não há endereço de
+  mensagem, não há turno e não há momento; e a fonte diz, com todas as letras,
+  que acrescentado e atualizado renderizam idênticos. A faixa de runtime oferece
+  o endereço da chamada como endereço natural do chip, e nada além.
+
+**4. `speaker-identity` — colapsa, e é a mais direta das cinco.**
+
+- **A favor**: quatro espécies onde `ChatRole` tem três, e o subagente é palavra
+  que esta casa não tem — um turno que vale por uma conversa aninhada inteira. A
+  fonte ainda lhe dá FORMA, não tinta: o distintivo do subagente é círculo cheio
+  onde os outros são quadrado arredondado, e forma carregando sentido é
+  justamente o que a regra 4 da §8 pede. Conversa com vários agentes é buraco
+  real: o `chat-thread` desenha pessoa, assistente e sistema, e nada no DS
+  desenha qual de vários agentes falou.
+- **Contra**: é o `chat-thread`, linha por linha. A árvore daquela folha já traz
+  `.nds-chat-message-avatar`, `.nds-chat-message-header` com
+  `.nds-chat-message-author` e um segundo campo ao lado — onde ela põe a hora e a
+  fonte quer o modelo ou a duração — e `.nds-chat-message-content` no corpo. Vale
+  a frase da vigésima sexta na largura máxima: **API igual à do dono não é nem
+  discussão** — e aqui o dono não é uma irmã, é a PRIMEIRA peça construída desta
+  guideline. A espécie do turno é `ChatRole` achatado, renomeado e misturado: o
+  agente é o assistente (a própria fonte admite que agente e subagente são
+  vocabulário do componente, e não papéis do runtime), `system` se perde — a
+  mesma perda, no mesmo campo, que a tabela do sinal já registra para
+  `shared-conversation` —, e ferramenta não é papel de quem fala: é
+  `ChatToolCall`, que a mensagem já mostra em `.nds-chat-message-tools`. As
+  quatro espécies viram três tinturas, duas delas iguais, o que a regra 4 da §8
+  apaga; o que sobra é o ícone e o NOME, e o nome já é campo. E o corpo é o
+  parágrafo outra vez: o design system não pode ficar dono do texto da resposta —
+  pior aqui do que na décima terceira e na vigésima primeira, porque na linha de
+  ferramenta o exemplo da fonte enche esse campo com o JSON cru do argumento,
+  onde `.nds-chat-message-content` passa tudo por `createMarkdown` com
+  `isSafeUrl`.
+- **Colapsa.** O agente de dentro é o que a décima primeira e a décima segunda já
+  resolveram na 5.1, em `.nds-item-group` com o modelo em `.nds-font-mono`; e o
+  distintivo redondo contra o quadrado é `.nds-avatar` contra
+  `.nds-item-media-icon`, duas formas que já estão lado a lado nesta casa.
+- **A evidência que teria virado o voto**: ANINHAMENTO — um turno de subagente
+  que contivesse os próprios turnos, desenhado como árvore, que o `<ol>` plano do
+  `chat-thread` não segura e que seria geometria de verdade. Procurada na fonte, e
+  ela EXISTE: a chamada de ferramenta carrega as mensagens aninhadas que ela
+  produziu. Só que está na faixa de RUNTIME, e o auxiliar da própria fonte a
+  ACHATA — empurra cada mensagem aninhada para o mesmo arranjo, marcada como
+  subagente — antes de entregar. A faixa standalone recebe um arranjo de turnos
+  sem campo de filhos. **A única coisa que poderia ter sido desenho é exatamente
+  a que a fonte jogou fora antes de passar adiante**, e a §1 manda ler a faixa que
+  a recebeu assim.
+
+**5. `mcp-server-panel` — colapsa, e é a que tinha mais maquinário.**
+
+- **A favor**: é a mais equipada das cinco — abertura única sobre uma fila, uma
+  conta no cabeçalho, quatro palavras de estado com ponto por linha, uma ação que
+  só existe num dos estados e uma fila de etiquetas dentro do que se abre. Se
+  alguma das cinco tinha estado próprio, era esta. E "precisa de autorização" é
+  palavra que `ConnectionState` não tem: nem `connected`, nem `reconnecting`, nem
+  `disconnected` querem dizer "esperando que alguém autorize".
+- **Contra**: as quatro palavras, uma a uma. Ligado é `connected`. Ligando é
+  `reconnecting` — e a própria fonte dobra a autorização pendente dentro dela —,
+  com `isRetryScheduled` já decidindo se a contagem tem o que contar. Falhou é
+  `disconnected`, e de novo é a fonte que dobra erro e desligado num só. E
+  "precisa de autorização" é `waitsForPerson`, que `ToolCallState` `pending`
+  define com a consequência de desenho junto: "nasce ABERTA — pedir autorização
+  dentro de uma caixa fechada é pedir sem mostrar". A fonte desenha o contrário: a
+  linha que precisa de autorização chega FECHADA, e a pastilha de autorizar só
+  aparece depois de abrir. **A palavra que parecia nova é a que a fundação define
+  com mais cuidado**, e vale a frase da vigésima primeira — vocabulário que a
+  fundação hospeda não é vocabulário próprio de quem o desenha.
+- **E o achatamento aqui é DECLARADO pela fonte, em seção própria**, o que não
+  tinha acontecido nas doze da tabela: a faixa de runtime carrega seis estados, o
+  painel só tem quatro, e a fonte manda dobrar os dois que sobram "no ponto mais
+  próximo", com o `switch` publicado ao lado. Doze vezes o achatamento se leu nos
+  tipos; esta vem com o código que joga a informação fora antes de o componente
+  vê-la.
+- **Colapsa.** O desenho é `.nds-accordion` de abertura única com
+  `.nds-connection-state` por linha, as duas de pé, e a segunda já traz ponto,
+  palavra, contagem e ação na ordem em que a fonte as quer. As ferramentas chegam
+  como cadeias sem estado, então a fila é `.nds-badge` num `.nds-cluster`. E o
+  teste da família reprova de saída: quais servidores estão ligados não é em que a
+  resposta se apoia; é se ainda há por onde pedir, que é a razão declarada de
+  `ConnectionState` existir separado de `RunStatus`. Não há mensagem, não há
+  resposta, não há `Citation` — a quinta entrada seguida sem —, e a própria fonte
+  aponta a versão cheia desta lista: `mcp-config`, dentro de um diálogo, que já
+  está na 5.1 desde a leitura do catálogo. **Painel cuja versão cheia já colapsou
+  é painel.**
+- **A evidência que teria virado o voto**: um estado por servidor com ação que não
+  fosse tentar de novo — que é o que "precisa de autorização" parecia ser, e que
+  `waitsForPerson` já hospeda —, ou estado por FERRAMENTA: uma ferramenta
+  desligada, indisponível ou usada neste turno, que faria da fila uma lista de
+  verdade. Procurada nos tipos: a fila de ferramentas é arranjo de cadeias nuas,
+  sem estado, sem descrição e sem esquema. A faixa de runtime tem as três coisas,
+  mais o último erro — mais rica, e a §1 proíbe pegá-la; a standalone jogou tudo
+  fora.
+
+**As três cláusulas de reversibilidade que apontavam para cá, todas respondidas,
+e nenhuma dispara:**
+
+- **A da vigésima primeira NÃO dispara, e nomeava as cinco.** A condição era que
+  em alguma delas aparecesse graduação de afirmação com desenho, estado ou
+  vocabulário próprios — uma marca sobre uma frase que não coubesse na cadeia do
+  gatilho de explicação, um nível que a palavra não carregue, ou GRANDEZA
+  numérica por trás do nível. Nenhuma das cinco gradua afirmação nenhuma: quatro
+  não têm nível de coisa alguma, e a quinta tem estado de LIGAÇÃO, que mede
+  transporte e não confiança. Grandeza numérica não aparece em lugar nenhum do
+  lote — os únicos números são contagens sem teto, e contagem sem teto é
+  etiqueta, que é a fórmula da oitava. `confidence-marker` fica na 5.1, e esta
+  cláusula fecha.
+- **A da décima sexta NÃO dispara.** A condição era: ao construir
+  `retrieval-chunks` ou `research-report`, aparecer fila de citações com desenho,
+  estado ou vocabulário próprios — linha que não caiba num `.nds-item`, estado por
+  citação que a seleção não modele, ou lugar dentro da fonte pedindo tipo que
+  `Citation.anchor` não dê. `research-report` não tem fila de trechos: as linhas
+  dela são títulos de seção com um NÚMERO ao lado, e não há trecho, âncora nem
+  endereço em campo nenhum. `document-reference` fica na 5.1, e esta cláusula
+  fecha — a vigésima primeira já havia fechado a metade que era de
+  `retrieval-chunks`.
+- **A metade que a vigésima primeira deixou de pé, da décima oitava, também
+  fecha.** Ela dizia que sobravam `web-search` e `research-report` para verificar
+  se aparecia fila de trechos com desenho próprio. `web-search` desenha título e
+  domínio por linha, sem trecho; `research-report` desenha título e contagem, sem
+  trecho. `retrieval-chunks` fica na 5.1, e nenhuma das três cláusulas desta
+  família continua aberta.
+
+**As duas sobreposições que o lote existia para medir, resolvidas:**
+
+- **`web-search` e `research-report` NÃO são a mesma coisa em escalas diferentes —
+  e nenhuma é a escala da outra.** Elas colapsam em peças DIFERENTES: uma na lista
+  de fontes de um turno, outra na fila de passos do plano. O que elas dividem não
+  é escala, é um defeito só, e ele fica visível quando se põem os dois tipos lado
+  a lado: **as duas trocam a IDENTIDADE de uma fonte por uma EXIBIÇÃO dela** —
+  uma cadeia de domínio numa, um número na outra. A escala nunca foi o eixo; o
+  eixo era se a fonte sobrevive como `ChatSource`, e nas duas ela não sobrevive.
+- **`memory-chips` e `speaker-identity` NÃO são a mesma etiqueta com dois
+  conteúdos, e a premissa cai na segunda.** `memory-chips` é etiqueta curta:
+  pastilha com texto e um botão de dispensar. `speaker-identity` não é etiqueta
+  nenhuma — é uma fila de TURNOS, cada um com corpo de texto embaixo, que o
+  exemplo da própria fonte enche com JSON na linha de ferramenta; o que nela é
+  curto é só o distintivo que segura o ícone. É por isso que caem em donos
+  diferentes: uma em `.nds-composer-context`, outra em `.nds-chat-message`. O que
+  elas de fato dividem é outra coisa, e é a mesma dos outros três: **as duas
+  achatam uma união que esta casa já tem** — três palavras com dois desenhos numa,
+  `ChatRole` perdendo `system` e renomeando o assistente na outra —, e as duas
+  fecham a diferença com cor, que a regra 4 da §8 apaga.
+
+**E uma leitura de família que se CONFIRMA sem ter sido testada, e vale dizer as
+duas coisas.** A divisa da vigésima primeira — o que interrompe o parágrafo tem
+geometria própria; o que É o parágrafo, ou o que mora numa fila ao lado dele, não
+tem — previu as cinco corretamente: as cinco moram ao lado da resposta, e as
+cinco colapsaram. Mas previu barato, porque **nenhuma das cinco interrompe um
+parágrafo**: `memory-chips` fica abaixo da resposta, `speaker-identity` É o
+recipiente dela, e as outras três são painéis ao lado. A divisa fecha a família
+com um positivo e oito negativos, e o positivo continua sendo o mesmo de sempre —
+`inline-citation`. Quem a levar para a família 4 deve saber disso: ela nunca foi
+testada contra um segundo elemento que interrompa texto corrido, porque nenhum
+apareceu depois da marca.
+
+**E uma nota para quem abrir `evidencia.css` depois desta correção**: o cabeçalho
+da folha enumera cinco coisas que procedência significa — o documento, o trecho,
+o lugar dentro dele, o quanto se pode confiar, o que foi procurado e o que
+voltou. Depois das oito saídas, só as três primeiras têm peça, e as duas últimas
+foram reservadas para entradas que colapsaram (`confidence-marker` e
+`web-search`). O cabeçalho não é corrigido aqui de propósito: ele descreve o
+EIXO, não o inventário, e o eixo não encolheu — encolheu o que a fonte tinha para
+oferecer sobre ele.
+
+Contagens — e aqui esta correção faz DIFERENTE das anteriores, de propósito. A
+família 3 fica com **1 entrada e 1 componente**; a 5.2 perde 5 entradas e a 5.1
+ganha as mesmas 5. Os totais das duas seções NÃO vão escritos aqui, e o motivo é
+medido: este lote foi triado com outras duas portas escrevendo na mesma
+guideline ao mesmo tempo, e a linha da família 4 passou de 18 entradas para 12
+entre a leitura desta correção e a escrita dela. **Soma anotada durante a
+medição de outra porta registra a medição, não o arquivo** — foi assim que uma
+família ficou declarando 8 entradas com 7 componentes e o total foi a 121 sem
+ninguém ver. Quem precisar do total soma as SETE linhas da tabela da 5.2 e conta
+as linhas da 5.1, lembrando das que carregam duas entradas, na hora em que
+precisar. É a mesma disciplina que o parêntese da 5.2 já manda: reconte família a
+família a partir da tabela, nunca pelo próprio delta.
+
+**Vigésima sétima correção, a segunda em LOTE, e a segunda que dissolve uma
+FAMÍLIA inteira**: `orb` e `voice-conversation` colapsam, e a 7 deixa de existir.
+São a vigésima sétima e a vigésima oitava travessias de 5.2 para 5.1, e as
+contagens mudam uma vez só, ao fim do lote. `voz.css` não é fundada, e as folhas
+novas desta guideline passam de seis para cinco.
+
+**O MECANISMO, e ele NÃO é o da vigésima sexta**: lá a 5.2 tinha dado à família
+quatro bases e as quatro eram as próprias peças, e o corolário mandou perguntar,
+ao abrir uma folha, se as bases da coluna do eixo são MATERIAL ou PEÇAS. A 7
+declara uma base só, `media-player`, e ela É peça — então o instrumento previa o
+desfecho a que se chegou. **Previu certo pelo motivo errado, e é isso que vale
+guardar.** Nenhuma das duas entradas colapsa dentro do `media-player`: só
+`read-aloud` colapsou lá, na décima nona. Estas duas colapsam em
+`connection-state` e `thinking-indicator` (família 2), em `composer-voice`
+(família 1), em `agent-status` (família 2) e no `chat-thread` que já existia
+antes de tudo. **Base declarada é previsão, e previsão acerta o QUE sem acertar
+o ONDE** — o que ela mede é que a família não tinha material próprio, não que
+tenha um dono só.
+
+O que mede melhor é a coluna do eixo, lida palavra por palavra: "áudio ao vivo,
+com estado de conexão e legenda". As três coisas já tinham dono no dia em que a
+linha foi escrita. Áudio ao vivo é `MediaPlayerOptions.stream`, e o docblock dele
+já mede o que a transmissão faz com a barra; estado de conexão é
+`connection-state`, peça da família 2, com `ConnectionState` no vocabulário
+compartilhado; legenda é `<track>`, que a folha do `media-player` chama de
+exigência de nível A e que o `MediaPlayerTrack` já modela. **Eixo cujas três
+palavras nomeiam coisas construídas não é eixo de família: é um índice do que já
+existe.** É a leitura da vigésima sexta noutro registro — lá a família descrevia
+o que todo aplicativo já tinha, aqui descreve o que ESTE design system já tinha.
+
+**1. `orb` — colapsa, e a faixa que a §1 manda ler é quase toda a leitura.**
+
+- **A favor**: é a única entrada das 120 cujo assunto declarado é uma FORMA
+  ANIMADA, e forma animada é a coisa que menos se compõe de peças prontas. A
+  §8 a nomeia pelo nome na regra 8 ("orb pulsando"), o que se lê como a própria
+  guideline já contando com ela; `volume` é um sinal físico ao vivo, e nenhum
+  tipo de `chat-protocol.ts` carrega um; e uma superfície de foco não se monta
+  com um ponto de 8 px. Se alguma peça desta campanha ia sobreviver por desenho
+  puro, era esta.
+- **Contra**: **a faixa standalone é um `<canvas>` e mais nada.** A anatomia
+  mostra os dois blocos lado a lado, e o que é a peça standalone é só o primeiro:
+  `<canvas className="aui-voice-orb" data-state="…" />`, com três props. O ponto
+  de estado, o "Connecting...", o alternador de mudo e o desligar moram em
+  `VoiceControl`, `VoiceStatusDot`, `VoiceMuteButton` e `VoiceDisconnectButton`,
+  e a tabela que os declara está inteira sob **With a runtime**. A §1 é literal
+  sobre qual das duas se lê, e a leitura da faixa certa deixa um elemento sem
+  papel, sem nome, sem texto e sem controle.
+- E o pouco que ela declara tem dono, campo por campo. `state` é o produto
+  achatado de três eixos que a faixa de runtime mantém separados —
+  `status.type`, `isMuted` e `mode` —, e a própria fonte exporta a resolução como
+  FUNÇÃO (`deriveVoiceOrbState`), o que a classifica: agregado que é leitura
+  rende função, não desenho — a leitura que a vigésima sexta fez em
+  `conversation-search`. `volume` entra por
+  `--nds-voice-level`, que `.nds-composer-voice-bar` já lê, com o mesmo docblock
+  ("o nível é valor de runtime, e entra por custom property"), a mesma decisão de
+  ser `aria-hidden` e o mesmo quadro de repouso sob movimento reduzido — peça
+  desta campanha, construída oito correções antes desta. `variant` é uma paleta
+  de três cores nomeadas fora do tema, que a §9 fecha em uma frase. E o `<canvas>`
+  é código: a fonte diz que a peça "owns the WebGL animation", e o que a §1 pega
+  é desenho, nunca implementação — aqui não há um sem o outro.
+- **Colapsa**, e o teste que decide é o do quadro de repouso. `prefers-reduced-motion`
+  é o que a própria linha da 5.2 destacava para esta família, e sob ele o orb é um
+  círculo colorido: cinco estados separados por cor, que é o que a regra 4 da §8
+  proíbe e o que a decisão 4 do `connection-state` já escreveu para o ponto de 8
+  px. Uma peça cuja informação inteira desaparece quando a animação para não
+  carrega informação nenhuma — **o que informa é a palavra, e a palavra com ponto
+  e ação é `.nds-connection-state`, nó por nó.**
+- **A evidência que teria virado o voto**: geometria sem dono, como a da nona
+  correção — um sistema de coordenadas, uma forma que precisasse posicionar dado
+  sobre um espaço. Procurada nos tipos, que é onde a nona a achou: o único número
+  é `volume`, de 0 a 1, e ele escala a própria forma. **Escalar a si mesmo não é
+  sistema de coordenadas**; em `computer-use` o quadro é da peça e o ponto só
+  significa dentro dele, e aqui não há ponto, não há quadro e não há segunda
+  dimensão. A segunda coisa procurada foi um estado que a família não tenha e que
+  MUDE O DESENHO: `listening` contra `speaking` é o candidato, e a própria fonte
+  o desenha igual — o ponto de estado dela é verde nos dois. Cinco palavras,
+  quatro desenhos, e o que fecha a diferença é uma predefinição de animação: é a
+  sétima forma do sinal, medida na vigésima primeira, com o agravante de a
+  diferença sumir junto com o movimento.
+
+**2. `voice-conversation` — colapsa, e é a que compõe MAIS peças construídas de
+todas as 120.**
+
+- **A favor**: é a leitura mais forte do lote, e por três coisas que `orb` não
+  tem. A forma animada aqui é um `<button aria-label="Interrupt the assistant">`
+  — tem alvo, que é justamente o que faltou à palavra falada da décima nona; a
+  legenda NOMEIA o turno, que é a palavra que a regra 4 da §8 cobra; e `mode`
+  declara `thinking`, um estado que a faixa de runtime da fonte **não tem** e que
+  a standalone acrescentou — o contrário exato do achatamento, e a primeira vez
+  na campanha que a standalone entrega MAIS que o runtime. Some-se a isso o eixo
+  que o vocabulário compartilhado de fato não tem: de quem é a vez de falar.
+- **Contra**: as quatro palavras de `mode` têm quatro donos, e todos os quatro
+  estão construídos. `connecting` é `ConnectionState`, com a decisão de que a
+  primeira tentativa desenha como a quinta já escrita. `thinking` é o
+  `thinking-indicator`, cujo bloco abre dizendo que ele é "o lugar da resposta
+  enquanto ela não chegou" — a peça existe exatamente para esse vão. `speaking` é
+  `RunStatus` `running` com o `stop` de `AgentStatusIntent` ao lado, que é o
+  interromper da fonte com um rótulo que diz o que faz, e não um alvo de 120 px
+  sem nome visível. `listening` é `VoiceState` `recording` no `composer-voice`,
+  com alternador de `aria-pressed`, nível e palavra. **União cujas palavras se
+  repartem entre quatro peças de pé não é estado da entrada: é a ordem em que
+  elas aparecem na tela.**
+- E a transcrição fecha o resto: `VoiceTurn` é `SharedTurn` repetido, o
+  estreitamento em duas direções que a vigésima sexta mediu, e vale a frase que a
+  décima nona e a vigésima quinta já escreveram — **o parágrafo não é da peça.**
+  `muted` é o booleano do alternador,
+  o avesso da décima quinta e da décima nona; `amplitude` é `--nds-voice-level`;
+  `onToggleMute` e `onEnd` são espaço de ação, que a §2 entrega a quem consome.
+- **Colapsa**, pelo critério que a vigésima terceira fixou para separar absorção
+  de migração: **a 5.1 é para quem compõe mais de uma peça**, e esta compõe cinco.
+  Nenhuma docs page de nenhuma delas mostraria o `thinking-indicator` acima de um
+  `chat-thread` com o alternador de voz no pé, e é isso que a story de composição
+  existe para mostrar.
+- **A evidência que teria virado o voto**: uma decisão de REGIÃO VIVA que o
+  sistema ainda não tivesse tomado. Era a candidata mais séria, e a linha da 5.2
+  apontava para ela: áudio ao vivo é o caso em que anunciar pode ser certo, e a
+  regra 1 da §8 proíbe por padrão. Procurada nas folhas construídas, e **as três
+  metades já estão decididas, cada uma numa peça de pé**: perder a ligação
+  anuncia, e o `connection-state` escreve por quê ("não é o passo seguinte, é o
+  chão saindo"), com `role="status"` polido e a região envolvendo só a palavra; a
+  resposta que começa a vir anuncia UMA vez, e é o `thinking-indicator`; o
+  medidor de nível não anuncia nada, e é o `composer-voice`. Falta a quarta — de
+  quem é a vez —, e ela responde sozinha: numa chamada ao vivo quem anuncia o
+  turno é a voz que fala, e uma região viva por cima dela seria a peça falando
+  junto com o modelo. Para quem não ouve, o turno chega escrito na transcrição, e
+  quem anuncia lá é o anunciador do `chat-thread`, uma vez, ao terminar. **A
+  decisão mais difícil da família estava tomada três vezes antes de a família
+  abrir.**
+
+**As reversibilidades que apontavam para cá, respondidas:**
+
+- **`read-aloud` (décima nona) CONFIRMA no primeiro gatilho, e o segundo NÃO é
+  destas duas.** A condição era leitura em voz com desenho, estado ou vocabulário
+  próprios aparecendo ao construir uma destas: uma marca de palavra que a caixa de
+  linha não comporte, um estado de fala que `PlayerState` não modele, ou legenda
+  com TEMPO que `<track>` não dê. Nenhum dos três, e nenhum por pouco: nenhuma das
+  duas marca palavra nenhuma — `orb` não tem texto e a transcrição da outra são
+  turnos inteiros; o único estado de fala declarado é `mode`, que se reparte entre
+  quatro peças e não descreve reprodução; e a transcrição é `{ id, role, text }`,
+  que é MENOS que `<track>`, porque não tem tempo nenhum. `read-aloud` fica na 5.1.
+  O segundo gatilho daquela cláusula — se o terceiro motor, o que relata o próprio
+  estado em vez de ser lido de um elemento, não couber no `media-player` sem
+  redesenhar a barra — **continua aberto e não é destas duas**: ele se mede ao
+  compor a story de `read-aloud` sobre o `media-player`, e nem `orb` nem
+  `voice-conversation` tocam aquele motor. Fica dito para não ser procurado aqui.
+- **`mobile-composer` (décima quinta) CONFIRMA, e era o último gatilho dela.** A
+  vigésima sexta já escreveu que restava um só, e é este. A condição era
+  superfície de toque com desenho, estado ou vocabulário próprios: uma barra que
+  se prenda ao teclado por conta própria, um estado do aparelho que consulta de
+  mídia não alcance, ou geometria de telefone que não caiba numa regra do bloco
+  que já existe. `voice-conversation` não tem teclado, não tem campo, não tem
+  `keyboardOpen`, não tem consulta de mídia e não diz uma palavra sobre telefone —
+  é a mesma leitura da vigésima sexta sobre `thread-list-sidebar`, e pelo mesmo
+  motivo: **a fonte não é sobre isso.** `mobile-composer` fica na 5.1, e a
+  cláusula fecha sem gatilho nenhum de pé.
+- **`permission-grant` (quarta) e `computer-use` (nona) não são tocadas**: não há
+  pergunta com consequência nem geometria sobre superfície em nenhuma das duas.
+
+**A sobreposição que o lote existia para medir, medida**: `orb` está DENTRO de
+`voice-conversation`, e a fonte diz isso primeiro — a página da segunda manda ler
+a da primeira para o adaptador e diz cobrir "a tela em volta". É o par
+`thread-list` / `thread-list-sidebar` invertido: lá a de fora não tinha faixa
+standalone e a de dentro tinha; aqui a de dentro é que é uma casca de um elemento
+só, e é a de fora que dá à forma um papel, um nome, um alvo e uma palavra. **As
+duas colapsam no mesmo lugar, e a de dentro é o indicador da de fora.**
+
+**E a leitura de FAMÍLIA que fecha, porque uma família não se dissolve por soma
+de entradas**: a 7 é a única das sete cujo eixo era um MEIO, e não uma pergunta.
+As outras cinco vivas descrevem o que se pergunta, o que o agente está fazendo, em
+que a resposta se apoia, com que forma ela chega e quanto ela custa — coisas que
+mudam de desenho conforme a resposta. A 7 descrevia o CANAL: som em vez de texto.
+Trocar o meio não muda o que a interface tem a dizer, e a prova está nas quatro
+palavras de `mode` caindo em quatro peças que já desenhavam a mesma coisa por
+escrito. **Família definida por canal herda as peças do canal antigo, e não tem o
+que acrescentar.**
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos, e
+com duas portas escrevendo nas famílias 3 e 4 enquanto esta lia a fonte — o
+registro de método da vigésima terceira vale pela quarta vez, e os números das
+duas famílias vizinhas saíram das linhas relidas depois, nunca de delta desta
+passada. A família 7 fica com **0 entradas** e **0 componentes**; a 5.2 perde
+duas entradas e dois componentes, e a 5.1 ganha duas entradas.
+
+**E o registro de método, que vale uma sétima vez.** O pedido trazia duas
+afirmações a conferir, e as duas estavam erradas para o mesmo lado. A primeira:
+que `orb` seria "a única entrada de todo o catálogo cujo assunto declarado é forma
+animada" — e não é. `typing-indicator` e `number-ticker` também o são, e as duas
+já estavam na 5.1 desde a primeira leitura, a segunda com o dono escrito
+("animação de dígito, não componente — `13-animacao.md`"). A segunda: que a
+família 2 teria "dez peças construídas" — e tem NOVE; a décima era justamente
+`checkpoint-history`, a entrada por triar. As duas empurravam para o mesmo lado, e
+o lado era o da sobrevivência. **Afirmação que favorece o desfecho contrário ao
+que se está medindo também precisa ser conferida** — a vigésima sexta escreveu a
+metade fácil desta regra, que é conferir primeiro a afirmação que favorece o
+desfecho a que se chega; a metade que faltava é que nenhuma se confere sozinha.
+
+**Vigésima oitava correção, e a vigésima nona travessia de 5.2 para 5.1**:
+`checkpoint-history` é `.nds-item-group` de `.nds-item` com a linha corrente
+marcada — e as duas contagens mudam junto. É a quinta que colapsa numa peça da
+PRÓPRIA família 2 já construída, a última entrada que faltava dela, e **com ela a
+família 2 FECHA**, em nove componentes, como a 1 fechou na décima quinta.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`Checkpoint { id: string, label: string, at: string, files: number }` e, no
+componente, `checkpoints: readonly Checkpoint[]`, `currentId: string`,
+`onRestore?: (id: string) => void` e `className`. Quatro entradas no componente,
+quatro campos na linha, UMA chamada de volta. Faixa de runtime não há: a página
+publica só a forma standalone, e é a segunda entrada triada assim, depois de
+`schedule-card`. Vale a mesma leitura, na mesma direção: o que falta é a
+contradição INTERNA entre as duas faixas que a décima oitava e a vigésima
+acharam, e ela é uma prova a menos contra a entrada — nunca uma a favor. A
+anatomia é um rótulo "Checkpoints" e uma linha por ponto: um ponto (azul cheio
+no corrente, anel vazado nos que estão à frente, cinza cheio nos de trás), o
+rótulo, o carimbo com a contagem de arquivos, e ou a palavra "current" ou um
+botão de restaurar que só aparece no `:hover` ou no `:focus`. Com o arranjo
+vazio, só o rótulo é desenhado.
+
+Antes dos três testes, as três perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **Voltar atrás é eixo novo nesta família? NÃO É, e a folha já o tinha
+  construído.** É a pergunta mais forte da entrada: as nove peças de pé descrevem
+  o que está acontecendo, o que já aconteceu ou o que vai acontecer, e esta
+  descreve DESFAZER. A resposta está no `agent-plan`: uma lista ordenada com um
+  ponto marcado como "aqui", `aria-current` no passo, e a decisão escrita de que
+  "onde estamos também precisa chegar ao olho" — porque a cor do marcador não
+  responde sozinha. A diferença que o checkpoint acrescenta é que as linhas de
+  DEPOIS do cursor já aconteceram e foram deixadas para trás, em vez de ainda não
+  terem acontecido; e essa diferença não muda um pixel: o plano já desenha um
+  estado que não vai acontecer e continua na lista, que é `skipped`, e o desenha
+  com traço, não com opacidade. **Cursor sobre lista ordenada não é eixo desta
+  entrada: é o que a peça ao lado faz.**
+- **O trio corrente / à frente / atrás é estado, ou é POSIÇÃO? É posição, e a
+  fonte diz como a calcula.** A linha corrente é achada casando `currentId` contra
+  o arranjo, e o resto sai do ÍNDICE: quem vem depois desenha à frente, quem vem
+  antes desenha atrás, e um `currentId` que não casa com nada faz todas as linhas
+  desenharem atrás. Nenhum campo de `Checkpoint` participa disso. É a quarta forma
+  do sinal, medida na décima primeira: o estado por item não é um booleano
+  declarado, é uma comparação com um contador — só que ali a comparação partia a
+  lista em dois desenhos e aqui em três, e o efeito é o mesmo, incluindo o de
+  amarrar o desenho à ORDEM do arranjo. **Ao ler os tipos, conte quantos desenhos
+  distintos a peça sabe fazer, e depois pergunte de onde eles saem: se saem do
+  índice, quem os decide é quem passa o arranjo.**
+- **A contagem de arquivos é medição, e portanto da família 5? Não, e por dois
+  motivos.** Não tem teto e não tem fração — `token-budget.ts` não teria o que
+  contar —, e a família 5 já registrou que quem não mede contra denominador não
+  é dela. E `files: number` cobra o preço que esta família tira do componente por
+  regra: para desenhar, ele teria de escrever "4 arquivos", com plural e ordem de
+  palavras, que é decisão de idioma. É a sexta forma do sinal, medida na décima
+  sexta sobre `page: number`, com o mesmo desfecho — **o número chega já escrito,
+  como o carimbo ao lado dele.**
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montado inteiro, o cartão não deixa buraco — e a fonte mesma
+  já diz de que ele é feito, como em quase toda esta seção: a raiz "usa a
+  superfície `paper` compartilhada" e o carimbo com a contagem usam `mono`.
+  Superfície compartilhada declarada na origem, e é o oposto exato do que a nona
+  leu em `computer-use`.
+
+  A composição é `.nds-item-group` de `.nds-item` `data-size="sm"`, a mesma fila
+  que `subagent-list`, `background-inbox` e o histórico de `schedule-card` já
+  montam. O rótulo é `.nds-item-title`; o carimbo e a contagem, já escritos, são `.nds-badge`
+  com `.nds-font-mono`, onde a quinta, a décima primeira, a décima segunda, a
+  décima sétima, a décima oitava e a vigésima terceira já puseram todo valor
+  técnico; restaurar é `.nds-button` `.nds-button-ghost` em `.nds-item-actions`. A
+  linha corrente leva `aria-current="true"` e `.nds-item-muted`, que é o fundo
+  destacado da fonte. Sem ponto nenhum, `empty.css` — e aqui a composição é mais
+  fina que a fonte, que desenha o rótulo sobre o vazio e mais nada.
+
+  Três traços a composição não reproduz, os três por decisão já escrita, e os três
+  são regras da §8 e não gosto. O ponto colorido como único portador do trio é a
+  regra 4, e o conserto é o mesmo do `agent-plan` e do `connection-state`: o ponto
+  é reforço e a PALAVRA é o estado, em `.nds-badge`. A opacidade reduzida das
+  linhas à frente é a mesma regra 4, e é o traço que a décima segunda mediu em
+  `agent-handoff` — dois desenhos separados só por cor e opacidade custam a
+  informação inteira para quem não enxerga a diferença. E o botão que aparece só
+  no `:hover` é a regra 3: ações aparecem no `:hover` **e** no `:focus-within` e
+  permanecem na ordem de foco, que é o que `.nds-chat-message-actions` já desenha
+  por `opacity` e nunca por `display`. A fonte diz "hover or focus", e é a
+  diferença entre focar o botão e focar a LINHA que a decide.
+
+- **Estado, não, e o sinal fica MUDO, e é o mais mudo desde
+  `message-branches`.** `Checkpoint` não declara booleano, união nem tipo de
+  estado: são três cadeias e um número. Pela sub-regra da décima, olha-se a
+  assinatura que sobrou no lugar do estado, e é `onRestore(id)`. Ela nomeia um
+  dono — mas, pela primeira vez em seis, **o dono não é um componente nem uma
+  guideline transversal: é uma cláusula desta.** Restaurar é AÇÃO, e a §2 fecha o
+  assunto em uma linha: ação é espaço, não política, e o contrato é
+  `actions?: HTMLElement[]`, que o `approval-card` fixou e que o `.nds-item-actions`
+  hospeda. A vigésima segunda tinha escrito que dono pode não ser peça, quando
+  `cycle` apontou `13-animacao.md`; esta acrescenta o terceiro lugar em que um
+  dono mora — **a regra da própria família.** Quando a única assinatura que sobra
+  é uma que a §2 já classificou como espaço, ela não descreve a peça: descreve o
+  que quem monta põe dentro dela.
+
+- **Vocabulário, não, e nenhum campo fica sem par.** `id` é endereço de linha, que
+  `ChatToolCall.id` e `PlanStep.id` já declaram com o mesmo docblock e pelo mesmo
+  motivo. `label` é `PlanStep.label`. `at` é carimbo já formatado, que é a decisão
+  do relógio de `agent-status`, da contagem de `connection-state` e do `at` de
+  `schedule-card`, nas mesmas palavras. `files` é uma contagem sem total, e esta
+  família tem o tipo exato para isso — `JobCount`, cujo docblock existe justamente
+  porque "trabalho que não sabe de quantos é caso REAL" —, o que confirma que o
+  número não é conceito novo: é o `done` de uma conta sem denominador, com o
+  rótulo por escrever. É a distância inteira para `computer-use`, que sobreviveu
+  por ter dois campos sem par em lugar nenhum.
+
+E o teste da família, que é o quarto: **ela responde ao eixo, e é a segunda que o
+responde sobre um tempo que não é agora — a vigésima terceira olhava para a
+frente, e esta olha para trás.** "O que está acontecendo" é "você está no ponto
+três"; "há quanto tempo" é o carimbo de cada um; "o que eu posso fazer a respeito"
+é voltar. As três respostas cabem, e nenhuma pede desenho que a folha não tenha —
+o que faz desta a décima leitura do padrão que a sexta, a sétima, a décima
+primeira, a décima segunda, a décima quarta, a décima quinta, a décima sétima, a
+vigésima e a vigésima terceira já nomearam: **`checkpoint-history` não sai por não
+pertencer à família — sai por já estar construída dentro dela.**
+
+**E POR QUE MIGRA EM VEZ DE SER ABSORVIDA**, pelo critério da quarta, da vigésima
+e da vigésima terceira: absorção é para quem não acrescenta nada — mesma marcação,
+mesmo vocabulário, mesma docs page com outro título. Aqui a composição junta a
+linha rica, o distintivo monoespaçado, o botão que só aparece no foco e o vazio, e
+uma docs page desta entrada mostraria `aria-current` numa fila de `.nds-item`, que
+a docs page de nenhuma peça da família mostra. **A 5.1 é para quem compõe mais de
+uma peça.**
+
+**A LEITURA QUE A §7 OBRIGA, e ela não muda o veredito**: aquela seção nomeia
+`checkpoint-history` entre as peças que fazem perguntas com consequência, e é
+preciso dizer por que isso não a salva. A lista da §7 é de ASSUNTOS que encostam
+em política, não de peças: das seis que ela nomeia, `permission-grant` foi
+absorvida na quarta, `guardrail-notice` colapsou na décima, `elicitation-form` na
+vigésima e `edit-message` na décima quarta — sobrou `approval-card`, que é uma. E
+aqui não há pergunta nenhuma no sentido daquela seção: pergunta é pedido, alcance
+e um par de controles com alguma coisa de pé esperando a resposta, que é a API que
+o `approval-card` fechou. Uma fila com um botão por linha não é isso. **A linha da
+§7 continua valendo, e passa a valer para quem MONTAR a composição**: o que
+restaurar devolve, se os pontos à frente sobrevivem à volta, e se voltar duas
+vezes desfaz duas — nada disso é do design system, e é exatamente o que aquela
+seção manda perguntar à dona na hora.
+
+**A reversibilidade da vigésima terceira, que apontava para cá, respondida — e é a
+única que apontava.**
+
+- **`schedule-card` CONFIRMA, e a cláusula fecha os quatro gatilhos.** A condição
+  era agendamento com desenho, estado ou vocabulário próprios aparecendo ao
+  construir `checkpoint-history`. (a) Cadência que chegue ESTRUTURADA e peça
+  desenho — um trilho de sete pontos, uma prévia das próximas execuções, um
+  calendário: não há cadência nenhuma aqui, nem recorrência, nem intervalo; os
+  pontos são passado avulso. (b) Um estado por execução passada que `RunStatus` não
+  modele — `missed`, `throttled`, `skipped` por sobreposição: `Checkpoint` não
+  declara estado NENHUM, o que é aquém do `ok: boolean` que aquela correção mediu,
+  e não além dele. (c) O estado do próprio agendamento chegando como VOCABULÁRIO
+  em vez do booleano do interruptor: não há agendamento e não há interruptor. (d) O
+  segundo gatilho, se `agent-status` precisasse de desenho próprio para carregar um
+  instante FUTURO: esta entrada não tem instante futuro, e os carimbos que ela tem
+  vão para o distintivo, que é a saída que aquela composição já usava.
+  `schedule-card` fica na 5.1.
+- **`permission-grant` (quarta) não é tocada**: não há pergunta com consequência
+  aqui, pelo que a leitura da §7 acima mede.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: a
+família 2 passa a **13 entradas** e **9 componentes**, e FECHA. A 5.2 perde uma
+entrada e a 5.1 ganha uma. As famílias 3 e 4 estavam sendo escritas por outras
+duas portas enquanto esta lia a fonte, e os números delas não saem de delta desta
+passada: leem-se das linhas, depois — **contador compartilhado não se lê duas
+vezes: lê-se uma, depois.**
+
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
 Apareceu dezessete vezes: **catorze** como achatamento, sempre igual, e **quatro**
@@ -4367,6 +5091,12 @@ as três primeiras são as que fecham a sub-regra. Por isso vira critério:
 | `reviewable-diff` | `HunkDecision = pending\|kept\|discarded` — e só `pending` é do vocabulário | `running`, `failed` |
 | `thread-list` | `isRunning: boolean`, e só na faixa de RUNTIME — a standalone não tem estado nenhum | `idle`, `stopped`, `failed`, `complete` |
 | `shared-conversation` | `role: "user"\|"assistant"` — a primeira união achatada que não é de estados | `system` |
+| `orb` | `state = idle\|connecting\|listening\|speaking\|muted` — o produto de três eixos que a faixa de runtime separa, com `muted` junto, que é o do alternador | `reconnecting`, e o motivo de um fim (`finished\|cancelled\|error`) |
+| `voice-conversation` | `role: "user"\|"assistant"` em `VoiceTurn`, com `muted: boolean` ao lado, que é o do alternador | `system` |
+| `web-search` | `searching: boolean` — e a faixa de runtime da própria fonte declara quatro palavras, exatamente como em `retrieval-chunks` | `idle`, `stopped`, `failed` |
+| `research-report` | `state = pending\|writing\|done` — e `writing` é `running` renomeada, como `ready` era `complete` | `failed`, `skipped` — e `skipped` é o que justifica `PlanStepState` existir |
+| `speaker-identity` | `kind = user\|agent\|subagent\|tool` — a segunda união achatada que não é de estados, e a única que mistura papel de quem fala com espécie de parte | `system` — a MESMA perda, no mesmo campo, de `shared-conversation` |
+| `mcp-server-panel` | quatro palavras de estado onde a faixa de runtime da própria fonte declara seis — e ela publica o `switch` que dobra as duas que sobram | a espera por uma PESSOA separada da espera por uma nova tentativa, e o erro separado do desligado |
 | `web-preview` | `loading: boolean` | `idle`, `stopped`, `failed` — e `failed` é o pior: a prévia que quebrou desenha igual à que ainda está chegando, para sempre |
 | `image-generation` | `generating: boolean` | `idle`, `stopped`, `failed` |
 
@@ -4703,6 +5433,50 @@ a lista, ligando os pontos na ordem em que chegaram. A própria fonte o chama de
 da oitava forma ganha um terceiro ramo: ele descreve o item, ORDENA a lista, ou
 só a enfeita? Os dois últimos são de quem monta.
 
+**As duas aparições da vigésima sétima correção, medidas em lote, e as duas
+falam pelas DUAS bocas.** `orb` declara cinco palavras em
+`state`, e elas são o produto ACHATADO de três eixos que a faixa de runtime da
+MESMA página mantém separados: `status.type` — com o encerrado carregando ainda
+`finished | cancelled | error` —, `isMuted` e `mode`. Perde `reconnecting`, que
+`ConnectionState` tem e cujo bloco já escreveu por que a primeira tentativa
+desenha como a quinta; e perde o MOTIVO de um fim, de modo que a chamada que caiu
+por erro desenha igual à que a pessoa encerrou — a mesma perda que a décima oitava
+mediu em `retrieval-chunks` e a vigésima em `elicitation-form`. É mais uma vez em que
+a fonte se contradiz entre as faixas, e quem perde continua sendo a standalone. O
+avesso vem na mesma união: `muted` não é estado da sessão, é o `aria-pressed` de
+um alternador que está CONSTRUÍDO, com esse atributo e essa decisão, no
+`composer-voice`. **União que mistura um controle com dois eixos de estado não é
+vocabulário: é a tela de um componente escrita como enum.** E
+`voice-conversation` repete `SharedTurn` — `role` em duas palavras onde `ChatRole`
+tem três, perdendo `system`, que é a segunda vez que o achatamento não é de
+estados — com o mesmo `muted: boolean` ao lado. Mais duas entradas com as duas
+bocas, depois de `schedule-card`, e o campo se reparte igual: um fica aquém
+do vocabulário, o outro é de outra peça, e não sobra nenhum que seja da entrada.
+
+E uma EXTENSÃO do avesso, que estas duas obrigam a escrever: `volume` e
+`amplitude` não são estado nenhum e ainda assim disparam o sinal, porque o que já
+está construído não é um booleano — é a MECÂNICA inteira. `--nds-voice-level`
+entra por propriedade personalizada porque é dado de runtime e não valor de
+desenho; é `aria-hidden` porque o que muda a cada quadro não se anuncia; e tem
+quadro de repouso declarado sob `prefers-reduced-motion`, para não parecer
+desligado justamente para quem pediu menos movimento. Três decisões, escritas numa
+peça de pé, e a entrada nova não muda nenhuma. **A identidade se mede também
+contra a mecânica, e não só contra o campo** — a décima quinta mediu o nome, a
+décima nona mediu o dono, e esta mede a decisão.
+
+**O sinal MUDO da vigésima oitava correção**, e o primeiro em
+que o dono que sobra não é componente nem guideline transversal: `checkpoint-history`
+não declara booleano, união nem tipo de estado — três cadeias e um número —, e os
+três desenhos saem da POSIÇÃO da linha contra `currentId`, que é a quarta forma, da
+décima primeira, com três desenhos em vez de dois. Pela sub-regra da décima, a
+assinatura que sobra é `onRestore(id)`, e ela nomeia dono como as cinco chamadas de
+escolha anteriores; só que o dono é a **§2 desta guideline**, que já classificou
+ação como ESPAÇO e fixou o contrato no `approval-card`. Depois de `13-animacao.md`
+na vigésima segunda, é o terceiro lugar em que um dono mora, e o mais perto de
+casa. Não entra na tabela da abertura desta seção, e é preciso dizer por quê:
+aquelas são entradas que PERDEM palavras deste vocabulário, e esta não declara
+nenhuma para perder.
+
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
 contador posicional que parta a lista em dois desenhos, mandam aplicar os três
@@ -4719,7 +5493,7 @@ mostrou ser duas se DESDOBRA aqui, com o motivo.
 
 Ordem entre famílias — a que evita retrabalho:
 **3.1 fundação → 1 composer → 2 execução → 5 medição → 3 evidência → 4 resposta
-estruturada → 7 voz.**
+estruturada.**
 O composer primeiro porque fecha o ciclo com o `chat-thread` que já existe (dá
 para usar o produto ao fim da família 1); execução e medição em seguida porque
 são as que mais reaproveitam `chat-protocol.ts` e endurecem o vocabulário
@@ -4839,7 +5613,7 @@ todas; `01-acessibilidade.md` continua valendo por cima.
   map desenham com opacidade sobre `--muted`, e opacidade baixa some no escuro.
   Toda escala de intensidade se verifica nos dois modos, em todos os temas
   (`docs/shared/testing/cor.ts`).
-- Tokens novos, nenhum. As seis folhas usam o que os 42 tokens de tema já dão. Se
+- Tokens novos, nenhum. As cinco folhas usam o que os 42 tokens de tema já dão. Se
   uma cor parecer faltar, ela quase sempre é `--muted` com borda, e não um token
   novo — token novo obriga `16-novo-tema.md` inteiro, em todos os temas.
 
