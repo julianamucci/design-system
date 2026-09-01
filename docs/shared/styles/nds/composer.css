@@ -4,11 +4,22 @@
  * embaixo, e o botão que envia — ou interrompe o que está sendo gerado.
  *
  * FOLHA DA FAMÍLIA, não do slug. A guideline 17 constrói por família, e as
- * treze peças do composer dividem geometria, estados e tokens. O que está aqui
- * hoje é o núcleo (`composer`); menções, comandos, seletor de modelo, voz e o
- * composer de toque entram nesta mesma folha, reusando `.nds-composer-rail` e
- * `.nds-composer-field`. Uma folha por slug produziria treze molduras
- * ligeiramente diferentes, que é o oposto de um sistema.
+ * nove peças do composer dividem geometria, estados e tokens: o núcleo, o
+ * seletor do caractere gatilho, os anexos, a citação, o contexto, o seletor de
+ * modelo, o ditado por voz, o rascunho recuperado e a fila de envio. Todas
+ * moram aqui, reusando `.nds-composer-rail` e `.nds-composer-field`. Uma folha
+ * por slug produziria nove molduras ligeiramente diferentes, que é o oposto de
+ * um sistema.
+ *
+ * DUAS ENTRADAS DO CATÁLOGO NÃO VIRARAM BLOCO, e é decisão registrada na 5.3
+ * da guideline 17: a edição de um turno é este campo com o texto de antes
+ * dentro (décima quarta correção), e a versão de telefone é este campo
+ * respondendo ao espaço que tem (décima quinta). O que o telefone muda é
+ * AMBIENTE, e ambiente se resolve com consulta de mídia no bloco que já existe
+ * — `@media (pointer: coarse)` para o alvo de toque no trilho —, como o
+ * `chat-thread` já resolve o hover ausente com `@media (hover: none)`. Área
+ * segura no fim da tela é de quem DOCA a barra, e não dela: `.nds-composer`
+ * não declara `position` nenhum.
  *
  * Estrutura:
  *   <form class="nds-composer" data-state="idle|running">

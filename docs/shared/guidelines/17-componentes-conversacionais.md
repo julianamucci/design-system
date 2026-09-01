@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (46)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (47)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -276,9 +276,10 @@ falta, nomeada — nunca uma folha nova.
 | `subagent-list` | `.nds-item-group` de `job-progress` — uma linha por trabalhador. `.nds-item` `.nds-item-outline` dá a superfície de cada cartão; dentro dela `job-progress` leva o nome (`.nds-job-progress-label`), a PALAVRA do estado e a barra do sistema com nome acessível; `.nds-item-actions` leva o modelo em `.nds-badge` com `.nds-font-mono`. A lista é plana na fonte, e o agregado dela é ENTRADA, não leitura. Veio da família 2 — ver 5.3 |
 | `agent-handoff` | `.nds-stack` com três partes: a linha da passagem é `.nds-cluster[data-spacing="xs"]` de dois `.nds-badge` com a seta do lucide entre eles, decorativa, e a relação em `.nds-sr-only`; a palavra do estado é `agent-status`, que traz `RunStatus` inteiro no lugar do booleano da fonte; o motivo é a descrição de `.nds-item`, e o que foi levado junto é `.nds-item-group` de linhas com `.nds-font-mono` e `.nds-truncate`. Veio da família 2 — ver 5.3 |
 | `edit-message` | `composer` com `value` — o texto de antes chega pela mesma prop por onde um rascunho volta ao campo — mais `railStart` para o controle de cancelar e uma frase a mais em `.nds-composer-hint`, que é a DESCRIÇÃO do campo e por isso chega antes da tecla de envio, e não depois. A bolha em repouso é a mensagem do `chat-thread` com o controle de editar em `actions` (`.nds-chat-message-actions`), como `message-actions` acima nesta tabela; trocar uma forma pela outra é montagem de quem consome. Quantas réplicas o envio descarta é dado de produto (§7) e entra na frase como `{max}` já entra. Pede **uma opção** `railEnd?: HTMLElement[]` no trilho do `composer`, onde `.nds-composer-rail-end` já é a fila — nem classe nova, nem folha nova. Veio da família 1 — ver 5.3 |
+| `mobile-composer` | `composer` com `submitOn: 'modifier'` — o modo do toque, que o docblock do campo já nomeia — e `rows: 1`, mais `railStart` para anexar e para `composer-voice`, que ESCREVE por quem fala em vez de desenhar um microfone parado; e a fileira de atalhos acima é `follow-up-suggestions`, que esta tabela já resolveu em lista de `button` / `pill.css`. A linha que a fonte troca por "return to send" é `.nds-composer-hint`, que já diz qual tecla envia em CADA modo — e no toque a tecla certa não é essa. O que muda no telefone é AMBIENTE, e esta família já respondeu ambiente uma vez com consulta de mídia dentro do bloco que existe (`@media (hover: none)` no `chat-thread`): alvo de toque maior é `min-inline-size`/`min-block-size` no trilho sob `@media (pointer: coarse)`, e a área segura é de quem ENCOSTA a barra no fim da tela — `chat-panel`, nesta mesma tabela —, porque `.nds-composer` não tem `position` nenhum. **Falta uma utilitária, e está nomeada**: nada em `docs/shared/styles/` declara `env(safe-area-inset-bottom)`. Veio da família 1 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (74)
+### 5.2 As sete famílias novas (73)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -286,7 +287,7 @@ slug produz 83 folhas e nenhum sistema.
 
 | Família | Folha | Peças | O eixo comum |
 |---|---|---|---|
-| **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `mobile-composer`, `quote`, `draft-restore`, `message-queue` (12 no catálogo — `edit-message` saiu para a 5.1, ver 5.3 —, **10 componentes**) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
+| **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `background-inbox`, `connection-state`, `schedule-card`, `checkpoint-history`, `elicitation-form`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (17 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list` e `agent-handoff` saíram para a 5.1, ver 5.3 —, **13 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `document-reference`, `retrieval-chunks`, `confidence-marker`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (9) | Em que a resposta se apoia. Todas carregam `Citation`. Base em `hover-card`, `popover`, `badge` |
 | **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `code-diff`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (20) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`. **Atenção às dependências — §6** |
@@ -1462,7 +1463,223 @@ peça.
 Contagens, somadas família a família: 1 tem 12, 2 tem 17, 3 tem 9, 4 tem 20, 5
 tem 5, 6 tem 8 e 7 tem 3 — **74** na 5.2. A 5.1 vai a **46** (44 linhas contadas
 no arquivo, e duas delas carregam duas entradas). Somam 120. A família 1 fica com
-**10 componentes**, e as sete somam 68.
+**10 componentes**, e as sete somam 68. (Números desta correção, não os de hoje:
+a décima quinta os moveu — ver adiante.)
+
+**Décima quinta correção, e a nona que atravessa de 5.2 para 5.1**:
+`mobile-composer` é o `composer` respondendo ao espaço que tem — e as duas
+contagens mudam junto, 74 → 73 e 46 → 47. É a segunda a sair da família 1, e com
+ela **a família 1 fecha**: era a última entrada que faltava, e a triagem a
+dissolveu em vez de construí-la.
+
+O que a fonte descreve, lida crua e pelos TIPOS antes da anatomia: `value:
+string`, `keyboardOpen: boolean`, `running: boolean`, `actions: readonly
+string[]`, `onAction`, `onAttach`, `onValueChange`, `onSend`, `onStop`,
+`onFocus` e `className`. Onze entradas, CINCO delas chamadas de volta — mais que
+em qualquer das catorze leituras anteriores — e, como nas três últimas, nenhum
+tipo declarado. A anatomia é uma raiz com três filhos: a fileira de atalhos,
+retirada inteira quando o teclado está de pé; uma linha com anexar, campo e
+enviar; e, no fim, ou um puxador decorativo ou a frase "return to send", nunca
+os dois.
+
+**O TELEFONE NÃO É UM DESENHO, É UM AMBIENTE — e a fonte entrega o ambiente de
+fora.** É essa medida que decide todo o resto. O único campo que faz desta peça
+uma peça de telefone é `keyboardOpen`, e a fonte escreve que ele "tem de vir de
+fora, tipicamente do foco e do desfoque do campo ou de um ouvinte de
+`visualViewport`, porque nenhum estado de runtime acompanha se um teclado de
+tela está de pé". O componente não sabe do teclado: ele recebe um booleano que
+quem monta calculou. E o que esse booleano comuta são três coisas, todas com
+dono — montar ou não a fileira de atalhos, que a §2 já entrega a quem consome;
+trocar um respiro embaixo, que é área segura de quem encosta a barra no fim da
+tela; e trocar um puxador decorativo pela frase da dica, que é a dica.
+
+Antes dos três testes, as três perguntas que esta entrada obriga a fazer, porque
+é de uma delas que sairia desenho próprio:
+
+- **O campo já responde ao espaço que tem? JÁ, e está medido.** `.nds-composer`
+  é `flex` em coluna com `width: 100%` — não há largura em pixel, não há
+  `min-inline-size` de moldura, então a barra é do tamanho do que a hospeda. O
+  campo não tem altura fixa: o piso é `rows`, que é contagem de LINHA e por isso
+  acompanha a fonte do navegador (WCAG 1.4.4), e o teto é `40vh`, que é a tela e
+  não um número. E a tecla certa do toque já existe e já é nominal:
+  `submitOn: 'modifier'`, cujo docblock foi escrito exatamente sobre este caso —
+  "no teclado virtual o Enter é a tecla de quebrar linha, e um composer que envia
+  ali manda mensagem pela metade a cada tentativa de fazer parágrafo". A fonte
+  vai para o outro lado e escreve "return to send"; ela PODE, porque o campo dela
+  é de uma linha só e ali o Enter não quebra nada. É a mesma troca, vista dos
+  dois lados — e a nossa é a que preserva o parágrafo.
+
+- **O que muda no telefone é DESENHO ou é AMBIENTE? É ambiente, e esta família
+  já respondeu ambiente uma vez, com uma REGRA no bloco que existe.** O
+  precedente está construído e é do primeiro membro: `chat-thread.css` resolve
+  "sem ponteiro não existe hover" com `@media (hover: none)` dentro do próprio
+  bloco das ações da mensagem, e não com uma segunda peça chamada "mensagem de
+  telefone". Alvo de toque maior é a mesma forma: `min-inline-size` e
+  `min-block-size` maiores no trilho sob `@media (pointer: coarse)`, na regra que
+  a decisão 5 da folha já escreveu para os 24 px da WCAG 2.5.8. Uma peça separada
+  para isso duplicaria a moldura, o campo, a dica e o contador — quatro coisas —
+  para trocar duas medidas.
+
+  Uma utilitária falta de verdade, e por isso está NOMEADA na 5.1 em vez de
+  desenhada: nada em `docs/shared/styles/` declara `env(safe-area-inset-bottom)`.
+  Mas ela não é do composer, e a razão é mecânica: `.nds-composer` não declara
+  `position` nenhum, nunca esteve preso ao fim da tela, e quem o encosta lá é
+  `chat-panel`, que esta mesma tabela já resolveu. Respiro contra o indicador de
+  início é de quem DOCA, como o teclado é de quem OUVE o `visualViewport`.
+
+- **E o inverso — a fonte mostra algo que o campo não sabe fazer?** Medido antes
+  de decidir, porque era o caminho que salvaria a peça, e os três candidatos
+  falham: **gaveta que sobe, não há** — a raiz não tem `position`, nem
+  transformação, nem animação, nem estado de aberta e fechada; o "bottom sheet"
+  está na frase de abertura da fonte, não na anatomia dela. **Barra presa ao
+  teclado, não há** — a própria fonte tira o teclado do componente e o entrega a
+  um ouvinte de quem monta, que é o oposto de prender-se a ele. **Trilho que
+  vira menu, não há** — o trilho são dois botões ladeando o campo, e a fileira de
+  atalhos é um bloco irmão acima, que é `follow-up-suggestions`.
+
+  Sobra UMA diferença geométrica de verdade, e ela tem causa: o trilho da fonte
+  fica AO LADO do campo, e o nosso fica embaixo. Ela vem da mesma frase em que a
+  fonte se explica — "o elemento standalone desenha um `<input>` de uma linha; a
+  composição com runtime desenha um `<textarea>` que cresce, **que é a mesma
+  troca que todo composer do catálogo faz**". A linha horizontal é consequência
+  de um campo de uma linha, e não desenho próprio: com o campo de uma linha, os
+  controles cabem ao lado; com um campo que cresce, eles ficariam presos ao lado
+  de uma caixa que sobe. Recusada a troca — e ela é recusada em toda a família,
+  pela fonte inclusive —, a linha horizontal deixa de ter motivo. E a fonte
+  declara a troca como sendo de TODO composer do catálogo, não desta entrada:
+  diferença que a origem atribui à categoria inteira não distingue um membro
+  dela.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, a barra de telefone não deixa buraco de
+  desenho — e a fonte mesma já diz de que ela é feita, pela sétima vez nesta
+  seção e desta vez sobre TODAS as partes de uma vez: "anexar, campo e as
+  superfícies dos atalhos leem todos o token `field` compartilhado, e o botão de
+  enviar lê `inkButton`, de modo que reapontar esses dois cobre a barra
+  inteira".
+  Duas superfícies compartilhadas cobrindo a barra inteira, declaradas na origem
+  — é a leitura da quinta, da sétima, da décima, da décima primeira, da décima
+  segunda e da décima quarta correções, e o oposto exato do que a nona leu em
+  `computer-use`. Some-se que os atalhos são, na faixa de runtime,
+  `ThreadPrimitive.Suggestion`, que a fonte declara ser "o mesmo primitivo que o
+  balão de lançamento usa para os seus pedidos iniciais" — e o balão de
+  lançamento já está na 5.1. É a primeira vez que a origem declara uma parte
+  compartilhada com OUTRA ENTRADA do catálogo, e não só com a folha de
+  superfícies.
+
+  A composição está inteira: `.nds-composer-field` com o `<textarea>` sem borda
+  própria e o anel no `:focus-within`, `.nds-composer-rail` com começo e fim,
+  `.nds-composer-hint` embaixo, e `railStart` levando anexar e o ditado.
+  `follow-up-suggestions` é a fileira acima, e quem a monta ou não é quem
+  consome — que é o que `keyboardOpen` faz na fonte. Nenhuma classe nova.
+
+  Três traços a composição não reproduz, os três por decisão já escrita. O
+  **puxador** é um `<span>` `aria-hidden` de 4 px por 7 rem: desenha a alça de um
+  gesto de arrastar que a peça não implementa, e afordância desenhada sem
+  destino é a mesma decisão 3 do bloco de terminal ("caixa vazia com parada de
+  tabulação dentro é dar foco a lugar nenhum"), um degrau abaixo — aqui nem
+  parada de tabulação há, só a promessa. O **microfone** é o traço mais caro de
+  todos: a fonte o desenha quando o campo está vazio e escreve, ela mesma, que
+  ele é "puramente apresentacional — nada aqui inicia ditado". Nesta família
+  existe `composer-voice`, que recebe `VoiceState` — três palavras, `idle`,
+  `recording`, `transcribing` — e avisa quando alguém pediu para começar ou
+  parar. Trocar uma peça que dita por um ícone que não dita é regressão, não
+  porte. E a **troca de forma do botão** por ícone de quadrado é a decisão 3 da
+  folha vista de novo: aqui o botão troca de NOME, não só de ícone.
+
+  Onde fonte e composição DISCORDAM, a composição está mais fina, como na
+  oitava, na décima primeira e na décima quarta: lá anexar e cada atalho ficam
+  desabilitados apenas por a chamada de volta não ter sido passada — e a fonte
+  avisa que nenhum deles reage a `running` ou a `value`, "de modo que barrá-los
+  durante uma execução é responsabilidade de quem chama". A §2 dá o ESPAÇO em
+  vez do controle, e quem põe o elemento no `railStart` põe também o estado
+  dele.
+
+- **Estado, não** — e aqui o sinal mais barato disparou pela SEXTA vez, mas com
+  o desfecho invertido: `running: boolean` não é achatamento, é IDENTIDADE.
+  Todas as cinco vezes anteriores o booleano perdia palavras que o vocabulário
+  desta casa tinha; aqui a peça que É o dono desta superfície declara exatamente
+  o mesmo booleano, com o mesmo nome — `ComposerElement.setRunning(boolean)`,
+  `data-state="idle|running"` — e pelo motivo já escrito: o campo pergunta UMA
+  coisa ao estado da execução, dá para enviar ou é hora de interromper, e não
+  precisa das outras quatro palavras para responder. Declarar o mesmo booleano
+  que o dono declara não é uma peça nova: é a mesma peça.
+
+  `keyboardOpen` também não é estado desta família. Não achata vocabulário
+  nenhum — não há palavra de conversa para "teclado de pé" —, e não é disclosure
+  como `editing` e `openIndex` eram: é um fato sobre o APARELHO, medido fora e
+  passado para dentro. E a §2 o reprova onde ele mais importa: toda peça desta
+  família é controlável, quem tem `open` tem `onOpenChange`; esta tem `onFocus`
+  para abrir e **nada** para fechar, e a fonte admite o buraco — "fechá-lo de
+  novo fica com você, já que o elemento não tem chamada de volta de desfoque".
+  Metade de um par que a família exige inteiro.
+
+  E as CINCO chamadas de volta são o parágrafo mais alto que a sub-regra do
+  sinal mudo já teve, porque quatro delas nomeiam dono e o dono é o mesmo:
+  `onValueChange` é `onInput`, `onSend` é `onSubmit`, `onStop` é `onStop` —
+  mesmo nome, mesma letra —, e `onAttach` é o controle que entra pelo
+  `railStart` (§4.2). `onAction` devolve a cadeia escolhida para virar a próxima
+  mensagem, que é `onPick` do aviso, cujo dono a décima correção já nomeou em
+  `follow-up-suggestions`. Sobra `onFocus`, que não é assinatura de peça
+  nenhuma: é um evento do DOM do campo.
+
+- **Vocabulário, não.** Nenhum tipo novo, e a fonte nem declara um — são duas
+  cadeias, dois booleanos, um arranjo de cadeias e cinco chamadas de volta, a
+  mesma forma rala que a décima, a décima segunda e a décima quarta leram.
+  `value` é `ComposerOptions.value`. `actions: readonly string[]` é a mesma forma
+  e a mesma regra de `TerminalBlockOptions.lines`, das alternativas do aviso, do
+  `carried` da passagem e do arranjo de progresso da lista: arranjo de cadeias,
+  e quem fatia é quem consome. `keyboardOpen` é ambiente, e ambiente é o que a
+  §7 entrega a quem monta, como a política, a tabela de faixas e a contagem de
+  réplicas. É a distância inteira para `computer-use`, que sobreviveu por ter `x`
+  e `y` sem par em lugar nenhum: aqui não há sequer um campo sem par.
+
+E o teste da família, que é o quarto: **ela responde ao eixo, e responde com a
+peça que É o eixo — pela segunda vez, e agora sem nem trocar de conteúdo.** Em
+`edit-message` a superfície era a mesma com o texto de antes dentro; aqui é a
+mesma com MENOS dentro: sem seletor de gatilho, sem contador, sem fila de
+anexos, sem contexto, sem citação. Uma peça que é outra com partes a menos não é
+uma segunda peça — e vale o traço que a décima primeira e a décima segunda
+nomearam, no terceiro formato em que ele aparece: **repetir não é desenhar,
+emparelhar não é desenhar, e ESTREITAR também não.** Se estreitar bastasse, cada
+largura de tela teria a sua peça.
+
+**A reversibilidade da décima quarta, respondida:**
+
+- **`edit-message` CONFIRMA, e não desdobra.** A condição era: ao construir
+  `mobile-composer`, aparecer edição com desenho, estado ou vocabulário próprios
+  — uma moldura que só exista para editar, um estado da edição que a troca de
+  forma não modele, ou o descarte chegando como vocabulário. Nenhum dos três
+  aparece, e não por pouco: **esta fonte não tem edição nenhuma.** Não há texto
+  anterior, não há cancelar, não há aviso de descarte, não há `editing`. O
+  `value` daqui é rascunho corrente, não turno reescrito. O segundo gatilho —
+  que o campo pedisse desenho próprio para dizer que reescreve um turno — também
+  fica mudo pelo mesmo motivo.
+
+  Vale ser exato sobre o MECANISMO, porque a cláusula dizia "ao construir" e
+  esta peça não será construída: a verificação se faz pela LEITURA da fonte, e
+  ela responde inteira. A cláusula perguntava o que APARECERIA; a resposta é que
+  não aparece nada, e não aparece porque a última entrada da família não é sobre
+  editar. Ficasse aberta à espera de uma construção que a triagem acabou de
+  cancelar, seria pendência eterna por formalidade — e a §5.3 existe para o
+  contrário disso.
+
+**Reversível**, como as outras catorze: se ao construir `thread-list-sidebar`
+(família 6) ou `voice-conversation` (família 7) — as duas superfícies que
+sobraram no catálogo em que o telefone muda algo — aparecer superfície de toque
+com desenho, estado ou vocabulário próprios: uma barra que se PRENDA ao teclado
+por conta própria, um estado do aparelho que consulta de mídia não alcance, ou
+geometria de telefone que não caiba numa regra do bloco que já existe —,
+`mobile-composer` desdobra de volta para a 5.2, com o motivo. E há um segundo
+gatilho, deste lado: se o `composer` precisar de desenho próprio para o toque —
+e não só de `submitOn: 'modifier'`, de `rows`, do `railStart` e de uma consulta
+de mídia —, a versão de telefone vira variante DELE, e continua não sendo peça.
+
+Contagens, somadas família a família: 1 tem 11, 2 tem 17, 3 tem 9, 4 tem 20, 5
+tem 5, 6 tem 8 e 7 tem 3 — **73** na 5.2. A 5.1 vai a **47** (45 linhas contadas
+no arquivo, e duas delas carregam duas entradas). Somam 120. A família 1 fecha
+com **9 componentes**, e as sete somam 67.
 
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
@@ -1482,8 +1699,9 @@ exatamente o que 5.1 existe para evitar.
 
 ### O sinal mais barato de que uma entrada vai colapsar
 
-Apareceu cinco vezes, sempre igual, e por isso vira critério: **booleano onde
-este vocabulário já tem cinco palavras.**
+Apareceu cinco vezes, sempre igual — e uma sexta, diferente, que fecha a
+sub-regra pelo avesso —, e por isso vira critério: **booleano onde este
+vocabulário já tem cinco palavras.**
 
 | entrada | o que a fonte declara | o que ela perde |
 |---|---|---|
@@ -1567,6 +1785,24 @@ décima terceira mediu; `onValueChange` e `onSave` são `onInput` e `onSubmit` d
 um campo de texto, que é assinatura de UM tipo de peça e nomeia um dono
 construído. Onde sobra mais de uma, leia cada uma: as da família ficam caladas, e
 basta UMA que nomeie dono para a sub-regra falar.
+
+**Sexta aparição do sinal, medida na décima quinta correção, e a primeira em que
+o booleano NÃO é achatamento**: `mobile-composer` declara `running: boolean`, e
+a peça em que ela colapsa declara o MESMO booleano, com o mesmo nome
+(`setRunning`, `data-state="idle|running"`). Nas cinco da tabela o booleano
+perdia palavras que este vocabulário tem; aqui não se perde nada, porque o dono
+da superfície já decidiu perguntar uma coisa só ao estado da execução — dá para
+enviar, ou é hora de interromper. A leitura muda de sentido junto: **booleano
+igual ao do dono não é uma peça pequena, é a mesma peça.** Antes de contar o que
+o booleano perde, veja se quem o declara não é justamente quem já o declarava —
+e, se for, o sinal parou de prever colapso e passou a mostrá-lo.
+
+E o segundo booleano dela, `keyboardOpen`, é o caso novo do outro lado: não
+achata vocabulário, não é disclosure, e não descreve a conversa — descreve o
+APARELHO. Estado de ambiente entra pela §7 como dado de produto entra, e o teste
+que o pega é o da §2: se abre e não fecha — `onFocus` sem par de desfoque, como
+a própria fonte admite —, não é estado desta família; é uma leitura que quem
+monta faz do navegador.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um

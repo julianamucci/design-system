@@ -37,8 +37,10 @@ import {
  * quebrar linha, e é o padrão daqui. Mas ela é ERRADA no toque: no teclado
  * virtual o Enter é a tecla de quebrar linha, e um composer que envia ali
  * manda mensagem pela metade a cada tentativa de fazer parágrafo. Por isso
- * `submitOn` existe e `mobile-composer` — a peça vizinha da mesma família —
- * nasce com `'modifier'`.
+ * `submitOn` existe, e por isso a versão de telefone deste campo é ELE com
+ * `'modifier'` — não uma peça vizinha. A triagem da guideline 17 mediu isso na
+ * décima quinta correção: o que o telefone muda é ambiente, e ambiente cabe
+ * numa consulta de mídia da folha desta família.
  *
  * A dica embaixo NÃO é decoração: `Enter envia` é comportamento, e quem não vê
  * a tela precisa saber disso ANTES de apertar a tecla. Ela entra em
