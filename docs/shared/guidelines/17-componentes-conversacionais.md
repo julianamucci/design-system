@@ -110,6 +110,7 @@ vanilla e passa a ser a origem única de:
 | `TokenUsage` — entrada/saída/total/limite | anel de contexto, repartição, medidor de custo, faixa de cota |
 | `Citation` — fonte, trecho, âncora | citação em linha, referência a documento, trechos de recuperação, marcador de confiança |
 | `Attachment` — nome, tipo, tamanho, progresso, estado | anexos do composer, parte de arquivo, parte de imagem |
+| `ComputerStep` — verbo, alvo, ponto na tela | tela do computador. O único tipo daqui que carrega GEOMETRIA; ver a nona correção da 5.3 |
 
 Um estado só existe se **muda o desenho**. `pending` é separado de `running`
 porque um espera por uma pessoa e o outro pela máquina — parecem iguais na tela e
@@ -430,6 +431,11 @@ o motivo. `code-runner` era a outra verificação prevista aqui, e já foi feita
 fonte dele não tem passo nenhum — tem um trecho, um estado e linhas de saída —,
 então não desdobra nada. Ver a sétima correção, logo abaixo.
 
+**VERIFICADO, e não desdobra**: `computer-use` foi construída na nona
+correção. A sequência dela é desenhada no espaço de coordenadas da TELA, e não
+numa lista — não há trilho, não há carimbo e não há estado por passo. Uma lista
+vertical de passos continua sendo `tool-group` aberto.
+
 **Sétima correção, e a terceira que atravessa de 5.2 para 5.1**: `code-runner`
 é `code-block` + `terminal-block` — e as duas contagens mudam junto, 80 → 79 e
 40 → 41.
@@ -523,6 +529,10 @@ execução com controle PRÓPRIO — um botão que só faça sentido preso ao tr
 estado que `RunStatus` não modele, vocabulário de execução que `code-block` e
 `terminal-block` não deem —, `code-runner` desdobra de volta para a 5.2, com o
 motivo.
+
+**VERIFICADO, e não desdobra**: `computer-use` foi construída na nona
+correção, e não tem botão nenhum, nem estado por passo, nem saída. O que ela
+acrescenta é ESPAÇO, e não execução.
 
 **Oitava correção, e a quarta que atravessa de 5.2 para 5.1**: `reasoning-effort`
 é `toggle-group` + `context-display` — e as duas contagens mudam junto, 79 → 78
@@ -637,6 +647,102 @@ gatilho, deste lado: se `composer-model-picker` ganhar o controle de esforço qu
 a fonte descreve e ele pedir desenho próprio, a metade de controle vira variante
 DELE — e continua não sendo peça da 5.
 
+**Nona correção, e a primeira que NÃO mexe em contagem nenhuma**:
+`computer-use` SOBREVIVE à triagem. Sobreviver também é correção, e é ela que
+fecha as três reversibilidades que apontavam para cá.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia: uma
+moldura de navegador com pontos de janela e endereço; um quadro com a tela por
+baixo, o rastro e o cursor por cima; e um rodapé com verbo, alvo e "n de total",
+que só existe quando há passo. Os tipos são `ComputerUse { url, steps,
+activeIndex: number, children, className }` e `ComputerStep { id, action, target,
+x, y }`, com o rastro sendo as duas marcas anteriores mais a ativa, e
+`activeIndex` preso ao alcance. A metade de runtime é uma ferramenta `computer`
+que quem consome define, agrupada por `MessagePrimitive.GroupedParts` — nada
+disso porta (§1), e nada disso é preciso: a forma standalone é um componente
+controlado de cinco props.
+
+**O sinal do booleano NÃO apareceu**, e a ausência dele informa. Não há booleano
+e não há união de estado nenhuma: o passo não carrega estado, e o que existe é
+um índice. As três entradas que colapsaram ACHATARAM um vocabulário que já
+existia; esta não disputa com ele — acrescenta um eixo que ele nunca teve.
+
+Os três testes, e o primeiro é POSITIVO, o primeiro em quatro leituras:
+
+- **Desenho, SIM.** Montada com o que existe, a tela deixa buraco — e o buraco
+  não é uma classe, é um SISTEMA DE COORDENADAS. As irmãs desta folha desenham
+  listas e linhas, em que a posição de cada item é consequência da ordem; aqui a
+  posição é DADO, e nada no design system põe dado em coordenada sobre uma
+  superfície que ele não conhece. O que compõe, compõe mesmo: a legenda é
+  aglomerado de palavras, e a barra de endereço é `.nds-font-mono` com
+  `.nds-truncate`. O que não compõe é a marca sobre a tela.
+
+  E a FONTE DIZ ISSO DELA MESMA, ao contrário do que a quinta e a sétima
+  correções leram nas suas. Lá a origem declarava as próprias partes como
+  superfícies compartilhadas (`paper`, `field`, `mono`; `codeScroll`/`codeSurface`,
+  com a observação de que reapontá-las "restila todo outro elemento que rola
+  saída"). Aqui ela declara o contrário: os pontos de janela e a cor do cursor
+  são "literal Tailwind classes on the element itself", e restilá-los exige
+  editar as cadeias de classe do componente. Origem que não tem superfície
+  compartilhada para oferecer é origem que desenhou algo próprio.
+- **Estado, não** — e desta vez isso não decide nada, porque o critério é uma
+  DISJUNÇÃO: basta um dos três. O passo não tem estado, e o estado da sessão é
+  `RunStatus`, que já tem dono nesta folha. Vale registrar o que a peça faz com
+  ele: recebe as cinco palavras e pergunta UMA coisa — ainda corre? —, que
+  decide `aria-busy` e se a marca ativa pulsa. Isso não é o achatamento que esta
+  seção condena: aquele critério é sobre a ENTRADA, e o que ele condena é a
+  informação se perder ali. Aqui ela entra inteira, vinda do mesmo `RunStatus`
+  que alimenta o estado da execução logo acima na tela; um booleano na
+  assinatura obrigaria quem consome a traduzir cinco palavras em duas no ponto
+  da chamada, que é exatamente onde a perda aconteceria.
+- **Vocabulário, SIM.** `ComputerStep` tem `action` e `target`, que rimam com o
+  nome e o detalhe de `ChatToolCall` — mas tem `x` e `y`, e esses não têm par em
+  nada que o vocabulário descreva. É a diferença para `TimelineStat`, que era
+  vocabulário de verdade e mesmo assim não entrou: aquele tinha OUTRA CASA
+  (`diff-hunks.ts`, na família 4), e um ponto numa tela não tem — ele só existe
+  onde há tela. Vai para `chat-protocol.ts` pelo precedente de `PlanStep` e
+  `JobCount`: o critério daquele arquivo nunca foi "é conversa", é ser a origem
+  única do que cinco stacks reescreveriam.
+
+E o teste da família, que é o quarto: ela responde ao eixo, e responde "o que
+está acontecendo" da maneira mais literal que a família tem — mostrando. Não
+tem duração e não tem ação, como `tool-timeline` não tinha; a diferença é que
+aquela respondia com o desenho que outra peça já tinha, e esta responde com um
+que ninguém tem.
+
+**O que a §1 tira dela NÃO a esvazia**, e é aqui que ela se separa de
+`agent-card`. A captura de tela vira ESPAÇO — `screen: HTMLElement`, como o
+logotipo de modelo virou —, porque tela de sistema real traz marca registrada e
+conteúdo de terceiro. Mas no `agent-card` o logotipo era o que a peça tinha de
+mais próprio, e sem ele sobrava composição; aqui a imagem nunca foi o desenho:
+o desenho é o que vai EM VOLTA e POR CIMA dela. Tirar a captura tira o
+conteúdo, não a peça. Escrito na folha como decisão, e não herdado: o texto
+alternativo é de quem passa o elemento, VAZIO quando a legenda ao lado já diz o
+que está acontecendo — descrever a tela de outro produto ou repete a legenda ou
+narra o que não é desta peça —, e obrigatório quando a tela carrega o que a
+legenda não diz.
+
+**As três reversibilidades que apontavam para cá, respondidas:**
+
+- **`code-runner` (sétima) CONFIRMA, não desdobra.** A condição era execução com
+  controle PRÓPRIO: um botão preso ao trecho, um estado que `RunStatus` não
+  modele, vocabulário de execução que `code-block` e `terminal-block` não deem.
+  `computer-use` não tem botão nenhum, não tem estado por passo, não tem linha
+  de saída nem código de saída. O que ela acrescenta é ESPAÇO — onde na tela —,
+  e não EXECUÇÃO — o que rodou e como terminou. São eixos diferentes, e é por
+  isso que uma sobrevive sem levar a outra junto: a superfície nova desta peça
+  não é uma superfície de execução.
+- **`tool-timeline` (sexta) CONFIRMA.** A condição era sequência de passos com
+  trilho de verdade, carimbo que chegue como DADO, ou estado por passo que
+  `ToolCallState` não modele. Nenhum dos três aparece: não há carimbo, não há
+  estado, e a sequência daqui é desenhada no espaço de coordenadas da TELA, não
+  numa lista. Uma lista vertical de passos continua sendo `tool-group` aberto.
+- **`agent-card` (quinta) e `permission-grant` (quarta) não são tocadas**: nada
+  aqui é identidade de agente nem pergunta com consequência.
+
+Contagens: nada muda. A 5.1 fica onde a oitava correção a deixou, em **42**,
+e a 5.2 em **78**; a família 2 continua com **16 componentes**. Somam 120.
+
 Duas correções da família 2 já saem da leitura do vocabulário, antes de
 construir, e por isso entram aqui de saída: **`stopped-run` é `RunStatus`
 `stopped`** e **`tool-error` é `ToolCallState` `failed`**. Os dois estados já
@@ -679,6 +785,17 @@ ficou MUDO, e a entrada colapsou pelos três testes do mesmo jeito. A ausência 
 sinal não é aprovação; é ausência de sinal. Lá o que previa era outra coisa, e
 está no mesmo lugar: os tipos declaravam um `onSelect`, e retorno de escolha é a
 assinatura de um controle, não de uma medição.
+
+**E o sinal mudo com o desfecho INVERSO, medido na nona correção**:
+`computer-use` também não declara booleano nem união de estado nenhuma —
+`ComputerStep` não tem estado, e o que existe é `activeIndex: number` —, e essa
+sobreviveu. As duas leituras juntas fecham o que a de cima já dizia pela metade:
+**o sinal mudo não prevê nada, nem para um lado nem para o outro.** Quem decide
+continuam sendo os três testes, e o que separa estes dois casos é onde a
+ausência de estado leva. No `reasoning-effort` ela expunha um `onSelect`, que é
+assinatura de controle e por isso tinha dono; aqui ela expõe um PONTO, que é um
+eixo que este vocabulário nunca teve. Achatar um vocabulário existente é sinal;
+não tocar nele não é sinal de nada.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, ou uma união com uma palavra a menos que `RunStatus`/`ToolCallState`,

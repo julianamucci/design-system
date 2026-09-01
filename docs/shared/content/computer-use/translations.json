@@ -1,0 +1,1751 @@
+{
+  "pt-BR": {
+    "title": "Tela do computador",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "A tela que o agente está dirigindo, com a marca do que ele está fazendo agora, o rastro de onde a ação veio e a legenda que diz em palavras o passo em curso.",
+    "seo": {
+      "title": "Tela do computador — a marca, o rastro e a legenda",
+      "description": "A peça de tela do computador: a moldura com endereço, a tela que quem consome passa, o rastro das últimas ações e a legenda que leva o passo a quem não vê a imagem."
+    },
+    "labels": {
+      "address": "Endereço",
+      "position": "{index} de {total}"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "running": "Enquanto o agente dirige a tela",
+        "finished": "Quando a sessão termina",
+        "firstStep": "No primeiro passo, com o rastro ainda curto",
+        "withoutSteps": "Antes de o agente tocar em qualquer coisa"
+      },
+      "screen": {
+        "title": "Entrar na sua conta",
+        "email": "E-mail",
+        "password": "Senha",
+        "submit": "Continuar"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "structureLabel": "Estrutura",
+      "item1": "A barra de endereço abre a peça e diz qual tela está sendo dirigida. Ela é cortada quando não cabe, e ganha uma palavra que só quem ouve recebe.",
+      "item2": "O quadro tem proporção e recorta o que está dentro: nada rola aqui, porque uma moldura que rolasse seria uma segunda camada rolável dentro de uma conversa que já rola.",
+      "item3": "A tela é passada por quem consome. A peça nunca a cria, e não escreve nem apaga o texto alternativo dela.",
+      "item4": "O rastro mostra as últimas ações sobre o quadro, e a marca do passo em curso é maior e de outra cor. Enquanto a sessão corre, ela é cercada por um anel que pulsa.",
+      "item5": "A legenda fecha a peça com o verbo, o alvo e a posição na sequência — e é ela que dá nome à figura.",
+      "structureCode": {
+        "web": "<figure class=\"nds-computer-use\" data-status=\"running\" aria-busy=\"true\">\n  <p class=\"nds-computer-use-address nds-font-mono\">\n    <span class=\"nds-sr-only\">Endereço</span>\n    <span class=\"nds-computer-use-url nds-truncate\" lang=\"en\">app.exemplo.com/entrar</span>\n  </p>\n  <div class=\"nds-computer-use-screen\">\n    <div class=\"nds-computer-use-surface\"><!-- a tela, de quem consome --></div>\n    <span class=\"nds-computer-use-trail\" aria-hidden=\"true\">\n      <span class=\"nds-computer-use-mark\" style=\"--computer-use-mark-x: 86; --computer-use-mark-y: 12\"></span>\n      <span class=\"nds-computer-use-mark\" style=\"--computer-use-mark-x: 42; --computer-use-mark-y: 38\"></span>\n      <span class=\"nds-computer-use-mark\" data-active=\"true\" style=\"--computer-use-mark-x: 42; --computer-use-mark-y: 52\"></span>\n    </span>\n  </div>\n  <figcaption class=\"nds-computer-use-caption\">\n    <span class=\"nds-computer-use-action\">Digitar</span>\n    <span class=\"nds-computer-use-target nds-truncate\">a senha</span>\n    <span class=\"nds-computer-use-position\">4 de 6</span>\n  </figcaption>\n</figure>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "item1": "Use para mostrar a tela que o agente está dirigindo, com o ponto em que ele tocou e o que ele fez ali.",
+        "item2": "Passe a tela como elemento pronto: a peça desenha a moldura, e o que aparece dentro dela é seu.",
+        "item3": "Escreva o passo em palavra, sempre — a marca sobre a imagem é para os olhos.",
+        "item4": "Mande a sequência inteira e diga qual passo está em curso: é o total que faz a contagem existir.",
+        "item5": "Avance em quem consome — a peça não dirige nada, não avança sozinha e não captura tela.",
+        "title": "Diretrizes"
+      },
+      "scenarios": {
+        "title": "Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar onde o agente tocou numa tela, e o que ele fez ali",
+          "u": "Tela do computador",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Listar o que o agente fez para responder, sem mostrar tela nenhuma",
+          "u": "Grupo de chamadas",
+          "a": "Ali cada linha é uma chamada com estado próprio; aqui há um ponto sobre uma imagem."
+        },
+        "item3": {
+          "s": "Dizer em que pé está a resposta inteira, e oferecer parar",
+          "u": "Estado da execução",
+          "a": "Aquela linha descreve a resposta e carrega as ações; esta mostra uma tela sendo dirigida."
+        },
+        "item4": {
+          "s": "Mostrar o que um comando escreveu no terminal",
+          "u": "Bloco de terminal",
+          "a": "Ali o corpo é texto pré-formatado que rola; aqui é uma imagem que recorta."
+        },
+        "item5": {
+          "s": "Mostrar o que o agente pretende fazer, passo a passo, antes de fazer",
+          "u": "Plano do agente",
+          "a": "Ali cada passo tem estado próprio e nenhum tem lugar; aqui o passo tem lugar e a sessão é que tem estado."
+        }
+      },
+      "uxWriting": {
+        "title": "Escrita",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bom",
+          "avoid": "Evite",
+          "address": {
+            "name": "Endereço",
+            "format": "O endereço como ele aparece na barra, sem protocolo e sem enfeite",
+            "good": "app.exemplo.com/entrar",
+            "bad": "Tela de login do sistema"
+          },
+          "action": {
+            "name": "Verbo",
+            "format": "Uma palavra, no infinitivo, sobre o que o agente fez",
+            "good": "Digitar",
+            "bad": "Executando a ação de digitação"
+          },
+          "target": {
+            "name": "Alvo",
+            "format": "O que recebeu a ação, como uma pessoa o chamaria",
+            "good": "o endereço de e-mail",
+            "bad": "input#email"
+          },
+          "position": {
+            "name": "Contagem",
+            "format": "Molde com os dois números e a palavra que os liga",
+            "good": "3 de 6",
+            "bad": "50% concluído"
+          }
+        }
+      },
+      "do": {
+        "title": "Faça",
+        "item1": "Diga o passo em palavras, ao lado da marca.",
+        "item2": "Deixe o rastro curto: ele mostra o caminho, não a sessão inteira.",
+        "item3": "Passe a tela com o texto alternativo que ela merece — vazio quando a legenda já diz tudo.",
+        "item4": "Torne a tela inerte: dentro da moldura ela é uma foto, e ninguém a está usando."
+      },
+      "dont": {
+        "title": "Não faça",
+        "item1": "Não anuncie cada passo: uma tela dirigida troca de passo mais depressa do que se lê.",
+        "item2": "Não deixe a marca pulsando depois que a sessão acabou — marca que pulsa diz que o agente ainda trabalha.",
+        "item3": "Não use captura de sistema de terceiro: ela traz marca registrada e conteúdo que não é seu.",
+        "item4": "Não faça a tela rolar dentro da moldura: a moldura recorta, e quem rola é a conversa."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "pair1": {
+        "do": "A legenda diz o verbo, o alvo e a posição, e a marca só reforça o lugar.",
+        "dont": "Só a marca sobre a imagem indica o passo, e quem não vê a tela não fica sabendo de nada."
+      },
+      "pair2": {
+        "do": "O rastro mostra as últimas ações, e a marca em curso se destaca por tamanho e por cor.",
+        "dont": "Todas as marcas da sessão aparecem juntas, e o rastro cobre a tela que ele deveria estar apontando."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComputerUse } from '@/components/ui/computer-use';\n\nconst computerUse = createComputerUse({\n  url: 'app.exemplo.com/entrar',\n  screen: tela,\n  steps: passos,\n  activeIndex: 3,\n  status: 'running',\n  labels: rotulos,\n});\n\ndocument.querySelector('#app')?.append(computerUse);"
+      },
+      "withLabels": "Os rótulos",
+      "withLabelsCode": {
+        "vanilla": "// Duas cadeias, e as duas são de interface — não são a fala do agente.\n//\n// A primeira é a palavra que apresenta o endereço, e só quem ouve a recebe: a\n// barra diz pelo desenho o que não consegue dizer em voz. A segunda é o molde\n// da contagem, com os dois números no lugar, porque a palavra que os liga é do\n// idioma e os números são dado.\nconst rotulos = {\n  address: 'Endereço',\n  position: '{index} de {total}',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando acontece",
+        "behavior": "O que muda"
+      },
+      "idle": {
+        "label": "Em espera",
+        "trigger": "A sessão foi montada e o agente ainda não agiu.",
+        "behavior": "A peça não se declara ocupada e a marca em curso não pulsa; o rastro e a legenda só existem se já houver passo."
+      },
+      "running": {
+        "label": "Em andamento",
+        "trigger": "O agente está dirigindo a tela agora.",
+        "behavior": "A peça se declara ocupada e a marca em curso ganha um anel que pulsa, apontando onde a ação está acontecendo."
+      },
+      "stopped": {
+        "label": "Interrompido",
+        "trigger": "Alguém interrompeu a sessão, e ela parou onde estava.",
+        "behavior": "A peça deixa de se declarar ocupada e o anel some; a marca fica onde a última ação aconteceu."
+      },
+      "complete": {
+        "label": "Concluído",
+        "trigger": "O agente terminou a sessão sozinho.",
+        "behavior": "A peça deixa de se declarar ocupada e o anel some; o último passo continua marcado e escrito na legenda."
+      },
+      "failed": {
+        "label": "Falhou",
+        "trigger": "A sessão quebrou no meio, sem que ninguém pedisse.",
+        "behavior": "A peça deixa de se declarar ocupada e o anel some; a marca fica no passo em que a sessão parou."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "url": {
+          "name": "url",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O endereço da tela que está sendo dirigida. É cortado quando não cabe na barra."
+        },
+        "screen": {
+          "name": "screen",
+          "type": "HTMLElement",
+          "default": "—",
+          "required": "Sim",
+          "description": "A tela, montada por quem consome. A peça nunca a cria, e não escreve nem apaga o texto alternativo dela."
+        },
+        "steps": {
+          "name": "steps",
+          "type": "readonly ComputerStep[]",
+          "default": "[]",
+          "required": "Não",
+          "description": "Os passos da sessão, na ordem em que aconteceram. Sem passo nenhum não há rastro nem legenda."
+        },
+        "activeIndex": {
+          "name": "activeIndex",
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Qual passo está acontecendo agora. Fora de alcance é preso ao alcance, para que incrementar além do último continue apontando para um passo de verdade."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "Não",
+          "description": "Em que pé está a sessão. Decide se a peça se declara ocupada e se a marca em curso pulsa."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComputerUseLabels",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra que apresenta o endereço e o molde da contagem."
+        },
+        "labelsAddress": {
+          "name": "address",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "A palavra que apresenta o endereço, e que só quem ouve recebe."
+        },
+        "labelsPosition": {
+          "name": "position",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O molde da contagem. Os dois números são substituídos nos lugares marcados."
+        },
+        "stepAction": {
+          "name": "action",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "O que o agente fez, no verbo com que ele nomeou a ação."
+        },
+        "stepTarget": {
+          "name": "target",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "Sobre o que ele agiu, como ele o descreveu."
+        },
+        "stepX": {
+          "name": "x",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Distância da borda de início, em porcentagem da largura do quadro. Em porcentagem porque o quadro é fluido."
+        },
+        "stepY": {
+          "name": "y",
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Distância do topo, em porcentagem da altura do quadro."
+        }
+      },
+      "extensibilityTitle": "Extensão",
+      "extensibility": "A peça desenha a moldura, as marcas dos passos que recebe e a legenda do passo em curso. Ela não dirige, não avança sozinha, não captura tela, não conta tempo e não rola. Avançar a sessão é de quem consome.",
+      "extensibilityCode": {
+        "vanilla": "// AVANÇAR É DE QUEM CONSOME, e a peça não agenda nada.\n//\n// Quem tem o relógio da sessão é o produto: a peça desenha o passo que recebe.\n// O índice é preso ao alcance, então incrementar além do último passo continua\n// apontando para um passo de verdade.\nlet passoAtual = 0;\n\nfunction avancar() {\n  passoAtual += 1;\n  moldura.replaceWith(\n    createComputerUse({\n      url: endereco,\n      screen: montarTela(),\n      steps: passos,\n      activeIndex: passoAtual,\n      status: passoAtual >= passos.length ? 'complete' : 'running',\n      labels: rotulos,\n    }),\n  );\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Onde é lido",
+        "description": "Descrição",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-computer-use",
+          "description": "Tamanho do texto da peça inteira, do endereço à legenda."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-computer-use-address",
+          "description": "Respiro vertical da barra de endereço, e a folga do anel em volta da marca em curso."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-computer-use",
+          "description": "Espaço entre as três partes da peça, e tamanho da marca do rastro."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-computer-use",
+          "description": "Recuo interno da moldura, e tamanho da marca do passo em curso."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-computer-use",
+          "description": "Superfície da moldura, da barra de endereço e do quadro por trás da tela."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-computer-use",
+          "description": "Contorno da moldura."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-computer-use",
+          "description": "Arredondamento da moldura."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-computer-use-screen",
+          "description": "Arredondamento do quadro e da barra de endereço."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-computer-use-mark",
+          "description": "Forma redonda da marca e do anel em volta dela."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-computer-use-mark",
+          "description": "Cor de apoio da peça, e a das marcas do rastro."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-computer-use-action",
+          "description": "O endereço e o verbo da legenda, que é o que descreve o passo."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-computer-use-mark",
+          "description": "Contorno da marca, que é o que a mantém legível sobre uma tela que a peça não conhece."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-computer-use-mark",
+          "description": "Cor da marca do passo em curso, e a do anel que pulsa em volta dela."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-computer-use-action",
+          "description": "Peso do verbo, que o separa do alvo ao lado."
+        },
+        "durationStately": {
+          "token": "--duration-stately",
+          "value": ".nds-computer-use-mark",
+          "description": "Período do pulso do anel. Zerado sob movimento reduzido, o anel fica sólido."
+        },
+        "easeStandard": {
+          "token": "--ease-standard",
+          "value": ".nds-computer-use-mark",
+          "description": "Curva do pulso do anel."
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": ".nds-computer-use {\n  /* A proporção do quadro é uma propriedade personalizada, e não uma altura:\n     tela de telefone é retrato, e a peça não tem como saber. Em proporção, o\n     quadro cresce com a largura em vez de espremer a imagem. */\n  --computer-use-aspect: 9 / 16;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Nada aqui é região viva: uma tela dirigida por agente troca de passo mais depressa do que se lê, e anunciar cada um tornaria a tela impossível de ouvir. O que chega a quem não vê a imagem é a legenda, que é também o nome da figura.",
+      "items": {
+        "item1": "A legenda diz o passo em palavras: verbo, alvo e posição na sequência.",
+        "item2": "A marca e o rastro ficam fora do que é lido em voz — posição numa imagem não chega a quem não a vê.",
+        "item3": "A peça é uma figura com legenda, e não um marco de página: um marco por tela numa conversa é uma lista que ninguém navega.",
+        "item4": "Nada dentro da peça é região viva, e é a decisão mais importante dela.",
+        "item5": "Enquanto a sessão corre, a peça se declara ocupada — é o que diz que aquele pedaço da tela ainda se escreve.",
+        "item6": "O quadro recorta e não rola, então não há uma segunda camada rolável para nomear.",
+        "item7": "O endereço ganha uma palavra que só quem ouve recebe, porque a barra diz pelo desenho o que não conseguiria dizer em voz.",
+        "item8": "O anel da marca em curso para de pulsar sob movimento reduzido, e fica sólido em vez de sumir."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Não para em nada aqui: a peça é de leitura, e a tela dentro da moldura é uma foto.",
+        "enter": "Não faz nada: a peça não oferece ação.",
+        "arrows": "Não fazem nada: o quadro recorta em vez de rolar."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "A raiz se declara ocupada enquanto a sessão corre, e nada nela é região viva.",
+        "item2": "A figura é nomeada pela própria legenda, e não por um texto repetido ao lado.",
+        "item3": "aria-hidden tira o rastro inteiro do que é lido em voz, numa camada só."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "O passo em curso é lido como verbo, alvo e contagem, e nunca como posição na imagem.",
+        "item2": "A tela é anunciada pelo texto alternativo que quem consome deu a ela, e por nada mais.",
+        "item3": "Nenhum passo é anunciado enquanto a sessão corre; quem quiser anunciar o fim escreve uma frase, uma vez, do lado de fora."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado da execução",
+          "description": "Em que pé está a resposta inteira, há quanto tempo, e onde ficam as ações de parar e repetir."
+        },
+        "toolGroup": {
+          "name": "Grupo de chamadas",
+          "description": "Quando o que se mostra é a lista do que o agente fez, com estado por chamada e sem tela nenhuma."
+        },
+        "terminalBlock": {
+          "name": "Bloco de terminal",
+          "description": "Quando o corpo é saída de texto pré-formatado que rola, e não uma imagem que recorta."
+        },
+        "agentPlan": {
+          "name": "Plano do agente",
+          "description": "Quando cada passo tem estado próprio e nenhum tem lugar na tela."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "É a primeira peça da família cujo eixo é o espaço. As irmãs desenham listas e linhas, em que a posição é consequência da ordem; aqui a posição é dado, e nada no sistema colocava dado em coordenada sobre uma superfície que ele não conhece.",
+      "item2": "A tela é espaço, e a peça nunca a cria. Captura de sistema real traz marca registrada e conteúdo de terceiro — a mesma razão pela qual os logotipos de modelo não entram no repositório.",
+      "item3": "O texto alternativo da tela é de quem a passa. Quando a legenda ao lado já diz o que está acontecendo, a captura é decorativa e vai com texto vazio; quando ela carrega o que a legenda não diz, o texto é obrigatório.",
+      "item4": "A moldura não tem os três pontos de janela que a referência desenha. Eles imitam os controles de um sistema operacional, não fazem nada, e nesta folha o ponto redondo já significa estado — três pontos sem sentido ao lado deles ensinariam que ponto aqui é enfeite.",
+      "item5": "O rastro não desbota em degraus de opacidade. Marca quase transparente sobre uma captura clara não é rastro, é nada, e opacidade baixa some no escuro. O que separa o que passou do que está acontecendo é tamanho e papel de cor.",
+      "item6": "A marca não desliza de um ponto ao outro: passo novo é marca nova. Quem conta o caminho percorrido é o rastro, que é estático e continua inteiro para quem pediu menos movimento.",
+      "item7": "O passo não tem estado próprio. O que está acontecendo vale para a sessão inteira, e um estado por passo faria a peça pintar cores sobre uma tela de terceiro — que é justamente a codificação que a legenda existe para não precisar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Quando dispara",
+        "payload": "Dados",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Quando uma seção fica visível por dois segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Ao interagir com a demonstração.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Funcionais",
+        "description": "O que a play function verifica em cada story.",
+        "item1": {
+          "action": "Passar uma sessão com passos e um índice",
+          "result": "A legenda traz o verbo, o alvo e a contagem daquele passo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Passar um endereço",
+          "result": "Ele aparece na barra, com a palavra que só quem ouve recebe",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar a peça em qualquer estado",
+          "result": "Nada dentro dela é região viva",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar a peça sem passo nenhum",
+          "result": "Não há rastro nem legenda, e sobra a moldura com a tela",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Passar o estado em que a sessão corre",
+          "result": "A peça se declara ocupada",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar um estado em que a sessão já não corre",
+          "result": "A peça deixa de se declarar ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Passar uma sessão longa com o índice no meio",
+          "result": "O rastro mostra no máximo três marcas, e a última é a do passo em curso",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Passar o índice do primeiro passo",
+          "result": "Há uma marca só, e ela é a do passo em curso",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Passar um índice além do último passo",
+          "result": "Ele é preso ao alcance, e a legenda aponta para o último passo",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Passar uma tela",
+          "result": "Ela entra no quadro sem que a peça toque no texto alternativo dela",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Montar a peça e percorrer com o teclado",
+          "result": "Nada dentro dela recebe foco, porque a tela é uma foto",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Montar a peça abaixo da linha de estado da execução",
+          "result": "As duas são autônomas, e a ação de parar existe só numa delas",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Verificado por axe em toda story, mais o que a play afirma.",
+        "item1": "A legenda diz o passo em palavras, e a marca não é a única pista",
+        "item2": "O rastro inteiro está fora do que é lido em voz",
+        "item3": "A figura é nomeada pela própria legenda",
+        "item4": "Nada dentro da peça é região viva",
+        "item5": "A peça se declara ocupada só enquanto a sessão corre",
+        "item6": "O quadro recorta e não rola, então não há região rolável sem nome",
+        "item7": "O endereço chega a quem ouve com a palavra que o apresenta",
+        "item8": "Nada dentro da peça entra na ordem de foco"
+      },
+      "visual": {
+        "title": "Visuais",
+        "description": "Fotografados pelo Chromatic em cada tema e modo.",
+        "item1": {
+          "story": "Playground — a peça, com os controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — os cinco, um abaixo do outro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — em andamento, com o anel em volta da marca",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — concluído, com a marca parada no último passo",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — o primeiro passo, com o rastro ainda curto",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estados — sem passo nenhum, só a moldura e a tela",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Estados — o índice preso ao alcance",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composições — a tela abaixo do estado da execução",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Composições — o endereço e o alvo longos, cortados",
+          "priority": "high"
+        },
+        "item10": {
+          "story": "Composições — o quadro em retrato",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "en": {
+    "title": "Computer screen",
+    "category": "Conversational",
+    "type": "Component",
+    "description": "The screen the agent is driving, with a mark on what it is doing right now, a trail of where the action came from, and a caption that says the current step in words.",
+    "seo": {
+      "title": "Computer screen — the mark, the trail and the caption",
+      "description": "The computer screen piece: a frame with an address, the screen the consumer passes in, a trail of the last actions, and a caption that carries the step to whoever cannot see the image."
+    },
+    "labels": {
+      "address": "Address",
+      "position": "{index} of {total}"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "running": "While the agent drives the screen",
+        "finished": "When the session ends",
+        "firstStep": "On the first step, with the trail still short",
+        "withoutSteps": "Before the agent touches anything"
+      },
+      "screen": {
+        "title": "Sign in to your account",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Continue"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "structureLabel": "Structure",
+      "item1": "The address bar opens the piece and says which screen is being driven. It is cut when it does not fit, and it carries a word only listeners receive.",
+      "item2": "The frame has a ratio and clips what is inside: nothing scrolls here, because a frame that scrolled would be a second scrollable layer inside a conversation that already scrolls.",
+      "item3": "The screen is passed in by the consumer. The piece never creates it, and never writes or erases its alternative text.",
+      "item4": "The trail shows the last actions over the frame, and the mark of the current step is larger and a different colour. While the session runs, a ring pulses around it.",
+      "item5": "The caption closes the piece with the verb, the target and the position in the sequence — and it is what gives the figure its name.",
+      "structureCode": {
+        "web": "<figure class=\"nds-computer-use\" data-status=\"running\" aria-busy=\"true\">\n  <p class=\"nds-computer-use-address nds-font-mono\">\n    <span class=\"nds-sr-only\">Endereço</span>\n    <span class=\"nds-computer-use-url nds-truncate\" lang=\"en\">app.exemplo.com/entrar</span>\n  </p>\n  <div class=\"nds-computer-use-screen\">\n    <div class=\"nds-computer-use-surface\"><!-- a tela, de quem consome --></div>\n    <span class=\"nds-computer-use-trail\" aria-hidden=\"true\">\n      <span class=\"nds-computer-use-mark\" style=\"--computer-use-mark-x: 86; --computer-use-mark-y: 12\"></span>\n      <span class=\"nds-computer-use-mark\" style=\"--computer-use-mark-x: 42; --computer-use-mark-y: 38\"></span>\n      <span class=\"nds-computer-use-mark\" data-active=\"true\" style=\"--computer-use-mark-x: 42; --computer-use-mark-y: 52\"></span>\n    </span>\n  </div>\n  <figcaption class=\"nds-computer-use-caption\">\n    <span class=\"nds-computer-use-action\">Digitar</span>\n    <span class=\"nds-computer-use-target nds-truncate\">a senha</span>\n    <span class=\"nds-computer-use-position\">4 de 6</span>\n  </figcaption>\n</figure>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "item1": "Use it to show the screen the agent is driving, with the point it touched and what it did there.",
+        "item2": "Pass the screen in as a ready element: the piece draws the frame, and what shows inside is yours.",
+        "item3": "Always write the step in words — the mark over the image is for the eyes.",
+        "item4": "Send the whole sequence and say which step is current: the total is what makes the count exist.",
+        "item5": "Advance in the consumer — the piece drives nothing, advances nothing on its own and captures no screen.",
+        "title": "Guidelines"
+      },
+      "scenarios": {
+        "title": "Scenarios",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Show where the agent touched a screen, and what it did there",
+          "u": "Computer screen",
+          "a": "—"
+        },
+        "item2": {
+          "s": "List what the agent did to answer, with no screen at all",
+          "u": "Tool group",
+          "a": "There each line is a call with its own state; here there is a point over an image."
+        },
+        "item3": {
+          "s": "Say where the whole answer stands, and offer to stop it",
+          "u": "Run status",
+          "a": "That line describes the answer and carries the actions; this one shows a screen being driven."
+        },
+        "item4": {
+          "s": "Show what a command wrote in the terminal",
+          "u": "Terminal block",
+          "a": "There the body is preformatted text that scrolls; here it is an image that clips."
+        },
+        "item5": {
+          "s": "Show what the agent intends to do, step by step, before doing it",
+          "u": "Agent plan",
+          "a": "There each step has its own state and none has a place; here the step has a place and the session is what has state."
+        }
+      },
+      "uxWriting": {
+        "title": "Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format",
+          "correct": "Good",
+          "avoid": "Avoid",
+          "address": {
+            "name": "Address",
+            "format": "The address as it appears in the bar, with no protocol and no decoration",
+            "good": "app.example.com/sign-in",
+            "bad": "System login screen"
+          },
+          "action": {
+            "name": "Verb",
+            "format": "One word about what the agent did",
+            "good": "Type",
+            "bad": "Performing the typing action"
+          },
+          "target": {
+            "name": "Target",
+            "format": "What received the action, as a person would call it",
+            "good": "the email address",
+            "bad": "input#email"
+          },
+          "position": {
+            "name": "Count",
+            "format": "A template with both numbers and the word that joins them",
+            "good": "3 of 6",
+            "bad": "50% complete"
+          }
+        }
+      },
+      "do": {
+        "title": "Do",
+        "item1": "Say the step in words, next to the mark.",
+        "item2": "Keep the trail short: it shows the path, not the whole session.",
+        "item3": "Pass the screen with the alternative text it deserves — empty when the caption already says everything.",
+        "item4": "Make the screen inert: inside the frame it is a photograph, and nobody is using it."
+      },
+      "dont": {
+        "title": "Don't",
+        "item1": "Do not announce each step: a driven screen changes step faster than anyone reads.",
+        "item2": "Do not leave the mark pulsing after the session ended — a pulsing mark says the agent is still working.",
+        "item3": "Do not use a capture of a third-party system: it brings a trademark and content that is not yours.",
+        "item4": "Do not make the screen scroll inside the frame: the frame clips, and what scrolls is the conversation."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "pair1": {
+        "do": "The caption says the verb, the target and the position, and the mark only reinforces the place.",
+        "dont": "Only the mark over the image indicates the step, and whoever cannot see the screen learns nothing."
+      },
+      "pair2": {
+        "do": "The trail shows the last actions, and the current mark stands out by size and by colour.",
+        "dont": "Every mark of the session shows at once, and the trail covers the screen it was meant to be pointing at."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic usage",
+      "basicCode": {
+        "vanilla": "import { createComputerUse } from '@/components/ui/computer-use';\n\nconst computerUse = createComputerUse({\n  url: 'app.exemplo.com/entrar',\n  screen: tela,\n  steps: passos,\n  activeIndex: 3,\n  status: 'running',\n  labels: rotulos,\n});\n\ndocument.querySelector('#app')?.append(computerUse);"
+      },
+      "withLabels": "The labels",
+      "withLabelsCode": {
+        "vanilla": "// Duas cadeias, e as duas são de interface — não são a fala do agente.\n//\n// A primeira é a palavra que apresenta o endereço, e só quem ouve a recebe: a\n// barra diz pelo desenho o que não consegue dizer em voz. A segunda é o molde\n// da contagem, com os dois números no lugar, porque a palavra que os liga é do\n// idioma e os números são dado.\nconst rotulos = {\n  address: 'Endereço',\n  position: '{index} de {total}',\n};"
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "What changes"
+      },
+      "idle": {
+        "label": "Waiting",
+        "trigger": "The session was mounted and the agent has not acted yet.",
+        "behavior": "The piece does not declare itself busy and the current mark does not pulse; trail and caption only exist if there is already a step."
+      },
+      "running": {
+        "label": "In progress",
+        "trigger": "The agent is driving the screen right now.",
+        "behavior": "The piece declares itself busy and the current mark gains a pulsing ring, pointing at where the action is happening."
+      },
+      "stopped": {
+        "label": "Interrupted",
+        "trigger": "Someone interrupted the session, and it stopped where it was.",
+        "behavior": "The piece stops declaring itself busy and the ring goes away; the mark stays where the last action happened."
+      },
+      "complete": {
+        "label": "Finished",
+        "trigger": "The agent finished the session on its own.",
+        "behavior": "The piece stops declaring itself busy and the ring goes away; the last step stays marked and written in the caption."
+      },
+      "failed": {
+        "label": "Failed",
+        "trigger": "The session broke midway, with nobody asking for it.",
+        "behavior": "The piece stops declaring itself busy and the ring goes away; the mark stays on the step where the session stopped."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "url": {
+          "name": "url",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The address of the screen being driven. It is cut when it does not fit the bar."
+        },
+        "screen": {
+          "name": "screen",
+          "type": "HTMLElement",
+          "default": "—",
+          "required": "Yes",
+          "description": "The screen, built by the consumer. The piece never creates it, and never writes or erases its alternative text."
+        },
+        "steps": {
+          "name": "steps",
+          "type": "readonly ComputerStep[]",
+          "default": "[]",
+          "required": "No",
+          "description": "The steps of the session, in the order they happened. With no steps there is no trail and no caption."
+        },
+        "activeIndex": {
+          "name": "activeIndex",
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Which step is happening now. Out of range is clamped to the range, so incrementing past the last one still points at a real step."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "Where the session stands. Decides whether the piece declares itself busy and whether the current mark pulses."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComputerUseLabels",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word that introduces the address and the template of the count."
+        },
+        "labelsAddress": {
+          "name": "address",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The word that introduces the address, and that only listeners receive."
+        },
+        "labelsPosition": {
+          "name": "position",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "The template of the count. Both numbers are substituted at the marked places."
+        },
+        "stepAction": {
+          "name": "action",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What the agent did, in the verb it used to name the action."
+        },
+        "stepTarget": {
+          "name": "target",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "What it acted on, as it described it."
+        },
+        "stepX": {
+          "name": "x",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "Distance from the start edge, as a percentage of the frame width. A percentage because the frame is fluid."
+        },
+        "stepY": {
+          "name": "y",
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "Distance from the top, as a percentage of the frame height."
+        }
+      },
+      "extensibilityTitle": "Extension",
+      "extensibility": "The piece draws the frame, the marks of the steps it receives and the caption of the current step. It does not drive, does not advance on its own, captures no screen, counts no time and does not scroll. Advancing the session belongs to the consumer.",
+      "extensibilityCode": {
+        "vanilla": "// AVANÇAR É DE QUEM CONSOME, e a peça não agenda nada.\n//\n// Quem tem o relógio da sessão é o produto: a peça desenha o passo que recebe.\n// O índice é preso ao alcance, então incrementar além do último passo continua\n// apontando para um passo de verdade.\nlet passoAtual = 0;\n\nfunction avancar() {\n  passoAtual += 1;\n  moldura.replaceWith(\n    createComputerUse({\n      url: endereco,\n      screen: montarTela(),\n      steps: passos,\n      activeIndex: passoAtual,\n      status: passoAtual >= passos.length ? 'complete' : 'running',\n      labels: rotulos,\n    }),\n  );\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Where it is read",
+        "description": "Description",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-computer-use",
+          "description": "Text size of the whole piece, from the address to the caption."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-computer-use-address",
+          "description": "Vertical breathing room of the address bar, and the gap of the ring around the current mark."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-computer-use",
+          "description": "Space between the three parts of the piece, and size of the trail mark."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-computer-use",
+          "description": "Inner padding of the frame, and size of the current step's mark."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-computer-use",
+          "description": "Surface of the frame, of the address bar and of the area behind the screen."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-computer-use",
+          "description": "Outline of the frame."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-computer-use",
+          "description": "Rounding of the frame."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-computer-use-screen",
+          "description": "Rounding of the viewport and of the address bar."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-computer-use-mark",
+          "description": "Round shape of the mark and of the ring around it."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-computer-use-mark",
+          "description": "Supporting colour of the piece, and the colour of the trail marks."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-computer-use-action",
+          "description": "The address and the caption's verb, which is what describes the step."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-computer-use-mark",
+          "description": "Outline of the mark, which is what keeps it legible over a screen the piece does not know."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-computer-use-mark",
+          "description": "Colour of the current step's mark, and of the ring that pulses around it."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-computer-use-action",
+          "description": "Weight of the verb, which separates it from the target beside it."
+        },
+        "durationStately": {
+          "token": "--duration-stately",
+          "value": ".nds-computer-use-mark",
+          "description": "Period of the ring's pulse. Zeroed under reduced motion, the ring stays solid."
+        },
+        "easeStandard": {
+          "token": "--ease-standard",
+          "value": ".nds-computer-use-mark",
+          "description": "Curve of the ring's pulse."
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".nds-computer-use {\n  /* A proporção do quadro é uma propriedade personalizada, e não uma altura:\n     tela de telefone é retrato, e a peça não tem como saber. Em proporção, o\n     quadro cresce com a largura em vez de espremer a imagem. */\n  --computer-use-aspect: 9 / 16;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Nothing here is a live region: a screen driven by an agent changes step faster than anyone reads, and announcing each one would make the screen impossible to listen to. What reaches whoever cannot see the image is the caption, which is also the name of the figure.",
+      "items": {
+        "item1": "The caption says the step in words: verb, target and position in the sequence.",
+        "item2": "The mark and the trail stay out of what is read aloud — a position in an image does not reach whoever cannot see it.",
+        "item3": "The piece is a figure with a caption, not a page landmark: one landmark per screen in a conversation is a list nobody navigates.",
+        "item4": "Nothing inside the piece is a live region, and that is its most important decision.",
+        "item5": "While the session runs, the piece declares itself busy — that is what says that part of the screen is still being written.",
+        "item6": "The frame clips and does not scroll, so there is no second scrollable layer to name.",
+        "item7": "The address carries a word only listeners receive, because the bar says by drawing what it could not say aloud.",
+        "item8": "The ring around the current mark stops pulsing under reduced motion, and stays solid instead of disappearing."
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "tab": "Stops at nothing here: the piece is for reading, and the screen inside the frame is a photograph.",
+        "enter": "Does nothing: the piece offers no action.",
+        "arrows": "Do nothing: the frame clips instead of scrolling."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "The root declares itself busy while the session runs, and nothing in it is a live region.",
+        "item2": "The figure is named by its own caption, not by a text repeated beside it.",
+        "item3": "aria-hidden takes the whole trail out of what is read aloud, in a single layer."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "The current step is read as verb, target and count, and never as a position in the image.",
+        "item2": "The screen is announced by the alternative text the consumer gave it, and by nothing else.",
+        "item3": "No step is announced while the session runs; whoever wants to announce the end writes one sentence, once, on the outside."
+      }
+    },
+    "related": {
+      "title": "Related",
+      "items": {
+        "agentStatus": {
+          "name": "Run status",
+          "description": "Where the whole answer stands, for how long, and where the stop and retry actions live."
+        },
+        "toolGroup": {
+          "name": "Tool group",
+          "description": "When what is shown is the list of what the agent did, with a state per call and no screen at all."
+        },
+        "terminalBlock": {
+          "name": "Terminal block",
+          "description": "When the body is preformatted text output that scrolls, and not an image that clips."
+        },
+        "agentPlan": {
+          "name": "Agent plan",
+          "description": "When each step has its own state and none has a place on a screen."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "item1": "It is the family's first piece whose axis is space. Its sisters draw lists and lines, where position follows from order; here position is data, and nothing in the system placed data at a coordinate over a surface it does not know.",
+      "item2": "The screen is a slot, and the piece never creates it. A capture of a real system brings a trademark and third-party content — the same reason model logos do not enter the repository.",
+      "item3": "The screen's alternative text belongs to whoever passes it. When the caption beside it already says what is happening, the capture is decorative and goes with empty text; when it carries what the caption does not say, the text is required.",
+      "item4": "The frame does not have the three window dots the reference draws. They imitate one operating system's controls, do nothing, and in this sheet a round dot already means state — three meaningless dots beside them would teach that a dot here is decoration.",
+      "item5": "The trail does not fade in steps of opacity. An almost transparent mark over a light capture is not a trail, it is nothing, and low opacity disappears in dark mode. What separates what passed from what is happening is size and colour role.",
+      "item6": "The mark does not glide from one point to the next: a new step is a new mark. What tells the path travelled is the trail, which is static and stays whole for whoever asked for less motion.",
+      "item7": "The step has no state of its own. What is happening applies to the whole session, and a state per step would make the piece paint colours over a third party's screen — which is exactly the encoding the caption exists to avoid."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
+      "table": {
+        "event": "Event",
+        "trigger": "When it fires",
+        "payload": "Data",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When the page opens.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When a section stays visible for two seconds.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "When the demonstration is interacted with.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional",
+        "description": "What the play function checks in each story.",
+        "item1": {
+          "action": "Pass a session with steps and an index",
+          "result": "The caption brings that step's verb, target and count",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pass an address",
+          "result": "It appears in the bar, with the word only listeners receive",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Mount the piece in any state",
+          "result": "Nothing inside it is a live region",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mount the piece with no steps at all",
+          "result": "There is no trail and no caption, and the frame with the screen remains",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pass the state in which the session runs",
+          "result": "The piece declares itself busy",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass a state in which the session no longer runs",
+          "result": "The piece stops declaring itself busy",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pass a long session with the index in the middle",
+          "result": "The trail shows at most three marks, and the last is the current step's",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Pass the index of the first step",
+          "result": "There is a single mark, and it is the current step's",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pass an index beyond the last step",
+          "result": "It is clamped to the range, and the caption points at the last step",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pass a screen",
+          "result": "It enters the frame without the piece touching its alternative text",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Mount the piece and walk through it with the keyboard",
+          "result": "Nothing inside it takes focus, because the screen is a photograph",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Mount the piece below the run status line",
+          "result": "The two are autonomous, and the stop action exists in only one of them",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Checked by axe in every story, plus what the play asserts.",
+        "item1": "The caption says the step in words, and the mark is not the only clue",
+        "item2": "The whole trail is out of what is read aloud",
+        "item3": "The figure is named by its own caption",
+        "item4": "Nothing inside the piece is a live region",
+        "item5": "The piece declares itself busy only while the session runs",
+        "item6": "The frame clips and does not scroll, so there is no unnamed scrollable region",
+        "item7": "The address reaches listeners with the word that introduces it",
+        "item8": "Nothing inside the piece enters the focus order"
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Photographed by Chromatic in each theme and mode.",
+        "item1": {
+          "story": "Playground — the piece, with the controls",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — the five, one below the other",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — in progress, with the ring around the mark",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — finished, with the mark stopped on the last step",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "States — the first step, with the trail still short",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "States — with no steps at all, only the frame and the screen",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "States — the index clamped to the range",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Compositions — the screen below the run status",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Compositions — the long address and target, cut",
+          "priority": "high"
+        },
+        "item10": {
+          "story": "Compositions — the frame in portrait",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  },
+  "es": {
+    "title": "Pantalla del ordenador",
+    "category": "Conversacional",
+    "type": "Componente",
+    "description": "La pantalla que el agente está dirigiendo, con la marca de lo que hace ahora, el rastro de dónde vino la acción y el pie que dice en palabras el paso en curso.",
+    "seo": {
+      "title": "Pantalla del ordenador — la marca, el rastro y el pie",
+      "description": "La pieza de pantalla del ordenador: el marco con dirección, la pantalla que pasa quien la consume, el rastro de las últimas acciones y el pie que lleva el paso a quien no ve la imagen."
+    },
+    "labels": {
+      "address": "Dirección",
+      "position": "{index} de {total}"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "running": "Mientras el agente dirige la pantalla",
+        "finished": "Cuando la sesión termina",
+        "firstStep": "En el primer paso, con el rastro aún corto",
+        "withoutSteps": "Antes de que el agente toque nada"
+      },
+      "screen": {
+        "title": "Entrar en tu cuenta",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "submit": "Continuar"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "structureLabel": "Estructura",
+      "item1": "La barra de dirección abre la pieza y dice qué pantalla se está dirigiendo. Se corta cuando no cabe, y lleva una palabra que solo recibe quien escucha.",
+      "item2": "El marco tiene proporción y recorta lo que hay dentro: aquí no se desplaza nada, porque un marco que se desplazara sería una segunda capa desplazable dentro de una conversación que ya se desplaza.",
+      "item3": "La pantalla la pasa quien consume la pieza. La pieza nunca la crea, y no escribe ni borra su texto alternativo.",
+      "item4": "El rastro muestra las últimas acciones sobre el marco, y la marca del paso en curso es más grande y de otro color. Mientras la sesión corre, un anillo late a su alrededor.",
+      "item5": "El pie cierra la pieza con el verbo, el objetivo y la posición en la secuencia — y es lo que da nombre a la figura.",
+      "structureCode": {
+        "web": "<figure class=\"nds-computer-use\" data-status=\"running\" aria-busy=\"true\">\n  <p class=\"nds-computer-use-address nds-font-mono\">\n    <span class=\"nds-sr-only\">Endereço</span>\n    <span class=\"nds-computer-use-url nds-truncate\" lang=\"en\">app.exemplo.com/entrar</span>\n  </p>\n  <div class=\"nds-computer-use-screen\">\n    <div class=\"nds-computer-use-surface\"><!-- a tela, de quem consome --></div>\n    <span class=\"nds-computer-use-trail\" aria-hidden=\"true\">\n      <span class=\"nds-computer-use-mark\" style=\"--computer-use-mark-x: 86; --computer-use-mark-y: 12\"></span>\n      <span class=\"nds-computer-use-mark\" style=\"--computer-use-mark-x: 42; --computer-use-mark-y: 38\"></span>\n      <span class=\"nds-computer-use-mark\" data-active=\"true\" style=\"--computer-use-mark-x: 42; --computer-use-mark-y: 52\"></span>\n    </span>\n  </div>\n  <figcaption class=\"nds-computer-use-caption\">\n    <span class=\"nds-computer-use-action\">Digitar</span>\n    <span class=\"nds-computer-use-target nds-truncate\">a senha</span>\n    <span class=\"nds-computer-use-position\">4 de 6</span>\n  </figcaption>\n</figure>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "item1": "Úsala para mostrar la pantalla que el agente dirige, con el punto que tocó y lo que hizo allí.",
+        "item2": "Pasa la pantalla como elemento ya montado: la pieza dibuja el marco, y lo que aparece dentro es tuyo.",
+        "item3": "Escribe siempre el paso en palabras — la marca sobre la imagen es para los ojos.",
+        "item4": "Envía la secuencia entera y di qué paso está en curso: el total es lo que hace existir el recuento.",
+        "item5": "Avanza en quien consume la pieza — ella no dirige nada, no avanza sola y no captura pantalla.",
+        "title": "Directrices"
+      },
+      "scenarios": {
+        "title": "Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Mostrar dónde tocó el agente una pantalla, y qué hizo allí",
+          "u": "Pantalla del ordenador",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Listar lo que el agente hizo para responder, sin mostrar ninguna pantalla",
+          "u": "Grupo de llamadas",
+          "a": "Allí cada línea es una llamada con estado propio; aquí hay un punto sobre una imagen."
+        },
+        "item3": {
+          "s": "Decir en qué punto está la respuesta entera, y ofrecer detenerla",
+          "u": "Estado de la ejecución",
+          "a": "Esa línea describe la respuesta y lleva las acciones; esta muestra una pantalla dirigida."
+        },
+        "item4": {
+          "s": "Mostrar lo que un comando escribió en el terminal",
+          "u": "Bloque de terminal",
+          "a": "Allí el cuerpo es texto preformateado que se desplaza; aquí es una imagen que recorta."
+        },
+        "item5": {
+          "s": "Mostrar lo que el agente piensa hacer, paso a paso, antes de hacerlo",
+          "u": "Plan del agente",
+          "a": "Allí cada paso tiene estado propio y ninguno tiene lugar; aquí el paso tiene lugar y la sesión es la que tiene estado."
+        }
+      },
+      "uxWriting": {
+        "title": "Redacción",
+        "table": {
+          "element": "Elemento",
+          "rules": "Formato",
+          "correct": "Bien",
+          "avoid": "Evita",
+          "address": {
+            "name": "Dirección",
+            "format": "La dirección tal como aparece en la barra, sin protocolo y sin adornos",
+            "good": "app.ejemplo.com/entrar",
+            "bad": "Pantalla de acceso del sistema"
+          },
+          "action": {
+            "name": "Verbo",
+            "format": "Una palabra, en infinitivo, sobre lo que hizo el agente",
+            "good": "Escribir",
+            "bad": "Ejecutando la acción de escritura"
+          },
+          "target": {
+            "name": "Objetivo",
+            "format": "Lo que recibió la acción, como lo llamaría una persona",
+            "good": "la dirección de correo",
+            "bad": "input#email"
+          },
+          "position": {
+            "name": "Recuento",
+            "format": "Plantilla con los dos números y la palabra que los une",
+            "good": "3 de 6",
+            "bad": "50 % completado"
+          }
+        }
+      },
+      "do": {
+        "title": "Haz",
+        "item1": "Di el paso en palabras, junto a la marca.",
+        "item2": "Deja el rastro corto: muestra el camino, no la sesión entera.",
+        "item3": "Pasa la pantalla con el texto alternativo que merece — vacío cuando el pie ya lo dice todo.",
+        "item4": "Haz la pantalla inerte: dentro del marco es una foto, y nadie la está usando."
+      },
+      "dont": {
+        "title": "No hagas",
+        "item1": "No anuncies cada paso: una pantalla dirigida cambia de paso más deprisa de lo que se lee.",
+        "item2": "No dejes la marca latiendo después de que la sesión acabe — una marca que late dice que el agente sigue trabajando.",
+        "item3": "No uses una captura de un sistema ajeno: trae marca registrada y contenido que no es tuyo.",
+        "item4": "No hagas que la pantalla se desplace dentro del marco: el marco recorta, y quien se desplaza es la conversación."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "pair1": {
+        "do": "El pie dice el verbo, el objetivo y la posición, y la marca solo refuerza el lugar.",
+        "dont": "Solo la marca sobre la imagen indica el paso, y quien no ve la pantalla no se entera de nada."
+      },
+      "pair2": {
+        "do": "El rastro muestra las últimas acciones, y la marca en curso destaca por tamaño y por color.",
+        "dont": "Todas las marcas de la sesión aparecen juntas, y el rastro tapa la pantalla que debería estar señalando."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Uso básico",
+      "basicCode": {
+        "vanilla": "import { createComputerUse } from '@/components/ui/computer-use';\n\nconst computerUse = createComputerUse({\n  url: 'app.exemplo.com/entrar',\n  screen: tela,\n  steps: passos,\n  activeIndex: 3,\n  status: 'running',\n  labels: rotulos,\n});\n\ndocument.querySelector('#app')?.append(computerUse);"
+      },
+      "withLabels": "Las etiquetas",
+      "withLabelsCode": {
+        "vanilla": "// Duas cadeias, e as duas são de interface — não são a fala do agente.\n//\n// A primeira é a palavra que apresenta o endereço, e só quem ouve a recebe: a\n// barra diz pelo desenho o que não consegue dizer em voz. A segunda é o molde\n// da contagem, com os dois números no lugar, porque a palavra que os liga é do\n// idioma e os números são dado.\nconst rotulos = {\n  address: 'Endereço',\n  position: '{index} de {total}',\n};"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Qué cambia"
+      },
+      "idle": {
+        "label": "En espera",
+        "trigger": "La sesión se montó y el agente aún no ha actuado.",
+        "behavior": "La pieza no se declara ocupada y la marca en curso no late; el rastro y el pie solo existen si ya hay algún paso."
+      },
+      "running": {
+        "label": "En curso",
+        "trigger": "El agente está dirigiendo la pantalla ahora mismo.",
+        "behavior": "La pieza se declara ocupada y la marca en curso gana un anillo que late, señalando dónde ocurre la acción."
+      },
+      "stopped": {
+        "label": "Interrumpido",
+        "trigger": "Alguien interrumpió la sesión, y se detuvo donde estaba.",
+        "behavior": "La pieza deja de declararse ocupada y el anillo desaparece; la marca queda donde ocurrió la última acción."
+      },
+      "complete": {
+        "label": "Completado",
+        "trigger": "El agente terminó la sesión por su cuenta.",
+        "behavior": "La pieza deja de declararse ocupada y el anillo desaparece; el último paso sigue marcado y escrito en el pie."
+      },
+      "failed": {
+        "label": "Falló",
+        "trigger": "La sesión se rompió a mitad de camino, sin que nadie lo pidiera.",
+        "behavior": "La pieza deja de declararse ocupada y el anillo desaparece; la marca queda en el paso en que la sesión se detuvo."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "url": {
+          "name": "url",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La dirección de la pantalla que se dirige. Se corta cuando no cabe en la barra."
+        },
+        "screen": {
+          "name": "screen",
+          "type": "HTMLElement",
+          "default": "—",
+          "required": "Sí",
+          "description": "La pantalla, montada por quien consume la pieza. Ella nunca la crea, y no escribe ni borra su texto alternativo."
+        },
+        "steps": {
+          "name": "steps",
+          "type": "readonly ComputerStep[]",
+          "default": "[]",
+          "required": "No",
+          "description": "Los pasos de la sesión, en el orden en que ocurrieron. Sin ningún paso no hay rastro ni pie."
+        },
+        "activeIndex": {
+          "name": "activeIndex",
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Qué paso ocurre ahora. Fuera de alcance queda sujeto al alcance, para que incrementar más allá del último siga señalando un paso de verdad."
+        },
+        "status": {
+          "name": "status",
+          "type": "'idle' | 'running' | 'stopped' | 'complete' | 'failed'",
+          "default": "'idle'",
+          "required": "No",
+          "description": "En qué punto está la sesión. Decide si la pieza se declara ocupada y si la marca en curso late."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "ComputerUseLabels",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra que presenta la dirección y la plantilla del recuento."
+        },
+        "labelsAddress": {
+          "name": "address",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La palabra que presenta la dirección, y que solo recibe quien escucha."
+        },
+        "labelsPosition": {
+          "name": "position",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "La plantilla del recuento. Los dos números se sustituyen en los lugares marcados."
+        },
+        "stepAction": {
+          "name": "action",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Lo que hizo el agente, en el verbo con que nombró la acción."
+        },
+        "stepTarget": {
+          "name": "target",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Sobre qué actuó, tal como él lo describió."
+        },
+        "stepX": {
+          "name": "x",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Distancia desde el borde de inicio, en porcentaje del ancho del marco. En porcentaje porque el marco es fluido."
+        },
+        "stepY": {
+          "name": "y",
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Distancia desde arriba, en porcentaje de la altura del marco."
+        }
+      },
+      "extensibilityTitle": "Extensión",
+      "extensibility": "La pieza dibuja el marco, las marcas de los pasos que recibe y el pie del paso en curso. No dirige, no avanza sola, no captura pantalla, no cuenta tiempo y no se desplaza. Avanzar la sesión es de quien la consume.",
+      "extensibilityCode": {
+        "vanilla": "// AVANÇAR É DE QUEM CONSOME, e a peça não agenda nada.\n//\n// Quem tem o relógio da sessão é o produto: a peça desenha o passo que recebe.\n// O índice é preso ao alcance, então incrementar além do último passo continua\n// apontando para um passo de verdade.\nlet passoAtual = 0;\n\nfunction avancar() {\n  passoAtual += 1;\n  moldura.replaceWith(\n    createComputerUse({\n      url: endereco,\n      screen: montarTela(),\n      steps: passos,\n      activeIndex: passoAtual,\n      status: passoAtual >= passos.length ? 'complete' : 'running',\n      labels: rotulos,\n    }),\n  );\n}"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Dónde se lee",
+        "description": "Descripción",
+        "textLabel": {
+          "token": "--text-label",
+          "value": ".nds-computer-use",
+          "description": "Tamaño del texto de toda la pieza, de la dirección al pie."
+        },
+        "spacing1": {
+          "token": "--spacing-1",
+          "value": ".nds-computer-use-address",
+          "description": "Respiro vertical de la barra de dirección, y holgura del anillo alrededor de la marca en curso."
+        },
+        "spacing2": {
+          "token": "--spacing-2",
+          "value": ".nds-computer-use",
+          "description": "Espacio entre las tres partes de la pieza, y tamaño de la marca del rastro."
+        },
+        "spacing3": {
+          "token": "--spacing-3",
+          "value": ".nds-computer-use",
+          "description": "Margen interior del marco, y tamaño de la marca del paso en curso."
+        },
+        "muted": {
+          "token": "--muted",
+          "value": ".nds-computer-use",
+          "description": "Superficie del marco, de la barra de dirección y del área tras la pantalla."
+        },
+        "border": {
+          "token": "--border",
+          "value": ".nds-computer-use",
+          "description": "Contorno del marco."
+        },
+        "radius": {
+          "token": "--radius",
+          "value": ".nds-computer-use",
+          "description": "Redondeo del marco."
+        },
+        "radiusSm": {
+          "token": "--radius-sm",
+          "value": ".nds-computer-use-screen",
+          "description": "Redondeo del recuadro y de la barra de dirección."
+        },
+        "radiusFull": {
+          "token": "--radius-full",
+          "value": ".nds-computer-use-mark",
+          "description": "Forma redonda de la marca y del anillo a su alrededor."
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": ".nds-computer-use-mark",
+          "description": "Color de apoyo de la pieza, y el de las marcas del rastro."
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": ".nds-computer-use-action",
+          "description": "La dirección y el verbo del pie, que es lo que describe el paso."
+        },
+        "background": {
+          "token": "--background",
+          "value": ".nds-computer-use-mark",
+          "description": "Contorno de la marca, que es lo que la mantiene legible sobre una pantalla que la pieza no conoce."
+        },
+        "primary": {
+          "token": "--primary",
+          "value": ".nds-computer-use-mark",
+          "description": "Color de la marca del paso en curso, y el del anillo que late a su alrededor."
+        },
+        "fontWeightMedium": {
+          "token": "--font-weight-medium",
+          "value": ".nds-computer-use-action",
+          "description": "Peso del verbo, que lo separa del objetivo contiguo."
+        },
+        "durationStately": {
+          "token": "--duration-stately",
+          "value": ".nds-computer-use-mark",
+          "description": "Periodo del latido del anillo. Puesto a cero con movimiento reducido, el anillo queda sólido."
+        },
+        "easeStandard": {
+          "token": "--ease-standard",
+          "value": ".nds-computer-use-mark",
+          "description": "Curva del latido del anillo."
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".nds-computer-use {\n  /* A proporção do quadro é uma propriedade personalizada, e não uma altura:\n     tela de telefone é retrato, e a peça não tem como saber. Em proporção, o\n     quadro cresce com a largura em vez de espremer a imagem. */\n  --computer-use-aspect: 9 / 16;\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Aquí nada es región viva: una pantalla dirigida por un agente cambia de paso más deprisa de lo que se lee, y anunciar cada uno haría la pantalla imposible de escuchar. Lo que llega a quien no ve la imagen es el pie, que además es el nombre de la figura.",
+      "items": {
+        "item1": "El pie dice el paso en palabras: verbo, objetivo y posición en la secuencia.",
+        "item2": "La marca y el rastro quedan fuera de lo que se lee en voz — una posición en una imagen no llega a quien no la ve.",
+        "item3": "La pieza es una figura con pie, y no un punto de referencia de página: uno por pantalla en una conversación es una lista que nadie recorre.",
+        "item4": "Nada dentro de la pieza es región viva, y es su decisión más importante.",
+        "item5": "Mientras la sesión corre, la pieza se declara ocupada — es lo que dice que esa parte de la pantalla aún se escribe.",
+        "item6": "El marco recorta y no se desplaza, así que no hay una segunda capa desplazable que nombrar.",
+        "item7": "La dirección lleva una palabra que solo recibe quien escucha, porque la barra dice con el dibujo lo que no podría decir en voz.",
+        "item8": "El anillo de la marca en curso deja de latir con movimiento reducido, y queda sólido en vez de desaparecer."
+      },
+      "keyboard": {
+        "title": "Teclado",
+        "tab": "Aquí no se detiene en nada: la pieza es de lectura, y la pantalla dentro del marco es una foto.",
+        "enter": "No hace nada: la pieza no ofrece acción.",
+        "arrows": "No hacen nada: el marco recorta en vez de desplazarse."
+      },
+      "aria": {
+        "title": "ARIA",
+        "item1": "La raíz se declara ocupada mientras la sesión corre, y nada en ella es región viva.",
+        "item2": "La figura se nombra por su propio pie, y no por un texto repetido al lado.",
+        "item3": "aria-hidden saca el rastro entero de lo que se lee en voz, en una sola capa."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "El paso en curso se lee como verbo, objetivo y recuento, y nunca como posición en la imagen.",
+        "item2": "La pantalla se anuncia por el texto alternativo que le dio quien la pasa, y por nada más.",
+        "item3": "Ningún paso se anuncia mientras la sesión corre; quien quiera anunciar el final escribe una frase, una vez, por fuera."
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "items": {
+        "agentStatus": {
+          "name": "Estado de la ejecución",
+          "description": "En qué punto está la respuesta entera, desde hace cuánto, y dónde están las acciones de detener y repetir."
+        },
+        "toolGroup": {
+          "name": "Grupo de llamadas",
+          "description": "Cuando lo que se muestra es la lista de lo que hizo el agente, con estado por llamada y sin ninguna pantalla."
+        },
+        "terminalBlock": {
+          "name": "Bloque de terminal",
+          "description": "Cuando el cuerpo es salida de texto preformateado que se desplaza, y no una imagen que recorta."
+        },
+        "agentPlan": {
+          "name": "Plan del agente",
+          "description": "Cuando cada paso tiene estado propio y ninguno tiene lugar en una pantalla."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas",
+      "item1": "Es la primera pieza de la familia cuyo eje es el espacio. Sus hermanas dibujan listas y líneas, donde la posición es consecuencia del orden; aquí la posición es dato, y nada en el sistema colocaba dato en una coordenada sobre una superficie que no conoce.",
+      "item2": "La pantalla es un hueco, y la pieza nunca la crea. Una captura de un sistema real trae marca registrada y contenido ajeno — la misma razón por la que los logotipos de modelo no entran en el repositorio.",
+      "item3": "El texto alternativo de la pantalla es de quien la pasa. Cuando el pie ya dice lo que ocurre, la captura es decorativa y va con texto vacío; cuando ella lleva lo que el pie no dice, el texto es obligatorio.",
+      "item4": "El marco no tiene los tres puntos de ventana que dibuja la referencia. Imitan los controles de un sistema operativo, no hacen nada, y en esta hoja el punto redondo ya significa estado — tres puntos sin sentido a su lado enseñarían que aquí un punto es adorno.",
+      "item5": "El rastro no se apaga en escalones de opacidad. Una marca casi transparente sobre una captura clara no es rastro, es nada, y la opacidad baja desaparece en oscuro. Lo que separa lo que pasó de lo que ocurre es el tamaño y el papel del color.",
+      "item6": "La marca no se desliza de un punto a otro: paso nuevo es marca nueva. Quien cuenta el camino recorrido es el rastro, que es estático y sigue entero para quien pidió menos movimiento.",
+      "item7": "El paso no tiene estado propio. Lo que ocurre vale para la sesión entera, y un estado por paso haría que la pieza pintara colores sobre la pantalla de un tercero — que es justo la codificación que el pie existe para no necesitar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Cuándo se dispara",
+        "payload": "Datos",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la página.",
+        "pageViewPayload": "component_name, locale, page_title",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Cuando una sección permanece visible dos segundos.",
+        "sectionViewedPayload": "section_id, component_name, locale",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Al interactuar con la demostración.",
+        "demoClickPayload": "component_name, element_id"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Funcionales",
+        "description": "Lo que la play function verifica en cada story.",
+        "item1": {
+          "action": "Pasar una sesión con pasos y un índice",
+          "result": "El pie trae el verbo, el objetivo y el recuento de ese paso",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pasar una dirección",
+          "result": "Aparece en la barra, con la palabra que solo recibe quien escucha",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Montar la pieza en cualquier estado",
+          "result": "Nada dentro de ella es región viva",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Montar la pieza sin ningún paso",
+          "result": "No hay rastro ni pie, y queda el marco con la pantalla",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pasar el estado en que la sesión corre",
+          "result": "La pieza se declara ocupada",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar un estado en que la sesión ya no corre",
+          "result": "La pieza deja de declararse ocupada",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Pasar una sesión larga con el índice en el medio",
+          "result": "El rastro muestra como mucho tres marcas, y la última es la del paso en curso",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Pasar el índice del primer paso",
+          "result": "Hay una sola marca, y es la del paso en curso",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Pasar un índice más allá del último paso",
+          "result": "Queda sujeto al alcance, y el pie señala el último paso",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pasar una pantalla",
+          "result": "Entra en el marco sin que la pieza toque su texto alternativo",
+          "priority": "high"
+        },
+        "item11": {
+          "action": "Montar la pieza y recorrerla con el teclado",
+          "result": "Nada dentro de ella recibe foco, porque la pantalla es una foto",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Montar la pieza bajo la línea de estado de la ejecución",
+          "result": "Las dos son autónomas, y la acción de detener existe solo en una",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Verificado por axe en cada story, más lo que afirma la play.",
+        "item1": "El pie dice el paso en palabras, y la marca no es la única pista",
+        "item2": "El rastro entero está fuera de lo que se lee en voz",
+        "item3": "La figura se nombra por su propio pie",
+        "item4": "Nada dentro de la pieza es región viva",
+        "item5": "La pieza se declara ocupada solo mientras la sesión corre",
+        "item6": "El marco recorta y no se desplaza, así que no hay región desplazable sin nombre",
+        "item7": "La dirección llega a quien escucha con la palabra que la presenta",
+        "item8": "Nada dentro de la pieza entra en el orden de foco"
+      },
+      "visual": {
+        "title": "Visuales",
+        "description": "Fotografiados por Chromatic en cada tema y modo.",
+        "item1": {
+          "story": "Playground — la pieza, con los controles",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — los cinco, uno bajo el otro",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — en curso, con el anillo alrededor de la marca",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — completado, con la marca detenida en el último paso",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estados — el primer paso, con el rastro aún corto",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estados — sin ningún paso, solo el marco y la pantalla",
+          "priority": "high"
+        },
+        "item7": {
+          "story": "Estados — el índice sujeto al alcance",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Composiciones — la pantalla bajo el estado de la ejecución",
+          "priority": "medium"
+        },
+        "item9": {
+          "story": "Composiciones — la dirección y el objetivo largos, cortados",
+          "priority": "high"
+        },
+        "item10": {
+          "story": "Composiciones — el marco en retrato",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {}
+  }
+}

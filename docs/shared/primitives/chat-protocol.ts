@@ -541,3 +541,42 @@ export function jobProgressValue(status: RunStatus, count?: JobCount): number | 
   }
   return status === 'running' ? null : 0;
 }
+
+// ─── Sessão de computador ─────────────────────────────────────────────────────
+
+/**
+ * Um passo de uma sessão em que o agente dirige uma tela.
+ *
+ * É O PRIMEIRO TIPO DESTE ARQUIVO QUE CARREGA GEOMETRIA, e vale dizer por quê
+ * ele mora aqui mesmo assim. Um ponto na tela não é conversa — `x` e `y` não
+ * têm par em nada que este vocabulário já descreva —, mas o critério deste
+ * arquivo nunca foi "é conversa": é ser a origem única do que mais de uma stack
+ * vai reescrever. `PlanStep` e `JobCount` são igualmente de uma peça só, e
+ * estão aqui pelo mesmo motivo. Cinco stacks escrevendo o próprio ponto é como
+ * se produz cinco geometrias que discordam, e geometria que discorda não
+ * aparece em teste: aparece como marca fora de lugar numa foto.
+ *
+ * `action` e `target` RIMAM com `name` e `detail` de `ChatToolCall`, e ainda
+ * assim o tipo é próprio: uma chamada de ferramenta tem estado e esta não tem
+ * nenhum — o que está acontecendo na sessão é `RunStatus`, e vale para a
+ * sessão inteira, não por passo. Um passo que carregasse estado faria a peça
+ * desenhar cinco marcas diferentes sobre a tela, que é justamente a codificação
+ * que a legenda existe para não precisar.
+ *
+ * O PONTO É PORCENTAGEM DO QUADRO, e não pixel. O quadro é fluido — a mesma
+ * sessão é desenhada em três larguras —, e um ponto em pixel apontaria para
+ * lugares diferentes em cada uma. Fora de 0–100 não é erro de tipo, e quem
+ * desenha decide o que fazer com isso.
+ */
+export interface ComputerStep {
+  /** Endereço do passo, para atualizar o certo quando dois têm o mesmo verbo. */
+  id?: string;
+  /** O que o agente fez, no verbo com que ele nomeou a ação. */
+  action: string;
+  /** Sobre o que ele agiu, como ele o descreveu. */
+  target: string;
+  /** Distância da borda de início, em porcentagem da largura do quadro. */
+  x: number;
+  /** Distância do topo, em porcentagem da altura do quadro. */
+  y: number;
+}

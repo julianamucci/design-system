@@ -1252,3 +1252,296 @@
 .nds-terminal-block-exit {
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Tela do computador ───────────────────────────────────────────────────────
+ *
+ * A tela que o agente está dirigindo, com a marca da ação em curso e o rastro
+ * de onde ela veio. Vocabulário: `RunStatus`, e um passo com PONTO na tela.
+ *
+ *   <figure class="nds-computer-use" data-slot="computer-use" data-status="running" aria-busy="true">
+ *     <p class="nds-computer-use-address nds-font-mono" data-slot="computer-use-address">
+ *       <span class="nds-sr-only">Endereço</span>
+ *       <span class="nds-computer-use-url nds-truncate" data-slot="computer-use-url" lang="en">app.exemplo.com/entrar</span>
+ *     </p>
+ *     <div class="nds-computer-use-screen" data-slot="computer-use-screen">
+ *       <div class="nds-computer-use-surface" data-slot="computer-use-surface"><!-- a tela, de quem consome --></div>
+ *       <span class="nds-computer-use-trail" data-slot="computer-use-trail" aria-hidden="true">
+ *         <span class="nds-computer-use-mark" data-slot="computer-use-mark"></span>
+ *         <span class="nds-computer-use-mark" data-slot="computer-use-mark"></span>
+ *         <span class="nds-computer-use-mark" data-slot="computer-use-mark" data-active="true"></span>
+ *       </span>
+ *     </div>
+ *     <figcaption class="nds-computer-use-caption" data-slot="computer-use-caption">
+ *       <span class="nds-computer-use-action" data-slot="computer-use-action">Digitar</span>
+ *       <span class="nds-computer-use-target nds-truncate" data-slot="computer-use-target">o endereço de e-mail</span>
+ *       <span class="nds-computer-use-position" data-slot="computer-use-position">3 de 6</span>
+ *     </figcaption>
+ *   </figure>
+ *
+ * Cada marca recebe o próprio ponto em duas propriedades personalizadas,
+ * `--computer-use-mark-x` e `--computer-use-mark-y`, em porcentagem do quadro.
+ * É DADO, e não valor de desenho: o ponto vem do que o agente clicou, e não há
+ * token de "62%". Por isso ele entra como propriedade personalizada, que é a
+ * forma que a regra do repositório permite e a única que mantém o cálculo na
+ * folha.
+ *
+ * `.nds-font-mono`, `.nds-truncate` e `.nds-sr-only` ANDAM NA ÁRVORE, e são as
+ * únicas classes daqui vindas de outras folhas (`typography.css`,
+ * `utilities.css`). Mesma escolha do bloco de terminal, e o mesmo risco: classe
+ * que mora só na marcação some quando uma stack copia a árvore pela metade, e
+ * nada reprova. Por isso a `play` do vanilla AFIRMA a monoespaçada no endereço.
+ *
+ * POR QUE ESTA PEÇA EXISTE, e não é composição (triagem na §5.3 da guideline
+ * 17). Ela é a primeira da família 2 cujo eixo é o ESPAÇO: as irmãs desenham
+ * listas e linhas, e esta desenha um PONTO sobre uma superfície que ela não
+ * conhece. Nada no sistema posiciona dado em coordenada sobre conteúdo de
+ * terceiro, e nenhuma classe faltante resolveria — o que falta é o sistema de
+ * coordenadas, que é desenho, e não utilitária.
+ *
+ * SEM OS TRÊS PONTOS DE JANELA, ainda que a fonte os desenhe. Eles imitam os
+ * controles de janela de um sistema operacional específico, não fazem nada e
+ * não dizem nada. E há um motivo local mais forte: nesta folha o PONTO É
+ * ESTADO — o do estado da execução, o da ligação, o do bloco de terminal, todos
+ * do mesmo tamanho e da mesma forma. Três pontos coloridos que não significam
+ * nada, ao lado deles, ensinariam que ponto aqui é enfeite. O que diz que
+ * aquilo é uma tela é a moldura e a barra de endereço.
+ *
+ * A TELA É ESPAÇO (§1 da guideline 17). A peça NUNCA cria imagem: captura de
+ * tela de sistema real traz marca registrada e conteúdo de terceiro, e é a
+ * mesma decisão que já tirou os logotipos de modelo do repositório. Quem
+ * consome passa o elemento, como `avatar` já faz na mensagem.
+ *
+ * SEM TRANSIÇÃO DE POSIÇÃO, ainda que a fonte deslize o cursor de um ponto ao
+ * outro. Aqui a marca não se move: passo novo é marca NOVA, porque a fábrica
+ * monta a peça de uma vez e não reposiciona nada depois. Declarar uma transição
+ * que nada dispara seria desenho que não existe com cara de desenho pensado —
+ * a mesma lição do ponto do estado da ligação. O caminho percorrido quem conta
+ * é o RASTRO, que é estático e sobrevive a quem pediu menos movimento.
+ *
+ * AS DECISÕES DE ACESSIBILIDADE
+ *
+ * 1. NÃO É REGIÃO VIVA, como o resto da folha. A legenda troca a cada passo, e
+ *    uma tela dirigida por agente troca de passo mais depressa do que se lê —
+ *    anunciar cada uma seria a rajada da saída de terminal, com outro nome
+ *    (regra 1 da §8 da guideline 17). O que existe no lugar é `aria-busy` na
+ *    raiz enquanto a execução corre. Quem quiser anunciar o fim escreve UMA
+ *    frase num anunciador próprio, do lado de fora.
+ * 2. A LEGENDA É A PEÇA, para quem ouve. Marca e rastro são posição, e posição
+ *    numa imagem não chega a quem não a vê: eles saem inteiros do que é lido.
+ *    O que sobra é a legenda — verbo, alvo e onde se está na sequência —, e é
+ *    por isso que ela é `<figcaption>` e não um parágrafo solto: a legenda de
+ *    uma figura É o nome dela, e assim a tela deixa de ser uma imagem anônima.
+ * 3. O ESTADO É PALAVRA, e a posição é NÚMERO. A marca ativa se distingue do
+ *    rastro por TAMANHO e por PAPEL DE COR, nunca só por cor (WCAG 1.4.1) —
+ *    e nem isso basta sozinho, porque a legenda diz em texto qual é o passo.
+ * 4. `<figure>` E `<figcaption>`, e não `role="region"`. Marco de página por
+ *    tela numa conversa é uma lista de marcos que ninguém navega — mesma
+ *    leitura que o bloco de terminal fez ao escolher `role="group"`. Figura não
+ *    é marco, e ainda amarra a legenda à imagem que ela descreve.
+ * 5. NADA ROLA AQUI, e é escolha. O quadro tem proporção e RECORTA: uma tela
+ *    que rolasse seria uma segunda camada rolável dentro de uma conversa que já
+ *    rola (regra 6 da §8), e teria de ganhar nome e parada de tabulação para
+ *    não reprovar em `scrollable-region-focusable`. Recortar é o que uma
+ *    moldura faz.
+ * 6. O TEXTO ALTERNATIVO DA TELA É DE QUEM CONSOME, e a peça não o escreve nem
+ *    o apaga — ela não é dona daquele elemento. A orientação, que é decisão e
+ *    não herança: quando a legenda ao lado já diz o que está acontecendo, a
+ *    captura é DECORATIVA e vai com texto alternativo vazio, porque descrever
+ *    a tela de outro produto ou repete a legenda ou narra coisa que não é
+ *    desta peça. Quando a tela carrega o que a legenda não diz, o texto é
+ *    obrigatório — e continua sendo de quem consome, que é quem sabe o que
+ *    está ali.
+ * 7. A MARCA ATIVA SÓ PULSA ENQUANTO CORRE. Marca que pulsa depois do fim é o
+ *    cursor que fica mentindo do bloco de terminal, na outra ponta da folha.
+ *    Sob movimento reduzido a animação para e o anel fica sólido: o quadro de
+ *    repouso deste anel é o opaco, então parar basta — mesma leitura do cursor,
+ *    e o contrário da dos pontos do indicador de geração.
+ * 8. O ENDEREÇO GANHA UMA PALAVRA que só quem ouve recebe. Sem os pontos de
+ *    janela, o que diz "isto é um endereço" é a posição e o tratamento — e nada
+ *    disso chega a quem não vê a barra. Uma cadeia solta no começo da figura
+ *    seria texto sem assunto. É a mesma solução do indicador de geração, que
+ *    também descreve em `.nds-sr-only` o que só o desenho dizia.
+ * 9. NADA TEM ALTURA FIXA. O quadro tem PROPORÇÃO, e proporção cresce com a
+ *    largura; o endereço e a legenda crescem com a fonte do navegador (WCAG
+ *    1.4.4). E não há alvo de toque a medir: não há nada para apertar aqui — a
+ *    peça é de leitura, como o bloco de terminal.
+ */
+
+.nds-computer-use {
+  /* A PROPORÇÃO DO QUADRO, em propriedade personalizada para que quem consome a
+   * mude na folha dele — tela de telefone é retrato, e a peça não tem como
+   * saber. Em proporção, e não em altura: altura fixa não cresce com a largura,
+   * e o que está dentro é uma imagem que precisa caber inteira. */
+  --computer-use-aspect: 16 / 9;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+
+  /* `<figure>` nasce com margem do agente de usuário, e ela nunca é a do
+   * sistema: sem esta linha a peça se afasta das irmãs numa pilha. */
+  margin: 0;
+  padding: var(--spacing-3);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted) / 0.3);
+
+  font-size: var(--text-label);
+  color: hsl(var(--muted-foreground));
+}
+
+/* A BARRA DE ENDEREÇO. Ela é o que, junto da moldura, diz que aquilo é uma
+ * tela — e por isso ganha superfície própria, mais funda que a da peça, como a
+ * caixa de saída do bloco de terminal. */
+.nds-computer-use-address {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  margin: 0;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  background-color: hsl(var(--muted) / 0.5);
+
+  color: hsl(var(--foreground));
+}
+
+/* `min-inline-size: 0` para o corte funcionar: item de flex não encolhe abaixo
+ * do próprio conteúdo sem isto, e `.nds-truncate` na marcação nunca chegaria a
+ * cortar. Endereço é a cadeia que mais cresce nesta peça. */
+.nds-computer-use-url {
+  min-inline-size: 0;
+}
+
+/* O QUADRO. Recorta e não rola (decisão 5); a proporção o faz crescer com a
+ * largura em vez de espremer a imagem. */
+.nds-computer-use-screen {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--computer-use-aspect);
+  border-radius: var(--radius-sm);
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+/* A SUPERFÍCIE é o encaixe da tela de quem consome (§1 e §2 da guideline 17).
+ * Ela existe para que a regra de ajuste abaixo não alcance o rastro, que mora
+ * no mesmo quadro — e para que a peça possa AJUSTAR o que recebe sem exigir
+ * classe de quem passa: moldura que não faz o conteúdo caber não é moldura. */
+.nds-computer-use-surface {
+  position: absolute;
+  inset: 0;
+}
+
+.nds-computer-use-surface > * {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  /* Só faz efeito em elemento substituído (imagem, vídeo); em qualquer outro é
+   * inerte. É o ajuste que a fonte pede no código de quem consome, e que aqui
+   * mora na folha porque o enquadramento é da moldura, não de quem a usa. */
+  object-fit: cover;
+}
+
+/* O RASTRO é uma camada só, e é ela que sai inteira do que é lido em voz
+ * (decisão 2) — um `aria-hidden` por marca seria a mesma decisão repetida em
+ * tantos lugares quantos forem os passos. */
+.nds-computer-use-trail {
+  position: absolute;
+  inset: 0;
+}
+
+/* A MARCA. O ponto chega em porcentagem do quadro, como DADO, e `calc` o
+ * transforma em posição: `calc(62 * 1%)` é 62%. A translação de meia marca em
+ * cada eixo é o que faz a coordenada apontar para o CENTRO dela — sem isso o
+ * ponto marcaria o canto superior esquerdo, e a mira ficaria deslocada
+ * justamente onde ela precisa ser exata. */
+.nds-computer-use-mark {
+  position: absolute;
+  inset-inline-start: calc(var(--computer-use-mark-x) * 1%);
+  inset-block-start: calc(var(--computer-use-mark-y) * 1%);
+  transform: translate(-50%, -50%);
+
+  inline-size: var(--spacing-2);
+  block-size: var(--spacing-2);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--muted-foreground));
+
+  /* O CONTORNO DA COR DE FUNDO, e é o que torna a marca legível sobre uma tela
+   * que a peça não conhece: ela pode cair sobre branco, sobre preto ou sobre
+   * uma fotografia. Sem ele, a marca some justamente onde o agente clicou. */
+  box-shadow: 0 0 0 2px hsl(var(--background));
+}
+
+/* SEM RAMPA DE OPACIDADE no rastro, ainda que a fonte apague as marcas antigas
+ * em degraus de 0.18. Marca a 18% sobre uma captura clara não é rastro, é nada
+ * — e opacidade baixa some no escuro (§9 da guideline 17). A diferença entre o
+ * que passou e o que está acontecendo é TAMANHO e PAPEL DE COR, e as duas
+ * cores são sólidas nos dois modos. */
+.nds-computer-use-mark[data-active="true"] {
+  inline-size: var(--spacing-3);
+  block-size: var(--spacing-3);
+  background-color: hsl(var(--primary));
+}
+
+/* O ANEL QUE PULSA, e só enquanto a execução corre (decisão 7). */
+.nds-computer-use[data-status="running"] .nds-computer-use-mark[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--spacing-1) * -1);
+  border: 2px solid hsl(var(--primary));
+  border-radius: var(--radius-full);
+  animation: nds-computer-use-ping var(--duration-stately) var(--ease-standard) infinite;
+}
+
+/* Do opaco para fora, e não o contrário: o primeiro quadro é o de repouso, e é
+ * ele que fica quando a animação para. */
+@keyframes nds-computer-use-ping {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+/* PARAR BASTA, como no cursor do bloco de terminal: o quadro de repouso deste
+ * anel é o opaco, então ele fica sólido e continua cercando a marca ativa. */
+@media (prefers-reduced-motion: reduce) {
+  .nds-computer-use[data-status="running"] .nds-computer-use-mark[data-active="true"]::after {
+    animation: none;
+  }
+}
+
+/* A LEGENDA, que é a peça para quem ouve (decisão 2). `baseline` e não
+ * `center`: o verbo tem peso maior que o alvo, e alinhar pelo meio deixaria as
+ * duas palavras da mesma frase em alturas diferentes. */
+.nds-computer-use-caption {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  margin: 0;
+}
+
+/* O VERBO é o que descreve, e por isso carrega o peso e a cor de texto — mesma
+ * divisão do nome e do detalhe da chamada de ferramenta, acima nesta folha. */
+.nds-computer-use-action {
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium);
+}
+
+.nds-computer-use-target {
+  min-inline-size: 0;
+}
+
+/* SELETOR POR CLASSE com `margin-inline-start: auto`, e não uma utilitária de
+ * espaçador na marcação: a contagem é o único item que muda de lado quando a
+ * peça é espelhada, e propriedade lógica já resolve isso sozinha.
+ * `tabular-nums` porque o número troca a cada passo, e algarismo de largura
+ * variável faria a contagem dançar no lugar. */
+.nds-computer-use-position {
+  margin-inline-start: auto;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
