@@ -4,8 +4,8 @@
  * O EIXO: EM QUE A RESPOSTA SE APOIA. Uma frase afirma alguma coisa, e as peças
  * daqui respondem de onde aquilo veio — o documento, o trecho, o lugar dentro
  * dele, o quanto se pode confiar, o que foi procurado e o que voltou. É isso que
- * faz as nove dividirem geometria, tokens e vocabulário, e é por isso que moram
- * numa folha só, e não uma por slug.
+ * faz as peças daqui dividirem geometria, tokens e vocabulário, e é por isso que
+ * moram numa folha só, e não uma por slug.
  *
  * O vocabulário é `@shared/primitives/chat-protocol`: `ChatSource` é o
  * documento, `Citation` é o apoio — a fonte, o trecho e onde dentro dela. As
