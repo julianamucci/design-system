@@ -425,18 +425,21 @@ interface SwitchProps {
     componentSlug="switch"
     items={[
       {
+        trackId: 'default',
         name: $tStore('variants.items.default'),
         description: stripHtml($tStore('variants.styles.default')),
         code: codeDefault,
         preview: variantDefault,
       },
       {
+        trackId: 'withDescription',
         name: $tStore('variants.items.withDescription'),
         description: stripHtml($tStore('variants.styles.withDescription')),
         code: codeWithDescription,
         preview: variantWithDescription,
       },
       {
+        trackId: 'sm',
         name: $tStore('variants.items.sm'),
         description: stripHtml($tStore('variants.styles.sm')),
         code: codeSm,
@@ -476,6 +479,7 @@ interface SwitchProps {
     componentSlug="switch"
     items={[
       {
+        trackId: 'withLabel',
         name: $tStore('variants.compositions.withLabel.name'),
         description: $tStore('variants.compositions.withLabel.description'),
         useWhen: $tStore('variants.compositions.withLabel.use'),
@@ -483,6 +487,7 @@ interface SwitchProps {
         preview: compWithLabel,
       },
       {
+        trackId: 'withoutLabel',
         name: $tStore('variants.compositions.withoutLabel.name'),
         description: $tStore('variants.compositions.withoutLabel.description'),
         useWhen: $tStore('variants.compositions.withoutLabel.use'),
@@ -490,6 +495,7 @@ interface SwitchProps {
         preview: compWithoutLabel,
       },
       {
+        trackId: 'settingsList',
         name: $tStore('variants.compositions.settingsList.name'),
         description: $tStore('variants.compositions.settingsList.description'),
         useWhen: $tStore('variants.compositions.settingsList.use'),
@@ -500,6 +506,7 @@ interface SwitchProps {
         preview: compSettingsList,
       },
       {
+        trackId: 'inForm',
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),

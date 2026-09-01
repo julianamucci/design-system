@@ -475,11 +475,12 @@ interface TriggerProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="drawer"
     items={[
-      { name: $tStore('variants.items.bottom'), description: $tStore('variants.styles.bottom'), code: codeBottom, preview: variantBottom },
-      { name: $tStore('variants.items.top'),    description: $tStore('variants.styles.top'),    code: codeTop,    preview: variantTop    },
-      { name: $tStore('variants.items.left'),   description: $tStore('variants.styles.left'),   code: codeLeft,   preview: variantLeft   },
-      { name: $tStore('variants.items.right'),  description: $tStore('variants.styles.right'),  code: codeRight,  preview: variantRight  },
+      { trackId: 'bottom', name: $tStore('variants.items.bottom'), description: $tStore('variants.styles.bottom'), code: codeBottom, preview: variantBottom },
+      { trackId: 'top', name: $tStore('variants.items.top'),    description: $tStore('variants.styles.top'),    code: codeTop,    preview: variantTop    },
+      { trackId: 'left', name: $tStore('variants.items.left'),   description: $tStore('variants.styles.left'),   code: codeLeft,   preview: variantLeft   },
+      { trackId: 'right', name: $tStore('variants.items.right'),  description: $tStore('variants.styles.right'),  code: codeRight,  preview: variantRight  },
       {
+        trackId: 'withScroll',
         name: $tStore('variants.items.withScroll.name'),
         description: $tStore('variants.items.withScroll.description'),
         useWhen: $tStore('variants.items.withScroll.use'),
@@ -616,6 +617,7 @@ interface TriggerProps {
     componentSlug="drawer"
     items={[
       {
+        trackId: 'withForm',
         name: $tStore('variants.compositions.withForm.name'),
         description: $tStore('variants.compositions.withForm.description'),
         useWhen: $tStore('variants.compositions.withForm.use'),
@@ -651,6 +653,7 @@ interface TriggerProps {
         preview: compWithForm,
       },
       {
+        trackId: 'withConfirmation',
         name: $tStore('variants.compositions.withConfirmation.name'),
         description: $tStore('variants.compositions.withConfirmation.description'),
         useWhen: $tStore('variants.compositions.withConfirmation.use'),

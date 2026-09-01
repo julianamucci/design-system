@@ -447,9 +447,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.default'),   description: stripHtml($tStore('variants.styles.default')),   code: codeDefault,   preview: variantDefault   },
-      { name: $tStore('variants.items.withTitle'), description: stripHtml($tStore('variants.styles.withTitle')), code: codeWithTitle, preview: variantWithTitle },
-      { name: $tStore('variants.items.form'),      description: stripHtml($tStore('variants.styles.form')),      code: codeForm,      preview: variantForm      },
+      { trackId: 'default', name: $tStore('variants.items.default'),   description: stripHtml($tStore('variants.styles.default')),   code: codeDefault,   preview: variantDefault   },
+      { trackId: 'withTitle', name: $tStore('variants.items.withTitle'), description: stripHtml($tStore('variants.styles.withTitle')), code: codeWithTitle, preview: variantWithTitle },
+      { trackId: 'form', name: $tStore('variants.items.form'),      description: stripHtml($tStore('variants.styles.form')),      code: codeForm,      preview: variantForm      },
     ]}
   />
 
@@ -485,6 +485,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     componentSlug="popover"
     items={[
       {
+        trackId: 'editProfile',
         name: $tStore('variants.compositions.editProfile.name'),
         description: $tStore('variants.compositions.editProfile.description'),
         useWhen: $tStore('variants.compositions.editProfile.use'),
@@ -515,6 +516,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         preview: compEditProfile,
       },
       {
+        trackId: 'tableFilter',
         name: $tStore('variants.compositions.tableFilter.name'),
         description: $tStore('variants.compositions.tableFilter.description'),
         useWhen: $tStore('variants.compositions.tableFilter.use'),
@@ -548,6 +550,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         preview: compTableFilter,
       },
       {
+        trackId: 'colorPicker',
         name: $tStore('variants.compositions.colorPicker.name'),
         description: $tStore('variants.compositions.colorPicker.description'),
         useWhen: $tStore('variants.compositions.colorPicker.use'),
@@ -571,6 +574,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         preview: compColorPicker,
       },
       {
+        trackId: 'quickSettings',
         name: $tStore('variants.compositions.quickSettings.name'),
         description: $tStore('variants.compositions.quickSettings.description'),
         useWhen: $tStore('variants.compositions.quickSettings.use'),

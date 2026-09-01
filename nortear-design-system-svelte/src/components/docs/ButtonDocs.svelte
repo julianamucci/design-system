@@ -347,6 +347,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           { name: 'secondary',   description: stripHtml($tStore('variants.items.secondary')),   code: codeSecondary,   preview: variantSecondary   },
           { name: 'ghost',       description: stripHtml($tStore('variants.items.ghost')),       code: codeGhost,       preview: variantGhost       },
           {
+            trackId: 'asLink',
             name: $tStore('variants.items.asLink.name'),
             description: $tStore('variants.items.asLink.description'),
             useWhen: $tStore('variants.items.asLink.use'),
@@ -433,6 +434,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         componentSlug="button"
         items={[
           {
+            trackId: 'iconLeft',
             name: $tStore('variants.compositions.iconLeft.name'),
             description: $tStore('variants.compositions.iconLeft.description'),
             useWhen: $tStore('variants.compositions.iconLeft.use'),
@@ -440,6 +442,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             preview: compIconLeft,
           },
           {
+            trackId: 'iconRight',
             name: $tStore('variants.compositions.iconRight.name'),
             description: $tStore('variants.compositions.iconRight.description'),
             useWhen: $tStore('variants.compositions.iconRight.use'),
@@ -447,6 +450,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             preview: compIconRight,
           },
           {
+            trackId: 'destructiveWithIcon',
             name: $tStore('variants.compositions.destructiveWithIcon.name'),
             description: $tStore('variants.compositions.destructiveWithIcon.description'),
             useWhen: $tStore('variants.compositions.destructiveWithIcon.use'),
@@ -454,6 +458,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             preview: compDestructive,
           },
           {
+            trackId: 'actionPair',
             name: $tStore('variants.compositions.actionPair.name'),
             description: $tStore('variants.compositions.actionPair.description'),
             useWhen: $tStore('variants.compositions.actionPair.use'),

@@ -610,6 +610,7 @@ interface SidebarMenuButtonProps {
       { name: 'none',       description: $tStore('variants.items.none'),       code: codeCollapsibleNone,  preview: variantNone      },
       { name: 'right',      description: $tStore('variants.items.right'),      code: codeSideRight,        preview: variantRight     },
       {
+        trackId: 'withSubMenu',
         name: $tStore('variants.items.withSubMenu.name'),
         description: $tStore('variants.items.withSubMenu.description'),
         useWhen: $tStore('variants.items.withSubMenu.use'),
@@ -634,6 +635,7 @@ interface SidebarMenuButtonProps {
         preview: variantWithSubMenu,
       },
       {
+        trackId: 'withBadges',
         name: $tStore('variants.items.withBadges.name'),
         description: $tStore('variants.items.withBadges.description'),
         useWhen: $tStore('variants.items.withBadges.use'),
@@ -839,6 +841,7 @@ interface SidebarMenuButtonProps {
     componentSlug="sidebar"
     items={[
       {
+        trackId: 'withGroups',
         name: $tStore('variants.compositions.withGroups.name'),
         description: $tStore('variants.compositions.withGroups.description'),
         useWhen: $tStore('variants.compositions.withGroups.use'),
@@ -874,6 +877,7 @@ interface SidebarMenuButtonProps {
         preview: compWithGroups,
       },
       {
+        trackId: 'withSearch',
         name: $tStore('variants.compositions.withSearch.name'),
         description: $tStore('variants.compositions.withSearch.description'),
         useWhen: $tStore('variants.compositions.withSearch.use'),

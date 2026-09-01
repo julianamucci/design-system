@@ -791,6 +791,7 @@ interface ComboboxChipProps {
     componentSlug="combobox"
     items={[
       {
+        trackId: 'inForm',
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),

@@ -376,7 +376,7 @@ interface AlertTitleProps {
           { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),      code: codeWarning,      preview: variantWarning      },
           { name: 'info',        description: stripHtml($tStore('variants.items.info')),         code: codeInfo,         preview: variantInfo         },
           { name: $tStore('variants.items.dismissible.name'), description: $tStore('variants.items.dismissible.description'), useWhen: $tStore('variants.items.dismissible.use'), trackId: 'dismissible', code: codeDismissible, preview: variantDismissible },
-          { name: $tStore('states.withoutTitle.label'), description: $tStore('states.withoutTitle.behavior'), code: codeWithoutTitle, preview: variantWithoutTitle },
+          { trackId: 'withoutTitle', name: $tStore('states.withoutTitle.label'), description: $tStore('states.withoutTitle.behavior'), code: codeWithoutTitle, preview: variantWithoutTitle },
         ]}
       />
 
@@ -439,6 +439,7 @@ interface AlertTitleProps {
         componentSlug="alert"
         items={[
           {
+            trackId: 'withIcon',
             name: $tStore('variants.compositions.withIcon.name'),
             description: $tStore('variants.compositions.withIcon.description'),
             useWhen: $tStore('variants.compositions.withIcon.use'),
@@ -446,6 +447,7 @@ interface AlertTitleProps {
             preview: compWithIcon,
           },
           {
+            trackId: 'withAction',
             name: $tStore('variants.compositions.withAction.name'),
             description: $tStore('variants.compositions.withAction.description'),
             useWhen: $tStore('variants.compositions.withAction.use'),

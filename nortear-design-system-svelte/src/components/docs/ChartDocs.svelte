@@ -539,6 +539,7 @@ declare function buildRadarOption(o: {
       { name: 'Dispersão', description: stripHtml($tStore('variants.items.scatter')), code: codeScatter, preview: variantScatter },
       { name: 'Rosca aninhada', description: stripHtml($tStore('variants.items.pieNest')), code: codeNest, preview: variantNest },
       {
+        trackId: 'smallInline',
         name: $tStore('variants.items.smallInline.name'),
         description: $tStore('variants.items.smallInline.description'),
         useWhen: $tStore('variants.items.smallInline.use'),
@@ -654,6 +655,7 @@ declare function buildRadarOption(o: {
     componentSlug="chart"
     items={[
       {
+        trackId: 'inCard',
         name: $tStore('variants.compositions.inCard.name'),
         description: $tStore('variants.compositions.inCard.description'),
         useWhen: $tStore('variants.compositions.inCard.use'),

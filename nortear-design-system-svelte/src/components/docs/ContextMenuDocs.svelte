@@ -513,6 +513,7 @@ interface ContextMenuRadioGroupProps {
       { name: 'destructive',  description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,       preview: variantDestructive  },
       { name: 'Label + Inset',description: stripHtml($tStore('variants.items.label')),        code: codeVariantLabel,      preview: variantLabel        },
       {
+        trackId: 'withCheckbox',
         name: $tStore('variants.items.withCheckbox.name'),
         description: $tStore('variants.items.withCheckbox.description'),
         useWhen: $tStore('variants.items.withCheckbox.use'),
@@ -520,6 +521,7 @@ interface ContextMenuRadioGroupProps {
         preview: variantWithCheckbox,
       },
       {
+        trackId: 'withRadio',
         name: $tStore('variants.items.withRadio.name'),
         description: $tStore('variants.items.withRadio.description'),
         useWhen: $tStore('variants.items.withRadio.use'),
@@ -527,6 +529,7 @@ interface ContextMenuRadioGroupProps {
         preview: variantWithRadio,
       },
       {
+        trackId: 'withSubmenu',
         name: $tStore('variants.items.withSubmenu.name'),
         description: $tStore('variants.items.withSubmenu.description'),
         useWhen: $tStore('variants.items.withSubmenu.use'),
@@ -534,6 +537,7 @@ interface ContextMenuRadioGroupProps {
         preview: variantWithSubmenu,
       },
       {
+        trackId: 'withShortcuts',
         name: $tStore('variants.items.withShortcuts.name'),
         description: $tStore('variants.items.withShortcuts.description'),
         useWhen: $tStore('variants.items.withShortcuts.use'),

@@ -511,9 +511,10 @@ interface MenubarRadioGroupProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="menubar"
     items={[
-      { name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
-      { name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: codeDestructive, preview: variantDestructive },
+      { trackId: 'default', name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
+      { trackId: 'destructive', name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: codeDestructive, preview: variantDestructive },
       {
+        trackId: 'withShortcuts',
         name: $tStore('variants.items.withShortcuts.name'),
         description: $tStore('variants.items.withShortcuts.description'),
         useWhen: $tStore('variants.items.withShortcuts.use'),
@@ -532,6 +533,7 @@ interface MenubarRadioGroupProps {
         preview: variantWithShortcuts,
       },
       {
+        trackId: 'withCheckbox',
         name: $tStore('variants.items.withCheckbox.name'),
         description: $tStore('variants.items.withCheckbox.description'),
         useWhen: $tStore('variants.items.withCheckbox.use'),
@@ -547,6 +549,7 @@ interface MenubarRadioGroupProps {
         preview: variantWithCheckbox,
       },
       {
+        trackId: 'withRadio',
         name: $tStore('variants.items.withRadio.name'),
         description: $tStore('variants.items.withRadio.description'),
         useWhen: $tStore('variants.items.withRadio.use'),
@@ -565,6 +568,7 @@ interface MenubarRadioGroupProps {
         preview: variantWithRadio,
       },
       {
+        trackId: 'editorComplete',
         name: $tStore('variants.items.editorComplete.name'),
         description: $tStore('variants.items.editorComplete.description'),
         useWhen: $tStore('variants.items.editorComplete.use'),

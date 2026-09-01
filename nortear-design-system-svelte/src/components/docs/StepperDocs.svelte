@@ -527,7 +527,7 @@ interface StepperPartProps {
         name: $tStore('variants.compositions.withDescriptions.name'),
         description: $tStore('variants.compositions.withDescriptions.description'),
         useWhen: $tStore('variants.compositions.withDescriptions.use'),
-        trackId: 'with-descriptions',
+        trackId: 'withDescriptions',
         code: stepperWithDescriptionsSource(),
         preview: compositionWithDescriptions,
       },

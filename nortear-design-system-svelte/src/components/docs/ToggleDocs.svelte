@@ -412,24 +412,28 @@ interface ToggleProps {
     componentSlug="toggle"
     items={[
       {
+        trackId: 'default',
         name: $tStore('variants.items.default'),
         description: stripHtml($tStore('variants.styles.default')),
         code: codeDefault,
         preview: variantDefault,
       },
       {
+        trackId: 'outline',
         name: $tStore('variants.items.outline'),
         description: stripHtml($tStore('variants.styles.outline')),
         code: codeOutline,
         preview: variantOutline,
       },
       {
+        trackId: 'withLabel',
         name: $tStore('variants.items.withLabel'),
         description: stripHtml($tStore('variants.styles.withLabel')),
         code: codeWithLabel,
         preview: variantWithLabel,
       },
       {
+        trackId: 'sizes',
         name: $tStore('variants.items.sizes.name'),
         description: $tStore('variants.items.sizes.description'),
         useWhen: $tStore('variants.items.sizes.use'),
@@ -469,6 +473,7 @@ interface ToggleProps {
     componentSlug="toggle"
     items={[
       {
+        trackId: 'toolbar',
         name: $tStore('variants.compositions.toolbar.name'),
         description: $tStore('variants.compositions.toolbar.description'),
         useWhen: $tStore('variants.compositions.toolbar.use'),
@@ -480,6 +485,7 @@ interface ToggleProps {
         preview: compToolbar,
       },
       {
+        trackId: 'filterList',
         name: $tStore('variants.compositions.filterList.name'),
         description: $tStore('variants.compositions.filterList.description'),
         useWhen: $tStore('variants.compositions.filterList.use'),

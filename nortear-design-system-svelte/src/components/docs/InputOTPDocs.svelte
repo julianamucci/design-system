@@ -432,10 +432,10 @@ interface InputOTPProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.sixDigits'),     description: stripHtml($tStore('variants.styles.sixDigits')),     code: codeSixDigits,     preview: variantSix     },
-      { name: $tStore('variants.items.fourDigits'),    description: stripHtml($tStore('variants.styles.fourDigits')),    code: codeFourDigits,    preview: variantFour    },
-      { name: $tStore('variants.items.withSeparator'), description: stripHtml($tStore('variants.styles.withSeparator')), code: codeWithSeparator, preview: variantSep     },
-      { name: $tStore('variants.items.alphanumeric'),  description: stripHtml($tStore('variants.styles.alphanumeric')),  code: codeAlpha,         preview: variantAlpha   },
+      { trackId: 'sixDigits', name: $tStore('variants.items.sixDigits'),     description: stripHtml($tStore('variants.styles.sixDigits')),     code: codeSixDigits,     preview: variantSix     },
+      { trackId: 'fourDigits', name: $tStore('variants.items.fourDigits'),    description: stripHtml($tStore('variants.styles.fourDigits')),    code: codeFourDigits,    preview: variantFour    },
+      { trackId: 'withSeparator', name: $tStore('variants.items.withSeparator'), description: stripHtml($tStore('variants.styles.withSeparator')), code: codeWithSeparator, preview: variantSep     },
+      { trackId: 'alphanumeric', name: $tStore('variants.items.alphanumeric'),  description: stripHtml($tStore('variants.styles.alphanumeric')),  code: codeAlpha,         preview: variantAlpha   },
     ]}
   />
 
@@ -467,6 +467,7 @@ interface InputOTPProps {
     componentSlug="input-otp"
     items={[
       {
+        trackId: 'withLabel',
         name: $tStore('variants.compositions.withLabel.name'),
         description: $tStore('variants.compositions.withLabel.description'),
         useWhen: $tStore('variants.compositions.withLabel.use'),
@@ -486,6 +487,7 @@ interface InputOTPProps {
         preview: compLabel,
       },
       {
+        trackId: 'withHelpText',
         name: $tStore('variants.compositions.withHelpText.name'),
         description: $tStore('variants.compositions.withHelpText.description'),
         useWhen: $tStore('variants.compositions.withHelpText.use'),
@@ -502,6 +504,7 @@ interface InputOTPProps {
         preview: compHelp,
       },
       {
+        trackId: 'withErrorMessage',
         name: $tStore('variants.compositions.withErrorMessage.name'),
         description: $tStore('variants.compositions.withErrorMessage.description'),
         useWhen: $tStore('variants.compositions.withErrorMessage.use'),
@@ -518,6 +521,7 @@ interface InputOTPProps {
         preview: compError,
       },
       {
+        trackId: 'withResendButton',
         name: $tStore('variants.compositions.withResendButton.name'),
         description: $tStore('variants.compositions.withResendButton.description'),
         useWhen: $tStore('variants.compositions.withResendButton.use'),

@@ -473,6 +473,7 @@ import { Label } from "@/components/ui/label";`;
     componentSlug="checkbox"
     items={[
       {
+        trackId: 'fieldset',
         name: $tStore('variants.compositions.fieldset.name'),
         description: $tStore('variants.compositions.fieldset.description'),
         useWhen: $tStore('variants.compositions.fieldset.use'),
@@ -480,6 +481,7 @@ import { Label } from "@/components/ui/label";`;
         preview: compFieldset,
       },
       {
+        trackId: 'selectAll',
         name: $tStore('variants.compositions.selectAll.name'),
         description: $tStore('variants.compositions.selectAll.description'),
         useWhen: $tStore('variants.compositions.selectAll.use'),
@@ -487,6 +489,7 @@ import { Label } from "@/components/ui/label";`;
         preview: compSelectAll,
       },
       {
+        trackId: 'inList',
         name: $tStore('variants.compositions.inList.name'),
         description: $tStore('variants.compositions.inList.description'),
         useWhen: $tStore('variants.compositions.inList.use'),

@@ -447,6 +447,7 @@ interface InputProps extends HTMLInputAttributes {
         componentSlug="input"
         items={[
           {
+            trackId: 'withLabel',
             name: $tStore('variants.compositions.withLabel.name'),
             description: $tStore('variants.compositions.withLabel.description'),
             useWhen: $tStore('variants.compositions.withLabel.use'),
@@ -454,6 +455,7 @@ interface InputProps extends HTMLInputAttributes {
             preview: compWithLabel,
           },
           {
+            trackId: 'withHint',
             name: $tStore('variants.compositions.withHint.name'),
             description: $tStore('variants.compositions.withHint.description'),
             useWhen: $tStore('variants.compositions.withHint.use'),
@@ -461,6 +463,7 @@ interface InputProps extends HTMLInputAttributes {
             preview: compWithHint,
           },
           {
+            trackId: 'errorMessage',
             name: $tStore('variants.compositions.errorMessage.name'),
             description: $tStore('variants.compositions.errorMessage.description'),
             useWhen: $tStore('variants.compositions.errorMessage.use'),
@@ -468,6 +471,7 @@ interface InputProps extends HTMLInputAttributes {
             preview: compWithError,
           },
           {
+            trackId: 'withPrefix',
             name: $tStore('variants.compositions.withPrefix.name'),
             description: $tStore('variants.compositions.withPrefix.description'),
             useWhen: $tStore('variants.compositions.withPrefix.use'),

@@ -418,10 +418,11 @@ interface SliderProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="slider"
     items={[
-      { name: $tStore('variants.items.single'),   description: stripHtml($tStore('variants.styles.single')),   code: codeSingle,   preview: variantSingle   },
-      { name: $tStore('variants.items.range'),    description: stripHtml($tStore('variants.styles.range')),    code: codeRange,    preview: variantRange    },
-      { name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: verticalCode, preview: variantVertical },
+      { trackId: 'single', name: $tStore('variants.items.single'),   description: stripHtml($tStore('variants.styles.single')),   code: codeSingle,   preview: variantSingle   },
+      { trackId: 'range', name: $tStore('variants.items.range'),    description: stripHtml($tStore('variants.styles.range')),    code: codeRange,    preview: variantRange    },
+      { trackId: 'vertical', name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: verticalCode, preview: variantVertical },
       {
+        trackId: 'brightness',
         name: $tStore('variants.items.brightness.name'),
         description: $tStore('variants.items.brightness.description'),
         useWhen: $tStore('variants.items.brightness.use'),
@@ -454,6 +455,7 @@ interface SliderProps {
     componentSlug="slider"
     items={[
       {
+        trackId: 'volume',
         name: $tStore('variants.compositions.volume.name'),
         description: $tStore('variants.compositions.volume.description'),
         useWhen: $tStore('variants.compositions.volume.use'),
@@ -461,6 +463,7 @@ interface SliderProps {
         preview: compVolumePreview,
       },
       {
+        trackId: 'form',
         name: $tStore('variants.compositions.form.name'),
         description: $tStore('variants.compositions.form.description'),
         useWhen: $tStore('variants.compositions.form.use'),

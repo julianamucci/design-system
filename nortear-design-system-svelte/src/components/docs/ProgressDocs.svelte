@@ -367,9 +367,9 @@ interface ProgressProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.determinate'),   description: stripHtml($tStore('variants.styles.determinate')),   code: codeDeterminate,   preview: variantDeterminate   },
-      { name: $tStore('variants.items.withLabel'),     description: stripHtml($tStore('variants.styles.withLabel')),     code: codeWithLabel,     preview: variantWithLabel     },
-      { name: $tStore('variants.items.semantic'),      description: stripHtml($tStore('variants.styles.semantic')),      code: codeSemantic,      preview: variantSemantic      },
+      { trackId: 'determinate', name: $tStore('variants.items.determinate'),   description: stripHtml($tStore('variants.styles.determinate')),   code: codeDeterminate,   preview: variantDeterminate   },
+      { trackId: 'withLabel', name: $tStore('variants.items.withLabel'),     description: stripHtml($tStore('variants.styles.withLabel')),     code: codeWithLabel,     preview: variantWithLabel     },
+      { trackId: 'semantic', name: $tStore('variants.items.semantic'),      description: stripHtml($tStore('variants.styles.semantic')),      code: codeSemantic,      preview: variantSemantic      },
     ]}
   />
 

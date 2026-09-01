@@ -440,9 +440,10 @@ interface PaginationDirectionalProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="pagination"
     items={[
-      { name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
-      { name: $tStore('variants.items.directional'), description: stripHtml($tStore('variants.styles.directional')), code: codeDirectional, preview: variantDirectional },
+      { trackId: 'default', name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
+      { trackId: 'directional', name: $tStore('variants.items.directional'), description: stripHtml($tStore('variants.styles.directional')), code: codeDirectional, preview: variantDirectional },
       {
+        trackId: 'simple',
         name: $tStore('variants.items.simple.name'),
         description: $tStore('variants.items.simple.description'),
         useWhen: $tStore('variants.items.simple.use'),
@@ -464,6 +465,7 @@ interface PaginationDirectionalProps {
         preview: variantSimple,
       },
       {
+        trackId: 'withEllipsis',
         name: $tStore('variants.items.withEllipsis.name'),
         description: $tStore('variants.items.withEllipsis.description'),
         useWhen: $tStore('variants.items.withEllipsis.use'),
@@ -487,6 +489,7 @@ interface PaginationDirectionalProps {
         preview: variantWithEllipsis,
       },
       {
+        trackId: 'interactive',
         name: $tStore('variants.items.interactive.name'),
         description: $tStore('variants.items.interactive.description'),
         useWhen: $tStore('variants.items.interactive.use'),

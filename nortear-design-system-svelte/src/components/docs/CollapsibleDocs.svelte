@@ -435,6 +435,7 @@ interface CollapsibleContentProps {
         preview: variantControlled,
       },
       {
+        trackId: 'customButton',
         name: $tStore('variants.items.customButton.name'),
         description: $tStore('variants.items.customButton.description'),
         useWhen: $tStore('variants.items.customButton.use'),
@@ -519,6 +520,7 @@ interface CollapsibleContentProps {
     componentSlug="collapsible"
     items={[
       {
+        trackId: 'iconTrigger',
         name: $tStore('variants.compositions.iconTrigger.name'),
         description: $tStore('variants.compositions.iconTrigger.description'),
         useWhen: $tStore('variants.compositions.iconTrigger.use'),
@@ -538,6 +540,7 @@ interface CollapsibleContentProps {
         preview: compIconTrigger,
       },
       {
+        trackId: 'rotatingChevron',
         name: $tStore('variants.compositions.rotatingChevron.name'),
         description: $tStore('variants.compositions.rotatingChevron.description'),
         useWhen: $tStore('variants.compositions.rotatingChevron.use'),
@@ -556,6 +559,7 @@ interface CollapsibleContentProps {
         preview: compRotatingChevron,
       },
       {
+        trackId: 'richContent',
         name: $tStore('variants.compositions.richContent.name'),
         description: $tStore('variants.compositions.richContent.description'),
         useWhen: $tStore('variants.compositions.richContent.use'),

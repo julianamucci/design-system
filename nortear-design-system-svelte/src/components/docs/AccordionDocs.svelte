@@ -445,10 +445,10 @@ type AccordionProps = {
         id="variantes"
         title={$tStore('variants.title')}
         items={[
-          { name: $tStore('variants.items.single.label'),      description: stripHtml($tStore('variants.items.single.description')),      code: codeSingle,      preview: modeSingle      },
-          { name: $tStore('variants.items.multiple.label'),    description: stripHtml($tStore('variants.items.multiple.description')),    code: codeMultiple,    preview: modeMultiple    },
-          { name: $tStore('variants.items.controlled.label'),  description: stripHtml($tStore('variants.items.controlled.description')),  code: codeControlled,  preview: modeControlled  },
-          { name: $tStore('variants.items.defaultOpen.label'), description: stripHtml($tStore('variants.items.defaultOpen.description')), code: codeSingle,      preview: modeDefaultOpen },
+          { trackId: 'single', name: $tStore('variants.items.single.label'),      description: stripHtml($tStore('variants.items.single.description')),      code: codeSingle,      preview: modeSingle      },
+          { trackId: 'multiple', name: $tStore('variants.items.multiple.label'),    description: stripHtml($tStore('variants.items.multiple.description')),    code: codeMultiple,    preview: modeMultiple    },
+          { trackId: 'controlled', name: $tStore('variants.items.controlled.label'),  description: stripHtml($tStore('variants.items.controlled.description')),  code: codeControlled,  preview: modeControlled  },
+          { trackId: 'defaultOpen', name: $tStore('variants.items.defaultOpen.label'), description: stripHtml($tStore('variants.items.defaultOpen.description')), code: codeSingle,      preview: modeDefaultOpen },
         ]}
       />
 
@@ -508,6 +508,7 @@ type AccordionProps = {
         componentSlug="accordion"
         items={[
           {
+            trackId: 'iconTrigger',
             name: $tStore('variants.compositions.iconTrigger.name'),
             description: $tStore('variants.compositions.iconTrigger.description'),
             useWhen: $tStore('variants.compositions.iconTrigger.use'),
@@ -537,6 +538,7 @@ type AccordionProps = {
             preview: compIconTrigger,
           },
           {
+            trackId: 'badgeTrigger',
             name: $tStore('variants.compositions.badgeTrigger.name'),
             description: $tStore('variants.compositions.badgeTrigger.description'),
             useWhen: $tStore('variants.compositions.badgeTrigger.use'),
@@ -559,6 +561,7 @@ type AccordionProps = {
             preview: compBadgeTrigger,
           },
           {
+            trackId: 'richContent',
             name: $tStore('variants.compositions.richContent.name'),
             description: $tStore('variants.compositions.richContent.description'),
             useWhen: $tStore('variants.compositions.richContent.use'),
@@ -591,6 +594,7 @@ type AccordionProps = {
             preview: compRichContent,
           },
           {
+            trackId: 'faq',
             name: $tStore('variants.compositions.faq.name'),
             description: $tStore('variants.compositions.faq.description'),
             useWhen: $tStore('variants.compositions.faq.use'),

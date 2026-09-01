@@ -584,18 +584,21 @@ interface SelectItemProps {
     componentSlug="select"
     items={[
       {
+        trackId: 'default',
         name: $tStore('variants.items.default'),
         description: stripHtml($tStore('variants.styles.default')),
         code: codeDefault,
         preview: variantDefault,
       },
       {
+        trackId: 'withGroups',
         name: $tStore('variants.items.withGroups'),
         description: stripHtml($tStore('variants.styles.withGroups')),
         code: codeWithGroups,
         preview: variantWithGroups,
       },
       {
+        trackId: 'withIcon',
         name: $tStore('variants.items.withIcon'),
         description: stripHtml($tStore('variants.styles.withIcon')),
         code: codeWithIcon,
@@ -679,6 +682,7 @@ interface SelectItemProps {
     componentSlug="select"
     items={[
       {
+        trackId: 'inForm',
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),

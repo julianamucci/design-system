@@ -567,6 +567,7 @@ interface CarouselNavProps extends ButtonProps {
       { name: 'single',     description: stripHtml($tStore('variants.items.single')),     code: codeSingle,     preview: variantSingle     },
       { name: 'multi',      description: stripHtml($tStore('variants.items.multi')),      code: codeMulti,      preview: variantMulti      },
       {
+        trackId: 'autoplay',
         name: $tStore('variants.items.autoplay.name'),
         description: $tStore('variants.items.autoplay.description'),
         useWhen: $tStore('variants.items.autoplay.use'),
@@ -683,6 +684,7 @@ interface CarouselNavProps extends ButtonProps {
     componentSlug="carousel"
     items={[
       {
+        trackId: 'withDots',
         name: $tStore('variants.compositions.withDots.name'),
         description: $tStore('variants.compositions.withDots.description'),
         useWhen: $tStore('variants.compositions.withDots.use'),
@@ -690,6 +692,7 @@ interface CarouselNavProps extends ButtonProps {
         preview: compWithDots,
       },
       {
+        trackId: 'gallery',
         name: $tStore('variants.compositions.gallery.name'),
         description: $tStore('variants.compositions.gallery.description'),
         useWhen: $tStore('variants.compositions.gallery.use'),

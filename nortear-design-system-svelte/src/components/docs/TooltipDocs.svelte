@@ -446,10 +446,11 @@ interface TooltipTriggerProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="tooltip"
     items={[
-      { name: $tStore('variants.items.default'),      description: stripHtml($tStore('variants.styles.default')),      code: codeDefault,      preview: variantDefault      },
-      { name: $tStore('variants.items.withShortcut'), description: stripHtml($tStore('variants.styles.withShortcut')), code: codeWithShortcut, preview: variantWithShortcut },
-      { name: $tStore('variants.items.longText'),     description: stripHtml($tStore('variants.styles.longText')),     code: codeLongText,     preview: variantLongText     },
+      { trackId: 'default', name: $tStore('variants.items.default'),      description: stripHtml($tStore('variants.styles.default')),      code: codeDefault,      preview: variantDefault      },
+      { trackId: 'withShortcut', name: $tStore('variants.items.withShortcut'), description: stripHtml($tStore('variants.styles.withShortcut')), code: codeWithShortcut, preview: variantWithShortcut },
+      { trackId: 'longText', name: $tStore('variants.items.longText'),     description: stripHtml($tStore('variants.styles.longText')),     code: codeLongText,     preview: variantLongText     },
       {
+        trackId: 'positioningSides',
         name: $tStore('variants.items.positioningSides.name'),
         description: $tStore('variants.items.positioningSides.description'),
         useWhen: $tStore('variants.items.positioningSides.use'),
@@ -526,6 +527,7 @@ interface TooltipTriggerProps {
     componentSlug="tooltip"
     items={[
       {
+        trackId: 'iconButtonWithShortcut',
         name: $tStore('variants.compositions.iconButtonWithShortcut.name'),
         description: $tStore('variants.compositions.iconButtonWithShortcut.description'),
         useWhen: $tStore('variants.compositions.iconButtonWithShortcut.use'),
@@ -544,6 +546,7 @@ interface TooltipTriggerProps {
         preview: compIconShortcut,
       },
       {
+        trackId: 'formFieldHelp',
         name: $tStore('variants.compositions.formFieldHelp.name'),
         description: $tStore('variants.compositions.formFieldHelp.description'),
         useWhen: $tStore('variants.compositions.formFieldHelp.use'),
@@ -568,6 +571,7 @@ interface TooltipTriggerProps {
         preview: compFormHelp,
       },
       {
+        trackId: 'metricDescription',
         name: $tStore('variants.compositions.metricDescription.name'),
         description: $tStore('variants.compositions.metricDescription.description'),
         useWhen: $tStore('variants.compositions.metricDescription.use'),

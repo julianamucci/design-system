@@ -503,18 +503,21 @@ interface RadioGroupItemProps {
     componentSlug="radio-group"
     items={[
       {
+        trackId: 'vertical',
         name: $tStore('variants.items.vertical'),
         description: stripHtml($tStore('variants.styles.vertical')),
         code: verticalCode,
         preview: variantVertical,
       },
       {
+        trackId: 'horizontal',
         name: $tStore('variants.items.horizontal'),
         description: stripHtml($tStore('variants.styles.horizontal')),
         code: horizontalCode,
         preview: variantHorizontal,
       },
       {
+        trackId: 'withDescription',
         name: $tStore('variants.items.withDescription'),
         description: stripHtml($tStore('variants.styles.withDescription')),
         code: codeWithDescription,
@@ -587,6 +590,7 @@ interface RadioGroupItemProps {
     componentSlug="radio-group"
     items={[
       {
+        trackId: 'inForm',
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),

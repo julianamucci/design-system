@@ -491,9 +491,10 @@ interface DropdownMenuRadioGroupProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="dropdown-menu"
     items={[
-      { name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
-      { name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: codeDestructive, preview: variantDestructive },
+      { trackId: 'default', name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
+      { trackId: 'destructive', name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: codeDestructive, preview: variantDestructive },
       {
+        trackId: 'withLabel',
         name: $tStore('variants.items.withLabel.name'),
         description: $tStore('variants.items.withLabel.description'),
         useWhen: $tStore('variants.items.withLabel.use'),
@@ -516,6 +517,7 @@ interface DropdownMenuRadioGroupProps {
         preview: variantWithLabel,
       },
       {
+        trackId: 'withCheckboxItems',
         name: $tStore('variants.items.withCheckboxItems.name'),
         description: $tStore('variants.items.withCheckboxItems.description'),
         useWhen: $tStore('variants.items.withCheckboxItems.use'),
@@ -535,6 +537,7 @@ interface DropdownMenuRadioGroupProps {
         preview: variantWithCheckboxItems,
       },
       {
+        trackId: 'withRadioGroup',
         name: $tStore('variants.items.withRadioGroup.name'),
         description: $tStore('variants.items.withRadioGroup.description'),
         useWhen: $tStore('variants.items.withRadioGroup.use'),
@@ -556,6 +559,7 @@ interface DropdownMenuRadioGroupProps {
         preview: variantWithRadioGroup,
       },
       {
+        trackId: 'withShortcuts',
         name: $tStore('variants.items.withShortcuts.name'),
         description: $tStore('variants.items.withShortcuts.description'),
         useWhen: $tStore('variants.items.withShortcuts.use'),

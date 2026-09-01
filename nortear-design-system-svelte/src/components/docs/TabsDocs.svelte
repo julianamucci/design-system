@@ -381,9 +381,9 @@ interface TabsContentProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.default'),  description: stripHtml($tStore('variants.styles.default')),  code: codeDefault,  preview: variantDefault  },
-      { name: $tStore('variants.items.line'),     description: stripHtml($tStore('variants.styles.line')),     code: codeLine,     preview: variantLine     },
-      { name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: verticalCode, preview: variantVertical },
+      { trackId: 'default', name: $tStore('variants.items.default'),  description: stripHtml($tStore('variants.styles.default')),  code: codeDefault,  preview: variantDefault  },
+      { trackId: 'line', name: $tStore('variants.items.line'),     description: stripHtml($tStore('variants.styles.line')),     code: codeLine,     preview: variantLine     },
+      { trackId: 'vertical', name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: verticalCode, preview: variantVertical },
     ]}
   />
 
@@ -429,6 +429,7 @@ interface TabsContentProps {
     componentSlug="tabs"
     items={[
       {
+        trackId: 'iconTrigger',
         name: $tStore('variants.compositions.iconTrigger.name'),
         description: $tStore('variants.compositions.iconTrigger.description'),
         useWhen: $tStore('variants.compositions.iconTrigger.use'),
@@ -445,6 +446,7 @@ interface TabsContentProps {
         preview: compIconTrigger,
       },
       {
+        trackId: 'badgeTrigger',
         name: $tStore('variants.compositions.badgeTrigger.name'),
         description: $tStore('variants.compositions.badgeTrigger.description'),
         useWhen: $tStore('variants.compositions.badgeTrigger.use'),

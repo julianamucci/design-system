@@ -472,18 +472,21 @@ interface ToggleGroupItemProps {
     componentSlug="toggle-group"
     items={[
       {
+        trackId: 'single',
         name: $tStore('variants.items.single'),
         description: stripHtml($tStore('variants.styles.single')),
         code: codeSingle,
         preview: variantSingle,
       },
       {
+        trackId: 'multiple',
         name: $tStore('variants.items.multiple'),
         description: stripHtml($tStore('variants.styles.multiple')),
         code: codeMultiple,
         preview: variantMultiple,
       },
       {
+        trackId: 'vertical',
         name: $tStore('variants.items.vertical'),
         description: stripHtml($tStore('variants.styles.vertical')),
         code: verticalCode,
@@ -538,6 +541,7 @@ interface ToggleGroupItemProps {
     componentSlug="toggle-group"
     items={[
       {
+        trackId: 'alignmentBar',
         name: $tStore('variants.compositions.alignmentBar.name'),
         description: $tStore('variants.compositions.alignmentBar.description'),
         useWhen: $tStore('variants.compositions.alignmentBar.use'),
@@ -549,6 +553,7 @@ interface ToggleGroupItemProps {
         preview: compAlignmentBar,
       },
       {
+        trackId: 'viewMode',
         name: $tStore('variants.compositions.viewMode.name'),
         description: $tStore('variants.compositions.viewMode.description'),
         useWhen: $tStore('variants.compositions.viewMode.use'),
@@ -559,6 +564,7 @@ interface ToggleGroupItemProps {
         preview: compViewMode,
       },
       {
+        trackId: 'filterWithText',
         name: $tStore('variants.compositions.filterWithText.name'),
         description: $tStore('variants.compositions.filterWithText.description'),
         useWhen: $tStore('variants.compositions.filterWithText.use'),

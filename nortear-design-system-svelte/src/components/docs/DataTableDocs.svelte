@@ -329,6 +329,7 @@ const columns: DataTableColumn<Invoice>[] = [
       { name: 'enableColumnOrdering',  description: stripHtml($tStore('variants.items.reorder')),        code: '<DataTable enableColumnOrdering />',   preview: noPreview },
       { name: 'enablePagination',      description: stripHtml($tStore('variants.items.pagination')),     code: '<DataTable enablePagination />',       preview: noPreview },
       {
+        trackId: 'editableSheet',
         name: $tStore('variants.items.editableSheet.name'),
         description: $tStore('variants.items.editableSheet.description'),
         useWhen: $tStore('variants.items.editableSheet.use'),
@@ -336,6 +337,7 @@ const columns: DataTableColumn<Invoice>[] = [
         preview: noPreview,
       },
       {
+        trackId: 'virtualizedLog',
         name: $tStore('variants.items.virtualizedLog.name'),
         description: $tStore('variants.items.virtualizedLog.description'),
         useWhen: $tStore('variants.items.virtualizedLog.use'),
@@ -343,6 +345,7 @@ const columns: DataTableColumn<Invoice>[] = [
         preview: noPreview,
       },
       {
+        trackId: 'pinnedKey',
         name: $tStore('variants.items.pinnedKey.name'),
         description: $tStore('variants.items.pinnedKey.description'),
         useWhen: $tStore('variants.items.pinnedKey.use'),
@@ -359,6 +362,7 @@ const columns: DataTableColumn<Invoice>[] = [
     componentSlug="data-table"
     items={[
       {
+        trackId: 'selectionWithActions',
         name: $tStore('variants.compositions.selectionWithActions.name'),
         description: $tStore('variants.compositions.selectionWithActions.description'),
         useWhen: $tStore('variants.compositions.selectionWithActions.use'),

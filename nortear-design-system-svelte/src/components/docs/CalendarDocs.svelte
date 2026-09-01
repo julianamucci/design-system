@@ -408,6 +408,7 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
       { name: 'captionLayout="dropdown"',   description: stripHtml($tStore('variants.items.captionDropdown')), code: codeCaptionDropdown, preview: variantCaptionDropdown },
       { name: 'numberOfMonths={2}',         description: stripHtml($tStore('variants.items.numberOfMonths')),  code: codeTwoMonths,       preview: variantTwoMonths       },
       {
+        trackId: 'inlineBordered',
         name: $tStore('variants.items.inlineBordered.name'),
         description: $tStore('variants.items.inlineBordered.description'),
         useWhen: $tStore('variants.items.inlineBordered.use'),
@@ -417,6 +418,7 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
         preview: variantInlineBordered,
       },
       {
+        trackId: 'disabledPast',
         name: $tStore('variants.items.disabledPast.name'),
         description: $tStore('variants.items.disabledPast.description'),
         useWhen: $tStore('variants.items.disabledPast.use'),

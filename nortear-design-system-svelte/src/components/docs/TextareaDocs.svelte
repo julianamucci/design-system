@@ -362,9 +362,9 @@ interface TextareaProps extends HTMLTextareaAttributes {
     title={$tStore('variants.title')}
     componentSlug="textarea"
     items={[
-      { name: $tStore('variants.items.default'),     description: $tStore('variants.styles.default'),     code: codeDefault,     preview: variantDefault     },
-      { name: $tStore('variants.items.withCounter'), description: $tStore('variants.styles.withCounter'), code: codeWithCounter, preview: variantWithCounter },
-      { name: $tStore('variants.items.noResize'),    description: $tStore('variants.styles.noResize'),    code: codeNoResize,    preview: variantNoResize    },
+      { trackId: 'default', name: $tStore('variants.items.default'),     description: $tStore('variants.styles.default'),     code: codeDefault,     preview: variantDefault     },
+      { trackId: 'withCounter', name: $tStore('variants.items.withCounter'), description: $tStore('variants.styles.withCounter'), code: codeWithCounter, preview: variantWithCounter },
+      { trackId: 'noResize', name: $tStore('variants.items.noResize'),    description: $tStore('variants.styles.noResize'),    code: codeNoResize,    preview: variantNoResize    },
     ]}
   />
 
@@ -397,6 +397,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
     componentSlug="textarea"
     items={[
       {
+        trackId: 'withLabel',
         name: $tStore('variants.compositions.withLabel.name'),
         description: $tStore('variants.compositions.withLabel.description'),
         useWhen: $tStore('variants.compositions.withLabel.use'),
@@ -404,6 +405,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
         preview: compWithLabel,
       },
       {
+        trackId: 'withHint',
         name: $tStore('variants.compositions.withHint.name'),
         description: $tStore('variants.compositions.withHint.description'),
         useWhen: $tStore('variants.compositions.withHint.use'),
@@ -411,6 +413,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
         preview: compWithHint,
       },
       {
+        trackId: 'withError',
         name: $tStore('variants.compositions.withError.name'),
         description: $tStore('variants.compositions.withError.description'),
         useWhen: $tStore('variants.compositions.withError.use'),
@@ -418,6 +421,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
         preview: compWithError,
       },
       {
+        trackId: 'inForm',
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),

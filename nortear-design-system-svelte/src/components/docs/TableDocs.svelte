@@ -517,11 +517,11 @@ interface TableRowProps {
       <DocsVariants
         title={$tStore('variants.title')}
         items={[
-          { name: $tStore('variants.items.basic.label'),            description: stripHtml($tStore('variants.items.basic.description')),            code: codeBasic,          preview: variantBasic          },
-          { name: $tStore('variants.items.withFooter.label'),       description: stripHtml($tStore('variants.items.withFooter.description')),       code: codeWithFooter,     preview: variantWithFooter     },
-          { name: $tStore('variants.items.withSrOnlyCaption.label'),description: stripHtml($tStore('variants.items.withSrOnlyCaption.description')),code: codeSrOnlyCaption,  preview: variantSrOnlyCaption  },
-          { name: $tStore('variants.items.withInlineActions.label'),description: stripHtml($tStore('variants.items.withInlineActions.description')),code: codeInlineActions,  preview: variantInlineActions  },
-          { name: $tStore('variants.items.withEmptyState.label'),   description: stripHtml($tStore('variants.items.withEmptyState.description')),   code: codeEmptyState,     preview: variantEmptyState     },
+          { trackId: 'basic', name: $tStore('variants.items.basic.label'),            description: stripHtml($tStore('variants.items.basic.description')),            code: codeBasic,          preview: variantBasic          },
+          { trackId: 'withFooter', name: $tStore('variants.items.withFooter.label'),       description: stripHtml($tStore('variants.items.withFooter.description')),       code: codeWithFooter,     preview: variantWithFooter     },
+          { trackId: 'withSrOnlyCaption', name: $tStore('variants.items.withSrOnlyCaption.label'),description: stripHtml($tStore('variants.items.withSrOnlyCaption.description')),code: codeSrOnlyCaption,  preview: variantSrOnlyCaption  },
+          { trackId: 'withInlineActions', name: $tStore('variants.items.withInlineActions.label'),description: stripHtml($tStore('variants.items.withInlineActions.description')),code: codeInlineActions,  preview: variantInlineActions  },
+          { trackId: 'withEmptyState', name: $tStore('variants.items.withEmptyState.label'),   description: stripHtml($tStore('variants.items.withEmptyState.description')),   code: codeEmptyState,     preview: variantEmptyState     },
         ]}
       />
 
@@ -664,6 +664,7 @@ interface TableRowProps {
         componentSlug="table"
         items={[
           {
+            trackId: 'filterableToolbar',
             name: $tStore('variants.compositions.filterableToolbar.name'),
             description: $tStore('variants.compositions.filterableToolbar.description'),
             useWhen: $tStore('variants.compositions.filterableToolbar.use'),
@@ -694,6 +695,7 @@ interface TableRowProps {
             preview: compFilterableToolbar,
           },
           {
+            trackId: 'sortableHeaders',
             name: $tStore('variants.compositions.sortableHeaders.name'),
             description: $tStore('variants.compositions.sortableHeaders.description'),
             useWhen: $tStore('variants.compositions.sortableHeaders.use'),
@@ -706,6 +708,7 @@ interface TableRowProps {
             preview: compSortableHeaders,
           },
           {
+            trackId: 'selectableRows',
             name: $tStore('variants.compositions.selectableRows.name'),
             description: $tStore('variants.compositions.selectableRows.description'),
             useWhen: $tStore('variants.compositions.selectableRows.use'),
@@ -723,6 +726,7 @@ interface TableRowProps {
             preview: compSelectableRows,
           },
           {
+            trackId: 'withPagination',
             name: $tStore('variants.compositions.withPagination.name'),
             description: $tStore('variants.compositions.withPagination.description'),
             useWhen: $tStore('variants.compositions.withPagination.use'),

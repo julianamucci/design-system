@@ -419,9 +419,9 @@ interface HandleProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
-      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
-      { name: $tStore('variants.items.nested'),     description: stripHtml($tStore('variants.styles.nested')),     code: codeNested,     preview: variantNested     },
+      { trackId: 'horizontal', name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
+      { trackId: 'vertical', name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
+      { trackId: 'nested', name: $tStore('variants.items.nested'),     description: stripHtml($tStore('variants.styles.nested')),     code: codeNested,     preview: variantNested     },
     ]}
   />
 

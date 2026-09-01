@@ -311,9 +311,9 @@
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.rectangle'), description: stripHtml($tStore('variants.styles.rectangle')), code: codeRectangle, preview: variantRectangle },
-      { name: $tStore('variants.items.circle'),    description: stripHtml($tStore('variants.styles.circle')),    code: codeCircle,    preview: variantCircle    },
-      { name: $tStore('variants.items.line'),      description: stripHtml($tStore('variants.styles.line')),      code: codeLine,      preview: variantLine      },
+      { trackId: 'rectangle', name: $tStore('variants.items.rectangle'), description: stripHtml($tStore('variants.styles.rectangle')), code: codeRectangle, preview: variantRectangle },
+      { trackId: 'circle', name: $tStore('variants.items.circle'),    description: stripHtml($tStore('variants.styles.circle')),    code: codeCircle,    preview: variantCircle    },
+      { trackId: 'line', name: $tStore('variants.items.line'),      description: stripHtml($tStore('variants.styles.line')),      code: codeLine,      preview: variantLine      },
     ]}
   />
 

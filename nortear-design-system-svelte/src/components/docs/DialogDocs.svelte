@@ -482,6 +482,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       { name: 'withDestructiveAction', description: stripHtml($tStore('variants.items.withDestructiveAction')), code: codeDestructive, preview: variantDestructive },
       { name: 'customCloseInFooter',   description: stripHtml($tStore('variants.items.customCloseInFooter')),   code: codeNoCloseBtn,  preview: variantNoClose     },
       {
+        trackId: 'confirmEmail',
         name: $tStore('variants.items.confirmEmail.name'),
         description: $tStore('variants.items.confirmEmail.description'),
         useWhen: $tStore('variants.items.confirmEmail.use'),
@@ -630,6 +631,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     componentSlug="dialog"
     items={[
       {
+        trackId: 'mediaPreview',
         name: $tStore('variants.compositions.mediaPreview.name'),
         description: $tStore('variants.compositions.mediaPreview.description'),
         useWhen: $tStore('variants.compositions.mediaPreview.use'),

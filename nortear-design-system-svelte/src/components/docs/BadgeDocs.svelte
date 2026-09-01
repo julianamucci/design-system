@@ -308,6 +308,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
     componentSlug="badge"
     items={[
       {
+        trackId: 'withIcon',
         name: $tStore('variants.compositions.withIcon.name'),
         description: $tStore('variants.compositions.withIcon.description'),
         useWhen: $tStore('variants.compositions.withIcon.use'),
@@ -315,6 +316,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         preview: compWithIcon,
       },
       {
+        trackId: 'withCounter',
         name: $tStore('variants.compositions.withCounter.name'),
         description: $tStore('variants.compositions.withCounter.description'),
         useWhen: $tStore('variants.compositions.withCounter.use'),
@@ -322,6 +324,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         preview: compWithCounter,
       },
       {
+        trackId: 'asTrigger',
         name: $tStore('variants.compositions.asTrigger.name'),
         description: $tStore('variants.compositions.asTrigger.description'),
         useWhen: $tStore('variants.compositions.asTrigger.use'),

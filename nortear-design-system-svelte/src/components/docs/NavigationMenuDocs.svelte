@@ -414,9 +414,10 @@ interface NavigationMenuLinkProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="navigation-menu"
     items={[
-      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
-      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
+      { trackId: 'horizontal', name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
+      { trackId: 'vertical', name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
       {
+        trackId: 'linkSimples',
         name: $tStore('variants.items.linkSimples.name'),
         description: $tStore('variants.items.linkSimples.description'),
         useWhen: $tStore('variants.items.linkSimples.use'),
@@ -430,6 +431,7 @@ interface NavigationMenuLinkProps {
         preview: variantLinkSimples,
       },
       {
+        trackId: 'comDropdown',
         name: $tStore('variants.items.comDropdown.name'),
         description: $tStore('variants.items.comDropdown.description'),
         useWhen: $tStore('variants.items.comDropdown.use'),
@@ -452,6 +454,7 @@ interface NavigationMenuLinkProps {
         preview: variantComDropdown,
       },
       {
+        trackId: 'megaMenuGrid',
         name: $tStore('variants.items.megaMenuGrid.name'),
         description: $tStore('variants.items.megaMenuGrid.description'),
         useWhen: $tStore('variants.items.megaMenuGrid.use'),
@@ -476,6 +479,7 @@ interface NavigationMenuLinkProps {
         preview: variantMegaMenuGrid,
       },
       {
+        trackId: 'comCardDestacado',
         name: $tStore('variants.items.comCardDestacado.name'),
         description: $tStore('variants.items.comCardDestacado.description'),
         useWhen: $tStore('variants.items.comCardDestacado.use'),

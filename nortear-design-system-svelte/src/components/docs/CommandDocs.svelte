@@ -595,6 +595,7 @@ interface CommandLoadingProps {
       { name: 'inline',   description: stripHtml($tStore('variants.items.inline')),   code: codeVariantInline,   preview: variantInline   },
       { name: 'palette',  description: stripHtml($tStore('variants.items.palette')),  code: codeVariantPalette,  preview: variantPalette  },
       {
+        trackId: 'withGroups',
         name: $tStore('variants.items.withGroups.name'),
         description: $tStore('variants.items.withGroups.description'),
         useWhen: $tStore('variants.items.withGroups.use'),

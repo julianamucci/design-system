@@ -415,9 +415,10 @@ interface HoverCardContentProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="hover-card"
     items={[
-      { name: $tStore('variants.items.default'),   description: stripHtml($tStore('variants.styles.default')),   code: codeDefault,   preview: variantDefault   },
-      { name: $tStore('variants.items.withDelay'), description: stripHtml($tStore('variants.styles.withDelay')), code: codeWithDelay, preview: variantWithDelay },
+      { trackId: 'default', name: $tStore('variants.items.default'),   description: stripHtml($tStore('variants.styles.default')),   code: codeDefault,   preview: variantDefault   },
+      { trackId: 'withDelay', name: $tStore('variants.items.withDelay'), description: stripHtml($tStore('variants.styles.withDelay')), code: codeWithDelay, preview: variantWithDelay },
       {
+        trackId: 'userProfile',
         name: $tStore('variants.items.userProfile.name'),
         description: $tStore('variants.items.userProfile.description'),
         useWhen: $tStore('variants.items.userProfile.use'),
@@ -443,6 +444,7 @@ interface HoverCardContentProps {
         preview: variantUserProfile,
       },
       {
+        trackId: 'linkPreview',
         name: $tStore('variants.items.linkPreview.name'),
         description: $tStore('variants.items.linkPreview.description'),
         useWhen: $tStore('variants.items.linkPreview.use'),
@@ -465,6 +467,7 @@ interface HoverCardContentProps {
         preview: variantLinkPreview,
       },
       {
+        trackId: 'definitionTooltip',
         name: $tStore('variants.items.definitionTooltip.name'),
         description: $tStore('variants.items.definitionTooltip.description'),
         useWhen: $tStore('variants.items.definitionTooltip.use'),
@@ -486,6 +489,7 @@ interface HoverCardContentProps {
         preview: variantDefinitionTooltip,
       },
       {
+        trackId: 'metricExplainer',
         name: $tStore('variants.items.metricExplainer.name'),
         description: $tStore('variants.items.metricExplainer.description'),
         useWhen: $tStore('variants.items.metricExplainer.use'),

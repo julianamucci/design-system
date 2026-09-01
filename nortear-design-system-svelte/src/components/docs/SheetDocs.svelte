@@ -473,10 +473,10 @@ interface TriggerProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.right'),  description: stripHtml($tStore('variants.styles.right')),  code: codeRight,  preview: variantRight  },
-      { name: $tStore('variants.items.left'),   description: stripHtml($tStore('variants.styles.left')),   code: codeLeft,   preview: variantLeft   },
-      { name: $tStore('variants.items.top'),    description: stripHtml($tStore('variants.styles.top')),    code: codeTop,    preview: variantTop    },
-      { name: $tStore('variants.items.bottom'), description: stripHtml($tStore('variants.styles.bottom')), code: codeBottom, preview: variantBottom },
+      { trackId: 'right', name: $tStore('variants.items.right'),  description: stripHtml($tStore('variants.styles.right')),  code: codeRight,  preview: variantRight  },
+      { trackId: 'left', name: $tStore('variants.items.left'),   description: stripHtml($tStore('variants.styles.left')),   code: codeLeft,   preview: variantLeft   },
+      { trackId: 'top', name: $tStore('variants.items.top'),    description: stripHtml($tStore('variants.styles.top')),    code: codeTop,    preview: variantTop    },
+      { trackId: 'bottom', name: $tStore('variants.items.bottom'), description: stripHtml($tStore('variants.styles.bottom')), code: codeBottom, preview: variantBottom },
     ]}
   />
 
@@ -560,6 +560,7 @@ interface TriggerProps {
     componentSlug="sheet"
     items={[
       {
+        trackId: 'advancedFilters',
         name: $tStore('variants.compositions.advancedFilters.name'),
         description: $tStore('variants.compositions.advancedFilters.description'),
         useWhen: $tStore('variants.compositions.advancedFilters.use'),
@@ -587,6 +588,7 @@ interface TriggerProps {
         preview: compAdvancedFilters,
       },
       {
+        trackId: 'secondaryNavigation',
         name: $tStore('variants.compositions.secondaryNavigation.name'),
         description: $tStore('variants.compositions.secondaryNavigation.description'),
         useWhen: $tStore('variants.compositions.secondaryNavigation.use'),
