@@ -130,7 +130,7 @@ caiba em duas frases e renda cinco implementações vai para um primitivo:
 | `composer-trigger.ts` | Caractere gatilho (`@`, `/`), recorte do termo, filtro, âncora do cursor — a mesma máquina serve menções, comandos e qualquer picker futuro |
 | `token-budget.ts` *(existe)* | Fração usada, limiar de aviso, repartição por origem — três peças de medição desenham o mesmo número. Importa `TokenUsage` de `chat-protocol.ts`, nunca o redeclara: aquele é o vocabulário, este é a conta |
 | `stream-reveal.ts` | Quantas palavras já apareceram, qual é a mais nova — texto em streaming, revelação de imagem, ticker |
-| `diff-hunks.ts` | Partir um diff unificado em blocos, e o estado por bloco (manter/descartar). A tabela previa que `code-diff` e `reviewable-diff` compartilhassem; a vigésima segunda correção mediu a fonte e **`code-diff` não faz nem uma coisa nem outra** — recebe as linhas já partidas por quem monta e não tem bloco, logo não tem estado por bloco. A justificativa que resta é de `reviewable-diff` sozinha, e se confirma (ou cai) quando ela for triada |
+| `diff-hunks.ts` *(dispensado, não nasce)* | Nasceria para partir um diff unificado em blocos e guardar o estado por bloco (manter/descartar). A tabela previa que `code-diff` e `reviewable-diff` o dividissem; a vigésima segunda e a vigésima quarta correções mediram as duas fontes e **nenhuma das duas faz nem uma coisa nem outra** — `code-diff` recebe as linhas já partidas e `reviewable-diff` recebe os blocos já partidos, e quem parte é quem monta. O estado por bloco é `pending` (que é `ToolCallState` `pending`) mais o que a §7 tira, e a sobra dele é uma contagem DERIVADA, do tamanho de `isRunFinished`, cuja casa é `chat-protocol.ts` no dia em que uma peça precisar dela. Primitivo que perde as duas tarefas não nasce menor: não nasce. A espécie por linha, que era o resíduo com dono, mora em `code-highlight.ts`, ao lado de `LineRangeInput` |
 
 Nenhum deles importa framework. Todos ganham teste de nó (`*.test.ts` no
 vanilla, como `chat-scroll.test.ts`), e é esse teste que segura a regra.
@@ -225,7 +225,7 @@ e 70 folhas; boa parte das 120 é **composição do que existe**, e tratá-las c
 componentes novos duplicaria `command`, `dialog`, `data-table` e `chart` com outro
 nome. As tabelas abaixo cobrem as 120 entradas, cada uma exatamente uma vez.
 
-### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (55)
+### 5.1 Já desenhado — vira story ou composição, folha nova nenhuma (56)
 
 Estas entram como **stories de composição** e seções de docs page das peças que já
 existem. Se ao montar aparecer um buraco, o conserto é uma classe `.nds-*` que
@@ -285,9 +285,10 @@ falta, nomeada — nunca uma folha nova.
 | `confidence-marker` | `markdown` com o gatilho de explicação que esta base já compõe. Cada afirmação é um `<button>` em linha dentro do parágrafo, com a cadeia que `hover-card.fixtures.ts` e `hover-card.source.ts` já escrevem literalmente e nesta ordem — `.nds-underline-dotted` `.nds-cursor-help` `.nds-bg-transparent` `.nds-border-none` `.nds-p-0` —, e o nível troca só a decoração: `.nds-underline` para o que se apoia em fonte, `.nds-underline-dotted` para o que não se apoia, as duas com o mesmo deslocamento que cinco folhas já aplicam. O nível chega também como PALAVRA — `.nds-badge` em linha, como `directive-text` acima nesta tabela, ou `.nds-sr-only` quando o parágrafo não pode ser interrompido —, porque a fonte declara três níveis e desenha duas decorações, deixando o terceiro por conta da cor, que a regra 3 desta folha troca pela palavra e a regra 4 da §8 proíbe (WCAG 1.4.1). A base da afirmação é `.nds-popover-content` num encaixe ABAIXO do parágrafo, ligado por `aria-describedby`: encaixe, e não caixa flutuante, é o que faz a revelação não cobrir o texto que se está lendo, que é a decisão 4 do bloco da citação em linha. O espaço se reserva com `min-block-size`, nunca com a altura fixa da fonte, porque o encaixe carrega texto (§9). Nenhuma classe nova, e nenhuma nomeada como faltando: se o produto quiser três decorações em vez de duas palavras, a que falta é `.nds-underline-dashed` em `utilities.css`, ao lado das duas que já estão lá — utilitária, nunca folha. Veio da família 3 — ver 5.3 |
 | `code-diff` | `code-block` com a espécie da linha. O cabeçalho é `.nds-code-block-header`: `.nds-code-block-title` monoespaçado, que já TRUNCA o caminho do arquivo em vez de empurrar o botão, e os dois contadores em `.nds-cluster[data-spacing="xs"]` de `.nds-badge nds-badge-success` / `.nds-badge nds-badge-destructive` com `.nds-font-mono` — o mesmo desenho que `tool-timeline` já resolveu nesta tabela para `{ file, added, removed }`, que é este cabeçalho com outros nomes. O corpo é `.nds-code-block-scroll`, que rola nos dois eixos no mesmo container com `overscroll-behavior-inline: contain` e `tabindex="0"`; `.nds-code-block-pre` com `lang="en"` e `tab-size: 2`; `.nds-code-block-text` com `white-space: pre`, que é literalmente a decisão que a fonte anuncia; e `.nds-code-block-gutter` sticky, que sobrevive à rolagem horizontal — mais realce por gramática, que a fonte não tem. **Unificado, sem numeração e sem cabeçalho de trecho**: a fonte não desenha nenhum dos três, e é isso que tira daqui a única geometria que esta base não teria — duas numerações que avançam em ritmos diferentes. **Faltam duas coisas, e estão nomeadas**: `.nds-code-block-line` conhece um estado por linha (`data-highlighted`) e o diferencial quer três espécies, o que é um `data-kind` com um par de tinta por espécie — `--success` e `--destructive` com alfa, como o destaque já é `--primary` com alfa —, medido contra `--muted` E contra a linha destacada nos dois modos; e o gutter, hoje `aria-hidden` porque número é redundante com a posição, nesse modo carrega `+` / `−` visível mais a palavra em `.nds-sr-only`, porque tinta sozinha é a codificação que a regra 4 da §8 recusa e cujo exemplo é este. **Pede duas opções em `createCodeBlock`**: a espécie por linha ao lado de `highlightLines`, e o mesmo `actions?: HTMLElement[]` que `code-runner` já pede nesta tabela; nem classe fora das nomeadas, nem folha nova. A entrada escalonada a 60 ms é revelação, e revelação é `13-animacao.md`. Veio da família 4 — ver 5.3 |
 | `schedule-card` | `.nds-card` com o interruptor no cabeçalho e `.nds-item-group` de `agent-status` embaixo. `.nds-card-header` leva o nome em `.nds-card-title` `.nds-truncate` e a cadência em `.nds-card-description`, com o `switch` em `.nds-card-action` — a grade já abre a segunda coluna com `:has(> .nds-card-action)` e a segunda linha com `:has(> .nds-card-description)`, e a ação já ocupa as duas linhas com `justify-self: end`, sem regra nova. A linha da próxima execução é `.nds-item` `data-size="sm"` com o rótulo em `.nds-item-title` e o instante em `.nds-badge` com `.nds-font-mono`, chegando já escrito como texto — a decisão da contagem do estado da ligação, que é onde esta família já resolveu tempo FUTURO; pausado, o instante dá lugar à PALAVRA, e não ao esmaecimento, que a regra 4 da §8 recusa. O ícone de relógio entra em `.nds-badge > svg`, que já o dimensiona. O histórico é `.nds-item-group` de `.nds-item` `.nds-item-outline` `data-size="sm"`, com o carimbo em `.nds-item-title` e `agent-status` em `.nds-item-actions` — `RunStatus` inteiro no lugar do booleano da fonte, que separa o que falhou do que alguém interrompeu. Sem execução nenhuma, `empty.css`. O que a cadência agenda e o que pausar faz é produto (§7), e a própria fonte já o põe fora da peça. Veio da família 2 — ver 5.3 |
+| `reviewable-diff` | `.nds-card` com um `code-block` por trecho. `.nds-card-header` leva o nome do arquivo em `.nds-card-title` com `.nds-font-mono` e `.nds-truncate`, e a contagem do que já foi decidido em `.nds-badge` com `.nds-font-mono` dentro de `.nds-card-action`, o encaixe que a grade do cabeçalho já abre com `:has(> .nds-card-action)`; `.nds-card-content` recebe `.nds-stack[data-spacing="sm"]` de um `.nds-code-block-root` por trecho, com o intervalo em `.nds-code-block-title` monoespaçado — cadeia que a fonte imprime e nunca reparte, logo nenhum `@@` a interpretar — e, em `.nds-code-block-actions`, os dois controles enquanto o trecho está pendente ou o `.nds-badge` do que foi decidido depois, que é a fila de `actions?: HTMLElement[]` da §2 e não um estado; `.nds-card-footer` leva o que falta decidir e o botão de aplicar. As linhas usam a espécie por linha que `code-diff` já nomeou nesta tabela, dentro de `.nds-code-block-scroll` — que a fonte desta entrada não tem, e é onde a composição fica mais fina que ela. O trecho descartado **não esmaece**: opacidade sozinha separando duas decisões é a codificação que a regra 4 da §8 recusa e que a décima segunda já mediu, e a palavra já está ao lado. A contagem do cabeçalho e o portão do rodapé são derivados de `hunks`, como a própria fonte declara — agregado que é leitura rende função, não desenho. Nenhuma classe nova e nenhuma nomeada como faltando: as opções que `code-runner` e `code-diff` pediam ao `code-block` — `actions`, `lineKinds`, a palavra na calha e o nome da região que rola — já estão de pé. Veio da família 4 — ver 5.3 |
 | `logos` | **fora** — marca registrada. Vira espaço para `HTMLElement` |
 
-### 5.2 As sete famílias novas (65)
+### 5.2 As sete famílias novas (64)
 
 Construir **por família**, não por slug. Dentro de uma família as peças dividem
 geometria, estados, tokens e — o que mais importa — a folha. Construir slug a
@@ -298,7 +299,7 @@ slug produz 83 folhas e nenhum sistema.
 | **1. Composer** | `composer.css` | `composer`, `composer-attachments`, `composer-context`, `composer-model-picker`, `composer-trigger-popover` (absorve `composer-mentions` e `composer-slash-commands` — ver 5.3), `composer-voice`, `quote`, `draft-restore`, `message-queue` (11 no catálogo — `edit-message` e `mobile-composer` saíram para a 5.1, ver 5.3 —, **9 componentes**, e a família está FECHADA) | Uma superfície de entrada com um trilho de controles. Tudo pende de `textarea` + `popover` ancorado ao cursor. Primitivo: `composer-trigger.ts` |
 | **2. Execução do agente** | `agent-run.css` | `agent-status` (absorve `stopped-run`, que é `RunStatus` `stopped` — ver 5.3), `thinking-indicator`, `agent-plan` (absorve `todo-list` — mesmo desenho, mesmos estados, mesmo vocabulário), `job-progress`, `tool-group` (absorve `tool-error`, que é `ToolCallState` `failed`), `terminal-block`, `computer-use`, `connection-state`, `checkpoint-history`, `approval-card` (absorve `permission-grant` — mesma API, ver 5.3) (14 no catálogo — `agent-card`, `tool-timeline`, `code-runner`, `guardrail-notice`, `subagent-list`, `agent-handoff`, `background-inbox`, `elicitation-form` e `schedule-card` saíram para a 5.1, ver 5.3 —, **10 componentes** até aqui) | Todas respondem "o que está acontecendo, há quanto tempo, e o que eu posso fazer a respeito". Estados de `RunStatus` e `ToolCallState`; base em `collapsible`, `progress`, `badge` |
 | **3. Evidência e procedência** | `evidencia.css` | `inline-citation`, `web-search`, `research-report`, `memory-chips`, `speaker-identity`, `mcp-server-panel` (6 no catálogo — `document-reference`, `retrieval-chunks` e `confidence-marker` saíram para a 5.1, ver 5.3 —, **6 componentes**) | Em que a resposta se apoia. Todas carregam `Citation` — e a entrada que não carregava foi justamente a que colapsou na vigésima primeira. Base em `hover-card`, `popover`, `badge` |
-| **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `reviewable-diff`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (19 no catálogo — `code-diff` saiu para a 5.1, ver 5.3 —, **19 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. Primitivo: `diff-hunks.ts`, cuja justificativa a vigésima segunda correção reduziu a `reviewable-diff` sozinha — ver §3.2. **Atenção às dependências — §6** |
+| **4. Resposta estruturada** | `resposta-estruturada.css` | `spec-sheet`, `comparison-card`, `score-breakdown`, `recommendation-card`, `timeline`, `file-tree`, `flow-graph`, `trace-waterfall`, `activity-graph`, `heat-graph`, `image-generation`, `diagram`, `mermaid-diagram`, `math-block`, `map-answer`, `web-preview`, `artifact-card`, `canvas-split` (18 no catálogo — `code-diff` e `reviewable-diff` saíram para a 5.1, ver 5.3 —, **18 componentes**) | A forma com que o modelo responde quando não é texto. Base em `card`, `table`, `chart`. **Primitivo nenhum**: `diff-hunks.ts` era o previsto, e a vigésima quarta correção o dispensou depois de medir as duas entradas que o justificavam — ver §3.2. **Atenção às dependências — §6** |
 | **5. Medição** | `medicao.css` | `context-display`, `context-breakdown`, `cost-meter`, `message-timing`, `quota-banner` (5 — `reasoning-effort` saiu para a 5.1, ver 5.3) | O mesmo número em formas diferentes — anel, barra, texto, repartição — e, sem teto, só texto. Primitivo: `token-budget.ts`, para as que têm denominador; `message-timing` mede TEMPO, não tem teto e por isso não lê conta nenhuma — a triagem dele foi refeita ao construir, confirmou o slug, e o porquê está no bloco "Tempo de uma resposta" da folha. O eixo é o que se MEDE: quem ESCOLHE quanto esforço aplicar não mede nada, e por isso não é desta família |
 | **6. Navegação da conversa** | `conversa-nav.css` | `message-branches`, `regenerate-menu`, `conversation-search`, `thread-search`, `thread-list`, `thread-list-sidebar`, `shared-conversation`, `onboarding` (8) | Achar e trocar de lugar sem perder o seu. Base em `sidebar`, `command`, `pagination`, `stepper.css` |
 | **7. Voz** | `voz.css` | `orb`, `voice-conversation` (2 no catálogo — `read-aloud` saiu para a 5.1, ver 5.3 —, **2 componentes**) | Áudio ao vivo, com estado de conexão e legenda. Base em `media-player`. **Sensível a `prefers-reduced-motion`** |
@@ -3321,9 +3322,235 @@ saíram das tabelas relidas depois de a árvore assentar. A conta que esta corre
 tinha escrito antes disso dizia 20 na 4, e já estava velha quando foi escrita.
 **Contador compartilhado não se lê duas vezes: lê-se uma, depois.**
 
+**Vigésima quarta correção, e a décima oitava que atravessa de 5.2 para 5.1**:
+`reviewable-diff` é `.nds-card` com um `code-block` por trecho — e as duas
+contagens mudam junto, 65 → 64 e 55 → 56. É a **segunda leitura da família 4**, e
+ela fecha a dupla do diferencial: as duas entradas do catálogo que mostravam
+mudança de arquivo eram composição, e `resposta-estruturada.css` **continua por
+fundar**. A vigésima segunda abriu a maior das sete famílias sem folha; esta a
+deixa do mesmo jeito, e isso é resultado, não pendência — folha que nascesse em
+volta de duas peças que não são peça nasceria em volta de nada.
+
+O que a fonte descreve, lida inteira e pelos TIPOS antes da anatomia:
+`HunkDecision = "pending" | "kept" | "discarded"`; `DiffLine { kind: "context" |
+"added" | "removed"; text: string }` — o MESMO tipo da irmã, palavra por palavra;
+`DiffHunk { id, range, decision, lines }`; e no componente `filename`, `hunks`,
+`onKeep(id)`, `onDiscard(id)`, `onApply()` e `className`. A anatomia são TRÊS
+filhos: um cabeçalho com o nome do arquivo e "N de M mantidos"; um corpo com um
+bloco por trecho — o intervalo, e os dois controles enquanto está pendente ou o
+rótulo da decisão depois dela; e um rodapé com "N falta decidir" ou "tudo
+revisado" e um botão de aplicar desabilitado enquanto houver pendente.
+
+**A vigésima segunda deixou escrito o que faria esta entrada sobreviver**, e são
+quatro gatilhos nomeados lá. Procurei os quatro na página antes de aplicar teste
+nenhum, porque qualquer um deles viraria a leitura sozinho:
+
+- **Trecho dobrável, com o intervalo no resumo?** Não. Não há `open`, não há
+  `onOpenChange`, não há disclosure nenhum — o intervalo é uma linha de texto
+  acima das linhas e o bloco está sempre aberto. É a regra 5 da §8 sem nada para
+  reger.
+- **Numeração, ou duas numerações que avancem em ritmos diferentes?** Não.
+  `DiffLine` é `{ kind, text }` e a anatomia não tem calha. Era a ÚNICA geometria
+  que esta base não teria como desenhar, e é a mesma ausência que a irmã já
+  tinha.
+- **Lado a lado?** Não. Unificado, e a fonte o diz na primeira linha.
+- **Estado por linha que uma etiqueta de espécie não modele?** Não. O estado está
+  no BLOCO, não na linha — e é por isso que ele merece leitura própria, no
+  segundo teste.
+
+E há uma quinta ausência, que a irmã não tinha e que inverte o sinal de
+superfície compartilhada: **a fonte não declara região de rolagem nenhuma.**
+`code-diff` lê `paper` MAIS `codeScroll`/`codeSurface` de `surfaces.tsx`; esta lê
+`paper` e `inkButton`, e nada mais. Onde a irmã declarava compartilhada a caixa
+que rola, esta não tem caixa que role, e a linha comprida não tem para onde ir. É
+o traço em que a composição fica **mais fina que a fonte**, como na oitava, na
+décima primeira, na décima quarta, na décima quinta, na décima sétima e na
+vigésima: `.nds-code-block-scroll` dá à revisão o que a origem não deu à revisão
+dela.
+
+Os três testes, todos negativos:
+
+- **Desenho, não.** Montada inteira, a revisão não deixa buraco — e a própria
+  fonte declara compartilhado o que usa, `paper` na superfície e `inkButton` no
+  botão de aplicar, os dois em `surfaces.tsx`, que é a leitura da quinta, da
+  sétima, da décima, da décima terceira, da vigésima e da vigésima segunda.
+
+  Os três filhos da anatomia são os três filhos de `.nds-card`, conferidos na
+  folha e não presumidos: `.nds-card-header` leva o nome do arquivo em
+  `.nds-card-title` com `.nds-font-mono` e `.nds-truncate` — caminho de arquivo é
+  o caso para o qual a regra do truncamento foi escrita — e a contagem em
+  `.nds-badge` com `.nds-font-mono` dentro de `.nds-card-action`, o encaixe que a
+  grade já abre com `:has(> .nds-card-action)`; `.nds-card-content` recebe
+  `.nds-stack[data-spacing="sm"]` de um `code-block` por trecho; e
+  `.nds-card-footer` leva a frase do que falta e o botão de aplicar.
+
+  Cada trecho é `.nds-code-block-root` inteiro, e o encaixe é exato:
+  `.nds-code-block-title` monoespaçado recebe o intervalo — que chega como CADEIA
+  e que a fonte nunca reparte —, e `.nds-code-block-actions`, a fila que o
+  cabeçalho já encosta no fim com `margin-inline-start: auto`, recebe os dois
+  controles enquanto está pendente e o distintivo do que foi decidido depois. As
+  linhas são `.nds-code-block-line` com a espécie que a vigésima segunda já
+  nomeou, dentro de `.nds-code-block-scroll`, `.nds-code-block-pre` com
+  `lang="en"` e `.nds-code-block-text` com `white-space: pre`. Nenhuma classe
+  nova, e nenhuma nomeada como faltando além das que a irmã já nomeou.
+
+  **A troca dos controles pelo rótulo é o contrato da §2, não um estado.** "Ação
+  é espaço, não política: `actions?: HTMLElement[]`" — quem monta passa dois
+  botões ou passa um distintivo, e o bloco desenha o que recebe. É o mesmo
+  movimento que o cartão de autorização já faz com os controles dele, e o
+  componente nunca precisa saber qual dos dois está lá.
+
+  Um traço a composição não reproduz, por decisão já escrita: as linhas do trecho
+  descartado ESMAECEM e continuam visíveis. Opacidade sozinha separando duas
+  decisões é a codificação que a regra 4 da §8 recusa, e a décima segunda já
+  mediu o custo dela em `agent-handoff` — dois desenhos que se separam só por cor
+  e opacidade não são dois desenhos. O que entra no lugar é a PALAVRA, que a
+  própria fonte já põe ali ao lado.
+- **Estado, não — e é aqui que a entrada quase vira peça, então a medida vale
+  inteira.** `HunkDecision` tem três palavras. `pending` é `ToolCallState`
+  `pending` sem folga nenhuma: é o estado que espera por uma PESSOA, que é a
+  razão declarada de ele existir separado de `running` (§3.1) e o que
+  `waitsForPerson` já responde. As outras duas não são estados da peça: são o que
+  acontece DEPOIS de respondê-la, e a §7 as põe do lado de fora por escrito.
+
+  É a mesma forma da vigésima correção, palavra por palavra: `request | accepted
+  | declined` tinha uma do vocabulário e duas do produto, e colapsou por isso.
+  Aqui a diferença que se poderia alegar — que o assentado desta é LIDO pela peça
+  enquanto ela continua de pé, em vez de encerrá-la — foi medida e não segura: o
+  que o assentado alimenta é uma CONTAGEM, e a fonte diz dela que é sempre
+  derivada de `hunks` e nunca guardada em separado. **Agregado que é leitura
+  rende função, não desenho** — a décima sétima já escreveu essa frase, e lá ela
+  reprovava a entrada porque a conta encolhia junto com o vocabulário; aqui a
+  conta está certa, e continua sendo uma função.
+
+  E `kept` contra `discarded`, medido pelo critério da §3.1 — um estado só existe
+  se muda o desenho: tirado o esmaecimento que a regra 4 recusa, os dois se
+  separam por uma palavra dentro do mesmo `.nds-badge`. **Palavra diferente no
+  mesmo distintivo é conteúdo.** O que muda desenho de verdade é pendente contra
+  decidido — dois botões ou um distintivo —, e isso é a fila de `actions` que a
+  §2 dá à família inteira.
+
+  Vale reparar em quem GUARDA a decisão, porque a fonte é explícita nas duas
+  faixas: `useState<Record<string, HunkDecision>>` mora em quem CONSOME, nas
+  duas. Isso sozinho não decide nada — nesta família todo estado entra por prop, e
+  `agent-status` recebe `RunStatus` do mesmo jeito —, mas fecha a leitura: a peça
+  não é dona da decisão, não a produz e não a guarda; recebe o que alguém decidiu
+  e o repassa.
+- **Vocabulário, não, e a ausência é a notícia pela terceira vez** (a décima
+  terceira e a vigésima segunda foram as outras duas). `DiffLine` é o tipo da
+  irmã, idêntico, e a vigésima segunda já o transformou em opção do `code-block`.
+  Tirado `decision`, que é o item acima, `DiffHunk` fica `{ id, range, lines }`:
+  um endereço, um rótulo em cadeia e uma lista. É exatamente o que a quinta
+  correção recusou chamar de vocabulário em `AgentSkill` — "uma linha de lista
+  com nome próprio" —, e `range` é o caso mais claro disso, porque a fonte o
+  imprime e nunca o reparte. Nada que `chat-protocol.ts` precise aprender.
+
+E o teste da família, que é o quarto: ela responde ao eixo — a forma com que o
+modelo responde quando não é texto — e a base que usa é `card`, que é uma das
+três que a 5.2 declara para a família 4. É o inverso exato do que a vigésima
+segunda leu na irmã, e por isso vale dizer que **não é ele que decide aqui
+tampouco**: os três já decidiram, e responder ao eixo não salva quem não tem
+nenhum dos três, como `code-runner` já mostrou na sétima.
+
+**O que fica nomeado como faltando: NADA — e essa é a segunda notícia desta
+leitura.** A vigésima segunda nomeou três coisas (`actions?: HTMLElement[]` no
+cabeçalho, a espécie por linha ao lado de `highlightLines`, e o gutter que nesse
+modo carrega a palavra em vez de ser `aria-hidden`) mais um quarto item que era
+defeito do `code-block` construído e não da triagem — `.nds-code-block-scroll`
+com `tabindex="0"` sem nome nem papel, regra 6 da §8. **As quatro estão de pé na
+árvore**, medidas em `CodeBlockOptions` no momento de compor e não lidas desta
+guideline: `lineKinds`, `actions`, `addedLabel`/`removedLabel` e `regionLabel`,
+com `role="group"` na região que rola. Foi outra porta que as construiu enquanto
+esta lia a fonte, o que é o motivo pelo qual a §11 manda ler o estado do
+componente na hora de compor: uma triagem que tivesse copiado a lista de
+pendências da irmã teria nomeado como faltando quatro coisas que existem.
+
+E isso ENDURECE o desfecho em vez de o enfraquecer. O buraco de opção era a
+última coisa que separava a composição de estar pronta, e o teste do desenho da
+5.1 é literalmente "montada inteira, deixa buraco?". Não deixa nenhum. A revisão
+de cinco trechos, que sem `regionLabel` seriam cinco paradas de tabulação
+anônimas, tem cinco regiões nomeadas.
+
+**As três heranças que a vigésima segunda deixou para esta triagem, respondidas:**
+
+1. **`diff-hunks.ts` não nasce.** A §3.2 lhe dava duas tarefas. A primeira —
+   partir um diff unificado em blocos — não é de ninguém: as DUAS entradas
+   recebem o material já partido, `code-diff` em `lines` e esta em `hunks`, e
+   quem parte é quem monta. A segunda — o estado por bloco — não é desenho: é
+   `pending` mais o que a §7 tira, e o que resta dele é a contagem derivada, do
+   tamanho de `isRunFinished`, cuja casa é `chat-protocol.ts` no dia em que uma
+   peça precisar dela, que é o que a décima sétima já fixou para a contagem do
+   `background-inbox`. **Primitivo previsto que perde as duas tarefas não nasce
+   menor: não nasce.** A linha da §3.2 foi corrigida para dizer isso.
+2. **`DiffLine` não sobrevive como forma, e a espécie mora em
+   `docs/shared/primitives/code-block-lines.ts`** — módulo folha ao lado de
+   `code-highlight.ts`, com `CodeLineKind` e o mapa de espécie para marca
+   visível e para palavra falada. A parte desta decisão que era desta triagem é a
+   NEGATIVA, e ela se mantém: não em `chat-protocol.ts`, que é o vocabulário da
+   CONVERSA e onde espécie de linha de código não descreve nem mensagem, nem
+   parte, nem chamada de ferramenta; e não no primitivo da família 4, que pelo
+   item 1 não existe. A positiva foi MEDIDA na árvore, não decidida aqui: a porta
+   do `code-block` a construiu enquanto esta lia a fonte, e o lugar dela é melhor
+   do que o que esta leitura escreveria — o módulo carrega mais do que um tipo,
+   carrega o par marca/palavra, e isso é decisão que rende cinco `if`, que é o
+   critério da §3.2. Dentro de `code-highlight.ts`, que é tokenizador, o mapa não
+   teria o que fazer.
+
+   E a FORMA confirma o que esta leitura previu por outro caminho: o construtor
+   recebe `code: string` mais `lineKinds`, uma lista paralela indexada por linha,
+   como já recebe `code` mais `highlightLines`. **O par `{ kind, text }` da fonte
+   não sobrevive em stack nenhuma**, porque quem já tem o código inteiro numa
+   cadeia não o reparte para depois juntar de novo.
+3. **`TimelineStat` não tem casa, e agora está medido dos dois lados.**
+   Conferido na fonte DESTA entrada, que era a metade que faltava: o cabeçalho é
+   o nome do arquivo mais "N de M mantidos", e não há contador de adição nem de
+   remoção em lugar nenhum da peça. A previsão da vigésima segunda se confirma, e
+   quem deu desenho ao tipo continua sendo a sexta correção — `.nds-cluster` de
+   `.nds-badge`, na 5.1, na linha do `tool-timeline`.
+
+**Reversível**, como as outras vinte e três: se ao construir `file-tree`,
+`trace-waterfall` ou qualquer outra da família 4 aparecer revisão de mudança com
+desenho, estado ou vocabulário próprios — trecho dobrável, numeração, lado a
+lado, uma rolagem horizontal ÚNICA que atravesse os trechos e os mantenha no
+mesmo deslocamento, ou um assentado que se desenhe de outro jeito que não uma
+palavra —, `reviewable-diff` desdobra de volta para a 5.2, com o motivo. E há um
+segundo gatilho, deste lado: se a fila de N blocos numa mesma revisão pedir regra
+que não seja de bloco — cabeçalho pegajoso por trecho, uma calha comum, uma
+segunda coluna —, ela volta a ser peça, e volta com `resposta-estruturada.css`
+ainda por fundar.
+
+**E `code-diff` NÃO desdobra.** A cláusula da vigésima segunda pedia que esta
+leitura procurasse quatro coisas na irmã, e as quatro estão respondidas acima:
+não há numeração em duas colunas, não há lado a lado, não há trecho dobrável com
+intervalo no resumo, e não há estado por linha que uma etiqueta de espécie não
+modele. O segundo gatilho daquela correção também fica de pé: as três tintas
+continuam cabendo em regra por linha, e o cabeçalho de que esta entrada precisa é
+o do `card`, não um cabeçalho próprio do diferencial.
+
+**O que esta leitura NÃO decide**: nenhuma das outras dezoito da família 4 foi
+triada aqui. Quem abrir a próxima funda `resposta-estruturada.css` — e agora sem
+as duas entradas de diferencial dentro, o que muda o eixo do que a folha vai ter
+de reger: as duas que saíram puxavam a família para código, e as dezoito que
+ficam não são código.
+
+Contagens, somadas família a família e lidas das TABELAS, não dos cabeçalhos: 1
+tem 11, 2 tem 14, 3 tem 6, 4 tem 18, 5 tem 5, 6 tem 8 e 7 tem 2 — **64** na 5.2.
+A 5.1 vai a **56** (54 linhas contadas no arquivo, e duas delas carregam duas
+entradas). Somam 120. A família 4 fica com **18 componentes**, e as sete somam
+58.
+
+E o registro de método vale uma quarta vez, pelo avesso das três anteriores: a
+árvore estava ASSENTADA quando esta contagem foi feita — a vigésima terceira
+tinha acabado de ser commitada, e as tabelas foram recontadas depois disso, linha
+a linha. Foi assim que o número de partida desta correção ficou 65 e não 66: o
+briefing que a pediu trazia 66, que era a conta de antes da vigésima terceira, e
+uma correção que confiasse nele teria escrito 65 no fim. **Contador
+compartilhado não se herda de quem pede o trabalho: lê-se do arquivo, depois.**
+
+
 ### O sinal mais barato de que uma entrada vai colapsar
 
-Apareceu onze vezes: **nove** como achatamento, sempre igual, e **três** pelo
+Apareceu doze vezes: **dez** como achatamento, sempre igual, e **três** pelo
 avesso — `mobile-composer`, `read-aloud` e `schedule-card`, que declara as duas
 formas de uma vez e por isso conta nas duas; as duas primeiras são as que fecham
 a sub-regra. Por isso vira critério:
@@ -3340,9 +3567,10 @@ a sub-regra. Por isso vira critério:
 | `retrieval-chunks` | `searching: boolean` — e a faixa de runtime da própria fonte declara quatro palavras | `idle`, `stopped`, `failed` |
 | `elicitation-form` | `state = request\|accepted\|declined` — e só `request` é do vocabulário | `running`, `failed` |
 | `schedule-card` | `ok: boolean` por execução passada — e `enabled: boolean` ao lado, que é o do `switch` | `idle`, `running`, `stopped` |
+| `reviewable-diff` | `HunkDecision = pending\|kept\|discarded` — e só `pending` é do vocabulário | `running`, `failed` |
 
-Nas nove, o achatamento não é economia — é sinal de que a entrada foi
-desenhada para uma tela só, sem o vocabulário que a família já tem. E as nove
+Nas dez, o achatamento não é economia — é sinal de que a entrada foi
+desenhada para uma tela só, sem o vocabulário que a família já tem. E as dez
 colapsaram pelos testes normais; o booleano só chegou antes.
 
 **A quarta é o limite da forma**, medida na décima primeira correção, e vale
@@ -3568,6 +3796,20 @@ junto, que é a árvore inteira do primitivo. **Quando as duas formas aparecem n
 mesma entrada, elas não se somam: dividem o campo** — um booleano fica aquém do
 vocabulário, o outro é de outra peça, e não sobra nenhum que seja da entrada. Ao
 ler os tipos, não pare no primeiro booleano: conte de quem é cada um.
+
+**Décima segunda aparição, e a nona que é achatamento, medida na vigésima quarta
+correção**: `reviewable-diff` declara `pending | kept | discarded`, e é a
+repetição exata da décima — uma palavra do vocabulário e duas do produto, com
+`running` e `failed` de fora. O que ela acrescenta ao instrumento é o lugar onde
+a diferença podia estar e não estava. Na décima o assentado SUBSTITUÍA a peça: o
+rodapé inteiro era trocado por uma frase e a pergunta acabava ali. Aqui não —
+aqui as decisões convivem na mesma tela, a peça continua de pé com umas
+respondidas e outras não, e o assentado é lido por ela. Parecia bastante para o
+achatamento não valer, e não é: **o que a peça faz com o assentado é uma CONTA**,
+e a própria fonte declara que ela é derivada e nunca guardada. Ao ler uma união
+em que só a primeira palavra é do vocabulário, pergunte o que a peça faz com as
+outras — se troca desenho por elas, é a §7; se soma, é função; peça não é nenhuma
+das duas.
 
 **Como usar**: ao ler a fonte, olhe os tipos ANTES da anatomia. Um booleano de
 estado, uma união com uma palavra a menos que `RunStatus`/`ToolCallState`, ou um
