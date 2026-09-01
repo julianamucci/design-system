@@ -7,9 +7,12 @@
  *   <div class="nds-code-block-root" data-numbered="true">
  *     <div class="nds-code-block-header">
  *       <span class="nds-code-block-title">index.vue</span>
- *       <button class="nds-button nds-button-ghost nds-button-icon-sm">…</button>
+ *       <span class="nds-code-block-actions">
+ *         …ações de quem compõe…
+ *         <button class="nds-button nds-button-ghost nds-button-icon-sm">…</button>
+ *       </span>
  *     </div>
- *     <div class="nds-code-block-scroll">
+ *     <div class="nds-code-block-scroll" role="group" aria-label="Bloco de código" tabindex="0">
  *       <pre class="nds-code-block-pre"><code class="nds-code-block-code">
  *         <span class="nds-code-block-line" data-highlighted="true">
  *           <span class="nds-code-block-gutter" aria-hidden="true">1</span>
@@ -20,12 +23,25 @@
  *     <div class="nds-code-block-footer">Observação</div>
  *   </div>
  *
+ * No modo de espécie de linha a calha troca de conteúdo, e só ela:
+ *
+ *   <div class="nds-code-block-root" data-numbered="false" data-line-kinds="true">
+ *     …
+ *         <span class="nds-code-block-line" data-kind="added">
+ *           <span class="nds-code-block-gutter">+<span class="nds-sr-only">Linha adicionada</span></span>
+ *           <span class="nds-code-block-text">…</span>
+ *         </span>
+ *
  * NÃO confundir com `.nds-code-block` (sem sufixo), em code.css: aquela é a
  * utilitária simples de bloco monoespaçado, sem header/gutter. Esta é o
  * componente. As duas coexistem — a utilitária segue em uso nas docs pages.
  *
  * Tokens: --card, --muted, --border, --foreground, --muted-foreground,
  *         --primary, --info, --success, --warning, --destructive, --spacing-*
+ *
+ * `--success` e `--destructive` deixaram de ser só herança da folha: eles pintam
+ * as duas espécies de linha, com o mesmo alfa do destaque. Ver a medição no
+ * bloco de espécie, mais abaixo.
  */
 
 .nds-code-block-root {
@@ -40,6 +56,22 @@
    * fundo do gutter sem precisar de um segundo valor. */
   --code-block-highlight-bg: hsl(var(--primary) / 0.12);
   --code-block-highlight-accent: hsl(var(--primary));
+
+  /* ── Espécie de linha — adição e remoção ──────────────────────────────────
+   * Mesmo alfa do destaque, e pelo mesmo motivo: o par assenta sobre
+   * --code-block-bg e sobre o fundo do gutter sem precisar de um segundo valor.
+   * Token novo, nenhum: são --success e --destructive, que os 42 do tema já dão.
+   *
+   * Medido antes de escrever, nos três temas e nos dois modos, compondo o alfa
+   * sobre --muted e dividindo pelas ONZE cores de sintaxe mais o texto simples.
+   * Pior caso: 4.66:1 (tag sobre adição, default/escuro) e 4.73:1 (tag sobre
+   * remoção, mesmo tema) — o mesmo patamar do destaque, que mede 4.78:1 na pior
+   * combinação. Nos temas warm e cold o pior sobe para 5.35:1. Subir o alfa para
+   * 0.14 derruba o pior para 4.48:1 e reprova; é por isso que ele não sobe. */
+  --code-block-added-bg: hsl(var(--success) / 0.12);
+  --code-block-added-accent: hsl(var(--success));
+  --code-block-removed-bg: hsl(var(--destructive) / 0.12);
+  --code-block-removed-accent: hsl(var(--destructive));
 
   /* ── Cores de sintaxe ─────────────────────────────────────────────────────
    * Paleta própria, não derivada dos tokens semânticos. A primeira versão usava
@@ -194,12 +226,16 @@
   -webkit-user-select: none;
 }
 
-.nds-code-block-root[data-numbered="false"] .nds-code-block-gutter {
+/* `:not([data-line-kinds="true"])` porque a calha tem DOIS conteúdos possíveis.
+ * Sem numeração ela some — mas no modo de espécie ela deixa de carregar número
+ * e passa a carregar a marca `+`/`−`, que é informação e não decoração: escondê-la
+ * ali apagaria o único indicador não-cromático da distinção. */
+.nds-code-block-root[data-numbered="false"]:not([data-line-kinds="true"]) .nds-code-block-gutter {
   display: none;
 }
 
 /* Sem numeração o código precisa do respiro que o gutter dava. */
-.nds-code-block-root[data-numbered="false"] .nds-code-block-text {
+.nds-code-block-root[data-numbered="false"]:not([data-line-kinds="true"]) .nds-code-block-text {
   padding-inline-start: var(--spacing-4);
 }
 
@@ -219,6 +255,35 @@
 
 .nds-code-block-line[data-highlighted="true"] .nds-code-block-gutter {
   background-color: var(--code-block-highlight-bg);
+  color: hsl(var(--foreground) / 0.8);
+}
+
+/* ── Espécie de linha ───────────────────────────────────────────────────────
+ * DEPOIS do destaque de propósito, e a mesma especificidade: numa linha que seja
+ * as duas coisas, a espécie vence. Destaque é ênfase que quem monta escolheu;
+ * espécie é o que a linha É, e trocar de tinta mudaria o significado.
+ *
+ * Mesma forma do destaque — fundo mais barra de acento —, e não por simetria: a
+ * barra é o segundo indicador que a regra 1.4.1 pede, e ela também é o que
+ * distingue as duas espécies para quem não separa verde de vermelho. A marca na
+ * calha é o terceiro. */
+.nds-code-block-line[data-kind="added"] {
+  background-color: var(--code-block-added-bg);
+  box-shadow: inset 2px 0 0 0 var(--code-block-added-accent);
+}
+
+.nds-code-block-line[data-kind="added"] .nds-code-block-gutter {
+  background-color: var(--code-block-added-bg);
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.nds-code-block-line[data-kind="removed"] {
+  background-color: var(--code-block-removed-bg);
+  box-shadow: inset 2px 0 0 0 var(--code-block-removed-accent);
+}
+
+.nds-code-block-line[data-kind="removed"] .nds-code-block-gutter {
+  background-color: var(--code-block-removed-bg);
   color: hsl(var(--foreground) / 0.8);
 }
 

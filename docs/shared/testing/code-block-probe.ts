@@ -198,12 +198,53 @@ export function measureCodeBlock(wrapper: HTMLElement) {
       statusForaDoBotao: status && button ? !button.contains(status) : null,
       statusTexto: text(status),
       gutterAriaHidden: gutters.map((g) => g.getAttribute('aria-hidden')),
-      gutterNumeros: gutters.map((g) => g.textContent?.trim() ?? null),
+      // Só os nós de TEXTO diretos: no modo de espécie a calha carrega também
+      // um `.nds-sr-only`, e `textContent` colaria a palavra na marca — o campo
+      // passaria a medir duas coisas com o nome de uma.
+      gutterNumeros: gutters.map(
+        (g) =>
+          [...g.childNodes]
+            .filter((n) => n.nodeType === 3)
+            .map((n) => n.textContent ?? '')
+            .join('')
+            .trim() || null,
+      ),
+      /**
+       * Espécie por linha, e o que a calha fala em cada uma.
+       *
+       * Vem em par de propósito: a marca `+`/`−` sozinha é indicador visual, e a
+       * palavra sozinha não chega a quem enxerga sem separar as cores. A regra 4
+       * da §8 pede os dois, e o exemplo que ela dá é este.
+       */
+      especiesDeLinha: lines.map((l) => l.getAttribute('data-kind')),
+      gutterPalavras: gutters.map((g) => g.querySelector('.nds-sr-only')?.textContent?.trim() ?? null),
     },
     rolagem: {
       /** Um eixo, um dono: mais de uma entrada aqui é contêiner aninhado rolando. */
       donos: scroll ? donosDeEixo(scroll, root) : [],
       tabIndexDoScroll: scroll?.hasAttribute('tabindex') ? scroll.tabIndex : null,
+      /**
+       * Papel e nome da região que rola.
+       *
+       * A regra 6 da §8 da guideline 17 pede os DOIS junto com o `tabindex`, e
+       * a falta do nome não acusa em portão nenhum: o axe cobra
+       * `scrollable-region-focusable` quando falta o foco, e não cobra nada
+       * quando falta o nome. Sem estes dois campos, a sonda mediria a região
+       * focável e chamaria de completa o que estava pela metade.
+       */
+      papelDoScroll: scroll?.getAttribute('role') ?? null,
+      // `accessibleName` NÃO serve aqui: o fallback dela é o texto do elemento,
+      // e o texto desta região é o trecho de código inteiro — a região anônima
+      // apareceria "nomeada" com o próprio código.
+      nomeDoScroll: (() => {
+        if (!scroll) return null;
+        const labelled = scroll.getAttribute('aria-labelledby');
+        if (labelled) {
+          const target = scroll.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+          if (target?.textContent?.trim()) return target.textContent.trim();
+        }
+        return scroll.getAttribute('aria-label')?.trim() || null;
+      })(),
       /** Focável de fato, não só por atributo. */
       aceitaFocus: (() => {
         if (!scroll) return null;

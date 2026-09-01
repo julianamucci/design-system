@@ -203,9 +203,14 @@ export function CodeBlockDocs() {
   title?: string;
   showLineNumbers?: boolean;
   highlightLines?: string | number | Array<string | number>;
+  lineKinds?: Array<"context" | "added" | "removed">;
+  actions?: React.ReactNode;
   footer?: React.ReactNode;
   copyLabel?: string;
   copiedLabel?: string;
+  addedLabel?: string;
+  removedLabel?: string;
+  regionLabel?: string;
 }`;
 
   return (
@@ -686,9 +691,14 @@ export function CodeBlockDocs() {
               "title",
               "showLineNumbers",
               "highlightLines",
+              "lineKinds",
+              "actions",
               "footer",
               "copyLabel",
               "copiedLabel",
+              "addedLabel",
+              "removedLabel",
+              "regionLabel",
               "className",
             ].map((key) => ({
               name: tContent(`props.table.${key}.name`),
@@ -714,7 +724,10 @@ export function CodeBlockDocs() {
           description: tContent("tokens.table.part"),
         }}
         items={[
-          ...["bg", "border", "headerBg", "highlightBg", "highlightAccent", "maxBlockSize"].map((key) => ({
+          ...[
+            "bg", "border", "headerBg", "highlightBg", "highlightAccent",
+            "addedBg", "addedAccent", "removedBg", "removedAccent", "maxBlockSize",
+          ].map((key) => ({
             token: tContent(`tokens.table.${key}.token`),
             value: tContent("tokens.surfaceTitle"),
             description: tContent(`tokens.table.${key}.part`),

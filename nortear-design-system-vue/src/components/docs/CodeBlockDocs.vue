@@ -35,6 +35,10 @@ const overrides: TranslationOverrides = {
   '*': {
     'props.table.className.name': 'class',
     'props.table.footer.type': 'string | slot',
+    // Divergência de API de framework, registrada e não "alinhada": aqui os
+    // controles extras do cabeçalho não são prop — são um slot nomeado, que é a
+    // forma idiomática do Vue para o mesmo encaixe.
+    'props.table.actions.type': 'slot',
   },
 };
 
@@ -45,13 +49,21 @@ const INTERFACE_CODE = `export interface CodeBlockProps
   title?: string;
   showLineNumbers?: boolean;
   highlightLines?: string | number | Array<string | number>;
+  lineKinds?: Array<'context' | 'added' | 'removed'>;
   copyLabel?: string;
   copiedLabel?: string;
+  addedLabel?: string;
+  removedLabel?: string;
+  regionLabel?: string;
   class?: HTMLAttributes['class'];
 }
 
 // O rodapé é um slot nomeado, não uma prop:
-// <CodeBlock ...><template #footer>Observação</template></CodeBlock>`;
+// <CodeBlock ...><template #footer>Observação</template></CodeBlock>
+//
+// As ações extras do cabeçalho também são um slot nomeado, e entram antes
+// da ação de copiar:
+// <CodeBlock ...><template #actions><Button …/></template></CodeBlock>`;
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 // locale vem SEMPRE de useTranslation — nunca de Pinia/useLocaleStore.
@@ -296,7 +308,8 @@ const propCols = computed(() => ({
 
 const PROP_KEYS = [
   'code', 'language', 'title', 'showLineNumbers', 'highlightLines',
-  'footer', 'copyLabel', 'copiedLabel', 'className',
+  'lineKinds', 'actions', 'footer', 'copyLabel', 'copiedLabel',
+  'addedLabel', 'removedLabel', 'regionLabel', 'className',
 ] as const;
 
 const propItems = computed(() => PROP_KEYS.map(key => ({
@@ -307,7 +320,10 @@ const propItems = computed(() => PROP_KEYS.map(key => ({
   description: tContent(`props.table.${key}.description`),
 })));
 
-const SURFACE_TOKEN_KEYS = ['bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent', 'maxBlockSize'] as const;
+const SURFACE_TOKEN_KEYS = [
+  'bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent',
+  'addedBg', 'addedAccent', 'removedBg', 'removedAccent', 'maxBlockSize',
+] as const;
 const SYNTAX_TOKEN_KEYS = [
   'comment', 'string', 'number', 'keyword', 'builtin', 'function',
   'tag', 'attr', 'property', 'operator', 'punctuation', 'plain',

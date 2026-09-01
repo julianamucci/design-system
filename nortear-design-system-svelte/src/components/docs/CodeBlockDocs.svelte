@@ -24,9 +24,14 @@
   title?: string;
   showLineNumbers?: boolean;
   highlightLines?: string | number | Array<string | number>;
+  lineKinds?: Array<'context' | 'added' | 'removed'>;
+  actions?: Snippet;
   footer?: string | Snippet;
   copyLabel?: string;
   copiedLabel?: string;
+  addedLabel?: string;
+  removedLabel?: string;
+  regionLabel?: string;
   class?: string;
 }`;
 
@@ -45,6 +50,7 @@
     '*': {
       'props.table.className.name': 'class',
       'props.table.footer.type': 'string | Snippet',
+      'props.table.actions.type': 'Snippet',
     },
   });
 
@@ -182,7 +188,8 @@ render(items, total);`;
 
   const PROP_KEYS = [
     'code', 'language', 'title', 'showLineNumbers', 'highlightLines',
-    'footer', 'copyLabel', 'copiedLabel', 'className',
+    'lineKinds', 'actions', 'footer', 'copyLabel', 'copiedLabel',
+    'addedLabel', 'removedLabel', 'regionLabel', 'className',
   ];
 
   const propItems = $derived(
@@ -196,7 +203,10 @@ render(items, total);`;
   );
 
   const TOKEN_GROUPS: { titleKey: string; keys: string[] }[] = [
-    { titleKey: 'tokens.surfaceTitle', keys: ['bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent', 'maxBlockSize'] },
+    { titleKey: 'tokens.surfaceTitle', keys: [
+      'bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent',
+      'addedBg', 'addedAccent', 'removedBg', 'removedAccent', 'maxBlockSize',
+    ] },
     { titleKey: 'tokens.syntaxTitle', keys: ['comment', 'string', 'number', 'keyword', 'builtin', 'function', 'tag', 'attr', 'property', 'operator', 'punctuation', 'plain'] },
     { titleKey: 'tokens.inheritedTitle', keys: ['radius', 'mutedForeground', 'foreground', 'borderBase'] },
   ];

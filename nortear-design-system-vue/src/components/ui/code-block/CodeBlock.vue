@@ -16,6 +16,12 @@ import {
   resolveLanguage,
   type LineRangeInput,
 } from '@shared/primitives/code-highlight'
+import { LABELS_CODE_BLOCK_DEFAULT } from '@shared/primitives/code-block-labels'
+import {
+  codeLineMarks,
+  hasLineKinds,
+  type CodeLineKind,
+} from '@shared/primitives/code-block-lines'
 
 const props = withDefaults(defineProps<{
   /** Código a exibir. É exatamente o que o botão copiar coloca no clipboard. */
@@ -28,15 +34,44 @@ const props = withDefaults(defineProps<{
   showLineNumbers?: boolean
   /** Linhas destacadas: `[3, '5-7']` ou `'3, 5-7'`. */
   highlightLines?: LineRangeInput
+  /**
+   * Espécie de cada linha, indexada a partir da primeira.
+   *
+   * Ligada, a calha troca o número pela marca `+`/`−` e deixa de ser
+   * `aria-hidden`. Indexada por linha, e não por intervalo como
+   * `highlightLines`: destaque é decoração esparsa, espécie é classificação
+   * completa — ver `@shared/primitives/code-block-lines`.
+   */
+  lineKinds?: ReadonlyArray<CodeLineKind>
   /** Observações abaixo do código. Também aceita o slot `footer`. */
   footer?: string
   copyLabel?: string
   copiedLabel?: string
+  /**
+   * Palavra que o leitor recebe na calha de uma linha adicionada.
+   *
+   * Existe pelo mesmo motivo de `copyLabel`: é texto falado, e texto falado que
+   * quem consome não possa trocar decide o idioma do produto pelo componente.
+   */
+  addedLabel?: string
+  /** Palavra que o leitor recebe na calha de uma linha removida. */
+  removedLabel?: string
+  /**
+   * Nome acessível da região que rola.
+   *
+   * A região tem `tabindex="0"` porque quem navega por teclado precisa alcançar
+   * o código que passa da altura máxima; com nome ela deixa de ser uma parada
+   * anônima. Distinga quando houver mais de um bloco na mesma tela.
+   */
+  regionLabel?: string
   class?: HTMLAttributes['class']
 }>(), {
   showLineNumbers: true,
-  copyLabel: 'Copiar código',
-  copiedLabel: 'Copiado!',
+  copyLabel: LABELS_CODE_BLOCK_DEFAULT.copy,
+  copiedLabel: LABELS_CODE_BLOCK_DEFAULT.copied,
+  addedLabel: LABELS_CODE_BLOCK_DEFAULT.lineAdded,
+  removedLabel: LABELS_CODE_BLOCK_DEFAULT.lineRemoved,
+  regionLabel: LABELS_CODE_BLOCK_DEFAULT.region,
 })
 
 // A linguagem RESOLVIDA, não a recebida: `.css` e `css` são a mesma coisa, e um
@@ -45,6 +80,19 @@ const props = withDefaults(defineProps<{
 const resolvedLanguage = computed(() => resolveLanguage(props.language))
 const lines = computed(() => highlightCode(props.code, resolvedLanguage.value))
 const highlighted = computed(() => parseLineRanges(props.highlightLines))
+
+// Uma entrada por linha, ou vazio fora do modo de espécie. A calha só perde o
+// `aria-hidden` quando há entrada, e é a diferença que importa: número de linha
+// é redundante com a posição e sai da leitura; sinal de adição e remoção é o
+// único portador não-cromático da distinção e não é redundante com nada.
+const marks = computed(() =>
+  codeLineMarks(props.lineKinds, lines.value.length, {
+    ...LABELS_CODE_BLOCK_DEFAULT,
+    lineAdded: props.addedLabel,
+    lineRemoved: props.removedLabel,
+  }),
+)
+const kindMode = computed(() => hasLineKinds(props.lineKinds))
 
 const copied = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
@@ -68,6 +116,7 @@ async function handleCopy() {
   <div
     data-slot="code-block"
     :data-numbered="showLineNumbers ? 'true' : 'false'"
+    :data-line-kinds="kindMode ? 'true' : undefined"
     :data-language="resolvedLanguage"
     :class="cn('nds-code-block-root', props.class)"
   >
@@ -77,6 +126,13 @@ async function handleCopy() {
         class="nds-code-block-title"
       >{{ title }}</span>
       <span class="nds-code-block-actions">
+        <!-- Controles de quem compõe, ANTES do copiar, e a ordem é decisão de
+             acessibilidade: a fila é encostada no fim do cabeçalho, então
+             acrescentar do lado de dentro deixa o copiar ancorado no canto do
+             bloco em toda composição (WCAG 3.2.4, identificação consistente). O
+             rótulo "Copiado!" fica colado ao botão que ele descreve pelo mesmo
+             motivo, e a ordem de foco segue a visual. -->
+        <slot name="actions" />
         <span
           v-if="copied"
           class="nds-code-block-copy-label"
@@ -112,8 +168,19 @@ async function handleCopy() {
       aria-live="polite"
     >{{ copied ? copiedLabel : '' }}</span>
 
+    <!-- Região rolável alcançável por teclado (WCAG 2.1.1), COM papel e nome —
+         a regra 6 da §8 da guideline 17 pede os dois, e `tabindex` sozinho fazia
+         uma parada de foco que o leitor de tela não sabia nomear.
+
+         `group` e não `region`: `region` com nome vira landmark, e uma página de
+         documentação tem dezenas de blocos — seriam dezenas de entradas de mesmo
+         papel e mesmo nome na lista de regiões do leitor, que é o que o docblock
+         da `scroll-area` já avisa que torna a lista inútil. `group` nomeia sem
+         entrar em lista nenhuma. -->
     <div
       class="nds-code-block-scroll"
+      role="group"
+      :aria-label="regionLabel"
       tabindex="0"
     >
       <!-- lang="en": o conteúdo é código — identificador e palavra reservada.
@@ -124,7 +191,15 @@ async function handleCopy() {
         :key="i"
         class="nds-code-block-line"
         :data-highlighted="highlighted.has(i + 1) ? 'true' : undefined"
+        :data-kind="marks[i]?.kind"
       ><span
+        v-if="marks[i]"
+        class="nds-code-block-gutter"
+      >{{ marks[i].mark }}<span
+        v-if="marks[i].label"
+        class="nds-sr-only"
+      >{{ marks[i].label }}</span></span><span
+        v-else
         class="nds-code-block-gutter"
         aria-hidden="true"
       >{{ i + 1 }}</span><span class="nds-code-block-text"><template

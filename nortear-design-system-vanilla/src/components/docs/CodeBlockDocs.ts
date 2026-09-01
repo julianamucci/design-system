@@ -32,12 +32,14 @@ import {
 // Nesta stack o componente é uma factory, então três coisas mudam:
 //   · `className` chama-se `class`;
 //   · `footer` aceita `string | HTMLElement`, não um nó de framework;
+//   · `actions` recebe uma lista de elementos, não um nó de framework;
 //   · os blocos de estrutura e extensibilidade são chamadas de função.
 
 const overrides: TranslationOverrides = {
   '*': {
     'props.table.className.name': 'class',
     'props.table.footer.type': 'string | HTMLElement',
+    'props.table.actions.type': 'HTMLElement[]',
   },
 };
 
@@ -160,14 +162,18 @@ function languageSnippet(language: string): string {
 // ─── Tokens ───────────────────────────────────────────────────────────────────
 
 const TOKEN_GROUPS: Array<{ titleKey: string; keys: string[] }> = [
-  { titleKey: 'tokens.surfaceTitle', keys: ['bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent', 'maxBlockSize'] },
+  { titleKey: 'tokens.surfaceTitle', keys: [
+    'bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent',
+    'addedBg', 'addedAccent', 'removedBg', 'removedAccent', 'maxBlockSize',
+  ] },
   { titleKey: 'tokens.syntaxTitle',  keys: ['comment', 'string', 'number', 'keyword', 'builtin', 'function', 'tag', 'attr', 'property', 'operator', 'punctuation', 'plain'] },
   { titleKey: 'tokens.inheritedTitle', keys: ['radius', 'mutedForeground', 'foreground', 'borderBase'] },
 ];
 
 const PROP_KEYS = [
   'code', 'language', 'title', 'showLineNumbers', 'highlightLines',
-  'footer', 'copyLabel', 'copiedLabel', 'className',
+  'lineKinds', 'actions', 'footer', 'copyLabel', 'copiedLabel',
+  'addedLabel', 'removedLabel', 'regionLabel', 'className',
 ];
 
 const INTERFACE_CODE = `// createCodeBlock(options)
@@ -177,9 +183,14 @@ export interface CodeBlockOptions {
   title?: string;
   showLineNumbers?: boolean;
   highlightLines?: string | number | Array<string | number>;
+  lineKinds?: Array<'context' | 'added' | 'removed'>;
+  actions?: HTMLElement[];
   footer?: string | HTMLElement;
   copyLabel?: string;
   copiedLabel?: string;
+  addedLabel?: string;
+  removedLabel?: string;
+  regionLabel?: string;
   class?: string;
 }`;
 

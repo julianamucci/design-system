@@ -9,11 +9,14 @@ import {
   resolveLanguage,
   type LineRangeInput,
 } from '@shared/primitives/code-highlight';
+import { LABELS_CODE_BLOCK_DEFAULT } from '@shared/primitives/code-block-labels';
+import { codeLineMarks, hasLineKinds, type CodeLineKind } from '@shared/primitives/code-block-lines';
 
 // ─── CodeBlock ────────────────────────────────────────────────────────────────
 //
-// Bloco de código com header (título + copiar), scroll duplo, numeração e
-// destaque de linha. Estrutura e cores em docs/shared/styles/nds/code-block.css.
+// Bloco de código com header (título + fila de ações), scroll duplo nomeado,
+// numeração, destaque de linha e espécie de linha (contexto, adição, remoção).
+// Estrutura e cores em docs/shared/styles/nds/code-block.css.
 //
 // A tokenização vem de @shared/primitives/code-highlight (TS puro) e devolve
 // DADOS, não HTML: cada span vira um nó via createElement/textContent, então não
@@ -30,10 +33,48 @@ export interface CodeBlockOptions {
   showLineNumbers?: boolean;
   /** Linhas destacadas: `[3, '5-7']` ou `'3, 5-7'`. */
   highlightLines?: LineRangeInput;
+  /**
+   * Espécie de cada linha, indexada a partir da primeira.
+   *
+   * Ligada, a calha troca o número pela marca `+`/`−` e deixa de ser
+   * `aria-hidden`. Indexada por linha, e não por intervalo como
+   * `highlightLines`: destaque é decoração esparsa, espécie é classificação
+   * completa — ver `@shared/primitives/code-block-lines`.
+   */
+  lineKinds?: ReadonlyArray<CodeLineKind>;
+  /**
+   * Controles de quem compõe, no cabeçalho.
+   *
+   * Entram ANTES do copiar, e a ordem é decisão de acessibilidade, não de
+   * gosto: a fila é encostada no fim do cabeçalho, então acrescentar do lado de
+   * dentro deixa o copiar ancorado no canto do bloco em toda composição. Quem
+   * aprendeu que copiar é o último controle do cabeçalho continua com essa
+   * verdade quando a composição acrescenta executar, alternar ou baixar (WCAG
+   * 3.2.4, identificação consistente). O rótulo "Copiado!" fica colado ao botão
+   * que ele descreve pelo mesmo motivo, e a ordem de foco segue a visual.
+   */
+  actions?: HTMLElement[];
   /** Observações abaixo do código. */
   footer?: string | HTMLElement;
   copyLabel?: string;
   copiedLabel?: string;
+  /**
+   * Palavra que o leitor recebe na calha de uma linha adicionada.
+   *
+   * Existe pelo mesmo motivo de `copyLabel`: é texto falado, e texto falado que
+   * quem consome não possa trocar decide o idioma do produto pelo componente.
+   */
+  addedLabel?: string;
+  /** Palavra que o leitor recebe na calha de uma linha removida. */
+  removedLabel?: string;
+  /**
+   * Nome acessível da região que rola.
+   *
+   * A região tem `tabindex="0"` porque quem navega por teclado precisa alcançar
+   * o código que passa da altura máxima; com nome ela deixa de ser uma parada
+   * anônima. Distinga quando houver mais de um bloco na mesma tela.
+   */
+  regionLabel?: string;
   class?: string;
 }
 
@@ -68,13 +109,24 @@ export function createCodeBlock(options: CodeBlockOptions): DestroyableElement {
     title,
     showLineNumbers = true,
     highlightLines,
+    lineKinds,
+    actions: extraActions,
     footer,
-    copyLabel = 'Copiar código',
-    copiedLabel = 'Copiado!',
+    copyLabel = LABELS_CODE_BLOCK_DEFAULT.copy,
+    copiedLabel = LABELS_CODE_BLOCK_DEFAULT.copied,
+    addedLabel = LABELS_CODE_BLOCK_DEFAULT.lineAdded,
+    removedLabel = LABELS_CODE_BLOCK_DEFAULT.lineRemoved,
+    regionLabel = LABELS_CODE_BLOCK_DEFAULT.region,
   } = options;
 
   const lines = highlightCode(code, resolveLanguage(language));
   const highlighted = parseLineRanges(highlightLines);
+  const marks = codeLineMarks(lineKinds, lines.length, {
+    ...LABELS_CODE_BLOCK_DEFAULT,
+    lineAdded: addedLabel,
+    lineRemoved: removedLabel,
+  });
+  const kindMode = hasLineKinds(lineKinds);
 
   const root = document.createElement('div');
   root.dataset.slot = 'code-block';
@@ -84,6 +136,9 @@ export function createCodeBlock(options: CodeBlockOptions): DestroyableElement {
   // API Reference acompanhando os controls (ver dev-vanilla.md).
   root.dataset.numbered = String(showLineNumbers);
   root.dataset.language = resolveLanguage(language);
+  // A folha precisa saber que a calha mudou de conteúdo: sem numeração ela some,
+  // mas a marca `+`/`−` não pode sumir com ela.
+  if (kindMode) root.dataset.lineKinds = 'true';
 
   // ── Header ──────────────────────────────────────────────────────────────────
   // Sempre presente: o botão copiar precisa estar visível mesmo sem título.
@@ -152,12 +207,24 @@ export function createCodeBlock(options: CodeBlockOptions): DestroyableElement {
     });
   });
 
+  if (extraActions?.length) actions.append(...extraActions);
   actions.append(feedback, copyButton);
   header.appendChild(actions);
 
   // ── Conteúdo ────────────────────────────────────────────────────────────────
   const scroll = document.createElement('div');
   scroll.className = 'nds-code-block-scroll';
+  // Região rolável alcançável por teclado (WCAG 2.1.1), COM papel e nome — a
+  // regra 6 da §8 da guideline 17 pede os dois, e `tabindex` sozinho fazia uma
+  // parada de foco que o leitor de tela não sabia nomear.
+  //
+  // `group` e não `region`: `region` com nome vira landmark, e uma página de
+  // documentação tem dezenas de blocos — seriam dezenas de entradas de mesmo
+  // papel e mesmo nome na lista de regiões do leitor, que é exatamente o que o
+  // docblock da `scroll-area` já avisa que torna a lista inútil. `group` nomeia
+  // sem entrar em lista nenhuma.
+  scroll.setAttribute('role', 'group');
+  scroll.setAttribute('aria-label', regionLabel);
   scroll.tabIndex = 0;
 
   const pre = document.createElement('pre');
@@ -173,11 +240,26 @@ export function createCodeBlock(options: CodeBlockOptions): DestroyableElement {
     const line = document.createElement('span');
     line.className = 'nds-code-block-line';
     if (highlighted.has(i + 1)) line.dataset.highlighted = 'true';
+    const mark = marks[i];
+    if (mark) line.dataset.kind = mark.kind;
 
     const gutter = document.createElement('span');
     gutter.className = 'nds-code-block-gutter';
-    gutter.setAttribute('aria-hidden', 'true');
-    gutter.textContent = String(i + 1);
+    if (mark) {
+      // Sem `aria-hidden` aqui, e é a diferença que importa: número de linha é
+      // redundante com a posição e sai da leitura; sinal de adição e remoção é o
+      // único portador não-cromático da distinção e não é redundante com nada.
+      gutter.textContent = mark.mark;
+      if (mark.label) {
+        const word = document.createElement('span');
+        word.className = 'nds-sr-only';
+        word.textContent = mark.label;
+        gutter.appendChild(word);
+      }
+    } else {
+      gutter.setAttribute('aria-hidden', 'true');
+      gutter.textContent = String(i + 1);
+    }
 
     const text = document.createElement('span');
     text.className = 'nds-code-block-text';

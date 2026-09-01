@@ -257,6 +257,20 @@
           "required": "Não",
           "description": "Linhas em destaque, contadas a partir de 1. Aceita números avulsos, intervalos ou a combinação dos dois."
         },
+        "lineKinds": {
+          "name": "lineKinds",
+          "type": "Array<'context' | 'added' | 'removed'>",
+          "default": "—",
+          "required": "Não",
+          "description": "Espécie de cada linha, na ordem em que elas aparecem. Ligada, a coluna lateral troca o número pelo sinal de adição ou remoção e passa a ser lida pelo leitor de tela."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "ReactNode",
+          "default": "—",
+          "required": "Não",
+          "description": "Controles adicionais no header, exibidos antes da ação de copiar. A ação de copiar continua ancorada no canto do bloco em qualquer composição."
+        },
         "footer": {
           "name": "footer",
           "type": "ReactNode",
@@ -277,6 +291,27 @@
           "default": "'Copiado!'",
           "required": "Não",
           "description": "Texto de confirmação, exibido ao lado do ícone e anunciado pela região de status."
+        },
+        "addedLabel": {
+          "name": "addedLabel",
+          "type": "string",
+          "default": "'Linha adicionada'",
+          "required": "Não",
+          "description": "Palavra que o leitor de tela recebe nas linhas marcadas como adição. Traduza junto com o resto da página."
+        },
+        "removedLabel": {
+          "name": "removedLabel",
+          "type": "string",
+          "default": "'Linha removida'",
+          "required": "Não",
+          "description": "Palavra que o leitor de tela recebe nas linhas marcadas como remoção. Traduza junto com o resto da página."
+        },
+        "regionLabel": {
+          "name": "regionLabel",
+          "type": "string",
+          "default": "'Bloco de código'",
+          "required": "Não",
+          "description": "Nome acessível da área rolável, que entra na ordem de tabulação. Dê nomes distintos quando houver mais de um bloco na mesma tela."
         },
         "className": {
           "name": "className",
@@ -324,6 +359,22 @@
         "highlightAccent": {
           "token": "--code-block-highlight-accent",
           "part": "Barra de acento na lateral da linha em destaque"
+        },
+        "addedBg": {
+          "token": "--code-block-added-bg",
+          "part": "Fundo da linha de adição, semitransparente sobre a superfície"
+        },
+        "addedAccent": {
+          "token": "--code-block-added-accent",
+          "part": "Barra de acento na lateral da linha de adição"
+        },
+        "removedBg": {
+          "token": "--code-block-removed-bg",
+          "part": "Fundo da linha de remoção, semitransparente sobre a superfície"
+        },
+        "removedAccent": {
+          "token": "--code-block-removed-accent",
+          "part": "Barra de acento na lateral da linha de remoção"
         },
         "maxBlockSize": {
           "token": "--code-block-max-block-size",
@@ -402,12 +453,12 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O bloco é operável só com teclado: a ação de copiar e a região de scroll entram na ordem de tabulação, e a confirmação de cópia é anunciada por uma região de status fora do botão. Cumpre WCAG 2.2 AA: 1.4.1 (cor não é o único indicador), 1.4.3 (contraste), 2.1.1 (teclado) e 4.1.3 (mensagens de status).",
+      "summary": "O bloco é operável só com teclado: a ação de copiar e a região de scroll entram na ordem de tabulação, a região de scroll carrega papel e nome, e a confirmação de cópia é anunciada por uma região de status fora do botão. Cumpre WCAG 2.2 AA: 1.4.1 (cor não é o único indicador), 1.4.3 (contraste), 2.1.1 (teclado), 4.1.2 (nome e papel) e 4.1.3 (mensagens de status).",
       "item1": "<strong>Confirmação anunciada</strong> — a confirmação vive em uma região <code>role=\"status\"</code> com <code>aria-live=\"polite\"</code> fora do botão, então o leitor de tela anuncia sem que o rótulo mude no meio da interação.",
-      "item2": "<strong>Região de scroll focável</strong> — a área rolável recebe <code>tabindex=\"0\"</code>. Sem isso, quem navega sem mouse não alcança o código que passa da altura máxima (WCAG 2.1.1).",
-      "item3": "<strong>Numeração fora da leitura</strong> — a coluna é <code>aria-hidden=\"true\"</code> e não selecionável: o leitor de tela lê o código, não os números.",
+      "item2": "<strong>Região de scroll nomeada</strong> — a área rolável recebe <code>tabindex=\"0\"</code>, papel de grupo e nome acessível. Sem o foco, quem navega sem mouse não alcança o código que passa da altura máxima; sem o nome, a parada de teclado chega ao leitor de tela sem dizer onde a pessoa entrou.",
+      "item3": "<strong>Número sai da leitura, sinal não</strong> — a coluna lateral é <code>aria-hidden=\"true\"</code> e não selecionável enquanto numera, porque número de linha é redundante com a posição. Quando ela passa a marcar adição e remoção, deixa de ser escondida e cada linha marcada carrega a palavra correspondente.",
       "item4": "<strong>Contraste medido</strong> — a paleta de sintaxe foi medida contra os dois fundos possíveis, o da superfície e o da linha em destaque, com mínimo de 4.5:1 nos temas claro e escuro.",
-      "item5": "<strong>Destaque não é só cor</strong> — a linha marcada recebe barra de acento na lateral além do fundo, então a marcação sobrevive à visão monocromática (WCAG 1.4.1).",
+      "item5": "<strong>Marcação não é só cor</strong> — a linha em destaque recebe barra de acento na lateral além do fundo, e as linhas de adição e de remoção recebem barra de acento, sinal na coluna lateral e palavra para o leitor de tela (WCAG 1.4.1).",
       "item6": "<strong>Ícones decorativos</strong> — os ícones da ação de copiar são <code>aria-hidden=\"true\"</code>; o rótulo acessível do botão descreve a ação e a confirmação.",
       "keyboard": {
         "tab": "Move o foco para a ação de copiar e para a região de scroll do código.",
@@ -417,17 +468,17 @@
         "homeEnd": "Com o foco na região de scroll, levam ao início e ao fim do conteúdo rolável."
       },
       "aria": {
-        "role": "<code>role=\"status\"</code> — região fora do botão que recebe o texto de confirmação da cópia.",
+        "role": "<code>role=\"status\"</code> na região que recebe o texto de confirmação da cópia, e <code>role=\"group\"</code> na região que rola — sem papel ela não teria como carregar nome.",
         "ariaLive": "<code>aria-live=\"polite\"</code> — anuncia a confirmação sem interromper a leitura em curso.",
-        "ariaLabel": "<code>aria-label</code> — rótulo acessível da ação de copiar; passa a ser o texto de confirmação enquanto o feedback está ativo.",
+        "ariaLabel": "<code>aria-label</code> — nome acessível da ação de copiar e da região que rola; na ação, passa a ser o texto de confirmação enquanto o feedback está ativo.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — na coluna de numeração e nos ícones do botão.",
-        "tabindex": "<code>tabindex=\"0\"</code> — na região de scroll, para alcance por teclado."
+        "tabindex": "<code>tabindex=\"0\"</code> — na região de scroll, para alcance por teclado; anda sempre com o papel e o nome dela."
       },
       "screenReader": {
         "onCopy": "Ao copiar: o leitor anuncia o texto de confirmação uma vez, e a região volta a ficar vazia em 2 segundos.",
         "codeContent": "O conteúdo é lido como texto pré-formatado, linha a linha, sem os números da coluna lateral.",
         "button": "A ação de copiar é anunciada pelo rótulo acessível, nunca pelo ícone.",
-        "scrollRegion": "A região de scroll é anunciada como área focável — quem navega por teclado percebe que há conteúdo para rolar."
+        "scrollRegion": "A região de scroll é anunciada como grupo, com o nome dela — quem navega por teclado sabe onde entrou e que há conteúdo para rolar."
       }
     },
     "related": {
@@ -847,6 +898,20 @@
           "required": "No",
           "description": "Highlighted lines, counted from 1. Accepts single numbers, ranges, or a mix of both."
         },
+        "lineKinds": {
+          "name": "lineKinds",
+          "type": "Array<'context' | 'added' | 'removed'>",
+          "default": "—",
+          "required": "No",
+          "description": "Kind of each line, in the order they appear. When set, the side column swaps the number for the added or removed sign and starts being read by the screen reader."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "ReactNode",
+          "default": "—",
+          "required": "No",
+          "description": "Extra controls in the header, rendered before the copy action. The copy action stays anchored at the corner of the block in any composition."
+        },
         "footer": {
           "name": "footer",
           "type": "ReactNode",
@@ -867,6 +932,27 @@
           "default": "'Copiado!'",
           "required": "No",
           "description": "Confirmation text, shown beside the icon and announced by the status region."
+        },
+        "addedLabel": {
+          "name": "addedLabel",
+          "type": "string",
+          "default": "'Linha adicionada'",
+          "required": "No",
+          "description": "Word the screen reader gets on lines marked as additions. Translate it along with the rest of the page."
+        },
+        "removedLabel": {
+          "name": "removedLabel",
+          "type": "string",
+          "default": "'Linha removida'",
+          "required": "No",
+          "description": "Word the screen reader gets on lines marked as removals. Translate it along with the rest of the page."
+        },
+        "regionLabel": {
+          "name": "regionLabel",
+          "type": "string",
+          "default": "'Bloco de código'",
+          "required": "No",
+          "description": "Accessible name of the scrollable area, which is in the tab order. Give distinct names when more than one block shares the screen."
         },
         "className": {
           "name": "className",
@@ -914,6 +1000,22 @@
         "highlightAccent": {
           "token": "--code-block-highlight-accent",
           "part": "Accent bar on the side of the highlighted line"
+        },
+        "addedBg": {
+          "token": "--code-block-added-bg",
+          "part": "Background of an added line, semi-transparent over the surface"
+        },
+        "addedAccent": {
+          "token": "--code-block-added-accent",
+          "part": "Side accent bar of an added line"
+        },
+        "removedBg": {
+          "token": "--code-block-removed-bg",
+          "part": "Background of a removed line, semi-transparent over the surface"
+        },
+        "removedAccent": {
+          "token": "--code-block-removed-accent",
+          "part": "Side accent bar of a removed line"
         },
         "maxBlockSize": {
           "token": "--code-block-max-block-size",
@@ -992,12 +1094,12 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "The block is fully operable by keyboard: the copy action and the scroll region are both in the tab order, and the copy confirmation is announced by a status region outside the button. Meets WCAG 2.2 AA: 1.4.1 (color is not the only indicator), 1.4.3 (contrast), 2.1.1 (keyboard), and 4.1.3 (status messages).",
+      "summary": "The block is fully operable by keyboard: the copy action and the scroll region are both in the tab order, the scroll region carries a role and a name, and the copy confirmation is announced by a status region outside the button. Meets WCAG 2.2 AA: 1.4.1 (color is not the only indicator), 1.4.3 (contrast), 2.1.1 (keyboard), 4.1.2 (name and role), and 4.1.3 (status messages).",
       "item1": "<strong>Announced confirmation</strong> — the confirmation lives in a <code>role=\"status\"</code> region with <code>aria-live=\"polite\"</code> outside the button, so screen readers announce it without the button label changing mid-interaction.",
-      "item2": "<strong>Focusable scroll region</strong> — the scrollable area carries <code>tabindex=\"0\"</code>. Without it, keyboard-only users cannot reach code beyond the maximum height (WCAG 2.1.1).",
-      "item3": "<strong>Numbering out of the reading flow</strong> — the column is <code>aria-hidden=\"true\"</code> and not selectable: the screen reader reads the code, not the numbers.",
+      "item2": "<strong>Named scroll region</strong> — the scrollable area carries <code>tabindex=\"0\"</code>, a group role and an accessible name. Without focus, keyboard-only users cannot reach code beyond the maximum height; without the name, the keyboard stop reaches the screen reader without saying where the person landed.",
+      "item3": "<strong>Numbers leave the reading flow, signs do not</strong> — the side column is <code>aria-hidden=\"true\"</code> and not selectable while it numbers, because a line number is redundant with the position. Once it marks additions and removals it stops being hidden, and every marked line carries the matching word.",
       "item4": "<strong>Measured contrast</strong> — the syntax palette was measured against both possible backgrounds, the surface and the highlighted line, at a minimum of 4.5:1 in light and dark themes.",
-      "item5": "<strong>Highlighting is not color alone</strong> — the marked line also gets a side accent bar, so the mark survives monochrome vision (WCAG 1.4.1).",
+      "item5": "<strong>Marking is not color alone</strong> — the highlighted line also gets a side accent bar, and added and removed lines get an accent bar, a sign in the side column and a word for the screen reader (WCAG 1.4.1).",
       "item6": "<strong>Decorative icons</strong> — the copy action icons are <code>aria-hidden=\"true\"</code>; the button's accessible label describes the action and the confirmation.",
       "keyboard": {
         "tab": "Moves focus to the copy action and to the code scroll region.",
@@ -1007,17 +1109,17 @@
         "homeEnd": "With focus on the scroll region, jump to the start and the end of the scrollable content."
       },
       "aria": {
-        "role": "<code>role=\"status\"</code> — region outside the button that receives the copy confirmation text.",
+        "role": "<code>role=\"status\"</code> on the region that receives the copy confirmation text, and <code>role=\"group\"</code> on the scrolling region — without a role it could not carry a name.",
         "ariaLive": "<code>aria-live=\"polite\"</code> — announces the confirmation without interrupting ongoing reading.",
-        "ariaLabel": "<code>aria-label</code> — accessible label of the copy action; becomes the confirmation text while the feedback is active.",
+        "ariaLabel": "<code>aria-label</code> — accessible name of the copy action and of the scrolling region; on the action it becomes the confirmation text while the feedback is active.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — on the number column and on the button icons.",
-        "tabindex": "<code>tabindex=\"0\"</code> — on the scroll region, for keyboard reach."
+        "tabindex": "<code>tabindex=\"0\"</code> — on the scroll region, for keyboard reach; it always travels with the region role and name."
       },
       "screenReader": {
         "onCopy": "On copy: the reader announces the confirmation text once, and the region empties again after 2 seconds.",
         "codeContent": "The content is read as preformatted text, line by line, without the numbers in the side column.",
         "button": "The copy action is announced by its accessible label, never by the icon.",
-        "scrollRegion": "The scroll region is announced as a focusable area — keyboard users learn there is content to scroll."
+        "scrollRegion": "The scroll region is announced as a group, by its name — keyboard users learn where they landed and that there is content to scroll."
       }
     },
     "related": {
@@ -1437,6 +1539,20 @@
           "required": "No",
           "description": "Líneas destacadas, contadas desde 1. Acepta números sueltos, intervalos o la combinación de ambos."
         },
+        "lineKinds": {
+          "name": "lineKinds",
+          "type": "Array<'context' | 'added' | 'removed'>",
+          "default": "—",
+          "required": "No",
+          "description": "Especie de cada línea, en el orden en que aparecen. Activada, la columna lateral cambia el número por el signo de adición o eliminación y pasa a ser leída por el lector de pantalla."
+        },
+        "actions": {
+          "name": "actions",
+          "type": "ReactNode",
+          "default": "—",
+          "required": "No",
+          "description": "Controles adicionales en el header, mostrados antes de la acción de copiar. La acción de copiar sigue anclada en la esquina del bloque en cualquier composición."
+        },
         "footer": {
           "name": "footer",
           "type": "ReactNode",
@@ -1457,6 +1573,27 @@
           "default": "'Copiado!'",
           "required": "No",
           "description": "Texto de confirmación, mostrado al lado del ícono y anunciado por la región de estado."
+        },
+        "addedLabel": {
+          "name": "addedLabel",
+          "type": "string",
+          "default": "'Linha adicionada'",
+          "required": "No",
+          "description": "Palabra que el lector de pantalla recibe en las líneas marcadas como adición. Tradúcela junto con el resto de la página."
+        },
+        "removedLabel": {
+          "name": "removedLabel",
+          "type": "string",
+          "default": "'Linha removida'",
+          "required": "No",
+          "description": "Palabra que el lector de pantalla recibe en las líneas marcadas como eliminación. Tradúcela junto con el resto de la página."
+        },
+        "regionLabel": {
+          "name": "regionLabel",
+          "type": "string",
+          "default": "'Bloco de código'",
+          "required": "No",
+          "description": "Nombre accesible del área desplazable, que entra en el orden de tabulación. Da nombres distintos cuando haya más de un bloque en la misma pantalla."
         },
         "className": {
           "name": "className",
@@ -1504,6 +1641,22 @@
         "highlightAccent": {
           "token": "--code-block-highlight-accent",
           "part": "Barra de acento al lateral de la línea destacada"
+        },
+        "addedBg": {
+          "token": "--code-block-added-bg",
+          "part": "Fondo de la línea de adición, semitransparente sobre la superficie"
+        },
+        "addedAccent": {
+          "token": "--code-block-added-accent",
+          "part": "Barra de acento lateral de la línea de adición"
+        },
+        "removedBg": {
+          "token": "--code-block-removed-bg",
+          "part": "Fondo de la línea de eliminación, semitransparente sobre la superficie"
+        },
+        "removedAccent": {
+          "token": "--code-block-removed-accent",
+          "part": "Barra de acento lateral de la línea de eliminación"
         },
         "maxBlockSize": {
           "token": "--code-block-max-block-size",
@@ -1582,12 +1735,12 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "El bloque es operable solo con teclado: la acción de copiar y la región de scroll entran en el orden de tabulación, y la confirmación de copia se anuncia por una región de estado fuera del botón. Cumple WCAG 2.2 AA: 1.4.1 (el color no es el único indicador), 1.4.3 (contraste), 2.1.1 (teclado) y 4.1.3 (mensajes de estado).",
+      "summary": "El bloque es operable solo con teclado: la acción de copiar y la región de scroll entran en el orden de tabulación, la región de scroll lleva papel y nombre, y la confirmación de copia se anuncia por una región de estado fuera del botón. Cumple WCAG 2.2 AA: 1.4.1 (el color no es el único indicador), 1.4.3 (contraste), 2.1.1 (teclado), 4.1.2 (nombre y papel) y 4.1.3 (mensajes de estado).",
       "item1": "<strong>Confirmación anunciada</strong> — la confirmación vive en una región <code>role=\"status\"</code> con <code>aria-live=\"polite\"</code> fuera del botón, así el lector de pantalla la anuncia sin que la etiqueta cambie en medio de la interacción.",
-      "item2": "<strong>Región de scroll enfocable</strong> — el área desplazable recibe <code>tabindex=\"0\"</code>. Sin eso, quien navega sin mouse no alcanza el código que pasa de la altura máxima (WCAG 2.1.1).",
-      "item3": "<strong>Numeración fuera de la lectura</strong> — la columna es <code>aria-hidden=\"true\"</code> y no seleccionable: el lector de pantalla lee el código, no los números.",
+      "item2": "<strong>Región de scroll con nombre</strong> — el área desplazable recibe <code>tabindex=\"0\"</code>, papel de grupo y nombre accesible. Sin el foco, quien navega sin mouse no alcanza el código que pasa de la altura máxima; sin el nombre, la parada de teclado llega al lector de pantalla sin decir dónde entró la persona.",
+      "item3": "<strong>El número sale de la lectura, el signo no</strong> — la columna lateral es <code>aria-hidden=\"true\"</code> y no seleccionable mientras numera, porque el número de línea es redundante con la posición. Cuando pasa a marcar adición y eliminación, deja de estar oculta y cada línea marcada lleva la palabra correspondiente.",
       "item4": "<strong>Contraste medido</strong> — la paleta de sintaxis fue medida contra los dos fondos posibles, el de la superficie y el de la línea destacada, con mínimo de 4.5:1 en los temas claro y oscuro.",
-      "item5": "<strong>El destaque no es solo color</strong> — la línea marcada recibe barra de acento lateral además del fondo, así la marca sobrevive a la visión monocromática (WCAG 1.4.1).",
+      "item5": "<strong>La marca no es solo color</strong> — la línea destacada recibe barra de acento lateral además del fondo, y las líneas de adición y de eliminación reciben barra de acento, signo en la columna lateral y palabra para el lector de pantalla (WCAG 1.4.1).",
       "item6": "<strong>Íconos decorativos</strong> — los íconos de la acción de copiar son <code>aria-hidden=\"true\"</code>; la etiqueta accesible del botón describe la acción y la confirmación.",
       "keyboard": {
         "tab": "Mueve el foco a la acción de copiar y a la región de scroll del código.",
@@ -1597,17 +1750,17 @@
         "homeEnd": "Con el foco en la región de scroll, llevan al inicio y al final del contenido desplazable."
       },
       "aria": {
-        "role": "<code>role=\"status\"</code> — región fuera del botón que recibe el texto de confirmación de la copia.",
+        "role": "<code>role=\"status\"</code> en la región que recibe el texto de confirmación de la copia, y <code>role=\"group\"</code> en la región que se desplaza — sin papel no podría llevar nombre.",
         "ariaLive": "<code>aria-live=\"polite\"</code> — anuncia la confirmación sin interrumpir la lectura en curso.",
-        "ariaLabel": "<code>aria-label</code> — etiqueta accesible de la acción de copiar; pasa a ser el texto de confirmación mientras el feedback está activo.",
+        "ariaLabel": "<code>aria-label</code> — nombre accesible de la acción de copiar y de la región que se desplaza; en la acción, pasa a ser el texto de confirmación mientras el feedback está activo.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — en la columna de numeración y en los íconos del botón.",
-        "tabindex": "<code>tabindex=\"0\"</code> — en la región de scroll, para alcance por teclado."
+        "tabindex": "<code>tabindex=\"0\"</code> — en la región de scroll, para alcance por teclado; anda siempre con el papel y el nombre de ella."
       },
       "screenReader": {
         "onCopy": "Al copiar: el lector anuncia el texto de confirmación una vez, y la región vuelve a quedar vacía en 2 segundos.",
         "codeContent": "El contenido se lee como texto preformateado, línea a línea, sin los números de la columna lateral.",
         "button": "La acción de copiar se anuncia por la etiqueta accesible, nunca por el ícono.",
-        "scrollRegion": "La región de scroll se anuncia como área enfocable — quien navega por teclado percibe que hay contenido para desplazar."
+        "scrollRegion": "La región de scroll se anuncia como grupo, por su nombre — quien navega por teclado sabe dónde entró y que hay contenido para desplazar."
       }
     },
     "related": {

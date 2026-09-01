@@ -53,20 +53,31 @@ const { t, dict } = useTranslation(codeBlockTranslations as Record<string, unkno
   '*': {
     'props.table.footer.type': 'string',
     'props.table.className.name': 'class',
+    // Divergência de API de framework, registrada e não "alinhada": aqui os
+    // controles extras do cabeçalho não são input nenhum — entram por projeção
+    // de conteúdo, que é a forma idiomática do Angular para o mesmo encaixe.
+    'props.table.actions.name': 'ng-content',
+    'props.table.actions.type': 'projeção de conteúdo',
   },
   'pt-BR': {
+    'props.table.actions.description':
+      'Controles adicionais no header: o que estiver entre as tags do elemento é projetado antes da ação de copiar, que continua ancorada no canto do bloco.',
     'props.table.footer.description':
       'Observação abaixo do código, separada por borda. Recebe texto simples — o rodapé não interpreta marcação.',
     'props.table.className.description':
       'Classes extras vão no atributo class do próprio elemento — o Angular mescla com a classe base. Use para sobrescrever as custom properties do bloco em uma instância.',
   },
   en: {
+    'props.table.actions.description':
+      'Extra controls in the header: whatever sits between the element tags is projected before the copy action, which stays anchored at the corner of the block.',
     'props.table.footer.description':
       'Note below the code, separated by a border. Takes plain text — the footer does not interpret markup.',
     'props.table.className.description':
       'Extra classes go on the class attribute of the element itself — Angular merges them with the base class. Use it to override the block custom properties on a single instance.',
   },
   es: {
+    'props.table.actions.description':
+      'Controles adicionales en el header: lo que esté entre las etiquetas del elemento se proyecta antes de la acción de copiar, que sigue anclada en la esquina del bloque.',
     'props.table.footer.description':
       'Observación debajo del código, separada por un borde. Recibe texto simple — el pie no interpreta marcado.',
     'props.table.className.description':
@@ -226,24 +237,36 @@ readonly language = input<string | undefined>(undefined);
 readonly title = input<string>('');
 readonly showLineNumbers = input<boolean>(true);
 readonly highlightLines = input<LineRangeInput | undefined>(undefined);
+readonly lineKinds = input<ReadonlyArray<CodeLineKind> | undefined>(undefined);
 readonly footer = input<string>('');
 readonly copyLabel = input<string>('Copiar código');
 readonly copiedLabel = input<string>('Copiado!');
+readonly addedLabel = input<string>('Linha adicionada');
+readonly removedLabel = input<string>('Linha removida');
+readonly regionLabel = input<string>('Bloco de código');
 
+// Não há input \`actions\`: os controles extras do cabeçalho entram por
+// projeção de conteúdo — o que estiver entre as tags do elemento cai na
+// fila do cabeçalho, antes da ação de copiar.
+//
 // Não há input \`class\`: o atributo nativo do elemento já é mesclado
 // com a classe base .nds-code-block-root pelo próprio Angular.`;
 
 // ─── Tabelas derivadas do conteúdo ────────────────────────────────────────────
 
 const TOKEN_GROUPS: { titleKey: string; keys: string[] }[] = [
-  { titleKey: 'tokens.surfaceTitle', keys: ['bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent', 'maxBlockSize'] },
+  { titleKey: 'tokens.surfaceTitle', keys: [
+    'bg', 'border', 'headerBg', 'highlightBg', 'highlightAccent',
+    'addedBg', 'addedAccent', 'removedBg', 'removedAccent', 'maxBlockSize',
+  ] },
   { titleKey: 'tokens.syntaxTitle',  keys: ['comment', 'string', 'number', 'keyword', 'builtin', 'function', 'tag', 'attr', 'property', 'operator', 'punctuation', 'plain'] },
   { titleKey: 'tokens.inheritedTitle', keys: ['radius', 'mutedForeground', 'foreground', 'borderBase'] },
 ];
 
 const PROP_KEYS = [
   'code', 'language', 'title', 'showLineNumbers', 'highlightLines',
-  'footer', 'copyLabel', 'copiedLabel', 'className',
+  'lineKinds', 'actions', 'footer', 'copyLabel', 'copiedLabel',
+  'addedLabel', 'removedLabel', 'regionLabel', 'className',
 ];
 
 const STATE_KEYS = ['idle', 'copied', 'numbered', 'unnumbered', 'scrolling', 'unknownLanguage'];
