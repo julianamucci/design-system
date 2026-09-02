@@ -213,7 +213,16 @@ export const ItemDisabled: Story = {
     await step('O item desabilitado continua alcançável pela seta', async () => {
       // Padrão WAI-ARIA de menu: a seta PODE pousar no item desabilitado, para
       // que ele seja anunciado. O que ele não pode é executar.
-      await expect(disabled.getAttribute('tabindex')).not.toBe(null);
+      //
+      // A asserção anterior aqui era `getAttribute('tabindex')` diferente de
+      // `null`, e NÃO PODIA REPROVAR: a diretiva liga `[attr.tabindex]` em todo
+      // item, desabilitado ou não, então o atributo está lá qualquer que seja o
+      // percurso das setas. O que prova o passo é APERTAR a seta e ver onde o
+      // foco pousa — que é como as outras stacks o medem.
+      const items = within(menu).getAllByRole('menuitem');
+      items[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(disabled);
     });
 
     await step('O clique é bloqueado pelo CSS, não só pelo callback', async () => {
