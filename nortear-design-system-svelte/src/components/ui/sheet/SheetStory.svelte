@@ -15,7 +15,11 @@
   import { Label } from '@/components/ui/label';
 
   type Side = 'top' | 'right' | 'bottom' | 'left';
-  type Variant = 'default' | 'withForm' | 'withScrollContent' | 'noFooter' | 'withDestructiveAction';
+  // `noFooter` e `withDestructiveAction` saíram: nenhuma story as pedia, e ramo
+  // de story que ninguém renderiza é a mesma dívida da peça sem story — parece
+  // coberto e não é. `secondaryNav` entra porque a composição de navegação é
+  // documentada no conteúdo compartilhado e só esta stack não a mostrava.
+  type Variant = 'default' | 'withForm' | 'withScrollContent' | 'secondaryNav';
 
   interface Props {
     open?: boolean;
@@ -88,9 +92,23 @@
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Sheet.</p>
               {/each}
             </SheetBody>
+          {:else if variant === 'secondaryNav'}
+            <SheetBody>
+              <!-- Marco de navegação com nome próprio: a página já tem um <nav>,
+                   e dois sem nome distinto ficam indistinguíveis para quem
+                   navega por marcos. -->
+              <nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">
+                {#each ['Dashboard', 'Projetos', 'Equipe', 'Configurações'] as item (item)}
+                  <a
+                    href="#{item.toLowerCase()}"
+                    class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
+                  >{item}</a>
+                {/each}
+              </nav>
+            </SheetBody>
           {/if}
 
-          {#if variant !== 'noFooter'}
+          {#if variant !== 'secondaryNav'}
             <SheetFooter>
               <SheetClose>
                 {#snippet child({ props })}
@@ -111,10 +129,7 @@
                   >{cancelLabel}</Button>
                 {/snippet}
               </SheetClose>
-              <Button
-                variant={variant === 'withDestructiveAction' ? 'destructive' : 'default'}
-                onclick={onAction}
-              >
+              <Button onclick={onAction}>
                 {actionLabel}
               </Button>
             </SheetFooter>

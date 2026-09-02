@@ -352,6 +352,7 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.items.item5'),
   tContent('accessibility.items.item6'),
   tContent('accessibility.items.item7'),
+  tContent('accessibility.items.item8'),
 ]);
 
 const keyboardItems = computed(() => [
@@ -698,10 +699,7 @@ const a11yCritCols = computed(() => ({
             default-open
             :modal="false"
           >
-            <SheetContent
-              side="right"
-              style="width: 420px;"
-            >
+            <SheetContent side="right">
               <SheetHeader>
                 <SheetTitle>Filtros avançados</SheetTitle>
                 <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
@@ -752,23 +750,19 @@ const a11yCritCols = computed(() => ({
               >
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
-                  style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
                 >Dashboard</a>
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
-                  style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
                 >Projetos</a>
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
-                  style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
                 >Equipe</a>
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
-                  style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
                 >Configurações</a>
               </nav>
             </SheetContent>

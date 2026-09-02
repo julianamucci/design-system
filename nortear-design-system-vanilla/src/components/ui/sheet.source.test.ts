@@ -74,13 +74,13 @@ describe('sheetSnippet', () => {
 
 describe('sheetSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const padrão = sheetSource('<div data-slot="sheet-content">', {});
-    const esquerda = sheetSource('<div data-slot="sheet-content">', {
+    const atDefaults = sheetSource('<div data-slot="sheet-content">', {});
+    const atLeft = sheetSource('<div data-slot="sheet-content">', {
       args: { side: 'left', title: 'Menu' },
     });
-    expect(padrão).not.toBe(esquerda);
-    expect(esquerda).toContain("side: 'left'");
-    expect(esquerda).toContain("title: 'Menu'");
+    expect(atDefaults).not.toBe(atLeft);
+    expect(atLeft).toContain("side: 'left'");
+    expect(atLeft).toContain("title: 'Menu'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -109,5 +109,43 @@ describe('sheetControladoSnippet', () => {
     expect(code).toContain('gatilhoInterno.click();');
     expect(code).toContain('onOpenChange: (estado) => { aberto = estado; }');
     expect(code).not.toContain('open: true');
+  });
+});
+
+/**
+ * Guarda de COERÊNCIA do snippet: toda referência tem de estar declarada.
+ *
+ * Nasceu de um defeito real — o snippet controlado declarava `gatilhoInterno` e
+ * passava `trigger: triggerInterno`, um símbolo que não existia em lugar
+ * nenhum. Quem copiasse recebia código que não roda, e nenhum portão via: os
+ * três casos acima olhavam só linhas isoladas, e o snippet inteiro nunca foi
+ * lido como programa.
+ *
+ * A varredura é sobre `chave: identificador,` — só identificador nu, porque
+ * literal, chamada e arrow já se explicam sozinhos na própria linha.
+ */
+function referenciasSoltas(code: string): string[] {
+  const declarados = new Set<string>();
+  for (const m of code.matchAll(/\b(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g)) {
+    declarados.add(m[1]);
+  }
+  const soltas: string[] = [];
+  for (const m of code.matchAll(/^\s{2,}[A-Za-z_$][\w$]*:\s*([A-Za-z_$][\w$]*),?\s*$/gm)) {
+    const ref = m[1];
+    if (ref === 'true' || ref === 'false' || ref === 'null' || ref === 'undefined') continue;
+    if (!declarados.has(ref)) soltas.push(ref);
+  }
+  return soltas;
+}
+
+describe('coerência dos snippets', () => {
+  it('não referencia símbolo que o próprio snippet não declara', () => {
+    expect(referenciasSoltas(sheetSnippet({ body: 'formulario' }))).toEqual([]);
+    expect(referenciasSoltas(sheetControlledSnippet())).toEqual([]);
+  });
+
+  it('mostra showCloseButton só quando ele é desligado', () => {
+    expect(sheetSnippet({})).not.toContain('showCloseButton');
+    expect(sheetSnippet({ showCloseButton: false })).toContain('showCloseButton: false');
   });
 });

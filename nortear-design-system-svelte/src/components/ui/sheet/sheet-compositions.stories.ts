@@ -6,8 +6,8 @@ import SheetStory from './SheetStory.svelte';
 import {
   perfilSheetEditSource,
   sheetFiltersAvancadosSource,
+  sheetNavegacaoSecundariaSource,
   sheetSource,
-  sheetTermosWithScrollSource,
 } from './sheet.source';
 
 const meta: Meta = {
@@ -26,7 +26,7 @@ const meta: Meta = {
       description: {
         component:
           'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
-          'perfil e termos com rolagem interna. Renderizadas abertas para a captura visual.',
+          'perfil e navegação secundária. Renderizadas abertas para a captura visual.',
       },
     },
   },
@@ -94,51 +94,31 @@ export const ProfileEdit: Story = {
   },
 };
 
-export const TermsWithScroll: Story = {
+export const SecondaryNavigation: Story = {
   args: {
     open: true,
-    side: 'right',
-    variant: 'withScrollContent',
-    triggerLabel: 'Ver termos',
-    title: 'Termos e condições',
-    description: 'Leia atentamente antes de aceitar.',
-    actionLabel: 'Aceitar',
-    cancelLabel: 'Recusar',
+    side: 'left',
+    variant: 'secondaryNav',
+    triggerLabel: 'Abrir menu',
+    title: 'Menu',
+    description: 'Navegue entre as áreas do sistema.',
   },
   parameters: {
-    covers: ['visual.item4'],
     docs: {
-      source: { transform: sheetTermosWithScrollSource },
+      source: { transform: sheetNavegacaoSecundariaSource },
       description: {
         story:
-          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
-          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
+          'Sheet à esquerda como menu de navegação secundária — itens clicáveis dentro do ' +
+          'painel, sem rodapé.',
       },
     },
   },
-  play: async ({ step }) => {
+  play: async () => {
     const panel = await waitForPortal('dialog');
-    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
-    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
-
-    await step('O corpo é quem rola, não o painel', async () => {
-      await expect(body).not.toBeNull();
-      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
-      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
-    });
-
-    await step('A região rolável é alcançável por teclado', async () => {
-      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
-      // o corpo (é a regra scrollable-region-focusable do axe).
-      await expect(body).toHaveAttribute('tabindex', '0');
-    });
-
-    await step('O rodapé continua visível com o corpo cheio', async () => {
-      const boxFooter = footer.getBoundingClientRect();
-      const boxPanel = panel.getBoundingClientRect();
-      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
-      await expect(boxFooter.height).toBeGreaterThan(0);
-    });
+    await expect(panel).toHaveAttribute('data-side', 'left');
+    const nav = within(panel).getByRole('navigation', { name: /Navegação secundária/i });
+    await expect(nav).toBeVisible();
+    // Sem rodapé: a saída é o X do canto, e é ela que sustenta o painel sem ações.
+    await expect(panel.querySelector('[data-slot="sheet-footer"]')).toBeNull();
   },
 };

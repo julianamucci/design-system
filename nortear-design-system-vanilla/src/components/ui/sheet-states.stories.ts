@@ -4,6 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
 import { sheetSource, sheetSourceWith, sheetSourceControlled } from './sheet.source';
 import { createButton } from './button';
+import { makeFooter } from './sheet.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -22,8 +23,9 @@ const meta: Meta = {
       source: { transform: sheetSource },
       description: {
         component:
-          'Estados canônicos do Sheet: Closed (inicial), Open (aberto programaticamente) e ' +
-          'Controlled (abertura externa — a factory não expõe uma prop open).',
+          'Estados canônicos do Sheet: Closed (inicial), Open (aberto programaticamente), ' +
+          'LongScrollBody (corpo mais alto que o painel), WithCloseButtonHidden (sem o X ' +
+          'do canto) e Controlled (abertura externa — a factory não expõe uma prop open).',
       },
     },
   },
@@ -131,6 +133,138 @@ export const Open: Story = {
           throw new Error('o foco não entrou no painel');
         }
       });
+    });
+  },
+};
+
+export const LongScrollBody: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      // O corpo alto é o assunto: quem rola é `.nds-sheet-body`, e o rodapé fica
+      // onde está sem nenhuma opção extra.
+      source: {
+        transform: sheetSourceWith({
+          body: 'paragrafos',
+          triggerLabel: 'Ler termos',
+          title: 'Termos de uso',
+          description: 'Leia atentamente antes de aceitar.',
+          applyLabel: 'Aceitar termos',
+        }),
+      },
+      description: {
+        story:
+          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
+          'é o que separa "conteúdo longo" de "ação fora de alcance".',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
+
+    const long = document.createElement('div');
+    long.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+    long.dataset.spacing = 'sm';
+    for (let i = 1; i <= 24; i++) {
+      const p = document.createElement('p');
+      p.textContent = `Parágrafo ${i}: termos longos o bastante para o corpo precisar rolar dentro do painel, sem empurrar o rodapé para fora da tela.`;
+      long.appendChild(p);
+    }
+
+    const sheet = createSheet({
+      trigger,
+      side: 'right',
+      title: 'Termos de uso',
+      description: 'Leia atentamente antes de aceitar.',
+      content: long,
+      footer: makeFooter('Cancelar', 'Aceitar termos', true),
+    });
+    queueMicrotask(() => trigger.click());
+    return sheet;
+  },
+  play: async ({ step }) => {
+    const panel = await waitForPortal('dialog');
+    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+
+    await step('O corpo é quem rola, não o painel', async () => {
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      // O painel em si não rola: o `flex: 1 1 auto` do corpo é o que segura o rodapé.
+      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
+    });
+
+    await step('A região rolável é alcançável por teclado', async () => {
+      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
+      // o corpo (é a regra scrollable-region-focusable do axe).
+      await expect(body).toHaveAttribute('tabindex', '0');
+    });
+
+    await step('O rodapé continua visível com o corpo cheio', async () => {
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const WithCloseButtonHidden: Story = {
+  parameters: {
+    docs: {
+      // A AUSÊNCIA do X é o assunto, e ela só se sustenta com o rodapé
+      // oferecendo a outra saída.
+      source: {
+        transform: sheetSourceWith({
+          triggerLabel: 'Abrir filtros',
+          title: 'Filtros avançados',
+          description: 'Configure os filtros para refinar os resultados.',
+          applyLabel: 'Aplicar filtros',
+          showCloseButton: false,
+        }),
+      },
+      description: {
+        story:
+          'Sem o botão do canto. Só faz sentido quando o rodapé já oferece uma saída ' +
+          'explícita — Escape continua fechando de qualquer forma.',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
+    const body = document.createElement('div');
+    body.className = 'nds-text-body nds-text-muted-foreground';
+    body.textContent = 'Conteúdo do painel.';
+
+    const sheet = createSheet({
+      trigger,
+      side: 'right',
+      title: 'Filtros avançados',
+      description: 'Configure os filtros para refinar os resultados.',
+      content: body,
+      footer: makeFooter('Cancelar', 'Aplicar filtros', true),
+      showCloseButton: false,
+    });
+    queueMicrotask(() => trigger.click());
+    return sheet;
+  },
+  play: async ({ step }) => {
+    const panel = await waitForPortal('dialog');
+
+    await step('O botão do canto não é renderizado', async () => {
+      await expect(panel).toBeVisible();
+      await expect(
+        within(panel).queryByRole('button', { name: /^Fechar$/i }),
+      ).toBeNull();
+      // O seletor da própria folha, e não só o papel: o X é o único elemento
+      // que carrega esta classe, então zero dele é a prova direta.
+      await expect(panel.querySelector('.nds-sheet-close')).toBeNull();
+    });
+
+    await step('E ainda assim existe uma saída — o rodapé', async () => {
+      const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
+      await expect(footer).not.toBeNull();
+      await expect(within(footer!).getAllByRole('button').length).toBeGreaterThan(0);
     });
   },
 };

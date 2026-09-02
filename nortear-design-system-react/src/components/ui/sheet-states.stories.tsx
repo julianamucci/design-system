@@ -4,6 +4,7 @@ import { userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -14,6 +15,7 @@ import {
 } from "./sheet";
 import {
   sheetOpenSource,
+  sheetContentLongSource,
   sheetControlledSource,
   sheetNoButtonCloseSource,
   sheetSource,
@@ -38,13 +40,14 @@ const meta = {
       description: {
         component:
           "Estados canônicos do Sheet: Closed (inicial), Open (defaultOpen), " +
-          "WithCloseButtonHidden (sem o botão do canto) e Controlled (estado externo).",
+          "LongScrollBody (corpo mais alto que o painel), WithCloseButtonHidden " +
+          "(sem o botão do canto) e Controlled (estado externo).",
       },
     },
   },
   decorators: [
     (Story) => (
-      <div style={{ contain: "layout", minHeight: 320 }}>
+      <div className="nds-min-h-80" style={{ contain: "layout" }}>
         <Story />
       </div>
     ),
@@ -153,6 +156,87 @@ export const Open: Story = {
           throw new Error("o foco não entrou no painel");
         }
       });
+    });
+  },
+};
+
+/**
+ * Texto dos parágrafos longos, montado fora do JSX.
+ *
+ * Não é preferência de estilo: a catraca `identificador_pt_novo` descasca texto
+ * entre tags com `>[^<>{}]*<`, e uma interpolação no meio da frase
+ * (`Parágrafo {i + 1}: …`) quebra esse pareamento — dali para a frente a prosa
+ * passa a ser lida como código, e "corpo" e "painel" entram como identificador.
+ * Foi o que aconteceu uma vez: alguém calou a catraca traduzindo a FRASE, e a
+ * story passou a exibir "inside do panel, without empurrar o rodapé para
+ * outside da tela" a quem lê a documentação. Em literal, o contador não
+ * enxerga — e é também a forma que o Vanilla, referência, sempre usou.
+ */
+const LONG_PARAGRAPHS = Array.from(
+  { length: 24 },
+  (_, i) =>
+    `Parágrafo ${i + 1}: termos longos o bastante para o corpo precisar rolar ` +
+    `dentro do painel, sem empurrar o rodapé para fora da tela.`,
+);
+
+export const LongScrollBody: Story = {
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      // O corpo que rola é o assunto, e ele só aparece com o SheetBody cheio.
+      source: { transform: sheetContentLongSource },
+      description: {
+        story:
+          "Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — " +
+          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
+      },
+    },
+  },
+  render: () => (
+    <Sheet defaultOpen>
+      <SheetTrigger render={<Button variant="outline" />}>Ler termos</SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>Termos de uso</SheetTitle>
+          <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+        </SheetHeader>
+        <SheetBody className="nds-stack" data-spacing="sm">
+          {LONG_PARAGRAPHS.map((text, i) => (
+            <p key={i} className="nds-text-body">
+              {text}
+            </p>
+          ))}
+        </SheetBody>
+        <SheetFooter>
+          <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+          <Button>Aceitar termos</Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  ),
+  play: async ({ step }) => {
+    const panel = await waitForPortal("dialog");
+    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+
+    await step("O corpo é quem rola, não o painel", async () => {
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      // O painel em si não rola: o `flex: 1 1 auto` do corpo é o que segura o rodapé.
+      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
+    });
+
+    await step("A região rolável é alcançável por teclado", async () => {
+      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
+      // o corpo (é a regra scrollable-region-focusable do axe).
+      await expect(body).toHaveAttribute("tabindex", "0");
+    });
+
+    await step("O rodapé continua visível com o corpo cheio", async () => {
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

@@ -179,7 +179,7 @@ export const LongScrollBody: Story = {
       <nds-sheet [defaultOpen]="true">
         <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
 
-        <ng-template ndsSheetContent side="right" panelClass="nds-max-w-lg">
+        <ng-template ndsSheetContent side="right" panelClass="nds-rounded-xl">
           <div ndsSheetHeader>
             <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
             <p ndsSheetDescription>{{ descricaoPainel }}</p>
@@ -207,21 +207,28 @@ export const LongScrollBody: Story = {
     await step('O corpo é quem rola, não o painel', async () => {
       await expect(body).not.toBeNull();
       await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-      // O painel em si não rola: `flex: 1` no corpo é o que segura o rodapé.
+      // O painel em si não rola: o `flex: 1 1 auto` do corpo é o que segura o rodapé.
       await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
     });
 
-    await step('panelClass chega ao painel de verdade', async () => {
+    await step('panelClass chega ao painel, e o que ela escreve VALE', async () => {
       // O painel é construído dentro do portal: sem este input não haveria
       // elemento onde quem consome pudesse escrever uma classe.
       //
-      // ACHADO do CSS compartilhado, registrado aqui porque é onde se vê: a
-      // classe chega, mas `nds-max-w-lg` (0,1,0) NÃO vence
-      // `.nds-sheet-content[data-side="right"]` (0,2,0), que crava
-      // `max-width: 24rem`. Largura customizada por classe utilitária é inerte
-      // nas quatro stacks de navegador, e não só nesta.
-      await expect(panel).toHaveClass(/nds-max-w-lg/);
+      // A classe é `nds-rounded-xl`, e a troca tem motivo. Antes era
+      // `nds-max-w-lg`, que CHEGA e não faz nada: as regras de lado são (0,2,0)
+      // e qualquer utilitária de largura é (0,1,0), então o `max-width: 24rem`
+      // do lado direito vence. Uma story que ensina um botão que não liga nada é
+      // o mesmo defeito de uma tabela de tokens que nomeia o token errado — e a
+      // rota real da largura (`--sheet-width` / `--sheet-max-width`) já está na
+      // tabela de props e no snippet de customização.
+      //
+      // `.nds-sheet-content` não declara raio nenhum, então aqui a utilitária
+      // não disputa com ninguém: a asserção de estilo abaixo reprova tanto se a
+      // classe não chegar quanto se ela chegar e for anulada.
+      await expect(panel).toHaveClass(/nds-rounded-xl/);
       await expect(panel).toHaveClass(/nds-sheet-content/);
+      await expect(getComputedStyle(panel).borderTopLeftRadius).not.toBe('0px');
     });
 
     await step('A região rolável é alcançável por teclado', async () => {
@@ -239,7 +246,7 @@ export const LongScrollBody: Story = {
   },
 };
 
-export const WithoutCloseButton: Story = {
+export const WithCloseButtonHidden: Story = {
   parameters: {
     docs: {
       description: {

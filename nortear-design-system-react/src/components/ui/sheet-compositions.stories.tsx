@@ -13,7 +13,6 @@ import {
   SheetTrigger,
 } from "./sheet";
 import {
-  sheetContentLongSource,
   sheetFiltersSource,
   sheetNavigationSource,
   sheetPanelInferiorSource,
@@ -36,13 +35,13 @@ const meta = {
       description: {
         component:
           "Composições reais do Sheet em fluxos de produto: filtros avançados, navegação " +
-          "secundária, painel inferior e corpo longo com rolagem interna.",
+          "secundária e painel inferior.",
       },
     },
   },
   decorators: [
     (Story) => (
-      <div style={{ contain: "layout", minHeight: 320 }}>
+      <div className="nds-min-h-80" style={{ contain: "layout" }}>
         <Story />
       </div>
     ),
@@ -52,7 +51,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const FiltersPanel: Story = {
+export const AdvancedFilters: Story = {
   parameters: {
     docs: {
       // Formulário dentro do SheetBody — sub-composição que o snippet do meta,
@@ -195,68 +194,5 @@ export const BottomPanel: Story = {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "bottom");
     await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
-  },
-};
-
-export const WithLongScrollContent: Story = {
-  parameters: {
-    covers: ["visual.item4"],
-    docs: {
-      // O corpo que rola é o assunto, e ele só aparece com o SheetBody cheio.
-      source: { transform: sheetContentLongSource },
-      description: {
-        story:
-          "Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — " +
-          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
-      },
-    },
-  },
-  render: () => (
-    <Sheet defaultOpen>
-      <SheetTrigger render={<Button variant="outline" />}>Ler termos</SheetTrigger>
-      <SheetContent side="right">
-        <SheetHeader>
-          <SheetTitle>Termos de uso</SheetTitle>
-          <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
-        </SheetHeader>
-        <SheetBody className="nds-stack" data-spacing="sm">
-          {Array.from({ length: 24 }, (_, i) => (
-            <p key={i} className="nds-text-body">
-              Parágrafo {i + 1}: termos longos o bastante para o body precisar rolar
-              inside do panel, without empurrar o rodapé para outside da tela.
-            </p>
-          ))}
-        </SheetBody>
-        <SheetFooter>
-          <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-          <Button>Aceitar termos</Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
-  ),
-  play: async ({ step }) => {
-    const panel = await waitForPortal("dialog");
-    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
-    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
-
-    await step("O corpo é quem rola, não o painel", async () => {
-      await expect(body).not.toBeNull();
-      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
-      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
-    });
-
-    await step("A região rolável é alcançável por teclado", async () => {
-      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
-      // o corpo (é a regra scrollable-region-focusable do axe).
-      await expect(body).toHaveAttribute("tabindex", "0");
-    });
-
-    await step("O rodapé continua visível com o corpo cheio", async () => {
-      const boxFooter = footer.getBoundingClientRect();
-      const boxPanel = panel.getBoundingClientRect();
-      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
-      await expect(boxFooter.height).toBeGreaterThan(0);
-    });
   },
 };

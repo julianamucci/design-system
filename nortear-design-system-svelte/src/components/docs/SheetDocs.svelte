@@ -598,9 +598,10 @@ interface TriggerProps {
     <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
   </SheetHeader>
   <nav aria-label="Navegação secundária" class="nds-stack nds-px-4" data-spacing="xs">
-    <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Dashboard</a>
-    <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Projetos</a>
-    <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Equipe</a>
+    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
+    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
   </nav>
 </SheetContent>`,
         preview: compSecondaryNav,
@@ -636,10 +637,10 @@ interface TriggerProps {
             <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
           </SheetHeader>
           <nav aria-label="Navegação secundária" class="nds-stack nds-px-4" data-spacing="xs">
-            <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Dashboard</a>
-            <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Projetos</a>
-            <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Equipe</a>
-            <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Configurações</a>
+            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
+            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
           </nav>
         </SheetContent>
       </Sheet>
@@ -719,6 +720,7 @@ interface TriggerProps {
       stripHtml($tStore('accessibility.items.item5')),
       $tStore('accessibility.items.item6'),
       $tStore('accessibility.items.item7'),
+      $tStore('accessibility.items.item8'),
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[

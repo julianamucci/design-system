@@ -22,9 +22,8 @@ const meta: Meta = {
       description: {
         component:
           'Composições reais do Sheet: filtros avançados (right), navegação secundária ' +
-          '(left), painel de ações (bottom) e corpo longo com rolagem interna. A factory ' +
-          'não expõe um botão de fechar componível — o X vem pronto, e os botões do rodapé ' +
-          'saem pelo overlay.',
+          '(left) e painel de ações (bottom). A factory não expõe um botão de fechar ' +
+          'componível — o X vem pronto, e os botões do rodapé saem pelo overlay.',
       },
     },
   },
@@ -141,7 +140,7 @@ export const SecondaryNavigation: Story = {
   },
 };
 
-export const MobileBottomPanel: Story = {
+export const BottomPanel: Story = {
   parameters: {
     docs: {
       source: {
@@ -187,77 +186,5 @@ export const MobileBottomPanel: Story = {
     await expect(panel).toHaveAttribute('data-side', 'bottom');
     await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
     await expect(within(panel).getByRole('button', { name: 'Compartilhar' })).toBeVisible();
-  },
-};
-
-export const WithLongScrollContent: Story = {
-  parameters: {
-    covers: ['visual.item4'],
-    docs: {
-      // O corpo alto é o assunto: quem rola é `.nds-sheet-body`, e o rodapé fica
-      // onde está sem nenhuma opção extra.
-      source: {
-        transform: sheetSourceWith({
-          body: 'paragrafos',
-          triggerLabel: 'Ler termos',
-          title: 'Termos de uso',
-          description: 'Leia atentamente antes de aceitar.',
-          applyLabel: 'Aceitar termos',
-        }),
-      },
-      description: {
-        story:
-          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
-          'é o que separa "conteúdo longo" de "ação fora de alcance".',
-      },
-    },
-  },
-  render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
-
-    const long = document.createElement('div');
-    long.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-    long.dataset.spacing = 'sm';
-    for (let i = 1; i <= 24; i++) {
-      const p = document.createElement('p');
-      p.textContent = `Parágrafo ${i}: termos longos o bastante para o corpo precisar rolar dentro do painel, sem empurrar o rodapé para fora da tela.`;
-      long.appendChild(p);
-    }
-
-    const sheet = createSheet({
-      trigger,
-      side: 'right',
-      title: 'Termos de uso',
-      description: 'Leia atentamente antes de aceitar.',
-      content: long,
-      footer: makeFooter('Cancelar', 'Aceitar termos', true),
-    });
-    queueMicrotask(() => trigger.click());
-    return sheet;
-  },
-  play: async ({ step }) => {
-    const panel = await waitForPortal('dialog');
-    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
-    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
-
-    await step('O corpo é quem rola, não o painel', async () => {
-      await expect(body).not.toBeNull();
-      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
-      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
-    });
-
-    await step('A região rolável é alcançável por teclado', async () => {
-      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
-      // o corpo (é a regra scrollable-region-focusable do axe).
-      await expect(body).toHaveAttribute('tabindex', '0');
-    });
-
-    await step('O rodapé continua visível com o corpo cheio', async () => {
-      const boxFooter = footer.getBoundingClientRect();
-      const boxPanel = panel.getBoundingClientRect();
-      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
-      await expect(boxFooter.height).toBeGreaterThan(0);
-    });
   },
 };

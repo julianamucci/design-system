@@ -942,7 +942,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     dict();
-    return [1, 2, 3, 4, 5, 6, 7].map((i) => t(`accessibility.items.item${i}`));
+    return [1, 2, 3, 4, 5, 6, 7, 8].map((i) => t(`accessibility.items.item${i}`));
   });
 
   protected readonly keyboardItems = computed(() => {

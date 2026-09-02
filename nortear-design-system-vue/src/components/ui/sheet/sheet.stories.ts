@@ -231,6 +231,24 @@ export const Playground: Story = {
       await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
+    await step('Shift+Tab dá a volta para o outro lado, sem sair do painel', async () => {
+      const panel = await waitForPortal('dialog');
+      // O par negativo do passo acima: `accessibility.keyboard` documenta as
+      // duas direções e só a direta tinha asserção. No sentido inverso o laço
+      // passa por um ramo próprio — no Vanilla é literalmente o `if
+      // (e.shiftKey)`, que nenhuma story percorria.
+      for (let i = 0; i < 6; i++) await userEvent.tab({ shift: true });
+      // Mesma espera do sentido direto, e pelo mesmo motivo: a volta passa
+      // por uma âncora de foco irmã do painel e o retorno cai no tique
+      // seguinte. Foco que escapasse de verdade nunca voltaria, e reprovaria.
+      await waitFor(() => {
+        if (!panel.contains(document.activeElement)) {
+          throw new Error('o foco saiu do painel para trás e não voltou');
+        }
+      });
+      await expect(panel.contains(document.activeElement)).toBe(true);
+    });
+
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       await close();
       await waitFor(() => {

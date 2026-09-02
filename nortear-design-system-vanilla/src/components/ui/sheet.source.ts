@@ -30,6 +30,8 @@ export type SheetSnippetOptions = {
   onClose?: unknown;
   /** Quantos parágrafos o corpo longo empilha. */
   paragrafos?: number;
+  /** `false` monta o painel sem o X do canto — a saída passa a ser o rodapé. */
+  showCloseButton?: boolean;
   /** Mostra o `destroy()` — quem tira o painel da página o chama. */
   mostrarDestroy?: boolean;
 };
@@ -187,6 +189,8 @@ function panelLines(o: SheetSnippetOptions, trigger: string, rodapeRef?: string)
     ],
     ['content', 'corpo'],
     ['footer', rodapeRef],
+    // Só quando é FALSO: `true` é o padrão da fábrica e não entra no snippet.
+    ['showCloseButton', o.showCloseButton === false ? 'false' : undefined],
     ['onOpenChange', expressao(o.onOpenChange, CALLBACK_ABERTURA)],
     ['onClose', expressao(o.onClose, CALLBACK_FECHAMENTO)],
   ]);
@@ -238,7 +242,7 @@ gatilhoInterno.setAttribute('tabindex', '-1');
 gatilhoInterno.setAttribute('aria-hidden', 'true');`,
     `let aberto = false;
 const painel = ${callLine('createSheet', [
-      'trigger: triggerInterno,',
+      'trigger: gatilhoInterno,',
       `title: ${text(o.title ?? 'Controlado pelo pai')},`,
       `description: ${text(o.description ?? 'Abertura programática pelo gatilho interno.')},`,
       'content: corpo,',

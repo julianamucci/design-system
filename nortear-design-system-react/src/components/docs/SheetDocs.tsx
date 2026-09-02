@@ -794,6 +794,7 @@ export function SheetDocs() {
           stripHtml(tContent("accessibility.items.item5")),
           stripHtml(tContent("accessibility.items.item6")),
           stripHtml(tContent("accessibility.items.item7")),
+          stripHtml(tContent("accessibility.items.item8")),
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[

@@ -6,9 +6,10 @@
  * guarda que elas têm: a saída do painel não chega ao DOM durante a `play`.
  *
  * O que as stories montam em volta é ANDAIME e não entra no snippet: o
- * decorator `<div style={{ contain: "layout", minHeight: 320 }}>` existe porque
- * o painel é portalizado e o Storybook precisa de um quadro com altura para o
- * exemplo não colapsar, e `useTranslation` resolve rótulo, que é conteúdo de
+ * decorator `<div className="nds-min-h-80" style={{ contain: "layout" }}>` existe
+ * porque o painel é portalizado e o Storybook precisa de um quadro com altura
+ * para o exemplo não colapsar — a altura sai do degrau da escada, e não de um
+ * número cravado no `style`, que venceria o tema e a densidade; e `useTranslation` resolve rótulo, que é conteúdo de
  * quem consome. Os snippets trazem o texto já em português, idioma em que o
  * design system nasce.
  *

@@ -19,8 +19,13 @@ export type SheetArgs = {
   cancelLabel: string;
 };
 
-/** Corpo entre cabeçalho e rodapé. `nenhum` é o painel só de decisão. */
-type Body = 'nenhum' | 'formulario' | 'rolagem';
+/**
+ * Corpo entre cabeçalho e rodapé. `nenhum` é o painel só de decisão.
+ *
+ * `navegacao` é o único que dispensa o rodapé: um menu não tem o que confirmar,
+ * e a saída dele é o X do canto — é o que as outras quatro stacks já mostram.
+ */
+type Body = 'nenhum' | 'formulario' | 'rolagem' | 'navegacao';
 
 type Options = Partial<SheetArgs> & { body?: Body };
 
@@ -79,6 +84,20 @@ function panelBody(body: Body): string {
     </SheetBody>
 `;
   }
+  if (body === 'navegacao') {
+    return `
+    <SheetBody>
+      <nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">
+        {#each secoes as secao (secao)}
+          <a
+            href="#{secao.toLowerCase()}"
+            class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
+          >{secao}</a>
+        {/each}
+      </nav>
+    </SheetBody>
+`;
+  }
   if (body === 'rolagem') {
     // O corpo é peça do componente: o SheetBody já traz o overflow, o flex que
     // segura o rodapé e o tabindex que a região rolável exige (WCAG 2.1.1).
@@ -112,6 +131,10 @@ function panel(o: Options): string {
   // monta o painel — e continua voltando para lá a cada fechamento.
   const controlled = open !== undefined;
   const state = controlled ? `\n\nlet open = $state(${open});` : '';
+  const secoesList =
+    body === 'navegacao'
+      ? `\n\nconst secoes = ['Dashboard', 'Projetos', 'Equipe', 'Configurações'];`
+      : '';
   const paragrafosList =
     body === 'rolagem'
       ? `\n\nconst paragrafos = Array.from(
@@ -120,8 +143,22 @@ function panel(o: Options): string {
 );`
       : '';
 
+  // Menu não confirma nada: sem rodapé, a saída é o X do canto.
+  const footerBlock =
+    body === 'navegacao'
+      ? ''
+      : `    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>${cancelLabel}</Button>
+        {/snippet}
+      </SheetClose>
+      <Button>${actionLabel}</Button>
+    </SheetFooter>
+`;
+
   return svelteSnippet(
-    `${imports(body)}${state}${paragrafosList}`,
+    `${imports(body)}${state}${secoesList}${paragrafosList}`,
     `<Sheet${attrs(controlled ? 'bind:open' : '')}>
   <SheetTrigger>
     {#snippet child({ props })}
@@ -133,15 +170,7 @@ function panel(o: Options): string {
       <SheetTitle>${title}</SheetTitle>
       <SheetDescription>${description}</SheetDescription>
     </SheetHeader>
-${panelBody(body)}    <SheetFooter>
-      <SheetClose>
-        {#snippet child({ props })}
-          <Button variant="outline" {...props}>${cancelLabel}</Button>
-        {/snippet}
-      </SheetClose>
-      <Button>${actionLabel}</Button>
-    </SheetFooter>
-  </SheetContent>
+${panelBody(body)}${footerBlock}  </SheetContent>
 </Sheet>`,
   );
 }
@@ -188,5 +217,17 @@ export function sheetTermosWithScrollSource(): string {
     description: 'Leia atentamente antes de aceitar.',
     actionLabel: 'Aceitar',
     cancelLabel: 'Recusar',
+  });
+}
+
+/** Composição: navegação secundária à esquerda, sem rodapé. */
+export function sheetNavegacaoSecundariaSource(): string {
+  return panel({
+    open: true,
+    side: 'left',
+    body: 'navegacao',
+    triggerLabel: 'Abrir menu',
+    title: 'Menu',
+    description: 'Navegue entre as áreas do sistema.',
   });
 }

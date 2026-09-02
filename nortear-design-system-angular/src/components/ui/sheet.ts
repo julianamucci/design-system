@@ -32,6 +32,19 @@ import { cn } from '@/lib/utils';
 // Visual: classes .nds-sheet-* (docs/shared/styles/nds/sheet.css), o mesmo
 // conjunto que o Vanilla — referência de markup — escreve à mão.
 //
+// Decisão de acessibilidade do Sheet — bloco canônico no sheet.ts do Vanilla.
+// Em resumo: painel modal que entra pela borda, com role="dialog",
+// aria-modal="true", foco preso, foco devolvido ao gatilho no fecho, Escape e
+// clique no véu fechando, rolagem da página travada, corpo rolável com papel e
+// nome, e NENHUMA região viva.
+//
+// O mecanismo desta stack, medido em node_modules: o RdxDialogPopup liga
+// [attr.aria-modal] a modal() === true e aria-labelledby/aria-describedby aos
+// ids que as diretivas de título e descrição registram; a dispensa é escapeKey
+// sempre ligado mais outsidePress restrito ao diálogo mais profundo; o
+// gerenciador de foco é dono do alvo de retorno e sobrevive à animação de
+// saída. É a lista logo abaixo, item por item.
+//
 // COM os primitivos de Dialog do Radix NG, porque o Sheet É um Dialog com
 // posicionamento lateral e a parte difícil dele não é o CSS. O que o primitivo
 // entrega, e que se escreve errado à mão:
@@ -115,7 +128,13 @@ export function sheetCloseReason(motivo: RdxDialogOpenChangeReason): SheetCloseR
  * classe que quem consome escreve NO ELEMENTO. Aqui não há elemento — o painel
  * é construído por este componente, dentro do portal, e quem consome não tem
  * onde escrever. O conteúdo compartilhado documenta essa mesma escotilha nas
- * outras stacks como `className`, e é por ela que se ajusta a largura do painel.
+ * outras stacks como `className`.
+ *
+ * O que ela NÃO faz é ajustar a largura, e vale dizer porque o contrário já
+ * esteve escrito aqui: as regras de lado são (0,2,0) e qualquer utilitária de
+ * largura é (0,1,0), então `nds-max-w-lg` no painel é inerte. A largura sai de
+ * `--sheet-width` / `--sheet-max-width`, como a tabela de props do conteúdo
+ * compartilhado registra e o snippet de customização ensina.
  */
 @Directive({
   selector: 'ng-template[ndsSheetContent]',
@@ -137,7 +156,7 @@ export class NdsSheetContent {
    */
   readonly closeLabel = input('Fechar');
 
-  /** Classes .nds-* extras no painel (largura, principalmente). */
+  /** Classes .nds-* extras no painel — ver a nota de largura no docblock acima. */
   readonly panelClass = input('');
 }
 
@@ -346,8 +365,10 @@ export class NdsSheetDescription {}
  *
  * `tabindex="0"` estático, como no Vanilla: quando o conteúdo excede a altura do
  * painel, a região rolável precisa ser alcançável por teclado (WCAG 2.1.1 —
- * é a regra `scrollable-region-focusable` do axe). O `flex: 1` do CSS
- * compartilhado é o que mantém o rodapé no lugar enquanto o corpo rola.
+ * é a regra `scrollable-region-focusable` do axe). O `flex: 1 1 auto` do CSS
+ * compartilhado é o que mantém o rodapé no lugar enquanto o corpo rola — e é
+ * `1 1 auto`, não o atalho `flex: 1`, que zera a base e derruba a altura do
+ * painel nos lados `top` e `bottom`. O motivo inteiro está em sheet.css.
  */
 @Directive({
   selector: 'div[ndsSheetBody]',

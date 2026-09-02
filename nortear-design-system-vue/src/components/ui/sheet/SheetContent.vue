@@ -44,10 +44,23 @@ const delegatedProps = reactiveOmit(props, 'class', 'side', 'showCloseButton', '
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-// O primitivo desta stack isola o resto do documento com `aria-hidden` e NÃO
-// emite `aria-modal` (conferido em node_modules). O contrato de markup do
-// design system promete o atributo, então quem o emite é este wrapper — lendo
-// do contexto da raiz para que um painel não-modal não o receba.
+// Decisão de acessibilidade do Sheet — bloco canônico no sheet.ts do Vanilla.
+// Em resumo: painel modal que entra pela borda, com role="dialog",
+// aria-modal="true", foco preso, foco devolvido ao gatilho no fecho, Escape e
+// clique no véu fechando, rolagem da página travada, corpo rolável com papel e
+// nome, e NENHUMA região viva.
+//
+// O mecanismo desta stack, medido em node_modules: o DialogContent escolhe
+// entre DialogContentModal e DialogContentNonModal pelo modal da raiz — o
+// modal liga trap-focus, chama useHideOthers (aria-hidden nos irmãos) e devolve
+// o foco ao gatilho no onCloseAutoFocus; o não-modal passa trap-focus: false.
+// O véu segue o mesmo interruptor: o DialogOverlay só renderiza quando a raiz
+// é modal.
+//
+// O primitivo isola o resto do documento com `aria-hidden` e NÃO emite
+// `aria-modal`. O contrato de markup do design system promete o atributo,
+// então quem o emite é este wrapper — lendo do contexto da raiz para que um
+// painel não-modal não o receba.
 //
 // Aqui morava também um `aria-label="Sheet"` de muleta, aplicado sempre que o
 // consumidor não passasse `aria-labelledby` — o que é SEMPRE, porque quem liga

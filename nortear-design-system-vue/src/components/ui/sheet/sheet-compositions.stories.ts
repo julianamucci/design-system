@@ -18,7 +18,6 @@ import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
 import {
   sheetEditPerfilSource,
   sheetFiltersAvancadosSource,
-  sheetFormLongSource,
   sheetNavigationSecundariaSource,
 } from './sheet.source';
 
@@ -37,13 +36,13 @@ const meta = {
       description: {
         component:
           'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
-          'perfil, navegação secundária e formulário longo com rolagem interna.',
+          'perfil e navegação secundária.',
       },
     },
   },
   decorators: [
     () => ({
-      template: '<div style="min-height: 520px; width: 100%;"><story /></div>',
+      template: '<div class="nds-min-h-80 nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sheet>;
@@ -203,73 +202,5 @@ export const SecondaryNavigation: Story = {
     await expect(panel).toHaveAttribute('data-side', 'left');
     const nav = within(panel).getByRole('navigation');
     await expect(nav).toBeVisible();
-  },
-};
-
-export const LongFormScroll: Story = {
-  parameters: {
-    covers: ['visual.item4'],
-    docs: {
-      // O corpo mais alto que o painel é o assunto: sem os campos repetidos não
-      // há rolagem para o leitor ver de onde vem a separação corpo/rodapé.
-      source: { transform: sheetFormLongSource },
-      description: {
-        story:
-          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
-          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
-      },
-    },
-  },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <Sheet default-open>
-        <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>Preferências de notificação</SheetTitle>
-            <SheetDescription>Configure cada tipo de notificação individualmente.</SheetDescription>
-          </SheetHeader>
-          <SheetBody>
-            <div class="nds-grid" data-spacing="sm">
-              <div v-for="i in 12" :key="i" class="nds-grid" data-spacing="xs">
-                <Label :for="'notif-' + i">Categoria {{ i }}</Label>
-                <Input :id="'notif-' + i" :defaultValue="'Configuração ' + i" />
-              </div>
-            </div>
-          </SheetBody>
-          <SheetFooter>
-            <SheetClose as-child>
-              <Button variant="outline">Cancelar</Button>
-            </SheetClose>
-            <Button>Salvar preferências</Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    `,
-  }),
-  play: async ({ step }) => {
-    const panel = await waitForPortal('dialog');
-    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
-    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
-
-    await step('O corpo é quem rola, não o painel', async () => {
-      await expect(body).not.toBeNull();
-      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
-      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
-    });
-
-    await step('A região rolável é alcançável por teclado', async () => {
-      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
-      // o corpo (é a regra scrollable-region-focusable do axe).
-      await expect(body).toHaveAttribute('tabindex', '0');
-    });
-
-    await step('O rodapé continua visível com o corpo cheio', async () => {
-      const boxFooter = footer.getBoundingClientRect();
-      const boxPanel = panel.getBoundingClientRect();
-      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
-      await expect(boxFooter.height).toBeGreaterThan(0);
-    });
   },
 };

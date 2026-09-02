@@ -1,3 +1,17 @@
+<!--
+	Decisão de acessibilidade do Sheet — bloco canônico no sheet.ts do Vanilla.
+	Em resumo: painel modal que entra pela borda, com role="dialog",
+	aria-modal="true", foco preso, foco devolvido ao gatilho no fecho, Escape e
+	clique no véu fechando, rolagem da página travada, corpo rolável com papel e
+	nome, e NENHUMA região viva.
+
+	O mecanismo desta stack, medido em node_modules: o Dialog.Content do bits-ui
+	escreve role="dialog" e aria-modal="true" por conta própria — é a única das
+	quatro libs que não precisa do wrapper para isso — e empilha FocusScope
+	(trapFocus, padrão TRUE), EscapeLayer, DismissibleLayer e ScrollLock
+	(preventScroll, padrão TRUE). Aqui não existe prop modal: o painel é sempre
+	modal, e é por isso que este wrapper não tem o que decidir.
+-->
 <script lang="ts" module>
 	export type Side = "top" | "right" | "bottom" | "left";
 </script>

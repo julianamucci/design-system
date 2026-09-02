@@ -7,12 +7,30 @@
  *   <div class="nds-sheet-overlay" />
  *   <div class="nds-sheet-content" data-side="right" role="dialog" aria-modal="true">
  *     <div class="nds-sheet-header">…</div>
- *     <div class="nds-sheet-body">…</div>
+ *     <div class="nds-sheet-body" tabindex="0" role="group" aria-label="…">…</div>
  *     <div class="nds-sheet-footer">…</div>
  *     <button class="nds-sheet-close" aria-label="Fechar">…</button>
  *   </div>
  *
- * Tokens: --background, --foreground, --muted-foreground, --border,
+ * Duas notas sobre a árvore acima, porque o desenho dela ENSINA e já ensinou
+ * a forma errada em outra folha desta família:
+ *
+ *   · o corpo rola, e por isso entra na ordem de tabulação (WCAG 2.1.1, a
+ *     regra scrollable-region-focusable). Parada de teclado precisa de papel,
+ *     e o papel só aparece QUANDO há nome: `role="group"` e `aria-label` vêm
+ *     juntos ou não vêm — nome em elemento sem papel é atributo proibido, e o
+ *     leitor de tela o descarta (aria-prohibited-attr). É `group` e não
+ *     `region` porque um marco aninhado num diálogo já nomeado não acrescenta
+ *     navegação, só entrada na lista.
+ *
+ *   · o botão de fechar tem DUAS formas, e as duas são o desenho. O Vanilla
+ *     monta o `<button class="nds-sheet-close">` acima; as quatro stacks com
+ *     lib compõem o botão do design system e usam só o posicionamento:
+ *     `<button class="nds-button … nds-sheet-close-position">`, com o rótulo
+ *     em `.nds-sr-only`. A folha traz as duas regras por isso.
+ *
+ * Tokens: --overlay (a cor do véu, usada com 80% de opacidade),
+ *         --background, --foreground, --muted-foreground, --border,
  *         --ring, --spacing-*
  *         --sheet-width / --sheet-max-width — largura dos lados esquerdo e
  *         direito, o ponto de customização (ver a nota em "Sides").

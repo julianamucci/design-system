@@ -3,7 +3,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
-import { sheetSource } from './sheet.source';
+import { sheetSource, sheetTermosWithScrollSource } from './sheet.source';
 
 // Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
@@ -22,8 +22,9 @@ const meta: Meta = {
       source: { transform: sheetSource },
       description: {
         component:
-          'Estados canônicos do Sheet: Closed (inicial), Open, WithCloseButtonHidden ' +
-          '(sem o botão do canto) e Controlled (estado externo).',
+          'Estados canônicos do Sheet: Closed (inicial), Open, LongScrollBody (corpo mais ' +
+          'alto que o painel), WithCloseButtonHidden (sem o botão do canto) e Controlled ' +
+          '(estado externo).',
       },
     },
   },
@@ -100,6 +101,55 @@ export const Open: Story = {
           throw new Error('o foco não entrou no painel');
         }
       });
+    });
+  },
+};
+
+export const LongScrollBody: Story = {
+  args: {
+    open: true,
+    side: 'right',
+    variant: 'withScrollContent',
+    triggerLabel: 'Ver termos',
+    title: 'Termos e condições',
+    description: 'Leia atentamente antes de aceitar.',
+    actionLabel: 'Aceitar',
+    cancelLabel: 'Recusar',
+  },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      source: { transform: sheetTermosWithScrollSource },
+      description: {
+        story:
+          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
+          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
+      },
+    },
+  },
+  play: async ({ step }) => {
+    const panel = await waitForPortal('dialog');
+    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+
+    await step('O corpo é quem rola, não o painel', async () => {
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      // O painel em si não rola: o `flex: 1 1 auto` do corpo é o que segura o rodapé.
+      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
+    });
+
+    await step('A região rolável é alcançável por teclado', async () => {
+      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
+      // o corpo (é a regra scrollable-region-focusable do axe).
+      await expect(body).toHaveAttribute('tabindex', '0');
+    });
+
+    await step('O rodapé continua visível com o corpo cheio', async () => {
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

@@ -48,7 +48,7 @@ const meta = {
   },
   decorators: [
     () => ({
-      template: '<div style="min-height: 480px; width: 100%;"><story /></div>',
+      template: '<div class="nds-min-h-80 nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sheet>;

@@ -319,7 +319,8 @@
         "item4": "Focus trap dentro do painel enquanto aberto",
         "item5": "<code>Escape</code> fecha o painel e retorna foco ao trigger",
         "item6": "Clique no overlay fecha o painel (comportamento nativo)",
-        "item7": "Scroll do body é bloqueado enquanto o Sheet está aberto"
+        "item7": "Scroll do body é bloqueado enquanto o Sheet está aberto",
+        "item8": "O corpo rolável entra na ordem de tabulação e recebe <code>role=\"group\"</code> quando nomeado por <code>aria-label</code> — sem nome, papel nenhum"
       },
       "keyboard": {
         "title": "Navegação por Teclado",
@@ -790,7 +791,8 @@
         "item4": "Focus trap inside the panel while open",
         "item5": "<code>Escape</code> closes the panel and returns focus to trigger",
         "item6": "Overlay click closes the panel (native behavior)",
-        "item7": "Body scroll is blocked while Sheet is open"
+        "item7": "Body scroll is blocked while Sheet is open",
+        "item8": "The scrollable body joins the tab order and takes <code>role=\"group\"</code> when named with <code>aria-label</code> — no name, no role"
       },
       "keyboard": {
         "title": "Keyboard Navigation",
@@ -1261,7 +1263,8 @@
         "item4": "Focus trap dentro del panel mientras está abierto",
         "item5": "<code>Escape</code> cierra el panel y devuelve el foco al trigger",
         "item6": "Clic en el overlay cierra el panel (comportamiento nativo)",
-        "item7": "El scroll del body se bloquea mientras el Sheet está abierto"
+        "item7": "El scroll del body se bloquea mientras el Sheet está abierto",
+        "item8": "El cuerpo desplazable entra en el orden de tabulación y recibe <code>role=\"group\"</code> cuando se le nombra con <code>aria-label</code> — sin nombre, sin rol"
       },
       "keyboard": {
         "title": "Navegación por Teclado",

@@ -1,6 +1,62 @@
 // ─── Sheet — Vanilla factory standalone ─────────────────────────────────────
 // Visual: classes .nds-sheet-* (standalone). Render via portal.
 // Comportamento: overlay click + Escape fecham; focus-trap.
+//
+// ─── Decisão de acessibilidade ───────────────────────────────────────────────
+//
+// Bloco canônico da família: as outras quatro stacks carregam a versão curta
+// mais o mecanismo da própria lib. Medido na FONTE das quatro libs headless
+// (base-ui, reka-ui, bits-ui, radix-ng) e neste arquivo, em 2026-09-02 — não na
+// documentação delas.
+//
+// O Sheet é PAINEL MODAL que entra pela borda. É isso que o separa do resto da
+// família de sobreposição, e cada item abaixo é consequência disso:
+//
+//  1. PAPEL E NOME. role="dialog" no painel nas cinco, com aria-labelledby e
+//     aria-describedby apontando para os ids REAIS do título e da descrição.
+//     Painel sem título é diálogo anônimo — o leitor anuncia "diálogo" e nada
+//     mais. Aqui os ids nascem de um contador; nas outras quatro, das diretivas
+//     de título e descrição, que registram o próprio id no contexto da raiz.
+//
+//  2. aria-modal="true" NAS CINCO, por caminhos diferentes. bits-ui e radix-ng
+//     escrevem sozinhos (radix-ng só quando modal === true); base-ui e reka-ui
+//     NÃO escrevem, e quem escreve é o wrapper do design system, lendo o estado
+//     modal da raiz; aqui é literal. Painel NÃO-modal não recebe o atributo —
+//     nem "false", que anunciaria a existência de um modo que não existe.
+//
+//  3. PRENDE O FOCO — e é o que o separa do Popover, que só o recebe. base-ui
+//     por FloatingFocusManager com modal !== false; reka-ui pelo
+//     DialogContentModal, com trap-focus ligado a open; bits-ui pelo FocusScope
+//     trapFocus, cujo padrão é TRUE; radix-ng por gerenciador próprio; aqui
+//     pelo laço de Tab e Shift+Tab do handleKeydown.
+//
+//  4. O FOCO VOLTA AO GATILHO NO FECHO, nas cinco. Aqui é previousFocus.focus()
+//     em closeWithReason, e de propósito NÃO em desmontarPanel: quem desmonta
+//     pode ter tirado o próprio gatilho do documento.
+//
+//  5. ESCAPE FECHA e CLIQUE NO VÉU FECHA, nas cinco, e só no diálogo do topo.
+//     O ouvinte de Escape mora no DOCUMENTO, não no painel: o foco pode estar no
+//     corpo que rola, e um ouvinte preso ao painel dependeria de onde ele está.
+//
+//  6. ROLAGEM DA PÁGINA TRAVADA enquanto modal. Sem isso o aria-modal mente: o
+//     leitor de tela não alcança o fundo, mas a roda do mouse alcança. A
+//     contagem vive em @/lib/scroll-lock, compartilhada com o Drawer.
+//
+//  7. O CORPO QUE ROLA TEM PAPEL E NOME, e o nome NÃO tem padrão. O
+//     .nds-sheet-body leva tabindex="0" porque rola (WCAG 2.1.1, a regra
+//     scrollable-region-focusable), e parada de teclado precisa de papel:
+//     role="group" — não region, que poluiria a lista de marcos dentro de um
+//     diálogo já nomeado. O papel só é emitido QUANDO existe aria-label, porque
+//     nome em elemento sem papel é atributo proibido e o leitor o descarta
+//     (aria-prohibited-attr).
+//
+//  8. ORDEM DE LEITURA. O painel entra pela borda, mas quem lê de ouvido não
+//     segue a geometria: o foco entra no painel na abertura e a ordem é a do
+//     DOM — cabeçalho, corpo, rodapé e o X do canto por ÚLTIMO. O X é saída, não
+//     entrada; ele primeiro faria a primeira parada de teclado ser "fechar".
+//
+//  9. NENHUMA REGIÃO VIVA. A abertura já move o foco e o papel de diálogo já é
+//     anunciado; uma região viva aqui diria a mesma coisa duas vezes.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,6 +93,17 @@ export type SheetOptions = {
    * marco aninhado num diálogo não acrescenta navegação, só entrada na lista.
    */
   bodyLabel?: string;
+
+  /**
+   * Botão X no canto superior direito do painel.
+   *
+   * Entregue aqui porque o conteúdo compartilhado o documenta como prop do
+   * Content, com padrão `true`, e as outras quatro stacks o expõem: a factory
+   * era a única em que a promessa não se cumpria. Desligar só faz sentido com
+   * o rodapé oferecendo uma saída explícita — Escape e o clique no véu
+   * continuam fechando de qualquer forma.
+   */
+  showCloseButton?: boolean;
 
   /**
    * Nome acessível do botão de fechar.
@@ -120,6 +187,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     content,
     footer,
     bodyLabel,
+    showCloseButton = true,
     closeLabel = 'Fechar',
     onOpenChange,
     onClose,
@@ -182,12 +250,15 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     panelEl.dataset.slot = 'sheet-content';
 
     // Close button
-    const closeBtn = document.createElement('button');
-    closeBtn.type = 'button';
-    closeBtn.className = 'nds-sheet-close';
-    closeBtn.setAttribute('aria-label', closeLabel);
-    closeBtn.appendChild(createCloseIcon());
-    closeBtn.addEventListener('click', () => closeWithReason('close-button'));
+    let closeBtn: HTMLButtonElement | null = null;
+    if (showCloseButton) {
+      closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'nds-sheet-close';
+      closeBtn.setAttribute('aria-label', closeLabel);
+      closeBtn.appendChild(createCloseIcon());
+      closeBtn.addEventListener('click', () => closeWithReason('close-button'));
+    }
 
     // Header
     if (title || description) {
@@ -234,7 +305,9 @@ export function createSheet(options: SheetOptions): DestroyableElement {
       panelEl.appendChild(footerEl);
     }
 
-    panelEl.appendChild(closeBtn);
+    // Por ÚLTIMO no painel, de propósito: o X é a saída, não a entrada, e a
+    // ordem de leitura do diálogo é cabeçalho, corpo, rodapé e só então ela.
+    if (closeBtn) panelEl.appendChild(closeBtn);
 
     document.body.appendChild(overlayEl);
     document.body.appendChild(panelEl);

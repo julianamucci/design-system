@@ -47,7 +47,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div style={{ contain: "layout", minHeight: 320 }}>
+      <div className="nds-min-h-80" style={{ contain: "layout" }}>
         <Story />
       </div>
     ),

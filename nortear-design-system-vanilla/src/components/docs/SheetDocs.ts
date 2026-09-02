@@ -499,9 +499,12 @@ createSheet({
               useWhen: stripHtml(t('variants.compositions.secondaryNavigation.use')),
               code: `const nav = document.createElement('nav');
 nav.setAttribute('aria-label', 'Navegação secundária');
-['Dashboard', 'Projetos', 'Equipe'].forEach(label => {
+nav.className = 'nds-stack';
+nav.dataset.spacing = 'xs';
+['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'].forEach(label => {
   const a = document.createElement('a');
   a.href = '#';
+  a.className = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
   a.textContent = label;
   nav.appendChild(a);
 });
@@ -623,7 +626,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
           screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',       description: t('accessibility.keyboard.tab')      },

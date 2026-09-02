@@ -5,11 +5,24 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
-// O primitivo desta stack isola o resto do documento com `inert`/`aria-hidden`
-// e NÃO emite `aria-modal` (conferido em node_modules). Quem cumpre o contrato
-// de markup do design system é este wrapper, e para isso o Content precisa
-// saber se a raiz é modal. `'trap-focus'` prende o foco mas deixa a página
-// interativa: não é modal para o leitor de tela.
+// Decisão de acessibilidade do Sheet — bloco canônico no sheet.ts do Vanilla.
+// Em resumo: painel modal que entra pela borda, com role="dialog",
+// aria-modal="true", foco preso, foco devolvido ao gatilho no fecho, Escape e
+// clique no véu fechando, rolagem da página travada, corpo rolável com papel e
+// nome, e NENHUMA região viva.
+//
+// O mecanismo desta stack, medido em node_modules: o foco é preso pelo
+// FloatingFocusManager do DialogPopup, com modal !== false, que também devolve
+// o foco ao gatilho (returnFocus); a dispensa sai do useDismiss da raiz
+// (escapeKey só no diálogo do topo, outsidePress restrito ao backdrop do
+// próprio diálogo); a trava de rolagem cai de useScrollLock(open && modal ===
+// true), e portanto só do modal de verdade.
+//
+// O primitivo isola o resto do documento com `inert`/`aria-hidden` e NÃO emite
+// `aria-modal` (conferido em node_modules). Quem cumpre o contrato de markup do
+// design system é este wrapper, e para isso o Content precisa saber se a raiz é
+// modal. `'trap-focus'` prende o foco mas deixa a página interativa: não é modal
+// para o leitor de tela, e por isso não recebe o atributo.
 const SheetModalContext = React.createContext<boolean | "trap-focus">(true)
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
