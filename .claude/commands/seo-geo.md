@@ -174,8 +174,10 @@ Use 4 `Grep` em paralelo por check — não loops bash seriais.
 Ao finalizar todas as alterações, execute:
 
 ```bash
-git add -A
-git commit -m "skill(seo-geo): $ARGUMENTS"
+# Stage SÓ os seus caminhos. `git add -A` varre o que outra sessão
+# deixou na árvore — já levou 55 arquivos de outra stack para um commit,
+# e nesta casa reincidiu seis vezes numa campanha só. Liste os caminhos:
+git commit -- <caminhos exatos que você tocou> -m "skill(seo-geo): $ARGUMENTS"
 ```
 
 Se nenhum arquivo foi modificado, não faça commit.

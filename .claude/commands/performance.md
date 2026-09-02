@@ -165,8 +165,10 @@ useEffect(() => {
 Ao finalizar todas as otimizações, execute:
 
 ```bash
-git add -A
-git commit -m "skill(performance): $ARGUMENTS"
+# Stage SÓ os seus caminhos. `git add -A` varre o que outra sessão
+# deixou na árvore — já levou 55 arquivos de outra stack para um commit,
+# e nesta casa reincidiu seis vezes numa campanha só. Liste os caminhos:
+git commit -- <caminhos exatos que você tocou> -m "skill(performance): $ARGUMENTS"
 ```
 
 Se nenhum arquivo foi modificado, não faça commit.
