@@ -104,7 +104,18 @@ export const Playground: Story = {
       if (!args.open) {
         // A lista não desenha nada com a caixa fechada — quem esconde é o
         // navegador, e é justamente por isso que a peça é um `<details>`.
-        await expect(list.getClientRects()).toHaveLength(0);
+        //
+        // A CONTAGEM DE RETÂNGULOS NÃO MEDE ISSO, e deixou de medir sem avisar:
+        // o `<details>` fechado passou a esconder o conteúdo por
+        // `content-visibility: hidden` no `::details-content`, e essa
+        // propriedade PRESERVA a caixa — pula a pintura, não o layout. A lista
+        // seguia invisível na tela e a contagem virou 1.
+        //
+        // `checkVisibility()` é a pergunta certa: ela responde "isto está sendo
+        // renderizado?", e responde não para subárvore pulada, para
+        // `display: none` e para `visibility: hidden` — as três formas pelas
+        // quais uma engine pode fechar a caixa.
+        await expect(list.checkVisibility()).toBe(false);
       }
     });
 

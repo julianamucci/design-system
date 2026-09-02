@@ -110,7 +110,16 @@ export const Playground: Story = {
       // A decisão que governa o componente: texto em streaming numa região viva
       // é anunciado a cada trecho, e a leitura fica impossível. A única região
       // viva é o anunciador, fora do fluxo, e ele começa vazio.
-      await expect(viewport.getAttribute('role')).toBeNull();
+      //
+      // O papel `group` NÃO é região viva, e a asserção precisa dizer isso em
+      // vez de exigir papel NENHUM: enquanto a camada que rola não tinha papel,
+      // "sem papel" servia de atalho para "não anuncia sozinha", e o atalho
+      // passou a reprovar no dia em que a regra 6 da §8 da guideline 17 lhe deu
+      // o par `role="group"` + nome — sem papel, o `aria-label` que nomeia a
+      // parada de teclado seria atributo proibido. O que se mede é a LIVENESS.
+      await expect(viewport).toHaveAttribute('role', 'group');
+      await expect(['log', 'status', 'alert', 'marquee', 'timer'])
+        .not.toContain(viewport.getAttribute('role'));
       await expect(viewport.querySelector('[aria-live]')).toBeNull();
       const announcer = root.querySelector('.nds-chat-thread-announcer')!;
       await expect(announcer).toHaveAttribute('aria-live', 'polite');
