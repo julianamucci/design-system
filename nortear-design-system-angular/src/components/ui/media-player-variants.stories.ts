@@ -114,7 +114,14 @@ export const Video: Story = {
       // uma barra que não anda se lê como componente quebrado; foi assim que a
       // dona viu. O que separa "não sei a duração" de "não existe duração" é
       // este aviso.
-      await until(() => root.dataset['live'] === 'true', 5000);
+      // Prazo FOLGADO de propósito. `data-live` só aparece depois que a mídia
+      // reporta `Infinity` em `duration`, e isso depende de `loadedmetadata` —
+      // trabalho que compete com o resto da suíte. Medido em 2026-09-01: passou
+      // numa rodada de 380s e reprovou na de 910s, com a mesma máquina e o
+      // mesmo código, porque 5s não davam sob carga. O laço é de relógio e sai
+      // assim que a condição vira, então o prazo maior não custa tempo de
+      // rodada — só deixa de reprovar por carga.
+      await until(() => root.dataset['live'] === 'true', 20000);
       await expect(root.dataset['live']).toBe('true');
       await expect(clockText(root)).toBe(MEDIA_PLAYER_LABELS.live);
       await expect(clockText(root)).not.toContain('--:--');
