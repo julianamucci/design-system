@@ -407,25 +407,16 @@ Limitado **apenas às 3 stories que renderizam Toaster**. Botões e demais primi
 
 - **Arquivos:**
   - `nortear-design-system-react/src/components/ui/command.stories.tsx`
-  - `nortear-design-system-react/src/components/ui/command-composicoes.stories.tsx`
-  - `nortear-design-system-react/src/components/ui/command-estados.stories.tsx`
-- **Categoria:** a11y (escopo limitado a stories de Command)
-- **Data:** 2026-04-28
+  - `nortear-design-system-react/src/components/ui/command-compositions.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/command-states.stories.tsx`
+- **Categoria:** a11y (escopo limitado a stories de `Primitives/Overlay/Command/*`)
+- **Data:** 2026-04-28 · **Reduzido e remedido em:** 2026-09-02
 - **Upstream ref:** [pacocoursey/cmdk](https://github.com/pacocoursey/cmdk) — listbox como container genérico de comandos
-
-**Antes:**
-```tsx
-const meta = {
-  title: "UI/Command",
-  component: Command,
-  parameters: { ... },
-};
-```
 
 **Depois:**
 ```tsx
 const meta = {
-  title: "UI/Command",
+  title: "Primitives/Overlay/Command",
   component: Command,
   parameters: {
     a11y: {
@@ -437,11 +428,41 @@ const meta = {
 };
 ```
 
-**Motivo:** cmdk renderiza `<div cmdk-list role="listbox">` com children como `<div cmdk-empty>`, `<div cmdk-separator role="separator">` e `<div cmdk-group role="group">`. Pela ARIA spec, `role="listbox"` deve conter apenas `option` ou `group` como descendentes — daí a violação `aria-required-children` (critical).
+**Motivo — a versão anterior deste registro estava errada em duas pontas, e as duas foram medidas em 2026-09-02.**
 
-Mas cmdk segue intencionalmente o padrão de command palettes (VSCode, Figma, Spotlight) onde a "lista" pode ter elementos auxiliares (header, separator, empty state) que não são opções selecionáveis. Mudar isso exigiria fork da lib. Apenas as stories de `UI/Command/*` desabilitam essa regra; comboboxes ARIA-strict em outros componentes continuam validando.
+O texto de 2026-04-28 culpava três filhos (`cmdk-empty`, `cmdk-separator`,
+`cmdk-group`) e concluía que "mudar isso exigiria fork da lib". Nenhuma das
+duas afirmações se sustenta:
 
-**Verificação após bump:** acompanhar issue [cmdk#226](https://github.com/pacocoursey/cmdk/issues/226). Se cmdk migrar para `role="listbox"` apenas no container de itens (deixando separator/empty fora), remover este patch.
+- **O divisor NÃO precisava de fork.** `ariaRequiredChildrenEvaluate` (axe-core)
+  descarta todo nó em que `isVisibleToScreenReaders` é falso ANTES de julgar
+  filho permitido. Um `aria-hidden="true"` no `CommandSeparator` — que é
+  exatamente o que vanilla, vue e angular já faziam — resolve sem tocar na lib.
+  A lib crava `role="separator"` depois do espalhamento das props, então o
+  papel continua lá; o nó é que sai da árvore. **Feito**, e a asserção da story
+  `WithGroups` deixou de cobrar `role="separator"`.
+- **O `cmdk-group` nunca foi o problema:** `role="group"` é filho PERMITIDO de
+  `listbox`.
+
+**O que de fato restou, e por que a regra segue desligada:** `CommandEmpty` do
+cmdk monta `<div cmdk-empty role="presentation">` DENTRO da lista, e só
+enquanto o filtro não casa. `role="presentation"` não entra como filho não
+permitido (o avaliador desce para os filhos), mas quando não sobra nenhuma
+opção o listbox fica sem `option`, o nó de texto conta como conteúdo, e o
+caminho `reviewEmpty` devolve **falha** em vez de "incompleto". É o mesmo
+mecanismo que o `command-empty.svelte` já documenta na própria stack dele.
+
+**Pendência aberta (decisão da dona):** vanilla, vue e angular põem a mensagem
+FORA do listbox, com `role="status"` + `aria-live="polite"` + `aria-atomic`,
+montada o tempo todo — e é isso que `accessibility.screenReader.onFilter` do
+conteúdo compartilhado promete nas CINCO docs pages. Nesta stack a promessa é
+falsa. O caminho medido para cumpri-la: `useCommandState` é exportado pelo
+cmdk (`useCmdk as useCommandState`), então a região viva pode ser escrita no
+wrapper, fora do `CommandList`, sem fork — e aí este patch inteiro deixa de
+ser necessário. Não foi feito nesta rodada porque muda a anatomia publicada e
+só a suíte de navegador prova o resultado.
+
+**Verificação após bump:** acompanhar issue [cmdk#226](https://github.com/pacocoursey/cmdk/issues/226). Se cmdk migrar para `role="listbox"` apenas no container de itens (deixando empty fora), remover este patch.
 
 ### todas/alert — variante dismissible (`dismissible`/`onDismiss`/`dismissLabel`) {#alert-dismissible}
 
