@@ -2040,6 +2040,120 @@ function auditDeadLibInfra() {
 }
 
 /**
+ * Classe morta nos SANDBOXES (`src/App.*`, `src/main.ts`, `src/app.ts`).
+ *
+ * Nenhuma regra alcançava esses arquivos. `legacy_class_in_story` varre story,
+ * `dead_class_in_component` varre componente, e o sandbox não é nem um nem
+ * outro — é a única tela do projeto que ninguém fotografa, porque não entra na
+ * barra lateral do Storybook. Medido em 2026-09-02: 45 classes distintas mortas
+ * no React, 66 no Vue e 73 no Svelte, todas resíduo do framework que saiu. O
+ * caso exemplar era o véu da gaveta do Svelte — `fixed inset-0 z-40` inertes —,
+ * que por isso NÃO COBRIA a tela.
+ *
+ * A regra NÃO é "tem que começar com nds-", e a diferença importa. O Vanilla,
+ * que é a referência de forma, pinta com `.nds-app-*` e mantém `ds-nav-item`,
+ * `ds-home-nav` e `ds-locale-btn` de propósito: são GANCHO DE COMPORTAMENTO,
+ * lidos por `querySelectorAll('.ds-nav-item')` no mesmo arquivo, sem folha
+ * nenhuma por trás. Um portão por prefixo reprovaria os três — três falsos
+ * positivos na própria stack que a casa chama de fonte de verdade, e portão que
+ * despeja backlog ensina a ignorar o portão.
+ *
+ * O que a regra mede é se a classe FAZ ALGUMA COISA:
+ *   - `nds-*` precisa existir em algum CSS do projeto (pega erro de digitação,
+ *     que o prefixo sozinho deixa passar — ver a nota de `ndsClasses()`);
+ *   - qualquer outra precisa estar declarada em CSS ou ser consultada por
+ *     seletor no mesmo arquivo.
+ * Classe que não pinta e ninguém lê é no-op: o TypeScript não vê, o teste não
+ * vê, o axe não vê.
+ *
+ * A diretiva `class:` do Svelte entra na varredura à parte, e foi onde
+ * `translate-x-0` e `-translate-x-full` se esconderam da primeira medição —
+ * elas não estão dentro de nenhum `class="…"`.
+ */
+function auditSandboxDeadClass() {
+  const violations = [];
+  const ndsDeclaradas = ndsClasses();
+
+  // Todo seletor de classe declarado no CSS do projeto — não só os `nds-*`.
+  const declaradas = new Set();
+  for (const f of [
+    ...walkDir(join(ROOT, 'docs', 'shared', 'styles'), ['.css']),
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src', 'styles'), ['.css'])),
+  ]) {
+    const css = (readFile(f) || '').replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const m of css.matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)) declaradas.add(m[1]);
+  }
+
+  const NOMES_SANDBOX = ['App.tsx', 'App.vue', 'App.svelte', 'App.ts', 'main.ts', 'app.ts'];
+  // Mesmo lookbehind de `legacy_class_in_story` — ver a nota longa lá sobre
+  // `:class="captionClass"` e sobre o `\s*` antes do operador.
+  const RX_CLASSE_LITERAL =
+    /(?<![:[\w-])(?:class(?:Name)?|[a-z]+Class)\s*[:=]\s*["'`]([^"'`]+)["'`]/g;
+  const RX_DIRETIVA_SVELTE = /(?:^|\s)class:(-?[\w-]+)/g;
+  // Gancho: classe que o próprio arquivo consulta ou manipula por JS.
+  // O `(?:<[^>]*>)?` é o parâmetro de tipo: o Vanilla escreve
+  // `querySelectorAll<HTMLButtonElement>('.ds-nav-item')`, e sem ele a chamada
+  // não casava — os três ganchos legítimos da referência viravam falso
+  // positivo, que é exatamente o que este portão não pode fazer.
+  const RX_GANCHO =
+    /(?:querySelector(?:All)?|closest|matches)\s*(?:<[^>]*>)?\s*\(\s*["'`]([^"'`]+)["'`]|classList\.(?:add|remove|toggle|contains)\s*\(\s*["'`]([\w-]+)["'`]/g;
+
+  for (const stack of STACKS) {
+    // `existsSync` não distingue `App.ts` de `app.ts` em sistema de arquivos
+    // insensível a caixa, e o mesmo arquivo era medido duas vezes com dois
+    // nomes. A leitura do diretório dá o nome REAL.
+    const dirSrc = join(ROOT, stackDir(stack), 'src');
+    if (!existsSync(dirSrc)) continue;
+    const reais = new Set(readdirSync(dirSrc));
+    for (const nome of NOMES_SANDBOX) {
+      if (!reais.has(nome)) continue;
+      const file = join(dirSrc, nome);
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+      const linhaDe = (i) => content.slice(0, i).split('\n').length;
+
+      const ganchos = new Set();
+      for (const m of content.matchAll(RX_GANCHO)) {
+        if (m[2]) { ganchos.add(m[2]); continue; }
+        for (const s of m[1].matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)) ganchos.add(s[1]);
+      }
+
+      const vistas = new Set();
+      const acusar = (cls, idx, motivo) => {
+        if (vistas.has(cls)) return;
+        vistas.add(cls);
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack,
+          file: rel, line: linhaDe(idx), rule: 'sandbox_dead_class',
+          message: `classe "${cls}" no sandbox ${motivo} — no-op silencioso que nenhum outro portão alcança`,
+        });
+      };
+      const avaliar = (cls, idx) => {
+        if (!cls || vistas.has(cls)) return;
+        if (cls.startsWith('nds-')) {
+          if (!ndsDeclaradas.has(cls)) acusar(cls, idx, 'não existe em nenhum CSS do projeto');
+          return;
+        }
+        if (ALLOWED_CLASS_RX.test(cls)) return;
+        if (declaradas.has(cls) || ganchos.has(cls)) return;
+        acusar(cls, idx, 'não é declarada em CSS nem consultada por seletor neste arquivo');
+      };
+
+      for (const m of content.matchAll(RX_CLASSE_LITERAL)) {
+        if (m[1].includes('${') || m[1].includes('{{')) continue;
+        for (const cls of m[1].split(/\s+/)) avaliar(cls, m.index);
+      }
+      if (nome.endsWith('.svelte')) {
+        for (const m of content.matchAll(RX_DIRETIVA_SVELTE)) avaliar(m[1], m.index);
+      }
+    }
+  }
+
+  return violations;
+}
+
+/**
  * Taxonomia das seções Variantes / Estados / Composições.
  * Regra em docs/shared/guidelines/14-taxonomia-secoes.md.
  *
@@ -6110,7 +6224,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditSandboxDeadClass()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
