@@ -134,41 +134,60 @@ O mapa de cada tema, tirado de `themeAxisDefaults`:
 | `Elevacao` | `light` / `dark` | idem | idem |
 | `Opacidade` | `light` / `dark` | idem | idem |
 
+### A coleção `Tema` é uma TABELA, não um interruptor
+
+O arquivo tem uma coleção `Tema` com seis modos (`default-light` … `cold-dark`)
+e três variáveis de texto: `tema-ativo` (o nome do modo), `tema-config` (a tabela
+acima em JSON, constante nos seis modos, para ler com o olho) e `tema-id-map`
+(o mapa `collectionId → modeId` **daquele** modo, pronto para alimentar
+`setExplicitVariableModeForCollection` sem mais nenhuma resolução de nome).
+
+**Fixar o modo de `Tema` num nó não move nenhuma outra coleção.** Isto foi
+medido, não deduzido: um frame com `Tema=warm-dark` e mais nada fica com
+`explicitVariableModes` valendo exatamente `{Tema: 'warm-dark'}` — `Cor`, `Fonte`,
+`Raio`, `Dimensao` e `Tipografia` seguem resolvendo pelo modo padrão de cada uma,
+que é a combinação do tema default. A coleção guarda a intenção; quem executa é
+o script. Vale desconfiar de qualquer descrição que diga que ela "sincroniza
+automaticamente" — o Figma não tem esse mecanismo, e a seção acima explica por quê.
+
 O quinto eixo do CSS, `base-tipo`, **não tem contrapartida no Figma**: o
 `--type-base` vale 16 em todos os oito modos de `Tipografia`. Hoje isso não
 perde nada, porque os três temas usam `typebase: 'm'`. Passa a perder no dia em
 que um tema mudar a base.
 
-O análogo de `applyTheme`, para rodar sobre a seleção ou sobre uma página:
+O análogo de `applyTheme`, lendo o mapa em vez de repetir a tabela — assim a
+tabela mora num lugar só, e um tema novo é um modo novo em `Tema`, não uma
+edição de script:
 
 ```js
-const EIXOS = {
-  default: { Cor: 'default-light', Raio: 'default', Dimensao: 'default',
-             Fonte: 'default', Tipografia: 'minor-third',
-             Elevacao: 'light', Opacidade: 'light' },
-  warm:    { Cor: 'warm-light', Raio: 'warm', Dimensao: 'confortavel',
-             Fonte: 'lxgw-wenkai', Tipografia: 'major-third',
-             Elevacao: 'light', Opacidade: 'light' },
-  cold:    { Cor: 'cold-light', Raio: 'cold', Dimensao: 'condensado',
-             Fonte: 'pt-serif', Tipografia: 'perfect-fourth',
-             Elevacao: 'light', Opacidade: 'light' },
-};
-
-async function aplicarTema(no, tema, escuro = false) {
+async function aplicarTema(no, tema /* 'warm-dark' etc. */) {
   const cols = await figma.variables.getLocalVariableCollectionsAsync();
-  for (const [nomeCol, nomeModo] of Object.entries(EIXOS[tema])) {
-    const col = cols.find((c) => c.name === nomeCol);
-    if (!col) throw new Error('coleção ausente: ' + nomeCol);
-    // as três coleções que têm par claro/escuro trocam junto com o modo
-    const alvo = escuro && ['Cor', 'Elevacao', 'Opacidade'].includes(nomeCol)
-      ? nomeModo.replace(/light$/, 'dark')
-      : nomeModo;
-    const modo = col.modes.find((m) => m.name === alvo);
-    if (!modo) throw new Error(nomeCol + ' não tem modo ' + alvo);
-    no.setExplicitVariableModeForCollection(col, modo.modeId);
+  const temaCol = cols.find((c) => c.name === 'Tema');
+  const modo = temaCol.modes.find((m) => m.name === tema);
+  if (!modo) throw new Error('tema desconhecido: ' + tema);
+
+  let idMap = null;
+  for (const id of temaCol.variableIds) {
+    const v = await figma.variables.getVariableByIdAsync(id);
+    if (v && v.name === 'tema-id-map') idMap = v;
   }
+
+  const mapa = JSON.parse(idMap.valuesByMode[modo.modeId]);
+  for (const [cid, mid] of Object.entries(mapa)) {
+    const col = cols.find((c) => c.id === cid);
+    if (!col) throw new Error('coleção do mapa não existe mais: ' + cid);
+    no.setExplicitVariableModeForCollection(col, mid);
+  }
+  no.setExplicitVariableModeForCollection(temaCol, modo.modeId);  // registra a intenção
 }
 ```
+
+**Não confira o resultado na mesma execução.** `resolvedVariableModes` devolve
+`{}` logo depois da escrita, no mesmo script — não porque a escrita falhou, mas
+porque o getter não reflete o que ainda não assentou. `explicitVariableModes`
+responde na hora e é o que interessa; se quiser o resolvido, leia numa chamada
+seguinte. Quem conferir pelo resolvido e vir vazio vai concluir que a aplicação
+não funcionou, e ela funcionou.
 
 **Fixe os sete ou nenhum.** Fixar um subconjunto é o que produz o defeito mais
 difícil de enxergar aqui: o nó fica com uma coleção presa a um tema e as outras
