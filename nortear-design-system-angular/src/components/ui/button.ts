@@ -80,7 +80,7 @@ export function btnClass(
   ],
   host: {
     '[class]': 'hostClass()',
-    '[attr.data-slot]': '"button"',
+    '[attr.data-slot]': 'slotDoHost',
     // O RdxButtonDirective marca `role="button"` em qualquer host que não seja
     // um <button> nativo. Num <a href> isso é perda de semântica: o leitor
     // anuncia "botão" para algo que NAVEGA, e o Ctrl+clique deixa de abrir em
@@ -101,6 +101,24 @@ export class NdsButton {
 
   /** `<a href>` já é link e já é focável — não precisa de role nem tabindex. */
   private readonly ehAncora = this.hostRef.nativeElement.tagName === 'A';
+
+  /**
+   * Nome do slot deste botão.
+   *
+   * Quem COMPÕE nomeia a própria peça — `data-slot="composer-voice-toggle"` no
+   * botão que o ditado usa —, e é esse nome que a folha e a suíte procuram. Mas
+   * host binding VENCE atributo estático do template, e vence também binding de
+   * template: medido, `[attr.data-slot]="'…'"` no call site continuou perdendo
+   * para o `"button"` daqui. O nome específico sumia dos dezenove pontos em que
+   * a família conversacional compõe sobre este botão, e só nesta stack.
+   *
+   * Lido UMA vez, na construção: atributo estático já está no elemento quando a
+   * diretiva é instanciada, e o binding passa a devolver o que o template
+   * escreveu. Sem nome no call site, segue `button` — que é o padrão das outras
+   * quatro stacks.
+   */
+  protected readonly slotDoHost =
+    this.hostRef.nativeElement.getAttribute('data-slot') ?? 'button';
 
   protected readonly papel = computed(() => (this.ehAncora ? null : undefined));
   protected readonly tabIndexDoHost = computed(() => (this.ehAncora ? null : undefined));

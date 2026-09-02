@@ -3,6 +3,8 @@ import {
   Component,
   computed,
   Directive,
+  ElementRef,
+  inject,
   input,
   ViewEncapsulation,
 } from '@angular/core';
@@ -43,13 +45,22 @@ const VARIANT_CLASSNAME: Record<BadgeVariant, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[attr.data-slot]': '"badge"',
+    '[attr.data-slot]': 'slotDoHost',
     '[attr.data-variant]': 'variant()',
     '[class]': 'hostClass()',
   },
 })
 export class NdsBadge {
   readonly variant = input<BadgeVariant>('default');
+
+  /**
+   * Nome do slot deste selo. Mesma mecânica descrita em `button.ts`: quem
+   * compõe nomeia a peça (`data-slot="composer-queue-state"`), e host binding
+   * sobrescreveria esse nome. Lido na construção, antes do binding assumir.
+   */
+  protected readonly slotDoHost =
+    inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.getAttribute('data-slot') ??
+    'badge';
 
   // `[class]` porque a variante é dinâmica; o `class` que o consumidor
   // escreve no elemento é mesclado pelo Angular, sem input dedicado.
