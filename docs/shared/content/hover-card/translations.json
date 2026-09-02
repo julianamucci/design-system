@@ -8,7 +8,7 @@
       "title": "HoverCard — Overlay",
       "description": "Documentação do HoverCard: cartão flutuante por hover com delay, posicionamento e WCAG 2.2 AA.",
       "aiSummary": "Componente HoverCard que exibe cartão flutuante em hover/focus com delay configurável, posicionamento side/align e fechamento automático ao sair do trigger ou do content.",
-      "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, role=dialog, openDelay, closeDelay"
+      "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, aria-describedby, openDelay, closeDelay"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -290,7 +290,7 @@
         "item2": "<code>HoverCardContent</code> permanece aberto enquanto cursor estiver sobre ele (hoverable) — usuário pode interagir.",
         "item3": "ESC fecha o Content — atende WCAG 1.4.13 (dismissable).",
         "item4": "O conteúdo do HoverCard <strong>não pode ser a única forma</strong> de acessar a informação — usuários touch e leitores de tela precisam de alternativa.",
-        "item5": "O Trigger não recebe <code>aria-describedby</code> nem <code>aria-labelledby</code>: o Content só existe no documento enquanto está aberto, e o nome dele já sai do texto do próprio Trigger — apontar um para o outro faria o leitor anunciar a mesma coisa duas vezes.",
+        "item5": "O Trigger é DESCRITO pelo Content por <code>aria-describedby</code> enquanto o cartão está aberto: é o que faz o leitor de tela dizer o conteúdo do cartão, e não só o texto do gatilho. A associação existe apenas com o cartão aberto — o Content só está no documento nesse intervalo. <code>aria-labelledby</code> não é usado: ele trocaria o nome do gatilho pelo texto do cartão.",
         "item6": "Não coloque ações destrutivas ou submits — não há jeito acessível de chegar lá em touch."
       },
       "keyboard": {
@@ -302,13 +302,13 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "trigger": "Trigger: sem <code>aria-describedby</code> e sem <code>aria-labelledby</code> — quem carrega nome e papel é o Content.",
-        "content": "Content: <code>role=\"dialog\"</code> sem <code>aria-modal</code> — a ausência do atributo já significa não-modal, e o resto da página continua alcançável.",
+        "trigger": "Trigger: recebe <code>aria-describedby</code> apontando para o Content enquanto ele está aberto, e nunca <code>aria-labelledby</code> — o nome do gatilho é o texto dele.",
+        "content": "Content: sem <code>role</code> e sem nome próprio — é conteúdo descritivo, apontado pelo Trigger. Nome em elemento sem papel é atributo proibido pelo ARIA, e por isso ele não é escrito.",
         "expanded": "Trigger não recebe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
       },
       "screenReader": {
         "title": "Leitor de Tela",
-        "open": "Anuncia o conteúdo do Content quando ele aparece, sem interromper o fluxo do trigger.",
+        "open": "Anuncia o conteúdo do Content como descrição do trigger, sem interromper o fluxo da leitura.",
         "context": "Usuários de SR podem não acessar o conteúdo via hover — sempre forneça alternativa textual ou link."
       }
     },
@@ -352,7 +352,7 @@
         "description": "O que deve acontecer em cada interação.",
         "item1": {
           "action": "Hover no HoverCardTrigger por openDelay ms",
-          "result": "HoverCardContent aparece com role=dialog",
+          "result": "HoverCardContent aparece e o Trigger passa a descrevê-lo",
           "priority": "high"
         },
         "item2": {
@@ -385,7 +385,7 @@
         "title": "Acessibilidade Verificável",
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core no estado padrão",
-        "item2": "Content tem role=dialog com nome acessível e sem aria-modal (WCAG 4.1.2)",
+        "item2": "Content não tem role nem nome próprio, e o Trigger o aponta por aria-describedby enquanto está aberto (WCAG 4.1.2)",
         "item3": "Content abre por foco do teclado (WCAG 1.4.13 hoverable+focusable)",
         "item4": "ESC fecha o Content (WCAG 1.4.13 dismissable)",
         "item5": "Contraste mínimo 4.5:1 entre o texto e o fundo do painel (WCAG 1.4.3)",
@@ -448,7 +448,7 @@
       "title": "HoverCard — Overlay",
       "description": "HoverCard documentation: floating card on hover with delay, positioning, and WCAG 2.2 AA.",
       "aiSummary": "HoverCard component that displays a floating card on hover/focus with configurable delay, side/align positioning, and automatic close on leaving the trigger or content.",
-      "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, role=dialog, openDelay, closeDelay"
+      "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, aria-describedby, openDelay, closeDelay"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -730,7 +730,7 @@
         "item2": "<code>HoverCardContent</code> stays open while cursor is over it (hoverable) — user can interact.",
         "item3": "ESC closes Content — meets WCAG 1.4.13 (dismissable).",
         "item4": "HoverCard content <strong>cannot be the only way</strong> to access information — touch and screen reader users need an alternative.",
-        "item5": "The Trigger receives neither <code>aria-describedby</code> nor <code>aria-labelledby</code>: Content only exists in the document while open, and its name already comes from the Trigger text — pointing one at the other would make the reader announce the same thing twice.",
+        "item5": "The Trigger is DESCRIBED by the Content through <code>aria-describedby</code> while the card is open: that is what makes the screen reader say the card content, not just the trigger text. The association exists only while the card is open — the Content is in the document only during that window. <code>aria-labelledby</code> is not used: it would replace the trigger name with the card text.",
         "item6": "Do not put destructive or submit actions — no accessible way to reach on touch."
       },
       "keyboard": {
@@ -742,13 +742,13 @@
       },
       "aria": {
         "title": "ARIA Attributes",
-        "trigger": "Trigger: no <code>aria-describedby</code> and no <code>aria-labelledby</code> — name and role belong to Content.",
-        "content": "Content: <code>role=\"dialog\"</code> with no <code>aria-modal</code> — the absence of the attribute already means non-modal, and the rest of the page stays reachable.",
+        "trigger": "Trigger: receives <code>aria-describedby</code> pointing at the Content while it is open, and never <code>aria-labelledby</code> — the trigger name is its own text.",
+        "content": "Content: no <code>role</code> and no name of its own — it is descriptive content pointed at by the Trigger. A name on an element without a role is an ARIA-prohibited attribute, which is why it is not written.",
         "expanded": "Trigger does not receive <code>aria-expanded</code> — different from DropdownMenu/Popover."
       },
       "screenReader": {
         "title": "Screen Reader",
-        "open": "Announces Content content when it appears, without interrupting trigger flow.",
+        "open": "Announces the Content as the trigger description, without interrupting the reading flow.",
         "context": "SR users may not access content via hover — always provide textual or link alternative."
       }
     },
@@ -792,7 +792,7 @@
         "description": "What should happen on each interaction.",
         "item1": {
           "action": "Hover HoverCardTrigger for openDelay ms",
-          "result": "HoverCardContent appears with role=dialog",
+          "result": "HoverCardContent appears and the Trigger starts describing it",
           "priority": "high"
         },
         "item2": {
@@ -825,7 +825,7 @@
         "title": "Verifiable Accessibility",
         "description": "Criteria automated tools should confirm.",
         "item1": "No violations reported by axe-core in default state",
-        "item2": "Content has role=dialog with an accessible name and no aria-modal (WCAG 4.1.2)",
+        "item2": "Content has no role and no name of its own, and the Trigger points at it with aria-describedby while open (WCAG 4.1.2)",
         "item3": "Content opens by keyboard focus (WCAG 1.4.13 hoverable+focusable)",
         "item4": "ESC closes Content (WCAG 1.4.13 dismissable)",
         "item5": "Minimum 4.5:1 contrast between text and the panel background (WCAG 1.4.3)",
@@ -888,7 +888,7 @@
       "title": "HoverCard — Overlay",
       "description": "Documentación de HoverCard: tarjeta flotante por hover con delay, posicionamiento y WCAG 2.2 AA.",
       "aiSummary": "Componente HoverCard que muestra una tarjeta flotante en hover/focus con delay configurable, posicionamiento side/align y cierre automático al salir del trigger o del content.",
-      "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, role=dialog, openDelay, closeDelay"
+      "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, aria-describedby, openDelay, closeDelay"
     },
     "demonstration": {
       "title": "Demostración",
@@ -1170,7 +1170,7 @@
         "item2": "<code>HoverCardContent</code> permanece abierto mientras el cursor esté sobre él (hoverable) — usuario puede interactuar.",
         "item3": "ESC cierra el Content — cumple WCAG 1.4.13 (dismissable).",
         "item4": "El contenido del HoverCard <strong>no puede ser la única forma</strong> de acceder a la información — usuarios touch y lectores de pantalla necesitan alternativa.",
-        "item5": "El Trigger no recibe <code>aria-describedby</code> ni <code>aria-labelledby</code>: el Content solo existe en el documento mientras está abierto, y su nombre ya sale del texto del propio Trigger — apuntar uno al otro haría que el lector anunciara lo mismo dos veces.",
+        "item5": "El Trigger es DESCRITO por el Content mediante <code>aria-describedby</code> mientras la tarjeta está abierta: es lo que hace que el lector de pantalla diga el contenido de la tarjeta y no solo el texto del disparador. La asociación existe solo con la tarjeta abierta — el Content está en el documento únicamente en ese intervalo. <code>aria-labelledby</code> no se usa: cambiaría el nombre del disparador por el texto de la tarjeta.",
         "item6": "No coloques acciones destructivas o submits — no hay forma accesible de llegar en touch."
       },
       "keyboard": {
@@ -1182,13 +1182,13 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "trigger": "Trigger: sin <code>aria-describedby</code> y sin <code>aria-labelledby</code> — nombre y rol los lleva el Content.",
-        "content": "Content: <code>role=\"dialog\"</code> sin <code>aria-modal</code> — la ausencia del atributo ya significa no-modal, y el resto de la página sigue alcanzable.",
+        "trigger": "Trigger: recibe <code>aria-describedby</code> apuntando al Content mientras está abierto, y nunca <code>aria-labelledby</code> — el nombre del disparador es su propio texto.",
+        "content": "Content: sin <code>role</code> y sin nombre propio — es contenido descriptivo apuntado por el Trigger. Un nombre en un elemento sin rol es un atributo prohibido por ARIA, y por eso no se escribe.",
         "expanded": "Trigger no recibe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
       },
       "screenReader": {
         "title": "Lector de Pantalla",
-        "open": "Anuncia el contenido del Content cuando aparece, sin interrumpir el flujo del trigger.",
+        "open": "Anuncia el contenido del Content como descripción del disparador, sin interrumpir el flujo de lectura.",
         "context": "Usuarios de SR pueden no acceder al contenido vía hover — siempre proporciona alternativa textual o link."
       }
     },
@@ -1232,7 +1232,7 @@
         "description": "Lo que debe ocurrir en cada interacción.",
         "item1": {
           "action": "Hover en HoverCardTrigger durante openDelay ms",
-          "result": "HoverCardContent aparece con role=dialog",
+          "result": "HoverCardContent aparece y el Trigger pasa a describirlo",
           "priority": "high"
         },
         "item2": {
@@ -1265,7 +1265,7 @@
         "title": "Accesibilidad Verificable",
         "description": "Criterios que herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
-        "item2": "Content tiene role=dialog con nombre accesible y sin aria-modal (WCAG 4.1.2)",
+        "item2": "Content no tiene role ni nombre propio, y el Trigger lo apunta con aria-describedby mientras está abierto (WCAG 4.1.2)",
         "item3": "Content abre por foco de teclado (WCAG 1.4.13 hoverable+focusable)",
         "item4": "ESC cierra el Content (WCAG 1.4.13 dismissable)",
         "item5": "Contraste mínimo 4.5:1 entre el texto y el fondo del panel (WCAG 1.4.3)",

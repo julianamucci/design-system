@@ -4,10 +4,13 @@
  * Render em portal (body). Mantém aberto enquanto o mouse está sobre o painel
  * (hide com pequeno delay).
  *
- *   <div class="nds-hover-card-content" role="dialog" id="hover-card-1"
+ *   <div class="nds-hover-card-content" id="hover-card-1"
  *        style="top: …; left: …">
  *     [conteúdo customizado]
  *   </div>
+ *
+ * Sem `role`: o painel é conteúdo DESCRITIVO, apontado pelo `aria-describedby`
+ * do gatilho enquanto está aberto. O `id` acima é o alvo desse apontamento.
  *
  * Difere do popover apenas pela largura padrão (20rem ao invés de 18rem).
  *

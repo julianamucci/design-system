@@ -151,8 +151,11 @@ export function contrastRatio(corA: string, corB: string): number {
 /**
  * Nome acessível do painel, venha ele de `aria-label` ou de `aria-labelledby`.
  *
- * As cinco stacks resolvem o nome de formas diferentes (rótulo declarado,
- * heading interno, texto do gatilho) e o contrato é o RESULTADO, não o caminho.
+ * Desde 2026-09-02 o contrato é que ele seja VAZIO nas cinco: o painel perdeu o
+ * `role="dialog"`, e nome próprio em elemento sem papel é `aria-prohibited-attr`
+ * no axe. A função continua aqui — e continua olhando os dois caminhos —
+ * justamente porque é ela que prova a ausência: cada stack resolvia o nome de um
+ * jeito, e conferir só `aria-label` deixaria passar quem usava `aria-labelledby`.
  */
 export function accessibleName(panel: HTMLElement): string {
   const labelled = panel.getAttribute('aria-labelledby');
