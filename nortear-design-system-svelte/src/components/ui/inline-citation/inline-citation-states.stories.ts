@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent } from 'storybook/test';
 import InlineCitationStory from './InlineCitationStory.svelte';
-import { awaitPanel, citationOf, panelOf } from './inline-citation.fixtures';
+import {
+  awaitExpanded,
+  awaitPanel,
+  awaitPanelGone,
+  citationOf,
+  panelOf,
+} from './inline-citation.fixtures';
 import {
   inlineCitationEveryCaseSource,
   inlineCitationExpandedSource,
@@ -46,11 +52,18 @@ const markerOf = (canvasElement: HTMLElement) =>
 
 // Par idempotente: o painel Interactions repete a `play`, e um clique cego
 // partiria do estado que a rodada anterior deixou.
+//
+// E cada um ESPERA a marca assentar antes de devolver. Quem escreve
+// `aria-expanded` é o primitivo, num efeito que corre depois que o clique já
+// retornou: ler o atributo em seguida pega o valor de antes, e foi assim que a
+// primeira rodada de navegador reprovou o fechamento com `'true'`.
 const openMarker = async (el: HTMLElement) => {
   if (el.getAttribute('aria-expanded') !== 'true') await userEvent.click(el);
+  await awaitExpanded(el, 'true');
 };
 const closeMarker = async (el: HTMLElement) => {
   if (el.getAttribute('aria-expanded') !== 'false') await userEvent.click(el);
+  await awaitExpanded(el, 'false');
 };
 
 /**
@@ -108,6 +121,24 @@ export const Expanded: Story = {
       // Fechada, ela não deixa parada de tabulação para trás: o link do título
       // não existe mais, em vez de existir escondido.
       await closeMarker(marker);
+      await awaitPanelGone(root);
+      await expect(marker.getAttribute('aria-expanded')).toBe('false');
+      await expect(panelOf(root)).toBeNull();
+    });
+
+    await step('E ela FICA fechada — nada a reabre por conta própria', async () => {
+      // O passo acima prova o instante do clique; este prova o que vem DEPOIS
+      // dele, e é onde morava o defeito que a primeira rodada de navegador
+      // achou. O andaime desta story mandava abrir de dentro de um `$effect`
+      // que, sem `untrack`, dependia do estado INTERNO da peça: fechar
+      // invalidava o efeito, o efeito relia `defaultOpen` e mandava abrir de
+      // novo. A prévia não fechava nunca, e nem piscava.
+      //
+      // A espera é de RELÓGIO, e é ela que dá dentes ao passo: com o defeito de
+      // pé, medido, `aria-expanded` volta `true` nas doze amostras de 50 ms;
+      // com o `untrack`, `false` nas doze. Nada de `waitFor` — a condição é
+      // "CONTINUA falso", e espera por observador nunca a resolveria.
+      await new Promise((resolve) => { setTimeout(resolve, 500); });
       await expect(marker.getAttribute('aria-expanded')).toBe('false');
       await expect(panelOf(root)).toBeNull();
     });
@@ -115,11 +146,13 @@ export const Expanded: Story = {
     await step('Escape fecha, e o foco NÃO se move', async () => {
       // Ele já está na marca, que é de onde a prévia saiu (decisão 5 da folha).
       await openMarker(marker);
+      await awaitPanel(root);
       await expect(panelOf(root)).not.toBeNull();
 
       marker.focus();
       await userEvent.keyboard('{Escape}');
 
+      await awaitPanelGone(root);
       await expect(panelOf(root)).toBeNull();
       await expect(document.activeElement).toBe(marker);
     });

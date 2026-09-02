@@ -23,6 +23,7 @@
    * que é a própria forma de controle documentada. A propriedade continua
    * existindo, e é ela que a docs page usa.
    */
+  import { untrack } from 'svelte';
   import { locale } from '@/lib/i18n';
   import { InlineCitation, type InlineCitationCommands } from './index';
   import {
@@ -48,12 +49,28 @@
 
   let marca = $state<InlineCitationCommands | undefined>(undefined);
 
-  // O efeito só corre de novo quando a propriedade ou a referência mudam:
-  // fechar pela marca não o reagenda, e a prévia fica onde quem lê a deixou.
+  // O COMANDO CORRE FORA DA LEITURA, e é isso que faz o efeito depender só da
+  // propriedade e da referência.
+  //
+  // O comentário anterior afirmava que fechar pela marca não reagendava o
+  // efeito, e era falso: `open()` e `close()` LEEM o estado interno da peça
+  // (`if (expanded) return`), e leitura dentro de um efeito vira dependência
+  // dele — não importa de quem é o estado. Fechar pela marca invalidava o
+  // efeito, o efeito via `defaultOpen` ainda verdadeiro e mandava abrir de
+  // novo, no mesmo lote. A prévia NUNCA fechava, e nem chegava a piscar: a
+  // primeira rodada de navegador desta stack amostrou `aria-expanded` de 50 em
+  // 50 ms por 600 ms e leu `true` nas doze amostras.
+  //
+  // `untrack` no comando, e as duas leituras fora dele: `defaultOpen` e `marca`
+  // continuam sendo o que reagenda, e o estado interno da peça deixa de ser.
   $effect(() => {
-    if (!marca) return;
-    if (defaultOpen) marca.open();
-    else marca.close();
+    const abrir = defaultOpen;
+    const alvo = marca;
+    if (!alvo) return;
+    untrack(() => {
+      if (abrir) alvo.open();
+      else alvo.close();
+    });
   });
 </script>
 

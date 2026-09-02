@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent } from 'storybook/test';
 import InlineCitationInSentenceStory from './InlineCitationInSentenceStory.svelte';
 import InlineCitationMutuallyExclusiveStory from './InlineCitationMutuallyExclusiveStory.svelte';
-import { panelOf } from './inline-citation.fixtures';
+import { awaitExpanded, awaitPanel, awaitPanelGone, panelOf } from './inline-citation.fixtures';
 import {
   inlineCitationInSentenceSource,
   inlineCitationMutuallyExclusiveSource,
@@ -55,8 +55,15 @@ const rootsOf = (canvasElement: HTMLElement) => [
 
 // Par idempotente: o painel Interactions repete a `play`, e um clique cego
 // partiria do estado que a rodada anterior deixou.
+//
+// E ele ESPERA a marca assentar antes de devolver, pelo motivo escrito em
+// `awaitExpanded`: quem escreve `aria-expanded` é o primitivo, num efeito que
+// corre depois que o clique já retornou. Aqui a corrida ainda não tinha
+// reprovado — a mesma corrida reprovou o fechamento nas stories de estado, e
+// latente é como ela viveu lá até a primeira rodada de navegador.
 const openMarker = async (el: HTMLElement) => {
   if (el.getAttribute('aria-expanded') !== 'true') await userEvent.click(el);
+  await awaitExpanded(el, 'true');
 };
 
 /**
@@ -95,6 +102,7 @@ export const InSentence: SentenceStory = {
       // mover o foco (decisão 6 da folha): portalada para o fim do documento, a
       // próxima parada seria a palavra seguinte do parágrafo.
       await openMarker(first);
+      await awaitPanel(firstRoot);
       const panel = panelOf(firstRoot)!;
 
       await expect(panel.parentElement).toBe(firstRoot);
@@ -127,6 +135,7 @@ export const MutuallyExclusive: ExclusiveStory = {
 
     await step('Abrir a primeira monta a prévia dela, e só a dela', async () => {
       await openMarker(first);
+      await awaitPanel(firstRoot);
       await expect(panelOf(firstRoot)).not.toBeNull();
       await expect(panelOf(secondRoot)).toBeNull();
     });
@@ -135,6 +144,12 @@ export const MutuallyExclusive: ExclusiveStory = {
       // O componente não procurou a irmã: quem a fechou foi a página, com a
       // lista que só ela tem.
       await openMarker(second);
+      await awaitPanel(secondRoot);
+      // A primeira fecha por ordem da PÁGINA, um passo depois de a segunda
+      // abrir: esperar as duas pontas é o que separa "a página fechou" de "a
+      // leitura chegou antes da página".
+      await awaitPanelGone(firstRoot);
+      await awaitExpanded(first, 'false');
       await expect(panelOf(secondRoot)).not.toBeNull();
       await expect(panelOf(firstRoot)).toBeNull();
       await expect(first.getAttribute('aria-expanded')).toBe('false');

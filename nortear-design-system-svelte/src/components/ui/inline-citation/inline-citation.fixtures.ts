@@ -139,3 +139,53 @@ export async function awaitPanel(
   }
   return panel;
 }
+
+/**
+ * Espera a prévia SAIR da árvore, pelo mesmo relógio e com a mesma leitura
+ * pura.
+ *
+ * A contraparte de `awaitPanel`, e ela é necessária pelo mesmo motivo: se a
+ * prévia que nasce aberta só aparece depois do efeito de montagem, a que fecha
+ * também só some depois do efeito — a asserção `toBeNull()` logo após o clique
+ * mediria a árvore de antes.
+ */
+export async function awaitPanelGone(root: HTMLElement, timeoutMs = 1000): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (panelOf(root) !== null && Date.now() < deadline) {
+    await new Promise((resolve) => { setTimeout(resolve, 16); });
+  }
+  return panelOf(root) === null;
+}
+
+/**
+ * Espera a marca ASSENTAR no estado pedido, pelo mesmo relógio e com a mesma
+ * leitura pura de `awaitPanel`.
+ *
+ * É a metade que faltava. `awaitPanel` cobria só a ida: a prévia que nasce
+ * aberta só aparece depois do efeito de montagem. A VOLTA tem a mesma latência
+ * e não tinha espera nenhuma — quem escreve `aria-expanded` é o primitivo, num
+ * efeito que corre depois que o clique já retornou, e a leitura logo em seguida
+ * pega o valor de ANTES. A primeira rodada de navegador desta stack reprovou
+ * exatamente aí, com `'true'` onde a asserção pedia `'false'`.
+ *
+ * Nada de espera por observador de mutação, pelo motivo escrito em `awaitPanel`
+ * e no CLAUDE.md raiz: condição que toca o DOM reagenda a si mesma e pendura a
+ * aba sem reprovar. Aqui a leitura é um `getAttribute` e nada mais.
+ *
+ * Devolver o valor final em vez de afirmar é de propósito: quem afirma é a
+ * story, com a mensagem dela. Estourado o prazo, sai o valor errado e a
+ * asserção reprova — a espera não esconde defeito, só tira a corrida do meio.
+ */
+export async function awaitExpanded(
+  marker: HTMLElement,
+  expected: 'true' | 'false',
+  timeoutMs = 1000,
+): Promise<string | null> {
+  const deadline = Date.now() + timeoutMs;
+  let current = marker.getAttribute('aria-expanded');
+  while (current !== expected && Date.now() < deadline) {
+    await new Promise((resolve) => { setTimeout(resolve, 16); });
+    current = marker.getAttribute('aria-expanded');
+  }
+  return current;
+}
