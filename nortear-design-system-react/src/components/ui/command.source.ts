@@ -102,7 +102,7 @@ ${ON_CHOOSE}`,
 /**
  * Com atalho: o `CommandShortcut` mora DENTRO do comando, e sem `aria-hidden`.
  * Atalho escondido do leitor de tela é atalho que só quem enxerga descobre — o
- * nome acessível do comando passa a ser "Button ⌘B", que é a informação útil.
+ * nome acessível do comando passa a ser "Button Ctrl+B", que é a informação útil.
  */
 export function commandWithShortcutsSource(): string {
   return jsxSnippet(
@@ -124,11 +124,11 @@ import { LayoutIcon, TypeIcon } from "lucide-react";`,
       <CommandGroup heading="Componentes">
         <CommandItem value="button">
           <LayoutIcon />
-          Button <CommandShortcut>⌘B</CommandShortcut>
+          Button <CommandShortcut>Ctrl+B</CommandShortcut>
         </CommandItem>
         <CommandItem value="input">
           <TypeIcon />
-          Input <CommandShortcut>⌘I</CommandShortcut>
+          Input <CommandShortcut>Ctrl+I</CommandShortcut>
         </CommandItem>
       </CommandGroup>
     </CommandList>
@@ -253,7 +253,7 @@ import { LayoutIcon, MinusIcon, SearchIcon, TypeIcon } from "lucide-react";`,
         data-spacing="sm"
       >
         <span>Pressione</span>
-        <kbd className="nds-kbd">⌘K</kbd>
+        <kbd className="nds-kbd">Ctrl+K</kbd>
       </div>
       <Button
         variant="outline"
@@ -276,11 +276,11 @@ import { LayoutIcon, MinusIcon, SearchIcon, TypeIcon } from "lucide-react";`,
             <CommandGroup heading="Componentes">
               <CommandItem value="button" onSelect={() => setAberta(false)}>
                 <LayoutIcon />
-                Button <CommandShortcut>⌘B</CommandShortcut>
+                Button <CommandShortcut>Ctrl+B</CommandShortcut>
               </CommandItem>
               <CommandItem value="input" onSelect={() => setAberta(false)}>
                 <TypeIcon />
-                Input <CommandShortcut>⌘I</CommandShortcut>
+                Input <CommandShortcut>Ctrl+I</CommandShortcut>
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />

@@ -132,7 +132,7 @@ Command
 - `CommandGroup` com `heading` para organizar ações relacionadas — sem heading quando há apenas um grupo.
 - Preferência: menu simples sem ícones, salvo instrução específica.
 - Sempre fechar o Dialog/Popover após `onSelect` (`setOpen(false)`).
-- **Command Palette (Cmd+K)**: o atalho **não é nativo** — implementar via `useEffect` + `addEventListener` para detectar `metaKey/ctrlKey + "k"` e alternar o estado do Dialog. Dica visual do atalho obrigatória (`<kbd>⌘K</kbd>` em botão de busca) — o usuário precisa descobrir o atalho.
+- **Command Palette (Ctrl+K)**: o atalho **não é nativo** — implementar via `useEffect` + `addEventListener` para detectar `metaKey/ctrlKey + "k"` e alternar o estado do Dialog. Dica visual do atalho obrigatória (`<kbd>Ctrl+K</kbd>` em botão de busca) — o usuário precisa descobrir o atalho.
 - **Não é escolha de valor**: lista de opções de formulário com busca é `Combobox`, que tem campo, chips, estado vazio e serialização próprios. Command é para executar ação, não para preencher campo.
 
 **Acessibilidade** (ver `docs/shared/guidelines/01-acessibilidade.md`):

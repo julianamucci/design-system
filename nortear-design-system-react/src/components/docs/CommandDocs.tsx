@@ -167,7 +167,7 @@ function CommandPaletteDemo({
               >
                 <LayoutIcon />
                 {itemButton}
-                <CommandShortcut>⌘B</CommandShortcut>
+                <CommandShortcut>Ctrl+B</CommandShortcut>
               </CommandItem>
               <CommandItem
                 value="input"
@@ -182,7 +182,7 @@ function CommandPaletteDemo({
               >
                 <TypeIcon />
                 {itemInput}
-                <CommandShortcut>⌘I</CommandShortcut>
+                <CommandShortcut>Ctrl+I</CommandShortcut>
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />
@@ -334,7 +334,7 @@ useEffect(() => {
       <CommandGroup heading="Ações">
         <CommandItem value="acao" onSelect={() => setOpen(false)}>
           Ação
-          <CommandShortcut>⌘A</CommandShortcut>
+          <CommandShortcut>Ctrl+A</CommandShortcut>
         </CommandItem>
       </CommandGroup>
     </CommandList>
@@ -636,7 +636,7 @@ interface CommandDialogProps
                   <SearchIcon />
                   {labels.openPalette}
                 </Button>
-                <p className="nds-text-caption nds-text-muted-foreground" style={{ opacity: 0.4, textDecoration: "line-through" }}>⌘K</p>
+                <p className="nds-text-caption nds-text-muted-foreground" style={{ opacity: 0.4, textDecoration: "line-through" }}>Ctrl+K</p>
               </div>
             ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),
@@ -1041,7 +1041,7 @@ interface CommandDialogProps
           { key: "Enter", description: toPlainText(tContent("accessibility.keyboard.enter")) },
           { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
           { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
-          { key: "⌘K", description: toPlainText(tContent("accessibility.keyboard.cmdK")) },
+          { key: "Ctrl+K", description: toPlainText(tContent("accessibility.keyboard.cmdK")) },
         ]}
       />
 

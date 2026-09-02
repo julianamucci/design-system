@@ -139,7 +139,7 @@ ${IMPORT_BUTTON}`,
       'Ver atalhos',
       '',
       `    <p className="nds-text-body">
-      Use Ctrl + K para abrir a busca em qualquer tela.
+      Use Ctrl+K para abrir a busca em qualquer tela.
     </p>`,
     ),
   );

@@ -94,7 +94,7 @@ Menubar (aria-label="Menu principal")
 **UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 - Triggers da barra: substantivos, sem verbo, sem ponto final. Ex.: "Arquivo", "Editar", "Exibir".
 - Itens do menu: verbos no infinitivo descrevendo a ação. Ex.: "Salvar", "Abrir novo", "Exportar como PDF".
-- Atalhos: usar símbolos padrão do sistema (`⌘`, `Ctrl`, `⇧`, `⌥`).
+- Atalhos: teclas escritas por extenso (`Ctrl`, `Shift`, `Alt`), compostas com `+` e sem espaço — `Ctrl+S`, `Ctrl+Shift+Z`. Nada de glifo de macOS: ele não se digita em Windows nem em Linux.
 
 **Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
 - Evento: `menu_item_click` com `label` (texto do item) e `menu` (nome do menu pai).

@@ -215,7 +215,7 @@ export const CheckedItem: Story = {
           <CommandGroup heading="Aparência">
             <CommandItem value="claro" checked>Claro</CommandItem>
             <CommandItem value="escuro" checked={false}>Escuro</CommandItem>
-            <CommandItem value="sistema" checked>Sistema <CommandShortcut>⌘S</CommandShortcut></CommandItem>
+            <CommandItem value="sistema" checked>Sistema <CommandShortcut>Ctrl+S</CommandShortcut></CommandItem>
           </CommandGroup>
         </CommandList>
       </Command>
@@ -263,7 +263,7 @@ export const CheckedItem: Story = {
       )!;
       await expect(atalho.getAttribute("aria-hidden")).toBeNull();
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
-      await expect(canvas.getByRole("option", { name: /Sistema\s*⌘S/ })).toBe(
+      await expect(canvas.getByRole("option", { name: /Sistema\s*Ctrl\+S/ })).toBe(
         comando("sistema"),
       );
     });

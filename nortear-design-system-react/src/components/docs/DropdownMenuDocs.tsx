@@ -675,17 +675,17 @@ interface DropdownMenuItemProps {
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>
-      Desfazer <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+      Desfazer <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Refazer <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+      Refazer <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuSeparator />
     <DropdownMenuItem>
-      Copiar <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+      Copiar <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Colar <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+      Colar <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
     </DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>`,
@@ -697,17 +697,17 @@ interface DropdownMenuItemProps {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="bottom" align="start">
                     <DropdownMenuItem>
-                      Desfazer <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+                      Desfazer <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Refazer <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+                      Refazer <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
-                      Copiar <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+                      Copiar <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Colar <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+                      Colar <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

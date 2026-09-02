@@ -25,7 +25,7 @@ export const PASTE_LABEL = "Colar"
 
 export const SEARCH_GROUP_LABEL = "Buscar componentes"
 export const SEARCH_PLACEHOLDER = "Buscar"
-export const SEARCH_SHORTCUT = "⌘K"
+export const SEARCH_SHORTCUT = "Ctrl+K"
 
 export const PASSWORD_GROUP_LABEL = "Senha"
 export const REVEAL_LABEL = "Mostrar senha"

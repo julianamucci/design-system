@@ -41,9 +41,9 @@ const AXE_WITH_MENU_OPEN = {
 } as const
 
 const SHORTCUTS = [
-  { label: "Desfazer", atalho: "⌘Z" },
-  { label: "Refazer", atalho: "⇧⌘Z" },
-  { label: "Copiar", atalho: "⌘C" },
+  { label: "Desfazer", atalho: "Ctrl+Z" },
+  { label: "Refazer", atalho: "Ctrl+Shift+Z" },
+  { label: "Copiar", atalho: "Ctrl+C" },
 ] as const
 
 const EXPORTACOES = ["PDF", "CSV", "PNG"] as const
@@ -124,7 +124,7 @@ export const WithShortcuts: Story = {
     })
 
     await step("O atalho entra no nome do item, e não fica escondido do leitor", async () => {
-      // Sem `aria-hidden`: "Desfazer, ⌘Z" é o que dá serventia ao atalho para
+      // Sem `aria-hidden`: "Desfazer, Ctrl+Z" é o que dá serventia ao atalho para
       // quem não enxerga a tela. Escondê-lo devolveria só "Desfazer".
       for (const [i, item] of items.entries()) {
         await expect(item).toHaveAccessibleName(
@@ -401,10 +401,10 @@ export const EditorCompleto: Story = {
             <MenubarGroup>
               <MenubarLabel>Documento</MenubarLabel>
               <MenubarItem>
-                Novo <MenubarShortcut>⌘N</MenubarShortcut>
+                Novo <MenubarShortcut>Ctrl+N</MenubarShortcut>
               </MenubarItem>
               <MenubarItem>
-                Abrir <MenubarShortcut>⌘O</MenubarShortcut>
+                Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut>
               </MenubarItem>
             </MenubarGroup>
             <MenubarSeparator />
@@ -416,10 +416,10 @@ export const EditorCompleto: Story = {
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+              Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
-              Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+              Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>

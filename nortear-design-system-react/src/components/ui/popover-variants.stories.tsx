@@ -64,7 +64,7 @@ export const Default: Story = {
         </PopoverTrigger>
         <PopoverContent>
           <p className="nds-text-body">
-            Use Ctrl + K para abrir a busca em qualquer tela.
+            Use Ctrl+K para abrir a busca em qualquer tela.
           </p>
         </PopoverContent>
       </Popover>
@@ -81,7 +81,7 @@ export const Default: Story = {
     await step("E carrega a classe do design system com o conteúdo livre", async () => {
       const dialog = screen.getByRole("dialog");
       await expect(dialog).toHaveClass(/nds-popover-content/);
-      await expect(dialog.textContent).toMatch(/Ctrl \+ K/);
+      await expect(dialog.textContent).toMatch(/Ctrl\+K/);
     });
   },
 };

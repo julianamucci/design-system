@@ -170,18 +170,18 @@ export const WithShortcuts: Story = {
           <CommandGroup heading="Componentes">
             <CommandItem value="button">
               <LayoutIcon />
-              Button <CommandShortcut>⌘B</CommandShortcut>
+              Button <CommandShortcut>Ctrl+B</CommandShortcut>
             </CommandItem>
             <CommandItem value="input">
               <TypeIcon />
-              Input <CommandShortcut>⌘I</CommandShortcut>
+              Input <CommandShortcut>Ctrl+I</CommandShortcut>
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Utilitários">
             <CommandItem value="separator">
               <MinusIcon />
-              Separator <CommandShortcut>⌘S</CommandShortcut>
+              Separator <CommandShortcut>Ctrl+S</CommandShortcut>
             </CommandItem>
           </CommandGroup>
         </CommandList>
@@ -201,13 +201,13 @@ export const WithShortcuts: Story = {
       const shortcuts = root.querySelectorAll<HTMLElement>('[data-slot="command-shortcut"]');
       await expect(shortcuts).toHaveLength(3);
       await expect(shortcuts[0]).toHaveClass(/nds-command-shortcut/);
-      await expect(shortcuts[0]).toHaveTextContent("⌘B");
+      await expect(shortcuts[0]).toHaveTextContent("Ctrl+B");
     });
 
     await step("O atalho entra no nome acessível do comando", async () => {
       // Atalho escondido do leitor de tela é atalho que só quem enxerga
       // descobre.
-      await expect(canvas.getByRole("option", { name: /Button\s*⌘B/ })).toBeVisible();
+      await expect(canvas.getByRole("option", { name: /Button\s*Ctrl\+B/ })).toBeVisible();
     });
 
     await step("O atalho fica encostado na borda direita do comando", async () => {
@@ -253,7 +253,7 @@ function CommandPaletteDemo() {
         data-spacing="sm"
       >
         <span>Pressione</span>
-        <kbd className="nds-kbd">⌘K</kbd>
+        <kbd className="nds-kbd">Ctrl+K</kbd>
       </div>
       <Button
         variant="outline"
@@ -276,11 +276,11 @@ function CommandPaletteDemo() {
             <CommandGroup heading="Componentes">
               <CommandItem value="button" onSelect={() => setOpen(false)}>
                 <LayoutIcon />
-                Button <CommandShortcut>⌘B</CommandShortcut>
+                Button <CommandShortcut>Ctrl+B</CommandShortcut>
               </CommandItem>
               <CommandItem value="input" onSelect={() => setOpen(false)}>
                 <TypeIcon />
-                Input <CommandShortcut>⌘I</CommandShortcut>
+                Input <CommandShortcut>Ctrl+I</CommandShortcut>
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />
@@ -333,7 +333,7 @@ export const CommandPalette: Story = {
       // de Do & Don't deste componente.
       const dica = canvasElement.querySelector<HTMLElement>(".nds-kbd")!;
       await expect(dica).toBeVisible();
-      await expect(dica).toHaveTextContent("⌘K");
+      await expect(dica).toHaveTextContent("Ctrl+K");
     });
 
     await step("O diálogo é nomeado por um título que só o leitor de tela vê", async () => {
@@ -361,7 +361,7 @@ export const CommandPalette: Story = {
       const atalho = panel.querySelector<HTMLElement>(
         '[data-value="button"] [data-slot="command-shortcut"]',
       )!;
-      await expect(atalho).toHaveTextContent("⌘B");
+      await expect(atalho).toHaveTextContent("Ctrl+B");
     });
 
     await step("Escape fecha o diálogo e devolve o foco ao gatilho", async () => {

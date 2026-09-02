@@ -147,7 +147,7 @@ describe('composições', () => {
 
   it('o atalho fica dentro do item e não some para o leitor de tela', () => {
     const saida = dropdownMenuWithShortcutsSource();
-    expect(saida).toContain('<DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>');
+    expect(saida).toContain('<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
     const item = saida.slice(saida.indexOf('Copiar'));
     expect(item.indexOf('<DropdownMenuShortcut>')).toBeLessThan(
       item.indexOf('</DropdownMenuItem>'),

@@ -63,9 +63,9 @@ describe('contextMenuSource', () => {
   });
 
   it('o atalho fica dentro do item e não sai da árvore de acessibilidade', () => {
-    // "Excluir, ⌫" é o nome útil; escondido, o atalho só existe para quem vê.
+    // "Excluir, Delete" é o nome útil; escondido, o atalho só existe para quem vê.
     const saida = contextMenuSource();
-    expect(saida).toContain('<ContextMenuShortcut>⌫</ContextMenuShortcut>');
+    expect(saida).toContain('<ContextMenuShortcut>Delete</ContextMenuShortcut>');
     expect(saida).not.toContain('aria-hidden');
   });
 

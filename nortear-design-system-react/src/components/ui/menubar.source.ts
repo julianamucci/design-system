@@ -74,19 +74,19 @@ export const menubarSource: SourceTransform<MenubarArgs> = (_gerado, ctx) => {
 ${menu(
   'Arquivo',
   `      <MenubarItem>
-        Novo <MenubarShortcut>⌘N</MenubarShortcut>
+        Novo <MenubarShortcut>Ctrl+N</MenubarShortcut>
       </MenubarItem>
       <MenubarItem>
-        Abrir <MenubarShortcut>⌘O</MenubarShortcut>
+        Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut>
       </MenubarItem>`,
 )}
 ${menu(
   'Editar',
   `      <MenubarItem>
-        Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+        Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut>
       </MenubarItem>
       <MenubarItem>
-        Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+        Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
       </MenubarItem>`,
 )}
 </Menubar>`,
@@ -344,10 +344,10 @@ ${menu(
   `      <MenubarGroup>
         <MenubarLabel>Documento</MenubarLabel>
         <MenubarItem>
-          Novo <MenubarShortcut>⌘N</MenubarShortcut>
+          Novo <MenubarShortcut>Ctrl+N</MenubarShortcut>
         </MenubarItem>
         <MenubarItem>
-          Abrir <MenubarShortcut>⌘O</MenubarShortcut>
+          Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut>
         </MenubarItem>
       </MenubarGroup>
       <MenubarSeparator />
@@ -356,10 +356,10 @@ ${menu(
 ${menu(
   'Editar',
   `      <MenubarItem>
-        Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+        Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut>
       </MenubarItem>
       <MenubarItem>
-        Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+        Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
       </MenubarItem>`,
 )}
 ${menu(

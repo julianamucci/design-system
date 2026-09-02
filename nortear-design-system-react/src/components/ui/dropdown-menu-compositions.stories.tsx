@@ -328,16 +328,16 @@ export const WithShortcuts: Story = {
         <DropdownMenuContent>
           <DropdownMenuItem>
             Desfazer
-            <DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
+            <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             Copiar
-            <DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
+            <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             Colar
-            <DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
+            <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -350,7 +350,7 @@ export const WithShortcuts: Story = {
     await step("O atalho faz parte do nome do item", async () => {
       // Sem isso o leitor de tela anunciaria "Copiar" e a pessoa nunca saberia
       // que existe uma tecla — o atalho é informação, não decoração.
-      await expect(canvas.getByRole("menuitem", { name: "Copiar Ctrl C" })).toBeTruthy();
+      await expect(canvas.getByRole("menuitem", { name: "Copiar Ctrl+C" })).toBeTruthy();
     });
 
     await step("O texto do atalho não some para o leitor de tela", async () => {
@@ -361,7 +361,7 @@ export const WithShortcuts: Story = {
     await step("O atalho fica encostado na borda direita do item", async () => {
       // `margin-left: auto` é o mecanismo, mas num item flex o valor computado
       // já vem resolvido em pixels — o que dá para afirmar é o resultado.
-      const item = canvas.getByRole("menuitem", { name: "Colar Ctrl V" });
+      const item = canvas.getByRole("menuitem", { name: "Colar Ctrl+V" });
       const atalho = item.querySelector<HTMLElement>("[data-slot='dropdown-menu-shortcut']")!;
       const itemBox = item.getBoundingClientRect();
       const shortcutBox = atalho.getBoundingClientRect();

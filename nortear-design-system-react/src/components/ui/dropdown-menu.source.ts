@@ -355,7 +355,7 @@ export function dropdownMenuWithSubmenuSource(): string {
 
 /**
  * Atalhos de teclado. O atalho é INFORMAÇÃO, não decoração: fica dentro do
- * item, entra no nome acessível ("Copiar Ctrl C") e por isso nunca leva
+ * item, entra no nome acessível ("Copiar Ctrl+C") e por isso nunca leva
  * `aria-hidden`. Quem o empurra para a borda direita é o próprio componente.
  */
 export function dropdownMenuWithShortcutsSource(): string {
@@ -373,16 +373,16 @@ export function dropdownMenuWithShortcutsSource(): string {
       '',
       `<DropdownMenuItem>
   Desfazer
-  <DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
+  <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
 </DropdownMenuItem>
 <DropdownMenuItem>
   Copiar
-  <DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
+  <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
 </DropdownMenuItem>
 <DropdownMenuSeparator />
 <DropdownMenuItem>
   Colar
-  <DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
+  <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
 </DropdownMenuItem>`,
     ),
   );

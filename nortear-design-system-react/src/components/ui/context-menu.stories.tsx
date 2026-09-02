@@ -102,14 +102,14 @@ export const Playground: Story = {
         <ContextMenuGroup>
           <ContextMenuItem>
             Editar
-            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuItem>Duplicar</ContextMenuItem>
         </ContextMenuGroup>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive">
           Excluir
-          <ContextMenuShortcut>⌫</ContextMenuShortcut>
+          <ContextMenuShortcut>Delete</ContextMenuShortcut>
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
@@ -152,7 +152,7 @@ export const Playground: Story = {
     });
 
     await step("O atalho é lido junto do item, não escondido", async () => {
-      // "Excluir, ⌫" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
+      // "Excluir, Delete" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
       // só "Excluir" e o atalho não ensinaria nada.
       const menu = await waitForPortal("menu");
       const atalho = menu.querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!;

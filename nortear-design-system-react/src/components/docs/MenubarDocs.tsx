@@ -250,10 +250,10 @@ interface MenubarItemProps {
                 <MenubarTrigger>Arquivo</MenubarTrigger>
                 <MenubarContent>
                   <MenubarItem>
-                    Novo <MenubarShortcut>⌘N</MenubarShortcut>
+                    Novo <MenubarShortcut>Ctrl+N</MenubarShortcut>
                   </MenubarItem>
                   <MenubarItem>
-                    Abrir <MenubarShortcut>⌘O</MenubarShortcut>
+                    Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut>
                   </MenubarItem>
                   <MenubarSeparator />
                   <MenubarSub>
@@ -278,17 +278,17 @@ interface MenubarItemProps {
                 <MenubarTrigger>Editar</MenubarTrigger>
                 <MenubarContent>
                   <MenubarItem>
-                    Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+                    Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut>
                   </MenubarItem>
                   <MenubarItem>
-                    Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                    Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
                   </MenubarItem>
                   <MenubarSeparator />
                   <MenubarItem>
-                    Copiar <MenubarShortcut>⌘C</MenubarShortcut>
+                    Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut>
                   </MenubarItem>
                   <MenubarItem>
-                    Colar <MenubarShortcut>⌘V</MenubarShortcut>
+                    Colar <MenubarShortcut>Ctrl+V</MenubarShortcut>
                   </MenubarItem>
                 </MenubarContent>
               </MenubarMenu>
@@ -471,7 +471,7 @@ interface MenubarItemProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                Salvar ⌘S
+                Salvar Ctrl+S
               </div>
             ),
             dontPreview: (
@@ -526,11 +526,11 @@ interface MenubarItemProps {
   <MenubarMenu>
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
       <MenubarSeparator />
-      <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
-      <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+      <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
+      <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
 </Menubar>`,
@@ -541,17 +541,17 @@ interface MenubarItemProps {
                     <MenubarTrigger>Editar</MenubarTrigger>
                     <MenubarContent>
                       <MenubarItem>
-                        Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+                        Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut>
                       </MenubarItem>
                       <MenubarItem>
-                        Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                        Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
                       </MenubarItem>
                       <MenubarSeparator />
                       <MenubarItem>
-                        Copiar <MenubarShortcut>⌘C</MenubarShortcut>
+                        Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut>
                       </MenubarItem>
                       <MenubarItem>
-                        Colar <MenubarShortcut>⌘V</MenubarShortcut>
+                        Colar <MenubarShortcut>Ctrl+V</MenubarShortcut>
                       </MenubarItem>
                     </MenubarContent>
                   </MenubarMenu>
@@ -644,18 +644,18 @@ interface MenubarItemProps {
   <MenubarMenu>
     <MenubarTrigger>Arquivo</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-      <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
-      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+      <MenubarItem>Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
+      <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
       <MenubarSeparator />
-      <MenubarItem>Sair <MenubarShortcut>⌘Q</MenubarShortcut></MenubarItem>
+      <MenubarItem>Sair <MenubarShortcut>Ctrl+Q</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
   <MenubarMenu>
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
   <MenubarMenu>
@@ -680,17 +680,17 @@ interface MenubarItemProps {
                     <MenubarTrigger>Arquivo</MenubarTrigger>
                     <MenubarContent>
                       <MenubarItem>
-                        Novo <MenubarShortcut>⌘N</MenubarShortcut>
+                        Novo <MenubarShortcut>Ctrl+N</MenubarShortcut>
                       </MenubarItem>
                       <MenubarItem>
-                        Abrir... <MenubarShortcut>⌘O</MenubarShortcut>
+                        Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut>
                       </MenubarItem>
                       <MenubarItem>
-                        Salvar <MenubarShortcut>⌘S</MenubarShortcut>
+                        Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut>
                       </MenubarItem>
                       <MenubarSeparator />
                       <MenubarItem>
-                        Sair <MenubarShortcut>⌘Q</MenubarShortcut>
+                        Sair <MenubarShortcut>Ctrl+Q</MenubarShortcut>
                       </MenubarItem>
                     </MenubarContent>
                   </MenubarMenu>
@@ -698,10 +698,10 @@ interface MenubarItemProps {
                     <MenubarTrigger>Editar</MenubarTrigger>
                     <MenubarContent>
                       <MenubarItem>
-                        Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+                        Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut>
                       </MenubarItem>
                       <MenubarItem>
-                        Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                        Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
                       </MenubarItem>
                     </MenubarContent>
                   </MenubarMenu>

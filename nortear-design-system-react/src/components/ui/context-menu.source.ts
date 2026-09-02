@@ -54,7 +54,7 @@ ${parts.map((part) => `  ${part},`).join('\n')}
  *
  * Ensina o arranjo canônico: a área que responde ao gesto, um grupo de ações
  * com atalho, o divisor e a ação destrutiva. O atalho fica DENTRO do item e sem
- * `aria-hidden`, porque "Excluir, ⌫" é o nome útil — escondido, o atalho só
+ * `aria-hidden`, porque "Excluir, Delete" é o nome útil — escondido, o atalho só
  * existe para quem enxerga.
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
@@ -75,14 +75,14 @@ ${area(label)}
     <ContextMenuGroup>
       <ContextMenuItem>
         Editar
-        <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
       </ContextMenuItem>
       <ContextMenuItem>Duplicar</ContextMenuItem>
     </ContextMenuGroup>
     <ContextMenuSeparator />
     <ContextMenuItem variant="destructive">
       Excluir
-      <ContextMenuShortcut>⌫</ContextMenuShortcut>
+      <ContextMenuShortcut>Delete</ContextMenuShortcut>
     </ContextMenuItem>
   </ContextMenuContent>
 </ContextMenu>`,
@@ -231,7 +231,7 @@ ${area(LABEL_DEFAULT)}
     <ContextMenuGroup>
       <ContextMenuItem>
         Editar
-        <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
       </ContextMenuItem>
       <ContextMenuItem disabled>Duplicar</ContextMenuItem>
       <ContextMenuItem>Renomear</ContextMenuItem>
@@ -317,7 +317,7 @@ ${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
           <ContextMenuLabel>Ações</ContextMenuLabel>
           <ContextMenuItem>
             Editar
-            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
@@ -348,7 +348,7 @@ ${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive">
           Excluir
-          <ContextMenuShortcut>⌫</ContextMenuShortcut>
+          <ContextMenuShortcut>Delete</ContextMenuShortcut>
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

@@ -75,7 +75,7 @@ describe('estados de cada comando', () => {
 
   it('o atalho mora dentro do comando e não sai da árvore de acessibilidade', () => {
     const saida = commandWithShortcutsSource();
-    expect(saida).toContain('<CommandShortcut>⌘B</CommandShortcut>');
+    expect(saida).toContain('<CommandShortcut>Ctrl+B</CommandShortcut>');
     expect(saida).not.toContain('aria-hidden');
   });
 });

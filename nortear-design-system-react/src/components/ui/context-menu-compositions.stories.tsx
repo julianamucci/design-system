@@ -66,16 +66,16 @@ export const WithShortcut: Story = {
       <ContextMenuContent>
         <ContextMenuItem data-testid="editar">
           Editar
-          <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+          <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
         </ContextMenuItem>
         <ContextMenuItem>
           Desfazer
-          <ContextMenuShortcut>⌘Z</ContextMenuShortcut>
+          <ContextMenuShortcut>Ctrl+Z</ContextMenuShortcut>
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive">
           Excluir
-          <ContextMenuShortcut>⌫</ContextMenuShortcut>
+          <ContextMenuShortcut>Delete</ContextMenuShortcut>
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
@@ -353,7 +353,7 @@ function DemoCompleta() {
           <ContextMenuLabel>Ações</ContextMenuLabel>
           <ContextMenuItem>
             Editar
-            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
@@ -387,7 +387,7 @@ function DemoCompleta() {
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive">
           Excluir
-          <ContextMenuShortcut>⌫</ContextMenuShortcut>
+          <ContextMenuShortcut>Delete</ContextMenuShortcut>
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
