@@ -192,6 +192,29 @@ Foi assim que o component set `Alert` deste arquivo ficou com `Cor=cold-light` e
 o resto em `default`, e o componente `Accordion` com `Tipografia=augmented-fourth`,
 que não é o padrão de tema nenhum.
 
+**E fixe no PORTADOR, não em cada nó — pino de filho VENCE o do ancestral.** A
+outra metade da regra, e a que custou mais caro. Aplicar os sete em toda a árvore
+parece a leitura zelosa de "os sete ou nenhum", e é o contrário: congela cada
+descendente no tema que ele tinha na hora da varredura. Como `explicitVariableModes`
+do filho ganha do herdado, trocar o tema do portador deixa de alcançar o que está
+dentro. Medido em 2026-09-02: o conjunto do Button foi para `default-dark` e os
+**72 ícones** ficaram em `default-light`, então o `+` de cada botão pintava a cor
+do claro dentro do botão escuro — com o vínculo certo, o token certo e o valor
+certo para o modo errado. Fora do escuro, nada disso aparece.
+
+Regra: pino de tema mora na página, no component set ou no componente de topo.
+Tudo abaixo herda, e pino de descendente é defeito até prova em contrário. A
+exceção é coleção que não é eixo de tema — `Texto` marca idioma, e o `palco` do
+AlertDialog a fixa de propósito.
+
+**Varredura que APAGA o que ela testa no ancestral é sensível à ordem.** Ao
+limpar os 101 pinos, a primeira passada usava "algum ancestral fixa?" como
+critério e limpava enquanto varria: dois ícones do Accordion foram visitados
+depois de o pai já ter sido limpo, deixaram de ver ancestral fixado, e passaram
+batido. Colete a lista inteira ANTES de escrever, e repita até a varredura voltar
+vazia — o custo é uma passada a mais e o ganho é não depender da ordem de
+`findAll`.
+
 ## Prefixos dentro de cada coleção
 
 | Coleção | Prefixos |
