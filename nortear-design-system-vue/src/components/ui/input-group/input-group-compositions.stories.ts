@@ -17,6 +17,7 @@ import {
   inputGroupRoot,
   NOTE_GROUP_LABEL,
   NOTE_PLACEHOLDER,
+  PASSWORD_FIELD_ID,
   PASSWORD_GROUP_LABEL,
   PASSWORD_SAMPLE,
   REVEAL_LABEL,
@@ -134,26 +135,39 @@ export const PasswordReveal: Story = {
       const visible = ref(false);
       return {
         visible,
+        fieldId: PASSWORD_FIELD_ID,
         groupLabel: PASSWORD_GROUP_LABEL,
         revealLabel: REVEAL_LABEL,
         hideLabel: HIDE_LABEL,
         sample: PASSWORD_SAMPLE,
       };
     },
+    // O rótulo VISÍVEL nomeia o CAMPO, e o nome do grupo não o substitui: o do
+    // grupo pertence ao conjunto campo + botão, e o leitor de tela não o
+    // empresta ao controle. Esta é a única composição sem `placeholder` — as
+    // outras se nomeavam por ele sem que ninguém reparasse —, então aqui o campo
+    // chegava anônimo, que é o caso exato da regra `label` do axe.
     template: `
-      <InputGroup :aria-label="groupLabel">
-        <InputGroupInput :type="visible ? 'text' : 'password'" :default-value="sample" />
-        <InputGroupAddon align="inline-end">
-          <InputGroupButton
-            size="icon-xs"
-            :aria-label="visible ? hideLabel : revealLabel"
-            @click="visible = !visible"
-          >
-            <EyeOff v-if="visible" aria-hidden="true" />
-            <Eye v-else aria-hidden="true" />
-          </InputGroupButton>
-        </InputGroupAddon>
-      </InputGroup>
+      <div class="nds-stack nds-w-full" data-spacing="sm">
+        <label class="nds-label" :for="fieldId">{{ groupLabel }}</label>
+        <InputGroup :aria-label="groupLabel">
+          <InputGroupInput
+            :id="fieldId"
+            :type="visible ? 'text' : 'password'"
+            :default-value="sample"
+          />
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton
+              size="icon-xs"
+              :aria-label="visible ? hideLabel : revealLabel"
+              @click="visible = !visible"
+            >
+              <EyeOff v-if="visible" aria-hidden="true" />
+              <Eye v-else aria-hidden="true" />
+            </InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -186,6 +200,12 @@ export const PasswordReveal: Story = {
       // Só de ícone: sem texto visível, o nome acessível é a única pista.
       await expect(toggle.textContent?.trim()).toBe('');
       await expect(canvas.getByRole('button', { name: /./ })).toBe(toggle);
+
+      // E o CAMPO tem nome próprio. Sem `placeholder`, o rótulo visível é a
+      // única fonte de nome que sobra — o `aria-label` do grupo nomeia o
+      // conjunto, não o controle. Sem esta linha o defeito voltava sem ninguém
+      // ver, porque o axe é quem o achou e nenhum passo o media.
+      await expect(field).toHaveAccessibleName(PASSWORD_GROUP_LABEL);
     });
 
     await step('A alternância conta o que aconteceu pela PALAVRA', async () => {

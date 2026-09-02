@@ -40,6 +40,25 @@ export const SEND_LABEL = 'Enviar'
 /** Id do campo do formato, para o rótulo visível apontar para ele. */
 export const SITE_FIELD_ID = 'input-group-site'
 
+/**
+ * Ids dos outros dois campos que também precisam de rótulo VISÍVEL.
+ *
+ * Um id por story, e não o reaproveitamento do `SITE_FIELD_ID`: a aba Docs
+ * monta as stories de um arquivo na MESMA página, e duas molduras com o mesmo
+ * id fariam os dois rótulos apontarem para o primeiro campo — o segundo ficaria
+ * anônimo de novo, agora sem o axe reclamar.
+ *
+ * O rótulo não é enfeite. A primeira rodada da suíte reprovou estas duas
+ * molduras no axe, e por regras diferentes: `label` no campo de senha (sem
+ * rótulo, sem `aria-label` e sem `placeholder`) e `label-title-only` no campo
+ * inválido — que dispara pela DESCRIÇÃO, porque `aria-describedby` não nomeia.
+ * Nenhum dos candidatos que estavam ali serve: o prefixo `https://` completa o
+ * formato, o texto do erro é descrição, e o nome do GRUPO pertence ao conjunto
+ * campo + botão, não ao controle.
+ */
+export const INVALID_FIELD_ID = 'input-group-invalid-site'
+export const PASSWORD_FIELD_ID = 'input-group-password'
+
 /** Id do texto que descreve o erro. Sai daqui para asserção e markup casarem. */
 export const INVALID_MESSAGE_ID = 'input-group-error'
 export const INVALID_MESSAGE = 'Endereço inválido'

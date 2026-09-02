@@ -673,6 +673,18 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
           class="nds-stack nds-w-full"
           data-spacing="sm"
         >
+          <!-- O rótulo VISÍVEL nomeia o campo — mesmo padrão do par 3 logo
+               abaixo. Sem ele o único candidato a nome era o `aria-describedby`
+               do erro, e descrição não é nome: a primeira rodada da suíte de
+               fumaça reprovou esta moldura em `label-title-only`, e o leitor de
+               tela anunciava "campo de edição, Endereço inválido" — que conta o
+               problema sem dizer de que campo é. O par continua sendo sobre a
+               PALAVRA do erro; o rótulo acompanha o lado bom para não virar a
+               diferença entre os dois. -->
+          <label
+            class="nds-label"
+            :for="DO_DONT_INVALID_ID"
+          >{{ labels.siteGroup }}</label>
           <InputGroup>
             <InputGroupAddon align="inline-start">
               <InputGroupText>{{ labels.prefix }}</InputGroupText>

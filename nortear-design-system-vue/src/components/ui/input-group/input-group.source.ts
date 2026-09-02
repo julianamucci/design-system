@@ -25,6 +25,7 @@ import {
   INVALID_MESSAGE_ID,
   NOTE_GROUP_LABEL,
   NOTE_PLACEHOLDER,
+  PASSWORD_FIELD_ID,
   PASSWORD_GROUP_LABEL,
   PASTE_LABEL,
   REVEAL_LABEL,
@@ -85,8 +86,15 @@ function importOf(names: string[]): string {
   return `import {\n${names.map(name => `  ${name},`).join('\n')}\n} from '@/components/ui/input-group'`
 }
 
-/** A marcação de um addon, com o que ele carrega dentro. */
-function addonMarkup(addon: InputGroupSnippetAddon): string {
+/**
+ * A marcação de um addon, com o que ele carrega dentro.
+ *
+ * `disabled` vem do GRUPO: um grupo desabilitado não pode ter controle vivo
+ * dentro. Snippet que mostrasse só o campo desligado ensinaria a copiar o
+ * defeito que a story `Disabled` acabou de corrigir — a moldura esmaecida com
+ * um botão que ainda recebe Tab e responde ao clique.
+ */
+function addonMarkup(addon: InputGroupSnippetAddon, disabled = false): string {
   const children: string[] = []
 
   if (addon.icon) {
@@ -102,6 +110,7 @@ function addonMarkup(addon: InputGroupSnippetAddon): string {
       '<InputGroupButton\n'
       + '  size="icon-xs"\n'
       + `  aria-label="${text(addon.buttonAccessibleName)}"\n`
+      + (disabled ? '  disabled\n' : '')
       + '  @click="handleAddon"\n'
       + '>\n'
       + `  <${addon.buttonIcon ?? 'Eye'} aria-hidden="true" />\n`
@@ -110,7 +119,7 @@ function addonMarkup(addon: InputGroupSnippetAddon): string {
   }
   else if (addon.buttonLabel) {
     children.push(
-      `<InputGroupButton @click="handleAddon">${text(addon.buttonLabel)}</InputGroupButton>`,
+      `<InputGroupButton${disabled ? ' disabled' : ''} @click="handleAddon">${text(addon.buttonLabel)}</InputGroupButton>`,
     )
   }
 
@@ -179,9 +188,13 @@ export function inputGroupSnippet(o: InputGroupSnippetOptions = {}): string {
   // marcação só precisa pôr o campo entre os addons para a leitura sequencial
   // bater com o desenho quando nada reordena.
   const body = [
-    ...addons.filter(addon => addon.align.endsWith('start')).map(addonMarkup),
+    ...addons
+      .filter(addon => addon.align.endsWith('start'))
+      .map(addon => addonMarkup(addon, o.disabled === true)),
     fieldMarkup(o),
-    ...addons.filter(addon => addon.align.endsWith('end')).map(addonMarkup),
+    ...addons
+      .filter(addon => addon.align.endsWith('end'))
+      .map(addon => addonMarkup(addon, o.disabled === true)),
   ].join('\n\n')
 
   const groupAttribute = o['aria-label'] ? ` aria-label="${text(o['aria-label'])}"` : ''
@@ -248,7 +261,14 @@ export function inputGroupRestSource(): string {
 
 /** Inválido: os dois atributos no campo, mais o texto que os explica. */
 export function inputGroupInvalidSource(): string {
-  return inputGroupSnippet({ placeholder: SITE_PLACEHOLDER, invalid: true })
+  // Com o rótulo VISÍVEL, que é o que a story mostra: descrever não é nomear, e
+  // um snippet sem rótulo ensinaria o campo anônimo que o axe reprova em
+  // `label-title-only`.
+  return inputGroupSnippet({
+    placeholder: SITE_PLACEHOLDER,
+    invalid: true,
+    visibleLabel: SITE_GROUP_LABEL,
+  })
 }
 
 /** Desabilitado: o atributo é do campo, e a moldura só reage a ele. */
@@ -282,20 +302,29 @@ ${importOf(['InputGroup', 'InputGroupAddon', 'InputGroupButton', 'InputGroupInpu
 
 const visible = ref(false)`
 
-  const markup = `<InputGroup aria-label="${PASSWORD_GROUP_LABEL}">
-  <InputGroupInput :type="visible ? 'text' : 'password'" />
+  // O rótulo VISÍVEL entra no snippet junto: sem `placeholder`, ele é a única
+  // fonte de nome que o campo tem, e o `aria-label` do grupo nomeia o conjunto,
+  // não o controle. Snippet sem ele ensinaria o campo anônimo que o axe reprova.
+  const markup = `<div class="nds-stack" data-spacing="sm">
+  <label class="nds-label" for="${PASSWORD_FIELD_ID}">
+    ${text(PASSWORD_GROUP_LABEL)}
+  </label>
 
-  <InputGroupAddon align="inline-end">
-    <InputGroupButton
-      size="icon-xs"
-      :aria-label="visible ? '${HIDE_LABEL}' : '${REVEAL_LABEL}'"
-      @click="visible = !visible"
-    >
-      <EyeOff v-if="visible" aria-hidden="true" />
-      <Eye v-else aria-hidden="true" />
-    </InputGroupButton>
-  </InputGroupAddon>
-</InputGroup>`
+  <InputGroup aria-label="${PASSWORD_GROUP_LABEL}">
+    <InputGroupInput id="${PASSWORD_FIELD_ID}" :type="visible ? 'text' : 'password'" />
+
+    <InputGroupAddon align="inline-end">
+      <InputGroupButton
+        size="icon-xs"
+        :aria-label="visible ? '${HIDE_LABEL}' : '${REVEAL_LABEL}'"
+        @click="visible = !visible"
+      >
+        <EyeOff v-if="visible" aria-hidden="true" />
+        <Eye v-else aria-hidden="true" />
+      </InputGroupButton>
+    </InputGroupAddon>
+  </InputGroup>
+</div>`
 
   return vueSnippet(script, markup)
 }
