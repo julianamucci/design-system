@@ -303,7 +303,7 @@ const subdomainThemeMap = {
 };
 ```
 
-`getThemeInfo()` returns `{ subdomain, theme, isDevMode, allowManualSelection }`. In dev mode, the manual `ThemeSelector` component is shown. In production, the theme is locked to the subdomain.
+`getThemeInfo()` returns `{ subdomain, theme, isDevMode, allowManualSelection }`. This repository ships no manual theme selector component: the only manual switch here is the Storybook toolbar. `allowManualSelection` is guidance for the consuming application, which is free to expose a selector of its own. In production, the theme is locked to the subdomain.
 
 ---
 
@@ -854,7 +854,10 @@ npm run storybook        # Storybook on http://localhost:6006
 # Tests
 npx vitest               # Run interaction + a11y tests (headless Chromium)
 
-# Build
+# Type-check gate — `tsc -b`, emits nothing
+npm run build
+
+# Build — the only publishable artifact
 npm run build-storybook  # Static build to storybook-static/
 
 # Visual regression

@@ -436,7 +436,7 @@ Sheet
 
 **API e exemplos**: `src/components/ui/tooltip.tsx` + stories + `TooltipDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-> **Setup obrigatório**: `TooltipProvider` (com `delayDuration={400}` recomendado) deve ser adicionado no root da aplicação (App.tsx). Sem ele, os tooltips **não aparecem**.
+> **Setup obrigatório**: `TooltipProvider` (com `delayDuration={400}` recomendado) deve ser adicionado no root da aplicação que consome o design system. Sem ele, os tooltips **não aparecem**. Dentro deste repositório quem cumpre esse papel é o `decorator` de `.storybook/preview.ts`.
 
 **Estrutura de subcomponentes**:
 ```

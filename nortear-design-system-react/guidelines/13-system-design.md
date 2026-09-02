@@ -10,8 +10,7 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 ## Visão Geral da Arquitetura
 
 ### Tipo de Aplicação
-- **Storybook** — interface principal de documentação (porta 6006)
-- **SPA sandbox** (`App.tsx`) — desenvolvimento isolado
+- **Storybook** — a única interface do projeto (porta 6006); não existe sandbox de aplicação
 - **Frontend-only** - Sem backend ou servidor
 - **Static** - Pode ser deployado em qualquer CDN/hosting estático
 
@@ -79,15 +78,14 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 
 ### Estado Global
 
-**i18n e tema** são gerenciados fora do `App.tsx`:
+**i18n e tema** são gerenciados fora das docs pages:
 - **i18n**: Zustand store em `@/lib/i18n.ts` — hook `useTranslation` disponível em qualquer componente
 - **Tema (light/dark + brand)**: toolbar do Storybook via decorators em `.storybook/preview.ts`
 
 **Decisão de Design**:
-- ✅ **i18n via Zustand** — estado leve, fora do App.tsx
-- ✅ **Temas via Storybook toolbar** — não via `useState` no App
+- ✅ **i18n via Zustand** — estado leve, fora da árvore de componentes
+- ✅ **Temas via Storybook toolbar** — não via `useState` de aplicação
 - ✅ **Props drilling é aceitável para 2-3 níveis** em ComponentDocs
-- ✅ **useState no App.tsx** apenas para o sandbox de desenvolvimento
 
 ### Estado Local
 
@@ -131,17 +129,7 @@ Re-render
 
 ### Navegação
 
-A navegação entre componentes é gerenciada pela **sidebar do Storybook** — não por `setState` no `App.tsx`. O `storySort` em `.storybook/preview.ts` define a ordem; os títulos das stories definem a hierarquia.
-
-```tsx
-// ✅ CORRETO — navegação via Storybook sidebar (título da story)
-export default {
-  title: "UI/Alert",   // → aparece em UI > Alert na sidebar
-} satisfies Meta<typeof Alert>;
-
-// ❌ EVITAR — registrar no App.tsx para fins de navegação
-// { name: "Alert", path: "alert", component: AlertDocs }
-```
+A navegação entre componentes é gerenciada pela **sidebar do Storybook** — não por estado de aplicação. O `storySort` em `.storybook/preview.ts` define a ordem; os títulos das stories definem a hierarquia. Quem coloca um componente na navegação é o `title` do meta da sua story, e nada além disso.
 
 ---
 
@@ -149,7 +137,7 @@ export default {
 
 ### Storybook sidebar como navegação principal
 
-A navegação na interface de documentação é gerenciada pelo **Storybook sidebar** (`storySort` em `.storybook/preview.ts`). Não existe `React Router`, nem state-based routing para fins de documentação.
+A navegação é gerenciada pelo **Storybook sidebar** (`storySort` em `.storybook/preview.ts`). Não existe `React Router` nem state-based routing em lugar nenhum do projeto.
 
 ```ts
 // .storybook/preview.ts — ordem da sidebar
@@ -162,7 +150,7 @@ storySort: {
 }
 ```
 
-O `App.tsx` mantém state-based routing **apenas para o sandbox de desenvolvimento**. Novos componentes não devem ser registrados lá para fins de navegação — o título da story é suficiente.
+Para colocar um componente novo na navegação, o título da story é suficiente.
 
 > Para o processo completo de adicionar um novo componente, ver `12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` Seção 14.
 
@@ -174,16 +162,7 @@ O `App.tsx` mantém state-based routing **apenas para o sandbox de desenvolvimen
 
 #### 1. Lazy Loading de Componentes
 
-**Storybook**: code splitting e lazy loading são gerenciados nativamente pelo Storybook via Vite. Cada story file é carregado sob demanda pelo bundler — não é necessário configurar `React.lazy` para as docs pages no Storybook.
-
-**App.tsx sandbox**: o `lazyDocs` em `App.tsx` usa `React.lazy` para carregamento sob demanda das docs pages no sandbox de desenvolvimento:
-
-```tsx
-// App.tsx — uso exclusivo do sandbox
-const AlertDocs = lazy(() => import('./components/docs/AlertDocs'));
-```
-
-Isso não afeta a performance do Storybook.
+Code splitting e lazy loading são gerenciados nativamente pelo Storybook via Vite. Cada story file é carregado sob demanda pelo bundler — não é necessário configurar `React.lazy` para as docs pages.
 
 #### 2. Memoization
 
@@ -251,9 +230,9 @@ document.documentElement.classList.add('dark');
 
 O Storybook cuida da renderização das stories e docs pages. Cada story é um módulo independente carregado sob demanda.
 
-**SEO**: metatags são injetadas no documento pai pelo hook `useSeoEffect` em cada ComponentDocs. O Storybook exporta (`storybook build`) um site estático que pode ser deployado em qualquer CDN.
+**SEO**: metatags são injetadas no documento pai pelo hook `useSeoEffect` em cada ComponentDocs. O `npm run build-storybook` exporta um site estático que pode ser deployado em qualquer CDN — é o único artefato publicável do projeto.
 
-**App.tsx sandbox**: CSR (Client-Side Rendering) puro. Suficiente para o sandbox de desenvolvimento — não é a interface pública do projeto.
+A renderização é CSR (Client-Side Rendering) puro, do Storybook inteiro.
 
 ---
 
@@ -347,7 +326,7 @@ useEffect(() => {
 5. Verificar no Storybook: npm run storybook
 ```
 
-O componente aparece automaticamente na sidebar sob `UI/NovoComponente`. Não é necessário registrá-lo no `App.tsx`.
+O componente aparece automaticamente na sidebar sob `UI/NovoComponente`. Não existe nenhum outro ponto de registro.
 
 **Escalabilidade**:
 
@@ -379,15 +358,14 @@ class ComponentName extends React.Component {
 }
 ```
 
-#### 2. Named Exports (Páginas) + Default Export (App)
+#### 2. Named Exports (Páginas) + Default Export (meta de story)
 
 ```tsx
 // ✅ Páginas de documentação: Named export
 export function AlertDocs() { }
-
-// ✅ App.tsx: Default export (entry point)
-export default function App() { }
 ```
+
+O único default export do projeto é o `meta` de cada arquivo de story, exigido pelo Storybook.
 
 #### 3. Props Typing (TypeScript)
 
@@ -574,7 +552,7 @@ function DemoSection() { }
 
 ### 4. Roteamento
 
-**Escolhido**: Storybook sidebar (docs) + state-based routing (sandbox)
+**Escolhido**: Storybook sidebar
 
 **Alternativas consideradas**:
 - React Router
@@ -582,9 +560,8 @@ function DemoSection() { }
 - Wouter
 
 **Razões**:
-- ✅ Storybook sidebar gerencia navegação de docs via `storySort` — zero config
-- ✅ State-based routing em `App.tsx` apenas para o sandbox
-- ✅ Sem dependência de router para a interface principal
+- ✅ Storybook sidebar gerencia toda a navegação via `storySort` — zero config
+- ✅ Sem dependência de router em lugar nenhum do projeto
 - ✅ Novos componentes aparecem na sidebar automaticamente pelo título da story
 
 ---
@@ -756,20 +733,19 @@ class ErrorBoundary extends React.Component {
 ### Build Process
 
 ```bash
-# 1. Install dependencies
-npm install
+# 1. Instalar dependências
+npm ci
 
-# 2. Build (Vite/Create React App/etc)
+# 2. Checagem de tipos — `tsc -b`, não emite artefato
 npm run build
 
-# 3. Output
-# dist/
-#   ├── index.html
-#   ├── assets/
-#   │   ├── index-[hash].js
-#   │   ├── index-[hash].css
-#   │   └── [images]
+# 3. Empacotar o site estático — este é o artefato publicável
+npm run build-storybook
+
+# 4. Saída: storybook-static/
 ```
+
+`npm run build` **não emite nada**: ele é portão de tipos, não passo de empacotamento. Quem gera o que vai para o ar é o `build-storybook`, e é ele que o `vercel.json` roda (`outputDirectory: "storybook-static"`). Repare na consequência: como o `build` não abre folha de estilo, `@import` quebrado em CSS só reprova no `build-storybook`.
 
 ### Deployment Targets
 
@@ -801,8 +777,11 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Build
+      - name: Type-check
         run: npm run build
+
+      - name: Build (artefato publicável)
+        run: npm run build-storybook
       
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
@@ -913,7 +892,7 @@ preview.ts
 ### Roadmap Técnico
 
 #### Fase 1: Atual (MVP)
-- ✅ SPA com roteamento básico
+- ✅ Storybook como única interface, navegação pelo `storySort`
 - ✅ Sistema de temas
 - ✅ 60+ componentes documentados
 

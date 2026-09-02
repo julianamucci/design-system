@@ -47,7 +47,7 @@ Regras permanentes:
 - `DialogTitle` e `DialogDescription` obrigatórios em todo Dialog, Sheet, Drawer — são a base do `aria-labelledby`
 - `TableCaption` obrigatório em toda Table (pode ficar visualmente oculta com `.nds-sr-only`)
 - `scope="col"` em todo `TableHead`
-- `TooltipProvider` no root — em Storybook: via `decorator` em `preview.ts`; em App.tsx sandbox: no topo do JSX
+- `TooltipProvider` no root — neste repositório, via `decorator` em `.storybook/preview.ts`; na aplicação que consome o design system, no root dela
 - `aria-invalid` dentro de `FormField`: automático via `FormControl` — não adicionar manualmente. Fora de `FormField`: adicionar manualmente com `aria-errormessage`
 
 Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
@@ -127,11 +127,9 @@ Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
 
 ---
 
-## 9. Navegação — Storybook como interface principal
+## 9. Navegação — Storybook como única interface
 
-A interface principal de documentação é o **Storybook** (`npm run storybook`, porta 6006). Novos componentes são adicionados criando stories — não registrando no `App.tsx`.
-
-O `App.tsx` é um **sandbox de desenvolvimento**. Não usar para fins de navegação de documentação.
+A única interface do projeto é o **Storybook** (`npm run storybook`, porta 6006). Não existe sandbox de aplicação: componente novo é adicionado criando stories, e é a story que o coloca na navegação.
 
 Para adicionar um componente: criar `*Docs.tsx` + `translations.json` + `*.stories.tsx` (5 arquivos). Ver `12-arquitetura-projeto.md`.
 

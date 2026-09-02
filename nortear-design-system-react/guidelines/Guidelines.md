@@ -2,7 +2,7 @@
 
 Esta documentação está organizada em arquivos separados por escopo para facilitar a navegação e manutenção.
 
-> **Leia primeiro**: [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) — referência completa de arquitetura Storybook (Storybook é a interface principal; consulte antes de qualquer tarefa de documentação ou stories).
+> **Leia primeiro**: [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) — referência completa de arquitetura Storybook (Storybook é a única interface — não há sandbox de aplicação; consulte antes de qualquer tarefa de documentação ou stories).
 
 ---
 
@@ -66,7 +66,7 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 5. **Acessibilidade** (11-shared) — Sempre obrigatória
 6. **Documentação** (11) — Padrão de documentação de componentes
 7. **Edições Parciais** (03-shared) — Preservação de conteúdo ao editar
-8. **STORYBOOK-ARCHITECTURE.md + Arquitetura** (12) — Storybook é a interface principal; consulte `STORYBOOK-ARCHITECTURE.md` primeiro, depois `12-arquitetura-projeto.md`
+8. **STORYBOOK-ARCHITECTURE.md + Arquitetura** (12) — Storybook é a única interface — não há sandbox de aplicação; consulte `STORYBOOK-ARCHITECTURE.md` primeiro, depois `12-arquitetura-projeto.md`
 9. **Design Sistema** (04-shared) — Implementação prática de tokens CSS
 10. **System Design** (13) — Padrões de código, performance, segurança
 11. **Tom de Voz** (05-shared) — Personalidade, terminologia e padrões de escrita

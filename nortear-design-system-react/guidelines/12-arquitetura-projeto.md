@@ -4,16 +4,17 @@
 
 ---
 
-## Interface Principal
+## A Interface
 
-O **Storybook** é a interface de documentação principal.
+O **Storybook** é a **única** interface do projeto. Não existe sandbox de aplicação.
 
 ```bash
-npm run storybook      # porta 6006 — interface principal
-npm run dev            # sandbox de desenvolvimento (App.tsx) — uso secundário
+npm run storybook        # porta 6006 — a interface
+npm run build            # tsc -b — só checagem de tipos, não emite artefato
+npm run build-storybook  # empacota storybook-static/ — o artefato publicável
 ```
 
-`App.tsx` é um **sandbox**. Ele existe para desenvolvimento isolado. Novos componentes **não precisam** ser registrados nele.
+Um componente novo entra no projeto **por story**: é a story que o coloca na sidebar, que os portões auditam e que o `build-storybook` empacota.
 
 ---
 
@@ -116,7 +117,7 @@ Não existe lista de categorias mantida manualmente. A sidebar reflete automatic
 
 ## Sistema de Temas
 
-Temas são gerenciados pelo toolbar do Storybook, **não** por estado em `App.tsx`.
+Temas são gerenciados pelo toolbar do Storybook, **não** por estado de aplicação.
 
 | Dimensão | Mecanismo |
 |---|---|
@@ -178,7 +179,7 @@ npm run storybook
 ```
 Confirmar que o componente aparece na sidebar sob `UI/NovoComponente` com todas as sub-páginas.
 
-> **App.tsx**: Novos componentes opcionalmente podem ser adicionados ao `lazyDocs` em `App.tsx` para uso no sandbox. Não é necessário.
+Não há mais nenhum passo de registro além destes cinco: a story é o registro.
 
 ---
 
@@ -239,15 +240,18 @@ export default { title: 'Foundations/Minha Página' };
 
 ---
 
-## Papel do App.tsx
+## Remoção do sandbox de aplicação (2026-09-02)
 
-`App.tsx` é um **sandbox de desenvolvimento** e **não** a interface de documentação.
+Até 2026-09-02 esta stack mantinha um sandbox de aplicação — `src/App.tsx`, `src/main.tsx`, `index.html`, `src/components/HomePage.tsx`, `src/components/ThemeSelector.tsx` — servido por `npm run dev` e empacotado por `vite build`. **Ele foi removido**, junto com os scripts `dev` e `preview`. O Angular já operava assim e virou o modelo para as outras stacks.
 
-Responsabilidades atuais:
-- Preview isolado de docs pages fora do Storybook
-- Desenvolvimento local antes de criar stories
+O motivo é medido, não estético:
 
-`App.tsx` **não** precisa ser atualizado ao adicionar novos componentes. A sidebar do Storybook é a única navegação relevante.
+- **Nunca era publicado.** Os cinco `vercel.json` têm `outputDirectory: "storybook-static"` e `buildCommand: "npm run build-storybook"`. O bundle do sandbox era gerado e descartado.
+- **Ninguém o abria.** A interface de trabalho e de leitura é o Storybook, na 6006.
+- **Nenhum portão o auditava.** `audit.mjs` varre `components/ui` e `docs/`; o sandbox ficava fora do alcance de todas as regras.
+- **Acumulava classe morta.** Restaram nele 172 classes de uma migração já encerrada, invisíveis para quem só olhava as stories.
+
+Consequência que vale saber de cor: `npm run build` passou a ser **`tsc -b`** — checagem de tipos, sem emissão. Com isso **nenhum dos cinco `npm run build` abre folha de estilo**, então `@import` quebrado em CSS só reprova no `build-storybook`. Ao mexer em CSS, o portão é `npm run build-storybook`, não o build.
 
 ---
 
