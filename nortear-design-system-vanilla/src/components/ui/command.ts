@@ -18,21 +18,92 @@
 //     <div data-slot="command-empty" role="status" aria-live="polite">…</div>
 //   </div>
 //
-// ─── Três decisões que o conteúdo compartilhado cobra ─────────────────────────
+// ─── DECISÃO DE ACESSIBILIDADE — bloco canônico da paleta ─────────────────────
 //
-// 1. A região de "sem resultados" fica MONTADA o tempo todo, fora do listbox.
-//    Uma região viva só é lida quando o conteúdo muda DENTRO dela — criar o
-//    parágrafo no instante em que a busca esvazia não anuncia coisa nenhuma.
-//    O que entra e sai é o texto (e a classe, que traz 24px de respiro e
-//    deixaria um vão embaixo da lista cheia). Fora do listbox porque
-//    `role="status"` não é filho permitido de `role="listbox"` e o axe reprova
-//    por `aria-required-children`.
-// 2. O campo publica `aria-activedescendant`. As setas movem o DESTAQUE e nunca
-//    o foco — sem esse atributo quem usa leitor de tela não ouve qual comando
-//    está em destaque, e a navegação por teclado vira um silêncio.
-// 3. O item marcado emite `data-checked` e carrega o ícone de marca. A folha já
-//    trazia `.nds-command-item[data-checked="true"] .nds-command-item-check`, e
-//    o estado estava especificado sem nada que o entregasse.
+// Escrito aqui, na referência cross-stack; os outros quatro primitivos trazem a
+// versão curta mais o mecanismo da própria lib. Medido em 2026-09-02 na FONTE
+// de cada lib (cmdk, reka-ui, bits-ui, @radix-ng/primitives/autocomplete), não
+// na documentação delas.
+//
+// ─── O que o command É, e o que o separa dos vizinhos de overlay ─────────────
+//
+// A paleta é um COMBOBOX com listbox — não um menu, não um diálogo com lista
+// dentro. O que a define é uma coisa só: **o foco nunca sai do campo de busca**.
+// As setas movem o DESTAQUE, e quem conta ao leitor de tela onde ele está é o
+// `aria-activedescendant` do campo. Daí a comparação com a família:
+//
+//   · `tooltip`   descreve e NÃO recebe foco; persiste por coordenada.
+//   · `popover`   RECEBE foco, tem conteúdo interativo e ganhou `modal`.
+//   · `hover-card` abre por ponteiro e NÃO move o foco para o painel — um Tab
+//     a partir do gatilho fecha o cartão.
+//   · `dropdown-menu` MOVE o foco para o item (`role="menuitem"`, foco real).
+//   · `command`   move o DESTAQUE e não o foco. É a única da família em que a
+//     pessoa continua digitando enquanto navega — e é isso que exige o par
+//     combobox → listbox por inteiro, com id real dos dois lados.
+//
+// ─── O contrato, e onde cada peça o cumpre ───────────────────────────────────
+//
+// 1. **Par combobox → listbox, com id REAL.** O campo publica `role="combobox"`,
+//    `aria-autocomplete="list"`, `aria-expanded="true"` e `aria-controls`
+//    apontando para o id que a lista tem de fato. `aria-expanded` é fixo em
+//    `true` porque a paleta não tem estado fechado: quem abre e fecha é o
+//    Dialog em volta. Id órfão em `aria-controls` o axe reprova
+//    (`aria-valid-attr-value`), e é o defeito mais fácil de introduzir aqui.
+//
+// 2. **`aria-activedescendant` segue o destaque, e é LIMPO quando não há.**
+//    Sem ele a navegação por teclado é um silêncio: a pessoa digita, aperta a
+//    seta e não ouve nada. E apontar para um nó que o filtro já removeu é
+//    violação de verdade — por isso `renderList` remove o atributo antes de
+//    redesenhar, e `setActive(-1)` o remove de novo.
+//
+// 3. **`aria-selected` acompanha o DESTAQUE, não a última escolha.** Numa
+//    paleta os dois papéis não coincidem: o item apontado pelo
+//    `aria-activedescendant` é, por contrato ARIA, o selecionado. É também o
+//    seletor que a folha compartilhada usa para pintar o item ativo.
+//
+// 4. **Grupo é `role="group"` nomeado pelo próprio cabeçalho**, e o cabeçalho
+//    NÃO vira opção da lista — erro clássico deste componente, que faria a
+//    seta parar num título e o filtro trazê-lo como resultado. Grupo sem
+//    cabeçalho não recebe `role` nem `aria-labelledby`: nome vazio é pior que
+//    nome nenhum.
+//
+// 5. **O divisor sai da árvore de acessibilidade.** Uma linha de 1px não é
+//    filho permitido de `listbox` (só `option` e `group` são), e quem separa
+//    os blocos para quem não vê a tela é o rótulo do grupo.
+//
+// 6. **Lista vazia: aqui uma região viva É justificada — e é a ÚNICA.**
+//    A regra da casa é não ter região viva por padrão, e ela vale: nada mais
+//    neste componente tem uma. Mas o vazio é o caso em que a mudança acontece
+//    FORA do foco da pessoa, sem que nada seja anunciado — quem lê de ouvido
+//    digitaria no vazio sem jamais saber que a busca não achou nada, e não há
+//    outro canal, porque o foco fica no campo e a lista só some.
+//    Três exigências, e as três são o motivo de o código ser como é:
+//      (a) o nó fica MONTADO o tempo todo — região viva só é lida quando o
+//          conteúdo muda DENTRO dela, e criá-la no instante em que a busca
+//          esvazia não anuncia coisa nenhuma;
+//      (b) o que entra e sai é o TEXTO e a classe (que traz 24px de respiro e
+//          deixaria um vão embaixo da lista cheia). Sem a classe o nó segue no
+//          DOM e na árvore de acessibilidade, com altura zero — o oposto de
+//          `display: none`, e é o que preserva o anúncio da próxima busca;
+//      (c) fica FORA do listbox, porque `role="status"` não é filho permitido
+//          de `role="listbox"` (axe, `aria-required-children`).
+//
+//    **DIVERGÊNCIA ABERTA, decisão da dona.** vanilla, vue e angular cumprem
+//    (a)+(b)+(c). react e svelte NÃO anunciam — e
+//    `accessibility.screenReader.onFilter` do conteúdo compartilhado promete a
+//    região viva nas CINCO docs pages. Os dois caminhos estão medidos e não
+//    exigem fork: no react, `useCommandState` é exportado pelo cmdk; no svelte,
+//    `Command.Root` aceita `onStateChange`, que entrega `filtered.count`.
+//    Registrado em PATCHES.md#command-listbox-children e no docblock das duas
+//    stacks.
+//
+// 7. **O atalho NÃO recebe `aria-hidden`.** Ele faz parte do nome da opção
+//    ("Buscar, Ctrl K"), que é o que dá serventia ao atalho para quem usa
+//    leitor de tela. Já a MARCA de escolhido é decorativa: quem anuncia o
+//    estado é o `data-checked` lido pela aplicação.
+//
+// 8. **O item desabilitado nunca é destino da seta**, e a lista de navegáveis é
+//    separada da de visíveis justamente para isso.
 
 import { cn } from '@/lib/utils';
 

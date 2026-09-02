@@ -79,6 +79,40 @@ provideCommandContext({
 })
 </script>
 
+<!--
+  ─── DECISÃO DE ACESSIBILIDADE — versão curta ───────────────────────────────
+
+  Bloco canônico no `command.ts` do Vanilla. Em uma frase: a paleta é um
+  COMBOBOX com listbox, e o que a define é o foco NUNCA sair do campo de busca —
+  as setas movem o destaque, e quem conta ao leitor de tela onde ele está é o
+  `aria-activedescendant`. É o que a separa do dropdown-menu (que move o foco de
+  verdade), do popover (que recebe foco) e do tooltip (que nem recebe).
+
+  ─── O mecanismo NESTA stack ───────────────────────────────────────────────────
+
+  Medido em `reka-ui` (2026-09-02). Esta stack compõe a família Listbox, não um
+  primitivo "command": `ListboxRoot` + `ListboxFilter` + `ListboxContent` +
+  `ListboxItem` + `ListboxGroup`. O que a lib dá pronto é o `role="listbox"`, o
+  `role="option"`, a navegação por setas e o `aria-activedescendant`; o que
+  ela NÃO dá — e é escrito aqui — é o lado COMBOBOX do par:
+
+    · `CommandInput` escreve `role="combobox"`, `aria-autocomplete`,
+      `aria-expanded` e `aria-controls`, porque o `ListboxFilter` renderiza um
+      `<input type="text">` puro. `aria-expanded` é fixo em `true`: a paleta não
+      tem estado fechado, quem abre e fecha é o Dialog em volta;
+    · o `listId` nasce na RAIZ porque campo e lista são IRMÃOS — nenhum dos dois
+      alcança o id do outro, e sem isso o `aria-controls` apontaria para órfão;
+    · `CommandItem` reescreve `aria-selected` para acompanhar o DESTAQUE (a lib
+      o deriva do modelo e marca o destaque só com `data-highlighted`, que
+      nenhuma regra da folha alcança);
+    · `CommandSeparator` vira decorativo, porque o primitivo emite
+      `role="separator"`, filho não permitido de `listbox`;
+    · `CommandEmpty` fica FORA do `CommandList`, montado o tempo todo, com
+      `role="status"` + `aria-live` + `aria-atomic` — a única região viva do
+      componente, e justificada no bloco canônico (item 6). Esta stack CUMPRE o
+      contrato; react e svelte ainda não.
+-->
+
 <template>
   <ListboxRoot
     data-slot="command"

@@ -40,6 +40,31 @@ import type { ComboboxItemRef } from '@radix-ng/primitives/combobox';
 //         <div class="nds-command-group-heading">Categoria</div>
 //         <div class="nds-command-item" role="option" aria-selected="false">…</div>
 //
+// ─── DECISÃO DE ACESSIBILIDADE — versão curta ─────────────────────────────────
+//
+// Bloco canônico no `command.ts` do Vanilla. Em uma frase: a paleta é um
+// COMBOBOX com listbox, e o que a define é o foco NUNCA sair do campo de busca
+// — as setas movem o destaque, e quem conta ao leitor de tela onde ele está é o
+// `aria-activedescendant`. É o que a separa do dropdown-menu (que move o foco
+// de verdade), do popover (que recebe foco) e do tooltip (que nem recebe).
+//
+// O mecanismo desta stack está descrito logo abaixo, em "Por que COM primitivo":
+// o `RdxAutocompleteRoot` entrega o par combobox → listbox inteiro, com id real
+// dos dois lados. O que foi escrito à mão, e por quê:
+//
+//   · `NdsCommandEmpty` — região viva (`role="status"` + `aria-live` +
+//     `aria-atomic`), montada o tempo todo e FORA da lista. É a ÚNICA região
+//     viva do componente, e a justificativa está no item 6 do bloco canônico:
+//     no vazio a mudança acontece longe do foco, e sem anúncio quem lê de
+//     ouvido digitaria no vazio sem saber que a busca não achou nada. Esta
+//     stack CUMPRE o contrato — react e svelte ainda não;
+//   · `NdsCommandSeparator` — decorativo, porque `RdxAutocompleteSeparator`
+//     emite `role="separator"`, filho não permitido de `listbox`;
+//   · `aria-selected` no item, que o primitivo marca só como
+//     `data-highlighted`;
+//   · o nome acessível da LISTA, herdado do campo (o axe cobra por
+//     `aria-input-field-name`, e listbox anônimo é listbox sem nome).
+//
 // ─── Por que COM primitivo, e qual ────────────────────────────────────────────
 //
 // O Radix NG não tem um primitivo "command". Tem `@radix-ng/primitives/
