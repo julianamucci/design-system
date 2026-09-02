@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { HoverCardContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { inject } from 'vue'
+import { inject, onUnmounted, watch } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   HoverCardContent,
   HoverCardPortal,
+  injectHoverCardRootContext,
   useForwardProps,
   useId,
 } from 'reka-ui'
@@ -40,36 +41,50 @@ const panelId = useId(undefined, 'nds-hover-card-content')
 
 const contexto = inject(KEY_HOVER_CARD, null)
 
-// A associação é escrita quando o painel MONTA e desfeita quando ele desmonta —
-// que é exatamente a janela em que o alvo existe no documento. Fechado, um
-// `aria-describedby` apontando para um `id` ausente é `aria-valid-attr-value`
-// no axe, então ele não pode ser prop fixa do gatilho.
+// A associação segue a ABERTURA da raiz, e não o ciclo de vida deste
+// componente. Medido na fonte da reka: `HoverCardContent` monta um `<Presence>`
+// por dentro, então ELE está montado o tempo todo — quem entra e sai do
+// documento é o `HoverCardContentImpl` que o `Presence` decide renderizar. Um
+// `ref` de função ou um `onMounted` aqui dispararia com o cartão fechado, e o
+// gatilho ficaria descrevendo um `id` fora do documento: `aria-valid-attr-value`
+// no axe, exatamente o que se quer evitar.
 //
-// Ref de FUNÇÃO no conteúdo da reka, e não `onMounted` neste componente: este
-// aqui está montado o tempo todo (é a reka que decide quando o painel entra),
-// então o ciclo deste componente não diz nada sobre o painel.
+// `flush: 'post'` para o atributo ser escrito depois de o painel entrar no DOM.
 //
 // O gatilho vem do CONTEXTO, e não de uma busca no documento: com vários
 // cartões na mesma tela (a story Sides), o primeiro
-// `[data-slot="hover-card-trigger"]` descreveria sempre o mesmo gatilho.
+// `[data-slot="hover-card-trigger"]` seria descrito por todos eles.
+const rootContext = injectHoverCardRootContext()
+
 let describedTrigger: HTMLElement | null = null
 
-function associate(instance: unknown): void {
-  if (instance) {
-    describedTrigger = contexto?.trigger.value ?? null
-    describedTrigger?.setAttribute('aria-describedby', panelId)
-    return
-  }
+function clearAssociation(): void {
   describedTrigger?.removeAttribute('aria-describedby')
   describedTrigger = null
 }
+
+watch(
+  () => rootContext.open.value,
+  (isOpen) => {
+    if (!isOpen) {
+      clearAssociation()
+      return
+    }
+    describedTrigger = contexto?.trigger.value ?? null
+    describedTrigger?.setAttribute('aria-describedby', panelId)
+  },
+  { immediate: true, flush: 'post' },
+)
+
+// Sair da página com o cartão aberto (troca de story, navegação) não passa pelo
+// `watch`: sem isto o gatilho — se sobreviver — ficaria com a descrição presa.
+onUnmounted(clearAssociation)
 </script>
 
 <template>
   <HoverCardPortal>
     <HoverCardContent
       :id="panelId"
-      :ref="associate"
       data-slot="hover-card-content"
       v-bind="{ ...$attrs, ...forwardedProps }"
       :class="cn( 'nds-hover-card-content', props.class, )"

@@ -31,6 +31,12 @@
 	// `aria-describedby` apontando para um `id` ausente é `aria-valid-attr-value`
 	// no axe. O `id` é o que o primitivo já gera para o conteúdo.
 	//
+	// O efeito lê a ABERTURA do contexto, e não só a referência: o `PopperLayer`
+	// do bits-ui de fato só renderiza o elemento com o cartão aberto, mas quem
+	// devolve a referência a `null` no desmonte é a lib — depender só disso
+	// deixaria a descrição presa se ela mudasse de comportamento. Com a abertura
+	// no efeito, fechar SEMPRE dispara a limpeza.
+	//
 	// O gatilho vem do CONTEXTO, e não de uma busca no documento: com vários
 	// cartões na mesma tela (a story Sides), o primeiro
 	// `[data-link-preview-trigger]` seria descrito por todos eles.
@@ -39,7 +45,7 @@
 	$effect(() => {
 		const trigger = contexto?.trigger;
 		const panel = ref;
-		if (!trigger || !panel?.id) return;
+		if (!contexto?.open || !trigger || !panel?.id) return;
 		trigger.setAttribute("aria-describedby", panel.id);
 		return () => {
 			if (trigger.getAttribute("aria-describedby") === panel.id) {

@@ -56,7 +56,10 @@
 		...restProps
 	}: HoverCardPrimitive.RootProps & { defaultOpen?: boolean } = $props();
 
-	createContextoHoverCard();
+	// A abertura entra no contexto por FUNÇÃO: lida assim, dentro do efeito do
+	// conteúdo, ela é rastreada e a descrição some no mesmo instante em que o
+	// cartão fecha.
+	createContextoHoverCard(() => open);
 </script>
 
 <HoverCardPrimitive.Root bind:open {openDelay} {closeDelay} {...restProps} />
