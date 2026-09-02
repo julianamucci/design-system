@@ -195,8 +195,9 @@ export const Playground: Story = {
     });
 
     await step('Fechado, não há describedby apontando para o vazio', async () => {
-      // O primitivo só escreve `aria-describedby` enquanto o balão existe. O
-      // Vanilla escreve na montagem — id ausente é `aria-valid-attr-value`.
+      // O primitivo só escreve `aria-describedby` enquanto o balão existe —
+      // describedby para id ausente é `aria-valid-attr-value` no axe. As cinco
+      // stacks cumprem o mesmo contrato.
       if (!args.open) {
         await expect(trigger.getAttribute('aria-describedby')).toBeNull();
       }

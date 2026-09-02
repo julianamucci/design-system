@@ -32,8 +32,8 @@ import {
 //
 //   · `role="tooltip"` no balão e `aria-describedby` no gatilho SÓ enquanto o
 //     balão existe — um describedby apontando para id ausente é violação de
-//     `aria-valid-attr-value`, que é o defeito do Vanilla hoje (ele escreve o
-//     atributo na montagem, muito antes de existir balão);
+//     `aria-valid-attr-value`. As cinco stacks cumprem isso hoje: o Vanilla
+//     escreve o atributo em `show()` e o remove em `hide()`;
 //   · abertura por hover E por foco, com o foco abrindo INSTANTANEAMENTE e o
 //     hover respeitando o delay — os dois lados da WCAG 1.4.13;
 //   · Escape fecha sem mexer no foco (o gatilho continua focado), e clique fora
@@ -50,6 +50,26 @@ import {
 //
 // Sobre a Arrow: ela NÃO é composta aqui, de propósito. Ver a nota no fim do
 // arquivo.
+//
+// ─── Acessibilidade: a decisão, medida nas cinco stacks em 2026-09-02 ────────
+//
+// 1. Abre por FOCO além de ponteiro, e o foco abre sem espera (WCAG 2.1.1).
+// 2. Escape fecha sem mover o foco (WCAG 1.4.13, Dismissible).
+// 3. Pairável e persistente por COORDENADA: a folha dá `pointer-events: none`
+//    ao balão, então quem segura a abertura é a área de tolerância entre
+//    gatilho e balão, e não um hover no nó (WCAG 1.4.13, Hoverable).
+// 4. O gatilho é DESCRITO pelo balão (`aria-describedby`, e só enquanto o balão
+//    existe), nunca NOMEADO por ele. Gatilho icon-only carrega `aria-label`
+//    próprio: em touch não há hover.
+// 5. Nada de região viva — o balão é `role="tooltip"`, e o anúncio chega pela
+//    descrição do gatilho, ao focar.
+//
+// Texto canônico, com o porquê de cada uma: cabeçalho do tooltip do Vanilla,
+// que é a referência de comportamento.
+//
+// Mecanismo nesta stack: os primitivos do `@radix-ng/primitives`, com polígono
+// de segurança do floating-ui.
+//
 
 /** Lado preferido de abertura. O auto-flip por colisão pode trocá-lo. */
 export type TooltipSide = 'top' | 'right' | 'bottom' | 'left';

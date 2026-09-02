@@ -2,6 +2,43 @@
 //
 // Visual: classe .nds-tooltip-content (standalone).
 // Render via portal (body) com posicionamento absoluto via JS.
+//
+// ─── Acessibilidade: a decisão, medida nas cinco stacks em 2026-09-02 ────────
+//
+// Tooltip é dos componentes mais fáceis de errar, então a decisão fica ESCRITA
+// e não herdada. Este é o texto canônico; as outras quatro stacks trazem a
+// versão curta e apontam para cá, que é onde o comportamento é definido.
+//
+// 1. ABRE POR FOCO, além de ponteiro, e o foco abre SEM ESPERA. Conteúdo que só
+//    aparece no :hover não existe para quem navega por teclado (WCAG 2.1.1). A
+//    espera existe para separar o ponteiro que atravessa do que para; no Tab não
+//    há equivalente a "parar em cima". Aqui: `aoFocar`.
+//
+// 2. DISPENSÁVEL sem mover o ponteiro: Escape fecha, e o foco NÃO é tocado —
+//    mexer nele faria o Escape parecer um Tab (WCAG 1.4.13, Dismissible). Aqui:
+//    `onKeyDown`, ouvinte de documento que vive só enquanto o balão existe.
+//
+// 3. PAIRÁVEL e PERSISTENTE, por COORDENADA e não por hover no nó. A folha
+//    compartilhada dá `pointer-events: none` ao balão — ele não é interativo, e
+//    isso é decisão de produto, não acidente —, então o ponteiro nunca "entra"
+//    no elemento e um `mouseenter` nele jamais dispararia. Quem segura a
+//    abertura é a caixa que une gatilho e balão, lida em coordenada. Aqui:
+//    `toleranciaInside` + `GRACE_MS`. As outras quatro chegam ao mesmo por
+//    polígono de segurança da lib, pela mesma razão.
+//
+// 4. O gatilho é DESCRITO pelo balão, nunca NOMEADO por ele: `aria-describedby`,
+//    e só enquanto o balão EXISTE. `aria-labelledby` faria o balão substituir o
+//    nome do gatilho, e o leitor de tela anunciaria o texto no lugar da ação em
+//    vez de depois dela. Em gatilho icon-only o nome tem de ser um `aria-label`
+//    PRÓPRIO do botão: em touch não há hover, e sem ele o botão fica anônimo.
+//    Escrever o describedby na montagem, antes de haver balão, é
+//    `aria-valid-attr-value` no axe — por isso ele nasce em `show()`.
+//
+// 5. NADA de região viva: nem `aria-live`, nem `role="status"`, nem
+//    `role="alert"`. O balão é `role="tooltip"` e ponto; o anúncio chega pela
+//    descrição do gatilho, no momento do foco. Região viva aqui faria o leitor
+//    de tela interromper a leitura a cada balão que abre.
+//
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
