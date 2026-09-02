@@ -246,7 +246,7 @@ const codeCompIconShortcut = `<Tooltip>
   </TooltipContent>
 </Tooltip>`;
 
-const codeCompFormHelp = `<div class="nds-stack" data-spacing="xs">
+const codeCompFormHelp = `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
     <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
@@ -260,7 +260,7 @@ const codeCompFormHelp = `<div class="nds-stack" data-spacing="xs">
       </TooltipContent>
     </Tooltip>
   </div>
-  <input id="api-token" type="text" class="nds-input" style="width: 16rem" placeholder="sk-..." />
+  <input id="api-token" type="text" class="nds-input" placeholder="sk-..." />
 </div>`;
 
 const codeCompMetric = `<div class="nds-stack" data-spacing="xs">
@@ -277,10 +277,10 @@ const codeCompMetric = `<div class="nds-stack" data-spacing="xs">
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.8s</p>
+  <p class="nds-text-h3 nds-m-0">1.8s</p>
 </div>`;
 
-const codeCompSides = `<div class="nds-grid nds-w-full" style="place-items: center; gap: 2rem">
+const codeCompSides = `<div class="nds-grid nds-w-full" data-spacing="xl" style="place-items: center">
   <Tooltip v-for="s in ['top','right','bottom','left']" :key="s">
     <TooltipTrigger as-child>
       <Button variant="outline">{{ s }}</Button>
@@ -625,10 +625,7 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                style="gap: 0.25rem"
-              >
+              <TooltipContent side="bottom">
                 Salvar
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
@@ -645,7 +642,6 @@ const a11yCritCols = computed(() => ({
           >
             <div
               class="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic"
-              style="max-width: 200px; text-align: center"
             >
               "Clique aqui para salvar o documento e voltar à tela inicial."
             </div>
@@ -707,10 +703,7 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                style="gap: 0.25rem"
-              >
+              <TooltipContent side="bottom">
                 Salvar
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
@@ -746,8 +739,9 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-3>
           <div
-            style="contain: layout; place-items: center; gap: 2rem"
+            style="contain: layout; place-items: center"
             class="nds-grid nds-w-full nds-min-h-40"
+            data-spacing="xl"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -817,10 +811,7 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                style="gap: 0.25rem"
-              >
+              <TooltipContent side="bottom">
                 Salvar
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
@@ -836,7 +827,7 @@ const a11yCritCols = computed(() => ({
             data-align="start"
           >
             <div
-              class="nds-stack"
+              class="nds-stack nds-w-full nds-max-w-sm"
               data-spacing="sm"
               style="align-items: flex-start"
             >
@@ -870,7 +861,6 @@ const a11yCritCols = computed(() => ({
                 id="api-token-vue-comp"
                 type="text"
                 class="nds-input"
-                style="width: 16rem"
                 placeholder="sk-..."
               >
             </div>
@@ -913,10 +903,7 @@ const a11yCritCols = computed(() => ({
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <p
-                class="nds-font-semibold"
-                style="font-size: 1.5rem; line-height: 2rem"
-              >
+              <p class="nds-text-h3 nds-m-0">
                 1.8s
               </p>
             </div>

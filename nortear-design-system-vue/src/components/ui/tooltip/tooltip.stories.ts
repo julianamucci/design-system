@@ -101,7 +101,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div style="contain: layout; min-height: 180px;" class="nds-cluster" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-50" data-align="center" data-justify="center">
         <Tooltip
           :key="String(args.defaultOpen)"
           :default-open="args.defaultOpen"

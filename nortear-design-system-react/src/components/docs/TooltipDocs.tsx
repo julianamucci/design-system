@@ -235,11 +235,11 @@ interface TooltipContentProps {
         {/* ── Demonstração ──────────────────────────────────────────── */}
         <DocsDemonstration title={tContent("demonstration.title")}>
           <div
-            className="nds-cluster"
+            className="nds-cluster nds-min-h-30"
             data-justify="center"
             data-align="center"
             data-spacing="lg"
-            style={{ contain: "layout", minHeight: 120, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <Tooltip
               onOpenChange={(open) =>
@@ -514,7 +514,7 @@ interface TooltipContentProps {
               name: tContent("variants.items.positioningSides.name"),
               description: tContent("variants.items.positioningSides.description"),
               useWhen: tContent("variants.items.positioningSides.use"),
-              code: `<div className="nds-grid nds-w-full" style={{ placeItems: "center", gap: "2rem" }}>
+              code: `<div className="nds-grid nds-w-full" data-spacing="xl" style={{ placeItems: "center" }}>
   {(["top", "right", "bottom", "left"] as const).map((side) => (
     <Tooltip key={side}>
       <TooltipTrigger
@@ -527,7 +527,7 @@ interface TooltipContentProps {
   ))}
 </div>`,
               preview: (
-                <div className="nds-grid nds-w-full" style={{ contain: "layout", minHeight: 140, placeItems: "center", gap: "2rem" }}>
+                <div className="nds-grid nds-w-full nds-min-h-40" data-spacing="xl" style={{ contain: "layout", placeItems: "center" }}>
                   {(["top", "right", "bottom", "left"] as const).map((side) => (
                     <Tooltip key={side}>
                       <TooltipTrigger
@@ -593,7 +593,7 @@ interface TooltipContentProps {
               name: tContent("variants.compositions.formFieldHelp.name"),
               description: tContent("variants.compositions.formFieldHelp.description"),
               useWhen: tContent("variants.compositions.formFieldHelp.use"),
-              code: `<div className="nds-stack" data-spacing="xs">
+              code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
   <div className="nds-cluster" data-spacing="sm">
     <label htmlFor="api-token" className="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
@@ -609,10 +609,10 @@ interface TooltipContentProps {
       </TooltipContent>
     </Tooltip>
   </div>
-  <input id="api-token" type="text" className="nds-input" style={{ width: "16rem" }} placeholder="sk-..." />
+  <input id="api-token" type="text" className="nds-input" placeholder="sk-..." />
 </div>`,
               preview: (
-                <div className="nds-stack" data-spacing="xs" style={{ alignItems: "flex-start" }}>
+                <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style={{ alignItems: "flex-start" }}>
                   <div className="nds-cluster" data-spacing="sm">
                     <label htmlFor="api-token-react-comp" className="nds-text-body nds-font-medium">
                       {locale === "en" ? "API Token" : locale === "es" ? "Token de API" : "Token de API"}
@@ -649,7 +649,6 @@ interface TooltipContentProps {
                     id="api-token-react-comp"
                     type="text"
                     className="nds-input"
-                    style={{ width: "16rem" }}
                     placeholder="sk-..."
                   />
                 </div>
@@ -676,7 +675,7 @@ interface TooltipContentProps {
       </TooltipContent>
     </Tooltip>
   </div>
-  <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.8s</p>
+  <p className="nds-text-h3 nds-m-0">1.8s</p>
 </div>`,
               preview: (
                 <div className="nds-stack" data-spacing="xs" style={{ alignItems: 'flex-start' }}>
@@ -710,7 +709,7 @@ interface TooltipContentProps {
                       </TooltipContent>
                     </Tooltip>
                   </div>
-                  <p className="nds-font-semibold" style={{ fontSize: '1.5rem', lineHeight: '2rem' }}>1.8s</p>
+                  <p className="nds-text-h3 nds-m-0">1.8s</p>
                 </div>
               ),
             },

@@ -186,10 +186,10 @@ export const PlacementSides: Story = {
   },
   render: () => (
     <div
-      className="nds-grid nds-p-8"
+      className="nds-grid nds-p-8 nds-min-h-70"
       data-spacing="xl"
       data-cols="2"
-      style={{ contain: "layout", minHeight: 280, position: "relative" }}
+      style={{ contain: "layout", position: "relative" }}
     >
       {(["top", "right", "bottom", "left"] as const).map((side) => (
         <Tooltip key={side} defaultOpen>

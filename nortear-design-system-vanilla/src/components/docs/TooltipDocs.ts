@@ -215,10 +215,9 @@ export function createTooltipDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'nds-grid nds-w-full';
+            wrap.className = 'nds-grid nds-w-full nds-min-h-50';
             wrap.dataset.cols = '3';
             wrap.dataset.spacing = 'lg';
-            wrap.style.minHeight = '180px';
 
             const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
               { labelKey: 'variants.items.default',      build: buildDefaultTooltip      },
@@ -405,8 +404,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
         function buildSidesPreview(): HTMLElement {
           const grid = document.createElement('div');
           grid.style.contain = 'layout';
-          grid.classList.add('nds-min-h-40');
-          grid.className = 'nds-grid nds-w-full';
+          grid.className = 'nds-grid nds-w-full nds-min-h-40';
           grid.dataset.cols = '4';
           grid.dataset.spacing = 'xl';
           grid.style.placeItems = 'center';
@@ -482,7 +480,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
 
         const codeFormHelp = `const help = createButton({
   variant: 'ghost',
-  size: 'icon-xs',
+  size: 'icon-sm',
   'aria-label': 'Ajuda sobre Token de API',
   label: '?',
 });
@@ -496,7 +494,7 @@ createTooltip({
 
         const codeMetric = `const help = createButton({
   variant: 'ghost',
-  size: 'icon-xs',
+  size: 'icon-sm',
   'aria-label': 'O que é LCP',
   label: 'i',
 });
@@ -523,7 +521,7 @@ createTooltip({
 
         function buildFormHelpPreview(): HTMLElement {
           const root = document.createElement('div');
-          root.className = 'nds-stack';
+          root.className = 'nds-stack nds-w-full nds-max-w-sm';
           root.dataset.spacing = 'xs';
           root.style.alignItems = 'flex-start';
 
@@ -555,8 +553,7 @@ createTooltip({
           const input = document.createElement('input');
           input.id = 'api-token-bc-comp';
           input.type = 'text';
-          input.className = 'input';
-          input.style.width = '16rem';
+          input.className = 'nds-input';
           input.placeholder = 'sk-...';
 
           root.append(labelRow, input);
@@ -594,9 +591,7 @@ createTooltip({
           headerRow.append(title, tooltip);
 
           const value = document.createElement('p');
-          value.className = 'nds-font-semibold';
-          value.style.fontSize = '1.5rem';
-          value.style.lineHeight = '2rem';
+          value.className = 'nds-text-h3 nds-m-0';
           value.textContent = '1.8s';
 
           root.append(headerRow, value);

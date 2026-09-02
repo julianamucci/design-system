@@ -100,7 +100,7 @@ export const Playground: Story = {
         sideOffset?: number;
       };
     return (
-      <div style={{ contain: "layout", minHeight: 150, position: "relative" }}>
+      <div className="nds-min-h-50" style={{ contain: "layout", position: "relative" }}>
         <Tooltip
           key={String(defaultOpen)}
           defaultOpen={defaultOpen}

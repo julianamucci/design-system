@@ -70,9 +70,8 @@ export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'nds-cluster nds-w-full';
+    container.className = 'nds-cluster nds-w-full nds-min-h-50';
     container.dataset.justify = 'center';
-    container.style.minHeight = '180px';
 
     const trigger = createButton({
       variant: 'outline',

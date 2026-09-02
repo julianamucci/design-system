@@ -454,7 +454,7 @@ interface TooltipTriggerProps {
         name: $tStore('variants.items.positioningSides.name'),
         description: $tStore('variants.items.positioningSides.description'),
         useWhen: $tStore('variants.items.positioningSides.use'),
-        code: `<div class="nds-grid nds-w-full" style="place-items: center; gap: 2rem">
+        code: `<div class="nds-grid nds-w-full" data-spacing="xl" style="place-items: center">
   {#each ['top','right','bottom','left'] as s}
     <Tooltip>
       <TooltipTrigger>
@@ -550,7 +550,7 @@ interface TooltipTriggerProps {
         name: $tStore('variants.compositions.formFieldHelp.name'),
         description: $tStore('variants.compositions.formFieldHelp.description'),
         useWhen: $tStore('variants.compositions.formFieldHelp.use'),
-        code: `<div class="nds-stack" data-spacing="xs">
+        code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
     <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
@@ -566,7 +566,7 @@ interface TooltipTriggerProps {
       </TooltipContent>
     </Tooltip>
   </div>
-  <input id="api-token" type="text" class="nds-input" style="width: 16rem" placeholder="sk-..." />
+  <input id="api-token" type="text" class="nds-input" placeholder="sk-..." />
 </div>`,
         preview: compFormHelp,
       },
@@ -591,7 +591,7 @@ interface TooltipTriggerProps {
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.8s</p>
+  <p class="nds-text-h3 nds-m-0">1.8s</p>
 </div>`,
         preview: compMetric,
       },
@@ -619,7 +619,7 @@ interface TooltipTriggerProps {
 
   {#snippet compFormHelp()}
     <TooltipProvider delayDuration={0}>
-      <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
+      <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
           <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">Token de API</label>
           <Tooltip>
@@ -638,7 +638,7 @@ interface TooltipTriggerProps {
         <input
           id="api-token-svelte-comp"
           type="text"
-          class="nds-input" style="width: 16rem"
+          class="nds-input"
           placeholder="sk-..."
         />
       </div>
@@ -663,14 +663,14 @@ interface TooltipTriggerProps {
             </TooltipContent>
           </Tooltip>
         </div>
-        <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.8s</p>
+        <p class="nds-text-h3 nds-m-0">1.8s</p>
       </div>
     </TooltipProvider>
   {/snippet}
 
   {#snippet variantPositioningSides()}
     <TooltipProvider delayDuration={0}>
-      <div class="nds-grid nds-w-full nds-min-h-40" style="contain: layout; place-items: center; gap: 2rem">
+      <div class="nds-grid nds-w-full nds-min-h-40" data-spacing="xl" style="contain: layout; place-items: center">
         <Tooltip>
           <TooltipTrigger>
             {#snippet child({ props })}
