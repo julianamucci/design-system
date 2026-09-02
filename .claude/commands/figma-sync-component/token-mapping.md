@@ -357,7 +357,20 @@ icon-only declaram width/height, e em `rem`: 1.5 (24px), 2 (32px), 2.25 (36px),
 2.5 (40px).
 
 **Alias de componente antes da escala.** Use `var(--radius-button)`, não
-`var(--radius)` — é o alias que muda quando o tema muda.
+`var(--radius)` — é o alias que muda quando o tema muda. O Alert violava isto
+amarrando `radius` onde o CSS declara `var(--radius-alert)`: mesmos 14/24/0 nos
+três temas, zero diferença visual, e uma bomba armada para o dia em que alguém
+mover o alias sem mover a escala.
+
+**Raio aninhado se AMARRA, não se calcula à mão.** Pela regra `Ri = Re − E`, um
+elemento recuado 2px dentro de um alerta pede `radius-alert − 2`. No Figma não
+dá para escrever `calc`, e cravar o número congela o valor num tema — foi assim
+que o anel do frame de movimento do Alert ficou com 10/8 quando o `--radius`
+passou de 10 para 14. A saída é procurar na escala o degrau que JÁ vale a
+diferença certa: `radius-md` é `radius-alert − 2` nos três temas (14/12, 24/22,
+0/0), então o retângulo interno amarra nele e acompanha o tema sozinho. Antes de
+usar o atalho, confira o degrau nos três — a escala não é uniforme, e o cold
+achata quase tudo em zero.
 
 **Font-size de controle é literal.** O button declara `0.75rem` / `0.875rem` /
 `1rem` direto; a escala `Tipografia` governa texto de conteúdo. Não force token
