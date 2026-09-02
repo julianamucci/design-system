@@ -248,9 +248,14 @@ const [aberto, setAberto] = useState(false);`,
 }
 
 /**
- * Modal: prende o foco e bloqueia a rolagem do corpo enquanto aberto — e ainda
- * assim não anuncia `aria-modal`. Esconder o resto da página do leitor de tela é
- * contrato de Dialog; um popover continua sendo conteúdo AO LADO, não no lugar.
+ * Modal: trava a rolagem do corpo e bloqueia o ponteiro fora do painel enquanto
+ * aberto — e não anuncia `aria-modal`. Esconder o resto da página do leitor de
+ * tela é contrato de Dialog; um popover continua sendo conteúdo AO LADO, não no
+ * lugar.
+ *
+ * O que ele NÃO faz nesta stack é prender o foco: o gerenciador de foco do Base
+ * UI só trapeia com `modal !== false && hasClosePart`, e esta família não expõe
+ * um `Popover.Close` para contar.
  */
 export function popoverModalSource(): string {
   return jsxSnippet(

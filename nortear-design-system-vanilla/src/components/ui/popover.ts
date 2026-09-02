@@ -2,6 +2,70 @@
 // Visual: classe .nds-popover-content (standalone).
 // Render via portal (body), posicionado pelo JS. Click-outside + Escape fecham.
 
+/**
+ * MODAL OU NÃO-MODAL — bloco canônico das cinco stacks.
+ *
+ * Medido em 2026-09-02 na FONTE de cada lib, não na documentação delas. As
+ * outras quatro trazem a versão curta com o mecanismo da própria stack.
+ *
+ * O Popover é o único da família de overlay que não é menu nem dica: ele RECEBE
+ * foco e guarda conteúdo interativo. Isso obriga a escolher entre dois
+ * contratos, e é escolher METADE de cada um que produz o defeito clássico —
+ * painel que o leitor de tela anuncia como diálogo modal e que o Tab atravessa
+ * como se não fosse.
+ *
+ * A escolha do design system é NÃO-MODAL, e ela é literal nas cinco:
+ *
+ * - O foco ENTRA no painel ao abrir: primeiro elemento focável, ou o próprio
+ *   painel quando não há nenhum. É o que separa o popover do tooltip, e é o que
+ *   o conteúdo compartilhado promete em três seções (acessibilidade, estados e
+ *   critérios de teste).
+ * - O foco NÃO fica PRESO: `Tab` sai do painel e segue a ordem da página.
+ *   Nenhuma das cinco instala laço de tabulação no estado padrão.
+ * - Por isso o painel NUNCA recebe `aria-modal`. O atributo manda o leitor de
+ *   tela esconder tudo o que está fora do diálogo, e essa promessa só se cumpre
+ *   com o foco preso: sem a prisão ele MENTE — o resto da página fica
+ *   inalcançável para quem ouve sem estar inalcançável para quem tabula. É o
+ *   contrário do véu do Dialog, e é de propósito: um popover é conteúdo AO
+ *   LADO, não no lugar.
+ * - `Escape` fecha e DEVOLVE o foco ao gatilho. Clique fora fecha.
+ * - O gatilho declara `aria-expanded` e `aria-haspopup="dialog"`, e
+ *   `aria-controls` apontando para o painel SÓ enquanto ele existe — apontar
+ *   para um id ausente reprova em `aria-valid-attr-value`.
+ * - Nenhuma região viva. O painel não é anúncio: ele é alcançado.
+ *
+ * O mecanismo de cada lib, e o que cada uma chama de "modal":
+ *
+ *   base-ui   — `PopoverRoot` nasce com `modal = false`; `role="dialog"` no
+ *               `Popup`. O `FloatingFocusManager` só trapeia quando
+ *               `modal !== false && hasClosePart` (`popup/PopoverPopup.js`), e
+ *               `modal === true` acrescenta trava de rolagem e um backdrop
+ *               interno (`positioner/PopoverPositioner.js`).
+ *   reka-ui   — `PopoverRoot` nasce com `modal: false`. Não-modal é
+ *               `PopoverContentNonModal`, com `trap-focus: false`; modal é
+ *               `PopoverContentModal`, que traz `trap-focus` ligado,
+ *               `useBodyScrollLock` e `useHideOthers` (este último esconde os
+ *               irmãos por `aria-hidden`, que é mais forte que `aria-modal`).
+ *   bits-ui   — NÃO tem `modal` nenhum. O que existe é `trapFocus` no Content,
+ *               e o padrão da LIB é `true`. Aquela stack o desliga
+ *               explicitamente para não ser a única das cinco a prender o foco;
+ *               desligá-lo não tira nem a entrada do foco nem a devolução ao
+ *               gatilho, porque `focus-scope.svelte.js` faz as duas fora do
+ *               `trap` — ele só gateia o ouvinte que puxa o foco de volta.
+ *   radix-ng  — `modal = input(false)`; trapeia com
+ *               `'trap-focus' || (modal === true && hasPopupClose())`. Emite
+ *               `aria-modal` no DIALOG, e não no popover.
+ *   vanilla   — esta fábrica. Não tem `modal`: não há laço de tabulação, não há
+ *               `aria-modal`, e o foco entra por `getFocusable(panelEl)[0]`.
+ *
+ * A prop `modal` está DOCUMENTADA na tabela de props do conteúdo compartilhado
+ * e existe em três das cinco, com semântica diferente em duas delas. É a única
+ * pendência aberta deste componente, e é decisão de produto: entregar (escrever
+ * o modo modal aqui e na stack do bits-ui) ou remover da tabela. Nada abaixo
+ * depende dela — o estado PADRÃO, que é o que as cinco entregam, é o descrito
+ * acima.
+ */
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';

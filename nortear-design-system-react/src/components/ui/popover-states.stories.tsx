@@ -37,9 +37,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** A altura mínima sai da escada de utilitárias, não de um valor cravado:
+ *  inline vence a folha, e a medida sairia do tema e da densidade junto. */
+const wrapperClass = "nds-min-h-70";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 280,
   position: "relative",
 };
 
@@ -53,7 +55,7 @@ export const Closed: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline">Abrir popover</Button>
@@ -94,7 +96,7 @@ export const Open: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Abrir popover</Button>
@@ -147,7 +149,7 @@ export const Controlled: Story = {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
       return (
-        <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+        <div className={`nds-stack ${wrapperClass}`} data-spacing="sm" style={wrapperStyle}>
           <div className="nds-cluster" data-spacing="md">
             <Button onClick={() => setOpen(true)}>Abrir externamente</Button>
             <Button variant="outline" onClick={() => setOpen(false)}>
@@ -220,12 +222,12 @@ export const Modal: Story = {
       source: { transform: popoverModalSource },
       description: {
         story:
-          "modal=true — foco trapeado dentro do Content e scroll do body bloqueado enquanto aberto.",
+          "modal=true — trava a rolagem do corpo e bloqueia o ponteiro fora do painel enquanto aberto. O foco NÃO fica preso: veja a nota na play.",
       },
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen modal>
         <PopoverTrigger asChild>
           <Button variant="outline">Abrir modal</Button>
@@ -250,10 +252,22 @@ export const Modal: Story = {
       await expect(dialog).toBeVisible();
     });
 
-    await step("Modal prende o foco, e ainda assim não anuncia aria-modal", async () => {
-      // `modal` aqui é bloqueio de rolagem e prisão de foco — não é o contrato
-      // de Dialog. `aria-modal` faria o leitor de tela esconder o resto da
-      // página, e um popover continua sendo conteúdo AO LADO, não no lugar.
+    await step("O foco entra no painel, e o painel não anuncia aria-modal", async () => {
+      // O nome deste passo era "Modal prende o foco", e a asserção abaixo NÃO
+      // media isso: o foco está dentro do painel também no modo não-modal, em
+      // todas as stacks — é o contrato `functional.item1`. Ela passaria com ou
+      // sem prisão, que é a forma exata da asserção que guarda o bug.
+      //
+      // E medido na fonte: `modal` sozinho NÃO prende o foco nesta stack.
+      // `popup/PopoverPopup.js` calcula
+      // `focusManagerModal = modal !== false && hasClosePart`, e `hasClosePart`
+      // conta os `Popover.Close` renderizados DENTRO do painel — esta família
+      // não expõe nenhum. O que `modal` entrega aqui é trava de rolagem e um
+      // backdrop interno (`positioner/PopoverPositioner.js`).
+      //
+      // `aria-modal` continua ausente de propósito, e essa asserção TEM dentes:
+      // o dia em que alguém "completar o contrato de modal" acrescentando o
+      // atributo sem prender o foco, ela reprova.
       const dialog = screen.getByRole("dialog");
       await expect(dialog).not.toHaveAttribute("aria-modal");
       await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));

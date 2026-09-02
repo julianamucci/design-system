@@ -9,6 +9,20 @@
 		class: className,
 		sideOffset = 4,
 		align = "center",
+		// NÃO-MODAL por padrão, e é aqui que esta stack se alinha às outras quatro.
+		//
+		// O bits-ui é a única lib das cinco sem `modal` nenhum: o que ele tem é
+		// `trapFocus` no Content, e o padrão DELE é `true`. Sem esta linha o painel
+		// prendia o foco — `Tab` não saía —, contrariando o que a própria docs page
+		// desta stack afirma ("Não-modal por padrão — o usuário pode interagir com o
+		// resto da página") e divergindo do Vanilla, que é a referência.
+		//
+		// Desligar o trap NÃO tira o que o contrato promete: em
+		// `focus-scope.svelte.js`, `#handleOpenAutoFocus` (foco entra no painel) e
+		// `#handleCloseAutoFocus` (foco volta ao gatilho) rodam fora do `trap` —
+		// ele gateia só `#setupEventListeners`, o ouvinte que puxa de volta o foco
+		// que escapou. Quem precisar do modo preso passa `trapFocus` explicitamente.
+		trapFocus = false,
 		portalProps,
 		...restProps
 	}: PopoverPrimitive.ContentProps & {
@@ -48,6 +62,7 @@
 		role="dialog"
 		{sideOffset}
 		{align}
+		{trapFocus}
 		class={cn("nds-popover-content", className)}
 		{...restProps}
 	/>

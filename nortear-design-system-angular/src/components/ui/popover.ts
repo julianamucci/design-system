@@ -59,6 +59,24 @@ import {
 // portal + positioner + painel. Todas as outras peças só acrescentam atributos e
 // classe a um elemento que quem consome já escreveu, então são `@Directive`.
 
+/**
+ * MODAL OU NÃO-MODAL — versão curta. O bloco canônico é o cabeçalho do
+ * `popover.ts` do Vanilla, medido na fonte das cinco libs em 2026-09-02.
+ *
+ * O Popover é NÃO-MODAL: o foco ENTRA no painel ao abrir (é o que o separa do
+ * tooltip), mas NÃO fica preso — `Tab` sai e segue a ordem da página. Por isso
+ * o painel nunca recebe `aria-modal`: o atributo manda o leitor de tela
+ * esconder o resto da página, e sem foco preso ele mentiria. `Escape` fecha e
+ * devolve o foco ao gatilho; clique fora fecha; o gatilho declara
+ * `aria-expanded` e `aria-haspopup="dialog"`; nenhuma região viva.
+ *
+ * Mecanismo desta stack: `RdxPopoverRoot` nasce com `modal = input(false)`, e o
+ * gerenciador de foco só trapeia com
+ * `'trap-focus' || (modal === true && hasPopupClose())`. O `aria-modal` do
+ * Radix NG está no DIALOG, não no popover — aqui ele não aparece em estado
+ * nenhum.
+ */
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type PopoverSide = 'top' | 'right' | 'bottom' | 'left';
