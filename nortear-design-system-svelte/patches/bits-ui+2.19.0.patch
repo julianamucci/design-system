@@ -1,0 +1,21 @@
+diff --git a/node_modules/bits-ui/dist/bits/menu/menu.svelte.js b/node_modules/bits-ui/dist/bits/menu/menu.svelte.js
+index 89f5cf1..460cd97 100644
+--- a/node_modules/bits-ui/dist/bits/menu/menu.svelte.js
++++ b/node_modules/bits-ui/dist/bits/menu/menu.svelte.js
+@@ -744,6 +744,7 @@ export class MenuContentState {
+         this.rovingFocusGroup = new RovingFocusGroup({
+             rootNode: boxWith(() => this.parentMenu.contentNode),
+             candidateAttr: this.parentMenu.root.getBitsAttr("item"),
++            candidateSelector: `[${this.parentMenu.root.getBitsAttr("item")}]`,
+             loop: this.opts.loop,
+             orientation: boxWith(() => "vertical"),
+         });
+@@ -769,7 +770,7 @@ export class MenuContentState {
+         const node = this.parentMenu.contentNode;
+         if (!node)
+             return [];
+-        const candidates = Array.from(node.querySelectorAll(`[${this.parentMenu.root.getBitsAttr("item")}]:not([data-disabled])`));
++        const candidates = Array.from(node.querySelectorAll(`[${this.parentMenu.root.getBitsAttr("item")}]`));
+         return candidates;
+     }
+     #isPointerMovingToSubmenu() {
