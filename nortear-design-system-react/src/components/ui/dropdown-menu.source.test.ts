@@ -60,8 +60,8 @@ describe('dropdownMenuSource', () => {
   });
 
   it('escreve modal e defaultOpen na RAIZ, e só quando diferem do padrão', () => {
-    const padrao = dropdownMenuSource(undefined, { args: { modal: true, defaultOpen: false } });
-    expect(padrao).toContain('<DropdownMenu>');
+    const atDefaults = dropdownMenuSource(undefined, { args: { modal: true, defaultOpen: false } });
+    expect(atDefaults).toContain('<DropdownMenu>');
 
     const trocado = dropdownMenuSource(undefined, { args: { modal: false, defaultOpen: true } });
     expect(trocado).toContain('<DropdownMenu defaultOpen modal={false}>');
