@@ -30,7 +30,7 @@
             <button type="button" class={CLASSES_BUTTON} {...props}>{side.label}</button>
           {/snippet}
         </HoverCardTrigger>
-        <HoverCardContent side={side.side} aria-label={`Cartão ${side.label} do gatilho`}>
+        <HoverCardContent side={side.side}>
           <p class="nds-text-caption">Side preferido: {side.label}.</p>
         </HoverCardContent>
       </HoverCard>

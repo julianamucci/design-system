@@ -18,16 +18,11 @@ import { cn } from "@/lib/utils"
 //    padrão do primitivo. A API pública do design system (e das outras stacks)
 //    põe `openDelay`/`closeDelay` na raiz, então o contexto abaixo os leva até
 //    o gatilho.
-//  · **`role="dialog"` e o NOME ACESSÍVEL do painel.** O primitivo não emite
-//    papel nenhum de propósito (trata o preview card como conteúdo
-//    suplementar), mas o Vanilla — referência de markup — escreve
-//    `role="dialog"`, e é o que as cinco stacks emitem. Sem nome, o axe reprova
-//    em `aria-dialog-name`; o nome sai do heading interno quando existe, e do
-//    texto do gatilho quando não.
-//
-// Sem `aria-modal`: a AUSÊNCIA do atributo já significa não-modal, e é o markup
-// do Vanilla. Escrever `aria-modal="false"` seria redundância que nenhuma outra
-// stack tem.
+//  · **a ASSOCIAÇÃO entre gatilho e painel.** O primitivo não emite papel nem
+//    relação nenhuma no preview card (medido em `node_modules`: nem o Popup nem
+//    o Trigger escrevem `role` ou `aria-*`), e é o design system que decide os
+//    dois. O painel recebe um `id`; o gatilho o aponta por `aria-describedby`
+//    enquanto o cartão está aberto.
 //
 // ─── Acessibilidade: o cartão é enriquecimento, e o teclado não entra nele ──
 //
@@ -38,9 +33,24 @@ import { cn } from "@/lib/utils"
 // uma delas. Daí as três regras — nada de ação, link ou campo no painel; o
 // gatilho continua sendo o caminho; abrir por foco é obrigatório.
 //
-// O gatilho não recebe `aria-describedby` nem `aria-labelledby`: o painel é
-// `role="dialog"` e já tira o nome do texto do gatilho, então apontar um para o
-// outro faria o leitor anunciar a mesma coisa duas vezes.
+// **Descrição sim, papel não** (decisão de 2026-09-02, que INVERTE a anterior).
+// O painel era `role="dialog"` nomeado pelo gatilho, e o gatilho não apontava
+// para ele — para não anunciar a mesma coisa duas vezes. O argumento estava
+// certo e resolvia o problema errado: a duplicação vinha de o painel ser um
+// diálogo homônimo, e isso era escolha nossa. Medido, o defeito era outro — com
+// o cartão ABERTO na tela, o leitor anunciava só o gatilho, porque nada leva o
+// foco ao painel e o `blur` fecha o cartão. Agora o painel não tem papel, e o
+// gatilho o DESCREVE.
+//
+//  · GANHA-SE o anúncio do conteúdo, no foco do gatilho;
+//  · PERDE-SE o painel como nó com papel próprio na árvore — não há mais
+//    "diálogo" para listar ou navegar.
+//
+// O painel também não tem nome próprio: `aria-label` em elemento sem papel é
+// `aria-prohibited-attr` no axe, então o nome saiu junto com o papel em vez de
+// sobrar apontando para nada. `aria-labelledby` no gatilho continua fora
+// (trocaria o nome do link pelo do cartão), e `aria-describedby` só existe
+// enquanto o painel existe — escrito na montagem seria `aria-valid-attr-value`.
 //
 // **Mecanismo desta stack** (medido em `node_modules`): o gatilho combina
 // `useHoverReferenceInteraction` (`mouseOnly`, com `safePolygon()` fazendo a
@@ -71,10 +81,10 @@ const WAIT_DEFAULT_CLOSE = 300
 type HoverCardContextValue = {
   openDelay: number
   closeDelay: number
-  /** Guarda o gatilho deste cartão — é dele que sai o nome acessível do painel. */
+  /** Guarda o gatilho deste cartão — é nele que a descrição do painel é escrita. */
   registrarTrigger: (el: HTMLElement | null) => void
-  /** Texto do gatilho no momento da leitura, ou `null` se ainda não montou. */
-  triggerText: () => string | null
+  /** O gatilho no momento da leitura, ou `null` se ainda não montou. */
+  triggerEl: () => HTMLElement | null
 }
 
 const HoverCardContext = React.createContext<HoverCardContextValue | null>(null)
@@ -99,13 +109,10 @@ function HoverCard({
   const registrarTrigger = React.useCallback((el: HTMLElement | null) => {
     triggerRef.current = el
   }, [])
-  const triggerText = React.useCallback(
-    () => triggerRef.current?.textContent?.trim() || null,
-    []
-  )
+  const triggerEl = React.useCallback(() => triggerRef.current, [])
   const contexto = React.useMemo(
-    () => ({ openDelay, closeDelay, registrarTrigger, triggerText }),
-    [openDelay, closeDelay, registrarTrigger, triggerText]
+    () => ({ openDelay, closeDelay, registrarTrigger, triggerEl }),
+    [openDelay, closeDelay, registrarTrigger, triggerEl]
   )
 
   return (
@@ -177,17 +184,31 @@ function HoverCardContent({
   >) {
   const contexto = useHoverCardContext()
 
-  // Nome acessível resolvido quando o painel monta, que é quando ele importa.
-  // Sai do rótulo que quem compõe declara e, sem ele, do texto do gatilho — a
-  // mesma regra das outras quatro stacks. O gatilho vem do CONTEXTO, e não de
-  // uma busca no documento: com quatro cartões na mesma tela (a story Sides),
-  // uma busca pelo primeiro `[data-slot="hover-card-trigger"]` daria o mesmo
-  // nome aos quatro.
-  const nomear = React.useCallback(
+  const panelId = React.useId()
+
+  // A associação é escrita quando o painel MONTA e desfeita quando ele
+  // desmonta — que é exatamente a janela em que o alvo existe no documento.
+  // Não dá para pôr `aria-describedby` no gatilho por prop: fechado, ele
+  // apontaria para um `id` ausente, e isso é `aria-valid-attr-value` no axe.
+  //
+  // O gatilho vem do CONTEXTO, e não de uma busca no documento: com quatro
+  // cartões na mesma tela (a story Sides), uma busca pelo primeiro
+  // `[data-slot="hover-card-trigger"]` descreveria sempre o mesmo gatilho.
+  //
+  // O ref guarda o gatilho de quando a associação foi feita: na desmontagem o
+  // contexto pode já ter sido esvaziado, e é neste elemento — não em outro —
+  // que o atributo precisa ser apagado.
+  const describedTrigger = React.useRef<HTMLElement | null>(null)
+  const associate = React.useCallback(
     (el: HTMLDivElement | null) => {
-      if (!el) return
-      if (el.getAttribute("aria-label") || el.getAttribute("aria-labelledby")) return
-      el.setAttribute("aria-label", contexto?.triggerText() || "Prévia")
+      if (el) {
+        const trigger = contexto?.triggerEl() ?? null
+        describedTrigger.current = trigger
+        trigger?.setAttribute("aria-describedby", el.id)
+        return
+      }
+      describedTrigger.current?.removeAttribute("aria-describedby")
+      describedTrigger.current = null
     },
     [contexto]
   )
@@ -203,8 +224,8 @@ function HoverCardContent({
       >
         <PreviewCardPrimitive.Popup
           data-slot="hover-card-content"
-          role="dialog"
-          ref={nomear}
+          id={panelId}
+          ref={associate}
           className={cn(
             "nds-hover-card-content",
             className

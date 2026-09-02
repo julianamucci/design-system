@@ -299,9 +299,11 @@ export function hoverCardPreviaDeLinkSource(): string {
 }
 
 /**
- * Definição de termo: o gatilho é um botão, porque não há para onde navegar, e
- * o painel recebe `aria-label` próprio. Sem ele o nome cairia no texto do
- * gatilho e repetiria a sigla sem dizer o que o cartão traz.
+ * Definição de termo: o gatilho é um botão, porque não há para onde navegar.
+ *
+ * O painel não recebe `aria-label`: ele não tem papel, e nome próprio em
+ * elemento sem papel é `aria-prohibited-attr` no axe. Quem descreve é o
+ * gatilho, por `aria-describedby`, e isso o componente escreve sozinho.
  */
 export function hoverCardDefinicaoSource(): string {
   return jsxSnippet(
@@ -311,7 +313,7 @@ export function hoverCardDefinicaoSource(): string {
       cartao(
         '',
         triggerButton('WCAG 2.2 AA'),
-        ' aria-label="Definição de WCAG 2.2 AA"',
+        '',
         `<div className="nds-stack" data-spacing="xs">
   <p className="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
   <p className="nds-text-caption nds-text-muted-foreground">
@@ -339,7 +341,7 @@ export function hoverCardMetricaSource(): string {
       cartao(
         '',
         triggerButton('LCP 1.8s'),
-        ' aria-label="Explicação da métrica LCP"',
+        '',
         `<div className="nds-stack" data-spacing="xs">
   <div
     className="nds-cluster"
@@ -386,7 +388,7 @@ export function hoverCardLadosSource(): string {
             {rotulo}
           </button>
         </HoverCardTrigger>
-        <HoverCardContent side={lado} aria-label={\`Cartão \${label} do gatilho\`}>
+        <HoverCardContent side={lado}>
           <p className="nds-text-caption">Lado preferido: {rotulo}.</p>
         </HoverCardContent>
       </HoverCard>{" "}

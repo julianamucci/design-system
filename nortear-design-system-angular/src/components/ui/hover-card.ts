@@ -36,9 +36,23 @@ import {
 // uma delas. Daí as três regras — nada de ação, link ou campo no painel; o
 // gatilho continua sendo o caminho; abrir por foco é obrigatório.
 //
-// O gatilho não recebe `aria-describedby` nem `aria-labelledby`: o painel é
-// `role="dialog"` e já tira o nome do texto do gatilho, então apontar um para o
-// outro faria o leitor anunciar a mesma coisa duas vezes.
+// **Descrição sim, papel não** (decisão de 2026-09-02, que INVERTE a anterior).
+// O painel era `role="dialog"` nomeado pelo gatilho, e o gatilho não apontava
+// para ele — para não anunciar a mesma coisa duas vezes. O argumento estava
+// certo e resolvia o problema errado: a duplicação vinha de o painel ser um
+// diálogo homônimo, e isso era escolha nossa. Medido, o defeito era outro — com
+// o cartão ABERTO na tela, o leitor anunciava só o gatilho, porque nada leva o
+// foco ao painel e o `blur` fecha o cartão. Agora o painel não tem papel, e o
+// gatilho o DESCREVE por `aria-describedby` enquanto o cartão está aberto.
+//
+//  · GANHA-SE o anúncio do conteúdo, no foco do gatilho;
+//  · PERDE-SE o painel como nó com papel próprio na árvore de acessibilidade.
+//
+// O painel também não tem nome próprio: `aria-label` em elemento sem papel é
+// `aria-prohibited-attr` no axe, então o nome saiu junto com o papel em vez de
+// sobrar apontando para nada. `aria-labelledby` continua fora (trocaria o nome
+// do link pelo do cartão), e `aria-describedby` só existe enquanto o painel
+// existe — escrito na montagem seria `aria-valid-attr-value`.
 //
 // **Mecanismo desta stack** (medido em `node_modules`): o gatilho liga
 // `pointerenter`, `pointerleave`, `focus` e `blur` no host — o foco é o CRU,
@@ -72,14 +86,12 @@ import {
 //
 // O que os primitivos NÃO entregam, e este componente acrescenta:
 //
-//   · `role="dialog"` no painel. O primitivo não emite nenhum papel de
-//     propósito (o Base UI trata o preview card como conteúdo suplementar), mas
-//     o Vanilla — referência de markup — escreve `role="dialog"` no painel, e é
-//     o que as outras stacks emitem. Paridade de markup é o que a auditoria
-//     cross-stack compara, então emitimos igual;
-//   · o NOME ACESSÍVEL desse dialog, sem o qual o axe reprova (`aria-dialog-name`).
-//     Sai de `label` quando quem compõe informa, e cai no texto do gatilho —
-//     mesma regra do Vanilla.
+//   · a ASSOCIAÇÃO entre gatilho e painel. O primitivo não emite papel nem
+//     relação nenhuma (medido em `node_modules`: nem o popup nem o gatilho
+//     escrevem `role` ou `aria-*` de relação), e é o design system que decide.
+//     O `id` do painel já vem do primitivo — `contentId` do contexto da raiz é
+//     o mesmo valor que o host do popup escreve —, e o gatilho o aponta por
+//     `aria-describedby` enquanto `isOpen()`.
 //
 // Anatomia: a raiz é elemento nativo com diretiva de atributo, como no resto do
 // stack, e o CONTEÚDO é um `<ng-template>`. Duas razões: o painel vive num
@@ -116,12 +128,6 @@ export class NdsHoverCardContent {
 
   /** Deslocamento no eixo de alinhamento, em px. */
   readonly alignOffset = input<number>(0);
-
-  /**
-   * Nome acessível do painel. Só é preciso quando o texto do gatilho não
-   * descreve o cartão — sem nada aqui, o nome vem do próprio gatilho.
-   */
-  readonly label = input<string>('');
 
   /**
    * Classes extras para o painel.
@@ -197,8 +203,6 @@ export class NdsHoverCardContent {
           rdxPreviewCardPopup
           class="nds-hover-card-content"
           [class]="c.contentClass()"
-          role="dialog"
-          [attr.aria-label]="accessibleName()"
           [attr.data-slot]="'hover-card-content'"
         >
           <ng-container [ngTemplateOutlet]="c.templateRef" />
@@ -214,24 +218,6 @@ export class NdsHoverCard {
    * de projeção padrão não entregariam nada a nenhum dos dois.
    */
   protected readonly content = contentChild(NdsHoverCardContent);
-
-  // O contexto da raiz vem do próprio elemento: `RdxPreviewCardRoot` é host
-  // directive deste componente e publica o contexto no injetor do host.
-  private readonly root = injectRdxPreviewCardRootContext();
-
-  /**
-   * Nome acessível do painel.
-   *
-   * `role="dialog"` sem nome é violação de axe (`aria-dialog-name`), e o texto
-   * do gatilho é o rótulo natural: o cartão é o preview DAQUELA menção. Ler o
-   * `textContent` não reage a mudanças de texto — como no Vanilla, o valor é
-   * resolvido quando o painel monta, que é quando ele importa.
-   */
-  protected readonly accessibleName = computed(() => {
-    const explicito = this.content()?.label();
-    if (explicito) return explicito;
-    return this.root.trigger()?.textContent?.trim() || undefined;
-  });
 }
 
 /**
@@ -257,9 +243,26 @@ export class NdsHoverCard {
   ],
   host: {
     '[attr.data-slot]': '"hover-card-trigger"',
+    '[attr.aria-describedby]': 'describedBy()',
   },
 })
 export class NdsHoverCardTrigger {
+  // O contexto da raiz alcança o gatilho porque `RdxPreviewCardRoot` é host
+  // directive do `span[ndsHoverCard]`, e o gatilho é filho dele no template de
+  // quem compõe — o mesmo injetor que o `RdxPreviewCardTrigger` já usa.
+  private readonly root = injectRdxPreviewCardRootContext();
+
+  /**
+   * `aria-describedby` só enquanto o cartão está aberto.
+   *
+   * `contentId` é o mesmo valor que o host do popup escreve no `id` — não há
+   * `id` a gerar aqui. Fechado, o atributo sai: apontando para um nó fora do
+   * documento, seria `aria-valid-attr-value` no axe.
+   */
+  protected readonly describedBy = computed(() =>
+    this.root.isOpen() ? this.root.contentId : null,
+  );
+
   constructor() {
     // `type="button"` de criação, e só quando o host é `<button>` e quem
     // escreveu não pediu outro tipo. Sem isso, um gatilho dentro de `<form>`

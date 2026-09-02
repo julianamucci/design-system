@@ -11,52 +11,51 @@
 		align = "center",
 		sideOffset = 4,
 		portalProps,
-		// Os dois rótulos saem do `restProps` DE PROPÓSITO: espalhados junto com
-		// o resto, eles vêm depois do valor calculado e o sobrescrevem — e como
-		// quem compõe escreve `aria-label={rotulo || undefined}`, o `undefined`
-		// apagava o nome de todo painel sem rótulo explícito. O axe reprovava em
-		// `aria-dialog-name` e a causa não aparecia em lugar nenhum do markup.
-		"aria-label": label,
-		"aria-labelledby": labelledBy,
 		...restProps
 	}: HoverCardPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof HoverCardPortal>>;
 	} = $props();
 
-	// Mesmo critério do Vanilla (referência cross-stack): `role="dialog"` exige
-	// nome acessível. Ele sai do rótulo que quem compõe declara e, sem ele, do
-	// texto do gatilho — a mesma regra das outras quatro stacks.
+	// Sem `role`: o bits-ui não emite papel no conteúdo, e desde 2026-09-02 o
+	// design system também não. O painel é conteúdo DESCRITIVO — o gatilho o
+	// aponta por `aria-describedby`, e é isso que faz o leitor de tela dizer o
+	// CONTEÚDO do cartão em vez de só o gatilho. Ver o bloco canônico em
+	// `hover-card.ts` do Vanilla.
 	//
-	// O gatilho vem do CONTEXTO, não de uma busca no documento: com vários
+	// Sem nome próprio também: `aria-label` em elemento sem papel é
+	// `aria-prohibited-attr` no axe. Os dois rótulos deixaram de ser extraídos do
+	// `restProps` — não há mais valor calculado que eles pudessem sobrescrever.
+	//
+	// A associação é escrita quando o painel MONTA e desfeita quando ele desmonta,
+	// que é exatamente a janela em que o alvo existe no documento: fechado, um
+	// `aria-describedby` apontando para um `id` ausente é `aria-valid-attr-value`
+	// no axe. O `id` é o que o primitivo já gera para o conteúdo.
+	//
+	// O gatilho vem do CONTEXTO, e não de uma busca no documento: com vários
 	// cartões na mesma tela (a story Sides), o primeiro
-	// `[data-link-preview-trigger]` daria o mesmo nome a todos os painéis.
-	//
-	// Ligado por atributo, e não escrito por `$effect`: o painel monta depois do
-	// gatilho e o `$derived` acompanha sozinho quando a referência chega — um
-	// efeito que roda uma vez deixaria o painel sem nome, e é isso que o axe
-	// reprova em `aria-dialog-name`.
+	// `[data-link-preview-trigger]` seria descrito por todos eles.
 	const contexto = usarContextoHoverCard();
 
-	const nameAutomatico = $derived(
-		label || labelledBy
-			? label
-			: contexto?.trigger?.textContent?.trim() || "Prévia",
-	);
+	$effect(() => {
+		const trigger = contexto?.trigger;
+		const panel = ref;
+		if (!trigger || !panel?.id) return;
+		trigger.setAttribute("aria-describedby", panel.id);
+		return () => {
+			if (trigger.getAttribute("aria-describedby") === panel.id) {
+				trigger.removeAttribute("aria-describedby");
+			}
+		};
+	});
 </script>
 
 <HoverCardPortal {...portalProps}>
-	<!-- role="dialog": o bits-ui não emite role no conteúdo. O Vanilla já
-	     define, e é o que torna a prévia anunciável pelo leitor de tela. Sem
-	     `aria-modal`: a ausência já significa não-modal. -->
 	<HoverCardPrimitive.Content
 		bind:ref
 		data-slot="hover-card-content"
-		role="dialog"
 		{align}
 		{sideOffset}
 		class={cn("nds-hover-card-content", className)}
 		{...restProps}
-		aria-label={nameAutomatico}
-		aria-labelledby={labelledBy}
 	/>
 </HoverCardPortal>

@@ -159,7 +159,7 @@ export const TermDefinition: Story = {
             class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
           >WCAG 2.2 AA</button>
 
-          <ng-template ndsHoverCardContent label="Definição de WCAG 2.2 AA">
+          <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
               <p class="nds-text-caption nds-text-muted-foreground">
@@ -183,11 +183,14 @@ export const TermDefinition: Story = {
       await expect(trigger).toHaveAttribute('type', 'button');
     });
 
-    await step('O nome acessível do painel vem do rótulo declarado', async () => {
+    await step('O painel não tem nome; o gatilho é que o DESCREVE', async () => {
+      const trigger = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
       const panel = await waitForOpen();
-      // Sem `label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"), que
-      // repetiria a sigla sem dizer o que o cartão traz.
-      await expect(panel).toHaveAttribute('aria-label', 'Definição de WCAG 2.2 AA');
+      // O painel perdeu o `role="dialog"` e, com ele, o nome próprio: sem papel,
+      // `aria-label` é `aria-prohibited-attr` no axe. O que a pessoa ouve agora
+      // é o CONTEÚDO, pela descrição que o gatilho aponta.
+      await expect(panel).not.toHaveAttribute('aria-label');
+      await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
       await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
     });
   },
@@ -214,7 +217,7 @@ export const ExplainedMetric: Story = {
             class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
           >LCP 1.8s</button>
 
-          <ng-template ndsHoverCardContent label="Explicação da métrica LCP">
+          <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
                 <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
@@ -263,7 +266,7 @@ export const Sides: Story = {
               ndsHoverCardTrigger
               class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >acima</button>
-            <ng-template ndsHoverCardContent side="top" label="Cartão acima do gatilho">
+            <ng-template ndsHoverCardContent side="top">
               <p class="nds-text-caption">Lado preferido: acima.</p>
             </ng-template>
           </span>
@@ -277,7 +280,7 @@ export const Sides: Story = {
               ndsHoverCardTrigger
               class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >abaixo</button>
-            <ng-template ndsHoverCardContent side="bottom" label="Cartão abaixo do gatilho">
+            <ng-template ndsHoverCardContent side="bottom">
               <p class="nds-text-caption">Lado preferido: abaixo.</p>
             </ng-template>
           </span>
@@ -291,7 +294,7 @@ export const Sides: Story = {
               ndsHoverCardTrigger
               class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >esquerda</button>
-            <ng-template ndsHoverCardContent side="left" label="Cartão à esquerda do gatilho">
+            <ng-template ndsHoverCardContent side="left">
               <p class="nds-text-caption">Lado preferido: esquerda.</p>
             </ng-template>
           </span>
@@ -305,7 +308,7 @@ export const Sides: Story = {
               ndsHoverCardTrigger
               class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >direita</button>
-            <ng-template ndsHoverCardContent side="right" label="Cartão à direita do gatilho">
+            <ng-template ndsHoverCardContent side="right">
               <p class="nds-text-caption">Lado preferido: direita.</p>
             </ng-template>
           </span>

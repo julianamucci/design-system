@@ -32,8 +32,6 @@ export type HoverCardArgs = {
   open: boolean;
   triggerLabel: string;
   href: string;
-  /** Nome acessível explícito do painel. Sem ele, sai do texto do gatilho. */
-  label: string;
   variant: HoverCardVariant;
 };
 
@@ -150,7 +148,6 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     open,
     triggerLabel = '@joana',
     href = '/users/joana',
-    label = '',
     variant = 'default',
   } = ctx?.args ?? {};
 
@@ -173,7 +170,6 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     align === 'center' ? '' : `align="${align}"`,
     sideOffset === 4 ? '' : `sideOffset={${sideOffset}}`,
     variant === 'extraClass' ? 'class="nds-w-md nds-text-center"' : '',
-    label ? `aria-label="${label}"` : '',
   );
 
   const trigger = TRIGGERS_BUTTON.includes(variant)
@@ -233,7 +229,6 @@ export function hoverCardDefinicaoSource(): string {
     args: {
       variant: 'definition',
       triggerLabel: 'WCAG 2.2 AA',
-      label: 'Definição de WCAG 2.2 AA',
     },
   });
 }
@@ -244,7 +239,6 @@ export function hoverCardMetricaSource(): string {
     args: {
       variant: 'metric',
       triggerLabel: 'LCP 1.8s',
-      label: 'Explicação da métrica LCP',
     },
   });
 }
@@ -281,7 +275,7 @@ const LADOS = [
             <button type="button" {...props}>{lado.rotulo}</button>
           {/snippet}
         </HoverCardTrigger>
-        <HoverCardContent side={lado.side} aria-label="Cartão {lado.rotulo} do gatilho">
+        <HoverCardContent side={lado.side}>
           <p class="nds-text-caption">Lado preferido: {lado.rotulo}.</p>
         </HoverCardContent>
       </HoverCard>

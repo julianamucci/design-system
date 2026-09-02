@@ -138,12 +138,12 @@ describe('transforms das stories de composição', () => {
     expect(saida).not.toContain('<a href');
   });
 
-  it('o painel de definição declara o próprio rótulo', () => {
-    // Sem ele o nome cairia no texto do gatilho e repetiria a sigla sem dizer
-    // o que o cartão traz.
-    expect(hoverCardDefinicaoSource()).toContain(
-      '<HoverCardContent aria-label="Definição de WCAG 2.2 AA">',
-    );
+  it('o painel de definição não declara rótulo próprio', () => {
+    // O painel não tem papel desde 2026-09-02, e nome próprio em elemento sem
+    // papel é `aria-prohibited-attr` no axe. Quem descreve é o gatilho, por
+    // `aria-describedby` — escrito pelo componente, não pelo snippet.
+    expect(hoverCardDefinicaoSource()).toContain('<HoverCardContent>');
+    expect(hoverCardDefinicaoSource()).not.toContain('aria-label');
   });
 
   it('na métrica a cor semântica fica no número, não no texto corrido', () => {
@@ -158,9 +158,10 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('v-for="l in lados"');
     expect(saida).toContain(':side="l.side"');
     expect([...saida.matchAll(/<HoverCard>/g)]).toHaveLength(1);
-    // Cada painel com nome próprio: quatro cartões com o mesmo nome acessível
-    // seriam indistinguíveis no leitor de tela.
-    expect(saida).toContain(`:aria-label="'Cartão ' + l.rotulo + ' do gatilho'"`);
+    // Sem nome próprio em painel nenhum: sem `role`, `aria-label` ali é
+    // `aria-prohibited-attr` no axe. Quem distingue os quatro é o gatilho de
+    // cada um, que os descreve por `aria-describedby`.
+    expect(saida).not.toContain('aria-label');
   });
 
   it('a largura do conjunto de lados vem de utilitária, não de style inline', () => {

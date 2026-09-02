@@ -3,9 +3,9 @@ import { getContext, setContext } from 'svelte';
 /**
  * Contexto do HoverCard — só o gatilho.
  *
- * O painel vive num portal no `<body>`, longe do gatilho no DOM, e é dele que
- * sai o nome acessível do `role="dialog"`. Procurar o gatilho por seletor daria,
- * numa tela com vários cartões, o mesmo nome a todos — era o que
+ * O painel vive num portal no `<body>`, longe do gatilho no DOM, e precisa
+ * escrever `aria-describedby` NELE enquanto está aberto. Procurar o gatilho por
+ * seletor daria, numa tela com vários cartões, sempre o mesmo — era o que
  * `document.querySelector('[data-link-preview-trigger]')` fazia aqui. A
  * associação tem de vir da árvore de componentes.
  */

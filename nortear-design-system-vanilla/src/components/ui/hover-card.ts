@@ -38,13 +38,50 @@
 //  · **pairável** — o ponteiro entra no painel sem fechá-lo;
 //  · **persistente** — só some por Escape, pelo ponteiro sair ou pelo blur.
 //
-// **Nome sim, descrição não.** O painel é `role="dialog"` e exige NOME: ele sai
-// do rótulo declarado e, sem ele, do texto do gatilho. Pôr também
-// `aria-describedby` no gatilho apontando para o painel faria o leitor anunciar
-// o link e em seguida descrevê-lo com um diálogo de nome idêntico — a mesma
-// coisa duas vezes. `aria-labelledby` seria pior: trocaria o nome do link pelo
-// do cartão. Por isso o gatilho não recebe nenhum dos dois, e também não recebe
-// `aria-expanded`/`aria-haspopup`: quem tem estado é o painel.
+// **Descrição sim, papel não** — decisão de 2026-09-02, e ela INVERTE a
+// anterior, que está registrada aqui porque o argumento dela continua correto.
+//
+// Antes: o painel era `role="dialog"` com nome tirado do gatilho, e o gatilho
+// não apontava para ele. A razão escrita era que `aria-describedby` faria o
+// leitor anunciar o link e em seguida descrevê-lo com um diálogo de nome
+// idêntico — a mesma coisa duas vezes. Isso é verdade, e resolve o problema
+// errado: a duplicação só existia porque o painel era um diálogo HOMÔNIMO, e
+// ser diálogo foi escolha nossa, não do gesto.
+//
+// O defeito real, medido: com o cartão ABERTO na tela, quem usa leitor de tela
+// ouvia só o gatilho. Nada move o foco para o painel, ele não é focalizável, e
+// o `blur` do gatilho agenda o fecho — então o Tab seguinte fecha o cartão
+// antes de alcançá-lo. O conteúdo nunca era dito.
+//
+// Agora: o painel não tem papel nenhum, e o gatilho o aponta por
+// `aria-describedby` — o padrão para conteúdo revelado por gatilho e não
+// navegável, o mesmo do tooltip.
+//
+//  · o que se GANHA: o CONTEÚDO é anunciado, no foco do gatilho, que é o único
+//    momento em que a pessoa está lá;
+//  · o que se PERDE: o painel deixa de ter papel próprio na árvore de
+//    acessibilidade. Não há mais um "diálogo" para o leitor listar ou navegar;
+//    ele passa a ser texto que descreve o gatilho. Para conteúdo suplementar de
+//    duas linhas, esse nó nunca serviu para nada — e o preço dele era o
+//    silêncio acima.
+//
+// A alternativa foi considerada e RECUSADA: tornar o painel alcançável de
+// verdade (o foco entra, o Escape devolve, o `blur` não fecha) faria sentido se
+// ele pudesse conter link ou botão. A regra 1 acima diz que não pode, e foi
+// medido que nenhuma composição das cinco stacks põe elemento focável ali —
+// seria custo sem uso.
+//
+// Consequências de markup, e as cinco emitem igual:
+//
+//  · o painel não tem `role`, e por isso não tem nome PRÓPRIO: `aria-label` em
+//    elemento sem papel é `aria-prohibited-attr` no axe. O atributo saiu junto
+//    com o papel, em vez de sobrar apontando para nada;
+//  · `aria-describedby` só existe enquanto o painel existe. Escrevê-lo na
+//    montagem, antes de haver painel, é `aria-valid-attr-value` no axe — é a
+//    mesma razão pela qual o tooltip o cria dentro de `show()`;
+//  · `aria-labelledby` continua fora: trocaria o nome do link pelo do cartão;
+//  · `aria-expanded`/`aria-haspopup` continuam fora: o cartão é conteúdo
+//    suplementar, não um menu que o leitor comanda.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -191,21 +228,20 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
 
     panelEl = document.createElement('div');
     panelEl.id = cardId;
-    panelEl.setAttribute('role', 'dialog');
     panelEl.className = cn('nds-hover-card-content', options.class);
     panelEl.dataset.slot = 'hover-card-content';
     panelEl.style.position = 'absolute';
     panelEl.appendChild(content);
 
-    // PATCH: a11y — role="dialog" exige accessible name. Ele sai do rótulo que
-    // quem compõe declara no gatilho e, sem ele, do texto do próprio gatilho —
-    // a mesma regra das outras quatro stacks.
-    const triggerLabel =
-      trigger.getAttribute('aria-label') || trigger.textContent?.trim() || 'Prévia';
-    panelEl.setAttribute('aria-label', triggerLabel);
-
     document.body.appendChild(panelEl);
     positionHoverCard(trigger, panelEl, side, align);
+
+    // O gatilho é DESCRITO pelo painel, e só enquanto o painel EXISTE — o
+    // `id` acima é o alvo. Escrever o atributo na montagem, com o cartão ainda
+    // fechado, apontaria para um nó que não está no documento: é
+    // `aria-valid-attr-value` no axe, e é por isso que ele nasce aqui e morre
+    // em `hide()`.
+    trigger.setAttribute('aria-describedby', cardId);
 
     // Keep card open while hovering over it
     panelEl.addEventListener('mouseenter', () => {
@@ -222,6 +258,9 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     if (!panelEl) return;
     document.removeEventListener('keydown', onKeyDown);
+    // A descrição sai junto com o painel: sobrando, apontaria para um nó que
+    // não existe mais.
+    trigger.removeAttribute('aria-describedby');
     panelEl.remove();
     panelEl = null;
     onOpenChange?.(false);

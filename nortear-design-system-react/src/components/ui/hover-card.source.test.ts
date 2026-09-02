@@ -126,12 +126,14 @@ describe('composições', () => {
     expect(saida).toContain('design-system.dev/overlays');
   });
 
-  it('a definição usa botão com type e rótulo próprio no painel', () => {
+  it('a definição usa botão com type, e o painel não carrega nome próprio', () => {
     const saida = hoverCardDefinicaoSource();
     // Sem `type="button"` o mesmo gatilho dentro de um <form> enviaria o form.
     expect(saida).toContain('<button type="button"');
-    // Sem `aria-label` o nome cairia no texto do gatilho e repetiria a sigla.
-    expect(saida).toContain('aria-label="Definição de WCAG 2.2 AA"');
+    // O painel não tem papel desde 2026-09-02, e nome próprio em elemento sem
+    // papel é `aria-prohibited-attr` no axe. Quem descreve é o gatilho, por
+    // `aria-describedby` — escrito pelo componente, não pelo snippet.
+    expect(saida).not.toContain('aria-label');
   });
 
   it('na métrica a cor semântica fica no número, e o texto corrido não a recebe', () => {

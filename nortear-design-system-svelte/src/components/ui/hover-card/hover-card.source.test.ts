@@ -78,11 +78,12 @@ describe('hoverCardSource', () => {
     );
   });
 
-  it('o rótulo explícito vira o nome acessível do painel', () => {
+  it('o painel não carrega nome próprio em snippet nenhum', () => {
+    // O painel não tem papel desde 2026-09-02, e nome próprio em elemento sem
+    // papel é `aria-prohibited-attr` no axe. Quem descreve é o gatilho, por
+    // `aria-describedby` — escrito pelo componente, não pelo snippet.
     expect(hoverCardSource()).not.toContain('aria-label');
-    expect(hoverCardSource('', { args: { label: 'Prévia do perfil' } })).toContain(
-      'aria-label="Prévia do perfil"',
-    );
+    expect(hoverCardSource('', { args: { variant: 'definition' } })).not.toContain('aria-label');
   });
 
   it('troca o miolo do cartão conforme o control de composição', () => {
@@ -133,15 +134,15 @@ describe('transforms das stories de variação e composição', () => {
     // Sem `type="button"`, o mesmo gatilho dentro de um formulário o enviaria.
     expect(saida).toContain('<button type="button" {...props}>WCAG 2.2 AA</button>');
     expect(saida).not.toContain('<a href');
-    // Sem rótulo, o nome do painel repetiria a sigla sem dizer o que ele traz.
-    expect(saida).toContain('aria-label="Definição de WCAG 2.2 AA"');
+    // O painel não carrega nome: sem papel, `aria-label` é `aria-prohibited-attr`.
+    expect(saida).not.toContain('aria-label');
   });
 
   it('a métrica deixa a cor semântica no número, e não no texto corrido', () => {
     const saida = hoverCardMetricaSource();
     expect(saida).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>');
     expect(saida).toContain('<p class="nds-text-caption nds-text-muted-foreground">');
-    expect(saida).toContain('aria-label="Explicação da métrica LCP"');
+    expect(saida).not.toContain('aria-label');
   });
 
   it('a classe extra convive com a classe do componente, não a substitui', () => {
@@ -150,10 +151,11 @@ describe('transforms das stories de variação e composição', () => {
     );
   });
 
-  it('os quatro lados saem de uma lista, cada cartão com o seu nome acessível', () => {
+  it('os quatro lados saem de uma lista, e nenhum painel carrega nome próprio', () => {
     const saida = hoverCardLadosSource();
     expect(saida).toContain('{#each LADOS as lado (lado.side)}');
-    expect(saida).toContain('<HoverCardContent side={lado.side} aria-label="Cartão {lado.rotulo} do gatilho">');
+    expect(saida).toContain('<HoverCardContent side={lado.side}>');
+    expect(saida).not.toContain('aria-label');
     expect(saida.match(/side: "/g)).toHaveLength(4);
   });
 });

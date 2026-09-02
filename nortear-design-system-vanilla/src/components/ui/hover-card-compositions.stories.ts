@@ -183,11 +183,14 @@ export const TermDefinition: Story = {
       await expect(trigger).toHaveAttribute('type', 'button');
     });
 
-    await step('O nome acessível do painel vem do rótulo declarado', async () => {
+    await step('O rótulo nomeia o GATILHO; o painel é descrição, e não tem nome', async () => {
+      const trigger = canvas.getByRole('button', { name: 'Definição de WCAG 2.2 AA' });
       const panel = await waitForOpen();
-      // Sem rótulo no gatilho, o nome cairia no texto dele ("WCAG 2.2 AA"), que
-      // repetiria a sigla sem dizer o que o cartão traz.
-      await expect(accessibleName(panel)).toBe('Definição de WCAG 2.2 AA');
+      // O `aria-label` do gatilho continua valendo — ele nomeia o botão, que
+      // sem ele se chamaria só "WCAG 2.2 AA". O que saiu foi o nome do PAINEL:
+      // sem papel, `aria-label` nele é `aria-prohibited-attr` no axe.
+      await expect(accessibleName(panel)).toBe('');
+      await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
       await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
     });
   },

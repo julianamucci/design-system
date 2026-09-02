@@ -6,6 +6,7 @@ import { NDS_AVATAR } from './avatar';
 import { NdsButton } from './button';
 import {
   CARTAO_PERFIL,
+  accessibleName,
   panelEntrar,
   waitForOpen,
   waitForClosed,
@@ -80,6 +81,13 @@ export const Closed: Story = {
       await expect(trigger).not.toHaveAttribute('aria-expanded');
       await expect(trigger).not.toHaveAttribute('aria-haspopup');
     });
+
+    await step('Fechado, o gatilho não descreve painel nenhum', async () => {
+      // A outra metade da associação: `aria-describedby` só existe enquanto o
+      // painel existe. Apontando para um `id` fora do documento, seria
+      // `aria-valid-attr-value` no axe.
+      await expect(trigger).not.toHaveAttribute('aria-describedby');
+    });
   },
 };
 
@@ -126,29 +134,32 @@ export const Open: Story = {
     await userEvent.hover(trigger);
     const panel = await waitForOpen();
 
-    await step('O painel é um dialog não-modal', async () => {
-      await expect(panel).toHaveAttribute('role', 'dialog');
-      // Sem `aria-modal`: a ausência do atributo JÁ significa não-modal, e é o
-      // markup que o Vanilla — referência do sistema — emite. Escrever
-      // `aria-modal="false"` seria redundância que nenhuma outra stack tem.
+    await step('O painel não tem papel próprio, e não pede nome', async () => {
+      // O painel deixou de ser `role="dialog"` (ver o bloco canônico em
+      // `hover-card.ts` do Vanilla): ele é conteúdo DESCRITIVO, apontado pelo
+      // gatilho.
+      await expect(panel).not.toHaveAttribute('role');
       await expect(panel).not.toHaveAttribute('aria-modal');
-      // Não-modal de verdade: o resto da página continua alcançável.
+      // Sem papel, `aria-label` no painel seria `aria-prohibited-attr` no axe.
+      // O nome saiu junto com o papel — não sobrou apontando para nada.
+      await expect(accessibleName(panel)).toBe('');
+      // O resto da página continua alcançável, como sempre esteve.
       await expect(trigger).toBeVisible();
-      await expect(panel).toHaveAttribute('aria-label', '@joana');
     });
 
-    await step('O gatilho não descreve nem nomeia o painel', async () => {
-      // É o item de acessibilidade que esta story DECLARA cobrir, e até aqui
-      // nenhuma asserção o alcançava: o auditor de contrato dava 17/17 com
-      // este item coberto por nada.
+    await step('O gatilho DESCREVE o painel, e é assim que o conteúdo é anunciado', async () => {
+      // É o item de acessibilidade que esta story DECLARA cobrir, e a asserção
+      // aqui era o INVERSO desta: cobrava que `aria-describedby` NÃO existisse,
+      // congelando o defeito de o cartão abrir na tela sem nada ser anunciado.
       //
-      // O painel é `role="dialog"` e já tira o NOME do texto do gatilho.
-      // Apontar o gatilho de volta com `aria-describedby` faria o leitor
-      // anunciar o link e em seguida descrevê-lo com um diálogo de nome
-      // idêntico — a mesma coisa duas vezes. `aria-labelledby` seria pior:
-      // trocaria o nome do link pelo do cartão.
-      await expect(trigger).not.toHaveAttribute('aria-describedby');
+      // `aria-describedby` e não `aria-labelledby`: o segundo trocaria o nome
+      // do link pelo texto do cartão.
+      await expect(panel.id).not.toBe('');
+      await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
       await expect(trigger).not.toHaveAttribute('aria-labelledby');
+      // O alvo existe no documento — descrição que aponta para nada é
+      // `aria-valid-attr-value` no axe.
+      await expect(document.getElementById(panel.id)).toBe(panel);
     });
 
     await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {

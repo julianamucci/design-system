@@ -27,8 +27,6 @@
     triggerLabel?: string;
     href?: string;
     variant?: Variant;
-    /** Nome acessível explícito do painel — usado nos gatilhos que são botão. */
-    label?: string;
   }
   // `defaultOpen` não existe no bits-ui nem no vaul-svelte: a prop era
   // passada, ignorada, e o overlay nunca abria. A API real é `open`
@@ -46,7 +44,6 @@
     triggerLabel = '@joana',
     href = '/users/joana',
     variant = 'default',
-    label = '',
   }: Props = $props();
 
   // Os gatilhos que não navegam (termo, métrica) são BOTÃO: não há para onde
@@ -78,7 +75,6 @@
         {side}
         {align}
         {sideOffset}
-        aria-label={label || undefined}
         class={variant === 'extraClass' ? 'nds-w-md nds-text-center' : undefined}
       >
         {#if variant === 'linkPreview'}

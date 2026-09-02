@@ -5,6 +5,7 @@ import { NDS_HOVER_CARD } from './hover-card';
 import { NDS_AVATAR } from './avatar';
 import {
   CARTAO_PERFIL,
+  accessibleName,
   waitForOpen,
   waitForClosed,
   panelOpen,
@@ -194,13 +195,13 @@ export const Playground: Story = {
       await userEvent.hover(trigger);
       const panel = await waitForOpen();
       await expect(panel).toBeVisible();
-      // `role="dialog"` é contrato de markup das cinco stacks — o primitivo não
-      // o emite, este componente sim.
-      await expect(panel).toHaveAttribute('role', 'dialog');
+      // Sem `role`: o painel é conteúdo descritivo, não um diálogo. Quem o liga
+      // ao gatilho é o `aria-describedby`, e é ele que faz o leitor de tela
+      // anunciar o CONTEÚDO do cartão em vez de só o gatilho.
+      await expect(panel).not.toHaveAttribute('role');
+      await expect(accessibleName(panel)).toBe('');
+      await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
       await expect(panel).toHaveClass(/nds-hover-card-content/);
-      // Nome acessível: sem ele o axe reprova por `aria-dialog-name`. Sai do
-      // texto do gatilho quando quem compõe não informa outro.
-      await expect(panel).toHaveAttribute('aria-label', args.triggerLabel);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBeGreaterThan(callsBefore);
@@ -227,6 +228,9 @@ export const Playground: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForClosed('depois do Escape');
       await expect(panelOpen()).toBeNull();
+      // A descrição sai com o painel: sobrando, apontaria para um `id` que já
+      // não está no documento.
+      await expect(trigger).not.toHaveAttribute('aria-describedby');
     });
   },
 };

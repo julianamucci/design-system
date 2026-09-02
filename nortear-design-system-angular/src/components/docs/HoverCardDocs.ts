@@ -210,7 +210,6 @@ const EXTENSIBILITY_CODE = `<!-- Espera curta, outro lado e uma classe no painel
     side="right"
     align="start"
     contentClass="nds-text-center"
-    label="Perfil de Joana Silva"
   >
     <!-- conteúdo -->
   </ng-template>
@@ -278,7 +277,7 @@ const VARIANT_CODE = {
     class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
   >WCAG 2.2 AA</button>
 
-  <ng-template ndsHoverCardContent label="Definição de WCAG 2.2 AA">
+  <ng-template ndsHoverCardContent>
     <div class="nds-stack" data-spacing="xs">
       <p class="nds-text-body nds-font-medium">WCAG 2.2 nível AA</p>
       <p class="nds-text-caption nds-text-muted-foreground">Definição em uma ou duas frases.</p>
@@ -291,7 +290,7 @@ const VARIANT_CODE = {
     class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
   >LCP 1.8s</button>
 
-  <ng-template ndsHoverCardContent label="Explicação da métrica LCP">
+  <ng-template ndsHoverCardContent>
     <div class="nds-stack" data-spacing="xs">
       <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
         <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
@@ -425,7 +424,7 @@ const VARIANT_CODE = {
         {{ t('demonstration.labels.definitionTooltip') }}:
         <span ndsHoverCard>
           <button ndsHoverCardTrigger [class]="classesGatilhoBotao">WCAG 2.2 AA</button>
-          <ng-template ndsHoverCardContent [label]="rotuloDefinicao()">
+          <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
               <p class="nds-text-caption nds-text-muted-foreground">{{ resumoDefinicao() }}</p>
@@ -440,7 +439,7 @@ const VARIANT_CODE = {
         {{ t('demonstration.labels.metricExplainer') }}:
         <span ndsHoverCard>
           <button ndsHoverCardTrigger [class]="classesGatilhoBotao">LCP 1.8s</button>
-          <ng-template ndsHoverCardContent [label]="rotuloMetrica()">
+          <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
                 <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
@@ -516,7 +515,7 @@ const VARIANT_CODE = {
               {{ t('demonstration.labels.definitionTooltip') }}:
               <span ndsHoverCard>
                 <button ndsHoverCardTrigger [class]="classesGatilhoBotao">WCAG 2.2 AA</button>
-                <ng-template ndsHoverCardContent [label]="rotuloDefinicao()">
+                <ng-template ndsHoverCardContent>
                   <p class="nds-text-caption nds-text-muted-foreground">{{ resumoDefinicao() }}</p>
                 </ng-template>
               </span>
@@ -526,7 +525,7 @@ const VARIANT_CODE = {
               {{ t('demonstration.labels.metricExplainer') }}:
               <span ndsHoverCard>
                 <button ndsHoverCardTrigger [class]="classesGatilhoBotao">LCP 1.8s</button>
-                <ng-template ndsHoverCardContent [label]="rotuloMetrica()">
+                <ng-template ndsHoverCardContent>
                   <p class="nds-text-caption nds-text-muted-foreground">{{ resumoMetrica() }}</p>
                 </ng-template>
               </span>
@@ -688,22 +687,6 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly resumoMetrica = computed(() => {
     dict();
     return this.primeiraFrase('variants.items.metricExplainer.description');
-  });
-
-  /**
-   * Nome acessível dos cartões que não são preview de pessoa.
-   *
-   * Sem `label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"), que repete
-   * a sigla sem dizer o que o cartão traz.
-   */
-  protected readonly rotuloDefinicao = computed(() => {
-    dict();
-    return `${t('variants.items.definitionTooltip.name')}: WCAG 2.2 AA`;
-  });
-
-  protected readonly rotuloMetrica = computed(() => {
-    dict();
-    return `${t('variants.items.metricExplainer.name')}: LCP`;
   });
 
   protected readonly navGroups = computed(() => {

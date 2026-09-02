@@ -251,8 +251,11 @@ export function hoverCardPreviaDeLinkSource(): string {
 
 /**
  * Sigla no meio da prosa. O gatilho é botão, não link — não há para onde
- * navegar — e o painel declara o próprio rótulo: sem ele, o nome acessível
- * cairia no texto do gatilho e repetiria a sigla sem dizer o que o cartão traz.
+ * navegar.
+ *
+ * O painel não declara rótulo: ele não tem papel, e nome próprio em elemento sem
+ * papel é `aria-prohibited-attr` no axe. Quem descreve é o gatilho, por
+ * `aria-describedby`, e isso o componente escreve sozinho.
  */
 export function hoverCardDefinicaoSource(): string {
   return vueSnippet(
@@ -261,7 +264,7 @@ export function hoverCardDefinicaoSource(): string {
       antes: 'Todo componente do sistema atende',
       depois: ', sem exceção.',
       trigger: button('WCAG 2.2 AA'),
-      panel: 'aria-label="Definição de WCAG 2.2 AA"',
+      panel: '',
       content: `<div class="nds-stack" data-spacing="xs">
   <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
   <p class="nds-text-caption nds-text-muted-foreground">
@@ -285,7 +288,7 @@ export function hoverCardMetricaSource(): string {
       antes: 'A página inicial fechou o mês em',
       depois: ', dentro da meta.',
       trigger: button('LCP 1.8s'),
-      panel: 'aria-label="Explicação da métrica LCP"',
+      panel: '',
       content: `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
     <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
@@ -321,7 +324,7 @@ const lados = [
       <HoverCardTrigger as-child>
         <button type="button" class="${TRIGGER_BUTTON}">{{ l.rotulo }}</button>
       </HoverCardTrigger>
-      <HoverCardContent :side="l.side" :aria-label="'Cartão ' + l.rotulo + ' do gatilho'">
+      <HoverCardContent :side="l.side">
         <p class="nds-text-caption">Lado preferido: {{ l.rotulo }}.</p>
       </HoverCardContent>
     </HoverCard>

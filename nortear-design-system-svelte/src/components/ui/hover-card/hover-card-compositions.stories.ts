@@ -119,7 +119,6 @@ export const TermDefinition: Story = {
     ...mountOpen,
     variant: 'definition',
     triggerLabel: 'WCAG 2.2 AA',
-    label: 'Definição de WCAG 2.2 AA',
   },
   parameters: {
     covers: ['visual.item3'],
@@ -141,11 +140,14 @@ export const TermDefinition: Story = {
       await expect(trigger).toHaveAttribute('type', 'button');
     });
 
-    await step('O nome acessível do painel vem do rótulo declarado', async () => {
+    await step('O painel não tem nome; o gatilho é que o DESCREVE', async () => {
+      const trigger = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
       const panel = await waitForOpen();
-      // Sem rótulo, o nome cairia no texto do gatilho ("WCAG 2.2 AA"), que
-      // repetiria a sigla sem dizer o que o cartão traz.
-      await expect(accessibleName(panel)).toBe('Definição de WCAG 2.2 AA');
+      // O painel perdeu o `role="dialog"` e, com ele, o nome próprio: sem papel,
+      // `aria-label` é `aria-prohibited-attr` no axe. O que a pessoa ouve agora
+      // é o CONTEÚDO, pela descrição que o gatilho aponta.
+      await expect(accessibleName(panel)).toBe('');
+      await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
       await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
     });
   },
@@ -156,7 +158,6 @@ export const ExplainedMetric: Story = {
     ...mountOpen,
     variant: 'metric',
     triggerLabel: 'LCP 1.8s',
-    label: 'Explicação da métrica LCP',
   },
   parameters: {
     docs: {

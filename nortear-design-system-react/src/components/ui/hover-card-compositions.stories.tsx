@@ -177,8 +177,8 @@ export const TermDefinition: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
-      // Gatilho de botão e `aria-label` próprio no painel — duas trocas que o
-      // snippet do cartão de perfil esconderia.
+      // Gatilho de botão em vez de link — troca que o snippet do cartão de
+      // perfil esconderia.
       source: { transform: hoverCardDefinicaoSource },
       description: {
         story:
@@ -195,7 +195,7 @@ export const TermDefinition: Story = {
             WCAG 2.2 AA
           </button>
         </HoverCardTrigger>
-        <HoverCardContent aria-label="Definição de WCAG 2.2 AA">
+        <HoverCardContent>
           <div className="nds-stack" data-spacing="xs">
             <p className="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
             <p className="nds-text-caption nds-text-muted-foreground">
@@ -218,11 +218,14 @@ export const TermDefinition: Story = {
       await expect(trigger).toHaveAttribute("type", "button");
     });
 
-    await step("O nome acessível do painel vem do rótulo declarado", async () => {
+    await step("O painel não tem nome; o gatilho é que o DESCREVE", async () => {
+      const trigger = canvas.getByRole("button", { name: "WCAG 2.2 AA" });
       const panel = await waitForOpen();
-      // Sem `aria-label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"),
-      // que repetiria a sigla sem dizer o que o cartão traz.
-      await expect(accessibleName(panel)).toBe("Definição de WCAG 2.2 AA");
+      // O painel perdeu o `role="dialog"` e, com ele, o nome próprio: sem papel,
+      // `aria-label` é `aria-prohibited-attr` no axe. O que a pessoa ouve agora
+      // é o CONTEÚDO, pela descrição que o gatilho aponta.
+      await expect(accessibleName(panel)).toBe("");
+      await expect(trigger).toHaveAttribute("aria-describedby", panel.id);
       await expect(within(panel).getByText("WCAG 2.2 nível AA")).toBeVisible();
     });
   },
@@ -249,7 +252,7 @@ export const ExplainedMetric: Story = {
             LCP 1.8s
           </button>
         </HoverCardTrigger>
-        <HoverCardContent aria-label="Explicação da métrica LCP">
+        <HoverCardContent>
           <div className="nds-stack" data-spacing="xs">
             <div
               className="nds-cluster"
@@ -311,7 +314,7 @@ export const Sides: Story = {
                 {label}
               </button>
             </HoverCardTrigger>
-            <HoverCardContent side={side} aria-label={`Cartão ${label} do gatilho`}>
+            <HoverCardContent side={side}>
               <p className="nds-text-caption">Side preferido: {label}.</p>
             </HoverCardContent>
           </HoverCard>{" "}

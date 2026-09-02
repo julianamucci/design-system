@@ -23,7 +23,7 @@ const meta: Meta = {
       source: { transform: hoverCardSource },
       description: {
         component:
-          'Cartão flutuante exibido em hover ou foco, com espera configurável, posicionamento side/align e role=dialog. Usar para previews opcionais — nunca para ações críticas, que ninguém alcança no toque.',
+          'Cartão flutuante exibido em hover ou foco, com espera configurável e posicionamento side/align. O gatilho descreve o painel enquanto ele está aberto, e é assim que o conteúdo chega ao leitor de tela. Usar para previews opcionais — nunca para ações críticas, que ninguém alcança no toque.',
       },
     },
   },
@@ -92,7 +92,7 @@ export const Playground: Story = {
       'accessibility.item6',
     ],
   },
-  play: async ({ canvasElement, step, args }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('link', { name: /@joana/i });
 
@@ -117,13 +117,13 @@ export const Playground: Story = {
       await userEvent.hover(trigger);
       const panel = await waitForOpen();
       await expect(panel).toBeVisible();
-      // `role="dialog"` é contrato de markup das cinco stacks — o primitivo não
-      // o emite, este componente sim.
-      await expect(panel).toHaveAttribute('role', 'dialog');
+      // Sem `role`: o painel é conteúdo descritivo, não um diálogo. Quem o liga
+      // ao gatilho é o `aria-describedby`, e é ele que faz o leitor de tela
+      // anunciar o CONTEÚDO do cartão em vez de só o gatilho.
+      await expect(panel).not.toHaveAttribute('role');
+      await expect(accessibleName(panel)).toBe('');
+      await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
       await expect(panel).toHaveClass(/nds-hover-card-content/);
-      // Nome acessível: sem ele o axe reprova por `aria-dialog-name`. Sai do
-      // texto do gatilho quando quem compõe não informa outro.
-      await expect(accessibleName(panel)).toBe(args.triggerLabel);
     });
 
     await step('Levar o ponteiro para longe fecha o cartão', async () => {
@@ -147,6 +147,9 @@ export const Playground: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForClosed('depois do Escape');
       await expect(panelOpen()).toBeNull();
+      // A descrição sai com o painel: sobrando, apontaria para um `id` que já
+      // não está no documento.
+      await expect(trigger).not.toHaveAttribute('aria-describedby');
     });
   },
 };
