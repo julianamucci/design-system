@@ -108,7 +108,22 @@ export const Playground: Story = {
       if (!args.open) {
         // A lista não desenha nada com a caixa fechada — quem esconde é o
         // navegador, e é justamente por isso que a peça é um `<details>`.
-        await expect(list.getClientRects()).toHaveLength(0);
+        //
+        // Pela VISIBILIDADE, e não por retângulo. O `<details>` fechado do
+        // Chromium atual não remove a subárvore: ele a PULA
+        // (`content-visibility: hidden` em `::details-content`). Com a caixa
+        // corretamente fechada, o `<ol>` seguia devolvendo um retângulo — e não
+        // um retângulo degenerado, mas os 1198px do bloco que o contém. As duas
+        // leituras de geometria mediam o navegador; `checkVisibility()` mede o
+        // que a asserção quer dizer.
+        await expect(list.checkVisibility()).toBe(false);
+
+        // E o portão tem DENTES: aberta a caixa, a mesma leitura vira `true`.
+        // Sem esta metade, uma API que devolvesse `false` sempre passaria por
+        // guarda — foi exatamente assim que a leitura anterior enganou.
+        root.open = true;
+        await expect(list.checkVisibility()).toBe(true);
+        root.open = false;
       }
     });
 
