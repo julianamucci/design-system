@@ -1925,6 +1925,68 @@ function auditDocumentLang() {
   return violations;
 }
 
+/**
+ * Docs page que existe e não está na suíte de fumaça.
+ *
+ * A fumaça é a ÚNICA suíte que monta a docs page inteira e a passa pelo axe.
+ * Página fora dela não tem verificação de acessibilidade nem prova de que
+ * renderiza — e a ausência é invisível: nada reprova, a contagem só encolhe.
+ * Foi assim que 31 páginas (a família conversacional da guideline 17 e o
+ * input-group) ficaram meses sem portão nenhum, com as cinco stacks verdes.
+ *
+ * Exclusão deliberada continua valendo, mas tem de se DECLARAR no cabeçalho do
+ * arquivo, com motivo:
+ *
+ *   // FORA: Icons — catálogo lucide completo estoura o timeout do runner
+ *
+ * O motivo é obrigatório justamente porque exceção sem motivo vira permanente:
+ * a próxima pessoa não tem como saber se ainda vale. Sem o travessão e o texto
+ * a linha não isenta ninguém.
+ */
+function auditDocsSmokeCobertura() {
+  const violations = [];
+  const EXT = { react: '.tsx', vue: '.vue', svelte: '.svelte', vanilla: '.ts', angular: '.ts' };
+
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    const arquivos = walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte']);
+    const smoke = arquivos.find((f) => /docs-smoke\.stories\./.test(f.replace(/\\/g, '/')));
+    if (!smoke) continue;
+    const content = readFile(smoke);
+    if (!content) continue;
+
+    const isentas = new Set();
+    for (const linha of content.split(/\r?\n/)) {
+      const m = linha.match(/^\/\/\s*FORA:\s*([A-Za-z0-9, ]+?)\s*[—-]\s*(\S.*)$/);
+      if (!m) continue;
+      for (const nome of m[1].split(',')) isentas.add(nome.trim().replace(/Docs$/, ''));
+    }
+
+    const ext = EXT[stack];
+    const sufixo = 'Docs' + ext;
+    const paginas = arquivos
+      .filter((f) => basename(f).endsWith(sufixo))
+      .map((f) => basename(f, ext))
+      .sort();
+
+    for (const pagina of paginas) {
+      const nome = pagina.replace(/Docs$/, '');
+      if (isentas.has(nome)) continue;
+      // Âncora no fim do caminho do módulo: `InputDocs` não pode casar dentro de
+      // `InputGroupDocs`, e o import do Vue/Svelte carrega a extensão.
+      const re = new RegExp("from '(?:[^']*/)?" + pagina + "(?:\\.vue|\\.svelte)?'");
+      if (re.test(content)) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, smoke), line: 1, rule: 'docs_page_fora_da_fumaca',
+        message: pagina + ' existe em src/components/docs mas não está registrada na fumaça — a página não passa pelo axe nem prova que monta. Registre, ou declare a exclusão com motivo numa linha "// FORA: ' + nome + ' — <motivo>"',
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -6009,7 +6071,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
