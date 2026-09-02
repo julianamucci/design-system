@@ -172,16 +172,32 @@ function toPx(raw, lookup, seen = new Set()) {
     return Math.max(partes[0], partes[1]);
   }
 
-  m = /^calc\(\s*var\((--[\w-]+)\)\s*([*+-])\s*([\d.]+)(px)?\s*\)$/.exec(v);
+  // `calc(A op B)`, com A e B podendo ser QUALQUER coisa que este resolvedor
+  // entenda — inclusive outra `var()`. Antes o lado direito só podia ser número:
+  // `--radius-card: calc(var(--spacing-4) + var(--radius-xs))` devolvia null e o
+  // token SUMIA do export do Figma, com um aviso que o `--check` não lia.
+  //
+  // O corte é no operador COM ESPAÇO em volta, e não em qualquer `+-*/`: o CSS
+  // exige o espaço dentro de `calc()`, e é justamente o que impede o regex de
+  // partir `var(--spacing-4)` no hífen do próprio nome.
+  m = /^calc\(\s*(.+)\s*\)$/.exec(v);
   if (m) {
-    if (seen.has(m[1])) return null;
-    seen.add(m[1]);
-    const base = lookup(m[1]);
-    if (base === undefined) return null;
-    const b = toPx(base, lookup, seen);
+    const partido = /^(.+?)\s([*+/-])\s(.+)$/.exec(m[1].trim());
+    if (!partido) return null;
+    const [, esq, op, dir] = partido;
+
+    const a = toPx(esq.trim(), lookup, new Set(seen));
+    if (a === null) return null;
+
+    // À direita, número puro é fator (`* 4`); o resto é dimensão.
+    const b = /^[\d.]+$/.test(dir.trim())
+      ? parseFloat(dir.trim())
+      : toPx(dir.trim(), lookup, new Set(seen));
     if (b === null) return null;
-    const n = parseFloat(m[3]);
-    return m[2] === '*' ? b * n : m[2] === '+' ? b + n : b - n;
+
+    if (op === '*') return a * b;
+    if (op === '/') return b === 0 ? null : a / b;
+    return op === '+' ? a + b : a - b;
   }
   return null;
 }
@@ -617,7 +633,22 @@ if (process.argv.includes('--check')) {
     console.error(`✗ ${relative(ROOT, OUT)} está defasado. Rode: node scripts/build-figma-variables.mjs`);
     process.exit(1);
   }
-  console.log('✓ figma-variables.json em dia com o CSS');
+  // Arquivo em dia NÃO é o mesmo que export completo. Este check comparava a
+  // saída do gerador com o arquivo, e um token que o gerador não consegue
+  // resolver sai dos DOIS lados — some do export e do arquivo, e a comparação
+  // segue idêntica. Foi o que aconteceu com `--radius-card` do tema default: a
+  // conta `calc(var(--spacing-4) + var(--radius-xs))` não resolvia, o aviso saía
+  // na tela de quem rodava o gerador à mão, e o portão dizia "em dia" enquanto o
+  // Figma ficava sem a variável.
+  //
+  // Aviso agora reprova. Um token que o gerador não sabe traduzir é uma variável
+  // ausente da biblioteca, e ausência é o defeito que ninguém enxerga.
+  if (avisos.length) {
+    console.error(`✗ ${avisos.length} token(s) não resolveram — o export sai INCOMPLETO:`);
+    for (const a of avisos) console.error(`  ${a}`);
+    process.exit(1);
+  }
+  console.log('✓ figma-variables.json em dia com o CSS, e sem token por resolver');
   process.exit(0);
 }
 
