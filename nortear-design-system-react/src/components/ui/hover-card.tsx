@@ -184,7 +184,15 @@ function HoverCardContent({
   >) {
   const contexto = useHoverCardContext()
 
-  const panelId = React.useId()
+  // `useId` continua sendo a fonte — é ele que casa servidor e cliente na
+  // hidratação, e trocá-lo por contador de módulo quebraria isso na hora em que
+  // a ordem de renderização mudasse. O que se higieniza é só a FORMA: o React
+  // 19 gera `«r0»`, e o guilemete é o único caractere não-ASCII entre os ids
+  // das cinco stacks — válido como IDREF, mas ilegal num seletor CSS sem
+  // escape, o que transforma um `querySelector('#' + id)` futuro em defeito
+  // silencioso. É o mesmo padrão de `inline-citation.tsx` e de
+  // `computer-use.fixtures.tsx`.
+  const panelId = `nds-hover-card-${React.useId().replace(/[^a-zA-Z0-9_-]/g, "")}`
 
   // A associação é escrita quando o painel MONTA e desfeita quando ele
   // desmonta — que é exatamente a janela em que o alvo existe no documento.

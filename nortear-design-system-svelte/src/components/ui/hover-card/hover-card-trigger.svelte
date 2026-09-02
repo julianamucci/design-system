@@ -48,6 +48,12 @@
 		delete limpos.role;
 		delete limpos["aria-haspopup"];
 		delete limpos["aria-expanded"];
+		// `aria-controls` sai pelo mesmo motivo dos três acima, e é o quarto que
+		// o bits-ui emite sozinho: nenhuma das outras quatro stacks o tem, e
+		// depois que o gatilho passou a apontar o conteúdo por
+		// `aria-describedby` ele ficou redundante — a relação já está dita, e
+		// dita pelo atributo que os leitores de tela de fato anunciam.
+		delete limpos["aria-controls"];
 		return limpos;
 	}
 </script>
