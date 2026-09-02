@@ -2,8 +2,7 @@
 
 ## Visão Geral
 
-- **Storybook** — interface principal de documentação (porta 6006)
-- **Sandbox** (`app.ts`) — desenvolvimento isolado
+- **Storybook** — a única interface, e onde a documentação vive (porta 6009)
 - **Frontend-only** — sem backend, deployável em CDN estático
 
 ---

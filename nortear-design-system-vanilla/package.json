@@ -4,10 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc",
     "lint": "eslint . --cache --cache-location node_modules/.cache/eslint/",
-    "preview": "vite preview",
     "pretest": "node ../scripts/limpar-orfaos.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",

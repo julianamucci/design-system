@@ -131,11 +131,11 @@ Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
 
 ---
 
-## 9. Navegação — Storybook como interface principal
+## 9. Navegação — Storybook como interface única
 
-A interface principal de documentação é o **Storybook** (`npm run storybook`, porta 6006). Novos componentes são adicionados criando stories — não registrando em `app.ts`.
+A documentação vive no **Storybook** (`npm run storybook`, porta 6009), e não há outra interface: o sandbox de aplicação foi removido em 2026-09-02. Componente novo é adicionado **criando stories** — é o que o torna alcançável.
 
-O `app.ts` é um **sandbox de desenvolvimento**. Não usar para fins de navegação de documentação.
+A navegação é a sidebar do Storybook, ordenada pelo `storySort`. Não usar roteamento SPA para documentação.
 
 Para adicionar um componente: criar `*Docs.ts` (função que retorna `HTMLElement`) + `*.stories.ts` (usando `@storybook/html`). Ver `12-arquitetura-projeto.md`.
 

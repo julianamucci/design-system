@@ -1,17 +1,20 @@
 # Arquitetura do Projeto — Design System Nortear (Storybook-Centric)
 
-> **Referência primária:** Leia `STORYBOOK-ARCHITECTURE.md` antes de qualquer tarefa de documentação ou stories.
+> **Referência primária:** o índice em `Guidelines.md` — ele aponta a guideline de cada assunto antes de qualquer tarefa de documentação ou stories.
 
 ---
 
-## Interface Principal
+## A interface
 
-O **Storybook** é a interface de documentação principal.
+O **Storybook** é a única interface desta stack. Não existe sandbox de aplicação.
 
 ```bash
-npm run storybook      # porta 6006 — interface principal
-npm run dev            # sandbox de desenvolvimento — uso secundário
+npm run storybook       # porta 6009 — a interface
+npm run build           # tsc (com noEmit) — checagem de tipo, não gera artefato
+npm run build-storybook # empacota as stories em storybook-static/
 ```
+
+`storybook-static/` é o artefato publicável — é para ele que o `vercel.json` aponta. Repare no que o `build` deixa de fora: nenhum dos cinco `npm run build` abre folha de estilo, então `@import` quebrado em CSS só reprova no `build-storybook`.
 
 ---
 
@@ -63,7 +66,7 @@ nortear-design-system-vanilla/
 │       └── storybook-docs.css   # Overrides para Docs tab
 │
 ├── chromatic.config.json
-└── STORYBOOK-ARCHITECTURE.md
+└── guidelines/                  # estas guidelines
 ```
 
 ---
@@ -136,6 +139,21 @@ render: (args) => {
   return container;
 }
 ```
+
+---
+
+## O sandbox de aplicação saiu (2026-09-02)
+
+Esta stack tinha um sandbox — `src/app.ts`, `src/main.ts`, `index.html` e os
+scripts `dev` e `preview`. Todos foram removidos. O que se mediu antes de tirar:
+
+- **nunca era publicado** — os cinco `vercel.json` publicam `storybook-static/`, e nada além disso chega ao ar;
+- **ninguém o abria** — o trabalho de componente, documentação e revisão acontece todo no Storybook;
+- **nenhum portão o auditava** — fora do alcance dos gates, ele apodrecia em silêncio, e terminou carregando 172 classes mortas de uma migração já encerrada.
+
+O Angular já operava assim, sem sandbox, e virou o modelo para as outras.
+
+Não recrie nenhum desses arquivos. Componente novo entra por story, e a sidebar do Storybook é a única navegação que existe.
 
 ---
 

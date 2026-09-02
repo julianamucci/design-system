@@ -6,7 +6,7 @@ Siga estritamente as regras em `guidelines/RULES.md` antes de qualquer tarefa.
 
 **Stack**: Vanilla TypeScript + CSS standalone (`.nds-*`) + lucide (vanilla) + Zod.
 
-**Arquitetura**: `guidelines/12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` (Storybook é a interface principal).
+**Arquitetura**: `guidelines/12-arquitetura-projeto.md` — o Storybook é a **única** interface desta stack; não existe sandbox de aplicação desde 2026-09-02.
 
 Para detalhes de implementação de componentes:
 - `guidelines/04-layout-components.md` a `guidelines/10-overlay-components.md`
