@@ -1226,3 +1226,22 @@
   font-weight: var(--font-weight-medium);
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Dentro de uma superfície COLORIDA, quem manda na cor é a superfície ─────
+ *
+ * A composição documentada guarda a linha inteira numa dica de ferramenta, e a
+ * dica pinta com `--primary`. `--muted-foreground` e `--foreground` são cores
+ * de quem senta sobre `--background`: sobre a dica elas não alcançam nada.
+ * Medido pelo axe na primeira rodada da composição — 1.09:1 no termo
+ * (#5c6b70 sobre #3c6972) e 2.19:1 no valor (#243138 sobre o mesmo fundo).
+ *
+ * `inherit` e não um token novo: a dica já responde pelo próprio par de cores
+ * (`--primary` / `--primary-foreground`), e é esse par que tem contraste
+ * garantido ali. Termo e valor param de se distinguir pela COR e passam a se
+ * distinguir só pelo PESO, que é a distinção que sobrevive a qualquer
+ * superfície — a mesma leitura da regra de containers coloridos, onde texto
+ * corrido nunca carrega a cor semântica. */
+.nds-tooltip-content .nds-message-timing,
+.nds-tooltip-content .nds-message-timing-value {
+  color: inherit;
+}

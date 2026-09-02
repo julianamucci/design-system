@@ -11,9 +11,11 @@ import {
   addonsOf,
   inputGroupControl,
   inputGroupRoot,
+  INVALID_FIELD_ID,
   INVALID_MESSAGE,
   INVALID_MESSAGE_ID,
   PASTE_LABEL,
+  SITE_GROUP_LABEL,
   SITE_PLACEHOLDER,
   SITE_PREFIX,
 } from "./input-group.fixtures"
@@ -109,11 +111,19 @@ export const Invalid: Story = {
     // O texto do erro mora FORA da moldura: dentro dela ele herdaria o
     // `cursor: text` do addon e disputaria a largura com o que a pessoa digita.
     <div className="nds-stack nds-w-full" data-spacing="sm">
+      {/* O rótulo VISÍVEL nomeia o campo. Sem ele o único candidato a nome era
+          o `aria-describedby` do erro — e descrição não é nome: o axe reprova
+          em `label-title-only`, e o leitor de tela anuncia "campo de edição,
+          Endereço inválido", que conta o problema sem dizer de que campo é. */}
+      <label className="nds-label" htmlFor={INVALID_FIELD_ID}>
+        {SITE_GROUP_LABEL}
+      </label>
       <InputGroup>
         <InputGroupAddon align="inline-start">
           <InputGroupText>{SITE_PREFIX}</InputGroupText>
         </InputGroupAddon>
         <InputGroupInput
+          id={INVALID_FIELD_ID}
           placeholder={SITE_PLACEHOLDER}
           aria-invalid
           aria-describedby={INVALID_MESSAGE_ID}
@@ -157,13 +167,29 @@ export const Invalid: Story = {
         // dentro de um `waitFor`, que reagendaria a si mesmo e travaria a aba.
         // O atributo é DEVOLVIDO no mesmo passo, e é isso que faz o replay do
         // painel Interactions partir do mesmo estado da primeira rodada.
-        const withError = getComputedStyle(root()).borderTopColor
+        //
+        // A TRANSIÇÃO precisa sair antes da medida, e este é o defeito que a
+        // primeira rodada da suíte encontrou: a moldura declara
+        // `transition: border-color`, então tirar o atributo INICIA uma
+        // transição em vez de trocar a cor. O computado logo em seguida devolve
+        // o valor de PARTIDA — a mesma vermelha —, e a asserção reprovava com
+        // `rgb(184, 20, 42)` dos dois lados, com a regra da folha funcionando.
+        // Congelar a transição é mecânico (nenhum valor de design entra aqui) e
+        // deixa o computado ser o valor final já na primeira leitura.
+        const frame = root()
+        const previousTransition = frame.style.transition
+        frame.style.transition = "none"
+        try {
+          const withError = getComputedStyle(frame).borderTopColor
 
-        field().removeAttribute("aria-invalid")
-        const withoutError = getComputedStyle(root()).borderTopColor
-        field().setAttribute("aria-invalid", "true")
+          field().removeAttribute("aria-invalid")
+          const withoutError = getComputedStyle(frame).borderTopColor
+          field().setAttribute("aria-invalid", "true")
 
-        await expect(withError).not.toBe(withoutError)
+          await expect(withError).not.toBe(withoutError)
+        } finally {
+          frame.style.transition = previousTransition
+        }
       },
     )
 
@@ -181,6 +207,22 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item5", "visual.item3"],
     docs: { source: { transform: inputGroupDisabledSource } },
+    // `color-contrast` DESLIGADA nesta story, e só nela — com o motivo, porque
+    // exceção sem motivo vira exceção permanente.
+    //
+    // O grupo inteiro esmaece por `:has(:disabled)`, e o axe mede o `<span>` do
+    // prefixo em 2.03:1 (#aeb4b6 sobre #fdfbf9). O `<input>` e o `<button>` ele
+    // PULA sozinho, por estarem desabilitados; o `<span>` não é controle, então
+    // a mesma isenção não o alcança automaticamente — mas ela vale: a WCAG
+    // 1.4.3 dispensa de contraste o texto que faz parte de um componente de
+    // interface INATIVO, e aqui os dois controles da moldura estão desligados.
+    // É a mesma leitura que o colhedor de contraste do toggle já usa ao pular
+    // toggles desabilitados.
+    //
+    // O que isto NÃO cobre: qualquer outro estado desta moldura. As outras duas
+    // stories do arquivo continuam medindo contraste normalmente, e é lá que um
+    // prefixo ilegível de verdade reprovaria.
+    a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } },
   },
   render: () => (
     <InputGroup>

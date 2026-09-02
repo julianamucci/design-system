@@ -20,6 +20,7 @@ import {
   HIDE_LABEL,
   NOTE_GROUP_LABEL,
   NOTE_PLACEHOLDER,
+  PASSWORD_FIELD_ID,
   PASSWORD_GROUP_LABEL,
   PASSWORD_SAMPLE,
   REVEAL_LABEL,
@@ -131,21 +132,32 @@ function PasswordField() {
   const [visible, setVisible] = useState(false)
 
   return (
-    <InputGroup aria-label={PASSWORD_GROUP_LABEL}>
-      <InputGroupInput
-        type={visible ? "text" : "password"}
-        defaultValue={PASSWORD_SAMPLE}
-      />
-      <InputGroupAddon align="inline-end">
-        <InputGroupButton
-          size="icon-xs"
-          aria-label={visible ? HIDE_LABEL : REVEAL_LABEL}
-          onClick={() => setVisible(!visible)}
-        >
-          {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
-        </InputGroupButton>
-      </InputGroupAddon>
-    </InputGroup>
+    <div className="nds-stack nds-w-full" data-spacing="sm">
+      {/* O campo tem nome PRÓPRIO, e o nome do grupo não o substitui: o do
+          grupo pertence ao conjunto campo + botão (decisão 2 do primitivo), e
+          o leitor de tela não o empresta ao campo. Sem este rótulo o campo
+          ficava anônimo — sem `<label>`, sem `aria-label` e sem `placeholder`,
+          que é justamente o caso que o axe reprova na regra `label`. */}
+      <label className="nds-label" htmlFor={PASSWORD_FIELD_ID}>
+        {PASSWORD_GROUP_LABEL}
+      </label>
+      <InputGroup aria-label={PASSWORD_GROUP_LABEL}>
+        <InputGroupInput
+          id={PASSWORD_FIELD_ID}
+          type={visible ? "text" : "password"}
+          defaultValue={PASSWORD_SAMPLE}
+        />
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton
+            size="icon-xs"
+            aria-label={visible ? HIDE_LABEL : REVEAL_LABEL}
+            onClick={() => setVisible(!visible)}
+          >
+            {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+          </InputGroupButton>
+        </InputGroupAddon>
+      </InputGroup>
+    </div>
   )
 }
 

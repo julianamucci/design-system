@@ -288,6 +288,15 @@ export function InputGroupDocs() {
     const errorId = `${id}-erro`
     return (
       <div className="nds-stack nds-w-full" data-spacing="sm">
+        {/* O rótulo VISÍVEL nomeia o campo — mesmo padrão do `affixFrame`.
+            Sem ele o único candidato a nome era o `aria-describedby` do erro,
+            e descrição não é nome: a primeira rodada da suíte de fumaça
+            reprovou esta moldura em `label-title-only`. O par de Do & Don't
+            continua sendo sobre a PALAVRA do erro; o rótulo está nos dois
+            lados justamente para não virar a diferença entre eles. */}
+        <label className="nds-label" htmlFor={id}>
+          {labels.siteGroup}
+        </label>
         <InputGroup>
           <InputGroupAddon align="inline-start">
             <InputGroupText>{labels.prefix}</InputGroupText>
@@ -466,13 +475,29 @@ export function InputGroupDocs() {
             // Só a moldura vermelha: quem não distingue a cor não fica sabendo
             // de nada. O atributo está lá — é ele que pinta —, mas não há texto
             // nenhum ligado a ele.
+            //
+            // O rótulo acompanha o lado bom: a diferença que este par ensina é
+            // a presença do TEXTO DO ERRO, e um campo sem nome de um lado só
+            // acrescentaria um segundo defeito no meio da lição.
             dontPreview: (
-              <InputGroup>
-                <InputGroupAddon align="inline-start">
-                  <InputGroupText>{labels.prefix}</InputGroupText>
-                </InputGroupAddon>
-                <InputGroupInput placeholder={labels.siteField} aria-invalid />
-              </InputGroup>
+              <div className="nds-stack nds-w-full" data-spacing="sm">
+                <label
+                  className="nds-label"
+                  htmlFor="input-group-do-dont-sem-texto"
+                >
+                  {labels.siteGroup}
+                </label>
+                <InputGroup>
+                  <InputGroupAddon align="inline-start">
+                    <InputGroupText>{labels.prefix}</InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="input-group-do-dont-sem-texto"
+                    placeholder={labels.siteField}
+                    aria-invalid
+                  />
+                </InputGroup>
+              </div>
             ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),
             dontCaption: toPlainText(tContent("doDont.pair2.dont")),

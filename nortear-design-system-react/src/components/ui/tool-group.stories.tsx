@@ -98,7 +98,17 @@ export const Playground: Story = {
       if (!args.open) {
         // A lista não desenha nada com a caixa fechada — quem esconde é o
         // navegador, e é justamente por isso que a peça é um `<details>`.
-        await expect(list.getClientRects()).toHaveLength(0)
+        //
+        // A medida é `checkVisibility()`, e não `getClientRects()`, porque o
+        // navegador esconde o conteúdo de um `<details>` fechado com
+        // `content-visibility: hidden` em `::details-content` — e não com
+        // `display: none`, como fazia antes. Num galho pulado a caixa continua
+        // EXISTINDO com medidas zeradas: `getClientRects()` devolve um
+        // `DOMRect` vazio, comprimento 1, e a asserção reprovava com a lista
+        // corretamente escondida. `checkVisibility()` responde à pergunta que
+        // este passo faz, e continua com dentes: basta alguém devolver
+        // `content-visibility: visible` ao conteúdo para ela voltar a reprovar.
+        await expect(list.checkVisibility()).toBe(false)
       }
     })
 

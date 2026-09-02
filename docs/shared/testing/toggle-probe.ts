@@ -132,13 +132,49 @@ export function toggleNosDoisThemesContrast(
   root: HTMLElement,
   minimum = 4.5,
 ): ContrastToggleFailure[] {
-  const light = contrastFailures(root, minimum, 'claro');
-  const desfazer = darkLigarTheme(root.ownerDocument);
+  const unfreeze = freezeTransitions(root.ownerDocument);
   try {
-    return [...light, ...contrastFailures(root, minimum, 'escuro')];
+    const light = contrastFailures(root, minimum, 'claro');
+    const desfazer = darkLigarTheme(root.ownerDocument);
+    try {
+      return [...light, ...contrastFailures(root, minimum, 'escuro')];
+    } finally {
+      desfazer();
+    }
   } finally {
-    desfazer();
+    unfreeze();
   }
+}
+
+/**
+ * Congela transição e animação enquanto se mede. Devolve a função que desfaz.
+ *
+ * Sem isto a medição do tema ESCURO lia um estado a meio caminho, e o número
+ * que saía não era o de tema nenhum. O toggle declara
+ * `transition: background-color …, color …`: pôr a classe `.dark` não troca as
+ * cores, INICIA uma transição, e o computado logo em seguida devolve o valor de
+ * PARTIDA — o do claro. A sonda de `--background`, por outro lado, é um
+ * elemento recém-criado, sem transição de onde partir: ela já volta a
+ * superfície escura. O resultado é tinta clara sobre fundo escuro, e a primeira
+ * rodada da suíte do React reprovou o toggle ativo em 1.16:1 no escuro com a
+ * paleta correta.
+ *
+ * É a mesma armadilha que já está descrita para `waitFor`, na outra ponta:
+ * ali a espera nunca chega, aqui a leitura chega cedo demais. E é LATENTE —
+ * quando as duas leituras pegam valores da mesma época, o número sai certo e
+ * ninguém vê.
+ *
+ * Congelar, e não esperar: a conta é síncrona e todas as cinco stacks a chamam
+ * assim. `!important` porque a regra precisa vencer a do componente, e a
+ * própria inserção da folha força o recálculo — a primeira leitura seguinte já
+ * é do valor final.
+ */
+function freezeTransitions(doc: Document): () => void {
+  const style = doc.createElement('style');
+  style.textContent =
+    '*, *::before, *::after { transition: none !important; animation: none !important; }';
+  doc.head.appendChild(style);
+  return () => style.remove();
 }
 
 /** Mensagem de falha legível, com o número medido. */

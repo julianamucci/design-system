@@ -108,7 +108,16 @@ export const Playground: Story = {
       // A decisão que governa o componente: texto em streaming numa região viva
       // é anunciado a cada trecho, e a leitura fica impossível. A única região
       // viva é o anunciador, fora do fluxo, e ele começa vazio.
-      await expect(viewport.getAttribute("role")).toBeNull()
+      //
+      // A asserção mede a AUSÊNCIA DE SEMÂNTICA VIVA, e não a ausência de papel.
+      // Ela exigia `role` nulo, e isso reprovava o papel que a área que rola
+      // ganhou de propósito: sem papel, o `aria-label` que nomeia a parada de
+      // teclado é atributo proibido e o axe o descarta. `group` nomeia sem
+      // falar; `log`, `status`, `alert`, `marquee` e `timer` é que trariam a
+      // semântica viva embutida — e são esses que este passo tem de barrar.
+      const VIVOS = ["log", "status", "alert", "alertdialog", "marquee", "timer"]
+      await expect(viewport).toHaveAttribute("role", "group")
+      await expect(VIVOS).not.toContain(viewport.getAttribute("role"))
       await expect(viewport.querySelector("[aria-live]")).toBeNull()
       const announcer = root.querySelector(".nds-chat-thread-announcer")!
       await expect(announcer).toHaveAttribute("aria-live", "polite")
