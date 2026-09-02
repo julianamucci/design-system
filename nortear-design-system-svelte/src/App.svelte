@@ -87,33 +87,28 @@
   );
 </script>
 
-<div class="flex h-screen overflow-hidden bg-background text-foreground font-sans">
+<div class="nds-app">
   <!-- Sidebar -->
-  <aside
-    class="fixed inset-y-0 left-0 z-50 w-64 border-r border-border bg-sidebar flex flex-col nds-transition-transform duration-300 nds-md-relative nds-md-translate-x-0"
-    class:translate-x-0={sidebarOpen}
-    class:-translate-x-full={!sidebarOpen}
-  >
+  <aside class="nds-app-sidebar" data-drawer="true" data-open={sidebarOpen ? 'true' : 'false'}>
     <!-- Logo -->
-    <div class="flex h-14 items-center gap-2 border-b border-border px-4">
-      <div class="h-6 w-6 rounded bg-primary"></div>
-      <span class="font-semibold text-sidebar-foreground">Design System</span>
-      <span class="ml-auto text-xs nds-text-muted-foreground">Svelte</span>
+    <div class="nds-app-sidebar-header">
+      <div class="nds-app-sidebar-logo"></div>
+      <span>Design System</span>
+      <span class="nds-app-sidebar-tag">Svelte</span>
     </div>
 
     <!-- Nav -->
-    <nav class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
+    <nav class="nds-app-sidebar-nav">
       {#each Object.entries(groups) as [groupName, items] (groupName)}
         <div>
-          <p class="mb-1 px-2 text-xs font-semibold nds-uppercase nds-tracking-wide nds-text-muted-foreground">
-            {groupName}
-          </p>
+          <p class="nds-app-nav-group-title">{groupName}</p>
           {#each items as item (item.id)}
             <button
               onclick={() => navigate(item.id)}
-              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm nds-transition-colors {activeComponent === item.id ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent-50'}"
+              class="nds-app-nav-item"
+              data-active={activeComponent === item.id ? 'true' : 'false'}
             >
-              <item.icon class="h-4 w-4 shrink-0" />
+              <item.icon class="nds-icon nds-shrink-0" />
               {item.label}
             </button>
           {/each}
@@ -123,60 +118,57 @@
   </aside>
 
   <!-- Main -->
-  <div class="flex flex-1 flex-col overflow-hidden">
+  <div class="nds-app-main">
     <!-- Topbar -->
-    <header class="flex h-14 items-center gap-3 border-b border-border bg-background px-4">
+    <header class="nds-app-header">
       <!-- Mobile menu toggle -->
       <button
-        class="nds-md-hidden p-1.5 rounded-md nds-hover-bg-muted-soft"
+        class="nds-icon-button nds-md-hidden"
         onclick={() => sidebarOpen = !sidebarOpen}
         aria-label="Menu"
       >
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="nds-icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
 
-      <span class="flex-1 text-sm nds-text-muted-foreground">
+      <span class="nds-app-header-title">
         {activeComponent ? activeComponent : 'Início'}
       </span>
 
       <!-- Dark mode toggle -->
       <button
         onclick={toggleDark}
-        class="p-1.5 rounded-md nds-hover-bg-muted-soft nds-transition-colors"
+        class="nds-icon-button"
         aria-label={isDark ? 'Modo claro' : 'Modo escuro'}
       >
         {#if isDark}
-          <Sun class="h-4 w-4" />
+          <Sun class="nds-icon" />
         {:else}
-          <Moon class="h-4 w-4" />
+          <Moon class="nds-icon" />
         {/if}
       </button>
     </header>
 
     <!-- Content -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="nds-app-content">
       {#if loadingDoc}
-        <div class="flex h-full items-center justify-center">
-          <div class="h-6 w-6 nds-animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+        <div class="nds-app-loading">
+          <div class="nds-spinner"></div>
         </div>
       {:else if CurrentDoc}
         <CurrentDoc.default />
       {:else}
         <!-- Home page -->
-        <div class="p-8 max-w-2xl">
-          <h1 class="text-3xl font-bold nds-tracking-tight mb-2">Design System</h1>
-          <p class="nds-text-muted-foreground mb-6">
+        <div class="nds-app-home">
+          <h1 class="nds-app-home-title">Design System</h1>
+          <p class="nds-app-home-lead">
             Biblioteca de componentes em <strong>Svelte 5</strong> usando o design system-svelte e bits-ui.
           </p>
-          <div class="grid gap-3 nds-sm-grid-2">
-            <button
-              onclick={() => navigate('alert')}
-              class="rounded-lg border border-border p-4 text-left nds-hover-bg-muted-50 nds-transition-colors"
-            >
-              <p class="font-medium">Alert</p>
-              <p class="text-sm nds-text-muted-foreground">Feedback visual para o usuário</p>
+          <div class="nds-app-home-grid">
+            <button onclick={() => navigate('alert')} class="nds-app-home-card">
+              <p class="nds-app-home-card-title">Alert</p>
+              <p class="nds-app-home-card-desc">Feedback visual para o usuário</p>
             </button>
           </div>
         </div>
@@ -185,11 +177,7 @@
   </div>
 </div>
 
-<!-- Sidebar overlay (mobile) -->
+<!-- Véu da gaveta (mobile) -->
 {#if sidebarOpen}
-  <div
-    class="fixed inset-0 z-40 nds-bg-black-50 nds-md-hidden"
-    onclick={() => sidebarOpen = false}
-    role="presentation"
-  ></div>
+  <div class="nds-app-scrim" onclick={() => sidebarOpen = false} role="presentation"></div>
 {/if}
