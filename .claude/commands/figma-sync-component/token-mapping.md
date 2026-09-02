@@ -5,9 +5,14 @@ Referência do comando `/figma-sync-component`.
 **Sincronizado em 2026-09-02** contra `docs/shared/tokens/figma-variables.json`,
 comparando as duas pontas por resumo determinístico (token, modo e valor, com o
 float32 do Figma arredondado dos dois lados). Sete das oito coleções ficaram
-idênticas; a `Color` difere por um único token, `--ring-offset-color`, que existe
-no arquivo e não existe mais no CSS — apagá-lo desprende quem estiver amarrado a
-ele, então continua lá por decisão pendente.
+idênticas; a `Cor` difere por um único token, `--ring-offset-color`, que existe
+no arquivo e não existe mais no CSS.
+
+Esse token está **sem uso**, e isso foi medido, não suposto: nenhuma outra
+variável o referencia por alias, nenhum estilo local o amarra, e ele não aparece
+em nenhum dos 1262 nós das dez páginas. Fica no arquivo por decisão pendente —
+apagar variável é irreversível do lado de quem estivesse amarrado, e aqui não há
+ninguém.
 
 Vale reparar em como a defasagem chegou até aqui. A nota anterior dizia que as
 144 variáveis batiam uma a uma em 2026-08-05, e nada avisou quando deixaram de
@@ -33,12 +38,18 @@ Apple) e nenhum deles é fonte de token do projeto.
 
 **Toda variável tem `codeSyntax.WEB` igual à custom property do CSS.**
 `marca/primary` tem `var(--primary)`, `espacamento/spacing-4` tem
-`var(--spacing-4)`, e assim por diante — sem exceção. É essa igualdade que
-permite sincronizar por valor sem depender do nome da coleção, que **diverge**:
-o arquivo chama `Color`/`Spacing`/`Radius`/`Motion`/`Elevation`/`z-index`, e o
-export chama `Cor`/`Dimensao`/`Raio`/`Movimento`/`Elevacao`/`Camada`. Casar por
-`codeSyntax.WEB` atravessa a divergência; importar o JSON cru criaria coleções
-gêmeas.
+`var(--spacing-4)`, e assim por diante — sem exceção.
+
+Casar por `codeSyntax.WEB` é o que torna a sincronia robusta a nome, e vale
+lembrar por quê mesmo agora que os nomes batem. Até 2026-09-02 as coleções do
+arquivo se chamavam `Color`/`Spacing`/`Radius`/`Motion`/`Elevation`/`z-index`
+contra `Cor`/`Dimensao`/`Raio`/`Movimento`/`Elevacao`/`Camada` no export, e a
+sincronia daquele dia atravessou a divergência inteira sem tropeçar porque nunca
+olhou para o nome da coleção. Depois disso os seis foram renomeados para os do
+export — 130 variáveis mudaram de coleção de nome sem que uma única das 932
+amarrações de nó se soltasse, porque o id da variável não muda. Alinhar os nomes
+foi higiene, não pré-requisito: quem indexar por `codeSyntax.WEB` continua imune
+se eles divergirem de novo.
 
 Duas coleções do arquivo **não têm origem no CSS** e não entram em sincronia
 nenhuma: `Texto` (54 variáveis × pt-BR/en/es) e `Opacidade` (8 × light/dark,
@@ -69,37 +80,39 @@ Se algum dia uma variável aparecer sem `codeSyntax`, o caminho continua servind
 
 | Coleção | Vars | Modos |
 |---|---|---|
-| `Color` | 51 | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` |
-| `Spacing` | 30 | `default`, `condensado`, `confortavel` |
-| `Tipografia` | 19 | `minor-third`, `augmented-fourth`, `golden`, `major-second`, `major-third`, `minor-second`, `perfect-fifth`, `perfect-fourth` |
-| `Motion` | 19 | `default` |
-| `Radius` | 13 | `default` |
-| `z-index` | 7 | `default` |
-| `Elevation` | 4 | `light`, `dark` |
-| `Fonte` | 1 | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` |
+| `Cor` | 55 | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` |
 | `Texto` | 54 | `pt-BR`, `en`, `es` |
-| `Opacidade` | 4 | `light`, `dark` |
+| `Dimensao` | 31 | `default`, `condensado`, `confortavel` |
+| `Tipografia` | 25 | `minor-second`, `minor-third`, `major-second`, `major-third`, `perfect-fourth`, `augmented-fourth`, `perfect-fifth`, `golden` |
+| `Movimento` | 19 | `default` |
+| `Raio` | 13 | `default`, `warm`, `cold` |
+| `Camada` | 8 | `default` |
+| `Opacidade` | 8 | `light`, `dark` |
+| `Elevacao` | 4 | `light`, `dark` |
+| `Fonte` | 1 | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` |
 
-Os nomes **não** seguem as pastas do export: lá são `Cor`, `Dimensao`, `Raio`,
-`Movimento`, `Elevacao`, `Camada`; aqui são `Color`, `Spacing`, `Radius`,
-`Motion`, `Elevation`, `z-index`. Só `Tipografia` e `Fonte` coincidem. Nunca
-derive nome de coleção do nome da pasta.
+Os nomes coincidem com os do export desde 2026-09-02, mas **um deles não fecha a
+conta**: `Cor` tem 55 e o export tem 54, pela sobra do `--ring-offset-color`
+descrita no topo. Se a contagem desta tabela e a do export baterem em tudo menos
+aí, está certo.
 
-`Tipografia` tem um modo a mais que o export: `perfect-fourth` existe no Figma e
-não tem arquivo em `figma/Tipografia/`.
+`Raio` ganhou os modos `warm` e `cold` na mesma data. Antes tinha só `default`,
+o que quer dizer que a identidade de raio de dois dos três temas simplesmente
+não existia no arquivo — o `radius` do warm é 24 e o do cold é 0, contra 14 do
+default, e nada disso era representável.
 
 ## Prefixos dentro de cada coleção
 
 | Coleção | Prefixos |
 |---|---|
-| `Color` | `superficie/`, `marca/`, `feedback/`, `estrutura/`, `grafico/`, `sidebar/`, `codigo/` |
-| `Spacing` | `espacamento/`, `altura/`, `tamanho/`, `traco/` |
+| `Cor` | `superficie/`, `marca/`, `feedback/`, `estrutura/`, `grafico/`, `sidebar/`, `codigo/`, `outros/` |
+| `Dimensao` | `espacamento/`, `altura/`, `tamanho/`, `traco/` |
 | `Tipografia` | `tamanho/`, `escala/`, `peso/`, `entrelinha/`, `espacamento-letra/` |
-| `Motion` | `duracao/`, `curva/`, `deslocamento/` |
+| `Movimento` | `duracao/`, `curva/`, `deslocamento/` |
 | `Texto`, `Opacidade` | `<slug>/` — o conteúdo é por componente |
-| `Radius`, `Elevation`, `z-index`, `Fonte` | sem prefixo |
+| `Raio`, `Elevacao`, `Camada`, `Fonte` | sem prefixo |
 
-`Spacing` guarda mais que espaçamento: `altura/height-*`, `tamanho/size-*` e
+`Dimensao` guarda mais que espaçamento: `altura/height-*`, `tamanho/size-*` e
 `traco/border-width-default` moram lá.
 
 ---
@@ -151,8 +164,8 @@ alfa — os dois lados leem o mesmo número em vez de dois números parecidos.
 fundo; o valor é `10`. Não confie na aparência — leia `no.opacity` de volta
 depois de vincular, porque um fundo quase invisível passa por "sutil".
 
-`Opacidade` é coleção separada de `Color`: para ver o componente no escuro é
-preciso trocar os dois modos. `Elevation` tem a mesma exigência.
+`Opacidade` é coleção separada de `Cor`: para ver o componente no escuro é
+preciso trocar os dois modos. `Elevacao` tem a mesma exigência.
 
 **Instância escondida não expõe filhos.** `instancia.children` devolve `[]`
 enquanto `visible === false`, então uma varredura que pinta ícones pula todos os
@@ -164,10 +177,24 @@ plugin API`. Frame de timeline que precise animar partes separadas (cortina e
 painel de um diálogo, por exemplo) tem que usar nós próprios — ou expor a parte
 como propriedade booleana e montar o palco com nós de topo.
 
-**Não conte `children` de página que não está ativa.** Páginas carregam sob
-demanda: `figma.root.children[i].children.length` numa página que nunca recebeu
+**Não conte `children` de página que não está ativa** — e não confie na primeira
+contagem depois de carregar. Páginas carregam sob demanda:
+`figma.root.children[i].children.length` numa página que nunca recebeu
 `setCurrentPageAsync` devolve um número menor que o real, sem erro. Parece nó
-apagado. Ative a página antes de contar.
+apagado.
+
+`await pagina.loadAsync()` evita a troca de página, mas **não basta uma vez**.
+Medido em 2026-09-02, varrendo as dez páginas atrás de quem usava um token: a
+primeira passada viu 1011 nós, a segunda 1262, a terceira 1262 de novo. As
+instâncias ainda não estavam expandidas na primeira, e `findAll` não reclama de
+subárvore que ainda não chegou — devolve menos.
+
+O que torna isto perigoso é a direção do erro. Uma varredura que procura uso de
+token e passa por menos nós devolve **zero uso**, que é a resposta que autoriza
+apagar. Quem parou na primeira passada teria concluído "não é usado" com um
+terço da árvore por ver. Rode até a contagem repetir, e relate a contagem junto
+com o resultado — número de nós varridos é parte da resposta, não estatística
+decorativa.
 
 **Retângulos sobrepostos viram um VECTOR.** Dois retângulos dentro de um
 componente saem fundidos num único nó `Vector`. Contar filhos para inferir o que
@@ -188,7 +215,7 @@ node.fills = [figma.variables.setBoundVariableForPaint(
 ```
 
 **Modo claro/escuro não é variante.** As regras `.dark .nds-*` do CSS são o modo
-`default-dark` da coleção `Color`. Vincular a variável já cobre os dois.
+`default-dark` da coleção `Cor`. Vincular a variável já cobre os dois.
 
 **Altura fixa só onde o CSS declara.** Componente com texto não tem `height` — a
 altura é padding-block + line-height (WCAG 1.4.4, Resize Text 200%). Só os
