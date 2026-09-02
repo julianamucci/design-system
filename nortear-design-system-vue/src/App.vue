@@ -83,47 +83,46 @@ function isCategoryOpen(name: string) {
 </script>
 
 <template>
-  <div
-    class="flex h-screen overflow-hidden bg-background text-foreground"
-  >
+  <div class="nds-app">
     <!-- Skip to content -->
     <a
       href="#main-content"
-      class="sr-only nds-skip-link nds-focus-shadow-md nds-focus-ring-inset"
+      class="nds-skip-link nds-focus-shadow-md nds-focus-ring-inset"
     >
       Pular para conteúdo principal
     </a>
 
     <!-- Sidebar -->
     <aside
-      class="w-[280px] shrink-0 border-r border-sidebar-border bg-sidebar flex flex-col h-full overflow-hidden"
+      class="nds-app-sidebar nds-shrink-0 nds-overflow-hidden"
       aria-label="Sidebar de navegação"
     >
       <!-- Sidebar header -->
-      <div class="h-16 px-6 border-b border-sidebar-border flex items-center shrink-0">
-        <div class="flex items-center gap-2">
-          <div
-            class="h-8 w-8 bg-primary rounded-md flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <span class="text-primary-foreground font-bold">S</span>
-          </div>
-          <span class="font-semibold nds-text-3xl text-sidebar-foreground">Design System</span>
+      <div class="nds-app-sidebar-header nds-shrink-0">
+        <div
+          class="nds-app-sidebar-logo nds-inline-center"
+          aria-hidden="true"
+        >
+          <span class="nds-text-primary-foreground nds-font-bold">S</span>
         </div>
+        <span class="nds-text-3xl">Design System</span>
       </div>
 
       <!-- Sidebar nav -->
-      <div class="flex-1 overflow-y-auto p-4">
+      <div class="nds-app-sidebar-nav">
         <nav aria-label="Navegação de componentes">
-          <div class="space-y-2">
+          <div
+            class="nds-stack"
+            data-spacing="sm"
+          >
             <!-- Home -->
             <button
-              class="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm nds-transition-colors"
-              :class="currentPage === 'home' ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground'"
+              class="nds-app-nav-item"
+              :data-active="currentPage === 'home'"
               @click="navigateTo('home')"
             >
               <Home
-                class="h-4 w-4"
+                class="nds-icon"
                 aria-hidden="true"
               />
               <span>Home</span>
@@ -135,21 +134,23 @@ function isCategoryOpen(name: string) {
               :key="category.name"
             >
               <button
-                class="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-sm nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground nds-transition-colors text-sidebar-foreground"
+                class="nds-app-nav-item"
                 :aria-expanded="isCategoryOpen(category.name)"
                 @click="toggleCategory(category.name)"
               >
-                <span class="flex items-center gap-2">
-                  <component
-                    :is="category.icon"
-                    class="h-4 w-4"
-                    aria-hidden="true"
-                  />
-                  <span>{{ category.name }}</span>
-                </span>
+                <component
+                  :is="category.icon"
+                  class="nds-icon"
+                  aria-hidden="true"
+                />
+                <span>{{ category.name }}</span>
+                <!-- Chevron para BAIXO: `.nds-chevron` gira 180° com
+                     `aria-expanded="true"`, que é o idioma do disclosure em
+                     todas as stacks. O ícone que estava aqui apontava para a
+                     direita e girava 90° por classe condicional — meia volta
+                     num chevron lateral aponta para o lado errado. -->
                 <svg
-                  class="h-4 w-4 nds-transition-transform shrink-0"
-                  :class="isCategoryOpen(category.name) ? 'rotate-90' : ''"
+                  class="nds-icon nds-shrink-0 nds-spacer-start nds-transition-transform nds-chevron"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="none"
@@ -159,19 +160,20 @@ function isCategoryOpen(name: string) {
                   stroke-linejoin="round"
                   aria-hidden="true"
                 >
-                  <polyline points="9 18 15 12 9 6" />
+                  <polyline points="6 9 12 15 18 9" />
                 </svg>
               </button>
 
               <div
                 v-if="isCategoryOpen(category.name)"
-                class="ml-6 mt-1 space-y-1"
+                class="nds-ml-6 nds-mt-1 nds-stack"
+                data-spacing="xs"
               >
                 <button
                   v-for="item in category.items"
                   :key="item.path"
-                  class="w-full flex items-center justify-start px-2 h-7 rounded-md text-sm nds-transition-colors"
-                  :class="currentPage === item.path ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground'"
+                  class="nds-app-nav-item"
+                  :data-active="currentPage === item.path"
                   @click="navigateTo(item.path)"
                 >
                   {{ item.name }}
@@ -180,9 +182,12 @@ function isCategoryOpen(name: string) {
             </div>
 
             <!-- Theme selector -->
-            <div class="mt-4 pt-4 border-t border-sidebar-border">
-              <div class="flex items-center justify-between px-2 py-1">
-                <span class="text-sm text-sidebar-foreground">Theme</span>
+            <div class="nds-mt-4 nds-pt-4 nds-border-t">
+              <div
+                class="nds-cluster nds-px-2 nds-py-1"
+                data-justify="between"
+              >
+                <span class="nds-text-caption">Theme</span>
                 <ThemeSelector
                   :current-theme="currentTheme"
                   @theme-change="(t) => (currentTheme = t)"
@@ -195,22 +200,25 @@ function isCategoryOpen(name: string) {
     </aside>
 
     <!-- Main area -->
-    <div class="flex-1 flex flex-col min-w-0">
+    <div class="nds-app-main nds-min-w-0">
       <!-- Top header -->
-      <header class="h-16 border-b border-border bg-background flex items-center justify-end px-6 shrink-0">
+      <header class="nds-app-header nds-shrink-0">
+        <!-- Empurra a ação para a direita: o header da shell alinha à esquerda,
+             e este sandbox só tem o alternador de modo. -->
+        <span class="nds-app-header-title"></span>
         <button
-          class="h-8 w-8 p-0 flex items-center justify-center rounded-md nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring nds-transition-colors"
+          class="nds-icon-button nds-hover-text-accent-foreground nds-focus-ring"
           :aria-label="isDark ? 'Ativar modo claro' : 'Ativar modo escuro'"
           @click="isDark = !isDark"
         >
           <Sun
             v-if="isDark"
-            class="h-4 w-4"
+            class="nds-icon"
             aria-hidden="true"
           />
           <Moon
             v-else
-            class="h-4 w-4"
+            class="nds-icon"
             aria-hidden="true"
           />
         </button>
@@ -219,7 +227,7 @@ function isCategoryOpen(name: string) {
       <!-- Content -->
       <main
         id="main-content"
-        class="flex-1 overflow-auto"
+        class="nds-app-content"
       >
         <HomePage
           v-if="currentPage === 'home'"
@@ -232,10 +240,10 @@ function isCategoryOpen(name: string) {
           </template>
           <template #fallback>
             <div
-              class="flex items-center justify-center h-64 nds-text-muted-foreground"
+              class="nds-app-loading nds-text-muted-foreground"
               aria-live="polite"
             >
-              <span class="nds-animate-pulse text-sm">Carregando...</span>
+              <span class="nds-animate-pulse nds-text-caption">Carregando...</span>
             </div>
           </template>
         </Suspense>
