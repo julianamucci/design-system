@@ -231,6 +231,16 @@ varra os consumidores no Figma e confira a opacidade de nó contra o alfa do CSS
 O `--accent` do design system só aparece com `/ 0.1`; qualquer nó amarrado a ele
 em força total está errado por construção.
 
+**Mas opacidade sozinha não diz o que a camada FAZ — leia a geometria.** Na mesma
+varredura eu apliquei a regra acima ao `variant=link` e relatei que ele pintava
+uma placa sólida de `primary` sobre o texto: camada chamada `hover-overlay`,
+amarrada a cor de marca, opacidade 1. Os três sinais batiam. Só que o nó mede
+**1px de altura**, ancorado em `MAX/STRETCH` três pixels abaixo do rótulo — é o
+`text-decoration: underline` do CSS, e estava certo desde sempre. Opacidade 1 num
+sublinhado é o valor correto; num véu de fundo é defeito. Antes de chamar uma
+camada de errada, leia `height`, `layoutPositioning` e `constraints`: nome e alfa
+descrevem a intenção de quem criou, não o que o nó desenha.
+
 **Cor com alfa.** `hsl(var(--primary) / 0.9)` é uma cor com opacidade, não outro
 token. Vincule `var(--primary)` e ponha `0.9` no `opacity` do paint — variável do
 Figma não carrega alfa por uso. Vale para os hovers do button (`/0.9`, `/0.8`),
