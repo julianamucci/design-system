@@ -441,7 +441,24 @@ export const SeriesRemoved: Story = {
       // `filledShapes` exige o desenho assentado — antes de a animação fechar,
       // a marca que identifica a legenda está em toda forma.
       await drawingSettled(root);
-      await expect(filledShapes(root)).toHaveLength(REDUCED_SERIES.length * MONTHS.length);
+
+      // E A CONTAGEM ESPERA DE NOVO. `drawingSettled` fecha a marca de
+      // OPACIDADE, não a de GEOMETRIA: o próprio docblock dele diz que quem
+      // CONTA forma espera outra vez, e todo outro ponto de contagem desta
+      // família já fazia isso. Este era o único que afirmava direto, e por isso
+      // era o único que dependia de o redesenho ter começado antes da leitura —
+      // entre limpar e repintar o desenho fica VAZIO, e `filledShapes` devolveu
+      // zero contra oito na primeira rodada de navegador desta stack, só sob
+      // carga. A igualdade continua com dentes: contagem errada não converge,
+      // porque nenhuma forma some depois.
+      //
+      // Só leitura pura aqui dentro — consulta e `getBBox()`, que lê layout e
+      // não mexe no DOM. É a condição que ESCREVE que reagenda a si mesma e
+      // pendura a aba.
+      await waitFor(
+        () => expect(filledShapes(root)).toHaveLength(REDUCED_SERIES.length * MONTHS.length),
+        { timeout: 3000 },
+      );
     });
   },
 };
