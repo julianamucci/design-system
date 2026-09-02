@@ -4184,6 +4184,45 @@ function auditStoryCategoryTag() {
   return violations;
 }
 
+/**
+ * Stack que tem `patches/` tem o portão que confere se eles ainda se aplicam.
+ *
+ * O patch é o único item da árvore instalada que o design system controla, e o
+ * mais silencioso: o nome do arquivo carrega a versão, então um bump de
+ * dependência o desliga sem uma linha de aviso. Quem MEDE isso é
+ * `src/lib/patches-aplicados.test.ts`, no projeto `unit` da própria stack — só
+ * de lá o `node_modules` está garantido presente.
+ *
+ * Esta regra não abre `node_modules` (o auditor pula essa pasta de propósito, e
+ * reprovar por dependência não instalada ensinaria a ignorar o portão). Ela
+ * fecha só a brecha que o outro não alcança: uma stack GANHAR `patches/` e ficar
+ * sem portão nenhum — a mesma forma de sumiço silencioso do
+ * `source-snippets.test.ts`, em que quem saía da varredura não reprovava.
+ */
+function auditPatchGate() {
+  const violations = [];
+  const GATE = 'src/lib/patches-aplicados.test.ts';
+
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'patches');
+    if (!existsSync(dir)) continue;
+    const patches = readdirSync(dir).filter((f) => f.endsWith('.patch'));
+    if (patches.length === 0) continue;
+
+    if (!existsSync(join(ROOT, stackDir(stack), 'src', 'lib', 'patches-aplicados.test.ts'))) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: join(stackDir(stack), 'patches'), rule: 'patch_sem_portao',
+        message:
+          `a stack tem ${patches.length} patch(es) em \`patches/\` e nenhum \`${GATE}\` — ` +
+          'bump de dependência para de aplicar o patch EM SILÊNCIO, e sem esse portão ' +
+          'a medição seguinte vale para um estado que o design system não entrega',
+      });
+    }
+  }
+  return violations;
+}
+
 function auditStorybookInfra() {
   const violations = [];
   for (const stack of STACKS) {
@@ -6071,7 +6110,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
