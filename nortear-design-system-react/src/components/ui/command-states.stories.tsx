@@ -30,7 +30,10 @@ const meta = {
           "Os estados que a paleta assume sozinha (sem resultados) e os que cada comando assume (desabilitado, marcado).",
       },
     },
-    // Filhos auxiliares dentro do listbox — ver PATCHES.md#command-listbox-children
+    // Dívida ANTIGA: o divisor virou `aria-hidden` e a mensagem de vazio saiu
+    // do listbox, então o que sustentava a exceção já não está aqui. Religar a
+    // regra é medição de navegador, não conserto de markup — ver
+    // PATCHES.md#command-listbox-children.
     a11y: {
       config: {
         rules: [{ id: 'aria-required-children', enabled: false }],
@@ -58,12 +61,12 @@ export const EmptyState: Story = {
       <Command>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>
-          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           <CommandGroup heading="Componentes">
             <CommandItem value="button">Button</CommandItem>
             <CommandItem value="input">Input</CommandItem>
           </CommandGroup>
         </CommandList>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       </Command>
     </div>
   ),
@@ -79,7 +82,13 @@ export const EmptyState: Story = {
       await waitFor(async () => {
         await expect(canvas.getAllByRole("option")).toHaveLength(2);
       });
-      await expect(root.querySelector('[data-slot="command-empty"]')).toBeNull();
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      // A região viva já está no DOM antes de haver o que anunciar — é
+      // exatamente isso que a torna capaz de anunciar depois —, mas sem
+      // conteúdo, sem a classe e com altura zero.
+      await expect(vazio).not.toHaveAttribute("data-empty");
+      await expect(vazio).not.toHaveClass(/nds-command-empty/);
+      await expect(vazio.getBoundingClientRect().height).toBe(0);
     });
 
     await step('Buscando "zzz", nenhum comando sobra e o grupo se recolhe', async () => {
@@ -93,28 +102,37 @@ export const EmptyState: Story = {
         .not.toBeVisible();
     });
 
-    await step("A frase ocupa o lugar da lista", async () => {
+    await step("A frase é anunciada, não só desenhada", async () => {
       const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await expect(vazio).toBeVisible();
       await expect(vazio).toHaveTextContent("Nenhum resultado encontrado.");
       await expect(vazio).toHaveClass(/nds-command-empty/);
+      await expect(vazio).toHaveAttribute("data-empty", "");
+      // Sem a região viva, quem usa leitor de tela digitaria no vazio sem nunca
+      // saber que a busca não achou nada: o foco não sai do campo e não sobra
+      // item nenhum para onde navegar.
+      await expect(vazio).toHaveAttribute("role", "status");
+      await expect(vazio).toHaveAttribute("aria-live", "polite");
+      await expect(vazio).toHaveAttribute("aria-atomic", "true");
     });
 
-    // ─── Sobre a asserção que saiu daqui ──────────────────────────────────────
-    //
-    // Havia um `expect(listbox.contains(vazio)).toBe(true)`, justificado por
-    // layout ("é o espaço da lista que a mensagem preenche"). Ele congelava o
-    // defeito como contrato: em vanilla, vue e angular a mensagem fica FORA do
-    // listbox, com `role="status"` + `aria-live`, e a asserção de lá é a
-    // OPOSTA (`contains === false`). Nesta stack a lib monta o nó dentro da
-    // lista, com `role="presentation"` e só enquanto o filtro não casa — logo a
-    // frase é desenhada e não é anunciada, enquanto `screenReader.onFilter` do
-    // conteúdo compartilhado promete a região viva nas cinco docs pages.
-    //
-    // Nada foi posto no lugar de propósito: asserção que precisa ser APAGADA no
-    // dia em que o defeito for corrigido é do mesmo tipo da que saiu. A
-    // divergência está medida em PATCHES.md#command-listbox-children, e a
-    // decisão de entregar a região viva aqui é da dona.
+    await step("A região viva não é filha do listbox", async () => {
+      // ─── A asserção que este passo substitui ────────────────────────────────
+      //
+      // Aqui morava um `expect(listbox.contains(vazio)).toBe(true)`, justificado
+      // por layout ("é o espaço da lista que a mensagem preenche"), e ele
+      // congelava o defeito como contrato. Foi removido sem substituto de
+      // propósito: enquanto o defeito estivesse de pé, qualquer asserção nova
+      // teria de ser APAGADA no dia do conserto — do mesmo tipo da que saíra.
+      //
+      // Hoje o conserto está feito, e a asserção é a POSITIVA, a mesma que
+      // vanilla, vue e angular já usam: `role="status"` não é filho permitido
+      // de `role="listbox"` (só `option` e `group` são), e o axe reprova por
+      // aria-required-children.
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const list = canvas.getByRole("listbox");
+      await expect(list.contains(vazio)).toBe(false);
+    });
 
     // A story TERMINA sem resultados: é este o quadro que o Chromatic captura.
   },
@@ -135,7 +153,6 @@ export const ItemDisabled: Story = {
       <Command>
         <CommandInput placeholder="Buscar comando..." />
         <CommandList>
-          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           <CommandGroup heading="Arquivo">
             <CommandItem value="novo" onSelect={onChoose}>Novo</CommandItem>
             <CommandItem value="arquivar" disabled onSelect={onChoose}>
@@ -144,6 +161,7 @@ export const ItemDisabled: Story = {
             <CommandItem value="renomear" onSelect={onChoose}>Renomear</CommandItem>
           </CommandGroup>
         </CommandList>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       </Command>
     </div>
   ),
@@ -224,13 +242,13 @@ export const CheckedItem: Story = {
       <Command>
         <CommandInput placeholder="Buscar tema..." />
         <CommandList>
-          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           <CommandGroup heading="Aparência">
             <CommandItem value="claro" checked>Claro</CommandItem>
             <CommandItem value="escuro" checked={false}>Escuro</CommandItem>
             <CommandItem value="sistema" checked>Sistema <CommandShortcut>Ctrl+S</CommandShortcut></CommandItem>
           </CommandGroup>
         </CommandList>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       </Command>
     </div>
   ),

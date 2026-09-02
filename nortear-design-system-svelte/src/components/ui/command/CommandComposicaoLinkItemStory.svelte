@@ -14,7 +14,6 @@
   <Command.Root>
     <Command.Input placeholder="Buscar recurso..." />
     <Command.List>
-      <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Documentação">
         <Command.LinkItem href="/docs/button" value="docs-button">
           <BookOpen aria-hidden="true" />
@@ -41,5 +40,6 @@
         </Command.LinkItem>
       </Command.Group>
     </Command.List>
+    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
   </Command.Root>
 </div>

@@ -6,11 +6,11 @@
   <Command.Root>
     <Command.Input placeholder="Buscar componente..." />
     <Command.List>
-      <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Componentes">
         <Command.Item value="button">Button</Command.Item>
         <Command.Item value="input">Input</Command.Item>
       </Command.Group>
     </Command.List>
+    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
   </Command.Root>
 </div>

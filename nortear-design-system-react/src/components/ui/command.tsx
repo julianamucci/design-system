@@ -27,19 +27,18 @@
 //      `listbox`. Resolvido com `aria-hidden="true"` no wrapper (ver
 //      `CommandSeparator` abaixo) — medido em axe-core: nó invisível ao leitor
 //      de tela sai da conta de `aria-required-children`.
-//   2. O VAZIO **não é anunciado**. `Command.Empty` monta
-//      `role="presentation"` DENTRO da lista, e só enquanto o filtro não casa —
-//      criar o nó no instante em que a busca esvazia não anuncia nada. vanilla,
-//      vue e angular põem a mensagem FORA do listbox com `role="status"` +
-//      `aria-live`, e `accessibility.screenReader.onFilter` promete isso nas
-//      cinco docs pages. **Pendência aberta, decisão da dona**: o caminho está
-//      medido e não exige fork — `useCommandState` é exportado pelo cmdk
-//      (`useCmdk as useCommandState`), então a região viva pode ser escrita
-//      aqui, fora do `CommandList`. Registrado em
+//   2. O VAZIO precisava de uma região viva, e o `Command.Empty` do cmdk não
+//      serve para isso: ele monta `role="presentation"` DENTRO da lista, e só
+//      enquanto o filtro não casa — nó criado no instante em que a busca
+//      esvazia não anuncia nada. Fechado em 2026-09-02: `CommandEmpty` deixou
+//      de embrulhar o primitivo e virou um `<div role="status">` próprio,
+//      montado o tempo todo e IRMÃO do `CommandList`, que é a forma do Vanilla.
+//      O estado vem de `useCommandState`, exportado pelo cmdk (`useCmdk as
+//      useCommandState`, medido em `cmdk/dist/index.d.ts`) — sem fork. Ver
 //      PATCHES.md#command-listbox-children.
 
 import type * as React from "react"
-import { Command as CommandPrimitive } from "cmdk"
+import { Command as CommandPrimitive, useCommandState } from "cmdk"
 
 import { cn } from "@/lib/utils"
 import {
@@ -142,16 +141,56 @@ function CommandList({
   )
 }
 
+/**
+ * "Nenhum resultado" — e o ponto não é desenhar a frase, é ANUNCIÁ-LA.
+ *
+ * É a única região viva do componente, e o único ponto da paleta em que a
+ * mudança acontece FORA do foco e sem outro canal: o foco fica no campo de
+ * busca, a lista esvazia, e não sobra item nenhum para onde navegar. Sem o
+ * anúncio, quem lê de ouvido digita no vazio sem saber que a busca não achou
+ * nada.
+ *
+ * Duas condições, e são elas que explicam por que este componente não embrulha
+ * mais o `Command.Empty` do cmdk:
+ *
+ *   · o elemento fica MONTADO o tempo todo. Região viva criada no instante em
+ *     que a busca esvazia não anuncia nada — o leitor de tela lê a mudança de
+ *     conteúdo DENTRO de uma região que já existia. O primitivo monta e
+ *     desmonta o nó, então ele desenhava a frase sem nunca anunciá-la;
+ *   · o elemento fica FORA do `CommandList`. `role="status"` não é filho
+ *     permitido de `role="listbox"` (só `option` e `group` são), e um `<div>`
+ *     sem papel ali é pior: o `ariaRequiredChildrenEvaluate` do axe desce até o
+ *     nó de texto, `isContent` devolve verdadeiro, e a regra reprova.
+ *
+ * O que entra e sai é o CONTEÚDO e a classe. `.nds-command-empty` traz 24px de
+ * `padding-block`, e mantê-la com a lista cheia deixaria um vão embaixo dos
+ * resultados. Sem a classe e sem conteúdo o nó continua no DOM e na árvore de
+ * acessibilidade, com altura zero — o oposto de `display: none`, e é o que
+ * preserva o anúncio da PRÓXIMA busca sem resultado.
+ *
+ * A condição é a mesma que o primitivo usava (`filtered.count === 0`), lida do
+ * mesmo estado por `useCommandState`: o que a paleta DESENHA não mudou. Mudou
+ * onde a frase mora e o fato de ela passar a ser anunciada.
+ */
 function CommandEmpty({
   className,
+  children,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+}: React.ComponentProps<"div">) {
+  const isEmpty = useCommandState((state) => state.filtered.count === 0)
+
   return (
-    <CommandPrimitive.Empty
+    <div
       data-slot="command-empty"
-      className={cn("nds-command-empty", className)}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      {...(isEmpty ? { "data-empty": "" } : {})}
+      className={cn(isEmpty && "nds-command-empty", className)}
       {...props}
-    />
+    >
+      {isEmpty ? children : null}
+    </div>
   )
 }
 

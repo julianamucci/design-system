@@ -20,15 +20,33 @@ describe('commandSource', () => {
     expect(saida).toContain('<CommandList>');
   });
 
-  it('põe a mensagem de vazio DENTRO da lista', () => {
-    // Fora dela sobra uma área em branco onde a lista estava — é o espaço da
-    // lista que a mensagem preenche.
+  it('põe a mensagem de vazio FORA da lista, onde a região viva pode morar', () => {
+    // `role="status"` não é filho permitido de `role="listbox"` (só `option` e
+    // `group` são), e é como `role="status"` que a mensagem anuncia a busca sem
+    // resultado. Snippet com ela dentro da lista ensinaria o defeito.
     const saida = commandSource();
-    const startList = saida.indexOf('<CommandList>');
     const endList = saida.indexOf('</CommandList>');
     const vazio = saida.indexOf('<CommandEmpty>');
-    expect(vazio).toBeGreaterThan(startList);
-    expect(vazio).toBeLessThan(endList);
+    expect(endList).toBeGreaterThan(-1);
+    expect(vazio).toBeGreaterThan(endList);
+  });
+
+  it('todo snippet do painel mantém o vazio fora da lista', () => {
+    // A guarda acima cobre só o snippet canônico. Sem esta, um snippet novo (ou
+    // um já existente, editado) volta a ensinar a mensagem dentro da lista sem
+    // que nada reprove: o defeito não compila diferente.
+    for (const fn of [
+      commandSource,
+      commandWithShortcutsSource,
+      commandItemDisabledSource,
+      commandItemCheckedSource,
+      commandPaletteSource,
+    ]) {
+      const saida = fn();
+      expect(saida.indexOf('<CommandEmpty>')).toBeGreaterThan(
+        saida.indexOf('</CommandList>'),
+      );
+    }
   });
 
   it('nomeia cada grupo pelo cabeçalho, e separa os dois blocos', () => {

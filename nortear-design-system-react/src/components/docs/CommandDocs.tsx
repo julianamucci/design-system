@@ -152,7 +152,6 @@ function CommandPaletteDemo({
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList>
-            <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup heading={groupComponents}>
               <CommandItem
                 value="button"
@@ -203,6 +202,7 @@ function CommandPaletteDemo({
               </CommandItem>
             </CommandGroup>
           </CommandList>
+          <CommandEmpty>{emptyMessage}</CommandEmpty>
         </Command>
       </CommandDialog>
     </div>
@@ -290,7 +290,6 @@ export function CommandDocs() {
   const codeInline = `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button" onSelect={handleSelect}>
         Button
@@ -306,6 +305,7 @@ export function CommandDocs() {
       </CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`;
 
   const codePalette = `const [open, setOpen] = useState(false);
@@ -330,7 +330,6 @@ useEffect(() => {
   <Command>
     <CommandInput placeholder="Buscar..." />
     <CommandList>
-      <CommandEmpty>Nenhum resultado.</CommandEmpty>
       <CommandGroup heading="Ações">
         <CommandItem value="acao" onSelect={() => setOpen(false)}>
           Ação
@@ -338,6 +337,7 @@ useEffect(() => {
         </CommandItem>
       </CommandGroup>
     </CommandList>
+    <CommandEmpty>Nenhum resultado.</CommandEmpty>
   </Command>
 </CommandDialog>`;
 
@@ -437,7 +437,6 @@ interface CommandDialogProps
               <Command>
                 <CommandInput placeholder={labels.searchPlaceholder} />
                 <CommandList>
-                  <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                   <CommandGroup heading={labels.groupComponents}>
                     <CommandItem
                       value="button"
@@ -483,6 +482,7 @@ interface CommandDialogProps
                     </CommandItem>
                   </CommandGroup>
                 </CommandList>
+                <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
               </Command>
             </div>
           </div>
@@ -586,7 +586,6 @@ interface CommandDialogProps
                 <Command>
                   <CommandInput placeholder={labels.searchPlaceholder} />
                   <CommandList>
-                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                     <CommandGroup heading={labels.groupComponents}>
                       <CommandItem value="button">
                         <LayoutIcon />
@@ -594,6 +593,7 @@ interface CommandDialogProps
                       </CommandItem>
                     </CommandGroup>
                   </CommandList>
+                  <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                 </Command>
               </div>
             ),
@@ -671,7 +671,6 @@ interface CommandDialogProps
                 <Command>
                   <CommandInput placeholder={labels.searchPlaceholder} />
                   <CommandList>
-                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                     <CommandGroup heading={labels.groupComponents}>
                       <CommandItem value="button">
                         <LayoutIcon />
@@ -690,6 +689,7 @@ interface CommandDialogProps
                       </CommandItem>
                     </CommandGroup>
                   </CommandList>
+                  <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                 </Command>
               </div>
             ),
@@ -723,7 +723,6 @@ interface CommandDialogProps
             code: `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>${labels.emptyMessage}</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button">Button</CommandItem>
       <CommandItem value="input">Input</CommandItem>
@@ -737,13 +736,13 @@ interface CommandDialogProps
       <CommandItem value="twmerge">twMerge()</CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>${labels.emptyMessage}</CommandEmpty>
 </Command>`,
             preview: (
               <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
                 <Command>
                   <CommandInput placeholder="Buscar componente..." />
                   <CommandList>
-                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                     <CommandGroup heading="Componentes">
                       <CommandItem value="button">Button</CommandItem>
                       <CommandItem value="input">Input</CommandItem>
@@ -757,6 +756,7 @@ interface CommandDialogProps
                       <CommandItem value="twmerge">twMerge()</CommandItem>
                     </CommandGroup>
                   </CommandList>
+                  <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                 </Command>
               </div>
             ),

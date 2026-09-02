@@ -152,25 +152,29 @@ export const Playground: Story = {
       await expect(utilitarios).not.toBeVisible();
     });
 
-    await step('Sem correspondência, a mensagem de vazio aparece', async () => {
+    await step('Sem correspondência, a frase é ANUNCIADA e não só desenhada', async () => {
       await userEvent.clear(field);
       await userEvent.type(field, 'zzz');
 
-      const vazio = await waitFor(async () => {
-        const el = root.querySelector<HTMLElement>('[data-slot="command-empty"]');
-        await expect(el).not.toBeNull();
-        return el!;
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      await waitFor(async () => {
+        await expect(vazio).toHaveAttribute('data-empty', '');
       });
       await expect(vazio).toBeVisible();
       await expect(vazio).toHaveTextContent(args.emptyMessage as string);
       await expect(vazio).toHaveClass(/nds-command-empty/);
-      // Nenhum comando sobra: a única "opção" restante É a mensagem, que carrega
-      // `role="option"` porque um `<div>` de texto solto dentro de um listbox
-      // reprova no axe (aria-required-children). Ver command-empty.svelte.
-      const remaining = canvas.getAllByRole('option');
-      await expect(remaining).toHaveLength(1);
-      await expect(remaining[0]).toBe(vazio);
-      await expect(remaining[0]).toHaveAttribute('aria-disabled', 'true');
+      // Região viva montada o tempo todo: é a mudança DENTRO dela que o leitor
+      // de tela anuncia. Criá-la só na hora não anunciaria nada — e é o único
+      // ponto da paleta em que a mudança acontece fora do foco e sem outro
+      // canal, porque não sobra item nenhum para onde navegar.
+      await expect(vazio).toHaveAttribute('role', 'status');
+      await expect(vazio).toHaveAttribute('aria-live', 'polite');
+      await expect(vazio).toHaveAttribute('aria-atomic', 'true');
+      // E ela mora FORA do listbox: `role="status"` não é filho permitido de
+      // `role="listbox"` (axe: aria-required-children). Nenhum comando sobra e
+      // a mensagem NÃO se disfarça de opção para caber ali dentro.
+      await expect(list.contains(vazio)).toBe(false);
+      await expect(canvas.queryAllByRole('option')).toHaveLength(0);
     });
 
     await step('Apagar a busca traz os comandos de volta', async () => {
@@ -178,7 +182,12 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });
-      await expect(root.querySelector('[data-slot="command-empty"]')).toBeNull();
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      await expect(vazio).not.toHaveAttribute('data-empty');
+      // Continua no DOM (é o que preserva o anúncio da próxima busca vazia),
+      // mas sem a classe que traz 24px de respiro em cima e embaixo.
+      await expect(vazio).not.toHaveClass(/nds-command-empty/);
+      await expect(vazio.getBoundingClientRect().height).toBe(0);
     });
 
     await step('As setas percorrem a lista sem tirar o foco do campo', async () => {

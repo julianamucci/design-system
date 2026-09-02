@@ -17,7 +17,6 @@
   <Command>
     <CommandInput placeholder="Buscar ação..." />
     <CommandList>
-      <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       <CommandGroup heading="Ações">
         <CommandItem value="new-file">
           Novo arquivo
@@ -48,5 +47,6 @@
         </CommandItem>
       </CommandGroup>
     </CommandList>
+    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
   </Command>
 </div>

@@ -53,10 +53,14 @@ const ON_CHOOSE = `function aoEscolher(valor: string) {
 /**
  * Transform do `meta` — vale para todas as stories do arquivo.
  *
- * Ensina o arranjo canônico: campo de busca, lista, mensagem de vazio DENTRO da
- * lista (é o lugar dela: fora, sobra uma área em branco onde a lista estava) e
- * dois grupos separados por divisor. `loop` e `shouldFilter` só aparecem quando
- * diferem do padrão do componente.
+ * Ensina o arranjo canônico: campo de busca, lista com dois grupos separados por
+ * divisor, e a mensagem de vazio IRMÃ da lista.
+ *
+ * O lugar da mensagem não é detalhe de layout: ela é a região viva que anuncia
+ * a busca sem resultado, e `role="status"` não é filho permitido de
+ * `role="listbox"`. Ensinar o snippet com ela dentro da lista seria ensinar o
+ * defeito. `loop` e `shouldFilter` só aparecem quando diferem do padrão do
+ * componente.
  */
 export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
@@ -73,7 +77,6 @@ ${ON_CHOOSE}`,
   <Command${props}>
     <CommandInput placeholder="Buscar componente..." />
     <CommandList>
-      <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       <CommandGroup heading="Componentes">
         <CommandItem value="button" onSelect={aoEscolher}>
           <LayoutIcon />
@@ -94,6 +97,7 @@ ${ON_CHOOSE}`,
         <CommandItem value="clsx" onSelect={aoEscolher}>clsx()</CommandItem>
       </CommandGroup>
     </CommandList>
+    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
   </Command>
 </div>`,
   );
@@ -120,7 +124,6 @@ import { LayoutIcon, TypeIcon } from "lucide-react";`,
   <Command>
     <CommandInput placeholder="Buscar componente..." />
     <CommandList>
-      <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       <CommandGroup heading="Componentes">
         <CommandItem value="button">
           <LayoutIcon />
@@ -132,6 +135,7 @@ import { LayoutIcon, TypeIcon } from "lucide-react";`,
         </CommandItem>
       </CommandGroup>
     </CommandList>
+    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
   </Command>
 </div>`,
   );
@@ -158,13 +162,13 @@ export function commandItemDisabledSource(): string {
   <Command>
     <CommandInput placeholder="Buscar comando..." />
     <CommandList>
-      <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       <CommandGroup heading="Arquivo">
         <CommandItem value="novo">Novo</CommandItem>
         <CommandItem value="arquivar" disabled>Arquivar</CommandItem>
         <CommandItem value="renomear">Renomear</CommandItem>
       </CommandGroup>
     </CommandList>
+    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
   </Command>
 </div>`,
   );
@@ -193,13 +197,13 @@ export function commandItemCheckedSource(): string {
   <Command>
     <CommandInput placeholder="Buscar tema..." />
     <CommandList>
-      <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       <CommandGroup heading="Aparência">
         <CommandItem value="claro" checked>Claro</CommandItem>
         <CommandItem value="escuro" checked={false}>Escuro</CommandItem>
         <CommandItem value="sistema" checked={false}>Sistema</CommandItem>
       </CommandGroup>
     </CommandList>
+    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
   </Command>
 </div>`,
   );
@@ -272,7 +276,6 @@ import { LayoutIcon, MinusIcon, SearchIcon, TypeIcon } from "lucide-react";`,
         <Command>
           <CommandInput placeholder="Buscar componente..." />
           <CommandList>
-            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
             <CommandGroup heading="Componentes">
               <CommandItem value="button" onSelect={() => setAberta(false)}>
                 <LayoutIcon />
@@ -291,6 +294,7 @@ import { LayoutIcon, MinusIcon, SearchIcon, TypeIcon } from "lucide-react";`,
               </CommandItem>
             </CommandGroup>
           </CommandList>
+          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
         </Command>
       </CommandDialog>
     </div>

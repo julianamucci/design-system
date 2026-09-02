@@ -21,8 +21,7 @@
         <span>Carregando resultados...</span>
       </div>
     </Command.Loading>
-    <Command.List>
-      <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
-    </Command.List>
+    <Command.List />
+    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
   </Command.Root>
 </div>

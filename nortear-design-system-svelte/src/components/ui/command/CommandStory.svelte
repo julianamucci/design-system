@@ -29,7 +29,6 @@
   <Command {...rest}>
     <CommandInput {placeholder} />
     <CommandList>
-      <CommandEmpty>{emptyMessage}</CommandEmpty>
       <CommandGroup heading="Componentes">
         <CommandItem value="button" onSelect={() => onItemSelect?.('button')}>Button</CommandItem>
         <CommandItem value="input" onSelect={() => onItemSelect?.('input')}>Input</CommandItem>
@@ -41,5 +40,6 @@
         <CommandItem value="clsx" onSelect={() => onItemSelect?.('clsx')}>clsx()</CommandItem>
       </CommandGroup>
     </CommandList>
+    <CommandEmpty>{emptyMessage}</CommandEmpty>
   </Command>
 </div>

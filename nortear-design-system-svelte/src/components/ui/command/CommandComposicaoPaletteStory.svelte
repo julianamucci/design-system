@@ -53,7 +53,6 @@
   <Command.Dialog bind:open title="Command Palette" description="Busque por um comando ou ação...">
     <Command.Input placeholder="Buscar comando ou ação..." />
     <Command.List>
-      <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Páginas">
         <Command.Item value="dashboard" onSelect={() => handleSelect('dashboard')}>
           <LayoutDashboard aria-hidden="true" />
@@ -78,6 +77,7 @@
         </Command.Item>
       </Command.Group>
     </Command.List>
+    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
   </Command.Dialog>
 </div>
 

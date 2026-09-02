@@ -76,11 +76,26 @@ export const EmptyState: Story = {
         .not.toBeVisible();
     });
 
-    await step('A mensagem de vazio ocupa o lugar da lista', async () => {
+    await step('A frase é anunciada, não só desenhada', async () => {
       const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await expect(vazio).toBeVisible();
       await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
       await expect(vazio).toHaveClass(/nds-command-empty/);
+      await expect(vazio).toHaveAttribute('data-empty', '');
+      // Sem a região viva, quem usa leitor de tela digitaria no vazio sem nunca
+      // saber que a busca não achou nada: o foco não sai do campo e não sobra
+      // item nenhum para onde navegar.
+      await expect(vazio).toHaveAttribute('role', 'status');
+      await expect(vazio).toHaveAttribute('aria-live', 'polite');
+      await expect(vazio).toHaveAttribute('aria-atomic', 'true');
+    });
+
+    await step('A região viva não é filha do listbox', async () => {
+      // `role="status"` dentro de `role="listbox"` é filho não permitido, e o
+      // axe reprova por aria-required-children.
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const list = canvas.getByRole('listbox');
+      await expect(list.contains(vazio)).toBe(false);
       // A story TERMINA aqui, sem resultado: é o quadro que o Chromatic captura
       // e é o que `visual.item2` descreve.
     });

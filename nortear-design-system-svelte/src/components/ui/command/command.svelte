@@ -1,18 +1,48 @@
 <script lang="ts">
 	import { cn } from "@/lib/utils.js";
 	import { Command as CommandPrimitive } from "bits-ui";
+	import { createCommandEmptyContext } from "./command-context.js";
 
 	export type CommandRootApi = CommandPrimitive.Root;
+
+	type CommandStateSnapshot = Parameters<
+		NonNullable<CommandPrimitive.RootProps["onStateChange"]>
+	>[0];
 
 	let {
 		api = $bindable(null),
 		ref = $bindable(null),
 		value = $bindable(""),
 		class: className,
+		onStateChange,
 		...restProps
 	}: CommandPrimitive.RootProps & {
 		api?: CommandRootApi | null;
 	} = $props();
+
+	/**
+	 * Quantos comandos sobraram do filtro, na última publicação da lib.
+	 *
+	 * Nasce em 0 porque é com 0 que o estado da lib nasce — a contagem só é
+	 * calculada quando o primeiro comando se registra, um tique depois. Começar
+	 * em outro valor faria a paleta SEM comando nenhum (a que está carregando,
+	 * por exemplo) nunca se declarar vazia, que é o oposto do que as outras
+	 * stacks fazem.
+	 */
+	let filteredCount = $state(0);
+
+	createCommandEmptyContext(() => filteredCount === 0);
+
+	/**
+	 * A lib publica o estado depois de filtrar e ordenar, uma vez por tique.
+	 * O `onStateChange` de quem consome continua sendo chamado: este é o único
+	 * ponto do componente que precisa do estado, e sequestrá-lo tiraria da API
+	 * um gancho público.
+	 */
+	function handleStateChange(state: CommandStateSnapshot) {
+		filteredCount = state.filtered.count;
+		onStateChange?.(state);
+	}
 </script>
 
 <!--
@@ -35,15 +65,13 @@
 	nada. Por isso `command-list.svelte` funde lista e viewport num nó só: assim
 	o id apontado É o do `role="listbox"`. Ver o comentário de lá.
 
-	Uma divergência ABERTA, e ela é de conteúdo: o VAZIO **não é anunciado**
-	nesta stack. `Command.Empty` mora DENTRO do listbox (onde só `option` e
-	`group` são filhos permitidos) e por isso sai como `role="option"`
-	desabilitado, e não como região viva. vanilla, vue e angular põem a mensagem
-	fora da lista com `role="status"` + `aria-live`, que é o que
-	`accessibility.screenReader.onFilter` promete nas cinco docs pages.
-	**Decisão da dona**, com o caminho medido: `Command.Root` aceita
-	`onStateChange`, que entrega `filtered.count` — dá para montar a região viva
-	fora da `Command.List` sem tocar na lib. Ver `command-empty.svelte`.
+	O VAZIO é anunciado desde 2026-09-02, e o caminho passa por aqui: a raiz
+	assina `onStateChange` — prop pública do `Command.Root`, medida em
+	`bits-ui/dist/bits/command/types.d.ts` — e publica `filtered.count` num
+	contexto. `command-empty.svelte` lê esse contexto e deixou de embrulhar o
+	`Command.Empty` da lib, porque a região viva precisa ficar FORA do
+	`Command.List` e montada o tempo todo, que é a forma do Vanilla. Ver o
+	comentário de lá, que carrega a medição do axe.
 -->
 
 <CommandPrimitive.Root
@@ -51,6 +79,7 @@
 	bind:value
 	bind:ref
 	data-slot="command"
+	onStateChange={handleStateChange}
 	class={cn("nds-command", className)}
 	{...restProps}
 />

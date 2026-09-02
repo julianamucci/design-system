@@ -33,7 +33,6 @@ describe('commandSource', () => {
 <Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button" onSelect={() => executar('button')}>Button</CommandItem>
       <CommandItem value="input" onSelect={() => executar('input')}>Input</CommandItem>
@@ -43,6 +42,7 @@ describe('commandSource', () => {
       <CommandItem value="cn" onSelect={() => executar('cn')}>cn()</CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
     );
   });
@@ -70,20 +70,46 @@ describe('commandSource', () => {
   it('importa do design system, nunca do arquivo interno', () => {
     expect(commandSource()).toContain("from '@/components/ui/command'");
   });
+
+  it('todo snippet do painel mantém o vazio fora da lista', () => {
+    // A guarda de cada snippet cobre um snippet só. Sem esta, um snippet novo
+    // (ou um já existente, editado) volta a ensinar a região viva dentro do
+    // listbox sem que nada reprove: o defeito não compila diferente.
+    for (const fn of [
+      commandSource,
+      commandNoResultsSource,
+      commandLoadingSource,
+      commandItemDisabledSource,
+      commandItemCheckedSource,
+      commandWithGroupsSource,
+      commandWithShortcutsSource,
+      commandWithLinkItemSource,
+      commandPaletteSource,
+    ]) {
+      const saida = fn();
+      expect(saida).toContain('<CommandEmpty>');
+      expect(saida.indexOf('<CommandEmpty>')).toBeGreaterThan(
+        saida.lastIndexOf('</CommandList>'),
+      );
+    }
+  });
 });
 
 describe('transforms das stories de estado', () => {
-  it('sem resultados mostra a frase de vazio dentro da lista', () => {
+  it('sem resultados mostra a frase de vazio FORA da lista', () => {
     const saida = commandNoResultsSource();
     expect(saida).toContain('<CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>');
     // Um grupo só: o que a story ensina é o vazio, não o agrupamento.
     expect(saida.match(/<CommandGroup/g)).toHaveLength(1);
+    // A frase é a região viva que anuncia a busca sem resultado, e
+    // `role="status"` não é filho permitido de `role="listbox"`.
+    expect(saida.indexOf('<CommandEmpty>')).toBeGreaterThan(saida.indexOf('</CommandList>'));
   });
 
   it('o carregando fica FORA da lista', () => {
     const saida = commandLoadingSource();
     const posLoading = saida.indexOf('<CommandLoading>');
-    const posList = saida.indexOf('<CommandList>');
+    const posList = saida.indexOf('<CommandList');
     expect(posLoading).toBeGreaterThan(-1);
     // Progresso não é filho permitido de uma lista de opções.
     expect(posLoading).toBeLessThan(posList);

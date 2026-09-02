@@ -31,10 +31,12 @@ const meta: Meta<CommandArgs> = {
       // actions; a transform devolve o uso real, com os controls resolvidos.
       source: { transform: commandSource },
     },
-    // A lib desta stack renderiza <div role="listbox"> com filhos auxiliares
-    // (divisor e mensagem de vazio) que a spec ARIA não admite dentro de um
-    // listbox. É comportamento upstream deliberado — ver
-    // PATCHES.md#command-listbox-children.
+    // Regra desligada por dívida ANTIGA, e o que a sustentava já saiu daqui: o
+    // divisor virou `aria-hidden` e a mensagem de vazio saiu do listbox. O que
+    // resta é medição, não conserto — só o axe rodando em navegador diz se a
+    // lista vazia ainda reprova, e a suíte não roda nesta rodada. Religar a
+    // regra sem essa medida trocaria um portão frouxo por uma falha vermelha
+    // sem diagnóstico. Ver PATCHES.md#command-listbox-children.
     a11y: {
       config: {
         rules: [{ id: 'aria-required-children', enabled: false }],
@@ -87,7 +89,6 @@ export const Playground: Story = {
       <Command {...args}>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>
-          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           <CommandGroup heading="Componentes">
             <CommandItem value="button" onSelect={onItemSelect}>
               <LayoutIcon />
@@ -108,6 +109,7 @@ export const Playground: Story = {
             <CommandItem value="clsx" onSelect={onItemSelect}>clsx()</CommandItem>
           </CommandGroup>
         </CommandList>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       </Command>
     </div>
   ),
@@ -194,7 +196,7 @@ export const Playground: Story = {
         await expect(groups.filter((g) => !g.hidden)).toHaveLength(1);
       });
 
-      await step('Buscando "zzz", a mensagem de vazio ocupa o lugar da lista', async () => {
+      await step('Sem correspondência, a frase é ANUNCIADA e não só desenhada', async () => {
         await userEvent.clear(field);
         await userEvent.type(field, "zzz");
 
@@ -204,7 +206,18 @@ export const Playground: Story = {
         const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
         await expect(vazio).toBeVisible();
         await expect(vazio).toHaveTextContent("Nenhum resultado encontrado.");
+        await expect(vazio).toHaveAttribute("data-empty", "");
         await expect(vazio).toHaveClass(/nds-command-empty/);
+        // Região viva montada o tempo todo: é a mudança DENTRO dela que o
+        // leitor de tela anuncia. Criá-la só na hora não anunciaria nada — e é
+        // o único ponto da paleta em que a mudança acontece fora do foco e sem
+        // outro canal, porque não sobra item nenhum para onde navegar.
+        await expect(vazio).toHaveAttribute("role", "status");
+        await expect(vazio).toHaveAttribute("aria-live", "polite");
+        await expect(vazio).toHaveAttribute("aria-atomic", "true");
+        // E ela mora FORA do listbox: `role="status"` não é filho permitido de
+        // `role="listbox"` (axe: aria-required-children).
+        await expect(list.contains(vazio)).toBe(false);
       });
 
       await step("Apagar a busca traz os cinco comandos de volta", async () => {
@@ -212,7 +225,12 @@ export const Playground: Story = {
         await waitFor(async () => {
           await expect(canvas.getAllByRole("option")).toHaveLength(5);
         });
-        await expect(root.querySelector('[data-slot="command-empty"]')).toBeNull();
+        const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+        await expect(vazio).not.toHaveAttribute("data-empty");
+        // Continua no DOM (é o que preserva o anúncio da próxima busca vazia),
+        // mas sem a classe que traz 24px de respiro em cima e embaixo.
+        await expect(vazio).not.toHaveClass(/nds-command-empty/);
+        await expect(vazio.getBoundingClientRect().height).toBe(0);
       });
     }
 

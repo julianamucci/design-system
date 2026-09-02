@@ -13,9 +13,16 @@
  *         <div class="nds-command-group-heading">Categoria</div>
  *         <div class="nds-command-item" role="option" aria-selected="false">…</div>
  *       </div>
- *       <p class="nds-command-empty">No results found.</p>
  *     </div>
+ *     <div class="nds-command-empty" data-slot="command-empty"
+ *          role="status" aria-live="polite" aria-atomic="true">No results found.</div>
  *   </div>
+ *
+ * A mensagem de vazio é IRMÃ da lista, e não filha: ela é a região viva que
+ * anuncia a busca sem resultado, e `role="status"` não é filho permitido de
+ * `role="listbox"` (só `option` e `group` são). Ela fica montada o tempo todo —
+ * região viva criada na hora não anuncia nada —, e é a CLASSE que entra e sai:
+ * sem ela o nó continua na árvore de acessibilidade com altura zero.
  *
  * Tokens: --popover, --popover-foreground, --foreground, --muted-foreground,
  *         --accent, --accent-foreground, --border, --radius, --spacing-*

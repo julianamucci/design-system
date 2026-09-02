@@ -41,7 +41,10 @@ const meta = {
           "Os arranjos da paleta: com grupos e divisor, com atalhos, e dentro de um Dialog (command palette). Nenhuma peça nova entra aqui — é composição de call site.",
       },
     },
-    // Filhos auxiliares dentro do listbox — ver PATCHES.md#command-listbox-children
+    // Dívida ANTIGA: o divisor virou `aria-hidden` e a mensagem de vazio saiu
+    // do listbox, então o que sustentava a exceção já não está aqui. Religar a
+    // regra é medição de navegador, não conserto de markup — ver
+    // PATCHES.md#command-listbox-children.
     a11y: {
       config: {
         rules: [{ id: 'aria-required-children', enabled: false }],
@@ -66,7 +69,6 @@ export const WithShortcuts: Story = {
       <Command>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>
-          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           <CommandGroup heading="Componentes">
             <CommandItem value="button">
               <LayoutIcon />
@@ -85,6 +87,7 @@ export const WithShortcuts: Story = {
             </CommandItem>
           </CommandGroup>
         </CommandList>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
       </Command>
     </div>
   ),
@@ -172,7 +175,6 @@ function CommandPaletteDemo() {
         <Command>
           <CommandInput placeholder="Buscar componente..." />
           <CommandList>
-            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
             <CommandGroup heading="Componentes">
               <CommandItem value="button" onSelect={() => setOpen(false)}>
                 <LayoutIcon />
@@ -191,6 +193,7 @@ function CommandPaletteDemo() {
               </CommandItem>
             </CommandGroup>
           </CommandList>
+          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
         </Command>
       </CommandDialog>
     </div>

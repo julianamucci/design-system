@@ -31,8 +31,13 @@ ${parts.map((part) => `  ${part},`).join('\n')}
 }
 
 /**
- * Forma canônica: busca, lista, dois grupos e o divisor entre eles.
- * Serve o Playground e cascateia como padrão dos arquivos de estados e
+ * Forma canônica: busca, lista com dois grupos e o divisor entre eles, e a
+ * mensagem de vazio IRMÃ da lista.
+ *
+ * O lugar da mensagem não é detalhe de layout: ela é a região viva que anuncia
+ * a busca sem resultado, e `role="status"` não é filho permitido de
+ * `role="listbox"`. Ensinar o snippet com ela dentro da lista seria ensinar o
+ * defeito. Serve o Playground e cascateia como padrão dos arquivos de estados e
  * composições.
  */
 export function commandSource(
@@ -63,7 +68,6 @@ ${EXECUTAR}`,
     `<Command${props}>
   <CommandInput placeholder="${placeholder}" />
   <CommandList>
-    <CommandEmpty>${emptyMessage}</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button" onSelect={() => executar('button')}>Button</CommandItem>
       <CommandItem value="input" onSelect={() => executar('input')}>Input</CommandItem>
@@ -73,11 +77,12 @@ ${EXECUTAR}`,
       <CommandItem value="cn" onSelect={() => executar('cn')}>cn()</CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>${emptyMessage}</CommandEmpty>
 </Command>`,
   );
 }
 
-/** Estado EmptyState: a frase de vazio ocupa o lugar da lista quando nada casa. */
+/** Estado EmptyState: a frase de vazio, irmã da lista, quando nada casa. */
 export function commandNoResultsSource(): string {
   return svelteSnippet(
     importing(
@@ -91,12 +96,12 @@ export function commandNoResultsSource(): string {
     `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button">Button</CommandItem>
       <CommandItem value="input">Input</CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
   );
 }
@@ -124,9 +129,8 @@ import LoaderCircle from '@lucide/svelte/icons/loader-circle';`,
       <span>Carregando resultados...</span>
     </div>
   </CommandLoading>
-  <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-  </CommandList>
+  <CommandList />
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
   );
 }
@@ -147,7 +151,6 @@ ${EXECUTAR}`,
     `<Command>
   <CommandInput placeholder="Buscar comando..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Arquivo">
       <CommandItem value="novo" onSelect={() => executar('novo')}>Novo</CommandItem>
       <CommandItem value="arquivar" disabled onSelect={() => executar('arquivar')}>
@@ -158,6 +161,7 @@ ${EXECUTAR}`,
       </CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
   );
 }
@@ -182,7 +186,6 @@ export function commandItemCheckedSource(): string {
     `<Command>
   <CommandInput placeholder="Buscar tema..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Aparência">
       <CommandItem value="claro" checked={true}>Claro</CommandItem>
       <CommandItem value="escuro" checked={false}>Escuro</CommandItem>
@@ -192,6 +195,7 @@ export function commandItemCheckedSource(): string {
       </CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
   );
 }
@@ -211,7 +215,6 @@ export function commandWithGroupsSource(): string {
     `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button">Button</CommandItem>
       <CommandItem value="input">Input</CommandItem>
@@ -225,6 +228,7 @@ export function commandWithGroupsSource(): string {
       <CommandItem value="twmerge">twMerge()</CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
   );
 }
@@ -249,7 +253,6 @@ export function commandWithShortcutsSource(): string {
     `<Command>
   <CommandInput placeholder="Buscar ação..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Ações">
       <CommandItem value="new-file">
         Novo arquivo
@@ -280,6 +283,7 @@ export function commandWithShortcutsSource(): string {
       </CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
   );
 }
@@ -302,7 +306,6 @@ import ExternalLink from '@lucide/svelte/icons/external-link';`,
     `<Command>
   <CommandInput placeholder="Buscar recurso..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Documentação">
       <CommandLinkItem href="/docs/button" value="docs-button">
         <BookOpen aria-hidden="true" />
@@ -329,6 +332,7 @@ import ExternalLink from '@lucide/svelte/icons/external-link';`,
       </CommandLinkItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`,
   );
 }
@@ -398,7 +402,6 @@ $effect(() => {
 >
   <CommandInput placeholder="Buscar comando ou ação..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Páginas">
       <CommandItem value="dashboard" onSelect={() => executar('dashboard')}>
         <LayoutDashboard aria-hidden="true" />
@@ -423,6 +426,7 @@ $effect(() => {
       </CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </CommandDialog>`,
   );
 }

@@ -142,7 +142,6 @@ import uiTranslations from '@/i18n/ui.json';
   const codeInline = `<Command.Root>
   <Command.Input placeholder="Buscar componente..." />
   <Command.List>
-    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
     <Command.Group heading="Componentes">
       <Command.Item value="button">Button</Command.Item>
       <Command.Item value="input">Input</Command.Item>
@@ -152,6 +151,7 @@ import uiTranslations from '@/i18n/ui.json';
       <Command.Item value="separator">Separator</Command.Item>
     </Command.Group>
   </Command.List>
+  <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
 </Command.Root>`;
 
   const codeWithLoading = `<script lang="ts">
@@ -176,13 +176,13 @@ import uiTranslations from '@/i18n/ui.json';
   {/if}
 
   <Command.List>
-    <Command.Empty>Nenhum resultado.</Command.Empty>
     {#if !loading}
       <Command.Group heading="Resultados">
         <Command.Item value="item1">Item 1</Command.Item>
       </Command.Group>
     {/if}
   </Command.List>
+  <Command.Empty>Nenhum resultado.</Command.Empty>
 </Command.Root>`;
 
   const codePalette = `<script lang="ts">
@@ -210,7 +210,6 @@ import uiTranslations from '@/i18n/ui.json';
 <Command.Dialog bind:open title="Command Palette" description="Busque por um comando...">
   <Command.Input placeholder="Buscar comando ou ação..." />
   <Command.List>
-    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
     <Command.Group heading="Páginas">
       <Command.Item value="dashboard" onSelect={() => { open = false; }}>
         Dashboard
@@ -218,23 +217,23 @@ import uiTranslations from '@/i18n/ui.json';
       </Command.Item>
     </Command.Group>
   </Command.List>
+  <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
 </Command.Dialog>`;
 
   const codeVariantInline = `<Command.Root>
   <Command.Input placeholder="Buscar componente..." />
   <Command.List>
-    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
     <Command.Group heading="Componentes">
       <Command.Item value="button">Button</Command.Item>
       <Command.Item value="input">Input</Command.Item>
     </Command.Group>
   </Command.List>
+  <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
 </Command.Root>`;
 
   const codeVariantPalette = `<Command.Dialog bind:open title="Command Palette" description="Busque por um comando...">
   <Command.Input placeholder="Buscar comando ou ação..." />
   <Command.List>
-    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
     <Command.Group heading="Ações">
       <Command.Item value="settings" onSelect={() => { open = false; }}>
         Configurações
@@ -242,6 +241,7 @@ import uiTranslations from '@/i18n/ui.json';
       </Command.Item>
     </Command.Group>
   </Command.List>
+  <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
 </Command.Dialog>`;
 
   const codeCustomizationTokens = `/* Em globals.css — customizar tokens do Command */
@@ -309,7 +309,6 @@ interface CommandLoadingProps {
   const codeCompWithGroups = `<Command.Root>
   <Command.Input placeholder="Buscar componente..." />
   <Command.List>
-    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
     <Command.Group heading="Componentes">
       <Command.Item value="button">Button</Command.Item>
       <Command.Item value="input">Input</Command.Item>
@@ -323,6 +322,7 @@ interface CommandLoadingProps {
       <Command.Item value="twmerge">twMerge()</Command.Item>
     </Command.Group>
   </Command.List>
+  <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
 </Command.Root>`;
 
 </script>
@@ -348,7 +348,6 @@ interface CommandLoadingProps {
           <Command.Root>
             <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
             <Command.List>
-              <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
               <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
                 <Command.Item value="button" onSelect={() => track('command_item_select', { label: 'button', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemButton')}</Command.Item>
                 <Command.Item value="input" onSelect={() => track('command_item_select', { label: 'input', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemInput')}</Command.Item>
@@ -358,6 +357,7 @@ interface CommandLoadingProps {
                 <Command.Item value="separator" onSelect={() => track('command_item_select', { label: 'separator', group: 'utils', pattern: 'inline' })}>{$tStore('demonstration.labels.itemSeparator')}</Command.Item>
               </Command.Group>
             </Command.List>
+            <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
           </Command.Root>
         </div>
       </div>
@@ -378,9 +378,8 @@ interface CommandLoadingProps {
                 <span>Carregando resultados...</span>
               </div>
             </Command.Loading>
-            <Command.List>
-              <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
-            </Command.List>
+            <Command.List />
+            <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
           </Command.Root>
         </div>
       </div>
@@ -405,7 +404,6 @@ interface CommandLoadingProps {
         <Command.Dialog bind:open={paletteOpen} title={$tStore('demonstration.labels.dialogTitle')} description={$tStore('demonstration.labels.dialogDescription')}>
           <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
           <Command.List>
-            <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
             <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
               <Command.Item value="dashboard" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'dashboard', group: 'components', pattern: 'palette' }); }}>
                 <LayoutDashboard aria-hidden="true" />
@@ -430,6 +428,7 @@ interface CommandLoadingProps {
               </Command.Item>
             </Command.Group>
           </Command.List>
+          <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
         </Command.Dialog>
       </div>
 
@@ -530,11 +529,11 @@ interface CommandLoadingProps {
       <Command.Root>
         <Command.Input placeholder="Buscar..." />
         <Command.List>
-          <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
           <Command.Group heading="Componentes">
             <Command.Item value="button">Button</Command.Item>
           </Command.Group>
         </Command.List>
+        <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       </Command.Root>
     </div>
   {/snippet}
@@ -609,12 +608,12 @@ interface CommandLoadingProps {
       <Command.Root>
         <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
         <Command.List>
-          <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
           <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
             <Command.Item value="button">{$tStore('demonstration.labels.itemButton')}</Command.Item>
             <Command.Item value="input">{$tStore('demonstration.labels.itemInput')}</Command.Item>
           </Command.Group>
         </Command.List>
+        <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
       </Command.Root>
     </div>
   {/snippet}
@@ -632,7 +631,6 @@ interface CommandLoadingProps {
       <Command.Root>
         <Command.Input placeholder="Buscar componente..." />
         <Command.List>
-          <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
           <Command.Group heading="Componentes">
             <Command.Item value="button">Button</Command.Item>
             <Command.Item value="input">Input</Command.Item>
@@ -646,6 +644,7 @@ interface CommandLoadingProps {
             <Command.Item value="twmerge">twMerge()</Command.Item>
           </Command.Group>
         </Command.List>
+        <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
       </Command.Root>
     </div>
   {/snippet}

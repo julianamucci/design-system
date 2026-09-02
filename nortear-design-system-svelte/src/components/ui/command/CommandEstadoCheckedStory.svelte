@@ -6,7 +6,6 @@
   <Command.Root>
     <Command.Input placeholder="Buscar tema..." />
     <Command.List>
-      <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Aparência">
         <Command.Item value="claro" checked={true}>Claro</Command.Item>
         <Command.Item value="escuro" checked={false}>Escuro</Command.Item>
@@ -19,5 +18,6 @@
         </Command.Item>
       </Command.Group>
     </Command.List>
+    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
   </Command.Root>
 </div>
