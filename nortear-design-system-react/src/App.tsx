@@ -76,8 +76,8 @@ export default function App() {
     if (LazyComponent) {
       return (
         <Suspense fallback={
-          <div className="flex items-center justify-center h-64 nds-text-muted-foreground" aria-live="polite">
-            <span className="nds-animate-pulse text-sm">Carregando...</span>
+          <div className="nds-app-loading nds-text-muted-foreground" aria-live="polite">
+            <span className="nds-animate-pulse nds-text-caption">Carregando...</span>
           </div>
         }>
           <LazyComponent />
@@ -93,23 +93,21 @@ export default function App() {
     <SidebarProvider>
       <a
         href="#main-content"
-        className="sr-only nds-skip-link nds-focus-shadow-md nds-focus-ring-inset"
+        className="nds-skip-link nds-focus-shadow-md nds-focus-ring-inset"
       >
         Pular para conteúdo principal
       </a>
       <Sidebar>
-        <SidebarHeader className="h-16 px-6 border-b border-sidebar-border flex items-center">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center" aria-hidden="true">
-              <span className="text-primary-foreground">S</span>
-            </div>
-            <span className="font-semibold nds-text-3xl">Design System</span>
+        <SidebarHeader className="nds-app-sidebar-header">
+          <div className="nds-app-sidebar-logo nds-inline-center" aria-hidden="true">
+            <span className="nds-text-primary-foreground">S</span>
           </div>
+          <span className="nds-text-3xl">Design System</span>
         </SidebarHeader>
 
-        <SidebarContent className="p-4">
+        <SidebarContent className="nds-p-4">
           <nav aria-label="Navegação de componentes">
-            <div className="space-y-2">
+            <div className="nds-stack" data-spacing="sm">
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
@@ -117,28 +115,32 @@ export default function App() {
                     onClick={() => setCurrentPage('home')}
                     tooltip="Home"
                   >
-                    <Home className="h-4 w-4" aria-hidden="true" />
+                    <Home className="nds-icon" aria-hidden="true" />
                     <span>Home</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
 
-              <Accordion className="w-full">
+              <Accordion className="nds-w-full">
                 {componentCategories.map((category) => (
-                  <AccordionItem key={category.name} value={category.name} className="border-none">
-                    <AccordionTrigger className="py-2 px-2 nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground rounded-md [&[data-state=open]>svg]:rotate-90">
-                      <div className="flex items-center gap-2">
-                        <category.icon className="h-4 w-4" aria-hidden="true" />
+                  <AccordionItem key={category.name} value={category.name} className="nds-border-none">
+                    {/* Sem regra de rotação aqui: o AccordionTrigger já desenha o
+                        próprio chevron (`.nds-accordion-icon`), e quem o gira é
+                        `accordion.css`. A variante que estava neste ponto mirava
+                        um `> svg` que o gatilho nunca teve nesta posição. */}
+                    <AccordionTrigger className="nds-py-2 nds-px-2 nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground nds-rounded-md">
+                      <span className="nds-cluster" data-spacing="sm">
+                        <category.icon className="nds-icon" aria-hidden="true" />
                         <span>{category.name}</span>
-                      </div>
+                      </span>
                     </AccordionTrigger>
-                    <AccordionContent className="pb-0">
-                      <div className="ml-6 p-1 space-y-1">
+                    <AccordionContent className="nds-pb-0">
+                      <div className="nds-ml-6 nds-p-1 nds-stack" data-spacing="xs">
                         {category.items.map((item) => (
                           <Button
                             key={item.path}
                             variant={currentPage === item.path ? 'secondary' : 'ghost'}
-                            className="w-full justify-start h-7 text-sm"
+                            className="nds-w-full nds-text-left nds-text-caption"
                             onClick={() => setCurrentPage(item.path)}
                           >
                             {item.name}
@@ -150,9 +152,9 @@ export default function App() {
                 ))}
               </Accordion>
 
-              <div className="mt-4 pt-4 border-t border-sidebar-border">
-                <div className="flex items-center justify-between px-2 py-1">
-                  <span className="text-sm text-sidebar-foreground">Theme</span>
+              <div className="nds-mt-4 nds-pt-4 nds-border-t">
+                <div className="nds-cluster nds-px-2 nds-py-1" data-justify="between">
+                  <span className="nds-text-caption">Theme</span>
                   <ThemeSelector
                     currentTheme={currentTheme}
                     onThemeChange={setCurrentTheme}
@@ -164,26 +166,27 @@ export default function App() {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset className="flex flex-col">
-        <header className="h-16 border-b border-border bg-background flex items-center justify-end px-6">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsDark(!isDark)}
-              className="h-8 w-8 p-0"
-              aria-label={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Button>
-          </div>
+      <SidebarInset className="nds-app-main">
+        <header className="nds-app-header">
+          {/* Empurra a ação para a direita: o header da shell alinha à esquerda,
+              e este sandbox só tem o alternador de modo. */}
+          <span className="nds-app-header-title" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsDark(!isDark)}
+            className="nds-inline-center"
+            aria-label={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
+          >
+            {isDark ? (
+              <Sun className="nds-icon" aria-hidden="true" />
+            ) : (
+              <Moon className="nds-icon" aria-hidden="true" />
+            )}
+          </Button>
         </header>
 
-        <main id="main-content" className="flex-1 overflow-auto">
+        <main id="main-content" className="nds-app-content">
           {renderCurrentPage()}
         </main>
       </SidebarInset>
