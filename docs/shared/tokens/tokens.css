@@ -290,6 +290,29 @@
   /* Topo da escada: nada pode cobrir aviso nem atalho de navegação. */
   --z-toast: 1080;
 
+  /* Véu dos modais — a COR da camada que escurece a página atrás de dialog,
+     sheet, alert-dialog e drawer. Vizinho de `--z-modal-backdrop` de propósito:
+     um é a camada, o outro é a tinta dela.
+
+     Fica AQUI, e não em `themes/*.css`, porque hoje o véu é igual nos dois
+     modos — nenhuma das folhas de overlay tem bloco `.dark`. Promovê-lo a token
+     de tema o tornaria o 43º da lista que `16-novo-tema.md` cobra nos DOIS
+     modos, em Default, Warm e Cold, mais registro em `docs/shared/testing/cor.ts`.
+     Se um dia o modo escuro precisar de véu próprio, é essa promoção que ele
+     pede — e ela é decisão de arquitetura de tema por si, não consequência
+     desta.
+
+     Trio HSL cru, como toda cor do sistema: o alfa é do USO
+     (`hsl(var(--overlay) / 0.8)`), nunca do token. Duas razões medidas — nenhum
+     token de cor do projeto carrega `hsl()` completo (são 72 trios só no
+     default.css), e `build-figma-variables.mjs` só reconhece cor em trio cru:
+     valor com barra de alfa não casa o regex e sairia do espelho do Figma em
+     silêncio, que é exatamente a dívida que o cabeçalho deste arquivo conta.
+
+     O 0.8 é o véu padrão dos modais, e vem de dois dos três já concordarem
+     nele; o dialog estava em 0.1 por deriva, e mal escurecia o fundo. */
+  --overlay: 0 0% 0%;
+
   /* Sidebar — os oito também são cor, e vivem em `themes/*.css`. */
 }
 

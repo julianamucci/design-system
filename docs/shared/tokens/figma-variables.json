@@ -14,6 +14,21 @@
   "Cor": {
     "modes": {
       "default-light": {
+        "outros": {
+          "overlay": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0,
+                0
+              ],
+              "alpha": 1,
+              "hex": "#000000"
+            }
+          }
+        },
         "superficie": {
           "background": {
             "$type": "color",
@@ -719,6 +734,21 @@
         }
       },
       "default-dark": {
+        "outros": {
+          "overlay": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0,
+                0
+              ],
+              "alpha": 1,
+              "hex": "#000000"
+            }
+          }
+        },
         "superficie": {
           "background": {
             "$type": "color",
@@ -1424,6 +1454,21 @@
         }
       },
       "warm-light": {
+        "outros": {
+          "overlay": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0,
+                0
+              ],
+              "alpha": 1,
+              "hex": "#000000"
+            }
+          }
+        },
         "superficie": {
           "background": {
             "$type": "color",
@@ -2129,6 +2174,21 @@
         }
       },
       "warm-dark": {
+        "outros": {
+          "overlay": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0,
+                0
+              ],
+              "alpha": 1,
+              "hex": "#000000"
+            }
+          }
+        },
         "superficie": {
           "background": {
             "$type": "color",
@@ -2834,6 +2894,21 @@
         }
       },
       "cold-light": {
+        "outros": {
+          "overlay": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0,
+                0
+              ],
+              "alpha": 1,
+              "hex": "#000000"
+            }
+          }
+        },
         "superficie": {
           "background": {
             "$type": "color",
@@ -3539,6 +3614,21 @@
         }
       },
       "cold-dark": {
+        "outros": {
+          "overlay": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0,
+                0
+              ],
+              "alpha": 1,
+              "hex": "#000000"
+            }
+          }
+        },
         "superficie": {
           "background": {
             "$type": "color",
@@ -4698,10 +4788,6 @@
           "$type": "number",
           "$value": 14
         },
-        "radius-card": {
-          "$type": "number",
-          "$value": 18
-        },
         "radius-badge": {
           "$type": "number",
           "$value": 9999
@@ -4808,7 +4894,7 @@
         },
         "radius-card": {
           "$type": "number",
-          "$value": 4
+          "$value": 0
         },
         "radius-badge": {
           "$type": "number",
