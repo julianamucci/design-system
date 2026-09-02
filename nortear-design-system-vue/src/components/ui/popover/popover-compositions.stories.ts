@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import {
   Popover,
   PopoverContent,
@@ -19,6 +19,7 @@ import {
   popoverFilterSource,
   popoverPreferenciasSource,
   colorPopoverSelectorSource,
+  popoverAboveSource,
 } from './popover.source';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
@@ -37,7 +38,7 @@ const meta = {
       source: { transform: popoverEditarPerfilSource },
       description: {
         component:
-          'Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca "Mais" ou "Clique aqui".',
+          'Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca "Mais" ou "Clique aqui". O lado de abertura entra aqui pelo mesmo motivo: é arranjo do painel, não estado dele.',
       },
     },
   },
@@ -69,7 +70,7 @@ export const EditProfile: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 340px;">
+      <div class="nds-min-h-90" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
@@ -119,7 +120,7 @@ export const TableFilter: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 320px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Filtros</Button>
@@ -188,7 +189,7 @@ export const ColorPicker: Story = {
     // dinâmico: classe montada em runtime não é auditável — o verificador de
     // classe morta lê a expressão como se fosse o nome da classe.
     template: `
-      <div style="contain: layout; min-height: 300px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Escolher cor da etiqueta</Button>
@@ -255,7 +256,7 @@ export const QuickSettings: Story = {
       return { notificacoes, escuro, compacto };
     },
     template: `
-      <div style="contain: layout; min-height: 320px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Configuracoes rápidas</Button>
@@ -303,6 +304,65 @@ export const QuickSettings: Story = {
       // A que já estava marcada não se mexe: são preferências, não um grupo de
       // escolha única.
       await expect(notificacoes).toBeChecked();
+    });
+  },
+};
+
+export const SideTop: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      // O painel muda de lado e ganha folga própria: `side` e `side-offset` não
+      // aparecem em nenhuma outra story do arquivo.
+      source: { transform: popoverAboveSource },
+      description: {
+        story:
+          'Posicionamento preferido side="top". Sem espaço acima, o painel faz auto-flip para baixo.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <div class="nds-stack nds-min-h-100" data-split="last" data-align="center" style="contain: layout">
+        <Popover :default-open="true">
+          <PopoverTrigger as-child>
+            <Button variant="outline">Abrir acima</Button>
+          </PopoverTrigger>
+          <PopoverContent side="top" align="center" :side-offset="12">
+            <PopoverHeader>
+              <PopoverTitle>Ancorado acima</PopoverTitle>
+              <PopoverDescription>Sem espaço acima, o painel vira para baixo sozinho.</PopoverDescription>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: /Abrir acima/i });
+
+    await step('O lado pedido no template chega ao posicionamento', async () => {
+      const dialog = await waitForPortal('dialog');
+      // `top` ou `bottom`, nunca um lado do outro eixo: o auto-flip troca de
+      // LADO por colisão, jamais de eixo.
+      await expect(['top', 'bottom']).toContain(dialog.getAttribute('data-side'));
+    });
+
+    await step('E o sideOffset separa painel e gatilho pela medida pedida', async () => {
+      // Dentro de waitFor: o posicionador da lib nasce com um transform de
+      // reserva e só mede a posição num quadro seguinte. Medir antes disso lê o
+      // painel fora da tela, e a falha aponta para o offset em vez do relógio.
+      await waitFor(() => {
+        const dialog = panel()!;
+        const r1 = trigger.getBoundingClientRect();
+        const r2 = dialog.getBoundingClientRect();
+        const distancia =
+          dialog.getAttribute('data-side') === 'top' ? r1.top - r2.bottom : r2.top - r1.bottom;
+        // 12px pedidos, com 1px de folga para arredondamento sub-pixel.
+        expect(Math.abs(distancia - 12)).toBeLessThanOrEqual(1);
+      }, { timeout: 2000 });
     });
   },
 };

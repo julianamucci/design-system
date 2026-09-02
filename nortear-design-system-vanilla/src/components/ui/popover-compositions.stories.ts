@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createPopover } from './popover';
-import { centralizar } from './popover.fixtures';
-import { popoverSource, popoverSourceForm } from './popover.source';
+import {
+  createPopover,
+  createPopoverDescription,
+  createPopoverTitle,
+} from './popover';
+import { centralizar, empilharCentrado, open, panel } from './popover.fixtures';
+import { popoverSource, popoverSourceForm, popoverSourceWith } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -18,7 +22,7 @@ const meta: Meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          'Composicoes reais do Popover: EditarPerfil (form inline), FiltroDeTabela (checkboxes + ação), SeletorDeCor (swatches) e ConfiguracoesRapidas (toggles via inputs). Demonstra uso prático em fluxos comuns de produto.',
+          'Composicoes reais do Popover: EditarPerfil (form inline), FiltroDeTabela (checkboxes + ação), SeletorDeCor (swatches) e ConfiguracoesRapidas (toggles via inputs), mais a story de lado de abertura — arranjo do painel, não estado dele. Demonstra uso prático em fluxos comuns de produto.',
       },
     },
   },
@@ -28,6 +32,8 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
 
 async function waitForOpen(): Promise<void> {
   await waitFor(() => {
@@ -51,13 +57,9 @@ export const EditProfile: Story = {
     form.dataset.spacing = 'sm';
     form.addEventListener('submit', (e) => e.preventDefault());
 
-    const title = document.createElement('h4');
-    title.className = 'nds-text-body nds-font-medium nds-leading-none';
-    title.textContent = 'Dados do perfil';
+    const title = createPopoverTitle({ text: 'Dados do perfil' });
 
-    const desc = document.createElement('p');
-    desc.className = 'nds-text-caption nds-text-muted-foreground';
-    desc.textContent = 'As mudanças são salvas ao confirmar.';
+    const desc = createPopoverDescription({ text: 'As mudanças são salvas ao confirmar.' });
 
     const nameRow = document.createElement('div');
     nameRow.className = 'nds-stack';
@@ -88,7 +90,7 @@ export const EditProfile: Story = {
       await waitForOpen();
       const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
       const ctx = within(panel!);
-      await expect(ctx.getByLabelText(/nome/i)).toHaveValue('Joana Silva');
+      await expect(ctx.getByLabelText('Nome')).toHaveValue('Joana Silva');
       await expect(ctx.getByLabelText(/email/i)).toHaveValue('joana@example.com');
     });
   },
@@ -102,9 +104,7 @@ export const TableFilter: Story = {
     content.className = 'nds-stack';
     content.dataset.spacing = 'xs';
 
-    const title = document.createElement('h4');
-    title.className = 'nds-text-body nds-font-medium nds-leading-none';
-    title.textContent = 'Filtrar por status';
+    const title = createPopoverTitle({ text: 'Filtrar por status' });
 
     content.appendChild(title);
 
@@ -145,7 +145,7 @@ export const TableFilter: Story = {
       await waitForOpen();
       const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
       const ctx = within(panel!);
-      await expect(ctx.getByLabelText(/ativo/i)).toBeChecked();
+      await expect(ctx.getByLabelText('Ativo')).toBeChecked();
       await expect(ctx.getByRole('button', { name: /aplicar/i })).toBeInTheDocument();
     });
   },
@@ -153,36 +153,35 @@ export const TableFilter: Story = {
 
 export const ColorPicker: Story = {
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Cor' });
+    const trigger = createButton({ variant: 'outline', label: 'Escolher cor da etiqueta' });
 
     const content = document.createElement('div');
     content.className = 'nds-stack';
     content.dataset.spacing = 'xs';
 
-    const title = document.createElement('h4');
-    title.className = 'nds-text-body nds-font-medium nds-leading-none';
-    title.textContent = 'Selecionar cor';
+    const title = createPopoverTitle({ text: 'Cor da etiqueta' });
 
     const grid = document.createElement('div');
     grid.className = 'nds-grid';
     grid.dataset.cols = '6';
     grid.dataset.spacing = 'xs';
 
+    // A cor sai de token do tema, nunca de hexadecimal cravado: trocar de marca
+    // reescreve a paleta sem tocar na story, e o painel continua legível no
+    // tema escuro. Mesma paleta e mesmos nomes das outras quatro stacks.
     const swatches = [
-      { name: 'Vermelho',  color: '#ef4444' },
-      { name: 'Laranja',   color: '#f97316' },
-      { name: 'Amarelo',   color: '#eab308' },
-      { name: 'Verde',     color: '#22c55e' },
-      { name: 'Azul',      color: '#3b82f6' },
-      { name: 'Roxo',      color: '#a855f7' },
+      { name: 'Primária',    className: 'nds-bg-primary'     },
+      { name: 'Secundária',  className: 'nds-bg-secondary'   },
+      { name: 'Sucesso',     className: 'nds-bg-success'     },
+      { name: 'Atenção',     className: 'nds-bg-warning'     },
+      { name: 'Informação',  className: 'nds-bg-info'        },
+      { name: 'Destrutiva',  className: 'nds-bg-destructive' },
     ];
 
     for (const s of swatches) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'nds-rounded-full nds-size-6';
-      btn.style.boxShadow = '0 0 0 1px rgb(0 0 0 / 0.1)';
-      btn.style.backgroundColor = s.color;
+      btn.className = `${SWATCH_CLASSES} ${s.className}`;
       btn.setAttribute('aria-label', s.name);
       grid.appendChild(btn);
     }
@@ -198,16 +197,16 @@ export const ColorPicker: Story = {
       await waitForOpen();
       const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
       const ctx = within(panel!);
-      await expect(ctx.getByRole('button', { name: /vermelho/i })).toBeInTheDocument();
-      await expect(ctx.getByRole('button', { name: /azul/i })).toBeInTheDocument();
+      await expect(ctx.getByRole('button', { name: 'Primária' })).toBeInTheDocument();
+      await expect(ctx.getByRole('button', { name: 'Destrutiva' })).toBeInTheDocument();
     });
     await step('Foco navega entre swatches via Tab', async () => {
       const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      const first = within(panel!).getByRole('button', { name: /vermelho/i });
+      const first = within(panel!).getByRole('button', { name: 'Primária' });
       first.focus();
       await expect(first).toHaveFocus();
       await userEvent.tab();
-      const second = within(panel!).getByRole('button', { name: /laranja/i });
+      const second = within(panel!).getByRole('button', { name: 'Secundária' });
       await expect(second).toHaveFocus();
     });
   },
@@ -221,9 +220,7 @@ export const QuickSettings: Story = {
     content.className = 'nds-stack';
     content.dataset.spacing = 'sm';
 
-    const title = document.createElement('h4');
-    title.className = 'nds-text-body nds-font-medium nds-leading-none';
-    title.textContent = 'Preferências rápidas';
+    const title = createPopoverTitle({ text: 'Preferências rápidas' });
     content.appendChild(title);
 
     const toggles = [
@@ -263,6 +260,58 @@ export const QuickSettings: Story = {
       await expect(ctx.getByLabelText(/notificações/i)).toBeChecked();
       await expect(ctx.getByLabelText(/modo escuro/i)).not.toBeChecked();
       await expect(ctx.getByLabelText(/modo compacto/i)).not.toBeChecked();
+    });
+  },
+};
+
+export const SideTop: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+    // Override de story: o lado é o assunto, e `side` não passa por control
+    // neste arquivo.
+    docs: {
+      source: { transform: popoverSourceWith({ side: 'top', triggerLabel: 'Abrir acima' }) },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'outline', label: 'Abrir acima' });
+
+    const content = document.createElement('div');
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'xs';
+    content.append(
+      createPopoverTitle({ text: 'Ancorado acima' }),
+      createPopoverDescription({ text: 'Sem espaço acima, o painel vira para baixo sozinho.' }),
+    );
+
+    const el = createPopover({ trigger, content, side: 'top' });
+    queueMicrotask(() => trigger.click());
+
+    // Espaço ACIMA do gatilho, senão o painel não cabe e o auto-flip o manda
+    // para baixo — a story mediria o recurso oposto ao que documenta. Vem da
+    // pilha (`margin-top: auto` no último filho) e de um degrau da escada, não
+    // de um padding cravado.
+    const w = empilharCentrado([el], 'nds-min-h-100');
+    w.dataset.split = 'last';
+    return w;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Abrir acima' });
+
+    await step('O painel é posicionado acima do gatilho', async () => {
+      const p = await open(trigger);
+      const rg = trigger.getBoundingClientRect();
+      const rp = p.getBoundingClientRect();
+      await expect(rp.bottom).toBeLessThanOrEqual(rg.top + 1);
+    });
+
+    await step('E continua alinhado ao gatilho no outro eixo', async () => {
+      const rg = trigger.getBoundingClientRect();
+      const rp = panel()!.getBoundingClientRect();
+      const centerTrigger = rg.left + rg.width / 2;
+      const centerPanel = rp.left + rp.width / 2;
+      await expect(Math.abs(centerTrigger - centerPanel)).toBeLessThanOrEqual(2);
     });
   },
 };

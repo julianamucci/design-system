@@ -39,7 +39,7 @@ const meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          "Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca \"Mais\" ou \"Clique aqui\".",
+          "Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca \"Mais\" ou \"Clique aqui\". O lado de abertura entra aqui pelo mesmo motivo: é arranjo do painel, não estado dele.",
       },
     },
   },
@@ -48,9 +48,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** A altura mínima sai da escada de utilitárias, não de um valor cravado:
+ *  inline vence a folha, e a medida sairia do tema e da densidade junto. */
+const wrapperClass = "nds-min-h-90";
+
+/** A story do lado de cima precisa de espaço ACIMA do gatilho, senão o painel
+ *  colide com o topo e o auto-flip o manda para baixo — medindo o oposto do que
+ *  ela documenta. A pilha empurra o gatilho para o fim do wrapper por
+ *  `margin-top: auto`, no lugar de um padding cravado. */
+const sideTopClass = "nds-stack nds-min-h-100";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 340,
   position: "relative",
 };
 
@@ -73,7 +81,7 @@ export const EditProfile: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Editar perfil</Button>
@@ -124,7 +132,7 @@ export const TableFilter: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Filtros</Button>
@@ -188,7 +196,7 @@ export const ColorPicker: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Escolher cor da etiqueta</Button>
@@ -247,7 +255,7 @@ export const QuickSettings: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Configuracoes rápidas</Button>
@@ -314,7 +322,7 @@ export const SideTop: Story = {
     },
   },
   render: () => (
-    <div style={{ ...wrapperStyle, minHeight: 380, paddingTop: 240 }}>
+    <div className={sideTopClass} data-split="last" data-align="center" style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Abrir acima</Button>

@@ -31,7 +31,8 @@ const meta: Meta = {
         component:
           'Formulário curto, filtros combináveis, paleta restrita e preferências ' +
           'booleanas. Todo gatilho nomeia a ação e o objeto — nunca "Mais" ou ' +
-          '"Clique aqui".',
+          '"Clique aqui". O lado de abertura entra aqui pelo mesmo motivo: é ' +
+          'arranjo do painel, não estado dele.',
       },
     },
   },

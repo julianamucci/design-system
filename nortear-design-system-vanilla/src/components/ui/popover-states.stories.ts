@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createPopover } from './popover';
+import {
+  createPopover,
+  createPopoverDescription,
+  createPopoverTitle,
+} from './popover';
 import { open, empilharCentrado, panel } from './popover.fixtures';
 import { popoverSource, popoverSourceActions, popoverSourceWith } from './popover.source';
 import { createButton } from './button';
@@ -17,7 +21,7 @@ const meta: Meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          'Estados do Popover: fechado (painel fora do DOM), aberto, ancorado acima, ' +
+          'Estados do Popover: fechado (painel fora do DOM), aberto, ' +
           'controlado por fora e com foco dentro do painel. Fechado o painel não é um ' +
           'elemento escondido — é um elemento que não existe.',
       },
@@ -35,17 +39,13 @@ function buildSimpleContent(text: string): HTMLElement {
   c.className = 'nds-stack';
   c.dataset.spacing = 'xs';
 
-  const title = document.createElement('h4');
-  title.className = 'nds-popover-title';
-  title.dataset.slot = 'popover-title';
-  title.textContent = 'Configuracoes de exibição';
-
-  const p = document.createElement('p');
-  p.className = 'nds-popover-description';
-  p.dataset.slot = 'popover-description';
-  p.textContent = text;
-
-  c.append(title, p);
+  // As sub-fábricas emitem a classe E o `data-slot` que o conteúdo
+  // compartilhado documenta — escrever os dois à mão era o que fazia o contrato
+  // divergir quando um dos lados mudava.
+  c.append(
+    createPopoverTitle({ text: 'Configuracoes de exibição' }),
+    createPopoverDescription({ text }),
+  );
   return c;
 }
 
@@ -105,50 +105,6 @@ export const Open: Story = {
       const id = panel()!.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)?.textContent).toMatch(/Configuracoes de exibição/);
-    });
-  },
-};
-
-export const SideTop: Story = {
-  parameters: {
-    covers: ['visual.item4'],
-    // Override de story: o lado é o assunto, e `side` não passa por control
-    // neste arquivo.
-    docs: {
-      source: { transform: popoverSourceWith({ side: 'top', triggerLabel: 'Abrir acima' }) },
-    },
-  },
-  render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Abrir acima' });
-    const el = createPopover({
-      trigger,
-      content: buildSimpleContent('Sem espaço acima, o painel vira para baixo sozinho.'),
-      side: 'top',
-    });
-    queueMicrotask(() => trigger.click());
-    const w = empilharCentrado([el]);
-    // Espaço acima do gatilho, senão o painel não caberia e a story mediria o
-    // recurso oposto ao que documenta.
-    w.style.paddingTop = 'var(--spacing-8)';
-    return w;
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /abrir acima/i });
-
-    await step('O painel é posicionado acima do gatilho', async () => {
-      const p = await open(trigger);
-      const rg = trigger.getBoundingClientRect();
-      const rp = p.getBoundingClientRect();
-      await expect(rp.bottom).toBeLessThanOrEqual(rg.top + 1);
-    });
-
-    await step('E continua alinhado ao gatilho no outro eixo', async () => {
-      const rg = trigger.getBoundingClientRect();
-      const rp = panel()!.getBoundingClientRect();
-      const centerTrigger = rg.left + rg.width / 2;
-      const centerPanel = rp.left + rp.width / 2;
-      await expect(Math.abs(centerTrigger - centerPanel)).toBeLessThanOrEqual(2);
     });
   },
 };

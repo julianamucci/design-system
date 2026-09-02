@@ -14,7 +14,6 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { panel } from './popover.fixtures';
 import {
   popoverOpenSource,
-  popoverAboveSource,
   popoverControlledSource,
   popoverClosedSource,
   popoverModalSource,
@@ -32,7 +31,7 @@ const meta = {
       source: { transform: popoverClosedSource },
       description: {
         component:
-          'Estados canônicos do Popover: Fechado (painel fora do DOM), Aberto, ancorado acima, Controlado por fora e Modal (focus trap + scroll lock).',
+          'Estados canônicos do Popover: Fechado (painel fora do DOM), Aberto, Controlado por fora e Modal (focus trap + scroll lock).',
       },
     },
   },
@@ -118,7 +117,7 @@ export const Open: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir popover</Button>
@@ -147,65 +146,6 @@ export const Open: Story = {
   },
 };
 
-export const SideTop: Story = {
-  parameters: {
-    covers: ['visual.item4'],
-    docs: {
-      // O painel muda de lado e ganha folga própria: `side` e `side-offset` não
-      // aparecem em nenhuma outra story do arquivo.
-      source: { transform: popoverAboveSource },
-      description: {
-        story:
-          'Posicionamento preferido side="top". Sem espaço acima, o painel faz auto-flip para baixo.',
-      },
-    },
-  },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <div style="contain: layout; min-height: 320px; padding-top: 200px;">
-        <Popover :default-open="true">
-          <PopoverTrigger as-child>
-            <Button variant="outline">Abrir acima</Button>
-          </PopoverTrigger>
-          <PopoverContent side="top" align="center" :side-offset="12">
-            <PopoverHeader>
-              <PopoverTitle>Ancorado acima</PopoverTitle>
-              <PopoverDescription>Sem espaço acima, o painel vira para baixo sozinho.</PopoverDescription>
-            </PopoverHeader>
-          </PopoverContent>
-        </Popover>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /Abrir acima/i });
-
-    await step('O lado pedido no template chega ao posicionamento', async () => {
-      const dialog = await waitForPortal('dialog');
-      // `top` ou `bottom`, nunca um lado do outro eixo: o auto-flip troca de
-      // LADO por colisão, jamais de eixo.
-      await expect(['top', 'bottom']).toContain(dialog.getAttribute('data-side'));
-    });
-
-    await step('E o sideOffset separa painel e gatilho pela medida pedida', async () => {
-      // Dentro de waitFor: o posicionador da lib nasce com um transform de
-      // reserva e só mede a posição num quadro seguinte. Medir antes disso lê o
-      // painel fora da tela, e a falha aponta para o offset em vez do relógio.
-      await waitFor(() => {
-        const dialog = panel()!;
-        const r1 = trigger.getBoundingClientRect();
-        const r2 = dialog.getBoundingClientRect();
-        const distancia =
-          dialog.getAttribute('data-side') === 'top' ? r1.top - r2.bottom : r2.top - r1.bottom;
-        // 12px pedidos, com 1px de folga para arredondamento sub-pixel.
-        expect(Math.abs(distancia - 12)).toBeLessThanOrEqual(1);
-      }, { timeout: 2000 });
-    });
-  },
-};
-
 export const Controlled: Story = {
   parameters: {
     docs: {
@@ -227,7 +167,7 @@ export const Controlled: Story = {
     // dispensa por clique fora antes do próprio clique, e o par fechar+abrir
     // reabriria o painel no mesmo gesto.
     template: `
-      <div class="nds-stack" data-spacing="sm" style="contain: layout; min-height: 300px;">
+      <div class="nds-stack nds-min-h-80" data-spacing="sm" style="contain: layout">
         <div class="nds-cluster" data-spacing="md">
           <Button @click="open = true">Abrir externamente</Button>
           <Button variant="outline" @click="open = false">Fechar externamente</Button>
@@ -289,7 +229,7 @@ export const Modal: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Popover :default-open="true" :modal="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir modal</Button>
@@ -305,10 +245,16 @@ export const Modal: Story = {
       await expect(dialog).toBeVisible();
     });
 
-    await step('Modal prende o foco, e ainda assim não anuncia aria-modal', async () => {
-      // `modal` aqui é bloqueio de rolagem e prisão de foco — não é o contrato
-      // de Dialog. `aria-modal` faria o leitor de tela esconder o resto da
-      // página, e um popover continua sendo conteúdo AO LADO, não no lugar.
+    await step('O foco entra no painel, e o painel não anuncia aria-modal', async () => {
+      // O nome deste passo era "Modal prende o foco", e a asserção abaixo NÃO
+      // media isso: o foco está dentro do painel também no modo não-modal, em
+      // todas as stacks — é o contrato `functional.item1`. Ela passaria com ou
+      // sem prisão, que é a forma exata da asserção que guarda o bug. Nesta
+      // stack a prisão EXISTE (`PopoverContentModal` liga `trap-focus`), mas
+      // quem prova isso é apertar Tab e ver onde o foco pousa — ver o item de
+      // suíte de navegador no diário.
+      //
+      // `aria-modal` continua ausente de propósito, e essa asserção TEM dentes.
       const dialog = panel()!;
       await expect(dialog).not.toHaveAttribute('aria-modal');
       await waitFor(() => {

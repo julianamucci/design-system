@@ -24,7 +24,7 @@ const meta: Meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          'Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca "Mais" ou "Clique aqui".',
+          'Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca "Mais" ou "Clique aqui". O lado de abertura entra aqui pelo mesmo motivo: é arranjo do painel, não estado dele.',
       },
     },
   },
@@ -193,6 +193,56 @@ export const QuickSettings: Story = {
       // A que já estava marcada não se mexe: são preferências, não um grupo de
       // escolha única.
       await expect(notificacoes).toBeChecked();
+    });
+  },
+};
+
+export const SideTop: Story = {
+  name: 'Side top (auto-flip)',
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      description: {
+        story:
+          'Posicionamento preferido `side="top"`. Se não houver espaço, o popover faz auto-flip para outra direção.',
+      },
+    },
+  },
+  args: {
+    defaultOpen: true,
+    side: 'top',
+    sideOffset: 12,
+    variant: 'withTitle',
+    triggerLabel: 'Abrir acima',
+    title: 'Ancorado acima',
+    description: 'Sem espaço acima, o painel vira para baixo sozinho.',
+    saveLabel: 'Salvar',
+    cancelLabel: 'Cancelar',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: /Abrir acima/i });
+
+    await step('O lado pedido chega ao posicionamento', async () => {
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
+      // `top` ou `bottom`, nunca um lado do outro eixo: o auto-flip troca de
+      // LADO por colisão, jamais de eixo.
+      await expect(['top', 'bottom']).toContain(dialog.getAttribute('data-side'));
+    });
+
+    await step('E o sideOffset separa painel e gatilho pela medida pedida', async () => {
+      // Dentro de waitFor: o posicionador da lib nasce com um transform de
+      // reserva e só mede a posição num quadro seguinte. Medir antes disso lê o
+      // painel fora do lugar, e a falha aponta para o offset em vez do relógio.
+      await waitFor(() => {
+        const dialog = panel()!;
+        const r1 = trigger.getBoundingClientRect();
+        const r2 = dialog.getBoundingClientRect();
+        const distancia =
+          dialog.getAttribute('data-side') === 'top' ? r1.top - r2.bottom : r2.top - r1.bottom;
+        // 12px pedidos, com 1px de folga para arredondamento sub-pixel.
+        expect(Math.abs(distancia - 12)).toBeLessThanOrEqual(1);
+      }, { timeout: 2000 });
     });
   },
 };
