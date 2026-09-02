@@ -144,18 +144,23 @@
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>
           {:else if variant === 'withShortcuts'}
+            <!--
+              Mesmos itens e mesmos atalhos das outras quatro stacks. Antes eram
+              Salvar/Duplicar/Excluir com ⌘S, ⌘D e ⌫ — exemplo que não aparecia
+              em stack nenhuma, nem na docs page desta.
+            -->
             <DropdownMenuItem>
-              Salvar
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+              Desfazer
+              <DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              Duplicar
-              <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
+              Copiar
+              <DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
-              Excluir
-              <DropdownMenuShortcut>⌫</DropdownMenuShortcut>
+            <DropdownMenuItem>
+              Colar
+              <DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
             </DropdownMenuItem>
           {:else if variant === 'itemDisabled'}
             <DropdownMenuItem>Editar</DropdownMenuItem>

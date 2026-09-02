@@ -171,17 +171,17 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   withShortcuts: {
     names: ['DropdownMenuItem', 'DropdownMenuSeparator', 'DropdownMenuShortcut'],
     markup: `<DropdownMenuItem>
-  Salvar
-  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+  Desfazer
+  <DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
 </DropdownMenuItem>
 <DropdownMenuItem>
-  Duplicar
-  <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
+  Copiar
+  <DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
 </DropdownMenuItem>
 <DropdownMenuSeparator />
-<DropdownMenuItem variant="destructive">
-  Excluir
-  <DropdownMenuShortcut>⌫</DropdownMenuShortcut>
+<DropdownMenuItem>
+  Colar
+  <DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
 </DropdownMenuItem>`,
   },
 
