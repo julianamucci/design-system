@@ -136,14 +136,14 @@ O que **muda** por framework é como o preview chega ao container: `TemplateRef`
 
 | Arquivo | Presença | Nota |
 |---|---|---|
-| `package.json` | 5/5 | scripts `storybook`, `build-storybook`, `test`, `lint`, `chromatic`. **Porta única** — 6006/6007/6008/6009/6010 estão tomadas |
+| `package.json` | 5/5 | scripts `build` (só checagem de tipo — **sem bundler**), `storybook`, `build-storybook`, `test`, `lint`, `chromatic`. Sem `dev` e sem `preview`: não há sandbox. **Porta única** — 6006/6007/6008/6009/6010 estão tomadas |
 | `tsconfig.json` | 5/5 | aliases `@/*` e `@shared/*` |
 | `vite.config.ts` | 5/5 | os mesmos aliases |
 | `chromatic.config.json` | 5/5 | regressão visual |
 | `.env.example` + `.development` + `.production` | 5/5 | `.example` é o único versionado com valor |
 | `eslint.config.js` | **4/5** | falta no angular, **que declara `"lint": "eslint ."` no `package.json`** — script quebrado |
 | `vercel.json` | **4/5** | falta no angular; é a configuração de publicação |
-| `index.html` | **4/5** | falta no angular, e ali é justificado: é a entrada do sandbox, e o angular não tem sandbox |
+| `index.html` | **0/5** | **não existe mais em stack nenhuma.** Era a entrada do sandbox de aplicação, removido das quatro stacks de navegador em 2026-09-02 — o angular nunca teve, e era o modelo. Stack nova não cria `index.html`, `src/App.*`, `src/main.*`, nem script `dev`/`preview`: o artefato é o Storybook |
 
 O alias `@shared` precisa existir em **todos** os lugares onde há resolução de módulo — `tsconfig`, `vite.config` e, se o framework montar a própria config de Vite, também ali. Alias declarado em dois dos três lugares falha só em um dos três comandos, e sempre no menos usado.
 

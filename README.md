@@ -18,7 +18,7 @@ Um design system multi-stack production-ready com **4 implementações sincroniz
 
 Quando uma equipe ou produto precisa entregar a mesma marca em **mais de uma stack** (React + Vue, ou Svelte + Vanilla pra um landing), normalmente cada time mantém seu próprio fork — divergindo em comportamento, tokens, a11y. O Nortear elimina esse drift mantendo:
 
-- **Tokens CSS compartilhados** em `docs/shared/tokens/` consumidos pelos 4 stacks
+- **Tokens CSS compartilhados** em `docs/shared/tokens/` consumidos pelas 5 stacks
 - **Temas** (Default + Densidades + Fontes) em `docs/shared/themes/` aplicáveis cross-stack
 - **Conteúdo trilíngue** em `docs/shared/content/<slug>/translations.json` lido por todas as docs pages
 - **Guidelines** em `docs/shared/guidelines/` regendo decisões de API, a11y, UX writing
@@ -26,12 +26,16 @@ Quando uma equipe ou produto precisa entregar a mesma marca em **mais de uma sta
 
 ## Stacks
 
-| Stack | Diretório | Porta Storybook | Engine base | Comando dev |
+O Storybook é a **única** interface: não há sandbox de aplicação em nenhuma
+stack, e por isso não há comando `dev` fora dele.
+
+| Stack | Diretório | Porta Storybook | Engine base | Comando |
 |---|---|---|---|---|
-| **React** | `nortear-design-system-react/` | 6006 | `@base-ui/react` + Tailwind 4 | `npm run dev:react` |
-| **Vue** | `nortear-design-system-vue/` | 6007 | `reka-ui` + Tailwind 4 | `npm run dev:vue` |
-| **Svelte** | `nortear-design-system-svelte/` | 6008 | `bits-ui` + Tailwind 4 (Svelte 5 runes) | `npm run dev:svelte` |
-| **Nortear** | `nortear-design-system-vanilla/` | 6009 | Vanilla TS + factories + CSS standalone (`.nds-*`) — **zero CSS framework** | `npm run dev:vanilla` |
+| **React** | `nortear-design-system-react/` | 6006 | `@base-ui/react` + Tailwind 4 | `npm run storybook:react` |
+| **Vue** | `nortear-design-system-vue/` | 6007 | `reka-ui` + Tailwind 4 | `npm run storybook:vue` |
+| **Svelte** | `nortear-design-system-svelte/` | 6008 | `bits-ui` + Tailwind 4 (Svelte 5 runes) | `npm run storybook:svelte` |
+| **Nortear** | `nortear-design-system-vanilla/` | 6009 | Vanilla TS + factories + CSS standalone (`.nds-*`) — **zero CSS framework** | `npm run storybook:vanilla` |
+| **Angular** | `nortear-design-system-angular/` | 6010 | `@radix-ng/primitives` + CSS standalone (`.nds-*`) | `npm run storybook:angular` |
 
 ## Componentes
 

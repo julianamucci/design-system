@@ -16,7 +16,7 @@
  */
 
 /* Google Fonts: cada stack faz o hoist em seu próprio globals.css (React/Vue/Svelte)
- * ou via <link> em index.html / preview-head.html (Nortear). Não duplicar aqui —
+ * ou via <link> em .storybook/preview-head.html (Nortear/Angular). Não duplicar aqui —
  * Vite/Lightning CSS reordena e gera warning "must precede all other rules". */
 
 /* ── Motion tokens (durações, easings, reduced-motion) ──────────────────── */

@@ -61,13 +61,13 @@
       "rows": {
         "storybook": {
           "command": "npm run storybook",
-          "purpose": "Sobe o Storybook em modo dev. É a interface principal — não use <code>App.tsx</code>/<code>main.ts</code>.",
+          "purpose": "Sobe o Storybook em modo dev. É a única interface do projeto — não existe sandbox de aplicação.",
           "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009 · Angular 6010"
         },
         "build": {
           "command": "npm run build",
-          "purpose": "Typecheck + build de produção via Vite.",
-          "ports": "Saída em <code>dist/</code>."
+          "purpose": "Só checagem de tipos, conforme o stack: <code>tsc</code>, <code>vue-tsc</code>, <code>svelte-check</code> ou <code>ngc</code>.",
+          "ports": "Não emite arquivo. O artefato publicável sai de <code>npm run build-storybook</code>."
         },
         "lint": {
           "command": "npm run lint",
@@ -158,13 +158,13 @@
       "rows": {
         "storybook": {
           "command": "npm run storybook",
-          "purpose": "Starts Storybook in dev mode. It is the main interface — do not use <code>App.tsx</code>/<code>main.ts</code>.",
+          "purpose": "Starts Storybook in dev mode. It is the project's only interface — there is no application sandbox.",
           "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009 · Angular 6010"
         },
         "build": {
           "command": "npm run build",
-          "purpose": "Typecheck + production build via Vite.",
-          "ports": "Output in <code>dist/</code>."
+          "purpose": "Type-check only, per stack: <code>tsc</code>, <code>vue-tsc</code>, <code>svelte-check</code> or <code>ngc</code>.",
+          "ports": "Emits nothing. The publishable artifact comes from <code>npm run build-storybook</code>."
         },
         "lint": {
           "command": "npm run lint",
@@ -255,13 +255,13 @@
       "rows": {
         "storybook": {
           "command": "npm run storybook",
-          "purpose": "Levanta Storybook en modo dev. Es la interfaz principal — no uses <code>App.tsx</code>/<code>main.ts</code>.",
+          "purpose": "Levanta Storybook en modo dev. Es la única interfaz del proyecto — no existe sandbox de aplicación.",
           "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009 · Angular 6010"
         },
         "build": {
           "command": "npm run build",
-          "purpose": "Typecheck + build de producción vía Vite.",
-          "ports": "Salida en <code>dist/</code>."
+          "purpose": "Solo verificación de tipos, según el stack: <code>tsc</code>, <code>vue-tsc</code>, <code>svelte-check</code> o <code>ngc</code>.",
+          "ports": "No emite archivos. El artefacto publicable sale de <code>npm run build-storybook</code>."
         },
         "lint": {
           "command": "npm run lint",

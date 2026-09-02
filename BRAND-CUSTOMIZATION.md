@@ -77,7 +77,7 @@ A fonte do Google Fonts é carregada em:
 | React | [`nortear-design-system-react/src/styles/globals.css`](nortear-design-system-react/src/styles/globals.css) (linha 6, `@import url('...fonts.googleapis.com/...')`) |
 | Vue | [`nortear-design-system-vue/src/styles/globals.css`](nortear-design-system-vue/src/styles/globals.css) |
 | Svelte | [`nortear-design-system-svelte/src/styles/globals.css`](nortear-design-system-svelte/src/styles/globals.css) |
-| Nortear | [`nortear-design-system-vanilla/index.html`](nortear-design-system-vanilla/index.html) + [`nortear-design-system-vanilla/.storybook/preview-head.html`](nortear-design-system-vanilla/.storybook/preview-head.html) (via `<link>`) |
+| Nortear | [`nortear-design-system-vanilla/.storybook/preview-head.html`](nortear-design-system-vanilla/.storybook/preview-head.html) (via `<link>`) |
 
 **Substitua** o URL do `@import` / `<link>` pela sua família. Exemplo trocando Inter por Geist:
 
@@ -163,8 +163,7 @@ cp .env.example .env.production    # ID do ambiente de produção
 ```
 
 As variáveis:
-- `STORYBOOK_GA_MEASUREMENT_ID` — interpolada pelo Storybook nos `manager-head.html` (sintaxe `%VAR%`); `storybook dev` usa `.env.development`, `storybook build` usa `.env.production`
-- `VITE_GA_MEASUREMENT_ID` — interpolada pelo Vite no `index.html` do sandbox React
+- `STORYBOOK_GA_MEASUREMENT_ID` — interpolada pelo Storybook nos `manager-head.html` (sintaxe `%VAR%`); `storybook dev` usa `.env.development`, `storybook build` usa `.env.production`. É a única: `VITE_GA_MEASUREMENT_ID` saiu dos cinco `.env.example` em 2026-09-02, junto com o `index.html` do sandbox React, o único arquivo que a lia
 
 3. **Vercel/CI**: os `.env.*` não vão pro repo, então defina `STORYBOOK_GA_MEASUREMENT_ID` como variável de ambiente em cada projeto Vercel (**Settings → Environment Variables**, escopo Production) com o ID de produção.
 
@@ -172,7 +171,7 @@ As variáveis:
 
 ### Não quer analytics?
 
-Não faça nada — sem env vars o tracking já é no-op. Pra remover de vez, delete os blocos `<script>` do gtag nos `manager-head.html` (4 stacks) e no `nortear-design-system-react/index.html`; a função `track()` em `src/lib/analytics.ts` já é silenciosa quando `gtag` não existe.
+Não faça nada — sem env vars o tracking já é no-op. Pra remover de vez, delete os blocos `<script>` do gtag nos `manager-head.html` das cinco stacks; a função `track()` em `src/lib/analytics.ts` já é silenciosa quando `gtag` não existe.
 
 ---
 

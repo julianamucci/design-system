@@ -279,14 +279,18 @@ Inclui qualquer condição temporária ou ambiental: braço quebrado, sol sobre 
 
 ---
 
-## Estrutura acessível da SPA
+## Estrutura acessível de uma SPA que consome o design system
 
-Este projeto usa roteamento baseado em estado — não há navegação real entre URLs. Leitores de tela não percebem automaticamente a troca de "página". É obrigatório anunciar a mudança e gerenciar o foco.
+Esta seção é para o **produto consumidor**, não para este repositório: aqui a
+interface é o Storybook, e o sandbox de aplicação que exercia estes padrões foi
+removido em 2026-09-02. Quando o produto usa roteamento baseado em estado — sem
+navegação real entre URLs —, leitores de tela não percebem a troca de "página",
+e é obrigatório anunciar a mudança e gerenciar o foco.
 
 ### Estrutura de landmarks
 
 ```tsx
-// App.tsx — estrutura obrigatória
+// Raiz da aplicação — estrutura obrigatória
 <html lang="pt-BR">
   <body>
     {/* Skip link — primeiro elemento */}
@@ -301,7 +305,7 @@ Este projeto usa roteamento baseado em estado — não há navegação real entr
 
       <SidebarInset>
         <header role="banner">
-          {/* Toggle dark/light, ThemeSelector */}
+          {/* Toggle dark/light, seletor de tema */}
         </header>
 
         <main id="main-content" tabIndex={-1}>
@@ -356,7 +360,7 @@ const navigateTo = (page: string, pageTitle: string) => {
 };
 ```
 
-### ThemeSelector acessível
+### Seletor de tema acessível
 
 ```tsx
 {/* Anunciar mudança de tema para leitores de tela */}

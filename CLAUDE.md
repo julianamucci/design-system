@@ -34,11 +34,15 @@ Per-stack guidelines live in `nortear-design-system-<stack>/guidelines/` and eac
 Each stack is an independent npm package; run commands from inside the stack directory.
 
 ```bash
-# Storybook (the primary developer interface — NOT App.tsx/main.ts)
+# Storybook (the only developer interface — there is no application sandbox)
 npm run storybook          # React:6006 · Vue:6007 · Svelte:6008 · Vanilla:6009 · Angular:6010
 
-# Build + typecheck
-npm run build              # tsc -b && vite build (varies per stack)
+# Type-check (no bundling: `npm run build` emits nothing in any stack)
+npm run build              # react: tsc -b · vue: vue-tsc -b · svelte: svelte-check
+                           # vanilla: tsc · angular: ngc --noEmit
+
+# Bundle (the published artifact, and the only gate that resolves CSS)
+npm run build-storybook    # → storybook-static/ — what the five vercel.json publish
 
 # Lint
 npm run lint
@@ -70,7 +74,9 @@ npm run core:pack                                # empacota docs/shared como @no
 
 ### Storybook is the home
 
-Each stack uses Storybook 10 as its primary interface. `App.tsx`/`main.ts` exists only as a development sandbox. New components are added by creating `*.stories.tsx` and `*Docs.tsx` (or stack equivalent) — **not** by registering in `App.tsx`.
+Each stack uses Storybook 10 as its **only** interface. New components are added by creating `*.stories.tsx` and `*Docs.tsx` (or stack equivalent).
+
+There is no application sandbox any more. `src/App.*`, `src/main.*` and `index.html` were removed from react, vue, svelte and vanilla on 2026-09-02 (angular never had them, and was the model): the five `vercel.json` publish `build-storybook` → `storybook-static`, so the sandbox never left the machine, nobody opened it, and no gate audited it — it had accumulated 172 dead classes from a finished migration before anyone measured. `npm run build` is now type-check only in all five.
 
 The Storybook sidebar order is controlled by `storySort` in `.storybook/preview.ts`. Brand themes are toggled via toolbar globals.
 
@@ -141,7 +147,7 @@ When `*Docs.tsx` iterates `translations[locale].props.<group>.items` directly (b
 
 ## Conventions To Respect
 
-- **Never register new components in `App.tsx`/`main.ts`** — they're sandboxes; the source of truth for docs is the Storybook story tree.
+- **Never recreate an application sandbox** (`src/App.*`, `src/main.*`, `index.html`, a `dev`/`preview` script) — the story tree is the source of truth for docs, and a screen nobody publishes is a screen nobody audits.
 - **Never include emojis or ✓/✗ glyphs in `translations.json`** — those are rendered by the docs page code (.nds-* pills + lucide icons). Including them in text causes visual duplication.
 - **Never reference one stack by name from another stack's text or notes** (e.g. "In React, value is always an array. In Vue…"). Each stack's docs are consumed standalone; cross-stack comparisons leak.
 - **Never call `gtag()` directly** — use `track()` from `src/lib/analytics.ts`. GA4 lives in the manager, not the iframe.
@@ -176,11 +182,41 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
   | texto de `translations.json` | `audit.mjs` — texto não compila |
   | um componente `ui/<slug>` | build da stack + a suíte **daquele slug** |
   | CSS compartilhado `.nds-*` | as stories que usam a classe, nas cinco |
-  | módulo folha novo em `docs/shared/` | os cinco **builds** (resolução de módulo) + o teste do próprio módulo |
+  | módulo TS novo em `docs/shared/` | os cinco **builds** (resolução de módulo) + o teste do próprio módulo |
+  | **folha CSS** nova em `docs/shared/` | os cinco **`build-storybook`** — ver a nota abaixo: desde 2026-09-02 o `build` não resolve mais `@import` de CSS |
   | binding de template do Angular | `npm run build` (`ngc --noEmit`) — só ele type-checka isso |
   | renomeação em massa, mudança de contrato | tudo, e em bloco |
 
   Suíte inteira é para mudança que atravessa o grafo. Para mudança local, suíte inteira não é rigor — é ruído caro, e some no meio dele o sinal que importava.
+
+  **Quem resolve CSS agora é o `build-storybook`, e ele é caro.** Até 2026-09-02
+  o `npm run build` das quatro stacks de navegador terminava em `vite build`, e
+  era ELE que empacotava o `globals.css` — plantando `@import
+  "./folha-que-nao-existe.css"` no vanilla, `vite build` reprovava com exit 1 e
+  sete ocorrências. Com o sandbox removido o `build` virou só type-check, e
+  `tsc`/`vue-tsc`/`svelte-check`/`ngc` não abrem folha de estilo: **`@import`
+  quebrado passa nos cinco builds sem uma palavra** — medido em 2026-09-02 com o
+  `@import "./folha-que-nao-existe.css"` replantado no `globals.css` do vanilla:
+  `npm run build` fechou **exit 0**. O `build-storybook` reprovou o mesmo defeito
+  com **exit 1**, nomeando o arquivo (`Unable to resolve @import …`, `[postcss]
+  ENOENT`), porque `.storybook/preview.ts` importa o mesmo `globals.css` que o
+  `main.ts` importava.
+
+  **O ônus é o relógio, e ele é de cinco para um** (série, cache quente, nesta
+  máquina):
+
+  | | react | vue | svelte | vanilla | angular | soma |
+  |---|---:|---:|---:|---:|---:|---:|
+  | `npm run build` | 13s | 19s | 37s | 8s | 25s | **102s** |
+  | `npm run build-storybook` | 151s | 112s | 89s | 54s | 95s | **501s** |
+
+  Para mudança de CSS compartilhado, 501s é o preço do único portão que enxerga —
+  e não há atalho, porque o barato não olha. Para mudança que não toca folha, o
+  `build` continua sendo o portão default. Detalhe de máquina: o
+  `build-storybook` do angular estourou a memória com o heap default (exit 127,
+  `memory allocation … failed`) e passou com
+  `NODE_OPTIONS=--max-old-space-size=7168`, que é o que o `vercel.json` dele já
+  define no CI.
 
   **Build é o portão default; suíte de navegador só sob pedido explícito da dona.**
   Segunda ocorrência em 2026-08-23, na revisão do switch: rodei storybook e
@@ -214,7 +250,14 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
 
   Import órfão também reprova nas cinco. **O que isto NÃO diz** é que `build-storybook` virou dispensável: ele continua sendo quem EMPACOTA cada story, resolve addon e monta o índice — e isso não foi medido aqui. O que mudou é a leitura de "o build não vê stories", que era falsa.
 
-  Antes de chamar um portão de verde, saiba o que ele NÃO olha: `tsc` não vê string de host binding do Angular nem `<template>` de SFC, `svelte-check` com `--threshold error` engole aviso, `eslint` não abre arquivo que o `include` do tsconfig não alcança — e o `include` é justamente o que precisa ser conferido, porque é ele que decide o alcance de todos os três.
+  **Atualização de 2026-09-02**: as três colunas continuam valendo, mas o `build`
+  perdeu a metade que empacotava. Ele é agora `tsc -b` (react), `vue-tsc -b`
+  (vue), `svelte-check` (svelte), `tsc` (vanilla) e `ngc --noEmit` (angular) —
+  cinco checadores de tipo, nenhum bundler. Some com isso a resolução de CSS,
+  que vivia no `vite build`; ver a nota sobre `build-storybook` na regra de
+  escopo acima.
+
+  Antes de chamar um portão de verde, saiba o que ele NÃO olha: `tsc` não vê string de host binding do Angular nem `<template>` de SFC, `svelte-check` com `--threshold error` engole aviso, `eslint` não abre arquivo que o `include` do tsconfig não alcança — e o `include` é justamente o que precisa ser conferido, porque é ele que decide o alcance de todos os três. E nenhum dos cinco abre um `.css`.
 
 - **Suíte longa roda em processo DESTACADO.** Complementa a regra do primeiro plano acima: em 2026-08-22 a suíte do Vue morreu com exit 127 aos 14 minutos, sem escrever uma linha de resultado — quarta ocorrência do padrão. O harness encerra tarefas de background sem aviso, e `npm test > arquivo` com stdout redirecionado não é observável no meio (o vitest só imprime no fim, fora de TTY). Relançada por `Start-Process` de um `.cmd`, fora da árvore de processos do harness, a mesma suíte fechou em 328s. Para suíte de mais de dez minutos, destacar é o padrão, não o contorno. **Quinta ocorrência em 2026-08-23**, e a assinatura vale de cor: 44 minutos de relógio com os workers OCIOSOS — 1s de CPU somado em 15 processos ao longo de um minuto — e a árvore de processos inteira viva. Não é lentidão, é impasse; a mesma suíte destacada fechou em 146s. Antes de esperar mais, meça o CPU dos workers: parado com processo vivo é impasse, e esperar não resolve.
 - **`waitFor` que MEXE no DOM não reprova — PENDURA.** O `waitFor` da suíte reagenda por observador de mutação. Se a condição toca o DOM (sonda que pendura um `<span>` para resolver cor, leitura que força layout) e a primeira tentativa falha, a própria tentativa provoca a próxima: o prazo nunca chega, o navegador crava 100% de um núcleo, e a aba morre **sem resultado e sem falha** — levando o arquivo inteiro junto. Medido em 2026-08-26: a asserção com `waitFor` e o defeito plantado queimou **420 s de CPU sem reportar**; a mesma asserção com espera de relógio reprovou em **2,2 s**.

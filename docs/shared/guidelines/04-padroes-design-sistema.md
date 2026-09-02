@@ -326,44 +326,19 @@ html.tema-personalizado.dark {
 
 ### Criando um Novo Tema
 
-**Passo 1**: Definir as variáveis CSS do tema
+Um tema é um seletor de classe que redefine os 42 tokens de cor, nos dois modos:
 
 ```css
-/* Um tema é apenas um seletor de classe que redefine os tokens. */
-.meu-tema {
-  /* Definir TODOS os tokens usados no tema padrão */
-  --background: ...;
-  --foreground: ...;
-  /* etc */
-}
+.tema-meu { /* os 42 tokens */ }
+.dark.tema-meu { /* os mesmos 42, no escuro */ }
 ```
 
-**Passo 2**: Registrar no ThemeSelector
-
-```tsx
-// ThemeSelector.tsx
-const themes = [
-  { value: "default", label: "Default" },
-  { value: "tema-personalizado", label: "Tema Personalizado" },
-  { value: "meu-tema", label: "Meu Tema" }
-];
-```
-
-**Passo 3**: Atualizar App.tsx
-
-```tsx
-useEffect(() => {
-  document.documentElement.classList.remove('default', 'tema-personalizado', 'meu-tema', 'dark');
-  
-  if (currentTheme === 'meu-tema') {
-    document.documentElement.classList.add('meu-tema');
-  }
-  
-  if (isDark) {
-    document.documentElement.classList.add('dark');
-  }
-}, [isDark, currentTheme]);
-```
+**Onde registrar é assunto de `16-novo-tema.md`**, que lista os nove lugares
+medidos e o mais importante deles (`docs/shared/testing/cor.ts`, a lista que
+todas as sondas de contraste iteram). Não há seletor de tema em componente de
+aplicação: quem troca de tema é a **toolbar do Storybook**, e quem aplica a
+classe no `<html>` é `.storybook/preview.ts` mais `preview-head.html`, em cada
+uma das cinco stacks. O sandbox que tinha seletor próprio saiu em 2026-09-02.
 
 ---
 
@@ -380,19 +355,9 @@ html.dark {
 }
 ```
 
-**Ativação**:
-```tsx
-// App.tsx
-const [isDark, setIsDark] = useState(false);
-
-useEffect(() => {
-  if (isDark) {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-  }
-}, [isDark]);
-```
+**Ativação**: a classe `dark` no `<html>` vem da dimensão *theme* da toolbar do
+Storybook, aplicada em `.storybook/preview.ts`. Nenhum componente do design
+system escreve `classList` na raiz.
 
 **Combinação com Temas Personalizados**:
 - Tema personalizado define cores base
@@ -738,12 +703,12 @@ O layout raiz combina sidebar fixa com área de conteúdo fluida. Este padrão �
 │  Sidebar (280px fixo)  │  SidebarInset  │
 │                        │  (flex-1)      │
 │  - Navegação           │  - Header      │
-│  - ThemeSelector       │  - Conteúdo    │
+│  - Ações do header     │  - Conteúdo    │
 └─────────────────────────────────────────┘
 ```
 
 ```tsx
-{/* Estrutura raiz — App.tsx */}
+{/* Estrutura raiz do produto que consome o design system */}
 <SidebarProvider>
   <Sidebar />                    {/* 280px — gerenciado pelo componente Sidebar */}
   <SidebarInset className="flex-1 min-w-0">  {/* min-w-0 evita overflow */}

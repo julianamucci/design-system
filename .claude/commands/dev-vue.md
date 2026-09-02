@@ -173,7 +173,7 @@ const navGroups = computed(() => /* 4 grupos com IDs das 14 seções, ver AlertD
 - **`v-html` só em elemento nativo** — nunca em componente com slot (`<CardTitle v-html>` falha). Envolver: `<CardTitle><span v-html="..." /></CardTitle>`.
 - **Comentários `//` dentro de expressões de template** (`:class="cn( // nota ...)"`) quebram o parser. Notas vão em comentário HTML fora da expressão.
 - **`as` é keyword TS** — em template com `lang="ts"`, referencie via `props.as` (`:is="props.as ?? 'div'"`), nunca `as` solto.
-- `vue-tsc` NÃO pega esses erros — só o `vite build`. Rode build ao mexer em templates de `ui/`.
+- `vue-tsc` NÃO pega esses erros, e o `vite build` que os pegava saiu do `npm run build` em 2026-09-02, junto com o sandbox. Quem compila SFC agora é o **`npm run build-storybook`** — rode-o ao mexer em template de `ui/`.
 
 ---
 

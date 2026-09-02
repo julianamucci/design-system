@@ -176,8 +176,10 @@ NÃO existem em `tokens.css`. Cada tema declara os 42, e o Default é um tema co
 os outros — `cssClass: 'tema-default'`, não string vazia. A consequência prática
 é que **a classe `tema-*` no `<html>` é obrigatória**: sem ela não há cor, a
 página abre em preto sobre branco, e nem build nem type-check veem. Quem aplica
-dentro do repositório é `applyTheme()`, o `preview-head.html` de cada stack e o
-`<html>` do sandbox, guardados pela regra `tema_ausente_no_ponto_de_entrada`.
+dentro do repositório é `applyTheme()` e o `preview-head.html` de cada stack,
+guardados pela regra `tema_ausente_no_ponto_de_entrada`. (O `<html>` do sandbox
+era o terceiro ponto de entrada; o sandbox saiu em 2026-09-02 e esse ramo da
+regra saiu junto.)
 Quem consumir o pacote fora daqui aplica por conta.
 
 ---
@@ -224,11 +226,12 @@ Foi exatamente esse arquivo que a primeira versão desta guideline perdeu — e 
 o pior de perder, porque texto corrido não tem portão que o cobre. Confira as
 duas buscas **e** abra a página de fundamentos.
 
-Cinco arquivos aparecem nas buscas e NÃO são registro: `themes/default.css`
+Quatro arquivos aparecem nas buscas e NÃO são registro: `themes/default.css`
 e `themes/densities.css` (comentários sobre cascade e combinação),
-`angular/.../SonnerDocs.ts` (um snippet de exemplo),
+`angular/.../SonnerDocs.ts` (um snippet de exemplo) e
 `content/foundations/densidades/translations.json` (um exemplo de classe em
-prosa) e `vue/src/App.vue` (o sandbox, que tem seletor próprio).
+prosa). Eram cinco: o quinto era `vue/src/App.vue`, o sandbox, removido em
+2026-09-02.
 
 ### Conteúdo compartilhado (3)
 
@@ -265,11 +268,12 @@ prosa) e `vue/src/App.vue` (o sandbox, que tem seletor próprio).
    acrescentar o tema ali faz seis stories de portão passarem a medi-lo
    automaticamente, nos dois modos.
 
-### Opcional (1)
+### Opcional (0)
 
-10. `nortear-design-system-vue/src/App.vue` — o sandbox do Vue tem seletor de
-    tema próprio. Não é interface de produto (o Storybook é), então só mexa se
-    quiser o tema disponível ali também.
+Havia um décimo lugar, o seletor de tema próprio do sandbox do Vue
+(`nortear-design-system-vue/src/App.vue`). O sandbox foi removido das quatro
+stacks de navegador em 2026-09-02, então **são nove lugares, todos
+obrigatórios** — a toolbar do Storybook é o único seletor de tema do projeto.
 
 ---
 

@@ -60,7 +60,7 @@ Motivo: a URL que o navegador mostra é a do manager (`/?path=/docs/ui-accordion
 - Nunca copiar o script GA4 para `preview-head.html`
 - Nunca chamar `window.gtag` diretamente nas docs pages — sempre via `track()`
 
-> **Contexto App.tsx**: se a docs page também for usada no sandbox `App.tsx` (fora do Storybook), o `useSeoEffect` detecta a ausência de iframe e escreve no documento corrente normalmente.
+> **Fora de iframe**: `useSeoEffect` detecta a ausência de iframe e escreve no documento corrente. Isso existia para o sandbox de aplicação, removido em 2026-09-02; hoje o caminho só é exercido quando a docs page é montada fora do Storybook (suíte de teste, por exemplo). Não é motivo para escrever meta tag inline.
 
 ---
 
