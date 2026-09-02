@@ -28,7 +28,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
   template: `
     <div ndsDialog [open]="isOpen()" (openChange)="isOpen.set($event)">
       <button ndsDialogTrigger ndsButton variant="outline">
-        Buscar <span ndsCommandShortcut>⌘K</span>
+        Buscar <span ndsCommandShortcut>Ctrl+K</span>
       </button>
 
       <ng-template ndsDialogPortal>
@@ -48,8 +48,8 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 
             <div ndsCommandList>
               <div ndsCommandGroup heading="Componentes">
-                <div ndsCommandItem value="button" textValue="Button">Button <span ndsCommandShortcut>⌘B</span></div>
-                <div ndsCommandItem value="input" textValue="Input">Input <span ndsCommandShortcut>⌘I</span></div>
+                <div ndsCommandItem value="button" textValue="Button">Button <span ndsCommandShortcut>Ctrl+B</span></div>
+                <div ndsCommandItem value="input" textValue="Input">Input <span ndsCommandShortcut>Ctrl+I</span></div>
               </div>
 
               <div ndsCommandSeparator></div>
@@ -142,7 +142,7 @@ export const CommandPalette: Story = {
       // Atalho escondido é atalho que ninguém descobre — é a metade "do" do
       // par de Do & Don't deste componente.
       const dica = trigger.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
-      await expect(dica).toHaveTextContent('⌘K');
+      await expect(dica).toHaveTextContent('Ctrl+K');
       await expect(dica).toBeVisible();
     });
 
@@ -191,7 +191,7 @@ export const CommandPalette: Story = {
       const atalho = panel.querySelector<HTMLElement>(
         '[data-value="button"] [data-slot="command-shortcut"]',
       )!;
-      await expect(atalho).toHaveTextContent('⌘B');
+      await expect(atalho).toHaveTextContent('Ctrl+B');
       const boxItem = atalho.closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();
       const boxShortcut = atalho.getBoundingClientRect();
@@ -202,7 +202,7 @@ export const CommandPalette: Story = {
 
     await step('Escolher um comando executa e fecha', async () => {
       const panel = await waitForPortal('dialog');
-      await userEvent.click(within(panel).getByRole('option', { name: 'Input ⌘I' }));
+      await userEvent.click(within(panel).getByRole('option', { name: 'Input Ctrl+I' }));
 
       await waitForPortalVanish('dialog');
       await expect(canvas.getByTestId('executado')).toHaveTextContent('input');

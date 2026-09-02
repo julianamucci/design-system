@@ -197,7 +197,7 @@ const VARIANT_CODE = {
   <button ndsPopoverTrigger ndsButton variant="outline">Ver atalhos</button>
 
   <ng-template ndsPopoverContent>
-    <p class="nds-text-body">Use Ctrl + K para abrir a busca.</p>
+    <p class="nds-text-body">Use Ctrl+K para abrir a busca.</p>
   </ng-template>
 </div>`,
   withTitle: `<div ndsPopover>

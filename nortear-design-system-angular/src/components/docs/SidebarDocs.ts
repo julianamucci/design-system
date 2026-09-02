@@ -826,7 +826,7 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
       { key: 'Enter',     description: toPlainText(t('accessibility.keyboard.enter')) },
       { key: 'Space',     description: toPlainText(t('accessibility.keyboard.space')) },
       { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape')) },
-      { key: 'Ctrl/⌘+B',  description: toPlainText(t('accessibility.keyboard.ctrlB')) },
+      { key: 'Ctrl+B',    description: toPlainText(t('accessibility.keyboard.ctrlB')) },
       { key: '↑ ↓',       description: toPlainText(t('accessibility.keyboard.arrowKeys')) },
     ];
   });

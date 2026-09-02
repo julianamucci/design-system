@@ -218,8 +218,8 @@ const ANATOMY_CODE = `<nds-menubar>
     <button ndsMenubarTrigger>Arquivo</button>
 
     <ng-template ndsMenubarContent>
-      <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl N</span></div>
-      <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl O</span></div>
+      <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></div>
+      <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></div>
       <div ndsMenubarSeparator></div>
 
       <nds-menubar-sub>
@@ -235,7 +235,7 @@ const ANATOMY_CODE = `<nds-menubar>
   <nds-menubar-menu>
     <button ndsMenubarTrigger>Editar</button>
     <ng-template ndsMenubarContent>
-      <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl Z</span></div>
+      <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl+Z</span></div>
     </ng-template>
   </nds-menubar-menu>
 </nds-menubar>`;
@@ -317,10 +317,10 @@ const CODE_DESTRUCTIVE = `<div ndsMenubarItem variant="destructive">Descartar al
 
 const CODE_WITH_SHORTCUTS = `<ng-template ndsMenubarContent>
   <div ndsMenubarItem>
-    Desfazer <span ndsMenubarShortcut>Ctrl Z</span>
+    Desfazer <span ndsMenubarShortcut>Ctrl+Z</span>
   </div>
   <div ndsMenubarItem>
-    Refazer <span ndsMenubarShortcut>Ctrl Y</span>
+    Refazer <span ndsMenubarShortcut>Ctrl+Y</span>
   </div>
 </ng-template>`;
 
@@ -344,7 +344,7 @@ const CODE_EDITOR = `<nds-menubar>
     <ng-template ndsMenubarContent>
       <div ndsMenubarGroup>
         <div ndsMenubarLabel>Documento</div>
-        <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl N</span></div>
+        <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></div>
       </div>
       <div ndsMenubarSeparator></div>
       <div ndsMenubarItem variant="destructive">Descartar alterações</div>
@@ -354,7 +354,7 @@ const CODE_EDITOR = `<nds-menubar>
   <nds-menubar-menu>
     <button ndsMenubarTrigger>Editar</button>
     <ng-template ndsMenubarContent>
-      <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl Z</span></div>
+      <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl+Z</span></div>
     </ng-template>
   </nds-menubar-menu>
 </nds-menubar>`;
@@ -363,8 +363,8 @@ const CODE_EDITOR = `<nds-menubar>
 const ITEMS_FILE = ['Novo', 'Abrir', 'Salvar'] as const;
 const EXPORTACOES = ['PDF', 'CSV'] as const;
 const SHORTCUTS_EDIT = [
-  { label: 'Desfazer', atalho: 'Ctrl Z' },
-  { label: 'Refazer', atalho: 'Ctrl Y' },
+  { label: 'Desfazer', atalho: 'Ctrl+Z' },
+  { label: 'Refazer', atalho: 'Ctrl+Y' },
 ] as const;
 const EXIBICOES = ['Régua', 'Grade'] as const;
 const THEMES = [

@@ -268,14 +268,14 @@ export const WithShortcuts: Story = {
 
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuItem>
-            Desfazer <span ndsDropdownMenuShortcut>Ctrl Z</span>
+            Desfazer <span ndsDropdownMenuShortcut>Ctrl+Z</span>
           </div>
           <div ndsDropdownMenuItem>
-            Copiar <span ndsDropdownMenuShortcut>Ctrl C</span>
+            Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>
           </div>
           <div ndsDropdownMenuSeparator></div>
           <div ndsDropdownMenuItem>
-            Colar <span ndsDropdownMenuShortcut>Ctrl V</span>
+            Colar <span ndsDropdownMenuShortcut>Ctrl+V</span>
           </div>
         </ng-template>
       </nds-dropdown-menu>
@@ -288,14 +288,14 @@ export const WithShortcuts: Story = {
     await step('O atalho faz parte do nome do item', async () => {
       // Sem isso o leitor de tela anunciaria "Copiar" e a pessoa nunca saberia
       // que existe uma tecla — o atalho é informação, não decoração.
-      await expect(canvas.getByRole('menuitem', { name: 'Copiar Ctrl C' })).toBeTruthy();
+      await expect(canvas.getByRole('menuitem', { name: 'Copiar Ctrl+C' })).toBeTruthy();
     });
 
     await step('O atalho fica encostado na borda direita do item', async () => {
       // `margin-left: auto` é o mecanismo, mas num item flex o valor computado
       // já vem resolvido em pixels — o que dá para afirmar é o resultado: o
       // atalho encosta na direita e o rótulo fica na esquerda.
-      const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl V' });
+      const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl+V' });
       const atalho = item.querySelector<HTMLElement>('[data-slot="dropdown-menu-shortcut"]')!;
       const itemBox = item.getBoundingClientRect();
       const shortcutBox = atalho.getBoundingClientRect();

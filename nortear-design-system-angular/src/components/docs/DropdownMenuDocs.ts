@@ -320,7 +320,7 @@ const CODE_WITH_RADIO = `<ng-template ndsDropdownMenuContent>
 
 const CODE_WITH_SHORTCUTS = `<ng-template ndsDropdownMenuContent>
   <div ndsDropdownMenuItem>
-    Copiar <span ndsDropdownMenuShortcut>Ctrl C</span>
+    Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>
   </div>
 </ng-template>`;
 
@@ -487,11 +487,11 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuItem>
             {{ t('usage.uxWriting.table.item.good') }}
-            <span ndsDropdownMenuShortcut>Ctrl E</span>
+            <span ndsDropdownMenuShortcut>Ctrl+E</span>
           </div>
           <div ndsDropdownMenuItem>
             {{ t('demonstration.labels.basic') }}
-            <span ndsDropdownMenuShortcut>Ctrl K</span>
+            <span ndsDropdownMenuShortcut>Ctrl+K</span>
           </div>
         </ng-template>
       </nds-dropdown-menu>

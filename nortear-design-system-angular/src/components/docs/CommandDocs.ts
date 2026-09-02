@@ -120,7 +120,7 @@ const ANATOMY_CODE = `<nds-command (itemSelect)="executar($event)">
     <div ndsCommandGroup heading="Componentes">
       <div ndsCommandItem value="button" textValue="Button" (onSelect)="abrir('button')">
         Button
-        <span ndsCommandShortcut>⌘B</span>
+        <span ndsCommandShortcut>Ctrl+B</span>
       </div>
       <div ndsCommandItem value="input">Input</div>
     </div>

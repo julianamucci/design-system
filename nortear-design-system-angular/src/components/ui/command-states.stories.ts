@@ -217,7 +217,7 @@ export const CheckedItem: Story = {
             <div ndsCommandGroup heading="Aparência">
               <div ndsCommandItem value="claro" [checked]="true">Claro</div>
               <div ndsCommandItem value="escuro" [checked]="false">Escuro</div>
-              <div ndsCommandItem value="sistema" [checked]="true" textValue="Sistema">Sistema <span ndsCommandShortcut>⌘S</span></div>
+              <div ndsCommandItem value="sistema" [checked]="true" textValue="Sistema">Sistema <span ndsCommandShortcut>Ctrl+S</span></div>
             </div>
           </div>
 
@@ -235,7 +235,7 @@ export const CheckedItem: Story = {
 
     const light = canvas.getByRole('option', { name: 'Claro' });
     const escuro = canvas.getByRole('option', { name: 'Escuro' });
-    const sistema = canvas.getByRole('option', { name: 'Sistema ⌘S' });
+    const sistema = canvas.getByRole('option', { name: 'Sistema Ctrl+S' });
     const marca = (item: HTMLElement) =>
       getComputedStyle(item.querySelector<HTMLElement>('.nds-command-item-check')!);
 

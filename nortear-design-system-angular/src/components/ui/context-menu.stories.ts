@@ -29,7 +29,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ContextMenuArgs
       <ng-template ndsContextMenuContent>
         <div ndsContextMenuItem (onSelect)="editar()">
           Editar
-          <span ndsContextMenuShortcut>Ctrl E</span>
+          <span ndsContextMenuShortcut>Ctrl+E</span>
         </div>
         <div ndsContextMenuItem>Duplicar</div>
 
@@ -97,7 +97,7 @@ export const Playground: Story = {
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem (onSelect)="onSelect('editar')">
             Editar
-            <span ndsContextMenuShortcut>Ctrl E</span>
+            <span ndsContextMenuShortcut>Ctrl+E</span>
           </div>
           <div ndsContextMenuItem (onSelect)="onSelect('duplicar')">Duplicar</div>
 

@@ -103,7 +103,7 @@ const ANATOMY_CODE = `<div ndsContextMenu>
       <div ndsContextMenuLabel>Arquivo</div>
       <div ndsContextMenuItem>
         Editar
-        <span ndsContextMenuShortcut>⌘E</span>
+        <span ndsContextMenuShortcut>Ctrl+E</span>
       </div>
       <div ndsContextMenuCheckboxItem [checked]="mostrarGrade">Mostrar grade</div>
     </div>
@@ -122,7 +122,7 @@ const ANATOMY_CODE = `<div ndsContextMenu>
 
     <div ndsContextMenuItem variant="destructive">
       Excluir
-      <span ndsContextMenuShortcut>⌫</span>
+      <span ndsContextMenuShortcut>Delete</span>
     </div>
   </ng-template>
 </div>`;

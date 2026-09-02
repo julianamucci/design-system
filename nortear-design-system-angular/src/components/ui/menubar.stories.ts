@@ -19,17 +19,17 @@ const MENUS: MenuDemo[] = [
   {
     label: 'Arquivo',
     items: [
-      { label: 'Novo', atalho: '⌘N' },
-      { label: 'Abrir', atalho: '⌘O' },
-      { label: 'Salvar', atalho: '⌘S' },
+      { label: 'Novo', atalho: 'Ctrl+N' },
+      { label: 'Abrir', atalho: 'Ctrl+O' },
+      { label: 'Salvar', atalho: 'Ctrl+S' },
     ],
   },
   {
     label: 'Editar',
     items: [
-      { label: 'Desfazer', atalho: '⌘Z' },
-      { label: 'Refazer', atalho: '⇧⌘Z' },
-      { label: 'Copiar', atalho: '⌘C' },
+      { label: 'Desfazer', atalho: 'Ctrl+Z' },
+      { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+      { label: 'Copiar', atalho: 'Ctrl+C' },
     ],
   },
   {
@@ -89,8 +89,8 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<MenubarArgs> })
         <button ndsMenubarTrigger>Arquivo</button>
 
         ${content}
-          <div ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></div>
-          <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></div>
+          <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></div>
+          <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></div>
         </ng-template>
       </nds-menubar-menu>
 
@@ -98,8 +98,8 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<MenubarArgs> })
         <button ndsMenubarTrigger>Editar</button>
 
         ${content}
-          <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>⌘Z</span></div>
-          <div ndsMenubarItem>Refazer <span ndsMenubarShortcut>⇧⌘Z</span></div>
+          <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl+Z</span></div>
+          <div ndsMenubarItem>Refazer <span ndsMenubarShortcut>Ctrl+Shift+Z</span></div>
         </ng-template>
       </nds-menubar-menu>
     </nds-menubar>
