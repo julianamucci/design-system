@@ -37,7 +37,7 @@
     },
     "axes": {
       "title": "Densidade e Fontes",
-      "subtitle": "Além das cores, o tema controla densidade (escala de spacing/alturas) e família tipográfica — também via classe no <html>. Os eixos de type scale e base tipográfica são documentados na página Tipografia.",
+      "subtitle": "Densidade, família tipográfica, escala e base tipográfica são eixos SEPARADOS da cor — cada um tem seu grupo de classes no <html> e combina com qualquer tema. O que os temas desta biblioteca fazem é RECOMENDAR uma combinação: escolher Warm ou Cold move também densidade, fonte e escala, para demonstrar como as peças se comportam juntas. É demonstração, não amarra — quem consome escolhe cada eixo por conta, e pode usar a cor de um tema com a densidade e a tipografia de outro, ou com as suas.",
       "density": {
         "title": "Densidade",
         "subtitle": "Ajusta --spacing-base proporcionalmente, afetando paddings, gaps e alturas tokenizadas.",
@@ -123,7 +123,7 @@
     },
     "axes": {
       "title": "Density and Fonts",
-      "subtitle": "Beyond colors, the theme controls density (spacing/height scale) and typographic family — also via a class on <html>. The type scale and type base axes are documented on the Typography page.",
+      "subtitle": "Density, typographic family, type scale and type base are axes SEPARATE from colour — each has its own group of classes on <html> and combines with any theme. What the themes in this library do is RECOMMEND a combination: picking Warm or Cold also moves density, font and scale, to demonstrate how the pieces behave together. It is a demonstration, not a constraint — consumers choose each axis on their own, and may pair one theme’s colour with another’s density and typography, or with their own.",
       "density": {
         "title": "Density",
         "subtitle": "Scales --spacing-base proportionally, affecting paddings, gaps and tokenized heights.",
@@ -209,7 +209,7 @@
     },
     "axes": {
       "title": "Densidad y Fuentes",
-      "subtitle": "Además de los colores, el tema controla densidad (escala de spacing/alturas) y familia tipográfica — también vía clase en <html>. Los ejes de type scale y base tipográfica se documentan en la página Tipografía.",
+      "subtitle": "Densidad, familia tipográfica, escala y base tipográfica son ejes SEPARADOS del color — cada uno tiene su grupo de clases en <html> y combina con cualquier tema. Lo que hacen los temas de esta biblioteca es RECOMENDAR una combinación: elegir Warm o Cold mueve también densidad, fuente y escala, para demostrar cómo se comportan juntas las piezas. Es demostración, no atadura — quien consume elige cada eje por su cuenta, y puede usar el color de un tema con la densidad y la tipografía de otro, o con las suyas.",
       "density": {
         "title": "Densidad",
         "subtitle": "Escala --spacing-base proporcionalmente, afectando paddings, gaps y alturas tokenizadas.",

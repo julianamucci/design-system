@@ -14,10 +14,10 @@ export type ThemeId = 'default' | 'warm' | 'cold';
  * sufixo da classe: `confortavel` → `.densidade-confortavel`.
  */
 export interface ThemeAxisDefaults {
-  density?: string;
-  font?: string;
-  typescale?: string;
-  typebase?: string;
+  density: string;
+  font: string;
+  typescale: string;
+  typebase: string;
 }
 
 export interface ThemeDefinition {
@@ -32,6 +32,13 @@ export interface ThemeDefinition {
    * troca qualquer uma depois sem o tema desfazer a escolha. Os seis eixos
    * seguem independentes, que é o contrato registrado na guideline 16.
    *
+   * OBRIGATÓRIO nos três, inclusive no que não tem opinião. Quando só o `warm`
+   * declarava, voltar dele para o `default` não devolvia nada — o handler saía
+   * cedo por não achar defaults, e a tela ficava com a densidade e a fonte do
+   * tema anterior. Um tema "sem opinião" não é um tema sem defaults: é um tema
+   * cujos defaults são os do sistema, e eles precisam estar escritos para poder
+   * ser restaurados.
+   *
    * Mora AQUI e não no CSS do tema por duas razões medidas. Uma: `.tema-warm` e
    * `.densidade-confortavel` têm a mesma especificidade, e os eixos são
    * importados DEPOIS dos temas — como o preview aplica sempre a classe do eixo,
@@ -43,7 +50,7 @@ export interface ThemeDefinition {
    * Não varia por modo: densidade, fonte e escala não têm versão clara e escura.
    * O default vale nos dois.
    */
-  axisDefaults?: ThemeAxisDefaults;
+  axisDefaults: ThemeAxisDefaults;
 }
 
 // ─── Catálogo de temas ────────────────────────────────────────────────────────
@@ -59,6 +66,14 @@ export const themes: ThemeDefinition[] = [
     // à mão. Divergiram. Agora cada tema tem um lugar só, e o preço é que a
     // classe passou a ser obrigatória: sem ela não há cor.
     cssClass: 'tema-default',
+    // Os do sistema. Escritos, e não omitidos, porque é voltando para cá que a
+    // restauração acontece.
+    axisDefaults: {
+      density: 'default',
+      font: 'default',
+      typescale: 'minor-third',
+      typebase: 'm',
+    },
   },
   {
     id: 'warm',
@@ -82,6 +97,13 @@ export const themes: ThemeDefinition[] = [
     label: 'Cold',
     description: 'Cores frias — tint azul nos neutros, marca cyan e status fora do semáforo',
     cssClass: 'tema-cold',
+    // Voz própria, como o Warm e no sentido oposto: mais informação por tela.
+    axisDefaults: {
+      density: 'condensado',
+      font: 'pt-serif',
+      typescale: 'perfect-fourth',
+      typebase: 'm',
+    },
   },
 ];
 
@@ -95,13 +117,24 @@ export const themeCssClasses: Record<ThemeId, string> = Object.fromEntries(
   themes.map((t) => [t.id, t.cssClass])
 ) as Record<ThemeId, string>;
 
-/**
- * Defaults dos outros eixos por tema. Tema sem opinião devolve `{}` — quem
- * consome mescla por cima do que já está posto, então ausência não zera nada.
- */
+/** Defaults dos outros eixos por tema. Os três declaram; nenhum devolve vazio. */
 export const themeAxisDefaults: Record<ThemeId, ThemeAxisDefaults> = Object.fromEntries(
-  themes.map((t) => [t.id, t.axisDefaults ?? {}])
+  themes.map((t) => [t.id, t.axisDefaults])
 ) as Record<ThemeId, ThemeAxisDefaults>;
+
+/**
+ * Prefixo da classe de cada eixo no `<html>`.
+ *
+ * Existe para que `applyTheme` saiba o que TIRAR antes de pôr: sem a lista, a
+ * troca de tema empilharia `densidade-confortavel` e `densidade-condensado` no
+ * mesmo elemento, e quem venceria seria a ordem da folha, não a escolha.
+ */
+export const AXIS_CLASS_PREFIX: Record<keyof ThemeAxisDefaults, string> = {
+  density: 'densidade-',
+  font: 'fonte-',
+  typescale: 'escala-',
+  typebase: 'base-tipo-',
+};
 
 // ─── Subdomínio → tema ────────────────────────────────────────────────────────
 // O PRIMEIRO rótulo do hostname decide o tema (warm.norteardesign.com.br → warm;
@@ -163,14 +196,47 @@ export function getThemeInfo() {
   };
 }
 
-/** Aplica um tema no <html> removendo o anterior. */
-export function applyTheme(themeId: ThemeId, isDark: boolean): void {
+/**
+ * Aplica um tema no `<html>`, removendo o anterior.
+ *
+ * Leva junto os OUTROS EIXOS — densidade, fonte, escala e base tipográfica — no
+ * `axisDefaults` do tema. É o que faz a troca de tema devolver uma tela
+ * coerente: sem isso, sair do `cold` deixava a serifada e o condensado para
+ * trás, porque nada os desfazia.
+ *
+ * `axes: false` para quem quer só a cor: aplica tema e modo, e não toca nos
+ * outros quatro. É a escotilha de quem monta a combinação por conta — e é o
+ * caso de qualquer consumidor que já controle densidade ou tipografia pelo
+ * próprio produto.
+ */
+export function applyTheme(
+  themeId: ThemeId,
+  isDark: boolean,
+  options: { axes?: boolean } = {},
+): void {
+  const { axes = true } = options;
   const root = document.documentElement;
-  // Remove todas as classes de tema
+
   themes.forEach((t) => { if (t.cssClass) root.classList.remove(t.cssClass); });
   root.classList.remove('dark');
-  // Aplica nova
+
   const cssClass = themeCssClasses[themeId];
   if (cssClass) root.classList.add(cssClass);
   if (isDark) root.classList.add('dark');
+
+  if (!axes) return;
+
+  const eixos = themeAxisDefaults[themeId];
+  if (!eixos) return;
+
+  // Tira TODA classe do eixo antes de pôr a nova. Varrer por prefixo, e não
+  // remover só a que este arquivo conhece, é o que mantém a troca correta
+  // quando alguém aplicou uma classe de eixo por fora.
+  for (const [eixo, prefixo] of Object.entries(AXIS_CLASS_PREFIX)) {
+    for (const classe of Array.from(root.classList)) {
+      if (classe.startsWith(prefixo)) root.classList.remove(classe);
+    }
+    const valor = eixos[eixo as keyof ThemeAxisDefaults];
+    if (valor) root.classList.add(prefixo + valor);
+  }
 }

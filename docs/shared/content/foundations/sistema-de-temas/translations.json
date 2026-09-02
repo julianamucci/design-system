@@ -12,7 +12,7 @@
     },
     "intro": {
       "title": "Como funciona",
-      "subtitle": "Todo o theming acontece com classes no elemento <code>&lt;html&gt;</code> — nenhum JavaScript envolvido. Cada eixo tem seu grupo de classes: <strong>tema de marca</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>modo escuro</strong> (<code>dark</code>), <strong>densidade</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>família tipográfica</strong> (<code>fonte-*</code>) e <strong>escala tipográfica</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). As classes podem ser combinadas livremente.",
+      "subtitle": "Todo o theming acontece com classes no elemento <code>&lt;html&gt;</code> — nenhum JavaScript envolvido. Cada eixo tem seu grupo de classes: <strong>tema de marca</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>modo escuro</strong> (<code>dark</code>), <strong>densidade</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>família tipográfica</strong> (<code>fonte-*</code>) e <strong>escala tipográfica</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). As classes podem ser combinadas livremente. Os temas desta biblioteca combinam cor, densidade e tipografia para DEMONSTRAR o sistema; cada eixo continua configurável por conta de quem consome.",
       "body": "Cada classe faz uma única coisa: redefinir tokens CSS (<code>--background</code>, <code>--primary</code>, <code>--spacing-base</code>…). Como os componentes leem esses tokens via <code>var(--token)</code>, a interface inteira muda de aparência no instante em que a classe muda — sem re-render e sem recarregar a página.",
       "audience": "Esta página é para quem vai criar um tema novo, aplicar o sistema em um produto white-label ou investigar por que um token não está com o valor esperado."
     },
@@ -128,7 +128,8 @@
         "noHardcode": "Nunca use valor hex direto em componente — sempre via <code>var(--token)</code>.",
         "noInlineDark": "Nunca aplique <code>dark:</code> manualmente em primitive — o token já comuta no <code>.dark</code>.",
         "channelListener": "Toolbar de tema precisa de listener <code>GLOBALS_UPDATED</code> module-level — decorator + <code>useEffect</code> não reverte pro Default.",
-        "noFixedHeight": "Tokens dimensionais nunca aplicam altura fixa em primitives — usar <code>padding-block</code> + <code>line-height</code> para respeitar WCAG 1.4.4."
+        "noFixedHeight": "Tokens dimensionais nunca aplicam altura fixa em primitives — usar <code>padding-block</code> + <code>line-height</code> para respeitar WCAG 1.4.4.",
+        "axisDefaults": "O tema RECOMENDA os outros eixos, não os controla: <code>axisDefaults</code> move densidade, fonte e escala ao trocar de tema — as combinações desta biblioteca existem para demonstração — e qualquer uma pode ser trocada logo depois. Quem consome configura cada eixo individualmente."
       }
     }
   },
@@ -145,7 +146,7 @@
     },
     "intro": {
       "title": "How it works",
-      "subtitle": "All theming happens through classes on the <code>&lt;html&gt;</code> element — no JavaScript involved. Each axis has its own class group: <strong>brand theme</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>dark mode</strong> (<code>dark</code>), <strong>density</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>font family</strong> (<code>fonte-*</code>) and <strong>type scale</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). Classes combine freely.",
+      "subtitle": "All theming happens through classes on the <code>&lt;html&gt;</code> element — no JavaScript involved. Each axis has its own class group: <strong>brand theme</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>dark mode</strong> (<code>dark</code>), <strong>density</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>font family</strong> (<code>fonte-*</code>) and <strong>type scale</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). Classes combine freely. The themes in this library combine colour, density and typography to DEMONSTRATE the system; each axis remains configurable by whoever consumes it.",
       "body": "Each class does exactly one thing: redefine CSS tokens (<code>--background</code>, <code>--primary</code>, <code>--spacing-base</code>…). Because components read these tokens via <code>var(--token)</code>, the whole interface changes appearance the moment the class changes — no re-render, no page reload.",
       "audience": "This page is for anyone creating a new theme, applying the system to a white-label product, or investigating why a token doesn’t have the expected value."
     },
@@ -261,7 +262,8 @@
         "noHardcode": "Never use a raw hex value in a component — always via <code>var(--token)</code>.",
         "noInlineDark": "Never apply <code>dark:</code> manually in a primitive — the token already toggles inside <code>.dark</code>.",
         "channelListener": "Theme toolbar needs a module-level <code>GLOBALS_UPDATED</code> listener — decorator + <code>useEffect</code> won't revert to Default.",
-        "noFixedHeight": "Dimensional tokens never apply a fixed height in primitives — use <code>padding-block</code> + <code>line-height</code> to honor WCAG 1.4.4."
+        "noFixedHeight": "Dimensional tokens never apply a fixed height in primitives — use <code>padding-block</code> + <code>line-height</code> to honor WCAG 1.4.4.",
+        "axisDefaults": "The theme RECOMMENDS the other axes, it does not control them: <code>axisDefaults</code> moves density, font and scale when the theme changes — the combinations in this library exist as a demonstration — and any of them can be changed right after. Consumers configure each axis individually."
       }
     }
   },
@@ -278,7 +280,7 @@
     },
     "intro": {
       "title": "Cómo funciona",
-      "subtitle": "Todo el theming ocurre con clases en el elemento <code>&lt;html&gt;</code> — sin JavaScript. Cada eje tiene su grupo de clases: <strong>tema de marca</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>modo oscuro</strong> (<code>dark</code>), <strong>densidad</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>familia tipográfica</strong> (<code>fonte-*</code>) y <strong>escala tipográfica</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). Las clases se combinan libremente.",
+      "subtitle": "Todo el theming ocurre con clases en el elemento <code>&lt;html&gt;</code> — sin JavaScript. Cada eje tiene su grupo de clases: <strong>tema de marca</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>modo oscuro</strong> (<code>dark</code>), <strong>densidad</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>familia tipográfica</strong> (<code>fonte-*</code>) y <strong>escala tipográfica</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). Las clases se combinan libremente. Los temas de esta biblioteca combinan color, densidad y tipografía para DEMOSTRAR el sistema; cada eje sigue siendo configurable por quien lo consume.",
       "body": "Cada clase hace una sola cosa: redefinir tokens CSS (<code>--background</code>, <code>--primary</code>, <code>--spacing-base</code>…). Como los componentes leen esos tokens vía <code>var(--token)</code>, toda la interfaz cambia de apariencia en el instante en que cambia la clase — sin re-render y sin recargar la página.",
       "audience": "Esta página es para quien va a crear un tema nuevo, aplicar el sistema en un producto white-label o investigar por qué un token no tiene el valor esperado."
     },
@@ -394,7 +396,8 @@
         "noHardcode": "Nunca uses un valor hex directo en un componente — siempre vía <code>var(--token)</code>.",
         "noInlineDark": "Nunca apliques <code>dark:</code> manualmente en un primitive — el token ya conmuta dentro de <code>.dark</code>.",
         "channelListener": "La toolbar de tema necesita un listener <code>GLOBALS_UPDATED</code> module-level — decorator + <code>useEffect</code> no revierte al Default.",
-        "noFixedHeight": "Tokens dimensionales nunca aplican altura fija en primitives — usar <code>padding-block</code> + <code>line-height</code> para cumplir WCAG 1.4.4."
+        "noFixedHeight": "Tokens dimensionales nunca aplican altura fija en primitives — usar <code>padding-block</code> + <code>line-height</code> para cumplir WCAG 1.4.4.",
+        "axisDefaults": "El tema RECOMIENDA los otros ejes, no los controla: <code>axisDefaults</code> mueve densidad, fuente y escala al cambiar de tema — las combinaciones de esta biblioteca existen como demostración — y cualquiera puede cambiarse enseguida. Quien consume configura cada eje individualmente."
       }
     }
   }
