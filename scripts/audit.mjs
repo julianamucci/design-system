@@ -2046,9 +2046,16 @@ function auditDeadLibInfra() {
  * `dead_class_in_component` varre componente, e o sandbox não é nem um nem
  * outro — é a única tela do projeto que ninguém fotografa, porque não entra na
  * barra lateral do Storybook. Medido em 2026-09-02: 45 classes distintas mortas
- * no React, 66 no Vue e 73 no Svelte, todas resíduo do framework que saiu. O
+ * no React, 57 no Vue e 70 no Svelte, todas resíduo do framework que saiu. O
  * caso exemplar era o véu da gaveta do Svelte — `fixed inset-0 z-40` inertes —,
  * que por isso NÃO COBRIA a tela.
+ *
+ * Os números acima são os DEPOIS de separar defeito de ruído, e a diferença
+ * vale de aviso para quem for medir de novo: uma sonda que casa palavra solta
+ * dentro de `class=` conta 66 no Vue e 73 no Svelte, porque `:class="a === b ?
+ * 'x' : 'y'"` entrega `===`, `?`, `:` e o nome da expressão como se fossem
+ * classe. No Angular a mesma sonda dá zero — e zero ali não é limpeza, é
+ * AUSÊNCIA: a stack não tem arquivo de sandbox nenhum.
  *
  * A regra NÃO é "tem que começar com nds-", e a diferença importa. O Vanilla,
  * que é a referência de forma, pinta com `.nds-app-*` e mantém `ds-nav-item`,
