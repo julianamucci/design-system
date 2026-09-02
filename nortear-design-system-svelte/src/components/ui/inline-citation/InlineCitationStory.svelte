@@ -47,7 +47,7 @@
   const citation = $derived(citationOf(shape));
   const labels = $derived(inlineCitationLabelsFor($locale, 1, citation));
 
-  let marca = $state<InlineCitationCommands | undefined>(undefined);
+  let mark = $state<InlineCitationCommands | undefined>(undefined);
 
   // O COMANDO CORRE FORA DA LEITURA, e é isso que faz o efeito depender só da
   // propriedade e da referência.
@@ -61,15 +61,15 @@
   // primeira rodada de navegador desta stack amostrou `aria-expanded` de 50 em
   // 50 ms por 600 ms e leu `true` nas doze amostras.
   //
-  // `untrack` no comando, e as duas leituras fora dele: `defaultOpen` e `marca`
+  // `untrack` no comando, e as duas leituras fora dele: `defaultOpen` e `mark`
   // continuam sendo o que reagenda, e o estado interno da peça deixa de ser.
   $effect(() => {
-    const abrir = defaultOpen;
-    const alvo = marca;
-    if (!alvo) return;
+    const shouldOpen = defaultOpen;
+    const target = mark;
+    if (!target) return;
     untrack(() => {
-      if (abrir) alvo.open();
-      else alvo.close();
+      if (shouldOpen) target.open();
+      else target.close();
     });
   });
 </script>
@@ -80,7 +80,7 @@
   que a marca não se descola da palavra que a antecede quando a linha quebra.
 -->
 <p>{parts[0]}<InlineCitation
-    bind:this={marca}
+    bind:this={mark}
     {citation}
     index={1}
     {labels}
