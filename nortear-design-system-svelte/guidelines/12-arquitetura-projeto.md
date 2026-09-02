@@ -4,21 +4,23 @@
 
 ---
 
-## Interface Principal
+## A interface
 
-O **Storybook** é a interface de documentação principal.
+O **Storybook** é a única interface desta stack. Não existe sandbox de aplicação.
 
 ```bash
-npm run storybook      # porta 6006 — interface principal
-npm run dev            # sandbox de desenvolvimento (App.svelte) — uso secundário
-npm run build          # svelte-check --threshold error && vite build
+npm run storybook       # porta 6008 — a interface
+npm run build           # svelte-check --tsconfig ./tsconfig.json --threshold error
+npm run build-storybook # empacota as stories em storybook-static/
 ```
 
-`App.svelte` é um **sandbox**. Novos componentes **não precisam** ser registrados nele.
+`storybook-static/` é o artefato publicável — é para ele que o `vercel.json` aponta. O `build` não emite nada: é checagem de tipo, e só. Repare no que isso deixa de fora: nenhum dos cinco `npm run build` abre folha de estilo, então `@import` quebrado em CSS só reprova no `build-storybook`.
 
 ## O portão de tipos
 
-`npm run build` roda `svelte-check` **antes** do `vite build`, e reprova a build inteira no primeiro erro de tipo.
+`npm run build` **é** o `svelte-check`, e reprova no primeiro erro de tipo.
+
+Ele nasceu como etapa anterior a um `vite build` que empacotava o sandbox de aplicação; quando o sandbox saiu (2026-09-02), o `vite build` foi junto, e o que sobrou no script é justamente a parte que sempre importou.
 
 Isso não existia. O `build` era só `vite build`, e o Vite compila `.svelte` sem checar tipo nenhum — o `tsconfig.json` estava escrito, `strict` ligado, e nada o executava. Quando o portão foi ligado pela primeira vez havia **36 erros em 26 arquivos**, entre eles quatro defeitos de comportamento que a suíte dava por verdes:
 
@@ -152,12 +154,18 @@ export const Playground: Story = {
 
 ---
 
-## Papel do App.svelte
+## O sandbox de aplicação saiu (2026-09-02)
 
-`App.svelte` é **sandbox de desenvolvimento**. Não é a interface de documentação.
+Esta stack tinha um sandbox — `src/App.svelte`, `src/main.ts`, `index.html` e os
+scripts `dev` e `preview`. Todos foram removidos. O que se mediu antes de tirar:
 
-- Novos componentes **não precisam** ser registrados nele
-- A sidebar do Storybook é a única navegação relevante
+- **nunca era publicado** — os cinco `vercel.json` publicam `storybook-static/`, e nada além disso chega ao ar;
+- **ninguém o abria** — o trabalho de componente, documentação e revisão acontece todo no Storybook;
+- **nenhum portão o auditava** — fora do alcance dos gates, ele apodrecia em silêncio, e terminou carregando 172 classes mortas de uma migração já encerrada.
+
+O Angular já operava assim, sem sandbox, e virou o modelo para as outras.
+
+Não recrie nenhum desses arquivos. Componente novo entra por story, e a sidebar do Storybook é a única navegação que existe.
 
 ---
 

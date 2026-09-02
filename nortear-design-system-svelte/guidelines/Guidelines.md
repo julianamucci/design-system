@@ -3,7 +3,7 @@
 Stack: **Svelte 5 + Bits UI + lucide-svelte + Zod + Storybook 10**
 
 > **Leia primeiro**: [`RULES.md`](./RULES.md) — as regras que valem em toda interação, e
-> [`12-arquitetura-projeto.md`](./12-arquitetura-projeto.md) — Storybook é a interface principal.
+> [`12-arquitetura-projeto.md`](./12-arquitetura-projeto.md) — Storybook é a única interface — não há sandbox de aplicação.
 
 ---
 
@@ -65,7 +65,7 @@ Em `docs/shared/guidelines/` — valem para todas as stacks do design system:
 5. **Acessibilidade** (01-shared) — sempre obrigatória
 6. **Documentação** (11) — ComponentDocs + stories Svelte
 7. **Edições Parciais** (03-shared)
-8. **Arquitetura** (12) — Storybook como interface principal
+8. **Arquitetura** (12) — Storybook como única interface — não há sandbox de aplicação
 9. **Design Sistema** (04-shared) — tokens CSS
 10. **System Design** (13) — runes, stores, performance
 11. **Tom de Voz** (05-shared)

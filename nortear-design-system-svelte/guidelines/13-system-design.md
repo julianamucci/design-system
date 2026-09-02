@@ -2,8 +2,7 @@
 
 ## Visão Geral
 
-- **Storybook** — interface principal de documentação (porta 6006)
-- **Sandbox** (`App.svelte`) — desenvolvimento isolado
+- **Storybook** — a única interface, e onde a documentação vive (porta 6008)
 - **Frontend-only** — sem backend, deployável em CDN estático
 
 ---
@@ -90,9 +89,9 @@ A navegação entre componentes é gerenciada pela **sidebar do Storybook** (`st
 export default {
   title: 'UI/Button',
 } satisfies Meta<typeof Button>;
-
-// ❌ EVITAR — registrar no App.svelte para fins de documentação
 ```
+
+Não existe outra porta de entrada: um componente sem story é um componente inalcançável.
 
 ---
 
