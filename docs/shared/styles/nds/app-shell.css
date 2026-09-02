@@ -1,16 +1,21 @@
 /*
  * ─── nds-app-shell ───────────────────────────────────────────────────────────
- * Classes semânticas (NÃO utilities) usadas exclusivamente pelo sandbox de
- * desenvolvimento (`src/app.ts`). Não são consumidas por stories nem por docs
- * pages — não vazam para o produto final do design system.
+ * FOLHA ÓRFÃ desde 2026-09-02. Nenhum arquivo do repositório usa uma classe
+ * daqui: `git grep` por `nds-app-`, `nds-admin-`, `nds-spinner` e
+ * `nds-icon-button` só encontra este arquivo.
  *
- * Já serviam também ao editor admin de docs, e as 24 classes `.nds-admin-*`
- * ficaram aqui quando ele saiu do projeto (2026-08-30): 245 linhas de folha
- * compartilhada carregadas por toda página, para markup que não existia mais.
- * CSS órfão não quebra nada, e é exatamente por isso que sobrevive.
+ * Ela existia para o sandbox de desenvolvimento (`src/App.*` / `src/app.ts`),
+ * removido das quatro stacks de navegador na mesma data — o Storybook é a
+ * interface, o sandbox nunca era publicado, e ele acumulava classe morta que
+ * nenhum portão via. Antes disso já tinha perdido o outro consumidor: as 24
+ * classes `.nds-admin-*` ficaram aqui quando o editor admin saiu (2026-08-30).
  *
- * Princípio: cada elemento da shell recebe 1–3 classes. Estados são expostos
- * via atributos `data-active`, `data-dirty`, etc. (não classes condicionais).
+ * Continua importada por `index.css`, ou seja, carregada em toda página das
+ * cinco stacks. CSS órfão não quebra nada, e é exatamente por isso que
+ * sobrevive — a decisão de apagar (o arquivo e o `@import`) é da dona.
+ *
+ * Princípio, enquanto durar: cada elemento da shell recebe 1–3 classes. Estados
+ * são expostos via atributos `data-active`, `data-dirty`, etc.
  *
  * Tokens: --background, --foreground, --border, --sidebar, --muted, --primary,
  *         --destructive, --warning, --spacing-*, --radius
