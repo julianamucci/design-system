@@ -11,8 +11,8 @@ import { tooltipSource } from './tooltip.source';
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {
   const [r, g, b] = (cor.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map((v) => {
-    const canal = Number(v) / 255;
-    return canal <= 0.03928 ? canal / 12.92 : ((canal + 0.055) / 1.055) ** 2.4;
+    const channel = Number(v) / 255;
+    return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
   });
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
@@ -79,8 +79,8 @@ export const Default: Story = {
       // Medido no elemento real, não na tabela de tokens: é a combinação
       // aplicada (fundo --primary, texto --primary-foreground) que a pessoa lê,
       // e ela precisa valer em qualquer tema da toolbar.
-      const estilo = getComputedStyle(balaoDe(trigger)!);
-      await expect(contraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+      const computedStyle = getComputedStyle(balaoDe(trigger)!);
+      await expect(contraste(computedStyle.color, computedStyle.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

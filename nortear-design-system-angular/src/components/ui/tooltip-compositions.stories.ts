@@ -8,9 +8,10 @@ import { NdsInput } from './input';
 import { NdsLabel } from './label';
 import { NdsCard, NdsCardContent, NdsCardHeader, NdsCardTitle } from './card';
 
-// As três composições que o conteúdo compartilhado documenta. Todas repetem a
-// mesma regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica
-// sozinho — nunca é o único portador da informação.
+// As três composições que o conteúdo compartilhado documenta, mais os quatro
+// lados de posicionamento. As composições repetem a mesma regra: o Tooltip
+// acrescenta contexto a um elemento que JÁ se explica sozinho — nunca é o único
+// portador da informação.
 
 const ICON_SALVAR = `<svg
           xmlns="http://www.w3.org/2000/svg"
@@ -78,9 +79,10 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Botão de ação rápida com atalho, ajuda ao lado do rótulo de um campo e definição ' +
-          'de sigla no cabeçalho de uma métrica. Nos três, o elemento continua compreensível ' +
-          'sem o Tooltip — em touch não há hover, e o conteúdo obrigatório não pode morar aqui.',
+          'Botão de ação rápida com atalho, ajuda ao lado do rótulo de um campo, definição ' +
+          'de sigla no cabeçalho de uma métrica e os quatro lados de posicionamento. Nas três ' +
+          'primeiras, o elemento continua compreensível sem o Tooltip — em touch não há hover, ' +
+          'e o conteúdo obrigatório não pode morar aqui.',
       },
     },
   },
@@ -212,6 +214,47 @@ export const MetricDescription: Story = {
         await expect(balaoDe(trigger)).not.toBeNull();
       });
       await expect(balaoDe(trigger)!.textContent).toContain('Largest Contentful Paint');
+    });
+  },
+};
+
+export const PlacementSides: Story = {
+  parameters: { covers: ['visual.item3'] },
+  render: () => ({
+    template: `
+      <div ndsTooltipProvider [delay]="0" class="nds-grid nds-p-8" data-cols="2" data-spacing="xl">
+        @for (side of lados; track side) {
+          <span ndsTooltip [defaultOpen]="true">
+            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="side">
+              {{ side }}
+            </button>
+            <ng-template ndsTooltipContent [side]="side">Tooltip {{ side }}</ng-template>
+          </span>
+        }
+      </div>
+    `,
+    props: { lados: ['top', 'right', 'bottom', 'left'] },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const oposto: Record<string, string> = {
+      top: 'bottom', bottom: 'top', left: 'right', right: 'left',
+    };
+
+    await step('Cada balão nasce do lado pedido, ou do oposto quando falta espaço', async () => {
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        const trigger = canvas.getByRole('button', { name: side });
+        // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
+        // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
+        await waitFor(async () => {
+          await expect(balaoDe(trigger)?.getAttribute('data-side')).toBeTruthy();
+        });
+        // O auto-flip por colisão é comportamento documentado: perto da borda o
+        // balão troca para o lado oposto em vez de sair da tela.
+        await expect([side, oposto[side]]).toContain(
+          balaoDe(trigger)!.getAttribute('data-side'),
+        );
+      }
     });
   },
 };

@@ -6,9 +6,11 @@ import { balaoDe } from './tooltip.fixtures';
 import { NdsButton } from './button';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
-// com atalho e texto longo — mais os quatro lados de posicionamento. Todas
-// nascem abertas: é o único jeito de a regressão visual capturar o balão, que
-// só existe no DOM enquanto está aberto.
+// com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
+// visual capturar o balão, que só existe no DOM enquanto está aberto.
+//
+// Os quatro lados de posicionamento moram em -compositions, e não aqui: é onde
+// react e vanilla já os publicavam, e o grupo da barra lateral sai do ARQUIVO.
 
 const ICON_SALVAR = `<svg
           xmlns="http://www.w3.org/2000/svg"
@@ -29,8 +31,8 @@ const ICON_SALVAR = `<svg
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {
   const [r, g, b] = (cor.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map((v) => {
-    const canal = Number(v) / 255;
-    return canal <= 0.03928 ? canal / 12.92 : ((canal + 0.055) / 1.055) ** 2.4;
+    const channel = Number(v) / 255;
+    return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
   });
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
@@ -94,8 +96,8 @@ export const Default: Story = {
       // Medido no elemento real, não na tabela de tokens: é a combinação
       // aplicada (fundo --primary, texto --primary-foreground) que a pessoa lê,
       // e ela precisa valer em qualquer tema da toolbar.
-      const estilo = getComputedStyle(balao);
-      await expect(contraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+      const computedStyle = getComputedStyle(balao);
+      await expect(contraste(computedStyle.color, computedStyle.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -169,47 +171,6 @@ export const LongText: Story = {
       // texto respeitou o teto em vez de esticar o balão pela viewport.
       await expect(limit).toBeGreaterThan(0);
       await expect(balao.getBoundingClientRect().width).toBeLessThanOrEqual(limit + 1);
-    });
-  },
-};
-
-export const PlacementSides: Story = {
-  parameters: { covers: ['visual.item3'] },
-  render: () => ({
-    template: `
-      <div ndsTooltipProvider [delay]="0" class="nds-grid nds-p-8" data-cols="2" data-spacing="xl">
-        @for (side of lados; track side) {
-          <span ndsTooltip [defaultOpen]="true">
-            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="side">
-              {{ side }}
-            </button>
-            <ng-template ndsTooltipContent [side]="side">Tooltip {{ side }}</ng-template>
-          </span>
-        }
-      </div>
-    `,
-    props: { lados: ['top', 'right', 'bottom', 'left'] },
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const oposto: Record<string, string> = {
-      top: 'bottom', bottom: 'top', left: 'right', right: 'left',
-    };
-
-    await step('Cada balão nasce do lado pedido, ou do oposto quando falta espaço', async () => {
-      for (const side of ['top', 'right', 'bottom', 'left']) {
-        const trigger = canvas.getByRole('button', { name: side });
-        // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
-        // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
-        await waitFor(async () => {
-          await expect(balaoDe(trigger)?.getAttribute('data-side')).toBeTruthy();
-        });
-        // O auto-flip por colisão é comportamento documentado: perto da borda o
-        // balão troca para o lado oposto em vez de sair da tela.
-        await expect([side, oposto[side]]).toContain(
-          balaoDe(trigger)!.getAttribute('data-side'),
-        );
-      }
     });
   },
 };
