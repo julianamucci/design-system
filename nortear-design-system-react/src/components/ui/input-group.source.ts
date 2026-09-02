@@ -21,6 +21,7 @@ import {
   NOTE_GROUP_LABEL,
   NOTE_PLACEHOLDER,
   PASTE_LABEL,
+  PASSWORD_FIELD_ID,
   PASSWORD_GROUP_LABEL,
   REVEAL_LABEL,
   SEARCH_GROUP_LABEL,
@@ -283,18 +284,27 @@ ${importOf(["InputGroup", "InputGroupAddon", "InputGroupButton", "InputGroupInpu
   const [visible, setVisible] = useState(false);
 
   return (
-    <InputGroup aria-label="${PASSWORD_GROUP_LABEL}">
-      <InputGroupInput type={visible ? "text" : "password"} />
-      <InputGroupAddon align="inline-end">
-        <InputGroupButton
-          size="icon-xs"
-          aria-label={visible ? "${HIDE_LABEL}" : "${REVEAL_LABEL}"}
-          onClick={() => setVisible(!visible)}
-        >
-          {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
-        </InputGroupButton>
-      </InputGroupAddon>
-    </InputGroup>
+    <>
+      {/* O rótulo é do CAMPO, e o nome do grupo não o substitui: o leitor de
+          tela não empresta um ao outro. Sem ele o campo fica anônimo — sem
+          \`<label>\`, sem \`aria-label\` e sem \`placeholder\` —, que é o caso
+          que o axe reprova na regra \`label\`. */}
+      <label className="nds-label" htmlFor="${PASSWORD_FIELD_ID}">
+        ${PASSWORD_GROUP_LABEL}
+      </label>
+      <InputGroup aria-label="${PASSWORD_GROUP_LABEL}">
+        <InputGroupInput id="${PASSWORD_FIELD_ID}" type={visible ? "text" : "password"} />
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton
+            size="icon-xs"
+            aria-label={visible ? "${HIDE_LABEL}" : "${REVEAL_LABEL}"}
+            onClick={() => setVisible(!visible)}
+          >
+            {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+          </InputGroupButton>
+        </InputGroupAddon>
+      </InputGroup>
+    </>
   );
 }`
 
