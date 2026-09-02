@@ -56,7 +56,7 @@ export const Closed: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 200px;">
+      <div class="nds-min-h-50" style="contain: layout">
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Abrir menu</Button>
@@ -95,7 +95,7 @@ export const Open: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Abrir menu</Button>
@@ -233,7 +233,7 @@ export const ItemDisabled: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Ações</Button>
@@ -289,7 +289,7 @@ export const CheckboxIndeterminate: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Colunas</Button>

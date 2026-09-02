@@ -231,9 +231,9 @@ interface DropdownMenuItemProps {
         <div className="nds-grid nds-w-full" data-spacing="md" style={{ "--grid-min": "9rem" } as CSSProperties}>
           {/* Basic */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-20"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 80, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.basic"))}
@@ -258,9 +258,9 @@ interface DropdownMenuItemProps {
 
           {/* Checkbox */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-20"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 80, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withCheckbox"))}
@@ -296,9 +296,9 @@ interface DropdownMenuItemProps {
 
           {/* Radio */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-20"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 80, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withRadio"))}
@@ -321,9 +321,9 @@ interface DropdownMenuItemProps {
 
           {/* Submenu */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-20"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 80, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withSubmenu"))}
@@ -549,7 +549,7 @@ interface DropdownMenuItemProps {
   </DropdownMenuContent>
 </DropdownMenu>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 240 }}>
+              <div className="nds-min-h-60" style={{ contain: "layout" }}>
                 <DropdownMenu defaultOpen modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Conta</Button>
@@ -596,7 +596,7 @@ interface DropdownMenuItemProps {
   </DropdownMenuContent>
 </DropdownMenu>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 200 }}>
+              <div className="nds-min-h-50" style={{ contain: "layout" }}>
                 <DropdownMenu defaultOpen modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Colunas</Button>
@@ -647,7 +647,7 @@ interface DropdownMenuItemProps {
   </DropdownMenuContent>
 </DropdownMenu>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 200 }}>
+              <div className="nds-min-h-50" style={{ contain: "layout" }}>
                 <DropdownMenu defaultOpen modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Tema</Button>
@@ -690,7 +690,7 @@ interface DropdownMenuItemProps {
   </DropdownMenuContent>
 </DropdownMenu>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 220 }}>
+              <div className="nds-min-h-60" style={{ contain: "layout" }}>
                 <DropdownMenu defaultOpen modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Editar</Button>

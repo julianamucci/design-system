@@ -53,7 +53,7 @@ export const Default: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 300px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Conta</Button>
@@ -109,7 +109,7 @@ export const Destructive: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 300px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Conta</Button>

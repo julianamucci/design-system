@@ -59,9 +59,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Andaime do canvas: o menu abre em portal e o cartão da story precisa
+// reservar a altura. O degrau vem da escada `.nds-min-h-*`, e não de um valor
+// cravado — inline vence a folha e sairia do tema e da densidade.
+const wrapperClass = "nds-min-h-90";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 360,
   position: "relative",
 };
 
@@ -79,7 +82,7 @@ export const WithLabel: Story = {
     docs: { source: { transform: dropdownMenuWithLabelSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Conta</Button>
@@ -134,7 +137,7 @@ export const WithCheckboxItems: Story = {
       const [name, setNome] = useState(true);
       const [email, setEmail] = useState(false);
       return (
-        <div style={wrapperStyle}>
+        <div className={wrapperClass} style={wrapperStyle}>
           <DropdownMenu defaultOpen modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">Colunas</Button>
@@ -204,7 +207,7 @@ export const WithRadioGroup: Story = {
     const Demo = () => {
       const [theme, setTema] = useState("light");
       return (
-        <div style={wrapperStyle}>
+        <div className={wrapperClass} style={wrapperStyle}>
           <DropdownMenu defaultOpen modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">Tema</Button>
@@ -254,7 +257,7 @@ export const WithSubmenu: Story = {
     docs: { source: { transform: dropdownMenuWithSubmenuSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Arquivo</Button>
@@ -317,7 +320,7 @@ export const WithShortcuts: Story = {
     docs: { source: { transform: dropdownMenuWithShortcutsSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Editar</Button>

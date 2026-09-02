@@ -83,7 +83,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div style="contain: layout; min-height: 300px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :key="String(args.defaultOpen)" v-bind="args">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Abrir menu</Button>

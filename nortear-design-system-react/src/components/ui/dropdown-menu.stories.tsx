@@ -23,7 +23,7 @@ const meta = {
     layout: "centered",
     docs: {
       page: withAutoDocsTab(DropdownMenuDocs),
-      // O painel imprimia o `<div style={{ contain, minHeight }}>` do canvas e
+      // O painel imprimia o `<div class="nds-min-h-80" style={{ contain }}>` do canvas e
       // o `{...rootArgs}` da desestruturação — andaime, não componente.
       source: { transform: dropdownMenuSource },
     },
@@ -80,7 +80,7 @@ export const Playground: Story = {
       align?: "start" | "center" | "end";
     };
     return (
-      <div style={{ contain: "layout", minHeight: 300, position: "relative" }}>
+      <div className="nds-min-h-80" style={{ contain: "layout", position: "relative" }}>
         <DropdownMenu {...rootArgs}>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">Abrir menu</Button>

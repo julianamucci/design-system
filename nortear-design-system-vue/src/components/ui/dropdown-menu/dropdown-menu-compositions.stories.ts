@@ -78,7 +78,7 @@ export const WithLabel: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 320px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Conta</Button>
@@ -138,7 +138,7 @@ export const WithCheckboxItems: Story = {
       return { name, email };
     },
     template: `
-      <div style="contain: layout; min-height: 300px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Colunas</Button>
@@ -205,7 +205,7 @@ export const WithRadioGroup: Story = {
       return { theme };
     },
     template: `
-      <div style="contain: layout; min-height: 300px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Tema</Button>
@@ -265,7 +265,7 @@ export const WithSubmenu: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 320px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Arquivo</Button>
@@ -338,7 +338,7 @@ export const WithShortcuts: Story = {
   render: () => ({
     components: componentes,
     template: `
-      <div style="contain: layout; min-height: 300px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <DropdownMenu :default-open="true" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Editar</Button>

@@ -40,9 +40,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Andaime do canvas: o menu abre em portal e o cartão da story precisa
+// reservar a altura. O degrau vem da escada `.nds-min-h-*`, e não de um valor
+// cravado — inline vence a folha e sairia do tema e da densidade.
+const wrapperClass = "nds-min-h-80";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 300,
   position: "relative",
 };
 
@@ -54,7 +57,7 @@ export const Default: Story = {
     docs: { source: { transform: dropdownMenuItemDefaultSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Conta</Button>
@@ -108,7 +111,7 @@ export const Destructive: Story = {
     docs: { source: { transform: dropdownMenuItemDestructiveSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Conta</Button>

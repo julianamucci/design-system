@@ -44,9 +44,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Andaime do canvas: o menu abre em portal e o cartão da story precisa
+// reservar a altura. O degrau vem da escada `.nds-min-h-*`, e não de um valor
+// cravado — inline vence a folha e sairia do tema e da densidade.
+const wrapperClass = "nds-min-h-80";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 300,
   position: "relative",
 };
 
@@ -64,7 +67,7 @@ export const Closed: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Abrir menu</Button>
@@ -96,7 +99,7 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: { covers: ["functional.item2", "accessibility.item3"] },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Abrir menu</Button>
@@ -179,7 +182,7 @@ export const Controlled: Story = {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
       return (
-        <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+        <div className={`nds-stack ${wrapperClass}`} data-spacing="sm" style={wrapperStyle}>
           <Button onClick={() => setOpen(!open)}>
             {open ? "Fechar pelo estado" : "Abrir pelo estado"}
           </Button>
@@ -229,7 +232,7 @@ export const ItemDisabled: Story = {
     docs: { source: { transform: dropdownMenuItemDisabledSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Ações</Button>

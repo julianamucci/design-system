@@ -5,10 +5,10 @@
  * apaga. É o que deixa as funções rodarem no projeto `unit` do vitest, a única
  * guarda que elas têm: a saída do painel não chega ao DOM durante a `play`.
  *
- * O painel imprimia a árvore do `render`: o `<div style={{ contain, minHeight
- * }}>` que segura o canvas da story, o `{...rootArgs}` e, nas composições, os
- * componentes de estado declarados dentro do arquivo de story. Nada disso
- * compila fora dali.
+ * O painel imprimia a árvore do `render`: o `<div class="nds-min-h-80"
+ * style={{ contain }}>` que segura o canvas da story, o `{...rootArgs}` e, nas
+ * composições, os componentes de estado declarados dentro do arquivo de
+ * story. Nada disso compila fora dali.
  *
  * Duas coisas ficam FORA dos snippets de propósito:
  *

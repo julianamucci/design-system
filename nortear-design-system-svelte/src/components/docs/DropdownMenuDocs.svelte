@@ -628,7 +628,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithLabel()}
-    <div style="contain: layout; min-height: 240px;">
+    <div class="nds-min-h-60" style="contain: layout">
       <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
@@ -649,7 +649,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithCheckboxItems()}
-    <div style="contain: layout; min-height: 200px;">
+    <div class="nds-min-h-50" style="contain: layout">
       <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
@@ -682,7 +682,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithRadioGroup()}
-    <div style="contain: layout; min-height: 200px;">
+    <div class="nds-min-h-50" style="contain: layout">
       <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
@@ -702,7 +702,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithShortcuts()}
-    <div style="contain: layout; min-height: 220px;">
+    <div class="nds-min-h-60" style="contain: layout">
       <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
