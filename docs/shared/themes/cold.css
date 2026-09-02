@@ -159,6 +159,13 @@
      valor inválido que derruba a declaração em silêncio. */
   --radius: 0;
   --radius-badge: 0;
+  /* O cartão também, e por um motivo que só aparece na conta: `--radius-xl` é o
+     único degrau ADITIVO da escada (`base + 4px`), então ele não zera junto com
+     a base como os de baixo, que passam por `max(0px, …)`. Um tema que se
+     declara quadrado ficava com cartões de 4px — arredondados o suficiente para
+     desmentir a própria identidade, e discretos o suficiente para ninguém
+     notar. Mesma família do `--radius-badge`, que aponta para `--radius-full`. */
+  --radius-card: 0;
 }
 
 /* Dark mode — combina `.dark.tema-cold` */

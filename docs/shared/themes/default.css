@@ -51,7 +51,9 @@
  *     Ver o bloco `--chart-*` mais abaixo.
  *   - Forma: a marca TEM identidade de forma (cantos generosos, nada vivo), então
  *     --radius é 0.875rem (14px); a escala derivada leva o cartão a
- *     --radius-xl = 18px, que é o raio de cartão do brand book.
+ *     --radius-xl = 18px, que é o raio de cartão do brand book. O cartão, porém,
+ *     NÃO usa 18: usa 24, e o motivo está na declaração de `--radius-card` mais
+ *     abaixo — 18px não comporta um filho aninhado a 16px de inset.
  *   - Herdado de tokens.css, não declarado aqui: espaçamento, densidade,
  *     tipografia, movimento, sombras e a escala --radius-xs..xl.
  *
@@ -284,7 +286,21 @@
   --radius-button: var(--radius-lg);
   --radius-input: var(--radius-lg);
   --radius-alert: var(--radius-lg);
-  --radius-card: var(--radius-xl);
+  /* 24px, e o valor é ESCRITO COMO A RAZÃO DELE: o inset em que um cartão
+     aninha, mais o menor raio que ainda se percebe.
+     `16px + 8px`, e o filho concêntrico cai exatamente em `--radius-xs`.
+     `Rᵢ = Rₑ − E` (a regra de raio aninhado) só produz canto visível enquanto o
+     raio do pai supera o espaçamento até o filho com alguma folga. Em
+     `var(--radius-xl)` o cartão media 18px contra um inset de 16, e o filho
+     saía com 2px — quadrado o bastante para parecer defeito de renderização,
+     redondo o bastante para não parecer decisão.
+     O brand book prescreve 18px, e este é o ponto em que o tema se afasta dele
+     de propósito: 18 não comporta aninhamento. O `+4px` da escala foi desenhado
+     para parear com inset de 4px (está escrito em `tokens.css`), e as seções
+     das docs pages aninham a 16.
+     Escrito com tokens, e não `1.5rem`, porque assim acompanha: mexer em
+     `--radius` ou na régua de espaçamento reajusta o cartão sozinho. */
+  --radius-card: calc(var(--spacing-4) + var(--radius-xs));
   --radius-badge: var(--radius-full);
 }
 

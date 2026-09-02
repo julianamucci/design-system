@@ -110,13 +110,40 @@ declaram, e cada um mostra um caminho:
 
 | tema | o que declara | identidade |
 |---|---|---|
-| `default` | `--radius: 0.875rem` + os cinco por componente | cantos generosos |
-| `warm` | `--radius: var(--radius-full)` | tudo em cápsula; micro-controle sai redondo |
-| `cold` | `--radius: 0` **e** `--radius-badge: 0` | canto reto |
+| `default` | `--radius: 0.875rem` + os cinco por componente, com `--radius-card` fora da escala | cantos generosos |
+| `warm` | `--radius: 1.5rem` | cantos macios, quase cápsula no controle |
+| `cold` | `--radius: 0`, `--radius-badge: 0` **e** `--radius-card: 0` | canto reto |
 
 Sobrescrever a BASE é o que move a escala inteira, e é o caminho preferido — os
 degraus continuam derivando sozinhos. Se declarar por componente, use a escala
-(`var(--radius-lg)`, `var(--radius-xl)`, `var(--radius-full)`), nunca px solto.
+(`var(--radius-lg)`, `var(--radius-xl)`, `var(--radius-full)`) ou uma expressão
+que diga a RAZÃO do valor; nunca px solto.
+
+**O `cold` precisa de três linhas, e as duas extras vêm do mesmo lugar:**
+`--radius-badge` aponta para `--radius-full` (9999px fixo) e `--radius-xl` é o
+único degrau ADITIVO da escada (`base + 4px`). Nenhum dos dois zera junto com a
+base — os degraus de baixo zeram porque passam por `max(0px, …)`, os de cima
+não. Um tema que se declara quadrado e zera só `--radius` fica com badge em
+cápsula e cartão de 4px.
+
+**E o `--radius-card` do `default` é o caso que ensina o resto.** O raio de
+cartão da escala é `base + 4`, e esse `+4` foi desenhado para parear com inset de
+**4px** — está escrito em `tokens.css`. As seções das docs pages aninham a
+**16px**, e aí `Rᵢ = Rₑ − E` devolvia 2px: quadrado o bastante para parecer
+defeito de renderização, redondo o bastante para não parecer decisão.
+
+A saída não é abrir exceção na regra de aninhamento. Foi testada, e ela não
+fecha: um piso do tipo `max(6px, Rₑ − E)` conserta o Default, não mexe no `warm`
+e deixa o filho do `cold` MAIS REDONDO que o pai; um piso relativo ao pai faz
+filho e pai empatarem. Quanto mais guarda a exceção precisa, mais ela avisa que
+o mecanismo é o errado.
+
+A saída é a proporção: o raio do cartão tem de superar o inset com folga. O
+Default escreve isso como conta, não como número —
+`calc(var(--spacing-4) + var(--radius-xs))`, o inset mais o menor raio que ainda
+se percebe —, e o filho concêntrico cai exatamente em `--radius-xs`. Custou
+afastar-se do brand book, que prescreve 18px de cartão: 18 não comporta
+aninhamento a 16.
 
 **O `cold` precisa das duas linhas, e o motivo vale para qualquer tema reto:**
 `--radius-badge` aponta para `--radius-full`, que é `9999px` fixo e não deriva da

@@ -227,11 +227,18 @@
 
   /* Tokens por componente — superfície de theming. Os DEFAULTS derivam da
      escala (aditiva), o que mantém os pares de raio aninhado válidos em
-     qualquer base: card(+4px) com inset de 4px → filho = base, sempre. */
+     qualquer base: card(+4px) com inset de 4px → filho = base, sempre.
+
+     E É PRECISO LER A CONDIÇÃO: o par vale para inset de 4px. Onde o inset é
+     maior, `Rᵢ = Rₑ − E` come o raio inteiro — com card em `base + 4` e inset de
+     16px, o filho sai com `base − 12`, que no tema Default dava 2px. Quadrado o
+     bastante para parecer defeito, redondo o bastante para não parecer decisão.
+     Quem aninha a 16px sobrescreve `--radius-card` no tema, escrevendo a razão
+     em vez do número: ver o Default, que usa `--spacing-4 + --radius-xs`. */
   --radius-button: var(--radius-lg);
   --radius-input: var(--radius-lg);
   --radius-alert: var(--radius-lg);
-  --radius-card: var(--radius-xl);   /* 14px */
+  --radius-card: var(--radius-xl);   /* base + 4px */
   --radius-badge: var(--radius-full); /* pill */
 
   /* Dimension tokens — altura de interativos.
