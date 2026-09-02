@@ -583,6 +583,18 @@ const a11yCritCols = computed(() => ({
         { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!-- CINCO itens, e a contagem é medida, não gosto.
+           Cada controle da faixa é um quadrado de `var(--size-lg)` (36px) e o
+           `.nds-button` declara `flex-shrink: 0`: a lista não encolhe, ela
+           TRANSBORDA. A moldura do par ocupa metade da largura da seção, e a
+           composição anterior — anterior, 1, reticências, 5, 6, 7, reticências,
+           12, próxima — pedia 9 × 36 + 8 × 4 = 356px de faixa dentro de um
+           painel de menos de 280. Na tela a faixa saía cortada dos dois lados; o
+           axe achou pela beirada, em `target-size`: sobravam 3,4px visíveis do
+           "12" e 4px do "próxima", onde o mínimo é 24. Com 1, reticências, 6,
+           reticências, 12 a faixa mede 5 × 36 + 4 × 4 = 196px e cabe.
+           Anterior e próxima saem daqui porque o par 2, logo abaixo, é
+           justamente o que fala deles — e é lá que eles têm espaço. -->
       <template #do-preview-0>
         <Pagination
           :aria-label="stripHtml(tContent('doDont.pair1.do'))"
@@ -592,18 +604,12 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <PaginationContent>
-            <PaginationItem><PaginationPrevious /></PaginationItem>
             <PaginationItem>
               <PaginationLink :aria-label="`Ir para página 1`">
                 1
               </PaginationLink>
             </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 5`">
-                5
-              </PaginationLink>
-            </PaginationItem>
             <PaginationItem>
               <PaginationLink
                 :is-active="true"
@@ -612,18 +618,12 @@ const a11yCritCols = computed(() => ({
                 6
               </PaginationLink>
             </PaginationItem>
-            <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 7`">
-                7
-              </PaginationLink>
-            </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
             <PaginationItem>
               <PaginationLink :aria-label="`Ir para página 12`">
                 12
               </PaginationLink>
             </PaginationItem>
-            <PaginationItem><PaginationNext /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
