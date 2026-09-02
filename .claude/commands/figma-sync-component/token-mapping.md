@@ -4,15 +4,12 @@ Referência do comando `/figma-sync-component`.
 
 **Sincronizado em 2026-09-02** contra `docs/shared/tokens/figma-variables.json`,
 comparando as duas pontas por resumo determinístico (token, modo e valor, com o
-float32 do Figma arredondado dos dois lados). Sete das oito coleções ficaram
-idênticas; a `Cor` difere por um único token, `--ring-offset-color`, que existe
-no arquivo e não existe mais no CSS.
+float32 do Figma arredondado dos dois lados). **As oito coleções batem token a
+token, nos seis modos.**
 
-Esse token está **sem uso**, e isso foi medido, não suposto: nenhuma outra
-variável o referencia por alias, nenhum estilo local o amarra, e ele não aparece
-em nenhum dos 1262 nós das dez páginas. Fica no arquivo por decisão pendente —
-apagar variável é irreversível do lado de quem estivesse amarrado, e aqui não há
-ninguém.
+O `--ring-offset-color`, que sobrava no arquivo sem par no CSS, foi removido em
+2026-09-02 depois de medido sem uso três vezes — nenhum alias de outra variável,
+nenhum estilo local, e ausente nos 1262 nós das dez páginas.
 
 Vale reparar em como a defasagem chegou até aqui. A nota anterior dizia que as
 144 variáveis batiam uma a uma em 2026-08-05, e nada avisou quando deixaram de
@@ -80,7 +77,7 @@ Se algum dia uma variável aparecer sem `codeSyntax`, o caminho continua servind
 
 | Coleção | Vars | Modos |
 |---|---|---|
-| `Cor` | 55 | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` |
+| `Cor` | 54 | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` |
 | `Texto` | 54 | `pt-BR`, `en`, `es` |
 | `Dimensao` | 31 | `default`, `condensado`, `confortavel` |
 | `Tipografia` | 25 | `minor-second`, `minor-third`, `major-second`, `major-third`, `perfect-fourth`, `augmented-fourth`, `perfect-fifth`, `golden` |
@@ -91,10 +88,8 @@ Se algum dia uma variável aparecer sem `codeSyntax`, o caminho continua servind
 | `Elevacao` | 4 | `light`, `dark` |
 | `Fonte` | 1 | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` |
 
-Os nomes coincidem com os do export desde 2026-09-02, mas **um deles não fecha a
-conta**: `Cor` tem 55 e o export tem 54, pela sobra do `--ring-offset-color`
-descrita no topo. Se a contagem desta tabela e a do export baterem em tudo menos
-aí, está certo.
+Os nomes e as contagens coincidem com os do export desde 2026-09-02. Se alguma
+linha divergir, é defasagem — não há mais exceção conhecida.
 
 `Raio` ganhou os modos `warm` e `cold` na mesma data. Antes tinha só `default`,
 o que quer dizer que a identidade de raio de dois dos três temas simplesmente
@@ -230,6 +225,23 @@ A pergunta a fazer depois de cada sincronia não é "algum vínculo quebrou", é
 varra os consumidores no Figma e confira a opacidade de nó contra o alfa do CSS.
 O `--accent` do design system só aparece com `/ 0.1`; qualquer nó amarrado a ele
 em força total está errado por construção.
+
+**Vínculo VÁLIDO apontando para o token ERRADO não aparece em portão nenhum.**
+Prima da armadilha acima, e mais silenciosa: o token existe, o vínculo resolve, a
+cor pintada pode até estar certa. O que mudou foi qual token o CSS manda usar.
+Em `886ee7af3` (2026-08-23) o título das quatro variantes do Alert saiu da cor
+semântica para o par `-foreground` da própria cor; no Figma, `destructive`,
+`success` e `info` continuaram com o título amarrado à cor semântica, e as
+descrições apontavam para `foreground` em vez de `destructive-foreground` e
+companhia. Os quatro pares valem `--foreground` neste projeto, então metade das
+diferenças não pintava um pixel diferente — e some inteira num tema derivado que
+divirja os quatro, que é exatamente o motivo de a indireção existir.
+
+**E a deriva costuma ser PARCIAL, o que arruína a sondagem por amostra.** Das
+quatro variantes semânticas do Alert, três tinham o título errado e a `warning`
+já estava certa. Conferir uma variante e concluir pelas outras teria dado
+qualquer resposta, conforme a variante sorteada. Compare as N contra o que o CSS
+declara para cada uma, nunca uma contra as demais.
 
 **Mas opacidade sozinha não diz o que a camada FAZ — leia a geometria.** Na mesma
 varredura eu apliquei a regra acima ao `variant=link` e relatei que ele pintava
