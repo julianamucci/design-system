@@ -75,7 +75,7 @@ export const EditProfile: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <PopoverHeader>
               <PopoverTitle>Editar perfil</PopoverTitle>
               <PopoverDescription>Altere o nome e o email da conta.</PopoverDescription>
@@ -125,7 +125,7 @@ export const TableFilter: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Filtros</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <PopoverHeader>
               <PopoverTitle>Filtrar por status</PopoverTitle>
               <PopoverDescription>Combine quantos status quiser na listagem.</PopoverDescription>
@@ -194,7 +194,7 @@ export const ColorPicker: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Escolher cor da etiqueta</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <PopoverHeader>
               <PopoverTitle>Cor da etiqueta</PopoverTitle>
               <PopoverDescription>Escolha uma cor da paleta do tema.</PopoverDescription>
@@ -261,7 +261,7 @@ export const QuickSettings: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Configuracoes rápidas</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <PopoverHeader>
               <PopoverTitle>Preferências</PopoverTitle>
               <PopoverDescription>Cada linha vale por si — nada aqui depende do resto.</PopoverDescription>

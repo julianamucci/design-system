@@ -61,7 +61,7 @@ export const EditProfile: Story = {
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
 
-        <ng-template ndsPopoverContent align="start">
+        <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
             <h3 ndsPopoverTitle>Editar perfil</h3>
             <p ndsPopoverDescription>Altere o nome e o email da conta.</p>
@@ -115,7 +115,7 @@ export const TableFilter: Story = {
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Filtros</button>
 
-        <ng-template ndsPopoverContent align="start">
+        <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
             <h3 ndsPopoverTitle>Filtrar por status</h3>
             <p ndsPopoverDescription>Combine quantos status quiser na listagem.</p>
@@ -245,7 +245,7 @@ export const QuickSettings: Story = {
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Configurações rápidas</button>
 
-        <ng-template ndsPopoverContent align="end">
+        <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
             <h3 ndsPopoverTitle>Preferências</h3>
             <p ndsPopoverDescription>Cada linha vale por si — nada aqui depende do resto.</p>

@@ -70,7 +70,7 @@ export const Default: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Ver atalhos</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <p class="nds-text-body">Use Ctrl+K para abrir a busca em qualquer tela.</p>
           </PopoverContent>
         </Popover>
@@ -113,7 +113,7 @@ export const WithTitle: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Configuracoes</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <PopoverHeader>
               <PopoverTitle>Configuracoes de exibição</PopoverTitle>
               <PopoverDescription>
@@ -187,7 +187,7 @@ export const Form: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <PopoverHeader>
               <PopoverTitle>Editar perfil</PopoverTitle>
             </PopoverHeader>

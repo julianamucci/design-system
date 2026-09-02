@@ -128,7 +128,7 @@ export const Form: Story = {
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
 
-        <ng-template ndsPopoverContent align="start">
+        <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
             <h3 ndsPopoverTitle>Editar perfil</h3>
             <p ndsPopoverDescription>Altere o nome e o email da conta.</p>

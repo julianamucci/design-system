@@ -65,7 +65,7 @@ import { Button } from '@/components/ui/button'`;
  */
 function configPanel(recuo = 2): string {
   const p = ' '.repeat(recuo);
-  return `${p}<PopoverContent align="start">
+  return `${p}<PopoverContent>
 ${p}  <PopoverHeader>
 ${p}    <PopoverTitle>Configuracoes de exibição</PopoverTitle>
 ${p}    <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
@@ -144,7 +144,7 @@ import { Button } from '@/components/ui/button'`,
     popover({
       root: ':default-open="true"',
       label: 'Ver atalhos',
-      panel: `  <PopoverContent align="start">
+      panel: `  <PopoverContent>
     <p class="nds-text-body">Use Ctrl+K para abrir a busca em qualquer tela.</p>
   </PopoverContent>`,
     }),
@@ -186,7 +186,7 @@ const email = ref('ana@nortear.com.br')`,
     popover({
       root: ':default-open="true"',
       label: 'Editar perfil',
-      panel: `  <PopoverContent align="start">
+      panel: `  <PopoverContent>
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
@@ -314,7 +314,7 @@ const email = ref('ana@nortear.com.br')`,
     popover({
       root: ':default-open="true"',
       label: 'Editar perfil',
-      panel: `  <PopoverContent align="start">
+      panel: `  <PopoverContent>
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
       <PopoverDescription>Altere o nome e o email da conta.</PopoverDescription>
@@ -362,7 +362,7 @@ const status = reactive<Record<string, boolean>>({
     popover({
       root: ':default-open="true"',
       label: 'Filtros',
-      panel: `  <PopoverContent align="start">
+      panel: `  <PopoverContent>
     <PopoverHeader>
       <PopoverTitle>Filtrar por status</PopoverTitle>
       <PopoverDescription>Combine quantos status quiser na listagem.</PopoverDescription>
@@ -419,7 +419,7 @@ import { Button } from '@/components/ui/button'`,
     popover({
       root: ':default-open="true"',
       label: 'Escolher cor da etiqueta',
-      panel: `  <PopoverContent align="start">
+      panel: `  <PopoverContent>
     <PopoverHeader>
       <PopoverTitle>Cor da etiqueta</PopoverTitle>
       <PopoverDescription>Escolha uma cor da paleta do tema.</PopoverDescription>
@@ -460,7 +460,7 @@ const preferencias = reactive<Record<string, boolean>>({
     popover({
       root: ':default-open="true"',
       label: 'Configuracoes rápidas',
-      panel: `  <PopoverContent align="start">
+      panel: `  <PopoverContent>
     <PopoverHeader>
       <PopoverTitle>Preferências</PopoverTitle>
       <PopoverDescription>Cada linha vale por si — nada aqui depende do resto.</PopoverDescription>
