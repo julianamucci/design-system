@@ -547,7 +547,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer :default-open="true">
+          <Drawer>
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('usage.uxWriting.table.trigger.good') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>Editar perfil</DrawerTitle>
@@ -570,7 +575,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer :default-open="true">
+          <Drawer>
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('usage.uxWriting.table.trigger.bad') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle class="nds-sr-only">
@@ -594,10 +604,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer
-            :default-open="true"
-            direction="bottom"
-          >
+          <Drawer direction="bottom">
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('usage.uxWriting.table.trigger.good') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>Filtros</DrawerTitle>
@@ -620,7 +632,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer :default-open="true">
+          <Drawer>
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('usage.uxWriting.table.trigger.bad') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>Drawer aninhado (errado)</DrawerTitle>
@@ -658,10 +675,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer
-            :default-open="true"
-            direction="bottom"
-          >
+          <Drawer direction="bottom">
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('variants.items.bottom') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.bottom') }}</DrawerTitle>
@@ -683,10 +702,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer
-            :default-open="true"
-            direction="top"
-          >
+          <Drawer direction="top">
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('variants.items.top') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.top') }}</DrawerTitle>
@@ -708,10 +729,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer
-            :default-open="true"
-            direction="left"
-          >
+          <Drawer direction="left">
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('variants.items.left') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.left') }}</DrawerTitle>
@@ -733,10 +756,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer
-            :default-open="true"
-            direction="right"
-          >
+          <Drawer direction="right">
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('variants.items.right') }}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.right') }}</DrawerTitle>

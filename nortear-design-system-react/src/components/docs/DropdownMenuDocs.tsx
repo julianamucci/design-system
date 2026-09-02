@@ -550,7 +550,7 @@ interface DropdownMenuItemProps {
 </DropdownMenu>`,
             preview: (
               <div className="nds-min-h-60" style={{ contain: "layout" }}>
-                <DropdownMenu defaultOpen modal={false}>
+                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Conta</Button>
                   </DropdownMenuTrigger>
@@ -597,7 +597,7 @@ interface DropdownMenuItemProps {
 </DropdownMenu>`,
             preview: (
               <div className="nds-min-h-50" style={{ contain: "layout" }}>
-                <DropdownMenu defaultOpen modal={false}>
+                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Colunas</Button>
                   </DropdownMenuTrigger>
@@ -648,7 +648,7 @@ interface DropdownMenuItemProps {
 </DropdownMenu>`,
             preview: (
               <div className="nds-min-h-50" style={{ contain: "layout" }}>
-                <DropdownMenu defaultOpen modal={false}>
+                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Tema</Button>
                   </DropdownMenuTrigger>
@@ -691,7 +691,7 @@ interface DropdownMenuItemProps {
 </DropdownMenu>`,
             preview: (
               <div className="nds-min-h-60" style={{ contain: "layout" }}>
-                <DropdownMenu defaultOpen modal={false}>
+                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Editar</Button>
                   </DropdownMenuTrigger>

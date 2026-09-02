@@ -592,7 +592,12 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Editar perfil
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
@@ -610,7 +615,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #dont-preview-0>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Atenção
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Atenção</DialogTitle>
@@ -628,7 +638,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #do-preview-1>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Editar perfil
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
@@ -646,7 +661,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #dont-preview-1>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="destructive">
+              Excluir conta
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Excluir conta</DialogTitle>
@@ -686,7 +706,12 @@ const a11yCritCols = computed(() => ({
       :note="stripHtml(tContent('variants.note'))"
     >
       <template #variant-preview-0>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Editar perfil
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
@@ -704,7 +729,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-1>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Editar perfil
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
@@ -746,7 +776,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-2>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Termos de serviço
+            </Button>
+          </DialogTrigger>
           <DialogScrollContent class="nds-max-w-md">
             <DialogHeader>
               <DialogTitle>Termos de serviço</DialogTitle>
@@ -776,7 +811,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-3>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Detalhes do pedido #4287
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Detalhes do pedido #4287</DialogTitle>
@@ -786,7 +826,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-4>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Remover anexo
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Remover anexo</DialogTitle>
@@ -806,7 +851,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-5>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Configurações de notificação
+            </Button>
+          </DialogTrigger>
           <DialogContent :show-close-button="false">
             <DialogHeader>
               <DialogTitle>Configurações de notificação</DialogTitle>
@@ -827,7 +877,12 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-6>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Confirmar e-mail
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Confirmar e-mail</DialogTitle>
@@ -857,7 +912,12 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Dialog default-open>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Capa do post
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Capa do post</DialogTitle>

@@ -426,7 +426,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet doPair1()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
           <PopoverTitle>Configurações</PopoverTitle>
@@ -436,7 +441,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Popover>
   {/snippet}
   {#snippet dontPair1()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <p class="nds-text-body">Conteúdo sem título — leitor de tela perde contexto.</p>
       </PopoverContent>
@@ -467,14 +477,24 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet variantDefault()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <p class="nds-text-body">Conteúdo contextual livre.</p>
       </PopoverContent>
     </Popover>
   {/snippet}
   {#snippet variantWithTitle()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('demonstration.labels.title')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
           <PopoverTitle>Configurações de exibição</PopoverTitle>
@@ -623,7 +643,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet compEditProfile()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
           <PopoverTitle>Dados do perfil</PopoverTitle>
@@ -657,7 +682,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compTableFilter()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('variants.compositions.tableFilter.name')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
           <PopoverTitle>Filtrar por status</PopoverTitle>
@@ -685,7 +715,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compColorPicker()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('variants.compositions.colorPicker.name')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
           <PopoverTitle>Cor da etiqueta</PopoverTitle>
@@ -704,7 +739,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compQuickSettings()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('variants.compositions.quickSettings.name')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
           <PopoverTitle>Preferências rápidas</PopoverTitle>
@@ -726,7 +766,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet variantForm()}
-    <Popover open>
+    <Popover>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
+        {/snippet}
+      </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
           <PopoverTitle>Editar perfil</PopoverTitle>

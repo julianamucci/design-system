@@ -549,10 +549,15 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {{ tContent('usage.uxWriting.table.label.good') }}
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent
               side="bottom"
               align="start"
@@ -572,10 +577,15 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {{ tContent('usage.uxWriting.table.trigger.bad') }}
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent
               side="bottom"
               align="start"
@@ -596,10 +606,15 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {{ tContent('usage.uxWriting.table.label.good') }}
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent
               side="bottom"
               align="start"
@@ -618,10 +633,15 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {{ tContent('usage.uxWriting.table.label.good') }}
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent
               side="bottom"
               align="start"
@@ -653,10 +673,15 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {{ tContent('demonstration.labels.basic') }}
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent
               side="bottom"
               align="start"
@@ -673,10 +698,15 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {{ tContent('usage.uxWriting.table.destructive.good') }}
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent
               side="bottom"
               align="start"
@@ -695,10 +725,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button
                 variant="outline"
@@ -727,10 +754,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button
                 variant="outline"
@@ -762,10 +786,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button
                 variant="outline"
@@ -799,10 +820,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu
-            :default-open="true"
-            :modal="false"
-          >
+          <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button
                 variant="outline"

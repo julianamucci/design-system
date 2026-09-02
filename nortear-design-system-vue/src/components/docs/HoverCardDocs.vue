@@ -424,7 +424,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <a
@@ -470,7 +469,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <a
@@ -514,7 +512,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <a
@@ -546,7 +543,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <a
@@ -749,7 +745,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <a
@@ -790,7 +785,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <a
@@ -829,7 +823,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <button
@@ -858,7 +851,6 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
-            :default-open="true"
           >
             <HoverCardTrigger as-child>
               <button

@@ -542,10 +542,12 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -563,10 +565,12 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #dont-preview-0>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle class="nds-sr-only">
@@ -586,10 +590,12 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #do-preview-1>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -599,10 +605,12 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #dont-preview-1>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="top">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -625,10 +633,12 @@ const a11yCritCols = computed(() => ({
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.rightLabel') }}</SheetTitle>
@@ -646,10 +656,12 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-1>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="left">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.leftLabel') }}</SheetTitle>
@@ -659,10 +671,12 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-2>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="top">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.topLabel') }}</SheetTitle>
@@ -672,10 +686,12 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-3>
-        <Sheet
-          default-open
-          :modal="false"
-        >
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </SheetTrigger>
           <SheetContent side="bottom">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.bottomLabel') }}</SheetTitle>
@@ -695,10 +711,12 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <div style="contain: layout">
-          <Sheet
-            default-open
-            :modal="false"
-          >
+          <Sheet>
+            <SheetTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.trigger') }}
+              </Button>
+            </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
                 <SheetTitle>Filtros avançados</SheetTitle>
@@ -734,10 +752,12 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div style="contain: layout">
-          <Sheet
-            default-open
-            :modal="false"
-          >
+          <Sheet>
+            <SheetTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.trigger') }}
+              </Button>
+            </SheetTrigger>
             <SheetContent side="left">
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>

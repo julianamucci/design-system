@@ -397,7 +397,10 @@ interface TriggerProps {
 
   {#snippet doPair1()}
     <div style="contain: layout">
-      <Drawer direction="bottom" defaultOpen={true}>
+      <Drawer direction="bottom">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Editar perfil</DrawerTitle>
@@ -415,7 +418,10 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <Drawer direction="bottom" defaultOpen={true}>
+      <Drawer direction="bottom">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.bad')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerDescription>Atualize seus dados.</DrawerDescription>
@@ -429,7 +435,10 @@ interface TriggerProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <Drawer direction="bottom" defaultOpen={true}>
+      <Drawer direction="bottom">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Filtros</DrawerTitle>
@@ -447,7 +456,10 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <Drawer direction="bottom" defaultOpen={true}>
+      <Drawer direction="bottom">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Externo</DrawerTitle>
@@ -515,7 +527,10 @@ interface TriggerProps {
 
   {#snippet variantBottom()}
     <div style="contain: layout">
-      <Drawer direction="bottom" defaultOpen={true}>
+      <Drawer direction="bottom">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.bottom')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Bottom</DrawerTitle>
@@ -533,7 +548,10 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantTop()}
     <div style="contain: layout">
-      <Drawer direction="top" defaultOpen={true}>
+      <Drawer direction="top">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.top')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Top</DrawerTitle>
@@ -551,7 +569,10 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantLeft()}
     <div style="contain: layout">
-      <Drawer direction="left" defaultOpen={true}>
+      <Drawer direction="left">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.left')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Left</DrawerTitle>
@@ -569,7 +590,10 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantRight()}
     <div style="contain: layout">
-      <Drawer direction="right" defaultOpen={true}>
+      <Drawer direction="right">
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.right')}</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Right</DrawerTitle>
@@ -588,7 +612,10 @@ interface TriggerProps {
 
   {#snippet variantWithScroll()}
     <div style="contain: layout">
-      <Drawer defaultOpen={true}>
+      <Drawer>
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>Ler termos</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Termos de uso</DrawerTitle>
@@ -683,7 +710,10 @@ interface TriggerProps {
 
   {#snippet compWithForm()}
     <div style="contain: layout">
-      <Drawer defaultOpen={true}>
+      <Drawer>
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>Editar perfil</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Editar perfil</DrawerTitle>
@@ -711,7 +741,10 @@ interface TriggerProps {
   {/snippet}
   {#snippet compWithConfirmation()}
     <div style="contain: layout">
-      <Drawer defaultOpen={true}>
+      <Drawer>
+        <DrawerTrigger>
+          {#snippet child({ props })}<Button variant="outline" {...props}>Remover item</Button>{/snippet}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Remover item da lista?</DrawerTitle>

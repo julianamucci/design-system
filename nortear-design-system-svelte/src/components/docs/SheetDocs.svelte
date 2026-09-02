@@ -397,7 +397,12 @@ interface TriggerProps {
 
   {#snippet doPair1()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Filtros avançados</SheetTitle>
@@ -415,7 +420,12 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle class="nds-sr-only">Atenção</SheetTitle>
@@ -430,7 +440,12 @@ interface TriggerProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Filtros avançados</SheetTitle>
@@ -448,7 +463,12 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Filtros avançados</SheetTitle>
@@ -482,7 +502,12 @@ interface TriggerProps {
 
   {#snippet variantRight()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Right</SheetTitle>
@@ -500,7 +525,12 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantLeft()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Left</SheetTitle>
@@ -518,7 +548,12 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantTop()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="top">
           <SheetHeader>
             <SheetTitle>Top</SheetTitle>
@@ -536,7 +571,12 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantBottom()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="bottom">
           <SheetHeader>
             <SheetTitle>Bottom</SheetTitle>
@@ -611,7 +651,12 @@ interface TriggerProps {
 
   {#snippet compAdvancedFilters()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Filtros avançados</SheetTitle>
@@ -630,7 +675,12 @@ interface TriggerProps {
 
   {#snippet compSecondaryNav()}
     <div style="contain: layout">
-      <Sheet open>
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
         <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Menu</SheetTitle>

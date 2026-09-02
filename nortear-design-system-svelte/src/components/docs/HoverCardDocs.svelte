@@ -200,7 +200,7 @@ interface HoverCardContentProps {
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
           {$tStore('demonstration.labels.userProfile')}
         </p>
-        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+        <HoverCard openDelay={50} closeDelay={50}>
           <HoverCardTrigger>
             {#snippet child({ props })}
               <a href="#joana" class="nds-text-primary nds-hover-underline" {...props}>@joana</a>
@@ -226,7 +226,7 @@ interface HoverCardContentProps {
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
           {$tStore('demonstration.labels.linkPreview')}
         </p>
-        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+        <HoverCard openDelay={50} closeDelay={50}>
           <HoverCardTrigger>
             {#snippet child({ props })}
               <a href="#link" class="nds-text-primary nds-hover-underline" {...props}>design-system.dev</a>
@@ -249,7 +249,7 @@ interface HoverCardContentProps {
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
           {$tStore('demonstration.labels.definitionTooltip')}
         </p>
-        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+        <HoverCard openDelay={50} closeDelay={50}>
           <HoverCardTrigger>
             {#snippet child({ props })}
               <a href="#wcag" class="nds-text-primary nds-hover-underline" {...props}>WCAG 2.2</a>
@@ -269,7 +269,7 @@ interface HoverCardContentProps {
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
           {$tStore('demonstration.labels.metricExplainer')}
         </p>
-        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+        <HoverCard openDelay={50} closeDelay={50}>
           <HoverCardTrigger>
             {#snippet child({ props })}
               <a href="#metric" class="nds-text-primary nds-hover-underline" {...props}>3,42%</a>
@@ -529,7 +529,7 @@ interface HoverCardContentProps {
 
   {#snippet variantUserProfile()}
     <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
-      <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+      <HoverCard openDelay={50} closeDelay={50}>
         <HoverCardTrigger>
           {#snippet child({ props })}
             <a href="#joana" class="nds-text-primary nds-hover-underline" {...props}>@joana</a>
@@ -553,7 +553,7 @@ interface HoverCardContentProps {
 
   {#snippet variantLinkPreview()}
     <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
-      <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+      <HoverCard openDelay={50} closeDelay={50}>
         <HoverCardTrigger>
           {#snippet child({ props })}
             <a href="#link" class="nds-text-primary nds-hover-underline" {...props}>design-system.dev</a>
@@ -574,7 +574,7 @@ interface HoverCardContentProps {
 
   {#snippet variantDefinitionTooltip()}
     <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
-      <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+      <HoverCard openDelay={50} closeDelay={50}>
         <HoverCardTrigger>
           {#snippet child({ props })}
             <button
@@ -598,7 +598,7 @@ interface HoverCardContentProps {
 
   {#snippet variantMetricExplainer()}
     <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
-      <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+      <HoverCard openDelay={50} closeDelay={50}>
         <HoverCardTrigger>
           {#snippet child({ props })}
             <button

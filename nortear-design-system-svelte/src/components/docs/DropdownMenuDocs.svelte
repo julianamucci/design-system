@@ -408,7 +408,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet doPair1()}
     <div style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Conta</Button>
@@ -428,7 +428,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Tudo</Button>
@@ -447,7 +447,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Ações</Button>
@@ -463,7 +463,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Ações</Button>
@@ -596,7 +596,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantDefault()}
     <div style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Default</Button>
@@ -612,7 +612,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet variantDestructive()}
     <div style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Destructive</Button>
@@ -629,7 +629,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithLabel()}
     <div class="nds-min-h-60" style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Conta</Button>
@@ -650,7 +650,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithCheckboxItems()}
     <div class="nds-min-h-50" style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Colunas</Button>
@@ -683,7 +683,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithRadioGroup()}
     <div class="nds-min-h-50" style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Tema</Button>
@@ -703,7 +703,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithShortcuts()}
     <div class="nds-min-h-60" style="contain: layout">
-      <DropdownMenu open={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Editar</Button>

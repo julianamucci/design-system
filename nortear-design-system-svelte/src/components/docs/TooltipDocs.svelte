@@ -373,7 +373,7 @@ interface TooltipTriggerProps {
 
   {#snippet doPair1()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -387,7 +387,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet dontPair1()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <!-- Anti-pattern didático (tooltip no lugar do rótulo); aria-label
@@ -403,7 +403,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet doPair2()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -417,7 +417,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet dontPair2()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -473,7 +473,7 @@ interface TooltipTriggerProps {
 
   {#snippet variantDefault()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -487,7 +487,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet variantWithShortcut()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -505,7 +505,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet variantLongText()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Compartilhar link" {...props}>
@@ -600,7 +600,7 @@ interface TooltipTriggerProps {
 
   {#snippet compIconShortcut()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip defaultOpen>
+      <Tooltip>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>

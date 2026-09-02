@@ -394,7 +394,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet doPair1()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Editar perfil</DialogTitle>
@@ -410,7 +413,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet dontPair1()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Atenção</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Atenção</DialogTitle>
@@ -426,7 +432,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet doPair2()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Editar perfil</DialogTitle>
@@ -442,7 +451,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet dontPair2()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Excluir conta</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Excluir conta</DialogTitle>
@@ -506,7 +518,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet variantDefault()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Editar perfil</DialogTitle>
@@ -522,7 +537,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet variantWithForm()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Editar dados</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Editar dados pessoais</DialogTitle>
@@ -544,7 +562,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet variantWithScroll()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Termos de uso</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Termos de uso</DialogTitle>
@@ -565,7 +586,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet variantNoFooter()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Sobre este produto</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Sobre este produto</DialogTitle>
@@ -575,7 +599,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet variantDestructive()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Remover item da lista</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Remover item da lista</DialogTitle>
@@ -591,7 +618,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
   {#snippet variantNoClose()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Convidar para o time</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>Convidar para o time</DialogTitle>
@@ -608,7 +638,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet variantConfirmEmail()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Confirmar e-mail</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Confirmar e-mail</DialogTitle>
@@ -653,7 +686,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet compMediaPreview()}
-    <Dialog open>
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Capa do post</Button>{/snippet}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Capa do post</DialogTitle>

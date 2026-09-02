@@ -650,7 +650,7 @@ interface PopoverContentProps {
             name: tContent("variants.compositions.editProfile.name"),
             description: tContent("variants.compositions.editProfile.description"),
             useWhen: tContent("variants.compositions.editProfile.use"),
-            code: `<Popover defaultOpen>
+            code: `<Popover>
   <PopoverTrigger asChild>
     <Button variant="outline">Editar perfil</Button>
   </PopoverTrigger>
