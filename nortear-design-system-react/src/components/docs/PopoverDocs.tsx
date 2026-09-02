@@ -87,6 +87,24 @@ const getNavGroups = (t: (key: string) => string) => [
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
+/**
+ * Amostra de cor do exemplo de paleta — as MESMAS classes e nomes das stories.
+ *
+ * A cor sai de token do tema, nunca de hexadecimal em `style` inline: trocar de
+ * marca reescreve a paleta sem tocar na página, e a amostra continua legível no
+ * tema escuro. `nds-focus-ring` é o anel de foco que a própria descrição desta
+ * composição promete.
+ */
+const SWATCH_CLASSES = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring";
+const SWATCH_COLORS = [
+  { name: "Primária",   className: "nds-bg-primary"     },
+  { name: "Secundária", className: "nds-bg-secondary"   },
+  { name: "Sucesso",    className: "nds-bg-success"     },
+  { name: "Atenção",    className: "nds-bg-warning"     },
+  { name: "Informação", className: "nds-bg-info"        },
+  { name: "Destrutiva", className: "nds-bg-destructive" },
+];
+
 export function PopoverDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(popoverTranslations);
@@ -240,16 +258,16 @@ interface PopoverContentProps {
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div
-          className="nds-grid nds-w-full"
+          className="nds-grid nds-w-full nds-min-h-50"
           data-cols="3"
           data-spacing="lg"
-          style={{ contain: "layout", minHeight: 180 }}
+          style={{ contain: "layout" }}
         >
           {/* Default */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-30"
             data-spacing="xs"
-            style={{ contain: "layout", minHeight: 120, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.default")}
@@ -281,9 +299,9 @@ interface PopoverContentProps {
 
           {/* With title */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-30"
             data-spacing="xs"
-            style={{ contain: "layout", minHeight: 120, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.withTitle")}
@@ -325,9 +343,9 @@ interface PopoverContentProps {
 
           {/* Form */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-30"
             data-spacing="xs"
-            style={{ contain: "layout", minHeight: 120, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.form")}
@@ -535,9 +553,7 @@ interface PopoverContentProps {
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
             preview: (
-              <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              >
+              <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -562,9 +578,7 @@ interface PopoverContentProps {
             description: stripHtml(tContent("variants.styles.withTitle")),
             code: codeWithTitle,
             preview: (
-              <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              >
+              <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -591,9 +605,7 @@ interface PopoverContentProps {
             description: stripHtml(tContent("variants.styles.form")),
             code: codeForm,
             preview: (
-              <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              >
+              <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -667,7 +679,7 @@ interface PopoverContentProps {
   </PopoverContent>
 </Popover>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+              <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -740,7 +752,7 @@ interface PopoverContentProps {
   </PopoverContent>
 </Popover>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+              <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">Filtros</Button>
@@ -777,60 +789,49 @@ interface PopoverContentProps {
             useWhen: tContent("variants.compositions.colorPicker.use"),
             code: `<Popover>
   <PopoverTrigger asChild>
-    <Button variant="outline">Cor</Button>
+    <Button variant="outline">Escolher cor da etiqueta</Button>
   </PopoverTrigger>
   <PopoverContent>
     <PopoverHeader>
-      <PopoverTitle>Selecionar cor</PopoverTitle>
+      <PopoverTitle>Cor da etiqueta</PopoverTitle>
     </PopoverHeader>
+    {/* A cor sai de token do tema, nunca de style inline. */}
     <div className="nds-grid" data-cols="6" data-spacing="xs">
       {[
-        { name: "Vermelho", color: "#ef4444" },
-        { name: "Laranja",  color: "#f97316" },
-        { name: "Amarelo",  color: "#eab308" },
-        { name: "Verde",    color: "#22c55e" },
-        { name: "Azul",     color: "#3b82f6" },
-        { name: "Roxo",     color: "#a855f7" },
+        { name: "Primária",   className: "nds-bg-primary"     },
+        { name: "Secundária", className: "nds-bg-secondary"   },
+        { name: "Sucesso",    className: "nds-bg-success"     },
+        { name: "Atenção",    className: "nds-bg-warning"     },
+        { name: "Informação", className: "nds-bg-info"        },
+        { name: "Destrutiva", className: "nds-bg-destructive" },
       ].map((s) => (
         <button
           key={s.name}
           type="button"
           aria-label={s.name}
-          className="nds-rounded-full nds-size-6"
-          style={{ background: s.color }}
+          className={"nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring " + s.className}
         />
       ))}
     </div>
   </PopoverContent>
 </Popover>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+              <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm">Cor</Button>
+                    <Button variant="outline" size="sm">Escolher cor da etiqueta</Button>
                   </PopoverTrigger>
                   <PopoverContent>
                     <PopoverHeader>
-                      <PopoverTitle>Selecionar cor</PopoverTitle>
+                      <PopoverTitle>Cor da etiqueta</PopoverTitle>
                     </PopoverHeader>
                     <div className="nds-grid" data-cols="6" data-spacing="xs">
-                      {[
-                        { name: "Vermelho", color: "#ef4444" },
-                        { name: "Laranja", color: "#f97316" },
-                        { name: "Amarelo", color: "#eab308" },
-                        { name: "Verde", color: "#22c55e" },
-                        { name: "Azul", color: "#3b82f6" },
-                        { name: "Roxo", color: "#a855f7" },
-                      ].map((s) => (
+                      {SWATCH_COLORS.map((s) => (
                         <button
                           key={s.name}
                           type="button"
                           aria-label={s.name}
-                          className="nds-rounded-full nds-size-6"
-                          style={{
-                            background: s.color,
-                            boxShadow: "0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)",
-                          }}
+                          className={`${SWATCH_CLASSES} ${s.className}`}
                         />
                       ))}
                     </div>
@@ -869,7 +870,7 @@ interface PopoverContentProps {
   </PopoverContent>
 </Popover>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+              <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">Configurações</Button>

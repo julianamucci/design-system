@@ -74,6 +74,9 @@ function trackPopoverOpenChange(triggerLabel: string): (open: boolean) => void {
   };
 }
 
+/** Amostra de cor do exemplo de paleta — a MESMA das cinco stories. */
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
+
 function buildDefaultPopover(): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
 
@@ -266,10 +269,9 @@ export function createPopoverDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'nds-grid nds-w-full';
+            wrap.className = 'nds-grid nds-w-full nds-min-h-50';
             wrap.dataset.cols = '3';
             wrap.dataset.spacing = 'lg';
-            wrap.style.minHeight = '180px';
 
             const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
               { labelKey: 'variants.items.default',   build: buildDefaultPopover   },
@@ -279,11 +281,10 @@ export function createPopoverDocs(): HTMLElement {
 
             for (const cell of cells) {
               const col = document.createElement('div');
-              col.className = 'nds-stack';
+              col.className = 'nds-stack nds-min-h-30';
               col.dataset.spacing = 'xs';
               col.style.contain = 'layout';
               col.style.position = 'relative';
-              col.classList.add('nds-min-h-30');
 
               const label = document.createElement('p');
               label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
@@ -496,9 +497,7 @@ form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
 form.addEventListener('submit', (e) => e.preventDefault());
 
-const title = document.createElement('h4');
-title.className = 'nds-text-body nds-font-medium nds-leading-none';
-title.textContent = 'Dados do perfil';
+const title = createPopoverTitle({ text: 'Dados do perfil' });
 
 const desc = document.createElement('p');
 desc.className = 'nds-text-caption nds-text-muted-foreground';
@@ -531,9 +530,7 @@ const content = document.createElement('div');
 content.className = 'nds-stack';
 content.dataset.spacing = 'xs';
 
-const title = document.createElement('h4');
-title.className = 'nds-text-body nds-font-medium nds-leading-none';
-title.textContent = 'Filtrar por status';
+const title = createPopoverTitle({ text: 'Filtrar por status' });
 content.appendChild(title);
 
 for (const opt of ['Ativo', 'Pendente', 'Arquivado']) {
@@ -562,36 +559,35 @@ content.appendChild(actions);
 
 createPopover({ trigger, content });`;
 
-        const codeColorPicker = `const trigger = createButton({ variant: 'outline', label: 'Cor' });
+        const codeColorPicker = `const trigger = createButton({ variant: 'outline', label: 'Escolher cor da etiqueta' });
 
 const content = document.createElement('div');
 content.className = 'nds-stack';
 content.dataset.spacing = 'xs';
 
-const title = document.createElement('h4');
-title.className = 'nds-text-body nds-font-medium nds-leading-none';
-title.textContent = 'Selecionar cor';
+const title = createPopoverTitle({ text: 'Cor da etiqueta' });
 
 const grid = document.createElement('div');
 grid.className = 'nds-grid';
 grid.dataset.cols = '6';
 grid.dataset.spacing = 'xs';
 
+// A cor sai de token do tema, nunca de style inline: trocar de marca
+// reescreve a paleta sem tocar no exemplo.
 const swatches = [
-  { name: 'Vermelho', color: '#ef4444' },
-  { name: 'Laranja',  color: '#f97316' },
-  { name: 'Amarelo',  color: '#eab308' },
-  { name: 'Verde',    color: '#22c55e' },
-  { name: 'Azul',     color: '#3b82f6' },
-  { name: 'Roxo',     color: '#a855f7' },
+  { name: 'Primária',   className: 'nds-bg-primary'     },
+  { name: 'Secundária', className: 'nds-bg-secondary'   },
+  { name: 'Sucesso',    className: 'nds-bg-success'     },
+  { name: 'Atenção',    className: 'nds-bg-warning'     },
+  { name: 'Informação', className: 'nds-bg-info'        },
+  { name: 'Destrutiva', className: 'nds-bg-destructive' },
 ];
 
 for (const s of swatches) {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.setAttribute('aria-label', s.name);
-  btn.className = 'nds-rounded-full nds-size-6';
-  btn.style.background = s.color;
+  btn.className = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring ' + s.className;
   grid.appendChild(btn);
 }
 
@@ -604,9 +600,7 @@ const content = document.createElement('div');
 content.className = 'nds-stack';
 content.dataset.spacing = 'sm';
 
-const title = document.createElement('h4');
-title.className = 'nds-text-body nds-font-medium nds-leading-none';
-title.textContent = 'Preferências rápidas';
+const title = createPopoverTitle({ text: 'Preferências rápidas' });
 content.appendChild(title);
 
 const toggles = [
@@ -639,9 +633,7 @@ createPopover({ trigger, content });`;
           form.dataset.spacing = 'xs';
           form.addEventListener('submit', (e) => e.preventDefault());
 
-          const heading = document.createElement('h4');
-          heading.className = 'nds-text-body nds-font-medium nds-leading-none';
-          heading.textContent = t('demonstration.labels.form.trigger');
+          const heading = createPopoverTitle({ text: t('demonstration.labels.form.trigger') });
 
           const nameRow = document.createElement('div');
           nameRow.className = 'nds-stack';
@@ -671,9 +663,7 @@ createPopover({ trigger, content });`;
           content.className = 'nds-stack';
           content.dataset.spacing = 'xs';
 
-          const title = document.createElement('h4');
-          title.className = 'nds-text-body nds-font-medium nds-leading-none';
-          title.textContent = 'Filtrar por status';
+          const title = createPopoverTitle({ text: 'Filtrar por status' });
           content.appendChild(title);
 
           for (const opt of ['Ativo', 'Pendente', 'Arquivado']) {
@@ -704,14 +694,12 @@ createPopover({ trigger, content });`;
         }
 
         function buildColorPickerPreview(): HTMLElement {
-          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Cor' });
+          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Escolher cor da etiqueta' });
           const content = document.createElement('div');
           content.className = 'nds-stack';
           content.dataset.spacing = 'xs';
 
-          const title = document.createElement('h4');
-          title.className = 'nds-text-body nds-font-medium nds-leading-none';
-          title.textContent = 'Selecionar cor';
+          const title = createPopoverTitle({ text: 'Cor da etiqueta' });
 
           const grid = document.createElement('div');
           grid.className = 'nds-grid';
@@ -719,21 +707,19 @@ createPopover({ trigger, content });`;
           grid.dataset.spacing = 'xs';
 
           const swatches = [
-            { name: 'Vermelho', color: '#ef4444' },
-            { name: 'Laranja',  color: '#f97316' },
-            { name: 'Amarelo',  color: '#eab308' },
-            { name: 'Verde',    color: '#22c55e' },
-            { name: 'Azul',     color: '#3b82f6' },
-            { name: 'Roxo',     color: '#a855f7' },
+            { name: 'Primária',   className: 'nds-bg-primary'     },
+            { name: 'Secundária', className: 'nds-bg-secondary'   },
+            { name: 'Sucesso',    className: 'nds-bg-success'     },
+            { name: 'Atenção',    className: 'nds-bg-warning'     },
+            { name: 'Informação', className: 'nds-bg-info'        },
+            { name: 'Destrutiva', className: 'nds-bg-destructive' },
           ];
 
           for (const s of swatches) {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.setAttribute('aria-label', s.name);
-            btn.className = 'nds-rounded-full nds-size-6';
-            btn.style.background = s.color;
-            btn.style.boxShadow = '0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)';
+            btn.className = `${SWATCH_CLASSES} ${s.className}`;
             grid.appendChild(btn);
           }
 
@@ -747,9 +733,7 @@ createPopover({ trigger, content });`;
           content.className = 'nds-stack';
           content.dataset.spacing = 'sm';
 
-          const title = document.createElement('h4');
-          title.className = 'nds-text-body nds-font-medium nds-leading-none';
-          title.textContent = 'Preferências rápidas';
+          const title = createPopoverTitle({ text: 'Preferências rápidas' });
           content.appendChild(title);
 
           const toggles = [

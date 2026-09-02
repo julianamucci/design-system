@@ -746,12 +746,15 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * traduzi-los desligaria o rótulo do que a pessoa encontra no CSS.
    */
   protected readonly amostrasDeCor = [
-    { className: 'nds-bg-primary',     label: 'primary'     },
-    { className: 'nds-bg-secondary',   label: 'secondary'   },
-    { className: 'nds-bg-success',     label: 'success'     },
-    { className: 'nds-bg-warning',     label: 'warning'     },
-    { className: 'nds-bg-info',        label: 'info'        },
-    { className: 'nds-bg-destructive', label: 'destructive' },
+    // O nome acessível é o mesmo das cinco stories: quem não distingue a cor
+    // depende dele, e nome diferente entre prévia e story parte o contrato em
+    // dois sem nenhum portão ver.
+    { className: 'nds-bg-primary',     label: 'Primária'   },
+    { className: 'nds-bg-secondary',   label: 'Secundária' },
+    { className: 'nds-bg-success',     label: 'Sucesso'    },
+    { className: 'nds-bg-warning',     label: 'Atenção'    },
+    { className: 'nds-bg-info',        label: 'Informação' },
+    { className: 'nds-bg-destructive', label: 'Destrutiva' },
   ];
 
   /**

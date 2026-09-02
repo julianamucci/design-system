@@ -162,17 +162,17 @@ function handleDemoOpenChange(triggerLabel: string, open: boolean) {
 }
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
-// A cor aqui é DADO da demonstração, não estilo: é o que o seletor oferece.
-// Ficava cravada seis vezes no markup, e era a única stack assim — as outras
-// quatro já liam de uma lista. Como valor ligado, sai do caminho da folha e
-// para de disputar com o tema.
+// A cor sai de TOKEN do tema, nunca de hexadecimal: trocar de marca reescreve
+// a paleta sem tocar no exemplo, e a amostra continua legível no tema escuro.
+// Mesma paleta, mesmos nomes e mesmas classes das cinco stories.
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
 const swatches = [
-  { name: 'Vermelho', color: '#ef4444' },
-  { name: 'Laranja',  color: '#f97316' },
-  { name: 'Amarelo',  color: '#eab308' },
-  { name: 'Verde',    color: '#22c55e' },
-  { name: 'Azul',     color: '#3b82f6' },
-  { name: 'Roxo',     color: '#a855f7' },
+  { name: 'Primária',   className: 'nds-bg-primary'     },
+  { name: 'Secundária', className: 'nds-bg-secondary'   },
+  { name: 'Sucesso',    className: 'nds-bg-success'     },
+  { name: 'Atenção',    className: 'nds-bg-warning'     },
+  { name: 'Informação', className: 'nds-bg-info'        },
+  { name: 'Destrutiva', className: 'nds-bg-destructive' },
 ];
 
 const codeImportBasic = `import {
@@ -306,26 +306,28 @@ const codeTableFilter = `<Popover>
 </Popover>`;
 
 const codeColorPicker = `<script setup>
+// A cor sai de token do tema, nunca de style inline.
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
 const swatches = [
-  { name: 'Vermelho', color: '#ef4444' },
-  { name: 'Laranja',  color: '#f97316' },
-  { name: 'Amarelo',  color: '#eab308' },
-  { name: 'Verde',    color: '#22c55e' },
-  { name: 'Azul',     color: '#3b82f6' },
-  { name: 'Roxo',     color: '#a855f7' },
+  { name: 'Primária',   className: 'nds-bg-primary'     },
+  { name: 'Secundária', className: 'nds-bg-secondary'   },
+  { name: 'Sucesso',    className: 'nds-bg-success'     },
+  { name: 'Atenção',    className: 'nds-bg-warning'     },
+  { name: 'Informação', className: 'nds-bg-info'        },
+  { name: 'Destrutiva', className: 'nds-bg-destructive' },
 ];
 <\/script>
 
 <Popover>
   <PopoverTrigger as-child>
-    <Button variant="outline">Cor</Button>
+    <Button variant="outline">Escolher cor da etiqueta</Button>
   </PopoverTrigger>
   <PopoverContent>
     <PopoverHeader>
-      <PopoverTitle>Selecionar cor</PopoverTitle>
+      <PopoverTitle>Cor da etiqueta</PopoverTitle>
     </PopoverHeader>
     <div class="nds-grid" data-cols="6" data-spacing="xs">
-      <button v-for="s in swatches" :key="s.name" type="button" :aria-label="s.name" class="nds-rounded-full nds-size-6" :style="{ background: s.color }" />
+      <button v-for="s in swatches" :key="s.name" type="button" :aria-label="s.name" :class="[SWATCH_CLASSES, s.className]" />
     </div>
   </PopoverContent>
 </Popover>`;
@@ -485,9 +487,9 @@ const a11yCritCols = computed(() => ({
       >
         <!-- Default -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-60"
           data-spacing="xs"
-          style="contain: layout; min-height: 220px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -515,9 +517,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- With title and actions -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-60"
           data-spacing="xs"
-          style="contain: layout; min-height: 220px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -562,9 +564,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- Form -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-70"
           data-spacing="xs"
-          style="contain: layout; min-height: 260px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -725,8 +727,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #do-preview-1>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <Button
             variant="outline"
@@ -738,8 +740,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-1>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <Button
             variant="outline"
@@ -764,8 +766,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             PopoverContent (sem header)
@@ -774,8 +776,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             PopoverHeader + Title + Description
@@ -784,8 +786,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             form (Inputs + submit)
@@ -803,8 +805,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <Popover>
             <PopoverTrigger as-child>
@@ -867,8 +869,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <Popover>
             <PopoverTrigger as-child>
@@ -940,8 +942,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <Popover>
             <PopoverTrigger as-child>
@@ -957,7 +959,7 @@ const a11yCritCols = computed(() => ({
               align="start"
             >
               <PopoverHeader>
-                <PopoverTitle>Selecionar cor</PopoverTitle>
+                <PopoverTitle>Cor da etiqueta</PopoverTitle>
               </PopoverHeader>
               <div
                 class="nds-grid"
@@ -969,8 +971,7 @@ const a11yCritCols = computed(() => ({
                   :key="s.name"
                   type="button"
                   :aria-label="s.name"
-                  class="nds-rounded-full nds-size-6"
-                  :style="{ background: s.color }"
+                  :class="[SWATCH_CLASSES, s.className]"
                 />
               </div>
             </PopoverContent>
@@ -979,8 +980,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <Popover>
             <PopoverTrigger as-child>

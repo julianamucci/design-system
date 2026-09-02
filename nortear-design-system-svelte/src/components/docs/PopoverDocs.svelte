@@ -25,6 +25,19 @@
   import popoverTranslations from '@shared/content/popover/translations.json';
   import { stripHtml, toPlainText } from '@/lib/strip-html';
 
+  // A cor sai de TOKEN do tema, nunca de hexadecimal em style inline: trocar de
+  // marca reescreve a paleta sem tocar no exemplo, e a amostra continua legível
+  // no tema escuro. Mesma paleta, mesmos nomes e mesmas classes das stories.
+  const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
+  const SWATCH_COLORS = [
+    { name: 'Primária',   className: 'nds-bg-primary'     },
+    { name: 'Secundária', className: 'nds-bg-secondary'   },
+    { name: 'Sucesso',    className: 'nds-bg-success'     },
+    { name: 'Atenção',    className: 'nds-bg-warning'     },
+    { name: 'Informação', className: 'nds-bg-info'        },
+    { name: 'Destrutiva', className: 'nds-bg-destructive' },
+  ];
+
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(popoverTranslations);
 
@@ -557,16 +570,16 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         code: `<Popover>
   <PopoverTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>Cor</Button>
+      <Button variant="outline" {...props}>Escolher cor da etiqueta</Button>
     {/snippet}
   </PopoverTrigger>
   <PopoverContent>
     <PopoverHeader>
-      <PopoverTitle>Selecionar cor</PopoverTitle>
+      <PopoverTitle>Cor da etiqueta</PopoverTitle>
     </PopoverHeader>
     <div class="nds-grid" data-cols="6" data-spacing="xs">
       {#each swatches as s}
-        <button type="button" aria-label={s.name} class="nds-rounded-full" style={\`width: 1.5rem; height: 1.5rem; background: \${s.color}\`}></button>
+        <button type="button" aria-label={s.name} class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring {s.className}"></button>
       {/each}
     </div>
   </PopoverContent>
@@ -675,22 +688,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     <Popover open>
       <PopoverContent>
         <PopoverHeader>
-          <PopoverTitle>Selecionar cor</PopoverTitle>
+          <PopoverTitle>Cor da etiqueta</PopoverTitle>
         </PopoverHeader>
  <div class="nds-grid nds-pt-1" data-cols="6" data-spacing="xs">
-          {#each [
-            { name: 'Vermelho', color: '#ef4444' },
-            { name: 'Laranja',  color: '#f97316' },
-            { name: 'Amarelo',  color: '#eab308' },
-            { name: 'Verde',    color: '#22c55e' },
-            { name: 'Azul',     color: '#3b82f6' },
-            { name: 'Roxo',     color: '#a855f7' },
-          ] as s (s.name)}
+          {#each SWATCH_COLORS as s (s.name)}
             <button
               type="button"
               aria-label={s.name}
-              class="nds-rounded-full nds-size-6"
-              style={`background: ${s.color}; box-shadow: 0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)`}
+              class="{SWATCH_CLASSES} {s.className}"
             ></button>
           {/each}
         </div>
