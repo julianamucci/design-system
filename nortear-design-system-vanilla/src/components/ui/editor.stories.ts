@@ -294,7 +294,16 @@ export const Playground: Story = {
       const highlighted = root.querySelector('mark') as HTMLElement;
       // O `<mark>` do navegador é amarelo fixo, que ignora o tema e ainda crava
       // o texto em preto. Aqui ele usa o realce do sistema.
-      await expect(getComputedStyle(highlighted).backgroundColor).toBe(tokenColor(root, '--accent'));
+      //
+      // E o realce é o accent DOSADO, não o accent cheio: desde que o token
+      // voltou a ser a cor da marca (`--accent: var(--primary)`), quem escreve
+      // a força é a folha do componente — `hsl(var(--accent) / 0.2)`. Cobrar o
+      // opaco aqui era cobrar uma cor que nenhuma regra pinta, e a asserção
+      // ficou para trás da mudança de tema.
+      const realce = tokenColor(root, '--accent')!
+        .replace('rgb(', 'rgba(')
+        .replace(/\)$/, ', 0.2)');
+      await expect(getComputedStyle(highlighted).backgroundColor).toBe(realce);
       root.editor.chain().selectAll().unsetHighlight().run();
 
       // Alinhamento é ATRIBUTO do bloco, e escolha única: centralizar desliga

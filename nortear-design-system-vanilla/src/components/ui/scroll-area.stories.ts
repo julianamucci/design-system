@@ -124,10 +124,16 @@ export const Playground: Story = {
 
     await step('A região rolável tem nome acessível e é alcançável por teclado', async () => {
       // O par papel + nome: sem papel, `aria-label` seria atributo proibido;
-      // com papel e sem nome, a região não vira landmark nenhum.
+      // sem nome, a fábrica não emite papel nenhum.
+      //
+      // O papel é `group` e NÃO `region`: `region` é papel de MARCO, e um
+      // viewport que rola é recurso de layout, não seção de conteúdo — a
+      // escolha está medida no cabeçalho de `scroll-area.ts`. Esta asserção
+      // ficou para trás quando a fábrica mudou, e passou a cobrar justamente o
+      // papel que a decisão tinha acabado de recusar.
       await expect(viewport).toHaveAttribute('tabindex', '0');
       if (args.label) {
-        await expect(canvas.getByRole('region', { name: args.label })).toBe(viewport);
+        await expect(canvas.getByRole('group', { name: args.label })).toBe(viewport);
       } else {
         await expect(viewport.getAttribute('role')).toBeNull();
         await expect(viewport.getAttribute('aria-label')).toBeNull();

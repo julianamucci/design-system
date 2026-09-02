@@ -182,7 +182,11 @@ export const Focus: Story = {
       // `aria-label` sem papel é atributo proibido — o axe acusa
       // `aria-prohibited-attr`. O par papel + nome é o que faz o leitor de tela
       // anunciar onde a pessoa entrou.
-      await expect(canvas.getByRole('region', { name: 'Lista rolável de itens' })).toBe(viewport);
+      //
+      // `group` e não `region`: `region` é papel de MARCO e este viewport é
+      // recurso de layout — a medição que trocou o papel está no cabeçalho de
+      // `scroll-area.ts`. A asserção cobrava o papel antigo.
+      await expect(canvas.getByRole('group', { name: 'Lista rolável de itens' })).toBe(viewport);
       viewport.blur();
       let alcancado = false;
       for (let i = 0; i < 8 && !alcancado; i++) {
