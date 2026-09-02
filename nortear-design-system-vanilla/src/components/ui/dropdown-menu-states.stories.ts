@@ -186,15 +186,19 @@ export const Controlled: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
-    wrapper.className = 'nds-stack';
+    // Degrau da escada `.nds-min-h-*` em vez de altura cravada: o andaime do
+    // canvas acompanha o tema e a densidade como o resto da página.
+    wrapper.className = 'nds-stack nds-min-h-50';
     wrapper.dataset.spacing = 'md';
-    wrapper.style.minHeight = '180px';
 
     const externalState = { isOpen: false };
     const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
 
     const hiddenTrigger = createButton({ variant: 'outline', label: 'internal-trigger' });
-    hiddenTrigger.classList.add('sr-only');
+    // `nds-sr-only`, COM prefixo: `sr-only` sozinho não existe na folha
+    // compartilhada — a classe estava morta e o gatilho interno, que só existe
+    // para o botão de fora comandar o menu, aparecia na tela.
+    hiddenTrigger.classList.add('nds-sr-only');
     hiddenTrigger.setAttribute('tabindex', '-1');
     hiddenTrigger.setAttribute('aria-hidden', 'true');
 
