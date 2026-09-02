@@ -140,7 +140,12 @@ export const Playground: Story = {
       // A decisão que governa o componente: texto em streaming numa região viva
       // é anunciado a cada trecho, e a leitura fica impossível. A única região
       // viva é o anunciador, fora do fluxo, e ele começa vazio.
-      await expect(viewport.getAttribute('role')).toBeNull();
+      //
+      // `group` é o papel que a área que rola CARREGA — papel genérico, para o
+      // nome do conteúdo poder ser anunciado a quem chega por Tab. O que esta
+      // asserção guarda não é a ausência de papel, é a ausência de vida: o que
+      // não pode existir aqui é `aria-live`.
+      await expect(viewport.getAttribute('role')).toBe('group');
       await expect(viewport.querySelector('[aria-live]')).toBeNull();
       const announcer = root.querySelector('.nds-chat-thread-announcer')!;
       await expect(announcer).toHaveAttribute('aria-live', 'polite');

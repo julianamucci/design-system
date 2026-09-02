@@ -228,7 +228,10 @@ export const Playground: Story = {
       // landmark nenhum. O `tabindex` é o que permite rolar sem mouse.
       await expect(viewport).toHaveAttribute('tabindex', '0');
       if (args.label) {
-        await expect(canvas.getByRole('region', { name: args.label })).toBe(viewport);
+        // `group`, e não `region`: o viewport que rola é recurso de layout, e
+        // `region` é papel de MARCO. A escolha está medida e justificada no
+        // cabeçalho de `scroll-area.ts`; esta asserção seguia no papel antigo.
+        await expect(canvas.getByRole('group', { name: args.label })).toBe(viewport);
       } else {
         await expect(viewport.getAttribute('role')).toBeNull();
         await expect(viewport.getAttribute('aria-label')).toBeNull();
