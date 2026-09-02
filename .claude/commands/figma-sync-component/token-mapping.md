@@ -243,6 +243,21 @@ já estava certa. Conferir uma variante e concluir pelas outras teria dado
 qualquer resposta, conforme a variante sorteada. Compare as N contra o que o CSS
 declara para cada uma, nunca uma contra as demais.
 
+**A variante com ANATOMIA diferente escapa da varredura que procura por
+camada.** Corolário do anterior, e pior, porque some antes de ser comparada. No
+Badge, as quatro variantes semânticas carregavam o fundo e a borda em duas
+camadas absolutas — `badge-bg` e `badge-border` —, montagem que só existia porque
+o desenho antigo tinha alfa, e alfa em opacidade de nó apagaria o texto junto. A
+`default` era preenchida sólida e **não tinha as duas camadas**. Qualquer sondagem
+escrita como "leia `badge-bg` de cada variante" devolveria quatro linhas
+plausíveis e nenhuma menção à quinta.
+
+Enumere as variantes pelo CONJUNTO (`componentSet.children`), não pelas camadas
+que você espera achar dentro delas, e trate camada ausente como achado, nunca
+como linha a pular. E quando o motivo da montagem desaparece — aqui, o alfa —,
+verifique se ela ainda vale: o modelo novo é opaco, e as duas camadas viraram
+enfeite que sobrevive só por consistência entre irmãs.
+
 **Mas opacidade sozinha não diz o que a camada FAZ — leia a geometria.** Na mesma
 varredura eu apliquei a regra acima ao `variant=link` e relatei que ele pintava
 uma placa sólida de `primary` sobre o texto: camada chamada `hover-overlay`,
