@@ -120,6 +120,12 @@ interface FrameOptions {
   disabled?: boolean;
   /** Marca o CAMPO como inválido e o liga ao texto que descreve o problema. */
   describedBy?: string;
+  /**
+   * Nome acessível do CAMPO, para o preview que não tem rótulo visível a que
+   * apontar. Não confundir com `aria-label`, que nomeia a MOLDURA: o grupo
+   * nomeia o conjunto campo+addons, e nomear o conjunto não nomeia o controle.
+   */
+  fieldLabel?: string;
   addons?: AddonDef[];
   fieldId?: string;
 }
@@ -140,6 +146,8 @@ function createFrame(options: FrameOptions): HTMLDivElement {
       disabled: options.disabled,
       id: options.fieldId,
     });
+
+  if (options.fieldLabel) field.setAttribute('aria-label', options.fieldLabel);
 
   // Estado é palavra, nunca só cor: o atributo vai no CAMPO e aponta para o
   // texto que descreve o problema. A moldura vermelha é o eco disso.
@@ -487,8 +495,15 @@ export function createInputGroupDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               // Moldura vermelha E texto ligado ao campo.
+              //
+              // O `fieldLabel` não é enfeite: descrever um campo sem NOMEÁ-LO é
+              // o que o axe chama de `label-title-only`, e a regra dispara
+              // justamente pelo `aria-describedby` — é por isso que só este
+              // preview acusava, entre vários campos sem rótulo nesta página.
+              // Num painel "faça", um campo sem nome contradiz a lição ao lado.
               doPreviewFactory: () => createInvalidFrame('input-group-do-dont-com-texto', {
                 placeholder: t('demonstration.labels.siteField'),
+                fieldLabel: t('demonstration.labels.siteGroup'),
                 addons: [{ align: 'inline-start', text: t('demonstration.labels.prefix') }],
               }),
               // Só a moldura vermelha: quem não distingue a cor não fica

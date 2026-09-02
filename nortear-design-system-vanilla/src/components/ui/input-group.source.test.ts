@@ -40,6 +40,9 @@ describe('inputGroupSnippet', () => {
     const code = inputGroupSnippet({ invalid: true });
     expect(code).toContain("campo.setAttribute('aria-invalid', 'true');");
     expect(code).toContain("campo.setAttribute('aria-describedby', 'endereco-erro');");
+    // Descrever não é nomear: quem copiar o snippet do estado inválido leva o
+    // nome do campo junto, senão reproduz `label-title-only` no próprio código.
+    expect(code).toContain("campo.setAttribute('aria-label', 'Endereço do site');");
     expect(code).not.toContain('invalid: true');
     expect(inputGroupSnippet()).not.toContain('aria-invalid');
   });

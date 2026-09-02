@@ -150,7 +150,20 @@ export function buildInputGroup(options: BuildInputGroupOptions = {}): HTMLDivEl
     const addon = createInputGroupAddon({ align: def.align });
     if (def.icon) addon.appendChild(ICONS[def.icon]());
     if (def.text) addon.appendChild(createInputGroupText({ text: def.text }));
-    if (def.button) addon.appendChild(createInputGroupButton(def.button));
+    // O `disabled` DO GRUPO alcança o botão do addon, e não só o campo.
+    //
+    // Ele chegava só ao controle: um grupo desabilitado esmaecia inteiro pela
+    // folha (`:has(:disabled)`) e ainda entregava um "Colar" focável e
+    // clicável — aparência de inativo com um controle vivo dentro é a pior das
+    // duas, o mesmo defeito que a story do campo já media e que ninguém tinha
+    // medido no botão. O `disabled` do próprio addon vence, para a story que
+    // precise de um botão vivo num grupo desabilitado poder pedi-lo.
+    if (def.button) {
+      addon.appendChild(createInputGroupButton({
+        ...def.button,
+        disabled: def.button.disabled ?? options.disabled,
+      }));
+    }
     return addon;
   });
 
@@ -180,7 +193,18 @@ export function buildInvalidField(options: BuildInputGroupOptions = {}): HTMLEle
   message.className = 'nds-text-caption nds-text-destructive';
   message.textContent = INVALID_MESSAGE;
 
-  wrapper.append(buildInputGroup({ ...options, invalid: true }), message);
+  const group = buildInputGroup({ ...options, invalid: true });
+
+  // DESCREVER NÃO É NOMEAR, e o par `aria-invalid` + `aria-describedby` sem
+  // nome é o caso exato em que o axe reprova (`label-title-only`, disparada
+  // pela descrição). O grupo pode ter nome; o CONTROLE precisa do dele.
+  //
+  // A falha estava escondida atrás de outra: enquanto a asserção da borda
+  // reprovava antes do axe, esta violação nunca chegava a ser relatada.
+  group.querySelector('.nds-input-group-control')!
+    .setAttribute('aria-label', options['aria-label'] ?? SITE_GROUP_LABEL);
+
+  wrapper.append(group, message);
   return wrapper;
 }
 

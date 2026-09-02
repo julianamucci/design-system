@@ -126,6 +126,14 @@ export const PasswordReveal: Story = {
     const field = group.querySelector<HTMLInputElement>('.nds-input-group-control')!;
     field.type = 'password';
     field.value = 'senha-de-exemplo';
+    // O NOME DO CAMPO É DO CAMPO, e não do grupo em volta.
+    //
+    // Esta é a única composição sem `placeholder` — as outras se nomeavam por
+    // ele sem que ninguém reparasse —, então aqui o campo chegava ao leitor de
+    // tela como "campo de edição" e nada mais: `label` (crítica, WCAG 4.1.2)
+    // reprovando um campo de senha. O `aria-label` do grupo NÃO resolve: ele
+    // nomeia o conjunto campo+botão, não o controle.
+    field.setAttribute('aria-label', PASSWORD_GROUP_LABEL);
 
     // O NOME do botão é que conta o que aconteceu — não o desenho do ícone.
     // Por isso ele muda junto com o estado, e é ele que a play mede.
@@ -158,6 +166,11 @@ export const PasswordReveal: Story = {
       // Só de ícone: sem texto visível, o nome acessível é a única pista.
       await expect(toggle.textContent?.trim()).toBe('');
       await expect(canvas.getByRole('button', { name: /./ })).toBe(toggle);
+
+      // E o CAMPO tem nome próprio. Sem `placeholder`, ele é a única fonte de
+      // nome que sobra — o `aria-label` do grupo nomeia o conjunto, não o
+      // controle. Sem esta linha o defeito voltava sem ninguém ver.
+      await expect(field).toHaveAccessibleName(PASSWORD_GROUP_LABEL);
     });
 
     await step('A alternância conta o que aconteceu pela PALAVRA', async () => {

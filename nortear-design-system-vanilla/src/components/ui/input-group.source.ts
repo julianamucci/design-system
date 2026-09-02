@@ -128,7 +128,13 @@ export function inputGroupSnippet(o: InputGroupSnippetOptions = {}): string {
   // Estado é palavra, nunca só cor: o atributo vai no CAMPO e aponta para o
   // texto que descreve o problema. A moldura vermelha é o eco disso.
   const invalidBlock = o.invalid
-    ? `// A moldura fica vermelha por causa DESTES dois atributos, e não o contrário.
+    ? `// A moldura fica vermelha por causa DESTES atributos, e não o contrário.
+//
+// E DESCREVER NÃO É NOMEAR: sem rótulo visível a que apontar, o campo precisa
+// do \`aria-label\` — o \`aria-describedby\` sozinho deixa o leitor de tela
+// anunciar a mensagem de erro de um campo que não tem nome. É a regra
+// \`label-title-only\` do axe, e ela dispara justamente por causa da descrição.
+campo.setAttribute('aria-label', 'Endereço do site');
 campo.setAttribute('aria-invalid', 'true');
 campo.setAttribute('aria-describedby', 'endereco-erro');`
     : undefined;
