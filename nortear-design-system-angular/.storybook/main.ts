@@ -69,6 +69,28 @@ const config: StorybookConfig = {
     viteConfig.optimizeDeps.include = [
       ...(viteConfig.optimizeDeps.include ?? []),
       ...subcaminhos,
+      // O `preview.ts` importa daqui (GLOBALS_UPDATED / SET_GLOBALS, o ouvinte
+      // de canal da barra de temas), e o otimizador só DESCOBRIA este
+      // subcaminho depois que a suíte já tinha começado. O pré-empacotamento
+      // mudava no meio da rodada e o Vite RECARREGAVA a página: os arquivos em
+      // voo naquele instante morriam com "Vitest failed to find the current
+      // suite" e eram contados como `(0 test)`.
+      //
+      // Medido em 2026-09-01: onze arquivos caíram assim, e um deles era o
+      // `docs-smoke.stories.ts` — as 98 docs pages inteiras. A suíte fechou
+      // vermelha por outro motivo e ninguém teria reparado que a fumaça não
+      // rodou; se os outros vinte testes estivessem verdes, a rodada teria
+      // fechado VERDE sem medir a fumaça.
+      'storybook/internal/core-events',
+    ];
+
+    // `vitest/browser` é módulo virtual do plugin do Vitest, e o otimizador
+    // aborta a rodada inteira ao tentar resolvê-lo. As outras quatro stacks já
+    // excluíam; esta era a única sem — ver o bloco `rollup.external` abaixo,
+    // que cobre o outro lado do mesmo problema.
+    viteConfig.optimizeDeps.exclude = [
+      ...(viteConfig.optimizeDeps.exclude ?? []),
+      'vitest/browser',
     ];
 
     // O alias precisa ser reaplicado aqui: o framework Angular monta a própria
