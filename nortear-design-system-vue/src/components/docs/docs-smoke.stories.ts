@@ -327,17 +327,12 @@ export const Densities: Story = {
   play: smokePlay,
 };
 
+// A exceção de `preview_vazio` saiu: a premissa dela ("falta decidir se a docs
+// page mostra o gatilho") foi decidida — mostra. Com o exemplo nascendo fechado,
+// o gatilho fica NO contêiner e ele deixa de estar vazio.
 export const Dialog: Story = {
   render: () => ({ components: { DialogDocs }, template: '<DialogDocs />' }),
   play: smokePlay,
-  parameters: {
-    contratoDocs: {
-      ignorar: {
-      preview_vazio:
-        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
-      },
-    },
-  },
 };
 
 export const Drawer: Story = {
@@ -471,14 +466,6 @@ export const Separator: Story = {
 export const Sheet: Story = {
   render: () => ({ components: { SheetDocs }, template: '<SheetDocs />' }),
   play: smokePlay,
-  parameters: {
-    contratoDocs: {
-      ignorar: {
-      preview_vazio:
-        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
-      },
-    },
-  },
 };
 
 export const Sidebar: Story = {

@@ -227,14 +227,11 @@ export const DataTable: Story = { render: page(DataTableDocs), play: mounted };
 export const Densities: Story = { render: page(DensitiesDocs), play: mounted };
 
 // axe: scrollable-region-focusable — catalogado no FIXES-NEEDED
+// A exceção de `preview_vazio` saiu: a premissa dela ("falta decidir se a docs
+// page mostra o gatilho") foi decidida — mostra. Com o exemplo nascendo fechado,
+// o gatilho fica NO contêiner e ele deixa de estar vazio.
 export const Dialog: Story = { render: page(DialogDocs), play: mounted, parameters: {
     a11y: { test: 'todo' },
-    contratoDocs: {
-      ignorar: {
-        preview_vazio:
-          'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
-      },
-    },
   },
 };
 
@@ -282,16 +279,7 @@ export const Pagination: Story = { render: page(PaginationDocs), play: mounted }
 
 // label RESOLVIDA (2026-08-01): o input do variantForm era o único fora de um
 // <label> envolvente — ganhou aria-label com a chave t() do bloco. Axe é portão.
-export const Popover: Story = { render: page(PopoverDocs), play: mounted,
-  parameters: {
-    contratoDocs: {
-      ignorar: {
-      preview_vazio:
-        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
-      },
-    },
-  },
-};
+export const Popover: Story = { render: page(PopoverDocs), play: mounted };
 
 export const Progress: Story = { render: page(ProgressDocs), play: mounted };
 
