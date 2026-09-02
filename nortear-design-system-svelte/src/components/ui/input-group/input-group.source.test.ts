@@ -84,12 +84,18 @@ describe('transforms das stories de estado', () => {
     expect(out).toContain(`<p id="${INVALID_MESSAGE_ID}"`);
     // O texto do erro mora FORA da moldura.
     expect(out.indexOf('</InputGroup>')).toBeLessThan(out.indexOf(`<p id="${INVALID_MESSAGE_ID}"`));
+    // E o campo tem NOME, não só descrição: quem copiar o snippet leva o rótulo
+    // visível junto, senão reproduz `label-title-only` no próprio código.
+    expect(out).toContain(`<label class="nds-label" for="${SITE_FIELD_ID}">`);
+    expect(out.indexOf('<label')).toBeLessThan(out.indexOf('<InputGroup>'));
   });
 
   it('o desabilitado é atributo do campo, não aparência da moldura', () => {
     const out = inputGroupDisabledSource();
     expect(out).toContain('disabled');
     expect(out).not.toContain('aria-disabled');
+    // E o BOTÃO do addon cai junto: grupo apagado não entrega controle vivo.
+    expect(out).toContain('<InputGroupButton disabled');
   });
 });
 

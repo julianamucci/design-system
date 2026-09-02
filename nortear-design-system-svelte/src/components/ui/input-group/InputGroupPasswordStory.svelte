@@ -9,6 +9,7 @@
   } from './index';
   import {
     HIDE_LABEL,
+    PASSWORD_FIELD_ID,
     PASSWORD_GROUP_LABEL,
     PASSWORD_SAMPLE,
     REVEAL_LABEL,
@@ -28,20 +29,33 @@
   let visible = $state(false);
 </script>
 
-<InputGroup aria-label={PASSWORD_GROUP_LABEL}>
-  <InputGroupInput type={visible ? 'text' : 'password'} value={PASSWORD_SAMPLE} />
+<div class="nds-stack nds-w-full" data-spacing="sm">
+  <!-- O campo tem nome PRÓPRIO, e o nome do grupo não o substitui: aquele
+       pertence ao conjunto campo + botão (decisão 2 do primitivo), e o leitor
+       de tela não o empresta ao campo. Sem este rótulo o campo ficava anônimo —
+       sem `<label>`, sem `aria-label` e sem `placeholder` —, que é justamente o
+       caso que o axe reprova na regra `label`. -->
+  <label class="nds-label" for={PASSWORD_FIELD_ID}>{PASSWORD_GROUP_LABEL}</label>
 
-  <InputGroupAddon align="inline-end">
-    <InputGroupButton
-      size="icon-xs"
-      aria-label={visible ? HIDE_LABEL : REVEAL_LABEL}
-      onclick={() => (visible = !visible)}
-    >
-      {#if visible}
-        <EyeOff aria-hidden="true" />
-      {:else}
-        <Eye aria-hidden="true" />
-      {/if}
-    </InputGroupButton>
-  </InputGroupAddon>
-</InputGroup>
+  <InputGroup aria-label={PASSWORD_GROUP_LABEL}>
+    <InputGroupInput
+      id={PASSWORD_FIELD_ID}
+      type={visible ? 'text' : 'password'}
+      value={PASSWORD_SAMPLE}
+    />
+
+    <InputGroupAddon align="inline-end">
+      <InputGroupButton
+        size="icon-xs"
+        aria-label={visible ? HIDE_LABEL : REVEAL_LABEL}
+        onclick={() => (visible = !visible)}
+      >
+        {#if visible}
+          <EyeOff aria-hidden="true" />
+        {:else}
+          <Eye aria-hidden="true" />
+        {/if}
+      </InputGroupButton>
+    </InputGroupAddon>
+  </InputGroup>
+</div>

@@ -1,13 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, within } from 'storybook/test';
+import { noTransicao } from '@shared/testing/input-probe';
 
 import InputGroupStory from './InputGroupStory.svelte';
 import {
   addonsOf,
+  BUTTON_SELECTOR,
   inputGroupControl,
   inputGroupRoot,
   INVALID_MESSAGE,
   INVALID_MESSAGE_ID,
+  SITE_GROUP_LABEL,
   SITE_PLACEHOLDER,
 } from './input-group.fixtures';
 import {
@@ -93,7 +96,13 @@ export const Invalid: Story = {
   },
   render: () => ({
     Component: InputGroupStory,
-    props: { placeholder: SITE_PLACEHOLDER, invalid: true },
+    props: {
+      placeholder: SITE_PLACEHOLDER,
+      invalid: true,
+      // O rótulo VISÍVEL nomeia o campo. Sem ele o único candidato a nome era o
+      // `aria-describedby` do erro, e descrição não é nome.
+      fieldLabel: SITE_GROUP_LABEL,
+    },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -107,6 +116,12 @@ export const Invalid: Story = {
       await expect(field).toHaveAttribute('aria-invalid', 'true');
       await expect(field).toHaveAttribute('aria-describedby', INVALID_MESSAGE_ID);
 
+      // E o campo tem NOME, não só descrição. O par descrição-sem-nome faz o
+      // leitor de tela anunciar a mensagem de erro de um campo anônimo, e é o
+      // que o axe reprova em `label-title-only` — disparada pela descrição, e
+      // por isso ausente em todos os outros campos sem rótulo desta suíte.
+      await expect(field).toHaveAccessibleName(SITE_GROUP_LABEL);
+
       const description = canvasElement.querySelector(`#${INVALID_MESSAGE_ID}`);
       await expect(description).not.toBeNull();
       await expect(description).toHaveTextContent(INVALID_MESSAGE);
@@ -118,10 +133,19 @@ export const Invalid: Story = {
       //
       // A escrita e as duas leituras acontecem aqui, de uma vez — nunca dentro
       // de um `waitFor`, que reagendaria a si mesmo e travaria a aba.
-      const withError = getComputedStyle(group).borderTopColor;
+      //
+      // A TRANSIÇÃO SAI ANTES DA MEDIDA, e é isso que faz a asserção medir o
+      // destino em vez do primeiro quadro. A folha declara
+      // `transition: border-color` na moldura: tirado o atributo, o computado
+      // no mesmo instante ainda é a cor de ANTES — é onde a interpolação
+      // começa. As duas leituras voltavam iguais e a asserção reprovava um CSS
+      // correto. `noTransicao` zera a transição e força o layout antes de ler.
+      const withError = noTransicao(group, () => getComputedStyle(group).borderTopColor);
 
-      field.removeAttribute('aria-invalid');
-      const withoutError = getComputedStyle(group).borderTopColor;
+      const withoutError = noTransicao(group, () => {
+        field.removeAttribute('aria-invalid');
+        return getComputedStyle(group).borderTopColor;
+      });
       field.setAttribute('aria-invalid', 'true');
 
       await expect(withError).not.toBe(withoutError);
@@ -143,6 +167,28 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item3'],
     docs: { source: { transform: inputGroupDisabledSource } },
+    // `color-contrast` DESLIGADA nesta story, e só nela — com o motivo, porque
+    // exceção sem motivo vira exceção permanente.
+    //
+    // O grupo inteiro esmaece por `:has(:disabled)`, que é a afordância de
+    // desabilitado desta casa — a mesma de `.nds-input` e de `.nds-button`. O
+    // axe pula controle desabilitado sozinho, então no campo e no botão a conta
+    // nem aparece; aqui ela aparece porque o prefixo `https://` é um `<span>`,
+    // e `<span>` não tem como ser desabilitado: `aria-disabled` não é atributo
+    // global, e num elemento de papel genérico ele troca uma violação por outra
+    // (`aria-allowed-attr`).
+    //
+    // A WCAG 1.4.3 isenta explicitamente texto de componente de interface
+    // INATIVO, e o grupo inteiro está inativo: o campo tem `disabled`, e o
+    // botão do addon passou a ter — era o defeito de verdade desta rodada.
+    //
+    // Medido nas rodadas das outras stacks sobre a MESMA folha compartilhada:
+    // `.nds-input-group-text` a 2,03:1 e o botão "Colar" a 2,85:1, os dois só
+    // por causa da opacidade; fora do estado desabilitado o mesmo prefixo mede
+    // 5,38:1. O que isto NÃO cobre é qualquer outro estado desta moldura — as
+    // outras duas stories do arquivo seguem medindo contraste, e é lá que um
+    // prefixo ilegível de verdade reprovaria.
+    a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
   },
   render: () => ({
     Component: InputGroupStory,
@@ -166,6 +212,18 @@ export const Disabled: Story = {
       const opacity = Number(getComputedStyle(group).opacity);
       await expect(opacity).toBeLessThan(1);
       await expect(group.hasAttribute('aria-disabled')).toBe(false);
+    });
+
+    await step('O BOTÃO do addon cai junto — grupo apagado não tem controle vivo', async () => {
+      // Não havia asserção nenhuma aqui, e por isso o defeito viveu: o
+      // `disabled` chegava ao campo e parava nele. O grupo aparecia esmaecido
+      // com um "Colar" que recebia Tab, respondia ao clique e ainda reprovava
+      // contraste — porque o axe só isenta quem está desabilitado de verdade.
+      const paste = group.querySelector<HTMLButtonElement>(BUTTON_SELECTOR)!;
+      await expect(paste).toBeDisabled();
+
+      paste.focus();
+      await expect(paste).not.toHaveFocus();
     });
 
     await step('O addon continua sem papel e sem foco', async () => {

@@ -159,6 +159,14 @@
   const DO_DONT_SITE_ID = 'input-group-docs-do-dont-site';
   const DO_DONT_INVALID_ID = 'input-group-docs-do-dont-invalid';
   const DO_DONT_INVALID_ERROR_ID = `${DO_DONT_INVALID_ID}-error`;
+  /**
+   * O lado "não faça" do par 2 precisa do próprio id.
+   *
+   * Os dois lados aparecem na MESMA tela: com um id só, os dois rótulos
+   * apontariam para o primeiro campo e o segundo ficaria sem nome outra vez —
+   * agora sem o axe reclamar.
+   */
+  const DO_DONT_INVALID_NO_TEXT_ID = `${DO_DONT_INVALID_ID}-sem-texto`;
 
   // ─── Demonstração ────────────────────────────────────────────────────────────
   //
@@ -528,6 +536,12 @@ interface InputGroupButtonProps {
   <!-- Par 2 — o erro aparece na moldura E em texto ligado ao campo -->
   {#snippet doPair2()}
     <div class="nds-stack nds-w-full" data-spacing="sm">
+      <!-- O rótulo VISÍVEL nomeia o campo — mesmo padrão do par 3. Sem ele o
+           único candidato a nome era o `aria-describedby` do erro, e descrição
+           não é nome: `label-title-only` reprova. O par continua sendo sobre a
+           PALAVRA do erro; o rótulo está nos dois lados justamente para não
+           virar a diferença entre eles. -->
+      <label class="nds-label" for={DO_DONT_INVALID_ID}>{labels.siteGroup}</label>
       <InputGroup>
         <InputGroupAddon align="inline-start">
           <InputGroupText>{labels.prefix}</InputGroupText>
@@ -549,13 +563,24 @@ interface InputGroupButtonProps {
   {#snippet dontPair2()}
     <!-- Só a moldura vermelha: quem não distingue a cor não fica sabendo de
          nada. O atributo está lá — é ele que pinta —, mas não há texto nenhum
-         ligado a ele. -->
-    <InputGroup>
-      <InputGroupAddon align="inline-start">
-        <InputGroupText>{labels.prefix}</InputGroupText>
-      </InputGroupAddon>
-      <InputGroupInput placeholder={labels.siteField} aria-invalid="true" />
-    </InputGroup>
+         ligado a ele.
+
+         O rótulo acompanha o lado bom: a diferença que este par ensina é a
+         presença do TEXTO DO ERRO, e um campo sem nome de um lado só
+         acrescentaria um segundo defeito no meio da lição. -->
+    <div class="nds-stack nds-w-full" data-spacing="sm">
+      <label class="nds-label" for={DO_DONT_INVALID_NO_TEXT_ID}>{labels.siteGroup}</label>
+      <InputGroup>
+        <InputGroupAddon align="inline-start">
+          <InputGroupText>{labels.prefix}</InputGroupText>
+        </InputGroupAddon>
+        <InputGroupInput
+          id={DO_DONT_INVALID_NO_TEXT_ID}
+          placeholder={labels.siteField}
+          aria-invalid="true"
+        />
+      </InputGroup>
+    </div>
   {/snippet}
 
   <!-- Par 3 — o rótulo visível nomeia; o prefixo só completa o formato -->

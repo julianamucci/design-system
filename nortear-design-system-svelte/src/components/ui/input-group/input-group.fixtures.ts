@@ -42,6 +42,21 @@ export const SEND_LABEL = 'Enviar';
 /** Id do campo do formato, para o rótulo visível apontar para ele. */
 export const SITE_FIELD_ID = 'input-group-site';
 
+/**
+ * Ids dos campos que também precisam de rótulo VISÍVEL.
+ *
+ * Um por story, porque duas molduras na mesma tela com o mesmo id fariam os
+ * dois rótulos apontarem para o primeiro campo — e o segundo ficaria sem nome
+ * outra vez, agora sem o axe reclamar.
+ *
+ * O rótulo não é enfeite: `label-title-only` dispara pelo `aria-describedby`, e
+ * descrição NÃO é nome. Nenhum dos candidatos que estavam ali serve — o prefixo
+ * `https://` completa o formato, o texto de erro é descrição, e o nome do GRUPO
+ * pertence ao conjunto campo + botão, não ao campo.
+ */
+export const INVALID_FIELD_ID = 'input-group-invalid-site';
+export const PASSWORD_FIELD_ID = 'input-group-password';
+
 /** Id do texto que descreve o erro. Sai daqui para asserção e marcação casarem. */
 export const INVALID_MESSAGE_ID = 'input-group-error';
 export const INVALID_MESSAGE = 'Endereço inválido';

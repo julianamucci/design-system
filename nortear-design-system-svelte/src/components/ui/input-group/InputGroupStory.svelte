@@ -8,6 +8,7 @@
     InputGroupTextarea,
   } from './index';
   import {
+    INVALID_FIELD_ID,
     INVALID_MESSAGE,
     INVALID_MESSAGE_ID,
     PASTE_LABEL,
@@ -37,6 +38,16 @@
     disabled?: boolean;
     /** Marca o CAMPO como inválido e o liga ao texto que descreve o problema. */
     invalid?: boolean;
+    /**
+     * Rótulo VISÍVEL do campo. Ausente, o campo fica com o nome que a
+     * composição lhe der — que pode ser nenhum.
+     *
+     * Ele existe porque descrever não é nomear: com `aria-describedby` ligado e
+     * sem nome, o axe reprova em `label-title-only` e o leitor de tela anuncia
+     * a mensagem de erro de um campo anônimo. O nome do GRUPO não substitui o
+     * do campo: aquele pertence ao conjunto campo + botão.
+     */
+    fieldLabel?: string;
   }
 
   let {
@@ -46,6 +57,7 @@
     rows = 2,
     disabled = false,
     invalid = false,
+    fieldLabel,
   }: Props = $props();
 
   // Estado é palavra, nunca só cor: os dois atributos vão no CAMPO e apontam
@@ -55,6 +67,15 @@
 </script>
 
 <div class="nds-stack nds-w-full" data-spacing="sm">
+  {#if fieldLabel}
+    <!-- O rótulo VISÍVEL nomeia o campo. Sem ele, num campo que liga mensagem
+         de erro, o único candidato a nome é o `aria-describedby` — e descrição
+         não é nome: o axe reprova em `label-title-only`, e o leitor de tela
+         anuncia "campo de edição, Endereço inválido", que conta o problema sem
+         dizer de que campo é. -->
+    <label class="nds-label" for={INVALID_FIELD_ID}>{fieldLabel}</label>
+  {/if}
+
   <InputGroup aria-label={ariaLabel}>
     <InputGroupAddon align="inline-start">
       <InputGroupText>{SITE_PREFIX}</InputGroupText>
@@ -62,6 +83,7 @@
 
     {#if multiline}
       <InputGroupTextarea
+        id={fieldLabel ? INVALID_FIELD_ID : undefined}
         {placeholder}
         {rows}
         {disabled}
@@ -70,6 +92,7 @@
       />
     {:else}
       <InputGroupInput
+        id={fieldLabel ? INVALID_FIELD_ID : undefined}
         {placeholder}
         {disabled}
         aria-invalid={invalidAttribute}
@@ -78,7 +101,13 @@
     {/if}
 
     <InputGroupAddon align="inline-end">
-      <InputGroupButton>{PASTE_LABEL}</InputGroupButton>
+      <!-- O `disabled` do grupo alcança o BOTÃO, e não só o campo.
+           Ele chegava só ao controle: a moldura esmaecia inteira pela folha
+           (`:has(:disabled)`) e ainda entregava um "Colar" que recebia Tab,
+           respondia ao clique e reprovava contraste — porque o axe só isenta
+           quem está desabilitado de verdade. Aparência de inativo com um
+           controle vivo dentro é a pior das duas. -->
+      <InputGroupButton {disabled}>{PASTE_LABEL}</InputGroupButton>
     </InputGroupAddon>
   </InputGroup>
 

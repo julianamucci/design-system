@@ -26,6 +26,7 @@ import {
   INVALID_MESSAGE_ID,
   NOTE_GROUP_LABEL,
   NOTE_PLACEHOLDER,
+  PASSWORD_FIELD_ID,
   PASSWORD_GROUP_LABEL,
   PASTE_LABEL,
   REVEAL_LABEL,
@@ -113,8 +114,14 @@ function iconImport(name: string): string {
   return `import ${name} from "@lucide/svelte/icons/${path}";`;
 }
 
-/** A marcação de um addon, com o que ele carrega dentro. */
-function addonMarkup(addon: InputGroupSnippetAddon): string {
+/**
+ * A marcação de um addon, com o que ele carrega dentro.
+ *
+ * `groupDisabled` desce do GRUPO: um grupo desabilitado não pode entregar um
+ * botão vivo lá dentro, e o snippet que omitisse a linha ensinaria justamente o
+ * defeito que a story passou a medir.
+ */
+function addonMarkup(addon: InputGroupSnippetAddon, groupDisabled = false): string {
   const children: string[] = [];
 
   if (addon.icon) {
@@ -137,7 +144,8 @@ function addonMarkup(addon: InputGroupSnippetAddon): string {
     );
   } else if (addon.buttonLabel) {
     children.push(
-      `<InputGroupButton onclick={handleAddon}>${addon.buttonLabel}</InputGroupButton>`,
+      `<InputGroupButton${groupDisabled ? ' disabled' : ''} onclick={handleAddon}>`
+      + `${addon.buttonLabel}</InputGroupButton>`,
     );
   }
 
@@ -201,9 +209,13 @@ export function inputGroupSnippet(options: InputGroupSnippetOptions = {}): strin
   // marcação só precisa pôr o campo entre os addons para a leitura sequencial
   // bater com o desenho quando nada reordena.
   const body = [
-    ...addons.filter((addon) => addon.align.endsWith('start')).map(addonMarkup),
+    ...addons
+      .filter((addon) => addon.align.endsWith('start'))
+      .map((addon) => addonMarkup(addon, options.disabled)),
     fieldMarkup(options),
-    ...addons.filter((addon) => addon.align.endsWith('end')).map(addonMarkup),
+    ...addons
+      .filter((addon) => addon.align.endsWith('end'))
+      .map((addon) => addonMarkup(addon, options.disabled)),
   ].join('\n\n');
 
   const groupAttribute = options['aria-label'] ? ` aria-label="${options['aria-label']}"` : '';
@@ -263,9 +275,20 @@ export function inputGroupRestSource(): string {
   return inputGroupSnippet({ placeholder: SITE_PLACEHOLDER });
 }
 
-/** Inválido: os dois atributos no campo, mais o texto que os explica. */
+/**
+ * Inválido: os dois atributos no campo, mais o texto que os explica — e o
+ * RÓTULO VISÍVEL, que é quem nomeia o campo.
+ *
+ * O rótulo entra no snippet junto com a story: descrever não é nomear, e um
+ * snippet que ligasse `aria-describedby` sem nome ensinaria `label-title-only`
+ * a quem copia.
+ */
 export function inputGroupInvalidSource(): string {
-  return inputGroupSnippet({ placeholder: SITE_PLACEHOLDER, invalid: true });
+  return inputGroupSnippet({
+    placeholder: SITE_PLACEHOLDER,
+    invalid: true,
+    visibleLabel: SITE_GROUP_LABEL,
+  });
 }
 
 /** Desabilitado: o atributo é do campo, e a moldura só reage a ele. */
@@ -299,23 +322,32 @@ ${groupImport(['InputGroup', 'InputGroupAddon', 'InputGroupButton', 'InputGroupI
 
 let visible = $state(false);`;
 
-  const markup = `<InputGroup aria-label="${PASSWORD_GROUP_LABEL}">
-  <InputGroupInput type={visible ? "text" : "password"} />
+  // O rótulo VISÍVEL acompanha a story: o nome do grupo pertence ao conjunto
+  // campo + botão e o leitor de tela não o empresta ao campo, então sem ele o
+  // campo fica anônimo — sem `<label>`, sem `aria-label` e sem `placeholder`,
+  // que é o caso da regra `label` do axe. Snippet que diverge da story ensina o
+  // defeito a quem copia.
+  const markup = `<div class="nds-stack" data-spacing="sm">
+  <label class="nds-label" for="${PASSWORD_FIELD_ID}">${PASSWORD_GROUP_LABEL}</label>
 
-  <InputGroupAddon align="inline-end">
-    <InputGroupButton
-      size="icon-xs"
-      aria-label={visible ? "${HIDE_LABEL}" : "${REVEAL_LABEL}"}
-      onclick={() => (visible = !visible)}
-    >
-      {#if visible}
-        <EyeOff aria-hidden="true" />
-      {:else}
-        <Eye aria-hidden="true" />
-      {/if}
-    </InputGroupButton>
-  </InputGroupAddon>
-</InputGroup>`;
+  <InputGroup aria-label="${PASSWORD_GROUP_LABEL}">
+    <InputGroupInput id="${PASSWORD_FIELD_ID}" type={visible ? "text" : "password"} />
+
+    <InputGroupAddon align="inline-end">
+      <InputGroupButton
+        size="icon-xs"
+        aria-label={visible ? "${HIDE_LABEL}" : "${REVEAL_LABEL}"}
+        onclick={() => (visible = !visible)}
+      >
+        {#if visible}
+          <EyeOff aria-hidden="true" />
+        {:else}
+          <Eye aria-hidden="true" />
+        {/if}
+      </InputGroupButton>
+    </InputGroupAddon>
+  </InputGroup>
+</div>`;
 
   return svelteSnippet(script, markup);
 }
