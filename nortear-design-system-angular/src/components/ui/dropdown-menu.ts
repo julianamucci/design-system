@@ -1,3 +1,19 @@
+/**
+ * CONTRATO DE ACESSIBILIDADE DO MENU — versão curta; o bloco canônico, com a
+ * medição das cinco stacks, está no cabeçalho do `dropdown-menu` do Vanilla.
+ *
+ * Cumprido igual em todas: `aria-haspopup="menu"` + `aria-expanded` no gatilho;
+ * `role="menu"` no painel e `menuitem` / `menuitemcheckbox` / `menuitemradio`
+ * nos itens; setas, `Home`/`End` e typeahead; `Escape` fecha e devolve o foco ao
+ * gatilho; nenhuma região viva.
+ *
+ * MECANISMO DESTA STACK, e onde ela diverge: aqui o item DESABILITADO CONTINUA
+ * no percurso das setas. O `handleKeydown` de `RdxMenuPopup` percorre a lista de
+ * `menuItems()`, e `getCompositeMenuItems()` filtra essa lista só por
+ * VISIBILIDADE — `disabled` não tira o item dela. Não há entrada que inverta
+ * isso, e três das cinco stacks fazem o contrário; a story `ItemDisabled` assere
+ * o que ESTA lib faz, apertando a seta. Medido na fonte em 2026-09-02.
+ */
 import {
   ChangeDetectionStrategy,
   Component,

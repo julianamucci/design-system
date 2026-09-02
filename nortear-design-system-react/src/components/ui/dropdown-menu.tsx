@@ -1,3 +1,20 @@
+/**
+ * CONTRATO DE ACESSIBILIDADE DO MENU — versão curta; o bloco canônico, com a
+ * medição das cinco stacks, está no cabeçalho do `dropdown-menu` do Vanilla.
+ *
+ * Cumprido igual em todas: `aria-haspopup="menu"` + `aria-expanded` no gatilho;
+ * `role="menu"` no painel e `menuitem` / `menuitemcheckbox` / `menuitemradio`
+ * nos itens; setas, `Home`/`End` e typeahead; `Escape` fecha e devolve o foco ao
+ * gatilho; nenhuma região viva.
+ *
+ * MECANISMO DESTA STACK, e onde ela diverge: aqui o item DESABILITADO CONTINUA
+ * no percurso das setas. `menu/item/useMenuItem` monta o item com
+ * `useButton({ focusableWhenDisabled: true })`, e `menu/root/MenuRoot` chama
+ * `useListNavigation` com `disabledIndices: EMPTY_ARRAY` — nenhum índice conta
+ * como desabilitado para a navegação. Não há prop que inverta isso, e três das
+ * cinco stacks fazem o contrário; a story `ItemDisabled` assere o que ESTA lib
+ * faz. Medido na fonte em 2026-09-02.
+ */
 import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 

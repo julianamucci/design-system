@@ -2,6 +2,59 @@
 // Visual: classes .nds-dropdown-menu-* (standalone).
 // Render via portal, navegação por teclado (Arrow/Home/End/Esc/Tab).
 
+/**
+ * CONTRATO DE ACESSIBILIDADE DO MENU — bloco canônico das cinco stacks.
+ *
+ * Medido em 2026-09-02 na FONTE de cada lib, não na documentação delas. As
+ * outras quatro trazem a versão curta com o mecanismo da própria stack.
+ *
+ * O que as CINCO cumprem igual:
+ *
+ * - Gatilho: `aria-haspopup="menu"` e `aria-expanded` acompanhando o estado.
+ * - Painel: `role="menu"`. Itens: `menuitem`, e `menuitemcheckbox` /
+ *   `menuitemradio` quando há estado, com `aria-checked` (aqui e no Angular
+ *   também `mixed`, para o estado misto).
+ * - Setas cima/baixo andam item a item; `Home` e `End` vão às pontas; digitar
+ *   um caractere salta para o item que começa com ele (typeahead).
+ * - `Escape` fecha e DEVOLVE o foco ao gatilho.
+ * - Nenhuma região viva. Menu não é anúncio: quem narra a mudança de foco é o
+ *   percurso do próprio leitor de tela, e um `aria-live` aqui duplicaria a fala.
+ *
+ * Onde as cinco DIVERGEM, e por que não dá para alinhar:
+ *
+ *   O item DESABILITADO sai do percurso das setas em três stacks e continua
+ *   nele em duas. Não é descuido de implementação: cada lib crava a escolha no
+ *   próprio seletor de candidatos, sem prop que a inverta.
+ *
+ *     PULA o item desabilitado
+ *       vanilla — a lista de candidatos aqui é
+ *                 `[role=menuitem]:not([aria-disabled="true"])`, e o item
+ *                 desabilitado também não recebe `tabindex`
+ *       reka-ui — `Menu/MenuContentImpl`, RovingFocusGroup com
+ *                 `attributeName: '[data-reka-collection-item]:not([data-disabled])'`
+ *       bits-ui — `bits/menu/menu.svelte.js`,
+ *                 `querySelectorAll('[…item]:not([data-disabled])')`
+ *
+ *     POUSA no item desabilitado
+ *       base-ui  — `menu/item/useMenuItem`, `useButton({ focusableWhenDisabled: true })`,
+ *                  e `menu/root/MenuRoot` chama `useListNavigation` com
+ *                  `disabledIndices: EMPTY_ARRAY` (nenhum índice é "desabilitado")
+ *       radix-ng — `getCompositeMenuItems()` filtra a lista só por VISIBILIDADE;
+ *                  `disabled` não tira o item dela
+ *
+ *   As duas leituras têm respaldo: a WAI-ARIA recomenda manter o item
+ *   desabilitado focalizável, para que ele seja ANUNCIADO em vez de sumir; e
+ *   pular poupa quem navega de parar no que não executa. O que NÃO se pode é
+ *   dizer que uma delas é o contrato do design system enquanto três stacks
+ *   fazem o contrário. Nenhum item de `testes.accessibility` promete um dos
+ *   dois lados — e a story `ItemDisabled` de cada stack assere o que a SUA lib
+ *   faz, com o motivo no passo.
+ *
+ * Outra divergência, esta de peça e não de comportamento: esta fábrica não tem
+ * submenu. `functional.item7` e `visual.item4` ficam declarados em
+ * `coversNotApplicable` na story do Playground.
+ */
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
@@ -248,12 +301,12 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         // "mixed" é o que distingue "alguns selecionados" de "todos
         // selecionados"; um booleano aqui mentiria para quem lê a tela.
         li.setAttribute('aria-checked', misto ? 'mixed' : String(checked));
-        const novo = createIndicador(
+        const nextIndicator = createIndicador(
           misto ? 'indeterminate' : checked ? 'checked' : 'unchecked',
           slotDoIndicador,
         );
-        if (li.firstElementChild) li.replaceChild(novo, li.firstElementChild);
-        else li.appendChild(novo);
+        if (li.firstElementChild) li.replaceChild(nextIndicator, li.firstElementChild);
+        else li.appendChild(nextIndicator);
       }
 
       if (marcavel) pintarMarkup();
