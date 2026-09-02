@@ -108,7 +108,7 @@ export const Playground: Story = {
             <CommandGroup :heading="args.showGroups ? 'Componentes' : ''">
               <CommandItem value="button" @select="args.onSelect('button')">
                 Button
-                <CommandShortcut>⌘B</CommandShortcut>
+                <CommandShortcut>Ctrl+B</CommandShortcut>
               </CommandItem>
               <CommandItem value="input" @select="args.onSelect('input')">Input</CommandItem>
               <CommandItem value="separator" @select="args.onSelect('separator')">Separator</CommandItem>

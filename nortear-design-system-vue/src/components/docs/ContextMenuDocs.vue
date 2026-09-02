@@ -196,7 +196,7 @@ const codeDefault = `<ContextMenu>
   <ContextMenuContent>
     <ContextMenuItem>
       Editar
-      <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+      <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
     </ContextMenuItem>
     <ContextMenuItem>Duplicar</ContextMenuItem>
     <ContextMenuItem>Compartilhar</ContextMenuItem>
@@ -210,7 +210,7 @@ const codeDestructive = `<ContextMenu>
     <ContextMenuSeparator />
     <ContextMenuItem variant="destructive">
       Excluir
-      <ContextMenuShortcut>⌫</ContextMenuShortcut>
+      <ContextMenuShortcut>Delete</ContextMenuShortcut>
     </ContextMenuItem>
   </ContextMenuContent>
 </ContextMenu>`;
@@ -545,16 +545,16 @@ const codeCompositionShortcuts = `<ContextMenu>
   <ContextMenuContent>
     <ContextMenuItem>
       Editar
-      <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+      <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
     </ContextMenuItem>
     <ContextMenuItem>
       Duplicar
-      <ContextMenuShortcut>⌘D</ContextMenuShortcut>
+      <ContextMenuShortcut>Ctrl+D</ContextMenuShortcut>
     </ContextMenuItem>
     <ContextMenuSeparator />
     <ContextMenuItem variant="destructive">
       Excluir
-      <ContextMenuShortcut>⌫</ContextMenuShortcut>
+      <ContextMenuShortcut>Delete</ContextMenuShortcut>
     </ContextMenuItem>
   </ContextMenuContent>
 </ContextMenu>`;
@@ -777,7 +777,7 @@ const codeCompositionShortcuts = `<ContextMenu>
           <ContextMenuContent>
             <ContextMenuItem>
               Editar
-              <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+              <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
@@ -991,7 +991,7 @@ const codeCompositionShortcuts = `<ContextMenu>
             </ContextMenuItem>
             <ContextMenuItem>
               {{ tContent('demonstration.labels.duplicate') }}
-              <ContextMenuShortcut>⌘D</ContextMenuShortcut>
+              <ContextMenuShortcut>Ctrl+D</ContextMenuShortcut>
             </ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem variant="destructive">

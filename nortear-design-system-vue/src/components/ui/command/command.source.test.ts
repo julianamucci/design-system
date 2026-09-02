@@ -38,7 +38,7 @@ function executar(valor: string) {
         <CommandGroup heading="Componentes">
           <CommandItem value="button" @select="executar('button')">
             Button
-            <CommandShortcut>⌘B</CommandShortcut>
+            <CommandShortcut>Ctrl+B</CommandShortcut>
           </CommandItem>
           <CommandItem value="input" @select="executar('input')">Input</CommandItem>
           <CommandItem value="separator" @select="executar('separator')">Separator</CommandItem>
@@ -122,7 +122,7 @@ describe('transforms das stories de estado', () => {
     expect(saida).toContain('<CommandItem value="claro" :checked="true">Claro</CommandItem>');
     expect(saida).toContain('<CommandItem value="escuro" :checked="false">Escuro</CommandItem>');
     // Um por item: marca e atalho disputariam a borda direita.
-    expect(saida).toContain('<CommandShortcut>⌘S</CommandShortcut>');
+    expect(saida).toContain('<CommandShortcut>Ctrl+S</CommandShortcut>');
   });
 });
 
@@ -137,7 +137,7 @@ describe('transforms das stories de composição', () => {
 
   it('cada atalho mora dentro do item, que é o que o põe no nome acessível', () => {
     const saida = commandWithShortcutsSource();
-    expect(saida).toMatch(/Salvar\n\s+<CommandShortcut>⌘S<\/CommandShortcut>/);
+    expect(saida).toMatch(/Salvar\n\s+<CommandShortcut>Ctrl\+S<\/CommandShortcut>/);
     expect(saida.match(/<CommandShortcut>/g)).toHaveLength(5);
   });
 
@@ -152,7 +152,7 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain(`onMounted(() => window.addEventListener('keydown', aoTeclar))`);
     expect(saida).toContain(`onUnmounted(() => window.removeEventListener('keydown', aoTeclar))`);
     // Atalho escondido é atalho que ninguém descobre.
-    expect(saida).toContain('<kbd class="nds-kbd">⌘K</kbd>');
+    expect(saida).toContain('<kbd class="nds-kbd">Ctrl+K</kbd>');
   });
 
   it('nenhum snippet carrega valor de design em style inline', () => {

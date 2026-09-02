@@ -38,18 +38,18 @@ const menus: Menu[] = [
     value: 'file',
     label: 'Arquivo',
     itens: [
-      { label: 'Novo', atalho: '⌘N' },
-      { label: 'Abrir', atalho: '⌘O' },
-      { label: 'Salvar', atalho: '⌘S' },
+      { label: 'Novo', atalho: 'Ctrl+N' },
+      { label: 'Abrir', atalho: 'Ctrl+O' },
+      { label: 'Salvar', atalho: 'Ctrl+S' },
     ],
   },
   {
     value: 'edit',
     label: 'Editar',
     itens: [
-      { label: 'Desfazer', atalho: '⌘Z' },
-      { label: 'Refazer', atalho: '⇧⌘Z' },
-      { label: 'Copiar', atalho: '⌘C' },
+      { label: 'Desfazer', atalho: 'Ctrl+Z' },
+      { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+      { label: 'Copiar', atalho: 'Ctrl+C' },
     ],
   },
   {
@@ -298,7 +298,7 @@ export function menubarCheckboxMistoSource(): string {
 
 /**
  * Atalhos visíveis: o atalho é filho do item, e NÃO leva `aria-hidden` —
- * "Desfazer ⌘Z" é o nome acessível inteiro, e é ele que dá serventia ao atalho
+ * "Desfazer Ctrl+Z" é o nome acessível inteiro, e é ele que dá serventia ao atalho
  * para quem não enxerga a tela.
  */
 export function menubarWithShortcutsSource(): string {
@@ -313,9 +313,9 @@ export function menubarWithShortcutsSource(): string {
     )}
 
 const atalhos = [
-  { label: 'Desfazer', atalho: '⌘Z' },
-  { label: 'Refazer', atalho: '⇧⌘Z' },
-  { label: 'Copiar', atalho: '⌘C' },
+  { label: 'Desfazer', atalho: 'Ctrl+Z' },
+  { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+  { label: 'Copiar', atalho: 'Ctrl+C' },
 ]`,
     `<Menubar default-value="edit">
   <MenubarMenu value="edit">
@@ -474,8 +474,8 @@ export function menubarEditorCompletoSource(): string {
     <MenubarContent>
       <MenubarGroup>
         <MenubarLabel>Documento</MenubarLabel>
-        <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-        <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+        <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+        <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
       </MenubarGroup>
       <MenubarSeparator />
       <MenubarItem variant="destructive">Descartar alterações</MenubarItem>
@@ -485,8 +485,8 @@ export function menubarEditorCompletoSource(): string {
   <MenubarMenu value="edit">
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
 

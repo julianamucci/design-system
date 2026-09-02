@@ -156,15 +156,15 @@ export const WithShortcuts: Story = {
             <CommandGroup heading="Ações">
               <CommandItem value="novo-arquivo">
                 Novo arquivo
-                <CommandShortcut>⌘N</CommandShortcut>
+                <CommandShortcut>Ctrl+N</CommandShortcut>
               </CommandItem>
               <CommandItem value="abrir">
                 Abrir
-                <CommandShortcut>⌘O</CommandShortcut>
+                <CommandShortcut>Ctrl+O</CommandShortcut>
               </CommandItem>
               <CommandItem value="salvar">
                 Salvar
-                <CommandShortcut>⌘S</CommandShortcut>
+                <CommandShortcut>Ctrl+S</CommandShortcut>
               </CommandItem>
             </CommandGroup>
 
@@ -173,11 +173,11 @@ export const WithShortcuts: Story = {
             <CommandGroup heading="Editar">
               <CommandItem value="desfazer">
                 Desfazer
-                <CommandShortcut>⌘Z</CommandShortcut>
+                <CommandShortcut>Ctrl+Z</CommandShortcut>
               </CommandItem>
               <CommandItem value="refazer">
                 Refazer
-                <CommandShortcut>⌘⇧Z</CommandShortcut>
+                <CommandShortcut>Ctrl+Shift+Z</CommandShortcut>
               </CommandItem>
             </CommandGroup>
           </CommandList>
@@ -200,15 +200,15 @@ export const WithShortcuts: Story = {
     await step('O atalho faz parte do nome acessível do comando', async () => {
       // Sem isso o leitor anunciaria "Salvar" e a pessoa nunca saberia que há
       // uma tecla — o atalho é informação, não decoração.
-      const salvar = canvas.getByRole('option', { name: 'Salvar ⌘S' });
+      const salvar = canvas.getByRole('option', { name: 'Salvar Ctrl+S' });
       const atalho = salvar.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
-      await expect(atalho).toHaveTextContent('⌘S');
+      await expect(atalho).toHaveTextContent('Ctrl+S');
     });
 
     await step('O atalho fica encostado na borda direita do comando', async () => {
-      const salvar = canvas.getByRole('option', { name: 'Salvar ⌘S' });
+      const salvar = canvas.getByRole('option', { name: 'Salvar Ctrl+S' });
       const atalho = salvar.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       const boxItem = salvar.getBoundingClientRect();
       const boxShortcut = atalho.getBoundingClientRect();
@@ -224,7 +224,7 @@ export const WithShortcuts: Story = {
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(1);
       });
-      await expect(canvas.getByRole('option', { name: 'Desfazer ⌘Z' })).toBeVisible();
+      await expect(canvas.getByRole('option', { name: 'Desfazer Ctrl+Z' })).toBeVisible();
 
       await userEvent.clear(field);
       await waitFor(async () => {
@@ -280,7 +280,7 @@ export const CommandPalette: Story = {
           @click="open = true"
         >
           Buscar
-          <kbd class="nds-kbd">⌘K</kbd>
+          <kbd class="nds-kbd">Ctrl+K</kbd>
         </Button>
 
         <CommandDialog
@@ -294,11 +294,11 @@ export const CommandPalette: Story = {
             <CommandGroup heading="Componentes">
               <CommandItem value="button" @select="executar('button')">
                 Button
-                <CommandShortcut>⌘B</CommandShortcut>
+                <CommandShortcut>Ctrl+B</CommandShortcut>
               </CommandItem>
               <CommandItem value="input" @select="executar('input')">
                 Input
-                <CommandShortcut>⌘I</CommandShortcut>
+                <CommandShortcut>Ctrl+I</CommandShortcut>
               </CommandItem>
             </CommandGroup>
 
@@ -330,7 +330,7 @@ export const CommandPalette: Story = {
       // de Do & Don't deste componente.
       const dica = trigger.querySelector<HTMLElement>('kbd')!;
       await expect(dica).toHaveClass(/nds-kbd/);
-      await expect(dica).toHaveTextContent('⌘K');
+      await expect(dica).toHaveTextContent('Ctrl+K');
       await expect(dica).toBeVisible();
     });
 
@@ -379,7 +379,7 @@ export const CommandPalette: Story = {
       const atalho = panel.querySelector<HTMLElement>(
         '[data-value="button"] [data-slot="command-shortcut"]',
       )!;
-      await expect(atalho).toHaveTextContent('⌘B');
+      await expect(atalho).toHaveTextContent('Ctrl+B');
       const boxItem = atalho.closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();
       const boxShortcut = atalho.getBoundingClientRect();
@@ -390,7 +390,7 @@ export const CommandPalette: Story = {
 
     await step('Escolher um comando executa e fecha', async () => {
       const panel = await waitForPortal('dialog');
-      await userEvent.click(within(panel).getByRole('option', { name: 'Input ⌘I' }));
+      await userEvent.click(within(panel).getByRole('option', { name: 'Input Ctrl+I' }));
 
       await waitForPortalGone('dialog');
       await expect(canvas.getByTestId('executado')).toHaveTextContent('input');

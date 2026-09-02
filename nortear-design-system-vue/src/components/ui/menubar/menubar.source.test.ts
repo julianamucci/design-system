@@ -39,18 +39,18 @@ const menus: Menu[] = [
     value: 'file',
     label: 'Arquivo',
     itens: [
-      { label: 'Novo', atalho: '⌘N' },
-      { label: 'Abrir', atalho: '⌘O' },
-      { label: 'Salvar', atalho: '⌘S' },
+      { label: 'Novo', atalho: 'Ctrl+N' },
+      { label: 'Abrir', atalho: 'Ctrl+O' },
+      { label: 'Salvar', atalho: 'Ctrl+S' },
     ],
   },
   {
     value: 'edit',
     label: 'Editar',
     itens: [
-      { label: 'Desfazer', atalho: '⌘Z' },
-      { label: 'Refazer', atalho: '⇧⌘Z' },
-      { label: 'Copiar', atalho: '⌘C' },
+      { label: 'Desfazer', atalho: 'Ctrl+Z' },
+      { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+      { label: 'Copiar', atalho: 'Ctrl+C' },
     ],
   },
   {
@@ -173,7 +173,7 @@ describe('transforms das stories de composição', () => {
   it('o atalho é filho do item, e não se esconde do leitor', () => {
     const saida = menubarWithShortcutsSource();
     expect(saida).toContain('<MenubarShortcut>{{ a.atalho }}</MenubarShortcut>');
-    // "Desfazer ⌘Z" é o nome acessível inteiro; escondê-lo devolveria só o
+    // "Desfazer Ctrl+Z" é o nome acessível inteiro; escondê-lo devolveria só o
     // rótulo e o atalho não serviria para quem não enxerga a tela.
     expect(saida).not.toContain('aria-hidden');
   });
@@ -207,7 +207,7 @@ describe('transforms das stories de composição', () => {
       expect(saida).toContain(`<MenubarMenu value="${menu}">`);
     }
     expect(saida).toContain('<MenubarSeparator />');
-    expect(saida).toContain('<MenubarShortcut>⌘N</MenubarShortcut>');
+    expect(saida).toContain('<MenubarShortcut>Ctrl+N</MenubarShortcut>');
     expect(saida).toContain('<MenubarCheckboxItem :checked="true">Régua</MenubarCheckboxItem>');
     // A barra nasce fechada: nenhum dos quatro menus abre na montagem.
     expect(saida).toContain('<Menubar>');

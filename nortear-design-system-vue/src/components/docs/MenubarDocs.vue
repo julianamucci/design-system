@@ -264,11 +264,11 @@ const codeWithShortcuts = `<Menubar default-value="edit">
   <MenubarMenu value="edit">
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
       <MenubarSeparator />
-      <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
-      <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+      <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
+      <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
 </Menubar>`;
@@ -300,15 +300,15 @@ const codeEditorComplete = `<Menubar>
   <MenubarMenu value="file">
     <MenubarTrigger>Arquivo</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-      <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
-      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+      <MenubarItem>Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
+      <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
   <MenubarMenu value="edit">
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
   <MenubarMenu value="view">
@@ -460,8 +460,8 @@ const a11yCritCols = computed(() => ({
           <MenubarMenu value="file">
             <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.fileMenu')) }}</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-              <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+              <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+              <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
               <MenubarSeparator />
               <MenubarSub>
                 <MenubarSubTrigger>Exportar</MenubarSubTrigger>
@@ -476,11 +476,11 @@ const a11yCritCols = computed(() => ({
           <MenubarMenu value="edit">
             <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.editMenu')) }}</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-              <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+              <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+              <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
               <MenubarSeparator />
-              <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
-              <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+              <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
+              <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
             </MenubarContent>
           </MenubarMenu>
           <MenubarMenu value="view">
@@ -632,8 +632,8 @@ const a11yCritCols = computed(() => ({
             <MenubarMenu value="edit">
               <MenubarTrigger>Editar</MenubarTrigger>
               <MenubarContent>
-                <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
-                <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+                <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
+                <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
@@ -725,11 +725,11 @@ const a11yCritCols = computed(() => ({
             <MenubarMenu value="edit">
               <MenubarTrigger>Editar</MenubarTrigger>
               <MenubarContent>
-                <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-                <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+                <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+                <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
                 <MenubarSeparator />
-                <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
-                <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+                <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
+                <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
@@ -795,18 +795,18 @@ const a11yCritCols = computed(() => ({
             <MenubarMenu value="file">
               <MenubarTrigger>Arquivo</MenubarTrigger>
               <MenubarContent>
-                <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-                <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
-                <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+                <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+                <MenubarItem>Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
+                <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
                 <MenubarSeparator />
-                <MenubarItem>Sair <MenubarShortcut>⌘Q</MenubarShortcut></MenubarItem>
+                <MenubarItem>Sair <MenubarShortcut>Ctrl+Q</MenubarShortcut></MenubarItem>
               </MenubarContent>
             </MenubarMenu>
             <MenubarMenu value="edit">
               <MenubarTrigger>Editar</MenubarTrigger>
               <MenubarContent>
-                <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-                <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+                <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+                <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
               </MenubarContent>
             </MenubarMenu>
             <MenubarMenu value="view">

@@ -145,7 +145,7 @@ import { Button } from '@/components/ui/button'`,
       root: ':default-open="true"',
       label: 'Ver atalhos',
       panel: `  <PopoverContent align="start">
-    <p class="nds-text-body">Use Ctrl + K para abrir a busca em qualquer tela.</p>
+    <p class="nds-text-body">Use Ctrl+K para abrir a busca em qualquer tela.</p>
   </PopoverContent>`,
     }),
   );

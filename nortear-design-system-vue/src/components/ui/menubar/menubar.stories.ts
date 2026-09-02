@@ -24,18 +24,18 @@ const MENUS = [
     value: 'file',
     label: 'Arquivo',
     items: [
-      { label: 'Novo', atalho: '⌘N' },
-      { label: 'Abrir', atalho: '⌘O' },
-      { label: 'Salvar', atalho: '⌘S' },
+      { label: 'Novo', atalho: 'Ctrl+N' },
+      { label: 'Abrir', atalho: 'Ctrl+O' },
+      { label: 'Salvar', atalho: 'Ctrl+S' },
     ],
   },
   {
     value: 'edit',
     label: 'Editar',
     items: [
-      { label: 'Desfazer', atalho: '⌘Z' },
-      { label: 'Refazer', atalho: '⇧⌘Z' },
-      { label: 'Copiar', atalho: '⌘C' },
+      { label: 'Desfazer', atalho: 'Ctrl+Z' },
+      { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+      { label: 'Copiar', atalho: 'Ctrl+C' },
     ],
   },
   {

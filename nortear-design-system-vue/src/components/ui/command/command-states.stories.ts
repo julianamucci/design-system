@@ -239,7 +239,7 @@ export const CheckedItem: Story = {
               <CommandItem value="escuro" :checked="false">Escuro</CommandItem>
               <CommandItem value="sistema" :checked="true">
                 Sistema
-                <CommandShortcut>⌘S</CommandShortcut>
+                <CommandShortcut>Ctrl+S</CommandShortcut>
               </CommandItem>
             </CommandGroup>
           </CommandList>
@@ -261,7 +261,7 @@ export const CheckedItem: Story = {
 
     const light = canvas.getByRole('option', { name: 'Claro' });
     const escuro = canvas.getByRole('option', { name: 'Escuro' });
-    const sistema = canvas.getByRole('option', { name: 'Sistema ⌘S' });
+    const sistema = canvas.getByRole('option', { name: 'Sistema Ctrl+S' });
     const marca = (item: HTMLElement) =>
       getComputedStyle(item.querySelector<HTMLElement>('.nds-command-item-check')!);
 

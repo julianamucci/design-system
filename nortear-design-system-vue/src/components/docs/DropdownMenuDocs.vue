@@ -302,17 +302,17 @@ const codeCompShortcuts = `<DropdownMenu>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>
-      Desfazer <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+      Desfazer <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Refazer <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+      Refazer <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuSeparator />
     <DropdownMenuItem>
-      Copiar <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+      Copiar <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Colar <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+      Colar <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
     </DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>`;
@@ -817,20 +817,20 @@ const a11yCritCols = computed(() => ({
             >
               <DropdownMenuItem>
                 Desfazer
-                <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+                <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 Refazer
-                <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+                <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 Copiar
-                <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+                <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 Colar
-                <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+                <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -105,11 +105,11 @@ export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx
     ]),
     menu(
       `    <ContextMenuGroup>
-${item('Editar', { atalho: '⌘E', recuo: '      ' })}
+${item('Editar', { atalho: 'Ctrl+E', recuo: '      ' })}
 ${item('Duplicar', { recuo: '      ' })}
     </ContextMenuGroup>
     <ContextMenuSeparator />
-${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`,
+${item('Excluir', { atalho: 'Delete', props: ' variant="destructive"' })}`,
       { label, root: attrBool('modal', ctx?.args?.modal, true) },
     ),
   );
@@ -128,7 +128,7 @@ export function contextMenuItemDisabledSource(): string {
       'ContextMenuShortcut',
     ]),
     menu(`    <ContextMenuGroup>
-${item('Editar', { atalho: '⌘E', recuo: '      ' })}
+${item('Editar', { atalho: 'Ctrl+E', recuo: '      ' })}
       <ContextMenuItem disabled>Duplicar</ContextMenuItem>
       <ContextMenuItem>Renomear</ContextMenuItem>
     </ContextMenuGroup>
@@ -177,11 +177,11 @@ export function contextMenuItemDestructiveSource(): string {
       'ContextMenuShortcut',
     ]),
     menu(`    <ContextMenuGroup>
-${item('Editar', { atalho: '⌘E', recuo: '      ' })}
+${item('Editar', { atalho: 'Ctrl+E', recuo: '      ' })}
       <ContextMenuItem>Duplicar</ContextMenuItem>
     </ContextMenuGroup>
     <ContextMenuSeparator />
-${item('Excluir permanentemente', { atalho: '⌫', props: ' variant="destructive"' })}`),
+${item('Excluir permanentemente', { atalho: 'Delete', props: ' variant="destructive"' })}`),
   );
 }
 
@@ -244,10 +244,10 @@ export function contextMenuWithShortcutsSource(): string {
       'ContextMenuSeparator',
       'ContextMenuShortcut',
     ]),
-    menu(`${item('Editar', { atalho: '⌘E' })}
-${item('Desfazer', { atalho: '⌘Z' })}
+    menu(`${item('Editar', { atalho: 'Ctrl+E' })}
+${item('Desfazer', { atalho: 'Ctrl+Z' })}
     <ContextMenuSeparator />
-${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`),
+${item('Excluir', { atalho: 'Delete', props: ' variant="destructive"' })}`),
   );
 }
 
@@ -363,7 +363,7 @@ const mostrarGrade = ref(true)
 const layout = ref('grid')`,
     menu(`    <ContextMenuGroup>
       <ContextMenuLabel>Ações</ContextMenuLabel>
-${item('Editar', { atalho: '⌘E', recuo: '      ' })}
+${item('Editar', { atalho: 'Ctrl+E', recuo: '      ' })}
       <ContextMenuSub>
         <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
         <ContextMenuSubContent>
@@ -388,6 +388,6 @@ ${item('Editar', { atalho: '⌘E', recuo: '      ' })}
       </ContextMenuRadioGroup>
     </ContextMenuGroup>
     <ContextMenuSeparator />
-${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`),
+${item('Excluir', { atalho: 'Delete', props: ' variant="destructive"' })}`),
   );
 }

@@ -108,7 +108,7 @@ export const Search: Story = {
     });
 
     await step('O atalho é TEXTO, e não um controle disfarçado', async () => {
-      // `⌘K` informa; ele não age. Um botão ali prometeria uma ação que o
+      // `Ctrl+K` informa; ele não age. Um botão ali prometeria uma ação que o
       // componente não tem, e ainda gastaria uma parada de tabulação.
       const suffix = addonOfAlign(group, 'inline-end')!;
       await expect(suffix).toHaveTextContent(SEARCH_SHORTCUT);

@@ -127,7 +127,7 @@ Command
 - `CommandGroup` com `heading` para organizar ações relacionadas — sem heading quando há apenas um grupo
 - Preferência: menu simples sem ícones, salvo instrução específica
 - Sempre fechar o Dialog/Popover após `onSelect` (`setOpen(false)`)
-- Dica visual do atalho (`<kbd>⌘K</kbd>`) obrigatória quando usar Command Palette — o usuário precisa descobrir o atalho
+- Dica visual do atalho (`<kbd>Ctrl+K</kbd>`) obrigatória quando usar Command Palette — o usuário precisa descobrir o atalho
 - Atalho global (Cmd+K) **não é nativo** do componente — requer listener manual no `mounted`/`onMounted`
 
 - **Não é escolha de valor**: lista de opções de formulário com busca é `Combobox`, que tem campo, chips, estado vazio e serialização próprios. Command é para executar ação, não para preencher campo

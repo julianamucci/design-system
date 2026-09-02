@@ -95,7 +95,7 @@ function executar(valor: string) {
         list: `<CommandGroup${title('Componentes')}>
   <CommandItem value="button" @select="executar('button')">
     Button
-    <CommandShortcut>⌘B</CommandShortcut>
+    <CommandShortcut>Ctrl+B</CommandShortcut>
   </CommandItem>
   <CommandItem value="input" @select="executar('input')">Input</CommandItem>
   <CommandItem value="separator" @select="executar('separator')">Separator</CommandItem>
@@ -182,7 +182,7 @@ export function commandItemCheckedSource(): string {
   <CommandItem value="escuro" :checked="false">Escuro</CommandItem>
   <CommandItem value="sistema" :checked="true">
     Sistema
-    <CommandShortcut>⌘S</CommandShortcut>
+    <CommandShortcut>Ctrl+S</CommandShortcut>
   </CommandItem>
 </CommandGroup>`,
       }),
@@ -232,15 +232,15 @@ export function commandWithShortcutsSource(): string {
         list: `<CommandGroup heading="Ações">
   <CommandItem value="novo-arquivo">
     Novo arquivo
-    <CommandShortcut>⌘N</CommandShortcut>
+    <CommandShortcut>Ctrl+N</CommandShortcut>
   </CommandItem>
   <CommandItem value="abrir">
     Abrir
-    <CommandShortcut>⌘O</CommandShortcut>
+    <CommandShortcut>Ctrl+O</CommandShortcut>
   </CommandItem>
   <CommandItem value="salvar">
     Salvar
-    <CommandShortcut>⌘S</CommandShortcut>
+    <CommandShortcut>Ctrl+S</CommandShortcut>
   </CommandItem>
 </CommandGroup>
 
@@ -249,11 +249,11 @@ export function commandWithShortcutsSource(): string {
 <CommandGroup heading="Editar">
   <CommandItem value="desfazer">
     Desfazer
-    <CommandShortcut>⌘Z</CommandShortcut>
+    <CommandShortcut>Ctrl+Z</CommandShortcut>
   </CommandItem>
   <CommandItem value="refazer">
     Refazer
-    <CommandShortcut>⌘⇧Z</CommandShortcut>
+    <CommandShortcut>Ctrl+Shift+Z</CommandShortcut>
   </CommandItem>
 </CommandGroup>`,
       }),
@@ -301,7 +301,7 @@ function executar(valor: string) {
     @click="aberto = true"
   >
     Buscar
-    <kbd class="nds-kbd">⌘K</kbd>
+    <kbd class="nds-kbd">Ctrl+K</kbd>
   </Button>
 
   <CommandDialog
@@ -315,11 +315,11 @@ function executar(valor: string) {
       <CommandGroup heading="Componentes">
         <CommandItem value="button" @select="executar('button')">
           Button
-          <CommandShortcut>⌘B</CommandShortcut>
+          <CommandShortcut>Ctrl+B</CommandShortcut>
         </CommandItem>
         <CommandItem value="input" @select="executar('input')">
           Input
-          <CommandShortcut>⌘I</CommandShortcut>
+          <CommandShortcut>Ctrl+I</CommandShortcut>
         </CommandItem>
       </CommandGroup>
 

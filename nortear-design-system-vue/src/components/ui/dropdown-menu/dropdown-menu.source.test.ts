@@ -183,7 +183,7 @@ describe('transforms das stories de composição', () => {
 
   it('o atalho mora dentro do item e não se esconde do leitor de tela', () => {
     const saida = dropdownMenuWithShortcutsSource();
-    expect(saida).toContain('Copiar<DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>');
+    expect(saida).toContain('Copiar<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
     // Escondido, a pessoa ouviria só "Copiar" e nunca saberia da tecla.
     expect(saida).not.toContain('aria-hidden');
   });

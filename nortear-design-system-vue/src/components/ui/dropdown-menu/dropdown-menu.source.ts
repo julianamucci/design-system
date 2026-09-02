@@ -379,7 +379,7 @@ export function dropdownMenuWithSubmenuSource(): string {
  * Composição WithShortcuts: o atalho encostado na borda direita do item.
  *
  * Ele mora DENTRO do item, e sem `aria-hidden`: é assim que ele entra no nome
- * acessível ("Copiar Ctrl C"). Escondido, a pessoa ouviria só "Copiar" e nunca
+ * acessível ("Copiar Ctrl+C"). Escondido, a pessoa ouviria só "Copiar" e nunca
  * saberia que existe uma tecla.
  */
 export function dropdownMenuWithShortcutsSource(): string {
@@ -393,14 +393,14 @@ export function dropdownMenuWithShortcutsSource(): string {
     menu({
       trigger: 'Editar',
       content: `    <DropdownMenuItem>
-      Desfazer<DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
+      Desfazer<DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Copiar<DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
+      Copiar<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuSeparator />
     <DropdownMenuItem>
-      Colar<DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
+      Colar<DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
     </DropdownMenuItem>`,
     }),
   );

@@ -71,7 +71,7 @@ export const Default: Story = {
             <Button variant="outline">Ver atalhos</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
-            <p class="nds-text-body">Use Ctrl + K para abrir a busca em qualquer tela.</p>
+            <p class="nds-text-body">Use Ctrl+K para abrir a busca em qualquer tela.</p>
           </PopoverContent>
         </Popover>
       </div>
@@ -86,7 +86,7 @@ export const Default: Story = {
 
     await step('E carrega a classe do design system com o conteúdo livre', async () => {
       await expect(panel()).toHaveClass(/nds-popover-content/);
-      await expect(panel()!.textContent).toMatch(/Ctrl \+ K/);
+      await expect(panel()!.textContent).toMatch(/Ctrl\+K/);
     });
   },
 };

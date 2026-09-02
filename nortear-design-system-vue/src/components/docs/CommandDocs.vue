@@ -221,7 +221,7 @@ const open = ref(false);
     <CommandGroup heading="Ações">
       <CommandItem value="salvar" @select="() => open = false">
         Salvar
-        <CommandShortcut>⌘S</CommandShortcut>
+        <CommandShortcut>Ctrl+S</CommandShortcut>
       </CommandItem>
     </CommandGroup>
   </CommandList>
@@ -406,7 +406,7 @@ const keyboardItems = computed(() => [
   { key: 'Enter',      description: toPlainText(tContent('accessibility.keyboard.enter'))     },
   { key: 'Escape',     description: toPlainText(tContent('accessibility.keyboard.escape'))    },
   { key: 'Tab',        description: toPlainText(tContent('accessibility.keyboard.tab'))       },
-  { key: '⌘K',         description: toPlainText(tContent('accessibility.keyboard.cmdK'))      },
+  { key: 'Ctrl+K',      description: toPlainText(tContent('accessibility.keyboard.cmdK'))      },
 ]);
 
 const relatedItems = computed(() => [
@@ -563,7 +563,7 @@ const visualTestItems = computed(() => [
                   @select="paletteSelect('button')"
                 >
                   {{ tContent('demonstration.labels.itemButton') }}
-                  <CommandShortcut>⌘B</CommandShortcut>
+                  <CommandShortcut>Ctrl+B</CommandShortcut>
                 </CommandItem>
                 <CommandItem
                   value="input"
@@ -691,7 +691,7 @@ const visualTestItems = computed(() => [
             data-spacing="xs"
           >
             Pressione
-            <kbd class="nds-kbd">⌘K</kbd>
+            <kbd class="nds-kbd">Ctrl+K</kbd>
           </span>
         </div>
       </template>
@@ -756,7 +756,7 @@ const visualTestItems = computed(() => [
           >
             Buscar
           </Button>
-          <kbd class="nds-kbd">⌘K</kbd>
+          <kbd class="nds-kbd">Ctrl+K</kbd>
         </div>
       </template>
 

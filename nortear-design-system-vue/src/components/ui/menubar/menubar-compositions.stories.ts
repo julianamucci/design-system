@@ -30,9 +30,9 @@ import {
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
 const SHORTCUTS = [
-  { label: 'Desfazer', atalho: '⌘Z' },
-  { label: 'Refazer', atalho: '⇧⌘Z' },
-  { label: 'Copiar', atalho: '⌘C' },
+  { label: 'Desfazer', atalho: 'Ctrl+Z' },
+  { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+  { label: 'Copiar', atalho: 'Ctrl+C' },
 ];
 
 const EXPORTACOES = ['PDF', 'CSV', 'PNG'];
@@ -122,7 +122,7 @@ export const WithShortcuts: Story = {
     });
 
     await step('O atalho entra no nome do item, e não fica escondido do leitor', async () => {
-      // Sem `aria-hidden`: "Desfazer, ⌘Z" é o que dá serventia ao atalho para
+      // Sem `aria-hidden`: "Desfazer, Ctrl+Z" é o que dá serventia ao atalho para
       // quem não enxerga a tela. Escondê-lo devolveria só "Desfazer".
       for (const [i, item] of items.entries()) {
         await expect(item).toHaveAccessibleName(`${SHORTCUTS[i].label} ${SHORTCUTS[i].atalho}`);
@@ -403,8 +403,8 @@ export const EditorCompleto: Story = {
             <MenubarContent>
               <MenubarGroup>
                 <MenubarLabel>Documento</MenubarLabel>
-                <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-                <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+                <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+                <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
               </MenubarGroup>
               <MenubarSeparator />
               <MenubarItem variant="destructive">Descartar alterações</MenubarItem>
@@ -414,8 +414,8 @@ export const EditorCompleto: Story = {
           <MenubarMenu value="edit">
             <MenubarTrigger>Editar</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-              <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+              <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+              <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
             </MenubarContent>
           </MenubarMenu>
 
