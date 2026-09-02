@@ -41,7 +41,9 @@ Duas consequências que mudam o que se roda:
 1. **Nenhum dos cinco `npm run build` abre folha de estilo.** No Vue, `build` é `vue-tsc -b`: checa tipos e não emite. `@import` quebrado em CSS só reprova no `build-storybook`.
 2. **Quem compila SFC agora é o `build-storybook`.** As armadilhas de template que o `vue-tsc` não pega — `v-html` em componente com slot, comentário `//` dentro de expressão, `as` solto — eram pegas pelo `vite build`, que saiu junto. Ao mexer em template de `ui/`, o portão é `npm run build-storybook`.
 
-A folha `docs/shared/styles/nds/app-shell.css` define a família `.nds-app-*` (`.nds-app`, `.nds-app-sidebar`, `.nds-app-main`, `.nds-app-content`, `.nds-app-header`) e existia para essa moldura de aplicação. Com a remoção ela ficou **órfã**: `index.css` ainda a importa, mas nenhum arquivo do repositório usa uma classe dela. Fato registrado; apagar a folha é decisão da dona.
+A folha `docs/shared/styles/nds/app-shell.css` definia a família `.nds-app-*` e existia só para essa moldura de aplicação. Com a remoção do sandbox ela ficou órfã — 26 seletores, zero consumidores —, e **foi apagada em 2026-09-02**, junto com o `@import` que a trazia para o `index.css`. Enquanto esteve órfã, era carregada em toda página das cinco stacks.
+
+Não confunda com `.nds-sidebar-layout`, que a guideline 04 cita ao falar de "app-shell" como CONCEITO: essa mora em `layout.css`, é usada em cinco arquivos e continua viva.
 
 ---
 
