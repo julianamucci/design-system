@@ -108,14 +108,13 @@ const CLASSES_TRIGGER = 'nds-text-primary nds-font-medium nds-hover-underline';
 // Botão sem moldura para gatilhos que não navegam (termo, métrica): as classes
 // zeram o cromo nativo do `<button>` sem uma linha de CSS inline.
 const CLASSES_TRIGGER_BUTTON =
-  'nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
-// A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
-// descreve um elemento `<nds-hover-card>` e um `<nds-avatar src="…">` que este
-// stack não tem: as peças são diretivas de ATRIBUTO sobre elementos nativos,
-// para o markup bater com o do Vanilla e o CSS `.nds-hover-card-*` casar sem
-// wrapper. Enquanto o conteúdo não for corrigido, a estrutura mostrada aqui é a
-// que compila.
+// As três peças são diretivas de ATRIBUTO sobre elementos nativos
+// (`span[ndsHoverCard]`, `a|button[ndsHoverCardTrigger]`,
+// `ng-template[ndsHoverCardContent]`), para o markup bater com o do Vanilla e o
+// CSS `.nds-hover-card-*` casar sem wrapper. É a mesma estrutura que a variante
+// `angular` de `anatomy.structureCode` mostra no conteúdo compartilhado.
 const ANATOMY_CODE = `<p>
   Comentário de
   <span ndsHoverCard>
@@ -217,19 +216,6 @@ const EXTENSIBILITY_CODE = `<!-- Espera curta, outro lado e uma classe no painel
   </ng-template>
 </span>`;
 
-const TOKENS_CODE = `/* Tokens que o painel consome, todos em .nds-hover-card-content */
-:root {
-  --popover: 0 0% 100%;              /* fundo do cartão */
-  --popover-foreground: 222 47% 11%; /* texto do cartão */
-  --border: 214 32% 91%;             /* borda de 1px */
-  --radius: 0.5rem;                  /* cantos */
-  --z-popover: 50;                   /* camada do portal */
-}
-
-/* A largura padrão é 20rem e mora na própria folha do cartão, com a mesma
-   especificidade de qualquer classe utilitária — por isso trocá-la exige uma
-   regra sua sobre [data-slot='hover-card-content'], e não uma classe extra. */`;
-
 const VARIANT_CODE = {
   default: `<span ndsHoverCard>
   <a ndsHoverCardTrigger href="/users/joana" class="nds-text-primary nds-font-medium">&#64;joana</a>
@@ -289,7 +275,7 @@ const VARIANT_CODE = {
        o caminho alternativo obrigatório. -->
   <button
     ndsHoverCardTrigger
-    class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+    class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
   >WCAG 2.2 AA</button>
 
   <ng-template ndsHoverCardContent label="Definição de WCAG 2.2 AA">
@@ -302,7 +288,7 @@ const VARIANT_CODE = {
   metricExplainer: `<span ndsHoverCard>
   <button
     ndsHoverCardTrigger
-    class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+    class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
   >LCP 1.8s</button>
 
   <ng-template ndsHoverCardContent label="Explicação da métrica LCP">
@@ -603,7 +589,7 @@ const VARIANT_CODE = {
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
-          [customizationCode]="tokensCode"
+          [customizationCode]="t('tokens.customizationCode')"
         />
 
         <nds-docs-accessibility
@@ -652,7 +638,6 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeAvatar = IMPORT_CODE_AVATAR;
-  protected readonly tokensCode = TOKENS_CODE;
   protected readonly classesGatilho = CLASSES_TRIGGER;
   protected readonly classesGatilhoBotao = CLASSES_TRIGGER_BUTTON;
 

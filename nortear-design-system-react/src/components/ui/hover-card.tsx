@@ -28,6 +28,28 @@ import { cn } from "@/lib/utils"
 // Sem `aria-modal`: a AUSÊNCIA do atributo já significa não-modal, e é o markup
 // do Vanilla. Escrever `aria-modal="false"` seria redundância que nenhuma outra
 // stack tem.
+//
+// ─── Acessibilidade: o cartão é enriquecimento, e o teclado não entra nele ──
+//
+// Abre por PONTEIRO e por FOCO, fecha no `blur` do gatilho e não move o foco
+// para o painel — então um Tab a partir do gatilho fecha o cartão antes de
+// alcançar o que houver dentro. Conteúdo interativo no painel é inalcançável
+// por teclado, e isso vale nas cinco stacks: é a forma do gesto, não defeito de
+// uma delas. Daí as três regras — nada de ação, link ou campo no painel; o
+// gatilho continua sendo o caminho; abrir por foco é obrigatório.
+//
+// O gatilho não recebe `aria-describedby` nem `aria-labelledby`: o painel é
+// `role="dialog"` e já tira o nome do texto do gatilho, então apontar um para o
+// outro faria o leitor anunciar a mesma coisa duas vezes.
+//
+// **Mecanismo desta stack** (medido em `node_modules`): o gatilho combina
+// `useHoverReferenceInteraction` (`mouseOnly`, com `safePolygon()` fazendo a
+// ponte de tolerância até o painel) e `useFocus`, que só abre em
+// `:focus-visible` — foco programático NÃO abre, e é por isso que a play usa
+// `userEvent.tab()` e não `.focus()`. O Escape vem do `useDismiss` da raiz.
+//
+// Bloco canônico, com a comparação contra tooltip e popover e as três condições
+// da WCAG 1.4.13: `hover-card.ts` do Vanilla.
 
 const WAIT_DEFAULT_OPEN = 600
 const WAIT_DEFAULT_CLOSE = 300

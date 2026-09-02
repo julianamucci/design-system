@@ -528,7 +528,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantUserProfile()}
-    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
@@ -552,7 +552,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantLinkPreview()}
-    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
@@ -573,7 +573,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantDefinitionTooltip()}
-    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
@@ -597,7 +597,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantMetricExplainer()}
-    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}

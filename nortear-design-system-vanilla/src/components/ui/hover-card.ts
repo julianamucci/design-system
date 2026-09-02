@@ -1,6 +1,50 @@
 // ─── HoverCard — Vanilla factory standalone ─────────────────────────────────
 // Visual: classe .nds-hover-card-content (standalone).
 // Mostra ao hover do trigger; mantém aberto enquanto mouse está sobre o painel.
+//
+// ─── Acessibilidade: o que separa este cartão do tooltip e do popover ───────
+//
+// Bloco canônico do sistema. As outras quatro stacks carregam a versão curta
+// mais o mecanismo da lib delas; a decisão é esta, e foi medida na FONTE das
+// quatro libs, não na documentação.
+//
+// Os três abrem uma caixa flutuante. A diferença é QUEM chega até ela:
+//
+//  · **tooltip DESCREVE.** Não recebe foco, não tem conteúdo próprio, e a
+//    persistência da 1.4.13 é resolvida por COORDENADA — a folha dá
+//    `pointer-events: none` ao balão, então o ponteiro nunca o "perde".
+//  · **popover RECEBE FOCO.** Tem conteúdo interativo, abre por clique, e por
+//    isso ganhou `modal`: há para onde levar o foco e de onde devolvê-lo.
+//  · **hover-card abre por PONTEIRO.** Nenhuma das cinco stacks move o foco
+//    para o painel, e as cinco fecham no `blur` do gatilho. Some as duas
+//    coisas: um Tab a partir do gatilho FECHA o cartão antes de alcançar o que
+//    houver dentro. Conteúdo interativo no painel é inalcançável por teclado, e
+//    isso não é defeito de uma stack — é a forma do gesto.
+//
+// Daí saem três regras do COMPONENTE, não do exemplo:
+//
+//  1. o painel nunca carrega ação, link ou campo. Medido: nenhuma composição
+//     das cinco stacks põe elemento focável dentro do painel;
+//  2. o cartão é ENRIQUECIMENTO. O gatilho continua sendo o caminho — `<a>`
+//     quando navega, `<button>` quando só explica —, e a informação tem sempre
+//     uma via alternativa (a página de perfil, o glossário);
+//  3. abrir por FOCO é obrigatório, e as cinco abrem. Sem isso o conteúdo
+//     simplesmente não existiria para quem não usa ponteiro.
+//
+// WCAG 1.4.13, as três condições e onde cada uma é cumprida:
+//
+//  · **dispensável** — Escape fecha. O ouvinte é do DOCUMENTO porque o foco
+//    fica no gatilho, nunca dentro do painel;
+//  · **pairável** — o ponteiro entra no painel sem fechá-lo;
+//  · **persistente** — só some por Escape, pelo ponteiro sair ou pelo blur.
+//
+// **Nome sim, descrição não.** O painel é `role="dialog"` e exige NOME: ele sai
+// do rótulo declarado e, sem ele, do texto do gatilho. Pôr também
+// `aria-describedby` no gatilho apontando para o painel faria o leitor anunciar
+// o link e em seguida descrevê-lo com um diálogo de nome idêntico — a mesma
+// coisa duas vezes. `aria-labelledby` seria pior: trocaria o nome do link pelo
+// do cartão. Por isso o gatilho não recebe nenhum dos dois, e também não recebe
+// `aria-expanded`/`aria-haspopup`: quem tem estado é o painel.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

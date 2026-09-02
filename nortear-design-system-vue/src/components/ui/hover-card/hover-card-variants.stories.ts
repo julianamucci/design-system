@@ -41,7 +41,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
-const STYLE_PARAGRAFO = 'contain: layout; min-height: 250px; max-width: 24rem;';
+// Andaime da frase que cerca o gatilho, alinhado ao `emFrase` do Vanilla —
+// referência de markup. A reserva de espaço e a largura saem de CLASSE
+// (`nds-min-h-50`, `nds-max-w-sm`): cravadas em `style`, venceriam a folha e
+// sairiam do tema, da densidade e da escala. No `style` fica só mecânica de
+// layout, que não tem token nem escala.
+const CLASSES_PARAGRAPH = 'nds-text-body nds-max-w-sm nds-min-h-50';
+const LAYOUT_PARAGRAPH = 'contain: layout;';
 
 export const Default: Story = {
   parameters: {
@@ -55,7 +61,7 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
+      <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         Comentário de
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -102,7 +108,7 @@ export const WithShortDelay: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
+      <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         Documentação em
         <HoverCard :open-delay="150" :close-delay="100">
           <HoverCardTrigger as-child>

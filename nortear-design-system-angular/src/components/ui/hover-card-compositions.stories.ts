@@ -156,7 +156,7 @@ export const TermDefinition: Story = {
                nds-cursor-help, iguais nas cinco stacks. -->
           <button
             ndsHoverCardTrigger
-            class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+            class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
           >WCAG 2.2 AA</button>
 
           <ng-template ndsHoverCardContent label="Definição de WCAG 2.2 AA">
@@ -211,7 +211,7 @@ export const ExplainedMetric: Story = {
         <span ndsHoverCard [defaultOpen]="true">
           <button
             ndsHoverCardTrigger
-            class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+            class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
           >LCP 1.8s</button>
 
           <ng-template ndsHoverCardContent label="Explicação da métrica LCP">
@@ -261,7 +261,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+              class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >acima</button>
             <ng-template ndsHoverCardContent side="top" label="Cartão acima do gatilho">
               <p class="nds-text-caption">Lado preferido: acima.</p>
@@ -275,7 +275,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+              class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >abaixo</button>
             <ng-template ndsHoverCardContent side="bottom" label="Cartão abaixo do gatilho">
               <p class="nds-text-caption">Lado preferido: abaixo.</p>
@@ -289,7 +289,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+              class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >esquerda</button>
             <ng-template ndsHoverCardContent side="left" label="Cartão à esquerda do gatilho">
               <p class="nds-text-caption">Lado preferido: esquerda.</p>
@@ -303,7 +303,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+              class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >direita</button>
             <ng-template ndsHoverCardContent side="right" label="Cartão à direita do gatilho">
               <p class="nds-text-caption">Lado preferido: direita.</p>

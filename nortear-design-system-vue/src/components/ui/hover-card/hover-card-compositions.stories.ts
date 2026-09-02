@@ -50,7 +50,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
-const STYLE_PARAGRAFO = 'contain: layout; min-height: 280px; max-width: 24rem;';
+// Andaime da frase que cerca o gatilho, alinhado ao `emFrase` do Vanilla —
+// referência de markup. A reserva de espaço e a largura saem de CLASSE
+// (`nds-min-h-50`, `nds-max-w-sm`): cravadas em `style`, venceriam a folha e
+// sairiam do tema, da densidade e da escala. No `style` fica só mecânica de
+// layout, que não tem token nem escala.
+const CLASSES_PARAGRAPH = 'nds-text-body nds-max-w-sm nds-min-h-50';
+const LAYOUT_PARAGRAPH = 'contain: layout;';
 const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
@@ -67,7 +73,7 @@ export const UserProfile: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
+      <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         Comentário de
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -118,7 +124,7 @@ export const LinkPreview: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
+      <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         O guia completo está em
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -170,7 +176,7 @@ export const TermDefinition: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
+      <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         Todo componente do sistema atende
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -225,7 +231,7 @@ export const ExplainedMetric: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
+      <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         A página inicial fechou o mês em
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -338,7 +344,7 @@ export const ExtraPanelClass: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
+      <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         Resumo da entrega de
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>

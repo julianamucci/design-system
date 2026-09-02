@@ -687,8 +687,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #do-preview-1>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <div class="nds-text-body nds-font-mono">
             openDelay={{ '{500}' }}
@@ -697,8 +697,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-1>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <div class="nds-text-body nds-font-mono">
             openDelay={{ '{0}' }}
@@ -723,8 +723,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             openDelay=600 / closeDelay=300
@@ -733,8 +733,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div
-          style="contain: layout; min-height: 60px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-16"
         >
           <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             openDelay=500 / closeDelay=200
@@ -743,8 +743,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div
-          style="contain: layout; min-height: 140px; position: relative;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
           <HoverCard
             :open-delay="50"
@@ -784,8 +784,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <div
-          style="contain: layout; min-height: 140px; position: relative;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
           <HoverCard
             :open-delay="50"
@@ -823,8 +823,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-4>
         <div
-          style="contain: layout; min-height: 140px; position: relative;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
           <HoverCard
             :open-delay="50"
@@ -852,8 +852,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-5>
         <div
-          style="contain: layout; min-height: 140px; position: relative;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
           <HoverCard
             :open-delay="50"

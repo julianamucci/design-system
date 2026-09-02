@@ -105,9 +105,12 @@ export const Playground: Story = {
   render: ({ side, align, openDelay, closeDelay, defaultOpen, triggerLabel, onOpenChange }) => (
     // `key`: `defaultOpen` só é lido na montagem, então trocar o control sem
     // remontar não mudaria nada na tela.
+    // A reserva de espaço sai de CLASSE (`nds-min-h-50`), como no `emFrase` do
+    // Vanilla: cravada em `style`, venceria a folha e sairia do tema, da
+    // densidade e da escala. No `style` fica só mecânica de layout.
     <p
-      className="nds-text-body nds-max-w-sm"
-      style={{ contain: "layout", minHeight: 250, position: "relative" }}
+      className="nds-text-body nds-max-w-sm nds-min-h-50"
+      style={{ contain: "layout", position: "relative" }}
     >
       Comentário de{" "}
       <HoverCard

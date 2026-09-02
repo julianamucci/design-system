@@ -205,16 +205,16 @@ interface HoverCardContentProps {
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div
-          className="nds-grid nds-w-full"
+          className="nds-grid nds-w-full nds-min-h-40"
           data-cols="2"
           data-spacing="lg"
-          style={{ "--grid-min": "16rem", contain: "layout", minHeight: 160 } as React.CSSProperties}
+          style={{ "--grid-min": "16rem", contain: "layout" } as React.CSSProperties}
         >
           {/* Profile preview */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-25"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 100, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.userProfile"))}
@@ -242,9 +242,9 @@ interface HoverCardContentProps {
 
           {/* Link preview */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-25"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 100, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.linkPreview"))}
@@ -269,9 +269,9 @@ interface HoverCardContentProps {
 
           {/* Definition */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-25"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 100, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.definitionTooltip"))}
@@ -293,9 +293,9 @@ interface HoverCardContentProps {
 
           {/* Metric */}
           <div
-            className="nds-stack"
+            className="nds-stack nds-min-h-25"
             data-spacing="sm"
-            style={{ contain: "layout", minHeight: 100, position: "relative" }}
+            style={{ contain: "layout", position: "relative" }}
           >
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.metricExplainer"))}
@@ -499,7 +499,7 @@ interface HoverCardContentProps {
   </HoverCardContent>
 </HoverCard>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
                 <HoverCard openDelay={50} closeDelay={50} defaultOpen>
                   <HoverCardTrigger asChild>
                     <a href="#joana" className="nds-text-primary nds-hover-underline">@joana</a>
@@ -540,7 +540,7 @@ interface HoverCardContentProps {
   </HoverCardContent>
 </HoverCard>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
                 <HoverCard openDelay={50} closeDelay={50} defaultOpen>
                   <HoverCardTrigger asChild>
                     <a href="#link" className="nds-text-primary nds-hover-underline">design-system.dev</a>
@@ -580,7 +580,7 @@ interface HoverCardContentProps {
   </HoverCardContent>
 </HoverCard>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
                 <HoverCard openDelay={50} closeDelay={50} defaultOpen>
                   <HoverCardTrigger asChild>
                     <button
@@ -625,7 +625,7 @@ interface HoverCardContentProps {
   </HoverCardContent>
 </HoverCard>`,
             preview: (
-              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
                 <HoverCard openDelay={50} closeDelay={50} defaultOpen>
                   <HoverCardTrigger asChild>
                     <button

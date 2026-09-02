@@ -44,12 +44,12 @@ describe('hoverCardSource', () => {
   });
 
   it('a espera padrão do componente não é escrita no markup', () => {
-    const padrao = hoverCardSource('', { args: { openDelay: 600, closeDelay: 300 } });
-    expect(padrao).not.toContain('openDelay');
-    expect(padrao).not.toContain('closeDelay');
+    const defaultDelays = hoverCardSource('', { args: { openDelay: 600, closeDelay: 300 } });
+    expect(defaultDelays).not.toContain('openDelay');
+    expect(defaultDelays).not.toContain('closeDelay');
 
-    const curta = hoverCardSource('', { args: { openDelay: 150, closeDelay: 100 } });
-    expect(curta).toContain('<HoverCard openDelay={150} closeDelay={100}>');
+    const shortDelays = hoverCardSource('', { args: { openDelay: 150, closeDelay: 100 } });
+    expect(shortDelays).toContain('<HoverCard openDelay={150} closeDelay={100}>');
   });
 
   it('acompanha os controls de posicionamento, e só escreve o que difere do padrão', () => {

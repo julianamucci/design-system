@@ -40,11 +40,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const paragrafo: React.CSSProperties = {
+// Andaime da frase que cerca o gatilho, alinhado ao `emFrase` do Vanilla —
+// referência de markup. A reserva de espaço e a largura saem de CLASSE
+// (`nds-min-h-50`, `nds-max-w-sm`): cravadas em `style`, venceriam a folha e
+// sairiam do tema, da densidade e da escala. No `style` fica só mecânica de
+// layout, que não tem token nem escala.
+const CLASSES_PARAGRAPH = "nds-text-body nds-max-w-sm nds-min-h-50";
+const LAYOUT_PARAGRAPH: React.CSSProperties = {
   contain: "layout",
-  minHeight: 250,
   position: "relative",
-  maxWidth: "24rem",
 };
 
 export const Default: Story = {
@@ -60,7 +64,7 @@ export const Default: Story = {
     },
   },
   render: () => (
-    <p className="nds-text-body" style={paragrafo}>
+    <p className={CLASSES_PARAGRAPH} style={LAYOUT_PARAGRAPH}>
       Comentário de{" "}
       <HoverCard defaultOpen>
         <HoverCardTrigger asChild>
@@ -106,7 +110,7 @@ export const WithShortDelay: Story = {
     },
   },
   render: () => (
-    <p className="nds-text-body" style={paragrafo}>
+    <p className={CLASSES_PARAGRAPH} style={LAYOUT_PARAGRAPH}>
       Documentação em{" "}
       <HoverCard openDelay={150} closeDelay={100}>
         <HoverCardTrigger asChild>

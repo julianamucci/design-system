@@ -44,11 +44,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const paragrafo: React.CSSProperties = {
+// Andaime da frase que cerca o gatilho, alinhado ao `emFrase` do Vanilla —
+// referência de markup. A reserva de espaço e a largura saem de CLASSE
+// (`nds-min-h-50`, `nds-max-w-sm`): cravadas em `style`, venceriam a folha e
+// sairiam do tema, da densidade e da escala. No `style` fica só mecânica de
+// layout, que não tem token nem escala.
+const CLASSES_PARAGRAPH = "nds-text-body nds-max-w-sm nds-min-h-50";
+const LAYOUT_PARAGRAPH: React.CSSProperties = {
   contain: "layout",
-  minHeight: 250,
   position: "relative",
-  maxWidth: "24rem",
 };
 
 const CartaoPerfil = () => (
@@ -81,7 +85,7 @@ export const Closed: Story = {
     },
   },
   render: () => (
-    <p className="nds-text-body" style={paragrafo}>
+    <p className={CLASSES_PARAGRAPH} style={LAYOUT_PARAGRAPH}>
       Comentário de{" "}
       <HoverCard>
         <HoverCardTrigger asChild>
@@ -127,7 +131,7 @@ export const Open: Story = {
     },
   },
   render: () => (
-    <p className="nds-text-body" style={paragrafo}>
+    <p className={CLASSES_PARAGRAPH} style={LAYOUT_PARAGRAPH}>
       Comentário de{" "}
       <HoverCard openDelay={100} closeDelay={80}>
         <HoverCardTrigger asChild>
@@ -163,6 +167,20 @@ export const Open: Story = {
       await expect(accessibleName(panel)).toBe("@joana");
     });
 
+    await step("O gatilho não descreve nem nomeia o painel", async () => {
+      // É o item de acessibilidade que esta story DECLARA cobrir, e até aqui
+      // nenhuma asserção o alcançava: o auditor de contrato dava 17/17 com
+      // este item coberto por nada.
+      //
+      // O painel é `role="dialog"` e já tira o NOME do texto do gatilho.
+      // Apontar o gatilho de volta com `aria-describedby` faria o leitor
+      // anunciar o link e em seguida descrevê-lo com um diálogo de nome
+      // idêntico — a mesma coisa duas vezes. `aria-labelledby` seria pior:
+      // trocaria o nome do link pelo do cartão.
+      await expect(trigger).not.toHaveAttribute("aria-describedby");
+      await expect(trigger).not.toHaveAttribute("aria-labelledby");
+    });
+
     await step("Levar o cursor para dentro do painel mantém o cartão aberto", async () => {
       // O caminho completo: sai do gatilho (o que agenda o fechamento) e entra
       // no painel (o que o cancela). Só a entrada, sem a saída, provaria nada.
@@ -177,8 +195,8 @@ export const Open: Story = {
     await step("O texto do painel tem contraste de 4.5:1 contra o fundo do cartão", async () => {
       // Medido do par que o design system promete (--popover-foreground sobre
       // --popover), e não deduzido do token: é o valor que o navegador aplicou.
-      const estilo = getComputedStyle(panel);
-      await expect(contrastRatio(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+      const styles = getComputedStyle(panel);
+      await expect(contrastRatio(styles.color, styles.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -200,7 +218,7 @@ export const Controlled: Story = {
     const ControlledDemo = () => {
       const [isOpen, setAberto] = useState(false);
       return (
-        <div className="nds-stack" data-spacing="md" style={paragrafo}>
+        <div className="nds-stack nds-max-w-sm nds-min-h-50" data-spacing="md" style={LAYOUT_PARAGRAPH}>
           <div className="nds-cluster" data-spacing="sm">
             {/* Nomes próprios, e não os mesmos do gatilho: dois controles com o
                 mesmo nome acessível são ambíguos em leitor de tela. */}

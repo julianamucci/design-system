@@ -27,6 +27,27 @@ import {
 // é um `<a>` ou `<button>` de quem consome, e é ele que precisa continuar
 // clicável: o cartão é ENRIQUECIMENTO, nunca o único caminho para a informação.
 //
+// ─── Acessibilidade: o cartão é enriquecimento, e o teclado não entra nele ──
+//
+// Abre por PONTEIRO e por FOCO, fecha no `blur` do gatilho e não move o foco
+// para o painel — então um Tab a partir do gatilho fecha o cartão antes de
+// alcançar o que houver dentro. Conteúdo interativo no painel é inalcançável
+// por teclado, e isso vale nas cinco stacks: é a forma do gesto, não defeito de
+// uma delas. Daí as três regras — nada de ação, link ou campo no painel; o
+// gatilho continua sendo o caminho; abrir por foco é obrigatório.
+//
+// O gatilho não recebe `aria-describedby` nem `aria-labelledby`: o painel é
+// `role="dialog"` e já tira o nome do texto do gatilho, então apontar um para o
+// outro faria o leitor anunciar a mesma coisa duas vezes.
+//
+// **Mecanismo desta stack** (medido em `node_modules`): o gatilho liga
+// `pointerenter`, `pointerleave`, `focus` e `blur` no host — o foco é o CRU,
+// sem guarda de foco visível. O painel cancela o fechamento no próprio
+// `pointerenter`, e o Escape sai da camada dispensável do popup.
+//
+// Bloco canônico, com a comparação contra tooltip e popover e as três condições
+// da WCAG 1.4.13: `hover-card.ts` do Vanilla.
+//
 // COM os primitivos do Radix NG (`rdxPreviewCard*`, o nome do preview card no
 // Radix NG). O que eles entregam é exatamente a parte difícil de escrever à mão:
 //

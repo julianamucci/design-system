@@ -112,8 +112,11 @@ export const Playground: Story = {
     },
     // `:key`: `default-open` só é lido na montagem, então trocar o control sem
     // remontar não mudaria nada na tela.
+    // A reserva de espaço sai de CLASSE (`nds-min-h-50`), como no `emFrase` do
+    // Vanilla: cravada em `style`, venceria a folha e sairia do tema, da
+    // densidade e da escala. No `style` fica só mecânica de layout.
     template: `
-      <p class="nds-text-body nds-max-w-sm" style="contain: layout; min-height: 250px">
+      <p class="nds-text-body nds-max-w-sm nds-min-h-50" style="contain: layout">
         Comentário de
         <HoverCard
           :key="String(args.defaultOpen)"

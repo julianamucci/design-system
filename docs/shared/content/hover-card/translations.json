@@ -30,7 +30,7 @@
         "vue": "<HoverCard>\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<HoverCard>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "vanilla": "const gatilho = document.createElement('a');\ngatilho.href = '/users/joana';\ngatilho.textContent = '@joana';\n\nconst perfil = document.createElement('div');\nperfil.className = 'nds-cluster';\nperfil.dataset.spacing = 'sm';\nperfil.append(\n  criarAvatar('/joana.jpg'),\n  criarResumo('Joana Silva', 'Designer · 142 seguidores'),\n);\n\nconst cartao = createHoverCard({\n  trigger: gatilho,\n  content: perfil,\n  side: 'bottom',\n  align: 'start',\n});",
-        "angular": "<!-- Sobre rdxPreviewCard, o nome do primitivo no Radix NG -->\n<nds-hover-card>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\">\n      <nds-avatar src=\"/joana.jpg\" />\n      <div>\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</nds-hover-card>"
+        "angular": "<!-- As três peças são diretivas de atributo sobre elementos nativos -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <span ndsAvatar>\n        <span ndsAvatarFallback aria-hidden=\"true\">JS</span>\n      </span>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</span>"
       }
     },
     "usage": {
@@ -290,7 +290,7 @@
         "item2": "<code>HoverCardContent</code> permanece aberto enquanto cursor estiver sobre ele (hoverable) — usuário pode interagir.",
         "item3": "ESC fecha o Content — atende WCAG 1.4.13 (dismissable).",
         "item4": "O conteúdo do HoverCard <strong>não pode ser a única forma</strong> de acessar a informação — usuários touch e leitores de tela precisam de alternativa.",
-        "item5": "Inclua <code>aria-describedby</code> apontando para o Content quando o conteúdo for descritivo do trigger.",
+        "item5": "O Trigger não recebe <code>aria-describedby</code> nem <code>aria-labelledby</code>: o Content só existe no documento enquanto está aberto, e o nome dele já sai do texto do próprio Trigger — apontar um para o outro faria o leitor anunciar a mesma coisa duas vezes.",
         "item6": "Não coloque ações destrutivas ou submits — não há jeito acessível de chegar lá em touch."
       },
       "keyboard": {
@@ -302,7 +302,7 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "trigger": "Trigger: pode receber <code>aria-describedby</code> apontando para o Content.",
+        "trigger": "Trigger: sem <code>aria-describedby</code> e sem <code>aria-labelledby</code> — quem carrega nome e papel é o Content.",
         "content": "Content: <code>role=\"dialog\"</code> sem <code>aria-modal</code> — a ausência do atributo já significa não-modal, e o resto da página continua alcançável.",
         "expanded": "Trigger não recebe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
       },
@@ -470,7 +470,7 @@
         "vue": "<HoverCard>\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<HoverCard>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "vanilla": "const trigger = document.createElement('a');\ntrigger.href = '/users/joana';\ntrigger.textContent = '@joana';\n\nconst profile = document.createElement('div');\nprofile.className = 'nds-cluster';\nprofile.dataset.spacing = 'sm';\nprofile.append(\n  buildAvatar('/joana.jpg'),\n  buildSummary('Joana Silva', 'Designer · 142 followers'),\n);\n\nconst card = createHoverCard({\n  trigger,\n  content: profile,\n  side: 'bottom',\n  align: 'start',\n});",
-        "angular": "<!-- On rdxPreviewCard, the primitive name in Radix NG -->\n<nds-hover-card>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\">\n      <nds-avatar src=\"/joana.jpg\" />\n      <div>\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</nds-hover-card>"
+        "angular": "<!-- The three parts are attribute directives on native elements -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <span ndsAvatar>\n        <span ndsAvatarFallback aria-hidden=\"true\">JS</span>\n      </span>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</span>"
       }
     },
     "usage": {
@@ -730,7 +730,7 @@
         "item2": "<code>HoverCardContent</code> stays open while cursor is over it (hoverable) — user can interact.",
         "item3": "ESC closes Content — meets WCAG 1.4.13 (dismissable).",
         "item4": "HoverCard content <strong>cannot be the only way</strong> to access information — touch and screen reader users need an alternative.",
-        "item5": "Include <code>aria-describedby</code> pointing to Content when it describes the trigger.",
+        "item5": "The Trigger receives neither <code>aria-describedby</code> nor <code>aria-labelledby</code>: Content only exists in the document while open, and its name already comes from the Trigger text — pointing one at the other would make the reader announce the same thing twice.",
         "item6": "Do not put destructive or submit actions — no accessible way to reach on touch."
       },
       "keyboard": {
@@ -742,7 +742,7 @@
       },
       "aria": {
         "title": "ARIA Attributes",
-        "trigger": "Trigger: may receive <code>aria-describedby</code> pointing to Content.",
+        "trigger": "Trigger: no <code>aria-describedby</code> and no <code>aria-labelledby</code> — name and role belong to Content.",
         "content": "Content: <code>role=\"dialog\"</code> with no <code>aria-modal</code> — the absence of the attribute already means non-modal, and the rest of the page stays reachable.",
         "expanded": "Trigger does not receive <code>aria-expanded</code> — different from DropdownMenu/Popover."
       },
@@ -910,7 +910,7 @@
         "vue": "<HoverCard>\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<HoverCard>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "vanilla": "const gatillo = document.createElement('a');\ngatillo.href = '/users/joana';\ngatillo.textContent = '@joana';\n\nconst perfil = document.createElement('div');\nperfil.className = 'nds-cluster';\nperfil.dataset.spacing = 'sm';\nperfil.append(\n  construirAvatar('/joana.jpg'),\n  construirResumen('Joana Silva', 'Designer · 142 seguidores'),\n);\n\nconst tarjeta = createHoverCard({\n  trigger: gatillo,\n  content: perfil,\n  side: 'bottom',\n  align: 'start',\n});",
-        "angular": "<!-- Sobre rdxPreviewCard, el nombre del primitivo en Radix NG -->\n<nds-hover-card>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\">\n      <nds-avatar src=\"/joana.jpg\" />\n      <div>\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</nds-hover-card>"
+        "angular": "<!-- Las tres piezas son directivas de atributo sobre elementos nativos -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <span ndsAvatar>\n        <span ndsAvatarFallback aria-hidden=\"true\">JS</span>\n      </span>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</span>"
       }
     },
     "usage": {
@@ -1170,7 +1170,7 @@
         "item2": "<code>HoverCardContent</code> permanece abierto mientras el cursor esté sobre él (hoverable) — usuario puede interactuar.",
         "item3": "ESC cierra el Content — cumple WCAG 1.4.13 (dismissable).",
         "item4": "El contenido del HoverCard <strong>no puede ser la única forma</strong> de acceder a la información — usuarios touch y lectores de pantalla necesitan alternativa.",
-        "item5": "Incluye <code>aria-describedby</code> apuntando al Content cuando el contenido sea descriptivo del trigger.",
+        "item5": "El Trigger no recibe <code>aria-describedby</code> ni <code>aria-labelledby</code>: el Content solo existe en el documento mientras está abierto, y su nombre ya sale del texto del propio Trigger — apuntar uno al otro haría que el lector anunciara lo mismo dos veces.",
         "item6": "No coloques acciones destructivas o submits — no hay forma accesible de llegar en touch."
       },
       "keyboard": {
@@ -1182,7 +1182,7 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "trigger": "Trigger: puede recibir <code>aria-describedby</code> apuntando al Content.",
+        "trigger": "Trigger: sin <code>aria-describedby</code> y sin <code>aria-labelledby</code> — nombre y rol los lleva el Content.",
         "content": "Content: <code>role=\"dialog\"</code> sin <code>aria-modal</code> — la ausencia del atributo ya significa no-modal, y el resto de la página sigue alcanzable.",
         "expanded": "Trigger no recibe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
       },
