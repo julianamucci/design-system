@@ -7,13 +7,18 @@
  * nos itens; setas, `Home`/`End` e typeahead; `Escape` fecha e devolve o foco ao
  * gatilho; nenhuma região viva.
  *
- * MECANISMO DESTA STACK, e onde ela diverge: aqui o item DESABILITADO CONTINUA
- * no percurso das setas. `menu/item/useMenuItem` monta o item com
+ * O item DESABILITADO: a seta POUSA nele. Decisão do design system tomada em
+ * 2026-09-02 e válida nas cinco stacks — a WAI-ARIA APG pede que o item
+ * desabilitado siga alcançável pela seta para ser ANUNCIADO, porque tirá-lo da
+ * roda esconde de quem navega de ouvido que a opção existe e está indisponível.
+ * O que ele não faz é ATIVAR.
+ *
+ * MECANISMO DESTA STACK: nada a alterar, ela já cumpria a decisão.
+ * `menu/item/useMenuItem` monta o item com
  * `useButton({ focusableWhenDisabled: true })`, e `menu/root/MenuRoot` chama
  * `useListNavigation` com `disabledIndices: EMPTY_ARRAY` — nenhum índice conta
- * como desabilitado para a navegação. Não há prop que inverta isso, e três das
- * cinco stacks fazem o contrário; a story `ItemDisabled` assere o que ESTA lib
- * faz. Medido na fonte em 2026-09-02.
+ * como desabilitado para a navegação. A story `ItemDisabled` aperta a seta e
+ * verifica onde o foco pousa. Medido na fonte em 2026-09-02.
  */
 import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"

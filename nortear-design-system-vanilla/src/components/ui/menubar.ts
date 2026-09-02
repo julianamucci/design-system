@@ -466,31 +466,36 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
 
     // ── Teclado DENTRO do painel ────────────────────────────────────────────
     panel.addEventListener('keydown', (e) => {
-      const livres = focaveis.filter((el) => el.getAttribute('aria-disabled') !== 'true');
-      if (livres.length === 0) return;
-      const current = livres.indexOf(document.activeElement as HTMLElement);
+      // A roda são TODOS os itens, o desabilitado inclusive. Antes ela era
+      // `focaveis` filtrado por `aria-disabled !== 'true'`, e quem navega de
+      // ouvido não ficava sabendo que a opção existe — a WAI-ARIA APG pede que
+      // ela seja alcançada e ANUNCIADA como indisponível. O que o item
+      // desabilitado não faz é ativar, e disso quem cuida é `acionar()`.
+      const roda = focaveis;
+      if (roda.length === 0) return;
+      const current = roda.indexOf(document.activeElement as HTMLElement);
 
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         e.stopPropagation();
-        livres[(current + 1 + livres.length) % livres.length]?.focus();
+        roda[(current + 1 + roda.length) % roda.length]?.focus();
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         e.stopPropagation();
-        livres[(current - 1 + livres.length) % livres.length]?.focus();
+        roda[(current - 1 + roda.length) % roda.length]?.focus();
       } else if (e.key === 'Home') {
         e.preventDefault();
         e.stopPropagation();
-        livres[0]?.focus();
+        roda[0]?.focus();
       } else if (e.key === 'End') {
         e.preventDefault();
         e.stopPropagation();
-        livres[livres.length - 1]?.focus();
+        roda[roda.length - 1]?.focus();
       } else if (/^[a-zA-Z0-9]$/.test(e.key)) {
         // Typeahead: o conteúdo compartilhado promete que digitar uma letra
         // move o foco para o item que começa com ela.
         const letra = e.key.toLowerCase();
-        const ordenados = [...livres.slice(current + 1), ...livres.slice(0, current + 1)];
+        const ordenados = [...roda.slice(current + 1), ...roda.slice(0, current + 1)];
         const finding = ordenados.find((el) =>
           (el.textContent ?? '').trim().toLowerCase().startsWith(letra),
         );

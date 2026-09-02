@@ -7,12 +7,17 @@
  * nos itens; setas, `Home`/`End` e typeahead; `Escape` fecha e devolve o foco ao
  * gatilho; nenhuma região viva.
  *
- * MECANISMO DESTA STACK, e onde ela diverge: aqui o item DESABILITADO CONTINUA
- * no percurso das setas. O `handleKeydown` de `RdxMenuPopup` percorre a lista de
- * `menuItems()`, e `getCompositeMenuItems()` filtra essa lista só por
- * VISIBILIDADE — `disabled` não tira o item dela. Não há entrada que inverta
- * isso, e três das cinco stacks fazem o contrário; a story `ItemDisabled` assere
- * o que ESTA lib faz, apertando a seta. Medido na fonte em 2026-09-02.
+ * O item DESABILITADO: a seta POUSA nele. Decisão do design system tomada em
+ * 2026-09-02 e válida nas cinco stacks — a WAI-ARIA APG pede que o item
+ * desabilitado siga alcançável pela seta para ser ANUNCIADO, porque tirá-lo da
+ * roda esconde de quem navega de ouvido que a opção existe e está indisponível.
+ * O que ele não faz é ATIVAR.
+ *
+ * MECANISMO DESTA STACK: nada a alterar, ela já cumpria a decisão. O
+ * `handleKeydown` de `RdxMenuPopup` percorre a lista de `menuItems()`, e
+ * `getCompositeMenuItems()` filtra essa lista só por VISIBILIDADE — `disabled`
+ * não tira o item dela. A story `ItemDisabled` aperta a seta e verifica onde o
+ * foco pousa. Medido na fonte em 2026-09-02.
  */
 import {
   ChangeDetectionStrategy,

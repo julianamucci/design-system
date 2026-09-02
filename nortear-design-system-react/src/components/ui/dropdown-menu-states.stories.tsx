@@ -228,6 +228,7 @@ export const Controlled: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
+    covers: ["accessibility.item7"],
     // `disabled` é prop do ITEM, e nenhum control do arquivo a descreve.
     docs: { source: { transform: dropdownMenuItemDisabledSource } },
   },

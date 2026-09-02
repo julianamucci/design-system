@@ -20,35 +20,52 @@
  * - Nenhuma região viva. Menu não é anúncio: quem narra a mudança de foco é o
  *   percurso do próprio leitor de tela, e um `aria-live` aqui duplicaria a fala.
  *
- * Onde as cinco DIVERGEM, e por que não dá para alinhar:
+ * O item DESABILITADO: a seta POUSA nele, nas cinco.
  *
- *   O item DESABILITADO sai do percurso das setas em três stacks e continua
- *   nele em duas. Não é descuido de implementação: cada lib crava a escolha no
- *   próprio seletor de candidatos, sem prop que a inverta.
+ *   DECISÃO tomada em 2026-09-02, e não mais uma divergência aceita. A WAI-ARIA
+ *   APG recomenda manter o item desabilitado alcançável pela seta para que ele
+ *   seja ANUNCIADO: some-lo da roda esconde de quem navega de ouvido que a opção
+ *   existe e está indisponível. Pular poupa uma parada a quem enxerga; sumir
+ *   custa a informação a quem não enxerga, e é esse lado que o design system
+ *   escolheu. O que o item desabilitado não faz, em nenhuma stack, é ATIVAR.
  *
- *     PULA o item desabilitado
- *       vanilla — a lista de candidatos aqui é
- *                 `[role=menuitem]:not([aria-disabled="true"])`, e o item
- *                 desabilitado também não recebe `tabindex`
- *       reka-ui — `Menu/MenuContentImpl`, RovingFocusGroup com
- *                 `attributeName: '[data-reka-collection-item]:not([data-disabled])'`
- *       bits-ui — `bits/menu/menu.svelte.js`,
- *                 `querySelectorAll('[…item]:not([data-disabled])')`
+ *   Antes desta decisão três stacks pulavam e duas pousavam. Cada lib crava a
+ *   escolha no próprio seletor de candidatos, sem prop que a inverta — por isso
+ *   duas das três só se alinharam por PATCH, e é o mecanismo de cada uma:
  *
- *     POUSA no item desabilitado
+ *     já pousavam, sem alteração nenhuma
  *       base-ui  — `menu/item/useMenuItem`, `useButton({ focusableWhenDisabled: true })`,
  *                  e `menu/root/MenuRoot` chama `useListNavigation` com
  *                  `disabledIndices: EMPTY_ARRAY` (nenhum índice é "desabilitado")
  *       radix-ng — `getCompositeMenuItems()` filtra a lista só por VISIBILIDADE;
  *                  `disabled` não tira o item dela
  *
- *   As duas leituras têm respaldo: a WAI-ARIA recomenda manter o item
- *   desabilitado focalizável, para que ele seja ANUNCIADO em vez de sumir; e
- *   pular poupa quem navega de parar no que não executa. O que NÃO se pode é
- *   dizer que uma delas é o contrato do design system enquanto três stacks
- *   fazem o contrário. Nenhum item de `testes.accessibility` promete um dos
- *   dois lados — e a story `ItemDisabled` de cada stack assere o que a SUA lib
- *   faz, com o motivo no passo.
+ *     passaram a pousar, e como
+ *       vanilla — código nosso: o seletor daqui perdeu o
+ *                 `:not([aria-disabled="true"])` e o item desabilitado passou a
+ *                 receber `tabindex` (sem ele o `focus()` seria no-op). O mesmo
+ *                 no `menubar`; o `context-menu` já pousava.
+ *       reka-ui — `patches/reka-ui+2.10.3.patch`: `Menu/MenuContentImpl` chama
+ *                 `useArrowNavigation` com
+ *                 `attributeName: '[data-reka-collection-item]'`, sem o
+ *                 `:not([data-disabled])`, nos dois pontos de navegação.
+ *       bits-ui — `patches/bits-ui+2.19.0.patch`: em `bits/menu/menu.svelte.js`
+ *                 a seta NÃO passa por `#getCandidateNodes` — quem a atende é
+ *                 `RovingFocusGroup`, e o seletor dele vem de `candidateAttr`,
+ *                 que embute `:not([data-disabled])`. O patch passa a informar
+ *                 `candidateSelector` (que tem precedência) e tira o filtro
+ *                 também de `#getCandidateNodes`, que serve typeahead e
+ *                 `Home`/`End`.
+ *
+ *   Os dois patches são de arquivo cujo NOME carrega a versão: subiu a versão, o
+ *   patch para de aplicar em silêncio. O portão que reprova nesse caso é
+ *   `src/lib/patches-aplicados.test.ts`, em cada stack que tem `patches/`.
+ *
+ *   A promessa agora é cobrável: `testes.accessibility` do conteúdo
+ *   compartilhado tem um item para ela em `dropdown-menu`, `context-menu` e
+ *   `menubar`, e a story `ItemDisabled` de cada stack aperta a seta e verifica
+ *   ONDE o foco pousa — nunca a mera presença de `tabindex`, que a diretiva liga
+ *   em todo item e por isso não reprovaria nunca.
  *
  * Outra divergência, esta de peça e não de comportamento: esta fábrica não tem
  * submenu. `functional.item7` e `visual.item4` ficam declarados em
@@ -286,7 +303,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       li.dataset.slot = `dropdown-menu-${kind === 'item' ? 'item' : `${kind}-item`}`;
       if (kind === 'item') li.dataset.variant = item.variant ?? 'default';
       if (item.disabled) li.setAttribute('aria-disabled', 'true');
-      if (!item.disabled) li.setAttribute('tabindex', '-1');
+      // `tabindex` em TODO item, inclusive no desabilitado: sem ele o `focus()`
+      // das setas é no-op, e o item ficaria na lista de candidatos sem nunca
+      // receber o foco — a roda pareceria pular um passo em vez de pousar.
+      li.setAttribute('tabindex', '-1');
       if (item.value) li.dataset.value = item.value;
       if (item.group) li.dataset.group = item.group;
 
@@ -392,11 +412,15 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   function getMenuItems(menu: HTMLElement): HTMLElement[] {
     // Os três papéis navegam junto: uma lista de ações que mistura alternadores
     // e escolha única continua sendo uma lista só para quem usa as setas.
+    //
+    // O item DESABILITADO fica na roda. Ele era filtrado aqui por
+    // `:not([aria-disabled="true"])`, e sair da roda escondia de quem navega de
+    // ouvido que a opção existe — a WAI-ARIA APG pede o contrário. O que ele não
+    // faz é ATIVAR, e isso não depende deste seletor: item desabilitado não
+    // recebe ouvinte de `click` nem de `keydown`, e o CSS já lhe tira o ponteiro.
     return Array.from(
       menu.querySelectorAll<HTMLElement>(
-        '[role="menuitem"]:not([aria-disabled="true"]),' +
-          '[role="menuitemcheckbox"]:not([aria-disabled="true"]),' +
-          '[role="menuitemradio"]:not([aria-disabled="true"])',
+        '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
       ),
     );
   }

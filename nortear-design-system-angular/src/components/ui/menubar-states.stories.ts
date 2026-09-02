@@ -145,6 +145,7 @@ export const Open: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
+    covers: ['accessibility.item8'],
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
   },
   argTypes: {
@@ -188,6 +189,20 @@ export const ItemDisabled: Story = {
       const livre = items[0];
       await expect(Number(getComputedStyle(bloqueado).opacity))
         .toBeLessThan(Number(getComputedStyle(livre).opacity));
+    });
+
+    await step('A seta POUSA no item bloqueado', async () => {
+      // Decisão de 2026-09-02, nas cinco stacks: o item desabilitado continua no
+      // percurso das setas para ser ANUNCIADO como indisponível. Some-lo da roda
+      // esconderia de quem navega de ouvido que a opção existe.
+      //
+      // O comentário do primeiro passo já dizia "continua alcançável pela seta",
+      // e nada aqui apertava tecla nenhuma — `aria-disabled` sozinho não prova
+      // percurso. Este passo é quem cobra a promessa.
+      const previous = items[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled) - 1];
+      previous.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(bloqueado);
     });
 
     await step('Escolher o item bloqueado não executa nada', async () => {

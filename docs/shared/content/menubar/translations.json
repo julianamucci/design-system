@@ -432,7 +432,8 @@
         "item4": "Content tem role=menu (WCAG 4.1.2)",
         "item5": "Items têm role=menuitem/menuitemcheckbox/menuitemradio corretos",
         "item6": "Foco retorna ao Trigger ao fechar (WCAG 2.4.3)",
-        "item7": "Contraste mínimo 4.5:1 entre o texto do item e o fundo do painel (WCAG 1.4.3)"
+        "item7": "Contraste mínimo 4.5:1 entre o texto do item e o fundo do painel (WCAG 1.4.3)",
+        "item8": "A seta pousa também no item desabilitado, que segue no percurso do teclado e é anunciado como indisponível em vez de sumir (WAI-ARIA APG)"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -915,7 +916,8 @@
         "item4": "Content has role=menu (WCAG 4.1.2)",
         "item5": "Items have correct role=menuitem/menuitemcheckbox/menuitemradio",
         "item6": "Focus returns to Trigger on close (WCAG 2.4.3)",
-        "item7": "Minimum 4.5:1 contrast between item text and panel background (WCAG 1.4.3)"
+        "item7": "Minimum 4.5:1 contrast between item text and panel background (WCAG 1.4.3)",
+        "item8": "The arrow also lands on the disabled item, which stays in the keyboard sequence and is announced as unavailable instead of disappearing (WAI-ARIA APG)"
       },
       "visual": {
         "title": "Visual Regression",
@@ -1398,7 +1400,8 @@
         "item4": "Content tiene role=menu (WCAG 4.1.2)",
         "item5": "Items tienen role=menuitem/menuitemcheckbox/menuitemradio correctos",
         "item6": "Foco vuelve al Trigger al cerrar (WCAG 2.4.3)",
-        "item7": "Contraste mínimo 4.5:1 entre el texto del item y el fondo del panel (WCAG 1.4.3)"
+        "item7": "Contraste mínimo 4.5:1 entre el texto del item y el fondo del panel (WCAG 1.4.3)",
+        "item8": "La flecha también se posa en el ítem deshabilitado, que sigue en el recorrido del teclado y se anuncia como no disponible en vez de desaparecer (WAI-ARIA APG)"
       },
       "visual": {
         "title": "Regresión Visual",

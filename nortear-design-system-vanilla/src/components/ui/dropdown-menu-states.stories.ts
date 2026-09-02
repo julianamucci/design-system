@@ -249,6 +249,7 @@ export const Controlled: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
+    covers: ['accessibility.item7'],
     // Override de story: o item bloqueado é o assunto, e a marca dele é uma
     // chave da lista — o snippet do meta traria a lista canônica, sem nenhum.
     docs: {
@@ -285,15 +286,19 @@ export const ItemDisabled: Story = {
       await expect(getComputedStyle(disabled).pointerEvents).toBe('none');
     });
 
-    await step('A seta pula o item desabilitado', async () => {
-      // Aqui a navegação NÃO pousa no item bloqueado: ele fica fora do percurso
-      // das setas, e por isso também não tem `tabindex`.
+    await step('A seta POUSA no item desabilitado', async () => {
+      // Decisão de 2026-09-02, nas cinco stacks: o item desabilitado continua no
+      // percurso das setas para ser ANUNCIADO como indisponível. Some-lo da roda
+      // esconderia de quem navega de ouvido que a opção existe.
+      //
+      // A asserção anterior aqui media o CONTRÁRIO — "a seta pula" — e passou a
+      // estar errada com a decisão. Ela também exigia `tabindex` ausente; agora
+      // o atributo está presente em todo item, porque sem ele o `focus()` das
+      // setas seria no-op e a roda pareceria pular um passo.
       const items = within(menu).getAllByRole('menuitem');
-      await expect(disabled.hasAttribute('tabindex')).toBe(false);
       items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).not.toBe(disabled);
-      await expect(document.activeElement).toBe(items[2]);
+      await expect(document.activeElement).toBe(disabled);
     });
 
     await step('Limpa via ESC', async () => {

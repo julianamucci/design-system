@@ -375,7 +375,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
    *
    * O item desabilitado FICA na roda: escondê-lo da navegação esconde da pessoa
    * que a opção existe e está indisponível — é o que a WAI-ARIA APG recomenda, e
-   * é o que as outras quatro stacks fazem. O que ele não faz é ativar.
+   * desde 2026-09-02 é a decisão do design system para as cinco stacks (o bloco
+   * canônico está no cabeçalho do `dropdown-menu` do Vanilla). O que ele não faz
+   * é ativar.
    */
   function getMenuItems(menu: HTMLElement): HTMLElement[] {
     return Array.from(

@@ -188,6 +188,7 @@ export const Controlled: Story = {
 // ─── Item desabilitado ────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
+  parameters: { covers: ['accessibility.item7'] },
   render: () => ({
     props: { onSelect: fn() },
     template: `

@@ -151,6 +151,7 @@ export const Controlled: Story = {
 export const ItemDisabled: Story = {
   args: { defaultOpen: true, variant: 'itemDisabled', triggerLabel: 'Ações' },
   parameters: {
+    covers: ['accessibility.item7'],
     docs: { source: { transform: dropdownMenuItemDisabledSource } },
   },
   play: async ({ step }) => {
@@ -169,11 +170,18 @@ export const ItemDisabled: Story = {
       await expect(getComputedStyle(disabled).pointerEvents).toBe('none');
     });
 
-    await step('A seta pula o item desabilitado', async () => {
+    await step('A seta POUSA no item desabilitado', async () => {
+      // Decisão de 2026-09-02, nas cinco stacks: o item desabilitado continua no
+      // percurso das setas para ser ANUNCIADO como indisponível. Some-lo da roda
+      // esconderia de quem navega de ouvido que a opção existe.
+      //
+      // A asserção anterior aqui media o CONTRÁRIO — "a seta pula" — e passou a
+      // estar errada com a decisão. Quem alinha esta stack é o patch de
+      // `patches/`, e não código nosso: se ele parar de aplicar, este passo é o
+      // primeiro a reprovar.
       items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).not.toBe(disabled);
-      await expect(document.activeElement).toBe(items[2]);
+      await expect(document.activeElement).toBe(disabled);
     });
   },
 };
