@@ -12,6 +12,24 @@ Um tema **reescreve tokens de cor** (e, opcionalmente, a identidade de forma).
 Ele NÃO mexe em espaçamento, densidade, tipografia nem movimento: esses são
 eixos separados, combináveis com qualquer tema.
 
+**Um tema pode, porém, RECOMENDAR os outros eixos.** `axisDefaults` no
+`theme-config.ts` declara o ponto de partida de densidade, fonte, escala e base
+tipográfica; escolher o tema move as toolbars para lá, e a pessoa troca qualquer
+uma depois sem o tema desfazer a escolha. Recomendar não é reescrever — a
+independência dos seis eixos continua de pé, e é o que separa as duas coisas.
+
+Hoje só o `warm` tem opinião (respiro confortável, LXGW WenKai TC, Major Third).
+Tema sem `axisDefaults` não move nada.
+
+O default **não** mora no CSS do tema, e as duas razões são medidas: `.tema-warm`
+e `.densidade-confortavel` têm a mesma especificidade e os eixos são importados
+DEPOIS dos temas — como o preview aplica sempre a classe do eixo, um valor na
+folha do tema nunca chegaria a valer; e copiar a densidade para dentro do tema
+duplicaria oito tokens mantidos iguais à mão, que é como os 39 valores de cor
+divergiram antes. Nada disso vale para um consumidor que aplique só
+`tema-warm` sem classe de eixo: esse cai nos valores de `tokens.css`, e é o
+`applyTheme()` que precisa levar os eixos junto se essa for a intenção.
+
 ```
 tema        → cor + raio          (.tema-<id>)
 densidade   → padding/gap/altura  (.densidade-*)

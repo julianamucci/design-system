@@ -9,11 +9,41 @@
 
 export type ThemeId = 'default' | 'warm' | 'cold';
 
+/**
+ * Os outros cinco eixos que convivem com o tema no `<html>`. Cada valor é o
+ * sufixo da classe: `confortavel` → `.densidade-confortavel`.
+ */
+export interface ThemeAxisDefaults {
+  density?: string;
+  font?: string;
+  typescale?: string;
+  typebase?: string;
+}
+
 export interface ThemeDefinition {
   id: ThemeId;
   label: string;
   description: string;
   cssClass: string;
+  /**
+   * Ponto de partida dos OUTROS eixos quando este tema é escolhido.
+   *
+   * É DEFAULT, não trava: escolher o tema move as outras toolbars, e a pessoa
+   * troca qualquer uma depois sem o tema desfazer a escolha. Os seis eixos
+   * seguem independentes, que é o contrato registrado na guideline 16.
+   *
+   * Mora AQUI e não no CSS do tema por duas razões medidas. Uma: `.tema-warm` e
+   * `.densidade-confortavel` têm a mesma especificidade, e os eixos são
+   * importados DEPOIS dos temas — como o preview aplica sempre a classe do eixo,
+   * um default escrito na folha do tema nunca chegaria a valer. Duas: copiar a
+   * densidade para dentro do tema duplicaria oito tokens mantidos iguais à mão,
+   * que é exatamente como os 39 valores de cor divergiram antes (a história está
+   * no cabeçalho do `tokens.css`).
+   *
+   * Não varia por modo: densidade, fonte e escala não têm versão clara e escura.
+   * O default vale nos dois.
+   */
+  axisDefaults?: ThemeAxisDefaults;
 }
 
 // ─── Catálogo de temas ────────────────────────────────────────────────────────
@@ -35,6 +65,17 @@ export const themes: ThemeDefinition[] = [
     label: 'Warm',
     description: 'Cores quentes — tint âmbar nos neutros, marca vermelha e status fora do semáforo',
     cssClass: 'tema-warm',
+    // O Warm é o único tema com voz própria nos outros eixos: respiro maior,
+    // uma tipografia de traço caligráfico e uma escala mais aberta. O `typebase`
+    // vem declarado mesmo sendo o mesmo do resto — sem ele, trocar para o Warm
+    // não devolveria a base a `m` depois de alguém ter escolhido `s` ou `l`, e o
+    // default do tema ficaria pela metade.
+    axisDefaults: {
+      density: 'confortavel',
+      font: 'lxgw-wenkai',
+      typescale: 'major-third',
+      typebase: 'm',
+    },
   },
   {
     id: 'cold',
@@ -53,6 +94,14 @@ export const themeDisplayNames: Record<ThemeId, string> = Object.fromEntries(
 export const themeCssClasses: Record<ThemeId, string> = Object.fromEntries(
   themes.map((t) => [t.id, t.cssClass])
 ) as Record<ThemeId, string>;
+
+/**
+ * Defaults dos outros eixos por tema. Tema sem opinião devolve `{}` — quem
+ * consome mescla por cima do que já está posto, então ausência não zera nada.
+ */
+export const themeAxisDefaults: Record<ThemeId, ThemeAxisDefaults> = Object.fromEntries(
+  themes.map((t) => [t.id, t.axisDefaults ?? {}])
+) as Record<ThemeId, ThemeAxisDefaults>;
 
 // ─── Subdomínio → tema ────────────────────────────────────────────────────────
 // O PRIMEIRO rótulo do hostname decide o tema (warm.norteardesign.com.br → warm;

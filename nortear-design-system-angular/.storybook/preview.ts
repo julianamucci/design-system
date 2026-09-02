@@ -3,13 +3,13 @@
 // reproduz o que o buffer guardou. O porque esta no primitivo compartilhado.
 import { bufferarErros, iniciarFaroQuandoOcioso, marcarStory } from '@shared/primitives/faro';
 import '../src/lib/reload-on-chunk-error';
-import { getThemeFromSubdomain } from '@shared/themes/theme-config';
+import { getThemeFromSubdomain, themeAxisDefaults, type ThemeId } from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/angular-vite';
 import { applicationConfig } from '@storybook/angular-vite';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { useEffect, addons } from 'storybook/preview-api';
-import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';
+import { GLOBALS_UPDATED, SET_GLOBALS, UPDATE_GLOBALS } from 'storybook/internal/core-events';
 import '../src/styles/globals.css';
 import '../src/styles/storybook-docs.css';
 
@@ -90,6 +90,30 @@ function applyMotion(motion: string) {
 // Guard `typeof document` evita execução na indexação em Node (sem canal e
 // sem DOM).
 if (typeof document !== 'undefined') {
+  // Ao TROCAR de tema, os outros eixos vão para o ponto de partida daquele
+  // tema. É default e não trava: depois disso a pessoa muda qualquer toolbar e
+  // o tema não desfaz a escolha — os seis eixos seguem independentes.
+  //
+  // Só na TROCA, nunca na carga: o Storybook guarda o estado da toolbar entre
+  // sessões, e forçar no load apagaria a escolha de quem voltou. O efeito
+  // colateral conhecido é o acesso por subdomínio (warm.…), que abre com a cor
+  // do tema e a densidade de quem chegou.
+  //
+  // Emitir aqui dentro não faz laço: o que sai muda densidade, fonte e escala,
+  // nunca a marca, então a próxima notificação já entra com a marca igual.
+  let marcaAnterior: string | null = null;
+  const levarEixosDoTema = (marca: string) => {
+    if (marcaAnterior === null) { marcaAnterior = marca; return; }
+    if (marca === marcaAnterior) return;
+    marcaAnterior = marca;
+    const eixos = themeAxisDefaults[marca as ThemeId];
+    if (!eixos || Object.keys(eixos).length === 0) return;
+    try {
+      addons.getChannel().emit(UPDATE_GLOBALS, { globals: eixos });
+    } catch {
+      /* canal ainda não existe — a próxima troca resolve */
+    }
+  };
   const onGlobals = ({ globals = {} }: { globals?: Record<string, string> }) => {
     applyClasses(
       globals['brand'] || 'default',
@@ -99,6 +123,7 @@ if (typeof document !== 'undefined') {
       globals['typebase'] || 'm',
     );
     applyMotion(globals['motion'] || 'default');
+    levarEixosDoTema(globals['brand'] || 'default');
   };
   const subscribe = () => {
     try {
