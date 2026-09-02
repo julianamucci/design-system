@@ -43,9 +43,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Andaime do canvas: `contain` e `position` são mecânica, e provam que o painel
+// portalizado escapa de um bloco de contenção. Altura NÃO entra — as outras
+// quatro stacks não têm nenhuma aqui, e o painel é `position: fixed` de todo
+// jeito, então a altura do andaime não muda o que a foto mostra.
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 400,
   position: "relative",
 };
 
@@ -228,6 +231,7 @@ export const Controlled: Story = {
 
 export const NotDismissible: Story = {
   parameters: {
+    covers: ["functional.item7"],
     docs: {
       // `dismissible={false}` só faz sentido junto da saída explícita do rodapé
       // — o snippet precisa mostrar os dois na mesma composição.
@@ -258,7 +262,15 @@ export const NotDismissible: Story = {
       </Drawer>
     </div>
   ),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole("button", { name: /^Abrir$/i });
+    // A play é reexecutável no painel Interactions, e o último passo FECHA o
+    // painel de verdade. Sem restabelecer a precondição, a segunda rodada
+    // começaria com a tela vazia e os dois primeiros passos afirmariam nada.
+    if (within(document.body).queryAllByRole("dialog").length === 0) {
+      await userEvent.click(trigger);
+    }
     const panel = await waitForPortal("dialog");
 
     await step("Escape não fecha", async () => {
@@ -278,10 +290,21 @@ export const NotDismissible: Story = {
       await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(1);
     });
 
-    await step("A saída explícita do rodapé continua funcionando", async () => {
-      await expect(
-        within(panel).getByRole("button", { name: /Confirmar e fechar/i }),
-      ).toBeVisible();
+    // O passo dizia "continua funcionando" e só olhava se o botão estava
+    // VISÍVEL. Botão visível e inerte é exatamente o defeito que o rodapé de
+    // uma gaveta não dispensável não pode ter: com Escape e véu desligados, ele
+    // é a única saída. Agora o passo CLICA, e a asserção é o painel sumindo.
+    await step("A saída explícita do rodapé fecha de verdade", async () => {
+      const sair = within(panel).getByRole("button", { name: /Confirmar e fechar/i });
+      await expect(sair).toBeVisible();
+      await userEvent.click(sair);
+      await waitForPortalGone("dialog");
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
     });
+
+    // Volta a abrir: a foto do Chromatic é do painel aberto, e a próxima rodada
+    // da play precisa do mesmo ponto de partida desta.
+    await userEvent.click(trigger);
+    await waitForPortal("dialog");
   },
 };

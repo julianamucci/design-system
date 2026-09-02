@@ -217,6 +217,7 @@ export const Controlled: Story = {
 
 export const NotDismissible: Story = {
   parameters: {
+    covers: ['functional.item7'],
     docs: {
       description: {
         story:
@@ -250,7 +251,15 @@ export const NotDismissible: Story = {
       </nds-drawer>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: LABEL.trigger() });
+    // A play é reexecutável no painel Interactions, e o último passo FECHA o
+    // painel de verdade. Sem restabelecer a precondição, a segunda rodada
+    // começaria com a tela vazia e o primeiro passo afirmaria nada.
+    if (within(document.body).queryAllByRole('dialog').length === 0) {
+      await userEvent.click(trigger);
+    }
     const panel = await waitForPortal('dialog');
 
     await step('Clique no overlay não fecha', async () => {
@@ -264,9 +273,22 @@ export const NotDismissible: Story = {
       await expect(panel).toBeVisible();
     });
 
-    await step('A saída explícita do rodapé continua no painel', async () => {
-      await expect(within(panel).getByRole('button', { name: LABEL.close() })).toBeVisible();
+    // O passo dizia "continua no painel" e só olhava se o botão estava
+    // VISÍVEL. Botão visível e inerte é exatamente o defeito que o rodapé de uma
+    // gaveta não dispensável não pode ter: com o descarte por ponteiro
+    // desligado, ele é a saída que sobra junto com Escape.
+    await step('A saída explícita do rodapé fecha de verdade', async () => {
       await expect(panel).toHaveAccessibleName(LABEL.title());
+      const sair = within(panel).getByRole('button', { name: LABEL.close() });
+      await expect(sair).toBeVisible();
+      await userEvent.click(sair);
+      await waitForPortalVanish('dialog');
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
+
+    // Volta a abrir: a foto do Chromatic é do painel aberto, e a próxima rodada
+    // da play precisa do mesmo ponto de partida desta.
+    await userEvent.click(trigger);
+    await waitForPortal('dialog');
   },
 };

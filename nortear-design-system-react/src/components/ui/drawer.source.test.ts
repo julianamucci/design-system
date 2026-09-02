@@ -63,9 +63,9 @@ describe('drawerSource', () => {
   });
 
   it('dismissible e modal só aparecem quando a story os desliga', () => {
-    const padrao = drawerSource(undefined, { args: { dismissible: true, modal: true } });
-    expect(padrao).not.toContain('dismissible');
-    expect(padrao).not.toContain('modal');
+    const atDefaults = drawerSource(undefined, { args: { dismissible: true, modal: true } });
+    expect(atDefaults).not.toContain('dismissible');
+    expect(atDefaults).not.toContain('modal');
 
     const desligado = drawerSource(undefined, { args: { dismissible: false, modal: false } });
     expect(desligado).toContain('dismissible={false}');
@@ -136,9 +136,10 @@ describe('composições', () => {
 
   it('a rolagem mora no corpo, e o rodapé fica fora dele', () => {
     const saida = drawerWithScrollSource();
-    expect(saida).toContain('<DrawerBody className="nds-text-body">');
+    expect(saida).toContain('<DrawerBody className="nds-text-body" aria-label="Lista de itens">');
     // O `tabIndex` da região rolável vem do próprio componente — escrevê-lo
-    // aqui ensinaria a repetir à mão o que ele já faz.
+    // aqui ensinaria a repetir à mão o que ele já faz. O `aria-label`, não: sem
+    // ele o corpo fica sem papel, e é quem compõe que sabe o que há lá dentro.
     expect(saida).not.toContain('tabIndex');
     expect(saida.indexOf('<DrawerFooter>')).toBeGreaterThan(saida.indexOf('</DrawerBody>'));
   });

@@ -20,6 +20,57 @@
 //
 // Do Sheet ficam só `.nds-sheet-overlay`, `.nds-sheet-title` e
 // `.nds-sheet-description`, que o próprio CSS compartilhado manda reusar.
+//
+// ─── Decisão de acessibilidade, medida na fonte das cinco libs ───────────────
+//
+// Bloco canônico: as outras quatro stacks trazem a versão curta mais o
+// mecanismo delas. O Drawer é irmão do Sheet e DIVIDE a folha do véu com ele,
+// então o que muda entre os dois está marcado abaixo como divergência.
+//
+//   1. Foco preso: AS CINCO, enquanto o painel existe. Aqui é o laço de
+//      Tab/Shift+Tab escrito no `handleKeydown`; nas outras quatro é o
+//      gerenciador de foco da lib.
+//   2. `aria-modal="true"`: AS CINCO, e só no modo modal. Não-modal não recebe
+//      o atributo, nem `"false"` — com ele o leitor de tela esconderia o resto
+//      da página justamente quando o resto da página continua utilizável.
+//   3. `role="dialog"` com nome: AS CINCO. O nome sai do título por
+//      `aria-labelledby`, e a descrição por `aria-describedby` quando existe.
+//   4. Escape e clique no véu fecham: AS CINCO, quando `dismissible`. O
+//      `keydown` é do DOCUMENTO porque o foco pode estar no corpo que rola.
+//   5. Foco de volta ao gatilho ao fechar: AS CINCO. `desmontarPanel` NÃO
+//      devolve foco, de propósito: quem desmonta pode ter tirado o gatilho do
+//      documento junto.
+//   6. Trava de rolagem enquanto modal: AS CINCO. Aqui vem de
+//      `@/lib/scroll-lock`, que é contada e compartilhada com o Sheet.
+//   7. Corpo rolável: `tabindex="0"` sempre (WCAG 2.1.1) e `role="group"` só
+//      quando há nome. Nome em elemento sem papel é descartado pelo leitor de
+//      tela (`aria-prohibited-attr`); é `group` e não `region` porque marco
+//      aninhado num diálogo já nomeado não acrescenta navegação.
+//   8. Ordem de leitura: o foco entra no painel na abertura e segue o DOM —
+//      alça (escondida), cabeçalho, corpo, rodapé.
+//   9. Região viva: NENHUMA. A abertura já move o foco e o papel de diálogo já
+//      é anunciado; uma live region diria a mesma coisa duas vezes.
+//
+// ─── Onde ele DIVERGE do Sheet, e por quê ────────────────────────────────────
+//
+//   · Gesto de arrastar. Esta stack NÃO tem, e a do Angular também não; as três
+//     que montam sobre a lib de gaveta têm. Onde existe, é extra de ponteiro:
+//     Escape, véu e o botão do rodapé cobrem o mesmo objetivo por teclado, então
+//     nenhuma ação depende de arrastar (WCAG 2.5.7). O Sheet não tem gesto em
+//     stack nenhuma — por isso o conteúdo compartilhado descreve o arraste como
+//     extra, e não como caminho.
+//   · Alça. Afordância visual, com `aria-hidden`, sem foco e sem nome. O Sheet
+//     não tem alça.
+//   · Botão de fechar. O Sheet traz um X próprio (`.nds-sheet-close`, com
+//     `showCloseButton`); o Drawer não tem X nenhum, e a saída visível é o que
+//     quem compõe puser no rodapé. É por isso que rodapé com saída explícita
+//     deixa de ser opcional quando `dismissible` está desligado.
+//   · Largura. O Sheet lê `--sheet-width`/`--sheet-max-width`; o Drawer lê
+//     `--drawer-width`/`--drawer-max-width`, e o teto só entra a partir de 40rem
+//     de viewport. Nos dois, classe de largura NÃO vence: as regras de direção
+//     são (0,2,0) e qualquer utilitária é (0,1,0).
+//   · Atributo de posição. O Sheet usa `data-side`; o Drawer usa
+//     `data-vaul-drawer-direction`, que é o seletor que o CSS compartilhado lê.
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
@@ -238,9 +289,20 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     // das outras: qualquer elemento com `data-slot="drawer-close"` dentro do
     // painel fecha ao ser acionado. Sem isto, o "Cancelar" do rodapé é um botão
     // inerte — e era, porque a factory anterior só oferecia o X do Sheet.
-    panelEl
-      .querySelectorAll<HTMLElement>('[data-slot="drawer-close"]')
-      .forEach((el) => el.addEventListener('click', () => closeWithReason('close-button')));
+    //
+    // A escuta é DELEGADA no painel, e não um ouvinte por botão. O painel é um
+    // nó novo a cada abertura, então nada se acumula; a forma anterior
+    // registrava de novo nos MESMOS elementos de rodapé a cada `open()` — o
+    // rodapé é o elemento que quem compõe passou, e ele sobrevive ao
+    // fechamento. Fechar continuava certo (o `closeWithReason` sai cedo quando
+    // já está fechado), mas os ouvintes cresciam sem limite.
+    //
+    // Delegar também cobre o clique que cai num ícone DENTRO do botão, que é o
+    // caso real de um fechador composto.
+    panelEl.addEventListener('click', (e) => {
+      const alvo = (e.target as HTMLElement | null)?.closest('[data-slot="drawer-close"]');
+      if (alvo) closeWithReason('close-button');
+    });
 
     document.body.appendChild(overlayEl);
     document.body.appendChild(panelEl);

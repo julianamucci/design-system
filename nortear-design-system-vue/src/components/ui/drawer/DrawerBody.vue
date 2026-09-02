@@ -10,9 +10,12 @@ import { cn } from '@/lib/utils'
  * axe). `role` e nome acessível ficam com quem compõe, porque só ali se sabe o
  * que a região contém.
  *
- * `.nds-drawer-body` traz `flex: 1`, `min-height: 0` e `overflow: auto`. É o
- * `min-height: 0` que faz o corpo ceder altura dentro do flex em coluna, em vez
- * de esticar o painel e empurrar o rodapé (com as ações) para fora da tela.
+ * `.nds-drawer-body` traz `flex: 1 1 auto`, `min-height: 0` e `overflow: auto`.
+ * A base `auto` é o que faz o corpo contribuir com a altura do conteúdo para o
+ * painel — com a base zero do atalho `flex: 1` o teto de altura nunca aperta
+ * ninguém, e o conteúdo transborda em vez de rolar. O `min-height: 0` é o que
+ * o deixa ceder altura dentro do flex em coluna, em vez de esticar o painel e
+ * empurrar o rodapé (com as ações) para fora da tela.
  */
 const props = defineProps<{
   class?: HTMLAttributes['class']

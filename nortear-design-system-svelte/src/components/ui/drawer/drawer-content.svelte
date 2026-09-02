@@ -25,8 +25,11 @@
 		class={cn("nds-drawer-content", className)}
 		{...restProps}
 	>
+		<!-- Alça: pura afordância. O CSS só a mostra na direção de baixo, e ela
+		     não recebe foco nem nome — anunciá-la só somaria ruído. -->
 		<div
 			class="nds-drawer-handle"
+			aria-hidden="true"
 		></div>
 		{@render children?.()}
 	</DrawerPrimitive.Content>

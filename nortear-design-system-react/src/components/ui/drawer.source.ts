@@ -316,7 +316,9 @@ export function drawerWithConfirmSource(): string {
 
 /**
  * Corpo mais alto que o painel. Quem rola é o `DrawerBody`, não o painel: ele
- * traz `flex: 1`, `min-height: 0` e `overflow: auto`, e é o `min-height: 0` que
+ * traz `flex: 1 1 auto`, `min-height: 0` e `overflow: auto`. A base `auto` é o
+ * que faz o teto de altura do painel apertar alguém (com a base zero do atalho
+ * `flex: 1` o conteúdo transborda em vez de rolar), e o `min-height: 0` é o que
  * o faz ceder altura em vez de esticar a caixa e empurrar o rodapé — com as
  * ações dentro — para fora da tela. O `tabIndex` da região rolável vem do
  * próprio componente, então quem navega por teclado alcança a rolagem.
@@ -324,7 +326,7 @@ export function drawerWithConfirmSource(): string {
 export function drawerWithScrollSource(): string {
   const miolo = [
     header('Lista de itens', '30 itens — role o conteúdo para ver mais.'),
-    `<DrawerBody className="nds-text-body">
+    `<DrawerBody className="nds-text-body" aria-label="Lista de itens">
   <ul className="nds-stack" data-spacing="sm">
     {Array.from({ length: 30 }, (_, i) => (
       <li

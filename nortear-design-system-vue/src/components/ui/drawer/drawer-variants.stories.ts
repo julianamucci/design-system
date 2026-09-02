@@ -18,6 +18,7 @@ import {
   drawerDireitaSource,
   drawerEsquerdaSource,
   drawerTopoSource,
+  drawerWithScrollSource,
 } from './drawer.source';
 
 const meta = {
@@ -32,7 +33,7 @@ const meta = {
       source: { transform: drawerBaixoSource },
       description: {
         component:
-          'Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.',
+          'Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais. O corpo rolável também mora aqui: é variação do conteúdo do painel, e é assim que o conteúdo compartilhado o descreve.',
       },
     },
   },
@@ -198,6 +199,88 @@ export const Right: Story = {
         const box = panelEl.getBoundingClientRect();
         await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
       });
+    });
+  },
+};
+
+export const WithScroll: Story = {
+  parameters: {
+    covers: ['accessibility.item7'],
+    docs: {
+      // O corpo passa a receber uma lista, e é ele quem rola: outro miolo e
+      // outro estado no script.
+      source: { transform: drawerWithScrollSource },
+      description: {
+        story:
+          'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa "conteúdo longo" de "ação fora de alcance".',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <div style="contain: layout">
+        <Drawer :default-open="true" direction="bottom">
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Termos de serviço</DrawerTitle>
+              <DrawerDescription>Leia atentamente os termos antes de aceitar.</DrawerDescription>
+            </DrawerHeader>
+            <DrawerBody class="nds-text-body nds-text-muted-foreground" aria-label="Termos de serviço">
+              <p v-for="i in 30" :key="i">
+                Parágrafo {{ i }} — conteúdo extenso para demonstrar a rolagem interna do painel
+                sem que o rodapé com as ações saia da tela.
+              </p>
+            </DrawerBody>
+            <DrawerFooter>
+              <Button>Aceitar termos</Button>
+              <DrawerClose as-child>
+                <Button variant="outline">Recusar</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    `,
+  }),
+  play: async ({ step }) => {
+    const panel = await waitForPortal('dialog');
+    const body = panel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
+    const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+
+    await step('O corpo é quem rola, não o painel', async () => {
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      // O painel em si não rola: o mínimo automático zero de um item com
+      // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
+      // O painel NÃO é contêiner de rolagem, e é isso que prova o contrato.
+      // Medir `scrollHeight <= clientHeight` nele não provava nada: sem
+      // `overflow` declarado o computado é `visible`, e elemento visível não
+      // rola por maior que seja o `scrollHeight`. Sonda no navegador com o
+      // corpo já correto: painel client 719 / scroll 2157, corpo client 559 /
+      // scroll 1524 — ou seja, o corpo cede altura e rola, e o número do painel
+      // era só a caixa de conteúdo não recortada.
+      await expect(['auto', 'scroll']).not.toContain(
+        getComputedStyle(panel).overflowY,
+      );
+    });
+
+    await step('A região rolável é alcançável por teclado, com papel e nome', async () => {
+      // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
+      // o corpo. É a regra scrollable-region-focusable do axe.
+      await expect(body).toHaveAttribute('tabindex', '0');
+      // Parada de teclado precisa de papel, e o papel só aparece com nome: os
+      // dois vêm juntos ou não vêm. Sem o par, o nome seria DESCARTADO pelo
+      // leitor de tela (aria-prohibited-attr) e ninguém saberia.
+      await expect(body).toHaveAttribute('role', 'group');
+      await expect(body).toHaveAccessibleName('Termos de serviço');
+    });
+
+    await step('O rodapé continua visível com o corpo cheio', async () => {
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

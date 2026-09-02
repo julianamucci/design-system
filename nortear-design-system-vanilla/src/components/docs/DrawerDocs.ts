@@ -202,7 +202,6 @@ export function createDrawerDocs(): HTMLElement {
             wrap.dataset.justify = 'center';
             wrap.dataset.spacing = 'sm';
             wrap.style.flexWrap = 'wrap';
-            wrap.style.minHeight = '140px';
             wrap.append(
               buildDrawerDemo({
                 triggerLabel: t('demonstration.labels.bottom'),
@@ -221,7 +220,7 @@ export function createDrawerDocs(): HTMLElement {
       case 'anatomia':
         return createDocsAnatomy({
           title: t('anatomy.title'),
-          items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -455,7 +454,11 @@ const drawer = createDrawer({
                   p.textContent = `Parágrafo ${i}: termos longos para garantir scroll interno.`;
                   longBody.appendChild(p);
                 }
+                // `data-slot="drawer-close"` é o que liga o clique ao fechamento nesta
+                // stack. Sem ele o Cancelar da PRÉVIA era um botão inerte, enquanto o
+                // helper de demonstração desta mesma página já o marcava.
                 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                cancel.dataset.slot = 'drawer-close';
                 const action = createButton({ variant: 'default', label: 'Aceitar termos' });
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
@@ -477,16 +480,25 @@ const drawer = createDrawer({
       }
 
       case 'composicoes': {
-        function buildField(labelText: string, type: string, value: string): HTMLLabelElement {
+        function buildField(
+          labelText: string,
+          id: string,
+          type: string,
+          value: string,
+        ): HTMLLabelElement {
           const label = document.createElement('label');
           label.className = 'nds-stack nds-text-body';
           label.dataset.spacing = 'xs';
+          label.htmlFor = id;
           const span = document.createElement('span');
           span.className = 'nds-font-medium';
           span.textContent = labelText;
           const input = document.createElement('input');
-          input.className = 'nds-border-default nds-rounded-md';
-          input.style.padding = '0.5rem 0.75rem';
+          // O campo é o do design system: `.nds-input` já traz o padding, a
+          // borda e o raio, e acompanha tema, densidade e escala de tipo. A
+          // versão anterior remontava os três à mão, com a medida cravada.
+          input.className = 'nds-input';
+          input.id = id;
           input.type = type;
           input.value = value;
           label.append(span, input);
@@ -495,15 +507,40 @@ const drawer = createDrawer({
 
         const codeWithForm = `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
+// Campo com rótulo: o htmlFor casando com o id é o que dá nome acessível ao
+// input dentro de um painel modal.
+function buildField(labelText, id, type, value) {
+  const label = document.createElement('label');
+  label.className = 'nds-stack nds-text-body';
+  label.dataset.spacing = 'xs';
+  label.htmlFor = id;
+
+  const span = document.createElement('span');
+  span.className = 'nds-font-medium';
+  span.textContent = labelText;
+
+  const input = document.createElement('input');
+  input.className = 'nds-input';
+  input.id = id;
+  input.type = type;
+  input.value = value;
+
+  label.append(span, input);
+  return label;
+}
+
 const form = document.createElement('form');
 form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
 form.append(
-  buildField('Nome', 'text', 'Maria Souza'),
-  buildField('E-mail', 'email', 'maria@exemplo.com'),
+  buildField('Nome', 'drawer-name', 'text', 'Maria Souza'),
+  buildField('E-mail', 'drawer-email', 'email', 'maria@exemplo.com'),
 );
 
+// data-slot="drawer-close" é o que faz a fábrica ligar o clique ao fechamento.
+// Sem ele o Cancelar é um botão inerte — e era assim que este snippet ensinava.
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+cancel.dataset.slot = 'drawer-close';
 const action = createButton({ variant: 'default', label: 'Salvar alterações' });
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
@@ -525,7 +562,10 @@ const body = document.createElement('div');
 body.className = 'nds-text-body nds-text-muted-foreground';
 body.textContent = 'Você poderá adicioná-lo novamente a qualquer momento.';
 
+// data-slot="drawer-close" é o que faz a fábrica ligar o clique ao fechamento.
+// Sem ele o Cancelar é um botão inerte.
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+cancel.dataset.slot = 'drawer-close';
 const action = createButton({ variant: 'destructive', label: 'Remover' });
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
@@ -558,15 +598,19 @@ const drawer = createDrawer({
                 form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
                 form.append(
-                  buildField('Nome', 'text', 'Maria Souza'),
-                  buildField('E-mail', 'email', 'maria@exemplo.com'),
+                  buildField('Nome', 'docs-drawer-name', 'text', 'Maria Souza'),
+                  buildField('E-mail', 'docs-drawer-email', 'email', 'maria@exemplo.com'),
                 );
+                // `data-slot="drawer-close"` é o que liga o clique ao fechamento nesta
+                // stack. Sem ele o Cancelar da PRÉVIA era um botão inerte, enquanto o
+                // helper de demonstração desta mesma página já o marcava.
                 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                cancel.dataset.slot = 'drawer-close';
                 const action = createButton({ variant: 'default', label: 'Salvar alterações' });
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'md';
+                footer.dataset.justify = 'end';
+                footer.dataset.spacing = 'md';
                 footer.append(cancel, action);
                 const el = createDrawer({
                   trigger,
@@ -704,13 +748,12 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
           screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab/Shift+Tab', description: t('accessibility.keyboard.tab')    },
             { key: 'Escape',        description: t('accessibility.keyboard.escape') },
             { key: 'Enter/Space',   description: t('accessibility.keyboard.enter')  },
-            { key: 'Swipe',         description: t('accessibility.keyboard.swipe')  },
           ],
         });
 
@@ -768,7 +811,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -781,7 +824,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
               criterion: t(`testes.accessibility.item${i}`),
               level: 'AA',
               how: '—',

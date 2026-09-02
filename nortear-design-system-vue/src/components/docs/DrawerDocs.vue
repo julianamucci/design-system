@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -222,6 +223,7 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item6'),
   tContent('anatomy.item7'),
   tContent('anatomy.item8'),
+  tContent('anatomy.item9'),
 ]);
 
 const variantItems = computed(() => [
@@ -295,9 +297,13 @@ const codeCompWithScroll = `<Drawer>
       <DrawerTitle>Termos de uso</DrawerTitle>
       <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
     </DrawerHeader>
-    <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
+    <DrawerBody
+      class="nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+      aria-label="Termos de uso"
+    >
       <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos longos para garantir scroll interno.</p>
-    </div>
+    </DrawerBody>
     <DrawerFooter>
       <Button>Aceitar termos</Button>
       <DrawerClose as-child>
@@ -363,13 +369,16 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.items.item4'),
   tContent('accessibility.items.item5'),
   tContent('accessibility.items.item6'),
+  tContent('accessibility.items.item7'),
 ]);
 
+// Sem linha de "Swipe": a tabela é de teclado, e arrastar é gesto de ponteiro.
+// O que se sabe sobre o arraste (nunca é o único caminho) está em
+// `accessibility.items.item5`, que é onde a WCAG 2.5.7 mora.
 const keyboardItems = computed(() => [
   { key: 'Tab / Shift+Tab', description: toPlainText(tContent('accessibility.keyboard.tab'))    },
   { key: 'Escape',          description: toPlainText(tContent('accessibility.keyboard.escape')) },
   { key: 'Enter / Space',   description: toPlainText(tContent('accessibility.keyboard.enter'))  },
-  { key: 'Swipe',           description: toPlainText(tContent('accessibility.keyboard.swipe'))  },
 ]);
 
 const relatedItems = computed(() => [
@@ -392,13 +401,13 @@ const analyticsItems = computed(() => [
   { event: 'drawer_close', trigger: 'onOpenChange(false)', payload: "{ component: 'drawer', location, label }" },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({
+const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
   action: toPlainText(tContent(`testes.functional.item${i}.action`)),
   result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
-const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({
+const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
   criterion: tContent(`testes.accessibility.item${i}`),
   level: 'AA',
   how: tContent(`testes.accessibility.item${i}`),
@@ -794,10 +803,10 @@ const a11yCritCols = computed(() => ({
                 <DrawerTitle>Termos de uso</DrawerTitle>
                 <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
               </DrawerHeader>
-              <div
-                class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
+              <DrawerBody
+                class="nds-stack nds-text-body nds-text-muted-foreground"
                 data-spacing="sm"
-                style="max-height: 16rem"
+                aria-label="Termos de uso"
               >
                 <p
                   v-for="i in 12"
@@ -805,7 +814,7 @@ const a11yCritCols = computed(() => ({
                 >
                   Parágrafo {{ i }}: termos longos para garantir scroll interno.
                 </p>
-              </div>
+              </DrawerBody>
               <DrawerFooter>
                 <Button>Aceitar termos</Button>
                 <DrawerClose as-child>

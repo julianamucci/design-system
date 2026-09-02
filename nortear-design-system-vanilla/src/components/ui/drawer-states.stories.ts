@@ -255,6 +255,7 @@ export const Controlled: Story = {
 
 export const NotDismissible: Story = {
   parameters: {
+    covers: ['functional.item7'],
     // Override de story: `dismissible: false` é o assunto, e o snippet do meta
     // mostraria a gaveta que Escape e overlay dispensam — o oposto.
     docs: {
@@ -306,10 +307,24 @@ export const NotDismissible: Story = {
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
     });
 
-    await step('A saída explícita do rodapé continua funcionando', async () => {
-      await expect(within(panel).getByRole('button', { name: /cancelar/i })).toBeVisible();
+    // O passo dizia "continua funcionando" e só olhava se o botão estava
+    // VISÍVEL. Botão visível e inerte é exatamente o defeito que o rodapé de uma
+    // gaveta não dispensável não pode ter: com Escape e véu desligados, ele é a
+    // única saída — e nesta stack quem liga o clique ao fechamento é o
+    // `data-slot="drawer-close"`, que é fácil de esquecer no rodapé.
+    await step('A saída explícita do rodapé fecha de verdade', async () => {
       await expect(panel).toHaveAccessibleName(/confirmação obrigatória/i);
+      const sair = within(panel).getByRole('button', { name: /cancelar/i });
+      await expect(sair).toBeVisible();
+      await userEvent.click(sair);
+      await waitForPortalGone('dialog');
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
+
+    // Volta a abrir: a foto do Chromatic é do painel aberto, e a próxima rodada
+    // da play precisa do mesmo ponto de partida desta.
+    await userEvent.click(canvas.getByRole('button', { name: /abrir confirmação/i }));
+    await waitForPortal('dialog');
   },
 };
 

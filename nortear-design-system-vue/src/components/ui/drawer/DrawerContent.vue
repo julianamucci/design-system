@@ -137,7 +137,10 @@ watch(
       v-bind="{ 'aria-modal': modal ? 'true' : undefined, ...$attrs, ...forwarded }"
       :class="cn('nds-drawer-content', props.class)"
     >
-      <div class="nds-drawer-handle" aria-hidden="true" />
+      <div
+        class="nds-drawer-handle"
+        aria-hidden="true"
+      />
       <slot />
     </DrawerContent>
   </DrawerPortal>

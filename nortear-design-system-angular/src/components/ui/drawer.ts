@@ -63,6 +63,21 @@ import { cn } from '@/lib/utils';
 // contrato de markup que o design system publicou. Emitir outro nome (ou criar
 // uma classe `.nds-drawer-right`) deixaria o painel sem posição nenhuma.
 //
+// ─── Decisão de acessibilidade (bloco canônico no drawer da stack vanilla) ───
+//
+// Foco preso enquanto o painel existe, `role="dialog"` com nome vindo do
+// título, `aria-modal` só no modo modal, Escape e clique no véu fechando, foco
+// de volta ao gatilho, rolagem da página travada enquanto modal, corpo rolável
+// com `tabindex="0"` e `role="group"` só quando nomeado, e NENHUMA região viva.
+//
+// O mecanismo desta stack: tudo isso vem do Dialog do primitivo, listado logo
+// acima — inclusive o `aria-modal`, que aqui NÃO precisa ser escrito à mão.
+//
+// Diverge do Sheet em três pontos deliberados: existe alça decorativa, NÃO
+// existe botão de fechar próprio (a saída visível é a do rodapé), e a largura
+// sai de `--drawer-width`/`--drawer-max-width` em vez dos tokens do Sheet. A
+// quarta divergência é o arraste, e nesta stack ele não existe — ver abaixo.
+//
 // ─── Sem gesto de arrastar, e por quê ─────────────────────────────────────────
 //
 // A alça é afordância visual, não um caminho de interação: nenhuma ação deste
@@ -336,15 +351,19 @@ export class NdsDrawerDescription {}
 /**
  * Corpo rolável do painel.
  *
- * O CSS compartilhado não tem `.nds-drawer-body`: `.nds-drawer-content` só
- * define a caixa, e cabeçalho e rodapé trazem o próprio `padding`. O corpo é
- * montado com os utilitários que existem — `nds-overflow-y` para rolar dentro
- * do teto de altura do painel e `nds-px-4` para alinhar com o cabeçalho.
+ * A classe é `.nds-drawer-body`, do CSS compartilhado — a mesma das outras
+ * quatro stacks. O docblock anterior dizia que essa classe NÃO existia e por
+ * isso montava o corpo com utilitárias (`nds-overflow-y nds-px-4`); a afirmação
+ * ficou velha quando a folha ganhou a regra, e nenhum portão vê classe que
+ * deixou de ser necessária. As utilitárias chegavam perto e não eram iguais:
+ * faltava o `flex: 1 1 auto`, que é o que faz o corpo contribuir com a altura
+ * do conteúdo para o painel — sem ele, o teto de 80% da altura da tela não
+ * chega a apertar ninguém.
  *
- * `overflow-y: auto` também é o que deixa o item encolher: em coluna flex, um
- * item com `overflow` diferente de `visible` tem mínimo automático zero, então
- * ele cede altura em vez de esticar o painel. E `.nds-drawer-footer` tem
- * `margin-top: auto`, que segura o rodapé embaixo enquanto o corpo rola.
+ * `min-height: 0` (e o `overflow` diferente de `visible`) é o que deixa o item
+ * encolher em coluna flex, cedendo altura em vez de esticar o painel. E
+ * `.nds-drawer-footer` tem `margin-top: auto`, que segura o rodapé embaixo
+ * enquanto o corpo rola.
  *
  * `tabindex="0"` estático: região rolável precisa ser alcançável por teclado
  * (WCAG 2.1.1 — regra `scrollable-region-focusable` do axe).
@@ -353,7 +372,7 @@ export class NdsDrawerDescription {}
   selector: 'div[ndsDrawerBody]',
   standalone: true,
   host: {
-    class: 'nds-overflow-y nds-px-4',
+    class: 'nds-drawer-body',
     tabindex: '0',
     '[attr.data-slot]': '"drawer-body"',
     '[attr.role]': 'ariaLabel() ? "group" : null',

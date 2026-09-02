@@ -110,7 +110,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => (
-    <div style={{ contain: "layout", minHeight: 400, position: "relative" }}>
+    <div style={{ contain: "layout", position: "relative" }}>
       <Drawer {...args}>
         <DrawerTrigger asChild>
           <Button variant="outline">{LABEL.trigger}</Button>

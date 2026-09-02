@@ -29,7 +29,7 @@ const meta: Meta = {
       description: {
         component:
           'Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e ' +
-          'a única direção em que a alça aparece; left e right servem a painéis laterais.',
+          'a única direção em que a alça aparece; left e right servem a painéis laterais. O corpo rolável também mora aqui: é variação do conteúdo do painel, e é assim que o conteúdo compartilhado o descreve.',
       },
     },
   },
@@ -182,6 +182,7 @@ export const Right: Story = {
 
 export const WithScroll: Story = {
   parameters: {
+    covers: ['accessibility.item7'],
     docs: {
       description: {
         story:
@@ -211,7 +212,7 @@ export const WithScroll: Story = {
             <p ndsDrawerDescription>{{ descricaoPainel }}</p>
           </div>
 
-          <div ndsDrawerBody class="nds-stack" data-spacing="sm">
+          <div ndsDrawerBody class="nds-stack" data-spacing="sm" aria-label="{{ tituloPainel }}">
             @for (p of paragrafos; track p.id) {
               <p class="nds-text-body nds-text-muted-foreground">{{ p.text }}</p>
             }
@@ -232,15 +233,25 @@ export const WithScroll: Story = {
     await step('O corpo é quem rola, não o painel', async () => {
       await expect(body).not.toBeNull();
       await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-      // O painel em si não rola: o mínimo automático zero de um item com
-      // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
-      await expect(panelEl.scrollHeight).toBeLessThanOrEqual(panelEl.clientHeight + 1);
+      // O painel NÃO é contêiner de rolagem, e é isso que prova o contrato.
+      // Medir `scrollHeight <= clientHeight` nele não provava nada — e era o que
+      // esta asserção fazia, sozinha entre as cinco stacks: sem `overflow`
+      // declarado o computado é `visible`, e elemento visível não rola por maior
+      // que seja o `scrollHeight`. As outras quatro já mediam o `overflow-y`.
+      await expect(['auto', 'scroll']).not.toContain(
+        getComputedStyle(panelEl).overflowY,
+      );
     });
 
-    await step('A região rolável é alcançável por teclado', async () => {
+    await step('A região rolável é alcançável por teclado, com papel e nome', async () => {
       // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
       // o corpo (é a regra scrollable-region-focusable do axe).
       await expect(body).toHaveAttribute('tabindex', '0');
+      // Parada de teclado precisa de papel, e o papel só aparece com nome: os
+      // dois vêm juntos ou não vêm. Sem o par, o nome seria DESCARTADO pelo
+      // leitor de tela (aria-prohibited-attr) e ninguém saberia.
+      await expect(body).toHaveAttribute('role', 'group');
+      await expect(body).toHaveAccessibleName(t('variants.items.withScroll.name'));
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {

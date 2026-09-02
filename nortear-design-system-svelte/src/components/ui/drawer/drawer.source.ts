@@ -194,7 +194,7 @@ export function drawerWithScrollSource(): string {
     triggerLabel: 'Ler termos',
     title: 'Termos de uso',
     description: 'Leia atentamente antes de aceitar.',
-    body: `    <DrawerBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+    body: `    <DrawerBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm" aria-label="Termos de uso">
       <p>Parágrafo 1: conteúdo extenso o bastante para o corpo passar da altura do painel.</p>
       <p>Parágrafo 2: quem rola é o corpo, e o rodapé continua alcançável.</p>
     </DrawerBody>`,

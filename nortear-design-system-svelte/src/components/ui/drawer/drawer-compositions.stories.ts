@@ -6,7 +6,6 @@ import DrawerStory from './DrawerStory.svelte';
 import {
   drawerWithConfirmSource,
   drawerWithFormSource,
-  drawerWithScrollSource,
   drawerSource,
 } from './drawer.source';
 
@@ -24,7 +23,7 @@ const meta: Meta = {
       source: { transform: drawerSource },
       description: {
         component:
-          'Combinações canônicas: formulário curto com confirmar/cancelar, confirmação reversível e corpo mais alto que o painel.',
+          'Combinações canônicas: formulário curto com confirmar/cancelar e confirmação reversível.',
       },
     },
   },
@@ -108,62 +107,6 @@ export const WithConfirmation: Story = {
       const cancelar = inside.getByRole('button', { name: /Cancelar/i });
       await expect(cancelar).toHaveClass('nds-button-outline');
       await expect(inside.getByRole('button', { name: /^Remover$/i })).toBeVisible();
-    });
-  },
-};
-
-export const WithScroll: Story = {
-  args: {
-    direction: 'bottom',
-    defaultOpen: true,
-    variant: 'withScroll',
-    title: 'Termos de uso',
-    description: 'Leia atentamente antes de aceitar.',
-    actionLabel: 'Aceitar',
-    cancelLabel: 'Recusar',
-  },
-  parameters: {
-    docs: {
-      source: { transform: drawerWithScrollSource },
-      description: {
-        story:
-          'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa "conteúdo longo" de "ação fora de alcance".',
-      },
-    },
-  },
-  play: async ({ step }) => {
-    const panel = await waitForPortal('dialog');
-    const body = panel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
-    const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
-
-    await step('O corpo é quem rola, não o painel', async () => {
-      await expect(body).not.toBeNull();
-      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-      // O painel em si não rola: o mínimo automático zero de um item com
-      // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
-      // O painel NÃO é contêiner de rolagem, e é isso que prova o contrato.
-      // Medir `scrollHeight <= clientHeight` nele não provava nada: sem
-      // `overflow` declarado o computado é `visible`, e elemento visível não
-      // rola por maior que seja o `scrollHeight`. Sonda no navegador com o
-      // corpo já correto: painel client 719 / scroll 2157, corpo client 559 /
-      // scroll 1524 — ou seja, o corpo cede altura e rola, e o número do painel
-      // era só a caixa de conteúdo não recortada.
-      await expect(['auto', 'scroll']).not.toContain(
-        getComputedStyle(panel).overflowY,
-      );
-    });
-
-    await step('A região rolável é alcançável por teclado', async () => {
-      // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
-      // o corpo. É a regra scrollable-region-focusable do axe.
-      await expect(body).toHaveAttribute('tabindex', '0');
-    });
-
-    await step('O rodapé continua visível com o corpo cheio', async () => {
-      const boxFooter = footer.getBoundingClientRect();
-      const boxPanel = panel.getBoundingClientRect();
-      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
-      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

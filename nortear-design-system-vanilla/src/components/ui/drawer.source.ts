@@ -27,6 +27,11 @@ export type DrawerSnippetOptions = {
   description?: string;
   /** Texto do parágrafo que ocupa o corpo. */
   bodyText?: string;
+  /**
+   * Nome acessível do CORPO que rola. Sem padrão, como na fábrica: é ele que
+   * traz junto o `role="group"`, e sem nome o corpo fica sem papel nenhum.
+   */
+  bodyLabel?: string;
   /** Ações do rodapé, na ordem. Lista VAZIA = gaveta sem rodapé. */
   footer?: DrawerSnippetAction[];
   /** Borda de entrada. `bottom` é o padrão e não entra no snippet. */
@@ -124,6 +129,7 @@ function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolea
       o.description === '' ? undefined : text(o.description ?? 'Atualize seus dados pessoais.'),
     ],
     ['content', content],
+    ['bodyLabel', o.bodyLabel ? text(o.bodyLabel) : undefined],
     ['footer', temRodape ? 'rodape' : undefined],
     ['direction', o.direction && o.direction !== 'bottom' ? text(o.direction) : undefined],
     ['dismissible', o.dismissible === false ? 'false' : undefined],

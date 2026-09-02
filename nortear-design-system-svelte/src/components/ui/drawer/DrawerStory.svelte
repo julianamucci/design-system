@@ -88,7 +88,11 @@
             <!-- Sem altura inline: `.nds-drawer-body` já rola dentro do teto de
                  altura do painel, e o `min-height: 0` dele é o que faz o corpo
                  ceder altura em vez de empurrar o rodapé para fora da tela. -->
-            <DrawerBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+            <DrawerBody
+              class="nds-stack nds-text-body nds-text-muted-foreground"
+              data-spacing="sm"
+              aria-label="Termos de uso"
+            >
               {#each Array.from({ length: 30 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar a rolagem interna do panel.</p>
               {/each}

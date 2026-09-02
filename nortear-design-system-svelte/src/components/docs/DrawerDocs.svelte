@@ -2,6 +2,7 @@
   import { untrack } from 'svelte';
   import {
     Drawer,
+    DrawerBody,
     DrawerClose,
     DrawerContent,
     DrawerDescription,
@@ -11,6 +12,8 @@
     DrawerTrigger,
   } from '@/components/ui/drawer';
   import { Button } from '@/components/ui/button';
+  import { Input } from '@/components/ui/input';
+  import { Label } from '@/components/ui/label';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -304,6 +307,7 @@ interface TriggerProps {
       $tStore('anatomy.item6'),
       $tStore('anatomy.item7'),
       $tStore('anatomy.item8'),
+      $tStore('anatomy.item9'),
     ]}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -507,11 +511,15 @@ interface TriggerProps {
       <DrawerTitle>Termos de uso</DrawerTitle>
       <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
     </DrawerHeader>
-    <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
+    <DrawerBody
+      class="nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+      aria-label="Termos de uso"
+    >
       {#each Array.from({ length: 12 }) as _, i}
         <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
       {/each}
-    </div>
+    </DrawerBody>
     <DrawerFooter>
       <Button>Aceitar termos</Button>
       <DrawerClose>
@@ -621,11 +629,15 @@ interface TriggerProps {
             <DrawerTitle>Termos de uso</DrawerTitle>
             <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
           </DrawerHeader>
-          <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
+          <DrawerBody
+            class="nds-stack nds-text-body nds-text-muted-foreground"
+            data-spacing="sm"
+            aria-label="Termos de uso"
+          >
             {#each Array.from({ length: 12 }) as _, i (i)}
               <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
             {/each}
-          </div>
+          </DrawerBody>
           <DrawerFooter>
             <Button>Aceitar termos</Button>
             <DrawerClose>
@@ -659,16 +671,18 @@ interface TriggerProps {
       <DrawerTitle>Editar perfil</DrawerTitle>
       <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
-    <form class="nds-stack nds-px-4" data-spacing="sm">
-      <label class="nds-stack nds-text-body" data-spacing="xs">
-        <span class="nds-font-medium">Nome</span>
-        <input class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="Maria Souza" />
-      </label>
-      <label class="nds-stack nds-text-body" data-spacing="xs">
-        <span class="nds-font-medium">E-mail</span>
-        <input type="email" class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="maria@exemplo.com" />
-      </label>
-    </form>
+    <DrawerBody>
+      <form class="nds-grid" data-spacing="sm">
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="drawer-name">Nome</Label>
+          <Input id="drawer-name" value="Maria Souza" />
+        </div>
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="drawer-email">E-mail</Label>
+          <Input id="drawer-email" type="email" value="maria@exemplo.com" />
+        </div>
+      </form>
+    </DrawerBody>
     <DrawerFooter>
       <Button>Salvar alterações</Button>
       <DrawerClose>
@@ -719,16 +733,18 @@ interface TriggerProps {
             <DrawerTitle>Editar perfil</DrawerTitle>
             <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
           </DrawerHeader>
-          <form class="nds-stack nds-px-4" data-spacing="sm">
-            <label class="nds-stack nds-text-body" data-spacing="xs">
-              <span class="nds-font-medium">Nome</span>
-              <input class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="Maria Souza" />
-            </label>
-            <label class="nds-stack nds-text-body" data-spacing="xs">
-              <span class="nds-font-medium">E-mail</span>
-              <input type="email" class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="maria@exemplo.com" />
-            </label>
-          </form>
+          <DrawerBody>
+            <form class="nds-grid" data-spacing="sm">
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="docs-drawer-name">Nome</Label>
+                <Input id="docs-drawer-name" value="Maria Souza" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="docs-drawer-email">E-mail</Label>
+                <Input id="docs-drawer-email" type="email" value="maria@exemplo.com" />
+              </div>
+            </form>
+          </DrawerBody>
           <DrawerFooter>
             <Button>Salvar alterações</Button>
             <DrawerClose>
@@ -829,13 +845,13 @@ interface TriggerProps {
       $tStore('accessibility.items.item4'),
       $tStore('accessibility.items.item5'),
       $tStore('accessibility.items.item6'),
+      $tStore('accessibility.items.item7'),
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab / Shift+Tab', description: $tStore('accessibility.keyboard.tab')    },
       { key: 'Escape',          description: $tStore('accessibility.keyboard.escape') },
       { key: 'Enter / Space',   description: $tStore('accessibility.keyboard.enter')  },
-      { key: 'Swipe',           description: $tStore('accessibility.keyboard.swipe')  },
     ]}
   />
 
@@ -887,7 +903,7 @@ interface TriggerProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5, 6].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
         action: toPlainText($tStore(`testes.functional.item${i}.action`)),
         result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
@@ -907,6 +923,7 @@ interface TriggerProps {
         { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '2.1.2',  how: '—' },
         { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '2.1.1',  how: '—' },
         { criterion: toPlainText($tStore('testes.accessibility.item6')), level: '1.4.3',  how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item7')), level: '2.1.1',  how: '—' },
       ],
     }}
     visual={{

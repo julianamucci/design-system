@@ -3,12 +3,12 @@
     "title": "Drawer",
     "category": "Overlay",
     "type": "Componente",
-    "description": "Painel deslizante mobile-first que entra por uma das bordas da tela com gestos de arrastar e fechamento por swipe.",
+    "description": "Painel deslizante mobile-first que entra por uma das bordas da tela, com véu, foco preso e saída explícita.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentação do Drawer: painel deslizante com 4 direções, gestos de arrastar, focus trap e WCAG 2.2 AA.",
+      "description": "Documentação do Drawer: painel deslizante com 4 direções, foco preso, corpo rolável e WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first que renderiza um painel deslizante com 4 direções (bottom/top/left/right), com fechamento por Escape, por clique fora e por botão explícito, focus trap e overlay.",
-      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, painel deslizante, focus trap, gesto de arrastar, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, painel deslizante, focus trap, corpo rolável, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -27,22 +27,23 @@
       "item4": "<strong>DrawerHeader</strong> — agrupa <code>DrawerTitle</code> e <code>DrawerDescription</code> com layout responsivo.",
       "item5": "<strong>DrawerTitle</strong> — título do drawer (obrigatório para <code>aria-labelledby</code> automático).",
       "item6": "<strong>DrawerDescription</strong> — descrição complementar (opcional, usado para <code>aria-describedby</code>).",
-      "item7": "<strong>DrawerFooter</strong> — área de ações no rodapé (botões de confirmação/cancelamento).",
-      "item8": "<strong>DrawerClose</strong> — botão para fechar; componha com Button como elemento filho.",
+      "item7": "<strong>DrawerBody</strong> — corpo rolável entre cabeçalho e rodapé; rola sozinho dentro do teto de altura do painel, entra na ordem de tabulação e aceita um nome acessível.",
+      "item8": "<strong>DrawerFooter</strong> — área de ações no rodapé (botões de confirmação/cancelamento).",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"nds-px-4\">{/* conteúdo */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody>{/* conteúdo */}</DrawerBody>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "vue": "<Drawer>\n  <DrawerTrigger as-child>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody><!-- conteúdo --></DrawerBody>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose as-child>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "svelte": "<Drawer bind:open>\n  <DrawerTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Abrir</Button>\n    {/snippet}\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody><!-- conteúdo --></DrawerBody>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose>\n        {#snippet child({ props })}\n          <Button variant=\"outline\" {...props}>Cancelar</Button>\n        {/snippet}\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "vanilla": "const gaveta = createDrawer({\n  trigger: botaoAbrir,        // o gatilho é passado pronto e fica no wrapper\n  direction: 'bottom',\n  title: 'Título',\n  description: 'Descrição complementar.',\n  content: corpo,             // conteúdo\n  footer: rodape,             // um elemento com data-slot=\"drawer-close\" fecha\n  dismissible: true,\n  modal: true,\n});",
-        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Descrição complementar.</p>\n    </div>\n    <div class=\"nds-px-4\"><!-- conteúdo --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
-      }
+        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Descrição complementar.</p>\n    </div>\n    <div ndsDrawerBody><!-- conteúdo --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
+      },
+      "item9": "<strong>DrawerClose</strong> — botão para fechar; componha com Button como elemento filho."
     },
     "usage": {
       "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
-        "item1": "Use Drawer em mobile (direção bottom) para fluxos com gestos naturais de swipe.",
+        "item1": "Use Drawer em mobile na direção de baixo: entrar pela borda inferior é o que se espera ali.",
         "item2": "Em desktop, prefira <code>Sheet</code> ou <code>Dialog</code>; Drawer com <code>direction=\"right\"</code> é alternativa válida para painéis editáveis.",
         "item3": "Sempre inclua <code>DrawerTitle</code> mesmo que visualmente oculto (<code>sr-only</code>) — é referência do <code>aria-labelledby</code>.",
         "item4": "Não aninhe Drawers dentro de Drawers — quebra o focus trap; use sub-rotas ou Steps.",
@@ -116,10 +117,10 @@
       },
       "do": {
         "title": "Use quando",
-        "item1": "Fluxos mobile com gestos de swipe naturais.",
+        "item1": "Fluxos mobile em que o painel entra pela borda de baixo.",
         "item2": "Painéis laterais com formulários ou filtros.",
         "item3": "Menu de navegação ou seletor sem hierarquia complexa.",
-        "item4": "Conteúdo dispensável que pode ser fechado por swipe-down."
+        "item4": "Conteúdo dispensável, que sai por Escape, clique no véu ou botão do rodapé."
       },
       "dont": {
         "title": "Não use quando",
@@ -136,7 +137,7 @@
         "dont": "Drawer sem DrawerTitle — leitor de tela não anuncia o painel."
       },
       "pair2": {
-        "do": "Drawer mobile direction=bottom com swipe-to-close natural.",
+        "do": "Drawer mobile direction=bottom com saída explícita no rodapé.",
         "dont": "Drawer aninhado dentro de outro Drawer — quebra focus trap."
       }
     },
@@ -152,15 +153,15 @@
         "right": "Right",
         "withScroll": {
           "name": "Com conteúdo rolável",
-          "description": "Drawer cujo body usa <code>overflow-y-auto</code> e altura máxima, permitindo rolagem interna sem expandir o painel. Header e footer permanecem fixos.",
-          "use": "Termos de uso, listas longas e detalhes que excedem a altura visível do painel. Garanta foco visível em elementos interativos dentro da área rolável."
+          "description": "Drawer cujo corpo rola sozinho dentro do teto de altura do painel, sem esticar a caixa. Cabeçalho e rodapé continuam na tela.",
+          "use": "Termos de uso, listas longas e detalhes que excedem a altura visível do painel. Garanta foco visível nos elementos interativos dentro da área rolável."
         }
       },
       "styles": {
-        "bottom": "Padrão mobile-first com handle de drag visível; entra por baixo, max-height 80vh, rounded-t-xl.",
-        "top": "Entra por cima; rounded-b-xl; útil para notificações ou seletores rápidos.",
-        "left": "Painel lateral à esquerda; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
-        "right": "Painel lateral à direita (padrão para edição em desktop); rounded-l-xl."
+        "bottom": "Padrão mobile-first: entra por baixo, com a alça visível e teto de 80% da altura da tela; cantos arredondados no topo.",
+        "top": "Entra por cima, com os cantos arredondados embaixo; útil para notificações ou seletores rápidos.",
+        "left": "Painel lateral à esquerda: 75% da largura no mobile e teto de 24rem a partir de 40rem de viewport, pelos tokens de largura; cantos arredondados à direita.",
+        "right": "Painel lateral à direita (a alternativa de desktop para edição e filtros): mesma régua de largura da esquerda, com os cantos arredondados à esquerda."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -186,7 +187,7 @@
       "open": {
         "label": "Aberto",
         "trigger": "click trigger / defaultOpen=true",
-        "behavior": "Painel visível com overlay; focus trap ativo; ESC e swipe fecham."
+        "behavior": "Painel visível com véu; foco preso dentro; Escape, clique no véu e a saída do rodapé fecham."
       },
       "controlled": {
         "label": "Controlado",
@@ -241,16 +242,16 @@
           "type": "boolean",
           "default": "true",
           "required": "Não",
-          "description": "Permite fechar via swipe, ESC ou clique no overlay."
+          "description": "Permite fechar por Escape e por clique no véu."
         }
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Drawer controlado com direção customizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* conteúdo */}\n  </DrawerContent>\n</Drawer>",
-        "vue": "<!-- Drawer controlado com direção customizada -->\n<Drawer v-model:open=\"aberto\" direction=\"right\">\n  <DrawerContent class=\"nds-max-w-md\">\n    <!-- conteúdo -->\n  </DrawerContent>\n</Drawer>",
-        "svelte": "<!-- Drawer controlado com direção customizada.\n     Não existe defaultOpen: o estado inicial é o valor de `open`. -->\n<Drawer bind:open direction=\"right\">\n  <DrawerContent class=\"nds-max-w-md\">\n    <!-- conteúdo -->\n  </DrawerContent>\n</Drawer>",
-        "vanilla": "// Drawer com direção customizada. Além do gatilho, a gaveta abre e fecha por\n// código; fechar por chamada informa o motivo `api`, que separa no analytics a\n// gaveta que alguém dispensou da que o programa recolheu.\nconst gaveta = createDrawer({\n  trigger: botaoAbrir,\n  direction: 'right',\n  content: corpo,\n  class: 'nds-max-w-md',\n  onOpenChange: (aberto) => registrarEstado(aberto),\n  onClose: (motivo) => registrarSaida(motivo),   // escape | overlay | close-button | api\n});\n\ngaveta.open();\ngaveta.toggle();\nif (gaveta.isOpen()) gaveta.close();",
-        "angular": "<!-- Drawer controlado com direção customizada -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent class=\"nds-max-w-md\">\n    <!-- conteúdo -->\n  </ng-template>\n</nds-drawer>"
+        "react": "// Drawer controlado com direção customizada. A largura sai das custom\n// properties --drawer-width / --drawer-max-width (ver Customização), nunca\n// de classe de largura: as regras de direção vencem qualquer utilitária.\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"painel-filtros\">\n    {/* conteúdo */}\n  </DrawerContent>\n</Drawer>",
+        "vue": "<!-- Drawer controlado com direção customizada. A largura sai das custom\n     properties --drawer-width / --drawer-max-width (ver Customização), nunca\n     de classe de largura: as regras de direção vencem qualquer utilitária. -->\n<Drawer v-model:open=\"open\" direction=\"right\">\n  <DrawerContent class=\"painel-filtros\">\n    <!-- conteúdo -->\n  </DrawerContent>\n</Drawer>",
+        "svelte": "<!-- Drawer controlado com direção customizada. A largura sai das custom\n     properties --drawer-width / --drawer-max-width (ver Customização), nunca\n     de classe de largura: as regras de direção vencem qualquer utilitária. -->\n<Drawer bind:open direction=\"right\">\n  <DrawerContent class=\"painel-filtros\">\n    <!-- conteúdo -->\n  </DrawerContent>\n</Drawer>",
+        "vanilla": "// Drawer com direção customizada. Além do gatilho, a gaveta abre e fecha por\n// código; fechar por chamada informa o motivo `api`, que separa no analytics a\n// gaveta que alguém dispensou da que o programa recolheu.\nconst gaveta = createDrawer({\n  trigger: botaoAbrir,\n  direction: 'right',\n  content: corpo,\n  class: 'painel-filtros',\n  onOpenChange: (aberto) => registrarEstado(aberto),\n  onClose: (motivo) => registrarSaida(motivo),   // escape | overlay | close-button | api\n});\n\ngaveta.open();\ngaveta.toggle();\nif (gaveta.isOpen()) gaveta.close();",
+        "angular": "<!-- Drawer controlado com direção customizada. A largura sai das custom\n     properties --drawer-width / --drawer-max-width (ver Customização), nunca\n     de classe de largura: as regras de direção vencem qualquer utilitária. -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent panelClass=\"painel-filtros\">\n    <!-- conteúdo -->\n  </ng-template>\n</nds-drawer>"
       }
     },
     "tokens": {
@@ -277,7 +278,7 @@
         },
         "handle": {
           "class": "nds-drawer-handle",
-          "part": "Alça de arraste, visível apenas na direção de baixo"
+          "part": "Alça do painel, visível apenas na direção de baixo"
         },
         "rounded": {
           "class": "nds-drawer-content",
@@ -286,7 +287,7 @@
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Override de véu para tema custom: redeclare o token, não a cor.\n   Assim o véu continua sendo um ponto só, e o alfa segue no uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}"
+        "web": "/* Override de véu para tema custom: redeclare o token, não a cor.\n   Assim o véu continua sendo um ponto só, e o alfa segue no uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Largura do painel lateral: custom property, nunca classe de largura.\n   As regras de direção são mais específicas do que qualquer utilitária,\n   então uma classe de largura chega ao elemento e não pinta nada. */\n.painel-filtros {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
       }
     },
     "accessibility": {
@@ -297,15 +298,15 @@
         "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> quando presente.",
         "item3": "Focus trap automático: Tab/Shift+Tab circula apenas dentro do Content quando aberto.",
         "item4": "ESC fecha o drawer (quando <code>dismissible=true</code>).",
-        "item5": "Swipe gesture (bottom/top) tem fallback de teclado/clique para usuários sem touch.",
-        "item6": "Inclua <code>motion-reduce:animate-none</code> em animações customizadas se ultrapassar o padrão da lib."
+        "item5": "Arrastar o painel é um extra de ponteiro onde a plataforma o oferece — nunca o único caminho. Escape, clique no véu e o botão do rodapé cobrem o mesmo objetivo por teclado (WCAG 2.5.7).",
+        "item6": "Painel e véu já param de animar sob <code>prefers-reduced-motion</code>. Animação própria que você acrescentar precisa parar junto — a classe <code>nds-motion-reduce-none</code> faz isso.",
+        "item7": "O corpo rolável entra na ordem de tabulação (WCAG 2.1.1) e recebe <code>role=\"group\"</code> quando você lhe dá um nome acessível; sem nome ele fica sem papel, porque nome em elemento sem papel é descartado pelo leitor de tela."
       },
       "keyboard": {
         "title": "Navegação por Teclado",
         "tab": "Tab/Shift+Tab — circula foco apenas dentro do DrawerContent (focus trap).",
         "escape": "ESC — fecha o drawer (se dismissible).",
-        "enter": "Enter/Space — ativa botões e DrawerClose.",
-        "swipe": "Swipe gesture — alternativa em touch devices; sempre acompanhado de DrawerClose com botão visível."
+        "enter": "Enter/Space — ativa botões e DrawerClose."
       },
       "aria": {
         "title": "Atributos ARIA",
@@ -388,6 +389,11 @@
           "action": "Modo controlado (estado externo + callback de mudança)",
           "result": "Estado externo controla abertura/fechamento",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Com a dispensa por ponteiro desligada, clicar no véu",
+          "result": "O painel continua aberto, e a saída explícita do rodapé continua fechando",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -398,14 +404,15 @@
         "item3": "DrawerTitle conectado via aria-labelledby ao Content",
         "item4": "Focus trap funcional: Tab não escapa do DrawerContent",
         "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.1.1, 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre o texto e o fundo do painel (WCAG 1.4.3)"
+        "item6": "Contraste mínimo 4.5:1 entre o texto e o fundo do painel (WCAG 1.4.3)",
+        "item7": "O corpo rolável é alcançável por teclado (tabindex=0) e só recebe role=group quando tem nome acessível (WCAG 2.1.1)"
       },
       "visual": {
         "title": "Regressão Visual",
         "description": "Estados que Chromatic deve capturar.",
         "required": "Obrigatório",
         "item1": {
-          "story": "Bottom (padrão) com handle de drag",
+          "story": "Bottom (padrão) com a alça visível",
           "priority": "high"
         },
         "item2": {
@@ -451,12 +458,12 @@
     "title": "Drawer",
     "category": "Overlay",
     "type": "Component",
-    "description": "Mobile-first sliding panel that enters from any screen edge with drag gestures and swipe-to-dismiss support.",
+    "description": "Mobile-first sliding panel that enters from a screen edge, with a scrim, trapped focus, and an explicit way out.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Drawer documentation: sliding panel with 4 directions, drag gestures, focus trap, and WCAG 2.2 AA.",
+      "description": "Drawer documentation: sliding panel with 4 directions, trapped focus, scrollable body, and WCAG 2.2 AA.",
       "aiSummary": "Mobile-first Drawer component renders a sliding panel with 4 directions (bottom/top/left/right), closing via Escape, outside click, and an explicit button, with focus trap and overlay.",
-      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, sliding panel, focus trap, drag gesture, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, sliding panel, focus trap, scrollable body, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -475,22 +482,23 @@
       "item4": "<strong>DrawerHeader</strong> — groups <code>DrawerTitle</code> and <code>DrawerDescription</code> with responsive layout.",
       "item5": "<strong>DrawerTitle</strong> — drawer title (required for automatic <code>aria-labelledby</code>).",
       "item6": "<strong>DrawerDescription</strong> — complementary description (optional, used for <code>aria-describedby</code>).",
-      "item7": "<strong>DrawerFooter</strong> — footer action area (confirm/cancel buttons).",
-      "item8": "<strong>DrawerClose</strong> — close button; compose with Button as a child element.",
+      "item7": "<strong>DrawerBody</strong> — scrollable body between header and footer; it scrolls on its own inside the panel height cap, joins the tab order, and accepts an accessible name.",
+      "item8": "<strong>DrawerFooter</strong> — footer action area (confirm/cancel buttons).",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"nds-px-4\">{/* content */}</div>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody>{/* content */}</DrawerBody>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "vue": "<Drawer>\n  <DrawerTrigger as-child>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody><!-- content --></DrawerBody>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose as-child>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "svelte": "<Drawer bind:open>\n  <DrawerTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Open</Button>\n    {/snippet}\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody><!-- content --></DrawerBody>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose>\n        {#snippet child({ props })}\n          <Button variant=\"outline\" {...props}>Cancel</Button>\n        {/snippet}\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "vanilla": "const drawer = createDrawer({\n  trigger: openButton,        // the trigger is passed ready and stays in the wrapper\n  direction: 'bottom',\n  title: 'Title',\n  description: 'Complementary description.',\n  content: body,              // content\n  footer,                     // an element with data-slot=\"drawer-close\" closes it\n  dismissible: true,\n  modal: true,\n});",
-        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Description complementar.</p>\n    </div>\n    <div class=\"nds-px-4\"><!-- content --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
-      }
+        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Description complementar.</p>\n    </div>\n    <div ndsDrawerBody><!-- content --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
+      },
+      "item9": "<strong>DrawerClose</strong> — close button; compose with Button as a child element."
     },
     "usage": {
       "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
-        "item1": "Use Drawer on mobile (bottom direction) for flows with natural swipe gestures.",
+        "item1": "Use Drawer on mobile in the bottom direction: entering from the bottom edge is what people expect there.",
         "item2": "On desktop, prefer <code>Sheet</code> or <code>Dialog</code>; Drawer with <code>direction=\"right\"</code> is a valid alternative for editable panels.",
         "item3": "Always include <code>DrawerTitle</code> even if visually hidden (<code>sr-only</code>) — it is the <code>aria-labelledby</code> reference.",
         "item4": "Do not nest Drawers inside Drawers — breaks focus trap; use sub-routes or Steps.",
@@ -564,10 +572,10 @@
       },
       "do": {
         "title": "Use when",
-        "item1": "Mobile flows with natural swipe gestures.",
+        "item1": "Mobile flows where the panel enters from the bottom edge.",
         "item2": "Side panels with forms or filters.",
         "item3": "Navigation menu or selector without complex hierarchy.",
-        "item4": "Dismissible content that can be closed by swipe-down."
+        "item4": "Dismissible content that leaves by Escape, a click on the scrim, or a footer button."
       },
       "dont": {
         "title": "Do not use when",
@@ -584,7 +592,7 @@
         "dont": "Drawer without DrawerTitle — screen reader doesn't announce the panel."
       },
       "pair2": {
-        "do": "Mobile Drawer direction=bottom with natural swipe-to-close.",
+        "do": "Mobile Drawer direction=bottom with an explicit exit in the footer.",
         "dont": "Drawer nested inside another Drawer — breaks focus trap."
       }
     },
@@ -600,15 +608,15 @@
         "right": "Right",
         "withScroll": {
           "name": "With scrollable content",
-          "description": "Drawer whose body uses <code>overflow-y-auto</code> and a max-height, allowing internal scroll without expanding the panel. Header and footer stay fixed.",
-          "use": "Terms of use, long lists, and details that exceed the panel's visible height. Ensure visible focus on interactive elements inside the scrollable area."
+          "description": "Drawer whose body scrolls on its own inside the panel height cap, without stretching the box. Header and footer stay on screen.",
+          "use": "Terms of use, long lists, and details that exceed the visible panel height. Make sure focus stays visible on interactive elements inside the scrollable area."
         }
       },
       "styles": {
-        "bottom": "Mobile-first default with visible drag handle; enters from below, max-height 80vh, rounded-t-xl.",
-        "top": "Enters from above; rounded-b-xl; useful for notifications or quick selectors.",
-        "left": "Left side panel; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
-        "right": "Right side panel (default for desktop edit); rounded-l-xl."
+        "bottom": "Mobile-first default: enters from below, with the handle visible and a cap of 80% of the screen height; rounded corners on top.",
+        "top": "Enters from above, with rounded corners at the bottom; useful for notifications or quick pickers.",
+        "left": "Side panel on the left: 75% of the width on mobile and a 24rem cap from a 40rem viewport up, through the width tokens; rounded corners on the right.",
+        "right": "Side panel on the right (the desktop alternative for editing and filters): the same width ruler as the left, with rounded corners on the left."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -634,7 +642,7 @@
       "open": {
         "label": "Open",
         "trigger": "click trigger / defaultOpen=true",
-        "behavior": "Visible panel with overlay; focus trap active; ESC and swipe close it."
+        "behavior": "Panel visible with the scrim; focus trapped inside; Escape, a click on the scrim, and the footer exit close it."
       },
       "controlled": {
         "label": "Controlled",
@@ -689,16 +697,16 @@
           "type": "boolean",
           "default": "true",
           "required": "No",
-          "description": "Allows closing via swipe, ESC, or overlay click."
+          "description": "Allows closing by Escape and by clicking the scrim."
         }
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Controlled Drawer with custom direction\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* content */}\n  </DrawerContent>\n</Drawer>",
-        "vue": "<!-- Controlled Drawer with custom direction -->\n<Drawer v-model:open=\"open\" direction=\"right\">\n  <DrawerContent class=\"nds-max-w-md\">\n    <!-- content -->\n  </DrawerContent>\n</Drawer>",
-        "svelte": "<!-- Controlled Drawer with custom direction.\n     There is no defaultOpen: the initial state is the value of `open`. -->\n<Drawer bind:open direction=\"right\">\n  <DrawerContent class=\"nds-max-w-md\">\n    <!-- content -->\n  </DrawerContent>\n</Drawer>",
-        "vanilla": "// Drawer with a custom direction. Beyond the trigger, the drawer opens and\n// closes by code; closing by call reports the reason `api`, which tells apart in\n// analytics the drawer someone dismissed from the one the program put away.\nconst drawer = createDrawer({\n  trigger: openButton,\n  direction: 'right',\n  content: body,\n  class: 'nds-max-w-md',\n  onOpenChange: (open) => recordState(open),\n  onClose: (reason) => recordExit(reason),   // escape | overlay | close-button | api\n});\n\ndrawer.open();\ndrawer.toggle();\nif (drawer.isOpen()) drawer.close();",
-        "angular": "<!-- Controlled Drawer with custom direction -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent class=\"nds-max-w-md\">\n    <!-- content -->\n  </ng-template>\n</nds-drawer>"
+        "react": "// Controlled Drawer with a custom direction. The width comes from the\n// --drawer-width / --drawer-max-width custom properties (see Customization),\n// never from a width class: the direction rules beat any utility.\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"filters-panel\">\n    {/* content */}\n  </DrawerContent>\n</Drawer>",
+        "vue": "<!-- Controlled Drawer with a custom direction. The width comes from the\n     --drawer-width / --drawer-max-width custom properties (see Customization),\n     never from a width class: the direction rules beat any utility. -->\n<Drawer v-model:open=\"open\" direction=\"right\">\n  <DrawerContent class=\"filters-panel\">\n    <!-- content -->\n  </DrawerContent>\n</Drawer>",
+        "svelte": "<!-- Controlled Drawer with a custom direction. The width comes from the\n     --drawer-width / --drawer-max-width custom properties (see Customization),\n     never from a width class: the direction rules beat any utility. -->\n<Drawer bind:open direction=\"right\">\n  <DrawerContent class=\"filters-panel\">\n    <!-- content -->\n  </DrawerContent>\n</Drawer>",
+        "vanilla": "// Drawer with a custom direction. Beyond the trigger, the drawer opens and\n// closes by code; closing by call reports the reason `api`, which tells apart in\n// analytics the drawer someone dismissed from the one the program put away.\nconst drawer = createDrawer({\n  trigger: openButton,\n  direction: 'right',\n  content: body,\n  class: 'filters-panel',\n  onOpenChange: (open) => recordState(open),\n  onClose: (reason) => recordExit(reason),   // escape | overlay | close-button | api\n});\n\ndrawer.open();\ndrawer.toggle();\nif (drawer.isOpen()) drawer.close();",
+        "angular": "<!-- Controlled Drawer with a custom direction. The width comes from the\n     --drawer-width / --drawer-max-width custom properties (see Customization),\n     never from a width class: the direction rules beat any utility. -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent panelClass=\"filters-panel\">\n    <!-- content -->\n  </ng-template>\n</nds-drawer>"
       }
     },
     "tokens": {
@@ -725,7 +733,7 @@
         },
         "handle": {
           "class": "nds-drawer-handle",
-          "part": "Drag handle, visible only in the bottom direction"
+          "part": "Panel handle, visible only in the bottom direction"
         },
         "rounded": {
           "class": "nds-drawer-content",
@@ -734,7 +742,7 @@
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Veil override for a custom theme: redeclare the token, not the colour.\n   The veil stays a single point, and the alpha stays at the use site. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}"
+        "web": "/* Scrim override for a custom theme: redeclare the token, not the colour.\n   That keeps the scrim a single point, and the alpha stays at the use site. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Side panel width: custom property, never a width class.\n   The direction rules are more specific than any utility, so a width class\n   reaches the element and paints nothing. */\n.filters-panel {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
       }
     },
     "accessibility": {
@@ -745,15 +753,15 @@
         "item2": "<code>DrawerDescription</code> optional — links <code>aria-describedby</code> when present.",
         "item3": "Automatic focus trap: Tab/Shift+Tab cycles only within Content when open.",
         "item4": "ESC closes the drawer (when <code>dismissible=true</code>).",
-        "item5": "Swipe gesture (bottom/top) has keyboard/click fallback for users without touch.",
-        "item6": "Include <code>motion-reduce:animate-none</code> in custom animations beyond library defaults."
+        "item5": "Dragging the panel is a pointer extra where the platform offers it — never the only path. Escape, a click on the scrim, and the footer button cover the same goal from the keyboard (WCAG 2.5.7).",
+        "item6": "Panel and scrim already stop animating under <code>prefers-reduced-motion</code>. Any animation you add on top has to stop as well — the <code>nds-motion-reduce-none</code> class does that.",
+        "item7": "The scrollable body joins the tab order (WCAG 2.1.1) and takes <code>role=\"group\"</code> when you give it an accessible name; without a name it carries no role, because a name on a roleless element is discarded by the screen reader."
       },
       "keyboard": {
         "title": "Keyboard Navigation",
         "tab": "Tab/Shift+Tab — cycles focus only inside DrawerContent (focus trap).",
         "escape": "ESC — closes the drawer (if dismissible).",
-        "enter": "Enter/Space — activates buttons and DrawerClose.",
-        "swipe": "Swipe gesture — alternative on touch devices; always paired with visible DrawerClose button."
+        "enter": "Enter/Space — activates buttons and DrawerClose."
       },
       "aria": {
         "title": "ARIA Attributes",
@@ -836,6 +844,11 @@
           "action": "Controlled mode (external state + change callback)",
           "result": "External state controls opening/closing",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "With pointer dismissal turned off, click the scrim",
+          "result": "The panel stays open, and the explicit footer exit still closes it",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -846,14 +859,15 @@
         "item3": "DrawerTitle connected via aria-labelledby to Content",
         "item4": "Working focus trap: Tab does not escape DrawerContent",
         "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.1.1, 2.4.3)",
-        "item6": "Minimum 4.5:1 contrast between text and the panel background (WCAG 1.4.3)"
+        "item6": "Minimum 4.5:1 contrast between text and the panel background (WCAG 1.4.3)",
+        "item7": "The scrollable body is keyboard reachable (tabindex=0) and only takes role=group when it has an accessible name (WCAG 2.1.1)"
       },
       "visual": {
         "title": "Visual Regression",
         "description": "States Chromatic should capture.",
         "required": "Required",
         "item1": {
-          "story": "Bottom (default) with drag handle",
+          "story": "Bottom (default) with the handle visible",
           "priority": "high"
         },
         "item2": {
@@ -899,12 +913,12 @@
     "title": "Drawer",
     "category": "Overlay",
     "type": "Componente",
-    "description": "Panel deslizante mobile-first que entra desde cualquier borde de pantalla con gestos de arrastrar y cierre por swipe.",
+    "description": "Panel deslizante mobile-first que entra desde un borde de la pantalla, con velo, foco atrapado y salida explícita.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentación de Drawer: panel deslizante con 4 direcciones, gestos de arrastre, focus trap y WCAG 2.2 AA.",
+      "description": "Documentación de Drawer: panel deslizante con 4 direcciones, foco atrapado, cuerpo desplazable y WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first que renderiza un panel deslizante con 4 direcciones (bottom/top/left/right), con cierre por Escape, clic fuera y botón explícito, focus trap y overlay.",
-      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, panel deslizante, focus trap, gesto de arrastre, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, panel deslizante, focus trap, cuerpo desplazable, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demostración",
@@ -923,22 +937,23 @@
       "item4": "<strong>DrawerHeader</strong> — agrupa <code>DrawerTitle</code> y <code>DrawerDescription</code> con layout responsive.",
       "item5": "<strong>DrawerTitle</strong> — título del drawer (obligatorio para <code>aria-labelledby</code> automático).",
       "item6": "<strong>DrawerDescription</strong> — descripción complementaria (opcional, usado para <code>aria-describedby</code>).",
-      "item7": "<strong>DrawerFooter</strong> — área de acciones del pie (botones de confirmación/cancelación).",
-      "item8": "<strong>DrawerClose</strong> — botón para cerrar; compón con Button como elemento hijo.",
+      "item7": "<strong>DrawerBody</strong> — cuerpo desplazable entre encabezado y pie; se desplaza solo dentro del techo de altura del panel, entra en el orden de tabulación y acepta un nombre accesible.",
+      "item8": "<strong>DrawerFooter</strong> — área de acciones del pie (botones de confirmación/cancelación).",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"nds-px-4\">{/* contenido */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody>{/* contenido */}</DrawerBody>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "vue": "<Drawer>\n  <DrawerTrigger as-child>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody><!-- contenido --></DrawerBody>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose as-child>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "svelte": "<Drawer bind:open>\n  <DrawerTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Abrir</Button>\n    {/snippet}\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody><!-- contenido --></DrawerBody>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose>\n        {#snippet child({ props })}\n          <Button variant=\"outline\" {...props}>Cancelar</Button>\n        {/snippet}\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
         "vanilla": "const gaveta = createDrawer({\n  trigger: botonAbrir,        // el disparador se pasa listo y queda en el wrapper\n  direction: 'right',\n  title: 'Título',\n  description: 'Descripción complementaria.',\n  content: cuerpo,            // contenido\n  footer: pie,                // un elemento con data-slot=\"drawer-close\" cierra\n  dismissible: true,\n  modal: true,\n});",
-        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Descripción complementar.</p>\n    </div>\n    <div class=\"nds-px-4\"><!-- contenido --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
-      }
+        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Descripción complementar.</p>\n    </div>\n    <div ndsDrawerBody><!-- contenido --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
+      },
+      "item9": "<strong>DrawerClose</strong> — botón para cerrar; compón con Button como elemento hijo."
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
-        "item1": "Usa Drawer en mobile (dirección bottom) para flujos con gestos naturales de swipe.",
+        "item1": "Usa Drawer en mobile en la dirección de abajo: entrar por el borde inferior es lo que se espera ahí.",
         "item2": "En desktop, prefiere <code>Sheet</code> o <code>Dialog</code>; Drawer con <code>direction=\"right\"</code> es alternativa válida para paneles editables.",
         "item3": "Incluye siempre <code>DrawerTitle</code> aunque sea visualmente oculto (<code>sr-only</code>) — es referencia del <code>aria-labelledby</code>.",
         "item4": "No anides Drawers dentro de Drawers — rompe el focus trap; usa subrutas o Steps.",
@@ -1012,10 +1027,10 @@
       },
       "do": {
         "title": "Usa cuando",
-        "item1": "Flujos mobile con gestos de swipe naturales.",
+        "item1": "Flujos mobile en los que el panel entra por el borde de abajo.",
         "item2": "Paneles laterales con formularios o filtros.",
         "item3": "Menú de navegación o selector sin jerarquía compleja.",
-        "item4": "Contenido dispensable que se cierra con swipe-down."
+        "item4": "Contenido dispensable, que sale con Escape, clic en el velo o botón del pie."
       },
       "dont": {
         "title": "No uses cuando",
@@ -1032,7 +1047,7 @@
         "dont": "Drawer sin DrawerTitle — el lector de pantalla no anuncia el panel."
       },
       "pair2": {
-        "do": "Drawer mobile direction=bottom con swipe-to-close natural.",
+        "do": "Drawer mobile direction=bottom con salida explícita en el pie.",
         "dont": "Drawer anidado dentro de otro Drawer — rompe el focus trap."
       }
     },
@@ -1048,15 +1063,15 @@
         "right": "Right",
         "withScroll": {
           "name": "Con contenido desplazable",
-          "description": "Drawer cuyo body usa <code>overflow-y-auto</code> y una max-height, permitiendo scroll interno sin expandir el panel. Header y footer permanecen fijos.",
-          "use": "Términos de uso, listas largas y detalles que exceden la altura visible del panel. Garantiza foco visible en elementos interactivos dentro del área desplazable."
+          "description": "Drawer cuyo cuerpo se desplaza solo dentro del techo de altura del panel, sin estirar la caja. Encabezado y pie siguen en pantalla.",
+          "use": "Términos de uso, listas largas y detalles que exceden la altura visible del panel. Asegura foco visible en los elementos interactivos dentro del área desplazable."
         }
       },
       "styles": {
-        "bottom": "Predeterminado mobile-first con handle de drag visible; entra desde abajo, max-height 80vh, rounded-t-xl.",
-        "top": "Entra desde arriba; rounded-b-xl; útil para notificaciones o selectores rápidos.",
-        "left": "Panel lateral izquierdo; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
-        "right": "Panel lateral derecho (predeterminado para edición en desktop); rounded-l-xl."
+        "bottom": "Predeterminado mobile-first: entra desde abajo, con el asa visible y techo del 80% de la altura de la pantalla; esquinas redondeadas arriba.",
+        "top": "Entra desde arriba, con las esquinas redondeadas abajo; útil para notificaciones o selectores rápidos.",
+        "left": "Panel lateral a la izquierda: 75% del ancho en mobile y techo de 24rem a partir de 40rem de viewport, por los tokens de ancho; esquinas redondeadas a la derecha.",
+        "right": "Panel lateral a la derecha (la alternativa de escritorio para edición y filtros): la misma regla de ancho que la izquierda, con las esquinas redondeadas a la izquierda."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -1082,7 +1097,7 @@
       "open": {
         "label": "Abierto",
         "trigger": "click trigger / defaultOpen=true",
-        "behavior": "Panel visible con overlay; focus trap activo; ESC y swipe lo cierran."
+        "behavior": "Panel visible con velo; foco atrapado dentro; Escape, clic en el velo y la salida del pie lo cierran."
       },
       "controlled": {
         "label": "Controlado",
@@ -1137,16 +1152,16 @@
           "type": "boolean",
           "default": "true",
           "required": "No",
-          "description": "Permite cerrar vía swipe, ESC o clic en el overlay."
+          "description": "Permite cerrar con Escape y con clic en el velo."
         }
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Drawer controlado con dirección personalizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* contenido */}\n  </DrawerContent>\n</Drawer>",
-        "vue": "<!-- Drawer controlado con dirección personalizada -->\n<Drawer v-model:open=\"abierto\" direction=\"right\">\n  <DrawerContent class=\"nds-max-w-md\">\n    <!-- contenido -->\n  </DrawerContent>\n</Drawer>",
-        "svelte": "<!-- Drawer controlado con dirección personalizada.\n     No existe defaultOpen: el estado inicial es el valor de `open`. -->\n<Drawer bind:open direction=\"right\">\n  <DrawerContent class=\"nds-max-w-md\">\n    <!-- contenido -->\n  </DrawerContent>\n</Drawer>",
-        "vanilla": "// Drawer con dirección personalizada. Además del disparador, la gaveta abre y\n// cierra por código; cerrar por llamada informa el motivo `api`, que separa en\n// analytics la gaveta que alguien descartó de la que el programa recogió.\nconst gaveta = createDrawer({\n  trigger: botonAbrir,\n  direction: 'right',\n  content: cuerpo,\n  class: 'nds-max-w-md',\n  onOpenChange: (abierto) => registrarEstado(abierto),\n  onClose: (motivo) => registrarSalida(motivo),   // escape | overlay | close-button | api\n});\n\ngaveta.open();\ngaveta.toggle();\nif (gaveta.isOpen()) gaveta.close();",
-        "angular": "<!-- Drawer controlado con dirección personalizada -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent class=\"nds-max-w-md\">\n    <!-- contenido -->\n  </ng-template>\n</nds-drawer>"
+        "react": "// Drawer controlado con dirección personalizada. El ancho sale de las custom\n// properties --drawer-width / --drawer-max-width (ver Personalización), nunca\n// de clase de ancho: las reglas de dirección vencen a cualquier utilitaria.\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"panel-filtros\">\n    {/* contenido */}\n  </DrawerContent>\n</Drawer>",
+        "vue": "<!-- Drawer controlado con dirección personalizada. El ancho sale de las custom\n     properties --drawer-width / --drawer-max-width (ver Personalización), nunca\n     de clase de ancho: las reglas de dirección vencen a cualquier utilitaria. -->\n<Drawer v-model:open=\"open\" direction=\"right\">\n  <DrawerContent class=\"panel-filtros\">\n    <!-- contenido -->\n  </DrawerContent>\n</Drawer>",
+        "svelte": "<!-- Drawer controlado con dirección personalizada. El ancho sale de las custom\n     properties --drawer-width / --drawer-max-width (ver Personalización), nunca\n     de clase de ancho: las reglas de dirección vencen a cualquier utilitaria. -->\n<Drawer bind:open direction=\"right\">\n  <DrawerContent class=\"panel-filtros\">\n    <!-- contenido -->\n  </DrawerContent>\n</Drawer>",
+        "vanilla": "// Drawer con dirección personalizada. Además del disparador, la gaveta abre y\n// cierra por código; cerrar por llamada informa el motivo `api`, que separa en\n// analytics la gaveta que alguien descartó de la que el programa recogió.\nconst gaveta = createDrawer({\n  trigger: botonAbrir,\n  direction: 'right',\n  content: cuerpo,\n  class: 'panel-filtros',\n  onOpenChange: (abierto) => registrarEstado(abierto),\n  onClose: (motivo) => registrarSalida(motivo),   // escape | overlay | close-button | api\n});\n\ngaveta.open();\ngaveta.toggle();\nif (gaveta.isOpen()) gaveta.close();",
+        "angular": "<!-- Drawer controlado con dirección personalizada. El ancho sale de las custom\n     properties --drawer-width / --drawer-max-width (ver Personalización), nunca\n     de clase de ancho: las reglas de dirección vencen a cualquier utilitaria. -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent panelClass=\"panel-filtros\">\n    <!-- contenido -->\n  </ng-template>\n</nds-drawer>"
       }
     },
     "tokens": {
@@ -1173,7 +1188,7 @@
         },
         "handle": {
           "class": "nds-drawer-handle",
-          "part": "Asa de arrastre, visible solo en la dirección inferior"
+          "part": "Asa del panel, visible solo en la dirección de abajo"
         },
         "rounded": {
           "class": "nds-drawer-content",
@@ -1182,7 +1197,7 @@
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Override de velo para tema custom: redeclara el token, no el color.\n   Así el velo sigue siendo un solo punto, y el alfa sigue en el uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}"
+        "web": "/* Override de velo para tema custom: redeclara el token, no el color.\n   Así el velo sigue siendo un punto solo, y el alfa queda en el uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Ancho del panel lateral: custom property, nunca clase de ancho.\n   Las reglas de dirección son más específicas que cualquier utilitaria, así\n   que una clase de ancho llega al elemento y no pinta nada. */\n.panel-filtros {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
       }
     },
     "accessibility": {
@@ -1193,15 +1208,15 @@
         "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> cuando está presente.",
         "item3": "Focus trap automático: Tab/Shift+Tab circula solo dentro del Content cuando está abierto.",
         "item4": "ESC cierra el drawer (cuando <code>dismissible=true</code>).",
-        "item5": "Swipe gesture (bottom/top) tiene fallback de teclado/clic para usuarios sin touch.",
-        "item6": "Incluye <code>motion-reduce:animate-none</code> en animaciones personalizadas si superan el predeterminado de la lib."
+        "item5": "Arrastrar el panel es un extra de puntero donde la plataforma lo ofrece — nunca el único camino. Escape, clic en el velo y el botón del pie cubren el mismo objetivo desde el teclado (WCAG 2.5.7).",
+        "item6": "El panel y el velo ya dejan de animarse bajo <code>prefers-reduced-motion</code>. La animación propia que agregues también tiene que parar — la clase <code>nds-motion-reduce-none</code> hace eso.",
+        "item7": "El cuerpo desplazable entra en el orden de tabulación (WCAG 2.1.1) y recibe <code>role=\"group\"</code> cuando le das un nombre accesible; sin nombre no lleva papel, porque un nombre en un elemento sin papel lo descarta el lector de pantalla."
       },
       "keyboard": {
         "title": "Navegación por Teclado",
         "tab": "Tab/Shift+Tab — circula foco solo dentro de DrawerContent (focus trap).",
         "escape": "ESC — cierra el drawer (si dismissible).",
-        "enter": "Enter/Space — activa botones y DrawerClose.",
-        "swipe": "Swipe gesture — alternativa en touch devices; siempre acompañado de DrawerClose con botón visible."
+        "enter": "Enter/Space — activa botones y DrawerClose."
       },
       "aria": {
         "title": "Atributos ARIA",
@@ -1284,6 +1299,11 @@
           "action": "Modo controlado (estado externo + callback de cambio)",
           "result": "Estado externo controla apertura/cierre",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Con el descarte por puntero desactivado, hacer clic en el velo",
+          "result": "El panel sigue abierto, y la salida explícita del pie lo sigue cerrando",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -1294,14 +1314,15 @@
         "item3": "DrawerTitle conectado vía aria-labelledby al Content",
         "item4": "Focus trap funcional: Tab no escapa de DrawerContent",
         "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.1.1, 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre el texto y el fondo del panel (WCAG 1.4.3)"
+        "item6": "Contraste mínimo 4.5:1 entre el texto y el fondo del panel (WCAG 1.4.3)",
+        "item7": "El cuerpo desplazable es alcanzable por teclado (tabindex=0) y solo recibe role=group cuando tiene nombre accesible (WCAG 2.1.1)"
       },
       "visual": {
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
         "item1": {
-          "story": "Bottom (predeterminado) con handle de drag",
+          "story": "Bottom (predeterminado) con el asa visible",
           "priority": "high"
         },
         "item2": {

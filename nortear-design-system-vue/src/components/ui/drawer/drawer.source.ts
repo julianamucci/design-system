@@ -380,7 +380,7 @@ const clausulas = [
       trigger: 'Ver termos',
       title: 'Termos de serviço',
       descricao: 'Leia atentamente os termos antes de aceitar.',
-      body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+      body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground" aria-label="Termos de serviço">
       <p v-for="(clausula, i) in clausulas" :key="i">{{ clausula }}</p>
     </DrawerBody>`,
       footer: footer('Aceitar termos', 'Recusar'),

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -10,6 +11,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -233,14 +236,14 @@ interface DrawerProps {
           className="nds-cluster nds-w-full"
           data-justify="center"
           data-spacing="md"
-          style={{ contain: "layout", flexWrap: "wrap", minHeight: "140px" }}
+          style={{ contain: "layout", flexWrap: "wrap" }}
         >
           {directions.map((dir) => (
             <div
               key={dir}
               className="nds-stack"
               data-spacing="xs"
-              style={{ contain: "layout", minHeight: 80, position: "relative" }}
+              style={{ contain: "layout", position: "relative" }}
             >
               <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {DOMPurify.sanitize(tContent(`demonstration.labels.${dir}`))}
@@ -289,6 +292,7 @@ interface DrawerProps {
           tContent("anatomy.item6"),
           tContent("anatomy.item7"),
           tContent("anatomy.item8"),
+          tContent("anatomy.item9"),
         ]}
         structureCode={structureCode}
         structureLabel={tContent("anatomy.structureLabel")}
@@ -488,13 +492,17 @@ interface DrawerProps {
       <DrawerTitle>Termos de uso</DrawerTitle>
       <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
     </DrawerHeader>
-    <div className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" style={{ maxHeight: '16rem' }}>
+    <DrawerBody
+      className="nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+      aria-label="Termos de uso"
+    >
       {Array.from({ length: 12 }).map((_, i) => (
         <p key={i}>
           Parágrafo {i + 1}: termos longos para garantir scroll interno.
         </p>
       ))}
-    </div>
+    </DrawerBody>
     <DrawerFooter>
       <Button>Aceitar termos</Button>
       <DrawerClose asChild>
@@ -513,17 +521,17 @@ interface DrawerProps {
                     <DrawerTitle>Termos de uso</DrawerTitle>
                     <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
                   </DrawerHeader>
-                  <div
-                    className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
+                  <DrawerBody
+                    className="nds-stack nds-text-body nds-text-muted-foreground"
                     data-spacing="sm"
-                    style={{ maxHeight: "16rem" }}
+                    aria-label="Termos de uso"
                   >
                     {Array.from({ length: 12 }).map((_, i) => (
                       <p key={i}>
                         Parágrafo {i + 1}: termos longos para garantir scroll interno.
                       </p>
                     ))}
-                  </div>
+                  </DrawerBody>
                   <DrawerFooter>
                     <Button>Aceitar termos</Button>
                     <DrawerClose asChild>
@@ -555,20 +563,22 @@ interface DrawerProps {
   <DrawerContent>
     <DrawerHeader>
       <DrawerTitle>Editar perfil</DrawerTitle>
-      <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+      <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
     </DrawerHeader>
-    <form className="nds-stack nds-px-4" data-spacing="sm">
-      <label className="nds-stack nds-text-body" data-spacing="xs">
-        <span className="nds-font-medium">Nome</span>
-        <input className="nds-border-default nds-rounded-md" style={{ padding: '0.5rem 0.75rem' }} defaultValue="Maria Souza" />
-      </label>
-      <label className="nds-stack nds-text-body" data-spacing="xs">
-        <span className="nds-font-medium">E-mail</span>
-        <input type="email" className="nds-border-default nds-rounded-md" style={{ padding: '0.5rem 0.75rem' }} defaultValue="maria@exemplo.com" />
-      </label>
-    </form>
+    <DrawerBody>
+      <form className="nds-grid" data-spacing="sm">
+        <div className="nds-grid" data-spacing="xs">
+          <Label htmlFor="drawer-name">Nome</Label>
+          <Input id="drawer-name" defaultValue="Juliana" />
+        </div>
+        <div className="nds-grid" data-spacing="xs">
+          <Label htmlFor="drawer-email">E-mail</Label>
+          <Input id="drawer-email" type="email" defaultValue="juliana@example.com" />
+        </div>
+      </form>
+    </DrawerBody>
     <DrawerFooter>
-      <Button>Salvar alterações</Button>
+      <Button>Confirmar</Button>
       <DrawerClose asChild>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
@@ -583,20 +593,22 @@ interface DrawerProps {
                 <DrawerContent>
                   <DrawerHeader>
                     <DrawerTitle>Editar perfil</DrawerTitle>
-                    <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+                    <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
                   </DrawerHeader>
-                  <form className="nds-stack nds-px-4" data-spacing="sm">
-                    <label className="nds-stack nds-text-body" data-spacing="xs">
-                      <span className="nds-font-medium">Nome</span>
-                      <input className="nds-border-default nds-rounded-md" style={{ padding: "0.5rem 0.75rem" }} defaultValue="Maria Souza" />
-                    </label>
-                    <label className="nds-stack nds-text-body" data-spacing="xs">
-                      <span className="nds-font-medium">E-mail</span>
-                      <input type="email" className="nds-border-default nds-rounded-md" style={{ padding: "0.5rem 0.75rem" }} defaultValue="maria@exemplo.com" />
-                    </label>
-                  </form>
+                  <DrawerBody>
+                    <form className="nds-grid" data-spacing="sm">
+                      <div className="nds-grid" data-spacing="xs">
+                        <Label htmlFor="docs-drawer-name">Nome</Label>
+                        <Input id="docs-drawer-name" defaultValue="Juliana" />
+                      </div>
+                      <div className="nds-grid" data-spacing="xs">
+                        <Label htmlFor="docs-drawer-email">E-mail</Label>
+                        <Input id="docs-drawer-email" type="email" defaultValue="juliana@example.com" />
+                      </div>
+                    </form>
+                  </DrawerBody>
                   <DrawerFooter>
-                    <Button>Salvar alterações</Button>
+                    <Button>Confirmar</Button>
                     <DrawerClose asChild>
                       <Button variant="outline">Cancelar</Button>
                     </DrawerClose>
@@ -801,13 +813,16 @@ interface DrawerProps {
           tContent("accessibility.items.item4"),
           tContent("accessibility.items.item5"),
           tContent("accessibility.items.item6"),
+          tContent("accessibility.items.item7"),
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
+        // Sem linha de "Swipe": a tabela é de teclado, e arrastar é gesto de
+        // ponteiro. O que se sabe sobre o arraste (nunca é o único caminho)
+        // está em `accessibility.items.item5`, que é onde a WCAG 2.5.7 mora.
         keyboardItems={[
           { key: "Tab / Shift+Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
           { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
           { key: "Enter / Space", description: toPlainText(tContent("accessibility.keyboard.enter")) },
-          { key: "Swipe", description: toPlainText(tContent("accessibility.keyboard.swipe")) },
         ]}
       />
 
@@ -906,6 +921,11 @@ interface DrawerProps {
               result: tContent("testes.functional.item6.result"),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.medium"),
             },
+            {
+              action: tContent("testes.functional.item7.action"),
+              result: tContent("testes.functional.item7.result"),
+              priority: tNav(priorityKeyMap[tContent("testes.functional.item7.priority")] ?? "common.medium"),
+            },
           ],
         }}
         accessibility={{
@@ -922,6 +942,7 @@ interface DrawerProps {
             { criterion: tContent("testes.accessibility.item4"), level: "2.1.1", how: "Keyboard test" },
             { criterion: tContent("testes.accessibility.item5"), level: "2.4.3", how: "Keyboard test" },
             { criterion: tContent("testes.accessibility.item6"), level: "1.4.3", how: "Contrast checker" },
+            { criterion: tContent("testes.accessibility.item7"), level: "2.1.1", how: "Keyboard test" },
           ],
         }}
         visual={{

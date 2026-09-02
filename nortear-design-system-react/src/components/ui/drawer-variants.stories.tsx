@@ -17,6 +17,7 @@ import {
   drawerEsquerdaSource,
   drawerSource,
   drawerTopoSource,
+  drawerWithScrollSource,
 } from "./drawer.source";
 import { Button } from "./button";
 
@@ -34,7 +35,7 @@ const meta = {
       source: { transform: drawerSource },
       description: {
         component:
-          "Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.",
+          "Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais. O corpo rolável também mora aqui: é variação do conteúdo do painel, e é assim que o conteúdo compartilhado o descreve.",
       },
     },
   },
@@ -43,9 +44,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Andaime do canvas: `contain` e `position` são mecânica, e provam que o painel
+// portalizado escapa de um bloco de contenção. Altura NÃO entra — as outras
+// quatro stacks não têm nenhuma aqui, e o painel é `position: fixed` de todo
+// jeito, então a altura do andaime não muda o que a foto mostra.
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 400,
   position: "relative",
 };
 
@@ -181,6 +185,97 @@ export const Right: Story = {
       await expect(panelEl).toHaveAccessibleName("Filtros");
       const box = panelEl.getBoundingClientRect();
       await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
+    });
+  },
+};
+
+export const WithScroll: Story = {
+  parameters: {
+    covers: ["accessibility.item7"],
+    docs: {
+      // Só uma lista mais alta que o painel mostra que quem rola é o corpo e
+      // que o rodapé continua na tela.
+      source: { transform: drawerWithScrollSource },
+      description: {
+        story:
+          "Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
+      },
+    },
+  },
+  render: () => (
+    <div style={wrapperStyle}>
+      <Drawer defaultOpen>
+        <DrawerTrigger asChild>
+          <Button variant="outline">Ver lista</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Lista de itens</DrawerTitle>
+            <DrawerDescription>30 itens — role o conteúdo para ver mais.</DrawerDescription>
+          </DrawerHeader>
+          <DrawerBody className="nds-text-body" aria-label="Lista de itens">
+            <ul className="nds-stack" data-spacing="sm">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <li
+                  key={i}
+                  className="nds-cluster nds-border-default nds-rounded-md nds-py-2 nds-px-4"
+                  data-justify="between"
+                >
+                  <span>Item {i + 1}</span>
+                  <span className="nds-text-muted-foreground">#{i + 1}</span>
+                </li>
+              ))}
+            </ul>
+          </DrawerBody>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="outline">Fechar</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  ),
+  play: async ({ step }) => {
+    const panel = await waitForPortal("dialog");
+    const body = panel.querySelector<HTMLElement>("[data-slot='drawer-body']")!;
+    const footer = panel.querySelector<HTMLElement>("[data-slot='drawer-footer']")!;
+
+    await step("O corpo é quem rola, não o painel", async () => {
+      await expect(body).not.toBeNull();
+      await expect(panel.querySelectorAll("[data-slot='drawer-body'] li")).toHaveLength(30);
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      // O painel em si não rola: o mínimo automático zero de um item com
+      // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
+      // O painel NÃO é contêiner de rolagem, e é isso que prova o contrato.
+      // Medir `scrollHeight <= clientHeight` nele não provava nada: sem
+      // `overflow` declarado o computado é `visible`, e elemento visível não
+      // rola por maior que seja o `scrollHeight`. Sonda no navegador com o
+      // corpo já correto: painel client 719 / scroll 2157, corpo client 559 /
+      // scroll 1524 — ou seja, o corpo cede altura e rola, e o número do painel
+      // era só a caixa de conteúdo não recortada.
+      await expect(['auto', 'scroll']).not.toContain(
+        getComputedStyle(panel).overflowY,
+      );
+    });
+
+    await step("A região rolável é alcançável por teclado, com papel e nome", async () => {
+      // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
+      // o corpo. É a regra scrollable-region-focusable do axe, que reprovava
+      // esta story antes de o corpo virar componente.
+      await expect(body).toHaveAttribute("tabindex", "0");
+      // Parada de teclado precisa de papel, e o papel só aparece com nome: os
+      // dois vêm juntos ou não vêm. Sem o par, o `aria-label` seria DESCARTADO
+      // pelo leitor de tela (aria-prohibited-attr) e ninguém saberia.
+      await expect(body).toHaveAttribute("role", "group");
+      await expect(body).toHaveAccessibleName("Lista de itens");
+    });
+
+    await step("O rodapé continua visível com o corpo cheio", async () => {
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

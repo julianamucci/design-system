@@ -3,6 +3,23 @@ import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
 
+// ─── Decisão de acessibilidade (bloco canônico no drawer da stack vanilla) ───
+//
+// Foco preso enquanto o painel existe, `role="dialog"` com nome vindo do título,
+// `aria-modal` só no modo modal, Escape e clique no véu fechando, foco de volta
+// ao gatilho, rolagem da página travada enquanto modal, corpo rolável com
+// `tabindex="0"` e `role="group"` só quando nomeado, e NENHUMA região viva.
+//
+// O mecanismo desta stack: o diálogo por baixo do primitivo prende o foco por
+// escopo de foco e trava a rolagem por remoção de scroll — conferido em
+// node_modules —, mas NÃO emite `aria-modal`, que por isso é escrito aqui.
+//
+// Diverge do Sheet em quatro pontos deliberados: aqui existe gesto de arrastar
+// (extra de ponteiro, nunca o único caminho — WCAG 2.5.7), existe alça
+// decorativa, NÃO existe botão de fechar próprio (a saída visível é a do
+// rodapé), e a largura sai de `--drawer-width`/`--drawer-max-width` em vez dos
+// tokens do Sheet.
+//
 // O primitivo desta stack (e o diálogo que ele usa por baixo) NÃO emite
 // `aria-modal` — conferido em node_modules. Quem cumpre o contrato de markup do
 // design system é este wrapper, e para isso o Content precisa saber se a raiz é
@@ -84,7 +101,9 @@ function DrawerContent({
         aria-modal={modal ? "true" : undefined}
         {...props}
       >
-        <div className="nds-drawer-handle" />
+        {/* Alça: pura afordância. O CSS só a mostra na direção de baixo, e ela
+            não recebe foco nem nome — anunciá-la só somaria ruído. */}
+        <div className="nds-drawer-handle" aria-hidden="true" />
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
@@ -113,9 +132,12 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
  * e o nome acessível ficam a cargo de quem compõe, porque só ali se sabe o que
  * a região contém.
  *
- * `.nds-drawer-body` traz `flex: 1`, `min-height: 0` e `overflow: auto` — é o
- * `min-height: 0` que faz o corpo ceder altura dentro do flex em coluna em vez
- * de esticar o painel e empurrar o rodapé (com as ações) para fora da tela.
+ * `.nds-drawer-body` traz `flex: 1 1 auto`, `min-height: 0` e `overflow: auto`.
+ * A base `auto` é o que faz o corpo contribuir com a altura do conteúdo para o
+ * painel — com a base zero do atalho `flex: 1` o teto de altura nunca aperta
+ * ninguém, e o conteúdo transborda em vez de rolar. O `min-height: 0` é o que
+ * o deixa ceder altura dentro do flex em coluna, em vez de esticar o painel e
+ * empurrar o rodapé (com as ações) para fora da tela.
  */
 function DrawerBody({
   className,

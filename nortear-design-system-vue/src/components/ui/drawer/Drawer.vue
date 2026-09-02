@@ -6,6 +6,27 @@ import { DrawerRoot } from 'vaul-vue'
 import { provideDrawerModal } from './context'
 
 /**
+ * ─── Decisão de acessibilidade (bloco canônico no drawer da stack vanilla) ───
+ *
+ * Foco preso enquanto o painel existe, `role="dialog"` com nome vindo do
+ * título, `aria-modal` só no modo modal, Escape e clique no véu fechando, foco
+ * de volta ao gatilho, rolagem da página travada enquanto modal, corpo rolável
+ * com `tabindex="0"` e `role="group"` só quando nomeado, e NENHUMA região viva.
+ *
+ * O mecanismo desta stack: o diálogo por baixo do primitivo prende o foco e
+ * trava a rolagem, mas NÃO emite `aria-modal` (conferido em node_modules) —
+ * quem o escreve é o `DrawerContent`, lendo o modo real pelo contexto da raiz.
+ * O primitivo também CANCELA o foco automático da abertura, e por isso o
+ * `DrawerContent` move o foco para o painel uma vez por abertura.
+ *
+ * Diverge do Sheet em quatro pontos deliberados: aqui existe gesto de arrastar
+ * (extra de ponteiro, nunca o único caminho — WCAG 2.5.7), existe alça
+ * decorativa, NÃO existe botão de fechar próprio (a saída visível é a do
+ * rodapé), e a largura sai de `--drawer-width`/`--drawer-max-width` em vez dos
+ * tokens do Sheet.
+ */
+
+/**
  * ─── Por que `open` e `defaultOpen` não são repassados como vieram ───────────
  *
  * Duas armadilhas somadas, e o sintoma era um drawer que simplesmente não

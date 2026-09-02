@@ -1,6 +1,7 @@
 import { userEvent, within } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { drawerClearPortais } from './drawer-portal-cleanup';
+import { createButton } from './button';
 
 /**
  * Andaime de abertura do Drawer — um helper, dois arquivos de story.
@@ -33,4 +34,42 @@ export async function openPeloTrigger(
     await userEvent.click(within(canvasElement).getByRole('button', { name: name }));
   }
   return await waitForPortal('dialog');
+}
+
+/**
+ * Rodapé de ações do painel — cancelar (que fecha) e a ação principal.
+ *
+ * Mora aqui pela mesma razão do helper acima: era cópia idêntica em dois
+ * arquivos de story, e com a `WithScroll` mudando de arquivo passaria a ser
+ * referência quebrada num deles. O `data-slot="drawer-close"` é o que faz a
+ * factory ligar o fechamento ao botão — o equivalente desta stack ao
+ * componente `DrawerClose` das outras.
+ */
+export function buildDrawerFooter(
+  cancelLabel: string,
+  actionLabel: string,
+  destrutivo = false,
+): HTMLElement {
+  const cancel = createButton({ variant: 'outline', label: cancelLabel });
+  cancel.dataset.slot = 'drawer-close';
+  const action = createButton({
+    variant: destrutivo ? 'destructive' : 'default',
+    label: actionLabel,
+  });
+
+  const footer = document.createElement('div');
+  footer.className = 'nds-cluster';
+  footer.dataset.justify = 'end';
+  footer.dataset.spacing = 'md';
+  footer.append(cancel, action);
+  return footer;
+}
+
+/** Andaime de centralização do canvas. */
+export function buildDrawerWrapper(child: HTMLElement): HTMLElement {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.appendChild(child);
+  return wrapper;
 }
