@@ -292,6 +292,64 @@ const codeCompSecondaryNav = `<Sheet>
   </SheetContent>
 </Sheet>`;
 
+const codeCompProfileEdit = `<Sheet>
+  <SheetTrigger as-child>
+    <Button variant="outline">Editar perfil</Button>
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Editar perfil</SheetTitle>
+      <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <form class="nds-grid" data-spacing="sm">
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="profile-name">Nome</Label>
+          <Input id="profile-name" default-value="Juliana Mucci" />
+        </div>
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="profile-handle">Username</Label>
+          <Input id="profile-handle" default-value="@julianamucci" />
+        </div>
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="profile-bio">Bio</Label>
+          <Input id="profile-bio" default-value="Designer de sistemas em São Paulo" />
+        </div>
+      </form>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </SheetClose>
+      <Button type="submit">Salvar alterações</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+
+const codeCompBottomPanel = `<Sheet>
+  <SheetTrigger as-child>
+    <Button variant="outline">Abrir ações</Button>
+  </SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>Ações rápidas</SheetTitle>
+      <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <div class="nds-cluster" data-spacing="md">
+        <Button variant="outline">Compartilhar</Button>
+        <Button variant="outline">Duplicar</Button>
+        <Button variant="destructive">Excluir</Button>
+      </div>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose as-child>
+        <Button variant="outline">Fechar</Button>
+      </SheetClose>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+
 const compositionItems = computed(() => [
   {
     trackId: 'advancedFilters',
@@ -306,6 +364,20 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.secondaryNavigation.description'),
     useWhen: tContent('variants.compositions.secondaryNavigation.use'),
     code: codeCompSecondaryNav,
+  },
+  {
+    trackId: 'profileEdit',
+    name: tContent('variants.compositions.profileEdit.name'),
+    description: tContent('variants.compositions.profileEdit.description'),
+    useWhen: tContent('variants.compositions.profileEdit.use'),
+    code: codeCompProfileEdit,
+  },
+  {
+    trackId: 'bottomPanel',
+    name: tContent('variants.compositions.bottomPanel.name'),
+    description: tContent('variants.compositions.bottomPanel.description'),
+    useWhen: tContent('variants.compositions.bottomPanel.use'),
+    code: codeCompBottomPanel,
   },
 ]);
 
@@ -785,6 +857,106 @@ const a11yCritCols = computed(() => ({
                   class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
                 >Configurações</a>
               </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout">
+          <Sheet>
+            <SheetTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.trigger') }}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Editar perfil</SheetTitle>
+                <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+              </SheetHeader>
+              <form
+                class="nds-grid nds-px-4"
+                data-spacing="sm"
+              >
+                <div
+                  class="nds-grid"
+                  data-spacing="xs"
+                >
+                  <Label for="comp-profile-name">Nome</Label>
+                  <Input
+                    id="comp-profile-name"
+                    default-value="Juliana Mucci"
+                  />
+                </div>
+                <div
+                  class="nds-grid"
+                  data-spacing="xs"
+                >
+                  <Label for="comp-profile-handle">Username</Label>
+                  <Input
+                    id="comp-profile-handle"
+                    default-value="@julianamucci"
+                  />
+                </div>
+                <div
+                  class="nds-grid"
+                  data-spacing="xs"
+                >
+                  <Label for="comp-profile-bio">Bio</Label>
+                  <Input
+                    id="comp-profile-bio"
+                    default-value="Designer de sistemas em São Paulo"
+                  />
+                </div>
+              </form>
+              <SheetFooter>
+                <SheetClose as-child>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
+                </SheetClose>
+                <Button type="submit">
+                  Salvar alterações
+                </Button>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout">
+          <Sheet>
+            <SheetTrigger as-child>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.trigger') }}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom">
+              <SheetHeader>
+                <SheetTitle>Ações rápidas</SheetTitle>
+                <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+              </SheetHeader>
+              <div
+                class="nds-cluster nds-px-4"
+                data-spacing="md"
+              >
+                <Button variant="outline">
+                  Compartilhar
+                </Button>
+                <Button variant="outline">
+                  Duplicar
+                </Button>
+                <Button variant="destructive">
+                  Excluir
+                </Button>
+              </div>
+              <SheetFooter>
+                <SheetClose as-child>
+                  <Button variant="outline">
+                    Fechar
+                  </Button>
+                </SheetClose>
+              </SheetFooter>
             </SheetContent>
           </Sheet>
         </div>

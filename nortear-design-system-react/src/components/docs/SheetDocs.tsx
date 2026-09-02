@@ -661,6 +661,122 @@ export function SheetDocs() {
               </div>
             ),
           },
+          {
+            trackId: "profileEdit",
+            name: tContent("variants.compositions.profileEdit.name"),
+            description: tContent("variants.compositions.profileEdit.description"),
+            useWhen: tContent("variants.compositions.profileEdit.use"),
+            code: `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Editar perfil</SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Editar perfil</SheetTitle>
+      <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <form id="perfil" className="nds-grid" data-spacing="sm">
+        <Label htmlFor="nome">Nome</Label>
+        <Input id="nome" defaultValue="Juliana Mucci" />
+        <Label htmlFor="username">Username</Label>
+        <Input id="username" defaultValue="@julianamucci" />
+        <Label htmlFor="bio">Bio</Label>
+        <Input id="bio" defaultValue="Designer de sistemas em São Paulo" />
+      </form>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <Button type="submit" form="perfil">Salvar alterações</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+            preview: (
+              <div style={{ contain: "layout" }}>
+                <Sheet>
+                  <SheetTrigger render={<Button variant="outline" />}>Editar perfil</SheetTrigger>
+                  <SheetContent side="right">
+                    <SheetHeader>
+                      <SheetTitle>Editar perfil</SheetTitle>
+                      <SheetDescription>
+                        Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
+                      </SheetDescription>
+                    </SheetHeader>
+                    <SheetBody>
+                      <form id="docs-sheet-perfil" className="nds-grid" data-spacing="sm">
+                        <div className="nds-grid" data-spacing="xs">
+                          <Label htmlFor="docs-sheet-profile-name">Nome</Label>
+                          <Input id="docs-sheet-profile-name" defaultValue="Juliana Mucci" />
+                        </div>
+                        <div className="nds-grid" data-spacing="xs">
+                          <Label htmlFor="docs-sheet-profile-handle">Username</Label>
+                          <Input id="docs-sheet-profile-handle" defaultValue="@julianamucci" />
+                        </div>
+                        <div className="nds-grid" data-spacing="xs">
+                          <Label htmlFor="docs-sheet-profile-bio">Bio</Label>
+                          <Input id="docs-sheet-profile-bio" defaultValue="Designer de sistemas em São Paulo" />
+                        </div>
+                      </form>
+                    </SheetBody>
+                    <SheetFooter>
+                      <SheetClose render={<Button type="button" variant="outline" />}>
+                        Cancelar
+                      </SheetClose>
+                      <Button type="submit" form="docs-sheet-perfil">Salvar alterações</Button>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            ),
+          },
+          {
+            trackId: "bottomPanel",
+            name: tContent("variants.compositions.bottomPanel.name"),
+            description: tContent("variants.compositions.bottomPanel.description"),
+            useWhen: tContent("variants.compositions.bottomPanel.use"),
+            code: `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Abrir ações</SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>Ações rápidas</SheetTitle>
+      <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <div className="nds-cluster" data-spacing="md">
+        <Button variant="outline">Compartilhar</Button>
+        <Button variant="outline">Duplicar</Button>
+        <Button variant="destructive">Excluir</Button>
+      </div>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Fechar</SheetClose>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+            preview: (
+              <div style={{ contain: "layout" }}>
+                <Sheet>
+                  <SheetTrigger render={<Button variant="outline" />}>Abrir ações</SheetTrigger>
+                  <SheetContent side="bottom">
+                    <SheetHeader>
+                      <SheetTitle>Ações rápidas</SheetTitle>
+                      <SheetDescription>
+                        Escolha uma das ações disponíveis para este item.
+                      </SheetDescription>
+                    </SheetHeader>
+                    <SheetBody>
+                      <div className="nds-cluster" data-spacing="md">
+                        <Button variant="outline">Compartilhar</Button>
+                        <Button variant="outline">Duplicar</Button>
+                        <Button variant="destructive">Excluir</Button>
+                      </div>
+                    </SheetBody>
+                    <SheetFooter>
+                      <SheetClose render={<Button variant="outline" />}>Fechar</SheetClose>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            ),
+          },
         ]}
       />
 

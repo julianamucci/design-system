@@ -179,6 +179,16 @@
           "name": "Navegação secundária",
           "description": "Painel <code>side=\"left\"</code> com lista de links como conteúdo principal. Substitui menus permanentes em layouts compactos.",
           "use": "Menus de área administrativa, navegação entre seções secundárias do app, drill-down de hierarquias profundas que não cabem no header."
+        },
+        "profileEdit": {
+          "name": "Edição de perfil",
+          "description": "Painel <code>side=\"right\"</code> com um <code>form</code> no body: cada campo é um par <code>Label</code> + <code>Input</code>, e o footer traz descartar + confirmar. A confirmação é o envio do formulário, não um botão solto.",
+          "use": "Edição de poucos campos relacionados sem tirar a pessoa da listagem que ela estava lendo. Passando de um punhado de campos, a edição merece página própria."
+        },
+        "bottomPanel": {
+          "name": "Painel inferior",
+          "description": "Painel <code>side=\"bottom\"</code> com uma fileira de <code>Button</code> no body, no lugar de formulário. Mesmo desenho do Drawer em telas pequenas, sem o gesto de arrastar.",
+          "use": "Folha de ações sobre um item de lista em tela estreita. Quando arrastar para fechar faz parte da interação esperada, o componente é o Drawer."
         }
       }
     },
@@ -651,6 +661,16 @@
           "name": "Secondary navigation",
           "description": "<code>side=\"left\"</code> panel with a list of links as main content. Replaces permanent menus in compact layouts.",
           "use": "Admin area menus, navigation between secondary app sections, drill-down for deep hierarchies that don't fit in the header."
+        },
+        "profileEdit": {
+          "name": "Profile editing",
+          "description": "<code>side=\"right\"</code> panel with a <code>form</code> in the body: each field is a <code>Label</code> + <code>Input</code> pair, and the footer carries discard + confirm. Confirming submits the form rather than firing a loose button.",
+          "use": "Editing a few related fields without pulling the person away from the list they were reading. Past a handful of fields, editing deserves its own page."
+        },
+        "bottomPanel": {
+          "name": "Bottom panel",
+          "description": "<code>side=\"bottom\"</code> panel with a row of <code>Button</code> in the body instead of a form. Same layout as the Drawer on small screens, without the drag gesture.",
+          "use": "Action sheet over a list item on a narrow screen. When dragging to dismiss is part of the expected interaction, the component is the Drawer."
         }
       }
     },
@@ -1123,6 +1143,16 @@
           "name": "Navegación secundaria",
           "description": "Panel <code>side=\"left\"</code> con lista de enlaces como contenido principal. Sustituye menús permanentes en layouts compactos.",
           "use": "Menús de área administrativa, navegación entre secciones secundarias del app, drill-down de jerarquías profundas que no caben en el header."
+        },
+        "profileEdit": {
+          "name": "Edición de perfil",
+          "description": "Panel <code>side=\"right\"</code> con un <code>form</code> en el body: cada campo es un par <code>Label</code> + <code>Input</code>, y el footer trae descartar + confirmar. La confirmación es el envío del formulario, no un botón suelto.",
+          "use": "Edición de pocos campos relacionados sin sacar a la persona de la lista que estaba leyendo. Pasando de un puñado de campos, la edición merece página propia."
+        },
+        "bottomPanel": {
+          "name": "Panel inferior",
+          "description": "Panel <code>side=\"bottom\"</code> con una fila de <code>Button</code> en el body, en lugar de formulario. Mismo diseño del Drawer en pantallas pequeñas, sin el gesto de arrastrar.",
+          "use": "Hoja de acciones sobre un ítem de lista en pantalla estrecha. Cuando arrastrar para cerrar es parte de la interacción esperada, el componente es el Drawer."
         }
       }
     },

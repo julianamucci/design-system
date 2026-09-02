@@ -20,6 +20,7 @@ import { NDS_SHEET, sheetCloseReason } from '@/components/ui/sheet';
 import { NdsButton } from '@/components/ui/button';
 import { NdsLabel } from '@/components/ui/label';
 import { NdsCheckbox } from '@/components/ui/checkbox';
+import { NdsInput } from '@/components/ui/input';
 import uiTranslations from '@/i18n/ui.json';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 
@@ -232,6 +233,58 @@ const COMPOSITION_CODE = {
     </div>
   </ng-template>
 </nds-sheet>`,
+  profileEdit: `<nds-sheet>
+  <button ndsSheetTrigger ndsButton variant="outline">Editar perfil</button>
+
+  <ng-template ndsSheetContent side="right">
+    <div ndsSheetHeader>
+      <h2 ndsSheetTitle>Editar perfil</h2>
+      <p ndsSheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</p>
+    </div>
+
+    <div ndsSheetBody>
+      <form class="nds-grid" data-spacing="sm">
+        <div class="nds-grid" data-spacing="xs">
+          <label ndsLabel for="profile-name">Nome</label>
+          <input ndsInput id="profile-name" value="Juliana Mucci" />
+        </div>
+        <div class="nds-grid" data-spacing="xs">
+          <label ndsLabel for="profile-handle">Username</label>
+          <input ndsInput id="profile-handle" value="@julianamucci" />
+        </div>
+        <div class="nds-grid" data-spacing="xs">
+          <label ndsLabel for="profile-bio">Bio</label>
+          <input ndsInput id="profile-bio" value="Designer de sistemas em São Paulo" />
+        </div>
+      </form>
+    </div>
+
+    <div ndsSheetFooter>
+      <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
+      <button ndsButton type="submit">Salvar alterações</button>
+    </div>
+  </ng-template>
+</nds-sheet>`,
+  bottomPanel: `<nds-sheet>
+  <button ndsSheetTrigger ndsButton variant="outline">Abrir ações</button>
+
+  <ng-template ndsSheetContent side="bottom">
+    <div ndsSheetHeader>
+      <h2 ndsSheetTitle>Ações rápidas</h2>
+      <p ndsSheetDescription>Escolha uma das ações disponíveis para este item.</p>
+    </div>
+
+    <div ndsSheetBody class="nds-cluster" data-spacing="md">
+      <button ndsButton variant="outline">Compartilhar</button>
+      <button ndsButton variant="outline">Duplicar</button>
+      <button ndsButton variant="destructive">Excluir</button>
+    </div>
+
+    <div ndsSheetFooter>
+      <button ndsSheetClose ndsButton variant="outline">Fechar</button>
+    </div>
+  </ng-template>
+</nds-sheet>`,
 };
 
 const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
@@ -242,7 +295,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ...NDS_SHEET, NdsButton, NdsLabel, NdsCheckbox,
+    ...NDS_SHEET, NdsButton, NdsLabel, NdsCheckbox, NdsInput,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsCompositions, NdsDocsStates, NdsDocsProps, NdsDocsTokens,
@@ -434,6 +487,65 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
                 <a href="#" [class]="linkClasses">{{ destination.label }}</a>
               }
             </nav>
+          </div>
+        </ng-template>
+      </nds-sheet>
+    </ng-template>
+
+    <ng-template #tplCompPerfil>
+      <nds-sheet>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
+        <ng-template ndsSheetContent side="right">
+          <div ndsSheetHeader>
+            <h3 ndsSheetTitle>{{ t('variants.compositions.profileEdit.name') }}</h3>
+            <p ndsSheetDescription>{{ profileEditDescription() }}</p>
+          </div>
+
+          <div ndsSheetBody>
+            <!-- A confirmação é o envio do próprio formulário — não um botão
+                 solto. O guard de submit aqui existe só para o preview ao vivo:
+                 sem ele, um Enter dentro do campo tentaria navegar a página. -->
+            <form class="nds-grid" data-spacing="sm" (submit)="$event.preventDefault()">
+              <div class="nds-grid" data-spacing="xs">
+                <label ndsLabel for="comp-profile-name">Nome</label>
+                <input ndsInput id="comp-profile-name" value="Juliana Mucci" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <label ndsLabel for="comp-profile-handle">Username</label>
+                <input ndsInput id="comp-profile-handle" value="@julianamucci" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <label ndsLabel for="comp-profile-bio">Bio</label>
+                <input ndsInput id="comp-profile-bio" value="Designer de sistemas em São Paulo" />
+              </div>
+            </form>
+          </div>
+
+          <div ndsSheetFooter>
+            <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+            <button ndsButton type="submit">Salvar alterações</button>
+          </div>
+        </ng-template>
+      </nds-sheet>
+    </ng-template>
+
+    <ng-template #tplCompPainelInferior>
+      <nds-sheet>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
+        <ng-template ndsSheetContent side="bottom">
+          <div ndsSheetHeader>
+            <h3 ndsSheetTitle>{{ t('variants.compositions.bottomPanel.name') }}</h3>
+            <p ndsSheetDescription>{{ bottomPanelDescription() }}</p>
+          </div>
+
+          <div ndsSheetBody class="nds-cluster" data-spacing="md">
+            <button ndsButton variant="outline">Compartilhar</button>
+            <button ndsButton variant="outline">Duplicar</button>
+            <button ndsButton variant="destructive">Excluir</button>
+          </div>
+
+          <div ndsSheetFooter>
+            <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -645,6 +757,8 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarBottom = viewChild.required<TemplateRef<unknown>>('tplVarBottom');
   private readonly tplCompFiltros = viewChild.required<TemplateRef<unknown>>('tplCompFiltros');
   private readonly tplCompNavegacao = viewChild.required<TemplateRef<unknown>>('tplCompNavegacao');
+  private readonly tplCompPerfil = viewChild.required<TemplateRef<unknown>>('tplCompPerfil');
+  private readonly tplCompPainelInferior = viewChild.required<TemplateRef<unknown>>('tplCompPainelInferior');
 
   /** Três opções de filtro derivadas do conteúdo — nada de literal em português. */
   protected readonly opcoesDeFiltro = computed(() => {
@@ -662,6 +776,22 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       { id: 'nav-3', label: t('demonstration.labels.topLabel') },
       { id: 'nav-4', label: t('demonstration.labels.bottomLabel') },
     ];
+  });
+
+  /**
+   * Descrições próprias das duas composições novas, em texto puro: o conteúdo
+   * compartilhado traz `<code>` para a lista de composições (renderizada via
+   * `NdsDocsCompositions`), mas o preview ao vivo interpola dentro de um `<p>`
+   * — sem `toPlainText`, as tags apareceriam literalmente na tela.
+   */
+  protected readonly profileEditDescription = computed(() => {
+    dict();
+    return toPlainText(t('variants.compositions.profileEdit.description'));
+  });
+
+  protected readonly bottomPanelDescription = computed(() => {
+    dict();
+    return toPlainText(t('variants.compositions.bottomPanel.description'));
   });
 
   /**
@@ -798,9 +928,14 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
 
   protected readonly compositionItems = computed(() => {
     dict();
-    const mapa: { key: 'advancedFilters' | 'secondaryNavigation'; tpl: TemplateRef<unknown> }[] = [
-      { key: 'advancedFilters',     tpl: this.tplCompFiltros()   },
-      { key: 'secondaryNavigation', tpl: this.tplCompNavegacao() },
+    const mapa: {
+      key: 'advancedFilters' | 'secondaryNavigation' | 'profileEdit' | 'bottomPanel';
+      tpl: TemplateRef<unknown>;
+    }[] = [
+      { key: 'advancedFilters',     tpl: this.tplCompFiltros()        },
+      { key: 'secondaryNavigation', tpl: this.tplCompNavegacao()      },
+      { key: 'profileEdit',         tpl: this.tplCompPerfil()         },
+      { key: 'bottomPanel',         tpl: this.tplCompPainelInferior() },
     ];
     return mapa.map(({ key, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),

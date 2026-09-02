@@ -5,6 +5,8 @@ import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSheet, type SheetSide } from '@/components/ui/sheet';
 import { createButton } from '@/components/ui/button';
+import { createInput } from '@/components/ui/input';
+import { createLabel } from '@/components/ui/label';
 import uiTranslations from '@/i18n/ui.json';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 
@@ -455,6 +457,42 @@ createSheet({
           return nav;
         };
 
+        const buildProfileEditBody = () => {
+          const form = document.createElement('form');
+          form.className = 'nds-stack';
+          form.dataset.spacing = 'sm';
+          ([
+            ['Nome', 'profile-name', 'Juliana Mucci'],
+            ['Username', 'profile-handle', '@julianamucci'],
+            ['Bio', 'profile-bio', 'Designer de sistemas em São Paulo'],
+          ] as const).forEach(([label, id, value]) => {
+            const field = document.createElement('div');
+            field.className = 'nds-stack';
+            field.dataset.spacing = 'xs';
+            field.append(
+              createLabel({ text: label, htmlFor: id }),
+              createInput({ id, value }),
+            );
+            form.appendChild(field);
+          });
+          return form;
+        };
+
+        // A fileira de ações repete a mesma tríade das outras quatro stacks: a
+        // composição é documentada no conteúdo compartilhado, então o desenho
+        // dela não pode divergir de stack para stack.
+        const buildBottomPanelBody = () => {
+          const list = document.createElement('div');
+          list.className = 'nds-cluster';
+          list.dataset.spacing = 'md';
+          list.append(
+            createButton({ variant: 'outline', label: 'Compartilhar' }),
+            createButton({ variant: 'outline', label: 'Duplicar' }),
+            createButton({ variant: 'destructive', label: 'Excluir' }),
+          );
+          return list;
+        };
+
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -523,6 +561,105 @@ createSheet({
                   title: 'Menu',
                   description: 'Navegue entre as áreas do sistema.',
                   content: buildSecondaryNavBody(),
+                });
+              },
+            },
+            {
+              trackId: 'profileEdit',
+              name: stripHtml(t('variants.compositions.profileEdit.name')),
+              description: stripHtml(t('variants.compositions.profileEdit.description')),
+              useWhen: stripHtml(t('variants.compositions.profileEdit.use')),
+              code: `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+const form = document.createElement('form');
+form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
+[
+  ['Nome', 'profile-name', 'Juliana Mucci'],
+  ['Username', 'profile-handle', '@julianamucci'],
+  ['Bio', 'profile-bio', 'Designer de sistemas em São Paulo'],
+].forEach(([label, id, value]) => {
+  const field = document.createElement('div');
+  field.className = 'nds-stack';
+  field.dataset.spacing = 'xs';
+  field.append(
+    createLabel({ text: label, htmlFor: id }),
+    createInput({ id, value }),
+  );
+  form.appendChild(field);
+});
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.spacing = 'md';
+footer.append(
+  createButton({ variant: 'outline', label: 'Cancelar' }),
+  createButton({ variant: 'default', label: 'Salvar alterações' }),
+);
+createSheet({
+  trigger,
+  side: 'right',
+  title: 'Editar perfil',
+  description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+  content: form,
+  footer,
+});`,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+                const footer = document.createElement('div');
+                footer.className = 'nds-cluster';
+                footer.dataset.spacing = 'md';
+                footer.append(
+                  createButton({ variant: 'outline', label: 'Cancelar' }),
+                  createButton({ variant: 'default', label: 'Salvar alterações' }),
+                );
+                return createSheet({
+                  trigger,
+                  side: 'right',
+                  title: 'Editar perfil',
+                  description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+                  content: buildProfileEditBody(),
+                  footer,
+                });
+              },
+            },
+            {
+              trackId: 'bottomPanel',
+              name: stripHtml(t('variants.compositions.bottomPanel.name')),
+              description: stripHtml(t('variants.compositions.bottomPanel.description')),
+              useWhen: stripHtml(t('variants.compositions.bottomPanel.use')),
+              code: `const trigger = createButton({ variant: 'outline', label: 'Abrir ações' });
+const list = document.createElement('div');
+list.className = 'nds-cluster';
+list.dataset.spacing = 'md';
+list.append(
+  createButton({ variant: 'outline', label: 'Compartilhar' }),
+  createButton({ variant: 'outline', label: 'Duplicar' }),
+  createButton({ variant: 'destructive', label: 'Excluir' }),
+);
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.spacing = 'md';
+footer.append(createButton({ variant: 'outline', label: 'Fechar' }));
+createSheet({
+  trigger,
+  side: 'bottom',
+  title: 'Ações rápidas',
+  description: 'Escolha uma das ações disponíveis para este item.',
+  content: list,
+  footer,
+});`,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Abrir ações' });
+                const footer = document.createElement('div');
+                footer.className = 'nds-cluster';
+                footer.dataset.spacing = 'md';
+                footer.append(createButton({ variant: 'outline', label: 'Fechar' }));
+                return createSheet({
+                  trigger,
+                  side: 'bottom',
+                  title: 'Ações rápidas',
+                  description: 'Escolha uma das ações disponíveis para este item.',
+                  content: buildBottomPanelBody(),
+                  footer,
                 });
               },
             },

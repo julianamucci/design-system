@@ -2,6 +2,7 @@
   import { untrack } from 'svelte';
   import {
     Sheet,
+    SheetBody,
     SheetClose,
     SheetContent,
     SheetDescription,
@@ -11,6 +12,8 @@
     SheetTrigger,
   } from '@/components/ui/sheet';
   import { Button } from '@/components/ui/button';
+  import { Input } from '@/components/ui/input';
+  import { Label } from '@/components/ui/label';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -646,6 +649,84 @@ interface TriggerProps {
 </SheetContent>`,
         preview: compSecondaryNav,
       },
+      {
+        trackId: 'profileEdit',
+        name: $tStore('variants.compositions.profileEdit.name'),
+        description: $tStore('variants.compositions.profileEdit.description'),
+        useWhen: $tStore('variants.compositions.profileEdit.use'),
+        code: `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Editar perfil</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Editar perfil</SheetTitle>
+      <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <form id="perfil" class="nds-grid" data-spacing="sm">
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="nome">Nome</Label>
+          <Input id="nome" value="Juliana Mucci" />
+        </div>
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="username">Username</Label>
+          <Input id="username" value="@julianamucci" />
+        </div>
+        <div class="nds-grid" data-spacing="xs">
+          <Label for="bio">Bio</Label>
+          <Input id="bio" value="Designer de sistemas em São Paulo" />
+        </div>
+      </form>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>Cancelar</Button>
+        {/snippet}
+      </SheetClose>
+      <Button type="submit" form="perfil">Salvar alterações</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+        preview: compProfileEdit,
+      },
+      {
+        trackId: 'bottomPanel',
+        name: $tStore('variants.compositions.bottomPanel.name'),
+        description: $tStore('variants.compositions.bottomPanel.description'),
+        useWhen: $tStore('variants.compositions.bottomPanel.use'),
+        code: `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Abrir ações</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>Ações rápidas</SheetTitle>
+      <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <div class="nds-cluster" data-spacing="md">
+        <Button variant="outline">Compartilhar</Button>
+        <Button variant="outline">Duplicar</Button>
+        <Button variant="destructive">Excluir</Button>
+      </div>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>Fechar</Button>
+        {/snippet}
+      </SheetClose>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+        preview: compBottomPanel,
+      },
     ]}
   />
 
@@ -692,6 +773,76 @@ interface TriggerProps {
             <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
             <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
           </nav>
+        </SheetContent>
+      </Sheet>
+    </div>
+  {/snippet}
+
+  {#snippet compProfileEdit()}
+    <div style="contain: layout">
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Editar perfil</SheetTitle>
+            <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+          </SheetHeader>
+          <SheetBody>
+            <form id="docs-sheet-perfil" class="nds-grid" data-spacing="sm">
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="docs-sheet-profile-name">Nome</Label>
+                <Input id="docs-sheet-profile-name" value="Juliana Mucci" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="docs-sheet-profile-handle">Username</Label>
+                <Input id="docs-sheet-profile-handle" value="@julianamucci" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="docs-sheet-profile-bio">Bio</Label>
+                <Input id="docs-sheet-profile-bio" value="Designer de sistemas em São Paulo" />
+              </div>
+            </form>
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </SheetClose>
+            <Button type="submit" form="docs-sheet-perfil">Salvar alterações</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </div>
+  {/snippet}
+
+  {#snippet compBottomPanel()}
+    <div style="contain: layout">
+      <Sheet>
+        <SheetTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </SheetTrigger>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>Ações rápidas</SheetTitle>
+            <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+          </SheetHeader>
+          <SheetBody>
+            <div class="nds-cluster" data-spacing="md">
+              <Button variant="outline">Compartilhar</Button>
+              <Button variant="outline">Duplicar</Button>
+              <Button variant="destructive">Excluir</Button>
+            </div>
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Fechar</Button>{/snippet}
+            </SheetClose>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     </div>
