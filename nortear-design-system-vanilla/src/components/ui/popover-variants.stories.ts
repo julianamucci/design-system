@@ -45,7 +45,7 @@ export const Default: Story = {
       source: {
         transform: popoverSourceWith({
           triggerLabel: 'Ver atalhos',
-          text: 'Use Ctrl + K para abrir a busca em qualquer tela.',
+          text: 'Use Ctrl+K para abrir a busca em qualquer tela.',
         }),
       },
     },
@@ -55,7 +55,7 @@ export const Default: Story = {
 
     const content = document.createElement('p');
     content.className = 'nds-text-body';
-    content.textContent = 'Use Ctrl + K para abrir a busca em qualquer tela.';
+    content.textContent = 'Use Ctrl+K para abrir a busca em qualquer tela.';
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
@@ -74,7 +74,7 @@ export const Default: Story = {
 
     await step('E carrega a classe do design system com o conteúdo livre', async () => {
       await expect(panel()).toHaveClass(/nds-popover-content/);
-      await expect(panel()!.textContent).toMatch(/Ctrl \+ K/);
+      await expect(panel()!.textContent).toMatch(/Ctrl\+K/);
     });
   },
 };

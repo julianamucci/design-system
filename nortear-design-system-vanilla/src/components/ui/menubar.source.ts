@@ -65,16 +65,16 @@ const MENUS_DEFAULT: MenubarMenuSnippet[] = [
   {
     label: 'Arquivo',
     items: [
-      { label: 'Novo', shortcut: '⌘N', onClick: '() => novo()' },
-      { label: 'Abrir', shortcut: '⌘O', onClick: '() => abrir()' },
-      { label: 'Salvar', shortcut: '⌘S', onClick: '() => salvar()' },
+      { label: 'Novo', shortcut: 'Ctrl+N', onClick: '() => novo()' },
+      { label: 'Abrir', shortcut: 'Ctrl+O', onClick: '() => abrir()' },
+      { label: 'Salvar', shortcut: 'Ctrl+S', onClick: '() => salvar()' },
     ],
   },
   {
     label: 'Editar',
     items: [
-      { label: 'Desfazer', shortcut: '⌘Z', onClick: '() => desfazer()' },
-      { label: 'Refazer', shortcut: '⇧⌘Z', onClick: '() => refazer()' },
+      { label: 'Desfazer', shortcut: 'Ctrl+Z', onClick: '() => desfazer()' },
+      { label: 'Refazer', shortcut: 'Ctrl+Shift+Z', onClick: '() => refazer()' },
     ],
   },
 ];

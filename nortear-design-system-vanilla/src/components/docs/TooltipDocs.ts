@@ -358,7 +358,7 @@ comEspera({ trigger: botaoColar,  content: 'Colar'  });
 
 // Marcação entra como ELEMENTO já montado, nunca como HTML em string.
 const atalho = document.createElement('span');
-atalho.append('Salvar (', Object.assign(document.createElement('kbd'), { textContent: 'Ctrl S' }), ')');
+atalho.append('Salvar (', Object.assign(document.createElement('kbd'), { textContent: 'Ctrl+S' }), ')');
 
 createTooltip({
   trigger: botaoSalvar,

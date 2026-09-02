@@ -248,7 +248,7 @@ export const CheckedItem: Story = {
               label: 'Sistema',
               group: 'Aparência',
               checked: true,
-              shortcut: '⌘S',
+              shortcut: 'Ctrl+S',
             },
           ],
         }),
@@ -265,7 +265,7 @@ export const CheckedItem: Story = {
         items: [
           { value: 'claro',   label: 'Claro',   group: 'Aparência', checked: true  },
           { value: 'escuro',  label: 'Escuro',  group: 'Aparência', checked: false },
-          { value: 'sistema', label: 'Sistema', group: 'Aparência', checked: true, shortcut: '⌘S' },
+          { value: 'sistema', label: 'Sistema', group: 'Aparência', checked: true, shortcut: 'Ctrl+S' },
         ],
       })
     );
@@ -309,7 +309,7 @@ export const CheckedItem: Story = {
       const atalho = sistema.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
-      await expect(sistema).toHaveAccessibleName(/⌘S/);
+      await expect(sistema).toHaveAccessibleName(/Ctrl\+S/);
     });
   },
 };

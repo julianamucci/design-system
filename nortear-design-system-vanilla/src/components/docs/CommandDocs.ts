@@ -340,7 +340,7 @@ export function createCommandDocs(): HTMLElement {
       // ─── 6. Variantes (Padrões de Uso) ─────────────────────────────────
       case 'variantes': {
         const codeInline = `const cmd = createCommand({\n  placeholder: 'Buscar componente...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes' },\n    { value: 'input',  label: 'Input',  group: 'Componentes' },\n  ],\n  onSelect: (value) => console.log('selected:', value),\n});`;
-        const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes', shortcut: '⌘B' },\n    // O traço quebra a sequência: o que vem antes e o que vem depois passam\n    // a contar como blocos distintos, e é a fronteira que o CSS desenha.\n    { type: 'separator' },\n    { value: 'novo', label: 'Novo arquivo', group: 'Ações', shortcut: '⌘N' },\n  ],\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
+        const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes', shortcut: 'Ctrl+B' },\n    // O traço quebra a sequência: o que vem antes e o que vem depois passam\n    // a contar como blocos distintos, e é a fronteira que o CSS desenha.\n    { type: 'separator' },\n    { value: 'novo', label: 'Novo arquivo', group: 'Ações', shortcut: 'Ctrl+N' },\n  ],\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
 
         const codeWithGroups = `const wrap = document.createElement('div');
 wrap.className = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
@@ -398,8 +398,8 @@ wrap.appendChild(
                     placeholder: t('demonstration.labels.dialogDescription'),
                     emptyMessage: t('demonstration.labels.emptyMessage'),
                     items: [
-                      { value: 'button', label: t('demonstration.labels.itemButton'), group: t('demonstration.labels.groupComponents'), shortcut: '⌘B' },
-                      { value: 'input',  label: t('demonstration.labels.itemInput'),  group: t('demonstration.labels.groupComponents'), shortcut: '⌘I' },
+                      { value: 'button', label: t('demonstration.labels.itemButton'), group: t('demonstration.labels.groupComponents'), shortcut: 'Ctrl+B' },
+                      { value: 'input',  label: t('demonstration.labels.itemInput'),  group: t('demonstration.labels.groupComponents'), shortcut: 'Ctrl+I' },
                       // O traço fecha o bloco de componentes e abre o de utilitários.
                       { type: 'separator' },
                       { value: 'cn', label: 'cn()', group: t('demonstration.labels.groupUtils') },
@@ -607,7 +607,7 @@ export type CommandSeparator = { type: 'separator' };`;
             { key: 'Enter',  description: toPlainText(t('accessibility.keyboard.enter'))      },
             { key: 'Escape', description: toPlainText(t('accessibility.keyboard.escape'))     },
             { key: 'Tab',    description: toPlainText(t('accessibility.keyboard.tab'))        },
-            { key: '⌘K',    description: toPlainText(t('accessibility.keyboard.cmdK'))       },
+            { key: 'Ctrl+K',    description: toPlainText(t('accessibility.keyboard.cmdK'))       },
           ],
         });
 

@@ -386,7 +386,7 @@ export function createContextMenuDocs(): HTMLElement {
                 sc.className = 'nds-text-caption nds-tracking-wider nds-text-muted-foreground';
                 sc.style.marginLeft = 'auto';
                 sc.setAttribute('aria-hidden', 'true');
-                sc.textContent = '⌘E';
+                sc.textContent = 'Ctrl+E';
                 li.append(labelSpan, sc);
                 return li;
               },
@@ -517,7 +517,7 @@ const sc = document.createElement('span');
 sc.className = 'nds-text-caption nds-tracking-wider nds-text-muted-foreground';
 sc.style.marginLeft = 'auto';
 sc.setAttribute('aria-hidden', 'true');
-sc.textContent = '⌘E';
+sc.textContent = 'Ctrl+E';
 
 li.append(label, sc);`;
 
@@ -809,10 +809,10 @@ lbl.textContent = 'Ações';`,
               previewFactory: () => {
                 const menu = makeMenuPanel();
                 menu.append(
-                  makeItemWithShortcut(t('demonstration.labels.edit'), '⌘E'),
-                  makeItemWithShortcut(t('demonstration.labels.duplicate'), '⌘D'),
+                  makeItemWithShortcut(t('demonstration.labels.edit'), 'Ctrl+E'),
+                  makeItemWithShortcut(t('demonstration.labels.duplicate'), 'Ctrl+D'),
                   makeSeparator(),
-                  makeItemWithShortcut(t('demonstration.labels.delete'), '⌫', true),
+                  makeItemWithShortcut(t('demonstration.labels.delete'), 'Delete', true),
                 );
                 return menu;
               },

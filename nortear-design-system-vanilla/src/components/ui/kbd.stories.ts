@@ -46,13 +46,13 @@ export const NameAccessible: Story = {
     });
 
     await step('O apelido depreciado continua produzindo o atributo', async () => {
-      const antigo = createKbd({ text: '⇧', label: 'Shift' });
+      const antigo = createKbd({ text: 'Shift', label: 'Shift' });
       await expect(antigo).toHaveAttribute('aria-label', 'Shift');
 
       // E o canônico vence quando os dois vierem — dois nomes disputando um
       // atributo é o defeito que a unificação existe para fechar.
-      const both = createKbd({ text: '⌘', label: 'Antigo', 'aria-label': 'Command' });
-      await expect(both).toHaveAttribute('aria-label', 'Command');
+      const both = createKbd({ text: 'Ctrl', label: 'Antigo', 'aria-label': 'Control' });
+      await expect(both).toHaveAttribute('aria-label', 'Control');
     });
   },
 };

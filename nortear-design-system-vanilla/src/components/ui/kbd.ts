@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 // Renderiza <kbd> nativo (semântica HTML) com aparência de tecla física.
 
 export interface KbdOptions {
-  /** Conteúdo: texto curto (Ctrl, B, ⌘) ou nodes. */
+  /** Conteúdo: texto curto (Ctrl, B, Shift) ou nodes. */
   children?: string | HTMLElement | Array<string | HTMLElement>;
   /** Alias para `children: string`. */
   text?: string;

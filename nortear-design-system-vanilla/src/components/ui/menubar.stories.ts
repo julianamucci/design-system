@@ -16,17 +16,17 @@ const MENUS = [
   {
     label: 'Arquivo',
     items: [
-      { label: 'Novo', shortcut: '⌘N' },
-      { label: 'Abrir', shortcut: '⌘O' },
-      { label: 'Salvar', shortcut: '⌘S' },
+      { label: 'Novo', shortcut: 'Ctrl+N' },
+      { label: 'Abrir', shortcut: 'Ctrl+O' },
+      { label: 'Salvar', shortcut: 'Ctrl+S' },
     ],
   },
   {
     label: 'Editar',
     items: [
-      { label: 'Desfazer', shortcut: '⌘Z' },
-      { label: 'Refazer', shortcut: '⇧⌘Z' },
-      { label: 'Copiar', shortcut: '⌘C' },
+      { label: 'Desfazer', shortcut: 'Ctrl+Z' },
+      { label: 'Refazer', shortcut: 'Ctrl+Shift+Z' },
+      { label: 'Copiar', shortcut: 'Ctrl+C' },
     ],
   },
   {

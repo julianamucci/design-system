@@ -665,7 +665,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
             { key: 'Tab',         description: toPlainText(t('accessibility.keyboard.tab'))       },
             { key: 'Arrow Left / Arrow Right',       description: toPlainText(t('accessibility.keyboard.arrows'))    },
             { key: 'Backspace',   description: toPlainText(t('accessibility.keyboard.backspace')) },
-            { key: 'Ctrl/Cmd+V',  description: toPlainText(t('accessibility.keyboard.paste'))     },
+            { key: 'Ctrl+V',  description: toPlainText(t('accessibility.keyboard.paste'))     },
             { key: '0-9',         description: toPlainText(t('accessibility.keyboard.digit'))     },
           ],
         });

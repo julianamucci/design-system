@@ -220,8 +220,8 @@ export const WithShortcuts: Story = {
           placeholder: 'Buscar comando...',
           emptyMessage: NO_RESULT,
           items: [
-            { value: 'novo', label: 'Novo arquivo', group: 'Arquivo', shortcut: '⌘N' },
-            { value: 'salvar', label: 'Salvar', group: 'Arquivo', shortcut: '⌘S' },
+            { value: 'novo', label: 'Novo arquivo', group: 'Arquivo', shortcut: 'Ctrl+N' },
+            { value: 'salvar', label: 'Salvar', group: 'Arquivo', shortcut: 'Ctrl+S' },
             { value: 'preferencias', label: 'Preferências', group: 'Aplicativo' },
           ],
         }),
@@ -231,9 +231,9 @@ export const WithShortcuts: Story = {
   render: () =>
     mountInline(
       [
-        { value: 'novo',     label: 'Novo arquivo', group: 'Arquivo', shortcut: '⌘N' },
-        { value: 'abrir',    label: 'Abrir',        group: 'Arquivo', shortcut: '⌘O' },
-        { value: 'salvar',   label: 'Salvar',       group: 'Arquivo', shortcut: '⌘S' },
+        { value: 'novo',     label: 'Novo arquivo', group: 'Arquivo', shortcut: 'Ctrl+N' },
+        { value: 'abrir',    label: 'Abrir',        group: 'Arquivo', shortcut: 'Ctrl+O' },
+        { value: 'salvar',   label: 'Salvar',       group: 'Arquivo', shortcut: 'Ctrl+S' },
         { value: 'preferencias', label: 'Preferências', group: 'Aplicativo' },
       ],
       'Buscar comando...'
@@ -248,7 +248,7 @@ export const WithShortcuts: Story = {
     await step('O atalho aparece à direita do comando', async () => {
       const salvar = comando(canvasElement, 'salvar');
       const atalho = salvar.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
-      await expect(atalho).toHaveTextContent('⌘S');
+      await expect(atalho).toHaveTextContent('Ctrl+S');
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
 
       const boxItem = salvar.getBoundingClientRect();
@@ -264,7 +264,7 @@ export const WithShortcuts: Story = {
       const salvar = comando(canvasElement, 'salvar');
       const atalho = salvar.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
-      await expect(salvar).toHaveAccessibleName(/⌘S/);
+      await expect(salvar).toHaveAccessibleName(/Ctrl\+S/);
     });
 
     await step('Comando sem atalho não ganha um espaço vazio', async () => {
@@ -414,8 +414,8 @@ export const LongList: Story = {
 // ─── Command Palette (Command dentro de Dialog) ───────────────────────────────
 
 const ITEMS_PALETTE: CommandItem[] = [
-  { value: 'button', label: 'Button', group: 'Componentes', shortcut: '⌘B' },
-  { value: 'input',  label: 'Input',  group: 'Componentes', shortcut: '⌘I' },
+  { value: 'button', label: 'Button', group: 'Componentes', shortcut: 'Ctrl+B' },
+  { value: 'input',  label: 'Input',  group: 'Componentes', shortcut: 'Ctrl+I' },
   { value: 'cn',     label: 'cn()',   group: 'Utilitários'  },
 ];
 
@@ -452,7 +452,7 @@ export const CommandPalette: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Buscar' });
     const dica = document.createElement('kbd');
     dica.className = 'nds-kbd';
-    dica.textContent = '⌘K';
+    dica.textContent = 'Ctrl+K';
     trigger.appendChild(dica);
 
     const cmd = createCommand({
@@ -520,7 +520,7 @@ export const CommandPalette: Story = {
       // de Do & Don't deste componente.
       const dica = trigger.querySelector<HTMLElement>('kbd')!;
       await expect(dica).toHaveClass(/nds-kbd/);
-      await expect(dica).toHaveTextContent('⌘K');
+      await expect(dica).toHaveTextContent('Ctrl+K');
       await expect(dica).toBeVisible();
     });
 
@@ -568,7 +568,7 @@ export const CommandPalette: Story = {
       // Os atalhos de cada comando aparecem à direita, encostados na borda.
       const atalho = comando(p, 'button')
         .querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
-      await expect(atalho).toHaveTextContent('⌘B');
+      await expect(atalho).toHaveTextContent('Ctrl+B');
       const boxItem = comando(p, 'button').getBoundingClientRect();
       const boxShortcut = atalho.getBoundingClientRect();
       await expect(boxItem.right - boxShortcut.right).toBeLessThan(

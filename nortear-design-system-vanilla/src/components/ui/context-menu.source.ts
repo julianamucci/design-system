@@ -49,7 +49,7 @@ const AREA_DEFAULT = 'Clique com o botão direito aqui';
 function itemsDefault(o: ContextMenuSnippetOptions): ContextMenuEntrySnippet[] {
   const withShortcut = o.showShortcuts !== false;
   const items: ContextMenuEntrySnippet[] = [
-    { label: 'Editar', value: 'edit', shortcut: withShortcut ? '⌘E' : undefined },
+    { label: 'Editar', value: 'edit', shortcut: withShortcut ? 'Ctrl+E' : undefined },
     { label: 'Duplicar', value: 'duplicate' },
   ];
   if (o.showSeparator !== false) items.push({ type: 'separator' });
@@ -58,7 +58,7 @@ function itemsDefault(o: ContextMenuSnippetOptions): ContextMenuEntrySnippet[] {
       label: 'Excluir',
       value: 'delete',
       variant: 'destructive',
-      shortcut: withShortcut ? '⌫' : undefined,
+      shortcut: withShortcut ? 'Delete' : undefined,
     });
   }
   return items;

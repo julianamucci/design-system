@@ -7,9 +7,9 @@ import { menubarSource, menubarSourceWith } from './menubar.source';
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
 const SHORTCUTS = [
-  { label: 'Desfazer', shortcut: '⌘Z' },
-  { label: 'Refazer', shortcut: '⇧⌘Z' },
-  { label: 'Copiar', shortcut: '⌘C' },
+  { label: 'Desfazer', shortcut: 'Ctrl+Z' },
+  { label: 'Refazer', shortcut: 'Ctrl+Shift+Z' },
+  { label: 'Copiar', shortcut: 'Ctrl+C' },
 ] as const;
 
 const EXPORTACOES = ['PDF', 'CSV', 'PNG'] as const;
@@ -91,7 +91,7 @@ export const WithShortcuts: Story = {
     });
 
     await step('O atalho entra no nome do item, e não fica escondido do leitor', async () => {
-      // Sem `aria-hidden`: "Desfazer, ⌘Z" é o que dá serventia ao atalho para
+      // Sem `aria-hidden`: "Desfazer, Ctrl+Z" é o que dá serventia ao atalho para
       // quem não enxerga a tela. Escondê-lo devolveria só "Desfazer".
       for (const [i, item] of items.entries()) {
         await expect(item).toHaveAccessibleName(`${SHORTCUTS[i].label} ${SHORTCUTS[i].shortcut}`);
@@ -360,8 +360,8 @@ export const EditorCompleto: Story = {
               label: 'Arquivo',
               items: [
                 { type: 'label', label: 'Documento' },
-                { label: 'Novo', shortcut: '⌘N' },
-                { label: 'Abrir', shortcut: '⌘O' },
+                { label: 'Novo', shortcut: 'Ctrl+N' },
+                { label: 'Abrir', shortcut: 'Ctrl+O' },
                 { type: 'separator' },
                 { label: 'Descartar alterações', variant: 'destructive' },
               ],
@@ -369,8 +369,8 @@ export const EditorCompleto: Story = {
             {
               label: 'Editar',
               items: [
-                { label: 'Desfazer', shortcut: '⌘Z' },
-                { label: 'Refazer', shortcut: '⇧⌘Z' },
+                { label: 'Desfazer', shortcut: 'Ctrl+Z' },
+                { label: 'Refazer', shortcut: 'Ctrl+Shift+Z' },
               ],
             },
             {
@@ -397,8 +397,8 @@ export const EditorCompleto: Story = {
           label: 'Arquivo',
           items: [
             { type: 'label', label: 'Documento' },
-            { label: 'Novo', shortcut: '⌘N' },
-            { label: 'Abrir', shortcut: '⌘O' },
+            { label: 'Novo', shortcut: 'Ctrl+N' },
+            { label: 'Abrir', shortcut: 'Ctrl+O' },
             { type: 'separator' },
             { label: 'Descartar alterações', variant: 'destructive' },
           ],
@@ -406,8 +406,8 @@ export const EditorCompleto: Story = {
         {
           label: 'Editar',
           items: [
-            { label: 'Desfazer', shortcut: '⌘Z' },
-            { label: 'Refazer', shortcut: '⇧⌘Z' },
+            { label: 'Desfazer', shortcut: 'Ctrl+Z' },
+            { label: 'Refazer', shortcut: 'Ctrl+Shift+Z' },
           ],
         },
         {

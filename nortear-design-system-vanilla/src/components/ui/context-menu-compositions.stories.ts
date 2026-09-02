@@ -40,10 +40,10 @@ export const WithShortcut: Story = {
     createContextMenu({
       trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
-        { type: 'item', label: 'Editar', value: 'editar', shortcut: '⌘E', onClick: fn() },
-        { type: 'item', label: 'Desfazer', value: 'undo', shortcut: '⌘Z', onClick: fn() },
+        { type: 'item', label: 'Editar', value: 'editar', shortcut: 'Ctrl+E', onClick: fn() },
+        { type: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl+Z', onClick: fn() },
         { type: 'separator' },
-        { type: 'item', label: 'Excluir', value: 'delete', shortcut: '⌫', variant: 'destructive' },
+        { type: 'item', label: 'Excluir', value: 'delete', shortcut: 'Delete', variant: 'destructive' },
       ],
     }),
   play: async ({ canvasElement, step }) => {
@@ -270,7 +270,7 @@ export const CompleteComposition: Story = {
           radioValue: 'grid',
           items: [
             { type: 'label', label: 'Ações' },
-            { label: 'Editar', value: 'edit', shortcut: '⌘E' },
+            { label: 'Editar', value: 'edit', shortcut: 'Ctrl+E' },
             {
               type: 'submenu',
               label: 'Compartilhar',
@@ -288,7 +288,7 @@ export const CompleteComposition: Story = {
             { type: 'radio', label: 'Grade', value: 'grid' },
             { type: 'radio', label: 'Lista', value: 'list' },
             { type: 'separator' },
-            { label: 'Excluir', value: 'delete', shortcut: '⌫', variant: 'destructive' },
+            { label: 'Excluir', value: 'delete', shortcut: 'Delete', variant: 'destructive' },
           ],
         }),
       },
@@ -300,7 +300,7 @@ export const CompleteComposition: Story = {
       radioValue: 'grid',
       items: [
         { type: 'label', label: 'Ações' },
-        { type: 'item', label: 'Editar', value: 'edit', shortcut: '⌘E', onClick: fn() },
+        { type: 'item', label: 'Editar', value: 'edit', shortcut: 'Ctrl+E', onClick: fn() },
         {
           type: 'submenu',
           label: 'Compartilhar',
@@ -318,7 +318,7 @@ export const CompleteComposition: Story = {
         { type: 'radio', label: 'Grade', value: 'grid' },
         { type: 'radio', label: 'Lista', value: 'list' },
         { type: 'separator' },
-        { type: 'item', label: 'Excluir', value: 'delete', shortcut: '⌫', variant: 'destructive' },
+        { type: 'item', label: 'Excluir', value: 'delete', shortcut: 'Delete', variant: 'destructive' },
       ],
     }),
   play: async ({ canvasElement, step }) => {

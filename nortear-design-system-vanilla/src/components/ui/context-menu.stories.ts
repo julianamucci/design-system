@@ -90,7 +90,7 @@ export const Playground: Story = {
         type: 'item',
         label: 'Editar',
         value: 'edit',
-        shortcut: args.showShortcuts ? '⌘E' : undefined,
+        shortcut: args.showShortcuts ? 'Ctrl+E' : undefined,
         onClick: fn(),
       },
       { type: 'item', label: 'Duplicar', value: 'duplicate', onClick: fn() },
@@ -104,7 +104,7 @@ export const Playground: Story = {
         label: 'Excluir',
         value: 'delete',
         variant: 'destructive',
-        shortcut: args.showShortcuts ? '⌫' : undefined,
+        shortcut: args.showShortcuts ? 'Delete' : undefined,
         onClick: fn(),
       });
     }
@@ -154,7 +154,7 @@ export const Playground: Story = {
     });
 
     await step('O atalho é lido junto do item, não escondido', async () => {
-      // "Excluir, ⌫" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
+      // "Excluir, Delete" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
       // só "Excluir" e o atalho não ensinaria nada.
       const atalho = menuOpen()!.querySelector<HTMLElement>(
         '[data-slot="context-menu-shortcut"]',

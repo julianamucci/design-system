@@ -40,13 +40,13 @@ describe('commandSnippet', () => {
   it('mostra as chaves de item que a story exercita', () => {
     const code = commandSnippet({
       items: [
-        { value: 'novo', label: 'Novo arquivo', shortcut: '⌘N' },
+        { value: 'novo', label: 'Novo arquivo', shortcut: 'Ctrl+N' },
         { type: 'separator' },
         { value: 'claro', label: 'Claro', checked: true },
         { value: 'arquivar', label: 'Arquivar', disabled: true },
       ],
     });
-    expect(code).toContain("shortcut: '⌘N'");
+    expect(code).toContain("shortcut: 'Ctrl+N'");
     expect(code).toContain("{ type: 'separator' }");
     expect(code).toContain('checked: true');
     expect(code).toContain('disabled: true');

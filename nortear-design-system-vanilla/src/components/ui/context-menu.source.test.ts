@@ -38,7 +38,7 @@ describe('contextMenuSnippet', () => {
 
   it('acompanha os controls do menu canônico', () => {
     const completo = contextMenuSnippet();
-    expect(completo).toContain("shortcut: '⌘E'");
+    expect(completo).toContain("shortcut: 'Ctrl+E'");
     expect(completo).toContain("{ type: 'separator' },");
     expect(completo).toContain("variant: 'destructive'");
 

@@ -50,7 +50,7 @@ describe('dropdownMenuSnippet', () => {
         { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
         { type: 'separator' },
         { label: 'Excluir conta', value: 'delete', variant: 'destructive' },
-        { label: 'Copiar', value: 'copy', shortcut: 'Ctrl C' },
+        { label: 'Copiar', value: 'copy', shortcut: 'Ctrl+C' },
         { label: 'Arquivar', value: 'archive', disabled: true },
       ],
     });
@@ -63,7 +63,7 @@ describe('dropdownMenuSnippet', () => {
     );
     expect(code).toContain("{ type: 'separator' }");
     expect(code).toContain("variant: 'destructive'");
-    expect(code).toContain("shortcut: 'Ctrl C'");
+    expect(code).toContain("shortcut: 'Ctrl+C'");
     expect(code).toContain('disabled: true');
   });
 

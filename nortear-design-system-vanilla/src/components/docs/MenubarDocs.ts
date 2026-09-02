@@ -58,9 +58,9 @@ function buildDemoMenubar(): HTMLElement {
     {
       label: 'Arquivo',
       items: [
-        { type: 'item', label: 'Novo',     shortcut: '⌘N' },
-        { type: 'item', label: 'Abrir',    shortcut: '⌘O' },
-        { type: 'item', label: 'Salvar',   shortcut: '⌘S' },
+        { type: 'item', label: 'Novo',     shortcut: 'Ctrl+N' },
+        { type: 'item', label: 'Abrir',    shortcut: 'Ctrl+O' },
+        { type: 'item', label: 'Salvar',   shortcut: 'Ctrl+S' },
         { type: 'separator' },
         {
           type: 'submenu',
@@ -71,18 +71,18 @@ function buildDemoMenubar(): HTMLElement {
           ],
         },
         { type: 'separator' },
-        { type: 'item', label: 'Sair',     shortcut: '⌘Q' },
+        { type: 'item', label: 'Sair',     shortcut: 'Ctrl+Q' },
       ],
     },
     {
       label: 'Editar',
       items: [
-        { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
-        { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+        { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
+        { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
         { type: 'separator' },
-        { type: 'item', label: 'Recortar', shortcut: '⌘X' },
-        { type: 'item', label: 'Copiar',   shortcut: '⌘C' },
-        { type: 'item', label: 'Colar',    shortcut: '⌘V' },
+        { type: 'item', label: 'Recortar', shortcut: 'Ctrl+X' },
+        { type: 'item', label: 'Copiar',   shortcut: 'Ctrl+C' },
+        { type: 'item', label: 'Colar',    shortcut: 'Ctrl+V' },
       ],
     },
     {
@@ -98,8 +98,8 @@ function buildDemoMenubar(): HTMLElement {
     {
       label: 'Ferramentas',
       items: [
-        { type: 'item', label: 'Buscar',     shortcut: '⌘F' },
-        { type: 'item', label: 'Substituir', shortcut: '⌘H' },
+        { type: 'item', label: 'Buscar',     shortcut: 'Ctrl+F' },
+        { type: 'item', label: 'Substituir', shortcut: 'Ctrl+H' },
         { type: 'separator' },
         {
           type: 'radio-group',
@@ -334,8 +334,8 @@ export function createMenubarDocs(): HTMLElement {
                     {
                       label: 'Arquivo',
                       items: [
-                        { type: 'item', label: 'Salvar', shortcut: '⌘S' },
-                        { type: 'item', label: 'Abrir',  shortcut: '⌘O' },
+                        { type: 'item', label: 'Salvar', shortcut: 'Ctrl+S' },
+                        { type: 'item', label: 'Abrir',  shortcut: 'Ctrl+O' },
                       ],
                     },
                   ]),
@@ -368,9 +368,9 @@ export function createMenubarDocs(): HTMLElement {
   {
     label: 'Arquivo',
     items: [
-      { type: 'item', label: 'Novo',    shortcut: '⌘N' },
-      { type: 'item', label: 'Abrir',   shortcut: '⌘O' },
-      { type: 'item', label: 'Salvar',  shortcut: '⌘S' },
+      { type: 'item', label: 'Novo',    shortcut: 'Ctrl+N' },
+      { type: 'item', label: 'Abrir',   shortcut: 'Ctrl+O' },
+      { type: 'item', label: 'Salvar',  shortcut: 'Ctrl+S' },
     ],
   },
 ]);`;
@@ -460,11 +460,11 @@ panel.appendChild(li);`;
   {
     label: 'Editar',
     items: [
-      { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
-      { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+      { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
+      { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
       { type: 'separator' },
-      { type: 'item', label: 'Copiar',   shortcut: '⌘C' },
-      { type: 'item', label: 'Colar',    shortcut: '⌘V' },
+      { type: 'item', label: 'Copiar',   shortcut: 'Ctrl+C' },
+      { type: 'item', label: 'Colar',    shortcut: 'Ctrl+V' },
     ],
   },
 ]);`;
@@ -485,15 +485,15 @@ const panel = bar.querySelector('[role="menu"]');
 
         const codeEditorComplete = `const bar = createMenubar([
   { label: 'Arquivo', items: [
-    { type: 'item', label: 'Novo',    shortcut: '⌘N' },
-    { type: 'item', label: 'Abrir...', shortcut: '⌘O' },
-    { type: 'item', label: 'Salvar',  shortcut: '⌘S' },
+    { type: 'item', label: 'Novo',    shortcut: 'Ctrl+N' },
+    { type: 'item', label: 'Abrir...', shortcut: 'Ctrl+O' },
+    { type: 'item', label: 'Salvar',  shortcut: 'Ctrl+S' },
     { type: 'separator' },
-    { type: 'item', label: 'Sair',    shortcut: '⌘Q' },
+    { type: 'item', label: 'Sair',    shortcut: 'Ctrl+Q' },
   ]},
   { label: 'Editar', items: [
-    { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
-    { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+    { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
+    { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
   ]},
   { label: 'Exibir', items: [
     { type: 'label', label: 'Aparência' },
@@ -530,8 +530,8 @@ const panel = bar.querySelector('[role="menu"]');
                     {
                       label: 'Arquivo',
                       items: [
-                        { type: 'item', label: 'Novo',    shortcut: '⌘N' },
-                        { type: 'item', label: 'Salvar',  shortcut: '⌘S' },
+                        { type: 'item', label: 'Novo',    shortcut: 'Ctrl+N' },
+                        { type: 'item', label: 'Salvar',  shortcut: 'Ctrl+S' },
                       ],
                     },
                   ]),
@@ -567,11 +567,11 @@ const panel = bar.querySelector('[role="menu"]');
                   {
                     label: 'Editar',
                     items: [
-                      { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
-                      { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+                      { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
+                      { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
                       { type: 'separator' },
-                      { type: 'item', label: 'Copiar',   shortcut: '⌘C' },
-                      { type: 'item', label: 'Colar',    shortcut: '⌘V' },
+                      { type: 'item', label: 'Copiar',   shortcut: 'Ctrl+C' },
+                      { type: 'item', label: 'Colar',    shortcut: 'Ctrl+V' },
                     ],
                   },
                 ]),
@@ -624,15 +624,15 @@ const panel = bar.querySelector('[role="menu"]');
               previewFactory: () => wrapPreview(
                 createMenubar([
                   { label: 'Arquivo', items: [
-                    { type: 'item', label: 'Novo',     shortcut: '⌘N' },
-                    { type: 'item', label: 'Abrir...', shortcut: '⌘O' },
-                    { type: 'item', label: 'Salvar',   shortcut: '⌘S' },
+                    { type: 'item', label: 'Novo',     shortcut: 'Ctrl+N' },
+                    { type: 'item', label: 'Abrir...', shortcut: 'Ctrl+O' },
+                    { type: 'item', label: 'Salvar',   shortcut: 'Ctrl+S' },
                     { type: 'separator' },
-                    { type: 'item', label: 'Sair',     shortcut: '⌘Q' },
+                    { type: 'item', label: 'Sair',     shortcut: 'Ctrl+Q' },
                   ]},
                   { label: 'Editar', items: [
-                    { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
-                    { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+                    { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
+                    { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
                   ]},
                   { label: 'Exibir', items: [
                     { type: 'label', label: 'Aparência' },

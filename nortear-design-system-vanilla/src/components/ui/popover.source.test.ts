@@ -61,8 +61,8 @@ describe('popoverSnippet', () => {
   });
 
   it('conteúdo de texto puro dispensa as sub-fábricas de cabeçalho', () => {
-    const code = popoverSnippet({ text: 'Use Ctrl + K para abrir a busca.' });
-    expect(code).toContain("content: 'Use Ctrl + K para abrir a busca.'");
+    const code = popoverSnippet({ text: 'Use Ctrl+K para abrir a busca.' });
+    expect(code).toContain("content: 'Use Ctrl+K para abrir a busca.'");
     expect(code).not.toContain('createPopoverHeader');
     expect(code).not.toContain('createPopoverTitle');
   });

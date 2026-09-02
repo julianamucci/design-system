@@ -13,7 +13,7 @@ describe('menubarSnippet', () => {
   it('passa os menus no primeiro argumento, que é posicional', () => {
     const code = menubarSnippet();
     expect(code).toContain("label: 'Arquivo'");
-    expect(code).toContain("{ label: 'Novo', shortcut: '⌘N', onClick: () => novo() },");
+    expect(code).toContain("{ label: 'Novo', shortcut: 'Ctrl+N', onClick: () => novo() },");
     expect(code).toContain("document.querySelector('#app')?.append(barra);");
   });
 
