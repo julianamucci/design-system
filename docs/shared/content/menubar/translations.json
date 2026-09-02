@@ -32,11 +32,11 @@
       "item9": "<strong>MenubarLabel</strong> — cabeçalho de grupo (não interativo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> exibe atalho.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
-        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst barra = createMenubar([\n  {\n    label: 'Arquivo',\n    items: [\n      { label: 'Novo', shortcut: '⌘N' },\n      { label: 'Abrir', shortcut: '⌘O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Desfazer', shortcut: '⌘Z' }],\n  },\n]);\n\ndocument.body.appendChild(barra);",
-        "vue": "<Menubar v-model=\"menuAtivo\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "svelte": "<Menubar bind:value={menuAtivo}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst barra = createMenubar([\n  {\n    label: 'Arquivo',\n    items: [\n      { label: 'Novo', shortcut: 'Ctrl+N' },\n      { label: 'Abrir', shortcut: 'Ctrl+O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Desfazer', shortcut: 'Ctrl+Z' }],\n  },\n]);\n\ndocument.body.appendChild(barra);",
+        "vue": "<Menubar v-model=\"menuAtivo\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "svelte": "<Menubar bind:value={menuAtivo}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
       }
     },
     "usage": {
@@ -103,9 +103,9 @@
           },
           "shortcut": {
             "name": "MenubarShortcut",
-            "format": "Notação padrão de atalho do OS",
-            "good": "⌘S / Ctrl+S",
-            "bad": "Apertar Cmd e S"
+            "format": "Teclas por extenso, separadas por +",
+            "good": "Ctrl+S",
+            "bad": "Apertar Ctrl e S"
           },
           "destructive": {
             "name": "Item destructive",
@@ -137,7 +137,7 @@
         "dont": "Menubar com 1 menu único — use DropdownMenu."
       },
       "pair2": {
-        "do": "MenubarShortcut visível para atalhos importantes (⌘S, ⌘Z).",
+        "do": "MenubarShortcut visível para atalhos importantes (Ctrl+S, Ctrl+Z).",
         "dont": "Submenus aninhados em mais de 1 nível — confunde navegação."
       }
     },
@@ -355,7 +355,7 @@
         },
         "command": {
           "name": "Command",
-          "description": "Para acesso rápido a ações via busca (Cmd+K palette)."
+          "description": "Para acesso rápido a ações via busca (Ctrl+K palette)."
         }
       }
     },
@@ -515,11 +515,11 @@
       "item9": "<strong>MenubarLabel</strong> — group heading (non-interactive); <strong>MenubarSeparator</strong> divides groups; <strong>MenubarShortcut</strong> displays a shortcut.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
-        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst bar = createMenubar([\n  {\n    label: 'File',\n    items: [\n      { label: 'New', shortcut: '⌘N' },\n      { label: 'Open', shortcut: '⌘O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Export',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Edit',\n    items: [{ label: 'Undo', shortcut: '⌘Z' }],\n  },\n]);\n\ndocument.body.appendChild(bar);",
-        "vue": "<Menubar v-model=\"activeMenu\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "svelte": "<Menubar bind:value={activeMenu}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst bar = createMenubar([\n  {\n    label: 'File',\n    items: [\n      { label: 'New', shortcut: 'Ctrl+N' },\n      { label: 'Open', shortcut: 'Ctrl+O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Export',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Edit',\n    items: [{ label: 'Undo', shortcut: 'Ctrl+Z' }],\n  },\n]);\n\ndocument.body.appendChild(bar);",
+        "vue": "<Menubar v-model=\"activeMenu\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "svelte": "<Menubar bind:value={activeMenu}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
       }
     },
     "usage": {
@@ -586,9 +586,9 @@
           },
           "shortcut": {
             "name": "MenubarShortcut",
-            "format": "Standard OS shortcut notation",
-            "good": "⌘S / Ctrl+S",
-            "bad": "Press Cmd and S"
+            "format": "Spelled-out keys, separated by +",
+            "good": "Ctrl+S",
+            "bad": "Press Ctrl and S"
           },
           "destructive": {
             "name": "Destructive item",
@@ -620,7 +620,7 @@
         "dont": "Menubar with a single menu — use DropdownMenu."
       },
       "pair2": {
-        "do": "Visible MenubarShortcut for important shortcuts (⌘S, ⌘Z).",
+        "do": "Visible MenubarShortcut for important shortcuts (Ctrl+S, Ctrl+Z).",
         "dont": "Submenus nested more than 1 level — confuses navigation."
       }
     },
@@ -838,7 +838,7 @@
         },
         "command": {
           "name": "Command",
-          "description": "For quick action access via search (Cmd+K palette)."
+          "description": "For quick action access via search (Ctrl+K palette)."
         }
       }
     },
@@ -998,11 +998,11 @@
       "item9": "<strong>MenubarLabel</strong> — encabezado de grupo (no interactivo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> muestra atajo.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
-        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst barra = createMenubar([\n  {\n    label: 'Archivo',\n    items: [\n      { label: 'Nuevo', shortcut: '⌘N' },\n      { label: 'Abrir', shortcut: '⌘O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Deshacer', shortcut: '⌘Z' }],\n  },\n]);\n\ndocument.body.appendChild(barra);",
-        "vue": "<Menubar v-model=\"menuActivo\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "svelte": "<Menubar bind:value={menuActivo}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst barra = createMenubar([\n  {\n    label: 'Archivo',\n    items: [\n      { label: 'Nuevo', shortcut: 'Ctrl+N' },\n      { label: 'Abrir', shortcut: 'Ctrl+O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Deshacer', shortcut: 'Ctrl+Z' }],\n  },\n]);\n\ndocument.body.appendChild(barra);",
+        "vue": "<Menubar v-model=\"menuActivo\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "svelte": "<Menubar bind:value={menuActivo}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
       }
     },
     "usage": {
@@ -1069,9 +1069,9 @@
           },
           "shortcut": {
             "name": "MenubarShortcut",
-            "format": "Notación estándar de atajo del SO",
-            "good": "⌘S / Ctrl+S",
-            "bad": "Presiona Cmd y S"
+            "format": "Teclas escritas, separadas por +",
+            "good": "Ctrl+S",
+            "bad": "Presiona Ctrl y S"
           },
           "destructive": {
             "name": "Item destructive",
@@ -1103,7 +1103,7 @@
         "dont": "Menubar con un único menú — usa DropdownMenu."
       },
       "pair2": {
-        "do": "MenubarShortcut visible para atajos importantes (⌘S, ⌘Z).",
+        "do": "MenubarShortcut visible para atajos importantes (Ctrl+S, Ctrl+Z).",
         "dont": "Submenús anidados en más de 1 nivel — confunde la navegación."
       }
     },
@@ -1321,7 +1321,7 @@
         },
         "command": {
           "name": "Command",
-          "description": "Para acceso rápido a acciones vía búsqueda (Cmd+K palette)."
+          "description": "Para acceso rápido a acciones vía búsqueda (Ctrl+K palette)."
         }
       }
     },

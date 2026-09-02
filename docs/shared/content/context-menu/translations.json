@@ -20,8 +20,8 @@
         "shareEmail": "Por e-mail",
         "shareLink": "Por link",
         "delete": "Excluir",
-        "editShortcut": "⌘E",
-        "deleteShortcut": "⌫"
+        "editShortcut": "Ctrl+E",
+        "deleteShortcut": "Delete"
       }
     },
     "anatomy": {
@@ -42,7 +42,7 @@
         "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
         "vue": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem v-model:checked=\"marcado\" />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup v-model=\"visao\">\n      <ContextMenuRadioItem value=\"lista\" />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
         "svelte": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem bind:checked />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup bind:value>\n      <ContextMenuRadioItem value=\"lista\" />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
-        "vanilla": "const menu = createContextMenu({\n  trigger: areaDeClique,\n  radioValue: 'lista',\n  items: [\n    { type: 'label', label: 'Ações' },\n    { type: 'item', label: 'Abrir', shortcut: '⏎' },\n    { type: 'checkbox', label: 'Mostrar ocultos', checked: true },\n    { type: 'separator' },\n    { type: 'radio', value: 'lista', label: 'Lista' },\n    { type: 'radio', value: 'grade', label: 'Grade' },\n    {\n      type: 'submenu',\n      label: 'Enviar para',\n      items: [{ type: 'item', label: 'Área de trabalho' }],\n    },\n    { type: 'item', label: 'Excluir', variant: 'destructive' },\n  ],\n});",
+        "vanilla": "const menu = createContextMenu({\n  trigger: areaDeClique,\n  radioValue: 'lista',\n  items: [\n    { type: 'label', label: 'Ações' },\n    { type: 'item', label: 'Abrir', shortcut: 'Enter' },\n    { type: 'checkbox', label: 'Mostrar ocultos', checked: true },\n    { type: 'separator' },\n    { type: 'radio', value: 'lista', label: 'Lista' },\n    { type: 'radio', value: 'grade', label: 'Grade' },\n    {\n      type: 'submenu',\n      label: 'Enviar para',\n      items: [{ type: 'item', label: 'Área de trabalho' }],\n    },\n    { type: 'item', label: 'Excluir', variant: 'destructive' },\n  ],\n});",
         "angular": "<nds-context-menu>\n  <div ndsContextMenuTrigger></div>\n  <ng-template ndsContextMenuContent>\n    <div ndsContextMenuGroup>\n      <div ndsContextMenuLabel></div>\n      <button ndsContextMenuItem></button>\n      <button ndsContextMenuCheckboxItem></button>\n    </div>\n    <div ndsContextMenuSeparator></div>\n    <div ndsContextMenuRadioGroup>\n      <button ndsContextMenuRadioItem></button>\n    </div>\n    <nds-context-menu-sub>\n      <button ndsContextMenuSubTrigger></button>\n      <ng-template ndsContextMenuSubContent>\n        <button ndsContextMenuItem></button>\n      </ng-template>\n    </nds-context-menu-sub>\n  </ng-template>\n</nds-context-menu>"
       }
     },
@@ -143,7 +143,7 @@
         "withShortcuts": {
           "name": "Itens com atalhos",
           "description": "Itens combinando rótulo + <code>Shortcut</code> alinhado à direita. O <code>Shortcut</code> é lido junto do item pelo leitor de tela; a tecla real precisa ser registrada por um listener global.",
-          "use": "Ações que já possuem atalho global na aplicação (⌘E, ⌘D, ⌫). Mantém paridade entre menu contextual e teclado e ensina o atalho ao usuário."
+          "use": "Ações que já possuem atalho global na aplicação (Ctrl+E, Ctrl+D, Delete). Mantém paridade entre menu contextual e teclado e ensina o atalho ao usuário."
         },
         "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone."
       }
@@ -464,8 +464,8 @@
         "shareEmail": "By email",
         "shareLink": "By link",
         "delete": "Delete",
-        "editShortcut": "⌘E",
-        "deleteShortcut": "⌫"
+        "editShortcut": "Ctrl+E",
+        "deleteShortcut": "Delete"
       }
     },
     "anatomy": {
@@ -486,7 +486,7 @@
         "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
         "vue": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem v-model:checked=\"checked\" />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup v-model=\"view\">\n      <ContextMenuRadioItem value=\"list\" />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
         "svelte": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem bind:checked />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup bind:value>\n      <ContextMenuRadioItem value=\"list\" />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
-        "vanilla": "const menu = createContextMenu({\n  trigger: clickArea,\n  radioValue: 'list',\n  items: [\n    { type: 'label', label: 'Actions' },\n    { type: 'item', label: 'Open', shortcut: '⏎' },\n    { type: 'checkbox', label: 'Show hidden', checked: true },\n    { type: 'separator' },\n    { type: 'radio', value: 'list', label: 'List' },\n    { type: 'radio', value: 'grid', label: 'Grid' },\n    {\n      type: 'submenu',\n      label: 'Send to',\n      items: [{ type: 'item', label: 'Desktop' }],\n    },\n    { type: 'item', label: 'Delete', variant: 'destructive' },\n  ],\n});",
+        "vanilla": "const menu = createContextMenu({\n  trigger: clickArea,\n  radioValue: 'list',\n  items: [\n    { type: 'label', label: 'Actions' },\n    { type: 'item', label: 'Open', shortcut: 'Enter' },\n    { type: 'checkbox', label: 'Show hidden', checked: true },\n    { type: 'separator' },\n    { type: 'radio', value: 'list', label: 'List' },\n    { type: 'radio', value: 'grid', label: 'Grid' },\n    {\n      type: 'submenu',\n      label: 'Send to',\n      items: [{ type: 'item', label: 'Desktop' }],\n    },\n    { type: 'item', label: 'Delete', variant: 'destructive' },\n  ],\n});",
         "angular": "<nds-context-menu>\n  <div ndsContextMenuTrigger></div>\n  <ng-template ndsContextMenuContent>\n    <div ndsContextMenuGroup>\n      <div ndsContextMenuLabel></div>\n      <button ndsContextMenuItem></button>\n      <button ndsContextMenuCheckboxItem></button>\n    </div>\n    <div ndsContextMenuSeparator></div>\n    <div ndsContextMenuRadioGroup>\n      <button ndsContextMenuRadioItem></button>\n    </div>\n    <nds-context-menu-sub>\n      <button ndsContextMenuSubTrigger></button>\n      <ng-template ndsContextMenuSubContent>\n        <button ndsContextMenuItem></button>\n      </ng-template>\n    </nds-context-menu-sub>\n  </ng-template>\n</nds-context-menu>"
       }
     },
@@ -587,7 +587,7 @@
         "withShortcuts": {
           "name": "Items with shortcuts",
           "description": "Items combining label + <code>Shortcut</code> aligned to the right. <code>Shortcut</code> is read together with the item by the screen reader; the actual key must be wired via a global listener.",
-          "use": "Actions that already have a global app shortcut (⌘E, ⌘D, ⌫). Keeps parity between context menu and keyboard and teaches the shortcut to the user."
+          "use": "Actions that already have a global app shortcut (Ctrl+E, Ctrl+D, Delete). Keeps parity between context menu and keyboard and teaches the shortcut to the user."
         },
         "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items."
       }
@@ -908,8 +908,8 @@
         "shareEmail": "Por correo",
         "shareLink": "Por enlace",
         "delete": "Eliminar",
-        "editShortcut": "⌘E",
-        "deleteShortcut": "⌫"
+        "editShortcut": "Ctrl+E",
+        "deleteShortcut": "Delete"
       }
     },
     "anatomy": {
@@ -930,7 +930,7 @@
         "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
         "vue": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem v-model:checked=\"marcado\" />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup v-model=\"vista\">\n      <ContextMenuRadioItem value=\"lista\" />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
         "svelte": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem bind:checked />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup bind:value>\n      <ContextMenuRadioItem value=\"lista\" />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
-        "vanilla": "const menu = createContextMenu({\n  trigger: areaDeClic,\n  radioValue: 'lista',\n  items: [\n    { type: 'label', label: 'Acciones' },\n    { type: 'item', label: 'Abrir', shortcut: '⏎' },\n    { type: 'checkbox', label: 'Mostrar ocultos', checked: true },\n    { type: 'separator' },\n    { type: 'radio', value: 'lista', label: 'Lista' },\n    { type: 'radio', value: 'cuadricula', label: 'Cuadrícula' },\n    {\n      type: 'submenu',\n      label: 'Enviar a',\n      items: [{ type: 'item', label: 'Escritorio' }],\n    },\n    { type: 'item', label: 'Eliminar', variant: 'destructive' },\n  ],\n});",
+        "vanilla": "const menu = createContextMenu({\n  trigger: areaDeClic,\n  radioValue: 'lista',\n  items: [\n    { type: 'label', label: 'Acciones' },\n    { type: 'item', label: 'Abrir', shortcut: 'Enter' },\n    { type: 'checkbox', label: 'Mostrar ocultos', checked: true },\n    { type: 'separator' },\n    { type: 'radio', value: 'lista', label: 'Lista' },\n    { type: 'radio', value: 'cuadricula', label: 'Cuadrícula' },\n    {\n      type: 'submenu',\n      label: 'Enviar a',\n      items: [{ type: 'item', label: 'Escritorio' }],\n    },\n    { type: 'item', label: 'Eliminar', variant: 'destructive' },\n  ],\n});",
         "angular": "<nds-context-menu>\n  <div ndsContextMenuTrigger></div>\n  <ng-template ndsContextMenuContent>\n    <div ndsContextMenuGroup>\n      <div ndsContextMenuLabel></div>\n      <button ndsContextMenuItem></button>\n      <button ndsContextMenuCheckboxItem></button>\n    </div>\n    <div ndsContextMenuSeparator></div>\n    <div ndsContextMenuRadioGroup>\n      <button ndsContextMenuRadioItem></button>\n    </div>\n    <nds-context-menu-sub>\n      <button ndsContextMenuSubTrigger></button>\n      <ng-template ndsContextMenuSubContent>\n        <button ndsContextMenuItem></button>\n      </ng-template>\n    </nds-context-menu-sub>\n  </ng-template>\n</nds-context-menu>"
       }
     },
@@ -1031,7 +1031,7 @@
         "withShortcuts": {
           "name": "Ítems con atajos",
           "description": "Ítems que combinan etiqueta + <code>Shortcut</code> alineado a la derecha. El <code>Shortcut</code> se lee junto con el ítem por el lector de pantalla; la tecla real debe registrarse mediante un listener global.",
-          "use": "Acciones que ya tienen atajo global en la aplicación (⌘E, ⌘D, ⌫). Mantiene paridad entre menú contextual y teclado y enseña el atajo al usuario."
+          "use": "Acciones que ya tienen atajo global en la aplicación (Ctrl+E, Ctrl+D, Delete). Mantiene paridad entre menú contextual y teclado y enseña el atajo al usuario."
         },
         "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono."
       }

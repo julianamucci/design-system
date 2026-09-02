@@ -26,7 +26,7 @@
         "note": "Anotação",
         "send": "Enviar",
         "invalidMsg": "Endereço inválido",
-        "shortcut": "⌘K"
+        "shortcut": "Ctrl+K"
       }
     },
     "anatomy": {
@@ -560,7 +560,7 @@
         "note": "Note",
         "send": "Send",
         "invalidMsg": "Invalid address",
-        "shortcut": "⌘K"
+        "shortcut": "Ctrl+K"
       }
     },
     "anatomy": {
@@ -1094,7 +1094,7 @@
         "note": "Nota",
         "send": "Enviar",
         "invalidMsg": "Dirección no válida",
-        "shortcut": "⌘K"
+        "shortcut": "Ctrl+K"
       }
     },
     "anatomy": {

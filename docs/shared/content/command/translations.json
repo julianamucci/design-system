@@ -6,7 +6,7 @@
     "description": "Interface de busca e seleção rápida de comandos, ações ou itens com filtro fuzzy integrado. Suporta uso inline e command palette.",
     "seo": {
       "title": "Command — Overlay",
-      "description": "Documentação do Command: busca fuzzy integrada, padrões inline e command palette (Cmd+K), acessibilidade WCAG com navegação por teclado.",
+      "description": "Documentação do Command: busca fuzzy integrada, padrões inline e command palette (Ctrl+K), acessibilidade WCAG com navegação por teclado.",
       "aiSummary": "Componente Command com filtro fuzzy nativo, 2 padrões de uso (inline, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut e CommandEmpty.",
       "aiEntities": "Command, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA Combobox, Command Palette, atalho de teclado, filtro por texto"
     },
@@ -21,7 +21,7 @@
         "itemInput": "Input",
         "itemSeparator": "Separator",
         "shortcutHint": "Pressione",
-        "shortcutKey": "⌘K",
+        "shortcutKey": "Ctrl+K",
         "openPalette": "Buscar",
         "dialogTitle": "Command Palette",
         "dialogDescription": "Busque por um comando ou ação..."
@@ -40,11 +40,11 @@
       "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> com <code>Dialog</code> para o padrão command palette.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "angular": "<!-- Sobre rdxAutocomplete: o Radix NG não tem primitivo \"command\" -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>⌘K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>",
-        "vue": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" @select=\"handleSelect\">\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "svelte": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "vanilla": "const paleta = createCommand({\n  placeholder: 'Buscar...',\n  emptyMessage: 'Nenhum resultado.',\n  // O agrupamento vem do campo `group`; a factory desenha o traço entre um\n  // grupo e o seguinte. `{ type: 'separator' }` quebra a sequência onde não há\n  // grupo nenhum a separar.\n  items: [\n    { value: 'item',  label: 'Rótulo do item', group: 'Grupo',       shortcut: '⌘K' },\n    { value: 'outro', label: 'Outro item',     group: 'Outro grupo' },\n    { type: 'separator' },\n    { value: 'sair',  label: 'Sair' },\n  ],\n  onSelect: (valor) => console.log(valor),\n});"
+        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "angular": "<!-- Sobre rdxAutocomplete: o Radix NG não tem primitivo \"command\" -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>Ctrl+K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>",
+        "vue": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" @select=\"handleSelect\">\n        Rótulo do item\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "svelte": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "vanilla": "const paleta = createCommand({\n  placeholder: 'Buscar...',\n  emptyMessage: 'Nenhum resultado.',\n  // O agrupamento vem do campo `group`; a factory desenha o traço entre um\n  // grupo e o seguinte. `{ type: 'separator' }` quebra a sequência onde não há\n  // grupo nenhum a separar.\n  items: [\n    { value: 'item',  label: 'Rótulo do item', group: 'Grupo',       shortcut: 'Ctrl+K' },\n    { value: 'outro', label: 'Outro item',     group: 'Outro grupo' },\n    { type: 'separator' },\n    { value: 'sair',  label: 'Sair' },\n  ],\n  onSelect: (valor) => console.log(valor),\n});"
       }
     },
     "usage": {
@@ -53,8 +53,8 @@
         "title": "Guidelines Obrigatórias",
         "item1": "<code>CommandEmpty</code> é obrigatório — sem ele a área fica em branco quando não há resultados.",
         "item2": "Sempre chame <code>setOpen(false)</code> dentro do <code>onSelect</code> ao usar Command em Dialog ou Popover.",
-        "item3": "O atalho Cmd+K não é nativo — registre um listener de <code>keydown</code> na janela, na página que hospeda a paleta.",
-        "item4": "Exiba sempre uma dica visual do atalho (ex: <kbd>⌘K</kbd>) quando usar command palette — o usuário precisa descobrir o atalho.",
+        "item3": "O atalho Ctrl+K não é nativo — registre um listener de <code>keydown</code> na janela, na página que hospeda a paleta.",
+        "item4": "Exiba sempre uma dica visual do atalho (ex: <kbd>Ctrl+K</kbd>) quando usar command palette — o usuário precisa descobrir o atalho.",
         "item5": "Use <code>CommandGroup</code> com <code>heading</code> para organizar grupos relacionados; omita o heading quando há apenas um grupo."
       },
       "scenarios": {
@@ -110,7 +110,7 @@
         "dont": "Omitir CommandEmpty: deixa a lista em branco quando não há resultados."
       },
       "pair2": {
-        "do": "Exibir dica visual do atalho (ex: tecla Cmd+K) sempre que usar command palette.",
+        "do": "Exibir dica visual do atalho (ex: tecla Ctrl+K) sempre que usar command palette.",
         "dont": "Esconder o atalho do usuário: ele não consegue descobrir como abrir o command palette."
       }
     },
@@ -125,7 +125,7 @@
       "note": "O Command não tem variantes visuais via prop — os dois padrões de uso diferem na composição estrutural: inline na página ou dentro de <code>CommandDialog</code> (command palette).",
       "items": {
         "inline": "Renderizado diretamente na página. Use para busca local numa seção da página.",
-        "palette": "Command dentro de <code>CommandDialog</code>. Ativado por atalho global (Cmd+K) para acesso rápido a ações da aplicação.",
+        "palette": "Command dentro de <code>CommandDialog</code>. Ativado por atalho global (Ctrl+K) para acesso rápido a ações da aplicação.",
         "withGroups": {
           "name": "Com grupos",
           "description": "Itens organizados em múltiplos <code>CommandGroup</code> com <code>heading</code> distinto e separadores entre eles. O filtro fuzzy continua atravessando todos os grupos.",
@@ -264,7 +264,7 @@
         "itemSelectTrigger": "Usuário seleciona um item via clique ou Enter",
         "itemSelectPayload": "{ label: string, group: string, pattern: 'inline' | 'palette' }",
         "paletteOpen": "command_palette_open",
-        "paletteOpenTrigger": "Usuário abre o command palette (botão ou atalho Cmd+K)",
+        "paletteOpenTrigger": "Usuário abre o command palette (botão ou atalho Ctrl+K)",
         "paletteOpenPayload": "{ trigger: 'keyboard' | 'button' }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
@@ -308,7 +308,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Pressionar Cmd+K com listener implementado",
+          "action": "Pressionar Ctrl+K com listener implementado",
           "result": "CommandDialog abre; foco vai para CommandInput",
           "priority": "medium"
         }
@@ -371,7 +371,7 @@
     "description": "Fast search and selection interface for commands, actions, or items with built-in fuzzy filtering. Supports inline and command palette patterns.",
     "seo": {
       "title": "Command — Overlay",
-      "description": "Documentation for Command: built-in fuzzy search, inline and command palette (Cmd+K) patterns, WCAG accessibility with keyboard navigation.",
+      "description": "Documentation for Command: built-in fuzzy search, inline and command palette (Ctrl+K) patterns, WCAG accessibility with keyboard navigation.",
       "aiSummary": "Command component with native fuzzy filtering, 2 usage patterns (inline, command palette), subcomponents CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut, and CommandEmpty.",
       "aiEntities": "Command, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA Combobox, Command Palette, keyboard shortcut, text filtering"
     },
@@ -386,7 +386,7 @@
         "itemInput": "Input",
         "itemSeparator": "Separator",
         "shortcutHint": "Press",
-        "shortcutKey": "⌘K",
+        "shortcutKey": "Ctrl+K",
         "openPalette": "Search",
         "dialogTitle": "Command Palette",
         "dialogDescription": "Search for a command or action..."
@@ -405,11 +405,11 @@
       "item9": "<strong>CommandDialog</strong> — wrapper combining <code>Command</code> with <code>Dialog</code> for the command palette pattern.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "angular": "<!-- On rdxAutocomplete: Radix NG has no \"command\" primitive -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>⌘K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>",
-        "vue": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" @select=\"handleSelect\">\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "svelte": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "vanilla": "const paleta = createCommand({\n  placeholder: 'Search...',\n  emptyMessage: 'No results.',\n  // Grouping comes from the `group` field; the factory draws the rule between\n  // one group and the next. `{ type: 'separator' }` breaks the sequence where\n  // there is no group to separate.\n  items: [\n    { value: 'item',  label: 'Item label', group: 'Group',         shortcut: '⌘K' },\n    { value: 'other', label: 'Other item', group: 'Another group' },\n    { type: 'separator' },\n    { value: 'exit',  label: 'Exit' },\n  ],\n  onSelect: (valor) => console.log(valor),\n});"
+        "react": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "angular": "<!-- On rdxAutocomplete: Radix NG has no \"command\" primitive -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>Ctrl+K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>",
+        "vue": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" @select=\"handleSelect\">\n        Item label\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "svelte": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "vanilla": "const paleta = createCommand({\n  placeholder: 'Search...',\n  emptyMessage: 'No results.',\n  // Grouping comes from the `group` field; the factory draws the rule between\n  // one group and the next. `{ type: 'separator' }` breaks the sequence where\n  // there is no group to separate.\n  items: [\n    { value: 'item',  label: 'Item label', group: 'Group',         shortcut: 'Ctrl+K' },\n    { value: 'other', label: 'Other item', group: 'Another group' },\n    { type: 'separator' },\n    { value: 'exit',  label: 'Exit' },\n  ],\n  onSelect: (valor) => console.log(valor),\n});"
       }
     },
     "usage": {
@@ -418,8 +418,8 @@
         "title": "Required Guidelines",
         "item1": "<code>CommandEmpty</code> is required — without it the area is blank when there are no results.",
         "item2": "Always call <code>setOpen(false)</code> inside <code>onSelect</code> when using Command in a Dialog or Popover.",
-        "item3": "The Cmd+K shortcut is not native — register a window <code>keydown</code> listener on the page hosting the palette.",
-        "item4": "Always display a visual shortcut hint (e.g., <kbd>⌘K</kbd>) when using command palette — users need to discover the shortcut.",
+        "item3": "The Ctrl+K shortcut is not native — register a window <code>keydown</code> listener on the page hosting the palette.",
+        "item4": "Always display a visual shortcut hint (e.g., <kbd>Ctrl+K</kbd>) when using command palette — users need to discover the shortcut.",
         "item5": "Use <code>CommandGroup</code> with <code>heading</code> to organize related groups; omit the heading when there is only one group."
       },
       "scenarios": {
@@ -475,7 +475,7 @@
         "dont": "Omit CommandEmpty: leaves the list blank when there are no results."
       },
       "pair2": {
-        "do": "Display a visual shortcut hint (e.g., Cmd+K key) whenever using command palette.",
+        "do": "Display a visual shortcut hint (e.g., Ctrl+K key) whenever using command palette.",
         "dont": "Hide the shortcut from users: they cannot discover how to open the command palette."
       }
     },
@@ -490,7 +490,7 @@
       "note": "Command has no visual variants via prop — the two usage patterns differ in structural composition: inline on the page, or inside a <code>CommandDialog</code> (command palette).",
       "items": {
         "inline": "Rendered directly on the page. Use for local search within a page section.",
-        "palette": "Command inside <code>CommandDialog</code>. Triggered by a global shortcut (Cmd+K) for quick access to application actions.",
+        "palette": "Command inside <code>CommandDialog</code>. Triggered by a global shortcut (Ctrl+K) for quick access to application actions.",
         "withGroups": {
           "name": "With groups",
           "description": "Items organized into multiple <code>CommandGroup</code> blocks with distinct <code>heading</code> and separators between them. The fuzzy filter still spans all groups.",
@@ -629,7 +629,7 @@
         "itemSelectTrigger": "User selects an item via click or Enter",
         "itemSelectPayload": "{ label: string, group: string, pattern: 'inline' | 'palette' }",
         "paletteOpen": "command_palette_open",
-        "paletteOpenTrigger": "User opens the command palette (button or Cmd+K shortcut)",
+        "paletteOpenTrigger": "User opens the command palette (button or Ctrl+K shortcut)",
         "paletteOpenPayload": "{ trigger: 'keyboard' | 'button' }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
@@ -673,7 +673,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Press Cmd+K with listener implemented",
+          "action": "Press Ctrl+K with listener implemented",
           "result": "CommandDialog opens; focus goes to CommandInput",
           "priority": "medium"
         }
@@ -736,7 +736,7 @@
     "description": "Interfaz de búsqueda y selección rápida de comandos, acciones o ítems con filtro fuzzy integrado. Soporta los patrones inline y command palette.",
     "seo": {
       "title": "Command — Overlay",
-      "description": "Documentación del Command: búsqueda fuzzy integrada, patrones inline y command palette (Cmd+K), accesibilidad WCAG con navegación por teclado.",
+      "description": "Documentación del Command: búsqueda fuzzy integrada, patrones inline y command palette (Ctrl+K), accesibilidad WCAG con navegación por teclado.",
       "aiSummary": "Componente Command con filtro fuzzy nativo, 2 patrones de uso (inline, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut y CommandEmpty.",
       "aiEntities": "Command, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA Combobox, Command Palette, atajo de teclado, filtro por texto"
     },
@@ -751,7 +751,7 @@
         "itemInput": "Input",
         "itemSeparator": "Separator",
         "shortcutHint": "Presiona",
-        "shortcutKey": "⌘K",
+        "shortcutKey": "Ctrl+K",
         "openPalette": "Buscar",
         "dialogTitle": "Command Palette",
         "dialogDescription": "Busca un comando o acción..."
@@ -770,11 +770,11 @@
       "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> con <code>Dialog</code> para el patrón command palette.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "angular": "<!-- Sobre rdxAutocomplete: Radix NG no tiene primitivo \"command\" -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>⌘K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>",
-        "vue": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" @select=\"handleSelect\">\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "svelte": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
-        "vanilla": "const paleta = createCommand({\n  placeholder: 'Buscar...',\n  emptyMessage: 'Sin resultados.',\n  // La agrupación viene del campo `group`; la factory dibuja el trazo entre un\n  // grupo y el siguiente. `{ type: 'separator' }` quiebra la secuencia donde no\n  // hay grupo que separar.\n  items: [\n    { value: 'item',  label: 'Etiqueta del ítem', group: 'Grupo',      shortcut: '⌘K' },\n    { value: 'otro',  label: 'Otro ítem',         group: 'Otro grupo' },\n    { type: 'separator' },\n    { value: 'salir', label: 'Salir' },\n  ],\n  onSelect: (valor) => console.log(valor),\n});"
+        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "angular": "<!-- Sobre rdxAutocomplete: Radix NG no tiene primitivo \"command\" -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>Ctrl+K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>",
+        "vue": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" @select=\"handleSelect\">\n        Etiqueta del ítem\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "svelte": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>Ctrl+K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "vanilla": "const paleta = createCommand({\n  placeholder: 'Buscar...',\n  emptyMessage: 'Sin resultados.',\n  // La agrupación viene del campo `group`; la factory dibuja el trazo entre un\n  // grupo y el siguiente. `{ type: 'separator' }` quiebra la secuencia donde no\n  // hay grupo que separar.\n  items: [\n    { value: 'item',  label: 'Etiqueta del ítem', group: 'Grupo',      shortcut: 'Ctrl+K' },\n    { value: 'otro',  label: 'Otro ítem',         group: 'Otro grupo' },\n    { type: 'separator' },\n    { value: 'salir', label: 'Salir' },\n  ],\n  onSelect: (valor) => console.log(valor),\n});"
       }
     },
     "usage": {
@@ -783,8 +783,8 @@
         "title": "Guías Obligatorias",
         "item1": "<code>CommandEmpty</code> es obligatorio — sin él, el área queda en blanco cuando no hay resultados.",
         "item2": "Siempre llama <code>setOpen(false)</code> dentro de <code>onSelect</code> al usar Command en un Dialog o Popover.",
-        "item3": "El atajo Cmd+K no es nativo — registra un listener de <code>keydown</code> en la ventana, en la página que hospeda la paleta.",
-        "item4": "Muestra siempre una pista visual del atajo (ej: <kbd>⌘K</kbd>) al usar command palette — el usuario necesita descubrir el atajo.",
+        "item3": "El atajo Ctrl+K no es nativo — registra un listener de <code>keydown</code> en la ventana, en la página que hospeda la paleta.",
+        "item4": "Muestra siempre una pista visual del atajo (ej: <kbd>Ctrl+K</kbd>) al usar command palette — el usuario necesita descubrir el atajo.",
         "item5": "Usa <code>CommandGroup</code> con <code>heading</code> para organizar grupos relacionados; omite el heading cuando hay solo un grupo."
       },
       "scenarios": {
@@ -840,7 +840,7 @@
         "dont": "Omitir CommandEmpty: deja la lista en blanco cuando no hay resultados."
       },
       "pair2": {
-        "do": "Mostrar la pista visual del atajo (ej: tecla Cmd+K) siempre que uses command palette.",
+        "do": "Mostrar la pista visual del atajo (ej: tecla Ctrl+K) siempre que uses command palette.",
         "dont": "Ocultar el atajo al usuario: no podrá descubrir cómo abrir el command palette."
       }
     },
@@ -855,7 +855,7 @@
       "note": "Command no tiene variantes visuales vía prop — los dos patrones de uso difieren en la composición estructural: inline en la página o dentro de un <code>CommandDialog</code> (command palette).",
       "items": {
         "inline": "Renderizado directamente en la página. Usar para búsqueda local en una sección de la página.",
-        "palette": "Command dentro de <code>CommandDialog</code>. Activado por atajo global (Cmd+K) para acceso rápido a acciones de la aplicación.",
+        "palette": "Command dentro de <code>CommandDialog</code>. Activado por atajo global (Ctrl+K) para acceso rápido a acciones de la aplicación.",
         "withGroups": {
           "name": "Con grupos",
           "description": "Ítems organizados en múltiples <code>CommandGroup</code> con <code>heading</code> distinto y separadores entre ellos. El filtro fuzzy sigue atravesando todos los grupos.",
@@ -994,7 +994,7 @@
         "itemSelectTrigger": "Usuario selecciona un ítem vía clic o Enter",
         "itemSelectPayload": "{ label: string, group: string, pattern: 'inline' | 'palette' }",
         "paletteOpen": "command_palette_open",
-        "paletteOpenTrigger": "Usuario abre el command palette (botón o atajo Cmd+K)",
+        "paletteOpenTrigger": "Usuario abre el command palette (botón o atajo Ctrl+K)",
         "paletteOpenPayload": "{ trigger: 'keyboard' | 'button' }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
@@ -1038,7 +1038,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Presionar Cmd+K con listener implementado",
+          "action": "Presionar Ctrl+K con listener implementado",
           "result": "CommandDialog se abre; el foco va a CommandInput",
           "priority": "medium"
         }

@@ -1,7 +1,9 @@
 /*
  * ─── nds-kbd ─────────────────────────────────────────────────────────────────
- * Tecla de teclado física. Usado para atalhos, ícones de comando (⌘ ⇧ ⌥ ⌃),
- * teclas (Ctrl, Enter, Esc, ↑↓←→) e níveis WCAG (A, AA, AAA) em docs pages.
+ * Tecla de teclado física. Usado para atalhos e teclas escritas por extenso
+ * (Ctrl, Shift, Alt, Enter, Esc, Delete, ↑↓←→) e níveis WCAG (A, AA, AAA) em
+ * docs pages. Nada de glifo de macOS: eles não se digitam em Windows nem em
+ * Linux, então o design system escreve a tecla — ver 05-navigation-components.
  *
  *   <kbd class="nds-kbd">Ctrl</kbd>
  *
@@ -63,7 +65,7 @@
 }
 
 /* ── nds-kbd-group ─────────────────────────────────────────────────────────
- * Container para atalhos compostos (Ctrl + B, ⌘⇧⌥⌃, etc.).
+ * Container para atalhos compostos (Ctrl + B, Ctrl + Shift + Z, etc.).
  * Renderizado também como <kbd> para preservar a semântica HTML de tecla.
  */
 .nds-kbd-group {

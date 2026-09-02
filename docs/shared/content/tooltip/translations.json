@@ -93,9 +93,9 @@
           },
           "shortcut": {
             "name": "Atalho de teclado",
-            "format": "Símbolos do SO · separados por +",
-            "good": "\"Ctrl+S\", \"⌘+K\"",
-            "bad": "\"Pressione Control e S\", \"Cmd K\""
+            "format": "Teclas por extenso · separadas por +",
+            "good": "\"Ctrl+S\", \"Ctrl+K\"",
+            "bad": "\"Pressione Control e S\", \"Ctrl K\""
           },
           "icon": {
             "name": "Trigger icon-only",
@@ -543,9 +543,9 @@
           },
           "shortcut": {
             "name": "Keyboard shortcut",
-            "format": "OS symbols · separated by +",
-            "good": "\"Ctrl+S\", \"⌘+K\"",
-            "bad": "\"Press Control and S\", \"Cmd K\""
+            "format": "Spelled-out keys · separated by +",
+            "good": "\"Ctrl+S\", \"Ctrl+K\"",
+            "bad": "\"Press Control and S\", \"Ctrl K\""
           },
           "icon": {
             "name": "Icon-only trigger",
@@ -993,9 +993,9 @@
           },
           "shortcut": {
             "name": "Atajo de teclado",
-            "format": "Símbolos del SO · separados por +",
-            "good": "\"Ctrl+S\", \"⌘+K\"",
-            "bad": "\"Presiona Control y S\", \"Cmd K\""
+            "format": "Teclas escritas · separadas por +",
+            "good": "\"Ctrl+S\", \"Ctrl+K\"",
+            "bad": "\"Presiona Control y S\", \"Ctrl K\""
           },
           "icon": {
             "name": "Trigger icon-only",

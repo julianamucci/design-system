@@ -116,7 +116,7 @@
       "subtitle": "Cada stack tem seu próprio Storybook. Use a tabela acima para escolher o Storybook correto de acordo com o framework do seu projeto.",
       "items": {
         "foundations": "Leia as páginas de <strong>Foundations</strong> (Cores e Temas, Tipografia, Espaçamento, Elevação, Motion, Densidades) para entender todas as possibilidades de customização antes de mexer em tokens e temas.",
-        "search": "Use a <strong>barra de pesquisa</strong> do menu lateral (atalho <code>Ctrl K</code> / <code>⌘ K</code>) para ir direto a qualquer componente pelo nome.",
+        "search": "Use a <strong>barra de pesquisa</strong> do menu lateral (atalho <code>Ctrl+K</code>) para ir direto a qualquer componente pelo nome.",
         "start": "A página <strong>Comece por Aqui</strong> traz o passo a passo de instalação e primeiro uso na sua tecnologia."
       }
     },
@@ -246,7 +246,7 @@
       "subtitle": "Each stack has its own Storybook. Use the table above to pick the right Storybook based on your project's framework.",
       "items": {
         "foundations": "Read the <strong>Foundations</strong> pages (Colors & Themes, Typography, Spacing, Elevation, Motion, Densities) to understand every customization possibility before touching tokens and themes.",
-        "search": "Use the sidebar <strong>search bar</strong> (<code>Ctrl K</code> / <code>⌘ K</code> shortcut) to jump straight to any component by name.",
+        "search": "Use the sidebar <strong>search bar</strong> (<code>Ctrl+K</code> shortcut) to jump straight to any component by name.",
         "start": "The <strong>Getting Started</strong> page has the step-by-step install and first use for your technology."
       }
     },
@@ -376,7 +376,7 @@
       "subtitle": "Cada stack tiene su propio Storybook. Usa la tabla de arriba para elegir el Storybook correcto según el framework de tu proyecto.",
       "items": {
         "foundations": "Lee las páginas de <strong>Foundations</strong> (Colores y Temas, Tipografía, Espaciado, Elevación, Motion, Densidades) para entender todas las posibilidades de personalización antes de tocar tokens y temas.",
-        "search": "Usa la <strong>barra de búsqueda</strong> del menú lateral (atajo <code>Ctrl K</code> / <code>⌘ K</code>) para ir directo a cualquier componente por su nombre.",
+        "search": "Usa la <strong>barra de búsqueda</strong> del menú lateral (atajo <code>Ctrl+K</code>) para ir directo a cualquier componente por su nombre.",
         "start": "La página <strong>Comienza por Aquí</strong> trae el paso a paso de instalación y primer uso en tu tecnología."
       }
     },

@@ -334,7 +334,7 @@
         "tab": "Tab — entra/sai do componente como um único campo.",
         "arrows": "Setas Esquerda/Direita — move o foco entre slots.",
         "backspace": "Backspace — apaga o slot atual e volta para o anterior.",
-        "paste": "Ctrl+V / Cmd+V — cola código completo distribuindo automaticamente.",
+        "paste": "Ctrl+V — cola código completo distribuindo automaticamente.",
         "digit": "0-9 (ou caracteres válidos do pattern) — preenche o slot atual e avança."
       },
       "aria": {
@@ -818,7 +818,7 @@
         "tab": "Tab — enters/exits the component as a single field.",
         "arrows": "Left/Right arrows — moves focus between slots.",
         "backspace": "Backspace — clears current slot and moves back.",
-        "paste": "Ctrl+V / Cmd+V — pastes full code distributing automatically.",
+        "paste": "Ctrl+V — pastes full code distributing automatically.",
         "digit": "0-9 (or valid pattern characters) — fills current slot and advances."
       },
       "aria": {
@@ -1302,7 +1302,7 @@
         "tab": "Tab — entra/sale del componente como un único campo.",
         "arrows": "Flechas Izquierda/Derecha — mueve el foco entre slots.",
         "backspace": "Backspace — borra el slot actual y vuelve al anterior.",
-        "paste": "Ctrl+V / Cmd+V — pega código completo distribuyendo automáticamente.",
+        "paste": "Ctrl+V — pega código completo distribuyendo automáticamente.",
         "digit": "0-9 (o caracteres válidos del pattern) — llena el slot actual y avanza."
       },
       "aria": {

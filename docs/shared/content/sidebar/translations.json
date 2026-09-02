@@ -282,7 +282,7 @@
         "enter": "Ativa o item de menu ou toggle focado.",
         "space": "Ativa botões focados, equivalente ao Enter.",
         "escape": "Fecha a sidebar em mobile (Sheet). Ctrl+B fecha/abre em desktop.",
-        "ctrlB": "Atalho global para alternar a sidebar (Ctrl+B / Cmd+B).",
+        "ctrlB": "Atalho global para alternar a sidebar (Ctrl+B).",
         "arrowKeys": "Não implementado nativamente — use Accordion para subitens navegáveis por seta."
       },
       "aria": {
@@ -763,7 +763,7 @@
         "enter": "Activates the focused menu item or toggle.",
         "space": "Activates focused buttons, equivalent to Enter.",
         "escape": "Closes the sidebar on mobile (Sheet). Ctrl+B closes/opens on desktop.",
-        "ctrlB": "Global shortcut to toggle the sidebar (Ctrl+B / Cmd+B).",
+        "ctrlB": "Global shortcut to toggle the sidebar (Ctrl+B).",
         "arrowKeys": "Not natively implemented — use Accordion for sub-items navigable by arrow keys."
       },
       "aria": {
@@ -1244,7 +1244,7 @@
         "enter": "Activa el ítem de menú o toggle con foco.",
         "space": "Activa botones con foco, equivalente a Enter.",
         "escape": "Cierra el sidebar en mobile (Sheet). Ctrl+B cierra/abre en desktop.",
-        "ctrlB": "Atajo global para alternar el sidebar (Ctrl+B / Cmd+B).",
+        "ctrlB": "Atajo global para alternar el sidebar (Ctrl+B).",
         "arrowKeys": "No implementado de forma nativa — usa Accordion para subítems navegables con flechas."
       },
       "aria": {
