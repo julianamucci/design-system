@@ -743,6 +743,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       { token: '--muted',              value: '.nds-dialog-footer',    description: $tStore('tokens.table.muted')             },
       { token: '--border',             value: '.nds-dialog-footer',    description: $tStore('tokens.table.border')            },
       { token: '--radius-card',        value: '.nds-dialog-content',   description: $tStore('tokens.table.radius')            },
+      { token: '--overlay',            value: '.nds-dialog-overlay',   description: $tStore('tokens.table.overlay')           },
       { token: '--z-modal',            value: '.nds-dialog-content',   description: $tStore('tokens.table.zIndex')            },
       { token: '--duration-base',      value: '.nds-dialog-content',   description: $tStore('tokens.table.duration')          },
     ]}

@@ -891,6 +891,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
           { token: "--muted",              value: ".nds-dialog-footer",    description: tContent("tokens.table.muted") },
           { token: "--border",             value: ".nds-dialog-footer",    description: tContent("tokens.table.border") },
           { token: "--radius-card",        value: ".nds-dialog-content",   description: tContent("tokens.table.radius") },
+          { token: "--overlay",            value: ".nds-dialog-overlay",   description: tContent("tokens.table.overlay") },
           { token: "--z-modal",            value: ".nds-dialog-content",   description: tContent("tokens.table.zIndex") },
           { token: "--duration-base",      value: ".nds-dialog-content",   description: tContent("tokens.table.duration") },
         ]}

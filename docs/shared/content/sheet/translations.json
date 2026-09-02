@@ -293,7 +293,7 @@
         },
         "overlay": {
           "class": "nds-sheet-overlay",
-          "part": "Camada escura sobre a página enquanto o painel está aberto — a cor é preto a 80%, sem token próprio"
+          "part": "Camada escura sobre a página enquanto o painel está aberto — a cor vem do token do véu, com 80% de opacidade"
         },
         "ring": {
           "class": "nds-sheet-close",
@@ -764,7 +764,7 @@
         },
         "overlay": {
           "class": "nds-sheet-overlay",
-          "part": "Dark layer over the page while the panel is open — the colour is black at 80%, with no token of its own"
+          "part": "Dark layer over the page while the panel is open — the colour comes from the veil token, at 80% opacity"
         },
         "ring": {
           "class": "nds-sheet-close",
@@ -1235,7 +1235,7 @@
         },
         "overlay": {
           "class": "nds-sheet-overlay",
-          "part": "Capa oscura sobre la página mientras el panel está abierto — el color es negro al 80%, sin token propio"
+          "part": "Capa oscura sobre la página mientras el panel está abierto — el color viene del token del velo, con 80% de opacidad"
         },
         "ring": {
           "class": "nds-sheet-close",

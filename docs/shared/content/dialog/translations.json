@@ -256,6 +256,7 @@
         "muted": "Fundo do DialogFooter (com /50 de opacidade)",
         "border": "Separador superior do DialogFooter",
         "radius": "Border radius do DialogContent",
+        "overlay": "Cor do véu sobre a página enquanto o modal está aberto",
         "zIndex": "z-index 50 no Overlay e Content",
         "duration": "Duração de 100ms na animação de entrada e saída"
       },
@@ -713,6 +714,7 @@
         "muted": "DialogFooter background (with /50 opacity)",
         "border": "DialogFooter top separator",
         "radius": "DialogContent border radius",
+        "overlay": "Colour of the veil over the page while the modal is open",
         "zIndex": "z-index 50 on Overlay and Content",
         "duration": "100ms duration for enter and exit animations"
       },
@@ -1170,6 +1172,7 @@
         "muted": "Fondo del DialogFooter (con /50 de opacidad)",
         "border": "Separador superior del DialogFooter",
         "radius": "Border radius del DialogContent",
+        "overlay": "Color del velo sobre la página mientras el modal está abierto",
         "zIndex": "z-index 50 en Overlay y Content",
         "duration": "Duración de 100ms en la animación de entrada y salida"
       },

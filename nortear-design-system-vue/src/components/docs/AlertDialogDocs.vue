@@ -292,8 +292,8 @@ const cancelProps = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
-  { token: '—',                        value: '.nds-alert-dialog-overlay',     description: tContent('tokens.table.overlayBg')             },
+  // O véu lê `--overlay`, o token de cor da camada; o alfa de 0.8 é do uso.
+  { token: '--overlay',                        value: '.nds-alert-dialog-overlay',     description: tContent('tokens.table.overlayBg')             },
   { token: '--background',             value: '.nds-alert-dialog-content',     description: tContent('tokens.table.contentBg')             },
   { token: '--foreground',             value: '.nds-alert-dialog-content',     description: tContent('tokens.table.contentForeground')     },
   { token: '--border',                 value: '.nds-alert-dialog-content',     description: tContent('tokens.table.border')                },

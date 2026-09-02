@@ -645,7 +645,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '—',                        k: 'overlayBg',             target: '.nds-alert-dialog-overlay' },
+      { token: '--overlay',                        k: 'overlayBg',             target: '.nds-alert-dialog-overlay' },
       { token: '--background',             k: 'contentBg',             target: '.nds-alert-dialog-content' },
       { token: '--foreground',             k: 'contentForeground',     target: '.nds-alert-dialog-content' },
       { token: '--border',                 k: 'border',                target: '.nds-alert-dialog-content' },

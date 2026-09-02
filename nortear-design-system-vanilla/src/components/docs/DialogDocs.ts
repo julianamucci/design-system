@@ -661,6 +661,7 @@ export interface DialogOptions {
             { token: '--muted',              value: '.nds-dialog-footer',             description: t('tokens.table.muted') },
             { token: '--border',             value: '.nds-dialog-footer',             description: t('tokens.table.border') },
             { token: '--radius-card',        value: '.nds-dialog-content',            description: t('tokens.table.radius') },
+            { token: '--overlay',            value: '.nds-dialog-overlay',            description: t('tokens.table.overlay') },
             { token: '--z-modal',            value: '.nds-dialog-content',            description: t('tokens.table.zIndex') },
             { token: '--duration-base',      value: '.nds-dialog-content[data-open]', description: t('tokens.table.duration') },
           ],

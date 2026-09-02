@@ -1232,6 +1232,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       { token: '--border',             className: 'nds-dialog-footer',   k: 'border'            },
       { token: '--radius-card',        className: 'nds-dialog-content',  k: 'radius'            },
       // O overlay lê `--z-modal-backdrop`; `--z-modal` é do painel.
+      { token: '--overlay',            className: 'nds-dialog-overlay',  k: 'overlay'           },
       { token: '--z-modal',            className: 'nds-dialog-content',  k: 'zIndex'            },
       { token: '--duration-base',      className: 'nds-dialog-content',  k: 'duration'          },
     ].map(({ token, className, k }) => ({

@@ -930,7 +930,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       { token: '--foreground', k: 'foreground' },
       { token: '--muted-foreground', k: 'mutedForeground' },
       { token: '--border', k: 'border' },
-      { token: '--z-modal-backdrop', k: 'overlay' },
+      { token: '--overlay', k: 'overlay' },
       { token: '--ring', k: 'ring' },
       { token: '--sheet-width', k: 'width' },
     ].map(({ token, k }) => ({

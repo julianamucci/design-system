@@ -286,7 +286,7 @@
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+        "web": "/* Override de véu para tema custom: redeclare o token, não a cor.\n   Assim o véu continua sendo um ponto só, e o alfa segue no uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}"
       }
     },
     "accessibility": {
@@ -734,7 +734,7 @@
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Overlay override for custom theme */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+        "web": "/* Veil override for a custom theme: redeclare the token, not the colour.\n   The veil stays a single point, and the alpha stays at the use site. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}"
       }
     },
     "accessibility": {
@@ -1182,7 +1182,7 @@
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+        "web": "/* Override de velo para tema custom: redeclara el token, no el color.\n   Así el velo sigue siendo un solo punto, y el alfa sigue en el uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}"
       }
     },
     "accessibility": {

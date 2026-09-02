@@ -571,8 +571,8 @@ export interface AlertDialogOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
-            { token: '—',                        value: '.nds-alert-dialog-overlay',     description: t('tokens.table.overlayBg') },
+            // O véu lê `--overlay`, o token de cor da camada; o alfa de 0.8 é do uso.
+            { token: '--overlay',                        value: '.nds-alert-dialog-overlay',     description: t('tokens.table.overlayBg') },
             { token: '--background',             value: '.nds-alert-dialog-content',     description: t('tokens.table.contentBg') },
             { token: '--foreground',             value: '.nds-alert-dialog-content',     description: t('tokens.table.contentForeground') },
             { token: '--border',                 value: '.nds-alert-dialog-content',     description: t('tokens.table.border') },

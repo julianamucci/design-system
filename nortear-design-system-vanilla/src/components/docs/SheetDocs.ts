@@ -609,7 +609,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
             { token: '--foreground', value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
             { token: '--muted-foreground', value: t('tokens.table.mutedForeground.class'), description: t('tokens.table.mutedForeground.part') },
             { token: '--border', value: t('tokens.table.border.class'), description: t('tokens.table.border.part') },
-            { token: '--z-modal-backdrop', value: t('tokens.table.overlay.class'), description: t('tokens.table.overlay.part') },
+            { token: '--overlay', value: t('tokens.table.overlay.class'), description: t('tokens.table.overlay.part') },
             { token: '--ring', value: t('tokens.table.ring.class'), description: t('tokens.table.ring.part') },
             { token: '--sheet-width', value: t('tokens.table.width.class'), description: t('tokens.table.width.part') },
           ],

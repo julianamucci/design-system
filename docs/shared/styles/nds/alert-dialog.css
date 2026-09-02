@@ -32,7 +32,7 @@
   position: fixed;
   inset: 0;
   z-index: var(--z-modal-backdrop);
-  background-color: hsl(0 0% 0% / 0.8);
+  background-color: hsl(var(--overlay) / 0.8);
 }
 
 /* ── Content panel ───────────────────────────────────────────────────────── */

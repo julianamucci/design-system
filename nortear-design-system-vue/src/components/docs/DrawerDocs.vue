@@ -351,7 +351,7 @@ const tokenRows = computed(() => [
   { token: '--background',         value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
   { token: '--foreground',         value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
   { token: '--border',             value: tContent('tokens.table.border.class'),     description: tContent('tokens.table.border.part')     },
-  { token: '--z-modal-backdrop',   value: tContent('tokens.table.overlay.class'),    description: tContent('tokens.table.overlay.part')    },
+  { token: '--overlay',   value: tContent('tokens.table.overlay.class'),    description: tContent('tokens.table.overlay.part')    },
   { token: '--muted',              value: tContent('tokens.table.handle.class'),     description: tContent('tokens.table.handle.part')     },
   { token: '--radius-xl',          value: tContent('tokens.table.rounded.class'),    description: tContent('tokens.table.rounded.part')    },
 ]);

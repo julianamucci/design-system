@@ -690,7 +690,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
             { token: '--background',         value: t('tokens.table.background.class'), description: t('tokens.table.background.part') },
             { token: '--foreground',         value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
             { token: '--border',             value: t('tokens.table.border.class'),     description: t('tokens.table.border.part') },
-            { token: '--z-modal-backdrop',   value: t('tokens.table.overlay.class'),    description: t('tokens.table.overlay.part') },
+            { token: '--overlay',   value: t('tokens.table.overlay.class'),    description: t('tokens.table.overlay.part') },
             { token: '--muted',              value: t('tokens.table.handle.class'),     description: t('tokens.table.handle.part') },
             { token: '--radius-xl',          value: t('tokens.table.rounded.class'),    description: t('tokens.table.rounded.part') },
           ],

@@ -769,7 +769,7 @@ interface DrawerProps {
             description: tContent("tokens.table.border.part"),
           },
           {
-            token: "--z-modal-backdrop",
+            token: "--overlay",
             value: tContent("tokens.table.overlay.class"),
             description: tContent("tokens.table.overlay.part"),
           },

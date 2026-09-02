@@ -25,7 +25,7 @@
   inset: 0;
   z-index: var(--z-modal-backdrop);
   isolation: isolate;
-  background-color: hsl(0 0% 0% / 0.1);
+  background-color: hsl(var(--overlay) / 0.8);
   /* entrada instantânea — anima só a saída (evita corrida de opacity:0 com toBeVisible) */
 }
 

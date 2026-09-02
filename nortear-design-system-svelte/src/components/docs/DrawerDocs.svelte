@@ -775,7 +775,7 @@ interface TriggerProps {
       { token: '--background',         value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
       { token: '--foreground',         value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
       { token: '--border',             value: $tStore('tokens.table.border.class'),     description: $tStore('tokens.table.border.part')     },
-      { token: '--z-modal-backdrop',   value: $tStore('tokens.table.overlay.class'),    description: $tStore('tokens.table.overlay.part')    },
+      { token: '--overlay',   value: $tStore('tokens.table.overlay.class'),    description: $tStore('tokens.table.overlay.part')    },
       { token: '--muted',              value: $tStore('tokens.table.handle.class'),     description: $tStore('tokens.table.handle.part')     },
       { token: '--radius-xl',          value: $tStore('tokens.table.rounded.class'),    description: $tStore('tokens.table.rounded.part')    },
     ]}
