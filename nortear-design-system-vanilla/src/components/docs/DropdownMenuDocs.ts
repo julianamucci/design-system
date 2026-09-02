@@ -54,6 +54,54 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+/**
+ * Painel de menu ESTÁTICO para prévia — o `<ul role="menu">` que a folha
+ * compartilhada desenha, sem gatilho e sem posicionamento.
+ *
+ * Escopo de módulo, e não do `case 'variantes'`, porque o Do & Don't precisa do
+ * mesmo painel: `role="menuitem"` solto, sem um `menu` que o possua, é órfão
+ * para o leitor de tela (e para o `aria-required-parent` do axe). O painel
+ * também é quem dá largura ao item — `.nds-dropdown-menu-content` declara
+ * `min-width: 8rem` na folha, no lugar do valor cravado que estava aqui.
+ */
+function makeStaticMenuPanel(build: (ul: HTMLUListElement) => void): HTMLElement {
+  const ul = document.createElement('ul');
+  ul.setAttribute('role', 'menu');
+  ul.className = 'nds-dropdown-menu-content';
+  // A prévia não é posicionada por gatilho nenhum: o `position` da classe é o
+  // que a tiraria do fluxo do cartão.
+  ul.style.position = 'static';
+  build(ul);
+  return ul;
+}
+
+/**
+ * Item de menu para prévia. `data-variant` é o mecanismo REAL da variante — a
+ * folha pinta `--destructive` a partir dele —, e não um par de classes de cor
+ * escolhidas à mão.
+ *
+ * Também de escopo de módulo: a seção Variantes e o Do & Don't montam o mesmo
+ * item, e duas cópias divergem na primeira correção que só uma delas receber.
+ */
+function makeItem(label: string, shortcut?: string, variant?: 'destructive'): HTMLLIElement {
+  const li = document.createElement('li');
+  li.setAttribute('role', 'menuitem');
+  li.setAttribute('tabindex', '-1');
+  li.className = 'nds-dropdown-menu-item';
+  li.dataset.variant = variant ?? 'default';
+  const text = document.createElement('span');
+  text.textContent = label;
+  li.appendChild(text);
+  if (shortcut) {
+    const sc = document.createElement('span');
+    sc.className = 'nds-dropdown-menu-shortcut';
+    // Sem `aria-hidden`: o atalho é informação, não decoração.
+    sc.textContent = shortcut;
+    li.appendChild(sc);
+  }
+  return li;
+}
+
 function buildDemoMenu(triggerLabel: string): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: triggerLabel });
   return createDropdownMenu({
@@ -168,10 +216,11 @@ export function createDropdownMenuDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'nds-cluster';
+            // Degrau da escada `.nds-min-h-*` em vez de altura cravada: inline
+            // vence a folha e levaria o andaime para fora do tema e da densidade.
+            wrap.className = 'nds-cluster nds-min-h-40';
             wrap.dataset.justify = 'center';
             wrap.dataset.align = 'center';
-            wrap.style.minHeight = '140px';
             wrap.appendChild(buildDemoMenu(t('demonstration.labels.basic')));
             return wrap;
           },
@@ -268,24 +317,14 @@ export function createDropdownMenuDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
-                li.style.minWidth = '160px';
-                li.textContent = 'Excluir conta';
-                return li;
-              },
-              dontPreviewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-dropdown-menu-item nds-border-default nds-rounded-md';
-                li.style.minWidth = '160px';
-                li.textContent = 'Excluir conta';
-                return li;
-              },
+              doPreviewFactory: () =>
+                makeStaticMenuPanel((ul) => {
+                  ul.appendChild(makeItem('Excluir conta', undefined, 'destructive'));
+                }),
+              dontPreviewFactory: () =>
+                makeStaticMenuPanel((ul) => {
+                  ul.appendChild(makeItem('Excluir conta'));
+                }),
             },
           ],
         });
@@ -368,24 +407,6 @@ createDropdownMenu({
           }
           return span;
         }
-        function makeItem(label: string, shortcut?: string, variant?: 'destructive'): HTMLLIElement {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'menuitem');
-          li.setAttribute('tabindex', '-1');
-          li.className = 'nds-dropdown-menu-item';
-          li.dataset.variant = variant ?? 'default';
-          const text = document.createElement('span');
-          text.textContent = label;
-          li.appendChild(text);
-          if (shortcut) {
-            const sc = document.createElement('span');
-            sc.className = 'nds-dropdown-menu-shortcut';
-            // Sem `aria-hidden`: o atalho é informação, não decoração.
-            sc.textContent = shortcut;
-            li.appendChild(sc);
-          }
-          return li;
-        }
         function makeCheckboxItem(label: string, checked: boolean): HTMLLIElement {
           const li = document.createElement('li');
           li.setAttribute('role', 'menuitemcheckbox');
@@ -408,16 +429,6 @@ createDropdownMenu({
           li.append(makeIndicator(checked), text);
           return li;
         }
-        function makeStaticMenu(build: (ul: HTMLUListElement) => void): HTMLElement {
-          const ul = document.createElement('ul');
-          ul.setAttribute('role', 'menu');
-          ul.className = 'nds-dropdown-menu-content';
-          // A prévia não é posicionada por gatilho nenhum: o `position` da
-          // classe é o que a tiraria do fluxo do cartão.
-          ul.style.position = 'static';
-          build(ul);
-          return ul;
-        }
 
         return createDocsCompositions({
           id: 'variantes',
@@ -437,15 +448,10 @@ createDropdownMenu({
               name: t('variants.items.destructive'),
               description: stripHtml(t('variants.styles.destructive')),
               code: codeDestructive,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
-                li.style.minWidth = '160px';
-                li.textContent = 'Excluir';
-                return li;
-              },
+              previewFactory: () =>
+                makeStaticMenuPanel((ul) => {
+                  ul.appendChild(makeItem('Excluir', undefined, 'destructive'));
+                }),
             },
             {
               name: t('variants.items.withLabel.name'),
@@ -465,7 +471,7 @@ const menu = createDropdownMenu({
     { type: 'item',      label: 'Sair'           },
   ],
 });`,
-              previewFactory: () => makeStaticMenu((ul) => {
+              previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
                   makeLabelItem('Conta'),
                   makeItem('Perfil'),
@@ -492,7 +498,7 @@ const menu = createDropdownMenu({
   ],
 });
 // Alternar não fecha o menu: quem marca uma coluna costuma marcar a próxima.`,
-              previewFactory: () => makeStaticMenu((ul) => {
+              previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
                   makeLabelItem('Colunas visíveis'),
                   makeCheckboxItem('Status', true),
@@ -516,7 +522,7 @@ const menu = createDropdownMenu({
   ],
 });
 // O 'group' é o que torna a escolha única: marcar um desmarca os irmãos.`,
-              previewFactory: () => makeStaticMenu((ul) => {
+              previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
                   makeLabelItem('Aparência'),
                   makeRadioItem('Claro', false),
@@ -533,20 +539,25 @@ const menu = createDropdownMenu({
               code: `createDropdownMenu({
   trigger,
   items: [
-    { type: 'item', label: 'Desfazer', value: 'undo',  shortcut: 'Ctrl Z' },
-    { type: 'item', label: 'Copiar',   value: 'copy',  shortcut: 'Ctrl C' },
+    { type: 'item', label: 'Desfazer', value: 'undo',  shortcut: '⌘Z'  },
+    { type: 'item', label: 'Refazer',  value: 'redo',  shortcut: '⇧⌘Z' },
     { type: 'separator' },
-    { type: 'item', label: 'Colar',    value: 'paste', shortcut: 'Ctrl V' },
+    { type: 'item', label: 'Copiar',   value: 'copy',  shortcut: '⌘C'  },
+    { type: 'item', label: 'Colar',    value: 'paste', shortcut: '⌘V'  },
   ],
 });
 // O atalho integra o nome acessível do item, para que quem usa leitor de tela
 // também saiba que a tecla existe. Registrar a tecla real é do consumidor.`,
-              previewFactory: () => makeStaticMenu((ul) => {
+              // A prévia mostra exatamente o que o snippet acima ensina. Antes
+              // divergia nos dois eixos — o snippet trazia três itens com
+              // `Ctrl`, a prévia trazia cinco com `⌘` — e nenhum portão liga os
+              // dois: a guarda de snippet do auditor isenta de propósito o que
+              // está dentro de template literal.
+              previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
                   makeItem('Desfazer', '⌘Z'),
                   makeItem('Refazer', '⇧⌘Z'),
                   makeSeparator(),
-                  makeItem('Recortar', '⌘X'),
                   makeItem('Copiar', '⌘C'),
                   makeItem('Colar', '⌘V'),
                 );
