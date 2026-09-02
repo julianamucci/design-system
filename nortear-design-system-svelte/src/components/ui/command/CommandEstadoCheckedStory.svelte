@@ -15,7 +15,7 @@
              a borda direita. -->
         <Command.Item value="sistema" checked={true}>
           Sistema
-          <Command.Shortcut>⌘S</Command.Shortcut>
+          <Command.Shortcut>Ctrl+S</Command.Shortcut>
         </Command.Item>
       </Command.Group>
     </Command.List>

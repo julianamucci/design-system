@@ -188,7 +188,7 @@ export function commandItemCheckedSource(): string {
       <CommandItem value="escuro" checked={false}>Escuro</CommandItem>
       <CommandItem value="sistema" checked={true}>
         Sistema
-        <CommandShortcut>⌘S</CommandShortcut>
+        <CommandShortcut>Ctrl+S</CommandShortcut>
       </CommandItem>
     </CommandGroup>
   </CommandList>
@@ -253,30 +253,30 @@ export function commandWithShortcutsSource(): string {
     <CommandGroup heading="Ações">
       <CommandItem value="new-file">
         Novo arquivo
-        <CommandShortcut>⌘N</CommandShortcut>
+        <CommandShortcut>Ctrl+N</CommandShortcut>
       </CommandItem>
       <CommandItem value="open-file">
         Abrir arquivo
-        <CommandShortcut>⌘O</CommandShortcut>
+        <CommandShortcut>Ctrl+O</CommandShortcut>
       </CommandItem>
       <CommandItem value="save-file">
         Salvar
-        <CommandShortcut>⌘S</CommandShortcut>
+        <CommandShortcut>Ctrl+S</CommandShortcut>
       </CommandItem>
       <CommandItem value="find">
         Buscar
-        <CommandShortcut>⌘F</CommandShortcut>
+        <CommandShortcut>Ctrl+F</CommandShortcut>
       </CommandItem>
     </CommandGroup>
     <CommandSeparator />
     <CommandGroup heading="Navegação">
       <CommandItem value="settings">
         Configurações
-        <CommandShortcut>⌘,</CommandShortcut>
+        <CommandShortcut>Ctrl+,</CommandShortcut>
       </CommandItem>
       <CommandItem value="command-palette">
         Command Palette
-        <CommandShortcut>⌘K</CommandShortcut>
+        <CommandShortcut>Ctrl+K</CommandShortcut>
       </CommandItem>
     </CommandGroup>
   </CommandList>
@@ -388,7 +388,7 @@ $effect(() => {
     <Search class="nds-size-4" aria-hidden="true" />
     Buscar...
   </span>
-  <kbd class="nds-kbd">⌘K</kbd>
+  <kbd class="nds-kbd">Ctrl+K</kbd>
 </Button>
 
 <CommandDialog
@@ -403,7 +403,7 @@ $effect(() => {
       <CommandItem value="dashboard" onSelect={() => executar('dashboard')}>
         <LayoutDashboard aria-hidden="true" />
         Dashboard
-        <CommandShortcut>⌘D</CommandShortcut>
+        <CommandShortcut>Ctrl+D</CommandShortcut>
       </CommandItem>
       <CommandItem value="documents" onSelect={() => executar('documents')}>
         <FileText aria-hidden="true" />
@@ -419,7 +419,7 @@ $effect(() => {
       <CommandItem value="settings" onSelect={() => executar('settings')}>
         <Settings aria-hidden="true" />
         Configurações
-        <CommandShortcut>⌘,</CommandShortcut>
+        <CommandShortcut>Ctrl+,</CommandShortcut>
       </CommandItem>
     </CommandGroup>
   </CommandList>

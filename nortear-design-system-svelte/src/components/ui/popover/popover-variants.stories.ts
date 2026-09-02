@@ -43,7 +43,7 @@ export const Default: Story = {
     open: true,
     variant: 'default',
     triggerLabel: 'Ver atalhos',
-    description: 'Use Ctrl + K para abrir a busca em qualquer tela.',
+    description: 'Use Ctrl+K para abrir a busca em qualquer tela.',
   },
   play: async ({ step }) => {
     await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
@@ -54,7 +54,7 @@ export const Default: Story = {
 
     await step('E carrega a classe do design system com o conteúdo livre', async () => {
       await expect(panel()).toHaveClass(/nds-popover-content/);
-      await expect(panel()!.textContent).toMatch(/Ctrl \+ K/);
+      await expect(panel()!.textContent).toMatch(/Ctrl\+K/);
     });
   },
 };

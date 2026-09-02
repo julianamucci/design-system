@@ -224,7 +224,7 @@ export const CheckedItem: Story = {
     await step('O atalho faz parte do nome do comando', async () => {
       // Sem isso o leitor anunciaria "Sistema" e a pessoa nunca saberia que há
       // uma tecla — o atalho é informação, não decoração.
-      await expect(sistema).toHaveAccessibleName(/⌘S/);
+      await expect(sistema).toHaveAccessibleName(/Ctrl\+S/);
       const atalho = sistema.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
       await expect(atalho).toHaveClass(/nds-command-shortcut/);

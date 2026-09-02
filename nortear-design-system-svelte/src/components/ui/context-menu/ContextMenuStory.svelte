@@ -12,8 +12,8 @@
     editLabel = 'Editar',
     duplicateLabel = 'Duplicar',
     deleteLabel = 'Excluir',
-    editShortcut = '⌘E',
-    deleteShortcut = '⌫',
+    editShortcut = 'Ctrl+E',
+    deleteShortcut = 'Delete',
     showDestructive = true,
     showShortcuts = true,
   }: {

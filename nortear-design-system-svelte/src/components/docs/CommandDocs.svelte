@@ -204,7 +204,7 @@ import uiTranslations from '@/i18n/ui.json';
 <\/script>
 
 <Button variant="outline" onclick={() => { open = true; }}>
-  Buscar <kbd>⌘K</kbd>
+  Buscar <kbd>Ctrl+K</kbd>
 </Button>
 
 <Command.Dialog bind:open title="Command Palette" description="Busque por um comando...">
@@ -214,7 +214,7 @@ import uiTranslations from '@/i18n/ui.json';
     <Command.Group heading="Páginas">
       <Command.Item value="dashboard" onSelect={() => { open = false; }}>
         Dashboard
-        <Command.Shortcut>⌘D</Command.Shortcut>
+        <Command.Shortcut>Ctrl+D</Command.Shortcut>
       </Command.Item>
     </Command.Group>
   </Command.List>
@@ -238,7 +238,7 @@ import uiTranslations from '@/i18n/ui.json';
     <Command.Group heading="Ações">
       <Command.Item value="settings" onSelect={() => { open = false; }}>
         Configurações
-        <Command.Shortcut>⌘,</Command.Shortcut>
+        <Command.Shortcut>Ctrl+,</Command.Shortcut>
       </Command.Item>
     </Command.Group>
   </Command.List>
@@ -400,7 +400,7 @@ interface CommandLoadingProps {
             {$tStore('demonstration.labels.openPalette')}
           </span>
           <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
-            <span class="nds-text-caption">⌘</span>K
+            <span class="nds-text-caption">Ctrl+</span>K
           </kbd>
         </Button>
         <Command.Dialog bind:open={paletteOpen} title={$tStore('demonstration.labels.dialogTitle')} description={$tStore('demonstration.labels.dialogDescription')}>
@@ -411,7 +411,7 @@ interface CommandLoadingProps {
               <Command.Item value="dashboard" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'dashboard', group: 'components', pattern: 'palette' }); }}>
                 <LayoutDashboard aria-hidden="true" />
                 Dashboard
-                <Command.Shortcut>⌘D</Command.Shortcut>
+                <Command.Shortcut>Ctrl+D</Command.Shortcut>
               </Command.Item>
               <Command.Item value="documents" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'documents', group: 'components', pattern: 'palette' }); }}>
                 <FileText aria-hidden="true" />
@@ -427,7 +427,7 @@ interface CommandLoadingProps {
               <Command.Item value="settings" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'settings', group: 'utils', pattern: 'palette' }); }}>
                 <Settings aria-hidden="true" />
                 Configurações
-                <Command.Shortcut>⌘,</Command.Shortcut>
+                <Command.Shortcut>Ctrl+,</Command.Shortcut>
               </Command.Item>
             </Command.Group>
           </Command.List>
@@ -563,7 +563,7 @@ interface CommandLoadingProps {
         Buscar...
       </span>
       <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
-        <span class="nds-text-caption">⌘</span>K
+        <span class="nds-text-caption">Ctrl+</span>K
       </kbd>
     </Button>
   {/snippet}
@@ -623,7 +623,7 @@ interface CommandLoadingProps {
     <div class="nds-stack" data-spacing="sm" style="align-items: center">
       <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.shortcutHint')} {$tStore('demonstration.labels.shortcutKey')} {$tStore('demonstration.labels.openPalette')}</p>
       <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
-        <span class="nds-text-caption">⌘</span>K
+        <span class="nds-text-caption">Ctrl+</span>K
       </kbd>
     </div>
   {/snippet}
@@ -788,7 +788,7 @@ interface CommandLoadingProps {
       { key: 'Enter',      description: toPlainText($tStore('accessibility.keyboard.enter'))     },
       { key: 'Escape',     description: toPlainText($tStore('accessibility.keyboard.escape'))    },
       { key: 'Tab',        description: toPlainText($tStore('accessibility.keyboard.tab'))       },
-      { key: '⌘K',         description: toPlainText($tStore('accessibility.keyboard.cmdK'))      },
+      { key: 'Ctrl+K',     description: toPlainText($tStore('accessibility.keyboard.cmdK'))     },
     ]}
   />
 

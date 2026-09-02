@@ -52,13 +52,13 @@
     <ContextMenu.Content>
       <ContextMenu.Item data-testid="normal">
         Editar
-        <ContextMenu.Shortcut>⌘E</ContextMenu.Shortcut>
+        <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
       </ContextMenu.Item>
       <ContextMenu.Item>Duplicar</ContextMenu.Item>
       <ContextMenu.Separator />
       <ContextMenu.Item variant="destructive" data-testid="perigo">
         Excluir permanentemente
-        <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
+        <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
       </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>

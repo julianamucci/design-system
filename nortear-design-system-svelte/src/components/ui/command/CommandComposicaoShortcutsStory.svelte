@@ -21,30 +21,30 @@
       <CommandGroup heading="Ações">
         <CommandItem value="new-file">
           Novo arquivo
-          <CommandShortcut>⌘N</CommandShortcut>
+          <CommandShortcut>Ctrl+N</CommandShortcut>
         </CommandItem>
         <CommandItem value="open-file">
           Abrir arquivo
-          <CommandShortcut>⌘O</CommandShortcut>
+          <CommandShortcut>Ctrl+O</CommandShortcut>
         </CommandItem>
         <CommandItem value="save-file">
           Salvar
-          <CommandShortcut>⌘S</CommandShortcut>
+          <CommandShortcut>Ctrl+S</CommandShortcut>
         </CommandItem>
         <CommandItem value="find">
           Buscar
-          <CommandShortcut>⌘F</CommandShortcut>
+          <CommandShortcut>Ctrl+F</CommandShortcut>
         </CommandItem>
       </CommandGroup>
       <CommandSeparator />
       <CommandGroup heading="Navegação">
         <CommandItem value="settings">
           Configurações
-          <CommandShortcut>⌘,</CommandShortcut>
+          <CommandShortcut>Ctrl+,</CommandShortcut>
         </CommandItem>
         <CommandItem value="command-palette">
           Command Palette
-          <CommandShortcut>⌘K</CommandShortcut>
+          <CommandShortcut>Ctrl+K</CommandShortcut>
         </CommandItem>
       </CommandGroup>
     </CommandList>

@@ -190,7 +190,7 @@ export const WithShortcuts: Story = {
     await step('O atalho faz parte do nome do item', async () => {
       // Sem isso o leitor de tela anunciaria "Copiar" e a pessoa nunca saberia
       // que existe uma tecla — o atalho é informação, não decoração.
-      await expect(canvas.getByRole('menuitem', { name: 'Copiar Ctrl C' })).toBeTruthy();
+      await expect(canvas.getByRole('menuitem', { name: 'Copiar Ctrl+C' })).toBeTruthy();
     });
 
     await step('O texto do atalho não some para o leitor de tela', async () => {
@@ -199,7 +199,7 @@ export const WithShortcuts: Story = {
     });
 
     await step('O atalho fica encostado na borda direita do item', async () => {
-      const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl V' });
+      const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl+V' });
       const atalho = item.querySelector<HTMLElement>('[data-slot="dropdown-menu-shortcut"]')!;
       const itemBox = item.getBoundingClientRect();
       const shortcutBox = atalho.getBoundingClientRect();

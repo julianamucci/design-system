@@ -100,7 +100,7 @@ describe('transforms das stories de estado', () => {
     const saida = commandItemCheckedSource();
     expect(saida).toContain('checked={true}');
     expect(saida).toContain('checked={false}');
-    expect(saida).toContain('<CommandShortcut>⌘S</CommandShortcut>');
+    expect(saida).toContain('<CommandShortcut>Ctrl+S</CommandShortcut>');
   });
 });
 
@@ -115,7 +115,7 @@ describe('transforms das stories de composição', () => {
     const saida = commandWithShortcutsSource();
     expect(saida).toContain(`<CommandItem value="new-file">
         Novo arquivo
-        <CommandShortcut>⌘N</CommandShortcut>
+        <CommandShortcut>Ctrl+N</CommandShortcut>
       </CommandItem>`);
   });
 
@@ -130,6 +130,6 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<CommandDialog');
     expect(saida).toContain('title="Command Palette"');
     expect(saida).toContain("evento.key.toLowerCase() === 'k'");
-    expect(saida).toContain('<kbd class="nds-kbd">⌘K</kbd>');
+    expect(saida).toContain('<kbd class="nds-kbd">Ctrl+K</kbd>');
   });
 });

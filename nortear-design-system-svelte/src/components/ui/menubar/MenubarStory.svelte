@@ -59,9 +59,9 @@
   ];
 
   const SHORTCUTS = [
-    { label: 'Desfazer', atalho: '⌘Z' },
-    { label: 'Refazer', atalho: '⇧⌘Z' },
-    { label: 'Copiar', atalho: '⌘C' },
+    { label: 'Desfazer', atalho: 'Ctrl+Z' },
+    { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+    { label: 'Copiar', atalho: 'Ctrl+C' },
   ];
 
   const EXPORTACOES = ['PDF', 'CSV', 'PNG'];
@@ -174,8 +174,8 @@
           <MenubarContent>
             <MenubarGroup>
               <MenubarGroupHeading>Documento</MenubarGroupHeading>
-              <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-              <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+              <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+              <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
             </MenubarGroup>
             <MenubarSeparator />
             <MenubarItem variant="destructive">Descartar alterações</MenubarItem>
@@ -184,8 +184,8 @@
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-            <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+            <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+            <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu value="view">

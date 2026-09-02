@@ -134,7 +134,7 @@ export const WithShortcuts: Story = {
     await step('O atalho faz parte do nome do comando', async () => {
       // Sem isso o leitor anunciaria "Novo arquivo" e a pessoa nunca saberia
       // que existe uma tecla — o atalho é informação, não decoração.
-      await expect(novo).toHaveAccessibleName(/⌘N/);
+      await expect(novo).toHaveAccessibleName(/Ctrl\+N/);
       const atalho = novo.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
@@ -150,9 +150,9 @@ export const WithShortcuts: Story = {
     });
 
     await step('O atalho não entra no filtro', async () => {
-      // Quem busca "⌘" está procurando a tecla, não o comando: o filtro roda
-      // sobre o `value`, e nenhum deles carrega o símbolo.
-      await userEvent.type(field, '⌘');
+      // Quem busca "Ctrl" está procurando a tecla, não o comando: o filtro roda
+      // sobre o `value`, e nenhum deles carrega o texto do atalho.
+      await userEvent.type(field, 'Ctrl');
       await waitFor(async () => {
         await expect(canvas.queryByRole('option', { name: /Novo arquivo/ })).toBeNull();
       });
@@ -267,7 +267,7 @@ export const CommandPalette: Story = {
       // Atalho escondido é atalho que ninguém descobre.
       const dica = trigger.querySelector<HTMLElement>('.nds-kbd')!;
       await expect(dica).toBeVisible();
-      await expect(dica).toHaveTextContent('⌘K');
+      await expect(dica).toHaveTextContent('Ctrl+K');
       await expect(dica.tagName).toBe('KBD');
     });
 
@@ -326,7 +326,7 @@ export const CommandPalette: Story = {
       const atalho = panel.querySelector<HTMLElement>(
         '[data-value="dashboard"] [data-slot="command-shortcut"]',
       )!;
-      await expect(atalho).toHaveTextContent('⌘D');
+      await expect(atalho).toHaveTextContent('Ctrl+D');
       const boxItem = atalho
         .closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();

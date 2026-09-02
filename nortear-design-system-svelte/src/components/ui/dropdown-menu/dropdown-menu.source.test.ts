@@ -89,7 +89,7 @@ describe('dropdownMenuSource', () => {
       '<DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>',
     );
     expect(dropdownMenuSource('', { args: { variant: 'withShortcuts' } })).toContain(
-      '<DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>',
+      '<DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>',
     );
   });
 
@@ -178,7 +178,7 @@ describe('transforms das stories de variação, estado e composição', () => {
 
   it('o atalho é filho do item, não texto solto ao lado dele', () => {
     const saida = dropdownMenuWithShortcutsSource();
-    expect(saida).toContain('<DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>');
+    expect(saida).toContain('<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
     expect(saida).toContain('>Editar</Button>');
   });
 });

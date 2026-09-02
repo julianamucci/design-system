@@ -17,7 +17,7 @@
    *
    * O ícone é decoração e fica fora da árvore de acessibilidade — o que ele
    * ilustra já está no nome do grupo e no rótulo do campo. O atalho é TEXTO:
-   * `⌘K` informa, ele não age, e um botão ali prometeria uma ação que o
+   * `Ctrl+K` informa, ele não age, e um botão ali prometeria uma ação que o
    * componente não tem.
    *
    * O grupo tem nome porque a busca é um conjunto, e não só um campo.

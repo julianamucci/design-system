@@ -147,20 +147,20 @@
   <ContextMenu.Content>
     <ContextMenu.Item>
       Editar
-      <ContextMenu.Shortcut>⌘E</ContextMenu.Shortcut>
+      <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
     </ContextMenu.Item>
     <ContextMenu.Item>Duplicar</ContextMenu.Item>
     <ContextMenu.Separator />
     <ContextMenu.Item variant="destructive">
       Excluir
-      <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
+      <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
     </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>`;
 
   const codeDestructive = `<ContextMenu.Item variant="destructive">
   Excluir
-  <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
+  <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
 </ContextMenu.Item>`;
 
   const codeVariantLabel = `<ContextMenu.Root>
@@ -237,16 +237,16 @@
   <ContextMenu.Content>
     <ContextMenu.Item>
       Editar
-      <ContextMenu.Shortcut>⌘E</ContextMenu.Shortcut>
+      <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
     </ContextMenu.Item>
     <ContextMenu.Item>
       Duplicar
-      <ContextMenu.Shortcut>⌘D</ContextMenu.Shortcut>
+      <ContextMenu.Shortcut>Ctrl+D</ContextMenu.Shortcut>
     </ContextMenu.Item>
     <ContextMenu.Separator />
     <ContextMenu.Item variant="destructive">
       Excluir
-      <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
+      <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
     </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>`;
@@ -482,7 +482,7 @@ interface ContextMenuRadioGroupProps {
       <ContextMenu.Content>
         <ContextMenu.Item>
           Editar
-          <ContextMenu.Shortcut>⌘E</ContextMenu.Shortcut>
+          <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
@@ -668,7 +668,7 @@ interface ContextMenuRadioGroupProps {
         </ContextMenu.Item>
         <ContextMenu.Item>
           {$tStore('demonstration.labels.duplicate')}
-          <ContextMenu.Shortcut>⌘D</ContextMenu.Shortcut>
+          <ContextMenu.Shortcut>Ctrl+D</ContextMenu.Shortcut>
         </ContextMenu.Item>
         <ContextMenu.Separator />
         <ContextMenu.Item variant="destructive">

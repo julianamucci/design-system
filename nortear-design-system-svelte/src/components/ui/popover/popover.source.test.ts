@@ -73,9 +73,9 @@ describe('popoverSource', () => {
 
   it('a composição sem título traz só o texto, e importa só as três peças', () => {
     const saida = popoverSource('', {
-      args: { variant: 'default', description: 'Use Ctrl + K para abrir a busca.' },
+      args: { variant: 'default', description: 'Use Ctrl+K para abrir a busca.' },
     });
-    expect(saida).toContain('<p class="nds-text-body">Use Ctrl + K para abrir a busca.</p>');
+    expect(saida).toContain('<p class="nds-text-body">Use Ctrl+K para abrir a busca.</p>');
     expect(saida).not.toContain('PopoverTitle');
   });
 

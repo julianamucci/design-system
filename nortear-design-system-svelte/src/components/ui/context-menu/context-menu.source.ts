@@ -104,7 +104,7 @@ export function contextMenuSource(
 
   const lines = [
     '    <ContextMenuGroup>',
-    item('Editar', { atalho: showShortcuts ? '⌘E' : undefined, indent: '      ' }),
+    item('Editar', { atalho: showShortcuts ? 'Ctrl+E' : undefined, indent: '      ' }),
     item('Duplicar', { indent: '      ' }),
     '    </ContextMenuGroup>',
   ];
@@ -113,7 +113,7 @@ export function contextMenuSource(
     lines.push('    <ContextMenuSeparator />');
     lines.push(
       item('Excluir', {
-        atalho: showShortcuts ? '⌫' : undefined,
+        atalho: showShortcuts ? 'Delete' : undefined,
         props: ' variant="destructive"',
       }),
     );
@@ -188,10 +188,10 @@ export function contextMenuItemDestructiveSource(): string {
       'ContextMenuSeparator',
       'ContextMenuShortcut',
     ]),
-    menu(`${item('Editar', { atalho: '⌘E' })}
+    menu(`${item('Editar', { atalho: 'Ctrl+E' })}
     <ContextMenuItem>Duplicar</ContextMenuItem>
     <ContextMenuSeparator />
-${item('Excluir permanentemente', { atalho: '⌫', props: ' variant="destructive"' })}`),
+${item('Excluir permanentemente', { atalho: 'Delete', props: ' variant="destructive"' })}`),
   );
 }
 
@@ -251,10 +251,10 @@ export function contextMenuWithShortcutsSource(): string {
       'ContextMenuSeparator',
       'ContextMenuShortcut',
     ]),
-    menu(`${item('Editar', { atalho: '⌘E' })}
-${item('Desfazer', { atalho: '⌘Z' })}
+    menu(`${item('Editar', { atalho: 'Ctrl+E' })}
+${item('Desfazer', { atalho: 'Ctrl+Z' })}
     <ContextMenuSeparator />
-${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`),
+${item('Excluir', { atalho: 'Delete', props: ' variant="destructive"' })}`),
   );
 }
 
@@ -358,7 +358,7 @@ let mostrarGrade = $state(false);
 let layout = $state('grid');`,
     menu(`    <ContextMenuGroup>
       <ContextMenuGroupHeading>Ações</ContextMenuGroupHeading>
-${item('Editar', { atalho: '⌘E', indent: '      ' })}
+${item('Editar', { atalho: 'Ctrl+E', indent: '      ' })}
       <ContextMenuSub>
         <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
         <ContextMenuSubContent>
@@ -383,6 +383,6 @@ ${item('Editar', { atalho: '⌘E', indent: '      ' })}
       </ContextMenuRadioGroup>
     </ContextMenuGroup>
     <ContextMenuSeparator />
-${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`),
+${item('Excluir', { atalho: 'Delete', props: ' variant="destructive"' })}`),
   );
 }

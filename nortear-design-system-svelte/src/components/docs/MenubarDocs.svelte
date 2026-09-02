@@ -152,7 +152,7 @@
     <MenubarContent>
       <MenubarItem>
         Novo
-        <MenubarShortcut>⌘N</MenubarShortcut>
+        <MenubarShortcut>Ctrl+N</MenubarShortcut>
       </MenubarItem>
       <MenubarSeparator />
       <MenubarItem variant="destructive">Excluir</MenubarItem>
@@ -234,11 +234,11 @@ interface MenubarRadioGroupProps {
           <MenubarContent>
             <MenubarItem>
               Novo
-              <MenubarShortcut>⌘N</MenubarShortcut>
+              <MenubarShortcut>Ctrl+N</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Abrir...
-              <MenubarShortcut>⌘O</MenubarShortcut>
+              <MenubarShortcut>Ctrl+O</MenubarShortcut>
             </MenubarItem>
             <MenubarSeparator />
             <MenubarSub>
@@ -259,20 +259,20 @@ interface MenubarRadioGroupProps {
           <MenubarContent>
             <MenubarItem>
               Desfazer
-              <MenubarShortcut>⌘Z</MenubarShortcut>
+              <MenubarShortcut>Ctrl+Z</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Refazer
-              <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+              <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
             </MenubarItem>
             <MenubarSeparator />
             <MenubarItem>
               Copiar
-              <MenubarShortcut>⌘C</MenubarShortcut>
+              <MenubarShortcut>Ctrl+C</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Colar
-              <MenubarShortcut>⌘V</MenubarShortcut>
+              <MenubarShortcut>Ctrl+V</MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
@@ -463,11 +463,11 @@ interface MenubarRadioGroupProps {
           <MenubarContent>
             <MenubarItem>
               Salvar
-              <MenubarShortcut>⌘S</MenubarShortcut>
+              <MenubarShortcut>Ctrl+S</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Desfazer
-              <MenubarShortcut>⌘Z</MenubarShortcut>
+              <MenubarShortcut>Ctrl+Z</MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
@@ -522,11 +522,11 @@ interface MenubarRadioGroupProps {
   <MenubarMenu value="edit">
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
       <MenubarSeparator />
-      <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
-      <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+      <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
+      <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
 </Menubar>`,
@@ -576,15 +576,15 @@ interface MenubarRadioGroupProps {
   <MenubarMenu value="file">
     <MenubarTrigger>Arquivo</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-      <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
-      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+      <MenubarItem>Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
+      <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
   <MenubarMenu value="edit">
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
     </MenubarContent>
   </MenubarMenu>
   <MenubarMenu value="view">
@@ -640,11 +640,11 @@ interface MenubarRadioGroupProps {
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-            <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+            <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+            <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
             <MenubarSeparator />
-            <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
-            <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+            <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
+            <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
@@ -688,18 +688,18 @@ interface MenubarRadioGroupProps {
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-            <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
-            <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+            <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+            <MenubarItem>Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
+            <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
             <MenubarSeparator />
-            <MenubarItem>Sair <MenubarShortcut>⌘Q</MenubarShortcut></MenubarItem>
+            <MenubarItem>Sair <MenubarShortcut>Ctrl+Q</MenubarShortcut></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-            <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+            <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+            <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu value="view">

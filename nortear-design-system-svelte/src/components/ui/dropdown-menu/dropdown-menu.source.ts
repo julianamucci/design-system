@@ -172,16 +172,16 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
     names: ['DropdownMenuItem', 'DropdownMenuSeparator', 'DropdownMenuShortcut'],
     markup: `<DropdownMenuItem>
   Desfazer
-  <DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
+  <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
 </DropdownMenuItem>
 <DropdownMenuItem>
   Copiar
-  <DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
+  <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
 </DropdownMenuItem>
 <DropdownMenuSeparator />
 <DropdownMenuItem>
   Colar
-  <DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
+  <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
 </DropdownMenuItem>`,
   },
 

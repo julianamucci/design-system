@@ -75,7 +75,7 @@ describe('menubarSource', () => {
 
   it('os atalhos aparecem dentro do item, e não em coluna separada', () => {
     const saida = menubarSource('', { args: { demonstration: 'shortcuts' } });
-    expect(saida).toContain('<MenubarShortcut>⌘Z</MenubarShortcut>');
+    expect(saida).toContain('<MenubarShortcut>Ctrl+Z</MenubarShortcut>');
     expect(saida.match(/<MenubarShortcut>/g)).toHaveLength(3);
   });
 

@@ -47,7 +47,7 @@
       <Search class="nds-size-4" aria-hidden="true" />
       Buscar...
     </span>
-    <kbd class="nds-kbd">⌘K</kbd>
+    <kbd class="nds-kbd">Ctrl+K</kbd>
   </Button>
 
   <Command.Dialog bind:open title="Command Palette" description="Busque por um comando ou ação...">
@@ -58,7 +58,7 @@
         <Command.Item value="dashboard" onSelect={() => handleSelect('dashboard')}>
           <LayoutDashboard aria-hidden="true" />
           Dashboard
-          <Command.Shortcut>⌘D</Command.Shortcut>
+          <Command.Shortcut>Ctrl+D</Command.Shortcut>
         </Command.Item>
         <Command.Item value="documents" onSelect={() => handleSelect('documents')}>
           <FileText aria-hidden="true" />
@@ -74,7 +74,7 @@
         <Command.Item value="settings" onSelect={() => handleSelect('settings')}>
           <Settings aria-hidden="true" />
           Configurações
-          <Command.Shortcut>⌘,</Command.Shortcut>
+          <Command.Shortcut>Ctrl+,</Command.Shortcut>
         </Command.Item>
       </Command.Group>
     </Command.List>

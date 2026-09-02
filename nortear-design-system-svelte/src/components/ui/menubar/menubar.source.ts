@@ -74,9 +74,9 @@ function composition(
 ): Composition {
   if (demonstration === 'shortcuts') {
     const items = [
-      ['Desfazer', '⌘Z'],
-      ['Refazer', '⇧⌘Z'],
-      ['Copiar', '⌘C'],
+      ['Desfazer', 'Ctrl+Z'],
+      ['Refazer', 'Ctrl+Shift+Z'],
+      ['Copiar', 'Ctrl+C'],
     ]
       .map(
         ([label, atalho]) => `      <MenubarItem>
@@ -214,8 +214,8 @@ function composition(
           'Arquivo',
           `      <MenubarGroup>
         <MenubarGroupHeading>Documento</MenubarGroupHeading>
-        <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-        <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+        <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+        <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
       </MenubarGroup>
       <MenubarSeparator />
       <MenubarItem variant="destructive">Descartar alterações</MenubarItem>`,
@@ -223,8 +223,8 @@ function composition(
         menu(
           'edit',
           'Editar',
-          `      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>`,
+          `      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>`,
         ),
         menu(
           'view',

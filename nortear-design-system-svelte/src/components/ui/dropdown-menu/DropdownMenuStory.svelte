@@ -146,21 +146,21 @@
           {:else if variant === 'withShortcuts'}
             <!--
               Mesmos itens e mesmos atalhos das outras quatro stacks. Antes eram
-              Salvar/Duplicar/Excluir com ⌘S, ⌘D e ⌫ — exemplo que não aparecia
+              Salvar/Duplicar/Excluir com Ctrl+S, Ctrl+D e Delete — exemplo que não aparecia
               em stack nenhuma, nem na docs page desta.
             -->
             <DropdownMenuItem>
               Desfazer
-              <DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
+              <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuItem>
               Copiar
-              <DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
+              <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               Colar
-              <DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
+              <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
             </DropdownMenuItem>
           {:else if variant === 'itemDisabled'}
             <DropdownMenuItem>Editar</DropdownMenuItem>

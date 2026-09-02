@@ -40,14 +40,14 @@ describe('contextMenuSource', () => {
     <ContextMenuGroup>
       <ContextMenuItem>
         Editar
-        <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
       </ContextMenuItem>
       <ContextMenuItem>Duplicar</ContextMenuItem>
     </ContextMenuGroup>
     <ContextMenuSeparator />
     <ContextMenuItem variant="destructive">
       Excluir
-      <ContextMenuShortcut>⌫</ContextMenuShortcut>
+      <ContextMenuShortcut>Delete</ContextMenuShortcut>
     </ContextMenuItem>
   </ContextMenuContent>
 </ContextMenu>`,
@@ -122,7 +122,7 @@ describe('transforms das stories de composição', () => {
     expect(saida.match(/<ContextMenuShortcut>/g)).toHaveLength(3);
     expect(saida).toContain(`<ContextMenuItem>
       Desfazer
-      <ContextMenuShortcut>⌘Z</ContextMenuShortcut>
+      <ContextMenuShortcut>Ctrl+Z</ContextMenuShortcut>
     </ContextMenuItem>`);
   });
 

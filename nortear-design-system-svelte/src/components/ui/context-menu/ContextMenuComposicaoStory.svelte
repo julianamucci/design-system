@@ -39,16 +39,16 @@
     <ContextMenu.Content>
       <ContextMenu.Item data-testid="editar">
         Editar
-        <ContextMenu.Shortcut>⌘E</ContextMenu.Shortcut>
+        <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
       </ContextMenu.Item>
       <ContextMenu.Item>
         Desfazer
-        <ContextMenu.Shortcut>⌘Z</ContextMenu.Shortcut>
+        <ContextMenu.Shortcut>Ctrl+Z</ContextMenu.Shortcut>
       </ContextMenu.Item>
       <ContextMenu.Separator />
       <ContextMenu.Item variant="destructive">
         Excluir
-        <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
+        <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
       </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>
@@ -110,7 +110,7 @@
         <ContextMenuGroupHeading>Ações</ContextMenuGroupHeading>
         <ContextMenu.Item>
           Editar
-          <ContextMenu.Shortcut>⌘E</ContextMenu.Shortcut>
+          <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
         </ContextMenu.Item>
         <ContextMenu.Sub>
           <ContextMenu.SubTrigger>Compartilhar</ContextMenu.SubTrigger>
@@ -138,7 +138,7 @@
       <ContextMenu.Separator />
       <ContextMenu.Item variant="destructive">
         Excluir
-        <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
+        <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
       </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>

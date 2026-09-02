@@ -7,9 +7,9 @@ import { menubarSource } from './menubar.source';
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
 const SHORTCUTS = [
-  { label: 'Desfazer', atalho: '⌘Z' },
-  { label: 'Refazer', atalho: '⇧⌘Z' },
-  { label: 'Copiar', atalho: '⌘C' },
+  { label: 'Desfazer', atalho: 'Ctrl+Z' },
+  { label: 'Refazer', atalho: 'Ctrl+Shift+Z' },
+  { label: 'Copiar', atalho: 'Ctrl+C' },
 ];
 
 const EXPORTACOES = ['PDF', 'CSV', 'PNG'];
@@ -65,7 +65,7 @@ export const WithShortcuts: Story = {
     });
 
     await step('O atalho entra no nome do item, e não fica escondido do leitor', async () => {
-      // Sem `aria-hidden`: "Desfazer, ⌘Z" é o que dá serventia ao atalho para
+      // Sem `aria-hidden`: "Desfazer, Ctrl+Z" é o que dá serventia ao atalho para
       // quem não enxerga a tela. Escondê-lo devolveria só "Desfazer".
       for (const [i, item] of items.entries()) {
         await expect(item).toHaveAccessibleName(`${SHORTCUTS[i].label} ${SHORTCUTS[i].atalho}`);
