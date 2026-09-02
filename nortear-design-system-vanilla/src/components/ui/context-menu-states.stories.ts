@@ -40,7 +40,7 @@ const item = (value: string) =>
 
 export const ItemDisabled: Story = {
   parameters: {
-    covers: ['functional.item9', 'accessibility.item6', 'visual.item5'],
+    covers: ['functional.item9', 'accessibility.item6', 'accessibility.item9', 'visual.item5'],
     // `disabled` é o assunto, e o menu canônico do meta não o tem.
     docs: {
       source: {
@@ -79,6 +79,19 @@ export const ItemDisabled: Story = {
       // A cor sozinha não chega a quem não a distingue; a opacidade é o sinal
       // que sobra quando o contraste falha.
       await expect(Number(getComputedStyle(item('off')).opacity)).toBeLessThan(1);
+    });
+
+    await step('A seta POUSA no item desabilitado', async () => {
+      // Decisão de 2026-09-02, nas cinco stacks: o item desabilitado continua no
+      // percurso das setas para ser ANUNCIADO como indisponível. Some-lo da roda
+      // esconderia de quem navega de ouvido que a opção existe.
+      //
+      // O que prova isso é APERTAR a seta e ver onde o foco pousa. Afirmar a
+      // presença de `tabindex` não provaria: o atributo está em todo item,
+      // desabilitado ou não, e por isso não reprovaria nunca.
+      item('edit').focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(item('off'));
     });
 
     await step('Enter nele não escolhe nada e o menu segue aberto', async () => {
@@ -162,7 +175,7 @@ export const ItemDestructive: Story = {
     createContextMenu({
       trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
-        { type: 'item', label: 'Editar', value: 'normal', shortcut: '⌘E', onClick: fn() },
+        { type: 'item', label: 'Editar', value: 'normal', shortcut: 'Ctrl+E', onClick: fn() },
         { type: 'item', label: 'Duplicar', value: 'duplicate', onClick: fn() },
         { type: 'separator' },
         {
@@ -170,7 +183,7 @@ export const ItemDestructive: Story = {
           label: 'Excluir permanentemente',
           value: 'perigo',
           variant: 'destructive',
-          shortcut: '⌫',
+          shortcut: 'Delete',
           onClick: fn(),
         },
       ],

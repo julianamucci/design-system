@@ -48,7 +48,7 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 
 export const ItemDisabled: Story = {
   parameters: {
-    covers: ["functional.item9", "accessibility.item6", "visual.item5"],
+    covers: ["functional.item9", "accessibility.item6", "accessibility.item9", "visual.item5"],
     // `disabled` é prop do ITEM: sem o override o snippet não mostraria onde a
     // prop entra, que é o assunto da story.
     docs: { source: { transform: contextMenuItemDisabledSource } },
@@ -69,7 +69,7 @@ export const ItemDisabled: Story = {
         <ContextMenuGroup>
           <ContextMenuItem data-testid="primeiro">
             Editar
-            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuItem disabled data-testid="off">
             Duplicar
@@ -97,6 +97,19 @@ export const ItemDisabled: Story = {
       // que sobra quando o contraste falha.
       await expect(Number(getComputedStyle(target("off")).opacity)).toBeLessThan(1);
     });
+
+    await step("A seta POUSA no item desabilitado", async () => {
+      // Decisão de 2026-09-02, nas cinco stacks: o item desabilitado continua no
+      // percurso das setas para ser ANUNCIADO como indisponível. Some-lo da roda
+      // esconderia de quem navega de ouvido que a opção existe.
+      //
+      // O que prova isso é APERTAR a seta e ver onde o foco pousa. Afirmar a
+      // presença de `tabindex` não provaria: o atributo está em todo item,
+      // desabilitado ou não, e por isso não reprovaria nunca.
+      target("primeiro").focus()
+      await userEvent.keyboard("{ArrowDown}")
+      await expect(document.activeElement).toBe(target("off"))
+    })
 
     await step("Enter nele não escolhe nada e o menu segue aberto", async () => {
       // Ativar um item desabilitado é o caso raro em que a play pode repetir sem
@@ -177,14 +190,14 @@ export const ItemDestructive: Story = {
         <ContextMenuGroup>
           <ContextMenuItem data-testid="normal">
             Editar
-            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuItem>Duplicar</ContextMenuItem>
         </ContextMenuGroup>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive" data-testid="perigo">
           Excluir permanentemente
-          <ContextMenuShortcut>⌫</ContextMenuShortcut>
+          <ContextMenuShortcut>Delete</ContextMenuShortcut>
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

@@ -389,7 +389,8 @@
         "item5": "role=\"menuitemradio\" e aria-checked em RadioItem",
         "item6": "aria-disabled em itens desabilitados",
         "item7": "Escape fecha o menu e retorna foco ao trigger",
-        "item8": "Contraste mínimo 4.5:1 em todos os estados de texto"
+        "item8": "Contraste mínimo 4.5:1 em todos os estados de texto",
+        "item9": "A seta pousa também no item desabilitado, que segue no percurso do teclado e é anunciado como indisponível em vez de sumir (WAI-ARIA APG)"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -833,7 +834,8 @@
         "item5": "role=\"menuitemradio\" and aria-checked on RadioItem",
         "item6": "aria-disabled on disabled items",
         "item7": "Escape closes the menu and returns focus to trigger",
-        "item8": "Minimum contrast 4.5:1 across all text states"
+        "item8": "Minimum contrast 4.5:1 across all text states",
+        "item9": "The arrow also lands on the disabled item, which stays in the keyboard sequence and is announced as unavailable instead of disappearing (WAI-ARIA APG)"
       },
       "visual": {
         "title": "Visual Regression",
@@ -1277,7 +1279,8 @@
         "item5": "role=\"menuitemradio\" y aria-checked en RadioItem",
         "item6": "aria-disabled en ítems deshabilitados",
         "item7": "Escape cierra el menú y devuelve el foco al trigger",
-        "item8": "Contraste mínimo 4.5:1 en todos los estados de texto"
+        "item8": "Contraste mínimo 4.5:1 en todos los estados de texto",
+        "item9": "La flecha también se posa en el ítem deshabilitado, que sigue en el recorrido del teclado y se anuncia como no disponible en vez de desaparecer (WAI-ARIA APG)"
       },
       "visual": {
         "title": "Regresión Visual",

@@ -187,16 +187,17 @@ export const WithDisabledItems: Story = {
   parameters: {
     // `functional.item9` deixou de ser dispensa e passou a ser cobertura.
     //
-    // O texto compartilhado prometia que o item desabilitado "não recebe foco
-    // via teclado", e essa promessa era idiomática de lib, não do design system:
-    // duas das cinco stacks pulam o item na roda de foco e três o mantêm — o que
-    // a WAI-ARIA APG permite de propósito, para a opção não sumir de quem navega
-    // às cegas. Com o item reescrito para o que vale nas cinco (anunciado por
-    // `aria-disabled`, não ativa por clique nem por Enter, menu segue aberto), a
-    // dispensa perdeu razão de existir.
+    // Histórico, porque o texto compartilhado mudou de lado duas vezes. Ele
+    // prometia que o item desabilitado "não recebe foco via teclado"; essa
+    // promessa era idiomática de lib e não do design system, porque as stacks se
+    // dividiam, e por isso foi reescrita para o que valia nas cinco (anunciado
+    // por `aria-disabled`, não ativa por clique nem por Enter, menu segue
+    // aberto). Em 2026-09-02 a divergência foi RESOLVIDA por decisão: a seta
+    // pousa no item desabilitado nas cinco, e `accessibility.item9` promete
+    // isso. O passo "Ele recebe foco, mas não ativa" é quem o cobra aqui.
     covers: [
       'functional.item9', 'functional.item10',
-      'accessibility.item6',
+      'accessibility.item6', 'accessibility.item9',
       'visual.item2', 'visual.item5',
     ],
   },

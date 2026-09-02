@@ -45,7 +45,7 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 
 export const ItemDisabled: Story = {
   parameters: {
-    covers: ['functional.item9', 'accessibility.item6', 'visual.item5'],
+    covers: ['functional.item9', 'accessibility.item6', 'accessibility.item9', 'visual.item5'],
     docs: { source: { transform: contextMenuItemDisabledSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'disabled' } }),
@@ -62,6 +62,18 @@ export const ItemDisabled: Story = {
       // A cor sozinha não chega a quem não a distingue; a opacidade é o sinal
       // que sobra quando o contraste falha.
       await expect(Number(getComputedStyle(target('off')).opacity)).toBeLessThan(1);
+    });
+
+    await step('A seta POUSA no item desabilitado', async () => {
+      // Decisão de 2026-09-02, nas cinco stacks: o item desabilitado continua no
+      // percurso das setas para ser ANUNCIADO como indisponível. Some-lo da roda
+      // esconderia de quem navega de ouvido que a opção existe.
+      //
+      // Quem alinha esta stack é o patch de `patches/`, e não código nosso: se
+      // ele parar de aplicar, este passo é o primeiro a reprovar.
+      target('primeiro').focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(target('off'));
     });
 
     await step('Enter nele não escolhe nada e o menu segue aberto', async () => {
