@@ -101,6 +101,83 @@ o que quer dizer que a identidade de raio de dois dos três temas simplesmente
 não existia no arquivo — o `radius` do warm é 24 e o do cold é 0, contra 14 do
 default, e nada disso era representável.
 
+## Trocar de tema = trocar SETE modos
+
+No CSS, trocar de tema arrasta os outros eixos junto: `applyTheme` lê
+`themeAxisDefaults` e escreve, de uma vez, a cor, o raio, a densidade, a fonte e
+a escala tipográfica. No Figma **não existe equivalente nativo**, e vale saber
+por quê antes de tentar montar um.
+
+Modo é por coleção, e uma coleção não consegue governar o modo de outra. A
+tentativa óbvia — uma coleção `Tema` cujas variáveis fazem alias para as
+coleções de eixo — não funciona: alias aponta para uma VARIÁVEL, não para uma
+variável num modo, e a resolução usa o modo que o nó tem para a coleção de
+destino. Os próprios typings do Plugin API demonstram isso com duas coleções de
+dois modos: as quatro combinações dão quatro resultados diferentes. Alias
+atravessa coleção, mas não carrega modo.
+
+A herança que EXISTE é outra, e é nela que se apoia: modo explícito num nó
+desce para os descendentes (`resolvedVariableModes` soma o que o nó declara ao
+que os ancestrais declaram). E `PageNode` também tem `explicitVariableModes` —
+não é privilégio de frame. Então o portador do tema pode ser uma página inteira
+ou um frame; o que estiver dentro herda sem fazer nada.
+
+O mapa de cada tema, tirado de `themeAxisDefaults`:
+
+| Coleção | `default` | `warm` | `cold` |
+|---|---|---|---|
+| `Cor` | `default-light` / `default-dark` | `warm-light` / `warm-dark` | `cold-light` / `cold-dark` |
+| `Raio` | `default` | `warm` | `cold` |
+| `Dimensao` | `default` | `confortavel` | `condensado` |
+| `Fonte` | `default` | `lxgw-wenkai` | `pt-serif` |
+| `Tipografia` | `minor-third` | `major-third` | `perfect-fourth` |
+| `Elevacao` | `light` / `dark` | idem | idem |
+| `Opacidade` | `light` / `dark` | idem | idem |
+
+O quinto eixo do CSS, `base-tipo`, **não tem contrapartida no Figma**: o
+`--type-base` vale 16 em todos os oito modos de `Tipografia`. Hoje isso não
+perde nada, porque os três temas usam `typebase: 'm'`. Passa a perder no dia em
+que um tema mudar a base.
+
+O análogo de `applyTheme`, para rodar sobre a seleção ou sobre uma página:
+
+```js
+const EIXOS = {
+  default: { Cor: 'default-light', Raio: 'default', Dimensao: 'default',
+             Fonte: 'default', Tipografia: 'minor-third',
+             Elevacao: 'light', Opacidade: 'light' },
+  warm:    { Cor: 'warm-light', Raio: 'warm', Dimensao: 'confortavel',
+             Fonte: 'lxgw-wenkai', Tipografia: 'major-third',
+             Elevacao: 'light', Opacidade: 'light' },
+  cold:    { Cor: 'cold-light', Raio: 'cold', Dimensao: 'condensado',
+             Fonte: 'pt-serif', Tipografia: 'perfect-fourth',
+             Elevacao: 'light', Opacidade: 'light' },
+};
+
+async function aplicarTema(no, tema, escuro = false) {
+  const cols = await figma.variables.getLocalVariableCollectionsAsync();
+  for (const [nomeCol, nomeModo] of Object.entries(EIXOS[tema])) {
+    const col = cols.find((c) => c.name === nomeCol);
+    if (!col) throw new Error('coleção ausente: ' + nomeCol);
+    // as três coleções que têm par claro/escuro trocam junto com o modo
+    const alvo = escuro && ['Cor', 'Elevacao', 'Opacidade'].includes(nomeCol)
+      ? nomeModo.replace(/light$/, 'dark')
+      : nomeModo;
+    const modo = col.modes.find((m) => m.name === alvo);
+    if (!modo) throw new Error(nomeCol + ' não tem modo ' + alvo);
+    no.setExplicitVariableModeForCollection(col, modo.modeId);
+  }
+}
+```
+
+**Fixe os sete ou nenhum.** Fixar um subconjunto é o que produz o defeito mais
+difícil de enxergar aqui: o nó fica com uma coleção presa a um tema e as outras
+seis resolvendo pelo modo padrão da coleção, o que é uma combinação que nenhum
+tema define. Não dá erro, e não parece quebrado — parece uma escolha de design.
+Foi assim que o component set `Alert` deste arquivo ficou com `Cor=cold-light` e
+o resto em `default`, e o componente `Accordion` com `Tipografia=augmented-fourth`,
+que não é o padrão de tema nenhum.
+
 ## Prefixos dentro de cada coleção
 
 | Coleção | Prefixos |
