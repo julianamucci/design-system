@@ -2,8 +2,19 @@
 
 Referência do comando `/figma-sync-component`.
 
-**Verificado no arquivo em 2026-08-05** lendo as coleções locais via Plugin API.
-As 144 variáveis batem uma a uma com o export em `docs/shared/tokens/figma/`.
+**Sincronizado em 2026-09-02** contra `docs/shared/tokens/figma-variables.json`,
+comparando as duas pontas por resumo determinístico (token, modo e valor, com o
+float32 do Figma arredondado dos dois lados). Sete das oito coleções ficaram
+idênticas; a `Color` difere por um único token, `--ring-offset-color`, que existe
+no arquivo e não existe mais no CSS — apagá-lo desprende quem estiver amarrado a
+ele, então continua lá por decisão pendente.
+
+Vale reparar em como a defasagem chegou até aqui. A nota anterior dizia que as
+144 variáveis batiam uma a uma em 2026-08-05, e nada avisou quando deixaram de
+bater: o `--check` do gerador compara a saída do gerador com o arquivo JSON, os
+dois concordavam, e nenhum dos dois olhava para o Figma. Portão que mede
+fidelidade entre duas cópias locais não diz nada sobre a terceira ponta. Antes de
+confiar nesta linha, refaça o resumo — a data acima envelhece sozinha.
 
 ---
 
@@ -22,7 +33,17 @@ Apple) e nenhum deles é fonte de token do projeto.
 
 **Toda variável tem `codeSyntax.WEB` igual à custom property do CSS.**
 `marca/primary` tem `var(--primary)`, `espacamento/spacing-4` tem
-`var(--spacing-4)`, e assim por diante — sem exceção nas 144.
+`var(--spacing-4)`, e assim por diante — sem exceção. É essa igualdade que
+permite sincronizar por valor sem depender do nome da coleção, que **diverge**:
+o arquivo chama `Color`/`Spacing`/`Radius`/`Motion`/`Elevation`/`z-index`, e o
+export chama `Cor`/`Dimensao`/`Raio`/`Movimento`/`Elevacao`/`Camada`. Casar por
+`codeSyntax.WEB` atravessa a divergência; importar o JSON cru criaria coleções
+gêmeas.
+
+Duas coleções do arquivo **não têm origem no CSS** e não entram em sincronia
+nenhuma: `Texto` (54 variáveis × pt-BR/en/es) e `Opacidade` (8 × light/dark,
+nenhuma com `codeSyntax.WEB`). São feitas à mão no Figma; qualquer varredura que
+apague o que não está no export destrói as duas.
 
 Então o mapa não é uma tabela a decorar: é uma busca. Indexe por `codeSyntax.WEB`
 e procure pela própria string que está no CSS.
