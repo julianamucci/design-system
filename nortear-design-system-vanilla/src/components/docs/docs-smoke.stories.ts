@@ -3,7 +3,8 @@
 // Política: crash no mount → export fica FORA (listado abaixo); axe falhando →
 // parameters.a11y.test:'todo' com as rules no comentário; página limpa → axe é portão.
 //
-// Nenhuma página fora da fumaça: as 66 montam.
+// Nenhuma página fora da fumaça: 98 registradas, uma por *Docs.ts do diretório.
+// As 67 originais montam; as 31 registradas em 2026-09-01 ainda não rodaram.
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -75,6 +76,38 @@ import { createToggleGroupDocs } from './ToggleGroupDocs';
 import { createToneOfVoiceDocs } from './ToneOfVoiceDocs';
 import { createTooltipDocs } from './TooltipDocs';
 import { createTypographyDocs } from './TypographyDocs';
+
+import { createActivityGraphDocs } from './ActivityGraphDocs';
+import { createAgentPlanDocs } from './AgentPlanDocs';
+import { createAgentStatusDocs } from './AgentStatusDocs';
+import { createApprovalCardDocs } from './ApprovalCardDocs';
+import { createChatThreadDocs } from './ChatThreadDocs';
+import { createComposerAttachmentsDocs } from './ComposerAttachmentsDocs';
+import { createComposerContextDocs } from './ComposerContextDocs';
+import { createComposerDocs } from './ComposerDocs';
+import { createComposerModelPickerDocs } from './ComposerModelPickerDocs';
+import { createComposerQuoteDocs } from './ComposerQuoteDocs';
+import { createComposerTriggerPopoverDocs } from './ComposerTriggerPopoverDocs';
+import { createComposerVoiceDocs } from './ComposerVoiceDocs';
+import { createComputerUseDocs } from './ComputerUseDocs';
+import { createConnectionStateDocs } from './ConnectionStateDocs';
+import { createContextBreakdownDocs } from './ContextBreakdownDocs';
+import { createContextDisplayDocs } from './ContextDisplayDocs';
+import { createCostMeterDocs } from './CostMeterDocs';
+import { createDraftRestoreDocs } from './DraftRestoreDocs';
+import { createFlowGraphDocs } from './FlowGraphDocs';
+import { createInlineCitationDocs } from './InlineCitationDocs';
+import { createInputGroupDocs } from './InputGroupDocs';
+import { createJobProgressDocs } from './JobProgressDocs';
+import { createMarkdownDocs } from './MarkdownDocs';
+import { createMessageQueueDocs } from './MessageQueueDocs';
+import { createMessageTimingDocs } from './MessageTimingDocs';
+import { createQuotaBannerDocs } from './QuotaBannerDocs';
+import { createStepperDocs } from './StepperDocs';
+import { createTerminalBlockDocs } from './TerminalBlockDocs';
+import { createThinkingIndicatorDocs } from './ThinkingIndicatorDocs';
+import { createToolGroupDocs } from './ToolGroupDocs';
+import { createTraceWaterfallDocs } from './TraceWaterfallDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
@@ -336,3 +369,73 @@ export const ToggleGroup: Story = {
 export const ToneOfVoice: Story = { render: () => createToneOfVoiceDocs(), play };
 export const Tooltip: Story = { render: () => createTooltipDocs(), play };
 export const Typography: Story = { render: () => createTypographyDocs(), play };
+
+// ── Registradas em 2026-09-01 — 31 páginas que existiam FORA da fumaça ──
+// A família conversacional da guideline 17, o input-group tinham docs page
+// publicada e nenhuma verificação: nem de mount, nem de axe. Esta suíte é a
+// única que monta a página inteira e a submete ao axe — fora dela, a página
+// não tem portão nenhum.
+// ATENÇÃO: estas ainda NÃO FORAM EXECUTADAS. O registro está pronto; a
+// primeira rodada é que vai dizer quais montam limpas.
+
+export const ActivityGraph: Story = { render: () => createActivityGraphDocs(), play };
+
+export const AgentPlan: Story = { render: () => createAgentPlanDocs(), play };
+
+export const AgentStatus: Story = { render: () => createAgentStatusDocs(), play };
+
+export const ApprovalCard: Story = { render: () => createApprovalCardDocs(), play };
+
+export const ChatThread: Story = { render: () => createChatThreadDocs(), play };
+
+export const ComposerAttachments: Story = { render: () => createComposerAttachmentsDocs(), play };
+
+export const ComposerContext: Story = { render: () => createComposerContextDocs(), play };
+
+export const Composer: Story = { render: () => createComposerDocs(), play };
+
+export const ComposerModelPicker: Story = { render: () => createComposerModelPickerDocs(), play };
+
+export const ComposerQuote: Story = { render: () => createComposerQuoteDocs(), play };
+
+export const ComposerTriggerPopover: Story = { render: () => createComposerTriggerPopoverDocs(), play };
+
+export const ComposerVoice: Story = { render: () => createComposerVoiceDocs(), play };
+
+export const ComputerUse: Story = { render: () => createComputerUseDocs(), play };
+
+export const ConnectionState: Story = { render: () => createConnectionStateDocs(), play };
+
+export const ContextBreakdown: Story = { render: () => createContextBreakdownDocs(), play };
+
+export const ContextDisplay: Story = { render: () => createContextDisplayDocs(), play };
+
+export const CostMeter: Story = { render: () => createCostMeterDocs(), play };
+
+export const DraftRestore: Story = { render: () => createDraftRestoreDocs(), play };
+
+export const FlowGraph: Story = { render: () => createFlowGraphDocs(), play };
+
+export const InlineCitation: Story = { render: () => createInlineCitationDocs(), play };
+
+export const InputGroup: Story = { render: () => createInputGroupDocs(), play };
+
+export const JobProgress: Story = { render: () => createJobProgressDocs(), play };
+
+export const Markdown: Story = { render: () => createMarkdownDocs(), play };
+
+export const MessageQueue: Story = { render: () => createMessageQueueDocs(), play };
+
+export const MessageTiming: Story = { render: () => createMessageTimingDocs(), play };
+
+export const QuotaBanner: Story = { render: () => createQuotaBannerDocs(), play };
+
+export const Stepper: Story = { render: () => createStepperDocs(), play };
+
+export const TerminalBlock: Story = { render: () => createTerminalBlockDocs(), play };
+
+export const ThinkingIndicator: Story = { render: () => createThinkingIndicatorDocs(), play };
+
+export const ToolGroup: Story = { render: () => createToolGroupDocs(), play };
+
+export const TraceWaterfall: Story = { render: () => createTraceWaterfallDocs(), play };

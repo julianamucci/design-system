@@ -74,6 +74,39 @@ import { ToneOfVoiceDocs } from './ToneOfVoiceDocs';
 import { TooltipDocs } from './TooltipDocs';
 import { TypographyDocs } from './TypographyDocs';
 
+import { ActivityGraphDocs } from './ActivityGraphDocs';
+import { AgentPlanDocs } from './AgentPlanDocs';
+import { AgentStatusDocs } from './AgentStatusDocs';
+import { ApprovalCardDocs } from './ApprovalCardDocs';
+import { ChatThreadDocs } from './ChatThreadDocs';
+import { ComposerAttachmentsDocs } from './ComposerAttachmentsDocs';
+import { ComposerContextDocs } from './ComposerContextDocs';
+import { ComposerDocs } from './ComposerDocs';
+import { ComposerModelPickerDocs } from './ComposerModelPickerDocs';
+import { ComposerQuoteDocs } from './ComposerQuoteDocs';
+import { ComposerTriggerPopoverDocs } from './ComposerTriggerPopoverDocs';
+import { ComposerVoiceDocs } from './ComposerVoiceDocs';
+import { ComputerUseDocs } from './ComputerUseDocs';
+import { ConnectionStateDocs } from './ConnectionStateDocs';
+import { ContextBreakdownDocs } from './ContextBreakdownDocs';
+import { ContextDisplayDocs } from './ContextDisplayDocs';
+import { CostMeterDocs } from './CostMeterDocs';
+import { DraftRestoreDocs } from './DraftRestoreDocs';
+import { FlowGraphDocs } from './FlowGraphDocs';
+import { FormDocs } from './FormDocs';
+import { InlineCitationDocs } from './InlineCitationDocs';
+import { InputGroupDocs } from './InputGroupDocs';
+import { JobProgressDocs } from './JobProgressDocs';
+import { MarkdownDocs } from './MarkdownDocs';
+import { MessageQueueDocs } from './MessageQueueDocs';
+import { MessageTimingDocs } from './MessageTimingDocs';
+import { QuotaBannerDocs } from './QuotaBannerDocs';
+import { StepperDocs } from './StepperDocs';
+import { TerminalBlockDocs } from './TerminalBlockDocs';
+import { ThinkingIndicatorDocs } from './ThinkingIndicatorDocs';
+import { ToolGroupDocs } from './ToolGroupDocs';
+import { TraceWaterfallDocs } from './TraceWaterfallDocs';
+
 const meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
@@ -514,5 +547,173 @@ export const Tooltip: Story = {
 
 export const Typography: Story = {
   render: () => <TypographyDocs />,
+  play: mounted,
+};
+
+// ── Registradas em 2026-09-01 — 32 páginas que existiam FORA da fumaça ──
+// A família conversacional da guideline 17, o input-group e o form tinham docs page
+// publicada e nenhuma verificação: nem de mount, nem de axe. Esta suíte é a
+// única que monta a página inteira e a submete ao axe — fora dela, a página
+// não tem portão nenhum.
+// ATENÇÃO: estas ainda NÃO FORAM EXECUTADAS. O registro está pronto; a
+// primeira rodada é que vai dizer quais montam limpas.
+
+export const ActivityGraph: Story = {
+  render: () => <ActivityGraphDocs />,
+  play: mounted,
+};
+
+export const AgentPlan: Story = {
+  render: () => <AgentPlanDocs />,
+  play: mounted,
+};
+
+export const AgentStatus: Story = {
+  render: () => <AgentStatusDocs />,
+  play: mounted,
+};
+
+export const ApprovalCard: Story = {
+  render: () => <ApprovalCardDocs />,
+  play: mounted,
+};
+
+export const ChatThread: Story = {
+  render: () => <ChatThreadDocs />,
+  play: mounted,
+};
+
+export const ComposerAttachments: Story = {
+  render: () => <ComposerAttachmentsDocs />,
+  play: mounted,
+};
+
+export const ComposerContext: Story = {
+  render: () => <ComposerContextDocs />,
+  play: mounted,
+};
+
+export const Composer: Story = {
+  render: () => <ComposerDocs />,
+  play: mounted,
+};
+
+export const ComposerModelPicker: Story = {
+  render: () => <ComposerModelPickerDocs />,
+  play: mounted,
+};
+
+export const ComposerQuote: Story = {
+  render: () => <ComposerQuoteDocs />,
+  play: mounted,
+};
+
+export const ComposerTriggerPopover: Story = {
+  render: () => <ComposerTriggerPopoverDocs />,
+  play: mounted,
+};
+
+export const ComposerVoice: Story = {
+  render: () => <ComposerVoiceDocs />,
+  play: mounted,
+};
+
+export const ComputerUse: Story = {
+  render: () => <ComputerUseDocs />,
+  play: mounted,
+};
+
+export const ConnectionState: Story = {
+  render: () => <ConnectionStateDocs />,
+  play: mounted,
+};
+
+export const ContextBreakdown: Story = {
+  render: () => <ContextBreakdownDocs />,
+  play: mounted,
+};
+
+export const ContextDisplay: Story = {
+  render: () => <ContextDisplayDocs />,
+  play: mounted,
+};
+
+export const CostMeter: Story = {
+  render: () => <CostMeterDocs />,
+  play: mounted,
+};
+
+export const DraftRestore: Story = {
+  render: () => <DraftRestoreDocs />,
+  play: mounted,
+};
+
+export const FlowGraph: Story = {
+  render: () => <FlowGraphDocs />,
+  play: mounted,
+};
+
+export const Form: Story = {
+  render: () => <FormDocs />,
+  play: mounted,
+};
+
+export const InlineCitation: Story = {
+  render: () => <InlineCitationDocs />,
+  play: mounted,
+};
+
+export const InputGroup: Story = {
+  render: () => <InputGroupDocs />,
+  play: mounted,
+};
+
+export const JobProgress: Story = {
+  render: () => <JobProgressDocs />,
+  play: mounted,
+};
+
+export const Markdown: Story = {
+  render: () => <MarkdownDocs />,
+  play: mounted,
+};
+
+export const MessageQueue: Story = {
+  render: () => <MessageQueueDocs />,
+  play: mounted,
+};
+
+export const MessageTiming: Story = {
+  render: () => <MessageTimingDocs />,
+  play: mounted,
+};
+
+export const QuotaBanner: Story = {
+  render: () => <QuotaBannerDocs />,
+  play: mounted,
+};
+
+export const Stepper: Story = {
+  render: () => <StepperDocs />,
+  play: mounted,
+};
+
+export const TerminalBlock: Story = {
+  render: () => <TerminalBlockDocs />,
+  play: mounted,
+};
+
+export const ThinkingIndicator: Story = {
+  render: () => <ThinkingIndicatorDocs />,
+  play: mounted,
+};
+
+export const ToolGroup: Story = {
+  render: () => <ToolGroupDocs />,
+  play: mounted,
+};
+
+export const TraceWaterfall: Story = {
+  render: () => <TraceWaterfallDocs />,
   play: mounted,
 };

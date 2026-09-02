@@ -74,6 +74,39 @@ import ToneOfVoiceDocs from './ToneOfVoiceDocs.svelte';
 import TooltipDocs from './TooltipDocs.svelte';
 import TypographyDocs from './TypographyDocs.svelte';
 
+import ActivityGraphDocs from './ActivityGraphDocs.svelte';
+import AgentPlanDocs from './AgentPlanDocs.svelte';
+import AgentStatusDocs from './AgentStatusDocs.svelte';
+import ApprovalCardDocs from './ApprovalCardDocs.svelte';
+import ChatThreadDocs from './ChatThreadDocs.svelte';
+import ComposerAttachmentsDocs from './ComposerAttachmentsDocs.svelte';
+import ComposerContextDocs from './ComposerContextDocs.svelte';
+import ComposerDocs from './ComposerDocs.svelte';
+import ComposerModelPickerDocs from './ComposerModelPickerDocs.svelte';
+import ComposerQuoteDocs from './ComposerQuoteDocs.svelte';
+import ComposerTriggerPopoverDocs from './ComposerTriggerPopoverDocs.svelte';
+import ComposerVoiceDocs from './ComposerVoiceDocs.svelte';
+import ComputerUseDocs from './ComputerUseDocs.svelte';
+import ConnectionStateDocs from './ConnectionStateDocs.svelte';
+import ContextBreakdownDocs from './ContextBreakdownDocs.svelte';
+import ContextDisplayDocs from './ContextDisplayDocs.svelte';
+import CostMeterDocs from './CostMeterDocs.svelte';
+import DraftRestoreDocs from './DraftRestoreDocs.svelte';
+import FlowGraphDocs from './FlowGraphDocs.svelte';
+import FormDocs from './FormDocs.svelte';
+import InlineCitationDocs from './InlineCitationDocs.svelte';
+import InputGroupDocs from './InputGroupDocs.svelte';
+import JobProgressDocs from './JobProgressDocs.svelte';
+import MarkdownDocs from './MarkdownDocs.svelte';
+import MessageQueueDocs from './MessageQueueDocs.svelte';
+import MessageTimingDocs from './MessageTimingDocs.svelte';
+import QuotaBannerDocs from './QuotaBannerDocs.svelte';
+import StepperDocs from './StepperDocs.svelte';
+import TerminalBlockDocs from './TerminalBlockDocs.svelte';
+import ThinkingIndicatorDocs from './ThinkingIndicatorDocs.svelte';
+import ToolGroupDocs from './ToolGroupDocs.svelte';
+import TraceWaterfallDocs from './TraceWaterfallDocs.svelte';
+
 const meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
@@ -336,3 +369,75 @@ export const ToneOfVoice: Story = { render: page(ToneOfVoiceDocs), play: mounted
 export const Tooltip: Story = { render: page(TooltipDocs), play: mounted };
 
 export const Typography: Story = { render: page(TypographyDocs), play: mounted };
+
+// ── Registradas em 2026-09-01 — 32 páginas que existiam FORA da fumaça ──
+// A família conversacional da guideline 17, o input-group e o form tinham docs page
+// publicada e nenhuma verificação: nem de mount, nem de axe. Esta suíte é a
+// única que monta a página inteira e a submete ao axe — fora dela, a página
+// não tem portão nenhum.
+// ATENÇÃO: estas ainda NÃO FORAM EXECUTADAS. O registro está pronto; a
+// primeira rodada é que vai dizer quais montam limpas.
+
+export const ActivityGraph: Story = { render: page(ActivityGraphDocs), play: mounted };
+
+export const AgentPlan: Story = { render: page(AgentPlanDocs), play: mounted };
+
+export const AgentStatus: Story = { render: page(AgentStatusDocs), play: mounted };
+
+export const ApprovalCard: Story = { render: page(ApprovalCardDocs), play: mounted };
+
+export const ChatThread: Story = { render: page(ChatThreadDocs), play: mounted };
+
+export const ComposerAttachments: Story = { render: page(ComposerAttachmentsDocs), play: mounted };
+
+export const ComposerContext: Story = { render: page(ComposerContextDocs), play: mounted };
+
+export const Composer: Story = { render: page(ComposerDocs), play: mounted };
+
+export const ComposerModelPicker: Story = { render: page(ComposerModelPickerDocs), play: mounted };
+
+export const ComposerQuote: Story = { render: page(ComposerQuoteDocs), play: mounted };
+
+export const ComposerTriggerPopover: Story = { render: page(ComposerTriggerPopoverDocs), play: mounted };
+
+export const ComposerVoice: Story = { render: page(ComposerVoiceDocs), play: mounted };
+
+export const ComputerUse: Story = { render: page(ComputerUseDocs), play: mounted };
+
+export const ConnectionState: Story = { render: page(ConnectionStateDocs), play: mounted };
+
+export const ContextBreakdown: Story = { render: page(ContextBreakdownDocs), play: mounted };
+
+export const ContextDisplay: Story = { render: page(ContextDisplayDocs), play: mounted };
+
+export const CostMeter: Story = { render: page(CostMeterDocs), play: mounted };
+
+export const DraftRestore: Story = { render: page(DraftRestoreDocs), play: mounted };
+
+export const FlowGraph: Story = { render: page(FlowGraphDocs), play: mounted };
+
+export const Form: Story = { render: page(FormDocs), play: mounted };
+
+export const InlineCitation: Story = { render: page(InlineCitationDocs), play: mounted };
+
+export const InputGroup: Story = { render: page(InputGroupDocs), play: mounted };
+
+export const JobProgress: Story = { render: page(JobProgressDocs), play: mounted };
+
+export const Markdown: Story = { render: page(MarkdownDocs), play: mounted };
+
+export const MessageQueue: Story = { render: page(MessageQueueDocs), play: mounted };
+
+export const MessageTiming: Story = { render: page(MessageTimingDocs), play: mounted };
+
+export const QuotaBanner: Story = { render: page(QuotaBannerDocs), play: mounted };
+
+export const Stepper: Story = { render: page(StepperDocs), play: mounted };
+
+export const TerminalBlock: Story = { render: page(TerminalBlockDocs), play: mounted };
+
+export const ThinkingIndicator: Story = { render: page(ThinkingIndicatorDocs), play: mounted };
+
+export const ToolGroup: Story = { render: page(ToolGroupDocs), play: mounted };
+
+export const TraceWaterfall: Story = { render: page(TraceWaterfallDocs), play: mounted };

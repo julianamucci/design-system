@@ -71,6 +71,39 @@ import ToneOfVoiceDocs from '@/components/docs/ToneOfVoiceDocs.vue';
 import TooltipDocs from '@/components/docs/TooltipDocs.vue';
 import TypographyDocs from '@/components/docs/TypographyDocs.vue';
 
+import ActivityGraphDocs from '@/components/docs/ActivityGraphDocs.vue';
+import AgentPlanDocs from '@/components/docs/AgentPlanDocs.vue';
+import AgentStatusDocs from '@/components/docs/AgentStatusDocs.vue';
+import ApprovalCardDocs from '@/components/docs/ApprovalCardDocs.vue';
+import ChatThreadDocs from '@/components/docs/ChatThreadDocs.vue';
+import ComposerAttachmentsDocs from '@/components/docs/ComposerAttachmentsDocs.vue';
+import ComposerContextDocs from '@/components/docs/ComposerContextDocs.vue';
+import ComposerDocs from '@/components/docs/ComposerDocs.vue';
+import ComposerModelPickerDocs from '@/components/docs/ComposerModelPickerDocs.vue';
+import ComposerQuoteDocs from '@/components/docs/ComposerQuoteDocs.vue';
+import ComposerTriggerPopoverDocs from '@/components/docs/ComposerTriggerPopoverDocs.vue';
+import ComposerVoiceDocs from '@/components/docs/ComposerVoiceDocs.vue';
+import ComputerUseDocs from '@/components/docs/ComputerUseDocs.vue';
+import ConnectionStateDocs from '@/components/docs/ConnectionStateDocs.vue';
+import ContextBreakdownDocs from '@/components/docs/ContextBreakdownDocs.vue';
+import ContextDisplayDocs from '@/components/docs/ContextDisplayDocs.vue';
+import CostMeterDocs from '@/components/docs/CostMeterDocs.vue';
+import DraftRestoreDocs from '@/components/docs/DraftRestoreDocs.vue';
+import FlowGraphDocs from '@/components/docs/FlowGraphDocs.vue';
+import FormDocs from '@/components/docs/FormDocs.vue';
+import InlineCitationDocs from '@/components/docs/InlineCitationDocs.vue';
+import InputGroupDocs from '@/components/docs/InputGroupDocs.vue';
+import JobProgressDocs from '@/components/docs/JobProgressDocs.vue';
+import MarkdownDocs from '@/components/docs/MarkdownDocs.vue';
+import MessageQueueDocs from '@/components/docs/MessageQueueDocs.vue';
+import MessageTimingDocs from '@/components/docs/MessageTimingDocs.vue';
+import QuotaBannerDocs from '@/components/docs/QuotaBannerDocs.vue';
+import StepperDocs from '@/components/docs/StepperDocs.vue';
+import TerminalBlockDocs from '@/components/docs/TerminalBlockDocs.vue';
+import ThinkingIndicatorDocs from '@/components/docs/ThinkingIndicatorDocs.vue';
+import ToolGroupDocs from '@/components/docs/ToolGroupDocs.vue';
+import TraceWaterfallDocs from '@/components/docs/TraceWaterfallDocs.vue';
+
 const meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
@@ -546,5 +579,173 @@ export const Tooltip: Story = {
 
 export const Typography: Story = {
   render: () => ({ components: { TypographyDocs }, template: '<TypographyDocs />' }),
+  play: smokePlay,
+};
+
+// ── Registradas em 2026-09-01 — 32 páginas que existiam FORA da fumaça ──
+// A família conversacional da guideline 17, o input-group e o form tinham docs page
+// publicada e nenhuma verificação: nem de mount, nem de axe. Esta suíte é a
+// única que monta a página inteira e a submete ao axe — fora dela, a página
+// não tem portão nenhum.
+// ATENÇÃO: estas ainda NÃO FORAM EXECUTADAS. O registro está pronto; a
+// primeira rodada é que vai dizer quais montam limpas.
+
+export const ActivityGraph: Story = {
+  render: () => ({ components: { ActivityGraphDocs }, template: '<ActivityGraphDocs />' }),
+  play: smokePlay,
+};
+
+export const AgentPlan: Story = {
+  render: () => ({ components: { AgentPlanDocs }, template: '<AgentPlanDocs />' }),
+  play: smokePlay,
+};
+
+export const AgentStatus: Story = {
+  render: () => ({ components: { AgentStatusDocs }, template: '<AgentStatusDocs />' }),
+  play: smokePlay,
+};
+
+export const ApprovalCard: Story = {
+  render: () => ({ components: { ApprovalCardDocs }, template: '<ApprovalCardDocs />' }),
+  play: smokePlay,
+};
+
+export const ChatThread: Story = {
+  render: () => ({ components: { ChatThreadDocs }, template: '<ChatThreadDocs />' }),
+  play: smokePlay,
+};
+
+export const ComposerAttachments: Story = {
+  render: () => ({ components: { ComposerAttachmentsDocs }, template: '<ComposerAttachmentsDocs />' }),
+  play: smokePlay,
+};
+
+export const ComposerContext: Story = {
+  render: () => ({ components: { ComposerContextDocs }, template: '<ComposerContextDocs />' }),
+  play: smokePlay,
+};
+
+export const Composer: Story = {
+  render: () => ({ components: { ComposerDocs }, template: '<ComposerDocs />' }),
+  play: smokePlay,
+};
+
+export const ComposerModelPicker: Story = {
+  render: () => ({ components: { ComposerModelPickerDocs }, template: '<ComposerModelPickerDocs />' }),
+  play: smokePlay,
+};
+
+export const ComposerQuote: Story = {
+  render: () => ({ components: { ComposerQuoteDocs }, template: '<ComposerQuoteDocs />' }),
+  play: smokePlay,
+};
+
+export const ComposerTriggerPopover: Story = {
+  render: () => ({ components: { ComposerTriggerPopoverDocs }, template: '<ComposerTriggerPopoverDocs />' }),
+  play: smokePlay,
+};
+
+export const ComposerVoice: Story = {
+  render: () => ({ components: { ComposerVoiceDocs }, template: '<ComposerVoiceDocs />' }),
+  play: smokePlay,
+};
+
+export const ComputerUse: Story = {
+  render: () => ({ components: { ComputerUseDocs }, template: '<ComputerUseDocs />' }),
+  play: smokePlay,
+};
+
+export const ConnectionState: Story = {
+  render: () => ({ components: { ConnectionStateDocs }, template: '<ConnectionStateDocs />' }),
+  play: smokePlay,
+};
+
+export const ContextBreakdown: Story = {
+  render: () => ({ components: { ContextBreakdownDocs }, template: '<ContextBreakdownDocs />' }),
+  play: smokePlay,
+};
+
+export const ContextDisplay: Story = {
+  render: () => ({ components: { ContextDisplayDocs }, template: '<ContextDisplayDocs />' }),
+  play: smokePlay,
+};
+
+export const CostMeter: Story = {
+  render: () => ({ components: { CostMeterDocs }, template: '<CostMeterDocs />' }),
+  play: smokePlay,
+};
+
+export const DraftRestore: Story = {
+  render: () => ({ components: { DraftRestoreDocs }, template: '<DraftRestoreDocs />' }),
+  play: smokePlay,
+};
+
+export const FlowGraph: Story = {
+  render: () => ({ components: { FlowGraphDocs }, template: '<FlowGraphDocs />' }),
+  play: smokePlay,
+};
+
+export const Form: Story = {
+  render: () => ({ components: { FormDocs }, template: '<FormDocs />' }),
+  play: smokePlay,
+};
+
+export const InlineCitation: Story = {
+  render: () => ({ components: { InlineCitationDocs }, template: '<InlineCitationDocs />' }),
+  play: smokePlay,
+};
+
+export const InputGroup: Story = {
+  render: () => ({ components: { InputGroupDocs }, template: '<InputGroupDocs />' }),
+  play: smokePlay,
+};
+
+export const JobProgress: Story = {
+  render: () => ({ components: { JobProgressDocs }, template: '<JobProgressDocs />' }),
+  play: smokePlay,
+};
+
+export const Markdown: Story = {
+  render: () => ({ components: { MarkdownDocs }, template: '<MarkdownDocs />' }),
+  play: smokePlay,
+};
+
+export const MessageQueue: Story = {
+  render: () => ({ components: { MessageQueueDocs }, template: '<MessageQueueDocs />' }),
+  play: smokePlay,
+};
+
+export const MessageTiming: Story = {
+  render: () => ({ components: { MessageTimingDocs }, template: '<MessageTimingDocs />' }),
+  play: smokePlay,
+};
+
+export const QuotaBanner: Story = {
+  render: () => ({ components: { QuotaBannerDocs }, template: '<QuotaBannerDocs />' }),
+  play: smokePlay,
+};
+
+export const Stepper: Story = {
+  render: () => ({ components: { StepperDocs }, template: '<StepperDocs />' }),
+  play: smokePlay,
+};
+
+export const TerminalBlock: Story = {
+  render: () => ({ components: { TerminalBlockDocs }, template: '<TerminalBlockDocs />' }),
+  play: smokePlay,
+};
+
+export const ThinkingIndicator: Story = {
+  render: () => ({ components: { ThinkingIndicatorDocs }, template: '<ThinkingIndicatorDocs />' }),
+  play: smokePlay,
+};
+
+export const ToolGroup: Story = {
+  render: () => ({ components: { ToolGroupDocs }, template: '<ToolGroupDocs />' }),
+  play: smokePlay,
+};
+
+export const TraceWaterfall: Story = {
+  render: () => ({ components: { TraceWaterfallDocs }, template: '<TraceWaterfallDocs />' }),
   play: smokePlay,
 };

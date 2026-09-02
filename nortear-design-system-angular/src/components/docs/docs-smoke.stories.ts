@@ -4,8 +4,9 @@
 // falhando → parameters.a11y.test:'todo' com as rules no comentário; página
 // limpa → axe é portão.
 //
-// 67 exports: as 51 docs pages de componente mais as 16 de fundamento. A lista
-// está completa — o que entrar daqui pra frente é componente novo.
+// 98 exports: uma por *Docs.ts do diretório, sem exceção. Eram 67 até
+// 2026-09-01, quando entraram as 31 que existiam fora da fumaça (família
+// conversacional da guideline 17 e input-group) — essas ainda não rodaram.
 
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
@@ -81,10 +82,42 @@ import { NdsDensitiesDocs } from './DensitiesDocs';
 import { NdsI18nDocs } from './I18nDocs';
 import { NdsCrossStackDocs } from './CrossStackDocs';
 
+import { NdsActivityGraphDocs } from './ActivityGraphDocs';
+import { NdsAgentPlanDocs } from './AgentPlanDocs';
+import { NdsAgentStatusDocs } from './AgentStatusDocs';
+import { NdsApprovalCardDocs } from './ApprovalCardDocs';
+import { NdsChatThreadDocs } from './ChatThreadDocs';
+import { NdsComposerAttachmentsDocs } from './ComposerAttachmentsDocs';
+import { NdsComposerContextDocs } from './ComposerContextDocs';
+import { NdsComposerDocs } from './ComposerDocs';
+import { NdsComposerModelPickerDocs } from './ComposerModelPickerDocs';
+import { NdsComposerQuoteDocs } from './ComposerQuoteDocs';
+import { NdsComposerTriggerPopoverDocs } from './ComposerTriggerPopoverDocs';
+import { NdsComposerVoiceDocs } from './ComposerVoiceDocs';
+import { NdsComputerUseDocs } from './ComputerUseDocs';
+import { NdsConnectionStateDocs } from './ConnectionStateDocs';
+import { NdsContextBreakdownDocs } from './ContextBreakdownDocs';
+import { NdsContextDisplayDocs } from './ContextDisplayDocs';
+import { NdsCostMeterDocs } from './CostMeterDocs';
+import { NdsDraftRestoreDocs } from './DraftRestoreDocs';
+import { NdsFlowGraphDocs } from './FlowGraphDocs';
+import { NdsInlineCitationDocs } from './InlineCitationDocs';
+import { NdsInputGroupDocs } from './InputGroupDocs';
+import { NdsJobProgressDocs } from './JobProgressDocs';
+import { NdsMarkdownDocs } from './MarkdownDocs';
+import { NdsMessageQueueDocs } from './MessageQueueDocs';
+import { NdsMessageTimingDocs } from './MessageTimingDocs';
+import { NdsQuotaBannerDocs } from './QuotaBannerDocs';
+import { NdsStepperDocs } from './StepperDocs';
+import { NdsTerminalBlockDocs } from './TerminalBlockDocs';
+import { NdsThinkingIndicatorDocs } from './ThinkingIndicatorDocs';
+import { NdsToolGroupDocs } from './ToolGroupDocs';
+import { NdsTraceWaterfallDocs } from './TraceWaterfallDocs';
+
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsComboboxDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs, NdsFormDocs, NdsCalendarDocs, NdsCarouselDocs, NdsChartDocs, NdsDataTableDocs, NdsInputOTPDocs, NdsTextareaDocs, NdsResizableDocs, NdsSonnerDocs, NdsEditorDocs, NdsMediaPlayerDocs, NdsAboutDocs, NdsAccessibilityDocs, NdsAnalyticsCatalogDocs, NdsSeoGeoDocs, NdsToneOfVoiceDocs, NdsGettingStartedDocs, NdsTypographyDocs, NdsSpacingDocs, NdsElevationDocs, NdsMotionDocs, NdsIconsDocs, NdsThemeColorsDocs, NdsThemeSystemDocs, NdsDensitiesDocs, NdsI18nDocs, NdsCrossStackDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsComboboxDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs, NdsFormDocs, NdsCalendarDocs, NdsCarouselDocs, NdsChartDocs, NdsDataTableDocs, NdsInputOTPDocs, NdsTextareaDocs, NdsResizableDocs, NdsSonnerDocs, NdsEditorDocs, NdsMediaPlayerDocs, NdsAboutDocs, NdsAccessibilityDocs, NdsAnalyticsCatalogDocs, NdsSeoGeoDocs, NdsToneOfVoiceDocs, NdsGettingStartedDocs, NdsTypographyDocs, NdsSpacingDocs, NdsElevationDocs, NdsMotionDocs, NdsIconsDocs, NdsThemeColorsDocs, NdsThemeSystemDocs, NdsDensitiesDocs, NdsI18nDocs, NdsCrossStackDocs, NdsActivityGraphDocs, NdsAgentPlanDocs, NdsAgentStatusDocs, NdsApprovalCardDocs, NdsChatThreadDocs, NdsComposerAttachmentsDocs, NdsComposerContextDocs, NdsComposerDocs, NdsComposerModelPickerDocs, NdsComposerQuoteDocs, NdsComposerTriggerPopoverDocs, NdsComposerVoiceDocs, NdsComputerUseDocs, NdsConnectionStateDocs, NdsContextBreakdownDocs, NdsContextDisplayDocs, NdsCostMeterDocs, NdsDraftRestoreDocs, NdsFlowGraphDocs, NdsInlineCitationDocs, NdsInputGroupDocs, NdsJobProgressDocs, NdsMarkdownDocs, NdsMessageQueueDocs, NdsMessageTimingDocs, NdsQuotaBannerDocs, NdsStepperDocs, NdsTerminalBlockDocs, NdsThinkingIndicatorDocs, NdsToolGroupDocs, NdsTraceWaterfallDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -462,5 +495,168 @@ export const Editor: Story = {
 
 export const MediaPlayer: Story = {
   render: () => ({ template: '<nds-media-player-docs />' }),
+  play,
+};
+
+// ── Registradas em 2026-09-01 — 31 páginas que existiam FORA da fumaça ──
+// A família conversacional da guideline 17, o input-group tinham docs page
+// publicada e nenhuma verificação: nem de mount, nem de axe. Esta suíte é a
+// única que monta a página inteira e a submete ao axe — fora dela, a página
+// não tem portão nenhum.
+// ATENÇÃO: estas ainda NÃO FORAM EXECUTADAS. O registro está pronto; a
+// primeira rodada é que vai dizer quais montam limpas.
+
+export const ActivityGraph: Story = {
+  render: () => ({ template: '<nds-activity-graph-docs />' }),
+  play,
+};
+
+export const AgentPlan: Story = {
+  render: () => ({ template: '<nds-agent-plan-docs />' }),
+  play,
+};
+
+export const AgentStatus: Story = {
+  render: () => ({ template: '<nds-agent-status-docs />' }),
+  play,
+};
+
+export const ApprovalCard: Story = {
+  render: () => ({ template: '<nds-approval-card-docs />' }),
+  play,
+};
+
+export const ChatThread: Story = {
+  render: () => ({ template: '<nds-chat-thread-docs />' }),
+  play,
+};
+
+export const ComposerAttachments: Story = {
+  render: () => ({ template: '<nds-composer-attachments-docs />' }),
+  play,
+};
+
+export const ComposerContext: Story = {
+  render: () => ({ template: '<nds-composer-context-docs />' }),
+  play,
+};
+
+export const Composer: Story = {
+  render: () => ({ template: '<nds-composer-docs />' }),
+  play,
+};
+
+export const ComposerModelPicker: Story = {
+  render: () => ({ template: '<nds-composer-model-picker-docs />' }),
+  play,
+};
+
+export const ComposerQuote: Story = {
+  render: () => ({ template: '<nds-composer-quote-docs />' }),
+  play,
+};
+
+export const ComposerTriggerPopover: Story = {
+  render: () => ({ template: '<nds-composer-trigger-popover-docs />' }),
+  play,
+};
+
+export const ComposerVoice: Story = {
+  render: () => ({ template: '<nds-composer-voice-docs />' }),
+  play,
+};
+
+export const ComputerUse: Story = {
+  render: () => ({ template: '<nds-computer-use-docs />' }),
+  play,
+};
+
+export const ConnectionState: Story = {
+  render: () => ({ template: '<nds-connection-state-docs />' }),
+  play,
+};
+
+export const ContextBreakdown: Story = {
+  render: () => ({ template: '<nds-context-breakdown-docs />' }),
+  play,
+};
+
+export const ContextDisplay: Story = {
+  render: () => ({ template: '<nds-context-display-docs />' }),
+  play,
+};
+
+export const CostMeter: Story = {
+  render: () => ({ template: '<nds-cost-meter-docs />' }),
+  play,
+};
+
+export const DraftRestore: Story = {
+  render: () => ({ template: '<nds-draft-restore-docs />' }),
+  play,
+};
+
+export const FlowGraph: Story = {
+  render: () => ({ template: '<nds-flow-graph-docs />' }),
+  play,
+};
+
+export const InlineCitation: Story = {
+  render: () => ({ template: '<nds-inline-citation-docs />' }),
+  play,
+};
+
+export const InputGroup: Story = {
+  render: () => ({ template: '<nds-input-group-docs />' }),
+  play,
+};
+
+export const JobProgress: Story = {
+  render: () => ({ template: '<nds-job-progress-docs />' }),
+  play,
+};
+
+export const Markdown: Story = {
+  render: () => ({ template: '<nds-markdown-docs />' }),
+  play,
+};
+
+export const MessageQueue: Story = {
+  render: () => ({ template: '<nds-message-queue-docs />' }),
+  play,
+};
+
+export const MessageTiming: Story = {
+  render: () => ({ template: '<nds-message-timing-docs />' }),
+  play,
+};
+
+export const QuotaBanner: Story = {
+  render: () => ({ template: '<nds-quota-banner-docs />' }),
+  play,
+};
+
+export const Stepper: Story = {
+  render: () => ({ template: '<nds-stepper-docs />' }),
+  play,
+};
+
+export const TerminalBlock: Story = {
+  render: () => ({ template: '<nds-terminal-block-docs />' }),
+  play,
+};
+
+export const ThinkingIndicator: Story = {
+  render: () => ({ template: '<nds-thinking-indicator-docs />' }),
+  play,
+};
+
+export const ToolGroup: Story = {
+  render: () => ({ template: '<nds-tool-group-docs />' }),
+  play,
+};
+
+export const TraceWaterfall: Story = {
+  render: () => ({ template: '<nds-trace-waterfall-docs />' }),
   play,
 };
