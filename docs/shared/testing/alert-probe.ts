@@ -103,27 +103,41 @@ export function superficieDoApp(perto: HTMLElement): string {
  * uma cor que ninguém vê.
  */
 export function backgroundEffective(el: HTMLElement): string {
+  const doc = el.ownerDocument;
   let current: HTMLElement | null = el;
   const camadas: string[] = [];
-  while (current) {
+  // A SUBIDA PARA ANTES DO `body`, e o motivo é o mesmo que já valia embaixo: a
+  // pintura do documento fica VELHA quando o tema é trocado por classe. O
+  // `body` declara `background-color: hsl(var(--background))`, mas o harness
+  // põe a própria cor por cima com mais peso, e ela não acompanha o modo — no
+  // escuro o documento continua claro.
+  //
+  // Enquanto as folhas pintavam realce OPACO isso nunca aparecia: a subida
+  // parava na primeira camada e nunca chegava ao `body`. Quando `--accent`
+  // voltou a ser a cor cheia e a força passou a ser escrita no componente
+  // (`/ 0.2`), o fundo do toggle ativo virou translúcido, a subida passou a
+  // alcançar o documento, e a composição saiu do accent escuro sobre página
+  // CLARA: 1,16:1 num par que na tela mede 9:1. Não era o toggle, era o chão.
+  while (current && current !== doc.body && current !== doc.documentElement) {
     const cor = getComputedStyle(current).backgroundColor;
     const [, , , alfa = 1] = (cor.match(/-?[\d.]+/g) ?? []).map(Number);
     if (cor !== 'rgba(0, 0, 0, 0)') camadas.unshift(cor);
     if (cor !== 'rgba(0, 0, 0, 0)' && alfa >= 1) break;
     current = current.parentElement;
   }
-  // Nada opaco acima: a superfície é a do app, `--background`. Resolvida por um
-  // elemento-sonda montado no mesmo ponto da árvore, para herdar o tema vigente
-  // — subir até o body devolvia a cor clara também no escuro, porque o harness
-  // não o repinta, e aí toda variante transparente acusava contraste ~1:1.
-  if (camadas.length === 0) return superficieDoApp(el);
+  // O chão é sempre a superfície do app, `--background`, resolvida por um
+  // elemento-sonda montado no mesmo ponto da árvore para herdar o tema vigente.
+  // Ele já era a resposta quando NADA pintava acima; agora é também a base
+  // sobre a qual as camadas translúcidas se compõem.
+  const chao = superficieDoApp(el);
+  if (camadas.length === 0) return chao;
   // Composição de trás para frente (source-over).
   return camadas.reduce((base, camada) => {
     const [r, g, b, a = 1] = (camada.match(/-?[\d.]+/g) ?? []).map(Number);
     const [br, bg, bb] = rgb(base);
     const mist = (f: number, t: number) => Math.round(f * a + t * (1 - a));
     return `rgb(${mist(r, br)}, ${mist(g, bg)}, ${mist(b, bb)})`;
-  });
+  }, chao);
 }
 
 function measureText(el: Element | null, background: string): TextMeasurement | null {

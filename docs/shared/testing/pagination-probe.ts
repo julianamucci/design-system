@@ -211,6 +211,29 @@ export function reportProbe(stack: string, cenario: string, measurement: unknown
 // renderiza, e o número dele não aparece em lugar nenhum quando passa. Aqui a
 // conta é explícita e nomeia quem falhou.
 
+/**
+ * `rgb(...)`/`rgba(...)` → canais MAIS o alfa; `null` quando não é cor.
+ *
+ * O alfa é o que faltava, e a falta custou uma medição inteira. `canais`
+ * descartava o quarto canal e devolvia os três primeiros como se a cor fosse
+ * opaca: uma superfície `hsl(var(--accent) / 0.2)` voltava como o accent CHEIO,
+ * que é exatamente "uma cor que ninguém vê" — o caso que o docblock de
+ * `backgroundEffective` dizia estar tratando e não estava.
+ *
+ * A conta ficou latente enquanto as folhas pintavam realce opaco. No dia em que
+ * `--accent` voltou a ser a cor cheia e a força passou a ser escrita no
+ * componente (`/ 0.1` e `/ 0.2`), a página atual da paginação passou a ser
+ * medida contra o accent opaco: 2,2:1, o mesmo número que o portão de paleta já
+ * tinha identificado como par OPACO. Composta, a mesma superfície dá 9,9:1.
+ */
+function canaisAlfa(value: string): [number, number, number, number] | null {
+  const raw = value.match(/rgba?\(([^)]+)\)/);
+  if (!raw) return null;
+  const partes = raw[1].split(/[,/]/).map((p) => Number.parseFloat(p));
+  const alfa = partes.length >= 4 && Number.isFinite(partes[3]) ? partes[3] : 1;
+  return [partes[0], partes[1], partes[2], alfa];
+}
+
 /** `rgb(...)`/`rgba(...)` → canais; `null` quando o valor é transparente. */
 function canais(value: string): [number, number, number] | null {
   const raw = value.match(/rgba?\(([^)]+)\)/);
@@ -244,13 +267,27 @@ export function contrastRatio(
  * que ninguém vê — medir contra ela daria um número que não existe na tela.
  */
 export function backgroundEffective(elemento: Element): [number, number, number] {
+  const camadas: [number, number, number, number][] = [];
   let no: Element | null = elemento;
   while (no) {
-    const cor = canais(getComputedStyle(no).backgroundColor);
-    if (cor) return cor;
+    const cor = canaisAlfa(getComputedStyle(no).backgroundColor);
+    if (cor && cor[3] > 0) {
+      camadas.unshift(cor);
+      if (cor[3] >= 1) break;
+    }
     no = no.parentElement;
   }
-  return [255, 255, 255];
+  // Composição de trás para frente (source-over), a mesma conta do colhedor do
+  // Alert. Sem ela a primeira camada translúcida era devolvida como se fosse
+  // opaca — ver a nota de `canaisAlfa`.
+  return camadas.reduce<[number, number, number]>(
+    (base, [r, g, b, a]) => [
+      Math.round(r * a + base[0] * (1 - a)),
+      Math.round(g * a + base[1] * (1 - a)),
+      Math.round(b * a + base[2] * (1 - a)),
+    ],
+    [255, 255, 255],
+  );
 }
 
 export interface ContrastMeasurement {
