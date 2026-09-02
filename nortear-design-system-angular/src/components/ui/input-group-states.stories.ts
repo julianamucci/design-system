@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, within } from 'storybook/test';
+import { noTransicao } from '@shared/testing/cor';
 import { NDS_INPUT_GROUP } from './input-group';
 import { NdsButton } from './button';
 import {
@@ -10,6 +11,7 @@ import {
   INVALID_MESSAGE,
   INVALID_MESSAGE_ID,
   PASTE_LABEL,
+  SITE_GROUP_LABEL,
   SITE_PLACEHOLDER,
   SITE_PREFIX,
 } from './input-group.fixtures';
@@ -69,6 +71,19 @@ const TRAILING_ADDON_MARKUP = `
   </div>
 `;
 
+/**
+ * O mesmo addon, com o botão DESABILITADO.
+ *
+ * Grupo apagado com botão vivo dentro é a pior das duas leituras: a aparência
+ * promete inativo e o teclado entrega ativo. O `disabled` do campo não alcança
+ * o botão — são elementos irmãos —, então ele se declara aqui.
+ */
+const TRAILING_ADDON_MARKUP_DISABLED = `
+  <div ndsInputGroupAddon align="inline-end">
+    <button ndsButton variant="ghost" size="xs" ndsInputGroupButton disabled>${PASTE_LABEL}</button>
+  </div>
+`;
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Rest: Story = {
@@ -122,8 +137,13 @@ export const Invalid: Story = {
       <div class="nds-stack nds-w-full" data-spacing="sm">
         <div ndsInputGroup>
           ${LEADING_ADDON_MARKUP}
+          <!-- Nome de verdade no campo, e não só o texto de exemplo. Campo em
+               erro é lido junto com a mensagem, e sem nome o anúncio vira
+               "minhaempresa, inválido, Endereço inválido": o texto de exemplo
+               ocupa o lugar do nome e some assim que a pessoa digita. -->
           <input
             ndsInputGroupInput
+            aria-label="${SITE_GROUP_LABEL}"
             placeholder="${SITE_PLACEHOLDER}"
             aria-invalid="true"
             aria-describedby="${INVALID_MESSAGE_ID}"
@@ -157,14 +177,22 @@ export const Invalid: Story = {
     await step('A moldura ECOA o estado do campo, sem que ninguém a pinte', async () => {
       // A cor vem de `:has([aria-invalid="true"])` na folha. Medir a cor
       // computada é o que separa "a regra existe" de "a regra alcançou".
-      const withError = getComputedStyle(group).borderTopColor;
-
-      // O mesmo grupo, sem o atributo, para a comparação ter um lado de fora. A
-      // escrita e as duas leituras acontecem aqui, de uma vez — nunca dentro de
-      // um `waitFor`, que reagendaria a si mesmo e travaria a aba.
-      field.removeAttribute('aria-invalid');
-      const withoutError = getComputedStyle(group).borderTopColor;
-      field.setAttribute('aria-invalid', 'true');
+      // A moldura TRANSICIONA `border-color`. Sem suprimir a transição, a
+      // segunda leitura sai no primeiro quadro do esmaecimento e devolve a cor
+      // ANTIGA: as duas medidas davam `rgb(184, 20, 42)` e a asserção reprovava
+      // dizendo que a regra não alcançou — quando ela alcançava, e o que faltava
+      // era deixar a cor assentar. Mesma armadilha do "contraste ~1.0 = elemento
+      // em fade"; `noTransicao` é o remédio que o `badge` já usava.
+      //
+      // A escrita e as duas leituras acontecem aqui, de uma vez — nunca dentro
+      // de um `waitFor`, que reagendaria a si mesmo e travaria a aba.
+      const { withError, withoutError } = noTransicao(group, () => {
+        const comErro = getComputedStyle(group).borderTopColor;
+        field.removeAttribute('aria-invalid');
+        const semErro = getComputedStyle(group).borderTopColor;
+        field.setAttribute('aria-invalid', 'true');
+        return { withError: comErro, withoutError: semErro };
+      });
 
       await expect(withError).not.toBe(withoutError);
     });
@@ -184,6 +212,24 @@ export const Invalid: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item3'],
+    // `color-contrast` DESLIGADA AQUI, e só aqui, com o motivo medido.
+    //
+    // A folha esmaece o grupo inteiro (`:has(:disabled)` → `opacity: 0.5`), que
+    // é a afordância de desabilitado desta casa — a mesma de `.nds-input` e de
+    // `.nds-button`. O axe pula controle desabilitado, então nesses dois a conta
+    // nunca aparece; aqui ela aparece porque o prefixo `https://` é um `<span>`,
+    // e `<span>` não tem como ser desabilitado: `aria-disabled` não é atributo
+    // global, e num elemento de papel genérico ele troca uma violação por outra
+    // (`aria-allowed-attr`).
+    //
+    // A WCAG 1.4.3 isenta explicitamente texto de componente de interface
+    // INATIVO, e o grupo inteiro está inativo: o campo tem `disabled`, e o botão
+    // do addon passou a ter nesta rodada — ele continuava focável e clicável
+    // dentro de um grupo apagado, e esse era o defeito de verdade.
+    //
+    // Fora do estado desabilitado o mesmo prefixo é medido pela story `Rest`,
+    // onde o axe segue sendo portão.
+    a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
     docs: { source: { transform: inputGroupDisabledSource } },
   },
   render: () => ({
@@ -191,7 +237,7 @@ export const Disabled: Story = {
       <div ndsInputGroup>
         ${LEADING_ADDON_MARKUP}
         <input ndsInputGroupInput placeholder="${SITE_PLACEHOLDER}" disabled />
-        ${TRAILING_ADDON_MARKUP}
+        ${TRAILING_ADDON_MARKUP_DISABLED}
       </div>
     `,
   }),
@@ -219,6 +265,19 @@ export const Disabled: Story = {
         await expect(addon.hasAttribute('role')).toBe(false);
         await expect(addon.hasAttribute('tabindex')).toBe(false);
       }
+    });
+
+    await step('O botão do addon está desabilitado JUNTO com o campo', async () => {
+      // O `disabled` do campo não alcança o botão — são irmãos, não pai e
+      // filho. Sem esta asserção o grupo aparecia apagado com um botão vivo
+      // dentro, alcançável por Tab e clicável, que é justamente o que a
+      // aparência promete que não acontece.
+      const paste = group.querySelector<HTMLButtonElement>('button');
+      await expect(paste).not.toBeNull();
+      await expect(paste!).toBeDisabled();
+
+      paste!.focus();
+      await expect(paste!).not.toHaveFocus();
     });
   },
 };

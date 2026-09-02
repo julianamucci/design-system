@@ -10,6 +10,7 @@ import {
   SEARCH_PLACEHOLDER,
   SEARCH_SHORTCUT,
   SEND_LABEL,
+  SITE_GROUP_LABEL,
   SITE_PLACEHOLDER,
   SITE_PREFIX,
   SITE_SUFFIX,
@@ -56,6 +57,19 @@ export type InputGroupSnippetAddon = {
 export type InputGroupSnippetOptions = {
   /** Nome acessível do grupo. Ausente, o grupo não recebe nome — e é o comum. */
   ariaLabel?: string;
+  /**
+   * Nome acessível do CAMPO.
+   *
+   * O nome do grupo não serve de nome para o campo: o leitor anuncia o grupo ao
+   * ENTRAR nele, mas o campo em si continua sem nome, e é isso que WCAG 4.1.2
+   * cobra e o axe reprova (`label`). Só faz falta quando não há `placeholder`
+   * nem rótulo visível — o campo de senha é exatamente esse caso.
+   *
+   * Nome de verdade, e não um `placeholder` de fachada: `placeholder` satisfaz
+   * a regra do axe e some assim que a pessoa digita, o que deixa quem usa
+   * ampliação sem referência no meio do preenchimento.
+   */
+  fieldAriaLabel?: string;
   /** Texto de exemplo. Vazio, o atributo não é escrito — campo de senha não o tem. */
   placeholder?: string;
   /** Tipo do campo de uma linha, quando ele não é o texto padrão. */
@@ -85,7 +99,11 @@ function indent(level: number): string {
 }
 
 /** O bloco de um addon, com o que ele carrega dentro. */
-function addonMarkup(addon: InputGroupSnippetAddon, level: number): string[] {
+function addonMarkup(
+  addon: InputGroupSnippetAddon,
+  level: number,
+  grupoDesabilitado = false,
+): string[] {
   const lines = [indent(level) + '<div ndsInputGroupAddon align="' + addon.align + '">'];
 
   const buttonIcon = addon.icon && (addon.buttonLabel || addon.buttonToggle);
@@ -106,6 +124,11 @@ function addonMarkup(addon: InputGroupSnippetAddon, level: number): string[] {
       attrs.push('[attr.aria-label]="revealed() ? hideLabel : revealLabel"');
     }
     if (addon.buttonHandler) attrs.push('(click)="' + addon.buttonHandler + '()"');
+    // Grupo desabilitado desabilita o botão do addon TAMBÉM. Sem isto o grupo
+    // fica apagado e o botão continua focável e clicável dentro dele — a pior
+    // das duas leituras, porque a aparência promete inativo e o teclado entrega
+    // ativo.
+    if (grupoDesabilitado) attrs.push('disabled');
 
     lines.push(indent(level + 1) + '<button');
     for (const attr of attrs) lines.push(indent(level + 2) + attr);
@@ -140,6 +163,7 @@ function controlMarkup(
       revealable ? `[type]="revealed() ? 'text' : 'password'"` : 'type="password"',
     );
   }
+  if (options.fieldAriaLabel) attrs.push('aria-label="' + options.fieldAriaLabel + '"');
   if (placeholder) attrs.push('placeholder="' + placeholder + '"');
   if (options.multiline) attrs.push('rows="3"');
   if (options.disabled) attrs.push('disabled');
@@ -219,9 +243,9 @@ export function inputGroupSnippet(options: InputGroupSnippetOptions = {}): strin
         ? '<div ndsInputGroup aria-label="' + options.ariaLabel + '">'
         : '<div ndsInputGroup>'),
   );
-  for (const addon of leading) body.push(...addonMarkup(addon, 3));
+  for (const addon of leading) body.push(...addonMarkup(addon, 3, Boolean(options.disabled)));
   body.push(...controlMarkup(options, 3, addons.some((addon) => addon.buttonToggle)));
-  for (const addon of trailing) body.push(...addonMarkup(addon, 3));
+  for (const addon of trailing) body.push(...addonMarkup(addon, 3, Boolean(options.disabled)));
   body.push(indent(2) + '</div>');
 
   if (options.invalid) {
@@ -299,7 +323,11 @@ export function inputGroupRestSource(): string {
 }
 
 export function inputGroupInvalidSource(): string {
-  return inputGroupSnippet({ placeholder: SITE_PLACEHOLDER, invalid: true });
+  return inputGroupSnippet({
+    fieldAriaLabel: SITE_GROUP_LABEL,
+    placeholder: SITE_PLACEHOLDER,
+    invalid: true,
+  });
 }
 
 export function inputGroupDisabledSource(): string {
@@ -320,6 +348,7 @@ export function inputGroupSearchSource(): string {
 export function inputGroupPasswordSource(): string {
   return inputGroupSnippet({
     ariaLabel: PASSWORD_GROUP_LABEL,
+    fieldAriaLabel: PASSWORD_GROUP_LABEL,
     placeholder: '',
     type: 'password',
     addons: [

@@ -127,9 +127,14 @@ export const PasswordReveal: Story = {
     },
     template: `
       <div ndsInputGroup aria-label="${PASSWORD_GROUP_LABEL}">
+        <!-- O nome vai TAMBÉM no campo. O nome do grupo é anunciado ao entrar
+             nele e não serve de nome para o controle: sem o rótulo aqui, o
+             campo fica sem nome acessível (WCAG 4.1.2), e este é o único
+             composto sem texto de exemplo para disfarçar a falta. -->
         <input
           ndsInputGroupInput
           [type]="revealed ? 'text' : 'password'"
+          aria-label="${PASSWORD_GROUP_LABEL}"
           value="senha-de-exemplo"
         />
         <div ndsInputGroupAddon align="inline-end">

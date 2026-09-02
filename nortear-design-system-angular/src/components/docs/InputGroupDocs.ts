@@ -321,8 +321,12 @@ const TOKEN_ROWS: Array<[string, string]> = [
           <div ndsInputGroupAddon align="inline-start">
             <span ndsInputGroupText>{{ t('demonstration.labels.prefix') }}</span>
           </div>
+          <!-- O nome do campo é do CAMPO, e não do texto de exemplo. Este é o
+               lado "faça" de um par sobre erro acessível: mostrar a mensagem
+               ligada e deixar o campo sem nome ensinaria metade certa. -->
           <input
             ndsInputGroupInput
+            [attr.aria-label]="t('demonstration.labels.siteGroup')"
             [placeholder]="t('demonstration.labels.siteField')"
             aria-invalid="true"
             [attr.aria-describedby]="invalidMessageId"
