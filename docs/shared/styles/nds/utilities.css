@@ -481,7 +481,10 @@
 .nds-bg-primary-5 { background-color: hsl(var(--primary) / 0.05); }
 .nds-bg-success-10 { background-color: hsl(var(--success) / 0.1); }
 .nds-bg-warning-10 { background-color: hsl(var(--warning) / 0.1); }
-.nds-bg-black-50 { background-color: hsl(0 0% 0% / 0.5); }
+/* `.nds-bg-black-50` saiu daqui. Era a única do bloco que não lia token — preto
+ * cravado, com nome de tinta em vez de papel, e em sintaxe do framework que já
+ * tinha saído. Seu único uso era o véu da gaveta do sandbox, hoje
+ * `.nds-app-scrim` sobre `--overlay`. */
 .nds-bg-muted-foreground-20 { background-color: hsl(var(--muted-foreground) / 0.2); }
 .nds-border-primary-10 { border-color: hsl(var(--primary) / 0.1); }
 .nds-border-border-40 { border-color: hsl(var(--border) / 0.4); }
@@ -558,8 +561,9 @@
   .nds-md-grid-2 { grid-template-columns: repeat(2, 1fr); }
   .nds-md-grid-3 { grid-template-columns: repeat(3, 1fr); }
   .nds-md-hidden { display: none; }
-  .nds-md-relative { position: relative; }
-  .nds-md-translate-x-0 { transform: translateX(0); }
+  /* `.nds-md-relative` e `.nds-md-translate-x-0` saíram daqui. Existiam para um
+   * consumidor só — a gaveta do sandbox —, e a gaveta virou papel nomeado em
+   * `app-shell.css`, que já traz o próprio corte de 768px. */
 }
 @media (min-width: 1024px) {
   .nds-lg-grid-3 { grid-template-columns: repeat(3, 1fr); }

@@ -139,6 +139,55 @@
 }
 
 
+/* ── Sidebar como gaveta (shell responsiva do sandbox) ──────────────────────
+ * Fora de tela até `data-open="true"`, e coluna normal a partir de 768px.
+ * Estado por atributo, e não por classe condicional, pelo mesmo motivo que o
+ * resto da shell: é a regra declarada no cabeçalho deste arquivo.
+ *
+ * A gaveta e o véu formam PAR com o `sheet`: mesmos dois degraus de
+ * empilhamento, `--z-modal` para o painel e `--z-modal-backdrop` para o véu.
+ * O sandbox chegou aqui com `z-50`/`z-40` cravados, que por acidente ficavam
+ * ABAIXO de qualquer modal do próprio design system aberto por cima.
+ */
+.nds-app-sidebar[data-drawer="true"] {
+  position: fixed;
+  inset-block: 0;
+  left: 0;
+  z-index: var(--z-modal);
+  transform: translateX(-100%);
+  transition: transform 300ms ease;
+}
+
+.nds-app-sidebar[data-drawer="true"][data-open="true"] {
+  transform: translateX(0);
+}
+
+@media (min-width: 768px) {
+  .nds-app-sidebar[data-drawer="true"] {
+    position: relative;
+    z-index: auto;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-app-sidebar[data-drawer="true"] { transition: none; }
+}
+
+/* Véu que cobre a tela enquanto a gaveta está aberta. Lê `--overlay`, como o
+ * véu do dialog, do sheet e do alert-dialog; o alfa é do USO, nunca do token. */
+.nds-app-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal-backdrop);
+  background-color: hsl(var(--overlay) / 0.5);
+}
+
+@media (min-width: 768px) {
+  .nds-app-scrim { display: none; }
+}
+
+
 /* ── Home page (sandbox) ────────────────────────────────────────────────── */
 
 .nds-app-home {
