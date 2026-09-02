@@ -63,18 +63,29 @@ import {
  * MODAL OU NÃO-MODAL — versão curta. O bloco canônico é o cabeçalho do
  * `popover.ts` do Vanilla, medido na fonte das cinco libs em 2026-09-02.
  *
- * O Popover é NÃO-MODAL: o foco ENTRA no painel ao abrir (é o que o separa do
- * tooltip), mas NÃO fica preso — `Tab` sai e segue a ordem da página. Por isso
- * o painel nunca recebe `aria-modal`: o atributo manda o leitor de tela
- * esconder o resto da página, e sem foco preso ele mentiria. `Escape` fecha e
- * devolve o foco ao gatilho; clique fora fecha; o gatilho declara
- * `aria-expanded` e `aria-haspopup="dialog"`; nenhuma região viva.
+ * O Popover é NÃO-MODAL POR PADRÃO: o foco ENTRA no painel ao abrir (é o que o
+ * separa do tooltip), mas NÃO fica preso — `Tab` sai e segue a ordem da página.
+ * Por isso o painel só recebe `aria-modal` no modo modal: o atributo manda o
+ * leitor de tela esconder o resto da página, e sem foco preso ele mentiria.
+ * `Escape` fecha e devolve o foco ao gatilho; clique fora fecha; o gatilho
+ * declara `aria-expanded` e `aria-haspopup="dialog"`; nenhuma região viva.
  *
- * Mecanismo desta stack: `RdxPopoverRoot` nasce com `modal = input(false)`, e o
- * gerenciador de foco só trapeia com
- * `'trap-focus' || (modal === true && hasPopupClose())`. O `aria-modal` do
- * Radix NG está no DIALOG, não no popover — aqui ele não aparece em estado
- * nenhum.
+ * `modal` foi ENTREGUE nas cinco em 2026-09-02: prende o foco, trava a rolagem e
+ * anuncia `aria-modal`, os três juntos. O padrão continua não-modal.
+ *
+ * Mecanismo desta stack, medido na fonte: `RdxPopoverRoot` nasce com
+ * `modal = input(false)`, mas `modal` NÃO é booleano — `transformModal` aceita
+ * também a string `'trap-focus'`. O gerenciador de foco trapeia com
+ * `'trap-focus' || (modal === true && hasPopupClose())` e isola o lado de fora
+ * (`inert`) só com `modal === true && hasPopupClose()`. Já a trava de rolagem
+ * cai de `modal === true` sozinho (`useAnchoredScrollLock`). O `aria-modal` do
+ * Radix NG está no DIALOG, não no popover — aqui ele é nosso.
+ *
+ * Por isso o modo modal aqui é metade lib e metade nosso, igual à stack do
+ * base-ui: `modal` segue para a raiz (trava de rolagem) e o laço de tabulação
+ * está escrito no `NdsPopover` abaixo, na mesma forma do `popover.ts` do
+ * Vanilla. A alternativa seria injetar um botão de fechar que o desenho não pede
+ * só para satisfazer `hasPopupClose()`.
  */
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -83,8 +94,17 @@ export type PopoverSide = 'top' | 'right' | 'bottom' | 'left';
 export type PopoverAlign = 'start' | 'center' | 'end';
 
 /**
- * `true` bloqueia a rolagem da página; `'trap-focus'` prende o foco no painel
- * sem bloquear a interação com o resto da página. O padrão é não-modal.
+ * Modo MODAL. O padrão é `false`, que é o popover normal desta casa.
+ *
+ * `true` prende o foco no painel, trava a rolagem da página e faz o painel
+ * anunciar `aria-modal="true"` — os três juntos, que é o que a tabela de props
+ * do conteúdo compartilhado promete. Anunciar inércia sem prender o foco seria
+ * mentir para quem usa leitor de tela.
+ *
+ * `'trap-focus'` é um valor SÓ desta stack, herdado do primitivo: prende o foco
+ * sem travar a rolagem nem isolar o lado de fora. Fica exposto porque tirá-lo
+ * seria estreitar a API do primitivo sem ganho; não faz parte do contrato
+ * cross-stack, e é divergência de API de framework — registrada, não alinhada.
  */
 export type PopoverModal = boolean | 'trap-focus';
 
@@ -130,8 +150,9 @@ export class NdsPopoverContent {
  * Raiz do Popover.
  *
  * `open` é model do primitivo, então `[(open)]` funciona; `defaultOpen` cobre o
- * modo não-controlado e `modal` escolhe entre não-modal (padrão), trava de
- * rolagem (`true`) e prisão de foco (`'trap-focus'`).
+ * modo não-controlado e `modal` escolhe entre não-modal (padrão) e modal
+ * (`true`: foco preso, rolagem travada e `aria-modal`). Ver `PopoverModal` para
+ * o terceiro valor, que é só desta stack.
  *
  * `triggerId` / `defaultTriggerId` / `handle` ficam FORA da lista de inputs de
  * propósito: os três servem ao caso de um popover com gatilhos destacados,
@@ -188,7 +209,9 @@ export class NdsPopoverContent {
             data-slot="popover-content"
             [attr.data-state]="state()"
             [attr.aria-label]="rotuloDeReserva()"
+            [attr.aria-modal]="ariaModal()"
             (openAutoFocus)="aoAutoFocar($event)"
+            (keydown)="aoTeclar($event)"
           >
             <ng-container [ngTemplateOutlet]="panel.templateRef" />
           </div>
@@ -211,6 +234,68 @@ export class NdsPopover {
   protected readonly content = contentChild(NdsPopoverContent, { descendants: true });
 
   protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
+
+  /**
+   * O foco está PRESO no painel?
+   *
+   * Os dois valores que prendem: `true` (contrato cross-stack, com trava de
+   * rolagem por cima) e `'trap-focus'` (valor só desta stack, sem a trava). É
+   * desta pergunta que saem tanto o `aria-modal` quanto o laço de tabulação —
+   * as duas coisas têm de concordar sempre, porque uma sem a outra é o defeito.
+   */
+  protected readonly travaFoco = computed(() => {
+    const modal = this.root.modal();
+    return modal === true || modal === 'trap-focus';
+  });
+
+  /**
+   * `aria-modal` SÓ quando o foco está preso, e nunca `"false"` no padrão: o
+   * atributo ausente e o negado dizem a mesma coisa ao leitor de tela.
+   */
+  protected readonly ariaModal = computed(() => (this.travaFoco() ? 'true' : null));
+
+  /**
+   * Laço de tabulação do modo modal.
+   *
+   * Escrito aqui porque o primitivo não trapeia com `modal === true` sozinho:
+   * ele exige `hasPopupClose()`, ou seja, um `ndsPopoverClose` REGISTRADO dentro
+   * do painel — ver o bloco no topo deste arquivo. Mesma forma do `popover.ts`
+   * do Vanilla, que é a referência.
+   *
+   * Quando o primitivo JÁ está trapeando (com `'trap-focus'`, ou com `true` mais
+   * um botão de fechar), este laço é redundante e inofensivo: os dois levam o
+   * foco para o mesmo lugar.
+   *
+   * Fora do modo modal não há ramo nenhum: `Tab` segue a ordem da página e SAI
+   * do painel, que é o contrato padrão do popover.
+   */
+  protected aoTeclar(evento: KeyboardEvent): void {
+    if (!this.travaFoco() || evento.key !== 'Tab' || evento.defaultPrevented) return;
+
+    const panel = evento.currentTarget as HTMLElement | null;
+    if (!panel) return;
+
+    const focusable = Array.from(panel.querySelectorAll<HTMLElement>(FOCAVEIS)).filter(
+      (el) => !el.closest('[hidden]'),
+    );
+    // Sem nada focável dentro, ficar preso é literal: o gerenciador de foco já
+    // deixou o painel com `tabindex="-1"`, e ele segura o foco sozinho.
+    if (!focusable.length) {
+      evento.preventDefault();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (evento.shiftKey) {
+      if (document.activeElement === first) {
+        evento.preventDefault();
+        last.focus();
+      }
+    } else if (document.activeElement === last) {
+      evento.preventDefault();
+      first.focus();
+    }
+  }
 
   /**
    * Nome acessível de reserva para o painel.

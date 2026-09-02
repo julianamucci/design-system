@@ -7,7 +7,9 @@ import {
   PopoverPortal,
   useForwardPropsEmits,
 } from 'reka-ui'
+import { computed, inject } from 'vue'
 import { cn } from '@/lib/utils'
+import { POPOVER_MODAL } from './popover.context'
 
 defineOptions({
   inheritAttrs: false,
@@ -26,6 +28,17 @@ const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
+/**
+ * `aria-modal` — nosso, porque nenhum caminho do primitivo o emite.
+ *
+ * SÓ no modo modal, e nunca `"false"` no padrão: o atributo ausente e o negado
+ * dizem a mesma coisa ao leitor de tela, e anunciar inércia sem o foco preso
+ * seria mentira. Quem prende o foco aqui é a lib — com `modal`, o painel que
+ * renderiza é o modal, com `trap-focus` ligado —, então o anúncio é verdadeiro.
+ */
+const modal = inject(POPOVER_MODAL, computed(() => false))
+const ariaModal = computed(() => (modal.value ? 'true' : undefined))
+
 // Sem nome acessível de reserva aqui: a lib já aponta o `aria-labelledby` do
 // painel para o GATILHO, que é exatamente o comportamento desejado quando não
 // há título — o mesmo que o Vanilla, referência cross-stack, produz. Quando há
@@ -38,6 +51,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <PopoverContent
       data-slot="popover-content"
       v-bind="{ ...$attrs, ...forwarded }"
+      :aria-modal="ariaModal"
       :class="cn( 'nds-popover-content', props.class, )"
     >
       <slot />

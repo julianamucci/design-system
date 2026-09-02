@@ -248,14 +248,15 @@ const [aberto, setAberto] = useState(false);`,
 }
 
 /**
- * Modal: trava a rolagem do corpo e bloqueia o ponteiro fora do painel enquanto
- * aberto — e não anuncia `aria-modal`. Esconder o resto da página do leitor de
- * tela é contrato de Dialog; um popover continua sendo conteúdo AO LADO, não no
- * lugar.
+ * Modal: prende o foco no painel, trava a rolagem da página e anuncia
+ * `aria-modal`. Os três juntos — anunciar que o resto da página está inerte sem
+ * prender o foco engana quem navega por leitor de tela.
  *
- * O que ele NÃO faz nesta stack é prender o foco: o gerenciador de foco do Base
- * UI só trapeia com `modal !== false && hasClosePart`, e esta família não expõe
- * um `Popover.Close` para contar.
+ * A prisão é NOSSA e não da lib. O gerenciador de foco do Base UI só trapeia com
+ * `modal !== false && hasClosePart`, e `hasClosePart` conta os `Popover.Close`
+ * registrados dentro do painel; da lib vem a trava de rolagem, que cai de
+ * `modal === true` sozinho. O laço de tabulação está no `PopoverContent` de
+ * `popover.tsx`, na mesma forma do Vanilla, que é a referência.
  */
 export function popoverModalSource(): string {
   return jsxSnippet(
@@ -272,8 +273,9 @@ ${IMPORT_BUTTON}`,
       ' defaultOpen modal',
       'Abrir modal',
       '',
-      `${header('Popover modal', 'Interações fora do popover ficam bloqueadas.')}
+      `${header('Popover modal', 'O foco fica preso no painel enquanto ele está aberto.')}
     <div className="nds-cluster" data-justify="end" data-spacing="sm">
+      <Button variant="ghost" size="sm">Cancelar</Button>
       <Button size="sm">OK</Button>
     </div>`,
     ),

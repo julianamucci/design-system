@@ -30,6 +30,8 @@ export type PopoverSnippetOptions = {
   align?: PopoverAlign;
   sideOffset?: number;
   defaultOpen?: boolean;
+  /** Modo modal — foco preso, rolagem travada, painel anunciado como modal. */
+  modal?: boolean;
   /** Presença liga a linha do callback; string troca a expressão mostrada. */
   onOpenChange?: unknown;
   /** Mostra a linha de limpeza — o painel mora em portal no `body`. */
@@ -75,6 +77,7 @@ function panelLines(o: PopoverSnippetOptions, content: string): string[] {
     ['align', o.align && o.align !== 'center' ? text(o.align) : undefined],
     ['sideOffset', o.sideOffset !== undefined && o.sideOffset !== 8 ? String(o.sideOffset) : undefined],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],
+    ['modal', o.modal ? 'true' : undefined],
     [
       'onOpenChange',
       o.onOpenChange

@@ -51,7 +51,7 @@ const sharedComponents = {
 };
 
 const SIMPLE_PANEL = `
-          <PopoverContent side="bottom" align="start">
+          <PopoverContent side="bottom">
             <PopoverHeader>
               <PopoverTitle>Configuracoes de exibição</PopoverTitle>
               <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
@@ -222,7 +222,8 @@ export const Modal: Story = {
       // não no painel, onde ficam `side` e `align`.
       source: { transform: popoverModalSource },
       description: {
-        story: 'Modal=true — foco fica preso dentro do Popover e scroll do body é bloqueado.',
+        story:
+          'Modo modal — o foco fica preso no painel, a rolagem da página trava e o painel se anuncia como diálogo modal. As três coisas andam juntas: anunciar inércia sem prender o foco engana quem navega por leitor de tela.',
       },
     },
   },
@@ -245,21 +246,50 @@ export const Modal: Story = {
       await expect(dialog).toBeVisible();
     });
 
-    await step('O foco entra no painel, e o painel não anuncia aria-modal', async () => {
-      // O nome deste passo era "Modal prende o foco", e a asserção abaixo NÃO
-      // media isso: o foco está dentro do painel também no modo não-modal, em
-      // todas as stacks — é o contrato `functional.item1`. Ela passaria com ou
-      // sem prisão, que é a forma exata da asserção que guarda o bug. Nesta
-      // stack a prisão EXISTE (`PopoverContentModal` liga `trap-focus`), mas
-      // quem prova isso é apertar Tab e ver onde o foco pousa — ver o item de
-      // suíte de navegador no diário.
+    await step('O painel anuncia aria-modal', async () => {
+      // Tem dentes nos DOIS sentidos: reprova se alguém anunciar `aria-modal`
+      // sem prender o foco e reprova se o modo modal deixar de anunciar.
+      await expect(panel()!).toHaveAttribute('aria-modal', 'true');
+    });
+
+    await step('Tab a partir do último focável NÃO sai do painel', async () => {
+      // ─── A asserção com CONTROLE NEGATIVO ───────────────────────────────
       //
-      // `aria-modal` continua ausente de propósito, e essa asserção TEM dentes.
+      // A versão anterior deste passo provava a prisão com
+      // `dialog.contains(document.activeElement)` SEM tabular. Aquilo é
+      // verdadeiro no modo não-modal também — o foco entrar no painel é o
+      // contrato `functional.item1`, cumprido pelas cinco stacks —, então a
+      // asserção não podia reprovar: é a forma exata da asserção que guarda o
+      // bug.
+      //
+      // O controle negativo de verdade é este: partir do ÚLTIMO focável e
+      // apertar Tab. Não-modal, o foco SAI do painel e esta asserção reprova;
+      // modal, ele volta ao primeiro.
       const dialog = panel()!;
-      await expect(dialog).not.toHaveAttribute('aria-modal');
-      await waitFor(() => {
-        if (!dialog.contains(document.activeElement)) throw new Error('foco fora do painel');
-      });
+      const inside = within(dialog);
+      const cancel = inside.getByRole('button', { name: /Cancelar/i });
+      const save = inside.getByRole('button', { name: /Salvar/i });
+
+      save.focus();
+      await expect(save).toHaveFocus();
+
+      await userEvent.tab();
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(cancel).toHaveFocus();
+    });
+
+    await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
+      const dialog = panel()!;
+      const inside = within(dialog);
+      const cancel = inside.getByRole('button', { name: /Cancelar/i });
+      const save = inside.getByRole('button', { name: /Salvar/i });
+
+      cancel.focus();
+      await userEvent.tab({ shift: true });
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(save).toHaveFocus();
     });
   },
 };

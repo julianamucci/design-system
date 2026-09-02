@@ -14,7 +14,7 @@
  * painel que o leitor de tela anuncia como diálogo modal e que o Tab atravessa
  * como se não fosse.
  *
- * A escolha do design system é NÃO-MODAL, e ela é literal nas cinco:
+ * O PADRÃO do design system é NÃO-MODAL, e ele é literal nas cinco:
  *
  * - O foco ENTRA no painel ao abrir: primeiro elemento focável, ou o próprio
  *   painel quando não há nenhum. É o que separa o popover do tooltip, e é o que
@@ -34,42 +34,75 @@
  *   para um id ausente reprova em `aria-valid-attr-value`.
  * - Nenhuma região viva. O painel não é anúncio: ele é alcançado.
  *
- * O mecanismo de cada lib, e o que cada uma chama de "modal":
+ * ─── A prop `modal`, ENTREGUE nas cinco em 2026-09-02 ───────────────────────
+ *
+ * `modal` estava na tabela de props do conteúdo compartilhado e existia em três
+ * das cinco stacks, com semântica diferente em duas. A dona escolheu ENTREGAR
+ * (regra 2e6 — entregar ou remover). O que `modal: true` passa a significar,
+ * igual nas cinco e exatamente o que a tabela promete:
+ *
+ *   1. o foco fica PRESO no painel — `Tab` no último focável volta ao primeiro,
+ *      e `Shift+Tab` no primeiro vai ao último;
+ *   2. a rolagem da página fica travada;
+ *   3. o painel anuncia `aria-modal="true"`;
+ *   4. `Escape` fecha e devolve o foco ao gatilho, como no modo padrão.
+ *
+ * `aria-modal` SÓ existe no modo modal, e é o item 1 que lhe dá direito: o
+ * atributo manda o leitor de tela esconder o resto da página, e sem foco preso
+ * ele MENTE — o resto da página fica inalcançável para quem ouve sem estar
+ * inalcançável para quem tabula. Esta casa já pagou por atributo que anuncia o
+ * que não existe (o `aria-label` DESCARTADO em `drawer` e `sheet`, por estar num
+ * `div` sem papel). Por isso não-modal não recebe `aria-modal` nem
+ * `aria-modal="false"`: recebe atributo NENHUM.
+ *
+ * O mecanismo de cada lib, medido na FONTE — e é ele que decide quem entrega
+ * `modal` pela lib e quem o escreve à mão:
  *
  *   base-ui   — `PopoverRoot` nasce com `modal = false`; `role="dialog"` no
  *               `Popup`. O `FloatingFocusManager` só trapeia quando
  *               `modal !== false && hasClosePart` (`popup/PopoverPopup.js`), e
- *               `modal === true` acrescenta trava de rolagem e um backdrop
- *               interno (`positioner/PopoverPositioner.js`).
+ *               `hasClosePart` conta os `Popover.Close` REGISTRADOS dentro do
+ *               painel (`utils/closePart.js`, via `useClosePartRegistration`).
+ *               A trava de rolagem, essa sim, cai de `modal === true` sozinho:
+ *               `positioner/PopoverPositioner.js` liga
+ *               `useAnchoredPopupScrollLock` com `modal === true && !hover`.
+ *               Ou seja: a lib dá a TRAVA, não dá o TRAP.
  *   reka-ui   — `PopoverRoot` nasce com `modal: false`. Não-modal é
  *               `PopoverContentNonModal`, com `trap-focus: false`; modal é
  *               `PopoverContentModal`, que traz `trap-focus` ligado,
  *               `useBodyScrollLock` e `useHideOthers` (este último esconde os
  *               irmãos por `aria-hidden`, que é mais forte que `aria-modal`).
- *   bits-ui   — NÃO tem `modal` nenhum. O que existe é `trapFocus` no Content,
- *               e o padrão da LIB é `true`. Aquela stack o desliga
- *               explicitamente para não ser a única das cinco a prender o foco;
- *               desligá-lo não tira nem a entrada do foco nem a devolução ao
- *               gatilho, porque `focus-scope.svelte.js` faz as duas fora do
- *               `trap` — ele só gateia o ouvinte que puxa o foco de volta.
- *   radix-ng  — `modal = input(false)`; trapeia com
- *               `'trap-focus' || (modal === true && hasPopupClose())`. Emite
- *               `aria-modal` no DIALOG, e não no popover.
- *   vanilla   — esta fábrica. Não tem `modal`: não há laço de tabulação, não há
- *               `aria-modal`, e o foco entra por `getFocusable(panelEl)[0]`.
+ *               A lib dá as DUAS coisas — por isso aquela stack é a REFERÊNCIA
+ *               desta decisão.
+ *   bits-ui   — NÃO tem `modal` nenhum. Tem `trapFocus` (padrão da LIB `true`) e
+ *               `preventScroll` (padrão `false`), os dois no Content. São eles
+ *               que passam a ser o mecanismo de `modal` naquela stack.
+ *   radix-ng  — `modal` NÃO é booleano: `transformModal` aceita a string
+ *               `'trap-focus'` além do booleano. Trapeia com
+ *               `'trap-focus' || (modal === true && hasPopupClose())` e isola o
+ *               lado de fora (`inert`) só com `modal === true && hasPopupClose()`.
+ *               A trava de rolagem, como no base-ui, cai de `modal === true`
+ *               sozinho (`useAnchoredScrollLock`). O `aria-modal` do Radix NG
+ *               está no DIALOG, não no popover.
+ *   vanilla   — esta fábrica. Não tem lib: o laço de tabulação, a trava contada
+ *               e o `aria-modal` estão escritos aqui embaixo, e são a definição
+ *               à qual as outras quatro se alinham.
  *
- * A prop `modal` está DOCUMENTADA na tabela de props do conteúdo compartilhado
- * e existe em três das cinco, com semântica diferente em duas delas. É a única
- * pendência aberta deste componente, e é decisão de produto: entregar (escrever
- * o modo modal aqui e na stack do bits-ui) ou remover da tabela. Nada abaixo
- * depende dela — o estado PADRÃO, que é o que as cinco entregam, é o descrito
- * acima.
+ * O buraco do `Close`, e por que ele NÃO foi contornado: em base-ui e em
+ * radix-ng, `modal === true` só prende o foco se houver um botão de fechar
+ * REGISTRADO dentro do painel. Isso faria `modal` continuar mentindo para quem
+ * não renderizasse um. Nenhuma das duas stacks passou a injetar um botão que o
+ * desenho não pede; as duas escrevem o laço de tabulação por conta própria — o
+ * mesmo laço daqui — e deixam a lib com o que ela entrega sem condição, que é a
+ * trava de rolagem. É a segunda saída que a dona autorizou: a stack implementa o
+ * trap por outro caminho.
  */
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 import {
   positionFloating,
   type FloatingAlign,
@@ -97,6 +130,15 @@ export type PopoverOptions = {
   open?: boolean;
   /** Estado inicial no modo não-controlado. */
   defaultOpen?: boolean;
+  /**
+   * Modo MODAL. Padrão `false`, que é o popover normal desta casa.
+   *
+   * `true` prende o foco no painel, trava a rolagem da página e faz o painel
+   * anunciar `aria-modal="true"`. Os três andam juntos de propósito — ver o
+   * bloco no cabeçalho deste arquivo para por que anunciar sem prender é
+   * mentir para quem usa leitor de tela.
+   */
+  modal?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
@@ -198,6 +240,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     side = 'bottom',
     align = 'center',
     sideOffset = 8,
+    modal = false,
     onOpenChange,
   } = options;
 
@@ -209,6 +252,10 @@ export function createPopover(options: PopoverOptions): PopoverElement {
   let panelEl: HTMLElement | null = null;
   let isOpen = false;
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
+  // Espelha a trava PEDIDA por esta instância, e não o contador global de
+  // `scroll-lock`. Sem esta bandeira, um `close()` que chegasse duas vezes
+  // soltaria duas travas — e a segunda seria a de outro painel.
+  let scrollLocked = false;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'popover';
@@ -241,6 +288,10 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     panelEl.dataset.side = side;
     panelEl.dataset.align = align;
     panelEl.setAttribute('role', 'dialog');
+    // `aria-modal` SÓ no modo modal, e nunca `"false"` no modo padrão: o
+    // atributo ausente e o atributo negado dizem a mesma coisa ao leitor de
+    // tela, e o ausente não corre o risco de sobreviver a uma troca de modo.
+    if (modal) panelEl.setAttribute('aria-modal', 'true');
     // O painel recebe foco quando não há nada focável dentro: é o que faz o
     // leitor de tela anunciar o diálogo mesmo num painel só de texto.
     panelEl.tabIndex = -1;
@@ -274,6 +325,14 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     trigger.setAttribute('aria-controls', contentId);
     trigger.dataset.state = 'open';
     isOpen = true;
+
+    // Trava CONTADA, e não `body.style.overflow` local: dois painéis abertos ao
+    // mesmo tempo fariam o segundo guardar `hidden` como "valor anterior" e a
+    // página nunca mais rolaria. O porquê inteiro está em `@/lib/scroll-lock`.
+    if (modal) {
+      lockBodyScroll();
+      scrollLocked = true;
+    }
 
     // O foco entra no painel — é o que separa o popover do tooltip. O conteúdo
     // é interativo (formulário, filtro, botões), e sem isto quem navega por
@@ -320,6 +379,11 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
 
+    if (scrollLocked) {
+      unlockBodyScroll();
+      scrollLocked = false;
+    }
+
     if (focusEstavaInside) trigger.focus();
 
     notificar(false);
@@ -361,6 +425,27 @@ export function createPopover(options: PopoverOptions): PopoverElement {
       // `close()` já devolve o foco ao gatilho quando ele estava dentro do
       // painel, que é sempre o caso vindo do Escape.
       pedirChange(false);
+      return;
+    }
+
+    // Laço de tabulação — SÓ no modo modal. Mesma forma do `dialog.ts` desta
+    // stack, de propósito: é o mesmo problema, e duas escritas diferentes do
+    // mesmo laço divergiriam na primeira correção.
+    //
+    // Fora do modo modal não há ramo nenhum aqui: o `Tab` segue a ordem da
+    // página e SAI do painel, que é o contrato padrão do popover.
+    if (modal && e.key === 'Tab' && panelEl) {
+      const focusable = getFocusable(panelEl);
+      // Sem nada focável dentro, o foco não tem para onde ir e ficar preso é
+      // literal: o painel já tem `tabindex="-1"` e segura o foco.
+      if (!focusable.length) { e.preventDefault(); return; }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     }
   }
 

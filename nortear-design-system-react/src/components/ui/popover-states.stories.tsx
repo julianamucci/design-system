@@ -222,7 +222,7 @@ export const Modal: Story = {
       source: { transform: popoverModalSource },
       description: {
         story:
-          "modal=true — trava a rolagem do corpo e bloqueia o ponteiro fora do painel enquanto aberto. O foco NÃO fica preso: veja a nota na play.",
+          "Modo modal — o foco fica preso no painel, a rolagem da página trava e o painel se anuncia como diálogo modal. As três coisas andam juntas: anunciar inércia sem prender o foco engana quem navega por leitor de tela.",
       },
     },
   },
@@ -236,10 +236,16 @@ export const Modal: Story = {
           <PopoverHeader>
             <PopoverTitle>Popover modal</PopoverTitle>
             <PopoverDescription>
-              Interações fora do popover são bloqueadas.
+              O foco fica preso no painel enquanto ele está aberto.
             </PopoverDescription>
           </PopoverHeader>
+          {/* DOIS focáveis de propósito: com um só, "o Tab do último volta ao
+              primeiro" seria verdade sem laço nenhum, porque primeiro e último
+              seriam o mesmo elemento. */}
           <div className="nds-cluster nds-pt-1" data-justify="end">
+            <Button variant="ghost" size="sm">
+              Cancelar
+            </Button>
             <Button size="sm">OK</Button>
           </div>
         </PopoverContent>
@@ -252,25 +258,50 @@ export const Modal: Story = {
       await expect(dialog).toBeVisible();
     });
 
-    await step("O foco entra no painel, e o painel não anuncia aria-modal", async () => {
-      // O nome deste passo era "Modal prende o foco", e a asserção abaixo NÃO
-      // media isso: o foco está dentro do painel também no modo não-modal, em
-      // todas as stacks — é o contrato `functional.item1`. Ela passaria com ou
-      // sem prisão, que é a forma exata da asserção que guarda o bug.
+    await step("O painel anuncia aria-modal", async () => {
+      // Tem dentes nos DOIS sentidos: reprova se alguém anunciar `aria-modal`
+      // sem prender o foco (era o defeito antigo desta família) e reprova se o
+      // modo modal deixar de anunciar.
+      await expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
+    });
+
+    await step("Tab a partir do último focável NÃO sai do painel", async () => {
+      // ─── A asserção com CONTROLE NEGATIVO ───────────────────────────────
       //
-      // E medido na fonte: `modal` sozinho NÃO prende o foco nesta stack.
-      // `popup/PopoverPopup.js` calcula
-      // `focusManagerModal = modal !== false && hasClosePart`, e `hasClosePart`
-      // conta os `Popover.Close` renderizados DENTRO do painel — esta família
-      // não expõe nenhum. O que `modal` entrega aqui é trava de rolagem e um
-      // backdrop interno (`positioner/PopoverPositioner.js`).
+      // A versão anterior deste passo provava a prisão com
+      // `dialog.contains(document.activeElement)` SEM tabular. Aquilo é
+      // verdadeiro no modo não-modal também — o foco entrar no painel é o
+      // contrato `functional.item1`, cumprido pelas cinco stacks —, então a
+      // asserção não podia reprovar: é a forma exata da asserção que guarda o
+      // bug.
       //
-      // `aria-modal` continua ausente de propósito, e essa asserção TEM dentes:
-      // o dia em que alguém "completar o contrato de modal" acrescentando o
-      // atributo sem prender o foco, ela reprova.
+      // O controle negativo de verdade é este: partir do ÚLTIMO focável e
+      // apertar Tab. Não-modal, o foco SAI do painel e esta asserção reprova;
+      // modal, ele volta ao primeiro. É a mesma tecla que separa os dois modos,
+      // e por isso a asserção mede o modo e não o contrato comum.
       const dialog = screen.getByRole("dialog");
-      await expect(dialog).not.toHaveAttribute("aria-modal");
-      await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
+      const cancelar = within(dialog).getByRole("button", { name: /Cancelar/i });
+      const ok = within(dialog).getByRole("button", { name: /^OK$/i });
+
+      ok.focus();
+      await expect(ok).toHaveFocus();
+
+      await userEvent.tab();
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(cancelar).toHaveFocus();
+    });
+
+    await step("E Shift+Tab a partir do primeiro volta ao último", async () => {
+      const dialog = screen.getByRole("dialog");
+      const cancelar = within(dialog).getByRole("button", { name: /Cancelar/i });
+      const ok = within(dialog).getByRole("button", { name: /^OK$/i });
+
+      cancelar.focus();
+      await userEvent.tab({ shift: true });
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(ok).toHaveFocus();
     });
   },
 };

@@ -28,6 +28,8 @@
     sideOffset?: number;
     defaultOpen?: boolean;
     open?: boolean;
+    /** Modo modal — foco preso, rolagem travada, painel anunciado como modal. */
+    modal?: boolean;
     triggerLabel?: string;
     title?: string;
     description?: string;
@@ -51,6 +53,7 @@
     sideOffset = 4,
     defaultOpen = false,
     open = $bindable(defaultOpen),
+    modal = false,
     triggerLabel = 'Abrir popover',
     title = 'Configurações de exibição',
     description = 'Ajuste a aparência do conteúdo da página.',
@@ -93,7 +96,7 @@
 
 <div class="nds-stack" data-align="center" data-spacing="md" style="contain: layout">
   {#key `${side}-${align}-${defaultOpen}-${variant}`}
-      <Popover bind:open>
+      <Popover bind:open {modal}>
         <PopoverTrigger>
           {#snippet child({ props })}
             <Button {...props}>{triggerLabel}</Button>

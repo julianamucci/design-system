@@ -7,21 +7,44 @@ import { cn } from "@/lib/utils"
  * MODAL OU NÃO-MODAL — versão curta. O bloco canônico é o cabeçalho do
  * `popover.ts` do Vanilla, medido na fonte das cinco libs em 2026-09-02.
  *
- * O Popover é NÃO-MODAL: o foco ENTRA no painel ao abrir (é o que o separa do
- * tooltip), mas NÃO fica preso — `Tab` sai e segue a ordem da página. Por isso
- * o painel nunca recebe `aria-modal`: o atributo manda o leitor de tela
- * esconder o resto da página, e sem foco preso ele mentiria. `Escape` fecha e
- * devolve o foco ao gatilho; clique fora fecha; o gatilho declara
- * `aria-expanded` e `aria-haspopup="dialog"`; nenhuma região viva.
+ * O Popover é NÃO-MODAL POR PADRÃO: o foco ENTRA no painel ao abrir (é o que o
+ * separa do tooltip), mas NÃO fica preso — `Tab` sai e segue a ordem da página.
+ * Por isso o painel só recebe `aria-modal` no modo modal: o atributo manda o
+ * leitor de tela esconder o resto da página, e sem foco preso ele mentiria.
+ * `Escape` fecha e devolve o foco ao gatilho; clique fora fecha; o gatilho
+ * declara `aria-expanded` e `aria-haspopup="dialog"`; nenhuma região viva.
  *
- * Mecanismo desta stack: `PopoverRoot` do Base UI nasce com `modal = false`, e
- * o `FloatingFocusManager` do `Popup` só trapeia quando
- * `modal !== false && hasClosePart` — ou seja, `modal` sozinho NÃO prende o
- * foco enquanto não houver um `Popover.Close` renderizado dentro do painel.
- * Esta família não expõe um, então o estado entregue é sempre o não-modal.
+ * `modal` foi ENTREGUE nas cinco em 2026-09-02: prende o foco, trava a rolagem e
+ * anuncia `aria-modal`, os três juntos. O padrão continua não-modal.
+ *
+ * Mecanismo desta stack, medido na fonte: o `FloatingFocusManager` do `Popup`
+ * só trapeia quando `modal !== false && hasClosePart`
+ * (`popup/PopoverPopup.js`), e `hasClosePart` conta os `Popover.Close`
+ * REGISTRADOS dentro do painel (`utils/closePart.js`). A trava de rolagem, essa
+ * sim, cai de `modal === true` sozinho — `positioner/PopoverPositioner.js` liga
+ * `useAnchoredPopupScrollLock`. Ou seja: a lib dá a TRAVA e não dá o TRAP.
+ *
+ * Por isso o modo modal aqui é metade lib e metade nosso: `modal` segue para a
+ * raiz (trava de rolagem) e o laço de tabulação está escrito no `PopoverContent`
+ * abaixo, na mesma forma do `popover.ts` do Vanilla. A alternativa seria injetar
+ * um botão de fechar que o desenho não pede só para satisfazer `hasClosePart`.
  */
-function Popover({ ...props }: PopoverPrimitive.Root.Props) {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />
+
+/**
+ * Leva `modal` da raiz até o painel.
+ *
+ * O contexto é NOSSO e não o da lib: `modal` mora no store do Base UI, cujo
+ * acesso não é público, e depender de interno de lib para uma decisão de
+ * acessibilidade é o tipo de coisa que some numa atualização menor.
+ */
+const PopoverModalContext = React.createContext(false)
+
+function Popover({ modal = false, ...props }: PopoverPrimitive.Root.Props) {
+  return (
+    <PopoverModalContext.Provider value={modal === true}>
+      <PopoverPrimitive.Root data-slot="popover" modal={modal} {...props} />
+    </PopoverModalContext.Provider>
+  )
 }
 
 type PopoverTriggerProps = PopoverPrimitive.Trigger.Props & {
@@ -79,18 +102,81 @@ function nomearPanel(el: HTMLElement | null): void {
   if (name) el.setAttribute("aria-label", name)
 }
 
+/**
+ * O que conta como "focável" dentro do painel.
+ *
+ * `[tabindex="-1"]` fica de fora de propósito: é o marcador de foco
+ * programático, não de parada na ordem de tabulação — e o próprio painel o tem.
+ * Mesma lista do `popover.ts` do Vanilla, que é a referência.
+ */
+const FOCUSABLE = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(", ")
+
 function PopoverContent({
   className,
   align = "center",
   alignOffset = 0,
   side = "bottom",
   sideOffset = 4,
+  onKeyDown,
   ...props
 }: PopoverPrimitive.Popup.Props &
   Pick<
     PopoverPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const modal = React.useContext(PopoverModalContext)
+
+  /**
+   * Laço de tabulação do modo modal.
+   *
+   * Escrito aqui porque a lib não o entrega sem um `Popover.Close` registrado
+   * dentro do painel — ver o bloco no topo deste arquivo. Mesma forma do
+   * `dialog.ts` e do `popover.ts` do Vanilla, que é a referência: duas escritas
+   * diferentes do mesmo laço divergiriam na primeira correção.
+   *
+   * Fora do modo modal não há ramo nenhum: `Tab` segue a ordem da página e SAI
+   * do painel, que é o contrato padrão do popover.
+   */
+  // O tipo do evento sai da PRÓPRIA prop da lib: o Base UI embrulha o evento do
+  // React (`BaseUIEvent`, com `preventBaseUIHandler`), e escrever
+  // `React.KeyboardEvent` aqui não compila. Derivar em vez de copiar mantém a
+  // assinatura certa quando a lib mudar o embrulho.
+  function aoTeclar(
+    event: Parameters<NonNullable<PopoverPrimitive.Popup.Props["onKeyDown"]>>[0]
+  ): void {
+    onKeyDown?.(event)
+    if (!modal || event.key !== "Tab" || event.defaultPrevented) return
+
+    const panel = event.currentTarget
+    const focusable = Array.from(
+      panel.querySelectorAll<HTMLElement>(FOCUSABLE)
+    ).filter((el) => !el.closest("[hidden]"))
+    // Sem nada focável dentro, ficar preso é literal: o painel já carrega
+    // `tabindex="-1"` e segura o foco sozinho.
+    if (!focusable.length) {
+      event.preventDefault()
+      return
+    }
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (event.shiftKey) {
+      if (document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      }
+    } else if (document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
+
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Positioner
@@ -107,6 +193,11 @@ function PopoverContent({
           // título acontece depois de o conteúdo estar dentro, que é o que um
           // efeito de montagem do PRÓPRIO Popup não garantiria.
           ref={nomearPanel}
+          // `aria-modal` SÓ no modo modal, e nunca `"false"` no padrão: o
+          // atributo ausente e o negado dizem a mesma coisa ao leitor de tela,
+          // e anunciar inércia sem o laço de tabulação acima seria mentira.
+          aria-modal={modal ? true : undefined}
+          onKeyDown={aoTeclar}
           className={cn(
             "nds-popover-content",
             className

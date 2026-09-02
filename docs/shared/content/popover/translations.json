@@ -235,7 +235,7 @@
           "type": "boolean",
           "default": "false",
           "required": "Não",
-          "description": "Quando true, foca trap e bloqueia scroll do body."
+          "description": "Quando ativo, prende o foco no painel, trava a rolagem da página e faz o painel se anunciar como diálogo modal. O padrão é não-modal."
         },
         "side": {
           "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
@@ -360,7 +360,7 @@
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a abertura e o fechamento, o retorno do foco ao gatilho, o descarte por Escape e por clique fora e o posicionamento com desvio por colisão vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-popover-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Auto-flip</strong> — quando não há espaço no <code>side</code> preferido, o popover automaticamente reposiciona em outro lado para evitar overflow.",
       "item3": "<strong>Portal</strong> — o <code>PopoverContent</code> é renderizado em portal no <code>document.body</code> para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
-      "item4": "<strong>Não-modal por padrão</strong> — o usuário pode interagir com o resto da página. Use <code>modal</code> para trap de foco e bloqueio de scroll."
+      "item4": "<strong>Não-modal por padrão</strong> — o foco entra no painel ao abrir, mas o Tab sai dele e segue a ordem da página, e o painel não se anuncia como modal. No modo modal as três coisas mudam juntas: o foco fica preso no painel, a rolagem da página trava e o painel passa a se anunciar como diálogo modal. Elas andam juntas de propósito — anunciar que o resto da página está inerte sem prender o foco engana quem navega por leitor de tela."
     },
     "analytics": {
       "title": "Analytics",
@@ -693,7 +693,7 @@
           "type": "boolean",
           "default": "false",
           "required": "No",
-          "description": "When true, traps focus and blocks body scroll."
+          "description": "When enabled, traps focus inside the panel, locks page scrolling and makes the panel announce itself as a modal dialog. The default is non-modal."
         },
         "side": {
           "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
@@ -818,7 +818,7 @@
       "item1": "<strong>Behaviour and looks in separate layers</strong> — opening and closing, returning focus to the trigger, dismissal by Escape and by outside click, and positioning with collision shifting come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-popover-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Auto-flip</strong> — when there isn't enough space on the preferred <code>side</code>, the popover automatically repositions to avoid overflow.",
       "item3": "<strong>Portal</strong> — <code>PopoverContent</code> renders in a portal on <code>document.body</code> to avoid <code>z-index</code> and <code>overflow</code> issues.",
-      "item4": "<strong>Non-modal by default</strong> — the user can interact with the rest of the page. Use <code>modal</code> for focus trap and scroll block."
+      "item4": "<strong>Non-modal by default</strong> — focus moves into the panel on open, but Tab leaves it and follows the page order, and the panel does not announce itself as modal. In modal mode all three change together: focus stays trapped in the panel, page scrolling locks, and the panel announces itself as a modal dialog. They go together on purpose — announcing that the rest of the page is inert without trapping focus misleads anyone navigating with a screen reader."
     },
     "analytics": {
       "title": "Analytics",
@@ -1151,7 +1151,7 @@
           "type": "boolean",
           "default": "false",
           "required": "No",
-          "description": "Si es true, hace trap del foco y bloquea scroll del body."
+          "description": "Cuando está activo, atrapa el foco en el panel, bloquea el desplazamiento de la página y hace que el panel se anuncie como diálogo modal. El valor por defecto es no modal."
         },
         "side": {
           "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
@@ -1276,7 +1276,7 @@
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la apertura y el cierre, el retorno del foco al disparador, el descarte por Escape y por clic fuera y el posicionamiento con desvío por colisión vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-popover-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Auto-flip</strong> — cuando no hay espacio en el <code>side</code> preferido, el popover se reposiciona automáticamente para evitar overflow.",
       "item3": "<strong>Portal</strong> — el <code>PopoverContent</code> se renderiza en portal en <code>document.body</code> para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
-      "item4": "<strong>No-modal por defecto</strong> — el usuario puede interactuar con el resto de la página. Usa <code>modal</code> para trap de foco y bloqueo de scroll."
+      "item4": "<strong>No-modal por defecto</strong> — el foco entra en el panel al abrir, pero el Tab sale de él y sigue el orden de la página, y el panel no se anuncia como modal. En modo modal las tres cosas cambian juntas: el foco queda atrapado en el panel, el desplazamiento de la página se bloquea y el panel se anuncia como diálogo modal. Van juntas a propósito — anunciar que el resto de la página está inerte sin atrapar el foco engaña a quien navega con lector de pantalla."
     },
     "analytics": {
       "title": "Analytics",

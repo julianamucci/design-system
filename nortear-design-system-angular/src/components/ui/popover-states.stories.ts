@@ -182,22 +182,109 @@ export const Focus: Story = {
     });
 
     await step('Tab caminha entre os controles internos', async () => {
-      const cancelar = screen.getByRole('button', { name: 'Cancelar' });
-      const salvar = screen.getByRole('button', { name: 'Salvar' });
-      cancelar.focus();
+      const cancel = screen.getByRole('button', { name: 'Cancelar' });
+      const save = screen.getByRole('button', { name: 'Salvar' });
+      cancel.focus();
       await userEvent.tab();
-      await expect(salvar).toHaveFocus();
+      await expect(save).toHaveFocus();
     });
 
     await step('E o elemento focado por teclado mostra o anel de foco', async () => {
       // `:focus-visible` é a condição exata que o CSS compartilhado usa para
       // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
       // casaria a pseudo-classe e o anel não apareceria.
-      const salvar = screen.getByRole('button', { name: 'Salvar' });
-      await expect(salvar.matches(':focus-visible')).toBe(true);
+      const save = screen.getByRole('button', { name: 'Salvar' });
+      await expect(save.matches(':focus-visible')).toBe(true);
       // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
       // errada daria verde em qualquer elemento.
-      await expect(getComputedStyle(salvar).boxShadow).not.toBe('none');
+      await expect(getComputedStyle(save).boxShadow).not.toBe('none');
+    });
+  },
+};
+
+export const Modal: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Modo modal — o foco fica preso no painel, a rolagem da página trava e o painel se anuncia como diálogo modal. As três coisas andam juntas: anunciar inércia sem prender o foco engana quem navega por leitor de tela.',
+      },
+    },
+  },
+  render: () => ({
+    // O painel NÃO traz botão de fechar de propósito. O primitivo desta stack só
+    // trapeia com `modal === true` quando existe um `ndsPopoverClose`
+    // registrado dentro dele (`hasPopupClose()`), e é exatamente esse buraco que
+    // o laço de tabulação do `NdsPopover` fecha: sem ele, `modal` prometeria
+    // prisão de foco e entregaria só a trava de rolagem. Com um botão de fechar
+    // aqui, a story passaria pela lib e não mediria o nosso laço.
+    //
+    // DOIS focáveis, também de propósito: com um só, "o Tab do último volta ao
+    // primeiro" seria verdade sem laço nenhum.
+    template: `
+      <div ndsPopover [defaultOpen]="true" [modal]="true">
+        <button ndsPopoverTrigger ndsButton variant="outline">Abrir modal</button>
+
+        <ng-template ndsPopoverContent>
+          <div ndsPopoverHeader>
+            <h3 ndsPopoverTitle>Popover modal</h3>
+            <p ndsPopoverDescription>O foco fica preso no painel enquanto ele está aberto.</p>
+          </div>
+
+          <div class="nds-cluster" data-justify="end" data-spacing="sm">
+            <button ndsButton variant="ghost" size="sm">Cancelar</button>
+            <button ndsButton size="sm">Confirmar</button>
+          </div>
+        </ng-template>
+      </div>
+    `,
+  }),
+  play: async ({ step }) => {
+    await step('O painel abre em modo modal e anuncia aria-modal', async () => {
+      const dialog = await waitFor(() => screen.getByRole('dialog'), { timeout: 2000 });
+      await expect(dialog).toBeVisible();
+      // Tem dentes nos DOIS sentidos: reprova se alguém anunciar `aria-modal`
+      // sem prender o foco e reprova se o modo modal deixar de anunciar.
+      await expect(dialog).toHaveAttribute('aria-modal', 'true');
+    });
+
+    await step('Tab a partir do último focável NÃO sai do painel', async () => {
+      // ─── A asserção com CONTROLE NEGATIVO ───────────────────────────────
+      //
+      // Provar a prisão com `dialog.contains(document.activeElement)` SEM
+      // tabular não mede nada: o foco está dentro do painel no modo não-modal
+      // também, nas cinco stacks — é o contrato `functional.item1`. Essa
+      // asserção não pode reprovar, e é a forma exata da asserção que guarda o
+      // bug; foi encontrada assim em duas stacks desta família.
+      //
+      // O controle negativo de verdade é este: partir do ÚLTIMO focável e
+      // apertar Tab. Não-modal, o foco SAI do painel e esta asserção reprova;
+      // modal, ele volta ao primeiro.
+      const dialog = panel()!;
+      const inside = within(dialog);
+      const cancel = inside.getByRole('button', { name: /Cancelar/i });
+      const confirm = inside.getByRole('button', { name: /Confirmar/i });
+
+      confirm.focus();
+      await expect(confirm).toHaveFocus();
+
+      await userEvent.tab();
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(cancel).toHaveFocus();
+    });
+
+    await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
+      const dialog = panel()!;
+      const inside = within(dialog);
+      const cancel = inside.getByRole('button', { name: /Cancelar/i });
+      const confirm = inside.getByRole('button', { name: /Confirmar/i });
+
+      cancel.focus();
+      await userEvent.tab({ shift: true });
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(confirm).toHaveFocus();
     });
   },
 };

@@ -160,3 +160,78 @@ export const Controlled: Story = {
     });
   },
 };
+
+export const Modal: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Modo modal — o foco fica preso no painel, a rolagem da página trava e o painel se anuncia como diálogo modal. As três coisas andam juntas: anunciar inércia sem prender o foco engana quem navega por leitor de tela.',
+      },
+    },
+  },
+  args: {
+    defaultOpen: true,
+    modal: true,
+    // `withTitle` traz DOIS focáveis no painel. Com um só, "o Tab do último
+    // volta ao primeiro" seria verdade sem laço nenhum — primeiro e último
+    // seriam o mesmo elemento, e a asserção nasceria sem dentes.
+    variant: 'withTitle',
+    triggerLabel: 'Abrir modal',
+    title: 'Popover modal',
+    description: 'O foco fica preso no painel enquanto ele está aberto.',
+    saveLabel: 'Salvar',
+    cancelLabel: 'Cancelar',
+  },
+  play: async ({ step }) => {
+    await step('O painel abre em modo modal', async () => {
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
+      await expect(dialog).toBeVisible();
+    });
+
+    await step('O painel anuncia aria-modal', async () => {
+      // Tem dentes nos DOIS sentidos: reprova se alguém anunciar `aria-modal`
+      // sem prender o foco e reprova se o modo modal deixar de anunciar.
+      await expect(panel()).toHaveAttribute('aria-modal', 'true');
+    });
+
+    await step('Tab a partir do último focável NÃO sai do painel', async () => {
+      // ─── A asserção com CONTROLE NEGATIVO ───────────────────────────────
+      //
+      // Provar a prisão com `dialog.contains(document.activeElement)` SEM
+      // tabular não mede nada: o foco está dentro do painel no modo não-modal
+      // também, em todas as stacks — é o contrato `functional.item1`. Essa
+      // asserção não pode reprovar, e é a forma exata da asserção que guarda o
+      // bug; foi encontrada assim em duas stacks desta família.
+      //
+      // O controle negativo de verdade é este: partir do ÚLTIMO focável e
+      // apertar Tab. Não-modal, o foco SAI do painel e esta asserção reprova;
+      // modal, ele volta ao primeiro.
+      const dialog = panel()!;
+      const inside = within(dialog);
+      const cancel = inside.getByRole('button', { name: /Cancelar/i });
+      const save = inside.getByRole('button', { name: /Salvar/i });
+
+      save.focus();
+      await expect(save).toHaveFocus();
+
+      await userEvent.tab();
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(cancel).toHaveFocus();
+    });
+
+    await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
+      const dialog = panel()!;
+      const inside = within(dialog);
+      const cancel = inside.getByRole('button', { name: /Cancelar/i });
+      const save = inside.getByRole('button', { name: /Salvar/i });
+
+      cancel.focus();
+      await userEvent.tab({ shift: true });
+
+      await expect(dialog.contains(document.activeElement)).toBe(true);
+      await expect(save).toHaveFocus();
+    });
+  },
+};

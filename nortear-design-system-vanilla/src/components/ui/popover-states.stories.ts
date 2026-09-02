@@ -236,6 +236,22 @@ export const Focused: Story = {
       await expect(confirmar).toHaveFocus();
     });
 
+    await step('E do ÚLTIMO focável o Tab SAI do painel — este é o não-modal', async () => {
+      // ─── O outro lado do controle negativo ──────────────────────────────
+      //
+      // Este é o par da asserção da story Modal, e é o que dá dentes às duas:
+      // a MESMA tecla, no MESMO lugar, com resultado oposto conforme o modo.
+      // Aqui, sem `modal`, o foco tem de SAIR; lá, com `modal`, tem de VOLTAR
+      // ao primeiro. Uma asserção que passasse nos dois modos não estaria
+      // medindo o modo — foi assim que "Modal prende o foco" ficou verde por
+      // meses provando `painel.contains(activeElement)`, que é verdade sempre.
+      const p = panel()!;
+      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+      confirmar.focus();
+      await userEvent.tab();
+      await expect(p.contains(document.activeElement)).toBe(false);
+    });
+
     await step('E o elemento focado por teclado mostra o anel de foco', async () => {
       // `:focus-visible` é a condição exata que o CSS compartilhado usa para
       // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
@@ -245,6 +261,94 @@ export const Focused: Story = {
       // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
       // errada daria verde em qualquer elemento.
       await expect(getComputedStyle(confirmar).boxShadow).not.toBe('none');
+    });
+  },
+};
+
+export const Modal: Story = {
+  parameters: {
+    // Override de story: o assunto é o modo modal, e o snippet do meta mostra
+    // um painel só de texto — sem focável nenhum, não haveria prisão para ver.
+    docs: {
+      source: {
+        transform: popoverSourceActions({ title: 'Popover modal', modal: true, defaultOpen: true }),
+      },
+      description: {
+        story:
+          'Modo modal — o foco fica preso no painel, a rolagem da página trava e o painel se anuncia como diálogo modal. As três coisas andam juntas: anunciar inércia sem prender o foco engana quem navega por leitor de tela.',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'outline', label: 'Abrir modal' });
+
+    const content = document.createElement('div');
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'sm';
+    content.appendChild(createPopoverTitle({ text: 'Popover modal' }));
+
+    // DOIS focáveis de propósito: com um só, "o Tab do último volta ao
+    // primeiro" seria verdade sem laço nenhum — primeiro e último seriam o
+    // mesmo elemento, e a asserção nasceria sem dentes.
+    const actions = document.createElement('div');
+    actions.className = 'nds-cluster';
+    actions.dataset.spacing = 'sm';
+    actions.dataset.justify = 'end';
+    actions.append(
+      createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' }),
+      createButton({ variant: 'default', size: 'sm', label: 'Confirmar' }),
+    );
+    content.appendChild(actions);
+
+    const el = createPopover({ trigger, content, modal: true });
+    return empilharCentrado([el]);
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: /abrir modal/i });
+
+    await step('O painel abre em modo modal e anuncia aria-modal', async () => {
+      const p = await open(trigger);
+      await expect(p).toBeVisible();
+      // Tem dentes nos DOIS sentidos: reprova se alguém anunciar `aria-modal`
+      // sem prender o foco e reprova se o modo modal deixar de anunciar.
+      await expect(p).toHaveAttribute('aria-modal', 'true');
+    });
+
+    await step('Tab a partir do último focável NÃO sai do painel', async () => {
+      // ─── A asserção com CONTROLE NEGATIVO ───────────────────────────────
+      //
+      // Provar a prisão com `painel.contains(document.activeElement)` SEM
+      // tabular não mede nada: o foco está dentro do painel no modo não-modal
+      // também, nas cinco stacks — é o contrato `functional.item1`. Essa
+      // asserção não pode reprovar, e é a forma exata da asserção que guarda o
+      // bug; foi encontrada assim em duas stacks desta família.
+      //
+      // O par desta asserção está na story Focused, que é a não-modal: lá a
+      // MESMA tecla, no MESMO lugar, tem de tirar o foco do painel.
+      const p = panel()!;
+      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
+      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+
+      confirmar.focus();
+      await expect(confirmar).toHaveFocus();
+
+      await userEvent.tab();
+
+      await expect(p.contains(document.activeElement)).toBe(true);
+      await expect(cancelar).toHaveFocus();
+    });
+
+    await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
+      const p = panel()!;
+      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
+      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+
+      cancelar.focus();
+      await userEvent.tab({ shift: true });
+
+      await expect(p.contains(document.activeElement)).toBe(true);
+      await expect(confirmar).toHaveFocus();
     });
   },
 };

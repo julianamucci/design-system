@@ -3,31 +3,46 @@
 	import PopoverPortal from "./popover-portal.svelte";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ComponentProps } from "svelte";
+	import { usarContextoPopover } from "./context.svelte.js";
+
+	// O modo vem da RAIZ, não desta peça: `modal` é uma decisão do popover
+	// inteiro, e o painel é só quem a executa.
+	const contexto = usarContextoPopover();
+	const modal = $derived(contexto?.modal === true);
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		sideOffset = 4,
 		align = "center",
-		// NÃO-MODAL por padrão, e é aqui que esta stack se alinha às outras quatro.
+		// `trapFocus` e `preventScroll` SÃO o mecanismo de `modal` nesta stack.
 		//
-		// O bits-ui é a única lib das cinco sem `modal` nenhum: o que ele tem é
-		// `trapFocus` no Content, e o padrão DELE é `true`. Sem esta linha o painel
-		// prendia o foco — `Tab` não saía —, contrariando o que a própria docs page
-		// desta stack afirma ("Não-modal por padrão — o usuário pode interagir com o
-		// resto da página") e divergindo do Vanilla, que é a referência.
+		// O bits-ui é a única lib das quatro sem `modal` nenhum, e os padrões DELE
+		// são `trapFocus: true` e `preventScroll: false` — ou seja, o painel prendia
+		// o foco mesmo no modo padrão, contrariando o que a docs page desta stack
+		// afirma ("Não-modal por padrão") e divergindo do Vanilla, que é a
+		// referência. Amarrados a `modal`, os dois passam a seguir o contrato: sem
+		// `modal`, `Tab` sai do painel e a página rola; com `modal`, o foco fica
+		// preso e a rolagem trava.
 		//
-		// Desligar o trap NÃO tira o que o contrato promete: em
+		// Ligar e desligar o trap NÃO mexe no resto do contrato: em
 		// `focus-scope.svelte.js`, `#handleOpenAutoFocus` (foco entra no painel) e
-		// `#handleCloseAutoFocus` (foco volta ao gatilho) rodam fora do `trap` —
+		// `#handleCloseAutoFocus` (foco volta ao gatilho) rodam FORA do `trap` —
 		// ele gateia só `#setupEventListeners`, o ouvinte que puxa de volta o foco
-		// que escapou. Quem precisar do modo preso passa `trapFocus` explicitamente.
-		trapFocus = false,
+		// que escapou. Quem quiser um dos dois sem o outro ainda pode passá-los
+		// explicitamente; o padrão é o modo do popover.
+		trapFocus = undefined,
+		preventScroll = undefined,
 		portalProps,
 		...restProps
-	}: PopoverPrimitive.ContentProps & {
+	}: Omit<PopoverPrimitive.ContentProps, "trapFocus" | "preventScroll"> & {
+		trapFocus?: boolean;
+		preventScroll?: boolean;
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof PopoverPortal>>;
 	} = $props();
+
+	const effectiveTrapFocus = $derived(trapFocus ?? modal);
+	const effectivePreventScroll = $derived(preventScroll ?? modal);
 
 	// `role="dialog"` exige nome acessível (axe aria-dialog-name). Mesmo critério
 	// do Vanilla, que é a referência cross-stack: um heading interno vira
@@ -62,7 +77,9 @@
 		role="dialog"
 		{sideOffset}
 		{align}
-		{trapFocus}
+		trapFocus={effectiveTrapFocus}
+		preventScroll={effectivePreventScroll}
+		aria-modal={modal ? "true" : undefined}
 		class={cn("nds-popover-content", className)}
 		{...restProps}
 	/>
