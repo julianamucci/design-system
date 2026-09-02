@@ -91,9 +91,6 @@ const sections = [
 
 ## Output
 
-Arquivo `/components/docs/[Componente]Docs.vue` completo e funcional, pronto para ser registrado em `lazyDocs` no `App.vue`.
+Arquivo `/components/docs/[Componente]Docs.vue` completo e funcional, consumido pela story de docs do componente.
 
-Após criar o arquivo, adicionar em `App.vue`:
-```ts
-'nome-componente': defineAsyncComponent(() => import('./components/docs/[Componente]Docs.vue')),
-```
+Não há registro a fazer depois: o Storybook é a única interface desta stack e a página entra na árvore pela story. O entregável termina quando a docs page e a story existem.

@@ -6,7 +6,9 @@ Siga estritamente as regras em `guidelines/RULES.md` antes de qualquer tarefa.
 
 **Stack**: Vue 3 + Reka UI + Vee-validate + Pinia + lucide-vue-next + CSS standalone `.nds-*`.
 
-**Arquitetura**: `guidelines/12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` (Storybook é a interface principal).
+**Arquitetura**: `guidelines/12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE-VUE.md`. O Storybook é a **única** interface desta stack — não existe sandbox de aplicação.
+
+**Comandos**: `npm run storybook` (porta 6007) para desenvolver; `npm run build-storybook` para empacotar — é ele que produz `storybook-static/`, o artefato que o `vercel.json` publica, e é o único portão que compila template SFC e resolve `@import` de CSS. `npm run build` é `vue-tsc -b`: só checa tipos, não emite. Não existem `dev` nem `preview`.
 
 Para detalhes de implementação de componentes:
 - `guidelines/04-layout-components.md` a `guidelines/10-overlay-components.md`

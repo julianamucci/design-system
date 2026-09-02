@@ -80,4 +80,4 @@ onUnmounted(() => {
 
 ## Output
 
-Arquivo `.vue` completo, registrado no `lazyDocs` do App.vue com a chave correspondente.
+Arquivo `.vue` completo, consumido pela story do componente. Não há registro a fazer depois: o Storybook é a única interface desta stack, e o entregável termina quando o arquivo e a story existem.

@@ -636,19 +636,9 @@ function handleChange(value: string) {
 </template>
 ```
 
-### 8.2 Pinia setup in `main.ts`
+### 8.2 Pinia setup
 
-```ts
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-import App from './App.vue';
-
-const app = createApp(App);
-app.use(createPinia());
-app.mount('#app');
-```
-
-For Storybook, add Pinia in `preview.ts`:
+There is no application entry point in this stack — Storybook is the only host, so Pinia is installed once in `.storybook/preview.ts`:
 
 ```ts
 import { setup } from '@storybook/vue3';
@@ -896,9 +886,14 @@ npm run storybook
 # Tests
 npx vitest
 
-# Build
+# Type-check only — vue-tsc -b, emits nothing
+npm run build
+
+# Build the publishable artifact (storybook-static/)
 npm run build-storybook
 
 # Visual regression
 npx chromatic
 ```
+
+There is no `dev` and no `preview` script: the application sandbox was removed on 2026-09-02 and Storybook is the only interface. `npm run build` does not open a stylesheet and does not compile SFC templates — a broken CSS `@import` and the template traps `vue-tsc` cannot see (`v-html` on a component with a slot, a `//` comment inside an expression, a stray `as`) only fail in `build-storybook`. Run it whenever you touch a template under `ui/`. See `guidelines/12-arquitetura-projeto.md`.

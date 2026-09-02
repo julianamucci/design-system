@@ -24,5 +24,5 @@
 * Composables com prefixo `use` em `/src/composables/`
 * Sem `this` — Composition API não usa `this`
 * `v-model` para two-way binding — não prop+emit manual quando desnecessário
-* `defineAsyncComponent` para lazy loading de páginas de documentação
+* `defineAsyncComponent` para lazy loading de parte pesada dentro de um componente — não para carregar docs page, que o Storybook já divide por story
 * `<Suspense>` para fallback de componentes assíncronos

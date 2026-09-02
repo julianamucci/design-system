@@ -119,11 +119,11 @@ Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
 
 ---
 
-## 9. Navegação — Storybook como interface principal
+## 9. Navegação — Storybook como única interface
 
-A interface principal de documentação é o **Storybook** (`npm run storybook`, porta 6006). Novos componentes são adicionados criando stories — não registrando no `App.vue`.
+A **única** interface desta stack é o Storybook (`npm run storybook`, porta 6007). Não existe sandbox de aplicação: um componente entra na documentação ao ganhar sua docs page e suas stories, e nada mais precisa ser registrado.
 
-O `App.vue` é um **sandbox de desenvolvimento**. Não usar para fins de navegação de documentação.
+O artefato publicável sai de `npm run build-storybook` (`storybook-static/`). `npm run build` é `vue-tsc -b` — só checa tipos, não emite, e não abre folha de estilo nem compila template SFC; para essas duas coisas, o portão é o `build-storybook`. Não existem `npm run dev` nem `npm run preview`.
 
 Referência: `12-arquitetura-projeto.md`.
 

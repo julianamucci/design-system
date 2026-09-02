@@ -7,15 +7,12 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 ## Estrutura de Diretórios
 
 ```
-/
-├── App.vue                          # Entry point e roteamento principal
+src/
 ├── styles/
 │   └── globals.css                  # Design system, variáveis CSS, temas
 ├── components/
-│   ├── HomePage.vue                 # Página inicial
 │   ├── ComponentDemo.vue            # Wrapper para demos de componentes
 │   ├── docs/shared/DocsNav.vue      # Navegação lateral sticky de seções
-│   ├── ThemeSelector.vue            # Seletor de temas
 │   ├── ui/                          # Componentes base (Reka UI)
 │   └── docs/                        # Páginas de documentação (.vue)
 ├── composables/                     # Composables reutilizáveis
@@ -24,56 +21,39 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
     └── utils.ts                     # cn() helper
 ```
 
+Não há `App.vue`, `main.ts` na raiz de `src/` nem `index.html`: o único ponto de entrada é o Storybook, configurado em `.storybook/` (`main.ts`, `preview.ts`, `manager-head.html`), fora de `src/`. Atenção ao nome: o `main.ts` que existe é o `.storybook/main.ts` — outro arquivo, com outro papel.
+
+---
+
+## O sandbox de aplicação foi removido (2026-09-02)
+
+Até esta data a stack carregava, além do Storybook, uma aplicação de vitrine própria: `src/App.vue` como ponto de entrada, `src/main.ts` montando o app, `index.html`, `HomePage.vue`, `ThemeSelector.vue`, roteamento por estado local e os scripts `dev` e `preview`. Nada disso existe mais, e a decisão vale para as quatro stacks de navegador — o Angular já operava assim e virou o modelo.
+
+O motivo é medido, não estético:
+
+- o sandbox **nunca era publicado** — os cinco `vercel.json` publicam `storybook-static`, que sai do `build-storybook`;
+- **ninguém o abria**: a interface de desenvolvimento é o Storybook desde a migração para stories;
+- **nenhum portão o auditava** — nem `audit.mjs`, nem as suítes, nem as stories alcançavam aquele grafo;
+- por isso ele acumulou **172 classes mortas** de uma migração já encerrada, sem que nada reprovasse.
+
+Duas consequências que mudam o que se roda:
+
+1. **Nenhum dos cinco `npm run build` abre folha de estilo.** No Vue, `build` é `vue-tsc -b`: checa tipos e não emite. `@import` quebrado em CSS só reprova no `build-storybook`.
+2. **Quem compila SFC agora é o `build-storybook`.** As armadilhas de template que o `vue-tsc` não pega — `v-html` em componente com slot, comentário `//` dentro de expressão, `as` solto — eram pegas pelo `vite build`, que saiu junto. Ao mexer em template de `ui/`, o portão é `npm run build-storybook`.
+
+A folha `docs/shared/styles/nds/app-shell.css` define a família `.nds-app-*` (`.nds-app`, `.nds-app-sidebar`, `.nds-app-main`, `.nds-app-content`, `.nds-app-header`) e existia para essa moldura de aplicação. Com a remoção ela ficou **órfã**: `index.css` ainda a importa, mas nenhum arquivo do repositório usa uma classe dela. Fato registrado; apagar a folha é decisão da dona.
+
 ---
 
 ## Componentes Principais
 
-### 1. App.vue — Entry Point
-
-**Responsabilidades**:
-- Gerenciamento de roteamento baseado em estado (`currentPage` ref)
-- Controle de tema claro/escuro (`isDark` ref)
-- Controle de tema personalizado (`currentTheme` ref)
-- Renderização da sidebar e conteúdo principal
-- Aplicação de classes de tema no `<html>`
-
-**Estrutura do template**:
-
-```
-div            (moldura da aplicação, altura da janela, sem rolagem própria)
-├── link de pular para o conteúdo   (visível só no foco)
-├── aside      (sidebar: logo, nav de categorias em accordion, ThemeSelector)
-└── div        (área principal)
-    ├── header (alternância de modo claro/escuro)
-    └── main#main-content
-        └── página inicial, ou a docs page carregada sob demanda com fallback
-```
-
-O vocabulário do design system para esta forma é a família `.nds-app-*` (`.nds-app`, `.nds-app-sidebar`, `.nds-app-main`, `.nds-app-content`, `.nds-app-header`), na folha `app-shell.css`. O `App.vue` desta stack ainda não a adota por inteiro — é sandbox, não produto, e por isso não passou pela migração. Vale registrar a diferença em vez de descrevê-la como se já estivesse feita.
-
----
-
-### 2. HomePage.vue — Landing Page
-
-**Props**: nenhuma
-**Emits**: `navigate(path: string)`
-
-**Seções**:
-1. Header com logo e descrição
-2. "Por que usar o Design System?" (3 cards)
-3. Componentes Populares (grid de 6 botões)
-4. Como Navegar na Documentação (4 etapas)
-5. CTA final
-
----
-
-### 3. ComponentDemo.vue — Wrapper para Demos
+### 1. ComponentDemo.vue — Wrapper para Demos
 
 Um `Card` com a classe `.nds-docs-demo` e o marcador `data-docs-preview="demonstracao"`, envolvendo o slot. A moldura — respiro, borda, raio e elevação — é da folha `docs-demo.css`; o wrapper não declara nada por conta própria.
 
 ---
 
-### 4. DocsNav.vue — Navegação Lateral de Seções
+### 2. DocsNav.vue — Navegação Lateral de Seções
 
 **Localização**: `src/components/docs/shared/DocsNav.vue`
 **Props**: `groups: Array<{ label, sections: Array<{ id, label }> }>`, `activeSection: string`
@@ -82,50 +62,15 @@ Navegação lateral das seções, montada dentro do `<nav>` que o `DocsPageLayou
 
 ---
 
-### 5. ThemeSelector.vue — Seletor de Temas
+## Navegação e Roteamento
 
-**Props**: `currentTheme: string`
-**Emits**: `themeChange(theme: string)`
-
----
-
-## Sistema de Roteamento
-
-**Sem Vue Router** — roteamento via estado local no App.vue:
-
-```ts
-const currentPage = ref('home')
-const currentComponent = shallowRef(null)
-
-watch(currentPage, () => {
-  if (currentPage.value !== 'home' && lazyDocs[currentPage.value]) {
-    currentComponent.value = lazyDocs[currentPage.value]
-  } else {
-    currentComponent.value = null
-  }
-})
-```
-
-Lazy loading via `defineAsyncComponent` para todas as 66 páginas de documentação.
+**Sem Vue Router e sem roteamento próprio.** A árvore de navegação é a barra lateral do Storybook, cuja ordem vem de `storySort` em `.storybook/preview.ts`. Uma docs page entra nessa árvore ao ganhar sua story — não há índice de páginas a manter em código de aplicação.
 
 ---
 
 ## Temas e Dark Mode
 
-**Temas**: `default` | `tema-personalizado`
-
-**Aplicação via `watch`**:
-```ts
-watch([currentPage, isDark, currentTheme], () => {
-  document.documentElement.classList.remove('default', 'tema-personalizado', 'dark')
-  if (currentTheme.value === 'tema-personalizado') {
-    document.documentElement.classList.add('tema-personalizado')
-  }
-  if (isDark.value) {
-    document.documentElement.classList.add('dark')
-  }
-}, { immediate: true })
-```
+Tema, densidade, fonte e modo claro/escuro são globais da toolbar do Storybook. As classes correspondentes são aplicadas no `<html>` por `.storybook/preview.ts`, que assina os eventos `GLOBALS_UPDATED` e `SET_GLOBALS` em nível de módulo — decorator sozinho não reverte para o valor padrão neste renderizador. Nenhum componente de docs aplica classe de tema por conta própria.
 
 ---
 
@@ -170,15 +115,6 @@ const { isMobile } = useIsMobile()
 
 ## Adicionar Novo Componente
 
-1. **Criar página de documentação**:
-   ```
-   /components/docs/NewComponentDocs.vue
-   ```
-   Seguir template de 15 seções — ver `12-documentacao-componentes.md`.
+1. **Criar a página de documentação** em `/components/docs/NewComponentDocs.vue`, seguindo o template de 15 seções — ver `11-documentacao-componentes.md`.
 
-2. **Registrar no App.vue** em `lazyDocs`:
-   ```ts
-   'new-component': defineAsyncComponent(() => import('./components/docs/NewComponentDocs.vue')),
-   ```
-
-3. **Adicionar em `componentCategories`** no App.vue.
+2. **Criar as stories** do componente em `/components/ui/`. São elas que colocam a página na árvore do Storybook, na posição que `storySort` definir. Não há rota, catálogo nem registro em código de aplicação para atualizar: o entregável termina quando a docs page e a story existem.

@@ -36,12 +36,10 @@ Este documento descreve o System Design do projeto para Vue 3.
 
 ## Por que não Vue Router?
 
-O projeto é documentação estática com navegação simples por sidebar. Vue Router adicionaria complexidade desnecessária:
-- URLs seriam fragmentos sem valor de SEO real (SPA sem SSR)
-- O estado de navegação é simples: uma string `currentPage`
-- Lazy loading via `defineAsyncComponent` cobre a necessidade de code splitting
-
-Para indexação real no futuro, considerar Nuxt com SSG — ver seção de escalabilidade.
+Não há o que rotear: a navegação é a sidebar do Storybook, ordenada pelo
+`storySort` de `.storybook/preview.ts`, e desde 2026-09-02 não existe sandbox de
+aplicação nesta stack. Router aqui seria uma segunda árvore de navegação
+competindo com a única que o leitor vê.
 
 ---
 
@@ -70,21 +68,15 @@ import { Button } from '@/components/ui/button'
 
 ## Lazy Loading
 
-```ts
-// defineAsyncComponent para code splitting por página
-const AlertDocs = defineAsyncComponent(() => import('./components/docs/AlertDocs.vue'))
+Quem divide o código por página é o próprio Storybook: cada story é um módulo, e
+o builder carrega sob demanda a que está aberta. A stack não mantém registro de
+páginas para carregar sozinha — o registro que existia vivia no sandbox, que
+saiu em 2026-09-02.
 
-// Uso com Suspense obrigatório
-```
-
-```html
-<Suspense>
-  <component :is="currentComponent" />
-  <template #fallback>
-    <div aria-live="polite">Carregando...</div>
-  </template>
-</Suspense>
-```
+`defineAsyncComponent` continua válido dentro de um componente que só precisa de
+uma parte pesada quando o usuário chega nela (com `Suspense` e um fallback que
+anuncie a espera). O que deixou de existir é o uso dele como roteador de docs
+pages.
 
 ---
 

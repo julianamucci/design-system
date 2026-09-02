@@ -2,7 +2,7 @@
 
 Stack: **Vue 3 + Reka UI + Vee-validate + Pinia + lucide-vue-next**
 
-> **Leia primeiro**: [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) — Storybook é a interface principal.
+> **Leia primeiro**: [`STORYBOOK-ARCHITECTURE-VUE.md`](../STORYBOOK-ARCHITECTURE-VUE.md) — Storybook é a única interface — não há sandbox de aplicação.
 
 ---
 
@@ -53,7 +53,7 @@ Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Vanilla:
 5. **Acessibilidade** (01-shared) — sempre obrigatória
 6. **Documentação** (11) — ComponentDocs + stories Vue
 7. **Edições Parciais** (03-shared)
-8. **Arquitetura** (12) — Storybook como interface principal
+8. **Arquitetura** (12) — Storybook como única interface — não há sandbox de aplicação
 9. **Design Sistema** (04-shared) — tokens CSS
 10. **System Design** (13) — composables, estado, performance
 11. **Tom de Voz** (05-shared)
