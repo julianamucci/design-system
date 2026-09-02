@@ -37,9 +37,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** A altura mínima sai da escada de utilitárias, não de um valor cravado:
+ *  inline vence a folha, e a medida sairia do tema e da densidade junto. */
+const wrapperClass = "nds-min-h-70";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 280,
   position: "relative",
 };
 
@@ -57,7 +59,7 @@ export const Default: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Ver atalhos</Button>
@@ -99,7 +101,7 @@ export const WithTitle: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Configuracoes</Button>
@@ -177,7 +179,7 @@ export const Form: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Editar perfil</Button>

@@ -135,10 +135,11 @@ export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'nds-stack nds-w-full';
+    // Altura mínima pela escada de utilitárias: em `style` inline ela venceria
+    // a folha e sairia do tema e da densidade.
+    container.className = 'nds-stack nds-w-full nds-min-h-80';
     container.dataset.spacing = 'md';
     container.dataset.align = 'center';
-    container.style.minHeight = '300px';
 
     const trigger = createButton({ variant: 'outline', label: args.triggerLabel });
     const el = createPopover({
@@ -202,10 +203,10 @@ export const Playground: Story = {
       //
       // A medição é do valor COMPUTADO, não da classe: classe presente com
       // declaração inline por cima é exatamente o caso que passava despercebido.
-      const estilo = getComputedStyle(panel()!);
-      await expect(estilo.display).toBe('flex');
-      await expect(estilo.flexDirection).toBe('column');
-      await expect(parseFloat(estilo.rowGap)).toBeGreaterThan(0);
+      const computedStyle = getComputedStyle(panel()!);
+      await expect(computedStyle.display).toBe('flex');
+      await expect(computedStyle.flexDirection).toBe('column');
+      await expect(parseFloat(computedStyle.rowGap)).toBeGreaterThan(0);
     });
 
     await step('O painel não é modal', async () => {

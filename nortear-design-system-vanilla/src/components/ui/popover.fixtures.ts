@@ -20,14 +20,16 @@ import { userEvent, waitFor } from 'storybook/test';
  * Moldura que centraliza um único filho.
  *
  * A altura mínima é o espaço que o painel precisa para abrir sem esbarrar na
- * borda do canvas — quem documenta um lado de abertura passa a sua.
+ * borda do canvas — quem documenta um lado de abertura passa a sua. Vem como
+ * CLASSE da escada, não como medida: em `style` inline ela venceria a folha e
+ * sairia do tema e da densidade, e a indireção do parâmetro ainda a escondia do
+ * portão que varre valor cravado.
  */
-export function centralizar(child: HTMLElement, alturaMinima = '300px'): HTMLElement {
+export function centralizar(child: HTMLElement, alturaMinima = 'nds-min-h-80'): HTMLElement {
   const w = document.createElement('div');
   w.style.contain = 'layout';
-  w.className = 'nds-cluster nds-w-full';
+  w.className = `nds-cluster nds-w-full ${alturaMinima}`;
   w.dataset.justify = 'center';
-  w.style.minHeight = alturaMinima;
   w.appendChild(child);
   return w;
 }
@@ -39,13 +41,12 @@ export function centralizar(child: HTMLElement, alturaMinima = '300px'): HTMLEle
  * sobre o outro — gatilho, alvo externo, leitura de estado —, e é o `nds-stack`
  * que dá o respiro entre eles.
  */
-export function empilharCentrado(children: HTMLElement[], alturaMinima = '280px'): HTMLElement {
+export function empilharCentrado(children: HTMLElement[], alturaMinima = 'nds-min-h-70'): HTMLElement {
   const w = document.createElement('div');
   w.style.contain = 'layout';
-  w.className = 'nds-stack nds-w-full';
+  w.className = `nds-stack nds-w-full ${alturaMinima}`;
   w.dataset.spacing = 'sm';
   w.dataset.align = 'center';
-  w.style.minHeight = alturaMinima;
   w.append(...children);
   return w;
 }

@@ -68,9 +68,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** A altura mínima sai da escada de utilitárias, não de um valor cravado:
+ *  inline vence a folha, e a medida sairia do tema e da densidade junto. */
+const wrapperClass = "nds-min-h-70";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 280,
   position: "relative",
 };
 
@@ -110,7 +112,7 @@ export const Playground: Story = {
       onOpenChange?: (open: boolean) => void;
     };
     return (
-      <div style={wrapperStyle} className="nds-stack" data-spacing="md" data-align="center">
+      <div className={`nds-stack ${wrapperClass}`} style={wrapperStyle} data-spacing="md" data-align="center">
         <Popover
           key={`${String(defaultOpen)}-${String(modal)}`}
           defaultOpen={defaultOpen}

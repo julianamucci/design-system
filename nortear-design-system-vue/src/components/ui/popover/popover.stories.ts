@@ -98,7 +98,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div style="contain: layout; min-height: 300px;" class="nds-stack" data-align="center" data-spacing="md">
+      <div class="nds-stack nds-min-h-80" style="contain: layout" data-align="center" data-spacing="md">
         <Popover
           :key="String(args.defaultOpen) + String(args.modal)"
           :default-open="args.defaultOpen"

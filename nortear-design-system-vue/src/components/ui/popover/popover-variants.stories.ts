@@ -65,7 +65,7 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 240px;">
+      <div class="nds-min-h-60" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Ver atalhos</Button>
@@ -108,7 +108,7 @@ export const WithTitle: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Configuracoes</Button>
@@ -182,7 +182,7 @@ export const Form: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 340px;">
+      <div class="nds-min-h-90" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
