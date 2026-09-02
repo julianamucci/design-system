@@ -89,7 +89,7 @@ Registradas aqui para que ninguém procure seção que não existe:
 5. **Acessibilidade** (01-shared) — sempre obrigatória
 6. **Documentação** (11) — padrão das docs pages e stories
 7. **Edições Parciais** (03-shared) — preservação de conteúdo ao editar
-8. **Arquitetura** (12) — Storybook é a interface principal
+8. **Arquitetura** (12) — Storybook é a única interface — não há sandbox de aplicação
 9. **Design Sistema** (04-shared) — implementação prática de tokens
 10. **System Design** (13) — signals, ciclo de vida, performance, segurança
 11. **Tom de Voz** (05-shared)

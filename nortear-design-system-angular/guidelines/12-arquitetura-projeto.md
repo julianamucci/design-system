@@ -15,9 +15,11 @@ npm run chromatic
 
 ### Por que o `build` daqui não empacota nada
 
-As outras quatro stacks fazem `build = <checagem de tipos> && vite build`, e a segunda metade empacota o **sandbox** (`App`/`main` + `index.html`). Este pacote não tem sandbox, não tem `index.html`, não tem `angular.json` e não publica biblioteca: o artefato é o Storybook, e ele já tem script próprio (`build-storybook`). Inventar um `vite build` aqui só produziria um alvo sem entrada.
+Este pacote não tem sandbox, não tem `index.html`, não tem `angular.json` e não publica biblioteca: o artefato é o Storybook, e ele já tem script próprio (`build-storybook`). Inventar um `vite build` aqui só produziria um alvo sem entrada. O script `build` é checagem de tipos, e só ela.
 
-O que faltava era a **primeira** metade. O script `build` é ela, e só ela.
+**Esta stack passou a ser o modelo.** Até 2026-09-02 as outras quatro faziam `build = <checagem de tipos> && vite build`, e a segunda metade empacotava um sandbox (`App`/`main` + `index.html`) que nenhum `vercel.json` publicava. O sandbox foi removido das quatro, e o `build` delas virou o que sempre foi aqui: só a primeira metade.
+
+O que se perdeu com o `vite build` foi a resolução de **CSS** — nenhum dos cinco checadores de tipo abre folha de estilo. `@import` quebrado em `globals.css` só reprova no `build-storybook`.
 
 ### O portão é `ngc`, não `tsc`
 
