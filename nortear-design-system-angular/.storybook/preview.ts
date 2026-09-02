@@ -3,7 +3,12 @@
 // reproduz o que o buffer guardou. O porque esta no primitivo compartilhado.
 import { bufferarErros, iniciarFaroQuandoOcioso, marcarStory } from '@shared/primitives/faro';
 import '../src/lib/reload-on-chunk-error';
-import { getThemeFromSubdomain, themeAxisDefaults, type ThemeId } from '@shared/themes/theme-config';
+import {
+  getThemeFromSubdomain,
+  themeAxisDefaults,
+  applyAxisClasses,
+  type ThemeId,
+} from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/angular-vite';
 import { applicationConfig } from '@storybook/angular-vite';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -43,33 +48,15 @@ if (typeof document !== 'undefined') {
   assinarStory();
 }
 
-function applyClasses(
-  brand: string,
-  density: string,
-  font: string,
-  typescale: string,
-  typebase: string,
-) {
-  const html = document.documentElement;
-  const ours = new Set([
-    'tema-default', 'tema-warm', 'tema-cold',
-    'densidade-default', 'densidade-condensado', 'densidade-confortavel',
-    'fonte-default', 'fonte-lexend', 'fonte-pt-serif', 'fonte-lxgw-wenkai',
-    'escala-minor-second', 'escala-major-second', 'escala-minor-third', 'escala-major-third',
-    'escala-perfect-fourth', 'escala-augmented-fourth', 'escala-perfect-fifth', 'escala-golden',
-    'base-tipo-s', 'base-tipo-m', 'base-tipo-l',
-  ]);
-  const preserved = Array.from(html.classList).filter((c) => !ours.has(c));
-  html.className = [
-    ...preserved,
-    `tema-${brand}`,
-    `densidade-${density}`,
-    `fonte-${font}`,
-    `escala-${typescale}`,
-    `base-tipo-${typebase}`,
-  ].join(' ');
+// Os eixos são escritos por `applyAxisClasses`, em `@shared/themes/theme-config`.
+// Havia aqui um `Set` com os 21 nomes de classe — o mesmo em cinco previews, e
+// mantido à mão. Esquecer um arquivo ao acrescentar uma fonte não quebra nada
+// visível: a classe antiga fica, as duas do mesmo eixo empilham, e quem decide
+// passa a ser a ordem da folha em vez da escolha da toolbar. A função varre por
+// PREFIXO, então não há lista para envelhecer.
+function applyClasses(brand: string, density: string, font: string, typescale: string, typebase: string) {
+  applyAxisClasses({ theme: brand, density, font, typescale, typebase });
 }
-
 function applyMotion(motion: string) {
   const html = document.documentElement;
   if (motion === 'reduce') html.dataset['reducedMotion'] = 'true';

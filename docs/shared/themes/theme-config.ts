@@ -136,6 +136,55 @@ export const AXIS_CLASS_PREFIX: Record<keyof ThemeAxisDefaults, string> = {
   typebase: 'base-tipo-',
 };
 
+/** O sexto eixo, o da cor. Fora do mapa acima porque não tem default por tema. */
+export const THEME_CLASS_PREFIX = 'tema-';
+
+/** Sufixo escolhido em cada eixo. Ausente = aquele eixo não é tocado. */
+export interface AxisSelection {
+  theme?: string;
+  density?: string;
+  font?: string;
+  typescale?: string;
+  typebase?: string;
+}
+
+/**
+ * Escreve os eixos no `<html>`, tirando por PREFIXO o que já estava.
+ *
+ * Ponto único: antes, cada `preview.ts` carregava um `Set` com os 21 nomes de
+ * classe escritos à mão — cinco cópias do mesmo vocabulário, e uma sexta aqui.
+ * As cinco estavam idênticas quando isto foi escrito, o que é sorte e não
+ * garantia: acrescentar uma fonte exigiria lembrar dos cinco arquivos, e
+ * esquecer um NÃO quebra nada visível. A classe antiga simplesmente não é
+ * removida, as duas do mesmo eixo empilham no elemento, e quem decide passa a
+ * ser a ordem da folha em vez da escolha de quem clicou.
+ *
+ * Varrer por prefixo elimina a lista, e com ela a chance de a lista envelhecer:
+ * qualquer `fonte-*` sai, esteja ou não registrada em algum lugar.
+ *
+ * O que NÃO tem prefixo conhecido fica: densidade e tema convivem no mesmo
+ * `<html>` com o que o consumidor escreveu ali.
+ */
+export function applyAxisClasses(
+  selection: AxisSelection,
+  root: HTMLElement = document.documentElement,
+): void {
+  const pares: Array<[string, string | undefined]> = [
+    [THEME_CLASS_PREFIX, selection.theme],
+    ...(Object.entries(AXIS_CLASS_PREFIX) as Array<[keyof ThemeAxisDefaults, string]>).map(
+      ([eixo, prefixo]) => [prefixo, selection[eixo]] as [string, string | undefined],
+    ),
+  ];
+
+  for (const [prefixo, valor] of pares) {
+    if (valor === undefined) continue;
+    for (const classe of Array.from(root.classList)) {
+      if (classe.startsWith(prefixo)) root.classList.remove(classe);
+    }
+    root.classList.add(prefixo + valor);
+  }
+}
+
 // ─── Subdomínio → tema ────────────────────────────────────────────────────────
 // O PRIMEIRO rótulo do hostname decide o tema (warm.norteardesign.com.br → warm;
 // warm.react.norteardesign.com.br → warm). Subdomínios de stack e hosts
@@ -217,26 +266,8 @@ export function applyTheme(
   const { axes = true } = options;
   const root = document.documentElement;
 
-  themes.forEach((t) => { if (t.cssClass) root.classList.remove(t.cssClass); });
   root.classList.remove('dark');
-
-  const cssClass = themeCssClasses[themeId];
-  if (cssClass) root.classList.add(cssClass);
   if (isDark) root.classList.add('dark');
 
-  if (!axes) return;
-
-  const eixos = themeAxisDefaults[themeId];
-  if (!eixos) return;
-
-  // Tira TODA classe do eixo antes de pôr a nova. Varrer por prefixo, e não
-  // remover só a que este arquivo conhece, é o que mantém a troca correta
-  // quando alguém aplicou uma classe de eixo por fora.
-  for (const [eixo, prefixo] of Object.entries(AXIS_CLASS_PREFIX)) {
-    for (const classe of Array.from(root.classList)) {
-      if (classe.startsWith(prefixo)) root.classList.remove(classe);
-    }
-    const valor = eixos[eixo as keyof ThemeAxisDefaults];
-    if (valor) root.classList.add(prefixo + valor);
-  }
+  applyAxisClasses({ theme: themeId, ...(axes ? themeAxisDefaults[themeId] : {}) }, root);
 }
