@@ -215,6 +215,22 @@ que não é o padrão de tema nenhum.
 
 ## Armadilhas
 
+**Token que muda de SIGNIFICADO quebra o Figma em silêncio.** Sincronizar valor
+mantém o vínculo intacto e ainda assim estraga o componente, quando o novo valor
+pertence a outra família. Medido em 2026-09-02 com o `--accent`: ele era um tom
+claro (`#f5f5f5` no default) usado em força total, e passou a ser a mesma cor do
+`--primary` (`#3c6972`), usada **sempre com alfa** no CSS. As dezesseis
+sobreposições de hover de `outline` e `ghost` do Button estavam com opacidade de
+nó `1` — correto para o token antigo — e viraram uma placa de teal sólido por
+cima do rótulo. Nenhum portão viu: o vínculo continua certo, a variável continua
+existindo, e a única coisa que mudou foi o que a cor QUER dizer.
+
+A pergunta a fazer depois de cada sincronia não é "algum vínculo quebrou", é
+**"algum token passou a ser usado com alfa, ou deixou de ser?"**. Para esses,
+varra os consumidores no Figma e confira a opacidade de nó contra o alfa do CSS.
+O `--accent` do design system só aparece com `/ 0.1`; qualquer nó amarrado a ele
+em força total está errado por construção.
+
 **Cor com alfa.** `hsl(var(--primary) / 0.9)` é uma cor com opacidade, não outro
 token. Vincule `var(--primary)` e ponha `0.9` no `opacity` do paint — variável do
 Figma não carrega alfa por uso. Vale para os hovers do button (`/0.9`, `/0.8`),
