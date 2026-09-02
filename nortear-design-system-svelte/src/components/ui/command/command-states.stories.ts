@@ -145,9 +145,9 @@ export const ItemDisabled: Story = {
       // `data-disabled` EXISTE nesta lib: `boolToEmptyStrOrUndef` emite string
       // vazia quando desabilitado. A story anterior afirmava o contrário.
       await expect(arquivar).toHaveAttribute('data-disabled', '');
-      const estilo = getComputedStyle(arquivar);
-      await expect(estilo.pointerEvents).toBe('none');
-      await expect(Number.parseFloat(estilo.opacity)).toBeLessThan(1);
+      const computedStyle = getComputedStyle(arquivar);
+      await expect(computedStyle.pointerEvents).toBe('none');
+      await expect(Number.parseFloat(computedStyle.opacity)).toBeLessThan(1);
     });
 
     await step('Clicar não executa o comando', async () => {

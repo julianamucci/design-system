@@ -390,16 +390,15 @@ interface CommandLoadingProps {
         <p class="nds-text-body nds-font-medium">Command Palette</p>
         <Button
           variant="outline"
-          class="nds-cluster nds-text-muted-foreground" data-spacing="md"
+          class="nds-cluster nds-w-2xs nds-text-muted-foreground" data-spacing="md"
           data-justify="between"
-          style="width: 280px"
           onclick={() => { paletteOpen = true; track('command_palette_open', { trigger: 'button' }); }}
         >
           <span class="nds-cluster" data-spacing="sm">
             <Search class="nds-size-4" aria-hidden="true" />
             {$tStore('demonstration.labels.openPalette')}
           </span>
-          <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
+          <kbd class="nds-kbd">
             <span class="nds-text-caption">Ctrl+</span>K
           </kbd>
         </Button>
@@ -562,7 +561,7 @@ interface CommandLoadingProps {
         <Search class="nds-size-4" aria-hidden="true" />
         Buscar...
       </span>
-      <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
+      <kbd class="nds-kbd">
         <span class="nds-text-caption">Ctrl+</span>K
       </kbd>
     </Button>
@@ -622,7 +621,7 @@ interface CommandLoadingProps {
   {#snippet variantPalette()}
     <div class="nds-stack" data-spacing="sm" style="align-items: center">
       <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.shortcutHint')} {$tStore('demonstration.labels.shortcutKey')} {$tStore('demonstration.labels.openPalette')}</p>
-      <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
+      <kbd class="nds-kbd">
         <span class="nds-text-caption">Ctrl+</span>K
       </kbd>
     </div>

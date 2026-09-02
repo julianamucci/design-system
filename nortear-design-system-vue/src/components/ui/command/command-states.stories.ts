@@ -177,9 +177,9 @@ export const ItemDisabled: Story = {
     await step('O estado chega ao markup e ao desenho', async () => {
       await expect(arquivar).toHaveAttribute('aria-disabled', 'true');
       await expect(arquivar).toHaveAttribute('data-disabled', '');
-      const estilo = getComputedStyle(arquivar);
-      await expect(estilo.pointerEvents).toBe('none');
-      await expect(estilo.opacity).toBe('0.5');
+      const computedStyle = getComputedStyle(arquivar);
+      await expect(computedStyle.pointerEvents).toBe('none');
+      await expect(computedStyle.opacity).toBe('0.5');
     });
 
     await step('Clicar não executa o comando', async () => {

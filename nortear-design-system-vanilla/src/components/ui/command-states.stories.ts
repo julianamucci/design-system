@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createCommand } from './command';
 import { commandSource, commandSourceWith } from './command.source';
+import { WRAPPER, comando, regiaoVazia, zerarSearch, mountInline } from './command.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -16,8 +17,8 @@ const meta: Meta = {
       source: { transform: commandSource },
       description: {
         component:
-          'Os estados que a paleta assume sozinha (sem resultados) e os que cada comando ' +
-          'assume (marcado, desabilitado).',
+          'Os estados que a paleta assume sozinha (sem resultados, lista longa) e os que ' +
+          'cada comando assume (marcado, desabilitado).',
       },
     },
   },
@@ -27,28 +28,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const WRAPPER = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
-
-/** O item pelo `value`, e não pelo nome acessível: atalho e marca entram no nome. */
-const comando = (root: ParentNode, value: string): HTMLElement =>
-  root.querySelector<HTMLElement>(`[data-slot="command-item"][data-value="${value}"]`)!;
-
-const regiaoVazia = (root: ParentNode): HTMLElement =>
-  root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
-
-/**
- * Deixa a busca vazia E o destaque zerado.
- *
- * O item em destaque só volta a "nenhum" num re-render do filtro, e
- * `userEvent.clear` num campo JÁ vazio não dispara `input`. No REPLAY (a play
- * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
- * primeira seta partiria do meio da lista.
- */
-async function zerarSearch(field: HTMLElement): Promise<void> {
-  await userEvent.type(field, 'zzz');
-  await userEvent.clear(field);
-}
 
 // ─── Sem resultados ───────────────────────────────────────────────────────────
 
@@ -189,9 +168,9 @@ export const ItemDisabled: Story = {
 
     await step('O estado chega ao markup e ao desenho', async () => {
       await expect(arquivar()).toHaveAttribute('aria-disabled', 'true');
-      const estilo = getComputedStyle(arquivar());
-      await expect(estilo.pointerEvents).toBe('none');
-      await expect(Number.parseFloat(estilo.opacity)).toBeLessThan(1);
+      const computedStyle = getComputedStyle(arquivar());
+      await expect(computedStyle.pointerEvents).toBe('none');
+      await expect(Number.parseFloat(computedStyle.opacity)).toBeLessThan(1);
     });
 
     await step('Clicar não executa o comando', async () => {
@@ -310,6 +289,57 @@ export const CheckedItem: Story = {
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
       await expect(sistema).toHaveAccessibleName(/Ctrl\+S/);
+    });
+  },
+};
+
+// ─── Lista longa ──────────────────────────────────────────────────────────────
+
+const COMPONENTES_LONGOS = [
+  'Accordion', 'Alert', 'AlertDialog', 'AspectRatio', 'Avatar',
+  'Badge', 'Breadcrumb', 'Button', 'Calendar', 'Card',
+  'Carousel', 'Chart', 'Checkbox', 'Collapsible', 'Command',
+  'ContextMenu', 'DataTable', 'DatePicker', 'Dialog', 'Drawer',
+  'DropdownMenu', 'Form', 'HoverCard', 'Input', 'InputOTP',
+  'Label', 'Menubar', 'NavigationMenu', 'Pagination', 'Popover',
+];
+
+export const LongList: Story = {
+  render: () =>
+    mountInline(
+      COMPONENTES_LONGOS.map((label) => ({
+        value: label.toLowerCase(),
+        label,
+        group: 'Componentes',
+      })),
+      'Buscar componente...'
+    ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole('combobox');
+    const list = canvas.getByRole('listbox');
+
+    await userEvent.clear(field);
+    await expect(canvas.getAllByRole('option')).toHaveLength(30);
+
+    await step('A lista rola em vez de esticar a paleta', async () => {
+      // 300px de teto na folha: sem ele a paleta cresceria para fora da tela e
+      // o campo de busca sairia do alcance.
+      await expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
+      await expect(getComputedStyle(list).overflowY).toBe('auto');
+    });
+
+    await step('Buscando "dialog" sobram 2 — Dialog e AlertDialog', async () => {
+      await userEvent.clear(field);
+      await userEvent.type(field, 'dialog');
+      await expect(canvas.getAllByRole('option')).toHaveLength(2);
+      await expect(comando(canvasElement, 'dialog')).toBeVisible();
+      await expect(comando(canvasElement, 'alertdialog')).toBeVisible();
+    });
+
+    await step('A story termina com a lista inteira', async () => {
+      await userEvent.clear(field);
+      await expect(canvas.getAllByRole('option')).toHaveLength(30);
     });
   },
 };

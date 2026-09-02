@@ -163,13 +163,13 @@ export const ItemDisabled: Story = {
       // chegaria (armadilha 1) — a asserção é o que impede isso de voltar.
       await expect(arquivar).toHaveAttribute('aria-disabled', 'true');
       await expect(arquivar).toHaveAttribute('data-disabled', '');
-      const estilo = getComputedStyle(arquivar);
-      await expect(estilo.pointerEvents).toBe('none');
-      await expect(Number.parseFloat(estilo.opacity)).toBeLessThan(1);
+      const computedStyle = getComputedStyle(arquivar);
+      await expect(computedStyle.pointerEvents).toBe('none');
+      await expect(Number.parseFloat(computedStyle.opacity)).toBeLessThan(1);
       // O contrato diz "cursor não permitido", e a folha entrega os dois: o
       // `pointer-events: none` barra o clique, e o `cursor` é o que a pessoa vê
       // antes de tentar. Sem esta linha, metade do item ficava sem verificação.
-      await expect(estilo.cursor).toBe('not-allowed');
+      await expect(computedStyle.cursor).toBe('not-allowed');
     });
 
     await step('Clicar não executa o comando', async () => {

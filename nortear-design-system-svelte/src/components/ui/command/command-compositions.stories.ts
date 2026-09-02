@@ -3,13 +3,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, waitFor, expect, fn, screen } from 'storybook/test';
 import { Root as Command } from '@/components/ui/command';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
-import CommandComposicaoGruposStory from './CommandComposicaoGruposStory.svelte';
 import CommandComposicaoShortcutsStory from './CommandComposicaoShortcutsStory.svelte';
 import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.svelte';
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
 import {
   commandWithShortcutsSource,
-  commandWithGroupsSource,
   commandWithLinkItemSource,
   commandPaletteSource,
   commandSource,
@@ -33,9 +31,10 @@ const meta: Meta = {
       source: { transform: commandSource },
       description: {
         component:
-          'Padrões de composição do Command: com grupos e separadores, com atalhos, com ' +
-          'CommandLinkItem e dentro de um Dialog (command palette). A paleta em si não ' +
-          'flutua — quem flutua é o Dialog, que já existe no sistema.',
+          'Padrões de composição do Command: com atalhos, com CommandLinkItem e dentro de ' +
+          'um Dialog (command palette). A paleta em si não flutua — quem flutua é o ' +
+          'Dialog, que já existe no sistema. A lista dividida em grupos é VARIANTE ' +
+          '(variants.items.withGroups) e mora em Variants.',
       },
     },
   },
@@ -43,72 +42,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Com grupos ───────────────────────────────────────────────────────────────
-
-export const WithGroups: Story = {
-  parameters: {
-    covers: ['visual.item1'],
-    docs: { source: { transform: commandWithGroupsSource } },
-  },
-  render: () => ({
-    Component: CommandComposicaoGruposStory,
-    props: {},
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const field = canvas.getByRole('combobox');
-
-    await userEvent.clear(field);
-    await waitFor(async () => {
-      // Com o campo vazio: 4 componentes + 3 utilitários.
-      await expect(canvas.getAllByRole('option')).toHaveLength(7);
-    });
-
-    await step('Cada grupo é nomeado pelo próprio cabeçalho', async () => {
-      // Sem o `aria-labelledby` o leitor anuncia "grupo" e a pessoa não sabe de
-      // qual bloco se trata.
-      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
-      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
-    });
-
-    await step('O cabeçalho não é opção da lista', async () => {
-      // Cabeçalho navegável seria pior que inútil: a seta pararia nele como se
-      // fosse comando. Os 7 contados acima são exatamente os comandos.
-      const cabecalhos = root.querySelectorAll('.nds-command-group-heading');
-      await expect(cabecalhos).toHaveLength(2);
-      for (const header of cabecalhos) {
-        await expect(header.getAttribute('role')).not.toBe('option');
-      }
-    });
-
-    await step('O divisor é desenho, não estrutura', async () => {
-      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
-      await expect(divisor).toHaveClass(/nds-command-separator/);
-      // `role="separator"` não é filho permitido de um listbox; quem separa os
-      // blocos para quem não vê a tela é o rótulo do grupo.
-      await expect(divisor).toHaveAttribute('aria-hidden', 'true');
-      await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
-    });
-
-    await step('O filtro atravessa os grupos', async () => {
-      await userEvent.type(field, 'n');
-      await waitFor(async () => {
-        // Buscando "n": button, input (Componentes) e cn (Utilitários).
-        await expect(canvas.getAllByRole('option')).toHaveLength(3);
-      });
-      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
-      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
-
-      // A story TERMINA com a lista inteira: é o quadro de `visual.item1`.
-      await userEvent.clear(field);
-      await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(7);
-      });
-    });
-  },
-};
 
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
@@ -129,20 +62,20 @@ export const WithShortcuts: Story = {
       await expect(canvas.getAllByRole('option')).toHaveLength(6);
     });
 
-    const novo = canvas.getByRole('option', { name: /Novo arquivo/ });
+    const newFile = canvas.getByRole('option', { name: /Novo arquivo/ });
 
     await step('O atalho faz parte do nome do comando', async () => {
       // Sem isso o leitor anunciaria "Novo arquivo" e a pessoa nunca saberia
       // que existe uma tecla — o atalho é informação, não decoração.
-      await expect(novo).toHaveAccessibleName(/Ctrl\+N/);
-      const atalho = novo.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      await expect(newFile).toHaveAccessibleName(/Ctrl\+N/);
+      const atalho = newFile.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
     });
 
     await step('O atalho fica encostado à direita do comando', async () => {
-      const atalho = novo.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
-      const boxItem = novo.getBoundingClientRect();
+      const atalho = newFile.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      const boxItem = newFile.getBoundingClientRect();
       const boxShortcut = atalho.getBoundingClientRect();
       await expect(boxItem.right - boxShortcut.right).toBeLessThan(
         boxShortcut.left - boxItem.left,

@@ -6,6 +6,14 @@ import {
   commandSource,
   commandSourceWith,
 } from './command.source';
+import {
+  NO_RESULT,
+  comando,
+  separadores,
+  searchOf,
+  zerarSearch,
+  mountInline,
+} from './command.fixtures';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 import { open as abrirDialog, waitForClosed, panel } from './dialog.fixtures';
@@ -23,9 +31,11 @@ const meta: Meta = {
       source: { transform: commandSource },
       description: {
         component:
-          'As composições da paleta: com grupos, com atalhos, com itens desabilitados, ' +
-          'lista longa e a paleta dentro de um Dialog (padrão command palette). A paleta ' +
-          'em si não flutua — quem flutua é o Dialog, que já existe no sistema.',
+          'As composições da paleta: com traço declarado, com atalhos, com itens ' +
+          'desabilitados e a paleta dentro de um Dialog (padrão command palette). A ' +
+          'paleta em si não flutua — quem flutua é o Dialog, que já existe no sistema. ' +
+          'A lista dividida em grupos é VARIANTE (variants.items.withGroups) e mora em ' +
+          'Variants; a lista longa é ESTADO (states.longList) e mora em States.',
       },
     },
   },
@@ -35,109 +45,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const WRAPPER = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
-
-const NO_RESULT = 'Nenhum resultado encontrado.';
-
-/** O item pelo `value`, e não pelo nome acessível: atalho e marca entram no nome. */
-const comando = (root: ParentNode, value: string): HTMLElement =>
-  root.querySelector<HTMLElement>(`[data-slot="command-item"][data-value="${value}"]`)!;
-
-const separadores = (root: ParentNode): NodeListOf<HTMLElement> =>
-  root.querySelectorAll<HTMLElement>('[data-slot="command-separator"]');
-
-const searchOf = (root: ParentNode): HTMLInputElement =>
-  root.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
-
-/**
- * Deixa a busca vazia E o destaque zerado.
- *
- * O item em destaque só volta a "nenhum" num re-render do filtro, e
- * `userEvent.clear` num campo JÁ vazio não dispara `input`. No REPLAY (a play
- * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
- * primeira seta partiria do meio da lista.
- */
-async function zerarSearch(field: HTMLElement): Promise<void> {
-  await userEvent.type(field, 'zzz');
-  await userEvent.clear(field);
-}
-
-function mountInline(items: CommandEntry[], placeholder: string, onSelect?: (v: string) => void) {
-  const wrap = document.createElement('div');
-  wrap.className = WRAPPER;
-  wrap.appendChild(
-    createCommand({ placeholder, emptyMessage: NO_RESULT, items, onSelect })
-  );
-  return wrap;
-}
-
-// ─── Com grupos ───────────────────────────────────────────────────────────────
-
-const ITEMS_AGRUPADOS: CommandItem[] = [
-  { value: 'button',    label: 'Button',    group: 'Componentes' },
-  { value: 'input',     label: 'Input',     group: 'Componentes' },
-  { value: 'badge',     label: 'Badge',     group: 'Componentes' },
-  { value: 'separator', label: 'Separator', group: 'Componentes' },
-  { value: 'cn',        label: 'cn()',      group: 'Utilitários' },
-  { value: 'clsx',      label: 'clsx()',    group: 'Utilitários' },
-  { value: 'twmerge',   label: 'twMerge()', group: 'Utilitários' },
-];
-
-export const WithGroups: Story = {
-  parameters: { covers: ['visual.item1'] },
-  render: () => mountInline(ITEMS_AGRUPADOS, 'Buscar componente...'),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const field = canvas.getByRole('combobox');
-
-    await userEvent.clear(field);
-    await expect(canvas.getAllByRole('option')).toHaveLength(7);
-
-    await step('Cada grupo é nomeado pelo próprio cabeçalho', async () => {
-      const cabecalhos = canvasElement.querySelectorAll<HTMLElement>('.nds-command-group-heading');
-      await expect(cabecalhos).toHaveLength(2);
-      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
-      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
-      // O cabeçalho NÃO é uma opção — o erro clássico deste componente é
-      // deixá-lo entrar na lista e virar destino de navegação.
-      await expect(cabecalhos[0].getAttribute('role')).toBeNull();
-      const names = canvas.getAllByRole('option').map((o) => o.textContent);
-      await expect(names).not.toContain('Componentes');
-    });
-
-    await step('Um divisor separa os dois grupos, fora da árvore', async () => {
-      await expect(separadores(canvasElement)).toHaveLength(1);
-      await expect(separadores(canvasElement)[0]).toHaveAttribute('aria-hidden', 'true');
-      // Só `option` e `group` são filhos permitidos de um listbox.
-      await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
-    });
-
-    await step('Buscando "n" o filtro atravessa os dois grupos — sobram 3', async () => {
-      await userEvent.clear(field);
-      await userEvent.type(field, 'n');
-      // Button e Input (Componentes) + cn() (Utilitários).
-      await expect(canvas.getAllByRole('option')).toHaveLength(3);
-      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
-      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
-      await expect(separadores(canvasElement)).toHaveLength(1);
-    });
-
-    await step('Buscando "badge" sobra 1 comando e nenhum divisor', async () => {
-      await userEvent.clear(field);
-      await userEvent.type(field, 'badge');
-      await expect(canvas.getAllByRole('option')).toHaveLength(1);
-      // Um grupo só na tela: divisor sem nada de um dos lados seria ruído.
-      await expect(separadores(canvasElement)).toHaveLength(0);
-      await expect(canvas.queryAllByRole('group')).toHaveLength(1);
-    });
-
-    await step('A story termina no estado padrão, com os 7 comandos', async () => {
-      await userEvent.clear(field);
-      await expect(canvas.getAllByRole('option')).toHaveLength(7);
-    });
-  },
-};
 
 // ─── Com traço declarado ──────────────────────────────────────────────────────
 //
@@ -356,57 +263,6 @@ export const WithDisabledItems: Story = {
       const antes = onListSelect.mock.calls.length;
       await userEvent.click(comando(canvasElement, 'select'), { pointerEventsCheck: 0 });
       await expect(onListSelect.mock.calls.length).toBe(antes);
-    });
-  },
-};
-
-// ─── Lista longa ──────────────────────────────────────────────────────────────
-
-const COMPONENTES_LONGOS = [
-  'Accordion', 'Alert', 'AlertDialog', 'AspectRatio', 'Avatar',
-  'Badge', 'Breadcrumb', 'Button', 'Calendar', 'Card',
-  'Carousel', 'Chart', 'Checkbox', 'Collapsible', 'Command',
-  'ContextMenu', 'DataTable', 'DatePicker', 'Dialog', 'Drawer',
-  'DropdownMenu', 'Form', 'HoverCard', 'Input', 'InputOTP',
-  'Label', 'Menubar', 'NavigationMenu', 'Pagination', 'Popover',
-];
-
-export const LongList: Story = {
-  render: () =>
-    mountInline(
-      COMPONENTES_LONGOS.map((label) => ({
-        value: label.toLowerCase(),
-        label,
-        group: 'Componentes',
-      })),
-      'Buscar componente...'
-    ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const field = canvas.getByRole('combobox');
-    const list = canvas.getByRole('listbox');
-
-    await userEvent.clear(field);
-    await expect(canvas.getAllByRole('option')).toHaveLength(30);
-
-    await step('A lista rola em vez de esticar a paleta', async () => {
-      // 300px de teto na folha: sem ele a paleta cresceria para fora da tela e
-      // o campo de busca sairia do alcance.
-      await expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
-      await expect(getComputedStyle(list).overflowY).toBe('auto');
-    });
-
-    await step('Buscando "dialog" sobram 2 — Dialog e AlertDialog', async () => {
-      await userEvent.clear(field);
-      await userEvent.type(field, 'dialog');
-      await expect(canvas.getAllByRole('option')).toHaveLength(2);
-      await expect(comando(canvasElement, 'dialog')).toBeVisible();
-      await expect(comando(canvasElement, 'alertdialog')).toBeVisible();
-    });
-
-    await step('A story termina com a lista inteira', async () => {
-      await userEvent.clear(field);
-      await expect(canvas.getAllByRole('option')).toHaveLength(30);
     });
   },
 };

@@ -98,10 +98,23 @@ export const EmptyState: Story = {
       await expect(vazio).toBeVisible();
       await expect(vazio).toHaveTextContent("Nenhum resultado encontrado.");
       await expect(vazio).toHaveClass(/nds-command-empty/);
-      // Ela vive dentro da lista, não em cima dela: é o espaço da lista que a
-      // mensagem preenche, e é o que evita a área em branco.
-      await expect(canvas.getByRole("listbox").contains(vazio)).toBe(true);
     });
+
+    // ─── Sobre a asserção que saiu daqui ──────────────────────────────────────
+    //
+    // Havia um `expect(listbox.contains(vazio)).toBe(true)`, justificado por
+    // layout ("é o espaço da lista que a mensagem preenche"). Ele congelava o
+    // defeito como contrato: em vanilla, vue e angular a mensagem fica FORA do
+    // listbox, com `role="status"` + `aria-live`, e a asserção de lá é a
+    // OPOSTA (`contains === false`). Nesta stack a lib monta o nó dentro da
+    // lista, com `role="presentation"` e só enquanto o filtro não casa — logo a
+    // frase é desenhada e não é anunciada, enquanto `screenReader.onFilter` do
+    // conteúdo compartilhado promete a região viva nas cinco docs pages.
+    //
+    // Nada foi posto no lugar de propósito: asserção que precisa ser APAGADA no
+    // dia em que o defeito for corrigido é do mesmo tipo da que saiu. A
+    // divergência está medida em PATCHES.md#command-listbox-children, e a
+    // decisão de entregar a região viva aqui é da dona.
 
     // A story TERMINA sem resultados: é este o quadro que o Chromatic captura.
   },
@@ -155,9 +168,9 @@ export const ItemDisabled: Story = {
       // A lib desta stack escreve o data-attribute como "true"/"false", e a
       // folha o lê por `[data-disabled]:not([data-disabled="false"])`.
       await expect(arquivar).toHaveAttribute("data-disabled", "true");
-      const estilo = getComputedStyle(arquivar);
-      await expect(estilo.pointerEvents).toBe("none");
-      await expect(Number.parseFloat(estilo.opacity)).toBeLessThan(1);
+      const computedStyle = getComputedStyle(arquivar);
+      await expect(computedStyle.pointerEvents).toBe("none");
+      await expect(Number.parseFloat(computedStyle.opacity)).toBeLessThan(1);
     });
 
     await step("Clicar não executa o comando", async () => {

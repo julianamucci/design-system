@@ -1,9 +1,9 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import DOMPurify from 'dompurify';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCommand } from '@/components/ui/command';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import commandTranslations from '@shared/content/command/translations.json';
 
@@ -52,6 +52,59 @@ const priorityKeyMap: Record<string, string> = {
 
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
+}
+
+/**
+ * Gatilho da paleta — o botão REAL, e não um `<div>` que se parece com um.
+ *
+ * A medida do gatilho sai de `.nds-button`, que é a folha do design system.
+ * Antes o bloco era um `<div>` com `padding` cravado no `style`: a declaração
+ * vencia a folha e saía do tema, da densidade e da escala de tipo — e, pior,
+ * ensinava a construir um controle sem papel de botão, que o teclado não
+ * alcança. As outras stacks já usam o botão do sistema aqui.
+ */
+function buildPaletteTrigger(withShortcut: boolean): HTMLElement {
+  const trigger = createButton({
+    variant: 'outline',
+    class: 'nds-cluster nds-w-full',
+  });
+  trigger.dataset.spacing = 'xs';
+  trigger.dataset.justify = 'between';
+
+  // Lupa decorativa, montada por `createElementNS` e não por `innerHTML`:
+  // conteúdo estático não precisa de parser de HTML (guideline 09).
+  const NS = 'http://www.w3.org/2000/svg';
+  const lupa = document.createElementNS(NS, 'svg');
+  lupa.setAttribute('xmlns', NS);
+  lupa.setAttribute('viewBox', '0 0 24 24');
+  lupa.setAttribute('fill', 'none');
+  lupa.setAttribute('stroke', 'currentColor');
+  lupa.setAttribute('stroke-width', '2');
+  lupa.setAttribute('stroke-linecap', 'round');
+  lupa.setAttribute('stroke-linejoin', 'round');
+  lupa.setAttribute('aria-hidden', 'true');
+  const aro = document.createElementNS(NS, 'circle');
+  aro.setAttribute('cx', '11');
+  aro.setAttribute('cy', '11');
+  aro.setAttribute('r', '8');
+  const cabo = document.createElementNS(NS, 'path');
+  cabo.setAttribute('d', 'm21 21-4.3-4.3');
+  lupa.append(aro, cabo);
+  trigger.appendChild(lupa);
+
+  const label = document.createElement('span');
+  label.className = 'nds-flex-1';
+  label.textContent = t('demonstration.labels.openPalette');
+  trigger.appendChild(label);
+
+  if (withShortcut) {
+    const tecla = document.createElement('kbd');
+    tecla.className = 'nds-kbd';
+    tecla.textContent = t('demonstration.labels.shortcutKey');
+    trigger.appendChild(tecla);
+  }
+
+  return trigger;
 }
 
 function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
@@ -298,15 +351,7 @@ export function createCommandDocs(): HTMLElement {
                 outer.className = 'nds-stack nds-p-2';
                 outer.dataset.spacing = 'xs';
                 outer.style.alignItems = 'flex-start';
-                const hint = document.createElement('div');
-                hint.className = 'nds-cluster nds-w-full nds-text-body nds-text-muted-foreground nds-border-default nds-rounded nds-cursor-pointer';
-                hint.dataset.spacing = 'xs';
-                hint.style.padding = '0.375rem 0.75rem';
-                hint.innerHTML = `
-                  <span class="nds-flex-1">${DOMPurify.sanitize(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="nds-kbd">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
-                `;
-                outer.appendChild(hint);
+                outer.appendChild(buildPaletteTrigger(true));
                 return outer;
               },
               dontPreviewFactory: () => {
@@ -314,13 +359,8 @@ export function createCommandDocs(): HTMLElement {
                 outer.className = 'nds-stack nds-p-2';
                 outer.dataset.spacing = 'xs';
                 outer.style.alignItems = 'flex-start';
-                const hint = document.createElement('div');
-                hint.className = 'nds-cluster nds-w-full nds-text-body nds-text-muted-foreground nds-border-default nds-rounded nds-cursor-pointer';
-                hint.dataset.spacing = 'xs';
-                hint.style.padding = '0.375rem 0.75rem';
-                hint.textContent = t('demonstration.labels.openPalette');
-                // Sem dica de atalho
-                outer.appendChild(hint);
+                // Sem dica de atalho: o gatilho não conta que a paleta existe.
+                outer.appendChild(buildPaletteTrigger(false));
                 return outer;
               },
             },
@@ -381,16 +421,7 @@ wrap.appendChild(
                 outer.className = 'nds-stack nds-p-2';
                 outer.dataset.spacing = 'xs';
                 outer.style.alignItems = 'flex-start';
-                const hint = document.createElement('div');
-                hint.className = 'nds-cluster nds-w-full nds-text-body nds-text-muted-foreground nds-border-default nds-rounded nds-cursor-pointer';
-                hint.dataset.spacing = 'xs';
-                hint.style.padding = '0.375rem 0.75rem';
-                hint.innerHTML = `
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                  <span class="nds-flex-1">${DOMPurify.sanitize(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="nds-kbd">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
-                `;
-                outer.appendChild(hint);
+                outer.appendChild(buildPaletteTrigger(true));
                 const dialog = document.createElement('div');
                 dialog.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md';
                 dialog.appendChild(
