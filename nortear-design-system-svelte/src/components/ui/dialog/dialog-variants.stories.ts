@@ -224,8 +224,17 @@ export const WithScrollingOverlay: Story = {
       // se move com a rolagem do overlay, e é isso que a asserção mede.
       await expect(getComputedStyle(p).position).toBe('relative');
       const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
-      const antes = header.getBoundingClientRect().top;
       const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      // A leitura de referência sai de uma posição de rolagem CONHECIDA, e não
+      // da que a página tiver no momento. Ao abrir, o foco automático do painel
+      // rola o overlay até o primeiro focável, e a story chegava aqui com ele já
+      // descido: medido em 2026-09-03, `antes` valia -727,9px, descer para 120px
+      // SUBIA o cabeçalho de volta para -71,9px, e a asserção — correta —
+      // reprovava por uma precondição que ninguém tinha escrito. Este arquivo
+      // vinha marcado como `(0 test)` nas rodadas anteriores, então o passo
+      // nunca tinha sido executado.
+      ov.scrollTop = 0;
+      const antes = header.getBoundingClientRect().top;
       ov.scrollTop = 120;
       await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
       ov.scrollTop = 0;
