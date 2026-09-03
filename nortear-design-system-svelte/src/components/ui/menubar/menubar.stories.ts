@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
 import MenubarDocs from '@/components/docs/MenubarDocs.svelte';
@@ -65,12 +65,17 @@ const meta: Meta = {
       description: 'Composição interna usada na demonstração.',
       table: { type: { summary: 'string' }, defaultValue: { summary: "'default'" } },
     },
+    // Espião da escolha de item: sem ele a aba Actions abre VAZIA, e o
+    // `MenubarStory` já declarava a prop esperando quem a passasse. Mesma forma
+    // do Playground do Vanilla, que usa o mesmo nome.
+    onSelect: { control: false, table: { disable: true } },
   },
   args: {
     defaultValue: undefined,
     loop: true,
     variant: 'default',
     demonstration: 'default',
+    onSelect: fn(),
   },
 };
 
@@ -87,6 +92,7 @@ export const Playground: Story = {
       'functional.item6',
       'functional.item8',
       'functional.item10',
+      'functional.item11',
       'functional.item12',
       'accessibility.item2',
       'accessibility.item3',
@@ -152,21 +158,19 @@ export const Playground: Story = {
       });
     });
 
-    // TYPEAHEAD NÃO ENTREGUE NESTA STACK, e por isso `functional.item11`
-    // não é declarado aqui — o auditor de contrato acusa a divergência em vez
-    // de engoli-la. Medido em 2026-09-03: com o menu aberto e o foco em
-    // "Novo", digitar `s` deixa o foco onde estava, ainda depois de 600ms de
-    // espera de relógio; as outras quatro stacks levam para "Salvar".
-    //
-    // Mecanismo medido no bits-ui: a busca por letra só roda quando
-    // `target.closest('[data-menubar-content]').id` é igual ao `contentId` do
-    // menu, e o painel desta stack renderiza SEM `id` — a comparação é sempre
-    // falsa. O item e o painel carregam os atributos certos
-    // (`data-menubar-item`, `data-menubar-content`), então não é o wrapper
-    // deixando de encaminhar: é o `id` que não chega.
-    //
-    // O conteúdo compartilhado PROMETE a busca por letra ao leitor, então o
-    // desfecho é entregar ou mudar a promessa — não deixar como está.
+    await step('Digitar uma letra leva ao item que começa por ela', async () => {
+      // ` + '`' + `s` + '`' + ` é inequívoco nesta lista (Novo, Abrir, Salvar).
+      const menu = await waitForPortal('menu');
+      const items = within(menu).getAllByRole('menuitem');
+      const saveItem = items.find((i) => (i.textContent ?? '').trim().startsWith('Salvar'))!;
+      await expect(saveItem).toBeDefined();
+
+      await userEvent.keyboard('s');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(saveItem);
+      });
+    });
+
     await step('Space também abre o gatilho, e não só Enter', async () => {
       // O item do contrato diz "Enter/Space", e só o Enter era verificado —
       // meia verdade que o auditor de cobertura contava como verdade inteira.

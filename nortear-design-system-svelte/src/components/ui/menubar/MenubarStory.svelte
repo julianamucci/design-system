@@ -174,18 +174,18 @@
           <MenubarContent>
             <MenubarGroup>
               <MenubarGroupHeading>Documento</MenubarGroupHeading>
-              <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
-              <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
+              <MenubarItem onSelect={() => onSelect('Novo')}>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
+              <MenubarItem onSelect={() => onSelect('Abrir')}>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
             </MenubarGroup>
             <MenubarSeparator />
-            <MenubarItem variant="destructive">Descartar alterações</MenubarItem>
+            <MenubarItem variant="destructive" onSelect={() => onSelect('Descartar alterações')}>Descartar alterações</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
-            <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
+            <MenubarItem onSelect={() => onSelect('Desfazer')}>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
+            <MenubarItem onSelect={() => onSelect('Refazer')}>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu value="view">
@@ -201,8 +201,8 @@
         <MenubarMenu value="help">
           <MenubarTrigger>Ajuda</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Documentação</MenubarItem>
-            <MenubarItem>Atalhos de teclado</MenubarItem>
+            <MenubarItem onSelect={() => onSelect('Documentação')}>Documentação</MenubarItem>
+            <MenubarItem onSelect={() => onSelect('Atalhos de teclado')}>Atalhos de teclado</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       {:else if demonstration === 'destructive'}

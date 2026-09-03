@@ -32,6 +32,9 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    // Sem `args` próprios: sem isto a aba Actions lista espião que estas stories
+    // não usam, do mesmo jeito que o Controls abriria vazio.
+    actions: { disable: true },
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {

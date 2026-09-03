@@ -111,6 +111,7 @@ export const Playground: Story = {
       'functional.item8',
       'functional.item10',
       'functional.item11',
+      'functional.item12',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
@@ -227,18 +228,27 @@ export const Playground: Story = {
       });
     });
 
-    // SPACE NÃO LEVA O FOCO PARA DENTRO NESTA STACK, e por isso
-    // `functional.item12` não é declarado aqui — a divergência fica visível para o
-    // auditor de contrato em vez de virar cobertura de mentira.
-    //
-    // Medido em 2026-09-03: com Enter o foco entra no painel e pousa no
-    // primeiro item (o passo acima prova); com Space o painel ABRE — o
-    // `aria-expanded` vira "true" — e o foco fica no gatilho, ainda depois de
-    // espera de relógio. As outras quatro stacks levam o foco para dentro nas
-    // duas teclas.
-    //
-    // Era isto que o item de contrato antigo escondia: ele dizia "Enter/Space"
-    // numa chave só, e verificar o Enter bastava para marcá-lo coberto.
+    await step('Space também abre o gatilho, e não só Enter', async () => {
+      // Fecha ANTES de digitar: o passo estabelece a própria precondição, senão
+      // o replay do painel Interactions parte do menu já aberto.
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      arquivo.focus();
+      await userEvent.keyboard(' ');
+      await waitFor(async () => {
+        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      // A REABERTURA por teclado também tem de levar o foco para dentro.
+      const openedBySpace = await waitForPortal('menu');
+      await waitFor(async () => {
+        await expect(openedBySpace.contains(document.activeElement)).toBe(true);
+      });
+    });
+
     await step('Home e End saltam para as pontas da lista', async () => {
       const menu = await waitForPortal('menu');
       const items = within(menu).getAllByRole('menuitem');
