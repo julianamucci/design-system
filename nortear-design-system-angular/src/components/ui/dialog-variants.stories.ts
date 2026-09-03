@@ -91,6 +91,21 @@ export const Default: Story = {
       const buttons = footer.querySelectorAll('button');
       await expect(buttons[buttons.length - 1]).toHaveTextContent(LABELS.action);
     });
+
+    await step('O rodapé arredonda junto com o painel', async () => {
+      // RELAÇÃO, e não valor: derivar a expectativa de `--radius-card` faria a
+      // asserção concordar com qualquer defeito que também saísse do token, e
+      // asserção que não pode falhar foi o achado mais repetido desta campanha.
+      // O rodapé rasga até a borda do painel — as margens negativas cancelam o
+      // padding —, então as duas quinas de baixo são a MESMA linha. O 0.75rem
+      // cravado que morava na folha divergia do painel nas doze combinações de
+      // tema x modo x largura medidas.
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const panelStyle = getComputedStyle(p);
+      const footerStyle = getComputedStyle(footer);
+      await expect(footerStyle.borderBottomLeftRadius).toBe(panelStyle.borderBottomLeftRadius);
+      await expect(footerStyle.borderBottomRightRadius).toBe(panelStyle.borderBottomRightRadius);
+    });
   },
 };
 

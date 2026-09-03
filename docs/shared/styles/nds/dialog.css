@@ -140,14 +140,38 @@
 
   background-color: hsl(var(--muted) / 0.5);
   border-top: 1px solid hsl(var(--border));
-  border-end-start-radius: 0.75rem;
-  border-end-end-radius: 0.75rem;
+
+  /* O rodapé É a borda de baixo do painel, e por isso repete o raio DELE em vez
+   * de descontar um inset.
+   *
+   * Os `margin-inline` e `margin-bottom` negativos acima cancelam exatamente o
+   * `padding: var(--spacing-4)` do painel: a aresta do rodapé e a aresta do
+   * painel são a mesma linha. Na regra de raio aninhado (`Rᵢ = Rₑ − E`, da
+   * página de fundamentos Elevação) isso é `E = 0`, e as duas leituras
+   * coincidem — não é o caso de `.nds-card-nested`, que existe para quem está
+   * DENTRO com afastamento.
+   *
+   * Era `0.75rem` cravado. Raio de escala literal não acompanha tema nenhum, e
+   * medido nos três temas × dois modos × as duas larguras ele divergia do
+   * painel nas DOZE combinações: 24px de painel contra 12 de rodapé no
+   * `default`, 28 contra 12 no `warm`, e — o caso que prova — rodapé
+   * arredondado dentro de um painel de quinas retas no `cold`, que declara
+   * `--radius-card: 0`.
+   *
+   * Segue o painel também no ponto de corte: abaixo de 40rem ele é reto
+   * (`--radius-none`), e só a partir daí assume `--radius-card`. */
+  border-end-start-radius: var(--radius-none);
+  border-end-end-radius: var(--radius-none);
 }
 
 @media (min-width: 40rem) {
   .nds-dialog-footer {
     flex-direction: row;
     justify-content: flex-end;
+
+    /* Par da regra acima: o painel só arredonda a partir daqui. */
+    border-end-start-radius: var(--radius-card);
+    border-end-end-radius: var(--radius-card);
   }
 }
 
