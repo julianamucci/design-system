@@ -401,6 +401,10 @@ export const DragGesture: Story = {
       viewport.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const slides = () => canvas.getAllByRole('group') as HTMLElement[];
 
+    /** Uma repintura. É a unidade em que o motor reescreve a posição. */
+    const nextFrame = () =>
+      new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
     /**
      * Espera a posição PARAR de verdade: quatro leituras IDÊNTICAS.
      *
@@ -415,17 +419,30 @@ export const DragGesture: Story = {
      * Igualdade exata é o único critério que separa os dois: enquanto anima, o
      * motor reescreve a posição a cada quadro e duas leituras nunca coincidem; ao
      * terminar, ele escreve o valor final e para de escrever.
+     *
+     * E a amostragem é por QUADRO PINTADO, não por tentativa de `waitFor`. O
+     * argumento acima só vale se cada leitura for um quadro diferente, e dentro
+     * de um `waitFor` isso não é verdade: com a máquina disputada a thread
+     * congela, as tentativas se atropelam sobre o MESMO quadro, e quatro
+     * leituras idênticas passam a significar "nada repintou" em vez de "o motor
+     * parou" — a espera declara assentado com a animação ainda correndo. Foi o
+     * que reprovou este gesto por exatamente um slide (298,6px) na rodada com
+     * suíte concorrente, e é a mesma causa que o autoplay desta stack irmã já
+     * corrigiu. `requestAnimationFrame` dá uma leitura por repintura, que é a
+     * unidade de que a regra fala; se a thread trava, o quadro atrasa junto.
      */
     const settle = async () => {
       let estaveis = 0;
       let last = Number.NaN;
-      await waitFor(async () => {
+      const prazo = Date.now() + 4000;
+      while (Date.now() < prazo) {
+        await nextFrame();
         const agora = deslocamento();
         estaveis = agora === last ? estaveis + 1 : 0;
         last = agora;
-        await expect(estaveis).toBeGreaterThanOrEqual(3);
-      }, { timeout: 4000 });
-      return last;
+        if (estaveis >= 3) return last;
+      }
+      throw new Error(`a posição não assentou em 4s — última leitura ${last}`);
     };
 
     /** Espera a posição chegar a uma coordenada já conhecida. */
