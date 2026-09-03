@@ -253,7 +253,11 @@ export const Chart: Story = {
   play: mounted,
 };
 
-// axe: target-size — catalogado no FIXES-NEEDED
+// axe: target-size — MEDIDO em 2026-09-03, e a causa continua de pé: os
+// checkboxes do par do/don't saem com 16x16 CSS px (`#dodont-2-do-Email` e
+// irmãos), contra os 24x24 que a regra cobra, e sem espaçamento que compense.
+// É dívida do primitivo Checkbox, não desta página — o alvo cresce quando o
+// componente crescer. Segue catalogado no FIXES-NEEDED.
 export const Checkbox: Story = {
   render: () => <CheckboxDocs />,
   play: mounted,
@@ -275,14 +279,15 @@ export const Combobox: Story = {
   play: mounted,
 };
 
-// axe: color-contrast (Ctrl+K riscado do don't, 1.78:1) — catalogado no
-// FIXES-NEEDED. button-name RESOLVIDA (2026-08-01): trigger role="combobox"
-// ganhou aria-label — combobox não aceita name-from-content.
-// aria-required-children não reproduziu no diagnóstico de 2026-08-01.
+// color-contrast RESOLVIDA (2026-09-03): o `Ctrl+K` riscado do don't media
+// 1,75:1 e era o único achado da página. Ele saiu: a AUSÊNCIA da dica de atalho
+// já é o don't que a legenda descreve, e riscar um atalho ensinava outra coisa.
+// A página passa a medir sob o axe como as demais.
+// button-name RESOLVIDA (2026-08-01): trigger role="combobox" ganhou aria-label
+// — combobox não aceita name-from-content.
 export const Command: Story = {
   render: () => <CommandDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const ContextMenu: Story = {
@@ -315,11 +320,12 @@ export const Drawer: Story = {
   play: mounted,
 };
 
-// axe: aria-hidden-focus — catalogado no FIXES-NEEDED
+// aria-hidden-focus RESOLVIDA (2026-09-03): a página passou limpa sob o axe com
+// a exceção retirada. A causa saiu junto com alguma correção anterior e ninguém
+// tinha medido de novo — a exceção sobreviveu ao motivo dela.
 export const DropdownMenu: Story = {
   render: () => <DropdownMenuDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Editor: Story = {
@@ -377,7 +383,10 @@ export const MediaPlayer: Story = {
   play: mounted,
 };
 
-// axe: aria-required-children — catalogado no FIXES-NEEDED
+// axe: aria-required-children — MEDIDO em 2026-09-03, e a causa continua de pé:
+// a lib injeta um `span[aria-owns]` como filho direto do `role="menubar"`, e
+// `span` não é filho permitido. É markup da lib, não nosso — nada no call site
+// alcança esse nó. Segue catalogado no FIXES-NEEDED.
 export const Menubar: Story = {
   render: () => <MenubarDocs />,
   play: mounted,
@@ -389,10 +398,11 @@ export const Motion: Story = {
   play: settled,
 };
 
-// axe: aria-hidden-focus — catalogado no FIXES-NEEDED; landmark-unique restante
-// axe: aria-hidden-focus (focus guards do Base UI) — landmark-unique RESOLVIDA
-// (raízes com aria-label único + popup render={<div/>} no primitivo, decisão
-// da dona 2026-08-01; provado em modo portão: só aria-hidden-focus resta).
+// axe: aria-hidden-focus — MEDIDO em 2026-09-03, e a causa continua de pé: os
+// `span[data-base-ui-focus-guard]` da lib nascem com `aria-hidden="true"` E
+// `tabindex="0"` ao mesmo tempo. É markup da lib, não nosso.
+// landmark-unique RESOLVIDA (2026-08-01): raízes com aria-label único + popup
+// render={<div/>} no primitivo, decisão da dona.
 export const NavigationMenu: Story = {
   render: () => <NavigationMenuDocs />,
   play: mounted,
