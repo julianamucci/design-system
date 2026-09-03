@@ -152,7 +152,7 @@ export function createToggleGroup(options: ToggleGroupOptions): ToggleGroupEleme
         // pintura vem dele. Antes cada ramo escrevia nos botões do seu jeito, e
         // o `pressed` que a fábrica do toggle guarda no fecho ficava defasado
         // sem que se visse — o grupo sobrescrevia logo depois.
-        pintarEstado();
+        paintState();
         notifyChange();
       },
     });
@@ -184,7 +184,7 @@ export function createToggleGroup(options: ToggleGroupOptions): ToggleGroupEleme
   }
 
   /** Escreve nos botões o que `activeValues` diz. Uma origem só de verdade. */
-  function pintarEstado(): void {
+  function paintState(): void {
     buttons().forEach((b) => {
       const active = activeValues.has(b.dataset.value!);
       b.setAttribute('aria-pressed', String(active));
@@ -197,14 +197,14 @@ export function createToggleGroup(options: ToggleGroupOptions): ToggleGroupEleme
     for (const v of Array.isArray(value) ? value : [value]) {
       if (v !== '') activeValues.add(v);
     }
-    pintarEstado();
+    paintState();
   };
 
-  const raiz: ToggleGroupElement = Object.assign(root, { setValue });
+  const groupElement: ToggleGroupElement = Object.assign(root, { setValue });
 
   // Daqui para baixo, o contrato do papel de barra. Em `group` quem contém é o
   // dono do teclado, e instalar isto aqui criaria a segunda roving.
-  if (papel !== 'toolbar') return raiz;
+  if (papel !== 'toolbar') return groupElement;
 
   root.addEventListener('keydown', (event) => {
     const KEYS = ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'];
@@ -232,5 +232,5 @@ export function createToggleGroup(options: ToggleGroupOptions): ToggleGroupEleme
     buttons().find((b) => !b.disabled);
   if (initial) setRovingTarget(initial);
 
-  return raiz;
+  return groupElement;
 }
