@@ -13,10 +13,20 @@
  *
  * ─── O que ele NÃO faz ──────────────────────────────────────────────────────
  *
- * Não encerra processo recente. O corte de idade existe porque duas suítes
- * legítimas podem rodar ao mesmo tempo — uma por stack — e matar a irmã seria
- * pior que o problema que isto resolve. Órfão de verdade é o que sobreviveu ao
- * seu dono, e nenhuma suítе desta casa passa de vinte minutos.
+ * Não encerra processo recente. O corte de idade existe porque suítes legítimas
+ * rodam em paralelo — até três nesta máquina — e matar a irmã é pior que o
+ * problema que isto resolve. Órfão de verdade é o que sobreviveu ao seu dono.
+ *
+ * O corte era de VINTE minutos, com a premissa escrita de que "nenhuma suíte
+ * desta casa passa de vinte minutos". A premissa morreu, e o portão passou a
+ * matar o que devia proteger: em 2026-09-03 ele encerrou a rodada completa do
+ * Svelte no meio, que sai por volta dos 25 min. Medidas no mesmo dia, em série:
+ * vanilla 10m31s, react 16m53s, vue 17m14s, angular 23m08s, svelte ~25m.
+ *
+ * Sessenta minutos é mais que o dobro da mais longa, e continua servindo ao caso
+ * que originou o script — aquele órfão estava de pé desde a manhã, não havia 25
+ * minutos. Exceção declarada com a premissa verificável: se uma suíte passar de
+ * uma hora, este número é que está errado, e não a suíte.
  *
  * Não encerra `storybook dev`. É servidor de desenvolvimento, e quem o abriu
  * provavelmente quer que ele continue de pé — mesmo quando cresce demais (o do
@@ -28,7 +38,7 @@
  */
 import { execFileSync } from 'node:child_process';
 
-const IDADE_MINIMA_MIN = 20;
+const IDADE_MINIMA_MIN = 60;
 const AVISO_MEMORIA_MB = 1500;
 
 function processos() {

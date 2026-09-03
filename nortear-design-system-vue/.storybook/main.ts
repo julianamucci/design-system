@@ -54,6 +54,28 @@ const config: StorybookConfig = {
      * caminho do DOM fora do modo browser.
      */
     viteConfig.optimizeDeps = viteConfig.optimizeDeps ?? {};
+
+    /**
+     * `core-events` é DECLARADO, e não descoberto no meio da suíte.
+     *
+     * O `preview.ts` importa `storybook/internal/core-events` — é o ouvinte de
+     * canal da barra de temas. Sem o sandbox, esse subcaminho não aparece em
+     * mais nenhum grafo que o otimizador varra na partida: ele o descobre com a
+     * suíte já rodando, o pré-empacotamento muda, a página RECARREGA, e os
+     * arquivos em voo morrem com `Vitest failed to find the current suite` —
+     * contados como `(0 test)`, que não é arquivo vazio: é arquivo que não
+     * reprova. No Angular isso levou junto as 98 docs pages, e a rodada teria
+     * fechado verde sem medir um terço de si mesma; no Svelte foram sete
+     * arquivos, entre eles `dialog-variants`.
+     *
+     * Esta stack não tinha a declaração e passou verde hoje — o que prova a
+     * ORDEM daquela rodada, não imunidade.
+     */
+    viteConfig.optimizeDeps.include = [
+      ...(viteConfig.optimizeDeps.include ?? []),
+      'storybook/internal/core-events',
+    ];
+
     viteConfig.optimizeDeps.exclude = [
       ...(viteConfig.optimizeDeps.exclude ?? []),
       'vitest/browser',
