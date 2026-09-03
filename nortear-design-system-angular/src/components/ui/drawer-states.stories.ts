@@ -439,7 +439,16 @@ export const DragToDismiss: Story = {
 
       await waitForPortalVanish('dialog');
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
-      await expect(document.activeElement).toBe(trigger);
+      // A devolução do foco não acontece no mesmo quadro do desmonte: o portal
+      // segura o painel até o `@keyframes` de saída terminar, e a lib só
+      // devolve o foco no desmonte de fato. Ler `activeElement` logo depois do
+      // papel sumir pega o `<body>` — que foi o que reprovou aqui.
+      //
+      // `waitFor` de LEITURA PURA, como nas plays do Dialog: a condição não
+      // toca no DOM, então não se reagenda sozinha.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
     });
 
     await step('Nada depende do arraste: Escape fecha o mesmo panel', async () => {

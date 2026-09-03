@@ -117,7 +117,13 @@ export const WithForm: Story = {
     await step('O corpo do formulário é a região rolável do painel', async () => {
       const body = panel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
       await expect(body).toHaveAttribute('tabindex', '0');
-      await expect(body).toHaveClass(/nds-overflow-y/);
+      // Comportamento, e não nome de classe. A asserção cobrava a utilitária
+      // `nds-overflow-y`, que era como o corpo se montava ANTES de a folha
+      // compartilhada ganhar `.nds-drawer-body` — a classe deixou de ser
+      // necessária e ninguém viu, porque esta play nunca tinha rodado. O que
+      // prova a região rolável é o overflow computado, e ele sobrevive a
+      // renomear classe.
+      await expect(getComputedStyle(body).overflowY).toBe('auto');
     });
   },
 };
