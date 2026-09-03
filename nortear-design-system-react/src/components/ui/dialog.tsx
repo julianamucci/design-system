@@ -151,10 +151,10 @@ function DialogContent({
    * O painel precisa de ref PRÓPRIO por causa da rota B, e o de quem chama não
    * pode ser perdido no caminho — daí a composição abaixo.
    */
-  const painelRef = React.useRef<HTMLDivElement | null>(null)
-  const guardarPainel = React.useCallback(
+  const panelRef = React.useRef<HTMLDivElement | null>(null)
+  const registerPanel = React.useCallback(
     (node: HTMLDivElement | null) => {
-      painelRef.current = node
+      panelRef.current = node
       if (typeof ref === "function") ref(node)
       else if (ref) (ref as React.RefObject<HTMLDivElement | null>).current = node
     },
@@ -163,7 +163,7 @@ function DialogContent({
 
   const popup = (
     <DialogPrimitive.Popup
-      ref={guardarPainel}
+      ref={registerPanel}
       data-slot="dialog-content"
       className={cn(
         "nds-dialog-content",
@@ -189,7 +189,7 @@ function DialogContent({
        *
        * Antes do espalhamento de propósito: quem compõe pode passar o seu.
        */
-      initialFocus={scroll ? painelRef : undefined}
+      initialFocus={scroll ? panelRef : undefined}
       {...props}
     >
       {children}

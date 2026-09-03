@@ -136,7 +136,7 @@ export const Playground: Story = {
     // Lido com o diálogo JÁ FECHADO, e não presumido vazio: outro painel da
     // mesma página pode estar segurando a trava, e é este valor — não `''` — o
     // que o fechamento tem de devolver.
-    const overflowFechado = document.body.style.overflow;
+    const overflowWhenClosed = document.body.style.overflow;
 
     await step('O gatilho anuncia o que ele abre, antes de qualquer clique', async () => {
       // Quem navega por leitor de tela decide se vale ativar ANTES de ativar:
@@ -196,7 +196,7 @@ export const Playground: Story = {
       // nenhum — é o defeito que o contador de `@/lib/scroll-lock` existe para
       // evitar, e é aqui que ele se prova pelo lado de fora.
       await expect(triggerEl).toHaveAttribute('aria-expanded', 'false');
-      await expect(document.body.style.overflow).toBe(overflowFechado);
+      await expect(document.body.style.overflow).toBe(overflowWhenClosed);
     });
 
     await step('Clique no overlay fecha e devolve o foco', async () => {
