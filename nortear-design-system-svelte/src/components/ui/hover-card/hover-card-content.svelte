@@ -42,13 +42,31 @@
 	// `[data-link-preview-trigger]` seria descrito por todos eles.
 	const contexto = usarContextoHoverCard();
 
+	// O `id` do painel é NOSSO, e não o do primitivo.
+	//
+	// A versão anterior deste efeito desistia quando o painel chegava sem `id`
+	// (`!panel?.id`) — e era exatamente o que acontecia: medido em 2026-09-03, o
+	// elemento com `data-slot="hover-card-content"` renderizava com `id` vazio, o
+	// efeito saía pela guarda, e o `aria-describedby` NUNCA era escrito. O cartão
+	// abria na tela sem nada ser anunciado, que é o defeito que três stories
+	// tinham acabado de passar a cobrar.
+	//
+	// Depender do `id` que a lib gera para o conteúdo era a fragilidade: ela o
+	// gera, mas ele não chega ao nó que carrega o `data-slot`. O Vanilla — a
+	// referência cross-stack — escreve o `id` no painel com a própria mão
+	// (`panelEl.id = cardId`), e é o que se faz aqui. `$props.id()` dá um valor
+	// estável por instância, então vários cartões na mesma tela não colidem.
+	const panelId = $props.id();
+
 	$effect(() => {
 		const trigger = contexto?.trigger;
 		const panel = ref;
-		if (!contexto?.open || !trigger || !panel?.id) return;
-		trigger.setAttribute("aria-describedby", panel.id);
+		if (!contexto?.open || !trigger || !panel) return;
+		if (!panel.id) panel.id = panelId;
+		const target = panel.id;
+		trigger.setAttribute("aria-describedby", target);
 		return () => {
-			if (trigger.getAttribute("aria-describedby") === panel.id) {
+			if (trigger.getAttribute("aria-describedby") === target) {
 				trigger.removeAttribute("aria-describedby");
 			}
 		};
