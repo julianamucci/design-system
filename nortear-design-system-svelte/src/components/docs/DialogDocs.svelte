@@ -11,6 +11,8 @@
     DialogTrigger,
   } from '@/components/ui/dialog';
   import { Button } from '@/components/ui/button';
+  import { Input } from '@/components/ui/input';
+  import { Label } from '@/components/ui/label';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -571,7 +573,20 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Termos de uso</DialogTitle>
           <DialogDescription>Leia atentamente antes de aceitar.</DialogDescription>
         </DialogHeader>
-        <div class="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground nds-pr-2" data-spacing="sm" style="max-height: 40vh">
+        <!-- O teto e a rolagem saem de `.nds-dialog-body-scroll`: um
+             `max-height` inline vence a folha e sai do tema, da densidade e do
+             zoom. `tabindex="0"` porque a caixa rola (WCAG 2.1.1); o papel
+             `group` (e não `region`) só entra com nome, porque marco aninhado
+             num diálogo já nomeado não acrescenta navegação. -->
+        <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+        <div
+          class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
+          data-slot="dialog-body"
+          data-spacing="sm"
+          tabindex="0"
+          role="group"
+          aria-label="Termos de uso"
+        >
           {#each Array.from({ length: 10 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno.</p>
           {/each}
@@ -664,6 +679,36 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     componentSlug="dialog"
     items={[
       {
+        trackId: 'profileEdit',
+        name: $tStore('variants.compositions.profileEdit.name'),
+        description: $tStore('variants.compositions.profileEdit.description'),
+        useWhen: $tStore('variants.compositions.profileEdit.use'),
+        code: `<Dialog>
+  <DialogTrigger>
+    {#snippet child({ props })}<Button variant="outline" {...props}>Editar perfil</Button>{/snippet}
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Editar perfil</DialogTitle>
+      <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+    </DialogHeader>
+    <form class="nds-grid" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
+      <div class="nds-stack" data-spacing="sm">
+        <Label for="profile-name">Nome completo</Label>
+        <Input id="profile-name" value="Maria Silva" />
+      </div>
+      <DialogFooter>
+        <DialogClose>
+          {#snippet child({ props })}<Button type="button" variant="outline" {...props}>Cancelar</Button>{/snippet}
+        </DialogClose>
+        <Button type="submit">Salvar alterações</Button>
+      </DialogFooter>
+    </form>
+  </DialogContent>
+</Dialog>`,
+        preview: compProfileEdit,
+      },
+      {
         trackId: 'mediaPreview',
         name: $tStore('variants.compositions.mediaPreview.name'),
         description: $tStore('variants.compositions.mediaPreview.description'),
@@ -684,6 +729,35 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       },
     ]}
   />
+
+  {#snippet compProfileEdit()}
+    <Dialog>
+      <DialogTrigger>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Editar perfil</Button>{/snippet}
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Editar perfil</DialogTitle>
+          <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+        </DialogHeader>
+        <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer campo
+             disparar a ação primária, e é o que separa esta composição de um
+             painel com dois botões soltos. -->
+        <form class="nds-grid" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
+          <div class="nds-stack" data-spacing="sm">
+            <Label for="profile-name">Nome completo</Label>
+            <Input id="profile-name" value="Maria Silva" />
+          </div>
+          <DialogFooter>
+            <DialogClose>
+              {#snippet child({ props })}<Button type="button" variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </DialogClose>
+            <Button type="submit">Salvar alterações</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  {/snippet}
 
   {#snippet compMediaPreview()}
     <Dialog>

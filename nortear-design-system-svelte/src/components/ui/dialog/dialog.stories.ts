@@ -9,7 +9,7 @@ import {
   open,
   cantoButtonClose,
   checkFocusTrap,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForClosed,
   close,
   trigger,
@@ -119,7 +119,7 @@ export const Playground: Story = {
       const p = panel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       await expect(p).toHaveAttribute('aria-modal', 'true');
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step('O foco entra no painel ao abrir', async () => {

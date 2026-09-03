@@ -13,7 +13,7 @@ import {
   mountOpen,
   cantoButtonClose,
   buildField,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForOpen,
   waitForClosed,
   makeFooter,
@@ -74,7 +74,7 @@ export const Default: Story = {
       await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-body"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step('A ação primária é a última do rodapé, e é filha direta dele', async () => {
@@ -177,8 +177,10 @@ export const WithScrollContent: Story = {
       'nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground';
     longBody.dataset.spacing = 'md';
     longBody.tabIndex = 0;
-    longBody.setAttribute('role', 'region');
-    longBody.setAttribute('aria-label', 'Conteúdo rolável');
+    // `group` e não `region`: marco aninhado num diálogo já nomeado não
+    // acrescenta navegação. O nome diz O QUE rola.
+    longBody.setAttribute('role', 'group');
+    longBody.setAttribute('aria-label', 'Termos de uso');
     for (let i = 1; i <= 12; i++) {
       const p = document.createElement('p');
       p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;
@@ -200,7 +202,11 @@ export const WithScrollContent: Story = {
     await step('O corpo rola sozinho, com header e rodapé parados', async () => {
       // Comportamento e não nome de classe: o corpo precisa poder rolar E ter
       // conteúdo mais alto que a própria caixa.
-      const body = p.querySelector<HTMLElement>('[role="region"]')!;
+      // A factory monta o `.nds-dialog-body` em volta do conteúdo, então aqui
+      // quem rola é o elemento de DENTRO — nas outras stacks a classe de
+      // rolagem e o slot ficam no mesmo nó. Divergência de API da factory, não
+      // de markup: por isso a sonda é o papel, e não o slot.
+      const body = p.querySelector<HTMLElement>('[role="group"]')!;
       await expect(getComputedStyle(body).overflowY).toBe('auto');
       await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
       await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
@@ -209,7 +215,7 @@ export const WithScrollContent: Story = {
 
     await step('A região rolável é alcançável por teclado e tem nome', async () => {
       // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa.
-      const body = p.querySelector<HTMLElement>('[role="region"]')!;
+      const body = p.querySelector<HTMLElement>('[role="group"]')!;
       await expect(body).toHaveAttribute('tabindex', '0');
       await expect(body).toHaveAccessibleName();
     });
@@ -380,6 +386,57 @@ export const CustomCloseInFooter: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
+    });
+  },
+};
+
+// A ConfirmEmail vive AQUI, e não em -compositions, porque o conteúdo
+// compartilhado a descreve em `variants.items.confirmEmail` — ao lado de
+// default, withForm e das outras formas do painel. Estava em -compositions em
+// quatro stacks e em -variants numa só; quem lia a documentação de uma stack
+// encontrava a mesma story em outro lugar do menu.
+export const ConfirmEmail: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Confirmação de envio de e-mail com mensagem informativa e ação primária neutra.',
+      },
+    },
+  },
+  render: () => {
+    const body = document.createElement('div');
+    body.className = 'nds-text-body nds-text-muted-foreground';
+    body.textContent =
+      'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.';
+    return mountOpen(
+      createDialog({
+        trigger: createButton({ variant: 'outline', label: 'Confirmar e-mail' }),
+        title: 'Confirmar e-mail',
+        description: 'Verifique o endereço antes de enviar o link de acesso.',
+        content: body,
+        footer: makeFooter('Cancelar', 'Enviar link'),
+      }),
+    );
+  },
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
+      await checkNameAndDescription(p);
+    });
+
+    await step('O endereço confirmado aparece no corpo, não só no título', async () => {
+      // O dado que a pessoa precisa conferir antes de decidir tem que estar na
+      // tela — o título sozinho não diz para onde o link vai.
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).toHaveTextContent('maria@exemplo.com');
+    });
+
+    await step('A operação é reversível, então a ação primária é neutra', async () => {
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
+      await expect(buttons.length).toBe(2);
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
 };

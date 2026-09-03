@@ -5,7 +5,7 @@ import { dialogSource } from './dialog.source';
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForOpen,
   waitForClosed,
   trigger,
@@ -93,7 +93,7 @@ export const Open: Story = {
       await expect(p).toBeVisible();
       await expect(p).toHaveAttribute('aria-modal', 'true');
       await expect(overlay()).toBeVisible();
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step('E o foco já está dentro do painel', async () => {

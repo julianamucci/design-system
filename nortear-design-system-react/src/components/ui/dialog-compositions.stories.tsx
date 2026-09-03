@@ -3,7 +3,6 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
   waitForOpen,
   waitForClosed,
   close,
@@ -40,7 +39,7 @@ const meta = {
       source: { transform: dialogSource },
       description: {
         component:
-          "Composicoes reais do Dialog em fluxos de produto: confirmar e-mail, edição de perfil e pré-visualização de mídia.",
+          "Composicoes reais do Dialog em fluxos de produto: edição de perfil e pré-visualização de mídia.",
       },
     },
   },
@@ -48,63 +47,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const ConfirmEmail: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Dialog usado para confirmar e-mail antes de prosseguir. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Confirmar.",
-      },
-    },
-  },
-  render: () => {
-    const title = "Confirmar e-mail";
-    return (
-      <Dialog defaultOpen>
-        <DialogTrigger render={<Button variant="outline" />}>
-          Confirmar e-mail
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>
-              Enviaremos um link de confirmação para{" "}
-              <strong>maria@exemplo.com</strong>. Verifique sua caixa de entrada.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose render={<Button variant="outline" />}>
-              Cancelar
-            </DialogClose>
-            <Button>Enviar link</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-  },
-  play: async ({ step }) => {
-    const p = await waitForOpen();
-
-    await step("O diálogo se anuncia com o nome e a descrição do fluxo", async () => {
-      await checkNameEDescricao(p);
-    });
-
-    await step("O endereço confirmado aparece na descrição, não só no título", async () => {
-      // O dado que a pessoa precisa conferir antes de decidir mora na
-      // descrição, que é o que o leitor de tela anuncia junto com o nome.
-      const descricao = p.querySelector<HTMLElement>('[data-slot="dialog-description"]')!;
-      await expect(descricao).toHaveTextContent("maria@exemplo.com");
-    });
-
-    await step("A operação é reversível, então a ação primária é neutra", async () => {
-      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = footer.querySelectorAll<HTMLElement>("button");
-      await expect(buttons.length).toBe(2);
-      await expect(buttons[buttons.length - 1]).toHaveClass("nds-button-default");
-    });
-  },
-};
 
 export const ProfileEdit: Story = {
   parameters: {

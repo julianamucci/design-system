@@ -4,6 +4,8 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createDialog } from '@/components/ui/dialog';
 import { createButton } from '@/components/ui/button';
+import { createInput } from '@/components/ui/input';
+import { createLabel } from '@/components/ui/label';
 import uiTranslations from '@/i18n/ui.json';
 import dialogTranslations from '@shared/content/dialog/translations.json';
 
@@ -340,9 +342,18 @@ export function createDialogDocs(): HTMLElement {
           code: `import { createDialog } from '@/components/ui/dialog';
 import { createButton } from '@/components/ui/button';`,
           secondaryDescription: t('import.withScroll'),
-          secondaryCode: `// Para body com scroll interno, basta aplicar max-h + overflow-y-auto:
+          secondaryCode: `// A rolagem é do CORPO, e vem de uma classe só:
+// nds-dialog-body-scroll já traz o teto de altura, o overflow e a folga da
+// barra. O max-h-[60vh] que estava aqui era nome de utilitária de uma lib que
+// saiu: chega ao elemento e não pinta nada.
 const body = document.createElement('div');
-body.className = 'max-h-[60vh] nds-overflow-y';
+body.className = 'nds-dialog-body-scroll nds-stack';
+// Região que rola precisa ser alcançável por teclado e precisa de nome (WCAG
+// 2.1.1); o papel é group, e não region, porque marco aninhado num diálogo
+// já nomeado não acrescenta navegação.
+body.tabIndex = 0;
+body.setAttribute('role', 'group');
+body.setAttribute('aria-label', 'Termos de uso');
 
 const dialog = createDialog({
   trigger,
@@ -512,6 +523,84 @@ createDialog({
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'dialog',
           items: [
+            {
+              trackId: 'profileEdit',
+              name: stripHtml(t('variants.compositions.profileEdit.name')),
+              description: stripHtml(t('variants.compositions.profileEdit.description')),
+              useWhen: stripHtml(t('variants.compositions.profileEdit.use')),
+              code: `const form = document.createElement('form');
+form.className = 'nds-grid';
+form.dataset.spacing = 'md';
+form.addEventListener('submit', (e) => e.preventDefault());
+
+const field = document.createElement('div');
+field.className = 'nds-stack';
+field.dataset.spacing = 'sm';
+field.append(
+  createLabel({ text: 'Nome completo', htmlFor: 'profile-name' }),
+  createInput({ id: 'profile-name', name: 'name', value: 'Maria Silva' }),
+);
+form.appendChild(field);
+
+// O rodapé entra DENTRO do form: é o que faz o Enter em qualquer campo
+// disparar a ação primária. Por isso ele é montado aqui, e não passado na
+// opção de rodapé da factory, que o põe como irmão do corpo — fora do form.
+const footerEl = document.createElement('div');
+footerEl.className = 'nds-dialog-footer';
+footerEl.dataset.slot = 'dialog-footer';
+const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+cancel.type = 'button';
+cancel.dataset.slot = 'dialog-close';
+const save = createButton({ label: 'Salvar alterações' });
+save.type = 'submit';
+footerEl.append(cancel, save);
+form.appendChild(footerEl);
+
+createDialog({
+  trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
+  title: 'Editar perfil',
+  description: 'Atualize suas informações pessoais.',
+  content: form,
+});`,
+              previewFactory: () => {
+                const form = document.createElement('form');
+                form.className = 'nds-grid';
+                form.dataset.spacing = 'md';
+                form.addEventListener('submit', (e) => e.preventDefault());
+
+                const field = document.createElement('div');
+                field.className = 'nds-stack';
+                field.dataset.spacing = 'sm';
+                field.append(
+                  createLabel({ text: 'Nome completo', htmlFor: 'profile-name' }),
+                  createInput({ id: 'profile-name', name: 'name', value: 'Maria Silva' }),
+                );
+                form.appendChild(field);
+
+                // O rodapé fica DENTRO do form: é o que faz o Enter em qualquer
+                // campo disparar a ação primária, e é o que separa esta
+                // composição de um painel com dois botões soltos. Por isso é
+                // montado aqui, e não passado na opção de rodapé da factory,
+                // que o põe como irmão do corpo — fora do formulário.
+                const footerEl = document.createElement('div');
+                footerEl.className = 'nds-dialog-footer';
+                footerEl.dataset.slot = 'dialog-footer';
+                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                cancel.type = 'button';
+                cancel.dataset.slot = 'dialog-close';
+                const save = createButton({ label: 'Salvar alterações' });
+                save.type = 'submit';
+                footerEl.append(cancel, save);
+                form.appendChild(footerEl);
+
+                return createDialog({
+                  trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
+                  title: 'Editar perfil',
+                  description: 'Atualize suas informações pessoais.',
+                  content: form,
+                });
+              },
+            },
             {
               trackId: 'mediaPreview',
               name: stripHtml(t('variants.compositions.mediaPreview.name')),

@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
 import DialogProfileEditStory from './DialogProfileEditStory.svelte';
 import DialogMediaPreviewStory from './DialogMediaPreviewStory.svelte';
 import {
-  dialogConfirmarEmailSource,
   dialogEditarPerfilSource,
   dialogPreviaDeMidiaSource,
   dialogSource,
@@ -12,7 +10,6 @@ import {
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
   waitForOpen,
   waitForClosed,
   close,
@@ -36,7 +33,7 @@ const meta: Meta = {
       source: { transform: dialogSource },
       description: {
         component:
-          'Composicoes reais do Dialog em fluxos de produto: confirmar email, edição de perfil e pré-visualização de mídia.',
+          'Composicoes reais do Dialog em fluxos de produto: edição de perfil e pré-visualização de mídia.',
       },
     },
   },
@@ -44,41 +41,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-export const ConfirmEmail: Story = {
-  parameters: {
-    docs: {
-      source: { transform: dialogConfirmarEmailSource },
-      description: {
-        story:
-          'Dialog usado para confirmar troca de email. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Enviar confirmação.',
-      },
-    },
-  },
-  render: () => ({
-    Component: DialogConfirmEmailStory,
-    props: { open: true },
-  }),
-  play: async ({ step }) => {
-    const p = await waitForOpen();
-
-    await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
-      await checkNameEDescricao(p);
-    });
-
-    await step('O campo do fluxo está rotulado', async () => {
-      const email = p.querySelector<HTMLInputElement>('#confirm-new-email')!;
-      await expect(email).toHaveAccessibleName('Novo email');
-      await expect(email.type).toBe('email');
-    });
-
-    await step('A operação é reversível, então a ação primária é neutra', async () => {
-      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = footer.querySelectorAll<HTMLElement>('button');
-      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
-    });
-  },
-};
 
 export const ProfileEdit: Story = {
   parameters: {

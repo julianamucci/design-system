@@ -15,8 +15,37 @@
  *     <button class="nds-dialog-close" aria-label="Close">✕</button>
  *   </div>
  *
- * Tokens: --popover (bg), --popover-foreground (fg), --foreground (ring),
- *         --muted (footer bg), --border, --radius-xl, --spacing-*
+ * Corpo mais alto que o painel (o gatilho é do call site, não desta folha):
+ *
+ *   <div class="nds-dialog-body nds-dialog-body-scroll"
+ *        tabindex="0" role="group" aria-label="Termos de uso">…</div>
+ *
+ *   tabindex porque a caixa rola sozinha (WCAG 2.1.1, regra
+ *   scrollable-region-focusable). Parada de teclado precisa de papel, e o papel
+ *   só aparece QUANDO há nome: role="group" e aria-label vêm juntos, porque
+ *   nome em elemento sem papel é atributo proibido. group e não region, porque
+ *   um marco aninhado num diálogo já nomeado não acrescenta navegação — mesma
+ *   decisão registrada em sheet.css para o corpo do Sheet.
+ *
+ * ─── Dialog × AlertDialog ───────────────────────────────────────────────────
+ *
+ * As duas folhas são irmãs: alert-dialog.css reusa as keyframes
+ * nds-dialog-fade-in / nds-dialog-fade-out declaradas aqui. O que as separa é
+ * o que fecha o painel, e isso é decisão, não estilo:
+ *
+ *   · papel: role="dialog" aqui, role="alertdialog" lá;
+ *   · véu: aqui o clique no véu FECHA; lá não fecha — a decisão é crítica e
+ *     exige escolha explícita (está escrito no docblock de alert-dialog.css);
+ *   · Escape: fecha NOS DOIS, e no alertdialog equivale a cancelar;
+ *   · desfoque: só este overlay tem backdrop-filter, e sob um véu de
+ *     --overlay / 0.8 ele quase não aparece — o que o justifica hoje é o
+ *     movimento do que está atrás, não o contraste;
+ *   · o AlertDialog não tem botão de fechar no canto: a saída é o par
+ *     Cancel + Action do rodapé, e é por isso que o rodapé é obrigatório lá.
+ *
+ * Tokens: --overlay (véu), --popover (bg), --popover-foreground (fg),
+ *         --foreground (ring), --muted (footer bg), --border, --radius-card,
+ *         --spacing-*, --z-modal, --z-modal-backdrop
  */
 
 /* ── Overlay ─────────────────────────────────────────────────────────────── */

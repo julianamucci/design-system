@@ -10,7 +10,7 @@ import {
   panel,
   overlay,
   waitForClosed,
-  checkNameEDescricao,
+  checkNameAndDescription,
 } from './dialog.fixtures';
 import { NdsDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -217,7 +217,7 @@ export const Playground: Story = {
       const p = panel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       if (args.modal) await expect(p).toHaveAttribute('aria-modal', 'true');
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
       await expect(p).toHaveAccessibleName(LABELS.title);
       await expect(p).toHaveAccessibleDescription(LABELS.description);
     });

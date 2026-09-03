@@ -1,17 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
+import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
 import {
   dialogActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
   dialogNoFooterSource,
+  dialogConfirmarEmailSource,
   dialogSource,
 } from './dialog.source';
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForOpen,
   waitForClosed,
 } from './dialog.fixtures';
@@ -63,7 +65,7 @@ export const Default: Story = {
       await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step('A ação primária é a última do rodapé', async () => {
@@ -276,6 +278,46 @@ export const CustomCloseInFooter: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
+    });
+  },
+};
+
+// A ConfirmEmail vive AQUI, e não em -compositions, porque o conteúdo
+// compartilhado a descreve em `variants.items.confirmEmail` — ao lado de
+// default, withForm e das outras formas do painel. Estava em -compositions em
+// quatro stacks e em -variants numa só; quem lia a documentação de uma stack
+// encontrava a mesma story em outro lugar do menu.
+export const ConfirmEmail: Story = {
+  parameters: {
+    docs: {
+      source: { transform: dialogConfirmarEmailSource },
+      description: {
+        story:
+          'Dialog usado para confirmar troca de email. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Enviar confirmação.',
+      },
+    },
+  },
+  render: () => ({
+    Component: DialogConfirmEmailStory,
+    props: { open: true },
+  }),
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
+      await checkNameAndDescription(p);
+    });
+
+    await step('O campo do fluxo está rotulado', async () => {
+      const email = p.querySelector<HTMLInputElement>('#confirm-new-email')!;
+      await expect(email).toHaveAccessibleName('Novo email');
+      await expect(email.type).toBe('email');
+    });
+
+    await step('A operação é reversível, então a ação primária é neutra', async () => {
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
 };

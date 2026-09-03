@@ -4,7 +4,7 @@ import {
   open,
   cantoButtonClose,
   checkFocusTrap,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForClosed,
   close,
   trigger,
@@ -143,7 +143,7 @@ export const Playground: Story = {
     await step("O painel se anuncia como diálogo, com nome e descrição", async () => {
       const p = panel()!;
       await expect(p).toHaveAttribute("role", "dialog");
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step("Aberto e modal, o resto do documento sai do alcance", async () => {

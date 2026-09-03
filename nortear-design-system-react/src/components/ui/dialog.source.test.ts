@@ -132,11 +132,12 @@ describe('composições estruturais', () => {
 
   it('a região rolável entra na ordem de tabulação e tem nome', () => {
     // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa; sem
-    // nome, `role="region"` não é anunciada como região nenhuma.
+    // nome, o papel não é anunciado — e o papel é `group`, não `region`:
+    // marco aninhado num diálogo já nomeado não acrescenta navegação.
     const saida = dialogWithScrollSource();
     expect(saida).toContain('tabIndex={0}');
-    expect(saida).toContain('role="region"');
-    expect(saida).toContain('aria-label="Conteúdo rolável"');
+    expect(saida).toContain('role="group"');
+    expect(saida).toContain('aria-label="Termos de uso"');
     expect(saida).toContain('nds-dialog-body-scroll');
   });
 

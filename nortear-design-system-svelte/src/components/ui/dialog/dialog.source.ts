@@ -177,7 +177,10 @@ ${footerDefault('Cancelar', 'Salvar')}
 
 /**
  * Corpo mais alto que o painel: a rolagem é do corpo, e o cabeçalho e o rodapé
- * ficam parados. A região rolável precisa de `tabindex` e de nome acessível.
+ * ficam parados. A região rolável precisa de `tabindex` e de nome acessível — e
+ * o papel é `group`, não `region`: marco aninhado num diálogo já nomeado não
+ * acrescenta navegação. Era `region` aqui e `group` na prévia ao lado; o
+ * snippet é o que se copia, então o par tinha de fechar.
  */
 export function dialogWithScrollSource(): string {
   return dialogo({
@@ -190,8 +193,8 @@ export function dialogWithScrollSource(): string {
       data-slot="dialog-body"
       data-spacing="sm"
       tabindex="0"
-      role="region"
-      aria-label="Conteúdo rolável"
+      role="group"
+      aria-label="Termos e condições"
     >
       <p>Parágrafo 1: conteúdo extenso o bastante para o corpo passar da altura disponível.</p>
       <p>Parágrafo 2: a rolagem é do corpo, e não da página atrás do painel.</p>

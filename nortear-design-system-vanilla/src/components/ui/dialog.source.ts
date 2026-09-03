@@ -218,10 +218,11 @@ export function dialogWithBodyScrollableSnippet(o: DialogWithBodyScrollableSnipp
 corpo.className = 'nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground';
 corpo.dataset.spacing = 'md';
 // Região que rola precisa ser alcançável por teclado e precisa de nome (WCAG
-// 2.1.1) — sem isto ela só rola para quem tem ponteiro.
+// 2.1.1) — sem isto ela só rola para quem tem ponteiro. O papel é group, e
+// não region: marco aninhado num diálogo já nomeado não acrescenta navegação.
 corpo.tabIndex = 0;
-corpo.setAttribute('role', 'region');
-corpo.setAttribute('aria-label', ${text(o.scrollLabel ?? 'Conteúdo rolável')});
+corpo.setAttribute('role', 'group');
+corpo.setAttribute('aria-label', ${text(o.scrollLabel ?? 'Termos de uso')});
 
 for (let i = 1; i <= ${total}; i++) {
   const paragrafo = document.createElement('p');

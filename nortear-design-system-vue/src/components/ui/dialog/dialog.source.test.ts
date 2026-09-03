@@ -130,12 +130,18 @@ describe('transforms das stories de variante', () => {
     expect(saida).toContain('<Button type="submit">Salvar alterações</Button>');
   });
 
-  it('a rolagem troca o painel, e o conteúdo vem de uma lista de verdade', () => {
+  it('a rolagem é do CORPO, e o corpo chega alcançável por teclado', () => {
     const saida = dialogWithScrollSource();
-    expect(saida).toContain('<DialogScrollContent class="nds-max-w-lg">');
-    expect(saida).not.toContain('<DialogContent');
+    // O painel continua sendo o centralizado: trocar por `DialogScrollContent`
+    // é a outra rota, em que o cabeçalho sobe junto com o conteúdo.
+    expect(saida).toContain('<DialogContent class="nds-max-w-lg">');
+    expect(saida).not.toContain('DialogScrollContent');
+    expect(saida).toContain('nds-dialog-body-scroll');
+    expect(saida).toContain('tabindex="0"');
+    expect(saida).toContain('role="group"');
+    expect(saida).toContain('aria-label="Termos de serviço"');
     expect(saida).toContain('<p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>');
-    // Cabeçalho e rodapé continuam DENTRO do painel; quem rola é o overlay.
+    // Cabeçalho e rodapé continuam DENTRO do painel, parados.
     expect(saida).toContain('    <DialogHeader>');
     expect(saida).toContain('    <DialogFooter>');
   });

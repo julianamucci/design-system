@@ -5,7 +5,7 @@ import {
   cantoButtonClose,
   waitForOpen,
   waitForClosed,
-  checkNameEDescricao,
+  checkNameAndDescription,
 } from "./dialog.fixtures";
 import {
   Dialog,
@@ -43,7 +43,7 @@ const meta = {
       source: { transform: dialogSource },
       description: {
         component:
-          "Composicoes estruturais do Dialog: Default, WithForm, WithScrollContent, NoFooter, WithDestructiveAction e CustomCloseInFooter. Não há prop `variant` — a forma é dada pela composição interna.",
+          "Formas estruturais do Dialog: Default, WithForm, WithScrollContent, NoFooter, WithDestructiveAction, CustomCloseInFooter e ConfirmEmail. Não há prop `variant` — a forma é dada pela composição interna.",
       },
     },
   },
@@ -95,7 +95,7 @@ export const Default: Story = {
       await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step("A ação primária é a última do rodapé", async () => {
@@ -221,8 +221,8 @@ export const WithScrollContent: Story = {
           </DialogHeader>
           <div
             tabIndex={0}
-            role="region"
-            aria-label="Conteúdo rolável"
+            role="group"
+            aria-label="Termos de uso"
             data-slot="dialog-body"
             className="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
             data-spacing="sm"
@@ -430,6 +430,68 @@ export const CustomCloseInFooter: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
+    });
+  },
+};
+
+// A ConfirmEmail vive AQUI, e não em -compositions, porque o conteúdo
+// compartilhado a descreve em `variants.items.confirmEmail` — ao lado de
+// default, withForm e das outras formas do painel. Estava em -compositions em
+// quatro stacks e em -variants numa só; quem lia a documentação de uma stack
+// encontrava a mesma story em outro lugar do menu.
+export const ConfirmEmail: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Dialog usado para confirmar e-mail antes de prosseguir. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Confirmar.",
+      },
+    },
+  },
+  render: () => {
+    const title = "Confirmar e-mail";
+    return (
+      <Dialog defaultOpen>
+        <DialogTrigger render={<Button variant="outline" />}>
+          Confirmar e-mail
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>
+              Enviaremos um link de confirmação para{" "}
+              <strong>maria@exemplo.com</strong>. Verifique sua caixa de entrada.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>
+              Cancelar
+            </DialogClose>
+            <Button>Enviar link</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  },
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step("O diálogo se anuncia com o nome e a descrição do fluxo", async () => {
+      await checkNameAndDescription(p);
+    });
+
+    await step("O endereço confirmado aparece na descrição, não só no título", async () => {
+      // O dado que a pessoa precisa conferir antes de decidir mora na
+      // descrição, que é o que o leitor de tela anuncia junto com o nome.
+      const description = p.querySelector<HTMLElement>('[data-slot="dialog-description"]')!;
+      await expect(description).toHaveTextContent("maria@exemplo.com");
+    });
+
+    await step("A operação é reversível, então a ação primária é neutra", async () => {
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>("button");
+      await expect(buttons.length).toBe(2);
+      await expect(buttons[buttons.length - 1]).toHaveClass("nds-button-default");
     });
   },
 };

@@ -180,6 +180,11 @@
       },
       "compositionsTitle": "Composições",
       "compositions": {
+        "profileEdit": {
+          "name": "Edição de perfil",
+          "description": "Body com formulário de vários campos rotulados e o rodapé DENTRO do <code>form</code>, para que a ação primária seja o envio e o Enter em qualquer campo funcione.",
+          "use": "Editar dados que a pessoa já conhece sem tirá-la da página de origem. Para formulário longo ou com etapas, prefira uma página própria."
+        },
         "mediaPreview": {
           "name": "Pré-visualização de mídia",
           "description": "Body com mídia em destaque (imagem, vídeo, capa) e botão Close visível, sem footer de ações. A única intenção é \"ver\", não \"fazer\".",
@@ -638,6 +643,11 @@
       },
       "compositionsTitle": "Compositions",
       "compositions": {
+        "profileEdit": {
+          "name": "Profile editing",
+          "description": "Body with a multi-field labelled form and the footer INSIDE the <code>form</code>, so the primary action is the submit and Enter works from any field.",
+          "use": "Edit data the person already knows without taking them away from the originating page. For a long or multi-step form, prefer a page of its own."
+        },
         "mediaPreview": {
           "name": "Media preview",
           "description": "Body with highlighted media (image, video, cover) and visible Close button, no actions footer. The only intent is to \"view\", not to \"do\".",
@@ -1096,6 +1106,11 @@
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
+        "profileEdit": {
+          "name": "Edición de perfil",
+          "description": "Body con un formulario de varios campos etiquetados y el footer DENTRO del <code>form</code>, para que la acción primaria sea el envío y Enter funcione desde cualquier campo.",
+          "use": "Editar datos que la persona ya conoce sin sacarla de la página de origen. Para un formulario largo o por etapas, prefiere una página propia."
+        },
         "mediaPreview": {
           "name": "Previsualización de media",
           "description": "Body con media destacada (imagen, video, portada) y botón Close visible, sin footer de acciones. La única intención es \"ver\", no \"hacer\".",

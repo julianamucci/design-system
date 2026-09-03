@@ -5,6 +5,35 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
+/*
+ * ─── Dialog ─────────────────────────────────────────────────────────────────
+ *
+ * Diálogo modal comum. O bloco canônico da decisão de acessibilidade (dez
+ * itens, medidos na fonte das cinco libs) está no cabeçalho do `dialog.ts` do
+ * Vanilla; aqui fica a versão curta mais o mecanismo desta stack.
+ *
+ * Prende o foco, trava a rolagem da página, fecha por Escape E por clique no
+ * véu, e devolve o foco ao gatilho. Mecanismo: `useDialogRoot` chama
+ * `useScrollLock(open && modal === true)`, `useDismiss` com
+ * `escapeKey: isTopmost`, e o `FloatingFocusManager` do Popup prende o foco
+ * enquanto `modal !== false`. O `DialogTrigger` do primitivo emite
+ * `aria-haspopup="dialog"` e `aria-expanded` sozinho.
+ *
+ * ─── O que o separa do AlertDialog ──────────────────────────────────────────
+ *
+ * Papel: `dialog` aqui, `alertdialog` lá — o leitor de tela anuncia o
+ * segundo com urgência e lê a descrição junto do título.
+ *
+ * Dispensa: aqui o clique no véu FECHA; no AlertDialog não fecha, porque a
+ * decisão é crítica e exige escolha explícita. No primitivo desta stack isso
+ * não é configuração: `useRenderDialogRoot` liga
+ * `disablePointerDismissal` quando o modo é `alert-dialog`.
+ *
+ * Escape: fecha NOS DOIS, e no AlertDialog equivale a cancelar. Tirar a única
+ * saída de teclado seria pior que o risco de dispensa acidental — que é
+ * justamente o que o clique-fora bloqueado já cobre.
+ */
+
 // O primitivo desta stack isola o resto do documento com `inert`/`aria-hidden`
 // e NÃO emite `aria-modal` (conferido em node_modules). O contrato de markup do
 // design system promete o atributo, então quem o emite é este wrapper — e para

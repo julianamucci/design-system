@@ -608,10 +608,25 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       Leia atentamente antes de aceitar.
                     </DialogDescription>
                   </DialogHeader>
+                  {/*
+                    O teto e a rolagem saem de `.nds-dialog-body-scroll`, e não
+                    de um `max-height` inline: inline vence a folha, então o
+                    valor cravado saía do tema, da densidade e do zoom. A classe
+                    já traz `max-block-size`, `overflow-y` e a folga lateral
+                    que o `nds-pr-2` remontava à mão.
+
+                    `tabindex="0"` porque a caixa rola (WCAG 2.1.1), e o papel
+                    só entra acompanhado de nome — `group` e não `region`,
+                    porque marco aninhado num diálogo já nomeado não acrescenta
+                    navegação. O nome descreve O QUE rola, não que rola.
+                  */}
                   <div
-                    className="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground nds-pr-2"
+                    data-slot="dialog-body"
+                    tabIndex={0}
+                    role="group"
+                    aria-label="Termos de uso"
+                    className="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
                     data-spacing="sm"
-                    style={{ maxHeight: "40vh" }}
                   >
                     {Array.from({ length: 8 }).map((_, i) => (
                       <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>
@@ -749,6 +764,71 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="dialog"
         items={[
+          {
+            trackId: "profileEdit",
+            name: tContent("variants.compositions.profileEdit.name"),
+            description: tContent("variants.compositions.profileEdit.description"),
+            useWhen: tContent("variants.compositions.profileEdit.use"),
+            code: `<Dialog>
+  <DialogTrigger asChild>
+    <Button variant="outline">Editar perfil</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Editar perfil</DialogTitle>
+      <DialogDescription>
+        Atualize suas informações pessoais.
+      </DialogDescription>
+    </DialogHeader>
+    <form className="nds-grid" data-spacing="md" onSubmit={(e) => e.preventDefault()}>
+      <div className="nds-stack" data-spacing="sm">
+        <Label htmlFor="profile-name">Nome completo</Label>
+        <Input id="profile-name" defaultValue="Maria Silva" />
+      </div>
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button type="button" variant="outline">Cancelar</Button>
+        </DialogClose>
+        <Button type="submit">Salvar alterações</Button>
+      </DialogFooter>
+    </form>
+  </DialogContent>
+</Dialog>`,
+            preview: (
+              <Dialog>
+                <DialogTrigger render={<Button variant="outline" />}>Editar perfil</DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Editar perfil</DialogTitle>
+                    <DialogDescription>
+                      Atualize suas informações pessoais.
+                    </DialogDescription>
+                  </DialogHeader>
+                  {/*
+                    O rodapé fica DENTRO do form: é o que faz o Enter em
+                    qualquer campo disparar a ação primária, e é o que separa
+                    esta composição de um painel com dois botões soltos.
+                  */}
+                  <form
+                    className="nds-grid"
+                    data-spacing="md"
+                    onSubmit={(e) => e.preventDefault()}
+                  >
+                    <div className="nds-stack" data-spacing="sm">
+                      <Label htmlFor="profile-name">Nome completo</Label>
+                      <Input id="profile-name" defaultValue="Maria Silva" />
+                    </div>
+                    <DialogFooter>
+                      <DialogClose render={<Button type="button" variant="outline" />}>
+                        Cancelar
+                      </DialogClose>
+                      <Button type="submit">Salvar alterações</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            ),
+          },
           {
             trackId: "mediaPreview",
             name: tContent("variants.compositions.mediaPreview.name"),

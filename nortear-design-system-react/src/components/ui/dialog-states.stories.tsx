@@ -4,7 +4,7 @@ import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForOpen,
   waitForClosed,
   trigger,
@@ -157,7 +157,7 @@ export const Open: Story = {
       await expect(overlay()).toBeVisible();
       await expect(p).toHaveAttribute("role", "dialog");
       await expect(p).toHaveAttribute("aria-modal", "true");
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step("E o foco já está dentro do painel", async () => {

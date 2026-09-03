@@ -4,6 +4,8 @@ import { expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import { NdsAspectRatio } from './aspect-ratio';
+import { NdsInput } from './input';
+import { NdsLabel } from './label';
 import {
   IMG_PLACEHOLDER,
   LABELS,
@@ -21,7 +23,9 @@ const meta: Meta = {
   title: 'Primitives/Overlay/Dialog/Compositions',
   tags: ['overlay'],
   decorators: [
-    moduleMetadata({ imports: [...NDS_DIALOG, NdsButton, NdsAspectRatio] }),
+    moduleMetadata({
+      imports: [...NDS_DIALOG, NdsButton, NdsAspectRatio, NdsInput, NdsLabel],
+    }),
   ],
   parameters: {
     layout: 'centered',
@@ -30,8 +34,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Quando a única intenção é ver, e não fazer, o rodapé de ações some e o botão de ' +
-          'fechar passa a ser a saída principal.',
+          'Arranjos completos que resolvem um caso de uso: editar dados conhecidos sem sair ' +
+          'da página, e ver uma mídia em tamanho real sem nada a confirmar.',
       },
     },
   },
@@ -39,6 +43,81 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+// A ProfileEdit existia em quatro stacks e não aqui — composição publicada em
+// parte do sistema é promessa que uma stack não cumpre. Entra junto com a
+// chave 'variants.compositions.profileEdit' do conteúdo compartilhado, que
+// antes não descrevia nenhuma delas.
+export const ProfileEdit: Story = {
+  parameters: { covers: ['functional.item2'] },
+  render: () => ({
+    props: { labels: LABELS },
+    template: `
+      <div ndsDialog [defaultOpen]="true">
+        <button ndsDialogTrigger ndsButton variant="outline">Editar perfil</button>
+
+        <ng-template ndsDialogPortal>
+          <div ndsDialogOverlay></div>
+
+          <div ndsDialogContent [closeLabel]="labels.close">
+            <div ndsDialogHeader>
+              <h2 ndsDialogTitle>Editar perfil</h2>
+              <p ndsDialogDescription>
+                Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
+              </p>
+            </div>
+
+            <form (submit)="$event.preventDefault()">
+              <div ndsDialogBody class="nds-grid" data-spacing="md">
+                <div class="nds-stack" data-spacing="sm">
+                  <label ndsLabel for="profile-name">Nome completo</label>
+                  <input ndsInput id="profile-name" name="name" value="Maria Silva" />
+                </div>
+                <div class="nds-stack" data-spacing="sm">
+                  <label ndsLabel for="profile-username">Nome de usuário</label>
+                  <input ndsInput id="profile-username" name="username" value="@mariasilva" />
+                </div>
+              </div>
+
+              <div ndsDialogFooter>
+                <button ndsDialogClose ndsButton type="button" variant="outline">
+                  {{ labels.cancel }}
+                </button>
+                <button ndsButton type="submit">Salvar alterações</button>
+              </div>
+            </form>
+          </div>
+        </ng-template>
+      </div>
+    `,
+  }),
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('Os campos estão rotulados e trazem o valor inicial', async () => {
+      // O valor entra na asserção junto com o rótulo: um campo que renderiza
+      // vazio passaria só na presença do label e ninguém veria a falha.
+      const name = p.querySelector<HTMLInputElement>('#profile-name')!;
+      await expect(name).toHaveAccessibleName('Nome completo');
+      await expect(name.value).toBe('Maria Silva');
+
+      const username = p.querySelector<HTMLInputElement>('#profile-username')!;
+      await expect(username).toHaveAccessibleName('Nome de usuário');
+      await expect(username.value).toBe('@mariasilva');
+    });
+
+    await step('O rodapé fica dentro do formulário, e o envio não é o Cancelar', async () => {
+      // É o que separa esta composição de um painel com dois botões soltos: o
+      // Enter em qualquer campo tem de disparar o envio, e para isso o botão
+      // de submissão precisa estar DENTRO do form.
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(footer.closest('form')).not.toBeNull();
+      const botoes = footer.querySelectorAll<HTMLButtonElement>('button');
+      await expect(botoes[0].type).toBe('button');
+      await expect(botoes[botoes.length - 1].type).toBe('submit');
+    });
+  },
+};
 
 export const MediaPreview: Story = {
   parameters: { covers: ['functional.item4', 'accessibility.item6'] },

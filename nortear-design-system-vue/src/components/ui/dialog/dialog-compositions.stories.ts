@@ -16,7 +16,6 @@ import { Label } from '@/components/ui/label';
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
   waitForOpen,
   waitForClosed,
   close,
@@ -24,7 +23,6 @@ import {
   panel,
 } from './dialog.fixtures';
 import {
-  dialogConfirmarEmailSource,
   dialogEditarPerfilSource,
   dialogPreviaDeMidiaSource,
 } from './dialog.source';
@@ -38,10 +36,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: dialogConfirmarEmailSource },
+      source: { transform: dialogEditarPerfilSource },
       description: {
         component:
-          'Composicoes canônicas de uso real do Dialog: confirmação de email, edição de perfil e pré-visualização de mídia.',
+          'Composicoes canônicas de uso real do Dialog: edição de perfil e pré-visualização de mídia.',
       },
     },
   },
@@ -62,61 +60,6 @@ const sharedComponents = {
   Button,
   Input,
   Label,
-};
-
-export const ConfirmEmail: Story = {
-  parameters: {
-    docs: {
-      description: { story: 'Confirmação de troca de email com input inline.' },
-    },
-  },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <Dialog default-open>
-        <DialogTrigger as-child>
-          <Button variant="outline">Confirmar novo email</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmar novo email</DialogTitle>
-            <DialogDescription>
-              Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.
-            </DialogDescription>
-          </DialogHeader>
-          <div class="nds-grid" data-spacing="xs">
-            <Label for="new-email">Novo email</Label>
-            <Input id="new-email" type="email" placeholder="voce@example.com" />
-          </div>
-          <DialogFooter>
-            <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
-            </DialogClose>
-            <Button>Enviar confirmação</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    `,
-  }),
-  play: async ({ step }) => {
-    const p = await waitForOpen();
-
-    await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
-      await checkNameEDescricao(p);
-    });
-
-    await step('O campo do fluxo está rotulado', async () => {
-      const email = p.querySelector<HTMLInputElement>('#new-email')!;
-      await expect(email).toHaveAccessibleName('Novo email');
-      await expect(email.type).toBe('email');
-    });
-
-    await step('A operação é reversível, então a ação primária é neutra', async () => {
-      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = footer.querySelectorAll<HTMLElement>('button');
-      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
-    });
-  },
 };
 
 export const ProfileEdit: Story = {

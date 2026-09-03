@@ -95,7 +95,7 @@ describe('transforms das stories de composição', () => {
     const saida = dialogWithScrollSource();
     expect(saida).toContain('nds-dialog-body-scroll');
     expect(saida).toContain('tabindex="0"');
-    expect(saida).toContain('aria-label="Conteúdo rolável"');
+    expect(saida).toContain('aria-label="Termos e condições"');
   });
 
   it('a composição sem rodapé não importa nem escreve as peças de rodapé', () => {

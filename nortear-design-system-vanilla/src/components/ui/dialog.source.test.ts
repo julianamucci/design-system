@@ -137,9 +137,9 @@ describe('dialogComCorpoRolavelSnippet', () => {
   it('mostra a classe de rolagem e a costura de teclado que ela exige', () => {
     const code = dialogWithBodyScrollableSnippet({ paragrafos: 12 });
     expect(code).toContain('nds-dialog-body-scroll');
-    expect(code).toContain("corpo.setAttribute('role', 'region')");
+    expect(code).toContain("corpo.setAttribute('role', 'group')");
     expect(code).toContain('corpo.tabIndex = 0');
-    expect(code).toContain("corpo.setAttribute('aria-label', 'Conteúdo rolável')");
+    expect(code).toContain("corpo.setAttribute('aria-label', 'Termos de uso')");
     expect(code).toContain('i <= 12');
   });
 

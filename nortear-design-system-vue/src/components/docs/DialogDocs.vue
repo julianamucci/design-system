@@ -11,7 +11,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogScrollContent,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -43,21 +42,28 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 const { t: tNav } = useTranslation(uiTranslations);
 // O conteúdo compartilhado descreve o padrão de rolagem interna sem nomear
-// subcomponente, porque nem toda stack tem um. Aqui existe `DialogScrollContent`
-// — divergência de API de framework, que fica registrada neste override em vez
-// de virar comparação no texto comum. Nenhuma chave `*Code` passa por aqui.
+// subcomponente, porque nem toda stack tem um. O override abaixo nomeia as
+// DUAS rotas que existem aqui — divergência de API de framework, que fica
+// registrada neste override em vez de virar comparação no texto comum. Nenhuma
+// chave `*Code` passa por aqui.
+//
+// O texto anterior afirmava que `DialogScrollContent` "dá ao corpo a altura
+// máxima e a rolagem vertical, e mantém cabeçalho e rodapé sempre visíveis".
+// É o contrário do que ele faz: ele põe `.nds-dialog-overlay-scroll` e
+// `.nds-dialog-content-scroll`, e nesse arranjo quem rola é o overlay — o
+// painel inteiro entra no fluxo e o cabeçalho sobe junto com o resto.
 const { t: tContent, locale } = useTranslation(dialogTranslations, {
   'pt-BR': {
     'notes.tip3':
-      'Conteúdo mais alto que a janela deve rolar dentro do corpo, não junto com a página. Use <code>DialogScrollContent</code> no lugar de <code>DialogContent</code>: ele já dá ao corpo a altura máxima e a rolagem vertical, e mantém cabeçalho e rodapé sempre visíveis.',
+      'Conteúdo mais alto que a janela pede uma das duas rotas. Cabeçalho e rodapé parados: mantenha <code>DialogContent</code> e dê ao corpo a classe de rolagem, que já traz altura máxima e barra própria. Painel inteiro rolando com a página: troque por <code>DialogScrollContent</code>, e aí o cabeçalho sobe junto com o conteúdo.',
   },
   en: {
     'notes.tip3':
-      'Content taller than the window must scroll inside the body, not along with the page. Use <code>DialogScrollContent</code> in place of <code>DialogContent</code>: it already gives the body a max height and vertical scrolling, and keeps header and footer always visible.',
+      'Content taller than the window calls for one of two routes. Header and footer fixed: keep <code>DialogContent</code> and give the body the scroll class, which already brings a max height and its own scrollbar. Whole panel scrolling with the page: swap in <code>DialogScrollContent</code>, and the header then scrolls away with the content.',
   },
   es: {
     'notes.tip3':
-      'El contenido más alto que la ventana debe desplazarse dentro del cuerpo, no junto con la página. Usa <code>DialogScrollContent</code> en lugar de <code>DialogContent</code>: ya da al cuerpo la altura máxima y el desplazamiento vertical, y mantiene encabezado y pie siempre visibles.',
+      'El contenido más alto que la ventana pide una de dos rutas. Encabezado y pie fijos: mantén <code>DialogContent</code> y dale al cuerpo la clase de desplazamiento, que ya trae altura máxima y barra propia. Panel entero desplazándose con la página: cambia a <code>DialogScrollContent</code>, y entonces el encabezado sube junto con el contenido.',
   },
 });
 
@@ -185,7 +191,6 @@ const codeImportBasic = `import {
 
 const codeImportWithScroll = `import {
   Dialog,
-  DialogScrollContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
@@ -335,7 +340,38 @@ const codeCompositionMediaPreview = `<Dialog>
   </DialogContent>
 </Dialog>`;
 
+const codeCompositionProfileEdit = `<Dialog>
+  <DialogTrigger as-child>
+    <Button variant="outline">Editar perfil</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Editar perfil</DialogTitle>
+      <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+    </DialogHeader>
+    <form class="nds-grid" data-spacing="md" @submit.prevent>
+      <div class="nds-stack" data-spacing="sm">
+        <Label for="profile-name">Nome completo</Label>
+        <Input id="profile-name" model-value="Maria Silva" />
+      </div>
+      <DialogFooter>
+        <DialogClose as-child>
+          <Button type="button" variant="outline">Cancelar</Button>
+        </DialogClose>
+        <Button type="submit">Salvar alterações</Button>
+      </DialogFooter>
+    </form>
+  </DialogContent>
+</Dialog>`;
+
 const compositionItems = computed(() => [
+  {
+    trackId: 'profileEdit',
+    name: tContent('variants.compositions.profileEdit.name'),
+    description: tContent('variants.compositions.profileEdit.description'),
+    useWhen: tContent('variants.compositions.profileEdit.use'),
+    code: codeCompositionProfileEdit,
+  },
   {
     trackId: 'mediaPreview',
     name: tContent('variants.compositions.mediaPreview.name'),
@@ -782,15 +818,29 @@ const a11yCritCols = computed(() => ({
               Termos de serviço
             </Button>
           </DialogTrigger>
-          <DialogScrollContent class="nds-max-w-md">
+          <!-- `DialogContent`, e não `DialogScrollContent`: o conteúdo
+               compartilhado descreve esta variante como "Header e Footer fixos",
+               que é o arranjo em que só o CORPO rola. Com o painel rolável o
+               cabeçalho sobe junto, e a prévia contradizia a descrição
+               renderizada ao lado dela. -->
+          <DialogContent class="nds-max-w-md">
             <DialogHeader>
               <DialogTitle>Termos de serviço</DialogTitle>
               <DialogDescription>Leia atentamente os termos.</DialogDescription>
             </DialogHeader>
+            <!-- O teto e a rolagem saem de `.nds-dialog-body-scroll`: um
+                 `max-height` inline vence a folha e sai do tema, da densidade e
+                 do zoom — e o valor cravado aqui nem batia com o das outras
+                 stacks. `tabindex="0"` porque a caixa rola (WCAG 2.1.1); o
+                 papel `group` (e não `region`) só entra com nome, porque marco
+                 aninhado num diálogo já nomeado não acrescenta navegação. -->
             <div
-              class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y"
+              class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
+              data-slot="dialog-body"
               data-spacing="sm"
-              style="max-height: 14rem"
+              tabindex="0"
+              role="group"
+              aria-label="Termos de serviço"
             >
               <p
                 v-for="i in 8"
@@ -807,7 +857,7 @@ const a11yCritCols = computed(() => ({
               </DialogClose>
               <Button>Aceitar termos</Button>
             </DialogFooter>
-          </DialogScrollContent>
+          </DialogContent>
         </Dialog>
       </template>
       <template #variant-preview-3>
@@ -912,6 +962,53 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
+              Editar perfil
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar perfil</DialogTitle>
+              <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+            </DialogHeader>
+            <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer
+                 campo disparar a ação primária, e é o que separa esta
+                 composição de um painel com dois botões soltos. -->
+            <form
+              class="nds-grid"
+              data-spacing="md"
+              @submit.prevent
+            >
+              <div
+                class="nds-stack"
+                data-spacing="sm"
+              >
+                <Label for="profile-name">Nome completo</Label>
+                <Input
+                  id="profile-name"
+                  model-value="Maria Silva"
+                />
+              </div>
+              <DialogFooter>
+                <DialogClose as-child>
+                  <Button
+                    type="button"
+                    variant="outline"
+                  >
+                    Cancelar
+                  </Button>
+                </DialogClose>
+                <Button type="submit">
+                  Salvar alterações
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </template>
+      <template #variant-preview-1>
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">

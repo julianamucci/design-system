@@ -92,7 +92,7 @@ export async function close(): Promise<void> {
  * string e reprovaria no axe por `aria-valid-attr-value` — é exatamente o caso
  * que esta checagem existe para pegar.
  */
-export async function checkNameEDescricao(p: HTMLElement): Promise<void> {
+export async function checkNameAndDescription(p: HTMLElement): Promise<void> {
   const idTitle = p.getAttribute('aria-labelledby');
   await expect(idTitle).toBeTruthy();
   await expect(document.getElementById(idTitle!)).toHaveAttribute('data-slot', 'dialog-title');

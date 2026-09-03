@@ -8,11 +8,10 @@ import { NdsLabel } from './label';
 import {
   LABELS,
   panel,
-  overlay,
   open,
   waitForOpen,
   waitForClosed,
-  checkNameEDescricao,
+  checkNameAndDescription,
 } from './dialog.fixtures';
 
 // Dialog não tem prop `variant` nem `size` — o conteúdo compartilhado diz isso
@@ -81,7 +80,7 @@ export const Default: Story = {
       await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step('A ação primária é a última do rodapé', async () => {
@@ -115,7 +114,7 @@ export const WithForm: Story = {
             <div ndsDialogBody class="nds-stack" data-spacing="md">
               <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="dlg-nome">Nome</label>
-                <input ndsInput id="dlg-nome" name="nome" value="Ana Ribeiro" />
+                <input ndsInput id="dlg-nome" name="name" value="Ana Ribeiro" />
               </div>
               <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="dlg-email">E-mail</label>
@@ -165,15 +164,22 @@ export const WithScrollContent: Story = {
         <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
 
         <ng-template ndsDialogPortal>
-          <div ndsDialogOverlay [scroll]="true"></div>
+          <div ndsDialogOverlay></div>
 
-          <div ndsDialogContent [scroll]="true" [closeLabel]="labels.close">
+          <div ndsDialogContent [closeLabel]="labels.close">
             <div ndsDialogHeader>
               <h2 ndsDialogTitle>{{ labels.title }}</h2>
               <p ndsDialogDescription>{{ labels.description }}</p>
             </div>
 
-            <div ndsDialogBody class="nds-stack" data-spacing="sm">
+            <div
+              ndsDialogBody
+              class="nds-dialog-body-scroll nds-stack"
+              data-spacing="sm"
+              tabindex="0"
+              role="group"
+              [attr.aria-label]="labels.title"
+            >
               @for (paragrafo of paragrafos; track paragrafo) {
                 <p>{{ paragrafo }}</p>
               }
@@ -191,29 +197,28 @@ export const WithScrollContent: Story = {
   play: async ({ step }) => {
     const p = await waitForOpen();
 
-    await step('O painel sai do centro fixo e entra no fluxo do overlay', async () => {
-      // Conteúdo mais alto que a janela precisa de alguém para rolar. Quem rola
-      // é o overlay: o painel centralizado por `position: fixed` cortaria o que
-      // não coubesse, sem barra de rolagem nenhuma.
-      await expect(p).toHaveClass(/nds-dialog-content-scroll/);
-      await expect(overlay()).toHaveClass(/nds-dialog-overlay-scroll/);
-      await expect(getComputedStyle(overlay()!).overflowY).toBe('auto');
-      await expect(getComputedStyle(p).position).toBe('relative');
+    await step('O corpo rola sozinho, com header e rodapé parados', async () => {
+      // Esta story demonstrava a OUTRA rota — o par [scroll] do overlay e do
+      // painel, em que quem rola é o overlay e o cabeçalho sobe junto. O
+      // conteúdo compartilhado descreve withScrollContent como "Header e Footer
+      // fixos", que é o arranjo de corpo rolável: a story dizia uma coisa e a
+      // descrição renderizada ao lado dela dizia outra.
+      //
+      // Comportamento e não nome de classe: é o overflow computado que prova a
+      // variante, e a asserção sobrevive se a classe for renomeada.
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(getComputedStyle(body).overflowY).toBe('auto');
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
     });
 
-    await step('Header e Footer continuam no painel, acima e abaixo do corpo', async () => {
-      // Só os slots da família: os botões do rodapé carregam `data-slot="button"`
-      // e entrariam na lista sem dizer nada sobre a ordem das PARTES.
-      const partes = [...p.querySelectorAll<HTMLElement>('[data-slot^="dialog-"]')]
-        .map((el) => el.dataset['slot'])
-        .filter((slot) => slot !== 'dialog-close');
-      await expect(partes).toEqual([
-        'dialog-header',
-        'dialog-title',
-        'dialog-description',
-        'dialog-body',
-        'dialog-footer',
-      ]);
+    await step('A região rolável é alcançável por teclado e tem nome', async () => {
+      // Sem tabindex quem navega só por teclado não consegue rolar a caixa — é
+      // a exigência que acompanha toda região com rolagem própria.
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveAccessibleName();
     });
   },
 };

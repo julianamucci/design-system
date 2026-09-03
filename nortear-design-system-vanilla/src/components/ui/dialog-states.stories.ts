@@ -7,7 +7,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForOpen,
   waitForClosed,
   trigger,
@@ -128,7 +128,7 @@ export const Open: Story = {
       await expect(p).toHaveAttribute('aria-modal', 'true');
       await expect(p).toHaveAttribute('data-state', 'open');
       await expect(overlay()).toBeVisible();
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step('E o foco já está dentro do painel', async () => {

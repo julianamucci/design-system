@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogScrollContent,
   DialogTitle,
   DialogTrigger,
 } from './index';
@@ -17,10 +16,9 @@ import { Label } from '@/components/ui/label';
 import {
   open,
   cantoButtonClose,
-  checkNameEDescricao,
+  checkNameAndDescription,
   waitForOpen,
   waitForClosed,
-  overlay,
 } from './dialog.fixtures';
 import {
   dialogActionDestructiveSource,
@@ -28,6 +26,7 @@ import {
   dialogWithScrollSource,
   footerDialogCloseSource,
   dialogNoFooterSource,
+  dialogConfirmarEmailSource,
   dialogSource,
 } from './dialog.source';
 
@@ -61,7 +60,6 @@ const sharedComponents = {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogScrollContent,
   DialogTitle,
   DialogTrigger,
   Button,
@@ -110,7 +108,7 @@ export const Default: Story = {
       await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
-      await checkNameEDescricao(p);
+      await checkNameAndDescription(p);
     });
 
     await step('A ação primária é a última do rodapé', async () => {
@@ -196,11 +194,12 @@ export const WithScrollContent: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
-      // Outro painel: `DialogScrollContent` no lugar de `DialogContent`.
+      // A região rolável tem `tabindex`, papel e nome próprios — peça de corpo
+      // que o snippet do `meta` não tem.
       source: { transform: dialogWithScrollSource },
       description: {
         story:
-          'Conteúdo longo demais para a janela: o painel sai do centro fixo e entra no fluxo do overlay, que passa a ser quem rola. Header e Footer continuam dentro do painel.',
+          'Body longo com rolagem própria: o painel fica parado e centralizado, e header e rodapé continuam visíveis.',
       },
     },
   },
@@ -211,12 +210,19 @@ export const WithScrollContent: Story = {
         <DialogTrigger as-child>
           <Button variant="outline">Ver termos</Button>
         </DialogTrigger>
-        <DialogScrollContent class="nds-max-w-lg">
+        <DialogContent class="nds-max-w-lg">
           <DialogHeader>
             <DialogTitle>Termos de serviço</DialogTitle>
             <DialogDescription>Leia atentamente os termos antes de aceitar.</DialogDescription>
           </DialogHeader>
-          <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+          <div
+            class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
+            data-slot="dialog-body"
+            data-spacing="sm"
+            tabindex="0"
+            role="group"
+            aria-label="Termos de serviço"
+          >
             <p v-for="i in 12" :key="i">
               Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -229,27 +235,33 @@ export const WithScrollContent: Story = {
             </DialogClose>
             <Button>Aceitar termos</Button>
           </DialogFooter>
-        </DialogScrollContent>
+        </DialogContent>
       </Dialog>
     `,
   }),
   play: async ({ step }) => {
     const p = await waitForOpen();
 
-    await step('O painel sai do centro fixo e entra no fluxo do overlay', async () => {
-      // Conteúdo mais alto que a janela precisa de alguém para rolar. Quem rola
-      // é o overlay: o painel centralizado por `position: fixed` cortaria o que
-      // não coubesse, sem barra de rolagem nenhuma. Comportamento e não nome de
-      // classe — é o `overflow` computado que prova a variante.
-      await expect(getComputedStyle(overlay()!).overflowY).toBe('auto');
-      await expect(getComputedStyle(p).position).toBe('relative');
+    await step('O corpo rola sozinho, com header e rodapé parados', async () => {
+      // Esta story demonstrava a OUTRA rota — `DialogScrollContent`, em que quem
+      // rola é o overlay e o cabeçalho sobe junto. O conteúdo compartilhado
+      // descreve `withScrollContent` como "Header e Footer fixos", que é o
+      // arranjo de corpo rolável; a story dizia uma coisa e a descrição ao lado
+      // dela dizia outra. Comportamento e não nome de classe: é o `overflow`
+      // computado que prova a variante.
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(getComputedStyle(body).overflowY).toBe('auto');
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
     });
 
-    await step('Header e Footer continuam no painel, acima e abaixo do corpo', async () => {
-      const partes = [...p.querySelectorAll<HTMLElement>('[data-slot^="dialog-"]')]
-        .map((el) => el.dataset.slot)
-        .filter((slot) => slot !== 'dialog-close');
-      await expect(partes).toEqual(['dialog-header', 'dialog-title', 'dialog-description', 'dialog-footer']);
+    await step('A região rolável é alcançável por teclado e tem nome', async () => {
+      // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa —
+      // é a exigência que acompanha toda região com rolagem própria.
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveAccessibleName();
     });
   },
 };
@@ -401,6 +413,68 @@ export const CustomCloseInFooter: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
+    });
+  },
+};
+
+// A ConfirmEmail vive AQUI, e não em -compositions, porque o conteúdo
+// compartilhado a descreve em `variants.items.confirmEmail` — ao lado de
+// default, withForm e das outras formas do painel. Estava em -compositions em
+// quatro stacks e em -variants numa só; quem lia a documentação de uma stack
+// encontrava a mesma story em outro lugar do menu.
+export const ConfirmEmail: Story = {
+  parameters: {
+    docs: {
+      // O campo inline muda a marcação do corpo: o andaime do meta não o traz.
+      source: { transform: dialogConfirmarEmailSource },
+      description: { story: 'Confirmação de troca de email com input inline.' },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <Dialog default-open>
+        <DialogTrigger as-child>
+          <Button variant="outline">Confirmar novo email</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar novo email</DialogTitle>
+            <DialogDescription>
+              Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.
+            </DialogDescription>
+          </DialogHeader>
+          <div class="nds-grid" data-spacing="xs">
+            <Label for="new-email">Novo email</Label>
+            <Input id="new-email" type="email" placeholder="voce@example.com" />
+          </div>
+          <DialogFooter>
+            <DialogClose as-child>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
+            <Button>Enviar confirmação</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    `,
+  }),
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
+      await checkNameAndDescription(p);
+    });
+
+    await step('O campo do fluxo está rotulado', async () => {
+      const email = p.querySelector<HTMLInputElement>('#new-email')!;
+      await expect(email).toHaveAccessibleName('Novo email');
+      await expect(email.type).toBe('email');
+    });
+
+    await step('A operação é reversível, então a ação primária é neutra', async () => {
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
 };

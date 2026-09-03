@@ -276,9 +276,16 @@ export function dialogWithFormSource(): string {
 /**
  * Variante WithScrollContent: conteúdo mais alto que a janela.
  *
- * O painel sai do centro fixo e entra no fluxo do overlay, que passa a ser quem
- * rola. O painel centralizado por posição fixa cortaria o que não coubesse, sem
- * barra de rolagem nenhuma. Cabeçalho e rodapé continuam dentro do painel.
+ * Quem rola é o CORPO: o painel fica parado e centralizado, e cabeçalho e
+ * rodapé continuam visíveis — é o que o conteúdo compartilhado descreve para
+ * esta variante. O teto e a barra vêm da classe de rolagem, junto de
+ * `tabindex`, papel e nome, sem os quais a caixa só rola para quem tem
+ * ponteiro (WCAG 2.1.1). `group` e não `region`: marco aninhado num diálogo
+ * já nomeado não acrescenta navegação.
+ *
+ * A outra rota — `DialogScrollContent`, em que o painel entra no fluxo e o
+ * OVERLAY rola — existe nesta stack e está descrita na dica da docs page. Ela
+ * não é esta variante: ali o cabeçalho sobe junto com o conteúdo.
  */
 export function dialogWithScrollSource(): string {
   return vueSnippet(
@@ -288,7 +295,7 @@ export function dialogWithScrollSource(): string {
       'DialogDescription',
       'DialogFooter',
       'DialogHeader',
-      'DialogScrollContent',
+      'DialogContent',
       'DialogTitle',
       'DialogTrigger',
     ])}
@@ -299,12 +306,18 @@ const termos = [
   'Do encerramento: o cancelamento pode ser pedido a qualquer momento, e os dados ficam disponíveis por trinta dias.',
 ]`,
     dialogo({
-      panel: 'DialogScrollContent',
       painelProps: 'class="nds-max-w-lg"',
       trigger: 'Ver termos',
       title: 'Termos de serviço',
       descricao: 'Leia atentamente os termos antes de aceitar.',
-      body: `    <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+      body: `    <div
+      class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
+      data-slot="dialog-body"
+      data-spacing="sm"
+      tabindex="0"
+      role="group"
+      aria-label="Termos de serviço"
+    >
       <p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>
     </div>`,
       footer: footerDefault('Recusar', 'Aceitar termos'),

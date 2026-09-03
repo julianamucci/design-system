@@ -1,11 +1,61 @@
 // ─── Dialog — Vanilla factory standalone ────────────────────────────────────
-// Visual: classes .nds-dialog-* (standalone). Render via portal.
-// Comportamento: overlay click + Escape fecham; focus-trap; restaura foco.
+//
+// Visual: classes .nds-dialog-* (standalone). Render via portal (body).
+//
+// ─── A decisão de acessibilidade, medida nas cinco stacks ───────────────────
+//
+// Bloco canônico da família: as outras quatro trazem a versão curta mais o
+// mecanismo da própria lib. Medido na FONTE de cada lib, não na documentação.
+//
+//   1. PRENDE O FOCO — as cinco. base-ui: FloatingFocusManager com
+//      modal !== false. reka-ui: DialogContentModal com trap-focus ligado ao
+//      open. bits-ui: FocusScope com trapFocus padrão true. radix-ng:
+//      gerenciador próprio, dono do alvo de retorno. Aqui: laço de Tab e
+//      Shift+Tab no handleKeydown.
+//   2. role="dialog" + aria-modal="true" — as cinco. base-ui e reka-ui NÃO
+//      emitem aria-modal (conferido em node_modules): quem cumpre o contrato
+//      de markup ali é o wrapper do design system, lendo o modo real. bits-ui
+//      e radix-ng emitem sozinhas. Aqui é escrito à mão.
+//   3. NOME E DESCRIÇÃO — aria-labelledby aponta para o título, sempre;
+//      aria-describedby só existe quando existe descrição. Apontar para um id
+//      ausente o axe reprova em aria-valid-attr-value.
+//   4. ESCAPE FECHA — as cinco. O keydown é do DOCUMENTO, e não do painel,
+//      porque o foco pode estar no corpo que rola.
+//   5. CLIQUE NO VÉU FECHA — as cinco. É a diferença que mais importa em
+//      relação ao AlertDialog: ali o clique fora NÃO fecha (ver o docblock de
+//      alert-dialog.ts). Diálogo comum se dispensa por engano sem
+//      consequência; decisão crítica não.
+//   6. TRAVA A ROLAGEM DA PÁGINA — as cinco. base-ui: useScrollLock(open &&
+//      modal === true). reka-ui: useBodyScrollLock no overlay. bits-ui:
+//      ScrollLock com preventScroll padrão true. radix-ng: useScrollLock preso
+//      ao modal. Aqui: lockBodyScroll de @/lib/scroll-lock, com a contagem
+//      compartilhada com Sheet, Drawer e Popover. Faltava, e o conteúdo
+//      compartilhado a prometia por escrito em states.open.
+//   7. O GATILHO SE ANUNCIA — aria-haspopup="dialog" nas cinco (base-ui
+//      DialogTrigger, reka-ui DialogTrigger, bits-ui dialog.svelte.js e
+//      radix-ng RdxDialogTrigger emitem sozinhas), com aria-expanded
+//      acompanhando a abertura. Aqui era o único ponto da família sem os dois
+//      — o AlertDialog desta mesma stack já os escrevia.
+//   8. O FOCO VOLTA AO GATILHO ao fechar — as cinco.
+//   9. CORPO QUE ROLA — quando o conteúdo é mais alto que o painel, quem
+//      compõe pendura .nds-dialog-body-scroll no elemento do corpo, junto de
+//      tabindex="0" (WCAG 2.1.1) e de role="group" com nome. group e não
+//      region: marco aninhado num diálogo já nomeado não acrescenta navegação.
+//  10. REGIÃO VIVA: nenhuma. A abertura já move o foco, e o papel de diálogo
+//      já é anunciado.
+//
+// ─── O que esta stack NÃO faz, e é decisão de família ───────────────────────
+//
+// Não anima a SAÍDA: closeWithReason marca data-state="closed" e remove no
+// mesmo quadro, então as keyframes de saída de dialog.css não chegam a rodar.
+// É como Sheet e Drawer se comportam nesta stack; o único que espera a
+// animação é o AlertDialog, que tem o par animationend + timeout escrito.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 
 export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'action';
 
@@ -100,9 +150,21 @@ export function createDialog(options: DialogOptions): DestroyableElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'dialog';
+  // O gatilho abre um diálogo: anuncia isso ANTES do clique, e o aria-expanded
+  // acompanha a abertura — é o que base-ui, reka-ui, bits-ui e radix-ng fazem
+  // sozinhas, e o que o AlertDialog desta stack já escrevia à mão.
+  trigger.dataset.slot = 'dialog-trigger';
+  trigger.setAttribute('aria-haspopup', 'dialog');
+  trigger.setAttribute('aria-expanded', 'false');
   wrapper.appendChild(trigger);
 
   function open(): void {
+    // Já aberto: um segundo open() montaria um painel novo, perderia a
+    // referência do anterior — que ficaria órfão no body — e travaria a
+    // rolagem uma segunda vez, sem o destravar correspondente. Mesma guarda
+    // que o AlertDialog desta stack já tinha.
+    if (panelEl) return;
+
     previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
@@ -181,11 +243,25 @@ export function createDialog(options: DialogOptions): DestroyableElement {
     const focusable = getFocusable(panelEl);
     focusable[0]?.focus();
 
+    // A página atrás do véu não rola enquanto o diálogo está aberto — sem
+    // isto, a roda do mouse sobre o véu rolava o documento inteiro por baixo.
+    // A contagem vive em @/lib/scroll-lock, compartilhada com Sheet, Drawer e
+    // Popover, e é ela que faz diálogos empilhados destravarem só no último.
+    lockBodyScroll();
+
+    trigger.setAttribute('aria-expanded', 'true');
     document.addEventListener('keydown', handleKeydown);
     onOpenChange?.(true);
   }
 
   function closeWithReason(reason: DialogCloseReason): void {
+    // Já fechado: um segundo close (Escape depois do clique no véu, ou o
+    // destruir chegando em cima do fechamento) não pode destravar a rolagem
+    // duas vezes — a contagem ficaria negativa e a página seguinte abriria
+    // travada.
+    if (!panelEl && !overlayEl) return;
+    unlockBodyScroll();
+    trigger.setAttribute('aria-expanded', 'false');
     if (overlayEl) overlayEl.dataset.state = 'closed';
     if (panelEl) panelEl.dataset.state = 'closed';
     overlayEl?.remove();

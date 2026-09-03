@@ -43,6 +43,21 @@ import { NdsButton } from './button';
 //   · o painel montado até a animação de saída terminar — sem isso o
 //     fechamento não teria o que animar.
 //
+// ─── O que o separa do AlertDialog ────────────────────────────────────────────
+//
+// O bloco canônico da decisão de acessibilidade da família (dez itens, medidos
+// na fonte das cinco libs) está no cabeçalho do `dialog.ts` do Vanilla.
+//
+// Papel: `dialog` aqui, `alertdialog` lá — o leitor de tela anuncia o
+// segundo com urgência e lê a descrição junto do título.
+//
+// Dispensa: aqui o clique no véu FECHA; no AlertDialog não fecha. Lá isso não é
+// input público, é o perfil do componente, fixado na construção por
+// `provideRdxDialogVariant({ forcePointerDismissalDisabled: true })` — ninguém
+// que consome consegue afrouxar por engano.
+//
+// Escape: fecha NOS DOIS, e no AlertDialog equivale a cancelar.
+//
 // O que os primitivos NÃO entregam é `data-state="open|closed"`: o Radix NG
 // segue a convenção do Base UI (`data-open` / `data-closed`) e as outras quatro
 // stacks emitem `data-state`. O CSS compartilhado aceita as duas formas, mas

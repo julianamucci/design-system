@@ -248,8 +248,13 @@ ${form([
  * Corpo com rolagem própria: `tabindex` e nome não são opcionais.
  *
  * Toda região que rola sozinha precisa entrar na ordem de tabulação — sem ela
- * quem navega só por teclado não consegue rolar a caixa — e precisa de nome,
- * porque `role="region"` sem nome não é anunciada como região nenhuma.
+ * quem navega só por teclado não consegue rolar a caixa — e o papel só aparece
+ * QUANDO há nome, porque nome em elemento sem papel é atributo proibido.
+ *
+ * `group` e não `region`: marco aninhado num diálogo já nomeado
+ * não acrescenta navegação, só uma entrada a mais na lista de marcos. O nome
+ * diz O QUE rola — "Conteúdo rolável" nomeia o mecanismo, e quem chegou ali por
+ * Tab já sabe que rola.
  */
 export function dialogWithScrollSource(): string {
   return jsxSnippet(
@@ -265,8 +270,8 @@ export function dialogWithScrollSource(): string {
     </DialogHeader>
     <div
       tabIndex={0}
-      role="region"
-      aria-label="Conteúdo rolável"
+      role="group"
+      aria-label="Termos de uso"
       data-slot="dialog-body"
       className="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
       data-spacing="sm"

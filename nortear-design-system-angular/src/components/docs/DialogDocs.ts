@@ -299,8 +299,8 @@ const VARIANT_CODE = {
 
   withForm: `<div ndsDialogBody class="nds-stack" data-spacing="md">
   <div class="nds-stack" data-spacing="xs">
-    <label ndsLabel for="perfil-nome">Nome</label>
-    <input ndsInput id="perfil-nome" name="nome" />
+    <label ndsLabel for="profile-name">Nome</label>
+    <input ndsInput id="profile-name" name="name" />
   </div>
 
   <div class="nds-stack" data-spacing="xs">
@@ -314,18 +314,27 @@ const VARIANT_CODE = {
   <button ndsButton type="submit">Salvar alterações</button>
 </div>`,
 
-  withScrollContent: `<!-- scroll vai nos DOIS: quem rola é o overlay, e o painel
-     precisa sair do centro fixo para entrar no fluxo dele. -->
+  withScrollContent: `<!-- Quem rola é o CORPO: o painel fica parado e centralizado, e cabeçalho e
+     rodapé continuam visíveis. O teto e a barra vêm da classe de rolagem;
+     tabindex, papel e nome vêm junto, senão a caixa só rola para quem tem
+     ponteiro (WCAG 2.1.1). -->
 <ng-template ndsDialogPortal>
-  <div ndsDialogOverlay [scroll]="true"></div>
+  <div ndsDialogOverlay></div>
 
-  <div ndsDialogContent [scroll]="true" closeLabel="Fechar">
+  <div ndsDialogContent closeLabel="Fechar">
     <div ndsDialogHeader>
       <h2 ndsDialogTitle>Termos de uso</h2>
       <p ndsDialogDescription>Leia antes de aceitar.</p>
     </div>
 
-    <div ndsDialogBody class="nds-stack" data-spacing="sm">
+    <div
+      ndsDialogBody
+      class="nds-dialog-body-scroll nds-stack"
+      data-spacing="sm"
+      tabindex="0"
+      role="group"
+      aria-label="Termos de uso"
+    >
       <!-- conteúdo longo -->
     </div>
   </div>
@@ -368,6 +377,28 @@ const VARIANT_CODE = {
 };
 
 const COMPOSITION_CODE = {
+  profileEdit: `<div ndsDialogContent closeLabel="Fechar">
+  <div ndsDialogHeader>
+    <h2 ndsDialogTitle>Editar perfil</h2>
+    <p ndsDialogDescription>Atualize suas informações pessoais.</p>
+  </div>
+
+  <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer campo
+       disparar a ação primária. -->
+  <form (submit)="$event.preventDefault()">
+    <div ndsDialogBody class="nds-grid" data-spacing="md">
+      <div class="nds-stack" data-spacing="sm">
+        <label ndsLabel for="profile-name">Nome completo</label>
+        <input ndsInput id="profile-name" name="name" value="Maria Silva" />
+      </div>
+    </div>
+
+    <div ndsDialogFooter>
+      <button ndsDialogClose ndsButton type="button" variant="outline">Cancelar</button>
+      <button ndsButton type="submit">Salvar alterações</button>
+    </div>
+  </form>
+</div>`,
   mediaPreview: `<div ndsDialogContent closeLabel="Fechar">
   <div ndsDialogHeader>
     <h2 ndsDialogTitle>Capa do artigo</h2>
@@ -542,13 +573,24 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
       <div ndsDialog>
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
-          <div ndsDialogOverlay [scroll]="true"></div>
-          <div ndsDialogContent [scroll]="true" [closeLabel]="t('demonstration.labels.close')">
+          <!-- Sem [scroll]: o conteúdo compartilhado descreve esta variante como
+               "Header e Footer fixos", que é o arranjo em que só o CORPO rola.
+               Com o painel rolável o cabeçalho sobe junto, e a prévia
+               contradizia a descrição renderizada ao lado dela. -->
+          <div ndsDialogOverlay></div>
+          <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
               <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
               <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
             </div>
-            <div ndsDialogBody class="nds-stack" data-spacing="sm">
+            <div
+              ndsDialogBody
+              class="nds-dialog-body-scroll nds-stack"
+              data-spacing="sm"
+              tabindex="0"
+              role="group"
+              [attr.aria-label]="t('demonstration.labels.title')"
+            >
               @for (line of conteudoLongo(); track line) {
                 <p>{{ line }}</p>
               }
@@ -628,6 +670,36 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
               <button ndsButton>{{ t('variants.items.confirmEmail.name') }}</button>
             </div>
+          </div>
+        </ng-template>
+      </div>
+    </ng-template>
+
+    <ng-template #tplCompProfileEdit>
+      <div ndsDialog>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('variants.compositions.profileEdit.name') }}</button>
+        <ng-template ndsDialogPortal>
+          <div ndsDialogOverlay></div>
+          <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
+            <div ndsDialogHeader>
+              <h2 ndsDialogTitle>{{ t('variants.compositions.profileEdit.name') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
+            </div>
+            <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer
+                 campo disparar a ação primária, e é o que separa esta
+                 composição de um painel com dois botões soltos. -->
+            <form (submit)="$event.preventDefault()">
+              <div ndsDialogBody class="nds-grid" data-spacing="md">
+                <div class="nds-stack" data-spacing="sm">
+                  <label ndsLabel for="profile-name">Nome completo</label>
+                  <input ndsInput id="profile-name" name="name" value="Maria Silva" />
+                </div>
+              </div>
+              <div ndsDialogFooter>
+                <button ndsDialogClose ndsButton type="button" variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+                <button ndsButton type="submit">{{ t('demonstration.labels.action') }}</button>
+              </div>
+            </form>
           </div>
         </ng-template>
       </div>
@@ -844,6 +916,8 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     viewChild.required<TemplateRef<unknown>>('tplVarCustomCloseInFooter');
   private readonly tplVarConfirmEmail =
     viewChild.required<TemplateRef<unknown>>('tplVarConfirmEmail');
+  private readonly tplCompProfileEdit =
+    viewChild.required<TemplateRef<unknown>>('tplCompProfileEdit');
   private readonly tplCompMediaPreview =
     viewChild.required<TemplateRef<unknown>>('tplCompMediaPreview');
 
@@ -867,7 +941,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly camposDoFormulario = computed(() => {
     dict();
     return [
-      { id: 'perfil-nome', label: t('demonstration.labels.fieldName'), value: 'Ana Ribeiro' },
+      { id: 'profile-name', label: t('demonstration.labels.fieldName'), value: 'Ana Ribeiro' },
       { id: 'perfil-email', label: t('demonstration.labels.fieldEmail'), value: 'ana@exemplo.com' },
     ];
   });
@@ -1045,6 +1119,14 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly compositionItems = computed(() => {
     dict();
     return [
+      {
+        name: t('variants.compositions.profileEdit.name'),
+        description: t('variants.compositions.profileEdit.description'),
+        useWhen: t('variants.compositions.profileEdit.use'),
+        code: COMPOSITION_CODE.profileEdit,
+        trackId: 'profileEdit',
+        preview: this.tplCompProfileEdit(),
+      },
       {
         name: t('variants.compositions.mediaPreview.name'),
         description: t('variants.compositions.mediaPreview.description'),

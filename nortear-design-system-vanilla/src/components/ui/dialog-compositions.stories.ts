@@ -8,7 +8,6 @@ import {
   mountOpen,
   cantoButtonClose,
   buildField,
-  checkNameEDescricao,
   waitForOpen,
   waitForClosed,
   close,
@@ -30,7 +29,7 @@ const meta: Meta = {
       source: { transform: dialogSource },
       description: {
         component:
-          'Composicoes reais do Dialog: confirmação por e-mail, edição de perfil e pré-visualização de mídia.',
+          'Composicoes reais do Dialog: edição de perfil e pré-visualização de mídia.',
       },
     },
   },
@@ -40,52 +39,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
-
-export const ConfirmEmail: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: 'Confirmação de envio de e-mail com mensagem informativa e ação primária neutra.',
-      },
-    },
-  },
-  render: () => {
-    const body = document.createElement('div');
-    body.className = 'nds-text-body nds-text-muted-foreground';
-    body.textContent =
-      'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.';
-    return mountOpen(
-      createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Confirmar e-mail' }),
-        title: 'Confirmar e-mail',
-        description: 'Verifique o endereço antes de enviar o link de acesso.',
-        content: body,
-        footer: makeFooter('Cancelar', 'Enviar link'),
-      }),
-    );
-  },
-  play: async ({ step }) => {
-    const p = await waitForOpen();
-
-    await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
-      await checkNameEDescricao(p);
-    });
-
-    await step('O endereço confirmado aparece no corpo, não só no título', async () => {
-      // O dado que a pessoa precisa conferir antes de decidir tem que estar na
-      // tela — o título sozinho não diz para onde o link vai.
-      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
-      await expect(body).toHaveTextContent('maria@exemplo.com');
-    });
-
-    await step('A operação é reversível, então a ação primária é neutra', async () => {
-      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = footer.querySelectorAll<HTMLElement>('button');
-      await expect(buttons.length).toBe(2);
-      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
-    });
-  },
-};
 
 export const ProfileEdit: Story = {
   parameters: {
