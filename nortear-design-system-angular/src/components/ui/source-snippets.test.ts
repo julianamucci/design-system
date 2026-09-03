@@ -209,6 +209,29 @@ function ligacoesSemMembro(texto: string): string[] {
   for (const m of template.matchAll(/\((?!\s)[\w.$-]+\)="([^"]*)"/g)) registra(m[1]!);
   for (const m of template.matchAll(/\{\{([^}]*)\}\}/g)) registra(m[1]!);
 
+  // E os BLOCOS DE CONTROLE, que eram o quarto lugar e não eram conferidos.
+  //
+  // A varredura já lia `@for` — mas só para colher o nome do laço como local, o
+  // que a fazia ACEITAR a fonte sem olhar. `@for (slide of slides; …)` contra
+  // uma classe vazia passava verde, e quem copiasse receberia um laço que não
+  // resolve: exatamente o defeito que este check existe para pegar, escapando
+  // pela porta que ele mesmo abria. Medido em 2026-09-03, logo depois de a
+  // extração pôr 49 construtores ao alcance — `carousel` e `scroll-area`
+  // publicavam cinco laços assim.
+  //
+  // A fonte do laço e a expressão de `track` são avaliadas contra a classe como
+  // qualquer binding; a condição de `@if` e a de `@switch`/`@case`, também.
+  for (const m of template.matchAll(/@for\s*\(\s*[A-Za-z_$][\w$]*\s+of\s+([^;)]+)/g)) registra(m[1]!);
+  for (const m of template.matchAll(/;\s*track\s+([^;)]+)/g)) registra(m[1]!);
+  for (const m of template.matchAll(/@if\s*\(([^)]*)\)/g)) registra(m[1]!.split(';')[0]!);
+  for (const m of template.matchAll(/@(?:switch|case)\s*\(([^)]*)\)/g)) registra(m[1]!);
+
+  // O QUE ESTA VARREDURA AINDA NÃO ALCANÇA, e vale saber antes de chamá-la de
+  // verde: cada construtor é chamado UMA vez, com os padrões. Snippet que muda
+  // de forma conforme o arg — o do scroll-area monta um conteúdo diferente por
+  // orientação — só tem o ramo padrão conferido. Três dos quatro laços dele
+  // ficaram fora desta medição e foram corrigidos por LEITURA, não por portão.
+
   return [...soltos].sort();
 }
 

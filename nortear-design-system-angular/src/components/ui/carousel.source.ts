@@ -58,5 +58,9 @@ export function carouselPlaygroundSource(
     </nds-carousel>
   \`,
 })
-export class Exemplo {}`;
+export class Exemplo {
+  // O laço do exemplo sai daqui: expressão de template só enxerga membro de
+  // classe, e uma constante no topo do arquivo é invisível ali.
+  readonly slides = [{ id: 1 }, { id: 2 }, { id: 3 }];
+}`;
 }

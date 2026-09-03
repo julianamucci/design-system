@@ -82,5 +82,12 @@ export function scrollAreaPlaygroundSource(
     </div>
   \`,
 })
-export class Exemplo {}`;
+export class Exemplo {
+  // Os quatro laços do exemplo saem daqui: expressão de template só enxerga
+  // membro de classe, e uma constante no topo do arquivo é invisível ali.
+  readonly tags = ['Design', 'Sistema', 'Tokens'];
+  readonly cards = ['Cartão A', 'Cartão B', 'Cartão C'];
+  readonly linhas = [1, 2, 3];
+  readonly colunas = ['A', 'B', 'C'];
+}`;
 }
