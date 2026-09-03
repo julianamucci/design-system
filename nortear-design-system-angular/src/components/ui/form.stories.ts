@@ -3,74 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { NDS_FORM } from './form';
 import { NdsInput } from './input';
+import { formPlaygroundSource, type FormArgs } from './form.source';
 import { NdsFormDocs } from '@/components/docs/FormDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type FormArgs = {
-  label: string;
-  placeholder: string;
-  description: string;
-  error: string;
-  invalid: boolean;
-  disabled: boolean;
-};
-
-/**
- * O painel Code do renderer Angular imprime o andaime da story — com o `@if`
- * que decide se a descrição aparece e com `[placeholder]` ligado a um arg. Ver
- * a armadilha 3 do CLAUDE.md desta stack; o que a pessoa copia sai daqui.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<FormArgs> }): string {
-  const {
-    label = 'Email',
-    placeholder = 'ex: joao@empresa.com',
-    description = '',
-    error = '',
-    invalid = false,
-    disabled = false,
-  } = ctx.args ?? {};
-
-  const fieldAttrs = invalid || error ? ' [invalid]="true"' : '';
-  const inputAttrs = [
-    'ndsInput',
-    'type="email"',
-    'formControlName="email"',
-    `placeholder="${placeholder}"`,
-    disabled ? 'disabled' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const field = [
-    `<div ndsFormField${fieldAttrs}>`,
-    `  <label ndsFormLabel>${label}</label>`,
-    `  <input ${inputAttrs} />`,
-    description ? `  <p ndsFormDescription>${description}</p>` : '',
-    error ? `  <p ndsFormMessage>${error}</p>` : '',
-    '</div>',
-  ]
-    .filter(Boolean)
-    .map((line) => `      ${line}`)
-    .join('\n');
-
-  return `import { NDS_FORM } from '@/components/ui/form';
-import { NdsInput } from '@/components/ui/input';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-@Component({
-  imports: [...NDS_FORM, NdsInput, ReactiveFormsModule],
-  template: \`
-    <form ndsForm [formGroup]="form">
-${field}
-    </form>
-  \`,
-})
-export class Exemplo {
-  readonly form = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-  });
-}`;
-}
 
 const meta: Meta<FormArgs> = {
   title: 'Primitives/Form/Form',
@@ -108,7 +43,7 @@ type Story = StoryObj<FormArgs>;
  */
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: formPlaygroundSource } },
     // Saíram daqui duas declarações que esta story não cumpria:
     //
     //  · `accessibility.item5` dizia "contraste 4.5:1 em label, descrição E erro

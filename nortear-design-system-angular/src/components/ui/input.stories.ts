@@ -4,47 +4,9 @@ import { within, expect, userEvent } from 'storybook/test';
 import { heightResultante, fieldOf, borderContrast } from '@shared/testing/input-probe';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
+import { inputPlaygroundSource, type InputArgs } from './input.source';
 import { NdsInputDocs } from '@/components/docs/InputDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type InputArgs = {
-  type: string;
-  placeholder: string;
-  label: string;
-  disabled: boolean;
-  invalid: boolean;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<InputArgs> }): string {
-  const {
-    type = 'email',
-    placeholder = 'ex: joao@empresa.com',
-    label = 'Email profissional',
-    disabled = false,
-    invalid = false,
-  } = ctx.args ?? {};
-
-  const attrs = [
-    'id="email"',
-    `type="${type}"`,
-    `placeholder="${placeholder}"`,
-    disabled ? 'disabled' : '',
-    invalid ? 'aria-invalid="true"' : '',
-  ].filter(Boolean).join(' ');
-
-  return `import { NdsInput } from '@/components/ui/input';
-import { NdsLabel } from '@/components/ui/label';
-
-@Component({
-  imports: [NdsInput, NdsLabel],
-  template: \`
-    <label ndsLabel for="email">${label}</label>
-    <input ndsInput ${attrs} />
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<InputArgs> = {
   title: 'Primitives/Form/Input',
@@ -79,7 +41,7 @@ type Story = StoryObj<InputArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: inputPlaygroundSource } },
     // Revalidado nesta rodada. Duas declarações eram falsas e saíram daqui:
     //  · `functional.item2` (foco) — a play nunca focava nem media o halo; foi
     //    para a story `Focus`, que afere 2px e 30% de opacidade;

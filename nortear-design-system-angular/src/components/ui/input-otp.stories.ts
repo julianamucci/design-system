@@ -1,61 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
-import { NdsInputOtp, type InputOtpMode } from './input-otp';
+import { NdsInputOtp } from './input-otp';
+import { inputOtpPlaygroundSource, type InputOtpArgs } from './input-otp.source';
 import { NdsInputOTPDocs } from '@/components/docs/InputOTPDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type InputOtpArgs = {
-  maxLength: number;
-  mode: InputOtpMode;
-  disabled: boolean;
-  invalid: boolean;
-  label: string;
-  onComplete: (code: string) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com o binding de
- * arg e o rótulo de teste. Ver a armadilha 3 do CLAUDE.md deste stack.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<InputOtpArgs> }): string {
-  const {
-    maxLength = 6,
-    mode = 'numeric',
-    disabled = false,
-    invalid = false,
-    label = 'Código de verificação',
-  } = ctx.args ?? {};
-
-  const attrs = [
-    `[maxLength]="${maxLength}"`,
-    mode === 'alphanumeric' ? `mode="alphanumeric"` : '',
-    disabled ? '[disabled]="true"' : '',
-    invalid ? '[invalid]="true"' : '',
-    'aria-labelledby="otp-label"',
-    '[(value)]="codigo"',
-    '(complete)="verificar($event)"',
-  ].filter(Boolean).join('\n      ');
-
-  return `import { Component, signal } from '@angular/core';
-import { NdsInputOtp } from '@/components/ui/input-otp';
-
-@Component({
-  imports: [NdsInputOtp],
-  template: \`
-    <span id="otp-label" class="nds-text-label">${label}</span>
-    <nds-input-otp
-      ${attrs}
-    ></nds-input-otp>
-  \`,
-})
-export class Exemplo {
-  readonly codigo = signal('');
-  verificar(codigo: string): void {
-    console.log(codigo);
-  }
-}`;
-}
 
 const meta: Meta<InputOtpArgs> = {
   title: 'Primitives/Form/InputOTP',
@@ -102,7 +51,7 @@ type Story = StoryObj<InputOtpArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: inputOtpPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3',
       'functional.item4', 'functional.item5',

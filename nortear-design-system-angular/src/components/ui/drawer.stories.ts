@@ -1,83 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
-import { NDS_DRAWER, type DrawerDirection } from './drawer';
+import { NDS_DRAWER } from './drawer';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
-import { useTranslation } from '@/lib/i18n';
-import drawerTranslations from '@shared/content/drawer/translations.json';
+import { drawerPlaygroundSource, LABEL, type DrawerArgs } from './drawer.source';
 import { NdsDrawerDocs } from '@/components/docs/DrawerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
-
-// O conteúdo compartilhado do Drawer não tem um bloco de rótulos de demonstração
-// (o do Sheet tem). Os textos do painel saem da tabela de UX writing, que é
-// justamente onde o conteúdo diz como cada elemento deve ser escrito — o
-// exemplo "bom" de cada linha É o rótulo canônico, nos três idiomas.
-const LABEL = {
-  trigger: () => t('usage.uxWriting.table.trigger.good'),
-  title: () => t('usage.uxWriting.table.title.good'),
-  descricao: () => t('usage.uxWriting.table.description.good'),
-  close: () => t('usage.uxWriting.table.close.good'),
-};
-
-type DrawerArgs = {
-  direction: DrawerDirection;
-  modal: boolean;
-  defaultOpen: boolean;
-  triggerLabel: string;
-  onOpenChange: (isOpen: boolean) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com os bindings
- * ligados aos args. `transform` devolve o uso real, com os valores atuais dos
- * controls (armadilha 3 do CLAUDE.md deste stack).
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<DrawerArgs> }): string {
-  const {
-    direction = 'bottom',
-    modal = true,
-    defaultOpen = false,
-    triggerLabel = LABEL.trigger(),
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra no snippet: documentação que repete valor
-  // padrão ensina ruído.
-  const root = [
-    '<nds-drawer',
-    direction === 'bottom' ? '' : `direction="${direction}"`,
-    defaultOpen ? '[defaultOpen]="true"' : '',
-    modal ? '' : '[modal]="false"',
-  ].filter(Boolean).join(' ');
-
-  // Crase escapada: este texto vive dentro de um template literal, e uma crase
-  // crua fecharia a string no meio do snippet.
-  return `import { NDS_DRAWER } from '@/components/ui/drawer';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [...NDS_DRAWER, NdsButton],
-  template: \`
-    ${root}>
-      <button ndsDrawerTrigger ndsButton variant="outline">${triggerLabel}</button>
-
-      <ng-template ndsDrawerContent>
-        <div ndsDrawerHeader>
-          <h2 ndsDrawerTitle>${LABEL.title()}</h2>
-          <p ndsDrawerDescription>${LABEL.descricao()}</p>
-        </div>
-
-        <div ndsDrawerFooter>
-          <button ndsDrawerClose ndsButton variant="outline">${LABEL.close()}</button>
-        </div>
-      </ng-template>
-    </nds-drawer>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<DrawerArgs> = {
   title: 'Primitives/Overlay/Drawer',
@@ -151,7 +80,7 @@ async function close(): Promise<void> {
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: drawerPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'accessibility.item3', 'accessibility.item4', 'accessibility.item5',
@@ -164,7 +93,7 @@ export const Playground: Story = {
     props: {
       ...args,
       tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
+      descricaoPainel: LABEL.description(),
       rotuloFechar: LABEL.close(),
     },
     template: `
@@ -203,7 +132,7 @@ export const Playground: Story = {
       // O nome acessível vem do aria-labelledby que o primitivo liga ao id REAL
       // do ndsDrawerTitle — painel modal anônimo é o defeito silencioso aqui.
       await expect(panel).toHaveAccessibleName(LABEL.title());
-      await expect(panel).toHaveAccessibleDescription(LABEL.descricao());
+      await expect(panel).toHaveAccessibleDescription(LABEL.description());
       await expect(panel).toHaveAttribute('aria-modal', 'true');
       await expect(panel).toHaveAttribute('data-slot', 'drawer-content');
       await expect(panel).toHaveAttribute('data-state', 'open');

@@ -1,67 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
-import { NdsResizable, NdsResizablePanel, NdsResizableHandle, type ResizableDirection } from './resizable';
+import { NdsResizable, NdsResizablePanel, NdsResizableHandle } from './resizable';
+import { resizablePlaygroundSource, LABEL_HANDLE, type ResizableArgs } from './resizable.source';
 import { NdsResizableDocs } from '@/components/docs/ResizableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-/**
- * Rótulo do punho repetido nas stories.
- *
- * O aria-label é o nome acessível de um `role="separator"` focável — sem ele o
- * leitor de tela anuncia "separador" e nada mais. E ele diz o ATALHO, porque a
- * alternativa ao arrasto não tem nenhuma pista visual.
- */
-const LABEL_HANDLE = 'Redimensionar painéis — use as setas para ajustar';
-
-type ResizableArgs = {
-  direction: ResizableDirection;
-  withHandle: boolean;
-  defaultSize: number;
-  minSize: number;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com a caixa da
- * demo e os bindings nos args, que não é o que a pessoa deve escrever. Ver a
- * nota em `separator.stories.ts`.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ResizableArgs> }): string {
-  const {
-    direction = 'horizontal',
-    withHandle = true,
-    defaultSize = 30,
-    minSize = 20,
-  } = ctx.args ?? {};
-
-  return `import { NdsResizable, NdsResizablePanel, NdsResizableHandle } from '@/components/ui/resizable';
-
-@Component({
-  imports: [NdsResizable, NdsResizablePanel, NdsResizableHandle],
-  template: \`
-    <div ndsResizable direction="${direction}" class="nds-min-h-50" (layout)="aoLayout($event)">
-      <div ndsResizablePanel [defaultSize]="${defaultSize}" [minSize]="${minSize}" [maxSize]="60">
-        <!-- Painel inicial -->
-      </div>
-
-      <div
-        ndsResizableHandle
-        ${withHandle ? '[withHandle]="true"\n        ' : ''}aria-label="${LABEL_HANDLE}"
-      ></div>
-
-      <div ndsResizablePanel [defaultSize]="${100 - defaultSize}" [minSize]="${minSize}">
-        <!-- Painel seguinte -->
-      </div>
-    </div>
-  \`,
-})
-export class Exemplo {
-  aoLayout(tamanhos: number[]): void {
-    // Porcentagens finais, uma emissão por gesto — não uma por pixel.
-    console.log(tamanhos);
-  }
-}`;
-}
 
 const meta: Meta<ResizableArgs> = {
   title: 'Primitives/Layout/Resizable',
@@ -98,7 +41,7 @@ type Story = StoryObj<ResizableArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: resizablePlaygroundSource } },
     covers: [
       'functional.item2',
       'accessibility.item1',

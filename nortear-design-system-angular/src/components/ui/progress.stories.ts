@@ -2,45 +2,10 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_PROGRESS } from './progress';
+import { progressPlaygroundSource, type ProgressArgs } from './progress.source';
 import { NdsProgressDocs } from '@/components/docs/ProgressDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { percentualDesenhado } from '@shared/testing/progress-probe';
-
-type ProgressArgs = {
-  value: number;
-  min: number;
-  max: number;
-  ariaLabel: string;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ProgressArgs> }): string {
-  const { value = 42, min = 0, max = 100, ariaLabel = 'Progresso do upload' } = ctx.args ?? {};
-
-  // Só o que difere do default entra: snippet que repete valor padrão ensina ruído.
-  const attrs = [
-    `[value]="${value}"`,
-    min !== 0 ? `[min]="${min}"` : '',
-    max !== 100 ? `[max]="${max}"` : '',
-    `aria-label="${ariaLabel}"`,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  return `import { NDS_PROGRESS } from '@/components/ui/progress';
-
-@Component({
-  imports: [...NDS_PROGRESS],
-  template: \`
-    <div ndsProgress ${attrs}>
-      <div ndsProgressTrack>
-        <div ndsProgressIndicator></div>
-      </div>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<ProgressArgs> = {
   title: 'Primitives/Feedback/Progress',
@@ -76,7 +41,7 @@ type Story = StoryObj<ProgressArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: progressPlaygroundSource } },
     // `accessibility.item5` saiu daqui: ele fala de nome acessível em TODO
     // exemplo, e o exemplo que exercita o caminho difícil — nome vindo do
     // rótulo, via `aria-labelledby`, sem `aria-label` nenhum — é o WithLabel.

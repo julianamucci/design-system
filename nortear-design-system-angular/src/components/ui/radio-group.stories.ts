@@ -3,52 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { NdsRadioGroup, NdsRadioGroupItem } from './radio-group';
 import { NdsLabel } from './label';
+import { radioGroupPlaygroundSource, type RadioGroupArgs } from './radio-group.source';
 import { NdsRadioGroupDocs } from '@/components/docs/RadioGroupDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type RadioGroupArgs = {
-  groupLabel: string;
-  name: string;
-  value: string;
-  disabled: boolean;
-  onValueChange: (value: string | null) => void;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<RadioGroupArgs> }): string {
-  const { groupLabel = 'Forma de pagamento', name = 'payment', value = '', disabled = false } =
-    ctx.args ?? {};
-
-  // Só o que difere do default entra: snippet que repete valor padrão ensina ruído.
-  const attrs = [
-    `name="${name}"`,
-    value ? `value="${value}"` : '',
-    disabled ? '[disabled]="true"' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  return `import { NdsRadioGroup, NdsRadioGroupItem } from '@/components/ui/radio-group';
-import { NdsLabel } from '@/components/ui/label';
-
-@Component({
-  imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel],
-  template: \`
-    <p id="pagamento-titulo" class="nds-text-body nds-font-semibold">${groupLabel}</p>
-    <fieldset ndsRadioGroup aria-labelledby="pagamento-titulo" ${attrs}>
-      <div class="nds-radio-row">
-        <button ndsRadioGroupItem value="cartao" id="cartao"></button>
-        <label ndsLabel class="nds-radio-label" for="cartao">Cartão de crédito</label>
-      </div>
-      <div class="nds-radio-row">
-        <button ndsRadioGroupItem value="pix" id="pix"></button>
-        <label ndsLabel class="nds-radio-label" for="pix">Pix</label>
-      </div>
-    </fieldset>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<RadioGroupArgs> = {
   title: 'Primitives/Form/RadioGroup',
@@ -99,7 +56,7 @@ export const Playground: Story = {
       'accessibility.item4',
       'accessibility.item5',
     ],
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: radioGroupPlaygroundSource } },
   },
   render: (args) => ({
     props: { ...args },

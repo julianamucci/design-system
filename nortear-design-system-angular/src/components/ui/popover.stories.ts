@@ -1,71 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen, fn } from 'storybook/test';
-import { NDS_POPOVER, type PopoverAlign, type PopoverSide } from './popover';
+import { NDS_POPOVER } from './popover';
+import { popoverPlaygroundSource, type PopoverArgs } from './popover.source';
 import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 import { NdsPopoverDocs } from '@/components/docs/PopoverDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type PopoverArgs = {
-  side: PopoverSide;
-  align: PopoverAlign;
-  sideOffset: number;
-  defaultOpen: boolean;
-  triggerLabel: string;
-  onOpenChange: (open: boolean) => void;
-};
-
-/**
- * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da
- * story literalmente, com os bindings ligados aos args e o `(openChange)` do
- * espião. O `transform` devolve o uso real, com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<PopoverArgs> }): string {
-  const {
-    side = 'bottom',
-    align = 'center',
-    sideOffset = 4,
-    defaultOpen = false,
-    triggerLabel = 'Abrir popover',
-  } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra no snippet — documentação que repete valor
-  // padrão ensina ruído.
-  const options = [
-    side !== 'bottom' ? `side="${side}"` : '',
-    align !== 'center' ? `align="${align}"` : '',
-    sideOffset !== 4 ? `[sideOffset]="${sideOffset}"` : '',
-  ].filter(Boolean).join(' ');
-  const root = ['<div ndsPopover', defaultOpen ? '[defaultOpen]="true"' : '']
-    .filter(Boolean)
-    .join(' ');
-
-  return `import { NDS_POPOVER } from '@/components/ui/popover';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [...NDS_POPOVER, NdsButton],
-  template: \`
-    ${root}>
-      <button ndsPopoverTrigger ndsButton variant="outline">${triggerLabel}</button>
-
-      <ng-template ndsPopoverContent${options ? ` ${options}` : ''}>
-        <div ndsPopoverHeader>
-          <h3 ndsPopoverTitle>Configurações de exibição</h3>
-          <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
-        </div>
-
-        <div class="nds-cluster" data-justify="end" data-spacing="sm">
-          <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-          <button ndsPopoverClose ndsButton size="sm">Salvar</button>
-        </div>
-      </ng-template>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<PopoverArgs> = {
   title: 'Primitives/Overlay/Popover',
@@ -134,7 +75,7 @@ const OPOSTO: Record<string, string> = {
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: popoverPlaygroundSource } },
     // `accessibility.item1` (axe no estado ABERTO) e `accessibility.item2`
     // (contraste) saíram daqui na revalidação do contrato: a play desta story
     // termina com o painel FECHADO, e é o estado final que o axe varre. Os dois

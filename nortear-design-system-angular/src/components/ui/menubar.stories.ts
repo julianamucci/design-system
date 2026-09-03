@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
-import { NDS_MENUBAR, type MenubarSide, type MenubarAlign, type MenubarItemVariant } from './menubar';
+import { NDS_MENUBAR, type MenubarItemVariant } from './menubar';
+import { menubarPlaygroundSource, type MenubarArgs } from './menubar.source';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { NdsMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -51,63 +52,6 @@ const MENUS: MenuDemo[] = [
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
-type MenubarArgs = {
-  side: MenubarSide;
-  align: MenubarAlign;
-  modal: boolean;
-  loopFocus: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story como está escrito — com o `@for`
- * que monta a barra e com `[side]="side"` ligado ao arg. É o andaime da story,
- * não o que alguém escreve para usar o menubar. O `transform` devolve o uso
- * real, com os valores atuais dos controls já resolvidos.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<MenubarArgs> }): string {
-  const { side = 'bottom', align = 'start', modal = true, loopFocus = true } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra: snippet que repete valor default ensina
-  // ruído a quem copia.
-  const barra = ['<nds-menubar']
-    .concat(modal ? [] : ['[modal]="false"'])
-    .concat(loopFocus ? [] : ['[loopFocus]="false"'])
-    .join(' ') + '>';
-  const content = ['<ng-template ndsMenubarContent']
-    .concat(side === 'bottom' ? [] : [`side="${side}"`])
-    .concat(align === 'start' ? [] : [`align="${align}"`])
-    .join(' ') + '>';
-
-  return `import { NDS_MENUBAR } from '@/components/ui/menubar';
-
-@Component({
-  imports: [...NDS_MENUBAR],
-  template: \`
-    ${barra}
-      <nds-menubar-menu>
-        <button ndsMenubarTrigger>Arquivo</button>
-
-        ${content}
-          <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></div>
-          <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></div>
-        </ng-template>
-      </nds-menubar-menu>
-
-      <nds-menubar-menu>
-        <button ndsMenubarTrigger>Editar</button>
-
-        ${content}
-          <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl+Z</span></div>
-          <div ndsMenubarItem>Refazer <span ndsMenubarShortcut>Ctrl+Shift+Z</span></div>
-        </ng-template>
-      </nds-menubar-menu>
-    </nds-menubar>
-  \`,
-})
-export class Exemplo {}`;
-}
-
 const meta: Meta<MenubarArgs> = {
   title: 'Primitives/Navigation/Menubar',
   tags: ['autodocs', 'navigation'],
@@ -156,7 +100,7 @@ type Story = StoryObj<MenubarArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: menubarPlaygroundSource } },
     covers: [
       'functional.item1',
       'functional.item2',

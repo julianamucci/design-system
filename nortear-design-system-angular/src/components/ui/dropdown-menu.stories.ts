@@ -1,60 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
-import { NDS_DROPDOWN_MENU, type DropdownMenuSide, type DropdownMenuAlign } from './dropdown-menu';
+import { NDS_DROPDOWN_MENU } from './dropdown-menu';
+import { dropdownMenuPlaygroundSource, type DropdownMenuArgs } from './dropdown-menu.source';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { NdsDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type DropdownMenuArgs = {
-  side: DropdownMenuSide;
-  align: DropdownMenuAlign;
-  modal: boolean;
-  defaultOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story como está escrito — com os
- * bindings ligados aos args (`[side]="side"`). Isso é o andaime da story, não o
- * que alguém escreve para usar o menu. O `transform` devolve o uso real, com os
- * valores atuais dos controls já resolvidos (ver a nota em `separator.stories.ts`).
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<DropdownMenuArgs> }): string {
-  const { side = 'bottom', align = 'start', modal = true } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra: snippet que repete valor default ensina
-  // ruído a quem copia.
-  const root = ['<nds-dropdown-menu'].concat(modal ? [] : ['[modal]="false"']).join(' ') + '>';
-  const content = ['<ng-template ndsDropdownMenuContent']
-    .concat(side === 'bottom' ? [] : [`side="${side}"`])
-    .concat(align === 'start' ? [] : [`align="${align}"`])
-    .join(' ') + '>';
-
-  return `import { NDS_DROPDOWN_MENU } from '@/components/ui/dropdown-menu';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [...NDS_DROPDOWN_MENU, NdsButton],
-  template: \`
-    ${root}
-      <button ndsDropdownMenuTrigger ndsButton variant="outline">Abrir menu</button>
-
-      ${content}
-        <div ndsDropdownMenuLabel>Conta</div>
-        <div ndsDropdownMenuItem>Perfil</div>
-        <div ndsDropdownMenuItem>Configurações</div>
-        <div ndsDropdownMenuSeparator></div>
-        <div ndsDropdownMenuItem variant="destructive">Sair</div>
-      </ng-template>
-    </nds-dropdown-menu>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<DropdownMenuArgs> = {
   title: 'Primitives/Overlay/DropdownMenu',
@@ -107,7 +61,7 @@ const itemChoice = fn();
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: dropdownMenuPlaygroundSource } },
     covers: [
       'functional.item1',
       'functional.item3',

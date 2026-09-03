@@ -3,50 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { NdsLabel } from './label';
 import { NdsInput } from './input';
+import { labelPlaygroundSource, type LabelArgs } from './label.source';
 import { NdsLabelDocs } from '@/components/docs/LabelDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type LabelArgs = {
-  text: string;
-  htmlFor: string;
-  required: boolean;
-  disabled: boolean;
-};
-
-/**
- * Ver a nota em separator.stories.ts: o painel Code mostra o `template` da
- * story, com o `@if` do asterisco e os bindings ligados aos args. O transform
- * devolve o uso real com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<LabelArgs> }): string {
-  const { text = 'Nome completo', htmlFor = 'playground-label', required = false, disabled = false } =
-    ctx.args ?? {};
-
-  const marcador = required
-    ? `\n      <span class="nds-text-destructive" aria-hidden="true">*</span>`
-    : '';
-  const inputAttrs = [
-    'class="nds-input' + (disabled ? ' nds-peer' : '') + '"',
-    `id="${htmlFor}"`,
-    required ? 'aria-required="true"' : '',
-    disabled ? 'disabled' : '',
-  ].filter(Boolean).join(' ');
-
-  return `import { NdsLabel } from '@/components/ui/label';
-
-@Component({
-  imports: [NdsLabel],
-  template: \`
-    <label ndsLabel for="${htmlFor}">
-      ${text}${marcador}
-    </label>
-    <input ${inputAttrs} />
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<LabelArgs> = {
   title: 'Primitives/Form/Label',
@@ -94,7 +55,7 @@ type Story = StoryObj<LabelArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: labelPlaygroundSource } },
     covers: ['functional.item1', 'accessibility.item2'],
   },
   render: (args) => ({

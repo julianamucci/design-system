@@ -48,6 +48,15 @@ const HELPERS = new Set<string>([
   // do valor como texto, e as fixtures os reexportam para o componente.
   'YOUTUBE_VIDEO_ID',
   'VIMEO_VIDEO_ID',
+  // Rótulos acessíveis que o snippet INTERPOLA e a story consulta pelo nome
+  // acessível. Também são DADO: moram no módulo de snippet porque o construtor
+  // fecha sobre eles, e a story os importa de volta — o mesmo texto no exemplo
+  // e na asserção, em vez de duas cópias, das quais uma envelhece sozinha.
+  'LABEL',
+  'LABEL_HANDLE',
+  'LABEL_NEXT',
+  'LABEL_PAGE',
+  'LABEL_PREVIOUS',
 ]);
 
 /**
@@ -171,13 +180,21 @@ function ligacoesSemMembro(texto: string): string[] {
 
   const soltos = new Set<string>();
   const registra = (expressaoBruta: string) => {
+    // TEXTO DENTRO DA EXPRESSÃO NÃO É REFERÊNCIA, e foi o terceiro falso
+    // positivo deste check: `[attr.aria-label]="'Ir para página ' + n"` acusava
+    // `para`, `p` e `gina`. A exclusão por aspas da varredura lá embaixo só
+    // protege o PRIMEIRO caractere depois da abertura — e `á` não é `\w`, então
+    // a varredura recomeçava no meio da palavra e inventava dois nomes.
+    // Esvaziar cada literal antes de varrer fecha o caso inteiro.
+    const semTexto = expressaoBruta.replace(/'[^']*'/g, "''").replace(/`[^`]*`/g, '``');
+
     // CHAVE DE OBJETO LITERAL NÃO É REFERÊNCIA, e foi o segundo falso positivo
     // deste check: `[usage]="{ input: 18000, output: 7000 }"` acusava `input` e
     // `output` como membros faltando. O que distingue chave de ramo de ternário
     // é o que vem ANTES — chave é precedida de `{` ou `,`, e o ramo de um
     // ternário, de `?` ou `:`. Apagar a chave antes de varrer resolve sem
     // precisar entender a expressão.
-    const expressao = expressaoBruta.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
+    const expressao = semTexto.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
 
     for (const ident of expressao.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
       const nome = ident[1]!;

@@ -10,97 +10,17 @@ import {
   NdsPaginationNext,
   NdsPaginationPrevious,
 } from './pagination';
+import {
+  paginationPlaygroundSource,
+  LABEL_NEXT,
+  LABEL_PAGE,
+  LABEL_PREVIOUS,
+  type PaginationArgs,
+} from './pagination.source';
 import { NdsPaginationDocs } from '@/components/docs/PaginationDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type PaginationArgs = {
-  total: number;
-  current: number;
-  textoAnterior: string;
-  textoProxima: string;
-};
-
-/** Rótulos acessíveis fixos — não são controls, então ficam fora dos `args`. */
-const LABEL_PREVIOUS = 'Ir para a página anterior';
-const LABEL_NEXT = 'Ir para a próxima página';
-const LABEL_PAGE = 'Ir para página';
-
-/**
- * O painel Code imprime o `template` da story literalmente — com o `@for` que
- * monta a faixa de números e com os bindings ligados aos args. É o andaime da
- * story, não o que alguém escreve para usar uma paginação. O `transform`
- * devolve o uso real, com o valor atual dos controls já resolvido. Ver a nota
- * em `separator.stories.ts` e a armadilha 3 do CLAUDE.md deste stack.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<PaginationArgs> }): string {
-  const {
-    total = 5,
-    current = 2,
-    textoAnterior = 'Anterior',
-    textoProxima = 'Próxima',
-  } = ctx.args ?? {};
-
-  return `import {
-  NdsPagination, NdsPaginationContent, NdsPaginationItem,
-  NdsPaginationLink, NdsPaginationPrevious, NdsPaginationNext,
-} from '@/components/ui/pagination';
-
-@Component({
-  imports: [
-    NdsPagination, NdsPaginationContent, NdsPaginationItem,
-    NdsPaginationLink, NdsPaginationPrevious, NdsPaginationNext,
-  ],
-  template: \`
-    <nav ndsPagination>
-      <ul ndsPaginationContent>
-        <li ndsPaginationItem>
-          <a
-            ndsPaginationPrevious
-            href="#"
-            text="${textoAnterior}"
-            label="${LABEL_PREVIOUS}"
-            [disabled]="atual() === 1"
-            (click)="irPara($event, atual() - 1)"
-          ></a>
-        </li>
-        @for (n of paginas; track n) {
-          <li ndsPaginationItem>
-            <a
-              ndsPaginationLink
-              href="#"
-              [isActive]="n === atual()"
-              [attr.aria-label]="'${LABEL_PAGE} ' + n"
-              (click)="irPara($event, n)"
-            >{{ n }}</a>
-          </li>
-        }
-        <li ndsPaginationItem>
-          <a
-            ndsPaginationNext
-            href="#"
-            text="${textoProxima}"
-            label="${LABEL_NEXT}"
-            [disabled]="atual() === total"
-            (click)="irPara($event, atual() + 1)"
-          ></a>
-        </li>
-      </ul>
-    </nav>
-  \`,
-})
-export class Exemplo {
-  readonly total = ${total};
-  readonly paginas = Array.from({ length: this.total }, (_, i) => i + 1);
-  readonly atual = signal(${current});
-
-  irPara(evento: Event, pagina: number): void {
-    evento.preventDefault();
-    this.atual.set(pagina);
-  }
-}`;
-}
 
 const meta: Meta<PaginationArgs> = {
   title: 'Primitives/Navigation/Pagination',
@@ -131,11 +51,11 @@ const meta: Meta<PaginationArgs> = {
       control: { type: 'number', min: 1, max: 9 },
       description: 'Página exibida no momento — recebe aria-current="page".',
     },
-    textoAnterior: {
+    previousText: {
       control: 'text',
       description: 'Rótulo visível do controle de página anterior.',
     },
-    textoProxima: {
+    nextText: {
       control: 'text',
       description: 'Rótulo visível do controle de próxima página.',
     },
@@ -143,8 +63,8 @@ const meta: Meta<PaginationArgs> = {
   args: {
     total: 5,
     current: 2,
-    textoAnterior: 'Anterior',
-    textoProxima: 'Próxima',
+    previousText: 'Anterior',
+    nextText: 'Próxima',
   },
 };
 
@@ -169,7 +89,7 @@ export const Playground: Story = {
       'accessibility.item4',
       'accessibility.item5',
     ],
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: paginationPlaygroundSource } },
   },
   render: (args) => ({
     props: {
@@ -192,7 +112,7 @@ export const Playground: Story = {
             <a
               ndsPaginationPrevious
               href="#"
-              [text]="textoAnterior"
+              [text]="previousText"
               [label]="labelPrevious"
               [disabled]="current === 1"
               (click)="irTo($event, current - 1)"
@@ -213,7 +133,7 @@ export const Playground: Story = {
             <a
               ndsPaginationNext
               href="#"
-              [text]="textoProxima"
+              [text]="nextText"
               [label]="labelNext"
               [disabled]="current === total"
               (click)="irTo($event, current + 1)"
@@ -280,10 +200,10 @@ export const Playground: Story = {
       const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
       const next = canvas.getByRole('link', { name: LABEL_NEXT });
       await expect(previous.querySelector('.nds-pagination-label')).toHaveTextContent(
-        args.textoAnterior,
+        args.previousText,
       );
       await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent(
-        args.textoProxima,
+        args.nextText,
       );
       // O ícone direcional continua no DOM mesmo quando o rótulo some no
       // breakpoint estreito — é o que sobra para orientar.
