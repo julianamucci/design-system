@@ -41,6 +41,20 @@ export function svelteSnippet(script: string, markup: string): string {
 }
 
 /**
+ * A RAIZ da expressão que uma ligação recebe, ou nada quando ela não nomeia
+ * constante nenhuma.
+ *
+ * Serve às transforms que aceitam a expressão dos dados por opção: `trechos`
+ * pede declaração, `trechos.slice(0, 3)` pede a declaração de `trechos`, e `[]`
+ * não pede nenhuma. Procurar a palavra com fronteira, em vez da raiz, foi o
+ * defeito que a stack irmã pagou — `trechosLargos` e `trechosLongos` saíam do
+ * snippet sem declaração, e os três exemplos ligavam nome inexistente.
+ */
+export function raizDaExpressao(expressao: string): string | null {
+  return /^([A-Za-z_$][\w$]*)/.exec(expressao.trim())?.[1] ?? null;
+}
+
+/**
  * Junta atributos descartando os vazios, e devolve já com o espaço da frente —
  * assim `<Componente${attrs(...)} />` não deixa espaço sobrando quando nenhum
  * atributo difere do padrão.

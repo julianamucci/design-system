@@ -54,15 +54,42 @@ function attributes(opts: ComposerArgs): Array<string | undefined> {
   ];
 }
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. É a mesma frase do comentário acima, cobrada do
+ * outro lado: dizer que o texto e o envio são de quem consome e deixar `texto`
+ * e `enviar` sem declaração entrega ao painel um bloco que não roda quando
+ * alguém o copia.
+ */
+const DECL_BASE = [
+  "let texto = $state('');",
+  'const labels = { /* os rótulos do campo */ };',
+  '',
+  '// O envio é de quem consome: a peça avisa, e quem manda o texto para a',
+  '// conversa e limpa o campo é você.',
+  'function enviar() { /* manda o texto para a conversa */ }',
+].join('\n');
+
+const DECL_RUNNING = [
+  'let gerando = $state(true);',
+  'function cancelar() { /* interrompe a geração */ }',
+].join('\n');
+
+/** O `<script>` do exemplo: os imports e o que a marcação liga. */
+function script(imports: string, opts: ComposerArgs): string {
+  return [imports, '', DECL_BASE, ...(opts.running ? ['', DECL_RUNNING] : [])].join('\n');
+}
+
 /** O snippet completo, com ou sem o trilho preenchido. */
 export function composerSnippet(opts: ComposerArgs = {}): string {
   const attrs = attrsMultilinha(attributes(opts));
-  if (!opts.rail) return svelteSnippet(IMPORT, `<Composer${attrs} />`);
+  if (!opts.rail) return svelteSnippet(script(IMPORT, opts), `<Composer${attrs} />`);
 
   // O trilho é um ESPAÇO, e nesta stack ele é um trecho de marcação — declarado
   // ANTES de quem o usa, senão a referência aponta para o nada.
   return svelteSnippet(
-    IMPORT_WITH_BUTTON,
+    script(IMPORT_WITH_BUTTON, opts),
     [
       '{#snippet railStart()}',
       '  <Button variant="ghost" size="sm">Anexar</Button>',

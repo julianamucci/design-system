@@ -44,6 +44,25 @@ const JOB_LABEL = 'Indexando o repositório';
 const LABELS = 'labels={rotulos}';
 const ON_ACTION = 'onAction={(intent) => aplicar(intent)}';
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. Os rótulos e o retorno moravam só no arquivo da
+ * story, e o bloco do painel é copiado inteiro.
+ */
+const DECL = [
+  'const rotulos = { /* os rótulos do trabalho */ };',
+  '',
+  '// O pedido é um AVISO: a peça diz o que foi pedido, e quem pausa, retoma ou',
+  '// repete o trabalho é quem consome.',
+  'function aplicar(intent) { /* aplica o pedido ao trabalho */ }',
+].join('\n');
+
+/** O `<script>` do exemplo: os imports e o que a marcação liga. */
+function bloco(imports: string[], ...extras: string[]): string {
+  return [...imports, '', DECL, ...extras].join('\n');
+}
+
 /** `count={{ done: 1240, total: 5000 }}`, ou só o feito quando não se sabe de quantas. */
 function countAttribute(opts: JobProgressSnippetOptions): string | false {
   if (opts.done === undefined) return false;
@@ -63,7 +82,7 @@ function build(opts: JobProgressSnippetOptions): string {
     // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
     opts.action !== false && ON_ACTION,
   ]);
-  return svelteSnippet(IMPORT, `<JobProgress${attributes} />`);
+  return svelteSnippet(bloco([IMPORT]), `<JobProgress${attributes} />`);
 }
 
 /** Transform do `meta` — o Playground, que escreve os três eixos por extenso. */
@@ -102,7 +121,7 @@ export function jobProgressEveryStatusSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_STATUSES}`, markup);
+  return svelteSnippet(bloco([IMPORT, IMPORT_STATUSES]), markup);
 }
 
 /** Correndo, e com de quantas: a barra mostra a fração. */
@@ -162,6 +181,8 @@ export function jobProgressQueueSource(): string {
     `  { id: 'anexos', label: 'Sincronizando os anexos', status: 'running', count: { done: 1240 } },`,
     `  { id: 'publicar', label: 'Publicando o índice', status: 'idle' },`,
     '];',
+    '',
+    DECL,
   ].join('\n');
 
   const markup = [
@@ -203,5 +224,8 @@ export function jobProgressBesideRunSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_RUN}`, markup);
+  return svelteSnippet(
+    bloco([IMPORT, IMPORT_RUN], '', 'const rotulosDaExecucao = { /* os rótulos da linha de estado */ };'),
+    markup,
+  );
 }

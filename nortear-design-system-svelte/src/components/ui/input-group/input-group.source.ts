@@ -203,7 +203,16 @@ export function inputGroupSnippet(options: InputGroupSnippetOptions = {}): strin
     ),
   ];
 
-  const script = [...icons.map(iconImport), groupImport(names)].join('\n');
+  // NOME LIGADO É NOME DECLARADO: o retorno do controle do addon vinha de fora
+  // do bloco, e quem copiasse o painel receberia um `onclick` sem função.
+  const temBotao = addons.some((addon) => addon.buttonLabel || addon.buttonAccessibleName);
+  const script = [
+    ...icons.map(iconImport),
+    groupImport(names),
+    ...(temBotao
+      ? ['', 'function handleAddon() { /* o que o controle do addon faz */ }']
+      : []),
+  ].join('\n');
 
   // A ORDEM VISUAL é da folha, por `order` em `[data-align]`; a ordem da
   // marcação só precisa pôr o campo entre os addons para a leitura sequencial

@@ -110,6 +110,9 @@ function build(opts: ContextBreakdownSnippetOptions): string {
       '',
       '// A ordem é a de quem mediu, e a peça não a reordena.',
       partsLiteral(opts),
+      '',
+      '// Os rótulos são texto de interface, e vêm de quem consome.',
+      'const rotulos = { /* os rótulos da repartição */ };',
     ].join('\n'),
     breakdownTag('parcelas'),
   );
@@ -146,6 +149,9 @@ export function contextBreakdownEveryCaseSource(): string {
     '  CONTEXT_PARTS_SINGLE,',
     '  CONTEXT_PARTS_EMPTY,',
     '];',
+    '',
+    '// Os rótulos são texto de interface, e vêm de quem consome.',
+    'const rotulos = { /* os rótulos da repartição */ };',
   ].join('\n');
 
   const markup = [
@@ -218,7 +224,14 @@ export function contextBreakdownBesideBudgetSource(): string {
   ].join('\n');
 
   return svelteSnippet(
-    IMPORT_BESIDE,
+    [
+      IMPORT_BESIDE,
+      '',
+      '// Os rótulos são texto de interface, e vêm de quem consome — um jogo',
+      '// para cada peça, porque as perguntas são diferentes.',
+      'const rotulos = { /* os rótulos da repartição */ };',
+      'const rotulosDaJanela = { /* os rótulos da medição da janela */ };',
+    ].join('\n'),
     `<div class="nds-stack nds-max-w-lg" data-spacing="md">\n${indent(body)}\n</div>`,
   );
 }
@@ -234,6 +247,7 @@ export function contextBreakdownInsideDisclosureSource(): string {
   const script = [
     IMPORT_DISCLOSURE,
     '',
+    'const rotulos = { /* os rótulos da repartição */ };',
     'let aberto = $state(true);',
   ].join('\n');
 

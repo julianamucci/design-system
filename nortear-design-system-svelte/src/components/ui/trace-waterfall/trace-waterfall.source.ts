@@ -20,7 +20,7 @@
  * nada que o contrato já não diga — o que o snippet mostra é a CHAMADA, e o
  * que ela precisa: uma lista de trechos, um eixo e os rótulos.
  */
-import { attrsMultilinha, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type TraceWaterfallSnippetOptions = {
@@ -39,6 +39,34 @@ type StoryContext = {
 
 const IMPORT = "import { TraceWaterfall } from '@/components/ui/trace-waterfall';";
 
+/**
+ * O `<script>` do exemplo, com o que a marcação LIGA.
+ *
+ * NOME LIGADO É NOME DECLARADO. Os trechos continuam entrando por NOME — seis
+ * trechos com seis campos cada ocupariam a tela inteira do painel —, mas o nome
+ * passa a existir no bloco que alguém copia.
+ *
+ * A RAIZ da expressão, e não a palavra com fronteira: `trechos.slice(0, 3)`
+ * declara `trechos`, `[]` não declara nada, e `trechosDaJanela` é um nome
+ * PRÓPRIO — procurar a palavra deixaria os três últimos sem declaração.
+ */
+function script(spansRef?: string | null): string {
+  return [
+    IMPORT,
+    '',
+    ...(spansRef
+      ? [
+          '// Os trechos vêm de quem monta a cascata: o endereço, o rótulo, o',
+          '// começo, a duração, o recuo e o estado.',
+          `const ${spansRef} = [/* os trechos do rastro */];`,
+          '',
+        ]
+      : []),
+    '// Os rótulos são texto de interface, e vêm de quem consome.',
+    'const rotulos = { /* os rótulos da cascata */ };',
+  ].join('\n');
+}
+
 /** O uso real: os trechos, o eixo, o estado da execução e os rótulos. */
 function build(opts: TraceWaterfallSnippetOptions): string {
   const attributes = attrsMultilinha([
@@ -48,7 +76,10 @@ function build(opts: TraceWaterfallSnippetOptions): string {
     'labels={rotulos}',
   ]);
 
-  return svelteSnippet(IMPORT, `<TraceWaterfall${attributes} />`);
+  return svelteSnippet(
+    script(raizDaExpressao(opts.spansRef ?? 'trechos')),
+    `<TraceWaterfall${attributes} />`,
+  );
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -81,7 +112,7 @@ export function traceWaterfallEveryStateSnippet(): string {
     `<TraceWaterfall${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('trechos'), markup);
 }
 
 /** Um trecho que quebrou. */
@@ -117,7 +148,7 @@ export function traceWaterfallPartialSnippet(): string {
     `<TraceWaterfall${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('trechos'), markup);
 }
 
 /** Mais largo que a conversa: a camada rola, e é a única que rola. */
@@ -147,7 +178,7 @@ export function traceWaterfallClippedSnippet(): string {
     `<TraceWaterfall${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('trechosDaJanela'), markup);
 }
 
 /**
@@ -183,5 +214,5 @@ export function traceWaterfallTightColumnsSnippet(): string {
     '</style>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('trechos'), markup);
 }

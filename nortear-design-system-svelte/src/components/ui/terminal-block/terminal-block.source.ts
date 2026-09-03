@@ -43,6 +43,41 @@ const IMPORT_STATUSES = "import { RUN_STATUSES } from '@shared/primitives/chat-p
 const COMMAND = 'npm run build --workspace @nortear/ds';
 const LABELS = 'labels={rotulos}';
 
+/**
+ * O `<script>` do exemplo, com o que a marcação LIGA.
+ *
+ * NOME LIGADO É NOME DECLARADO. A saída longa continua entrando por NOME — é o
+ * que o comentário do topo defende —, mas o nome passa a existir no bloco que
+ * alguém copia.
+ */
+function script(imports: string[], ...extras: string[]): string {
+  return [
+    ...imports,
+    '',
+    '// Os rótulos são texto de interface, e vêm de quem consome.',
+    'const rotulos = { /* os rótulos do bloco */ };',
+    ...extras,
+  ].join('\n');
+}
+
+/** A saída guardada num nome, quando ela é longa demais para o painel. */
+function declSaida(nome: string): string {
+  return [
+    '',
+    '// A saída é do processo, e chega linha a linha para quem a mostra.',
+    `const ${nome} = [/* as linhas que o comando escreveu */];`,
+  ].join('\n');
+}
+
+/** As duas funções que a sequência de estados consulta. */
+const DECL_POR_ESTADO = [
+  '',
+  '// A saída e o número de cada estado são de quem rodou o comando: a peça só',
+  '// mostra o que recebe.',
+  'function saidaDe(status) { /* as linhas daquele estado */ }',
+  'function codigoDe(status) { /* o número daquele estado, ou nada */ }',
+].join('\n');
+
 /** Literal de cadeia com aspas simples, escapando o que quebraria a string. */
 function text(value: string): string {
   return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
@@ -73,7 +108,10 @@ function build(opts: TerminalBlockSnippetOptions): string {
     LABELS,
   ]);
 
-  return svelteSnippet(IMPORT, `<TerminalBlock${attributes} />`);
+  return svelteSnippet(
+    script([IMPORT], ...(opts.linesRef ? [declSaida(opts.linesRef)] : [])),
+    `<TerminalBlock${attributes} />`,
+  );
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -110,7 +148,7 @@ export function terminalBlockEveryStatusSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_STATUSES}`, markup);
+  return svelteSnippet(script([IMPORT, IMPORT_STATUSES], DECL_POR_ESTADO), markup);
 }
 
 /** Enquanto a saída chega: a peça se declara ocupada e o cursor aparece. */
@@ -198,6 +236,8 @@ export function terminalBlockSequenceSource(): string {
   const script = [
     IMPORT,
     '',
+    'const rotulos = { /* os rótulos do bloco */ };',
+    '',
     "const sequencia = ['complete', 'failed', 'idle'].map((status) => ({",
     '  id: status,',
     `  command: ${text(COMMAND)},`,
@@ -205,6 +245,7 @@ export function terminalBlockSequenceSource(): string {
     '  status,',
     '  exitCode: codigoDe(status),',
     '}));',
+    DECL_POR_ESTADO,
   ].join('\n');
 
   const markup = [
@@ -245,7 +286,15 @@ export function terminalBlockBesideRunSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_RUN}`, markup);
+  return svelteSnippet(
+    script(
+      [IMPORT, IMPORT_RUN],
+      '',
+      'const rotulosDaExecucao = { /* os rótulos da linha de estado */ };',
+      declSaida('saida'),
+    ),
+    markup,
+  );
 }
 
 /**
@@ -276,5 +325,5 @@ export function terminalBlockLongOutputSource(): string {
     '</style>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script([IMPORT], declSaida('saidaLonga')), markup);
 }

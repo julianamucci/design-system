@@ -19,7 +19,7 @@
  * ensinariam nada que o contrato já não diga — o que o snippet mostra é a
  * CHAMADA, e o que ela precisa: uma lista de nós, uma de ligações e os rótulos.
  */
-import { attrsMultilinha, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type FlowGraphSnippetOptions = {
@@ -38,6 +38,32 @@ type StoryContext = {
 
 const IMPORT = "import { FlowGraph } from '@/components/ui/flow-graph';";
 
+/**
+ * O `<script>` do exemplo, com o que a marcação LIGA.
+ *
+ * NOME LIGADO É NOME DECLARADO. Os nós e as ligações continuam entrando por
+ * NOME — despejar o grafo ocuparia o painel inteiro e ensinaria o andaime em
+ * vez da peça —, mas o nome passa a existir no bloco que alguém copia.
+ */
+function script(nosRef?: string | null, arestasRef?: string | null, extras: string[] = []): string {
+  return [
+    IMPORT,
+    '',
+    ...(nosRef
+      ? [
+          '// Os nós e as ligações vêm de quem monta o grafo: o que cada passo é,',
+          '// em que pé está e de onde ele veio.',
+          `const ${nosRef} = [/* os nós do grafo */];`,
+        ]
+      : []),
+    ...(arestasRef ? [`const ${arestasRef} = [/* as ligações entre os nós */];`] : []),
+    '',
+    '// Os rótulos são texto de interface, e vêm de quem consome.',
+    'const rotulos = { /* os rótulos do grafo */ };',
+    ...extras,
+  ].join('\n');
+}
+
 /** O uso real: os nós, as ligações, o estado da execução e os rótulos. */
 function build(opts: FlowGraphSnippetOptions): string {
   const attributes = attrsMultilinha([
@@ -47,7 +73,10 @@ function build(opts: FlowGraphSnippetOptions): string {
     'labels={rotulos}',
   ]);
 
-  return svelteSnippet(IMPORT, `<FlowGraph${attributes} />`);
+  return svelteSnippet(
+    script(raizDaExpressao(opts.nodesRef ?? 'nos'), opts.edgesRef),
+    `<FlowGraph${attributes} />`,
+  );
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -79,7 +108,7 @@ export function flowGraphEveryStateSnippet(): string {
     `<FlowGraph${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('nos', 'arestas'), markup);
 }
 
 /** Um caminho que quebrou: o estado que a referência não tem. */
@@ -114,7 +143,7 @@ export function flowGraphPartialSnippet(): string {
     `<FlowGraph${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('nos', 'arestas'), markup);
 }
 
 /** Mais largo que a conversa: a camada rola, e é a única que rola. */
@@ -164,5 +193,5 @@ export function flowGraphTightColumnsSnippet(): string {
     '</style>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('nos', 'arestas'), markup);
 }

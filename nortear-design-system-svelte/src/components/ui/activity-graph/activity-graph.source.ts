@@ -21,7 +21,7 @@
  * esta peça tem de próprio, e um snippet que as escondesse atrás de um nome
  * ensinaria exatamente o que a peça não é.
  */
-import { attrsMultilinha, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type ActivityGraphSnippetOptions = {
@@ -46,6 +46,29 @@ type StoryContext = {
 
 const IMPORT = "import { ActivityGraph } from '@/components/ui/activity-graph';";
 
+/**
+ * O `<script>` do exemplo: o import e as constantes que a marcação LIGA.
+ *
+ * NOME LIGADO É NOME DECLARADO. O painel é copiado inteiro, e uma constante que
+ * morasse só no arquivo da story ficaria para trás — quem colasse receberia
+ * `atividade` e `rotulos` sem nada por baixo. Escrever noventa dias por extenso
+ * continua fora de questão: o que entra é a declaração, não o conteúdo dela.
+ */
+function script(diasRef?: string | null): string {
+  return [
+    IMPORT,
+    '',
+    ...(diasRef
+      ? [
+          '// A atividade vem de quem monta a grade: uma data e uma contagem por dia.',
+          `const ${diasRef} = [/* os dias da janela */];`,
+        ]
+      : []),
+    '// Os rótulos são texto de interface, e vêm de quem consome.',
+    'const rotulos = { /* os rótulos da grade */ };',
+  ].join('\n');
+}
+
 /** O uso real: os dias, a janela, a escala, o estado da execução e os rótulos. */
 function build(opts: ActivityGraphSnippetOptions): string {
   const attributes = attrsMultilinha([
@@ -58,7 +81,8 @@ function build(opts: ActivityGraphSnippetOptions): string {
     'labels={rotulos}',
   ]);
 
-  return svelteSnippet(IMPORT, `<ActivityGraph${attributes} />`);
+  const dias = raizDaExpressao(opts.daysRef ?? 'atividade');
+  return svelteSnippet(script(dias), `<ActivityGraph${attributes} />`);
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -94,7 +118,7 @@ export function activityGraphScaleSnippet(): string {
     `<ActivityGraph${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('atividadeDaEscala'), markup);
 }
 
 /** A janela sem atividade nenhuma, que continua sendo uma grade. */
@@ -117,7 +141,7 @@ export function activityGraphEmptySnippet(): string {
     `<ActivityGraph${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script(), markup);
 }
 
 /** Enquanto a grade se escreve, com a execução ocupada. */
@@ -145,7 +169,7 @@ export function activityGraphNoWindowSnippet(): string {
     `<ActivityGraph${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('atividade'), markup);
 }
 
 /** Um mês só, porque a janela é dado. */
@@ -196,5 +220,5 @@ export function activityGraphTightCellsSnippet(): string {
     '</style>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script('atividade'), markup);
 }

@@ -64,7 +64,31 @@ export function contextSnippet(opts: ContextArgs = {}): string {
     // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
     !opts.automatic && 'onRemoveContext={(item) => tirar(item.id)}',
   ]);
-  return svelteSnippet(IMPORT, `<Composer${attrs} />`);
+  const script = [
+    IMPORT,
+    '',
+    'const labels = { /* os rótulos do campo */ };',
+    'const contextLabels = { /* os rótulos da lista */ };',
+    // Item por extenso não é nome ligado, e por isso não pede declaração: ele
+    // já chega escrito dentro do próprio atributo.
+    ...(opts.items
+      ? [
+          '',
+          '// A lista é de quem monta a conversa: o que cada item aponta, de que',
+          '// espécie ele é, e se entrou sozinho.',
+          `const ${opts.items} = [/* os itens do contexto */];`,
+        ]
+      : []),
+    ...(opts.automatic
+      ? []
+      : [
+          '',
+          '// A remoção é de quem consome: a peça avisa, e não tira nada por conta',
+          '// própria.',
+          'function tirar(id) { /* tira o item do contexto */ }',
+        ]),
+  ].join('\n');
+  return svelteSnippet(script, `<Composer${attrs} />`);
 }
 
 /** Transform do `meta` — o Playground, que escreve o item por extenso. */
@@ -104,5 +128,8 @@ export function contextWithFieldSource(): string {
  * e mostrar as duas props aqui ensinaria a declarar o que não se usa.
  */
 export function contextAbsentSource(): string {
-  return svelteSnippet(IMPORT, '<Composer {labels} />');
+  return svelteSnippet(
+    [IMPORT, '', 'const labels = { /* os rótulos do campo */ };'].join('\n'),
+    '<Composer {labels} />',
+  );
 }

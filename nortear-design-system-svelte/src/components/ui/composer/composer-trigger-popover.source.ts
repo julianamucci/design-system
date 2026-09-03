@@ -45,6 +45,20 @@ export function triggerSnippet(opts: TriggerArgs = {}): string {
   const script = [
     "import { Composer } from '@/components/ui/composer';",
     `import { ${opts.command ? 'COMMAND_TRIGGER, ' : ''}MENTION_TRIGGER } from '@shared/primitives/composer-trigger';`,
+    '',
+    // NOME LIGADO É NOME DECLARADO: a lista de cada gatilho, os rótulos e o
+    // envio moravam só no arquivo da story, e o bloco do painel é copiado
+    // inteiro.
+    "let texto = $state('');",
+    'const labels = { /* os rótulos do campo */ };',
+    'const triggerLabels = { /* os rótulos da lista do gatilho */ };',
+    '',
+    '// As opções de cada gatilho são de quem consome: quem pode ser mencionado,',
+    '// e que comandos existem.',
+    ...(opts.mention !== false ? ['const pessoas = [/* quem pode ser mencionado */];'] : []),
+    ...(opts.command ? ['const comandos = [/* os comandos oferecidos */];'] : []),
+    '',
+    'function enviar() { /* manda o texto para a conversa */ }',
   ].join('\n');
 
   const attributes = attrsMultilinha([

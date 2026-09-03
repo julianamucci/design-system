@@ -53,7 +53,11 @@ export function thinkingIndicatorSource(_generated?: unknown, ctx?: StoryContext
 /** A espera: o indicador no lugar em que a resposta vai aparecer. */
 export function indicatorWaitingSource(): string {
   return svelteSnippet(
-    `${IMPORT_INDICATOR}\n${IMPORT_MARKDOWN}`,
+    `${IMPORT_INDICATOR}\n${IMPORT_MARKDOWN}
+
+// A pergunta é de quem monta a conversa: o indicador só ocupa o lugar do
+// que ainda não veio.
+const pergunta = '/* a pergunta que abriu o turno */';`,
     `<div class="nds-stack" data-spacing="sm">
   <Markdown content={pergunta} />
   <!-- O indicador é o ÚLTIMO da conversa: ele ocupa o lugar do que ainda não veio. -->
@@ -71,7 +75,10 @@ export function indicatorWaitingSource(): string {
  */
 export function indicatorArrivedSource(): string {
   return svelteSnippet(
-    `${IMPORT_INDICATOR}\n${IMPORT_MARKDOWN}`,
+    `${IMPORT_INDICATOR}\n${IMPORT_MARKDOWN}
+
+// O primeiro trecho que chega pelo protocolo é o que faz a troca.
+let trecho = $state('');`,
     `<!-- Chegou o texto: o indicador sai, e o lugar passa a ser da resposta. -->
 {#if trecho}
   <Markdown content={trecho} />
@@ -89,7 +96,11 @@ ${IMPORT_MARKDOWN}
 
 // O primeiro trecho que chega pelo protocolo é o que faz a troca. O indicador
 // não sabe que ele chegou, e por isso a decisão é de quem monta a conversa.
-let trecho = $state('');`,
+let trecho = $state('');
+
+// A pergunta é de quem monta a conversa: o indicador só ocupa o lugar do
+// que ainda não veio.
+const pergunta = '/* a pergunta que abriu o turno */';`,
     `<div class="nds-stack" data-spacing="sm">
   <Markdown content={pergunta} />
   {#if trecho}
@@ -109,7 +120,9 @@ let trecho = $state('');`,
  */
 export function indicatorWithComposerSource(): string {
   return svelteSnippet(
-    `${IMPORT_INDICATOR}\n${IMPORT_COMPOSER}`,
+    `${IMPORT_INDICATOR}\n${IMPORT_COMPOSER}
+
+const labels = { /* os rótulos do campo */ };`,
     `${tag(DEFAULT_LABEL)}
 <!-- Só o campo oferece o que acionar; o indicador não tem controle nenhum. -->
 <Composer {labels} running />`,

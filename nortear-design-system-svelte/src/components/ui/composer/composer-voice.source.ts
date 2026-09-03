@@ -67,9 +67,27 @@ function attributesFor(opts: VoiceArgs): string {
   ]);
 }
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. O pedido é intenção, e o comentário acima já
+ * dizia que começar e parar são de quem consome — faltava o bloco do painel
+ * dizer a mesma coisa em código.
+ */
+const DECL_TOGGLE = [
+  'function comecar() { /* começa a captar */ }',
+  'function parar() { /* para de captar e manda transcrever */ }',
+].join('\n');
+
 /** O uso real do controle, sozinho. */
 function voiceSnippet(opts: VoiceArgs = {}): string {
-  return svelteSnippet(IMPORT, `<ComposerVoice${attributesFor(opts)} />`);
+  const script = [
+    IMPORT,
+    '',
+    'const rotulos = { /* os rótulos do ditado */ };',
+    ...(opts.state === 'transcribing' ? [] : ['', DECL_TOGGLE]),
+  ].join('\n');
+  return svelteSnippet(script, `<ComposerVoice${attributesFor(opts)} />`);
 }
 
 /** Transform do `meta` — o Playground, que segue os controls. */
@@ -118,7 +136,14 @@ export function voiceInRailSource(): string {
   );
 
   return svelteSnippet(
-    IMPORT_RAIL,
+    [
+      IMPORT_RAIL,
+      '',
+      'const rotulos = { /* os rótulos do campo */ };',
+      'const rotulosDaVoz = { /* os rótulos do ditado */ };',
+      '',
+      DECL_TOGGLE,
+    ].join('\n'),
     [
       `{#snippet railStart()}`,
       `  <ComposerVoice${attributes}  />`,

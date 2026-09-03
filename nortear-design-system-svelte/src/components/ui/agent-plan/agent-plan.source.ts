@@ -45,6 +45,31 @@ function quoted(value: string): string {
 }
 
 /**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. O bloco do painel é copiado inteiro, e o que
+ * mora só no arquivo da story fica para trás — quem colasse receberia `labels`
+ * e `proposedSteps` sem nada por baixo. A lista continua entrando por NOME e
+ * não por extenso: o que passa a aparecer é a declaração, não o conteúdo dela.
+ */
+const DECL_LABELS = 'const labels = { /* os rótulos do plano */ };';
+const DECL_STATUS_LABELS = 'const statusLabels = { /* os rótulos da linha de estado */ };';
+
+/** A lista de passos que a story mostra, declarada com o nome que ela liga. */
+function declPassos(nome: string): string {
+  return [
+    '// Os passos vêm de quem monta o plano: o que se faz, em que pé está e o',
+    '// motivo, o resultado ou a falha.',
+    `const ${nome} = [/* os passos do plano */];`,
+  ].join('\n');
+}
+
+/** O `<script>` do exemplo: os imports e o que a marcação liga. */
+function bloco(imports: string[], ...declaracoes: string[]): string {
+  return [...imports, '', ...declaracoes].join('\n');
+}
+
+/**
  * O uso da peça, com os passos vindos de onde a story diz.
  *
  * `{labels}` abreviado porque o nome da constante é o nome da prop: repetir
@@ -68,7 +93,10 @@ function stepLiteral(opts: AgentPlanSnippetOptions): string {
 
 /** Transform do `meta` — o Playground, que escreve o passo por extenso. */
 export function agentPlanSource(_generated?: unknown, ctx?: StoryContext): string {
-  return svelteSnippet(`${IMPORT}\n\n${stepLiteral(ctx?.args ?? {})}`, usage('{steps}'));
+  return svelteSnippet(
+    bloco([IMPORT], stepLiteral(ctx?.args ?? {}), DECL_LABELS),
+    usage('{steps}'),
+  );
 }
 
 /**
@@ -79,37 +107,51 @@ export function agentPlanSource(_generated?: unknown, ctx?: StoryContext): strin
  * para trás no dia em que o tipo cresce, e ninguém repara.
  */
 export function agentPlanEveryStateSource(): string {
-  const script = [
-    IMPORT,
-    IMPORT_STATES,
+  const script = bloco(
+    [IMPORT, IMPORT_STATES],
+    '// Um título por estado, na ordem em que o vocabulário compartilhado os declara.',
+    'const titles = [/* os títulos do exemplo */];',
     '',
     'const steps = PLAN_STEP_STATES.map((state, index) => ({',
     '  label: titles[index],',
     '  state,',
     '}));',
-  ].join('\n');
+    DECL_LABELS,
+  );
 
   return svelteSnippet(script, usage('{steps}'));
 }
 
 /** O plano proposto, antes de agir: nada começou, e o primeiro é o atual. */
 export function agentPlanProposedSource(): string {
-  return svelteSnippet(IMPORT, usage('steps={proposedSteps}'));
+  return svelteSnippet(
+    bloco([IMPORT], declPassos('proposedSteps'), DECL_LABELS),
+    usage('steps={proposedSteps}'),
+  );
 }
 
 /** A lista mantida durante o trabalho: dois fechados, um em curso. */
 export function agentPlanInProgressSource(): string {
-  return svelteSnippet(IMPORT, usage('steps={runningSteps}'));
+  return svelteSnippet(
+    bloco([IMPORT], declPassos('runningSteps'), DECL_LABELS),
+    usage('steps={runningSteps}'),
+  );
 }
 
 /** O plano encerrado: o pulado e o que falhou, lado a lado. */
 export function agentPlanFinishedSource(): string {
-  return svelteSnippet(IMPORT, usage('steps={finishedSteps}'));
+  return svelteSnippet(
+    bloco([IMPORT], declPassos('finishedSteps'), DECL_LABELS),
+    usage('steps={finishedSteps}'),
+  );
 }
 
 /** O rótulo longo, que quebra em linhas em vez de receber reticências. */
 export function agentPlanLongLabelSource(): string {
-  return svelteSnippet(IMPORT, usage('steps={longSteps}'));
+  return svelteSnippet(
+    bloco([IMPORT], declPassos('longSteps'), DECL_LABELS),
+    usage('steps={longSteps}'),
+  );
 }
 
 /**
@@ -125,7 +167,7 @@ export function agentPlanEmptySource(): string {
     usage('steps={[]}'),
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(bloco([IMPORT], DECL_LABELS), markup);
 }
 
 /**
@@ -143,7 +185,15 @@ export function agentPlanProposedWithStatusSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_STATUS}`, markup);
+  return svelteSnippet(
+    bloco(
+      [IMPORT, IMPORT_STATUS],
+      declPassos('proposedSteps'),
+      DECL_LABELS,
+      DECL_STATUS_LABELS,
+    ),
+    markup,
+  );
 }
 
 /**
@@ -161,5 +211,13 @@ export function agentPlanTaskListSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_STATUS}`, markup);
+  return svelteSnippet(
+    bloco(
+      [IMPORT, IMPORT_STATUS],
+      declPassos('runningSteps'),
+      DECL_LABELS,
+      DECL_STATUS_LABELS,
+    ),
+    markup,
+  );
 }

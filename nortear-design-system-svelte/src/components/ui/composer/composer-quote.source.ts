@@ -42,7 +42,27 @@ export function quoteSnippet(opts: QuoteArgs = {}): string {
     opts.withAttachments && 'attachments={arquivos}',
     'onDismissQuote={() => responder(null)}',
   ]);
-  return svelteSnippet(IMPORT, `<Composer${attrs} />`);
+  const script = [
+    IMPORT,
+    '',
+    'const labels = { /* os rótulos do campo */ };',
+    'const quoteLabels = { /* os rótulos da citação */ };',
+    '',
+    '// A citação é de quem monta a conversa: de quem é o trecho e o que ele diz.',
+    `const ${opts.quote ?? 'citacao'} = { /* o trecho citado */ };`,
+    ...(opts.withAttachments
+      ? [
+          '',
+          "const attachmentLabels = { /* os rótulos da fila */ };",
+          'const arquivos = [/* os anexos da fila */];',
+        ]
+      : []),
+    '',
+    '// Sair da citação é de quem consome: a peça avisa, e não a tira por conta',
+    '// própria.',
+    'function responder(alvo) { /* passa a responder a esse trecho, ou a nenhum */ }',
+  ].join('\n');
+  return svelteSnippet(script, `<Composer${attrs} />`);
 }
 
 /** Transform do `meta` — a forma básica. */
@@ -72,5 +92,8 @@ export function quoteWithAttachmentsSource(): string {
  * existe, e mostrar as duas props ensinaria a declarar o que não se usa.
  */
 export function quoteAbsentSource(): string {
-  return svelteSnippet(IMPORT, '<Composer {labels} />');
+  return svelteSnippet(
+    [IMPORT, '', 'const labels = { /* os rótulos do campo */ };'].join('\n'),
+    '<Composer {labels} />',
+  );
 }

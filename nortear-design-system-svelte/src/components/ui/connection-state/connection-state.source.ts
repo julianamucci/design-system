@@ -40,6 +40,19 @@ const IMPORT_STATES =
 
 const ON_RETRY = 'onRetry={() => religar()}';
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. O comentário abaixo já dizia que o retorno é um
+ * fio que precisa ter onde chegar; faltava o bloco do painel declarar a ponta.
+ */
+const DECL_RETRY = 'function religar() { /* tenta a conexão de novo */ }';
+
+/** O `<script>` do exemplo: os imports e o que a marcação liga. */
+function bloco(imports: string[], ...declaracoes: string[]): string {
+  return [...imports, '', ...declaracoes].join('\n');
+}
+
 /** O uso real: o estado, a contagem, os rótulos, e onde o pedido continua. */
 function build(opts: ConnectionStateSnippetOptions): string {
   const attributes = attrsMultilinha([
@@ -50,7 +63,12 @@ function build(opts: ConnectionStateSnippetOptions): string {
     // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
     opts.action !== false && ON_RETRY,
   ]);
-  return svelteSnippet(IMPORT, `<ConnectionState${attributes} />`);
+  const script = bloco(
+    [IMPORT],
+    'const labels = { /* os rótulos da conexão */ };',
+    ...(opts.action === false ? [] : ['', DECL_RETRY]),
+  );
+  return svelteSnippet(script, `<ConnectionState${attributes} />`);
 }
 
 /** Transform do `meta` — o Playground, que escreve estado e contagem por extenso. */
@@ -79,7 +97,15 @@ export function connectionStateEveryStateSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_STATES}`, markup);
+  return svelteSnippet(
+    bloco(
+      [IMPORT, IMPORT_STATES],
+      'const labels = { /* os rótulos da conexão */ };',
+      '',
+      DECL_RETRY,
+    ),
+    markup,
+  );
 }
 
 /** A ligação de pé: nada a contar, e nada a oferecer. */
@@ -129,5 +155,14 @@ export function connectionStateBesideRunSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_RUN}`, markup);
+  return svelteSnippet(
+    bloco(
+      [IMPORT, IMPORT_RUN],
+      'const rotulos = { /* os rótulos da conexão */ };',
+      'const rotulosDaExecucao = { /* os rótulos da linha de estado */ };',
+      '',
+      DECL_RETRY,
+    ),
+    markup,
+  );
 }

@@ -19,7 +19,7 @@
  * dado de andaime — três falas de exemplo —, e despejá-la faria o painel
  * ensinar o andaime em vez da peça.
  */
-import { attrsMultilinha, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type QueueSnippetOptions = {
@@ -63,8 +63,44 @@ function queueMarkup(opts: QueueSnippetOptions, messages: string): string {
   return `<MessageQueue${attributes} />`;
 }
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. O comentário acima já dizia que o retorno é um
+ * fio que precisa ter onde chegar; faltava o bloco do painel declarar a ponta,
+ * os rótulos e a própria fila.
+ */
+function declaracoes(
+  opts: QueueSnippetOptions,
+  rotulos: string,
+  fila?: string | null,
+): string {
+  return [
+    `const ${rotulos} = { /* os rótulos da fila */ };`,
+    ...(fila
+      ? [
+          '',
+          '// A fila é de quem monta a conversa: cada mensagem com o seu id, o',
+          '// texto e em que pé ela está.',
+          `const ${fila} = [/* as mensagens que esperam */];`,
+        ]
+      : []),
+    ...(opts.state === 'sending'
+      ? []
+      : [
+          '',
+          '// Retirar é de quem consome: a peça avisa, e não tira nada por conta',
+          '// própria.',
+          'function withdraw(id) { /* tira a mensagem da fila */ }',
+        ]),
+  ].join('\n');
+}
+
 function build(opts: QueueSnippetOptions, messages: string): string {
-  return svelteSnippet(IMPORT, queueMarkup(opts, messages));
+  return svelteSnippet(
+    [IMPORT, '', declaracoes(opts, 'labels', raizDaExpressao(messages))].join('\n'),
+    queueMarkup(opts, messages),
+  );
 }
 
 /** Transform do `meta` — o Playground, que escreve a mensagem por extenso. */
@@ -98,7 +134,7 @@ export function queueLongSource(): string {
  */
 export function queueEmptySource(): string {
   return svelteSnippet(
-    IMPORT,
+    [IMPORT, '', 'const labels = { /* os rótulos da fila */ };'].join('\n'),
     '<!-- Sem mensagem nenhuma, a fila não chega ao documento. -->\n<MessageQueue {labels} messages={[]} />',
   );
 }
@@ -122,5 +158,15 @@ export function queueAboveFieldSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_FIELD}`, markup);
+  return svelteSnippet(
+    [
+      IMPORT,
+      IMPORT_FIELD,
+      '',
+      declaracoes({}, 'queueLabels', 'waitingQueue'),
+      '',
+      'const fieldLabels = { /* os rótulos do campo */ };',
+    ].join('\n'),
+    markup,
+  );
 }

@@ -64,9 +64,32 @@ function attributesFor(opts: DraftSnippetOptions, indent = '  '): string {
   );
 }
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. O comentário acima já dizia que a faixa não
+ * sabe o que descartar apaga; faltava o bloco do painel declarar quem sabe.
+ */
+function declaracoes(opts: DraftSnippetOptions, rotulos: string): string {
+  return [
+    `const ${rotulos} = { /* os rótulos da faixa */ };`,
+    '',
+    '// O rascunho é de quem o guardou, e vai INTEIRO para a faixa.',
+    `const ${opts.draft ?? 'rascunhoGuardado'} = '/* o texto guardado */';`,
+    '',
+    '// A escolha é um AVISO: a faixa diz qual foi, e o que ela significa é de',
+    '// quem consome.',
+    'function restaurar() { /* devolve o rascunho ao campo */ }',
+    'function descartar() { /* joga o rascunho fora */ }',
+  ].join('\n');
+}
+
 /** O uso real da faixa, sozinha. */
 function draftSnippet(opts: DraftSnippetOptions = {}): string {
-  return svelteSnippet(IMPORT, `<DraftRestore${attributesFor(opts)} />`);
+  return svelteSnippet(
+    [IMPORT, '', declaracoes(opts, 'rotulos')].join('\n'),
+    `<DraftRestore${attributesFor(opts)} />`,
+  );
 }
 
 /** Transform do `meta` — o Playground, que segue os controls. */
@@ -101,7 +124,13 @@ export function draftAboveComposerSource(): string {
   const attributes = attributesFor({ timestamp: 'ontem, 14:32' }, '    ');
 
   return svelteSnippet(
-    IMPORT_WITH_COMPOSER,
+    [
+      IMPORT_WITH_COMPOSER,
+      '',
+      declaracoes({ timestamp: 'ontem, 14:32' }, 'rotulos'),
+      '',
+      'const rotulosDoCampo = { /* os rótulos do campo */ };',
+    ].join('\n'),
     [
       '<div class="nds-max-w-lg">',
       '  <!-- A faixa vem ANTES do campo na ordem de leitura, e não leva o foco. -->',

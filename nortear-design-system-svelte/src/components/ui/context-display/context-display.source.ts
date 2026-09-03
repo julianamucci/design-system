@@ -58,7 +58,13 @@ function build(opts: ContextDisplaySnippetOptions): string {
     opts.form && opts.form !== 'ring' ? `form="${opts.form}"` : false,
     '{labels}',
   ]);
-  return svelteSnippet(IMPORT, `<ContextDisplay${attributes} />`);
+  const script = [
+    IMPORT,
+    '',
+    '// Os rótulos são texto de interface, e vêm de quem consome.',
+    'const labels = { /* os rótulos da medição */ };',
+  ].join('\n');
+  return svelteSnippet(script, `<ContextDisplay${attributes} />`);
 }
 
 /** Transform do `meta` — o Playground, que escreve a medição por extenso. */
@@ -88,7 +94,16 @@ export function contextDisplayEveryFormSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT_FORMS, markup);
+  return svelteSnippet(
+    [
+      IMPORT_FORMS,
+      '',
+      '// A medição e os rótulos vêm de quem consome; a forma vem da lista.',
+      'const usage = { /* a medição da janela */ };',
+      'const labels = { /* os rótulos da medição */ };',
+    ].join('\n'),
+    markup,
+  );
 }
 
 /** O anel: a forma compacta, ao lado de outros controles. */
@@ -127,6 +142,8 @@ export function contextDisplayAllLevelsSource(): string {
     '  { input: 24000, output: 0, limit: 32000 },',
     '  { input: 30000, output: 0, limit: 32000 },',
     '].filter((usage) => budgetLevel(usage) !== null);',
+    '',
+    'const labels = { /* os rótulos da medição */ };',
   ].join('\n');
 
   const markup = [
@@ -179,5 +196,15 @@ export function contextDisplayBesideFieldSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_FIELD}`, markup);
+  return svelteSnippet(
+    [
+      IMPORT,
+      IMPORT_FIELD,
+      '',
+      '// Um jogo de rótulos para cada peça: as perguntas são diferentes.',
+      'const contextLabels = { /* os rótulos da medição */ };',
+      'const fieldLabels = { /* os rótulos do campo */ };',
+    ].join('\n'),
+    markup,
+  );
 }

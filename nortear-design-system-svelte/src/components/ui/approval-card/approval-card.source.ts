@@ -100,6 +100,27 @@ function scopeOf(name: string): string {
   return `${name}Scope`;
 }
 
+/**
+ * As declarações do exemplo, pelo mesmo motivo das escolhas acima.
+ *
+ * NOME LIGADO É NOME DECLARADO, e não só nome ITERADO: o alcance e o retorno da
+ * escolha chegavam ao painel sem nada por baixo, e quem copiasse o bloco
+ * receberia `publishScope` e `answer` inexistentes.
+ */
+const DECL_ANSWER = [
+  '// A escolha é um AVISO: o cartão diz o que foi escolhido, e o que aquilo',
+  '// significa é de quem consome.',
+  'function answer(choice) { /* registra a escolha */ }',
+].join('\n');
+
+/** O alcance declarado por quem monta, com o nome que a marcação liga. */
+function declScope(nome: string): string {
+  return [
+    '// O alcance é do produto: o que a autorização abrange, item a item.',
+    `const ${nome} = [/* as linhas do alcance */];`,
+  ].join('\n');
+}
+
 /** A tag do cartão, com ou sem o espaço da resposta preenchido. */
 function approvalTag(opts: ApprovalCardSnippetOptions): string {
   const attributes = attrsMultilinha([
@@ -115,9 +136,10 @@ function approvalTag(opts: ApprovalCardSnippetOptions): string {
 }
 
 function build(opts: ApprovalCardSnippetOptions): string {
-  const script =
-    opts.actions === false ? IMPORT : [IMPORT_WITH_BUTTON, '', CHOICES_DECL].join('\n');
-  return svelteSnippet(script, approvalTag(opts));
+  const partes =
+    opts.actions === false ? [IMPORT] : [IMPORT_WITH_BUTTON, '', CHOICES_DECL, '', DECL_ANSWER];
+  if (opts.scope) partes.push('', declScope(opts.scope));
+  return svelteSnippet(partes.join('\n'), approvalTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve a pergunta por extenso. */
@@ -189,6 +211,16 @@ export function approvalCardOutsideTheGroupSource(): string {
     '',
     CHOICES_DECL,
     '',
+    DECL_ANSWER,
+    '',
+    '// As chamadas e os rótulos vêm de quem monta a conversa.',
+    'const calls = [/* as chamadas da resposta */];',
+    'const groupLabels = { /* os rótulos da caixa */ };',
+    '',
+    '// O alcance de cada espera sai da própria chamada, e quem o monta é quem',
+    '// conhece o que aquela ferramenta faz.',
+    'function scopeOfWaiting(call) { /* as linhas do alcance daquela chamada */ }',
+    '',
     'const { grouped, waiting } = splitWaitingCalls(calls);',
   ].join('\n');
 
@@ -249,5 +281,8 @@ export function approvalCardAnsweringSource(): string {
     '</ApprovalCard>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT_WITH_BUTTON, card);
+  return svelteSnippet(
+    [IMPORT_WITH_BUTTON, '', DECL_ANSWER, '', declScope(scopeOf('publish'))].join('\n'),
+    card,
+  );
 }

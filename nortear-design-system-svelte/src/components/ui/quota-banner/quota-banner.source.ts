@@ -73,12 +73,17 @@ const NO_HORIZON = [
  * ela que responde onde o resto e o nível nascem, e um snippet que a escondesse
  * deixaria o leitor achando que a subtração é dele.
  */
-function script(opts: { imports?: string[]; after?: string[] } = {}): string {
+function script(
+  opts: { imports?: string[]; after?: string[]; rotulos?: string[] } = {},
+): string {
   return [
     IMPORT,
     IMPORT_BUDGET,
     ...(opts.imports ?? []),
     '',
+    // NOME LIGADO É NOME DECLARADO: os rótulos vinham de fora do bloco, e
+    // quem copiasse o painel ficava sem eles.
+    ...(opts.rotulos ?? ['const labels = { /* os rótulos da faixa */ };']),
     ...(opts.after ?? []),
   ].join('\n');
 }
@@ -250,5 +255,15 @@ export function quotaBannerBesideContextSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(script({ imports: [IMPORT_CONTEXT], after: [HORIZON] }), markup);
+  return svelteSnippet(
+    script({
+      imports: [IMPORT_CONTEXT],
+      rotulos: [
+        'const windowLabels = { /* os rótulos da medição da janela */ };',
+        'const quotaLabels = { /* os rótulos da faixa */ };',
+      ],
+      after: [HORIZON],
+    }),
+    markup,
+  );
 }

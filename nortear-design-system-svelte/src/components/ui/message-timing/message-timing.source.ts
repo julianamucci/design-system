@@ -97,7 +97,17 @@ function measureLines(measures: number): string {
 
 /** O bloco de `<script>`, com o formatador sempre junto da peça. */
 function script(opts: { imports?: string[]; body?: string[] } = {}): string {
-  return [IMPORT, ...(opts.imports ?? []), '', WRITER, ...(opts.body ?? [])].join('\n');
+  return [
+    IMPORT,
+    ...(opts.imports ?? []),
+    '',
+    WRITER,
+    '',
+    // NOME LIGADO É NOME DECLARADO: os rótulos vinham de fora do bloco, e
+    // quem copiasse o painel ficava com `{labels}` apontando para o nada.
+    'const labels = { /* os rótulos da medição */ };',
+    ...(opts.body ?? []),
+  ].join('\n');
 }
 
 function build(opts: MessageTimingSnippetOptions): string {

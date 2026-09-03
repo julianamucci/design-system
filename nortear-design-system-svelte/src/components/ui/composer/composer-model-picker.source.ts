@@ -57,9 +57,32 @@ function pickerTag(opts: ModelPickerArgs, indent: string): string {
   return `${indent}<ComposerModelPicker${body}${close}/>`;
 }
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. A lista continua entrando por NOME — despejar
+ * os modelos ensinaria o andaime em vez da peça —, mas o nome passa a existir
+ * no bloco que alguém copia.
+ */
+function declaracoes(opts: ModelPickerArgs, rotulos: string): string {
+  return [
+    `const ${rotulos} = { /* os rótulos do seletor */ };`,
+    '',
+    '// Os modelos são de quem consome: o id, o nome, a descrição e a etiqueta.',
+    `const ${opts.models ?? 'modelos'} = [/* os modelos oferecidos */];`,
+    '',
+    '// A escolha é um AVISO: o seletor diz qual foi, e guardá-la é de quem',
+    '// consome.',
+    'function escolher(id) { /* guarda o modelo escolhido */ }',
+  ].join('\n');
+}
+
 function build(opts: ModelPickerArgs): string {
   if (!opts.rail) {
-    return svelteSnippet(IMPORT_PICKER, pickerTag(opts, ''));
+    return svelteSnippet(
+      [IMPORT_PICKER, '', declaracoes(opts, 'rotulos')].join('\n'),
+      pickerTag(opts, ''),
+    );
   }
 
   // O seletor é AUTÔNOMO: ele não é uma prop do campo, é um controle que quem
@@ -74,7 +97,16 @@ function build(opts: ModelPickerArgs): string {
     '<Composer labels={rotulosDoCampo} {railStart} />',
   ].join('\n');
 
-  return svelteSnippet(IMPORT_BOTH, rail);
+  return svelteSnippet(
+    [
+      IMPORT_BOTH,
+      '',
+      declaracoes(opts, 'rotulos'),
+      '',
+      'const rotulosDoCampo = { /* os rótulos do campo */ };',
+    ].join('\n'),
+    rail,
+  );
 }
 
 /** Transform do `meta` — o Playground, cujos controles mexem no escolhido. */

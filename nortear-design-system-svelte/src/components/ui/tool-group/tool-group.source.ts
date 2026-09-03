@@ -40,6 +40,40 @@ const IMPORT_SPLIT =
 
 const ON_OPEN_CHANGE = 'onOpenChange={(aberto) => registrar(aberto)}';
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. A lista continua entrando por NOME — despejar
+ * as chamadas ensinaria o andaime em vez da peça —, mas o nome passa a existir
+ * no bloco que alguém copia.
+ */
+function declaracoes(chamadasRef?: string | null, comAviso = true): string {
+  return [
+    ...(chamadasRef
+      ? [
+          '// As chamadas são de quem monta a resposta: o nome de cada ferramenta,',
+          '// em que pé ela está e o que ela devolveu.',
+          `const ${chamadasRef} = [/* as chamadas da resposta */];`,
+          '',
+        ]
+      : []),
+    'const rotulos = { /* os rótulos da caixa */ };',
+    ...(comAviso
+      ? [
+          '',
+          '// Abrir é um AVISO: a caixa diz que abriu, e o que fazer com isso é de',
+          '// quem consome.',
+          'function registrar(aberto) { /* anota que a caixa abriu ou fechou */ }',
+        ]
+      : []),
+  ].join('\n');
+}
+
+/** O `<script>` do exemplo: os imports e o que a marcação liga. */
+function bloco(imports: string[], corpo: string): string {
+  return [...imports, '', corpo].join('\n');
+}
+
 /** O uso real: as chamadas, os rótulos, e onde o aviso de abrir continua. */
 function build(opts: ToolGroupSnippetOptions): string {
   const attributes = attrsMultilinha([
@@ -50,7 +84,10 @@ function build(opts: ToolGroupSnippetOptions): string {
     opts.open === true && 'open',
     opts.change !== false && ON_OPEN_CHANGE,
   ]);
-  return svelteSnippet(IMPORT, `<ToolGroup${attributes} />`);
+  return svelteSnippet(
+    bloco([IMPORT], declaracoes(opts.calls ?? 'chamadas', opts.change !== false)),
+    `<ToolGroup${attributes} />`,
+  );
 }
 
 /** Transform do `meta` — o Playground, que escreve a caixa por extenso. */
@@ -81,6 +118,8 @@ export function toolGroupEveryStateSource(): string {
     '  name: `ferramenta_${state}`,',
     '  state,',
     '}));',
+    '',
+    declaracoes(null, false),
   ].join('\n');
 
   return svelteSnippet(script, '<ToolGroup calls={chamadas} labels={rotulos} open />');
@@ -123,6 +162,8 @@ export function toolGroupWaitingOutsideSource(): string {
     IMPORT,
     IMPORT_SPLIT,
     '',
+    declaracoes('chamadas', false),
+    '',
     '// Pedir autorização dentro de uma caixa fechada é pedir sem mostrar.',
     'const { grouped, waiting } = splitWaitingCalls(chamadas);',
   ].join('\n');
@@ -151,5 +192,5 @@ export function toolGroupBeforeAnswerSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(bloco([IMPORT], declaracoes('chamadas', false)), markup);
 }

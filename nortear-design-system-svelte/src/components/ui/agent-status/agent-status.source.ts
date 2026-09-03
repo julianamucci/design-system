@@ -40,17 +40,41 @@ const IMPORT_STATUSES =
 
 const ON_ACTION = "onAction={(intent) => (intent === 'stop' ? stop() : start())}";
 
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. O bloco do painel é copiado inteiro, e o que
+ * mora só no arquivo da story fica para trás — quem colasse receberia `labels`,
+ * `stop` e `start` sem nada por baixo.
+ */
+const DECL_LABELS = 'const labels = { /* os rótulos da linha */ };';
+const DECL_ACOES = [
+  '// O pedido é só um AVISO: a linha diz o que foi pedido, e quem interrompe',
+  '// ou recomeça a execução é quem consome.',
+  'function stop() { /* interrompe a execução */ }',
+  'function start() { /* recomeça a execução */ }',
+].join('\n');
+
+/** O `<script>` do exemplo: os imports e o que a marcação liga. */
+function bloco(imports: string[], ...declaracoes: string[]): string {
+  return [...imports, '', ...declaracoes].join('\n');
+}
+
 /** O uso real: o estado, o relógio, os rótulos, e onde o pedido continua. */
 function build(opts: AgentStatusSnippetOptions): string {
+  const comAcao = opts.action !== false;
   const attributes = attrsMultilinha([
     `status="${opts.status ?? 'running'}"`,
     opts.elapsed ? `elapsed="${opts.elapsed}"` : false,
     '{labels}',
     // Estado sem rótulo de ação não desenha botão, então o retorno não teria
     // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
-    opts.action !== false && ON_ACTION,
+    comAcao && ON_ACTION,
   ]);
-  return svelteSnippet(IMPORT, `<AgentStatus${attributes} />`);
+  const script = comAcao
+    ? bloco([IMPORT], DECL_LABELS, '', DECL_ACOES)
+    : bloco([IMPORT], DECL_LABELS);
+  return svelteSnippet(script, `<AgentStatus${attributes} />`);
 }
 
 /** Transform do `meta` — o Playground, que escreve estado e relógio por extenso. */
@@ -79,7 +103,7 @@ export function agentStatusEveryStateSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_STATUSES}`, markup);
+  return svelteSnippet(bloco([IMPORT, IMPORT_STATUSES], DECL_LABELS, '', DECL_ACOES), markup);
 }
 
 /** A execução em curso: relógio correndo e a ação que interrompe. */
@@ -122,5 +146,14 @@ export function agentStatusAboveFieldSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_FIELD}`, markup);
+  return svelteSnippet(
+    bloco(
+      [IMPORT, IMPORT_FIELD],
+      'const statusLabels = { /* os rótulos da linha */ };',
+      'const fieldLabels = { /* os rótulos do campo */ };',
+      '',
+      DECL_ACOES,
+    ),
+    markup,
+  );
 }

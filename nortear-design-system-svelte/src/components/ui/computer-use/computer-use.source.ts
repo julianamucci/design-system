@@ -45,6 +45,49 @@ const IMPORT_STATUSES = "import { RUN_STATUSES } from '@shared/primitives/chat-p
 
 const DEFAULT_URL = 'app.exemplo.com/entrar';
 
+/**
+ * O encaixe da tela, e o que o exemplo declara para preenchê-lo.
+ *
+ * NOME LIGADO É NOME DECLARADO. O snippet mostrava `screen={tela}` sem que
+ * `tela` existisse em lugar nenhum do bloco — e a peça NUNCA cria imagem, então
+ * quem copiasse ficava com o encaixe vazio e sem saber onde ele se preenche. O
+ * trecho vem ANTES de quem o usa: declarado depois, a referência aponta para o
+ * nada.
+ */
+const BLOCO_DA_TELA = [
+  '{#snippet tela()}',
+  '  <!-- A imagem é de quem passa o trecho, e o texto alternativo também. -->',
+  '  <img src={capturaDaSessao} alt="" />',
+  '{/snippet}',
+  '',
+  '',
+].join('\n');
+
+/** As declarações do exemplo: os rótulos, a imagem e a lista de passos. */
+function declaracoes(
+  rotulos: string,
+  passosRef?: string,
+  extras: string[] = [],
+): string {
+  return [
+    `const ${rotulos} = { /* os rótulos da tela */ };`,
+    "const capturaDaSessao = '/* o endereço da imagem da sessão */';",
+    ...(passosRef
+      ? [
+          '',
+          '// Os passos são de quem conduz a sessão: o que foi feito, e onde.',
+          `const ${passosRef} = [/* os passos da sessão */];`,
+        ]
+      : []),
+    ...extras,
+  ].join('\n');
+}
+
+/** O `<script>` do exemplo: os imports e o que a marcação liga. */
+function bloco(imports: string[], corpo: string): string {
+  return [...imports, '', corpo].join('\n');
+}
+
 /** O uso real: o endereço, a tela, os passos, o índice, o estado e os rótulos. */
 function build(opts: ComputerUseSnippetOptions): string {
   const attributes = attrsMultilinha([
@@ -59,7 +102,10 @@ function build(opts: ComputerUseSnippetOptions): string {
     'labels={rotulos}',
   ]);
 
-  return svelteSnippet(IMPORT, `<ComputerUse${attributes} />`);
+  return svelteSnippet(
+    bloco([IMPORT], declaracoes('rotulos', opts.stepsRef)),
+    `${BLOCO_DA_TELA}<ComputerUse${attributes} />`,
+  );
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -121,7 +167,10 @@ export function computerUseEveryStatusSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_STATUSES}`, markup);
+  return svelteSnippet(
+    bloco([IMPORT, IMPORT_STATUSES], declaracoes('rotulos', 'passos')),
+    `${BLOCO_DA_TELA}${markup}`,
+  );
 }
 
 /**
@@ -176,7 +225,10 @@ export function computerUseScreenSource(): string {
     `<ComputerUse${attributes} />`,
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(
+    bloco([IMPORT], declaracoes('rotulos', 'passos')),
+    markup,
+  );
 }
 
 /**
@@ -202,7 +254,16 @@ export function computerUseBesideRunSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(`${IMPORT}\n${IMPORT_RUN}`, markup);
+  return svelteSnippet(
+    bloco(
+      [IMPORT, IMPORT_RUN],
+      declaracoes('rotulos', 'passos', [
+        '',
+        'const rotulosDaExecucao = { /* os rótulos da linha de estado */ };',
+      ]),
+    ),
+    `${BLOCO_DA_TELA}${markup}`,
+  );
 }
 
 /**
@@ -236,5 +297,8 @@ export function computerUsePortraitSource(): string {
     '</style>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(
+    bloco([IMPORT], declaracoes('rotulos', 'passos')),
+    `${BLOCO_DA_TELA}${markup}`,
+  );
 }

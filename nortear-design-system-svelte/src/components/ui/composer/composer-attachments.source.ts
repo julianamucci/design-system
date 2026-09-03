@@ -33,13 +33,28 @@ const IMPORT = "import { Composer } from '@/components/ui/composer';";
  * responsabilidade continua.
  */
 export function attachmentsSnippet(opts: AttachmentsArgs = {}): string {
+  const fila = opts.queue ?? 'arquivos';
   const attrs = attrsMultilinha([
     '{labels}',
     '{attachmentLabels}',
-    `attachments={${opts.queue ?? 'arquivos'}}`,
+    `attachments={${fila}}`,
     'onRemoveAttachment={(anexo) => remover(anexo.id)}',
   ]);
-  return svelteSnippet(IMPORT, `<Composer${attrs} />`);
+  const script = [
+    IMPORT,
+    '',
+    'const labels = { /* os rótulos do campo */ };',
+    'const attachmentLabels = { /* os rótulos da fila */ };',
+    '',
+    '// A fila é de quem sobe o arquivo: cada anexo com o seu id, o nome, o',
+    '// tamanho e em que pé está a subida.',
+    `const ${fila} = [/* os anexos da fila */];`,
+    '',
+    '// A remoção também é dele — a peça avisa, e não tira nada por conta',
+    '// própria: quem sobe o arquivo é quem sabe se dá para cancelar.',
+    'function remover(id) { /* tira o anexo da fila */ }',
+  ].join('\n');
+  return svelteSnippet(script, `<Composer${attrs} />`);
 }
 
 /** Transform do `meta` do Playground: a forma básica. */
@@ -74,5 +89,8 @@ export function attachmentsWithFieldSource(): string {
  * e mostrar as duas props aqui ensinaria a declarar o que não se usa.
  */
 export function attachmentsAbsentSource(): string {
-  return svelteSnippet(IMPORT, '<Composer {labels} />');
+  return svelteSnippet(
+    [IMPORT, '', 'const labels = { /* os rótulos do campo */ };'].join('\n'),
+    '<Composer {labels} />',
+  );
 }

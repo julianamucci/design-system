@@ -30,8 +30,23 @@ function tag(parts: Array<string | undefined>): string {
   return `<ChatThread {messages} {labels}${attrsMultilinha(parts)} />`;
 }
 
-function build(parts: Array<string | undefined> = [], before = ''): string {
-  return svelteSnippet(`${IMPORT}${before}`, tag(parts));
+/**
+ * As declarações do exemplo, escritas por extenso.
+ *
+ * NOME LIGADO É NOME DECLARADO. O bloco do painel é copiado inteiro, e a lista
+ * e os rótulos moravam só no arquivo da story — quem colasse receberia
+ * `messages` e `labels` sem nada por baixo. A conversa continua entrando por
+ * NOME: o que passa a aparecer é a declaração, não as mensagens.
+ */
+const DECL_MESSAGES = [
+  '// A conversa é de quem a monta: cada mensagem com o seu id, o autor e o',
+  '// que ela traz.',
+  'const messages = [/* as mensagens da conversa */];',
+  'const labels = { /* os rótulos da conversa */ };',
+].join('\n');
+
+function build(parts: Array<string | undefined> = [], extra: string[] = []): string {
+  return svelteSnippet([IMPORT, '', DECL_MESSAGES, ...extra].join('\n'), tag(parts));
 }
 
 /** Transform do `meta` — a forma básica. */
@@ -49,6 +64,9 @@ export function chatThreadStreamingSource(): string {
   return svelteSnippet(
     `${IMPORT}
 
+const labels = { /* os rótulos da conversa */ };
+const initial = [/* as mensagens que já chegaram */];
+
 let messages = $state(initial);
 
 const patch = (id, fields) => {
@@ -60,7 +78,10 @@ const patch = (id, fields) => {
 
 /** Com erro de execução — a resposta que não vem. */
 export function chatThreadErrorSource(): string {
-  return build(['{error}', 'size="md"']);
+  return build(
+    ['{error}', 'size="md"'],
+    ['', "const error = 'A resposta não chegou. Tente de novo.';"],
+  );
 }
 
 /** Conversa longa, onde a ancoragem no fim tem o que ancorar. */
