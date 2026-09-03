@@ -768,6 +768,8 @@ interface MenubarRadioGroupProps {
       { token: '--background',         value: $tStore('tokens.table.menubarBg.class'),     description: $tStore('tokens.table.menubarBg.part')     },
       { token: '--border',             value: $tStore('tokens.table.menubarBorder.class'), description: $tStore('tokens.table.menubarBorder.part') },
       { token: '--accent',             value: $tStore('tokens.table.triggerHover.class'),  description: $tStore('tokens.table.triggerHover.part')  },
+      { token: '--accent-foreground',  value: $tStore('tokens.table.triggerText.class'),   description: $tStore('tokens.table.triggerText.part')   },
+      { token: '--radius-sm',          value: $tStore('tokens.table.triggerRadius.class'), description: $tStore('tokens.table.triggerRadius.part') },
       { token: '--popover',            value: $tStore('tokens.table.contentBg.class'),     description: $tStore('tokens.table.contentBg.part')     },
       { token: '--border',             value: $tStore('tokens.table.contentBorder.class'), description: $tStore('tokens.table.contentBorder.part') },
       { token: '--radius',             value: $tStore('tokens.table.rounded.class'),       description: $tStore('tokens.table.rounded.part')       },

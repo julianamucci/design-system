@@ -1016,12 +1016,14 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
     return [
       { token: '--background',   k: 'menubarBg',     className: '.nds-menubar'                 },
       { token: '--border',       k: 'menubarBorder', className: '.nds-menubar'                 },
-      { token: '--accent',       k: 'triggerHover',  className: '.nds-menubar-trigger'         },
+      { token: '--accent',       k: 'triggerHover',  className: '.nds-menubar-trigger[data-state="open"]' },
+      { token: '--accent-foreground', k: 'triggerText',   className: '.nds-menubar-trigger:hover · .nds-menubar-trigger[data-state="open"]' },
+      { token: '--radius-sm',    k: 'triggerRadius', className: '.nds-menubar-trigger'         },
       { token: '--popover',      k: 'contentBg',     className: '.nds-dropdown-menu-content'   },
       { token: '--border',       k: 'contentBorder', className: '.nds-dropdown-menu-content'   },
       { token: '--radius',       k: 'rounded',       className: '.nds-dropdown-menu-content'   },
-      { token: '--accent',       k: 'itemHover',     className: '.nds-dropdown-menu-item'      },
-      { token: '--destructive',  k: 'destructive',   className: '.nds-dropdown-menu-item'      },
+      { token: '--accent',       k: 'itemHover',     className: '.nds-dropdown-menu-item:hover' },
+      { token: '--destructive',  k: 'destructive',   className: '.nds-dropdown-menu-item[data-variant="destructive"]' },
     ].map(({ token, k, className }) => ({
       token,
       value: className,

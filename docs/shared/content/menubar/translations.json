@@ -275,6 +275,14 @@
           "class": ".nds-menubar-trigger[data-state=\"open\"]",
           "part": "Gatilho do menu aberto, em destaque na barra"
         },
+        "triggerText": {
+          "class": ".nds-menubar-trigger:hover · .nds-menubar-trigger[data-state=\"open\"]",
+          "part": "Cor do texto do gatilho em destaque — o par do fundo de realce"
+        },
+        "triggerRadius": {
+          "class": ".nds-menubar-trigger",
+          "part": "Arredondamento do gatilho, um degrau abaixo do da barra"
+        },
         "contentBg": {
           "class": ".nds-dropdown-menu-content",
           "part": "Fundo do painel do menu"
@@ -759,6 +767,14 @@
           "class": ".nds-menubar-trigger[data-state=\"open\"]",
           "part": "Trigger of the open menu, highlighted on the bar"
         },
+        "triggerText": {
+          "class": ".nds-menubar-trigger:hover · .nds-menubar-trigger[data-state=\"open\"]",
+          "part": "Text colour of the highlighted trigger — the counterpart of the highlight background"
+        },
+        "triggerRadius": {
+          "class": ".nds-menubar-trigger",
+          "part": "Trigger corner radius, one step below the bar’s"
+        },
         "contentBg": {
           "class": ".nds-dropdown-menu-content",
           "part": "Menu panel background"
@@ -1242,6 +1258,14 @@
         "triggerHover": {
           "class": ".nds-menubar-trigger[data-state=\"open\"]",
           "part": "Disparador del menú abierto, destacado en la barra"
+        },
+        "triggerText": {
+          "class": ".nds-menubar-trigger:hover · .nds-menubar-trigger[data-state=\"open\"]",
+          "part": "Color del texto del disparador destacado — la contraparte del fondo de realce"
+        },
+        "triggerRadius": {
+          "class": ".nds-menubar-trigger",
+          "part": "Redondeo del disparador, un escalón por debajo del de la barra"
         },
         "contentBg": {
           "class": ".nds-dropdown-menu-content",

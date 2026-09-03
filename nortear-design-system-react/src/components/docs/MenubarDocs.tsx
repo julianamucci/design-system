@@ -851,6 +851,16 @@ interface MenubarItemProps {
             description: tContent("tokens.table.triggerHover.part"),
           },
           {
+            token: "--accent-foreground",
+            value: tContent("tokens.table.triggerText.class"),
+            description: tContent("tokens.table.triggerText.part"),
+          },
+          {
+            token: "--radius-sm",
+            value: tContent("tokens.table.triggerRadius.class"),
+            description: tContent("tokens.table.triggerRadius.part"),
+          },
+          {
             token: "--popover",
             value: tContent("tokens.table.contentBg.class"),
             description: tContent("tokens.table.contentBg.part"),
