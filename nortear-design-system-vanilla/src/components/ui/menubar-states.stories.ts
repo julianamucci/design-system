@@ -4,6 +4,7 @@ import { createMenubar } from './menubar';
 import { embrulhar, triggersOf, panelOpen } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith, menubarControlledSource } from './menubar.source';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
+import { tornarDestruivel } from '@/lib/destroy';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
@@ -551,7 +552,19 @@ export const ControlledOpen: Story = {
     });
 
     apply();
-    return embrulhar(area);
+    // O observador é de VIDA LONGA — ele acompanha a story inteira, ao contrário
+    // dos de um disparo só desta stack, que se desconectam no próprio retorno.
+    // Sem `disconnect`, ele sobrevive à saída do nó segurando o 'host' e o
+    // callback, e a story passaria a ensinar um vazamento: é justamente o que a
+    // `ListenerCleanup` deste arquivo existe para provar que não acontece.
+    //
+    // A última barra também precisa morrer aqui: `apply` destrói a ANTERIOR a
+    // cada troca, e a que fica de pé no fim não tem quem a chame.
+    const wrapper = embrulhar(area);
+    return tornarDestruivel(wrapper, wrapper, () => {
+      observer.disconnect();
+      bar?.destroy();
+    });
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
