@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { createChatThread } from './chat-thread';
 import { createButton } from './button';
 import { chatLabels, paraMensagens } from './chat-thread.fixtures';
@@ -33,6 +33,26 @@ type Story = StoryObj;
 
 /** Espião de escopo de módulo: dentro do render, a play não o alcança. */
 const onCopy = fn();
+
+/**
+ * Espera a opacidade computada assentar num valor, por relógio.
+ *
+ * Laço de `setTimeout` e não `waitFor`: o `waitFor` da suíte reagenda por
+ * observador de mutação e traz o prazo padrão de 1s junto, que é curto demais
+ * para uma transição medida com a máquina saturada. Aqui o prazo é explícito, e
+ * a mensagem de erro carrega o último valor lido — sem ela, "estourou o prazo"
+ * não diz se a opacidade estava parada em zero ou a meio caminho.
+ */
+async function esperarOpacidade(el: HTMLElement, alvo: string, prazoMs: number): Promise<void> {
+  const limite = performance.now() + prazoMs;
+  let ultima = '';
+  while (performance.now() < limite) {
+    ultima = getComputedStyle(el).opacity;
+    if (ultima === alvo) return;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  throw new Error(`a opacidade não chegou a ${alvo} em ${prazoMs}ms — último valor lido: ${ultima}`);
+}
 
 /**
  * A resposta com fontes, e uma delas com o endereço RECUSADO.
@@ -156,14 +176,21 @@ export const WithActions: Story = {
       // ficariam no Tab e invisíveis ao receber foco, que é 2.4.7 na forma mais
       // difícil de notar — quem usa mouse nunca vê o problema.
       copiar.focus();
-      // A espera é pela TRANSIÇÃO, não pelo foco: `getComputedStyle` devolve o
-      // valor animado do instante, e ler logo depois de focar pega a opacidade
-      // ainda perto de zero. Medido — sem a espera, reprova com
-      // `expected '0' to be '1'`.
+      // O foco é afirmado ANTES da opacidade, e separado dela, para que as duas
+      // causas possíveis não se confundam numa falha só: se o foco não estiver
+      // no botão, quem reprova é esta linha, dizendo isso.
+      await expect(copiar).toHaveFocus();
+      // E a espera pela transição é de RELÓGIO, com prazo largo.
       //
-      // Leitura PURA dentro do `waitFor`: condição que mexe no DOM reagenda a
-      // si mesma por observador de mutação e pendura o arquivo inteiro.
-      await waitFor(() => expect(getComputedStyle(actions).opacity).toBe('1'));
+      // Medido em par na mesma máquina, em 2026-09-03: com as suítes de três
+      // stacks em paralelo (30 `chrome-headless-shell` de pé) o `waitFor` que
+      // morava aqui estourou o prazo padrão de 1s e reprovou com
+      // `expected '0' to be '1'`; o MESMO arquivo, rodado sozinho, passou. A
+      // transição é de `--duration-fast` (120ms) — 1s só não basta porque com a
+      // máquina saturada o recálculo de estilo não chega nesse orçamento. Não é
+      // teste instável de causa desconhecida: é prazo curto demais para a carga
+      // que esta suíte de fato encontra, e o conserto é o prazo.
+      await esperarOpacidade(actions, '1', 6000);
     });
 
     await step('E acionam', async () => {
