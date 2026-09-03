@@ -268,8 +268,6 @@ export const Chart: Story = {
 };
 
 export const Checkbox: Story = {
-  // axe: target-size — catalogado no FIXES-NEEDED (empty-heading resolvida)
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { CheckboxDocs }, template: '<CheckboxDocs />' }),
   play: smokePlay,
 };
@@ -290,11 +288,6 @@ export const Combobox: Story = {
 };
 
 export const Command: Story = {
-  // axe: aria-required-children (CommandSeparator role=separator dentro do
-  // listbox, 2 nodes) — catalogado no FIXES-NEEDED. button-name RESOLVIDA
-  // (2026-08-01): triggers role="combobox" ganharam aria-label — combobox não
-  // aceita name-from-content. empty-heading já estava resolvida.
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { CommandDocs }, template: '<CommandDocs />' }),
   play: smokePlay,
 };
@@ -412,8 +405,6 @@ export const Motion: Story = {
 };
 
 export const NavigationMenu: Story = {
-  // axe: aria-hidden-focus — catalogado no FIXES-NEEDED (landmark-unique resolvida)
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { NavigationMenuDocs }, template: '<NavigationMenuDocs />' }),
   play: smokePlay,
 };

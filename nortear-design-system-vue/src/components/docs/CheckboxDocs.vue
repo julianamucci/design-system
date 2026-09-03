@@ -572,9 +572,14 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: fieldset vs checkboxes soltos -->
       <template #do-preview-1>
+        <!-- `md` e não `xs`: a caixa tem 16px, abaixo dos 24px que a WCAG 2.5.8
+             pede de alvo. Alvo pequeno passa quando tem FOLGA em volta, e com
+             4px entre as duas linhas não tinha — o axe reprovava as duas caixas
+             por `target-size`. O par 1, de caixa solitária, sempre passou: é a
+             vizinha perto que fecha a folga, não o tamanho em si. -->
         <fieldset
           class="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4"
-          data-spacing="xs"
+          data-spacing="md"
         >
           <legend class="nds-text-caption nds-font-semibold nds-px-1">
             Notificações
@@ -602,9 +607,11 @@ const visualTestItems = computed(() => [
         </fieldset>
       </template>
       <template #dont-preview-1>
+        <!-- Mesma folga de 24px do lado "do": o que este par contrasta é
+             fieldset contra caixas soltas, não o espaçamento entre elas. -->
         <div
           class="nds-stack nds-w-full"
-          data-spacing="xs"
+          data-spacing="md"
         >
           <div
             class="nds-cluster"

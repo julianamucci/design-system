@@ -670,7 +670,6 @@ const a11yCritCols = computed(() => ({
           <NavigationMenu
             :aria-label="stripHtml(tContent('doDont.pair2.do'))"
             :delay-duration="80"
-            default-value="produtos"
           >
             <NavigationMenuList>
               <NavigationMenuItem value="produtos">
@@ -718,7 +717,6 @@ const a11yCritCols = computed(() => ({
           <NavigationMenu
             :aria-label="stripHtml(tContent('doDont.pair2.dont'))"
             :delay-duration="80"
-            default-value="todos"
           >
             <NavigationMenuList>
               <NavigationMenuItem value="todos">
@@ -882,7 +880,6 @@ const a11yCritCols = computed(() => ({
           <NavigationMenu
             :aria-label="tContent('variants.items.comDropdown.name')"
             :delay-duration="80"
-            default-value="produtos"
           >
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -934,7 +931,6 @@ const a11yCritCols = computed(() => ({
           <NavigationMenu
             :aria-label="tContent('variants.items.megaMenuGrid.name')"
             :delay-duration="80"
-            default-value="solucoes"
           >
             <NavigationMenuList>
               <NavigationMenuItem value="solucoes">
@@ -1016,7 +1012,6 @@ const a11yCritCols = computed(() => ({
           <NavigationMenu
             :aria-label="tContent('variants.items.comCardDestacado.name')"
             :delay-duration="80"
-            default-value="recursos"
           >
             <NavigationMenuList>
               <NavigationMenuItem value="recursos">
