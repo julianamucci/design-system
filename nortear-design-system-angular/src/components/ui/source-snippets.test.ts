@@ -314,9 +314,18 @@ describe('transforms do painel Code', () => {
 
       // Vale para TODOS os ramos, e não só para o que os args padrão produzem.
       it('nenhum ramo liga laço sobre membro que a classe não declara', () => {
+        // REPROVA em vez de sair calada. A primeira versão desta linha fazia
+        // `return` quando o texto não vinha — e o glob de texto é `./*.ts`, sem
+        // subpasta, então um `.source.ts` que nascesse em subdiretório sairia da
+        // varredura SEM UMA PALAVRA, com a suíte verde medindo menos. É a mesma
+        // forma do portão que encolhe sozinho, e não vale a pena arriscá-la
+        // para poupar uma linha.
         const bruto = fontes[caminho];
-        if (bruto === undefined) return;
-        const soltos = ligacoesSemMembroNoTexto(bruto);
+        expect(
+          bruto,
+          `${caminho}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob (\`./*.ts\`, sem subpasta), e sem esta falha ele sumiria da medição em silêncio`,
+        ).toBeTypeOf('string');
+        const soltos = ligacoesSemMembroNoTexto(bruto!);
         expect(
           soltos,
           `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhuma classe do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
