@@ -197,10 +197,18 @@ export const Carousel: Story = { render: page(CarouselDocs), play: mounted };
 
 export const Chart: Story = { render: page(ChartDocs), play: mounted };
 
-// axe: target-size — catalogado no FIXES-NEEDED. button-name RESOLVIDA
-// (2026-08-01): variante default (checkbox sem Label visível) ganhou
-// aria-label; empty-heading RESOLVIDA: DocsAccessibility.svelte só renderiza
-// o <h3> do teclado quando keyboardTitle existe (mesmo fix do Vue).
+// axe: target-size — MEDIDO em 2026-09-03 com a exceção RETIRADA, e a causa
+// continua de pé: os checkboxes do par do/don't (`#do-pair2-do-1`,
+// `#do-pair2-do-2`, `#do-pair2-dont-1` e irmãos) saem com 16x16 CSS px contra
+// os 24x24 que a regra cobra, e empilhados com `data-spacing="xs"` também não
+// sobra espaçamento que compense. É dívida do PRIMITIVO — a largura vem de
+// `width: var(--spacing-4)` em `docs/shared/styles/nds/checkbox.css`, que vale
+// para as cinco stacks —, não desta página: o alvo cresce quando o componente
+// crescer, e isso é decisão de design, não de docs page. Mesma leitura e mesma
+// medida do React em 2026-09-03. Segue catalogado no FIXES-NEEDED.
+// button-name RESOLVIDA (2026-08-01): variante default (checkbox sem Label
+// visível) ganhou aria-label; empty-heading RESOLVIDA: DocsAccessibility.svelte
+// só renderiza o <h3> do teclado quando keyboardTitle existe (mesmo fix do Vue).
 export const Checkbox: Story = { render: page(CheckboxDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
 
 export const CodeBlock: Story = { render: page(CodeBlockDocs), play: mounted };
@@ -209,14 +217,17 @@ export const Collapsible: Story = { render: page(CollapsibleDocs), play: mounted
 
 export const Combobox: Story = { render: page(ComboboxDocs), play: mounted };
 
-// axe: aria-required-attr, aria-required-children, button-name, nested-interactive, target-size — catalogado no FIXES-NEEDED
-// axe: aria-required-attr (Command.Input do bits-ui sem aria-controls),
-// aria-required-children (Command.Loading role=progressbar dentro do listbox)
-// — catalogado no FIXES-NEEDED. button-name, nested-interactive e target-size
-// RESOLVIDAS (2026-08-01): o asChild inexistente no bits-ui virava <button>
-// wrapper sem nome — trocado pelo snippet child; trigger role="combobox"
-// ganhou aria-label (combobox não aceita name-from-content).
-export const Command: Story = { render: page(CommandDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// aria-required-attr e aria-required-children RESOLVIDAS (2026-09-03): a página
+// passou limpa sob o axe com a exceção retirada. Os dois achados eram do
+// `Command.Input` sem `aria-controls` e do `Command.Loading` com
+// `role="progressbar"` dentro do listbox — saíram junto com alguma correção
+// anterior do Command, e ninguém tinha medido de novo. A exceção sobreviveu ao
+// motivo dela.
+// button-name, nested-interactive e target-size RESOLVIDAS (2026-08-01): o
+// asChild inexistente no bits-ui virava <button> wrapper sem nome — trocado
+// pelo snippet child; trigger role="combobox" ganhou aria-label (combobox não
+// aceita name-from-content).
+export const Command: Story = { render: page(CommandDocs), play: mounted };
 
 export const ContextMenu: Story = { render: page(ContextMenuDocs), play: mounted };
 
@@ -226,14 +237,13 @@ export const DataTable: Story = { render: page(DataTableDocs), play: mounted };
 
 export const Densities: Story = { render: page(DensitiesDocs), play: mounted };
 
-// axe: scrollable-region-focusable — catalogado no FIXES-NEEDED
-// A exceção de `preview_vazio` saiu: a premissa dela ("falta decidir se a docs
-// page mostra o gatilho") foi decidida — mostra. Com o exemplo nascendo fechado,
-// o gatilho fica NO contêiner e ele deixa de estar vazio.
-export const Dialog: Story = { render: page(DialogDocs), play: mounted, parameters: {
-    a11y: { test: 'todo' },
-  },
-};
+// scrollable-region-focusable RESOLVIDA (2026-09-03): a página passou limpa sob
+// o axe com a exceção retirada. O corpo rolável do exemplo ganhou parada de
+// teclado em alguma correção anterior do Dialog, e ninguém tinha medido de novo.
+// A exceção de `preview_vazio` já tinha saído: a premissa dela ("falta decidir
+// se a docs page mostra o gatilho") foi decidida — mostra. Com o exemplo
+// nascendo fechado, o gatilho fica NO contêiner e ele deixa de estar vazio.
+export const Dialog: Story = { render: page(DialogDocs), play: mounted };
 
 export const Drawer: Story = { render: page(DrawerDocs), play: mounted };
 
