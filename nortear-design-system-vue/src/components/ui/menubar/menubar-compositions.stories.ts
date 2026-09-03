@@ -96,7 +96,7 @@ export const WithShortcuts: Story = {
     components: parts,
     setup: () => ({ shortcuts: SHORTCUTS }),
     template: `
-      <div style="contain: layout; min-height: 280px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Menubar default-value="edit">
           <MenubarMenu value="edit">
             <MenubarTrigger>Editar</MenubarTrigger>
@@ -152,7 +152,7 @@ export const WithSubmenu: Story = {
     components: parts,
     setup: () => ({ exportacoes: EXPORTACOES }),
     template: `
-      <div style="contain: layout; min-height: 320px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <Menubar default-value="file">
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -241,7 +241,7 @@ export const WithCheckboxItems: Story = {
       return { exibicoes: EXIBICOES, state };
     },
     template: `
-      <div style="contain: layout; min-height: 280px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Menubar default-value="view">
           <MenubarMenu value="view">
             <MenubarTrigger>Exibir</MenubarTrigger>
@@ -327,7 +327,7 @@ export const WithRadioGroup: Story = {
       return { temas: THEMES, theme };
     },
     template: `
-      <div style="contain: layout; min-height: 280px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Menubar default-value="theme">
           <MenubarMenu value="theme">
             <MenubarTrigger>Aparência</MenubarTrigger>
@@ -396,7 +396,7 @@ export const EditorCompleto: Story = {
   render: () => ({
     components: parts,
     template: `
-      <div style="contain: layout; min-height: 200px;">
+      <div class="nds-min-h-50" style="contain: layout">
         <Menubar>
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>

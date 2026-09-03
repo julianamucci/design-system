@@ -102,7 +102,7 @@ export const Playground: Story = {
       return { args, menus: MENUS };
     },
     template: `
-      <div style="contain: layout; min-height: 320px;">
+      <div class="nds-min-h-80" style="contain: layout">
         <Menubar
           :key="String(args.defaultValue) + String(args.loop)"
           :default-value="args.defaultValue || undefined"

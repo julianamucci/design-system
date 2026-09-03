@@ -76,7 +76,7 @@ export const Closed: Story = {
     components: parts,
     setup: () => ({ menus: MENUS_FECHADOS }),
     template: `
-      <div style="contain: layout; min-height: 120px;">
+      <div class="nds-min-h-30" style="contain: layout">
         <Menubar>
           <MenubarMenu v-for="m in menus" :key="m" :value="m">
             <MenubarTrigger>{{ m }}</MenubarTrigger>
@@ -126,7 +126,7 @@ export const Open: Story = {
   render: () => ({
     components: parts,
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Menubar default-value="file">
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -191,7 +191,7 @@ export const ItemDisabled: Story = {
     components: parts,
     setup: () => ({ items: ITEMS_WITH_BLOCK, onChoose: selectionSpy }),
     template: `
-      <div style="contain: layout; min-height: 240px;">
+      <div class="nds-min-h-60" style="contain: layout">
         <Menubar default-value="file">
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -270,7 +270,7 @@ export const CheckboxChecked: Story = {
       return { state: reactive<Record<string, boolean>>({ 'Régua': true, Grade: false }) };
     },
     template: `
-      <div style="contain: layout; min-height: 240px;">
+      <div class="nds-min-h-60" style="contain: layout">
         <Menubar default-value="view">
           <MenubarMenu value="view">
             <MenubarTrigger>Exibir</MenubarTrigger>
@@ -341,7 +341,7 @@ export const CheckboxIndeterminate: Story = {
   render: () => ({
     components: parts,
     template: `
-      <div style="contain: layout; min-height: 240px;">
+      <div class="nds-min-h-60" style="contain: layout">
         <Menubar default-value="view">
           <MenubarMenu value="view">
             <MenubarTrigger>Exibir</MenubarTrigger>

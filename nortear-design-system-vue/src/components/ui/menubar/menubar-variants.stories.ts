@@ -49,7 +49,7 @@ export const Default: Story = {
     components: parts,
     setup: () => ({ items: ITEMS_NEUTROS }),
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Menubar default-value="file">
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -113,7 +113,7 @@ export const Destructive: Story = {
     components: parts,
     setup: () => ({ perigo: ITEMS_WITH_PERIGO }),
     template: `
-      <div style="contain: layout; min-height: 260px;">
+      <div class="nds-min-h-70" style="contain: layout">
         <Menubar default-value="file">
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>
