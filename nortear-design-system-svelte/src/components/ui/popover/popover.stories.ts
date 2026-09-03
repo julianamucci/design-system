@@ -192,14 +192,17 @@ export const Playground: Story = {
       // `waitForPortal` pode retornar dentro dessa janela — um clique único
       // caía no vazio em ~1 de 3 execuções, sem erro nenhum. Reemitir mede o
       // COMPORTAMENTO ("clicar fora fecha") sem depender do instante do clique.
-      await waitFor(
-        async () => {
-          if (!body.queryByRole('dialog')) return;
-          await userEvent.click(canvas.getByTestId('area-externa'));
-          throw new Error('popover still open');
-        },
-        { timeout: 3000, interval: 100 }
-      );
+      //
+      // A reemissão é de RELÓGIO, não de `waitFor`: o clique MEXE no DOM, e
+      // condição que muta dentro do `waitFor` se reagenda sozinha pelo
+      // observador de mutação — o prazo não chega, o núcleo trava e a aba
+      // morre sem reportar, levando o arquivo inteiro junto.
+      const dismissDeadline = Date.now() + 3000;
+      while (body.queryByRole('dialog') && Date.now() < dismissDeadline) {
+        await userEvent.click(canvas.getByTestId('area-externa'));
+        await new Promise<void>((resolve) => setTimeout(resolve, 100));
+      }
+      await expect(body.queryByRole('dialog')).toBeNull();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
