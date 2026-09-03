@@ -28,7 +28,7 @@ export const PENDENTES: Record<string, string> = {
   padrão: 'mesma decisão de `padrao`, com acento',
   novo: 'polissêmico: elemento recém-montado nas stories, e no AccordionDocs a chave de rótulo que significa *Novo* — `new` é palavra reservada',
   teclar: 'a recomposição fundia com `tipo` num só `type`; o alvo certo é `onKey`, mas o nome aparece em contextos que pedem leitura',
-  com: 'não é identificador: aparece em comentário e dentro de `figma.com`',
+  com: 'a varredura não podia distinguir o identificador do `com` de prosa nem do sufixo de `figma.com`, e trocar por regex corromperia os dois. Restam duas declarações — `alert.source.test.ts` e `avatar.source.test.ts` do Vanilla; as do alert-dialog viraram `withMedia`. A razão anterior dizia "não é identificador", e isso era falso: eram quatro declarações',
   estilo: 'colide com o prop `style` do Svelte no aspect-ratio',
   densidade: 'colide com uma variável `density` já existente no preview.ts',
   canal: 'colide com `channel` no preview.ts',

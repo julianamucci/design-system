@@ -50,11 +50,11 @@ describe('alertDialogSnippet', () => {
   });
 
   it('o bloco de mídia arrasta a sub-fábrica e o import do ícone junto', () => {
-    const com = alertDialogSnippet({ showMedia: true });
-    expect(com).toContain('createAlertDialogMedia');
-    expect(com).toContain("import { createAlertIcon } from '@/components/ui/alert';");
-    expect(com).toContain("media.appendChild(createAlertIcon('warning'));");
-    expect(com).toContain('media,');
+    const withMedia = alertDialogSnippet({ showMedia: true });
+    expect(withMedia).toContain('createAlertDialogMedia');
+    expect(withMedia).toContain("import { createAlertIcon } from '@/components/ui/alert';");
+    expect(withMedia).toContain("media.appendChild(createAlertIcon('warning'));");
+    expect(withMedia).toContain('media,');
 
     const without = alertDialogSnippet();
     expect(without).not.toContain('createAlertDialogMedia');

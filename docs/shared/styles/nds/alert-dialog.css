@@ -15,13 +15,26 @@
  *     </div>
  *   </div>
  *
- * Sem overlay-click-to-close: a decisão é crítica e exige escolha explícita.
+ * ─── Dialog × AlertDialog ───────────────────────────────────────────────────
  *
- * Escape FECHA, e equivale a cancelar — o comentário anterior dizia o
- * contrário, e contradizia o próprio conteúdo compartilhado do componente
- * (testes.functional.item4). A WAI-ARIA manda o alertdialog seguir o teclado do
- * dialog: tirar a única saída de teclado seria pior do que o risco de dispensa
- * acidental, que é justamente o que o clique-fora bloqueado já cobre.
+ * As duas folhas são irmãs: as keyframes de fade abaixo vêm de dialog.css
+ * (nds-dialog-fade-in / -fade-out), declaradas lá e consumidas aqui. O que as
+ * separa não é estilo, é decisão — e está escrito nos dois docblocks:
+ *
+ *   · papel: role="alertdialog" aqui, role="dialog" lá;
+ *   · Sem overlay-click-to-close: a decisão é crítica e exige escolha
+ *     explícita. Vale nas CINCO stacks, e em nenhuma é configuração de quem
+ *     consome: é o perfil do componente, fixado na construção;
+ *   · Escape FECHA, e equivale a cancelar — o comentário anterior dizia o
+ *     contrário, e contradizia o próprio conteúdo compartilhado do componente
+ *     (testes.functional.item4). A WAI-ARIA manda o alertdialog seguir o
+ *     teclado do dialog: tirar a única saída de teclado seria pior do que o
+ *     risco de dispensa acidental, que é justamente o que o clique-fora
+ *     bloqueado já cobre;
+ *   · sem botão de fechar no canto: a saída visível é o par Cancel + Action do
+ *     rodapé, e é por isso que o rodapé não é opcional aqui. O Dialog tem
+ *     .nds-dialog-close, e esta folha não declara equivalente;
+ *   · sem backdrop-filter: só o véu do Dialog desfoca o fundo.
  *
  * Tokens: --background, --foreground, --muted-foreground, --border,
  *         --spacing-*

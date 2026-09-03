@@ -7,6 +7,7 @@ import {
   computed,
   contentChild,
   inject,
+  input,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -27,7 +28,9 @@ import {
 // Visual: classes `.nds-alert-dialog-*` (docs/shared/styles/nds/alert-dialog.css).
 //
 // É o irmão do Dialog para decisões que não têm volta: excluir, revogar,
-// descartar. Três coisas o separam, e nenhuma é estética:
+// descartar. O bloco canônico da divergência — com o mecanismo medido na fonte
+// das cinco libs — está no cabeçalho do `alert-dialog.ts` do Vanilla. Três
+// coisas o separam, e nenhuma é estética:
 //
 //   1. `role="alertdialog"` — o leitor de tela anuncia com urgência e lê a
 //      descrição junto do título, em vez de esperar a pessoa navegar até ela.
@@ -106,7 +109,7 @@ export class NdsAlertDialogContent {
 
       <div
         rdxDialogPopup
-        class="nds-alert-dialog-content"
+        [class]="panelClasses()"
         data-slot="alert-dialog-content"
         [attr.data-state]="state()"
       >
@@ -117,6 +120,30 @@ export class NdsAlertDialogContent {
 })
 export class NdsAlertDialog {
   protected readonly panel = contentChild.required(NdsAlertDialogContent);
+
+  /**
+   * Classe extra no painel.
+   *
+   * O conteúdo compartilhado promete, para as cinco stacks, que "todos os
+   * subcomponentes aceitam classes adicionais". Aqui o painel é portalado de
+   * dentro do template deste componente: classe posta em `<nds-alert-dialog>`
+   * cai no HOST, que fica na página, e nunca alcança o painel. As outras
+   * quatro stacks entregam o mesmo por `className`/`class`.
+   *
+   * A lista sai inteira de um `computed` — e não de `class` estático mais
+   * `[class]` — porque assim não há disputa entre a classe do template e a do
+   * binding: quem escreve o atributo é um só lugar.
+   *
+   * O que ela NÃO estende: largura, padding e cor do painel. `utilities.css`
+   * entra antes da folha do componente, então utilitária de mesma
+   * especificidade perde para a regra de `.nds-alert-dialog-content` — é o
+   * mesmo teto que a story ExtraClass das outras stacks documenta por escrito.
+   */
+  readonly panelClass = input<string>('');
+
+  protected readonly panelClasses = computed(() =>
+    ['nds-alert-dialog-content', this.panelClass()].filter(Boolean).join(' '),
+  );
 
   private readonly root = injectRdxDialogRootContext();
 

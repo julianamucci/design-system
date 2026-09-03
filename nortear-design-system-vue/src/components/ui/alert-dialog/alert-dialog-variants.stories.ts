@@ -24,8 +24,16 @@ import {
   alertDialogNoDescriptionSource,
 } from './alert-dialog.source';
 
+// As sete stories abaixo NÃO são composições, e por isso não moram mais em
+// -compositions: composição é um arranjo que resolve um caso de uso, e o que
+// há aqui são as formas que um único componente assume. Destructive e Neutral
+// são as duas linhas de `variants.items` do conteúdo compartilhado; WithMedia
+// e WithoutDescription exercitam peças opcionais da anatomia; LongDescription,
+// Responsive e ExtraClass exercitam robustez, ponto de quebra e
+// extensibilidade. A docs page é a prova: ela tem seção de Variantes e NÃO tem
+// seção de Composições, nem entrada `nav.compositions`.
 const meta = {
-  title: 'Primitives/Overlay/AlertDialog/Compositions',
+  title: 'Primitives/Overlay/AlertDialog/Variants',
   component: AlertDialog,
   tags: ['overlay'],
   parameters: {
@@ -61,7 +69,7 @@ const sharedComponents = {
   TriangleAlert,
 };
 
-export const WithIcon: Story = {
+export const WithMedia: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {

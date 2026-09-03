@@ -48,9 +48,27 @@ const { t, dict } = useTranslation(alertDialogTranslations as Record<string, unk
     // não é input: o Angular mescla o `class` escrito no elemento.
     'props.table.asChild':
       'Não existe nesta stack: a diretiva vai no próprio elemento, sem wrapper.',
-    'props.table.className':
-      'Não é input: classes extras vão no atributo class do elemento, e o Angular as mescla com a base.',
     'props.table.children': 'Conteúdo projetado — em Angular, o que está entre as tags.',
+  },
+  // Este par sai do '*' e vai por idioma: prosa em português servida às páginas
+  // em inglês e espanhol é o mesmo defeito que o override existe para evitar.
+  //
+  // E o texto anterior era FALSO para o painel. Ele dizia "classes extras vão
+  // no atributo class do elemento" — o que vale para header, título, descrição
+  // e rodapé, mas não para o painel: ele é portalado de dentro do template do
+  // componente, então classe posta em <nds-alert-dialog> cai no HOST, que fica
+  // na página. O input panelClass é a rota real, e existe desde esta revisão.
+  'pt-BR': {
+    'props.table.className':
+      'Nas peças internas, classes extras vão no atributo class do próprio elemento, e o Angular as mescla com a base. Para o painel, que é portalado, use a entrada panelClass da raiz.',
+  },
+  en: {
+    'props.table.className':
+      'On the inner parts, extra classes go on the element class attribute and Angular merges them with the base. For the panel, which is portalled, use the root panelClass input.',
+  },
+  es: {
+    'props.table.className':
+      'En las piezas internas, las clases extra van en el atributo class del propio elemento y Angular las combina con la base. Para el panel, que es portalizado, usa la entrada panelClass de la raíz.',
   },
 });
 

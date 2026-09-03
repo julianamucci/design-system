@@ -1,12 +1,54 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 // ─── Alert Dialog — Vanilla factory (portal manual) ──────────────────────────
 //
 // Visual: classes .nds-alert-dialog-* (standalone .nds-*).
-// Comportamentos preservados:
-//   - Sem overlay-click-to-close (canônico para alert dialog); Escape fecha.
+//
+// ─── O que o separa do Dialog, e por quê ────────────────────────────────────
+//
+// Bloco canônico da divergência. O bloco canônico da acessibilidade COMUM aos
+// dois (foco preso, aria-modal, nome e descrição, foco de volta ao gatilho,
+// trava de rolagem) está no cabeçalho de dialog.ts, e vale igual aqui.
+//
+// Este é o modal que NÃO pode ser dispensado por engano. Três coisas o separam
+// do diálogo comum, e nenhuma é estética:
+//
+//   1. PAPEL: role="alertdialog", e não role="dialog". O leitor de tela
+//      anuncia com urgência e lê a descrição JUNTO do título, em vez de
+//      esperar a pessoa navegar até ela — por isso a descrição, opcional na
+//      assinatura, é o que diz o que a confirmação custa.
+//   2. CLIQUE NO VÉU NÃO FECHA — nas cinco, medido na fonte de cada lib.
+//      base-ui: useRenderDialogRoot liga disablePointerDismissal quando o modo
+//      é 'alert-dialog'. reka-ui: AlertDialogContent previne
+//      pointerDownOutside e interactOutside. bits-ui: interactOutsideBehavior
+//      nasce em "ignore". radix-ng: provideRdxDialogVariant com
+//      forcePointerDismissalDisabled. Aqui: o overlay simplesmente não tem
+//      ouvinte de clique — e é por isso que ele não pode ganhar um.
+//      Em nenhuma das cinco isso é configuração de quem consome: é o perfil do
+//      componente, fixado na construção.
+//   3. ESCAPE FECHA, e equivale a cancelar — nas cinco. A WAI-ARIA manda o
+//      alertdialog seguir o teclado do dialog: tirar a única saída de teclado
+//      seria pior que o risco de dispensa acidental, que é justamente o que o
+//      clique-fora bloqueado já cobre. Havia aqui um comentário chamando a
+//      ausência de "decisão deliberada"; era divergência silenciosa.
+//
+// Corolário das três: a saída visível é o par Cancel + Action do rodapé, e por
+// isso o rodapé é obrigatório aqui — o Dialog tem um X próprio no canto e este
+// não tem nenhum.
+//
+// O foco entra no CANCEL, não no primeiro tabbable: num diálogo de destruição,
+// o Enter apertado por reflexo tem de cair na saída segura.
+//
+// ─── Os outros comportamentos ───────────────────────────────────────────────
 //   - Focus trap (Tab/Shift+Tab) entre cancel e action.
 //   - Restaura foco no elemento anterior ao fechar.
+//   - Trava a rolagem da página enquanto aberto — as outras quatro caem da
+//     lib (base-ui useScrollLock, reka-ui useBodyScrollLock, bits-ui
+//     ScrollLock, radix-ng useScrollLock), e a contagem daqui vive em
+//     @/lib/scroll-lock, compartilhada com Dialog, Sheet, Drawer e Popover.
+//   - Anima a SAÍDA e só então remove: é o único da família nesta stack que
+//     faz isso (Dialog, Sheet e Drawer removem no mesmo quadro).
 //   - MutationObserver fecha o dialog quando o wrapper é removido do DOM
 //     (Storybook remount entre stories).
 
@@ -167,6 +209,11 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
 
     cancelButton.focus();
 
+    // A página atrás do véu não rola enquanto o painel está aberto. Num modal
+    // que só sai por escolha explícita, deixar o fundo rolar é pior ainda: a
+    // pergunta continua na tela e o contexto por trás dela some.
+    lockBodyScroll();
+
     trigger.setAttribute('aria-expanded', 'true');
     document.addEventListener('keydown', handleKeydown);
     onOpenChange?.(true);
@@ -179,6 +226,11 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     overlayEl = null;
     panelEl = null;
 
+    // Só destrava se HAVIA o que fechar: a contagem é do documento, e um
+    // segundo close() (ESC durante a saída) soltaria a trava de outro painel
+    // empilhado por cima. O contador ignora solta sem trava, mas não sabe
+    // distinguir de quem ela é.
+    if (saindo.length > 0) unlockBodyScroll();
     trigger.setAttribute('aria-expanded', 'false');
     document.removeEventListener('keydown', handleKeydown);
     previousFocus?.focus();

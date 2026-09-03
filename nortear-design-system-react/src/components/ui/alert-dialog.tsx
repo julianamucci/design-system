@@ -4,6 +4,27 @@ import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
+/*
+ * ─── AlertDialog ────────────────────────────────────────────────────────────
+ *
+ * O modal que NÃO pode ser dispensado por engano. O bloco canônico da
+ * divergência com o Dialog está no cabeçalho do `alert-dialog.ts` do Vanilla;
+ * aqui fica a versão curta mais o mecanismo desta stack.
+ *
+ *   · PAPEL: `alertdialog`, e não `dialog` — o leitor de tela anuncia com
+ *     urgência e lê a descrição junto do título.
+ *   · CLIQUE NO VÉU NÃO FECHA. Mecanismo: `useRenderDialogRoot` liga
+ *     `disablePointerDismissal` quando o modo é `'alert-dialog'`, e o
+ *     `useDismiss` do Dialog consulta essa bandeira. Não é prop de quem
+ *     consome: é o perfil do componente, fixado na construção.
+ *   · ESCAPE FECHA, e equivale a cancelar — `escapeKey: isTopmost`, o mesmo
+ *     do Dialog. Tirar a única saída de teclado seria pior que o risco de
+ *     dispensa acidental, que o clique-fora bloqueado já cobre.
+ *
+ * Corolário: a saída visível é o par Cancel + Action do rodapé, e por isso o
+ * rodapé não é opcional aqui — este componente não tem X no canto, ao
+ * contrário do Dialog.
+ */
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
 }

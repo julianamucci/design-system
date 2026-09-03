@@ -69,12 +69,12 @@ describe('alertDialogSource', () => {
     expect(without).not.toContain('AlertDialogMedia');
     expect(without).not.toContain('triangle-alert');
 
-    const com = alertDialogSource('', { args: { showMedia: true } });
-    expect(com).toContain('    AlertDialogMedia,');
-    expect(com).toContain('icons/triangle-alert');
+    const withMedia = alertDialogSource('', { args: { showMedia: true } });
+    expect(withMedia).toContain('    AlertDialogMedia,');
+    expect(withMedia).toContain('icons/triangle-alert');
     // A mídia é o PRIMEIRO filho do header: é dessa ordem que dependem o CSS e
     // a leitura ícone → título → descrição.
-    expect(com).toContain(`<AlertDialogHeader>
+    expect(withMedia).toContain(`<AlertDialogHeader>
       <AlertDialogMedia>`);
   });
 
