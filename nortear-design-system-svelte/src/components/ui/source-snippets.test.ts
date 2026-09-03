@@ -231,9 +231,17 @@ describe('transforms do painel Code', () => {
 
       // Vale para TODOS os ramos, e não só para o que os args padrão produzem.
       it('nenhum ramo itera lista que o script do exemplo não declara', () => {
+        // REPROVA em vez de sair calada. `if (bruto === undefined) return;`
+        // pouparia uma linha e carregaria a forma exata do portão que encolhe
+        // sozinho: no dia em que os dois globs divergirem, o módulo que só um
+        // deles alcança sai da varredura SEM UMA PALAVRA, com a suíte verde
+        // medindo menos. Esta casa já pagou isso duas vezes.
         const bruto = fontes[caminho];
-        if (bruto === undefined) return;
-        const soltos = loopsSemDeclaracaoNoTexto(bruto);
+        expect(
+          bruto,
+          `${caminho}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob de \`fontes\`, e sem esta falha ele sumiria da medição em silêncio`,
+        ).toBeTypeOf('string');
+        const soltos = loopsSemDeclaracaoNoTexto(bruto!);
         expect(
           soltos,
           `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhum <script> do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
