@@ -67,6 +67,22 @@ function indent(block: string): string {
  * AQUI, por quem monta — é o único pedaço do contrato que atravessa a fronteira
  * do que a peça desenha.
  */
+/**
+ * As escolhas, declaradas por quem monta.
+ *
+ * Elas entram no `<script>` do exemplo porque o bloco acima as ITERA, e um laço
+ * sobre nome que o exemplo não declara é um laço que não resolve na mão de quem
+ * copia. O conteúdo continua sendo do produto: o que "sempre permitir" abrange
+ * e o que recusar significa não estão aqui e não vão estar.
+ */
+const CHOICES_DECL = [
+  'const choices = [',
+  '  { value: "allow-once", label: "Permitir uma vez" },',
+  '  { value: "always", label: "Sempre permitir" },',
+  '  { value: "deny", label: "Recusar" },',
+  '];',
+].join('\n');
+
 const ACTIONS_SNIPPET = [
   '{#snippet actions()}',
   '  {#each choices as choice (choice.value)}',
@@ -99,7 +115,9 @@ function approvalTag(opts: ApprovalCardSnippetOptions): string {
 }
 
 function build(opts: ApprovalCardSnippetOptions): string {
-  return svelteSnippet(opts.actions === false ? IMPORT : IMPORT_WITH_BUTTON, approvalTag(opts));
+  const script =
+    opts.actions === false ? IMPORT : [IMPORT_WITH_BUTTON, '', CHOICES_DECL].join('\n');
+  return svelteSnippet(script, approvalTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve a pergunta por extenso. */
@@ -168,6 +186,8 @@ export function approvalCardOutsideTheGroupSource(): string {
     IMPORT_WITH_BUTTON,
     "import { ToolGroup } from '@/components/ui/tool-group';",
     "import { splitWaitingCalls } from '@shared/primitives/tool-group-summary';",
+    '',
+    CHOICES_DECL,
     '',
     'const { grouped, waiting } = splitWaitingCalls(calls);',
   ].join('\n');

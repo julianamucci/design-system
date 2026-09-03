@@ -191,6 +191,22 @@ export function terminalBlockWithoutOutputSource(): string {
  * do produto.
  */
 export function terminalBlockSequenceSource(): string {
+  // A sequência entra no `<script>` do exemplo porque a marcação a ITERA: laço
+  // sobre nome que o exemplo não declara não resolve na mão de quem copia. Os
+  // três estados são os três casos que uma sequência produz — o que terminou
+  // bem, o que quebrou e o que ainda não rodou.
+  const script = [
+    IMPORT,
+    '',
+    "const sequencia = ['complete', 'failed', 'idle'].map((status) => ({",
+    '  id: status,',
+    `  command: ${text(COMMAND)},`,
+    '  lines: saidaDe(status),',
+    '  status,',
+    '  exitCode: codigoDe(status),',
+    '}));',
+  ].join('\n');
+
   const markup = [
     '<div class="nds-stack nds-max-w-lg" data-spacing="lg">',
     '  {#each sequencia as passo (passo.id)}',
@@ -205,7 +221,7 @@ export function terminalBlockSequenceSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script, markup);
 }
 
 /**

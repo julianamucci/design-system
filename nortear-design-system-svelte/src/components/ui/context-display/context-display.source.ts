@@ -119,9 +119,14 @@ export function contextDisplayAllLevelsSource(): string {
     IMPORT_BUDGET,
     '',
     '// O limiar é do primitivo, e a comparação é exata.',
-    "budgetLevel({ input: 16000, output: 0, limit: 32000 });  // 'normal'",
-    "budgetLevel({ input: 24000, output: 0, limit: 32000 });  // 'warning'",
-    "budgetLevel({ input: 30000, output: 0, limit: 32000 });  // 'critical'",
+    "//   budgetLevel({ input: 16000, output: 0, limit: 32000 })  -> 'normal'",
+    "//   budgetLevel({ input: 24000, output: 0, limit: 32000 })  -> 'warning'",
+    "//   budgetLevel({ input: 30000, output: 0, limit: 32000 })  -> 'critical'",
+    'const usages = [',
+    '  { input: 16000, output: 0, limit: 32000 },',
+    '  { input: 24000, output: 0, limit: 32000 },',
+    '  { input: 30000, output: 0, limit: 32000 },',
+    '].filter((usage) => budgetLevel(usage) !== null);',
   ].join('\n');
 
   const markup = [

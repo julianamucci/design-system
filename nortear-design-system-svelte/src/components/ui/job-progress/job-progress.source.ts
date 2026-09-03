@@ -150,6 +150,20 @@ export function jobProgressFailedSource(): string {
  * peça que a recebesse decidiria ordenação e agrupamento, que são do produto.
  */
 export function jobProgressQueueSource(): string {
+  // A fila entra no `<script>` do exemplo porque a marcação a ITERA: laço sobre
+  // nome que o exemplo não declara não resolve na mão de quem copia. Os três
+  // itens são os três graus de conhecimento sobre a conta — com total, sem
+  // total, e sem conta nenhuma —, que é o que a story fotografa.
+  const script = [
+    IMPORT,
+    '',
+    'const trabalhos = [',
+    `  { id: 'indexar', label: '${JOB_LABEL}', status: 'running', count: { done: 1240, total: 5000 } },`,
+    `  { id: 'anexos', label: 'Sincronizando os anexos', status: 'running', count: { done: 1240 } },`,
+    `  { id: 'publicar', label: 'Publicando o índice', status: 'idle' },`,
+    '];',
+  ].join('\n');
+
   const markup = [
     '<div class="nds-stack nds-max-w-lg" data-spacing="lg">',
     '  {#each trabalhos as trabalho (trabalho.id)}',
@@ -164,7 +178,7 @@ export function jobProgressQueueSource(): string {
     '</div>',
   ].join('\n');
 
-  return svelteSnippet(IMPORT, markup);
+  return svelteSnippet(script, markup);
 }
 
 /**
