@@ -19,7 +19,7 @@
  * dado de andaime — três falas de exemplo —, e despejá-la faria o painel
  * ensinar o andaime em vez da peça.
  */
-import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, expressionRoot, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type QueueSnippetOptions = {
@@ -98,7 +98,7 @@ function declaracoes(
 
 function build(opts: QueueSnippetOptions, messages: string): string {
   return svelteSnippet(
-    [IMPORT, '', declaracoes(opts, 'labels', raizDaExpressao(messages))].join('\n'),
+    [IMPORT, '', declaracoes(opts, 'labels', expressionRoot(messages))].join('\n'),
     queueMarkup(opts, messages),
   );
 }

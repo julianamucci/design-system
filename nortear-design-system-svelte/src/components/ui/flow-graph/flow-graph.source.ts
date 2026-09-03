@@ -19,7 +19,7 @@
  * ensinariam nada que o contrato já não diga — o que o snippet mostra é a
  * CHAMADA, e o que ela precisa: uma lista de nós, uma de ligações e os rótulos.
  */
-import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, expressionRoot, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type FlowGraphSnippetOptions = {
@@ -74,7 +74,7 @@ function build(opts: FlowGraphSnippetOptions): string {
   ]);
 
   return svelteSnippet(
-    script(raizDaExpressao(opts.nodesRef ?? 'nos'), opts.edgesRef),
+    script(expressionRoot(opts.nodesRef ?? 'nos'), opts.edgesRef),
     `<FlowGraph${attributes} />`,
   );
 }

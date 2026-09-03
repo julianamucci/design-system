@@ -21,7 +21,7 @@
  * esta peça tem de próprio, e um snippet que as escondesse atrás de um nome
  * ensinaria exatamente o que a peça não é.
  */
-import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, expressionRoot, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type ActivityGraphSnippetOptions = {
@@ -81,7 +81,7 @@ function build(opts: ActivityGraphSnippetOptions): string {
     'labels={rotulos}',
   ]);
 
-  const dias = raizDaExpressao(opts.daysRef ?? 'atividade');
+  const dias = expressionRoot(opts.daysRef ?? 'atividade');
   return svelteSnippet(script(dias), `<ActivityGraph${attributes} />`);
 }
 

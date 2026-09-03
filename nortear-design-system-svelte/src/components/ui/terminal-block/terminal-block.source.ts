@@ -61,11 +61,11 @@ function script(imports: string[], ...extras: string[]): string {
 }
 
 /** A saída guardada num nome, quando ela é longa demais para o painel. */
-function outputDecl(nome: string): string {
+function outputDecl(name: string): string {
   return [
     '',
     '// A saída é do processo, e chega linha a linha para quem a mostra.',
-    `const ${nome} = [/* as linhas que o comando escreveu */];`,
+    `const ${name} = [/* as linhas que o comando escreveu */];`,
   ].join('\n');
 }
 

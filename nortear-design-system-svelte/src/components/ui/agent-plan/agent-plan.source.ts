@@ -56,11 +56,11 @@ const DECL_LABELS = 'const labels = { /* os rótulos do plano */ };';
 const DECL_STATUS_LABELS = 'const statusLabels = { /* os rótulos da linha de estado */ };';
 
 /** A lista de passos que a story mostra, declarada com o nome que ela liga. */
-function stepsDecl(nome: string): string {
+function stepsDecl(name: string): string {
   return [
     '// Os passos vêm de quem monta o plano: o que se faz, em que pé está e o',
     '// motivo, o resultado ou a falha.',
-    `const ${nome} = [/* os passos do plano */];`,
+    `const ${name} = [/* os passos do plano */];`,
   ].join('\n');
 }
 

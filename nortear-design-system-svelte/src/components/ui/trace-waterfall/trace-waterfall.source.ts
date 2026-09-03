@@ -20,7 +20,7 @@
  * nada que o contrato já não diga — o que o snippet mostra é a CHAMADA, e o
  * que ela precisa: uma lista de trechos, um eixo e os rótulos.
  */
-import { attrsMultilinha, raizDaExpressao, svelteSnippet } from '@/lib/story-source';
+import { attrsMultilinha, expressionRoot, svelteSnippet } from '@/lib/story-source';
 
 /** O que as stories mudam e que o snippet precisa mostrar. */
 export type TraceWaterfallSnippetOptions = {
@@ -77,7 +77,7 @@ function build(opts: TraceWaterfallSnippetOptions): string {
   ]);
 
   return svelteSnippet(
-    script(raizDaExpressao(opts.spansRef ?? 'trechos')),
+    script(expressionRoot(opts.spansRef ?? 'trechos')),
     `<TraceWaterfall${attributes} />`,
   );
 }

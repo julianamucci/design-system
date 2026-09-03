@@ -50,8 +50,8 @@ export function svelteSnippet(script: string, markup: string): string {
  * defeito que a stack irmã pagou — `trechosLargos` e `trechosLongos` saíam do
  * snippet sem declaração, e os três exemplos ligavam nome inexistente.
  */
-export function raizDaExpressao(expressao: string): string | null {
-  return /^([A-Za-z_$][\w$]*)/.exec(expressao.trim())?.[1] ?? null;
+export function expressionRoot(expression: string): string | null {
+  return /^([A-Za-z_$][\w$]*)/.exec(expression.trim())?.[1] ?? null;
 }
 
 /**

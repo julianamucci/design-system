@@ -114,10 +114,10 @@ const DECL_ANSWER = [
 ].join('\n');
 
 /** O alcance declarado por quem monta, com o nome que a marcação liga. */
-function declScope(nome: string): string {
+function declScope(name: string): string {
   return [
     '// O alcance é do produto: o que a autorização abrange, item a item.',
-    `const ${nome} = [/* as linhas do alcance */];`,
+    `const ${name} = [/* as linhas do alcance */];`,
   ].join('\n');
 }
 

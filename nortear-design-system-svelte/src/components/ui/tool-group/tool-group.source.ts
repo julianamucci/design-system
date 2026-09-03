@@ -47,7 +47,7 @@ const ON_OPEN_CHANGE = 'onOpenChange={(aberto) => registrar(aberto)}';
  * as chamadas ensinaria o andaime em vez da peça —, mas o nome passa a existir
  * no bloco que alguém copia.
  */
-function declaracoes(chamadasRef?: string | null, comAviso = true): string {
+function declaracoes(chamadasRef?: string | null, withNotice = true): string {
   return [
     ...(chamadasRef
       ? [
@@ -58,7 +58,7 @@ function declaracoes(chamadasRef?: string | null, comAviso = true): string {
         ]
       : []),
     'const rotulos = { /* os rótulos da caixa */ };',
-    ...(comAviso
+    ...(withNotice
       ? [
           '',
           '// Abrir é um AVISO: a caixa diz que abriu, e o que fazer com isso é de',
@@ -70,8 +70,8 @@ function declaracoes(chamadasRef?: string | null, comAviso = true): string {
 }
 
 /** O `<script>` do exemplo: os imports e o que a marcação liga. */
-function bloco(imports: string[], corpo: string): string {
-  return [...imports, '', corpo].join('\n');
+function bloco(imports: string[], body: string): string {
+  return [...imports, '', body].join('\n');
 }
 
 /** O uso real: as chamadas, os rótulos, e onde o aviso de abrir continua. */

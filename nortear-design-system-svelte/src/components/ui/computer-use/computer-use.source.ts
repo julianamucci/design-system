@@ -66,17 +66,17 @@ const BLOCO_DA_TELA = [
 /** As declarações do exemplo: os rótulos, a imagem e a lista de passos. */
 function declaracoes(
   rotulos: string,
-  passosRef?: string,
+  stepsRef?: string,
   extras: string[] = [],
 ): string {
   return [
     `const ${rotulos} = { /* os rótulos da tela */ };`,
     "const capturaDaSessao = '/* o endereço da imagem da sessão */';",
-    ...(passosRef
+    ...(stepsRef
       ? [
           '',
           '// Os passos são de quem conduz a sessão: o que foi feito, e onde.',
-          `const ${passosRef} = [/* os passos da sessão */];`,
+          `const ${stepsRef} = [/* os passos da sessão */];`,
         ]
       : []),
     ...extras,
@@ -84,8 +84,8 @@ function declaracoes(
 }
 
 /** O `<script>` do exemplo: os imports e o que a marcação liga. */
-function bloco(imports: string[], corpo: string): string {
-  return [...imports, '', corpo].join('\n');
+function bloco(imports: string[], body: string): string {
+  return [...imports, '', body].join('\n');
 }
 
 /** O uso real: o endereço, a tela, os passos, o índice, o estado e os rótulos. */
