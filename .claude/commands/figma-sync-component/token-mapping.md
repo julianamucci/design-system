@@ -415,6 +415,18 @@ node.fills = [figma.variables.setBoundVariableForPaint(
 **Modo claro/escuro não é variante.** As regras `.dark .nds-*` do CSS são o modo
 `default-dark` da coleção `Cor`. Vincular a variável já cobre os dois.
 
+**`border` do CSS é traço `OUTSIDE`, e errar isso ENCOLHE o componente.** No CSS
+a borda fica fora do padding, então a caixa é `borda + padding + conteúdo +
+padding + borda`. Um frame do Figma em hug mede só `padding + conteúdo`; é o
+traço externo que devolve os pixels da borda dos dois lados. Com `INSIDE` o traço
+é desenhado por dentro, a caixa não cresce, e o componente sai mais baixo e mais
+estreito do que o navegador entrega — sem erro e sem parecer errado, porque
+proporção nenhuma se quebra.
+
+Medido no Badge: `2+2+18+2+2` dá 26px de altura no CSS, o frame media 22, e a
+diferença de 4px vinha inteira daí. `strokeAlign` é a tradução de onde a borda
+mora, não uma preferência de desenho.
+
 **Altura fixa só onde o CSS declara.** Componente com texto não tem `height` — a
 altura é padding-block + line-height (WCAG 1.4.4, Resize Text 200%). Só os
 icon-only declaram width/height, e em `rem`: 1.5 (24px), 2 (32px), 2.25 (36px),
