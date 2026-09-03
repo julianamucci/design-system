@@ -332,13 +332,19 @@ function semComentarios(bruto: string): string {
 /**
  * Todo nome que o TEXTO do módulo liga, em qualquer ramo.
  *
- * Irmã de `escopoDo`, e separada dela de propósito: aquela lê o SNIPPET, que é
- * JavaScript sem tipos, e resolve `{ a: b }` pegando o lado direito do `:`.
- * Aqui o alvo é TypeScript, onde `:` também introduz anotação de tipo —
+ * Irmã de `escopoDo`, e separada dela de propósito: aquela lê o SNIPPET e
+ * resolve `{ a: b }` pegando o lado direito do `:`. Aqui o alvo é TypeScript,
+ * onde `:` também introduz anotação de tipo —
  * `function corpo(items: Item[], o: Opts = {})` faria `escopoDo` ligar `Item` e
  * esquecer `items`. Medido: reaproveitá-la acusava dez módulos CORRETOS de uma
  * vez, oito deles só por parâmetro tipado. Os dois lados do `:` entram, porque
  * ligar demais só tira sensibilidade, enquanto ligar de menos inventa defeito.
+ *
+ * E ela também serve ao SNIPPET, em `referenciasSemOrigem`: a premissa de que o
+ * trecho publicado é JavaScript sem tipos não se sustentou na medição — o
+ * breadcrumb publica `(text: string, href: string) =>` e o filtro do combobox,
+ * `(item: ComboboxItem, query: string) =>`. Com `escopoDo`, esses parâmetros
+ * ficavam de fora e viravam acusação.
  */
 function ligadosNoTexto(texto: string): Set<string> {
   const nomes = new Set<string>();
@@ -440,6 +446,105 @@ function lacosSemOrigemNoTexto(bruto: string): string[] {
     if (METODOS_DE_LACO.test(m[2])) registra(m[1]);
   }
   return [...soltos].sort();
+}
+
+/**
+ * Constante em CAIXA_ALTA — o nome que NUNCA é espaço em branco de quem lê.
+ *
+ * Ver `referenciasSemOrigem`: é este formato que separa a constante vazada do
+ * marcador que o snippet oferece de propósito.
+ */
+const CONSTANTE = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$/;
+
+/**
+ * Apaga do snippet tudo que não é expressão — na ORDEM em que se pode apagar.
+ *
+ * A ordem não é gosto, é o que mantém os pares fechados, e inverter qualquer
+ * passo faz um módulo inteiro sair da varredura em silêncio:
+ *
+ *  1. comentário primeiro, senão prosa em crase dentro de um `//` vira código;
+ *  2. crase, depois aspa, depois expressão regular — a crase é a única que
+ *     admite as outras duas dentro de si, então ela tem de sair antes;
+ *  3. bloco de CSS só DEPOIS dos literais, e ANCORADO no começo da linha.
+ *     Medido: solto, o padrão de seletor casava `.textContent = \`Parágrafo
+ *     ${i} …\`` como se `.textContent = …{i}` fosse uma regra, cortava no meio
+ *     do literal e deixava uma crase órfã que engolia o resto do arquivo. Um
+ *     snippet pode trazer CSS (o `activity-graph` ensina o vão da casa numa
+ *     folha), e ali as palavras do token não são identificador de JavaScript.
+ */
+function semTextoNemFolha(texto: string): string {
+  let corpo = semComentarios(texto);
+  corpo = corpo.replace(/`(?:[^`\\]|\\.)*`/g, "''");
+  corpo = corpo.replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"/g, "''");
+  corpo = corpo.replace(/\/(?![/*])(?:\[[^\]\n]*\]|\\.|[^/\\\n[])+\/[dgimsuvy]*/g, '0');
+  corpo = corpo.replace(/^[ \t]*[.#][\w-]+[^\n{]*\{[^{}]*\}/gm, ' ');
+  // Chave de objeto literal e membro de interface não são referência: em
+  // `{ input: 18000 }` quem existe é o valor. O separador vem antes do nome —
+  // `{`, `,`, `;` ou a quebra de linha —, e é ele que distingue chave de ramo
+  // de ternário, que vem depois de `?` ou de `:`.
+  corpo = corpo.replace(/([{,;]\s*)[A-Za-z_$][\w$]*(\s*\??\s*:)/g, '$1$2');
+  corpo = corpo.replace(/(\n\s*)[A-Za-z_$][\w$]*(\s*\??\s*:)/g, '$1$2');
+  return corpo;
+}
+
+/**
+ * Nomes que o snippet REFERENCIA sem ligar, fora da posição de chamada.
+ *
+ * É a pergunta do Angular — toda expressão referencia nome que o exemplo
+ * declara? — traduzida para uma stack sem template. Lá a expressão só enxerga
+ * membro de classe e a lista de lugares é fechada; aqui o snippet é JavaScript
+ * que roda, então o lugar é qualquer posição de valor. `chamadasSemOrigem` já
+ * cobre a posição de CHAMADA e `interpolacoesSemOrigem`, o `${…}`; o que
+ * faltava era `parts: ALGUMA_COISA`, que não é nem uma nem outra.
+ *
+ * O QUE ELA DELIBERADAMENTE NÃO ACUSA, e o número que sustenta a exclusão.
+ *
+ * A varredura larga — todo identificador solto — foi implementada e MEDIDA
+ * antes desta: 221 exports em 37 dos 82 módulos. Lidas, elas não são defeito,
+ * são um idioma: o snippet desta stack oferece um marcador em minúscula para o
+ * que é de quem consome — `rotulos` para o objeto de rótulos, `enviar`,
+ * `irPara`, `handleAddon` para o que a página faz com o evento —, e o mesmo
+ * idioma está no React (`labels={labels}`, `onSubmit={enviar}`). Trocar isso é
+ * decisão de conteúdo das cinco stacks, e não de uma guarda de uma delas.
+ *
+ * Então a exclusão é NOMEADA e tem premissa conferível, em vez de ser uma lista
+ * de 221 desculpas: só entram os dois formatos que nunca são marcador —
+ *
+ *  · CAIXA_ALTA_COM_SUBLINHADO, que ninguém escreve para dizer "ponha o seu
+ *    aqui": é sempre uma constante que existe em algum módulo e chegou ao texto
+ *    publicado sem a linha de import que a traz;
+ *  · nome que ESTA PASTA publica, que é a mesma premissa de `chamadasSemOrigem`
+ *    vista fora do parêntese. Hoje nenhum snippet cai aqui — e é justamente
+ *    isso que dá dentes ao primeiro item: no dia em que o marcador deixar de
+ *    ser palavra inventada e passar a ser um nome que o design system exporta,
+ *    a exclusão não vale mais e o portão reprova.
+ *
+ * O QUE ELA NÃO VÊ:
+ *
+ *  · ramo não-padrão. Cada construtor é chamado UMA vez, com os args padrão, e
+ *    para esta pergunta não existe a segunda passagem que `lacosSemOrigemNoTexto`
+ *    faz sobre o texto — ali a fonte do laço aparece crua no módulo, aqui a
+ *    constante aparece DENTRO de um literal citado, ao lado da linha de import
+ *    que outro ramo emite. Uma passagem de texto veria as duas e passaria
+ *    sempre: seria portão sem dentes, que é pior que portão nenhum;
+ *  · nome em minúscula, pelo motivo medido acima;
+ *  · o que estiver depois de um ponto: `document.createElement` é do navegador.
+ */
+function referenciasSemOrigem(texto: string): string[] {
+  // O binder de TEXTO, e não o do snippet: `escopoDo` resolve `a: b` pegando o
+  // lado direito do `:`, e o snippet desta stack nem sempre é JavaScript sem
+  // tipos — `(text: string, href: string) =>` no breadcrumb, `(item:
+  // ComboboxItem, query: string) =>` no filtro do combobox. Medido: com
+  // `escopoDo`, esses parâmetros ficavam de fora e viravam acusação.
+  const ligados = ligadosNoTexto(texto);
+  const soltas = new Set<string>();
+  for (const m of semTextoNemFolha(texto).matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
+    const nome = m[1];
+    if (!CONSTANTE.test(nome) && !publicadosPeloDesignSystem.has(nome)) continue;
+    if (ligados.has(nome) || GLOBAIS.has(nome)) continue;
+    soltas.add(nome);
+  }
+  return [...soltas].sort();
 }
 
 type Chamavel = (...args: never[]) => unknown;
@@ -644,6 +749,18 @@ describe('transforms do painel Code', () => {
             soltas,
             `${name}: o snippet chama ${soltas.join(', ')} sem importar — ` +
               `quem copiar recebe um ReferenceError na primeira linha que executa`,
+          ).toEqual([]);
+        });
+
+        it(`${name} referencia só nome que o snippet liga`, () => {
+          const texto = snippetDe(name, fn);
+          const soltas = referenciasSemOrigem(texto);
+          expect(
+            soltas,
+            `${name}: o snippet referencia ${soltas.join(', ')} sem ligar — ` +
+              `constante de exemplo usada no corpo mas sem a linha de import que a ` +
+              `traz, e quem copiar recebe um ReferenceError. Emita o import junto, ` +
+              `como os outros ramos do mesmo módulo já fazem`,
           ).toEqual([]);
         });
 

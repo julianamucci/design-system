@@ -32,6 +32,17 @@ export type ContextBreakdownSnippetOptions = {
 };
 
 /**
+ * A linha de import da repartição de exemplo.
+ *
+ * Ela acompanha TODO ramo que escreve `CONTEXT_PARTS_TYPICAL` no corpo. Dois
+ * ramos a esqueciam — o da origem sem rótulo e o de dentro do bloco que expande
+ * —, e o snippet ensinava a usar uma constante que ninguém trazia: quem
+ * copiasse recebia um `ReferenceError` na primeira linha que executa.
+ */
+const IMPORT_DOS_EXEMPLOS =
+  "import { CONTEXT_PARTS_TYPICAL } from '@shared/primitives/context-breakdown-examples';";
+
+/**
  * A lista de parcelas por extenso, uma por linha.
  *
  * Uma linha por parcela, e não um objeto compacto: a ORDEM é o que a peça
@@ -137,7 +148,7 @@ export function contextBreakdownEmptySource(): string {
  */
 export function contextBreakdownUnlabeledOriginSource(): string {
   return snippet(
-    importing('context-breakdown', 'createContextBreakdown'),
+    [importing('context-breakdown', 'createContextBreakdown'), IMPORT_DOS_EXEMPLOS].join('\n'),
     [
       '// Sem palavra para a origem, a linha mostra o ENDEREÇO dela. Uma linha em',
       '// branco deixaria a cor sozinha dizendo de qual parcela se trata.',
@@ -168,7 +179,7 @@ export function contextBreakdownBesideBudgetSource(): string {
     [
       importing('context-breakdown', 'createContextBreakdown'),
       importing('context-display', 'createContextDisplay'),
-      "import { CONTEXT_PARTS_TYPICAL } from '@shared/primitives/context-breakdown-examples';",
+      IMPORT_DOS_EXEMPLOS,
     ].join('\n'),
     [
       `const contextBreakdown = ${callLine('createContextBreakdown', options([
@@ -199,6 +210,7 @@ export function contextBreakdownInsideDisclosureSource(): string {
       importing('context-breakdown', 'createContextBreakdown'),
       importing('collapsible', 'createCollapsible'),
       importing('button', 'createButton'),
+      IMPORT_DOS_EXEMPLOS,
     ].join('\n'),
     [
       `const contextBreakdown = ${callLine('createContextBreakdown', options([
