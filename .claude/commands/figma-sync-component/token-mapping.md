@@ -339,6 +339,18 @@ depois de vincular, porque um fundo quase invisível passa por "sutil".
 `Opacidade` é coleção separada de `Cor`: para ver o componente no escuro é
 preciso trocar os dois modos. `Elevacao` tem a mesma exigência.
 
+**`clone()` NÃO leva junto o `componentPropertyReferences`.** A camada copiada
+perde o laço com a propriedade que a acendia ou trocava — o booleano deixa de
+apagá-la, a troca de instância deixa de alcançá-la, e nada na tela diz isso. Uma
+variante criada por clonagem nasce surda às propriedades do conjunto. Depois de
+clonar, reponha as referências à mão e teste ligando e desligando cada booleano.
+
+**Nunca amarre variável ao `characters` de um texto que é propriedade.** O
+vínculo de camada e o `componentPropertyReferences.characters` disputam o mesmo
+lugar: o vínculo vence, a propriedade é apagada, e o componente para de aceitar
+texto em silêncio. Para que o rótulo padrão siga o idioma, o vínculo vai no
+DEFAULT da propriedade, com `editComponentProperty` — nunca na camada.
+
 **Instância escondida não expõe filhos.** `instancia.children` devolve `[]`
 enquanto `visible === false`, então uma varredura que pinta ícones pula todos os
 que nascem desligados, sem erro. Ligue, pinte, desligue de volta.
