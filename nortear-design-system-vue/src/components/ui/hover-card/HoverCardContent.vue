@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HoverCardContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { inject, onUnmounted, watch } from 'vue'
+import { inject, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   HoverCardContent,
@@ -63,18 +63,30 @@ function clearAssociation(): void {
   describedTrigger = null
 }
 
-watch(
-  () => rootContext.open.value,
-  (isOpen) => {
-    if (!isOpen) {
-      clearAssociation()
-      return
-    }
-    describedTrigger = contexto?.trigger.value ?? null
-    describedTrigger?.setAttribute('aria-describedby', panelId)
-  },
-  { immediate: true, flush: 'post' },
-)
+function associate(isOpen: boolean): void {
+  if (!isOpen) {
+    clearAssociation()
+    return
+  }
+  describedTrigger = contexto?.trigger.value ?? null
+  describedTrigger?.setAttribute('aria-describedby', panelId)
+}
+
+watch(() => rootContext.open.value, associate, { flush: 'post' })
+
+// A associação INICIAL não pode sair de `immediate: true`. Medido: um watcher
+// imediato roda o callback SÍNCRONO na criação, durante o `setup` — e nesse
+// instante `contexto.trigger.value` ainda é `null`, porque quem o preenche é o
+// `onMounted` do HoverCardTrigger, que só corre depois. Com o cartão nascendo
+// aberto (`default-open`), `open` nunca MUDA, o watcher nunca dispara de novo,
+// e o gatilho ficava sem `aria-describedby` para sempre: o leitor de tela
+// anunciava o gatilho e nada do conteúdo. Nos cartões abertos por ponteiro o
+// defeito não aparecia, porque ali `open` vai de `false` a `true` depois da
+// montagem. O `nextTick` garante que os irmãos já montaram.
+onMounted(async () => {
+  await nextTick()
+  associate(rootContext.open.value)
+})
 
 // Sair da página com o cartão aberto (troca de story, navegação) não passa pelo
 // `watch`: sem isto o gatilho — se sobreviver — ficaria com a descrição presa.
