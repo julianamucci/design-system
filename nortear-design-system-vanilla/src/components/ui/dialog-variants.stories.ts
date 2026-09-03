@@ -301,8 +301,17 @@ export const WithScrollingOverlay: Story = {
       // se move com a rolagem do overlay, e é isso que a asserção mede.
       await expect(getComputedStyle(p).position).toBe('relative');
       const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
-      const antes = header.getBoundingClientRect().top;
       const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+
+      // O zero é ESTABELECIDO, e não presumido. A versão anterior lia o `antes`
+      // de onde o overlay estivesse e reprovou com `-72 to be less than -1360`:
+      // ao abrir, o foco vai para o primeiro focável do painel, que nesta rota
+      // é o botão do RODAPÉ — o X do canto é o último filho —, e focá-lo rola o
+      // overlay até o fim. O `antes` já vinha de um overlay rolado, e mandar
+      // para 120 subia a rolagem em vez de descer. Fixando a origem, a asserção
+      // volta a medir o que ela diz medir.
+      ov.scrollTop = 0;
+      const antes = header.getBoundingClientRect().top;
       ov.scrollTop = 120;
       await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
       ov.scrollTop = 0;

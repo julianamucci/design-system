@@ -133,6 +133,19 @@ export const Playground: Story = {
       await expect(overlay()).toBeNull();
     });
 
+    // Lido com o diálogo JÁ FECHADO, e não presumido vazio: outro painel da
+    // mesma página pode estar segurando a trava, e é este valor — não `''` — o
+    // que o fechamento tem de devolver.
+    const overflowFechado = document.body.style.overflow;
+
+    await step('O gatilho anuncia o que ele abre, antes de qualquer clique', async () => {
+      // Quem navega por leitor de tela decide se vale ativar ANTES de ativar:
+      // sem isto o botão se anuncia como um botão qualquer, e a pessoa só
+      // descobre que caiu num modal depois de estar dentro dele.
+      await expect(triggerEl).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'false');
+    });
+
     await step('Clicar no gatilho abre o diálogo com overlay', async () => {
       const callsBefore = spy.mock.calls.length;
       const p = await open(canvasElement);
@@ -141,6 +154,15 @@ export const Playground: Story = {
       await expect(p).toHaveAttribute('data-state', 'open');
       await expect(overlay()).toHaveAttribute('data-state', 'open');
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);
+    });
+
+    await step('Aberto, o gatilho diz que está aberto e a página atrás não rola', async () => {
+      // `aria-modal="true"` promete que o resto da página está fora de alcance.
+      // Sem a trava a promessa é falsa: o leitor de tela não alcança o que está
+      // atrás, mas a roda do mouse alcança — e o texto compartilhado prometia
+      // por escrito uma trava que a fábrica não tinha.
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'true');
+      await expect(document.body.style.overflow).toBe('hidden');
     });
 
     await step('O painel se anuncia como diálogo modal, com nome e descrição', async () => {
@@ -169,6 +191,12 @@ export const Playground: Story = {
       // Sem `waitFor`: a factory devolve o foco de forma síncrona, e envolver a
       // asserção mascararia um bug de foco real.
       await expect(document.activeElement).toBe(triggerEl);
+      // O par da trava: contada, ela só devolve a rolagem quando a última sai.
+      // Um painel que trava e não solta deixa a página inteira parada sem erro
+      // nenhum — é o defeito que o contador de `@/lib/scroll-lock` existe para
+      // evitar, e é aqui que ele se prova pelo lado de fora.
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'false');
+      await expect(document.body.style.overflow).toBe(overflowFechado);
     });
 
     await step('Clique no overlay fecha e devolve o foco', async () => {
