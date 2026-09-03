@@ -272,7 +272,12 @@ export const NotDismissible: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /^Abrir$/i });
+    // `hidden: true` porque esta story nasce ABERTA (`default-open`): com o
+    // painel modal de pé, a reka marca todo o fundo com `aria-hidden`, e o
+    // gatilho sai da árvore de acessibilidade. Sem a opção, a consulta não acha
+    // nada e a play morre na PRIMEIRA linha — antes de medir Escape, overlay ou
+    // a saída pelo rodapé, que é o que esta story existe para provar.
+    const trigger = canvas.getByRole('button', { name: /^Abrir$/i, hidden: true });
     // A play é reexecutável no painel Interactions, e o último passo FECHA o
     // painel de verdade. Sem restabelecer a precondição, a segunda rodada
     // começaria com a tela vazia e os dois primeiros passos afirmariam nada.
