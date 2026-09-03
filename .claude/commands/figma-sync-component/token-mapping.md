@@ -339,6 +339,20 @@ depois de vincular, porque um fundo quase invisível passa por "sutil".
 `Opacidade` é coleção separada de `Cor`: para ver o componente no escuro é
 preciso trocar os dois modos. `Elevacao` tem a mesma exigência.
 
+**Anotação tem DOIS campos de rótulo, e ler o errado estraga de dois jeitos.**
+`annotation.label` devolve o texto já limpo; `annotation.labelMarkdown` devolve a
+fonte, com as crases em volta de `--token`. Os dois são mutuamente exclusivos na
+escrita — mandar ambos reprova com *"Only one of label or labelMarkdown should be
+given"*, e é assim que se descobre que espalhar a anotação antiga (`{...a, label}`)
+não funciona.
+
+Os dois erros que isso produz são silenciosos. Casar um trecho lido de `label`
+contra o conteúdo real falha sempre que houver crase no meio, e a anotação passa
+batida como se estivesse em dia. E escrever texto sem crase no campo
+`labelMarkdown` apaga a formatação do arquivo inteiro, uma anotação por vez, sem
+erro nenhum. Leia e escreva sempre o MESMO campo que a anotação já usava, e
+reponha a marcação à mão.
+
 **`clone()` NÃO leva junto o `componentPropertyReferences`.** A camada copiada
 perde o laço com a propriedade que a acendia ou trocava — o booleano deixa de
 apagá-la, a troca de instância deixa de alcançá-la, e nada na tela diz isso. Uma
