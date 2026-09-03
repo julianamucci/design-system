@@ -11,6 +11,7 @@ import {
   NdsBreadcrumbPage,
   NdsBreadcrumbSeparator,
 } from './breadcrumb';
+import { breadcrumbPlaygroundSource, type BreadcrumbArgs } from './breadcrumb.source';
 import { NdsBreadcrumbDocs } from '@/components/docs/BreadcrumbDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
@@ -20,58 +21,6 @@ import {
 } from '@shared/testing/breadcrumb-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type BreadcrumbArgs = {
-  paginaAtual: string;
-  separator: 'chevron' | 'slash';
-};
-
-/**
- * O painel Code mostra o `template` da story como está escrito — inclusive o
- * `@if` que alterna os dois desenhos de separador. Isso é o andaime da story,
- * não o que alguém escreve para usar um Breadcrumb. O `transform` devolve o uso
- * real, com o valor atual dos controls já resolvido. Ver a nota em
- * `separator.stories.ts`.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<BreadcrumbArgs> }): string {
-  const { paginaAtual = 'Breadcrumb', separator = 'chevron' } = ctx.args ?? {};
-  // O chevron é o desenho padrão: no snippet o `<li>` fica vazio, porque é isso
-  // que a pessoa escreve. Só o separador customizado carrega conteúdo.
-  const sep =
-    separator === 'chevron'
-      ? '<li ndsBreadcrumbSeparator></li>'
-      : '<li ndsBreadcrumbSeparator><svg ndsBreadcrumbIcon kind="slash"></svg></li>';
-
-  return `import {
-  NdsBreadcrumb, NdsBreadcrumbList, NdsBreadcrumbItem,
-  NdsBreadcrumbLink, NdsBreadcrumbPage, NdsBreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-
-@Component({
-  imports: [
-    NdsBreadcrumb, NdsBreadcrumbList, NdsBreadcrumbItem,
-    NdsBreadcrumbLink, NdsBreadcrumbPage, NdsBreadcrumbSeparator,
-  ],
-  template: \`
-    <nav ndsBreadcrumb>
-      <ol ndsBreadcrumbList>
-        <li ndsBreadcrumbItem>
-          <a ndsBreadcrumbLink href="/">Início</a>
-        </li>
-        ${sep}
-        <li ndsBreadcrumbItem>
-          <a ndsBreadcrumbLink href="/componentes">Componentes</a>
-        </li>
-        ${sep}
-        <li ndsBreadcrumbItem>
-          <span ndsBreadcrumbPage>${paginaAtual}</span>
-        </li>
-      </ol>
-    </nav>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<BreadcrumbArgs> = {
   title: 'Primitives/Navigation/Breadcrumb',
@@ -95,7 +44,7 @@ const meta: Meta<BreadcrumbArgs> = {
     docs: { page: withAutoDocsTab(NdsBreadcrumbDocs) },
   },
   argTypes: {
-    paginaAtual: {
+    currentPage: {
       control: 'text',
       description: 'Rótulo do último item — espelha o <h1> da página.',
     },
@@ -105,7 +54,7 @@ const meta: Meta<BreadcrumbArgs> = {
       description: 'Desenho do separador. O chevron é o padrão do componente.',
     },
   },
-  args: { paginaAtual: 'Breadcrumb', separator: 'chevron' },
+  args: { currentPage: 'Breadcrumb', separator: 'chevron' },
 };
 
 export default meta;
@@ -125,7 +74,7 @@ export const Playground: Story = {
       'accessibility.item6',
       'visual.item1',
     ],
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: breadcrumbPlaygroundSource } },
   },
   render: (args) => ({
     props: { ...args, ehChevron: args.separator === 'chevron' },
@@ -144,7 +93,7 @@ export const Playground: Story = {
           } @else {
             <li ndsBreadcrumbSeparator><svg ndsBreadcrumbIcon kind="slash"></svg></li>
           }
-          <li ndsBreadcrumbItem><span ndsBreadcrumbPage>{{ paginaAtual }}</span></li>
+          <li ndsBreadcrumbItem><span ndsBreadcrumbPage>{{ currentPage }}</span></li>
         </ol>
       </nav>
     `,
@@ -185,7 +134,7 @@ export const Playground: Story = {
       await expect(page).toHaveAttribute('aria-current', 'page');
       // Prova que o input chegou ao template: sem AOT o binding cai em silêncio
       // e o texto ficaria preso no valor que o template escreveu (armadilha 1).
-      await expect(page).toHaveTextContent(args.paginaAtual);
+      await expect(page).toHaveTextContent(args.currentPage);
       await expect(page.hasAttribute('href')).toBe(false);
       await expect(page.querySelector('a')).toBeNull();
     });

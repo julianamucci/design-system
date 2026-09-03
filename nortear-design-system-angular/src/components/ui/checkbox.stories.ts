@@ -3,45 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NdsCheckbox } from './checkbox';
 import { NdsLabel } from './label';
+import { checkboxPlaygroundSource, type CheckboxArgs } from './checkbox.source';
 import { NdsCheckboxDocs } from '@/components/docs/CheckboxDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type CheckboxArgs = {
-  checked: boolean;
-  indeterminate: boolean;
-  disabled: boolean;
-  label: string;
-  onCheckedChange: (checked: boolean) => void;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CheckboxArgs> }): string {
-  const {
-    checked = false,
-    indeterminate = false,
-    disabled = false,
-    label = 'Aceito os termos',
-  } = ctx.args ?? {};
-
-  const attrs = [
-    'id="termos"',
-    checked ? '[checked]="true"' : '',
-    indeterminate ? '[indeterminate]="true"' : '',
-    disabled ? '[disabled]="true"' : '',
-  ].filter(Boolean).join(' ');
-
-  return `import { NdsCheckbox } from '@/components/ui/checkbox';
-import { NdsLabel } from '@/components/ui/label';
-
-@Component({
-  imports: [NdsCheckbox, NdsLabel],
-  template: \`
-    <button ndsCheckbox ${attrs}></button>
-    <label ndsLabel for="termos">${label}</label>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<CheckboxArgs> = {
   title: 'Primitives/Form/Checkbox',
@@ -78,7 +42,7 @@ type Story = StoryObj<CheckboxArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: checkboxPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item7',
       'accessibility.item1', 'accessibility.item3', 'accessibility.item5',

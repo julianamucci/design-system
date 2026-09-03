@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, waitFor } from 'storybook/test';
 import { NDS_AVATAR, type AvatarSize } from './avatar';
+import { avatarPlaygroundSource, type AvatarArgs } from './avatar.source';
 import { NdsAvatarDocs } from '@/components/docs/AvatarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -25,46 +26,15 @@ export const DIAMETER: Record<AvatarSize, number> = {
   sm: 24, md: 32, lg: 40, xl: 48, '2xl': 64,
 };
 
-type AvatarArgs = {
-  src: string;
-  alt: string;
-  fallback: string;
-  size: AvatarSize;
-  delayMs: number;
-  onStatusChange: (status: string) => void;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<AvatarArgs> }): string {
-  const {
-    alt = 'Foto de perfil de Maria Rodrigues',
-    fallback = 'MR',
-    size = 'md',
-    delayMs = 600,
-  } = ctx.args ?? {};
-  // Só o que difere do default entra: snippet que repete valor padrão ensina
-  // ruído. `size="md"` é o default do componente.
-  const sizeAttr = size === 'md' ? '' : ` size="${size}"`;
-  const delay = delayMs ? ` [delayMs]="${delayMs}"` : '';
-  return `import { NDS_AVATAR } from '@/components/ui/avatar';
-
-@Component({
-  imports: [...NDS_AVATAR],
-  template: \`
-    <span ndsAvatar${sizeAttr}>
-      <img ndsAvatarImage src="/maria.jpg" alt="${alt}" />
-      <!-- aria-hidden porque o alt acima já identifica a pessoa:
-           sem isso o leitor de tela anuncia o nome duas vezes. -->
-      <span ndsAvatarFallback${delay}>${fallback}</span>
-    </span>
-  \`,
-})
-export class Exemplo {}`;
-}
-
 const meta: Meta<AvatarArgs> = {
   title: 'Primitives/Display/Avatar',
   tags: ['autodocs', 'display'],
+  // As três constantes abaixo são DADO, e sem esta linha o CSF as trata como
+  // story: o plugin de teste tenta escrever `.parameters` numa string, o módulo
+  // ESM está em modo estrito, e o arquivo INTEIRO morre no import — nenhuma das
+  // stories daqui chegava a rodar. Os arquivos irmãos as importam daqui, então
+  // a saída é declarar que não são stories, não mudá-las de casa.
+  excludeStories: ['IMG_AVATAR', 'IMG_QUEBRADA', 'DIAMETER'],
   decorators: [moduleMetadata({ imports: [...NDS_AVATAR] })],
   parameters: {
     layout: 'centered',
@@ -112,7 +82,7 @@ type Story = StoryObj<AvatarArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: avatarPlaygroundSource } },
     covers: ['functional.item1', 'accessibility.item1', 'accessibility.item4', 'visual.item1'],
   },
   render: (args) => ({

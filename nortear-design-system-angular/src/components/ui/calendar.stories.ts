@@ -3,7 +3,8 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { focusIso } from '@shared/testing/calendar-probe';
 import { parseDate } from '@internationalized/date';
-import { NdsCalendar, type CalendarCaptionLayout, type CalendarMode } from './calendar';
+import { NdsCalendar } from './calendar';
+import { calendarPlaygroundSource, type CalendarArgs } from './calendar.source';
 import { NdsCalendarDocs } from '@/components/docs/CalendarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -13,64 +14,6 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // escopo de módulo executável que o auditor cobra.
 const DAY_ESCOLHIDO = parseDate('2026-04-12');
 const DAYS_ESCOLHIDOS = [parseDate('2026-04-08'), parseDate('2026-04-12'), parseDate('2026-04-16')];
-
-type CalendarArgs = {
-  mode: CalendarMode;
-  locale: string;
-  captionLayout: CalendarCaptionLayout;
-  numberOfMonths: number;
-  showOutsideDays: boolean;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com o binding no
- * arg, que não é o que a pessoa deve escrever. Ver a nota em
- * `separator.stories.ts`.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CalendarArgs> }): string {
-  const {
-    mode = 'single',
-    locale = 'pt-BR',
-    captionLayout = 'label',
-    numberOfMonths = 1,
-    showOutsideDays = true,
-  } = ctx.args ?? {};
-
-  const multiplo = mode === 'multiple';
-  const attrs = [
-    multiplo ? 'mode="multiple"' : '',
-    '[(value)]="data"',
-    `locale="${locale}"`,
-    captionLayout === 'dropdown' ? 'captionLayout="dropdown"' : '',
-    numberOfMonths !== 1 ? `[numberOfMonths]="${numberOfMonths}"` : '',
-    showOutsideDays ? '' : '[showOutsideDays]="false"',
-  ]
-    .filter(Boolean)
-    .join('\n      ');
-
-  const inicial = multiplo
-    ? `signal([parseDate('2026-04-08'), parseDate('2026-04-12')])`
-    : `signal(parseDate('2026-04-12'))`;
-
-  return `import { signal } from '@angular/core';
-import { parseDate } from '@internationalized/date';
-import { NdsCalendar } from '@/components/ui/calendar';
-
-@Component({
-  imports: [NdsCalendar],
-  template: \`
-    <div
-      ndsCalendar
-      ${attrs}
-    ></div>
-  \`,
-})
-export class Exemplo {
-  // CalendarDate do @internationalized/date — sem hora e sem fuso, que é o que
-  // um calendário precisa.
-  readonly data = ${inicial};
-}`;
-}
 
 const meta: Meta<CalendarArgs> = {
   title: 'Primitives/Form/Calendar',
@@ -116,7 +59,7 @@ type Story = StoryObj<CalendarArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: calendarPlaygroundSource } },
     covers: [
       'visual.item1',
       'accessibility.item1',

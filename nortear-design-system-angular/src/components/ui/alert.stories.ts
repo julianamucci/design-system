@@ -7,66 +7,12 @@ import {
   NdsAlertTitle,
   NdsAlertDescription,
   NdsAlertIcon,
-  type AlertVariant,
-  type AlertRole,
 } from './alert';
+import { alertPlaygroundSource, type AlertArgs } from './alert.source';
 import { NdsAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type AlertArgs = {
-  variant: AlertVariant;
-  role: AlertRole;
-  dismissible: boolean;
-  dismissLabel: string;
-  title: string;
-  description: string;
-  onDismiss?: () => void;
-};
-
-/**
- * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da
- * story literalmente, com os bindings ligados aos controls. O `transform`
- * devolve o uso real, com os valores atuais — que é o que se copia.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<AlertArgs> }): string {
-  const {
-    variant = 'default',
-    role = 'alert',
-    dismissible = false,
-    title = 'Atenção',
-    description = 'Suas alterações serão aplicadas na próxima sessão.',
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra no snippet — documentação que repete
-  // valor padrão ensina ruído.
-  const attrs = [
-    variant === 'default' ? '' : `variant="${variant}"`,
-    role === 'alert' ? '' : `role="${role}"`,
-    dismissible ? 'dismissible (dismiss)="aoFechar()"' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const abre = attrs ? `<div ndsAlert ${attrs}>` : '<div ndsAlert>';
-
-  return `import {
-  NdsAlert, NdsAlertTitle, NdsAlertDescription, NdsAlertIcon,
-} from '@/components/ui/alert';
-
-@Component({
-  imports: [NdsAlert, NdsAlertTitle, NdsAlertDescription, NdsAlertIcon],
-  template: \`
-    ${abre}
-      <svg ndsAlertIcon kind="info"></svg>
-      <h5 ndsAlertTitle>${title}</h5>
-      <section ndsAlertDescription>${description}</section>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<AlertArgs> = {
   title: 'Primitives/Feedback/Alert',
@@ -139,7 +85,7 @@ type Story = StoryObj<AlertArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: alertPlaygroundSource } },
     covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
   },
   render: (args) => ({

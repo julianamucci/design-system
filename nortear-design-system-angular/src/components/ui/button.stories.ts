@@ -2,24 +2,12 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
-import { NdsButton, NdsButtonIcon, type ButtonVariant, type ButtonSize } from './button';
+import { NdsButton, NdsButtonIcon } from './button';
+import { buttonPlaygroundSource, type ButtonArgs } from './button.source';
 import { NdsButtonDocs } from '@/components/docs/ButtonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type ButtonArgs = {
-  variant: ButtonVariant;
-  size: ButtonSize;
-  label: string;
-  disabled: boolean;
-  onClick?: (e: MouseEvent) => void;
-  // Documentadas na aba "API Reference" sem control — o Playground não as
-  // encaminha para o componente, mas fazem parte da API do NdsButton.
-  ariaLabel?: string;
-  type?: 'button' | 'submit' | 'reset';
-  class?: string;
-};
 
 const meta: Meta<ButtonArgs> = {
   title: 'Primitives/Form/Button',
@@ -77,46 +65,9 @@ type Story = StoryObj<ButtonArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
-/**
- * Ver a nota em separator.stories.ts: o painel Code mostra o `template` da
- * story, com o `@if` que alterna texto e ícone e os bindings ligados aos args.
- * O `transform` devolve o uso real, com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ButtonArgs> }): string {
-  const { variant = 'default', size = 'default', label = 'Salvar', disabled = false } =
-    ctx.args ?? {};
-  const isIcon = size.startsWith('icon');
-
-  // Só o que difere do default entra no snippet — documentação que repete
-  // valor padrão ensina ruído.
-  const attrs = [
-    variant === 'default' ? '' : `variant="${variant}"`,
-    size === 'default' ? '' : `size="${size}"`,
-    disabled ? '[disabled]="true"' : '',
-    isIcon ? `aria-label="${label || 'Ação'}"` : '',
-  ].filter(Boolean).join(' ');
-
-  const abre = attrs ? `<button ndsButton ${attrs}>` : '<button ndsButton>';
-  const content = isIcon
-    ? '      <svg ndsButtonIcon kind="plus"></svg>'
-    : `      ${label}`;
-
-  return `import { NdsButton${isIcon ? ', NdsButtonIcon' : ''} } from '@/components/ui/button';
-
-@Component({
-  imports: [NdsButton${isIcon ? ', NdsButtonIcon' : ''}],
-  template: \`
-    ${abre}
-${content}
-    </button>
-  \`,
-})
-export class Exemplo {}`;
-}
-
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: buttonPlaygroundSource } },
     covers: [
       'functional.item1',
       'functional.item3',

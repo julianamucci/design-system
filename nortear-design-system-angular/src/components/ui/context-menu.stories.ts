@@ -3,48 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
 import { gestoOpen } from './context-menu.fixtures';
+import { contextMenuPlaygroundSource, type ContextMenuArgs } from './context-menu.source';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
-
-type ContextMenuArgs = {
-  triggerLabel: string;
-  areaClasse: string;
-  onSelect: (item: string) => void;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ContextMenuArgs> }): string {
-  const { triggerLabel = 'Clique com o botão direito' } = ctx.args ?? {};
-
-  return `import { NDS_CONTEXT_MENU } from '@/components/ui/context-menu';
-
-@Component({
-  imports: [NDS_CONTEXT_MENU],
-  template: \`
-    <div ndsContextMenu>
-      <div ndsContextMenuTrigger>${triggerLabel}</div>
-
-      <ng-template ndsContextMenuContent>
-        <div ndsContextMenuItem (onSelect)="editar()">
-          Editar
-          <span ndsContextMenuShortcut>Ctrl+E</span>
-        </div>
-        <div ndsContextMenuItem>Duplicar</div>
-
-        <div ndsContextMenuSeparator></div>
-
-        <div ndsContextMenuItem variant="destructive" (onSelect)="excluir()">
-          Excluir
-          <span ndsContextMenuShortcut>Del</span>
-        </div>
-      </ng-template>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<ContextMenuArgs> = {
   title: 'Primitives/Overlay/ContextMenu',
@@ -74,7 +37,7 @@ type Story = StoryObj<ContextMenuArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: contextMenuPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',

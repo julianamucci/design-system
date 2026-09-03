@@ -1,73 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
-import { NDS_CARD, type CardSize } from './card';
+import { NDS_CARD } from './card';
 import { NdsButton } from './button';
+import { cardPlaygroundSource, type CardArgs } from './card.source';
 import { NdsCardDocs } from '@/components/docs/CardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type CardArgs = {
-  size: CardSize;
-  title: string;
-  description: string;
-  content: string;
-  withFooter: boolean;
-  withAction: boolean;
-};
-
-/**
- * Ver a nota em separator.stories.ts. Aqui o andaime é maior: o template tem
- * dois `@if` (rodapé e ação) e cinco bindings de arg. O transform devolve o
- * uso real, com as partes que os controls ligaram.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CardArgs> }): string {
-  const {
-    size = 'default',
-    title = 'Cadeira Gamer Pro',
-    description = 'Estrutura ergonômica com ajuste de altura e apoio lombar.',
-    content = 'R$ 1.299,00',
-    withFooter = true,
-    withAction = false,
-  } = ctx.args ?? {};
-
-  const sizeAttr = size === 'default' ? '' : ` size="${size}"`;
-  const acao = withAction
-    ? `
-      <div ndsCardAction>
-        <button ndsButton variant="ghost" size="sm" aria-label="Editar produto ${title}">Editar</button>
-      </div>`
-    : '';
-  const footer = withFooter
-    ? `
-    <div ndsCardFooter class="nds-cluster" data-justify="end" data-spacing="md">
-      <button ndsButton variant="outline" aria-label="Editar produto ${title}">Editar</button>
-      <button ndsButton variant="destructive" aria-label="Excluir produto ${title}">Excluir</button>
-    </div>`
-    : '';
-
-  const usaButton = withAction || withFooter;
-  const imports = usaButton ? 'NDS_CARD, NdsButton' : 'NDS_CARD';
-
-  return `import { NDS_CARD } from '@/components/ui/card';${
-    usaButton ? `\nimport { NdsButton } from '@/components/ui/button';` : ''
-  }
-
-@Component({
-  imports: [${imports}],
-  template: \`
-    <div ndsCard${sizeAttr}>
-      <div ndsCardHeader>
-        <h3 ndsCardTitle>${title}</h3>
-        <p ndsCardDescription>${description}</p>${acao}
-      </div>
-      <div ndsCardContent>${content}</div>${footer}
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<CardArgs> = {
   title: 'Primitives/Layout/Card',
@@ -110,7 +50,7 @@ type Story = StoryObj<CardArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: cardPlaygroundSource } },
     // accessibility.item1 e item6 saem do axe, que o addon-a11y roda em toda
     // story — mas o auditor só enxerga o critério se alguma story o declarar.
     covers: [

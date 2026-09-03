@@ -7,6 +7,8 @@ import {
   measureRatio,
   ratioReprovas,
 } from '@shared/testing/aspect-ratio-probe';
+import { RATIOS } from './aspect-ratio.fixtures';
+import { aspectRatioPlaygroundSource, type AspectRatioArgs } from './aspect-ratio.source';
 import { NdsAspectRatioDocs } from '@/components/docs/AspectRatioDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -14,40 +16,15 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 export const IMG_PLACEHOLDER =
   "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='800' height='450' fill='%23cbd5e1'/%3E%3C/svg%3E";
 
-type AspectRatioArgs = {
-  ratio: number;
-  alt: string;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<AspectRatioArgs> }): string {
-  const { ratio = 16 / 9, alt = 'Vista aérea da orla' } = ctx.args ?? {};
-  const legivel = RATIOS.find((r) => Math.abs(r.value - ratio) < 0.001)?.expr ?? String(ratio);
-  return `import { NdsAspectRatio } from '@/components/ui/aspect-ratio';
-
-@Component({
-  imports: [NdsAspectRatio],
-  template: \`
-    <div ndsAspectRatio [ratio]="${legivel}">
-      <img src="/orla.jpg" alt="${alt}" />
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
-
-/** Proporções com a expressão legível, para o snippet não mostrar 1.7777. */
-const RATIOS = [
-  { value: 16 / 9, expr: '16 / 9' },
-  { value: 4 / 3,  expr: '4 / 3'  },
-  { value: 1,      expr: '1'      },
-  { value: 3 / 4,  expr: '3 / 4'  },
-  { value: 21 / 9, expr: '21 / 9' },
-];
-
 const meta: Meta<AspectRatioArgs> = {
   title: 'Primitives/Layout/AspectRatio',
   tags: ['autodocs', 'layout'],
+  // `IMG_PLACEHOLDER` é DADO, e sem esta linha o CSF o trata como story: o
+  // plugin de teste tenta escrever `.parameters` numa string, o módulo ESM está
+  // em modo estrito, e o arquivo INTEIRO morre no import — nenhuma das stories
+  // daqui chegava a rodar. Os arquivos irmãos importam a constante daqui, então
+  // a saída é declarar que ela não é story, não mudá-la de casa.
+  excludeStories: ['IMG_PLACEHOLDER'],
   decorators: [moduleMetadata({ imports: [NdsAspectRatio] })],
   parameters: {
     layout: 'padded',
@@ -72,7 +49,7 @@ type Story = StoryObj<AspectRatioArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: aspectRatioPlaygroundSource } },
     covers: ['functional.item1', 'functional.item2', 'accessibility.item1'],
   },
   render: (args) => ({

@@ -3,23 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { NdsCodeBlock } from './code-block';
 import { withClipboardStub } from './code-block.fixtures';
+import { codeBlockPlaygroundSource, type CodeBlockArgs } from './code-block.source';
 import { NdsCodeBlockDocs } from '@/components/docs/CodeBlockDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type CodeBlockArgs = {
-  code: string;
-  language: string;
-  title: string;
-  showLineNumbers: boolean;
-  highlightLines: string;
-  footer: string;
-  /** Documentadas na aba API Reference; o Playground não as encaminha. */
-  copyLabel?: string;
-  copiedLabel?: string;
-  class?: string;
-};
 
 /**
  * Trecho do Playground. Montado por `join('\n')` porque o próprio código leva
@@ -37,45 +25,6 @@ const DEMO_CODE = [
   "  readonly source = 'const total = items.length;';",
   '}',
 ].join('\n');
-
-/**
- * Ver a nota em separator.stories.ts: o renderer Angular imprime no painel Code
- * o `template` da story como está escrito, com os bindings ligados aos args.
- * Aqui vai o uso real, montado a partir de `ctx.args` — só o que difere do
- * default entra.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CodeBlockArgs> }): string {
-  const {
-    language = 'text',
-    title = '',
-    showLineNumbers = true,
-    highlightLines = '',
-    footer = '',
-  } = ctx.args ?? {};
-
-  const attrs = ['      [code]="source"'];
-  if (language && language !== 'text') attrs.push(`      language="${language}"`);
-  if (title) attrs.push(`      title="${title}"`);
-  if (!showLineNumbers) attrs.push('      [showLineNumbers]="false"');
-  if (highlightLines) attrs.push(`      [highlightLines]="'${highlightLines}'"`);
-  if (footer) attrs.push(`      footer="${footer}"`);
-
-  return [
-    "import { NdsCodeBlock } from '@/components/ui/code-block';",
-    '',
-    '@Component({',
-    '  imports: [NdsCodeBlock],',
-    '  template: `',
-    '    <nds-code-block',
-    ...attrs,
-    '    />',
-    '  `,',
-    '})',
-    'export class Exemplo {',
-    '  readonly source = fonte;',
-    '}',
-  ].join('\n');
-}
 
 const meta: Meta<CodeBlockArgs> = {
   title: 'Primitives/Display/CodeBlock',
@@ -152,7 +101,7 @@ type Story = StoryObj<CodeBlockArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: codeBlockPlaygroundSource } },
     // accessibility.item5 é 'sem violações axe-core': o addon-a11y roda em toda
     // story, mas o audit só enxerga o critério se alguma story o declarar.
     covers: [

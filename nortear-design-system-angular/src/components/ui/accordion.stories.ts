@@ -7,64 +7,9 @@ import {
   NdsAccordionItem,
   NdsAccordionTrigger,
 } from './accordion';
+import { accordionPlaygroundSource, type AccordionArgs } from './accordion.source';
 import { NdsAccordionDocs } from '@/components/docs/AccordionDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type AccordionArgs = {
-  multiple: boolean;
-  disabled: boolean;
-  onValueChange: (value: unknown) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com o binding de
- * arg e o andaime. Não é o que a pessoa deve escrever. Ver separator.stories.ts.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<AccordionArgs> }): string {
-  const { multiple = false, disabled = false } = ctx.args ?? {};
-
-  const attrs = [
-    multiple ? '[multiple]="true"' : '',
-    disabled ? '[disabled]="true"' : '',
-    // Modo único guarda uma string; múltiplo, um array. Ver a tabela de props.
-    multiple ? `[defaultValue]="['item-1']"` : `defaultValue="item-1"`,
-    '(valueChange)="aoMudar($event)"',
-  ].filter(Boolean).join('\n      ');
-
-  return `import {
-  NdsAccordion,
-  NdsAccordionItem,
-  NdsAccordionTrigger,
-  NdsAccordionContent,
-} from '@/components/ui/accordion';
-
-@Component({
-  imports: [NdsAccordion, NdsAccordionItem, NdsAccordionTrigger, NdsAccordionContent],
-  template: \`
-    <div ndsAccordion
-      ${attrs}
-    >
-      <div ndsAccordionItem value="item-1">
-        <button ndsAccordionTrigger>Como faço para redefinir minha senha?</button>
-        <div ndsAccordionContent>
-          Acesse a tela de login e clique em Esqueci minha senha.
-        </div>
-      </div>
-      <div ndsAccordionItem value="item-2">
-        <button ndsAccordionTrigger>Quais formas de pagamento são aceitas?</button>
-        <div ndsAccordionContent>
-          Aceitamos cartão de crédito, Pix e boleto bancário.
-        </div>
-      </div>
-    </div>
-  \`,
-})
-export class Exemplo {
-  aoMudar(valor: string | string[] | undefined) {
-    // Modo único: string. Modo múltiplo: array.
-  }
-}`;
-}
 
 const meta: Meta<AccordionArgs> = {
   title: 'Primitives/Disclosure/Accordion',
@@ -106,7 +51,7 @@ type Story = StoryObj<AccordionArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: accordionPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item3',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',

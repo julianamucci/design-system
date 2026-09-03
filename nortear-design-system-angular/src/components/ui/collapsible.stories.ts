@@ -3,86 +3,10 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NDS_COLLAPSIBLE } from './collapsible';
 import { NdsButton } from './button';
+import { CHEVRON } from './collapsible.fixtures';
+import { collapsiblePlaygroundSource, type CollapsibleArgs } from './collapsible.source';
 import { NdsCollapsibleDocs } from '@/components/docs/CollapsibleDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type CollapsibleArgs = {
-  open: boolean;
-  disabled: boolean;
-  triggerLabel: string;
-  onOpenChange: (open: boolean) => void;
-};
-
-/**
- * Chevron do lucide desenhado no próprio template.
- *
- * `NdsButtonIcon` não tem `chevron-down` no mapa, e o ícone aqui é decorativo —
- * o estado quem conta é o `aria-expanded`. A rotação de 180° é global:
- * `.nds-chevron` gira sob `[aria-expanded="true"]` e sob `[data-state="open"]`,
- * os dois presentes no trigger.
- */
-const CHEVRON = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>`;
-
-/**
- * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da
- * story literalmente, com os bindings ligados aos args. O `transform` devolve o
- * uso real, com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CollapsibleArgs> }): string {
-  const {
-    open = false,
-    disabled = false,
-    triggerLabel = 'Exibir filtros avançados',
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra no snippet — documentação que repete valor
-  // padrão ensina ruído.
-  const root = ['<div ndsCollapsible class="nds-w-sm"', open ? '[defaultOpen]="true"' : '']
-    .filter(Boolean)
-    .join(' ');
-  const trigger = [
-    '<button ndsCollapsibleTrigger ndsButton variant="ghost"',
-    'class="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"',
-    disabled ? '[disabled]="true"' : '',
-  ].filter(Boolean).join(' ');
-
-  return `import { NDS_COLLAPSIBLE } from '@/components/ui/collapsible';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [...NDS_COLLAPSIBLE, NdsButton],
-  template: \`
-    ${root}>
-      ${trigger}>
-        <span>${triggerLabel}</span>
-        ${CHEVRON.replace(/\n/g, '\n  ')}
-      </button>
-
-      <div
-        ndsCollapsiblePanel
-        class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
-        data-spacing="sm"
-      >
-        <p>Filtro avançado 1</p>
-        <p>Filtro avançado 2</p>
-      </div>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<CollapsibleArgs> = {
   title: 'Primitives/Disclosure/Collapsible',
@@ -140,7 +64,7 @@ async function close(trigger: HTMLElement): Promise<void> {
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: collapsiblePlaygroundSource } },
     // `visual.item2` (aberto por padrão) saiu daqui: o Playground monta com o
     // control `open` em false, e nenhum quadro dele é "aberto por padrão" —
     // quem cobre esse item é a story OpenByDefault, que monta expandida. Item

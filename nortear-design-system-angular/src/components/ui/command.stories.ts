@@ -2,55 +2,9 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NDS_COMMAND } from './command';
+import { commandPlaygroundSource, type CommandArgs } from './command.source';
 import { NdsCommandDocs } from '@/components/docs/CommandDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type CommandArgs = {
-  placeholder: string;
-  emptyMessage: string;
-  showGroups: boolean;
-  onItemSelect: (detalhe: { value: string; label: string }) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com o `@if` que
- * alterna os grupos e com `(itemSelect)` ligado ao espião. O `transform`
- * devolve o uso real, montado a partir dos controls (armadilha 3).
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CommandArgs> }): string {
-  const {
-    placeholder = 'Buscar componente...',
-    emptyMessage = 'Nenhum resultado encontrado.',
-    showGroups = true,
-  } = ctx.args ?? {};
-
-  const group = showGroups ? ' heading="Componentes"' : '';
-
-  return `import { NDS_COMMAND } from '@/components/ui/command';
-
-@Component({
-  imports: [...NDS_COMMAND],
-  template: \`
-    <nds-command (itemSelect)="executar($event)">
-      <input ndsCommandInput placeholder="${placeholder}" />
-
-      <div ndsCommandList>
-        <div ndsCommandGroup${group}>
-          <div ndsCommandItem value="button">Button</div>
-          <div ndsCommandItem value="input">Input</div>
-        </div>
-      </div>
-
-      <div ndsCommandEmpty>${emptyMessage}</div>
-    </nds-command>
-  \`,
-})
-export class Exemplo {
-  executar(comando: CommandSelectDetails): void {
-    // roda o comando e volta o foco para onde ele age
-  }
-}`;
-}
 
 const meta: Meta<CommandArgs> = {
   title: 'Primitives/Overlay/Command',
@@ -95,7 +49,7 @@ type Story = StoryObj<CommandArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: commandPlaygroundSource } },
     // `functional.item1` tem duas metades — o filtro esconder o que não casa, e
     // a frase de vazio aparecer quando nada sobra. A primeira é verificada
     // aqui; a segunda mora em `EmptyState`, que declara o mesmo id e é a story

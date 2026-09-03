@@ -3,50 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, waitFor } from 'storybook/test';
 import { NdsChart, type ChartType } from './chart';
 import { MONTHS, SERIE_UNICA, desenhoDe, formasPreenchidas } from './chart.fixtures';
+import { chartPlaygroundSource, type ChartArgs } from './chart.source';
 import { NdsChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type ChartArgs = {
-  type: ChartType;
-  label: string;
-  chartTitle: string;
-  showLegend: boolean | undefined;
-  showData: boolean;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com o `[type]`
- * ligado ao arg, que não é o que a pessoa escreve. Devolve o uso real.
- * Ver a nota em separator.stories.ts.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ChartArgs> }): string {
-  const { type = 'bar', label = '', chartTitle = '', showData = false } = ctx.args ?? {};
-  const lines = [
-    `<div ndsChart`,
-    `  type="${type}"`,
-    `  [xAxis]="meses"`,
-    `  [series]="series"`,
-    // O rótulo é o contrato de acessibilidade do componente: sem ele o
-    // compilador reclama, e é isso que o snippet precisa mostrar.
-    `  label="${label}"`,
-  ];
-  if (chartTitle) lines.push(`  chartTitle="${chartTitle}"`);
-  if (showData) lines.push(`  [showData]="true"`);
-  lines.push(`></div>`);
-
-  return `import { NdsChart } from '@/components/ui/chart';
-
-@Component({
-  imports: [NdsChart],
-  template: \`
-${lines.map((l) => `    ${l}`).join('\n')}
-  \`,
-})
-export class Exemplo {
-  readonly meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-  readonly series = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
-}`;
-}
 
 const meta: Meta<ChartArgs> = {
   title: 'Primitives/Display/Chart',
@@ -56,7 +15,7 @@ const meta: Meta<ChartArgs> = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(NdsChartDocs),
-      source: { transform: playgroundSource },
+      source: { transform: chartPlaygroundSource },
     },
   },
   argTypes: {

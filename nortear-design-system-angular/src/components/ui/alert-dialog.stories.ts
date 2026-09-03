@@ -3,63 +3,10 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
+import { alertDialogPlaygroundSource, type AlertDialogArgs } from './alert-dialog.source';
 import { NdsAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
-
-type AlertDialogArgs = {
-  triggerLabel: string;
-  title: string;
-  description: string;
-  cancel: string;
-  action: string;
-  onOpenChange: (isOpen: boolean) => void;
-  onConfirm: () => void;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<AlertDialogArgs> }): string {
-  const {
-    triggerLabel = 'Excluir conta',
-    title = 'Excluir conta',
-    description = '',
-    cancel = 'Cancelar',
-    action = 'Excluir',
-  } = ctx.args ?? {};
-
-  return `import { NDS_ALERT_DIALOG } from '@/components/ui/alert-dialog';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [NDS_ALERT_DIALOG, NdsButton],
-  template: \`
-    <nds-alert-dialog>
-      <button ndsAlertDialogTrigger ndsButton variant="destructive">
-        ${triggerLabel}
-      </button>
-
-      <ng-template ndsAlertDialogContent>
-        <div ndsAlertDialogHeader>
-          <h2 ndsAlertDialogTitle>${title}</h2>
-          <p ndsAlertDialogDescription>${description}</p>
-        </div>
-
-        <div ndsAlertDialogFooter>
-          <button ndsAlertDialogCancel ndsButton variant="outline">${cancel}</button>
-          <button ndsAlertDialogAction ndsButton variant="destructive" (click)="excluir()">
-            ${action}
-          </button>
-        </div>
-      </ng-template>
-    </nds-alert-dialog>
-  \`,
-})
-export class Exemplo {
-  excluir(): void {
-    // A ação roda aqui; o fechamento é do primitivo.
-  }
-}`;
-}
 
 const meta: Meta<AlertDialogArgs> = {
   title: 'Primitives/Overlay/AlertDialog',
@@ -97,7 +44,7 @@ type Story = StoryObj<AlertDialogArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: alertDialogPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item5', 'functional.item6',
