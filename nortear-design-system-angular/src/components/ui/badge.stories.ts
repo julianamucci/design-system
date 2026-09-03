@@ -1,29 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
-import { NdsBadge, type BadgeVariant } from './badge';
+import { NdsBadge } from './badge';
+import { badgePlaygroundSource, type BadgeArgs } from './badge.source';
 import { NdsBadgeDocs } from '@/components/docs/BadgeDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type BadgeArgs = {
-  variant: BadgeVariant;
-  label: string;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<BadgeArgs> }): string {
-  const { variant = 'default', label = 'Ativo' } = ctx.args ?? {};
-  const attrs = variant === 'default' ? '' : ` variant="${variant}"`;
-  return `import { NdsBadge } from '@/components/ui/badge';
-
-@Component({
-  imports: [NdsBadge],
-  template: \`<span ndsBadge${attrs}>${label}</span>\`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<BadgeArgs> = {
   title: 'Primitives/Feedback/Badge',
@@ -49,7 +32,7 @@ type Story = StoryObj<BadgeArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: badgePlaygroundSource } },
     covers: ['functional.item1', 'accessibility.item1', 'accessibility.item4'],
   },
   render: (args) => ({
