@@ -1,38 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect, waitFor } from 'storybook/test';
-import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
-import { AREA_CLICK_DIREITO, gestoOpen, brilho } from '@shared/testing/context-menu-area';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { NDS_CONTEXT_MENU } from './context-menu';
+import { gestoOpen } from './context-menu.fixtures';
+import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { AREA_CLICK_DIREITO, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
-import {
-  ContextMenu,
-  ContextMenuTrigger,
-  ContextMenuContent,
-  ContextMenuGroup,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuLabel,
-  ContextMenuCheckboxItem,
-} from '@/components/ui/context-menu';
-import {
-  contextMenuItemDisabledSource,
-  contextMenuItemDestructiveSource,
-  contextMenuItemRecuadoSource,
-  contextMenuMarkupMistaSource,
-  contextMenuPaletteDarkSource,
-} from './context-menu.source';
+
+// Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
 
 const meta: Meta = {
   title: 'Primitives/Overlay/ContextMenu/States',
-  component: ContextMenu,
   tags: ['overlay'],
+  decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {
+    layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: contextMenuItemDisabledSource },
       description: {
         component:
           'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
@@ -44,52 +30,55 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const componentes = {
-  ContextMenu,
-  ContextMenuTrigger,
-  ContextMenuContent,
-  ContextMenuGroup,
-  ContextMenuLabel,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuCheckboxItem,
-};
-
 const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
 // ── Item desabilitado ─────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
   parameters: {
+    // `functional.item9` deixou de ser dispensa e passou a ser cobertura.
+    //
+    // Histórico, porque o texto compartilhado mudou de lado duas vezes. Ele
+    // prometia que o item desabilitado "não recebe foco via teclado"; essa
+    // promessa era idiomática de lib e não do design system, porque as stacks se
+    // dividiam, e por isso foi reescrita para o que valia nas cinco (anunciado
+    // por `aria-disabled`, não ativa por clique nem por Enter, menu segue
+    // aberto). Em 2026-09-02 a divergência foi RESOLVIDA por decisão: a seta
+    // pousa no item desabilitado nas cinco, e `accessibility.item9` promete
+    // isso. O passo "Ele recebe foco, mas não ativa" é quem o cobra aqui.
     covers: ['functional.item9', 'accessibility.item6', 'accessibility.item9', 'visual.item5'],
   },
   render: () => ({
-    components: componentes,
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
-      <ContextMenu>
-        <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
-          Clique com o botão direito aqui
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuGroup>
-            <ContextMenuItem data-testid="primeiro">
-              Editar
-              <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuItem disabled data-testid="off">Duplicar</ContextMenuItem>
-            <ContextMenuItem data-testid="ultimo">Renomear</ContextMenuItem>
-          </ContextMenuGroup>
-          <ContextMenuSeparator />
-          <ContextMenuItem variant="destructive" disabled data-testid="perigo-off">
+      <div ndsContextMenu>
+        <div
+          ndsContextMenuTrigger
+          [class]="areaClasse"
+          data-align="center"
+          data-justify="center"
+          data-testid="area"
+        >Clique com o botão direito aqui</div>
+
+        <ng-template ndsContextMenuContent>
+          <div ndsContextMenuItem data-testid="primeiro">
+            Editar
+            <span ndsContextMenuShortcut>Ctrl+E</span>
+          </div>
+          <div ndsContextMenuItem [disabled]="true" data-testid="off">Duplicar</div>
+          <div ndsContextMenuItem data-testid="ultimo">Renomear</div>
+
+          <div ndsContextMenuSeparator></div>
+
+          <div ndsContextMenuItem variant="destructive" [disabled]="true" data-testid="perigo-off">
             Excluir
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+          </div>
+        </ng-template>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const area = () => within(canvasElement).getByTestId('area');
+    const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
 
     await step('O item desabilitado é anunciado como tal', async () => {
       await gestoOpen(area());
@@ -108,19 +97,19 @@ export const ItemDisabled: Story = {
       // percurso das setas para ser ANUNCIADO como indisponível. Some-lo da roda
       // esconderia de quem navega de ouvido que a opção existe.
       //
-      // Quem alinha esta stack é o patch de `patches/`, e não código nosso: se
-      // ele parar de aplicar, este passo é o primeiro a reprovar.
+      // O que prova isso é APERTAR a seta e ver onde o foco pousa. Afirmar a
+      // presença de `tabindex` não provaria: a diretiva o liga em TODO item,
+      // desabilitado ou não, e por isso não reprovaria nunca.
       target('primeiro').focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).toBe(target('off'));
+      await waitFor(() => expect(document.activeElement).toBe(target('off')));
     });
 
     await step('Enter nele não escolhe nada e o menu segue aberto', async () => {
       // Ativar um item desabilitado é o caso raro em que a play pode repetir sem
       // preparo: ele não muda de estado em rodada nenhuma.
-      target('off').focus();
       await userEvent.keyboard('{Enter}');
-      await expect(await waitForPortal('menu')).toBeVisible();
+      await expect(document.querySelector('[data-slot="context-menu-content"]')).not.toBeNull();
     });
 
     await step('O ponteiro também não o alcança', async () => {
@@ -135,32 +124,34 @@ export const ItemDisabled: Story = {
 // ── Item recuado ──────────────────────────────────────────────────────────────
 
 export const ItemInset: Story = {
-  parameters: {
-    // O recuo é a prop `inset` no rótulo e no item — nada disso aparece no
-    // snippet do meta, que mostra o menu sem alinhamento de indicador.
-    docs: { source: { transform: contextMenuItemRecuadoSource } },
-  },
   render: () => ({
-    components: componentes,
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
-      <ContextMenu>
-        <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
-          Clique com o botão direito aqui
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuGroup>
-            <ContextMenuLabel inset>Arquivo</ContextMenuLabel>
-            <ContextMenuItem data-testid="normal">Editar</ContextMenuItem>
-            <ContextMenuItem inset data-testid="recuado">Duplicar</ContextMenuItem>
-          </ContextMenuGroup>
-          <ContextMenuSeparator />
-          <ContextMenuItem inset variant="destructive">Excluir</ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+      <div ndsContextMenu>
+        <div
+          ndsContextMenuTrigger
+          [class]="areaClasse"
+          data-align="center"
+          data-justify="center"
+          data-testid="area"
+        >Clique com o botão direito aqui</div>
+
+        <ng-template ndsContextMenuContent>
+          <div ndsContextMenuGroup>
+            <div ndsContextMenuLabel [inset]="true">Arquivo</div>
+            <div ndsContextMenuItem data-testid="normal">Editar</div>
+            <div ndsContextMenuItem [inset]="true" data-testid="recuado">Duplicar</div>
+          </div>
+
+          <div ndsContextMenuSeparator></div>
+
+          <div ndsContextMenuItem [inset]="true" variant="destructive">Excluir</div>
+        </ng-template>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const area = () => within(canvasElement).getByTestId('area');
+    const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
 
     await step('O recuo é geometria, não classe', async () => {
       // O que o recuo entrega é o alinhamento com itens que têm indicador à
@@ -185,38 +176,40 @@ export const ItemInset: Story = {
 // ── Item destrutivo ───────────────────────────────────────────────────────────
 
 export const ItemDestructive: Story = {
-  parameters: {
-    covers: ['functional.item10', 'visual.item2'],
-    // Aqui nenhum item está desabilitado: o assunto é só a ação perigosa, com o
-    // rótulo por extenso que ela pede.
-    docs: { source: { transform: contextMenuItemDestructiveSource } },
-  },
+  parameters: { covers: ['functional.item10', 'visual.item2'] },
   render: () => ({
-    components: componentes,
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
-      <ContextMenu>
-        <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
-          Clique com o botão direito aqui
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuGroup>
-            <ContextMenuItem data-testid="normal">
+      <div ndsContextMenu>
+        <div
+          ndsContextMenuTrigger
+          [class]="areaClasse"
+          data-align="center"
+          data-justify="center"
+          data-testid="area"
+        >Clique com o botão direito aqui</div>
+
+        <ng-template ndsContextMenuContent>
+          <div ndsContextMenuGroup>
+            <div ndsContextMenuItem data-testid="normal">
               Editar
-              <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuItem>Duplicar</ContextMenuItem>
-          </ContextMenuGroup>
-          <ContextMenuSeparator />
-          <ContextMenuItem variant="destructive" data-testid="perigo">
+              <span ndsContextMenuShortcut>Ctrl+E</span>
+            </div>
+            <div ndsContextMenuItem>Duplicar</div>
+          </div>
+
+          <div ndsContextMenuSeparator></div>
+
+          <div ndsContextMenuItem variant="destructive" data-testid="perigo">
             Excluir permanentemente
-            <ContextMenuShortcut>Delete</ContextMenuShortcut>
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+            <span ndsContextMenuShortcut>Delete</span>
+          </div>
+        </ng-template>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const area = () => within(canvasElement).getByTestId('area');
+    const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
 
     await step('O item destrutivo se declara pelo atributo, não só pela cor', async () => {
       // `data-variant` é o que o CSS lê e o que a auditoria compara entre
@@ -236,38 +229,38 @@ export const ItemDestructive: Story = {
 
 // ── Item de marcação em estado misto ──────────────────────────────────────────
 //
-// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
-// primeiro clique num item misto o resolve para marcado — uma play que clicasse
-// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
-// mesmo DOM. Abrir o menu é idempotente: `gestoOpen` parte da área, não do
-// estado anterior.
+// Story SEM interação sobre os itens, de propósito. O que ela declara vale na
+// montagem, e o primeiro clique num item misto o resolve para marcado — uma play
+// que clicasse mediria outro estado no REPLAY do painel Interactions, que
+// reexecuta no mesmo DOM. Abrir o menu é idempotente: `gestoOpen` parte das
+// coordenadas da área, não do estado anterior.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: {
-    covers: ['functional.item11'],
-    // Itens de MARCAÇÃO nos três estados, e não itens de ação: outra peça e
-    // outra prop.
-    docs: { source: { transform: contextMenuMarkupMistaSource } },
-  },
+  parameters: { covers: ['functional.item11'] },
   render: () => ({
-    components: componentes,
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
-      <ContextMenu>
-        <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
-          Clique com o botão direito aqui
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>
-          <ContextMenuCheckboxItem checked="indeterminate">Colunas</ContextMenuCheckboxItem>
-          <ContextMenuCheckboxItem :checked="true">Régua</ContextMenuCheckboxItem>
-          <ContextMenuCheckboxItem :checked="false">Grade</ContextMenuCheckboxItem>
-        </ContextMenuContent>
-      </ContextMenu>
+      <div ndsContextMenu>
+        <div
+          ndsContextMenuTrigger
+          [class]="areaClasse"
+          data-align="center"
+          data-justify="center"
+          data-testid="area"
+        >Clique com o botão direito aqui</div>
+
+        <ng-template ndsContextMenuContent>
+          <div ndsContextMenuLabel>Mostrar na tela</div>
+          <div ndsContextMenuCheckboxItem [checked]="'indeterminate'">Colunas</div>
+          <div ndsContextMenuCheckboxItem [checked]="true">Régua</div>
+          <div ndsContextMenuCheckboxItem [checked]="false">Grade</div>
+        </ng-template>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const area = () => within(canvasElement).getByTestId('area');
-    const menu = await gestoOpen(area());
+    const area = canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
+    const menu = await gestoOpen(area);
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
     const checked = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
@@ -292,7 +285,11 @@ export const CheckboxIndeterminate: Story = {
       await expect(ehTique(formaMarcada)).toBe(true);
     });
 
-    await step('O desmarcado continua sem glifo nenhum', async () => {
+    await step('O desmarcado não mostra glifo nenhum', async () => {
+      // Aqui o indicador CONTINUA montado (é assim que a lib deixa possível uma
+      // animação de saída) e some por `display: none`. Sem caixa de layout o
+      // `getBBox` devolve tudo zerado, que é o que o colhedor lê como
+      // "sem glifo" — a asserção mede o que a pessoa vê, não o que existe.
       await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
@@ -303,32 +300,32 @@ export const CheckboxIndeterminate: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ['visual.item6'],
-    // Menu curto, sem grupo nem atalho: o que a story mostra é que a paleta
-    // troca sem uma linha de markup mudar.
-    docs: { source: { transform: contextMenuPaletteDarkSource } },
-    // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
-    // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
+    // themeOverride é o canal do addon-themes: a classe volta sozinha na story
+    // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
   },
   render: () => ({
-    components: componentes,
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
-      <ContextMenu>
-        <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
-          Clique com o botão direito aqui
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuItem>Editar</ContextMenuItem>
-          <ContextMenuItem disabled>Duplicar</ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+      <div ndsContextMenu>
+        <div
+            ndsContextMenuTrigger
+            [class]="areaClasse"
+            data-align="center"
+            data-justify="center"
+            data-testid="area"
+          >Clique com o botão direito aqui</div>
+
+        <ng-template ndsContextMenuContent>
+          <div ndsContextMenuItem>Editar</div>
+          <div ndsContextMenuItem [disabled]="true">Duplicar</div>
+          <div ndsContextMenuSeparator></div>
+          <div ndsContextMenuItem variant="destructive">Excluir</div>
+        </ng-template>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const area = () => within(canvasElement).getByTestId('area');
-
     await step('A paleta escura está aplicada no documento', async () => {
       await waitFor(() =>
         expect(document.documentElement.classList.contains('dark')).toBe(true),
@@ -338,7 +335,8 @@ export const DarkPalette: Story = {
     await step('O menu é mais escuro que o texto que ele recebe', async () => {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
-      const menu = await gestoOpen(area());
+      const area = canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
+      const menu = await gestoOpen(area);
       const cs = getComputedStyle(menu);
       await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
     });

@@ -123,7 +123,7 @@ function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }
       <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
         {tContent("demonstration.labels.triggerLabel")}
       </ContextMenuTrigger>
-      <ContextMenuContent style={{ minWidth: "12rem" }}>
+      <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.edit"))}>
             {tContent("demonstration.labels.edit")}
@@ -960,8 +960,9 @@ const [showRulers, setShowRulers] = useState(false);
           { token: "--accent",             value: ".nds-dropdown-menu-item",       description: tContent("tokens.table.accentBg") },
           { token: "--accent-foreground",  value: ".nds-dropdown-menu-item",       description: tContent("tokens.table.accentFg") },
           { token: "--destructive",        value: '[data-variant="destructive"]',  description: tContent("tokens.table.destructive") },
-          { token: "--destructive",        value: '[data-variant="destructive"]:focus', description: tContent("tokens.table.destructiveFocus") },
+          { token: "--destructive",        value: '.nds-dropdown-menu-item[data-variant="destructive"]:focus', description: tContent("tokens.table.destructiveFocus") },
           { token: "--muted-foreground",   value: ".nds-dropdown-menu-shortcut",   description: tContent("tokens.table.mutedFg") },
+          { token: "--muted-foreground",   value: ".nds-dropdown-menu-label",      description: tContent("tokens.table.mutedFgLabel") },
           { token: "--muted",              value: ".nds-dropdown-menu-separator",  description: tContent("tokens.table.border") },
           { token: "--border",             value: ".nds-dropdown-menu-content",    description: tContent("tokens.table.popupBorder") },
           { token: "--elevation-md",       value: ".nds-dropdown-menu-content",    description: tContent("tokens.table.shadow") },
@@ -993,15 +994,17 @@ const [showRulers, setShowRulers] = useState(false);
         ]}
         keyboardTitle={tContent("accessibility.title")}
         keyboardItems={[
-          { key: "Right-click / Menu", description: tContent("accessibility.keyboard.rightClick") },
-          { key: "Arrow Down",                  description: tContent("accessibility.keyboard.arrowDown") },
-          { key: "Arrow Up",                  description: tContent("accessibility.keyboard.arrowUp") },
-          { key: "Arrow Right",                  description: tContent("accessibility.keyboard.arrowRight") },
-          { key: "Arrow Left",                  description: tContent("accessibility.keyboard.arrowLeft") },
-          { key: "Enter",              description: tContent("accessibility.keyboard.enter") },
-          { key: "Space",              description: tContent("accessibility.keyboard.space") },
-          { key: "Escape",             description: tContent("accessibility.keyboard.escape") },
-          { key: "Tab",                description: tContent("accessibility.keyboard.tab") },
+          { key: "Right-click / Menu / Shift+F10", description: tContent("accessibility.keyboard.rightClick") },
+          { key: "Arrow Down",  description: tContent("accessibility.keyboard.arrowDown") },
+          { key: "Arrow Up",    description: tContent("accessibility.keyboard.arrowUp") },
+          { key: "Arrow Right", description: tContent("accessibility.keyboard.arrowRight") },
+          { key: "Arrow Left",  description: tContent("accessibility.keyboard.arrowLeft") },
+          { key: "Home / End",  description: tContent("accessibility.keyboard.homeEnd") },
+          { key: "A–Z",         description: tContent("accessibility.keyboard.typeahead") },
+          { key: "Enter",       description: tContent("accessibility.keyboard.enter") },
+          { key: "Space",       description: tContent("accessibility.keyboard.space") },
+          { key: "Esc",         description: tContent("accessibility.keyboard.escape") },
+          { key: "Tab",         description: tContent("accessibility.keyboard.tab") },
         ]}
       />
 

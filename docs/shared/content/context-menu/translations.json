@@ -233,7 +233,8 @@
         "accentFg": "Texto de item em foco",
         "destructive": "Texto de item destrutivo",
         "destructiveFocus": "Fundo de item destrutivo em foco",
-        "mutedFg": "Texto de label e shortcut",
+        "mutedFg": "Texto do atalho exibido no item",
+      "mutedFgLabel": "Texto do rótulo de grupo",
         "border": "Linha separadora",
         "popupBorder": "Borda de 1px do popup",
         "shadow": "Sombra do popup",
@@ -245,10 +246,10 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Context Menu implementa <code>role=\"menu\"</code> e <code>role=\"menuitem\"</code> automaticamente. Atenção: right-click é inacessível em touch e não descobrível por teclado — toda ação deve ter alternativa acessível. Cumpre WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> e <code>role=\"menuitem\"</code> automaticamente. Há caminho de teclado: a tecla de menu ou Shift+F10 sobre a área focada dispara o mesmo evento do clique direito. O que o gesto não faz é se anunciar — nada no gatilho diz que ele existe —, então toda ação daqui precisa existir também num ponto visível. Cumpre WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Aviso crítico: toda ação disponível no Context Menu deve ter uma alternativa acessível — botão visível, ícone de ação na linha ou DropdownMenu.",
       "keyboard": {
-        "rightClick": "Clique direito (ou menu key) abre o menu na posição do cursor.",
+        "rightClick": "Clique direito abre o menu na posição do ponteiro. Sem mouse, a tecla de menu ou Shift+F10 sobre a área focada dispara o mesmo evento.",
         "arrowDown": "Move o foco para o próximo item do menu.",
         "arrowUp": "Move o foco para o item anterior do menu.",
         "arrowRight": "Abre o submenu do item focado (SubTrigger).",
@@ -256,7 +257,9 @@
         "enter": "Ativa o item focado.",
         "space": "Ativa o item focado (CheckboxItem alterna estado).",
         "escape": "Fecha o menu e retorna o foco ao trigger.",
-        "tab": "Fecha o menu (o menu não aprisiona o foco como Dialog)."
+        "tab": "Fecha o menu (o menu não aprisiona o foco como Dialog).",
+        "homeEnd": "Leva o foco ao primeiro e ao último item do menu aberto.",
+        "typeahead": "Digitar letras move o foco para o item que começa com elas; as letras se acumulam por um segundo."
       },
       "aria": {
         "roleMenu": "<code>role=\"menu\"</code> — aplicado automaticamente no <code>ContextMenuContent</code>.",
@@ -288,7 +291,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "<code>ContextMenuShortcut</code> é visual: para funcionar, implemente o atalho real via <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
+      "tip1": "O atalho exibido no item é só o rótulo. Quem o faz funcionar é um ouvinte de <code>keydown</code> registrado no ciclo de vida de quem monta a tela — e removido quando ela sai, senão ele sobrevive à página.",
       "tip2": "Item destrutivo: use a variante <code>destructive</code> do item — ela pinta o texto com a cor de alerta (<code>--destructive</code>) e, no foco, um fundo com 10% dessa cor. Não escreva essas cores à mão.",
       "tip3": "Submenus aumentam a carga cognitiva: use apenas quando o agrupamento for essencial e nunca aninhe mais de um nível.",
       "tip4": "O popup usa <code>--popover</code> e <code>--popover-foreground</code> — não troque por <code>--card</code>, que é reservado para painéis de conteúdo (Dialog, Sheet).",
@@ -678,7 +681,8 @@
         "accentFg": "Focused item text",
         "destructive": "Destructive item text",
         "destructiveFocus": "Destructive item focus background",
-        "mutedFg": "Label and shortcut text",
+        "mutedFg": "Text of the shortcut shown in the item",
+      "mutedFgLabel": "Text of the group heading",
         "border": "Separator line",
         "popupBorder": "1px popup border",
         "shadow": "Popup shadow",
@@ -690,10 +694,10 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Context Menu implements <code>role=\"menu\"</code> and <code>role=\"menuitem\"</code> automatically. Note: right-click is inaccessible on touch and not keyboard-discoverable — every action must have an accessible alternative. Meets WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implements <code>role=\"menu\"</code> and <code>role=\"menuitem\"</code> automatically. There is a keyboard path: the menu key or Shift+F10 over the focused area fires the same event as right-click. What the gesture does not do is announce itself — nothing on the trigger says it exists — so every action here must also exist somewhere visible. Meets WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Critical warning: every action in the Context Menu must have an accessible alternative — visible button, inline action icon, or DropdownMenu.",
       "keyboard": {
-        "rightClick": "Right-click (or menu key) opens the menu at cursor position.",
+        "rightClick": "Right-click opens the menu at the pointer position. Without a mouse, the menu key or Shift+F10 over the focused area fires the same event.",
         "arrowDown": "Moves focus to the next menu item.",
         "arrowUp": "Moves focus to the previous menu item.",
         "arrowRight": "Opens the submenu of the focused item (SubTrigger).",
@@ -701,7 +705,9 @@
         "enter": "Activates the focused item.",
         "space": "Activates the focused item (CheckboxItem toggles state).",
         "escape": "Closes the menu and returns focus to the trigger.",
-        "tab": "Closes the menu (the menu does not trap focus like Dialog)."
+        "tab": "Closes the menu (the menu does not trap focus like Dialog).",
+        "homeEnd": "Moves focus to the first and to the last item of the open menu.",
+        "typeahead": "Typing letters moves focus to the item that starts with them; the letters accumulate for one second."
       },
       "aria": {
         "roleMenu": "<code>role=\"menu\"</code> — automatically applied to <code>ContextMenuContent</code>.",
@@ -733,7 +739,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "<code>ContextMenuShortcut</code> is visual only: to work, implement the real shortcut via <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
+      "tip1": "The shortcut shown in the item is only the label. What makes it work is a <code>keydown</code> listener registered in the lifecycle of whoever mounts the screen — and removed when it leaves, otherwise it outlives the page.",
       "tip2": "Destructive item: use the destructive variant of the item — it paints the text in the alert colour (<code>--destructive</code>) and, on focus, a background at 10% of that colour. Do not hand-write these colours.",
       "tip3": "Submenus increase cognitive load: use only when grouping is essential and never nest more than one level.",
       "tip4": "The popup uses <code>--popover</code> and <code>--popover-foreground</code> — do not swap in <code>--card</code>, which is reserved for content panels (Dialog, Sheet).",
@@ -1123,7 +1129,8 @@
         "accentFg": "Texto de ítem enfocado",
         "destructive": "Texto de ítem destructivo",
         "destructiveFocus": "Fondo de ítem destructivo en foco",
-        "mutedFg": "Texto de etiqueta y atajo",
+        "mutedFg": "Texto del atajo mostrado en el ítem",
+      "mutedFgLabel": "Texto del rótulo de grupo",
         "border": "Línea separadora",
         "popupBorder": "Borde de 1px del popup",
         "shadow": "Sombra del popup",
@@ -1135,10 +1142,10 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Context Menu implementa <code>role=\"menu\"</code> y <code>role=\"menuitem\"</code> automáticamente. Atención: el clic derecho es inaccesible en touch y no descubrible por teclado — toda acción debe tener alternativa accesible. Cumple WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> y <code>role=\"menuitem\"</code> automáticamente. Hay camino de teclado: la tecla de menú o Shift+F10 sobre el área enfocada dispara el mismo evento que el clic derecho. Lo que el gesto no hace es anunciarse — nada en el disparador dice que existe —, así que toda acción de aquí debe existir también en un punto visible. Cumple WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Aviso crítico: toda acción disponible en el Context Menu debe tener una alternativa accesible — botón visible, ícono de acción en la fila o DropdownMenu.",
       "keyboard": {
-        "rightClick": "Clic derecho (o tecla de menú) abre el menú en la posición del cursor.",
+        "rightClick": "Clic derecho abre el menú en la posición del puntero. Sin ratón, la tecla de menú o Shift+F10 sobre el área enfocada dispara el mismo evento.",
         "arrowDown": "Mueve el foco al siguiente ítem del menú.",
         "arrowUp": "Mueve el foco al ítem anterior del menú.",
         "arrowRight": "Abre el submenú del ítem enfocado (SubTrigger).",
@@ -1146,7 +1153,9 @@
         "enter": "Activa el ítem enfocado.",
         "space": "Activa el ítem enfocado (CheckboxItem alterna el estado).",
         "escape": "Cierra el menú y devuelve el foco al trigger.",
-        "tab": "Cierra el menú (el menú no atrapa el foco como Dialog)."
+        "tab": "Cierra el menú (el menú no atrapa el foco como Dialog).",
+        "homeEnd": "Lleva el foco al primer y al último ítem del menú abierto.",
+        "typeahead": "Escribir letras mueve el foco al ítem que empieza con ellas; las letras se acumulan por un segundo."
       },
       "aria": {
         "roleMenu": "<code>role=\"menu\"</code> — aplicado automáticamente en <code>ContextMenuContent</code>.",
@@ -1178,7 +1187,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "<code>ContextMenuShortcut</code> es solo visual: para funcionar, implementa el atajo real vía <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
+      "tip1": "El atajo mostrado en el ítem es solo la etiqueta. Quien lo hace funcionar es un escucha de <code>keydown</code> registrado en el ciclo de vida de quien monta la pantalla — y retirado cuando ella sale, si no sobrevive a la página.",
       "tip2": "Ítem destructivo: usa la variante <code>destructive</code> del ítem — pinta el texto con el color de alerta (<code>--destructive</code>) y, al enfocarse, un fondo con el 10% de ese color. No escribas esos colores a mano.",
       "tip3": "Los submenús aumentan la carga cognitiva: úsalos solo cuando el agrupamiento sea esencial y nunca anides más de un nivel.",
       "tip4": "El popup usa <code>--popover</code> y <code>--popover-foreground</code> — no lo cambies por <code>--card</code>, que es para paneles de contenido (Dialog, Sheet).",

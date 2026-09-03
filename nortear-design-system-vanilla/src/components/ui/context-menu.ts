@@ -9,6 +9,66 @@
 // passada as stories desenhavam essas peças à mão, com classes de uma lib que
 // saiu do projeto: renderizavam sem estilo nenhum e não provavam nada.
 
+/**
+ * CONTRATO DE ACESSIBILIDADE DO MENU DE CONTEXTO — bloco canônico das cinco.
+ *
+ * Medido em 2026-09-02 na FONTE de cada lib, não na documentação delas. As
+ * outras quatro trazem a versão curta com o mecanismo da própria stack.
+ *
+ * DO POPUP PARA DENTRO, é o bloco canônico do `dropdown-menu` (cabeçalho de
+ * `dropdown-menu.ts` desta stack) sem uma vírgula de diferença, e não por
+ * coincidência: as quatro libs montam este popup com as MESMAS peças de menu —
+ * `@base-ui/react/menu`, `Menu/*` do reka-ui, `bits/menu` do bits-ui e
+ * `@radix-ng/primitives/menu` —, e aqui a fábrica é a mesma folha
+ * `.nds-dropdown-menu-*`. Vale igual: `role="menu"`, `menuitem` /
+ * `menuitemcheckbox` / `menuitemradio` com `aria-checked`, setas, `Home`/`End`,
+ * typeahead, `Escape` fechando e DEVOLVENDO o foco, submenu com
+ * `aria-haspopup="menu"` + `aria-expanded` no sub-gatilho, NENHUMA região viva,
+ * e a seta POUSANDO no item desabilitado (decisão de 2026-09-02, com um patch
+ * por lib; o mecanismo de cada uma está escrito no bloco do `dropdown-menu`).
+ *
+ * O QUE DIVERGE do `dropdown-menu` é só a ABERTURA — e são três coisas:
+ *
+ *  1. O GATILHO NÃO SE ANUNCIA, nas cinco. O do `dropdown-menu` é um botão com
+ *     `aria-haspopup="menu"` e `aria-expanded`; aqui não há nem um nem outro.
+ *     Conferido na fonte, e é escolha das quatro libs, não esquecimento:
+ *       base-ui  — `context-menu/trigger/ContextMenuTrigger`: renderiza `div`
+ *                  com `onContextMenu`/`onTouch*` e o mapeamento de estado
+ *                  `pressableTriggerOpenStateMapping`, que só escreve `data-*`
+ *       reka-ui  — `ContextMenu/ContextMenuTrigger`: `as: 'span'`, e os únicos
+ *                  atributos são `data-state` e `data-disabled`
+ *       bits-ui  — `ContextMenuTriggerState.props` em `bits/menu/menu.svelte.js`:
+ *                  `data-state`, `data-disabled`, o atributo de marcação da lib
+ *                  e `tabindex: -1`
+ *       radix-ng — `RdxContextMenuTrigger`: host bindings `data-popup-open`,
+ *                  `data-pressed`, `data-disabled`
+ *     E está CERTO assim: `aria-haspopup` não é atributo global — a ARIA o
+ *     admite em `button`, `link`, `menuitem`, `combobox` e afins, não em
+ *     `generic`, que é o papel implícito de uma `<div>`/`<span>` de área. Dar
+ *     papel de botão à área seria pior: anunciaria um controle que Enter e
+ *     Espaço não acionam. O preço é real e o conteúdo compartilhado o paga por
+ *     escrito — `accessibility.warning` exige que toda ação daqui exista também
+ *     num ponto visível, e `notes.tip5` pede a dica visual na área.
+ *
+ *  2. O TECLADO ABRE, e é por isso que `tabindex="0"` na área é requisito e não
+ *     enfeite: a tecla Menu e `Shift+F10` disparam `contextmenu` no elemento
+ *     FOCADO. Sem parada de tabulação não há elemento focado, e o menu deixa de
+ *     existir para quem não usa mouse. As cinco põem o `tabindex`. O radix-ng
+ *     ainda separa os dois caminhos (`event.timeStamp - lastPointerDownTime >
+ *     300` abre com o primeiro item já destacado, em vez de só o popup).
+ *
+ *  3. O TOQUE abre por pressionar-e-segurar nas quatro libs, com temporizador
+ *     próprio (500ms em base-ui e radix-ng, `pressOpenDelay` em reka-ui, timer
+ *     de long-press em bits-ui). Esta fábrica NÃO tem temporizador: ela ouve
+ *     `contextmenu` e depende de o navegador emiti-lo no toque longo, o que nem
+ *     todo navegador móvel faz. É divergência conhecida e não fingida — o texto
+ *     compartilhado não promete toque.
+ *
+ * O `tabindex` da área tem ainda um segundo uso, e os dois se somam: é para ele
+ * que o foco volta no fechamento. Numa `div` sem `tabindex` o `focus()` é no-op
+ * e o foco cai no `<body>`, contra o que `testes.functional.item2` promete.
+ */
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
@@ -387,6 +447,34 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     );
   }
 
+  // ── Typeahead ───────────────────────────────────────────────────────────────
+  // Numa lista de ações longa é o que evita percorrer item por item. As letras
+  // se acumulam por 1s, como no padrão WAI-ARIA de menu: digitar "co" rápido
+  // procura "co", e não "c" e depois "o". Mesma forma do `dropdown-menu` desta
+  // stack — as duas fábricas compartilham a folha e o contrato de teclado.
+  let searchTypeahead = '';
+  let timerTypeahead: ReturnType<typeof setTimeout> | null = null;
+
+  function typeahead(letra: string, menuItems: HTMLElement[]): void {
+    searchTypeahead += letra.toLowerCase();
+    if (timerTypeahead !== null) clearTimeout(timerTypeahead);
+    timerTypeahead = setTimeout(() => {
+      searchTypeahead = '';
+      timerTypeahead = null;
+    }, 1000);
+
+    const current = menuItems.indexOf(document.activeElement as HTMLElement);
+    // A busca recomeça DEPOIS do item atual para que repetir a mesma letra
+    // percorra os homônimos em vez de travar no primeiro.
+    const order = menuItems
+      .slice(current + 1)
+      .concat(menuItems.slice(0, Math.max(current + 1, 0)));
+    const target = order.find((el) =>
+      (el.textContent ?? '').trim().toLowerCase().startsWith(searchTypeahead),
+    );
+    target?.focus();
+  }
+
   function open(x: number, y: number): void {
     panelEl = buildMenu(items, 'context-menu-content');
     panelEl.style.position = 'absolute';
@@ -429,6 +517,11 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       clearTimeout(timerClickOutside);
       timerClickOutside = null;
     }
+    if (timerTypeahead !== null) {
+      clearTimeout(timerTypeahead);
+      timerTypeahead = null;
+    }
+    searchTypeahead = '';
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
 
@@ -493,6 +586,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       menuItems[menuItems.length - 1]?.focus();
     } else if (e.key === 'Tab') {
       close(false);
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && /\S/.test(e.key)) {
+      e.preventDefault();
+      typeahead(e.key, menuItems);
     }
   }
 

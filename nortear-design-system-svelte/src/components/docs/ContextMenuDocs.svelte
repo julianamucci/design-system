@@ -1,6 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import * as ContextMenu from '@/components/ui/context-menu';
+  import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -96,6 +97,13 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+  // A moldura tracejada da área vem da constante COMPARTILHADA. Esta página
+  // escrevia a cadeia à mão em treze lugares, e com `nds-w-full nds-max-w-xs`
+  // no lugar de `nds-w-xs` — a divergência que a constante existe justamente
+  // para impedir (o docblock dela registra a rodada em que as cinco stacks
+  // desenhavam molduras diferentes).
+  const areaClasse = AREA_CLICK_DIREITO;
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -297,7 +305,7 @@ interface ContextMenuRadioGroupProps {
     <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
       <ContextMenu.Root onOpenChange={(o: boolean) => { if (o) track('menu_open', { component: 'context_menu', menu: 'demo', location: 'docs_demo' }); }}>
         <ContextMenu.Trigger
-          class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+          class={areaClasse}
           data-align="center"
           data-justify="center"
          
@@ -424,25 +432,40 @@ interface ContextMenuRadioGroupProps {
     ]}
   />
 
+  <!--
+    O par 1 monta o COMPONENTE, como os pares 2 e 3 ao lado e como as outras
+    quatro stacks. Antes ele desenhava caixas à mão, com `padding` cravado em
+    `style` inline: o exemplo saía do tema, da densidade e da escala de tipo, e
+    ensinava markup que o design system não emite.
+  -->
   {#snippet doPair1()}
-    <div class="nds-stack" data-spacing="sm" style="align-items: flex-start">
-      <p class="nds-text-caption nds-text-muted-foreground">Menu contextual + botão alternativo visível</p>
-      <div class="nds-cluster" data-spacing="sm">
-        <div class="nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground" style="border-style: dashed; padding: 0.5rem 0.75rem">Área com right-click</div>
-        <button class="nds-rounded nds-border-default nds-text-caption nds-hover-bg-accent" style="padding: 0.375rem 0.75rem">Ações</button>
-      </div>
+    <div class="nds-cluster" data-spacing="sm">
+      <ContextMenu.Root>
+        <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
+          Área com menu
+        </ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item>Editar</ContextMenu.Item>
+          <ContextMenu.Item variant="destructive">Excluir</ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Root>
+      <span class="nds-text-body nds-text-muted-foreground">+ botão visível</span>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="nds-stack" data-spacing="sm" style="align-items: flex-start">
-      <p class="nds-text-caption nds-text-muted-foreground">Apenas right-click, sem alternativa visível</p>
-      <div class="nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground" style="border-style: dashed; padding: 0.5rem 0.75rem">Área com right-click</div>
-    </div>
+    <ContextMenu.Root>
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
+        Área (sem botão)
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item variant="destructive">Excluir</ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
   {/snippet}
 
   {#snippet doPair2()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -454,7 +477,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
   {#snippet dontPair2()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -476,7 +499,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet doPair3()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -549,7 +572,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantDefault()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -565,7 +588,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantDestructive()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -581,7 +604,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantLabel()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -596,7 +619,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithCheckbox()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -621,7 +644,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithRadio()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -639,7 +662,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithSubmenu()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -658,7 +681,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithShortcuts()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -828,8 +851,9 @@ interface ContextMenuRadioGroupProps {
       { token: '--accent',             value: '.nds-dropdown-menu-item',       description: $tStore('tokens.table.accentBg')         },
       { token: '--accent-foreground',  value: '.nds-dropdown-menu-item',       description: $tStore('tokens.table.accentFg')         },
       { token: '--destructive',        value: '[data-variant="destructive"]',  description: $tStore('tokens.table.destructive')      },
-      { token: '--destructive',        value: '[data-variant="destructive"]:focus', description: $tStore('tokens.table.destructiveFocus') },
+      { token: '--destructive',        value: '.nds-dropdown-menu-item[data-variant="destructive"]:focus', description: $tStore('tokens.table.destructiveFocus') },
       { token: '--muted-foreground',   value: '.nds-dropdown-menu-shortcut',   description: $tStore('tokens.table.mutedFg')          },
+      { token: '--muted-foreground',   value: '.nds-dropdown-menu-label',      description: $tStore('tokens.table.mutedFgLabel')     },
       { token: '--muted',              value: '.nds-dropdown-menu-separator',  description: $tStore('tokens.table.border')           },
       { token: '--border',             value: '.nds-dropdown-menu-content',    description: $tStore('tokens.table.popupBorder')      },
       { token: '--elevation-md',       value: '.nds-dropdown-menu-content',    description: $tStore('tokens.table.shadow')           },
@@ -859,15 +883,17 @@ interface ContextMenuRadioGroupProps {
     ]}
     keyboardTitle={$tStore('accessibility.title')}
     keyboardItems={[
-      { key: 'Right-click / Menu', description: $tStore('accessibility.keyboard.rightClick') },
-      { key: 'Arrow Down',                  description: $tStore('accessibility.keyboard.arrowDown')  },
-      { key: 'Arrow Up',                  description: $tStore('accessibility.keyboard.arrowUp')    },
-      { key: 'Arrow Right',                  description: $tStore('accessibility.keyboard.arrowRight') },
-      { key: 'Arrow Left',                  description: $tStore('accessibility.keyboard.arrowLeft')  },
-      { key: 'Enter',              description: $tStore('accessibility.keyboard.enter')      },
-      { key: 'Space',              description: $tStore('accessibility.keyboard.space')      },
-      { key: 'Escape',             description: $tStore('accessibility.keyboard.escape')     },
-      { key: 'Tab',                description: $tStore('accessibility.keyboard.tab')        },
+      { key: 'Right-click / Menu / Shift+F10', description: $tStore('accessibility.keyboard.rightClick') },
+      { key: 'Arrow Down',  description: $tStore('accessibility.keyboard.arrowDown')  },
+      { key: 'Arrow Up',    description: $tStore('accessibility.keyboard.arrowUp')    },
+      { key: 'Arrow Right', description: $tStore('accessibility.keyboard.arrowRight') },
+      { key: 'Arrow Left',  description: $tStore('accessibility.keyboard.arrowLeft')  },
+      { key: 'Home / End',  description: $tStore('accessibility.keyboard.homeEnd')    },
+      { key: 'A–Z',         description: $tStore('accessibility.keyboard.typeahead')  },
+      { key: 'Enter',       description: $tStore('accessibility.keyboard.enter')      },
+      { key: 'Space',       description: $tStore('accessibility.keyboard.space')      },
+      { key: 'Esc',         description: $tStore('accessibility.keyboard.escape')     },
+      { key: 'Tab',         description: $tStore('accessibility.keyboard.tab')        },
     ]}
   />
 

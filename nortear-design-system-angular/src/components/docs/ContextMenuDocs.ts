@@ -661,6 +661,7 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       { token: '--destructive',          k: 'destructive',      target: '.nds-dropdown-menu-item[data-variant="destructive"]' },
       { token: '--destructive',          k: 'destructiveFocus', target: '.nds-dropdown-menu-item[data-variant="destructive"]:focus' },
       { token: '--muted-foreground',     k: 'mutedFg',          target: '.nds-dropdown-menu-shortcut' },
+      { token: '--muted-foreground',     k: 'mutedFgLabel',     target: '.nds-dropdown-menu-label' },
       // Medido no navegador: o separador é `--muted` (245,245,245), não
       // `--border` (230,230,230) — este último pinta a BORDA do popup, que
       // agora tem linha própria. O raio do item é `--radius-sm` (6px), não o
@@ -690,15 +691,17 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly keyboardItems = computed(() => {
     dict();
     return [
-      { key: 'Menu / Shift+F10', description: toPlainText(t('accessibility.keyboard.rightClick')) },
-      { key: '↓',               description: toPlainText(t('accessibility.keyboard.arrowDown')) },
-      { key: '↑',               description: toPlainText(t('accessibility.keyboard.arrowUp')) },
-      { key: '→',               description: toPlainText(t('accessibility.keyboard.arrowRight')) },
-      { key: '←',               description: toPlainText(t('accessibility.keyboard.arrowLeft')) },
-      { key: 'Enter',           description: toPlainText(t('accessibility.keyboard.enter')) },
-      { key: 'Space',           description: toPlainText(t('accessibility.keyboard.space')) },
-      { key: 'Esc',             description: toPlainText(t('accessibility.keyboard.escape')) },
-      { key: 'Tab',             description: toPlainText(t('accessibility.keyboard.tab')) },
+      { key: 'Right-click / Menu / Shift+F10', description: toPlainText(t('accessibility.keyboard.rightClick')) },
+      { key: 'Arrow Down',  description: toPlainText(t('accessibility.keyboard.arrowDown')) },
+      { key: 'Arrow Up',    description: toPlainText(t('accessibility.keyboard.arrowUp')) },
+      { key: 'Arrow Right', description: toPlainText(t('accessibility.keyboard.arrowRight')) },
+      { key: 'Arrow Left',  description: toPlainText(t('accessibility.keyboard.arrowLeft')) },
+      { key: 'Home / End',  description: toPlainText(t('accessibility.keyboard.homeEnd')) },
+      { key: 'A–Z',         description: toPlainText(t('accessibility.keyboard.typeahead')) },
+      { key: 'Enter',       description: toPlainText(t('accessibility.keyboard.enter')) },
+      { key: 'Space',       description: toPlainText(t('accessibility.keyboard.space')) },
+      { key: 'Esc',         description: toPlainText(t('accessibility.keyboard.escape')) },
+      { key: 'Tab',         description: toPlainText(t('accessibility.keyboard.tab')) },
     ];
   });
 

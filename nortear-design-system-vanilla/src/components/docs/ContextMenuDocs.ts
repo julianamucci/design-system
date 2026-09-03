@@ -105,6 +105,39 @@ function buildSimpleTriggerArea(label: string): HTMLElement {
   return wrap;
 }
 
+/**
+ * Prévia que monta o COMPONENTE de verdade — a forma que as outras quatro
+ * stacks já usavam nesta página.
+ *
+ * Antes desta passada as prévias e os trechos de código desenhavam painel,
+ * item, separador e indicador à mão, com `min-width`, `padding`, `margin` e
+ * cor cravados em `style` inline: dezesseis declarações que saíam do tema, da
+ * densidade e da escala de tipo. Pior que o estilo era a semântica — havia
+ * `<li role="menuitem">` SOLTO, fora de qualquer `role="menu"`, que é órfão
+ * para o leitor de tela e viola `aria-required-parent` —, e pior ainda era o
+ * fato de a fábrica JÁ entregar tudo isso: marcação, escolha única, submenu,
+ * atalho, recuo e variante destrutiva são tipos de item, não markup de quem
+ * consome. A página ensinava a contornar um componente completo.
+ */
+function buildMenuPreview(options: {
+  label?: string;
+  items: Parameters<typeof createContextMenu>[0]['items'];
+  radioValue?: string;
+}): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-cluster nds-w-full';
+  wrap.dataset.align = 'center';
+  wrap.dataset.justify = 'center';
+  wrap.appendChild(
+    createContextMenu({
+      trigger: makeTriggerArea(options.label ?? t('demonstration.labels.triggerLabel')),
+      items: options.items,
+      radioValue: options.radioValue,
+    }),
+  );
+  return wrap;
+}
+
 // ─── createContextMenuDocs ────────────────────────────────────────────────────
 
 export function createContextMenuDocs(): HTMLElement {
@@ -267,142 +300,96 @@ export function createContextMenuDocs(): HTMLElement {
               dontLabel:    tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
+              // O menu contextual COM um caminho visível ao lado — o assunto
+              // mais importante deste componente é que o gesto nunca seja o
+              // único caminho.
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-stack nds-text-body nds-p-2';
+                wrap.className = 'nds-cluster nds-w-full';
                 wrap.dataset.spacing = 'sm';
-                const label = document.createElement('p');
-                label.className = 'nds-text-muted-foreground nds-text-caption';
-                label.textContent = t('demonstration.labels.triggerLabel');
-                const actions = document.createElement('div');
-                actions.className = 'nds-cluster';
-                actions.dataset.spacing = 'sm';
-                ['Editar', 'Duplicar', 'Excluir'].forEach(a => {
-                  const btn = document.createElement('button');
-                  btn.className = 'nds-text-caption nds-px-2 nds-py-1 nds-rounded nds-border-default nds-hover-bg-accent';
-                  btn.textContent = a;
-                  actions.appendChild(btn);
-                });
-                wrap.append(label, actions);
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster nds-p-2 nds-text-body';
                 wrap.dataset.align = 'center';
                 wrap.dataset.justify = 'center';
-                // sem opacity: o dim rebaixava o texto muted da área para 2.52:1
-                // (axe: color-contrast) — a nota abaixo já explica o don't
-                const area = makeTriggerArea(t('demonstration.labels.triggerLabel'));
-                const note = document.createElement('p');
-                note.className = 'nds-text-caption nds-text-muted-foreground nds-mt-2';
-                note.style.textAlign = 'center';
-                note.textContent = 'Sem alternativa visível';
-                const inner = document.createElement('div');
-                inner.className = 'nds-stack nds-w-full';
-                inner.dataset.spacing = 'sm';
-                inner.style.alignItems = 'center';
-                inner.append(area, note);
-                wrap.appendChild(inner);
+                wrap.appendChild(
+                  createContextMenu({
+                    trigger: makeTriggerArea(t('demonstration.labels.triggerLabel')),
+                    items: [
+                      { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
+                      { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
+                    ],
+                  }),
+                );
+                const alternativa = document.createElement('button');
+                alternativa.type = 'button';
+                alternativa.className = 'nds-button nds-button-outline nds-button-sm';
+                alternativa.textContent = t('demonstration.labels.edit');
+                wrap.appendChild(alternativa);
                 return wrap;
               },
+              dontPreviewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
+                  ],
+                }),
             },
             {
               doLabel:      tNav('common.do'),
               dontLabel:    tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const menu = document.createElement('ul');
-                menu.setAttribute('role', 'menu');
-                menu.className =
-                  'nds-overflow-hidden nds-rounded-md nds-border-default nds-shadow-md';
-                menu.style.minWidth = '8rem';
-                menu.style.padding = 'var(--spacing-1)';
-                menu.style.background = 'hsl(var(--popover))';
-                menu.style.color = 'hsl(var(--popover-foreground))';
-                function mkItem(label: string, destructive = false) {
-                  const li = document.createElement('li');
-                  li.setAttribute('role', 'menuitem');
-                  li.className = [
-                    'nds-cluster nds-rounded-sm nds-px-2 nds-text-body',
-                    destructive ? 'nds-text-destructive' : '',
-                  ].join(' ');
-                  li.textContent = label;
-                  return li;
-                }
-                const sep = document.createElement('li');
-                sep.setAttribute('role', 'separator');
-                sep.className = 'nds-bg-muted';
-                sep.style.marginInline = '-0.25rem';
-                sep.style.marginBlock = '0.25rem';
-                sep.style.height = '1px';
-                menu.append(mkItem('Editar'), mkItem('Duplicar'), sep, mkItem(t('demonstration.labels.delete'), true));
-                return menu;
-              },
-              dontPreviewFactory: () => {
-                const menu = document.createElement('ul');
-                menu.setAttribute('role', 'menu');
-                menu.className =
-                  'nds-overflow-hidden nds-rounded-md nds-border-default nds-shadow-md';
-                menu.style.minWidth = '8rem';
-                menu.style.padding = 'var(--spacing-1)';
-                menu.style.background = 'hsl(var(--popover))';
-                menu.style.color = 'hsl(var(--popover-foreground))';
-                // Submenu aninhado — anti-padrão
-                function mkSubItem(labelText: string): HTMLLIElement {
-                  const li = document.createElement('li');
-                  li.setAttribute('role', 'menuitem');
-                  li.className = 'nds-cluster nds-px-2 nds-text-body';
-                  li.dataset.justify = 'between';
-                  li.style.paddingBlock = '0.375rem';
-                  const lSpan = document.createElement('span');
-                  lSpan.textContent = labelText;
-                  const arrow = document.createElement('span');
-                  arrow.className = 'nds-text-muted-foreground';
-                  arrow.textContent = '›';
-                  li.append(lSpan, arrow);
-                  return li;
-                }
-                menu.append(mkSubItem('Compartilhar'), mkSubItem('Enviar'), mkSubItem('Exportar'));
-                return menu;
-              },
+              doPreviewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
+                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
+                    { type: 'separator' },
+                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
+                  ],
+                }),
+              // Submenu dentro de submenu — o anti-padrão que `notes.tip3` nomeia.
+              dontPreviewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    {
+                      type: 'submenu',
+                      label: t('demonstration.labels.share'),
+                      value: 'share',
+                      items: [
+                        {
+                          type: 'submenu',
+                          label: t('demonstration.labels.shareLink'),
+                          value: 'share-link',
+                          items: [
+                            { type: 'item', label: t('demonstration.labels.shareEmail'), value: 'share-email' },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                }),
             },
             {
               doLabel:      tNav('common.do'),
               dontLabel:    tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair3.do')),
               dontCaption: toPlainText(t('doDont.pair3.dont')),
-              doPreviewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
-                li.style.minWidth = '160px';
-                const labelSpan = document.createElement('span');
-                labelSpan.className = 'nds-flex-1';
-                labelSpan.textContent = 'Editar';
-                const sc = document.createElement('span');
-                sc.className = 'nds-text-caption nds-tracking-wider nds-text-muted-foreground';
-                sc.style.marginLeft = 'auto';
-                sc.setAttribute('aria-hidden', 'true');
-                sc.textContent = 'Ctrl+E';
-                li.append(labelSpan, sc);
-                return li;
-              },
+              doPreviewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit', shortcut: t('demonstration.labels.editShortcut') },
+                  ],
+                }),
+              // A área sem nenhuma pista visual de que o gesto existe. Sem
+              // `opacity`: o esmaecimento levava o texto a 1.52:1 (axe:
+              // color-contrast), e o próprio texto já comunica a ausência.
               dontPreviewFactory: () => {
-                const area = makeTriggerArea(t('demonstration.labels.triggerLabel'));
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-stack nds-p-2';
-                wrap.dataset.spacing = 'sm';
-                wrap.style.alignItems = 'center';
-                const hint = document.createElement('p');
-                hint.className = 'nds-text-caption nds-text-muted-foreground';
-                hint.style.textAlign = 'center';
-                // sem opacity: 0.3 levava o texto a 1.52:1 (axe: color-contrast);
-                // o próprio texto já comunica a ausência de dica
+                wrap.className = 'nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default';
+                wrap.dataset.align = 'center';
+                wrap.dataset.justify = 'center';
+                const hint = document.createElement('span');
                 hint.textContent = '(sem dica visual)';
-                wrap.append(area, hint);
+                wrap.appendChild(hint);
                 return wrap;
               },
             },
@@ -416,13 +403,30 @@ export function createContextMenuDocs(): HTMLElement {
           description: t('import.basic'),
           code: `import { createContextMenu } from '@/components/ui/context-menu';`,
           secondaryDescription: t('import.withCheckbox'),
-          secondaryCode: `// Com radio/checkbox — monte o menu manualmente e adicione os atributos ARIA
-// role="menuitemcheckbox" + aria-checked para CheckboxItem
-// role="menuitemradio"  + aria-checked para RadioItem`,
+          secondaryCode: `// Marcação e escolha única são TIPOS de item — a fábrica emite os papéis,
+// o aria-checked e o indicador. Não há markup a montar à mão.
+createContextMenu({
+  trigger,
+  radioValue: 'grid',
+  items: [
+    { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
+    { type: 'separator' },
+    { type: 'radio', label: 'Grade', value: 'grid' },
+    { type: 'radio', label: 'Lista', value: 'list' },
+  ],
+});`,
         });
 
       // ── 6. Variantes ─────────────────────────────────────────────────────
       case 'variantes': {
+        // Os trechos abaixo ensinam a API DA FÁBRICA, e não markup montado à
+        // mão. Antes desta passada eles mostravam `<li>` construído item a
+        // item — com classes do Tailwind, que saiu do projeto e por isso
+        // renderizam sem estilo nenhum; com `aria-hidden` no atalho, que
+        // contradiz `accessibility.screenReader.shortcuts` e as asserções das
+        // cinco stacks; e com dimensões cravadas em `style` inline. Tudo isso
+        // já é tipo de item na fábrica, e quem copiava recebia o contrário do
+        // contrato.
         const codeDefault = `const trigger = document.createElement('div');
 trigger.textContent = 'Clique com o botão direito';
 
@@ -436,241 +440,66 @@ createContextMenu({
   ],
 });`;
 
-        const codeDestructive = `// Item destrutivo: classes aplicadas manualmente
-const li = document.createElement('li');
-li.setAttribute('role', 'menuitem');
-li.className = [
-  'nds-cluster nds-rounded-sm nds-px-2 nds-text-body',
-  'text-destructive focus:bg-destructive/10 focus:text-destructive',
-].join(' ');
-li.textContent = 'Excluir';`;
+        const codeDestructive = `// A variante é do ITEM, não classe de cor escrita à mão: é ela que liga
+// o data-variant, e é o data-variant que a folha compartilhada lê.
+{ type: 'item', label: 'Excluir', value: 'delete', variant: 'destructive' }`;
 
-        const codeCompCheckbox = `// Itens com role="menuitemcheckbox" + aria-checked
-const li = document.createElement('li');
-li.setAttribute('role', 'menuitemcheckbox');
-li.setAttribute('aria-checked', String(showGrid));
-li.className = 'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';
+        const codeLabel = `// Rótulo de grupo, não interativo. inset alinha com os itens que têm
+// indicador à esquerda.
+{ type: 'label', label: 'Ações', inset: true }`;
 
-// Indicador (check svg) visível quando aria-checked === "true"
-const indicator = document.createElement('span');
-indicator.className = 'nds-cluster';
-indicator.dataset.align = 'center';
-indicator.dataset.justify = 'center';
-indicator.style.width = '0.875rem';
-indicator.style.height = '0.875rem';
-if (showGrid) indicator.appendChild(createCheckSvg());
-
-const label = document.createElement('span');
-label.textContent = 'Mostrar grade';
-
-li.append(indicator, label);
-li.addEventListener('click', () => {
-  showGrid = !showGrid;
-  li.setAttribute('aria-checked', String(showGrid));
-  indicator.replaceChildren();
-  if (showGrid) indicator.appendChild(createCheckSvg());
+        const codeCompCheckbox = `// Marcação: a fábrica emite role="menuitemcheckbox", aria-checked e o
+// indicador. indeterminate anuncia "mixed" e desenha traço, não tique.
+createContextMenu({
+  trigger,
+  items: [
+    { type: 'label',    label: 'Visualização' },
+    { type: 'checkbox', label: 'Mostrar grade',  value: 'grade',  checked: false,
+      onCheckedChange: (checked) => console.log('grade', checked) },
+    { type: 'checkbox', label: 'Mostrar réguas', value: 'reguas', checked: true },
+  ],
 });`;
 
-        const codeCompRadio = `// Itens com role="menuitemradio" + aria-checked
-const radioGroup = document.createElement('ul');
-radioGroup.setAttribute('role', 'group');
-
-options.forEach(opt => {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitemradio');
-  li.setAttribute('aria-checked', String(opt.value === selected));
-  li.addEventListener('click', () => {
-    selected = opt.value;
-    rebuildItems();
-  });
-  // ... indicador + label
+        const codeCompRadio = `// Escolha única: o valor corrente vive no MENU (radioValue), não em cada
+// item. Marcar uma opção não fecha o menu.
+createContextMenu({
+  trigger,
+  radioValue: 'grid',
+  onRadioChange: (value) => console.log('layout', value),
+  items: [
+    { type: 'label', label: 'Layout' },
+    { type: 'radio', label: 'Grade',   value: 'grid'    },
+    { type: 'radio', label: 'Lista',   value: 'list'    },
+    { type: 'radio', label: 'Colunas', value: 'columns' },
+  ],
 });`;
 
-        const codeCompSubmenu = `// SubTrigger com aria-haspopup="menu" + aria-expanded
-const subTrigger = document.createElement('li');
-subTrigger.setAttribute('role', 'menuitem');
-subTrigger.setAttribute('aria-haspopup', 'menu');
-subTrigger.setAttribute('aria-expanded', 'false');
+        const codeCompSubmenu = `// Submenu: um item com items. A fábrica cuida de aria-haspopup,
+// aria-expanded, do posicionamento à direita e das setas.
+createContextMenu({
+  trigger,
+  items: [
+    { type: 'item',    label: 'Editar', value: 'edit' },
+    { type: 'submenu', label: 'Compartilhar', value: 'share', items: [
+      { type: 'item', label: 'Por e-mail', value: 'share-email' },
+      { type: 'item', label: 'Por link',   value: 'share-link'  },
+    ]},
+  ],
+});`;
 
-// SubContent posicionado à direita ao abrir
-subTrigger.addEventListener('mouseenter', openSub);
-subTrigger.addEventListener('focus',      openSub);
-
-function openSub() {
-  const rect = subTrigger.getBoundingClientRect();
-  subContent.style.top  = rect.top + 'px';
-  subContent.style.left = (rect.right + 4) + 'px';
-  subContent.style.display = 'block';
-  subTrigger.setAttribute('aria-expanded', 'true');
-}`;
-
-        const codeCompShortcuts = `// Item + atalho visual (aria-hidden) — atalho real exige listener global
-const li = document.createElement('li');
-li.setAttribute('role', 'menuitem');
-li.className = 'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';
-
-const label = document.createElement('span');
-label.className = 'nds-flex-1';
-label.textContent = 'Editar';
-
-const sc = document.createElement('span');
-sc.className = 'nds-text-caption nds-tracking-wider nds-text-muted-foreground';
-sc.style.marginLeft = 'auto';
-sc.setAttribute('aria-hidden', 'true');
-sc.textContent = 'Ctrl+E';
-
-li.append(label, sc);`;
-
-        // ── Helpers de DOM para os previews ─────────────────────────────────
-        function makeMenuPanel(): HTMLUListElement {
-          const ul = document.createElement('ul');
-          ul.setAttribute('role', 'menu');
-          ul.className =
-            'nds-overflow-hidden nds-rounded-md nds-border-default nds-shadow-md';
-          ul.style.minWidth = '10rem';
-          ul.style.padding = 'var(--spacing-1)';
-          ul.style.background = 'hsl(var(--popover))';
-          ul.style.color = 'hsl(var(--popover-foreground))';
-          return ul;
-        }
-        function makeMenuItem(text: string, opts?: { destructive?: boolean }): HTMLLIElement {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'menuitem');
-          li.className = [
-            'nds-cluster nds-rounded-sm nds-px-2 nds-text-body',
-            opts?.destructive ? 'nds-text-destructive' : '',
-          ].join(' ');
-          li.textContent = text;
-          return li;
-        }
-        function makeSeparator(): HTMLLIElement {
-          const sep = document.createElement('li');
-          sep.setAttribute('role', 'separator');
-          sep.className = 'nds-bg-muted';
-          sep.style.marginInline = '-0.25rem';
-          sep.style.marginBlock = '0.25rem';
-          sep.style.height = '1px';
-          return sep;
-        }
-        function makeLabel(text: string): HTMLLIElement {
-          const lbl = document.createElement('li');
-          lbl.setAttribute('role', 'presentation');
-          lbl.className = 'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground';
-          lbl.textContent = text;
-          return lbl;
-        }
-        function createCheckSvg(): SVGSVGElement {
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('width', '14');
-          svg.setAttribute('height', '14');
-          svg.setAttribute('viewBox', '0 0 24 24');
-          svg.setAttribute('fill', 'none');
-          svg.setAttribute('stroke', 'currentColor');
-          svg.setAttribute('stroke-width', '2');
-          svg.setAttribute('stroke-linecap', 'round');
-          svg.setAttribute('stroke-linejoin', 'round');
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          path.setAttribute('d', 'M20 6 9 17l-5-5');
-          svg.appendChild(path);
-          return svg;
-        }
-        function createDotSvg(): SVGSVGElement {
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('width', '8');
-          svg.setAttribute('height', '8');
-          svg.setAttribute('viewBox', '0 0 24 24');
-          svg.setAttribute('fill', 'currentColor');
-          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          c.setAttribute('cx', '12'); c.setAttribute('cy', '12'); c.setAttribute('r', '8');
-          svg.appendChild(c);
-          return svg;
-        }
-        function createChevronSvg(): SVGSVGElement {
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('width', '14');
-          svg.setAttribute('height', '14');
-          svg.setAttribute('viewBox', '0 0 24 24');
-          svg.setAttribute('fill', 'none');
-          svg.setAttribute('stroke', 'currentColor');
-          svg.setAttribute('stroke-width', '2');
-          svg.setAttribute('stroke-linecap', 'round');
-          svg.setAttribute('stroke-linejoin', 'round');
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          path.setAttribute('d', 'm9 18 6-6-6-6');
-          svg.appendChild(path);
-          return svg;
-        }
-        function makeCheckboxItem(label: string, initial: boolean): HTMLLIElement {
-          let checked = initial;
-          const li = document.createElement('li');
-          li.setAttribute('role', 'menuitemcheckbox');
-          li.setAttribute('aria-checked', String(checked));
-          li.className =
-            'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';
-          const ind = document.createElement('span');
-          ind.className = 'nds-cluster';
-          ind.dataset.align = 'center';
-          ind.dataset.justify = 'center';
-          ind.style.width = '0.875rem';
-          ind.style.height = '0.875rem';
-          if (checked) ind.appendChild(createCheckSvg());
-          const lbl = document.createElement('span');
-          lbl.textContent = label;
-          li.append(ind, lbl);
-          li.addEventListener('click', (e) => {
-            e.stopPropagation();
-            checked = !checked;
-            li.setAttribute('aria-checked', String(checked));
-            ind.replaceChildren();
-            if (checked) ind.appendChild(createCheckSvg());
-          });
-          return li;
-        }
-        function makeRadioItem(label: string, value: string, getSelected: () => string, setSelected: (v: string) => void): { el: HTMLLIElement; sync: () => void } {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'menuitemradio');
-          li.className =
-            'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';
-          const ind = document.createElement('span');
-          ind.className = 'nds-cluster';
-          ind.dataset.align = 'center';
-          ind.dataset.justify = 'center';
-          ind.style.width = '0.875rem';
-          ind.style.height = '0.875rem';
-          const lbl = document.createElement('span');
-          lbl.textContent = label;
-          li.append(ind, lbl);
-          function sync() {
-            const sel = getSelected();
-            li.setAttribute('aria-checked', String(value === sel));
-            ind.replaceChildren();
-            if (value === sel) ind.appendChild(createDotSvg());
-          }
-          sync();
-          li.addEventListener('click', (e) => {
-            e.stopPropagation();
-            setSelected(value);
-          });
-          return { el: li, sync };
-        }
-        function makeItemWithShortcut(text: string, shortcut: string, destructive = false): HTMLLIElement {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'menuitem');
-          li.className = [
-            'nds-cluster nds-rounded-sm nds-px-2 nds-text-body',
-            destructive ? 'nds-text-destructive' : '',
-          ].join(' ');
-          const lbl = document.createElement('span');
-          lbl.className = 'nds-flex-1';
-          lbl.textContent = text;
-          const sc = document.createElement('span');
-          sc.className = 'nds-text-caption nds-tracking-wider nds-text-muted-foreground';
-sc.style.marginLeft = 'auto';
-          sc.setAttribute('aria-hidden', 'true');
-          sc.textContent = shortcut;
-          li.append(lbl, sc);
-          return li;
-        }
+        const codeCompShortcuts = `// O atalho é campo do item. NÃO leva aria-hidden: "Excluir, Delete" é o
+// nome útil, e escondê-lo deixaria a pessoa sem saber que o atalho existe.
+// A tecla de verdade continua sendo um listener de quem monta a tela.
+createContextMenu({
+  trigger,
+  items: [
+    { type: 'item', label: 'Editar',   value: 'edit',      shortcut: 'Ctrl+E'  },
+    { type: 'item', label: 'Duplicar', value: 'duplicate', shortcut: 'Ctrl+D'  },
+    { type: 'separator' },
+    { type: 'item', label: 'Excluir',  value: 'delete',    shortcut: 'Delete',
+      variant: 'destructive' },
+  ],
+});`;
 
         return createDocsCompositions({
           id: 'variantes',
@@ -688,31 +517,27 @@ sc.style.marginLeft = 'auto';
               name: 'destructive',
               description: t('variants.items.destructive'),
               code: codeDestructive,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-text-destructive nds-border-destructive-soft';
-                li.textContent = t('demonstration.labels.delete');
-                return li;
-              },
+              previewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
+                    { type: 'separator' },
+                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
+                  ],
+                }),
             },
             {
               name: 'label',
               description: t('variants.items.label'),
-              code: `const lbl = document.createElement('li');
-lbl.setAttribute('role', 'presentation');
-lbl.className = 'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground';
-lbl.textContent = 'Ações';`,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'presentation');
-                li.className =
-                  'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground nds-border-default nds-rounded-md';
-                li.style.minWidth = '160px';
-                li.textContent = 'Ações';
-                return li;
-              },
+              code: codeLabel,
+              previewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'label', label: 'Ações', inset: true },
+                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit', inset: true },
+                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate', inset: true },
+                  ],
+                }),
             },
             {
               name: t('variants.items.withCheckbox.name'),
@@ -720,15 +545,14 @@ lbl.textContent = 'Ações';`,
               description: t('variants.items.withCheckbox.description'),
               useWhen: t('variants.items.withCheckbox.use'),
               code: codeCompCheckbox,
-              previewFactory: () => {
-                const menu = makeMenuPanel();
-                menu.append(
-                  makeLabel('Visualização'),
-                  makeCheckboxItem('Mostrar grade', true),
-                  makeCheckboxItem('Mostrar réguas', false),
-                );
-                return menu;
-              },
+              previewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'label', label: 'Visualização' },
+                    { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
+                    { type: 'checkbox', label: 'Mostrar réguas', value: 'reguas', checked: false },
+                  ],
+                }),
             },
             {
               name: t('variants.items.withRadio.name'),
@@ -736,28 +560,16 @@ lbl.textContent = 'Ações';`,
               description: t('variants.items.withRadio.description'),
               useWhen: t('variants.items.withRadio.use'),
               code: codeCompRadio,
-              previewFactory: () => {
-                const menu = makeMenuPanel();
-                let selected = '100';
-                const items: Array<{ sync: () => void }> = [];
-                const opts = [
-                  { value: '75',  label: '75%'  },
-                  { value: '100', label: '100%' },
-                  { value: '150', label: '150%' },
-                ];
-                menu.appendChild(makeLabel('Zoom'));
-                opts.forEach(o => {
-                  const ri = makeRadioItem(
-                    o.label,
-                    o.value,
-                    () => selected,
-                    (v) => { selected = v; items.forEach(i => i.sync()); },
-                  );
-                  items.push({ sync: ri.sync });
-                  menu.appendChild(ri.el);
-                });
-                return menu;
-              },
+              previewFactory: () =>
+                buildMenuPreview({
+                  radioValue: '100',
+                  items: [
+                    { type: 'label', label: 'Zoom' },
+                    { type: 'radio', label: '75%',  value: '75'  },
+                    { type: 'radio', label: '100%', value: '100' },
+                    { type: 'radio', label: '150%', value: '150' },
+                  ],
+                }),
             },
             {
               name: t('variants.items.withSubmenu.name'),
@@ -765,40 +577,22 @@ lbl.textContent = 'Ações';`,
               description: t('variants.items.withSubmenu.description'),
               useWhen: t('variants.items.withSubmenu.use'),
               code: codeCompSubmenu,
-              previewFactory: () => {
-                const menu = makeMenuPanel();
-                menu.append(
-                  makeMenuItem(t('demonstration.labels.edit')),
-                  makeMenuItem(t('demonstration.labels.duplicate')),
-                );
-                const subTrigger = document.createElement('li');
-                subTrigger.setAttribute('role', 'menuitem');
-                subTrigger.setAttribute('aria-haspopup', 'menu');
-                subTrigger.setAttribute('aria-expanded', 'false');
-                subTrigger.className =
-                  'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';
-                const subLabel = document.createElement('span');
-                subLabel.className = 'nds-flex-1';
-                subLabel.textContent = t('demonstration.labels.share');
-                const chev = document.createElement('span');
-                chev.appendChild(createChevronSvg());
-                subTrigger.append(subLabel, chev);
-                menu.appendChild(subTrigger);
-
-                // SubContent inline (visualmente ao lado, sem flutuação real)
-                const subContent = makeMenuPanel();
-                subContent.append(
-                  makeMenuItem(t('demonstration.labels.shareEmail')),
-                  makeMenuItem(t('demonstration.labels.shareLink')),
-                );
-
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster';
-                wrap.dataset.spacing = 'sm';
-                wrap.dataset.align = 'start';
-                wrap.append(menu, subContent);
-                return wrap;
-              },
+              previewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
+                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
+                    {
+                      type: 'submenu',
+                      label: t('demonstration.labels.share'),
+                      value: 'share',
+                      items: [
+                        { type: 'item', label: t('demonstration.labels.shareEmail'), value: 'share-email' },
+                        { type: 'item', label: t('demonstration.labels.shareLink'), value: 'share-link' },
+                      ],
+                    },
+                  ],
+                }),
             },
             {
               name: t('variants.items.withShortcuts.name'),
@@ -806,16 +600,15 @@ lbl.textContent = 'Ações';`,
               description: t('variants.items.withShortcuts.description'),
               useWhen: t('variants.items.withShortcuts.use'),
               code: codeCompShortcuts,
-              previewFactory: () => {
-                const menu = makeMenuPanel();
-                menu.append(
-                  makeItemWithShortcut(t('demonstration.labels.edit'), 'Ctrl+E'),
-                  makeItemWithShortcut(t('demonstration.labels.duplicate'), 'Ctrl+D'),
-                  makeSeparator(),
-                  makeItemWithShortcut(t('demonstration.labels.delete'), 'Delete', true),
-                );
-                return menu;
-              },
+              previewFactory: () =>
+                buildMenuPreview({
+                  items: [
+                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit', shortcut: 'Ctrl+E' },
+                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate', shortcut: 'Ctrl+D' },
+                    { type: 'separator' },
+                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', shortcut: 'Delete', variant: 'destructive' },
+                  ],
+                }),
             },
           ],
         });
@@ -842,19 +635,35 @@ lbl.textContent = 'Ações';`,
 
       // ── 8. Propriedades ──────────────────────────────────────────────────
       case 'propriedades': {
+        // A tipagem abaixo é a da fábrica, conferida linha a linha contra
+        // `components/ui/context-menu.ts`. A versão anterior parava em
+        // `'item' | 'separator' | 'label'` e omitia marcação, escolha única,
+        // submenu, atalho, recuo e variante — a página prometia MENOS do que o
+        // componente entrega, e por isso os trechos ao lado ensinavam a montar
+        // à mão o que já existia.
         const interfaceCode = `// createContextMenu(options)
 export type ContextMenuItemDef = {
-  type?:     'item' | 'separator' | 'label';
-  value?:    string;
-  label?:    string;
-  disabled?: boolean;
-  onClick?:  () => void;
+  type?:           'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
+  value?:          string;
+  label?:          string;
+  disabled?:       boolean;
+  inset?:          boolean;
+  variant?:        'default' | 'destructive';
+  shortcut?:       string;
+  checked?:        boolean;
+  indeterminate?:  boolean;
+  items?:          ContextMenuItemDef[];
+  onClick?:              () => void;
+  onCheckedChange?:      (checked: boolean) => void;
+  onIndeterminateChange?: (indeterminate: boolean) => void;
 };
 
 export type ContextMenuOptions = {
   trigger:        HTMLElement;
   items:          ContextMenuItemDef[];
   onOpenChange?:  (open: boolean) => void;
+  radioValue?:    string;
+  onRadioChange?: (value: string) => void;
   class?:         string;
 };`;
 
@@ -873,21 +682,30 @@ export type ContextMenuOptions = {
               title: t('props.rootTitle'),
               cols: propsCols,
               items: [
-                { name: 'trigger',      type: 'HTMLElement',                    defaultValue: '—',    required: 'Sim', description: 'Elemento HTML que captura o contextmenu (right-click).' },
-                { name: 'items',        type: 'ContextMenuItemDef[]',           defaultValue: '—',    required: 'Sim', description: 'Lista de itens, separadores e labels do menu.' },
-                { name: 'onOpenChange', type: '(open: boolean) => void',        defaultValue: '—',    required: 'Não', description: t('props.items.onOpenChange') },
-                { name: 'class',        type: 'string',                         defaultValue: '—',    required: 'Não', description: 'Classes extras aplicadas ao painel do menu.' },
+                { name: 'trigger',       type: 'HTMLElement',             defaultValue: '—', required: 'Sim', description: 'Elemento que captura o gesto — clique direito, tecla de menu ou Shift+F10 sobre ele.' },
+                { name: 'items',         type: 'ContextMenuItemDef[]',    defaultValue: '—', required: 'Sim', description: 'Lista de itens, separadores, rótulos e submenus do menu.' },
+                { name: 'onOpenChange',  type: '(open: boolean) => void', defaultValue: '—', required: 'Não', description: t('props.items.onOpenChange') },
+                { name: 'radioValue',    type: 'string',                  defaultValue: '—', required: 'Não', description: 'Valor corrente do grupo de escolha única — ele vive no menu, não em cada item.' },
+                { name: 'onRadioChange', type: '(value: string) => void', defaultValue: '—', required: 'Não', description: 'Disparado quando outra opção de escolha única passa a valer.' },
+                { name: 'class',         type: 'string',                  defaultValue: '—', required: 'Não', description: 'Classes extras aplicadas ao painel do menu.' },
               ],
             },
             {
               title: t('props.itemTitle'),
               cols: propsCols,
               items: [
-                { name: 'type',     type: '"item" | "separator" | "label"', defaultValue: '"item"', required: 'Não', description: 'Tipo do item no menu.' },
-                { name: 'label',    type: 'string',                         defaultValue: '—',      required: 'Não', description: 'Texto exibido no item ou label.' },
-                { name: 'value',    type: 'string',                         defaultValue: '—',      required: 'Não', description: t('props.items.value') },
-                { name: 'disabled', type: 'boolean',                        defaultValue: 'false',  required: 'Não', description: t('props.items.disabled') },
-                { name: 'onClick',  type: '() => void',                     defaultValue: '—',      required: 'Não', description: t('props.items.onSelect') },
+                { name: 'type',          type: '"item" | "separator" | "label" | "checkbox" | "radio" | "submenu"', defaultValue: '"item"', required: 'Não', description: 'Tipo do item. "submenu" exige items; "radio" exige value.' },
+                { name: 'label',         type: 'string',                       defaultValue: '—',     required: 'Não', description: 'Texto exibido no item ou no rótulo.' },
+                { name: 'value',         type: 'string',                       defaultValue: '—',     required: 'Não', description: t('props.items.value') },
+                { name: 'disabled',      type: 'boolean',                      defaultValue: 'false', required: 'Não', description: t('props.items.disabled') },
+                { name: 'inset',         type: 'boolean',                      defaultValue: 'false', required: 'Não', description: 'Recuo à esquerda, para alinhar com itens que têm indicador.' },
+                { name: 'variant',       type: '"default" | "destructive"',    defaultValue: '"default"', required: 'Não', description: 'Só em item de ação: "destructive" pinta o item com a cor de alerta.' },
+                { name: 'shortcut',      type: 'string',                       defaultValue: '—',     required: 'Não', description: 'Atalho exibido à direita do rótulo, e lido junto dele — não é escondido do leitor de tela.' },
+                { name: 'checked',       type: 'boolean',                      defaultValue: 'false', required: 'Não', description: 'Estado inicial de um item de marcação.' },
+                { name: 'indeterminate', type: 'boolean',                      defaultValue: 'false', required: 'Não', description: 'Estado misto de um item de marcação: anunciado como "mixed" e desenhado com traço. O primeiro clique o resolve para marcado.' },
+                { name: 'items',         type: 'ContextMenuItemDef[]',         defaultValue: '—',     required: 'Não', description: 'Itens do submenu, quando o tipo é "submenu".' },
+                { name: 'onClick',       type: '() => void',                   defaultValue: '—',     required: 'Não', description: t('props.items.onSelect') },
+                { name: 'onCheckedChange', type: '(checked: boolean) => void', defaultValue: '—',     required: 'Não', description: 'Disparado a cada alternância de um item de marcação.' },
               ],
             },
           ],
@@ -935,8 +753,9 @@ export type ContextMenuOptions = {
             { token: '--accent',             value: '.nds-dropdown-menu-item',       description: t('tokens.table.accentBg')         },
             { token: '--accent-foreground',  value: '.nds-dropdown-menu-item',       description: t('tokens.table.accentFg')         },
             { token: '--destructive',        value: '[data-variant="destructive"]',  description: t('tokens.table.destructive')      },
-            { token: '--destructive',        value: '[data-variant="destructive"]:focus', description: t('tokens.table.destructiveFocus') },
+            { token: '--destructive',        value: '.nds-dropdown-menu-item[data-variant="destructive"]:focus', description: t('tokens.table.destructiveFocus') },
             { token: '--muted-foreground',   value: '.nds-dropdown-menu-shortcut',   description: t('tokens.table.mutedFg')          },
+            { token: '--muted-foreground',   value: '.nds-dropdown-menu-label',      description: t('tokens.table.mutedFgLabel')     },
             { token: '--muted',              value: '.nds-dropdown-menu-separator',  description: t('tokens.table.border')           },
             { token: '--border',             value: '.nds-dropdown-menu-content',    description: t('tokens.table.popupBorder')      },
             { token: '--elevation-md',       value: '.nds-dropdown-menu-content',    description: t('tokens.table.shadow')           },
@@ -969,15 +788,17 @@ export type ContextMenuOptions = {
           ],
           keyboardTitle: tNav('common.keyboard'),
           keyboardItems: [
-            { key: 'Right-click / Menu', description: t('accessibility.keyboard.rightClick') },
-            { key: 'Arrow Down',                  description: t('accessibility.keyboard.arrowDown')  },
-            { key: 'Arrow Up',                  description: t('accessibility.keyboard.arrowUp')    },
-            { key: 'Arrow Right',                  description: t('accessibility.keyboard.arrowRight') },
-            { key: 'Arrow Left',                  description: t('accessibility.keyboard.arrowLeft')  },
-            { key: 'Enter',              description: t('accessibility.keyboard.enter')      },
-            { key: 'Space',              description: t('accessibility.keyboard.space')      },
-            { key: 'Esc',                description: t('accessibility.keyboard.escape')     },
-            { key: 'Tab',                description: t('accessibility.keyboard.tab')        },
+            { key: 'Right-click / Menu / Shift+F10', description: t('accessibility.keyboard.rightClick') },
+            { key: 'Arrow Down',  description: t('accessibility.keyboard.arrowDown')  },
+            { key: 'Arrow Up',    description: t('accessibility.keyboard.arrowUp')    },
+            { key: 'Arrow Right', description: t('accessibility.keyboard.arrowRight') },
+            { key: 'Arrow Left',  description: t('accessibility.keyboard.arrowLeft')  },
+            { key: 'Home / End',  description: t('accessibility.keyboard.homeEnd')    },
+            { key: 'A–Z',         description: t('accessibility.keyboard.typeahead')  },
+            { key: 'Enter',       description: t('accessibility.keyboard.enter')      },
+            { key: 'Space',       description: t('accessibility.keyboard.space')      },
+            { key: 'Esc',         description: t('accessibility.keyboard.escape')     },
+            { key: 'Tab',         description: t('accessibility.keyboard.tab')        },
           ],
         });
 

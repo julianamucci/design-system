@@ -120,7 +120,7 @@ export const WithCheckbox: Story = {
 
 // ─── Com escolha única ────────────────────────────────────────────────────────
 
-export const WithRadio: Story = {
+export const WithRadioGroup: Story = {
   parameters: {
     covers: ['functional.item8', 'accessibility.item5'],
     // A escolha única mora em duas opções ao mesmo tempo — os itens `radio` e o

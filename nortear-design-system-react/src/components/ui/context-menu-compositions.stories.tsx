@@ -217,8 +217,7 @@ function DemoRadio() {
   );
 }
 
-export const WithRadio: Story = {
-  name: "With radio group",
+export const WithRadioGroup: Story = {
   parameters: {
     covers: ["functional.item8", "accessibility.item5"],
     // Quem guarda o valor é o grupo de escolha única, peça que não existe no

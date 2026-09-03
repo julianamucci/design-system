@@ -96,7 +96,6 @@ export const ItemDisabled: Story = {
 // ── Item recuado ──────────────────────────────────────────────────────────────
 
 export const ItemInset: Story = {
-  name: 'Item with inset',
   parameters: {
     docs: { source: { transform: contextMenuItemRecuadoSource } },
   },
@@ -127,7 +126,6 @@ export const ItemInset: Story = {
 // ── Item destrutivo ───────────────────────────────────────────────────────────
 
 export const ItemDestructive: Story = {
-  name: 'Destructive item',
   parameters: {
     covers: ['functional.item10', 'visual.item2'],
     docs: { source: { transform: contextMenuItemDestructiveSource } },

@@ -6,7 +6,7 @@ import { gestoOpen } from './context-menu.fixtures';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
-import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
+import { AREA_CLICK_DIREITO, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
 
 type ContextMenuArgs = {
   triggerLabel: string;
@@ -117,6 +117,14 @@ export const Playground: Story = {
     await step('O menu do navegador não aparece por cima do nosso', async () => {
       // `defaultPrevented` é a única prova possível aqui: o menu nativo não
       // existe no DOM. Sem esta chamada barrada, os dois menus se sobrepõem.
+      //
+      // O `closeMenu()` NÃO é higiene: sem ele o passo mede a coisa errada no
+      // replay. A lib registra um segundo supressor no `document` que barra o
+      // menu nativo SEMPRE QUE o popup está aberto — então, com o menu de pé, o
+      // `defaultPrevented` sai verdadeiro mesmo que o ouvinte do gatilho tenha
+      // parado de funcionar. Partindo do menu fechado, quem preveniu só pode
+      // ser o gatilho.
+      await closeMenu();
       const evento = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
       area().dispatchEvent(evento);
       await waitFor(() => expect(evento.defaultPrevented).toBe(true));
@@ -152,11 +160,20 @@ export const Playground: Story = {
       await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
     });
 
-    await step('As setas percorrem os itens', async () => {
+    await step('As setas percorrem os itens na ordem em que aparecem', async () => {
+      // O foco parte de um item CONHECIDO — como nas outras quatro stacks.
+      // Antes o passo apertava a seta a partir de onde a abertura tivesse
+      // deixado o foco e conferia o TEXTO do elemento ativo: na primeira rodada
+      // acertava por sorte, e no replay do painel Interactions (que reexecuta no
+      // mesmo DOM, sem remontar) partia de outro lugar. Cada passo estabelece a
+      // própria precondição.
+      const menu = await waitForPortal('menu');
+      const items = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await waitFor(() => expect(document.activeElement?.textContent?.trim()).toContain('Editar'));
-      await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement?.textContent?.trim()).toContain('Duplicar');
+      await waitFor(() => expect(document.activeElement).toBe(items[1]));
+      await userEvent.keyboard('{ArrowUp}');
+      await waitFor(() => expect(document.activeElement).toBe(items[0]));
     });
 
     await step('Escape fecha e devolve o foco à área', async () => {
@@ -166,8 +183,13 @@ export const Playground: Story = {
     });
 
     await step('Clique fora fecha', async () => {
+      // `clickOutside` despacha `pointerdown`, `mousedown` e `click` no `<body>`
+      // em vez de `userEvent.click(document.body)`: a camada dispensável escuta
+      // um evento diferente em cada lib, e o `userEvent` se RECUSA a clicar num
+      // elemento com `pointer-events: none` — a play morreria com erro em vez de
+      // falha. É o helper que as outras quatro stacks já usam aqui.
       await gestoOpen(area());
-      await userEvent.click(document.body);
+      await clickOutside();
       await waitForPortalVanish('menu');
     });
 

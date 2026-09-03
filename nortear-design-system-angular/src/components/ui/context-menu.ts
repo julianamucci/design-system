@@ -206,20 +206,29 @@ export class NdsContextMenuSub {
  * folha compartilhada. O popup não é ancorado neste elemento: ele nasce onde o
  * ponteiro estava.
  *
- * ─── `tabindex="0"`, e por quê ────────────────────────────────────────────────
+ * ─── Acessibilidade — versão curta ────────────────────────────────────────────
  *
- * Nenhuma das outras quatro stacks torna esta área focável, e a consequência é
- * dupla:
+ * Bloco canônico das cinco stacks: cabeçalho de `context-menu.ts` no Vanilla.
+ * Do popup para dentro vale o contrato do DropdownMenu inteiro, porque aqui as
+ * peças SÃO as de `@radix-ng/primitives/menu`. O que diverge é a abertura:
  *
- *   1. A tecla Menu (e Shift+F10) dispara `contextmenu` no elemento FOCADO. Sem
- *      foco possível, quem não usa mouse nunca abre o menu — e o conteúdo
- *      compartilhado documenta esse caminho em `accessibility.keyboard`.
- *   2. Ao fechar, o foco não tem para onde voltar e cai no `<body>`, contra o
- *      que `testes.functional.item2` promete.
- *
- * Uma parada de tabulação a mais é barata; um componente inalcançável por
- * teclado não é. A lacuna nas outras stacks está registrada para uma passada
- * de cross-stack.
+ *   1. O gatilho NÃO se anuncia. `RdxContextMenuTrigger` só liga
+ *      `data-popup-open`, `data-pressed` e `data-disabled` — nada de
+ *      `aria-haspopup` nem `aria-expanded`, ao contrário do gatilho do
+ *      DropdownMenu, que é um botão e carrega os dois. É escolha das quatro
+ *      libs e está certa: `aria-haspopup` não vale em `generic`, o papel
+ *      implícito desta `<div>`. O preço está pago por escrito no conteúdo
+ *      compartilhado (`accessibility.warning`, `notes.tip5`).
+ *   2. `tabindex="0"` é REQUISITO, não enfeite: a tecla Menu e Shift+F10
+ *      disparam `contextmenu` no elemento FOCADO — sem parada de tabulação o
+ *      menu não existe para quem não usa mouse. `RdxContextMenuTrigger` ainda
+ *      separa os dois caminhos: sem `pointerdown` recente ele abre com o
+ *      primeiro item destacado, e não só o popup. As cinco stacks põem o
+ *      `tabindex`; o texto que dizia haver lacuna nas outras quatro estava
+ *      vencido e saiu nesta passada.
+ *   3. É também para este `tabindex` que o foco volta ao fechar. Sem ele o
+ *      `focus()` é no-op e o foco cai no `<body>`, contra o que
+ *      `testes.functional.item2` promete.
  */
 @Directive({
   selector: 'div[ndsContextMenuTrigger]',

@@ -11,14 +11,27 @@ function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props) {
 /**
  * A área que responde ao gesto.
  *
- * `tabIndex={0}` não é enfeite (mesma nota do stack Angular, que já a carregava):
+ * ─── Acessibilidade — versão curta ────────────────────────────────────────────
  *
- *   1. a tecla Menu e Shift+F10 disparam `contextmenu` no elemento FOCADO — sem
- *      foco possível, quem não usa mouse nunca abre o menu, e o conteúdo
- *      compartilhado documenta esse caminho em `accessibility.keyboard`;
- *   2. ao fechar, a lib devolve o foco ao gatilho. Numa `<div>` sem `tabindex`
- *      esse `focus()` é no-op e o foco cai no `<body>` — medido em sonda antes
- *      desta correção, contra o que `testes.functional.item2` promete.
+ * Bloco canônico das cinco stacks: cabeçalho de `context-menu.ts` no Vanilla.
+ * Do popup para dentro vale o contrato do DropdownMenu inteiro, porque aqui as
+ * peças SÃO as de `@base-ui/react/menu`. O que diverge é a abertura:
+ *
+ *   1. O gatilho NÃO se anuncia. `context-menu/trigger/ContextMenuTrigger`
+ *      renderiza uma `<div>` com os ouvintes do gesto e o mapeamento
+ *      `pressableTriggerOpenStateMapping`, que só escreve `data-*` — nada de
+ *      `aria-haspopup` nem `aria-expanded`, ao contrário do gatilho do
+ *      DropdownMenu, que é um botão e carrega os dois. É escolha das quatro
+ *      libs e está certa: `aria-haspopup` não vale em `generic`, o papel
+ *      implícito desta `<div>`. O preço está pago por escrito no conteúdo
+ *      compartilhado (`accessibility.warning`, `notes.tip5`).
+ *   2. `tabIndex={0}` é REQUISITO, não enfeite: a tecla Menu e Shift+F10
+ *      disparam `contextmenu` no elemento FOCADO — sem parada de tabulação o
+ *      menu não existe para quem não usa mouse, e é esse caminho que
+ *      `accessibility.keyboard` documenta.
+ *   3. É também para ele que a lib devolve o foco ao fechar. Numa `<div>` sem
+ *      `tabindex` esse `focus()` é no-op e o foco cai no `<body>` — medido em
+ *      sonda, contra o que `testes.functional.item2` promete.
  */
 function ContextMenuTrigger({
   className,

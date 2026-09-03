@@ -124,7 +124,6 @@ export const WithShortcut: Story = {
 // ── Com marcação ──────────────────────────────────────────────────────────────
 
 export const WithCheckbox: Story = {
-  name: 'With CheckboxItem',
   parameters: {
     covers: ['functional.item7', 'accessibility.item4'],
     // A marcação exige estado ligado por `v-model:checked` — um `ref` no script,
@@ -353,8 +352,7 @@ export const WithSubmenu: Story = {
 
 // ── Composição completa ───────────────────────────────────────────────────────
 
-export const Complete: Story = {
-  name: 'Complete — shortcut, checkbox, radio and submenu',
+export const CompleteComposition: Story = {
   parameters: {
     covers: ['visual.item4'],
     // O assunto é a CONVIVÊNCIA das três famílias de item no mesmo menu — é o

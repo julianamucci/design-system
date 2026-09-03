@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/context-menu/translations.json';
+import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -58,6 +59,13 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+// A moldura tracejada da área vem da constante COMPARTILHADA. Esta página
+// escrevia a cadeia à mão em treze lugares, e com `nds-w-full nds-max-w-xs` no
+// lugar de `nds-w-xs` — a divergência que a constante existe justamente para
+// impedir (o docblock dela registra a rodada em que as cinco stacks desenhavam
+// molduras diferentes).
+const areaClasse = AREA_CLICK_DIREITO;
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -387,8 +395,9 @@ const tokenRows = computed(() => [
   { token: '--accent',              value: '.nds-dropdown-menu-item',       description: tContent('tokens.table.accentBg')         },
   { token: '--accent-foreground',   value: '.nds-dropdown-menu-item',       description: tContent('tokens.table.accentFg')         },
   { token: '--destructive',         value: '[data-variant="destructive"]',  description: tContent('tokens.table.destructive')      },
-  { token: '--destructive',         value: '[data-variant="destructive"]:focus', description: tContent('tokens.table.destructiveFocus') },
+  { token: '--destructive',         value: '.nds-dropdown-menu-item[data-variant="destructive"]:focus', description: tContent('tokens.table.destructiveFocus') },
   { token: '--muted-foreground',    value: '.nds-dropdown-menu-shortcut',   description: tContent('tokens.table.mutedFg')          },
+  { token: '--muted-foreground',    value: '.nds-dropdown-menu-label',      description: tContent('tokens.table.mutedFgLabel')     },
   { token: '--muted',               value: '.nds-dropdown-menu-separator',  description: tContent('tokens.table.border')           },
   { token: '--border',              value: '.nds-dropdown-menu-content',    description: tContent('tokens.table.popupBorder')      },
   { token: '--elevation-md',        value: '.nds-dropdown-menu-content',    description: tContent('tokens.table.shadow')           },
@@ -410,15 +419,17 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Right Click',  description: tContent('accessibility.keyboard.rightClick') },
-  { key: 'Arrow Down',            description: tContent('accessibility.keyboard.arrowDown')  },
-  { key: 'Arrow Up',            description: tContent('accessibility.keyboard.arrowUp')    },
-  { key: 'Arrow Right',            description: tContent('accessibility.keyboard.arrowRight') },
-  { key: 'Arrow Left',            description: tContent('accessibility.keyboard.arrowLeft')  },
-  { key: 'Enter',        description: tContent('accessibility.keyboard.enter')      },
-  { key: 'Space',        description: tContent('accessibility.keyboard.space')      },
-  { key: 'Esc',          description: tContent('accessibility.keyboard.escape')     },
-  { key: 'Tab',          description: tContent('accessibility.keyboard.tab')        },
+  { key: 'Right-click / Menu / Shift+F10', description: tContent('accessibility.keyboard.rightClick') },
+  { key: 'Arrow Down',  description: tContent('accessibility.keyboard.arrowDown')  },
+  { key: 'Arrow Up',    description: tContent('accessibility.keyboard.arrowUp')    },
+  { key: 'Arrow Right', description: tContent('accessibility.keyboard.arrowRight') },
+  { key: 'Arrow Left',  description: tContent('accessibility.keyboard.arrowLeft')  },
+  { key: 'Home / End',  description: tContent('accessibility.keyboard.homeEnd')    },
+  { key: 'A–Z',         description: tContent('accessibility.keyboard.typeahead')  },
+  { key: 'Enter',       description: tContent('accessibility.keyboard.enter')      },
+  { key: 'Space',       description: tContent('accessibility.keyboard.space')      },
+  { key: 'Esc',         description: tContent('accessibility.keyboard.escape')     },
+  { key: 'Tab',         description: tContent('accessibility.keyboard.tab')        },
 ]);
 
 const relatedItems = computed(() => [
@@ -585,14 +596,13 @@ const codeCompositionShortcuts = `<ContextMenu>
       >
         <ContextMenu @update:open="handleDemoMenuOpenChange">
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent style="min-width: 12rem">
+          <ContextMenuContent>
             <ContextMenuGroup>
               <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.edit'))">
                 {{ tContent('demonstration.labels.edit') }}
@@ -682,7 +692,7 @@ const codeCompositionShortcuts = `<ContextMenu>
         >
           <ContextMenu>
             <ContextMenuTrigger
-              class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+              :class="areaClasse"
               data-align="center"
               data-justify="center"
              
@@ -702,10 +712,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #dont-preview-0>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             Área (sem botão)
           </ContextMenuTrigger>
@@ -721,10 +730,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #do-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             Clique com direito
           </ContextMenuTrigger>
@@ -740,10 +748,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #dont-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             Clique com direito
           </ContextMenuTrigger>
@@ -767,10 +774,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #do-preview-2>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             Clique com direito
           </ContextMenuTrigger>
@@ -815,10 +821,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-0>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -837,10 +842,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -859,10 +863,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-2>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -884,10 +887,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-3>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -917,10 +919,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-4>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -952,10 +953,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-5>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -977,10 +977,9 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-6>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+            :class="areaClasse"
             data-align="center"
             data-justify="center"
-           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
