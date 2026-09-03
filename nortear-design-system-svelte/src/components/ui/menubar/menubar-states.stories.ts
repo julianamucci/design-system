@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
-import { menubarSource } from './menubar.source';
+import MenubarControlledStory from './MenubarControlledStory.svelte';
+import { menubarSource, menubarControlledSource } from './menubar.source';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'];
@@ -244,6 +245,81 @@ export const CheckboxIndeterminate: Story = {
 
     await step('O desmarcado continua sem glifo nenhum', async () => {
       await expect(formaDoIndicador(desmarcado)).toBeNull();
+    });
+  },
+};
+
+// ─── ControlledOpen ───────────────────────────────────────────────────────────
+//
+// A barra CONTROLADA: quem consome guarda a abertura, e a barra obedece.
+//
+// Nesta lib o estado é da RAIZ, não de cada menu: `bind:value` guarda o `value`
+// do menu aberto, e string vazia é a barra inteira fechada. Controlar um menu
+// só, deixando os vizinhos de fora, não existe aqui — a divergência é de API de
+// framework, e fica registrada em vez de "alinhada". É a forma que
+// `props.extensibilityCode` ensina, e até aqui nenhuma story a exercitava.
+//
+// A story prova os DOIS sentidos, e o segundo é o que importa. Barra controlada
+// sem o caminho de volta abre e nunca mais fecha, porque a lib PEDE o fechamento
+// e não há quem atenda — armadilha de teclado, WCAG 2.1.2. Por isso o último
+// passo aperta Escape e cobra que o painel suma E que o estado externo tenha
+// acompanhado.
+
+const CONTROLLED_ITEMS = ['Novo', 'Abrir'];
+
+// O tipo sai do padrão do arquivo de propósito: o componente desta story não
+// recebe props, e o `Args` genérico do `Story` não é atribuível a
+// `Record<string, never>`. Mesma saída já adotada no accordion desta stack.
+export const ControlledOpen: StoryObj<Record<string, never>> = {
+  parameters: {
+    // Sem `args` próprios: sem isto o painel Controls abre vazio e a aba
+    // Actions lista espião que esta story não usa.
+    controls: { disable: true },
+    actions: { disable: true },
+    // A barra do meta sai dos `args`, que esta story não tem; o `bind:value` é
+    // justamente o que ela ensina.
+    docs: { source: { transform: menubarControlledSource } },
+  },
+  render: () => ({ Component: MenubarControlledStory }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const externalControl = canvas.getByTestId('external-open');
+    const readout = canvas.getByTestId('external-state');
+    const barra = canvas.getByRole('menubar');
+    const [arquivo] = within(barra).getAllByRole('menuitem');
+
+    // O painel Interactions reexecuta a `play` no MESMO DOM, sem remontar: este
+    // passo não SUPÕE o estado inicial, ele o estabelece.
+    await step('Precondição: o estado externo começa fechado', async () => {
+      if (readout.textContent?.trim() !== 'fechado') {
+        await userEvent.keyboard('{Escape}');
+      }
+      await waitFor(async () => {
+        await expect(readout.textContent?.trim()).toBe('fechado');
+      });
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(0);
+    });
+
+    await step('Quem abre o menu é o estado externo, não o gatilho', async () => {
+      await userEvent.click(externalControl);
+      const menu = await waitForPortal('menu');
+      await expect(readout.textContent?.trim()).toBe('aberto');
+      await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+      await expect(within(menu).getAllByRole('menuitem')).toHaveLength(CONTROLLED_ITEMS.length);
+    });
+
+    await step('Fechar pelo teclado devolve a mudança ao estado externo', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        // Leitura PURA dentro do `waitFor`: sonda que mexe no DOM reagenda a si
+        // mesma pelo observador de mutação e pendura a aba sem reprovar.
+        await expect(within(document.body).queryAllByRole('menu')).toHaveLength(0);
+      });
+      // O caminho de volta é o que separa "controlado" de armadilha de teclado:
+      // sem ele o estado externo continuaria dizendo "aberto" — e o painel nem
+      // teria saído do DOM.
+      await expect(readout.textContent?.trim()).toBe('fechado');
+      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
     });
   },
 };

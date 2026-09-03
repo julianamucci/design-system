@@ -182,3 +182,58 @@ export function menubarSourceWith(
 ): SourceTransform<MenubarSnippetOptions> {
   return (_gerado, ctx) => menubarSnippet({ ...ctx.args, ...fixas });
 }
+
+/**
+ * Barra CONTROLADA — o equivalente honesto, porque a fábrica não tem o par.
+ *
+ * As outras stacks expõem uma ligação reativa (uma prop de abertura mais o
+ * retorno da mudança). Aqui não existe: `createMenubar` recebe `defaultOpen` na
+ * CONSTRUÇÃO e não devolve nada que abra ou feche o menu depois. Inventar a prop
+ * seria ensinar API que o design system não tem.
+ *
+ * O que existe, e é o que este trecho mostra: quem consome guarda o estado, e a
+ * fábrica é COMANDADA — a barra é recriada com o `defaultOpen` que o estado
+ * pede. O caminho de volta é o DOM: o `aria-expanded` do gatilho conta quando o
+ * menu fechou sozinho (Escape, clique fora), e o estado acompanha. Sem esse
+ * segundo lado, o estado de fora passaria a mentir sobre a barra na primeira vez
+ * que alguém apertasse Escape.
+ */
+export function menubarControlledSource(): string {
+  return snippet(
+    importing('menubar', 'createMenubar'),
+    `const MENUS = [
+  { label: 'Arquivo', items: [{ label: 'Novo' }, { label: 'Abrir' }] },
+  { label: 'Editar', items: [{ label: 'Desfazer' }] },
+];
+
+const area = document.createElement('div');
+
+let menuAberto: number | null = null;
+let barra = createMenubar(MENUS);
+area.appendChild(barra);`,
+    `/* O estado manda: a barra é refeita com o menu que ele pede. */
+function aplicar(indice: number | null): void {
+  menuAberto = indice;
+  barra.destroy();
+  barra.remove();
+  barra =
+    indice === null ? createMenubar(MENUS) : createMenubar(MENUS, { defaultOpen: indice });
+  area.appendChild(barra);
+}`,
+    `/* E a barra responde: fechar por Escape ou clique fora atualiza o estado. */
+const observador = new MutationObserver(() => {
+  const gatilhos = area.querySelectorAll('[data-slot="menubar-trigger"]');
+  menuAberto = null;
+  gatilhos.forEach((gatilho, i) => {
+    if (gatilho.getAttribute('aria-expanded') === 'true') menuAberto = i;
+  });
+});
+
+observador.observe(area, {
+  subtree: true,
+  attributes: true,
+  attributeFilter: ['aria-expanded'],
+});`,
+    appendLine('area'),
+  );
+}

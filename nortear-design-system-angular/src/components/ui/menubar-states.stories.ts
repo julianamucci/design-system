@@ -338,3 +338,108 @@ export const CheckboxIndeterminate: Story = {
     });
   },
 };
+
+// ─── ControlledOpen ───────────────────────────────────────────────────────────
+//
+// O menu CONTROLADO: quem consome guarda a abertura, e a barra obedece.
+//
+// Nesta stack o par mora no MENU, não na barra — o primitivo publica `open` como
+// modelo, então a entrada é `[open]` e a saída, `(openChange)`. É isso que
+// permite controlar um menu deixando os vizinhos se governarem sozinhos, e é a
+// forma que `props.extensibilityCode` ensina; até aqui nenhuma story a
+// exercitava.
+//
+// A story prova os DOIS sentidos, e o segundo é o que importa. Menu controlado
+// sem o retorno ligado abre e nunca mais fecha, porque o primitivo PEDE o
+// fechamento e não há quem atenda — armadilha de teclado, WCAG 2.1.2. Por isso o
+// último passo aperta Escape e cobra que o painel suma E que o estado externo
+// tenha acompanhado.
+
+const CONTROLLED_ITEMS = ['Novo', 'Abrir'] as const;
+
+export const ControlledOpen: Story = {
+  parameters: {
+    // Sem `args` próprios: sem isto o painel Controls abre vazio e a aba
+    // Actions lista espião que esta story não usa.
+    controls: { disable: true },
+    actions: { disable: true },
+  },
+  render: () => ({
+    // O estado vive AQUI, fora da barra — é esse o assunto da story.
+    props: { open: false, items: CONTROLLED_ITEMS },
+    template: `
+      <div class="nds-stack" data-spacing="sm">
+        <div class="nds-cluster" data-align="center">
+          <button
+            type="button"
+            class="nds-button nds-button-outline nds-button-sm"
+            data-testid="external-open"
+            (click)="open = true"
+          >
+            Abrir Arquivo
+          </button>
+          <span data-testid="external-state">{{ open ? 'aberto' : 'fechado' }}</span>
+        </div>
+
+        <nds-menubar [modal]="false">
+          <nds-menubar-menu [open]="open" (openChange)="open = $event">
+            <button ndsMenubarTrigger>Arquivo</button>
+            <ng-template ndsMenubarContent>
+              @for (item of items; track item) {
+                <div ndsMenubarItem>{{ item }}</div>
+              }
+            </ng-template>
+          </nds-menubar-menu>
+
+          <nds-menubar-menu>
+            <button ndsMenubarTrigger>Editar</button>
+            <ng-template ndsMenubarContent>
+              <div ndsMenubarItem>Desfazer</div>
+            </ng-template>
+          </nds-menubar-menu>
+        </nds-menubar>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const externalControl = canvas.getByTestId('external-open');
+    const readout = canvas.getByTestId('external-state');
+    const barra = canvas.getByRole('menubar');
+    const [arquivo] = within(barra).getAllByRole('menuitem');
+
+    // O painel Interactions reexecuta a `play` no MESMO DOM, sem remontar: este
+    // passo não SUPÕE o estado inicial, ele o estabelece.
+    await step('Precondição: o estado externo começa fechado', async () => {
+      if (readout.textContent?.trim() !== 'fechado') {
+        await userEvent.keyboard('{Escape}');
+      }
+      await waitFor(async () => {
+        await expect(readout.textContent?.trim()).toBe('fechado');
+      });
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(0);
+    });
+
+    await step('Quem abre o menu é o estado externo, não o gatilho', async () => {
+      await userEvent.click(externalControl);
+      const menu = await waitForPortal('menu');
+      await expect(readout.textContent?.trim()).toBe('aberto');
+      await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+      await expect(within(menu).getAllByRole('menuitem')).toHaveLength(CONTROLLED_ITEMS.length);
+    });
+
+    await step('Fechar pelo teclado devolve a mudança ao estado externo', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        // Leitura PURA dentro do `waitFor`: sonda que mexe no DOM reagenda a si
+        // mesma pelo observador de mutação e pendura a aba sem reprovar.
+        await expect(within(document.body).queryAllByRole('menu')).toHaveLength(0);
+      });
+      // O retorno ligado é o que separa "controlado" de armadilha de teclado:
+      // sem ele o estado externo continuaria dizendo "aberto" — e o painel nem
+      // teria saído do DOM.
+      await expect(readout.textContent?.trim()).toBe('fechado');
+      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+    });
+  },
+};

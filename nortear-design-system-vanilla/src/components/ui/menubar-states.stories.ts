@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 import { embrulhar, triggersOf, panelOpen } from './menubar.fixtures';
-import { menubarSource, menubarSourceWith } from './menubar.source';
+import { menubarSource, menubarSourceWith, menubarControlledSource } from './menubar.source';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -449,6 +449,160 @@ export const ListenerCleanup: Story = {
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
       await checkLimpeza(probe);
+    });
+  },
+};
+
+// ─── ControlledOpen ───────────────────────────────────────────────────────────
+//
+// A barra CONTROLADA — no equivalente honesto desta stack.
+//
+// As outras quatro expõem uma ligação reativa: uma prop de abertura mais o
+// retorno da mudança. `createMenubar` não tem o par. Ela recebe `defaultOpen` na
+// CONSTRUÇÃO e não devolve nada que abra ou feche o menu depois — a API
+// devolvida é o elemento e o `destroy()`. Inventar a prop aqui seria ensinar o
+// que o design system não tem, então a story demonstra o que EXISTE: quem
+// consome guarda o estado e COMANDA a fábrica, refazendo a barra com o
+// `defaultOpen` que o estado pede.
+//
+// O caminho de volta é o DOM, e é ele que dá dentes à story: o `aria-expanded`
+// do gatilho conta quando o menu fechou sozinho, e o estado externo acompanha.
+// Sem esse segundo lado o estado passaria a mentir sobre a barra na primeira vez
+// que alguém apertasse Escape — que é a mesma armadilha de teclado (WCAG 2.1.2)
+// que um `onOpenChange` desligado cria nas stacks com ligação reativa.
+
+const CONTROLLED_ITEMS = ['Novo', 'Abrir'] as const;
+
+const CONTROLLED_MENUS = [
+  { label: 'Arquivo', items: CONTROLLED_ITEMS.map((label) => ({ label })) },
+  { label: 'Editar', items: [{ label: 'Desfazer' }] },
+];
+
+export const ControlledOpen: Story = {
+  parameters: {
+    // Sem `args` próprios: sem isto o painel Controls abre vazio e a aba
+    // Actions lista espião que esta story não usa.
+    controls: { disable: true },
+    actions: { disable: true },
+    // A chamada do meta é a barra solta; o que esta story ensina é a fiação do
+    // estado externo em volta dela.
+    docs: { source: { transform: menubarControlledSource } },
+  },
+  render: () => {
+    const area = document.createElement('div');
+    area.className = 'nds-stack';
+    area.dataset.spacing = 'sm';
+
+    const row = document.createElement('div');
+    row.className = 'nds-cluster';
+    row.dataset.align = 'center';
+
+    const control = document.createElement('button');
+    control.type = 'button';
+    control.className = 'nds-button nds-button-outline nds-button-sm';
+    control.dataset.testid = 'external-open';
+    control.textContent = 'Abrir Arquivo';
+
+    const readout = document.createElement('span');
+    readout.dataset.testid = 'external-state';
+
+    const host = document.createElement('div');
+    row.append(control, readout);
+    area.append(row, host);
+
+    // O estado vive AQUI, fora da barra — é esse o assunto da story.
+    let openMenu: number | null = null;
+    let bar: ReturnType<typeof createMenubar> | null = null;
+
+    const paint = () => {
+      readout.textContent = openMenu === null ? 'fechado' : 'aberto';
+    };
+
+    /** O estado manda: a barra é refeita com o menu que ele pede. */
+    const apply = () => {
+      bar?.destroy();
+      host.replaceChildren();
+      bar =
+        openMenu === null
+          ? createMenubar(CONTROLLED_MENUS)
+          : createMenubar(CONTROLLED_MENUS, { defaultOpen: openMenu });
+      host.appendChild(bar);
+      paint();
+    };
+
+    control.addEventListener('click', () => {
+      openMenu = 0;
+      apply();
+    });
+
+    // E a barra responde: fechar por Escape ou clique fora atualiza o estado.
+    const observer = new MutationObserver(() => {
+      const triggers = triggersOf(host);
+      const opened = triggers.findIndex((t) => t.getAttribute('aria-expanded') === 'true');
+      const next = opened === -1 ? null : opened;
+      if (next === openMenu) return;
+      openMenu = next;
+      paint();
+    });
+    observer.observe(host, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['aria-expanded'],
+    });
+
+    apply();
+    return embrulhar(area);
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const externalControl = canvas.getByTestId('external-open');
+    const readout = canvas.getByTestId('external-state');
+
+    // A barra é REFEITA a cada mudança de estado, então a referência ao elemento
+    // envelhece: cada passo consulta de novo, em vez de guardar do começo.
+    const firstTrigger = () => triggersOf(canvas.getByRole('menubar'))[0];
+
+    // O painel Interactions reexecuta a `play` no MESMO DOM, sem remontar: este
+    // passo não SUPÕE o estado inicial, ele o estabelece.
+    await step('Precondição: o estado externo começa fechado', async () => {
+      if (readout.textContent?.trim() !== 'fechado') {
+        // Sem lib de foco: o Escape é ouvido pelo gatilho e pela barra, então
+        // quem aperta precisa estar dentro dela.
+        firstTrigger().focus();
+        await userEvent.keyboard('{Escape}');
+      }
+      await waitFor(async () => {
+        await expect(readout.textContent?.trim()).toBe('fechado');
+      });
+      await expect(panelOpen(canvasElement)).toBeNull();
+    });
+
+    await step('Quem abre o menu é o estado externo, não o gatilho', async () => {
+      await userEvent.click(externalControl);
+      const panel = await waitFor(() => {
+        const p = panelOpen(canvasElement);
+        if (!p) throw new Error('painel não abriu');
+        return p;
+      });
+      await expect(readout.textContent?.trim()).toBe('aberto');
+      await expect(firstTrigger().getAttribute('aria-expanded')).toBe('true');
+      await expect(within(panel).getAllByRole('menuitem')).toHaveLength(
+        CONTROLLED_ITEMS.length,
+      );
+    });
+
+    await step('Fechar pelo teclado devolve a mudança ao estado externo', async () => {
+      firstTrigger().focus();
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        // Leitura PURA dentro do `waitFor`: sonda que mexe no DOM reagenda a si
+        // mesma pelo observador de mutação e pendura a aba sem reprovar.
+        await expect(panelOpen(canvasElement)).toBeNull();
+        // O caminho de volta é o que separa "controlado" de estado que mente:
+        // sem ele o readout continuaria dizendo "aberto" com o painel fechado.
+        await expect(readout.textContent?.trim()).toBe('fechado');
+      });
+      await expect(firstTrigger().getAttribute('aria-expanded')).toBe('false');
     });
   },
 };

@@ -304,3 +304,49 @@ ${menus}
 </Menubar>`,
   );
 }
+
+/**
+ * Barra CONTROLADA — `bind:value` na RAIZ.
+ *
+ * É a forma que `props.extensibilityCode` ensina, e nesta lib quem guarda a
+ * abertura é a raiz: o valor é o `value` do menu aberto, e string vazia é a
+ * barra fechada. Controlar um menu só, deixando os vizinhos de fora, não existe
+ * aqui — a divergência é de API de framework, e fica registrada assim.
+ *
+ * O botão externo entra no trecho porque ele é o assunto: é ele que mostra o
+ * estado de fora comandando a barra. E a ligação é de MÃO DUPLA por construção —
+ * sem o caminho de volta o menu abriria e nunca mais fecharia, nem por Escape,
+ * que é armadilha de teclado (WCAG 2.1.2).
+ */
+export function menubarControlledSource(): string {
+  return svelteSnippet(
+    `${importing([
+      'Menubar',
+      'MenubarMenu',
+      'MenubarTrigger',
+      'MenubarContent',
+      'MenubarItem',
+    ])}
+
+let menuAberto = $state("");`,
+    `<button type="button" onclick={() => (menuAberto = "file")}>
+  Abrir Arquivo
+</button>
+
+<Menubar bind:value={menuAberto}>
+  <MenubarMenu value="file">
+    <MenubarTrigger>Arquivo</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Novo</MenubarItem>
+      <MenubarItem>Abrir</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="edit">
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+  );
+}

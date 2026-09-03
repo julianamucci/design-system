@@ -511,3 +511,48 @@ export function menubarEditorCompletoSource(): string {
 </Menubar>`,
   );
 }
+
+/**
+ * Menu CONTROLADO — `v-model` na BARRA.
+ *
+ * É a forma que `props.extensibilityCode` ensina, e nesta stack quem guarda a
+ * abertura é a raiz: o modelo é o `value` do menu aberto, e string vazia é a
+ * barra fechada. Controlar um menu só, deixando os vizinhos de fora, não é
+ * possível aqui — a divergência é de API de framework, e fica registrada assim.
+ *
+ * O botão externo entra no trecho porque ele é o assunto: é ele que mostra o
+ * estado de fora comandando a barra. E o `v-model` é o que garante o caminho de
+ * volta — sem ele o menu abriria e nunca mais fecharia, nem por Escape, que é
+ * armadilha de teclado (WCAG 2.1.2).
+ */
+export function menubarControlledSource(): string {
+  return vueSnippet(
+    `import { ref } from 'vue'
+${importa('Menubar', 'MenubarContent', 'MenubarItem', 'MenubarMenu', 'MenubarTrigger')}
+
+const openMenu = ref('')`,
+    `<button
+  type="button"
+  class="nds-button nds-button-outline nds-button-sm"
+  @click="openMenu = 'file'"
+>
+  Abrir Arquivo
+</button>
+
+<Menubar v-model="openMenu">
+  <MenubarMenu value="file">
+    <MenubarTrigger>Arquivo</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Novo</MenubarItem>
+      <MenubarItem>Abrir</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="edit">
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+  );
+}

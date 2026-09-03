@@ -378,3 +378,48 @@ ${menu(
 </Menubar>`,
   );
 }
+
+/**
+ * Menu CONTROLADO — o par `open` / `onOpenChange` no `MenubarMenu`.
+ *
+ * É a forma que o conteúdo compartilhado ensina em `props.extensibilityCode`, e
+ * a única em que quem consome decide a abertura. Os dois lados aparecem de
+ * propósito: sem o retorno ligado, o menu abre e NUNCA fecha — nem por Escape,
+ * nem por clique fora —, que é armadilha de teclado (WCAG 2.1.2).
+ *
+ * O botão externo entra no trecho porque ele é o assunto, e não andaime de
+ * captura: é ele que mostra o estado de fora comandando o menu. `modal={false}`
+ * e as medidas da moldura continuam fora, como no resto deste módulo.
+ */
+export function menubarControlledSource(): string {
+  return jsxSnippet(
+    `import { useState } from "react";\n${importingMenubar(
+      'Menubar',
+      'MenubarContent',
+      'MenubarItem',
+      'MenubarMenu',
+      'MenubarTrigger',
+    )}\n\nconst [open, setOpen] = useState(false);`,
+    `<>
+  <button type="button" onClick={() => setOpen(true)}>
+    Abrir Arquivo
+  </button>
+
+  <Menubar>
+    <MenubarMenu open={open} onOpenChange={setOpen}>
+      <MenubarTrigger>Arquivo</MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem>Novo</MenubarItem>
+        <MenubarItem>Abrir</MenubarItem>
+      </MenubarContent>
+    </MenubarMenu>
+    <MenubarMenu>
+      <MenubarTrigger>Editar</MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem>Desfazer</MenubarItem>
+      </MenubarContent>
+    </MenubarMenu>
+  </Menubar>
+</>`,
+  );
+}
