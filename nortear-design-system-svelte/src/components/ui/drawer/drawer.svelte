@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Drawer as DrawerPrimitive } from "vaul-svelte";
+	import { setDrawerCloseContext } from "./close-context.js";
 
 	/**
 	 * ─── Decisão de acessibilidade (bloco canônico no drawer da stack vanilla) ─
@@ -38,15 +39,37 @@
 	let {
 		shouldScaleBackground = true,
 		autoFocus = true,
+		dismissible = true,
 		open = $bindable(false),
 		activeSnapPoint = $bindable(null),
 		...restProps
 	}: DrawerPrimitive.RootProps = $props();
+
+	/**
+	 * A saída explícita da gaveta não dispensável.
+	 *
+	 * O porquê inteiro — a guarda do primitivo, a armadilha de teclado que ela
+	 * criava e por que escrever `open` a contorna — está no docblock de
+	 * `close-context.ts`. Aqui só se publica o caminho: com a dispensa LIGADA o
+	 * contexto entrega `null` e o `DrawerClose` segue pelo primitivo; com ela
+	 * DESLIGADA, o `DrawerClose` chama esta função. Nunca os dois na mesma vez,
+	 * então não há pedido em dobro para proteger.
+	 */
+	function closeExplicitly(): void {
+		open = false;
+	}
+
+	setDrawerCloseContext({
+		get close() {
+			return dismissible ? null : closeExplicitly;
+		},
+	});
 </script>
 
 <DrawerPrimitive.Root
 	{shouldScaleBackground}
 	{autoFocus}
+	{dismissible}
 	bind:open
 	bind:activeSnapPoint
 	{...restProps}

@@ -216,6 +216,22 @@ export const NotDismissible: Story = {
 
     // Volta a abrir: a foto do Chromatic é do painel aberto, e a próxima rodada
     // da play precisa do mesmo ponto de partida desta.
+    //
+    // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal, a lib deixa
+    // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
+    // Clicar dentro dessa janela falha com "the element has `pointer-events:
+    // none`" — medido em 2026-09-03 aqui, e é a mesma espera que
+    // `sheet.stories.ts` já faz pelo mesmo motivo. Leitura pura dentro do
+    // `waitFor`, e prazo explícito porque o padrão de 1s não cabe em máquina
+    // carregada.
+    await waitFor(
+      () => {
+        if (getComputedStyle(document.body).pointerEvents === 'none') {
+          throw new Error('o overlay ainda bloqueia o ponteiro');
+        }
+      },
+      { timeout: 3000 },
+    );
     await userEvent.click(trigger);
     await waitForPortal('dialog');
   },
