@@ -109,6 +109,8 @@ export const Playground: Story = {
       'functional.item4',
       'functional.item6',
       'functional.item8',
+      'functional.item10',
+      'functional.item11',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
@@ -206,6 +208,47 @@ export const Playground: Story = {
       });
 
       await userEvent.keyboard('{ArrowUp}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0]);
+      });
+    });
+
+    await step('Digitar uma letra leva ao item que começa por ela', async () => {
+      // `s` é inequívoco nesta lista (Novo, Abrir, Salvar) — busca por letra com
+      // dois candidatos mediria a política de desempate, que é outro assunto.
+      const menu = await waitForPortal('menu');
+      const items = within(menu).getAllByRole('menuitem');
+      const saveItem = items.find((i) => (i.textContent ?? '').trim().startsWith('Salvar'))!;
+      await expect(saveItem).toBeDefined();
+
+      await userEvent.keyboard('s');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(saveItem);
+      });
+    });
+
+    // SPACE NÃO LEVA O FOCO PARA DENTRO NESTA STACK, e por isso
+    // `functional.item12` não é declarado aqui — a divergência fica visível para o
+    // auditor de contrato em vez de virar cobertura de mentira.
+    //
+    // Medido em 2026-09-03: com Enter o foco entra no painel e pousa no
+    // primeiro item (o passo acima prova); com Space o painel ABRE — o
+    // `aria-expanded` vira "true" — e o foco fica no gatilho, ainda depois de
+    // espera de relógio. As outras quatro stacks levam o foco para dentro nas
+    // duas teclas.
+    //
+    // Era isto que o item de contrato antigo escondia: ele dizia "Enter/Space"
+    // numa chave só, e verificar o Enter bastava para marcá-lo coberto.
+    await step('Home e End saltam para as pontas da lista', async () => {
+      const menu = await waitForPortal('menu');
+      const items = within(menu).getAllByRole('menuitem');
+
+      await userEvent.keyboard('{End}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[items.length - 1]);
+      });
+
+      await userEvent.keyboard('{Home}');
       await waitFor(async () => {
         await expect(document.activeElement).toBe(items[0]);
       });

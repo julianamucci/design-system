@@ -396,7 +396,7 @@
           "priority": "high"
         },
         "item3": {
-          "action": "Enter/Space ou Seta-baixo no Trigger",
+          "action": "Enter ou Seta-baixo no Trigger",
           "result": "Abre Content com role=menu e foco no primeiro Item",
           "priority": "high"
         },
@@ -428,6 +428,21 @@
         "item9": {
           "action": "Exibir um item de marcação no estado misto",
           "result": "Desenha um traço em vez do tique do estado marcado, e é anunciado como misto — nem marcado, nem desmarcado",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Home e End com o menu aberto",
+          "result": "O foco salta para o primeiro e para o último item da lista, sem passar pelos do meio",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Digitar uma letra com o menu aberto",
+          "result": "O foco vai para o primeiro item cujo rótulo começa por ela",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Space no Trigger",
+          "result": "Abre o menu e leva o foco para dentro dele, como o Enter faz",
           "priority": "high"
         }
       },
@@ -888,7 +903,7 @@
           "priority": "high"
         },
         "item3": {
-          "action": "Enter/Space or Down arrow on Trigger",
+          "action": "Enter or Arrow Down on the Trigger",
           "result": "Opens Content with role=menu and focus on first Item",
           "priority": "high"
         },
@@ -920,6 +935,21 @@
         "item9": {
           "action": "Render a checkable item in the mixed state",
           "result": "Draws a dash instead of the check mark of the checked state, and is announced as mixed — neither checked nor unchecked",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Home and End with the menu open",
+          "result": "Focus jumps to the first and to the last item of the list, skipping the ones in between",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Type a letter with the menu open",
+          "result": "Focus moves to the first item whose label starts with it",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Space on the Trigger",
+          "result": "Opens the menu and moves focus into it, the same way Enter does",
           "priority": "high"
         }
       },
@@ -1380,7 +1410,7 @@
           "priority": "high"
         },
         "item3": {
-          "action": "Enter/Space o Flecha-abajo en Trigger",
+          "action": "Enter o Flecha abajo en el Trigger",
           "result": "Abre Content con role=menu y foco en el primer Item",
           "priority": "high"
         },
@@ -1412,6 +1442,21 @@
         "item9": {
           "action": "Mostrar un elemento de marcación en estado mixto",
           "result": "Dibuja un guion en vez de la marca de verificación del estado marcado, y se anuncia como mixto — ni marcado ni desmarcado",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Home y End con el menú abierto",
+          "result": "El foco salta al primer y al último elemento de la lista, sin pasar por los del medio",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Escribir una letra con el menú abierto",
+          "result": "El foco va al primer elemento cuya etiqueta empieza por ella",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Space en el Trigger",
+          "result": "Abre el menú y lleva el foco dentro de él, como hace Enter",
           "priority": "high"
         }
       },

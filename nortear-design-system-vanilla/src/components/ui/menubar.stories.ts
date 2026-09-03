@@ -110,6 +110,9 @@ export const Playground: Story = {
       'functional.item4',
       'functional.item6',
       'functional.item8',
+      'functional.item10',
+      'functional.item11',
+      'functional.item12',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
@@ -190,6 +193,53 @@ export const Playground: Story = {
       });
 
       await userEvent.keyboard('{ArrowUp}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0]);
+      });
+    });
+
+    await step('Digitar uma letra leva ao item que começa por ela', async () => {
+      // `s` é inequívoco nesta lista (Novo, Abrir, Salvar) — busca por letra com
+      // dois candidatos mediria a política de desempate, que é outro assunto.
+      const panel = panelOpen(canvasElement)!;
+      const items = within(panel).getAllByRole('menuitem');
+      const saveItem = items.find((i) => (i.textContent ?? '').trim().startsWith('Salvar'))!;
+      await expect(saveItem).toBeDefined();
+
+      await userEvent.keyboard('s');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(saveItem);
+      });
+    });
+
+    await step('Space também abre o gatilho, e não só Enter', async () => {
+      // O item do contrato diz "Enter/Space", e só o Enter era verificado —
+      // meia verdade que o auditor de cobertura contava como verdade inteira.
+      // Fecha ANTES de digitar: o passo estabelece a própria precondição, senão
+      // o replay do painel Interactions parte do menu já aberto e o Space o
+      // fecharia.
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      arquivo.focus();
+      await userEvent.keyboard(' ');
+      await waitFor(async () => {
+        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+      });
+    });
+
+    await step('Home e End saltam para as pontas da lista', async () => {
+      const panel = panelOpen(canvasElement)!;
+      const items = within(panel).getAllByRole('menuitem');
+
+      await userEvent.keyboard('{End}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[items.length - 1]);
+      });
+
+      await userEvent.keyboard('{Home}');
       await waitFor(async () => {
         await expect(document.activeElement).toBe(items[0]);
       });

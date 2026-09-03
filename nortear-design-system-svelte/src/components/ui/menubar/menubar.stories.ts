@@ -86,6 +86,8 @@ export const Playground: Story = {
       'functional.item4',
       'functional.item6',
       'functional.item8',
+      'functional.item10',
+      'functional.item12',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
@@ -145,6 +147,62 @@ export const Playground: Story = {
       });
 
       await userEvent.keyboard('{ArrowUp}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0]);
+      });
+    });
+
+    // TYPEAHEAD NÃO ENTREGUE NESTA STACK, e por isso `functional.item11`
+    // não é declarado aqui — o auditor de contrato acusa a divergência em vez
+    // de engoli-la. Medido em 2026-09-03: com o menu aberto e o foco em
+    // "Novo", digitar `s` deixa o foco onde estava, ainda depois de 600ms de
+    // espera de relógio; as outras quatro stacks levam para "Salvar".
+    //
+    // Mecanismo medido no bits-ui: a busca por letra só roda quando
+    // `target.closest('[data-menubar-content]').id` é igual ao `contentId` do
+    // menu, e o painel desta stack renderiza SEM `id` — a comparação é sempre
+    // falsa. O item e o painel carregam os atributos certos
+    // (`data-menubar-item`, `data-menubar-content`), então não é o wrapper
+    // deixando de encaminhar: é o `id` que não chega.
+    //
+    // O conteúdo compartilhado PROMETE a busca por letra ao leitor, então o
+    // desfecho é entregar ou mudar a promessa — não deixar como está.
+    await step('Space também abre o gatilho, e não só Enter', async () => {
+      // O item do contrato diz "Enter/Space", e só o Enter era verificado —
+      // meia verdade que o auditor de cobertura contava como verdade inteira.
+      // Fecha ANTES de digitar: o passo estabelece a própria precondição, senão
+      // o replay do painel Interactions parte do menu já aberto e o Space o
+      // fecharia.
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      arquivo.focus();
+      await userEvent.keyboard(' ');
+      await waitFor(async () => {
+        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      // O passo seguinte digita DENTRO do menu, então a precondição não é o
+      // painel existir — é o foco já ter entrado nele. Sem esta espera, End era
+      // digitado com o foco ainda no gatilho.
+      const openedBySpace = await waitForPortal('menu');
+      await waitFor(async () => {
+        await expect(openedBySpace.contains(document.activeElement)).toBe(true);
+      });
+    });
+
+    await step('Home e End saltam para as pontas da lista', async () => {
+      const menu = await waitForPortal('menu');
+      const items = within(menu).getAllByRole('menuitem');
+
+      await userEvent.keyboard('{End}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[items.length - 1]);
+      });
+
+      await userEvent.keyboard('{Home}');
       await waitFor(async () => {
         await expect(document.activeElement).toBe(items[0]);
       });
