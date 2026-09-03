@@ -29,6 +29,40 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Um `Tab` de teclado, DESPACHADO À MÃO.
+ *
+ * Nem `userEvent.tab()` nem `userEvent.keyboard('{Tab}')` servem para medir um
+ * laço de tabulação, e não é questão de preferência: os dois MOVEM O FOCO
+ * primeiro e só então anunciam a tecla. Medido em 2026-09-03, com um ouvinte de
+ * `keydown` em fase de CAPTURA na story `Modal`: no instante do `keydown`, o
+ * `document.activeElement` já era o próximo elemento — e o alvo do evento
+ * também.
+ *
+ * Um laço é implementado no `keydown`, e a condição dele é `activeElement ===
+ * último`. Com o foco já movido, essa condição é falsa quando o laço roda: ele
+ * nunca dispara, o foco segue para fora do painel, a camada de foco da lib o
+ * puxa de volta para onde estava, e a asserção lê "não saiu do lugar" — que
+ * parece defeito do componente e não é. Nenhum laço, de nenhuma stack, pode ser
+ * medido por aqueles dois instrumentos.
+ *
+ * Despachar a tecla reproduz a ordem do teclado real — `keydown` primeiro,
+ * movimento do foco depois —, e é justamente o movimento que o laço substitui.
+ * Mesma saída que o gesto de arraste do drawer já usa neste repositório, e pelo
+ * mesmo motivo: quando o atalho do runner não reproduz a sequência real,
+ * despacha-se o evento.
+ */
+function pressTab(shift = false): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      key: 'Tab',
+      shiftKey: shift,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
+
 export const Closed: Story = {
   name: 'Closed',
   parameters: {
@@ -207,6 +241,11 @@ export const Modal: Story = {
       // O controle negativo de verdade é este: partir do ÚLTIMO focável e
       // apertar Tab. Não-modal, o foco SAI do painel e esta asserção reprova;
       // modal, ele volta ao primeiro.
+      //
+      // O instrumento é o `pressTab` deste arquivo, e o docblock dele explica
+      // por que `userEvent.tab()` e `userEvent.keyboard('{Tab}')` não podem medir
+      // um laço de tabulação. Esta story nasceu com `tab()` e nunca tinha sido
+      // executada, então o instrumento errado nunca tinha aparecido.
       const dialog = panel()!;
       const inside = within(dialog);
       const cancel = inside.getByRole('button', { name: /Cancelar/i });
@@ -215,7 +254,7 @@ export const Modal: Story = {
       save.focus();
       await expect(save).toHaveFocus();
 
-      await userEvent.tab();
+      pressTab();
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
       await expect(cancel).toHaveFocus();
@@ -228,7 +267,8 @@ export const Modal: Story = {
       const save = inside.getByRole('button', { name: /Salvar/i });
 
       cancel.focus();
-      await userEvent.tab({ shift: true });
+      // Mesmo instrumento e mesmo motivo do passo anterior.
+      pressTab(true);
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
       await expect(save).toHaveFocus();
