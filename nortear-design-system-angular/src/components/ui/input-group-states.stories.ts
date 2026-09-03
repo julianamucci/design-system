@@ -187,11 +187,11 @@ export const Invalid: Story = {
       // A escrita e as duas leituras acontecem aqui, de uma vez — nunca dentro
       // de um `waitFor`, que reagendaria a si mesmo e travaria a aba.
       const { withError, withoutError } = noTransicao(group, () => {
-        const comErro = getComputedStyle(group).borderTopColor;
+        const withErrorColor = getComputedStyle(group).borderTopColor;
         field.removeAttribute('aria-invalid');
-        const semErro = getComputedStyle(group).borderTopColor;
+        const withoutErrorColor = getComputedStyle(group).borderTopColor;
         field.setAttribute('aria-invalid', 'true');
-        return { withError: comErro, withoutError: semErro };
+        return { withError: withErrorColor, withoutError: withoutErrorColor };
       });
 
       await expect(withError).not.toBe(withoutError);

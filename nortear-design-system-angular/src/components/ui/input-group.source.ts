@@ -102,7 +102,7 @@ function indent(level: number): string {
 function addonMarkup(
   addon: InputGroupSnippetAddon,
   level: number,
-  grupoDesabilitado = false,
+  disabledGroup = false,
 ): string[] {
   const lines = [indent(level) + '<div ndsInputGroupAddon align="' + addon.align + '">'];
 
@@ -128,7 +128,7 @@ function addonMarkup(
     // fica apagado e o botão continua focável e clicável dentro dele — a pior
     // das duas leituras, porque a aparência promete inativo e o teclado entrega
     // ativo.
-    if (grupoDesabilitado) attrs.push('disabled');
+    if (disabledGroup) attrs.push('disabled');
 
     lines.push(indent(level + 1) + '<button');
     for (const attr of attrs) lines.push(indent(level + 2) + attr);
