@@ -631,12 +631,21 @@ interface CommandDialogProps
               </div>
             ),
             dontPreview: (
+              // Sem dica de atalho: o gatilho não conta que a paleta existe, e
+              // é a AUSÊNCIA que faz o contraste com o "do" ao lado.
+              //
+              // Aqui morava um `Ctrl+K` riscado com `opacity: 0.4` em `style`
+              // inline, e ele errava duas vezes: o valor de design fugia do
+              // tema pela regra do inline, e o texto resultante media 1,75:1
+              // contra os 4,5:1 que o axe cobra — a página inteira ficou sob
+              // `a11y: 'todo'` por causa dele. Riscar o que não deve existir
+              // também ensina o contrário do que a legenda diz: o erro não é
+              // mostrar o atalho errado, é não mostrar atalho nenhum.
               <div className="nds-stack nds-p-2" data-spacing="xs" style={{ alignItems: "flex-start" }}>
                 <Button variant="outline" size="sm">
                   <SearchIcon />
                   {labels.openPalette}
                 </Button>
-                <p className="nds-text-caption nds-text-muted-foreground" style={{ opacity: 0.4, textDecoration: "line-through" }}>Ctrl+K</p>
               </div>
             ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),

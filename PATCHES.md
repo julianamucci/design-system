@@ -403,84 +403,58 @@ Limitado **apenas às 3 stories que renderizam Toaster**. Botões e demais primi
 
 **Verificação após bump:** se `sonner` v3+ refatorar para usar `role="status"` + cores acessíveis por padrão, remover este patch. Teste manual: abrir toast, inspecionar contraste com DevTools.
 
-### react/command — desabilitar `aria-required-children` (cmdk listbox spec) {#command-listbox-children}
+### react/command — `aria-required-children` RESOLVIDO (medido em navegador 2026-09-03) {#command-listbox-children}
 
-- **Arquivos:**
-  - `nortear-design-system-react/src/components/ui/command.stories.tsx`
-  - `nortear-design-system-react/src/components/ui/command-compositions.stories.tsx`
-  - `nortear-design-system-react/src/components/ui/command-states.stories.tsx`
-  - `nortear-design-system-react/src/components/ui/command-variants.stories.tsx`
-    (este registro listava três arquivos; o quarto sempre esteve lá — corrigido
-    em 2026-09-02)
-- **Categoria:** a11y (escopo limitado a stories de `Primitives/Overlay/Command/*`)
-- **Data:** 2026-04-28 · **Reduzido e remedido em:** 2026-09-02 · **Premissa
-  removida em:** 2026-09-02
-- **Upstream ref:** [pacocoursey/cmdk](https://github.com/pacocoursey/cmdk) — listbox como container genérico de comandos
+- **Arquivos:** nenhum. A exceção saiu dos quatro arquivos de story do Command
+  (`command.stories.tsx`, `command-compositions.stories.tsx`,
+  `command-states.stories.tsx`, `command-variants.stories.tsx`).
+- **Categoria:** a11y · **Status:** **RESOLVIDO — patch removido**
+- **Aberto em:** 2026-04-28 · **Reduzido e remedido em:** 2026-09-02 ·
+  **Premissa removida em:** 2026-09-02 · **Encerrado em:** 2026-09-03
+- **Upstream ref:** [pacocoursey/cmdk](https://github.com/pacocoursey/cmdk)
 
-**Depois:**
-```tsx
-const meta = {
-  title: "Primitives/Overlay/Command",
-  component: Command,
-  parameters: {
-    a11y: {
-      config: {
-        rules: [{ id: 'aria-required-children', enabled: false }],
-      },
-    },
-  },
-};
-```
+**O que era:** as quatro stories desligavam `aria-required-children` por
+`a11y.config.rules`, porque o listbox do cmdk recebia filhos não permitidos.
 
-**Motivo — a versão anterior deste registro estava errada em duas pontas, e as duas foram medidas em 2026-09-02.**
+**As três causas, e como cada uma caiu:**
 
-O texto de 2026-04-28 culpava três filhos (`cmdk-empty`, `cmdk-separator`,
-`cmdk-group`) e concluía que "mudar isso exigiria fork da lib". Nenhuma das
-duas afirmações se sustenta:
+- **O divisor.** `ariaRequiredChildrenEvaluate` (axe-core) descarta todo nó em
+  que `isVisibleToScreenReaders` é falso ANTES de julgar filho permitido. Um
+  `aria-hidden="true"` no `CommandSeparator` resolveu sem tocar na lib: o papel
+  `role="separator"` que a lib crava continua lá, o nó é que sai da árvore.
+- **O `cmdk-group`.** Nunca foi problema: `role="group"` é filho PERMITIDO de
+  `listbox`. A entrada antiga o acusava por engano.
+- **O vazio.** `CommandEmpty` montava `role="presentation"` DENTRO da lista e só
+  enquanto o filtro não casava; sem nenhuma `option`, o caminho `reviewEmpty`
+  do avaliador devolvia falha em vez de "incompleto". Fechado em 2026-09-02:
+  `CommandEmpty` deixou de embrulhar o primitivo do cmdk e virou um `<div
+  role="status" aria-live="polite" aria-atomic="true">` próprio, montado o tempo
+  todo e IRMÃO do `CommandList`. O estado vem de `useCommandState`, exportado
+  pelo cmdk (`useCmdk as useCommandState`) — sem fork.
 
-- **O divisor NÃO precisava de fork.** `ariaRequiredChildrenEvaluate` (axe-core)
-  descarta todo nó em que `isVisibleToScreenReaders` é falso ANTES de julgar
-  filho permitido. Um `aria-hidden="true"` no `CommandSeparator` — que é
-  exatamente o que vanilla, vue e angular já faziam — resolve sem tocar na lib.
-  A lib crava `role="separator"` depois do espalhamento das props, então o
-  papel continua lá; o nó é que sai da árvore. **Feito**, e a asserção da story
-  `WithGroups` deixou de cobrar `role="separator"`.
-- **O `cmdk-group` nunca foi o problema:** `role="group"` é filho PERMITIDO de
-  `listbox`.
+**A medida que encerrou o registro.** Em 2026-09-02 as três causas já estavam
+derrubadas no papel, e o patch foi mantido de propósito: quem julga
+`aria-required-children` é o axe rodando em navegador, e faltava a rodada. O que
+não estava confirmado era se um listbox SEM nenhuma `option` — o que sobra
+quando o filtro não casa — sairia como "incomplete" (`reviewEmpty`) ou como
+falha.
 
-**O que restou até 2026-09-02, e por que a regra estava desligada:**
-`CommandEmpty` do cmdk montava `<div cmdk-empty role="presentation">` DENTRO da
-lista, e só enquanto o filtro não casa. `role="presentation"` não entra como
-filho não permitido (o avaliador desce para os filhos), mas quando não sobra
-nenhuma opção o listbox fica sem `option`, o nó de texto conta como conteúdo, e
-o caminho `reviewEmpty` devolve **falha** em vez de "incompleto".
+Medido em 2026-09-03, com a regra RELIGADA nos quatro arquivos e a suíte de
+navegador executada: **as stories do Command passam.** Nenhuma violação de
+`aria-required-children`, inclusive na story que termina sem resultados
+(`Empty state`), que é justamente o caso do listbox vazio. A exceção foi
+removida, e este registro fica só como histórico.
 
-**A premissa foi removida em 2026-09-02, por decisão da dona.** `CommandEmpty`
-deixou de embrulhar o primitivo do cmdk: é agora um `<div role="status"
-aria-live="polite" aria-atomic="true">` próprio, montado o tempo todo e IRMÃO do
-`CommandList` — a forma do Vanilla, e o que
-`accessibility.screenReader.onFilter` promete nas cinco docs pages. O estado vem
-de `useCommandState`, exportado pelo cmdk (`useCmdk as useCommandState`), então
-não houve fork; a condição continua sendo `filtered.count === 0`, a mesma que o
-primitivo usava. O mesmo foi feito no Svelte, por `onStateChange` do
-`Command.Root` do bits-ui.
+**Nota de contraste, e vale para quem for tentado a religar por analogia:** na
+mesma rodada a docs page do Menubar reprovou em `aria-required-children` por um
+`span[aria-owns]` que a lib injeta como filho direto do `role="menubar"`. É
+outra causa, em outro componente, e continua de pé — ver o comentário da story
+`Menubar` em `docs-smoke.stories.tsx`.
 
-**Com isso, nenhuma das três causas conhecidas do patch continua de pé** — o
-divisor está `aria-hidden`, o `cmdk-group` sempre foi permitido, e a mensagem
-saiu do listbox. **O patch NÃO foi removido**, e a razão é a regra da casa:
-premissa se derruba medindo. Quem julga `aria-required-children` é o axe rodando
-em navegador, e a suíte de navegador não foi executada nesta rodada (decisão da
-dona: rodada completa no fim da campanha). Especificamente, **não está
-confirmado** que um listbox sem nenhum `option` — que é o que sobra agora quando
-o filtro não casa — saia como "incomplete" (`reviewEmpty`) e não como falha.
-Remover a exceção antes dessa medida trocaria um portão frouxo por uma falha
-vermelha sem diagnóstico.
-
-**Próximo passo, e é uma medição, não um conserto:** na rodada de navegador,
-religar `aria-required-children` nos quatro arquivos e ver se as stories do
-Command passam. Se passarem, este registro inteiro sai.
-
-**Verificação após bump:** acompanhar issue [cmdk#226](https://github.com/pacocoursey/cmdk/issues/226). Se cmdk migrar para `role="listbox"` apenas no container de itens (deixando empty fora), remover este patch.
+**Verificação após bump:** se o cmdk voltar a montar a mensagem de vazio dentro
+do `role="listbox"`, ou se o divisor deixar de aceitar `aria-hidden`, a regra
+volta a reprovar nas quatro stories — e aí é conserto de markup, não exceção
+nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issues/226).
 
 ### todas/alert — variante dismissible (`dismissible`/`onDismiss`/`dismissLabel`) {#alert-dismissible}
 

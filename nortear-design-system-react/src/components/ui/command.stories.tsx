@@ -31,17 +31,6 @@ const meta: Meta<CommandArgs> = {
       // actions; a transform devolve o uso real, com os controls resolvidos.
       source: { transform: commandSource },
     },
-    // Regra desligada por dívida ANTIGA, e o que a sustentava já saiu daqui: o
-    // divisor virou `aria-hidden` e a mensagem de vazio saiu do listbox. O que
-    // resta é medição, não conserto — só o axe rodando em navegador diz se a
-    // lista vazia ainda reprova, e a suíte não roda nesta rodada. Religar a
-    // regra sem essa medida trocaria um portão frouxo por uma falha vermelha
-    // sem diagnóstico. Ver PATCHES.md#command-listbox-children.
-    a11y: {
-      config: {
-        rules: [{ id: 'aria-required-children', enabled: false }],
-      },
-    },
   },
   argTypes: {
     loop: {

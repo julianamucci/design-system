@@ -41,15 +41,6 @@ const meta = {
           "Os arranjos da paleta: com grupos e divisor, com atalhos, e dentro de um Dialog (command palette). Nenhuma peça nova entra aqui — é composição de call site.",
       },
     },
-    // Dívida ANTIGA: o divisor virou `aria-hidden` e a mensagem de vazio saiu
-    // do listbox, então o que sustentava a exceção já não está aqui. Religar a
-    // regra é medição de navegador, não conserto de markup — ver
-    // PATCHES.md#command-listbox-children.
-    a11y: {
-      config: {
-        rules: [{ id: 'aria-required-children', enabled: false }],
-      },
-    },
   },
 } satisfies Meta<typeof Command>;
 

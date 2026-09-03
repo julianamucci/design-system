@@ -34,8 +34,13 @@
 //      de embrulhar o primitivo e virou um `<div role="status">` próprio,
 //      montado o tempo todo e IRMÃO do `CommandList`, que é a forma do Vanilla.
 //      O estado vem de `useCommandState`, exportado pelo cmdk (`useCmdk as
-//      useCommandState`, medido em `cmdk/dist/index.d.ts`) — sem fork. Ver
-//      PATCHES.md#command-listbox-children.
+//      useCommandState`, medido em `cmdk/dist/index.d.ts`) — sem fork.
+//
+// As duas juntas ENCERRARAM a exceção que as stories carregavam: em 2026-09-03,
+// com `aria-required-children` religada nos quatro arquivos e a suíte de
+// navegador executada, as stories do Command passam — inclusive a que termina
+// sem resultados, que é o caso do listbox vazio. Histórico da medida em
+// PATCHES.md#command-listbox-children.
 
 import type * as React from "react"
 import { Command as CommandPrimitive, useCommandState } from "cmdk"
