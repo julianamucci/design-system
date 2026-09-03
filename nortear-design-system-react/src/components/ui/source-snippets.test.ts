@@ -24,12 +24,25 @@
  * 3. **Espião de control não vaza.** O Storybook entrega `onX` como FUNÇÃO;
  *    interpolada, o corpo do mock aparece no painel como se fosse código do
  *    design system.
+ *
+ * As três acima CHAMAM cada construtor, uma vez, com os args padrão. Existe uma
+ * QUARTA que não chama nada e lê o TEXTO do módulo — `loopsWithoutOrigin`, no
+ * fim deste arquivo. Ela existe porque as três primeiras só enxergam o ramo
+ * padrão, e 68 dos 82 módulos desta stack mudam a forma do snippet conforme o
+ * arg. As duas passagens se complementam, e nenhuma substitui a outra.
  */
 import { describe, expect, it } from 'vitest';
 import pkg from '../../../package.json';
 
 const modulos = import.meta.glob<Record<string, unknown>>('./**/*.source.ts', { eager: true });
 const caminhos = Object.keys(modulos).sort();
+
+/** Fonte crua de cada `*.source.ts` — a segunda passagem LÊ o módulo, não o executa. */
+const sourcesRaw = import.meta.glob<string>('./**/*.source.ts', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+});
 
 /** Fonte crua dos primitivos, para saber o que cada um realmente exporta. */
 const fontes = import.meta.glob<string>('./**/*.tsx', {
@@ -149,6 +162,228 @@ function declaradosNo(snippet: string): Set<string> {
   return names;
 }
 
+/** O que uma sequência de escape PUBLICA: `\n` é quebra de linha, não a letra n. */
+function unescaped(c: string | undefined): string {
+  if (c === 'n') return '\n';
+  if (c === 't') return '\t';
+  if (c === 'r') return '\r';
+  return c ?? '';
+}
+
+/**
+ * O TEXTO QUE O LEITOR COPIA, separado do código que o constrói.
+ *
+ * Ler o módulo por par de crases solto NÃO serve, e foi o primeiro falso achado
+ * desta checagem: a crase também abre citação em docblock, e o docblock do
+ * `table.source.ts` cita `INVOICES.map(...)` justamente para contar o defeito
+ * que ele JÁ corrigiu. A prosa vinha lida como snippet publicado, e o portão
+ * acusava o comentário que explica por que não há defeito.
+ *
+ * Então o corte é feito por varredura de caracteres, com três decisões:
+ *
+ *  · comentário de linha e de bloco NÃO entram — é onde mora a prosa;
+ *  · literal de string entra junto do de template, porque metade dos módulos
+ *    monta o corpo do snippet com `[...linhas].join('\n')`, e ali cada linha
+ *    publicada é uma string entre aspas;
+ *  · `${…}` é DESCARTADO: o que está lá dentro é nome do CONSTRUTOR, não do
+ *    snippet, e contá-lo inventaria símbolo faltando em quase todo módulo.
+ *
+ * Literal de expressão regular também é reconhecido, e não por elegância: o
+ * `code-block.source.ts` tem `.replace(/`/g, …)`, e um scanner que lesse aquela
+ * crase como abertura de template engoliria o resto do arquivo — perdendo a
+ * varredura em silêncio, que é o modo de falhar que este repositório já pagou
+ * caro duas vezes.
+ */
+function publishedText(bruto: string): string {
+  const BARRA = '\\';
+  let saida = '';
+  let i = 0;
+  const n = bruto.length;
+  // Último caractere significativo, que é o que distingue `/` de divisão do
+  // `/` que abre expressão regular.
+  let anterior = '\n';
+
+  while (i < n) {
+    const c = bruto[i]!;
+
+    if (c === '/' && bruto[i + 1] !== '/' && bruto[i + 1] !== '*' && /[(,=:[!&|?{};+\n]/.test(anterior)) {
+      i++;
+      let classe = false;
+      while (i < n) {
+        if (bruto[i] === BARRA) { i += 2; continue; }
+        if (bruto[i] === '[') classe = true;
+        else if (bruto[i] === ']') classe = false;
+        else if (bruto[i] === '/' && !classe) break;
+        else if (bruto[i] === '\n') break;
+        i++;
+      }
+      i++;
+      anterior = '/';
+      continue;
+    }
+
+    if (!/\s/.test(c)) anterior = c;
+
+    if (c === '/' && bruto[i + 1] === '/') {
+      while (i < n && bruto[i] !== '\n') i++;
+      continue;
+    }
+    if (c === '/' && bruto[i + 1] === '*') {
+      i += 2;
+      while (i < n && !(bruto[i] === '*' && bruto[i + 1] === '/')) i++;
+      i += 2;
+      continue;
+    }
+
+    if (c === "'" || c === '"') {
+      const aspa = c;
+      i++;
+      while (i < n && bruto[i] !== aspa) {
+        if (bruto[i] === BARRA) { saida += unescaped(bruto[i + 1]); i += 2; continue; }
+        if (bruto[i] === '\n') break;
+        saida += bruto[i];
+        i++;
+      }
+      i++;
+      saida += '\n';
+      continue;
+    }
+
+    if (c === '`') {
+      i++;
+      while (i < n && bruto[i] !== '`') {
+        if (bruto[i] === BARRA) { saida += unescaped(bruto[i + 1]); i += 2; continue; }
+        if (bruto[i] === '$' && bruto[i + 1] === '{') {
+          // A interpolação inteira sai, respeitando aninhamento de chave, de
+          // aspas e de template dentro dela.
+          let prof = 1;
+          i += 2;
+          while (i < n && prof > 0) {
+            const d = bruto[i];
+            if (d === '{') prof++;
+            else if (d === '}') prof--;
+            else if (d === '`') {
+              i++;
+              let interna = 0;
+              while (i < n) {
+                if (bruto[i] === BARRA) { i += 2; continue; }
+                if (bruto[i] === '$' && bruto[i + 1] === '{') { interna++; i += 2; continue; }
+                if (bruto[i] === '}' && interna > 0) { interna--; i++; continue; }
+                if (bruto[i] === '`' && interna === 0) break;
+                i++;
+              }
+            } else if (d === "'" || d === '"') {
+              const a = d;
+              i++;
+              while (i < n && bruto[i] !== a) { if (bruto[i] === BARRA) i++; i++; }
+            }
+            i++;
+          }
+          continue;
+        }
+        saida += bruto[i];
+        i++;
+      }
+      i++;
+      saida += '\n';
+      continue;
+    }
+
+    i++;
+  }
+  return saida;
+}
+
+/** Nomes que o TEXTO PUBLICADO declara ou importa — em qualquer ramo. */
+function declaredIn(texto: string): Set<string> {
+  const nomes = new Set<string>();
+  for (const [, nome] of texto.matchAll(/(?:const|let|var|function|class)\s+([A-Za-z_$][\w$]*)/g)) {
+    nomes.add(nome);
+  }
+  // Desestruturação: `const { a, b } = …` e `const [a, b] = …`.
+  for (const [, bloco] of texto.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]\s*=/g)) {
+    for (const parte of bloco.split(',')) {
+      const nome = parte.trim().split(/[:=]/).pop()?.trim().replace(/^\.\.\./, '');
+      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) nomes.add(nome);
+    }
+  }
+  for (const [, bloco] of texto.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}/g)) {
+    for (const parte of bloco.split(',')) {
+      const nome = parte.trim().split(/\s+as\s+/).pop()?.trim().replace(/^type\s+/, '');
+      if (nome) nomes.add(nome);
+    }
+  }
+  for (const [, nome] of texto.matchAll(/import\s+(?:\*\s+as\s+)?([A-Za-z_$][\w$]*)\s*(?:,|from)/g)) {
+    nomes.add(nome);
+  }
+  // Parâmetro de arrow e de função declarada: `(item) => …` liga `item`.
+  for (const [, lista] of texto.matchAll(/\(([^()]*)\)\s*=>/g)) {
+    for (const parte of lista.split(',')) {
+      const nome = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
+      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) nomes.add(nome);
+    }
+  }
+  for (const [, lista] of texto.matchAll(/function\s+[A-Za-z_$][\w$]*\s*\(([^()]*)\)/g)) {
+    for (const parte of lista.split(',')) {
+      const nome = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
+      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) nomes.add(nome);
+    }
+  }
+  return nomes;
+}
+
+/** Objetos globais cujo `.map` nunca precisa de origem no snippet. */
+const GLOBAIS_COM_MAP = new Set(['Object', 'Array', 'React', 'Math', 'JSON', 'Promise', 'this']);
+
+/**
+ * A MESMA pergunta das checagens que executam, feita ao TEXTO do módulo.
+ *
+ * POR QUE ESTA PASSAGEM EXISTE. As outras chamam cada construtor UMA vez, com
+ * os args padrão, então só o ramo default é conferido — e medido em 2026-09-03,
+ * 68 dos 82 módulos desta stack mudam a FORMA do snippet conforme o arg. Todo
+ * ramo não-padrão vivia sem portão nenhum.
+ *
+ * A forma conferida é o laço de renderização do JSX: `algo.map(…)`. É o
+ * equivalente exato do `@for (x of algo)` que o Angular confere — e o defeito é
+ * o mesmo dos dois lados: o snippet ITERA um nome que ele não declara nem
+ * importa, e quem copia recebe um símbolo indefinido. O docblock do
+ * `table.source.ts` conta essa história: o painel imprimia `{INVOICES.map(…)}`
+ * com `INVOICES` morando no módulo de fixtures. Aquele foi corrigido por
+ * LEITURA; esta passagem é o portão que dispensa a leitura da próxima vez.
+ *
+ * "Declarado" aqui quer dizer declarado ou importado DENTRO do próprio snippet
+ * — nada vale o módulo de fixtures ou o arquivo de story, que quem copia não
+ * tem. Declarações e usos são somados no MÓDULO inteiro, e não por construtor:
+ * é o que permite ver todos os ramos de uma vez, ao custo declarado abaixo.
+ *
+ * O QUE ELA NÃO VÊ, e por isso as passagens que executam continuam:
+ *
+ *  · **fonte do laço vinda de interpolação** (`${lista}.map(…)`) — o `${…}` é
+ *    apagado antes da varredura, porque ali o nome é do CONSTRUTOR e não do
+ *    snippet. A passagem que executa cobre o ramo padrão desses;
+ *  · **nome declarado no ramo ERRADO** — iterado no ramo A e declarado só no B.
+ *    A soma é por módulo, então o nome consta e passa. Ao menos ele existe no
+ *    exemplo, e o caso é mais raro que o que isto passa a pegar;
+ *  · **laço encadeado** (`lista.filter(…).map(…)`) e `for (const x of lista)` —
+ *    só a raiz colada ao `.map(` é conferida, que é a forma que os 82 módulos
+ *    usam hoje. Forma nova não é acusada: é ignorada, e este parágrafo é o
+ *    aviso de que ela precisaria de uma linha aqui;
+ *  · **referência que não é fonte de laço** — `labels={rotulos}`,
+ *    `usage={medicao}`. A convenção destes snippets é elidir o rótulo, e cobrar
+ *    toda referência acusaria dezenas de módulos corretos. Quem cobra origem de
+ *    TAG JSX é a checagem `só usa peças com origem`, que executa.
+ */
+function loopsWithoutOrigin(bruto: string): string[] {
+  const texto = publishedText(bruto);
+  const declarados = declaredIn(texto);
+  const soltos = new Set<string>();
+  for (const [, nome] of texto.matchAll(/(?:^|[^.\w$])([A-Za-z_$][\w$]*)\.map\s*\(/gm)) {
+    if (GLOBAIS_COM_MAP.has(nome) || declarados.has(nome)) continue;
+    soltos.add(nome);
+  }
+  return [...soltos].sort();
+}
+
 describe('transforms do painel Code', () => {
   it('a varredura encontra os módulos de source', () => {
     expect(caminhos.length).toBeGreaterThan(0);
@@ -179,6 +414,19 @@ describe('transforms do painel Code', () => {
     describe(caminho, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
+      });
+
+      // Vale para TODOS os ramos, e não só para o que os args padrão produzem.
+      it('nenhum ramo itera lista que o snippet não declara', () => {
+        const bruto = sourcesRaw[caminho];
+        // Cobrado, e não pulado: varredura que exclui em silêncio encolhe
+        // sozinha, e foi assim que 28 testes sumiram no Vue com a suíte verde.
+        expect(bruto, `${caminho}: a varredura crua não alcançou o módulo`).toBeDefined();
+        const soltos = loopsWithoutOrigin(bruto!);
+        expect(
+          soltos,
+          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que ele não declara nem importa — quem copiar aquele ramo recebe um laço sobre símbolo indefinido`,
+        ).toEqual([]);
       });
 
       // Esta varredura não filtra por sufixo, então ela não perde teste quando
