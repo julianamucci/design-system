@@ -197,19 +197,20 @@ export const Carousel: Story = { render: page(CarouselDocs), play: mounted };
 
 export const Chart: Story = { render: page(ChartDocs), play: mounted };
 
-// axe: target-size — MEDIDO em 2026-09-03 com a exceção RETIRADA, e a causa
-// continua de pé: os checkboxes do par do/don't (`#do-pair2-do-1`,
-// `#do-pair2-do-2`, `#do-pair2-dont-1` e irmãos) saem com 16x16 CSS px contra
-// os 24x24 que a regra cobra, e empilhados com `data-spacing="xs"` também não
-// sobra espaçamento que compense. É dívida do PRIMITIVO — a largura vem de
-// `width: var(--spacing-4)` em `docs/shared/styles/nds/checkbox.css`, que vale
-// para as cinco stacks —, não desta página: o alvo cresce quando o componente
-// crescer, e isso é decisão de design, não de docs page. Mesma leitura e mesma
-// medida do React em 2026-09-03. Segue catalogado no FIXES-NEEDED.
+// axe: target-size RESOLVIDA (2026-09-03). A leitura anterior VIU o
+// `data-spacing="xs"` e ainda assim mandou a correção para o primitivo — "o alvo
+// cresce quando o componente crescer". O alvo já era grande:
+// `.nds-checkbox::after` estende 8px por lado, dando 32x40 de área clicável, que
+// o axe não enxerga por ser pseudo-elemento. O que faltava era respiro na
+// PÁGINA, e a conta mostra que não era só o axe: com 4px entre as linhas, o alvo
+// de uma invadia o da vizinha em 12px — clicar logo abaixo de "Opção 1"
+// alternava "Opção 2". Com `md` (16px) o alvo para de invadir e o centro a
+// centro vai de 20px para 32px, acima dos 24 da WCAG 2.5.8. O Angular já usava
+// `md` na sublista equivalente, e é por isso que ele nunca reprovou.
 // button-name RESOLVIDA (2026-08-01): variante default (checkbox sem Label
 // visível) ganhou aria-label; empty-heading RESOLVIDA: DocsAccessibility.svelte
 // só renderiza o <h3> do teclado quando keyboardTitle existe (mesmo fix do Vue).
-export const Checkbox: Story = { render: page(CheckboxDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Checkbox: Story = { render: page(CheckboxDocs), play: mounted };
 
 export const CodeBlock: Story = { render: page(CodeBlockDocs), play: mounted };
 

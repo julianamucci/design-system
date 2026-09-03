@@ -224,7 +224,7 @@ import { Label } from "@/components/ui/label";`;
     <Checkbox id="sa-parent" checked={parent} {indeterminate} onCheckedChange={toggleAll} />
     <Label for="sa-parent">Selecionar todos</Label>
   </div>
- <div class="nds-stack nds-pl-6" data-spacing="xs">
+ <div class="nds-stack nds-pl-6" data-spacing="md">
     <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-1" bind:checked={c1} /><Label for="sa-1">Opção 1</Label></div>
     <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-2" bind:checked={c2} /><Label for="sa-2">Opção 2</Label></div>
     <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-3" bind:checked={c3} /><Label for="sa-3">Opção 3</Label></div>
@@ -382,7 +382,7 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet doPair2Do()}
-    <fieldset class="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4" data-spacing="xs">
+    <fieldset class="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4" data-spacing="md">
       <legend class="nds-text-caption nds-font-semibold nds-px-1">Preferências</legend>
       <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="do-pair2-do-1" bind:checked={doPair2Checked1} />
@@ -396,7 +396,7 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet doPair2Dont()}
-    <div class="nds-stack nds-w-full" data-spacing="xs">
+    <div class="nds-stack nds-w-full" data-spacing="md">
       <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="do-pair2-dont-1" bind:checked={doPair2Checked3} />
         <Label for="do-pair2-dont-1">Newsletter semanal</Label>
@@ -528,7 +528,7 @@ import { Label } from "@/components/ui/label";`;
         />
         <Label for="sa-parent">Selecionar todos</Label>
       </div>
- <div class="nds-stack nds-pl-6" data-spacing="xs">
+ <div class="nds-stack nds-pl-6" data-spacing="md">
         <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="sa-1" bind:checked={compSelectAllChild1} />
           <Label for="sa-1">Opção 1</Label>

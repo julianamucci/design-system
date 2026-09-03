@@ -369,9 +369,14 @@ interface NavigationMenuLinkProps
                           </NavigationMenuLink>
                         </li>
                       </ul>
+                      {/* Texto corrido sobre fundo colorido é `--foreground`, nunca
+                          `--muted-foreground`: medido em 4,1:1 sobre `--accent`, em
+                          13,3px, contra os 4,5:1 que a WCAG cobra para texto longo.
+                          Mesma causa e mesma razão do composer, corrigida hoje. O
+                          título pode carregar cor semântica; a descrição não. */}
                       <div className="nds-rounded-md nds-bg-accent nds-p-4 nds-text-caption">
                         <div className="nds-text-body nds-font-medium nds-mb-1">Novo</div>
-                        <p className="nds-text-muted-foreground">
+                        <p className="nds-text-foreground">
                           Conheça os tokens v2.
                         </p>
                       </div>

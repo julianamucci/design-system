@@ -6,6 +6,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { docsAuditarPage, describeProblemas } from '@shared/testing/docs-page-contract';
+import { axeRules, FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN } from '@/lib/wait-for-portal';
 
 import { AboutDocs } from './AboutDocs';
 import { AccessibilityDocs } from './AccessibilityDocs';
@@ -253,15 +254,16 @@ export const Chart: Story = {
   play: mounted,
 };
 
-// axe: target-size — MEDIDO em 2026-09-03, e a causa continua de pé: os
-// checkboxes do par do/don't saem com 16x16 CSS px (`#dodont-2-do-Email` e
-// irmãos), contra os 24x24 que a regra cobra, e sem espaçamento que compense.
-// É dívida do primitivo Checkbox, não desta página — o alvo cresce quando o
-// componente crescer. Segue catalogado no FIXES-NEEDED.
+// axe: target-size RESOLVIDA (2026-09-03). A causa catalogada estava incompleta:
+// dizia "dívida do primitivo, o alvo cresce quando o componente crescer". O alvo
+// JÁ era grande — `.nds-checkbox::after` estende 8px por lado, dando 32x40 de
+// área clicável —, e o que faltava era respiro na PÁGINA. Com `xs` (4px) entre
+// as linhas, o alvo de uma invadia o da vizinha em 12px: clicar logo abaixo de
+// "Email" alternava "SMS". Com `md` (16px) o alvo para de invadir e o centro a
+// centro passa de 20px para 32px, acima dos 24 da WCAG 2.5.8.
 export const Checkbox: Story = {
   render: () => <CheckboxDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const CodeBlock: Story = {
@@ -383,14 +385,19 @@ export const MediaPlayer: Story = {
   play: mounted,
 };
 
-// axe: aria-required-children — MEDIDO em 2026-09-03, e a causa continua de pé:
-// a lib injeta um `span[aria-owns]` como filho direto do `role="menubar"`, e
-// `span` não é filho permitido. É markup da lib, não nosso — nada no call site
-// alcança esse nó. Segue catalogado no FIXES-NEEDED.
+// axe: aria-required-children — a lib injeta um `span[aria-owns]` como filho
+// direto do `role="menubar"`, para amarrar ao gatilho o popup que vive em
+// portal. É markup da lib, e nada no call site alcança esse nó.
+//
+// O que muda em 2026-09-03 é a FORMA da exceção. Era `test: 'todo'`, que
+// desliga o axe da página INTEIRA — uma regra conhecida comprava silêncio sobre
+// todas as outras. Agora desliga só a regra, pela guarda que já existia em
+// `wait-for-portal.ts` com esta mesma análise escrita; `axeRules` preserva o
+// `target-size` global, que um array cru apagaria.
 export const Menubar: Story = {
   render: () => <MenubarDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
+  parameters: { a11y: { config: { rules: axeRules(MENU_RULE_CHILDREN) } } },
 };
 
 export const Motion: Story = {
@@ -398,15 +405,18 @@ export const Motion: Story = {
   play: settled,
 };
 
-// axe: aria-hidden-focus — MEDIDO em 2026-09-03, e a causa continua de pé: os
-// `span[data-base-ui-focus-guard]` da lib nascem com `aria-hidden="true"` E
-// `tabindex="0"` ao mesmo tempo. É markup da lib, não nosso.
+// axe: aria-hidden-focus — os `span[data-base-ui-focus-guard]` da lib nascem com
+// `aria-hidden="true"` E `tabindex="0"` ao mesmo tempo. É markup da lib.
+//
+// Como no Menubar acima, o que muda é a FORMA: era `test: 'todo'`, que apagava a
+// medição da página inteira; agora é a guarda nomeada que as stories desta stack
+// já usavam para o mesmo nó.
 // landmark-unique RESOLVIDA (2026-08-01): raízes com aria-label único + popup
 // render={<div/>} no primitivo, decisão da dona.
 export const NavigationMenu: Story = {
   render: () => <NavigationMenuDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
+  parameters: { a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } } },
 };
 
 export const Pagination: Story = {

@@ -400,8 +400,14 @@ export function CheckboxDocs() {
               {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
+                // As duas listas abaixo usam `md`, e não `xs`: a caixa tem 16px e
+                // o alvo de toque estende 8px por lado (`.nds-checkbox::after`).
+                // Com 4px de respiro, o alvo de uma linha invade o da vizinha em
+                // 12px — clicar logo abaixo de "Email" alterna "SMS" —, e centro a
+                // centro dá 20px, abaixo dos 24 da WCAG 2.5.8. Com 16px as duas
+                // contas fecham.
                 doPreview: (
-                  <fieldset className="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4" data-spacing="xs">
+                  <fieldset className="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4" data-spacing="md">
                     <legend className="nds-text-caption nds-font-semibold nds-px-1">Preferências</legend>
                     {["Email", "SMS", "Push"].map((opt) => (
                       <div key={opt} className="nds-cluster" data-spacing="xs">
@@ -414,7 +420,7 @@ export function CheckboxDocs() {
                   </fieldset>
                 ),
                 dontPreview: (
-                  <div className="nds-stack nds-w-full" data-spacing="xs">
+                  <div className="nds-stack nds-w-full" data-spacing="md">
                     {["Email", "SMS", "Push"].map((opt) => (
                       <div key={opt} className="nds-cluster" data-spacing="xs">
                         <Checkbox id={`dodont-2-dont-${opt}`} />
