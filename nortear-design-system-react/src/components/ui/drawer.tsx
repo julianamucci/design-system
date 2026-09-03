@@ -91,19 +91,19 @@ function Drawer({
    * da tela responderia igual a todos os outros passos.
    */
   const precisaControlar = !dismissible
-  const controlado = open !== undefined
-  const [abertoInterno, setAbertoInterno] = React.useState(defaultOpen)
-  const aberto = controlado ? open : abertoInterno
+  const isControlled = open !== undefined
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen)
+  const isOpen = isControlled ? open : internalOpen
 
-  const mudarAbertura = React.useCallback(
-    (novo: boolean) => {
-      if (!controlado) setAbertoInterno(novo)
-      onOpenChange?.(novo)
+  const changeOpen = React.useCallback(
+    (next: boolean) => {
+      if (!isControlled) setInternalOpen(next)
+      onOpenChange?.(next)
     },
-    [controlado, onOpenChange]
+    [isControlled, onOpenChange]
   )
 
-  const fecharExplicito = React.useMemo(
+  const explicitClose = React.useMemo(
     /*
      * Só quando a dispensa está desligada, e isso também é o que dispensa
      * qualquer proteção contra pedido em dobro: com a dispensa LIGADA este
@@ -111,19 +111,19 @@ function Drawer({
      * DESLIGADA o caminho do primitivo é engolido pela guarda dele, e este aqui
      * é o único que chega. Nunca os dois na mesma vez.
      */
-    () => (dismissible ? null : () => mudarAbertura(false)),
-    [dismissible, mudarAbertura]
+    () => (dismissible ? null : () => changeOpen(false)),
+    [dismissible, changeOpen]
   )
 
   return (
     <DrawerModalContext.Provider value={props.modal ?? true}>
-      <DrawerCloseContext.Provider value={fecharExplicito}>
+      <DrawerCloseContext.Provider value={explicitClose}>
         <DrawerPrimitive.Root
           data-slot="drawer"
           autoFocus={autoFocus}
           dismissible={dismissible}
           {...(precisaControlar
-            ? { open: aberto, onOpenChange: mudarAbertura }
+            ? { open: isOpen, onOpenChange: changeOpen }
             : { open, defaultOpen, onOpenChange })}
           {...props}
         />
@@ -148,7 +148,7 @@ function DrawerClose({
   onClick,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Close>) {
-  const fecharExplicito = React.useContext(DrawerCloseContext)
+  const explicitClose = React.useContext(DrawerCloseContext)
   return (
     <DrawerPrimitive.Close
       data-slot="drawer-close"
@@ -156,7 +156,7 @@ function DrawerClose({
         onClick?.(event)
         // Nulo quando a dispensa está ligada — aí quem fecha é o primitivo.
         // Com `dismissible={false}`, este é o ÚNICO caminho que fecha.
-        fecharExplicito?.()
+        explicitClose?.()
       }}
       {...props}
     />
