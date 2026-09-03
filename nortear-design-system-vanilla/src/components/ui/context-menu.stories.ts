@@ -176,6 +176,49 @@ export const Playground: Story = {
       await waitFor(() => expect(document.activeElement).toBe(items[0]));
     });
 
+    await step('Digitar salta para o item, e as letras se acumulam por um segundo', async () => {
+      // Numa lista de ações longa, o typeahead é o que evita percorrer item por
+      // item. As três asserções são degraus, e cada uma só passa se a anterior
+      // for verdade — por isso comparam com OUTRO item, e nunca com "mudou".
+      const items = [
+        ...menuOpen()!.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]'),
+      ];
+      // Editar · Duplicar · Excluir — três rótulos com iniciais que se separam,
+      // e dois deles começando por "e", que é o que dá sentido ao acúmulo.
+      await expect(items.length).toBe(3);
+
+      // As esperas de relógio entre os grupos NÃO são folga para o navegador:
+      // são o acúmulo expirando. A primeira versão deste passo não as tinha e
+      // reprovou — o "d" de um grupo continuava no buffer e o "e" do grupo
+      // seguinte virava "de", que não é o começo de rótulo nenhum. Custou a
+      // rodada para aparecer, e é exatamente o que o passo existe para medir.
+      // Relógio e não `waitFor`: o que se espera é o tempo passar, e não uma
+      // mutação que se possa observar.
+      const expirarAcumulo = () => new Promise((resolve) => setTimeout(resolve, 1100));
+
+      // Uma letra: a busca recomeça DEPOIS do item em foco, então "d" a partir
+      // de Editar acha Duplicar.
+      items[0].focus();
+      await userEvent.keyboard('d');
+      await expect(document.activeElement).toBe(items[1]);
+
+      // Duas letras seguidas: "e" pousa em Excluir e "ed" — o acúmulo — corrige
+      // para Editar. Sem acúmulo o segundo toque seria um "d" solto a partir de
+      // Excluir, que acharia Duplicar; é essa a diferença que a asserção mede.
+      await expirarAcumulo();
+      await userEvent.keyboard('e');
+      await expect(document.activeElement).toBe(items[2]);
+      await userEvent.keyboard('d');
+      await expect(document.activeElement).toBe(items[0]);
+
+      // E o acúmulo EXPIRA: passado o segundo do padrão WAI-ARIA, "d" volta a
+      // valer sozinho — de Editar para Duplicar. Se o buffer não zerasse, "edd"
+      // não acharia nada e o foco ficaria parado.
+      await expirarAcumulo();
+      await userEvent.keyboard('d');
+      await expect(document.activeElement).toBe(items[1]);
+    });
+
     await step('Escape fecha e devolve o foco à área', async () => {
       await gestoOpen(area());
       await userEvent.keyboard('{Escape}');
