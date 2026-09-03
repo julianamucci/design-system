@@ -39,10 +39,10 @@ const LABELS_BLOCK = [
   '};',
 ].join('\n');
 
-/** O identificador na raiz de uma expressão, ou nada quando ela é literal. */
+/** O identificador na root de uma expressão, ou nada quando ela é literal. */
 function rootName(expression: string): string | undefined {
-  const raiz = /^([A-Za-z_$][\w$]*)/.exec(expression);
-  return raiz?.[1];
+  const root = /^([A-Za-z_$][\w$]*)/.exec(expression);
+  return root?.[1];
 }
 
 /**

@@ -61,7 +61,7 @@ function script(imports: string[], ...extras: string[]): string {
 }
 
 /** A saída guardada num nome, quando ela é longa demais para o painel. */
-function declSaida(nome: string): string {
+function outputDecl(nome: string): string {
   return [
     '',
     '// A saída é do processo, e chega linha a linha para quem a mostra.',
@@ -109,7 +109,7 @@ function build(opts: TerminalBlockSnippetOptions): string {
   ]);
 
   return svelteSnippet(
-    script([IMPORT], ...(opts.linesRef ? [declSaida(opts.linesRef)] : [])),
+    script([IMPORT], ...(opts.linesRef ? [outputDecl(opts.linesRef)] : [])),
     `<TerminalBlock${attributes} />`,
   );
 }
@@ -291,7 +291,7 @@ export function terminalBlockBesideRunSource(): string {
       [IMPORT, IMPORT_RUN],
       '',
       'const rotulosDaExecucao = { /* os rótulos da linha de estado */ };',
-      declSaida('saida'),
+      outputDecl('saida'),
     ),
     markup,
   );
@@ -325,5 +325,5 @@ export function terminalBlockLongOutputSource(): string {
     '</style>',
   ].join('\n');
 
-  return svelteSnippet(script([IMPORT], declSaida('saidaLonga')), markup);
+  return svelteSnippet(script([IMPORT], outputDecl('saidaLonga')), markup);
 }

@@ -56,7 +56,7 @@ const DECL_LABELS = 'const labels = { /* os rótulos do plano */ };';
 const DECL_STATUS_LABELS = 'const statusLabels = { /* os rótulos da linha de estado */ };';
 
 /** A lista de passos que a story mostra, declarada com o nome que ela liga. */
-function declPassos(nome: string): string {
+function stepsDecl(nome: string): string {
   return [
     '// Os passos vêm de quem monta o plano: o que se faz, em que pé está e o',
     '// motivo, o resultado ou a falha.',
@@ -125,7 +125,7 @@ export function agentPlanEveryStateSource(): string {
 /** O plano proposto, antes de agir: nada começou, e o primeiro é o atual. */
 export function agentPlanProposedSource(): string {
   return svelteSnippet(
-    bloco([IMPORT], declPassos('proposedSteps'), DECL_LABELS),
+    bloco([IMPORT], stepsDecl('proposedSteps'), DECL_LABELS),
     usage('steps={proposedSteps}'),
   );
 }
@@ -133,7 +133,7 @@ export function agentPlanProposedSource(): string {
 /** A lista mantida durante o trabalho: dois fechados, um em curso. */
 export function agentPlanInProgressSource(): string {
   return svelteSnippet(
-    bloco([IMPORT], declPassos('runningSteps'), DECL_LABELS),
+    bloco([IMPORT], stepsDecl('runningSteps'), DECL_LABELS),
     usage('steps={runningSteps}'),
   );
 }
@@ -141,7 +141,7 @@ export function agentPlanInProgressSource(): string {
 /** O plano encerrado: o pulado e o que falhou, lado a lado. */
 export function agentPlanFinishedSource(): string {
   return svelteSnippet(
-    bloco([IMPORT], declPassos('finishedSteps'), DECL_LABELS),
+    bloco([IMPORT], stepsDecl('finishedSteps'), DECL_LABELS),
     usage('steps={finishedSteps}'),
   );
 }
@@ -149,7 +149,7 @@ export function agentPlanFinishedSource(): string {
 /** O rótulo longo, que quebra em linhas em vez de receber reticências. */
 export function agentPlanLongLabelSource(): string {
   return svelteSnippet(
-    bloco([IMPORT], declPassos('longSteps'), DECL_LABELS),
+    bloco([IMPORT], stepsDecl('longSteps'), DECL_LABELS),
     usage('steps={longSteps}'),
   );
 }
@@ -188,7 +188,7 @@ export function agentPlanProposedWithStatusSource(): string {
   return svelteSnippet(
     bloco(
       [IMPORT, IMPORT_STATUS],
-      declPassos('proposedSteps'),
+      stepsDecl('proposedSteps'),
       DECL_LABELS,
       DECL_STATUS_LABELS,
     ),
@@ -214,7 +214,7 @@ export function agentPlanTaskListSource(): string {
   return svelteSnippet(
     bloco(
       [IMPORT, IMPORT_STATUS],
-      declPassos('runningSteps'),
+      stepsDecl('runningSteps'),
       DECL_LABELS,
       DECL_STATUS_LABELS,
     ),

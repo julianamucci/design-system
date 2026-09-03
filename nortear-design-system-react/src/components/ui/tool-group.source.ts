@@ -11,7 +11,7 @@
  *
  * O Playground é o único que escreve a caixa aberta por extenso, e é de
  * propósito: lá o control muda isso, e um snippet que omitisse a opção mentiria
- * sobre o que a story renderiza. Nas demais o que varia é a lista, e ela chega
+ * sobre o que a story renderiza. Nas demais o que varia é a list, e ela chega
  * por um nome que o leitor já viu nas fixtures.
  */
 import { attrsMultilinha, jsxSnippet, type SourceTransform } from '@/lib/story-source';
@@ -21,7 +21,7 @@ const IMPORT = 'import { ToolGroup } from "@/components/ui/tool-group";';
 const ON_OPEN_CHANGE = 'onOpenChange={(aberto) => registrar(aberto)}';
 
 export type ToolGroupSnippetOptions = {
-  /** O nome da lista que entra no grupo, como o leitor a veria no código. */
+  /** O nome da list que entra no grupo, como o leitor a veria no código. */
   calls?: string;
   /** A caixa começa aberta? Só entra no snippet quando difere do padrão. */
   open?: boolean;
@@ -74,7 +74,7 @@ const CHANGE_HANDLER =
  *
  * Resumidas, e não elididas. O NOME muda por ramo porque é a LISTA que muda
  * entre os exemplos: o detalhe é campo de cada chamada, e não opção do grupo,
- * então o control que "tira o detalhe" na verdade troca a lista inteira.
+ * então o control que "tira o detalhe" na verdade troca a list inteira.
  */
 function callsLines(ref: string): string {
   const semDetalhe = ref === 'chamadasSemDetalhe';
@@ -91,12 +91,12 @@ function callsLines(ref: string): string {
     'docs/shared/guidelines/17-componentes-conversacionais.md',
     'O destino recusou: falta permissão de escrita.',
   ];
-  const lista = estados[ref] ?? estados.chamadas!;
+  const list = estados[ref] ?? estados.chamadas!;
   return [
     '// Três chamadas de exemplo. O DETALHE é campo de cada uma, e não opção do',
     '// grupo: é por isso que tirá-lo troca a lista, e não uma propriedade.',
     `const ${ref} = [`,
-    ...lista.map((state, i) => {
+    ...list.map((state, i) => {
       const campos = [`id: "c${i + 1}"`, `name: "${nomes[i]}"`, `state: "${state}"`];
       if (!semDetalhe) campos.push(`detail: "${detalhes[i]}"`);
       return `  { ${campos.join(', ')} },`;
@@ -147,8 +147,8 @@ export const toolGroupSource: SourceTransform<{ open?: boolean; detail?: boolean
 /**
  * Os quatro estados, percorrendo o vocabulário compartilhado.
  *
- * O snippet ensina a ITERAR `TOOL_CALL_STATES` em vez de escrever a lista à
- * mão, que é o mesmo motivo de a constante existir: lista escrita à mão fica
+ * O snippet ensina a ITERAR `TOOL_CALL_STATES` em vez de escrever a list à
+ * mão, que é o mesmo motivo de a constante existir: list escrita à mão fica
  * para trás no dia em que o tipo cresce, e ninguém repara.
  */
 export function toolGroupEveryStateSource(): string {

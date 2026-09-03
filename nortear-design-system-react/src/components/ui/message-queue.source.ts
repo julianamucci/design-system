@@ -10,7 +10,7 @@
  * nunca chegariam ao snippet.
  *
  * O Playground é o único que escreve a MENSAGEM por extenso, e é de propósito:
- * lá os controls mudam o estado e o texto, e um snippet que só mostrasse o nome
+ * lá os controls mudam o state e o texto, e um snippet que só mostrasse o nome
  * de uma constante mentiria sobre o que a story renderiza. Nas demais a fila é
  * dado de andaime — três falas de exemplo —, e despejá-la faria o painel
  * ensinar o andaime em vez da peça.
@@ -31,7 +31,7 @@ export type QueueSnippetOptions = {
 /**
  * Os rótulos da fila, por INTEIRO.
  *
- * Não cabe resumir: `labels` é obrigatória e a palavra de cada estado é um
+ * Não cabe resumir: `labels` é obrigatória e a palavra de cada state é um
  * `Record` completo — um objeto pela metade não compila para quem copia. São
  * eles o nome acessível da lista, o nome do botão de retirar (com o texto da
  * mensagem dentro, para que três botões não se chamem todos "Retirar") e a
@@ -87,7 +87,7 @@ function queueLines(ref: string): string {
     ref === 'longQueue'
       ? '// Uma fila que passa de nove — aqui, as três primeiras das doze.'
       : '// As três falas de exemplo, na ordem em que saem.';
-  const estado = (indice: number) =>
+  const state = (indice: number) =>
     primeiraSaindo && indice === 0 ? 'sending' : 'waiting';
   return [
     nota,
@@ -96,7 +96,7 @@ function queueLines(ref: string): string {
       'Manda o resumo de ontem',
       'E o prazo?',
       'Inclui o gráfico de custo',
-    ].map((texto, i) => `  { id: "m${i + 1}", text: "${texto}", state: "${estado(i)}" },`),
+    ].map((texto, i) => `  { id: "m${i + 1}", text: "${texto}", state: "${state(i)}" },`),
     '];',
   ].join('\n');
 }

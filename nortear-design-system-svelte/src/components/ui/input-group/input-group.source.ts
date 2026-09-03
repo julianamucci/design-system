@@ -205,11 +205,11 @@ export function inputGroupSnippet(options: InputGroupSnippetOptions = {}): strin
 
   // NOME LIGADO É NOME DECLARADO: o retorno do controle do addon vinha de fora
   // do bloco, e quem copiasse o painel receberia um `onclick` sem função.
-  const temBotao = addons.some((addon) => addon.buttonLabel || addon.buttonAccessibleName);
+  const hasButton = addons.some((addon) => addon.buttonLabel || addon.buttonAccessibleName);
   const script = [
     ...icons.map(iconImport),
     groupImport(names),
-    ...(temBotao
+    ...(hasButton
       ? ['', 'function handleAddon() { /* o que o controle do addon faz */ }']
       : []),
   ].join('\n');
