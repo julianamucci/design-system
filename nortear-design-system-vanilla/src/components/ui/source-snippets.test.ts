@@ -320,6 +320,128 @@ function interpolacoesSemOrigem(texto: string): string[] {
   return [...soltas].sort();
 }
 
+/** Comentário não é código publicado, e prosa em crase não é snippet. */
+function semComentarios(bruto: string): string {
+  return bruto
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .split('\n')
+    .map((linha) => linha.replace(/(^|[^:])\/\/.*$/, '$1'))
+    .join('\n');
+}
+
+/**
+ * Todo nome que o TEXTO do módulo liga, em qualquer ramo.
+ *
+ * Irmã de `escopoDo`, e separada dela de propósito: aquela lê o SNIPPET, que é
+ * JavaScript sem tipos, e resolve `{ a: b }` pegando o lado direito do `:`.
+ * Aqui o alvo é TypeScript, onde `:` também introduz anotação de tipo —
+ * `function corpo(items: Item[], o: Opts = {})` faria `escopoDo` ligar `Item` e
+ * esquecer `items`. Medido: reaproveitá-la acusava dez módulos CORRETOS de uma
+ * vez, oito deles só por parâmetro tipado. Os dois lados do `:` entram, porque
+ * ligar demais só tira sensibilidade, enquanto ligar de menos inventa defeito.
+ */
+function ligadosNoTexto(texto: string): Set<string> {
+  const nomes = new Set<string>();
+  const cru = (lista: string) => {
+    for (const parte of lista.split(',')) {
+      for (const pedaco of parte.split('=')[0].split(':')) {
+        const id = /^([A-Za-z_$][\w$]*)/.exec(pedaco.trim().replace(/^[([{\s.]+/, ''))?.[1];
+        if (id) nomes.add(id);
+      }
+    }
+  };
+  for (const m of texto.matchAll(
+    /(?:function|const|let|var|class|type|interface|enum)\s+([A-Za-z_$][\w$]*)/g,
+  )) {
+    nomes.add(m[1]);
+  }
+  for (const m of texto.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]/g)) cru(m[1]);
+  for (const m of texto.matchAll(/\(([^()]*)\)\s*(?::[^=]*)?=>/g)) cru(m[1]);
+  for (const m of texto.matchAll(/(?:^|[^\w$.)])([A-Za-z_$][\w$]*)\s*=>/gm)) nomes.add(m[1]);
+  for (const m of texto.matchAll(/function\s*[A-Za-z_$\w]*\s*\(([\s\S]*?)\)\s*[:{]/g)) cru(m[1]);
+  for (const m of texto.matchAll(/for\s*\(\s*(?:const|let|var)\s*[{[]?([^)]*?)[}\]]?\s+(?:of|in)\s/g)) {
+    cru(m[1]);
+  }
+  for (const m of texto.matchAll(/catch\s*\(\s*([A-Za-z_$][\w$]*)/g)) nomes.add(m[1]);
+  for (const nome of importadosNo(texto)) nomes.add(nome);
+  // `importing('slug', 'A', 'B')` — a linha de import que o snippet PUBLICA não
+  // existe como `import` no texto; ela é montada, e os nomes chegam citados.
+  for (const m of texto.matchAll(/importing\w*\s*\(([\s\S]*?)\)/g)) {
+    for (const parte of m[1].split(',').slice(1)) {
+      const nome = /'([A-Za-z_$][\w$]*)'/.exec(parte)?.[1];
+      if (nome) nomes.add(nome);
+    }
+  }
+  return nomes;
+}
+
+/** Os métodos que percorrem uma lista — o `.map` do laço, não o `.map` do Map. */
+const METODOS_DE_LACO = /^(?:map|forEach|flatMap)$/;
+
+/**
+ * Laços que o snippet publica sobre um nome que ninguém liga — em TODOS os ramos.
+ *
+ * POR QUE UMA SEGUNDA PASSAGEM EXISTE. A primeira chama cada construtor UMA
+ * vez, com os args padrão, e analisa o que sai. Medido em 2026-09-03: 79 dos 82
+ * módulos desta stack mudam a forma do snippet conforme o argumento — a maior
+ * proporção das cinco —, então o que os outros ramos publicam não tinha portão
+ * nenhum. Declarar caso por caso custaria centenas de arquivos e cada
+ * esquecimento voltaria a ser silêncio; ler o TEXTO vê todos os ramos de uma
+ * vez, ao custo de uma passagem por stack.
+ *
+ * A FORMA CONFERIDA É O LAÇO, e nesta stack ele tem duas: `for (const x of y)`
+ * e `y.map(…)` / `y.forEach(…)` / `y.flatMap(…)`. Aqui não há template de
+ * framework — o snippet é JavaScript que roda —, então "declarado" quer dizer
+ * declarado, importado ou recebido DENTRO do próprio trecho que o leitor copia.
+ *
+ * O QUE ELA ACHOU AO NASCER: três snippets ensinavam a percorrer uma lista que
+ * eles nunca declaram — `trabalhos` no `job-progress`, `sequencia` no
+ * `terminal-block` e `medicoes` no `context-display`. Os três explicavam no
+ * comentário que a lista é de quem consome, e isso continua verdade; o que não
+ * seguia era deixá-la sem forma na tela, quando todos os outros módulos
+ * escrevem os dados de exemplo à vista (o `DATA` do `table`, os blocos do
+ * `chart`, o `citacoes` do `inline-citation`). Declará-la custa quatro linhas e
+ * é o que faz o trecho rodar quando alguém o cola.
+ *
+ * O QUE ELA NÃO VÊ, e por isso a passagem que EXECUTA continua:
+ *
+ *  · o que estiver dentro de `${…}`: apagado antes da varredura, porque ali o
+ *    nome é do CONSTRUTOR e não do snippet. Laço cuja fonte é interpolada sai
+ *    desta medição — em troca, ela não inventa membro faltando em todo módulo;
+ *  · nome declarado no ramo ERRADO: iterado no ramo A e declarado só no B. O
+ *    texto é lido inteiro, então os dois ramos entram no mesmo conjunto. É o
+ *    caso do `citacoes` do `inline-citation`, declarado em um dos três exports
+ *    que o iteram — e é mais raro que o que isto passa a pegar;
+ *  · raiz de cadeia: `a.b.map(…)` não é conferido, só `a.map(…)`. O ponto antes
+ *    do nome é o que separa `document.createElement` do que é nosso, e afrouxar
+ *    isso traria de volta os falsos positivos que a primeira versão despejou;
+ *  · laço contado (`for (let i = 0; i < 3; i++)`) não tem fonte para conferir;
+ *  · comentário: apagado antes de tudo. Prosa em crase dentro de um docblock já
+ *    virou "texto publicado" numa versão anterior, e um nome que só existia na
+ *    explicação virou achado.
+ */
+function lacosSemOrigemNoTexto(bruto: string): string[] {
+  const semCom = semComentarios(bruto);
+  const ligados = ligadosNoTexto(semCom);
+  // `${…}` sai DEPOIS de colher o escopo e antes de procurar laço: o que está
+  // lá dentro é do construtor, e contá-lo inventaria nome faltando em todo
+  // módulo que interpola.
+  const texto = semCom.replace(/\$\{[^}]*\}/g, '');
+
+  const soltos = new Set<string>();
+  const registra = (nome: string) => {
+    if (ligados.has(nome) || GLOBAIS.has(nome)) return;
+    soltos.add(nome);
+  };
+  for (const m of texto.matchAll(/for\s*\(\s*(?:const|let|var)\s+[^)]*?\s+of\s+([A-Za-z_$][\w$]*)/g)) {
+    registra(m[1]);
+  }
+  for (const m of texto.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)\s*\.\s*([A-Za-z_$][\w$]*)\s*\(/g)) {
+    if (METODOS_DE_LACO.test(m[2])) registra(m[1]);
+  }
+  return [...soltos].sort();
+}
+
 type Chamavel = (...args: never[]) => unknown;
 
 /**
@@ -419,6 +541,25 @@ describe('transforms do painel Code', () => {
     describe(caminho, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
+      });
+
+      // Vale para TODOS os ramos, e não só para o que os args padrão produzem.
+      it('nenhum ramo publica laço sobre nome que o snippet não liga', () => {
+        // O texto TEM de existir: `fontes` varre `./*.ts` e `caminhos` varre
+        // `./**/*.source.ts`. Módulo em subpasta sairia da varredura sem uma
+        // palavra, que é como um portão encolhe em silêncio — aqui ele reprova.
+        const bruto = fontes[caminho];
+        expect(
+          typeof bruto,
+          `${caminho}: o texto do módulo não foi alcançado pela varredura — mova-o para esta pasta ou amplie o glob de \`fontes\``,
+        ).toBe('string');
+        const soltos = lacosSemOrigemNoTexto(bruto);
+        expect(
+          soltos,
+          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que ele não declara, ` +
+            `importa nem recebe — quem copiar aquele ramo recebe um ReferenceError. ` +
+            `A lista de exemplo é curta: declare-a no próprio snippet, à vista de quem lê.`,
+        ).toEqual([]);
       });
 
       // Esta varredura não filtra por sufixo, então ela não perde teste quando

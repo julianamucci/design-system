@@ -184,6 +184,16 @@ export function terminalBlockSequenceSource(): string {
   return snippet(
     importing('terminal-block', 'createTerminalBlock'),
     [
+      '// A sequência é de quem consome, e por isso ela é DECLARADA aqui: um',
+      '// laço sobre um nome que o snippet não declara quebra na mão de quem',
+      '// copia.',
+      'const sequencia = [',
+      `  { command: ${text(COMMAND)}, lines: ['built in 8.42s'], status: 'complete', exitCode: 0 },`,
+      "  { command: 'npm test --workspace @nortear/ds', lines: ['ERROR: build failed with 1 error'], status: 'failed', exitCode: 1 },",
+      '  // O que ainda não correu não escreveu nada, e não tem código de saída.',
+      "  { command: 'npm publish --workspace @nortear/ds', status: 'idle' },",
+      '];',
+      '',
       'for (const passo of sequencia) {',
       "  document.querySelector('#app')?.append(",
       '    createTerminalBlock({',

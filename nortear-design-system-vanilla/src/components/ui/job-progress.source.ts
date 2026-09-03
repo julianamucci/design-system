@@ -155,6 +155,15 @@ export function jobProgressQueueSource(): string {
   return snippet(
     importing('job-progress', 'createJobProgress'),
     [
+      '// A fila é de quem consome, e por isso ela é DECLARADA aqui: um laço',
+      '// sobre um nome que o snippet não declara quebra na mão de quem copia.',
+      'const trabalhos = [',
+      `  { label: ${text(JOB_LABEL)}, status: 'running', count: { done: 1240, total: 5000 } },`,
+      '  // Sem total não há trilha, e é caso real: a conta continua correndo.',
+      "  { label: 'Gerando embeddings', status: 'running', count: { done: 320 } },",
+      "  { label: 'Aquecendo o cache', status: 'idle' },",
+      '];',
+      '',
       'for (const job of trabalhos) {',
       "  document.querySelector('#app')?.append(",
       '    createJobProgress({',
