@@ -32,6 +32,31 @@ import { XIcon } from "lucide-react"
  * Escape: fecha NOS DOIS, e no AlertDialog equivale a cancelar. Tirar a única
  * saída de teclado seria pior que o risco de dispensa acidental — que é
  * justamente o que o clique-fora bloqueado já cobre.
+ *
+ * ─── Conteúdo mais alto que a janela: as DUAS rotas ─────────────────────────
+ *
+ * Rota A — CORPO ROLÁVEL. O painel fica parado e centralizado, o cabeçalho e o
+ * rodapé não saem da tela, e a rolagem acontece dentro do corpo. Nada muda no
+ * componente: quem compõe pendura `.nds-dialog-body-scroll` no elemento do
+ * corpo, com `tabindex="0"`, `role="group"` e nome.
+ *
+ * Rota B — OVERLAY ROLANDO. O painel entra no FLUXO do overlay, e quem rola é
+ * o overlay: o cabeçalho sobe junto com o conteúdo e sai da tela. Serve para
+ * conteúdo que se lê de ponta a ponta (um contrato, um artigo), em que fixar o
+ * cabeçalho rouba altura útil. Liga-se com `scroll` no Content, que põe
+ * `.nds-dialog-overlay-scroll` e `.nds-dialog-content-scroll` — o par que
+ * `dialog.css` declara para as cinco stacks.
+ *
+ * A FORMA da rota B diverge por stack, e isso é divergência de API de
+ * framework: não há fonte de verdade e não se "alinha". Aqui é uma prop
+ * booleana do Content, que é como React expõe uma variação de render sem
+ * duplicar componente. Nesse modo o Popup é renderizado DENTRO do Backdrop —
+ * a rolagem só chega ao painel se ele for filho de quem rola.
+ *
+ * Clique na barra de rolagem do overlay NÃO fecha: o `useDismiss` do primitivo
+ * desta stack já compara `offsetX` com `clientWidth` antes de dispensar
+ * (`floating-ui-react/hooks/useDismiss.js`), então aqui não é preciso guarda
+ * própria — nas stacks cujo primitivo não faz essa conta, é.
  */
 
 // O primitivo desta stack isola o resto do documento com `inert`/`aria-hidden`
@@ -83,13 +108,18 @@ function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
 
 function DialogOverlay({
   className,
+  scroll = false,
   ...props
-}: DialogPrimitive.Backdrop.Props) {
+}: DialogPrimitive.Backdrop.Props & {
+  /** Rota B: o overlay vira a área de rolagem e recebe o painel como filho. */
+  scroll?: boolean
+}) {
   return (
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
         "nds-dialog-overlay",
+        scroll && "nds-dialog-overlay-scroll",
         className
       )}
       {...props}
@@ -101,41 +131,64 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  scroll = false,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
+  /**
+   * Rota B — o painel sai do centro fixo e entra no fluxo do overlay, que
+   * passa a ser quem rola. O cabeçalho sobe junto com o conteúdo.
+   *
+   * Para manter cabeçalho e rodapé parados (rota A), deixe em `false` e
+   * pendure `.nds-dialog-body-scroll` no corpo. Ver o docblock do arquivo.
+   */
+  scroll?: boolean
 }) {
   const modal = React.useContext(DialogModalContext)
+  const popup = (
+    <DialogPrimitive.Popup
+      data-slot="dialog-content"
+      className={cn(
+        "nds-dialog-content",
+        scroll && "nds-dialog-content-scroll",
+        className
+      )}
+      aria-modal={modal === true ? "true" : undefined}
+      {...props}
+    >
+      {children}
+      {showCloseButton && (
+        <DialogPrimitive.Close
+          data-slot="dialog-close"
+          render={
+            <Button
+              variant="ghost"
+              className="nds-dialog-close-position"
+              size="icon-sm"
+            />
+          }
+        >
+          <XIcon
+          />
+          <span className="nds-sr-only">Fechar</span>
+        </DialogPrimitive.Close>
+      )}
+    </DialogPrimitive.Popup>
+  )
+
+  // Na rota B o painel é FILHO do overlay: rolagem de um elemento só alcança o
+  // que está dentro dele. Na rota A eles seguem irmãos, que é o arranjo em que
+  // o painel fica fixo no centro sem depender do overlay para posicionar.
   return (
     <DialogPortal>
-      <DialogOverlay />
-      <DialogPrimitive.Popup
-        data-slot="dialog-content"
-        className={cn(
-          "nds-dialog-content",
-          className
-        )}
-        aria-modal={modal === true ? "true" : undefined}
-        {...props}
-      >
-        {children}
-        {showCloseButton && (
-          <DialogPrimitive.Close
-            data-slot="dialog-close"
-            render={
-              <Button
-                variant="ghost"
-                className="nds-dialog-close-position"
-                size="icon-sm"
-              />
-            }
-          >
-            <XIcon
-            />
-            <span className="nds-sr-only">Fechar</span>
-          </DialogPrimitive.Close>
-        )}
-      </DialogPrimitive.Popup>
+      {scroll ? (
+        <DialogOverlay scroll>{popup}</DialogOverlay>
+      ) : (
+        <>
+          <DialogOverlay />
+          {popup}
+        </>
+      )}
     </DialogPortal>
   )
 }

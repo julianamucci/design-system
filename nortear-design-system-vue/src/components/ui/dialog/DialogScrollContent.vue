@@ -1,4 +1,25 @@
 <script setup lang="ts">
+/**
+ * ROTA B — o overlay é quem rola.
+ *
+ * O painel entra no FLUXO do overlay, e o overlay vira a área de rolagem: o
+ * cabeçalho sobe junto com o conteúdo e sai da tela. Serve para conteúdo que se
+ * lê de ponta a ponta (um contrato, um artigo), em que fixar o cabeçalho rouba
+ * altura útil. As classes são `.nds-dialog-overlay-scroll` e
+ * `.nds-dialog-content-scroll`, o par que `dialog.css` declara para as cinco
+ * stacks, e o painel é filho do overlay porque rolagem de um elemento só
+ * alcança o que está dentro dele.
+ *
+ * ROTA A é o `DialogContent` de sempre: o painel fica parado e centralizado, o
+ * cabeçalho e o rodapé não saem da tela, e quem rola é o corpo — quem compõe
+ * pendura `.nds-dialog-body-scroll` nele, com `tabindex="0"`, `role="group"` e
+ * nome.
+ *
+ * A FORMA da rota B diverge por stack, e isso é divergência de API de
+ * framework: não há fonte de verdade e não se "alinha". Aqui é um COMPONENTE
+ * próprio, porque a composição do overlay com o painel é o que muda e o
+ * `DialogContent` desta stack já monta os dois.
+ */
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'

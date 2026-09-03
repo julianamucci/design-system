@@ -290,6 +290,48 @@ export function dialogWithScrollSource(): string {
 }
 
 /**
+ * Rota B — o overlay é quem rola, e o painel entra no fluxo dele.
+ *
+ * O contrário da rota acima: aqui o cabeçalho NÃO fica parado, ele sobe junto
+ * com o conteúdo. Não há região rolável aninhada, então também não há
+ * `tabindex`, papel nem nome a declarar — quem rola é o overlay, e a página
+ * inteira do diálogo é uma coisa só.
+ *
+ * A forma é uma prop booleana do Content porque nesta stack o Content já monta
+ * o overlay: ligar as duas classes de uma vez é o que evita um segundo
+ * componente que só existiria para repetir o resto.
+ */
+export function dialogOverlayScrollSource(): string {
+  return jsxSnippet(
+    IMPORT_BASE,
+    `<Dialog defaultOpen>
+  <DialogTrigger render={<Button variant="outline" />}>Ver contrato</DialogTrigger>
+  <DialogContent scroll>
+    <DialogHeader>
+      <DialogTitle>Contrato de prestação</DialogTitle>
+      <DialogDescription>
+        O documento rola inteiro, e o cabeçalho sobe junto.
+      </DialogDescription>
+    </DialogHeader>
+    <div
+      data-slot="dialog-body"
+      className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+    >
+      <p>Cláusula 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <p>Cláusula 2. Sed do eiusmod tempor incididunt ut labore et dolore magna.</p>
+      <p>Cláusula 3. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+    </div>
+    <DialogFooter>
+      <DialogClose render={<Button variant="outline" />}>Recusar</DialogClose>
+      <Button>Aceitar</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>`,
+  );
+}
+
+/**
  * Ação primária destrutiva no rodapé.
  *
  * Vale só quando a destruição é secundária ao fluxo — remover de uma lista, não

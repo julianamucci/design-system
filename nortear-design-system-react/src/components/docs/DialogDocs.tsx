@@ -231,10 +231,20 @@ export function DialogDocs() {
   DialogTrigger,
 } from "@/components/ui/dialog";`;
 
-  const codeImportWithScroll = `// React/Svelte: scroll interno manual
-<DialogContent>
+  // O snippet anterior nomeava outra stack — cada página é lida sozinha — e
+  // ensinava um `max-height` inline, que vence a folha e sai do tema, da
+  // densidade e do zoom. O teto, o overflow e a folga da barra vêm todos da
+  // classe compartilhada.
+  const codeImportWithScroll = `<DialogContent>
   <DialogHeader>...</DialogHeader>
-  <div className="nds-overflow-y" style={{ maxHeight: '60vh' }}>{/* conteúdo longo */}</div>
+  <div
+    className="nds-dialog-body nds-dialog-body-scroll"
+    tabIndex={0}
+    role="group"
+    aria-label="Termos de uso"
+  >
+    {/* conteúdo longo */}
+  </div>
   <DialogFooter>...</DialogFooter>
 </DialogContent>`;
 
@@ -629,6 +639,51 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     data-spacing="sm"
                   >
                     {Array.from({ length: 8 }).map((_, i) => (
+                      <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>
+                    ))}
+                  </div>
+                  <DialogFooter>
+                    <DialogClose render={<Button variant="outline" />}>
+                      {tContent("demonstration.labels.cancel")}
+                    </DialogClose>
+                    <Button>Aceitar</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            ),
+          },
+          {
+            name: "withScrollingOverlay",
+            description: stripHtml(tContent("variants.items.withScrollingOverlay")),
+            // O snippet vem do conteúdo compartilhado, com uma variante por
+            // stack: escrito aqui ele ficaria preso a esta página, que é como
+            // cinco snippets desta campanha ficaram para trás do código.
+            code: tContent("variants.items.withScrollingOverlayCode"),
+            preview: (
+              <Dialog>
+                <DialogTrigger render={<Button variant="outline" />}>
+                  Ver contrato
+                </DialogTrigger>
+                <DialogContent scroll className="nds-max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Contrato de prestação</DialogTitle>
+                    <DialogDescription>
+                      O documento rola inteiro, e o cabeçalho sobe junto.
+                    </DialogDescription>
+                  </DialogHeader>
+                  {/*
+                    A OUTRA rota: quem rola é o overlay, e o painel entra no
+                    fluxo dele. Sem `.nds-dialog-body-scroll`, sem `tabindex` e
+                    sem papel — não há região rolável aninhada para alcançar por
+                    teclado, porque o que rola já está na ordem natural da
+                    página.
+                  */}
+                  <div
+                    data-slot="dialog-body"
+                    className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+                    data-spacing="sm"
+                  >
+                    {Array.from({ length: 16 }).map((_, i) => (
                       <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>
                     ))}
                   </div>

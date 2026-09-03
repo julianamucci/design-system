@@ -180,13 +180,21 @@ export class NdsDialogPortal {}
 /**
  * Backdrop translúcido atrás do painel.
  *
- * É irmão do painel, nunca pai: `.nds-dialog-content` é posicionado e cria
- * contexto de empilhamento próprio, então um overlay aninhado pintaria POR CIMA
- * do fundo do painel — e o clique nele contaria como "dentro", desligando o
- * fechamento por clique fora.
+ * Na ROTA A (padrão) é irmão do painel, nunca pai: `.nds-dialog-content` é
+ * posicionado e cria contexto de empilhamento próprio, então um overlay
+ * aninhado pintaria POR CIMA do fundo do painel — e o clique nele contaria como
+ * "dentro", desligando o fechamento por clique fora.
+ *
+ * Na ROTA B a relação se INVERTE, e é o que o par `scroll` exige: o overlay
+ * vira a área de rolagem e o painel entra no fluxo DELE, como filho. Medido
+ * contra a folha compartilhada: com os dois como irmãos, o overlay não tem o
+ * que rolar (`scrollHeight === clientHeight`) e a rota não acontece — a classe
+ * chega e não pinta. Aninhar é do call site, e por isso está no snippet e na
+ * story, não aqui.
  *
  * `scroll` troca o overlay para o modo rolável: ele vira a área de rolagem e o
- * painel entra no fluxo, para conteúdo mais alto que a janela.
+ * painel entra no fluxo, para conteúdo mais alto que a janela. As duas rotas
+ * estão descritas no docblock de `NdsDialogContent`.
  */
 @Directive({
   selector: 'div[ndsDialogOverlay]',
@@ -301,7 +309,24 @@ export class NdsDialogContent {
    */
   readonly closeLabel = input('Fechar');
 
-  /** Par do `scroll` do overlay: tira o painel do centro fixo e o põe no fluxo. */
+  /**
+   * ROTA B — par do `scroll` do overlay: tira o painel do centro fixo e o põe
+   * no fluxo, e a partir daí quem rola é o overlay. O cabeçalho sobe junto com
+   * o conteúdo.
+   *
+   * Os dois `scroll` andam juntos E o painel tem de estar DENTRO do overlay no
+   * template: rolagem de um elemento só alcança o que está dentro dele. Com os
+   * dois como irmãos as classes chegam e não produzem rolagem nenhuma.
+   *
+   * ROTA A, o padrão, é o contrário: o painel fica parado e centralizado, o
+   * cabeçalho e o rodapé não saem da tela, e a rolagem acontece dentro do corpo
+   * — quem compõe pendura `.nds-dialog-body-scroll` no `div ndsDialogBody`,
+   * com `tabindex="0"`, `role="group"` e nome.
+   *
+   * A FORMA da rota B diverge por stack, e isso é divergência de API de
+   * framework: não há fonte de verdade e não se "alinha". Aqui é um par de
+   * inputs, porque a composição do overlay e do painel é do template.
+   */
   readonly scroll = input(false, { transform: booleanAttribute });
 
   private readonly root = injectRdxDialogRootContext();

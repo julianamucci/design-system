@@ -13,7 +13,14 @@
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
 
-  type Variant = 'default' | 'withForm' | 'withScrollContent' | 'noFooter' | 'withDestructiveAction' | 'customCloseInFooter';
+  type Variant =
+    | 'default'
+    | 'withForm'
+    | 'withScrollContent'
+    | 'withScrollingOverlay'
+    | 'noFooter'
+    | 'withDestructiveAction'
+    | 'customCloseInFooter';
 
   interface Props {
     open?: boolean;
@@ -49,7 +56,7 @@
         <Button variant="outline" {...props}>{triggerLabel}</Button>
       {/snippet}
     </DialogTrigger>
-    <DialogContent {showCloseButton}>
+    <DialogContent {showCloseButton} scroll={variant === 'withScrollingOverlay'}>
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
@@ -93,6 +100,20 @@
         >
           {#each Array.from({ length: 14 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a height disponível em viewport.</p>
+          {/each}
+        </div>
+      {:else if variant === 'withScrollingOverlay'}
+        <!-- A OUTRA rota: quem rola é o overlay, e o painel entra no fluxo dele.
+             Sem `.nds-dialog-body-scroll`, sem tabindex e sem papel — não há
+             região rolável aninhada para alcançar por teclado, porque o que
+             rola já está na ordem natural da página. -->
+        <div
+          class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+          data-slot="dialog-body"
+          data-spacing="sm"
+        >
+          {#each Array.from({ length: 20 }) as _, i (i)}
+            <p>Cláusula {i + 1}: o diálogo entra no fluxo do overlay, e o cabeçalho sobe junto com o conteúdo em vez de ficar parado no topo.</p>
           {/each}
         </div>
       {/if}

@@ -11,6 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogScrollContent,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -294,6 +295,10 @@ const variantItems = computed(() => [
   { name: 'default',               description: stripHtml(tContent('variants.items.default')),               code: codeDefault },
   { name: 'withForm',              description: stripHtml(tContent('variants.items.withForm')),              code: codeWithForm },
   { name: 'withScrollContent',     description: stripHtml(tContent('variants.items.withScrollContent')),     code: codeDefault },
+  // O snippet vem do conteúdo compartilhado, com uma variante por stack:
+  // escrito aqui ele ficaria preso a esta página, que é como cinco snippets
+  // desta campanha ficaram para trás do código.
+  { name: 'withScrollingOverlay',  description: stripHtml(tContent('variants.items.withScrollingOverlay')),  code: tContent('variants.items.withScrollingOverlayCode') },
   { name: 'noFooter',              description: stripHtml(tContent('variants.items.noFooter')),              code: codeDefault },
   { name: 'withDestructiveAction', description: stripHtml(tContent('variants.items.withDestructiveAction')), code: codeDefault },
   { name: 'customCloseInFooter',   description: stripHtml(tContent('variants.items.customCloseInFooter')),   code: codeDefault },
@@ -864,6 +869,48 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
+              Ver contrato
+            </Button>
+          </DialogTrigger>
+          <!-- A OUTRA rota: DialogScrollContent põe o painel no fluxo do
+               overlay, e é o overlay que rola — o cabeçalho sobe junto com o
+               conteúdo. Componente próprio, e não uma prop, porque o que muda é
+               a composição do overlay com o painel. -->
+          <DialogScrollContent>
+            <DialogHeader>
+              <DialogTitle>Contrato de prestação</DialogTitle>
+              <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>
+            </DialogHeader>
+            <!-- Sem a classe de rolagem de corpo, sem tabindex e sem papel:
+                 aqui não há região rolável aninhada para alcançar por teclado,
+                 porque o que rola já está na ordem natural da página. -->
+            <div
+              class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+              data-slot="dialog-body"
+              data-spacing="sm"
+            >
+              <p
+                v-for="i in 16"
+                :key="i"
+              >
+                Cláusula {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </p>
+            </div>
+            <DialogFooter>
+              <DialogClose as-child>
+                <Button variant="outline">
+                  Recusar
+                </Button>
+              </DialogClose>
+              <Button>Aceitar</Button>
+            </DialogFooter>
+          </DialogScrollContent>
+        </Dialog>
+      </template>
+      <template #variant-preview-4>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button variant="outline">
               Detalhes do pedido #4287
             </Button>
           </DialogTrigger>
@@ -875,7 +922,7 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-      <template #variant-preview-4>
+      <template #variant-preview-5>
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
@@ -900,7 +947,7 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-      <template #variant-preview-5>
+      <template #variant-preview-6>
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
@@ -926,7 +973,7 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-      <template #variant-preview-6>
+      <template #variant-preview-7>
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">

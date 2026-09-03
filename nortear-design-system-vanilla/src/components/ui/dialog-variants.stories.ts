@@ -3,6 +3,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
 import {
   dialogWithBodyScrollableSource,
+  dialogWithOverlayScrollSource,
   dialogWithFormSource,
   dialogSource,
   dialogSourceWith,
@@ -233,6 +234,88 @@ export const WithScrollContent: Story = {
       const body = p.querySelector<HTMLElement>('[role="group"]')!;
       await expect(body).toHaveAttribute('tabindex', '0');
       await expect(body).toHaveAccessibleName();
+    });
+  },
+};
+
+export const WithScrollingOverlay: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    // A OUTRA rota, e por isso story própria: reusar o nome da de cima é
+    // exatamente como as duas circularam sob o mesmo rótulo.
+    docs: {
+      source: {
+        transform: dialogWithOverlayScrollSource({
+          triggerLabel: 'Ver contrato',
+          title: 'Contrato de prestação',
+          description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+          cancelLabel: 'Recusar',
+          actionLabel: 'Aceitar',
+        }),
+      },
+      description: {
+        story:
+          'Painel no fluxo do overlay, que passa a ser a área de rolagem: o cabeçalho sobe junto com o conteúdo.',
+      },
+    },
+  },
+  render: () => {
+    const longBody = document.createElement('div');
+    // Sem `.nds-dialog-body-scroll`, sem tabindex e sem papel: nesta rota não há
+    // região rolável aninhada para alcançar por teclado — quem rola é o
+    // overlay, e ele já está na ordem natural da página.
+    longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+    longBody.dataset.spacing = 'md';
+    for (let i = 1; i <= 20; i++) {
+      const p = document.createElement('p');
+      p.textContent = `Cláusula ${i}: o painel entra no fluxo do overlay, e o cabeçalho sobe junto com o conteúdo em vez de ficar parado no topo do painel.`;
+      longBody.appendChild(p);
+    }
+    return mountOpen(
+      createDialog({
+        trigger: createButton({ variant: 'outline', label: 'Ver contrato' }),
+        title: 'Contrato de prestação',
+        description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+        content: longBody,
+        footer: makeFooter('Recusar', 'Aceitar'),
+        scroll: true,
+      }),
+    );
+  },
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('Quem rola é o overlay, e o painel está DENTRO dele', async () => {
+      // Comportamento, e não nome de classe: a rota só existe se o overlay
+      // tiver o que rolar, e ele só tem se o painel for filho dele. Medido
+      // contra a folha compartilhada, com os dois como irmãos o `scrollHeight`
+      // do overlay é igual ao `clientHeight` — a classe chega e não pinta.
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      await expect(ov.contains(p)).toBe(true);
+      await expect(getComputedStyle(ov).overflowY).toBe('auto');
+      await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
+    });
+
+    await step('O painel entra no fluxo, e o cabeçalho sobe junto', async () => {
+      // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
+      // se move com a rolagem do overlay, e é isso que a asserção mede.
+      await expect(getComputedStyle(p).position).toBe('relative');
+      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
+      const antes = header.getBoundingClientRect().top;
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      ov.scrollTop = 120;
+      await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
+      ov.scrollTop = 0;
+    });
+
+    await step('Clique no painel NÃO fecha, mesmo borbulhando até o overlay', async () => {
+      // Nesta rota o painel é filho do overlay, então o clique dentro dele
+      // chega ao ouvinte que dispensa. Sem a guarda de `target`, clicar no
+      // cabeçalho fecharia o diálogo — e a rota B seria inutilizável. A sonda é
+      // a classe porque a fábrica desta stack não marca o título com slot.
+      const title = p.querySelector<HTMLElement>('.nds-dialog-title')!;
+      await userEvent.click(title);
+      await expect(document.querySelector('[data-slot="dialog-content"]')).toBeInTheDocument();
     });
   },
 };

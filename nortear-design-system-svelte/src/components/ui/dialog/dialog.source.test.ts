@@ -3,6 +3,7 @@ import {
   dialogActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
+  dialogOverlayScrollSource,
   dialogConfirmarEmailSource,
   dialogEditarPerfilSource,
   dialogPreviaDeMidiaSource,
@@ -96,6 +97,21 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('nds-dialog-body-scroll');
     expect(saida).toContain('tabindex="0"');
     expect(saida).toContain('aria-label="Termos e condições"');
+  });
+
+  it('as duas rotas de rolagem ensinam composições DIFERENTES', () => {
+    // O defeito que esta guarda existe para pegar já aconteceu: as duas rotas
+    // circularam sob o mesmo nome e três stacks mostravam uma, duas mostravam a
+    // outra. Comparadas em PAR, o que separa é o markup.
+    const rotaA = dialogWithScrollSource();
+    const rotaB = dialogOverlayScrollSource();
+
+    expect(rotaB).toContain('<DialogContent scroll>');
+    expect(rotaB).not.toContain('nds-dialog-body-scroll');
+    expect(rotaB).not.toContain('tabindex="0"');
+
+    expect(rotaA).toContain('nds-dialog-body-scroll');
+    expect(rotaA).not.toContain('<DialogContent scroll');
   });
 
   it('a composição sem rodapé não importa nem escreve as peças de rodapé', () => {

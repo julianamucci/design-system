@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   dialogWithBodyScrollableSnippet,
+  dialogWithOverlayScrollSnippet,
   dialogWithFormSnippet,
   dialogSnippet,
   dialogSource,
@@ -147,5 +148,29 @@ describe('dialogComCorpoRolavelSnippet', () => {
     const code = dialogWithBodyScrollableSnippet();
     expect(code).toContain('createDialog({');
     expect(code).not.toContain('data-slot=');
+  });
+});
+
+describe('dialogComOverlayRolandoSnippet', () => {
+  it('liga a rota pela opção da fábrica, e não por classe no call site', () => {
+    // A opção é o que faz o painel virar FILHO do overlay — sem isso as classes
+    // chegariam e a rolagem não teria o que alcançar.
+    const code = dialogWithOverlayScrollSnippet({ paragrafos: 20 });
+    expect(code).toContain('scroll: true,');
+    expect(code).toContain('i <= 20');
+  });
+
+  it('as duas rotas ensinam composições DIFERENTES', () => {
+    // As duas circularam sob o mesmo nome, e três stacks mostravam uma enquanto
+    // duas mostravam a outra. Comparadas em PAR, o que separa é o corpo.
+    const rotaA = dialogWithBodyScrollableSnippet();
+    const rotaB = dialogWithOverlayScrollSnippet();
+
+    expect(rotaB).not.toContain('nds-dialog-body-scroll');
+    expect(rotaB).not.toContain('corpo.tabIndex = 0');
+    expect(rotaB).not.toContain("corpo.setAttribute('role', 'group')");
+
+    expect(rotaA).toContain('nds-dialog-body-scroll');
+    expect(rotaA).not.toContain('scroll: true,');
   });
 });

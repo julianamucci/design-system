@@ -21,6 +21,7 @@ import {
   dialogWithActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
+  dialogOverlayScrollSource,
   footerDialogCloseSource,
   dialogNoFooterSource,
   dialogSource,
@@ -43,7 +44,7 @@ const meta = {
       source: { transform: dialogSource },
       description: {
         component:
-          "Formas estruturais do Dialog: Default, WithForm, WithScrollContent, NoFooter, WithDestructiveAction, CustomCloseInFooter e ConfirmEmail. Não há prop `variant` — a forma é dada pela composição interna.",
+          "Formas estruturais do Dialog: Default, WithForm, WithScrollContent, WithScrollingOverlay, NoFooter, WithDestructiveAction, CustomCloseInFooter e ConfirmEmail. Não há prop `variant` — a forma é dada pela composição interna.",
       },
     },
   },
@@ -215,7 +216,7 @@ export const WithScrollContent: Story = {
       source: { transform: dialogWithScrollSource },
       description: {
         story:
-          "Conteúdo longo com scroll interno. Header e Footer fixos; o body recebe `max-h-[60vh] overflow-y-auto`.",
+          "Body longo com rolagem própria: o painel fica parado e centralizado, e header e rodapé continuam visíveis. O teto e a rolagem saem de `.nds-dialog-body-scroll` — os nomes de utilitária que estavam aqui eram de uma lib que saiu do projeto.",
       },
     },
   },
@@ -281,6 +282,97 @@ export const WithScrollContent: Story = {
       const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
       await expect(body).toHaveAttribute("tabindex", "0");
       await expect(body).toHaveAccessibleName();
+    });
+  },
+};
+
+export const WithScrollingOverlay: Story = {
+  parameters: {
+    covers: ["visual.item6"],
+    docs: {
+      // A OUTRA rota, e por isso story própria: reusar o nome da de cima é
+      // exatamente como as duas circularam anos sob o mesmo rótulo.
+      source: { transform: dialogOverlayScrollSource },
+      description: {
+        story:
+          "Painel no fluxo do overlay, que passa a ser a área de rolagem: o cabeçalho sobe junto com o conteúdo.",
+      },
+    },
+  },
+  render: () => {
+    const { t } = useTranslation(dialogTranslations);
+    return (
+      <Dialog defaultOpen>
+        <DialogTrigger render={<Button variant="outline" />}>
+          Ver contrato
+        </DialogTrigger>
+        <DialogContent scroll className="nds-sm-max-w-md">
+          <DialogHeader>
+            <DialogTitle>Contrato de prestação</DialogTitle>
+            <DialogDescription>
+              O documento rola inteiro, e o cabeçalho sobe junto.
+            </DialogDescription>
+          </DialogHeader>
+          {/*
+            Sem `.nds-dialog-body-scroll`, sem `tabindex` e sem papel: nesta
+            rota não há região rolável aninhada para alcançar por teclado — quem
+            rola é o overlay, e ele já está na ordem natural da página.
+          */}
+          <div
+            data-slot="dialog-body"
+            className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+            data-spacing="sm"
+          >
+            {Array.from({ length: 20 }).map((_, i) => (
+              <p key={i}>
+                Cláusula {i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
+                aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat.
+              </p>
+            ))}
+          </div>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>
+              {t("demonstration.labels.cancel")}
+            </DialogClose>
+            <Button>Aceitar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  },
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step("Quem rola é o overlay, e o painel está DENTRO dele", async () => {
+      // Comportamento, e não nome de classe: a rota só existe se o overlay
+      // tiver o que rolar, e ele só tem se o painel for filho dele. Medido
+      // contra a folha compartilhada, com os dois como irmãos o
+      // `scrollHeight` do overlay é igual ao `clientHeight` — a classe chega e
+      // não pinta.
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      await expect(ov.contains(p)).toBe(true);
+      await expect(getComputedStyle(ov).overflowY).toBe("auto");
+      await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
+    });
+
+    await step("O painel entra no fluxo, e o cabeçalho sobe junto", async () => {
+      // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
+      // se move com a rolagem do overlay, e é isso que a asserção mede.
+      await expect(getComputedStyle(p).position).toBe("relative");
+      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
+      const antes = header.getBoundingClientRect().top;
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      ov.scrollTop = 120;
+      await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
+      ov.scrollTop = 0;
+    });
+
+    await step("Não há região rolável aninhada nesta rota", async () => {
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).not.toHaveClass("nds-dialog-body-scroll");
+      await expect(body).not.toHaveAttribute("tabindex");
     });
   },
 };

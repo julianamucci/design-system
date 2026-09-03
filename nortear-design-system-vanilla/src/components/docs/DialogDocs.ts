@@ -384,6 +384,18 @@ form.dataset.spacing = 'sm';
 
 createDialog({ trigger, title: 'Editar perfil', description: '...', content: form, footer });`;
 
+        const codeWithBodyScroll = `const body = document.createElement('div');
+// A rolagem é do CORPO: o teto, o overflow e a folga da barra vêm desta classe.
+body.className = 'nds-dialog-body-scroll nds-stack';
+// Região que rola precisa ser alcançável por teclado e precisa de nome (WCAG
+// 2.1.1); o papel é group, e não region, porque marco aninhado num diálogo já
+// nomeado não acrescenta navegação.
+body.tabIndex = 0;
+body.setAttribute('role', 'group');
+body.setAttribute('aria-label', 'Termos de uso');
+
+createDialog({ trigger, title: 'Termos de uso', description: '...', content: body, footer });`;
+
         const codeNoFooter = `createDialog({
   trigger,
   title: 'Sobre este recurso',
@@ -435,6 +447,75 @@ createDialog({ trigger, title: 'Editar perfil', description: '...', content: for
                 actionLabel: 'Salvar alterações',
                 bodyText: 'Imagine os campos aqui.',
               }),
+            },
+            {
+              // Faltava: as outras quatro páginas renderizavam esta variante e
+              // esta não, então o conteúdo compartilhado descrevia uma rota que
+              // quem lê nesta stack não via.
+              name: 'withScrollContent',
+              description: t('variants.items.withScrollContent'),
+              code: codeWithBodyScroll,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
+                const body = document.createElement('div');
+                // O teto, o overflow e a folga da barra saem todos desta classe.
+                // `tabindex` porque a caixa rola (WCAG 2.1.1), e o papel só
+                // entra com nome — `group` e não `region`, porque marco aninhado
+                // num diálogo já nomeado não acrescenta navegação.
+                body.className = 'nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground';
+                body.dataset.spacing = 'sm';
+                body.tabIndex = 0;
+                body.setAttribute('role', 'group');
+                body.setAttribute('aria-label', 'Termos de uso');
+                for (let i = 1; i <= 10; i++) {
+                  const p = document.createElement('p');
+                  p.textContent = `Parágrafo ${i}: conteúdo extenso para o corpo precisar rolar.`;
+                  body.appendChild(p);
+                }
+                return createDialog({
+                  trigger,
+                  title: 'Termos de uso',
+                  description: 'Leia atentamente antes de aceitar.',
+                  content: body,
+                  footer: [
+                    createButton({ variant: 'outline', label: 'Recusar' }),
+                    createButton({ label: 'Aceitar' }),
+                  ],
+                });
+              },
+            },
+            {
+              name: 'withScrollingOverlay',
+              description: t('variants.items.withScrollingOverlay'),
+              // O snippet vem do conteúdo compartilhado, com uma variante por
+              // stack: escrito aqui ele ficaria preso a esta página, que é como
+              // cinco snippets desta campanha ficaram para trás do código.
+              code: t('variants.items.withScrollingOverlayCode'),
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Ver contrato' });
+                const body = document.createElement('div');
+                // A OUTRA rota: sem a classe de rolagem de corpo, sem tabindex e
+                // sem papel — quem rola é o overlay, e ele já está na ordem
+                // natural da página.
+                body.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+                body.dataset.spacing = 'sm';
+                for (let i = 1; i <= 16; i++) {
+                  const p = document.createElement('p');
+                  p.textContent = `Cláusula ${i}: o conteúdo rola junto com o cabeçalho, e não dentro de uma caixa própria.`;
+                  body.appendChild(p);
+                }
+                return createDialog({
+                  trigger,
+                  title: 'Contrato de prestação',
+                  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+                  content: body,
+                  footer: [
+                    createButton({ variant: 'outline', label: 'Recusar' }),
+                    createButton({ label: 'Aceitar' }),
+                  ],
+                  scroll: true,
+                });
+              },
             },
             {
               name: 'noFooter',

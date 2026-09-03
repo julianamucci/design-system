@@ -326,6 +326,54 @@ const termos = [
 }
 
 /**
+ * Variante WithScrollingOverlay: a OUTRA rota para conteúdo mais alto que a
+ * janela.
+ *
+ * Quem rola é o OVERLAY: o painel entra no fluxo dele e o cabeçalho sobe junto
+ * com o conteúdo. Não há região rolável aninhada, então também não há
+ * `tabindex`, papel nem nome a declarar — o que rola já está na ordem natural
+ * da página.
+ *
+ * A forma é um COMPONENTE próprio nesta stack, porque o que muda é a composição
+ * do overlay com o painel, e o `DialogContent` daqui já monta os dois. Isso é
+ * divergência de API de framework: não há fonte de verdade e não se "alinha".
+ */
+export function dialogOverlayScrollSource(): string {
+  return vueSnippet(
+    `${importing([
+      'Dialog',
+      'DialogClose',
+      'DialogDescription',
+      'DialogFooter',
+      'DialogHeader',
+      'DialogScrollContent',
+      'DialogTitle',
+      'DialogTrigger',
+    ])}
+
+const clausulas = [
+  'Do objeto: os serviços são fornecidos no estado em que se encontram, e esta cláusula descreve o alcance de cada um deles.',
+  'Do uso: a conta é pessoal e intransferível, e o acesso por terceiros depende de autorização registrada.',
+  'Do encerramento: o cancelamento pode ser pedido a qualquer momento, e os dados ficam disponíveis por trinta dias.',
+]`,
+    dialogo({
+      panel: 'DialogScrollContent',
+      trigger: 'Ver contrato',
+      title: 'Contrato de prestação',
+      descricao: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+      body: `    <div
+      class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-slot="dialog-body"
+      data-spacing="sm"
+    >
+      <p v-for="(clausula, i) in clausulas" :key="i">{{ clausula }}</p>
+    </div>`,
+      footer: footerDefault('Recusar', 'Aceitar'),
+    }),
+  );
+}
+
+/**
  * Variante NoFooter: painel informativo.
  *
  * Sem nada a confirmar, o rodapé some e o X do canto é a única saída visível —

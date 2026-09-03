@@ -6,6 +6,7 @@ import {
   dialogActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
+  dialogOverlayScrollSource,
   dialogNoFooterSource,
   dialogConfirmarEmailSource,
   dialogSource,
@@ -178,6 +179,62 @@ export const WithScrollContent: Story = {
       const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
       await expect(body).toHaveAttribute('tabindex', '0');
       await expect(body).toHaveAccessibleName();
+    });
+  },
+};
+
+export const WithScrollingOverlay: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    docs: {
+      // A OUTRA rota, e por isso story própria: reusar o nome da de cima é
+      // exatamente como as duas circularam sob o mesmo rótulo.
+      source: { transform: dialogOverlayScrollSource },
+      description: {
+        story:
+          'Painel no fluxo do overlay, que passa a ser a área de rolagem: o cabeçalho sobe junto com o conteúdo.',
+      },
+    },
+  },
+  args: {
+    open: true,
+    variant: 'withScrollingOverlay',
+    triggerLabel: 'Ver contrato',
+    title: 'Contrato de prestação',
+    description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+    actionLabel: 'Aceitar',
+    cancelLabel: 'Recusar',
+  },
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('Quem rola é o overlay, e o painel está DENTRO dele', async () => {
+      // Comportamento, e não nome de classe: a rota só existe se o overlay
+      // tiver o que rolar, e ele só tem se o painel for filho dele. Medido
+      // contra a folha compartilhada, com os dois como irmãos o `scrollHeight`
+      // do overlay é igual ao `clientHeight` — a classe chega e não pinta.
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      await expect(ov.contains(p)).toBe(true);
+      await expect(getComputedStyle(ov).overflowY).toBe('auto');
+      await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
+    });
+
+    await step('O painel entra no fluxo, e o cabeçalho sobe junto', async () => {
+      // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
+      // se move com a rolagem do overlay, e é isso que a asserção mede.
+      await expect(getComputedStyle(p).position).toBe('relative');
+      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
+      const antes = header.getBoundingClientRect().top;
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      ov.scrollTop = 120;
+      await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
+      ov.scrollTop = 0;
+    });
+
+    await step('Não há região rolável aninhada nesta rota', async () => {
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).not.toHaveClass('nds-dialog-body-scroll');
+      await expect(body).not.toHaveAttribute('tabindex');
     });
   },
 };

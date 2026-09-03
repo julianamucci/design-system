@@ -28,6 +28,8 @@ export type DialogSnippetOptions = {
   footer?: DialogSnippetAction[];
   /** Só aparece quando é `false`: a fábrica desenha o X do canto por padrão. */
   showCloseButton?: boolean;
+  /** Rota B: o painel entra no fluxo do overlay, e o overlay é quem rola. */
+  scroll?: boolean;
   /** Corpo do callback de mudança de estado, quando a story o exercita. */
   onOpenChange?: string;
   /** Atalho do control do Playground — rótulo da ação que cancela. */
@@ -84,6 +86,7 @@ function linesComuns(o: DialogSnippetOptions, content: string): string[] {
     ],
     ['content', content],
     ['footer', footer(actionsOf(o))],
+    ['scroll', o.scroll ? 'true' : undefined],
     ['showCloseButton', o.showCloseButton === false ? 'false' : undefined],
     // Guarda de tipo, e não confiança no tipo declarado: `ctx.args` chega do
     // Storybook, e o control de callback do Playground é um espião de teste —
@@ -239,4 +242,52 @@ export function dialogWithBodyScrollableSource(
   fixas: DialogWithBodyScrollableSnippetOptions,
 ): SourceTransform<DialogWithBodyScrollableSnippetOptions> {
   return (_gerado, ctx) => dialogWithBodyScrollableSnippet({ ...ctx.args, ...fixas });
+}
+
+// ─── Quarta forma: overlay rolando (rota B) ──────────────────────────────────
+
+export type DialogOverlayScrollSnippetOptions = DialogSnippetOptions & {
+  /** Quantos parágrafos o exemplo empilha para o overlay precisar rolar. */
+  paragrafos?: number;
+};
+
+/**
+ * Diálogo com o OVERLAY rolando — a outra rota para conteúdo alto.
+ *
+ * O contrário da forma acima: aqui o cabeçalho NÃO fica parado, ele sobe junto
+ * com o conteúdo. Não há região rolável aninhada, então também não há
+ * `tabindex`, papel nem nome a declarar — quem rola é o overlay, e ele já está
+ * na ordem natural da página.
+ *
+ * A forma é uma OPÇÃO da fábrica porque é ela que monta overlay e painel: o
+ * `scroll: true` põe as duas classes e faz o painel virar filho do overlay,
+ * sem o que a rolagem não teria o que alcançar.
+ */
+export function dialogWithOverlayScrollSnippet(o: DialogOverlayScrollSnippetOptions = {}): string {
+  const total = o.paragrafos ?? 20;
+
+  return snippet(
+    IMPORTS_BASE,
+    `const corpo = document.createElement('div');
+corpo.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+corpo.dataset.spacing = 'md';
+
+for (let i = 1; i <= ${total}; i++) {
+  const paragrafo = document.createElement('p');
+  paragrafo.textContent = \`Cláusula \${i} do contrato.\`;
+  corpo.appendChild(paragrafo);
+}`,
+    // `scroll: true` é da FORMA, e não do call site: esta função existe para
+    // ensinar a rota B, e um snippet dela sem a opção ensinaria a rota A com
+    // parágrafos a mais.
+    `const dialogo = ${callLine('createDialog', linesComuns({ ...o, scroll: true }, 'corpo'))};`,
+    appendLine('dialogo'),
+  );
+}
+
+/** Transform de story para a forma com o overlay rolando. */
+export function dialogWithOverlayScrollSource(
+  fixas: DialogOverlayScrollSnippetOptions,
+): SourceTransform<DialogOverlayScrollSnippetOptions> {
+  return (_gerado, ctx) => dialogWithOverlayScrollSnippet({ ...ctx.args, ...fixas });
 }

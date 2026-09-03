@@ -4,6 +4,7 @@ import {
   dialogActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
+  dialogOverlayScrollSource,
   dialogConfirmarEmailSource,
   dialogControlledSource,
   dialogEditarPerfilSource,
@@ -144,6 +145,22 @@ describe('transforms das stories de variante', () => {
     // Cabeçalho e rodapé continuam DENTRO do painel, parados.
     expect(saida).toContain('    <DialogHeader>');
     expect(saida).toContain('    <DialogFooter>');
+  });
+
+  it('a OUTRA rota rola o overlay, e não repete a composição da rolagem de corpo', () => {
+    // As duas rotas circularam sob o mesmo nome, e três stacks mostravam uma
+    // enquanto duas mostravam a outra. Comparadas em PAR, o que as separa é o
+    // painel escolhido e a ausência da região rolável aninhada.
+    const rotaB = dialogOverlayScrollSource();
+    expect(rotaB).toContain('<DialogScrollContent>');
+    expect(rotaB).toContain("  DialogScrollContent,");
+    expect(rotaB).not.toContain('nds-dialog-body-scroll');
+    expect(rotaB).not.toContain('tabindex="0"');
+
+    // O par: a rota A não usa o painel rolável, e a B não usa o centralizado.
+    const rotaA = dialogWithScrollSource();
+    expect(rotaA).not.toContain('DialogScrollContent');
+    expect(rotaB).not.toContain('<DialogContent');
   });
 
   it('sem rodapé, as peças do rodapé saem também do import', () => {

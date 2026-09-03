@@ -57,6 +57,8 @@ type Frame = {
   body?: string;
   /** Rodapé completo, já indentado em 4 espaços. Vazio significa sem rodapé. */
   footer?: string;
+  /** Rota B: o painel entra no fluxo do overlay, e o overlay é quem rola. */
+  scroll?: boolean;
 };
 
 /**
@@ -73,8 +75,10 @@ function dialogo({
   description,
   body = '',
   footer = '',
+  scroll = false,
 }: Frame): string {
   const panelProps = attrs(
+    scroll ? 'scroll' : '',
     contentClass ? `class="${contentClass}"` : '',
     showCloseButton ? '' : 'showCloseButton={false}',
   );
@@ -198,6 +202,37 @@ export function dialogWithScrollSource(): string {
     >
       <p>Parágrafo 1: conteúdo extenso o bastante para o corpo passar da altura disponível.</p>
       <p>Parágrafo 2: a rolagem é do corpo, e não da página atrás do painel.</p>
+    </div>`,
+    footer: footerDefault('Recusar', 'Aceitar'),
+  });
+}
+
+/**
+ * Rota B — o overlay é quem rola, e o painel entra no fluxo dele.
+ *
+ * O contrário da rota acima: aqui o cabeçalho NÃO fica parado, ele sobe junto
+ * com o conteúdo. Não há região rolável aninhada, então também não há
+ * `tabindex`, papel nem nome a declarar — quem rola é o overlay, e ele já está
+ * na ordem natural da página.
+ *
+ * A forma é uma prop booleana do Content porque nesta stack o Content já monta
+ * o overlay: ligar as duas classes de uma vez é o que evita um segundo
+ * componente que só existiria para repetir o resto.
+ */
+export function dialogOverlayScrollSource(): string {
+  return dialogo({
+    isOpen: true,
+    scroll: true,
+    triggerLabel: 'Ver contrato',
+    title: 'Contrato de prestação',
+    description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+    body: `    <div
+      class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-slot="dialog-body"
+      data-spacing="sm"
+    >
+      <p>Cláusula 1: o painel entra no fluxo do overlay, e o overlay é quem rola.</p>
+      <p>Cláusula 2: o cabeçalho sobe junto com o conteúdo e sai da tela.</p>
     </div>`,
     footer: footerDefault('Recusar', 'Aceitar'),
   });

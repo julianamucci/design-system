@@ -238,6 +238,92 @@ export const WithScrollContent: Story = {
   },
 };
 
+export const WithScrollingOverlay: Story = {
+  // A OUTRA rota, e por isso story própria: reusar o nome da de cima é
+  // exatamente como as duas circularam sob o mesmo rótulo.
+  parameters: { covers: ['visual.item6'] },
+  render: () => ({
+    props: {
+      labels: LABELS,
+      clausulas: Array.from(
+        { length: 20 },
+        (_, i) =>
+          `Cláusula ${i + 1}: o painel entra no fluxo do overlay, e o cabeçalho sobe junto com o conteúdo em vez de ficar parado no topo do painel.`,
+      ),
+    },
+    template: `
+      <div ndsDialog [defaultOpen]="true">
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
+
+        <ng-template ndsDialogPortal>
+          <!--
+            Na rota B o painel é FILHO do overlay: rolagem de um elemento só
+            alcança o que está dentro dele. Com os dois como irmãos — que é o
+            arranjo da rota A — as classes chegam e o overlay não tem o que
+            rolar.
+          -->
+          <div ndsDialogOverlay scroll>
+            <div ndsDialogContent scroll [closeLabel]="labels.close">
+              <div ndsDialogHeader>
+                <h2 ndsDialogTitle>{{ labels.title }}</h2>
+                <p ndsDialogDescription>{{ labels.description }}</p>
+              </div>
+
+              <!--
+                Sem a classe de rolagem, sem tabindex e sem papel: nesta rota não
+                há região rolável aninhada para alcançar por teclado — quem rola
+                é o overlay, e ele já está na ordem natural da página.
+              -->
+              <div ndsDialogBody class="nds-stack" data-spacing="sm">
+                @for (clausula of clausulas; track clausula) {
+                  <p>{{ clausula }}</p>
+                }
+              </div>
+
+              <div ndsDialogFooter>
+                <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
+                <button ndsButton>{{ labels.action }}</button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    `,
+  }),
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('Quem rola é o overlay, e o painel está DENTRO dele', async () => {
+      // Comportamento, e não nome de classe: a rota só existe se o overlay
+      // tiver o que rolar, e ele só tem se o painel for filho dele. Medido
+      // contra a folha compartilhada, com os dois como irmãos o scrollHeight do
+      // overlay é igual ao clientHeight — a classe chega e não pinta.
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      await expect(ov.contains(p)).toBe(true);
+      await expect(getComputedStyle(ov).overflowY).toBe('auto');
+      await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
+    });
+
+    await step('O painel entra no fluxo, e o cabeçalho sobe junto', async () => {
+      // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
+      // se move com a rolagem do overlay, e é isso que a asserção mede.
+      await expect(getComputedStyle(p).position).toBe('relative');
+      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
+      const antes = header.getBoundingClientRect().top;
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      ov.scrollTop = 120;
+      await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
+      ov.scrollTop = 0;
+    });
+
+    await step('Não há região rolável aninhada nesta rota', async () => {
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).not.toHaveClass('nds-dialog-body-scroll');
+      await expect(body).not.toHaveAttribute('tabindex');
+    });
+  },
+};
+
 export const NoFooter: Story = {
   parameters: { covers: ['visual.item2'] },
   render: () => ({

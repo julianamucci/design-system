@@ -169,6 +169,14 @@
         "default": "Title + Description + Footer com ação primária. Composição padrão para formulários e edições.",
         "withForm": "Body com formulário inline (inputs, selects). Submissão dispara a ação primária do Footer.",
         "withScrollContent": "Body com conteúdo longo e scroll interno. Header e Footer fixos.",
+        "withScrollingOverlay": "Painel no fluxo do overlay, que passa a ser a área de rolagem — o cabeçalho sobe junto com o conteúdo. Para leitura de ponta a ponta, quando fixar o cabeçalho custa altura útil.",
+        "withScrollingOverlayCode": {
+          "react": "<Dialog defaultOpen>\n  <DialogTrigger render={<Button variant=\"outline\" />}>Ver contrato</DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div className=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"outline\" />}>Recusar</DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
+          "vue": "<Dialog default-open>\n  <DialogTrigger as-child>\n    <Button variant=\"outline\">Ver contrato</Button>\n  </DialogTrigger>\n  <DialogScrollContent>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose as-child>\n        <Button variant=\"outline\">Recusar</Button>\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogScrollContent>\n</Dialog>",
+          "svelte": "<Dialog bind:open>\n  <DialogTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Ver contrato</Button>\n    {/snippet}\n  </DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
+          "vanilla": "const corpo = document.createElement('div');\ncorpo.className = 'nds-stack';\ncorpo.dataset.spacing = 'sm';\n\n// `scroll` põe o painel DENTRO do overlay: rolagem de um elemento só\n// alcança o que está dentro dele.\ncreateDialog({\n  trigger,\n  title: 'Contrato de prestação',\n  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',\n  content: corpo,\n  footer,\n  scroll: true,\n});",
+          "angular": "<ng-template ndsDialogPortal>\n  <!-- Na rota B o painel é FILHO do overlay, e os dois recebem `scroll`. -->\n  <div ndsDialogOverlay scroll>\n    <div ndsDialogContent scroll>\n      <div ndsDialogHeader>\n        <h2 ndsDialogTitle>Contrato de prestação</h2>\n        <p ndsDialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</p>\n      </div>\n\n      <div ndsDialogBody class=\"nds-stack\" data-spacing=\"sm\">\n        <p>Cláusula 1. …</p>\n      </div>\n\n      <div ndsDialogFooter>\n        <button ndsDialogClose ndsButton variant=\"outline\">Recusar</button>\n        <button ndsButton>Aceitar</button>\n      </div>\n    </div>\n  </div>\n</ng-template>"
+        },
         "noFooter": "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva.",
         "withDestructiveAction": "Footer com ação primária <code>destructive</code>. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> no Content e <code>showCloseButton</code> no Footer — botão de fechar fica abaixo das ações.",
@@ -309,7 +317,7 @@
       "title": "Notas de Implementação",
       "tip1": "Por padrão, <code>DialogContent</code> renderiza em Portal — isola de overflow e transform de pais, mas pode causar conflitos com z-index custom. Use <code>className=\"z-[60]\"</code> se precisar elevar.",
       "tip2": "Para fechar Dialog após submit assíncrono, controle <code>open</code> via state e feche apenas em caso de sucesso. Em erro, mantenha aberto e exiba feedback inline.",
-      "tip3": "Conteúdo mais alto que a janela deve rolar dentro do corpo, não junto com a página: dê ao corpo uma altura máxima relativa à janela e rolagem no eixo vertical, mantendo cabeçalho e rodapé sempre visíveis.",
+      "tip3": "Conteúdo mais alto que a janela pede uma de duas rotas. Cabeçalho e rodapé parados: dê ao corpo uma altura máxima relativa à janela e rolagem no eixo vertical, e o painel continua centralizado e fixo. Painel inteiro rolando: ponha o painel no fluxo do overlay e deixe o overlay ser a área de rolagem — aí o cabeçalho sobe junto com o conteúdo. A primeira serve a formulário e confirmação; a segunda, a texto que se lê de ponta a ponta.",
       "tip4": "Evite aninhar Dialog dentro de DropdownMenu ou Popover — o focus trap pode conflitar. Feche o menu antes de abrir o diálogo."
     },
     "analytics": {
@@ -436,6 +444,10 @@
         },
         "item5": {
           "story": "Composição WithScrollContent — conteúdo longo com scroll interno",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Variante WithScrollingOverlay — painel no fluxo, com o overlay rolando",
           "priority": "medium"
         }
       }
@@ -632,6 +644,14 @@
         "default": "Title + Description + Footer with primary action. Default composition for forms and editing.",
         "withForm": "Body with inline form (inputs, selects). Submit fires the Footer's primary action.",
         "withScrollContent": "Body with long content and internal scroll. Header and Footer fixed.",
+        "withScrollingOverlay": "Panel in the overlay's flow, and the overlay becomes the scrolling area — the header scrolls away with the content. For end-to-end reading, when pinning the header costs useful height.",
+        "withScrollingOverlayCode": {
+          "react": "<Dialog defaultOpen>\n  <DialogTrigger render={<Button variant=\"outline\" />}>Ver contrato</DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div className=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"outline\" />}>Recusar</DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
+          "vue": "<Dialog default-open>\n  <DialogTrigger as-child>\n    <Button variant=\"outline\">Ver contrato</Button>\n  </DialogTrigger>\n  <DialogScrollContent>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose as-child>\n        <Button variant=\"outline\">Recusar</Button>\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogScrollContent>\n</Dialog>",
+          "svelte": "<Dialog bind:open>\n  <DialogTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Ver contrato</Button>\n    {/snippet}\n  </DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
+          "vanilla": "const corpo = document.createElement('div');\ncorpo.className = 'nds-stack';\ncorpo.dataset.spacing = 'sm';\n\n// `scroll` põe o painel DENTRO do overlay: rolagem de um elemento só\n// alcança o que está dentro dele.\ncreateDialog({\n  trigger,\n  title: 'Contrato de prestação',\n  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',\n  content: corpo,\n  footer,\n  scroll: true,\n});",
+          "angular": "<ng-template ndsDialogPortal>\n  <!-- Na rota B o painel é FILHO do overlay, e os dois recebem `scroll`. -->\n  <div ndsDialogOverlay scroll>\n    <div ndsDialogContent scroll>\n      <div ndsDialogHeader>\n        <h2 ndsDialogTitle>Contrato de prestação</h2>\n        <p ndsDialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</p>\n      </div>\n\n      <div ndsDialogBody class=\"nds-stack\" data-spacing=\"sm\">\n        <p>Cláusula 1. …</p>\n      </div>\n\n      <div ndsDialogFooter>\n        <button ndsDialogClose ndsButton variant=\"outline\">Recusar</button>\n        <button ndsButton>Aceitar</button>\n      </div>\n    </div>\n  </div>\n</ng-template>"
+        },
         "noFooter": "Only Title + Description, no Footer. For informational use or passive preview.",
         "withDestructiveAction": "Footer with <code>destructive</code> primary action. Different from AlertDialog — use only when destructiveness is secondary to the flow (e.g. remove item from list).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> on Content and <code>showCloseButton</code> on Footer — close button sits below the actions.",
@@ -772,7 +792,7 @@
       "title": "Implementation Notes",
       "tip1": "By default, <code>DialogContent</code> renders in a Portal — isolates from parent overflow and transform but may conflict with custom z-index. Use <code>className=\"z-[60]\"</code> if you need to raise it.",
       "tip2": "To close Dialog after async submit, control <code>open</code> via state and close only on success. On error, keep open and show inline feedback.",
-      "tip3": "Content taller than the window must scroll inside the body, not along with the page: give the body a max height relative to the window and vertical scrolling, keeping header and footer always visible.",
+      "tip3": "Content taller than the window calls for one of two routes. Header and footer fixed: give the body a max height relative to the window plus vertical scrolling, and the panel stays centred and fixed. Whole panel scrolling: put the panel in the overlay flow and let the overlay be the scrolling area — the header then scrolls away with the content. The first suits forms and confirmations; the second, text read end to end.",
       "tip4": "Avoid nesting Dialog inside DropdownMenu or Popover — focus trap may conflict. Close the menu before opening the dialog."
     },
     "analytics": {
@@ -899,6 +919,10 @@
         },
         "item5": {
           "story": "WithScrollContent composition — long content with internal scroll",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "WithScrollingOverlay variant — panel in flow, with the overlay scrolling",
           "priority": "medium"
         }
       }
@@ -1095,6 +1119,14 @@
         "default": "Title + Description + Footer con acción primaria. Composición estándar para formularios y ediciones.",
         "withForm": "Body con formulario inline (inputs, selects). El submit dispara la acción primaria del Footer.",
         "withScrollContent": "Body con contenido largo y scroll interno. Header y Footer fijos.",
+        "withScrollingOverlay": "Panel en el flujo del overlay, que pasa a ser el área de desplazamiento: el encabezado sube junto con el contenido. Para lectura de principio a fin, cuando fijar el encabezado cuesta altura útil.",
+        "withScrollingOverlayCode": {
+          "react": "<Dialog defaultOpen>\n  <DialogTrigger render={<Button variant=\"outline\" />}>Ver contrato</DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div className=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"outline\" />}>Recusar</DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
+          "vue": "<Dialog default-open>\n  <DialogTrigger as-child>\n    <Button variant=\"outline\">Ver contrato</Button>\n  </DialogTrigger>\n  <DialogScrollContent>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose as-child>\n        <Button variant=\"outline\">Recusar</Button>\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogScrollContent>\n</Dialog>",
+          "svelte": "<Dialog bind:open>\n  <DialogTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Ver contrato</Button>\n    {/snippet}\n  </DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
+          "vanilla": "const corpo = document.createElement('div');\ncorpo.className = 'nds-stack';\ncorpo.dataset.spacing = 'sm';\n\n// `scroll` põe o painel DENTRO do overlay: rolagem de um elemento só\n// alcança o que está dentro dele.\ncreateDialog({\n  trigger,\n  title: 'Contrato de prestação',\n  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',\n  content: corpo,\n  footer,\n  scroll: true,\n});",
+          "angular": "<ng-template ndsDialogPortal>\n  <!-- Na rota B o painel é FILHO do overlay, e os dois recebem `scroll`. -->\n  <div ndsDialogOverlay scroll>\n    <div ndsDialogContent scroll>\n      <div ndsDialogHeader>\n        <h2 ndsDialogTitle>Contrato de prestação</h2>\n        <p ndsDialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</p>\n      </div>\n\n      <div ndsDialogBody class=\"nds-stack\" data-spacing=\"sm\">\n        <p>Cláusula 1. …</p>\n      </div>\n\n      <div ndsDialogFooter>\n        <button ndsDialogClose ndsButton variant=\"outline\">Recusar</button>\n        <button ndsButton>Aceitar</button>\n      </div>\n    </div>\n  </div>\n</ng-template>"
+        },
         "noFooter": "Solo Title + Description, sin Footer. Para uso informativo o previsualización pasiva.",
         "withDestructiveAction": "Footer con acción primaria <code>destructive</code>. Distinto de AlertDialog — úsalo solo cuando lo destructivo es secundario al flujo (ej. quitar ítem de lista).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> en Content y <code>showCloseButton</code> en Footer — el botón de cerrar queda debajo de las acciones.",
@@ -1235,7 +1267,7 @@
       "title": "Notas de Implementación",
       "tip1": "Por defecto, <code>DialogContent</code> renderiza en Portal — aísla del overflow y transform de los padres, pero puede chocar con z-index custom. Usa <code>className=\"z-[60]\"</code> si necesitas elevarlo.",
       "tip2": "Para cerrar Dialog tras submit asíncrono, controla <code>open</code> vía state y cierra solo en caso de éxito. En error, mantén abierto y muestra feedback inline.",
-      "tip3": "El contenido más alto que la ventana debe desplazarse dentro del cuerpo, no junto con la página: da al cuerpo una altura máxima relativa a la ventana y desplazamiento vertical, manteniendo encabezado y pie siempre visibles.",
+      "tip3": "El contenido más alto que la ventana pide una de dos rutas. Encabezado y pie fijos: dale al cuerpo una altura máxima relativa a la ventana y desplazamiento vertical, y el panel sigue centrado y fijo. Panel entero desplazándose: pon el panel en el flujo del overlay y deja que el overlay sea el área de desplazamiento — así el encabezado sube junto con el contenido. La primera sirve a formularios y confirmaciones; la segunda, a texto que se lee de principio a fin.",
       "tip4": "Evita anidar Dialog dentro de DropdownMenu o Popover — el focus trap puede chocar. Cierra el menú antes de abrir el diálogo."
     },
     "analytics": {
@@ -1362,6 +1394,10 @@
         },
         "item5": {
           "story": "Composición WithScrollContent — contenido largo con scroll interno",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Variante WithScrollingOverlay — panel en el flujo, con el overlay desplazándose",
           "priority": "medium"
         }
       }

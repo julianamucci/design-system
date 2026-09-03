@@ -604,6 +604,38 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
       </div>
     </ng-template>
 
+    <ng-template #tplVarScrollingOverlay>
+      <div ndsDialog>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
+        <ng-template ndsDialogPortal>
+          <!-- A OUTRA rota: o par [scroll] põe o painel no fluxo do overlay, e é
+               o overlay que rola — o cabeçalho sobe junto com o conteúdo. O
+               painel é FILHO do overlay aqui, e não irmão: rolagem de um
+               elemento só alcança o que está dentro dele. -->
+          <div ndsDialogOverlay scroll>
+            <div ndsDialogContent scroll [closeLabel]="t('demonstration.labels.close')">
+              <div ndsDialogHeader>
+                <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
+                <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
+              </div>
+              <!-- Sem a classe de rolagem de corpo, sem tabindex e sem papel:
+                   aqui não há região rolável aninhada para alcançar por teclado,
+                   porque o que rola já está na ordem natural da página. -->
+              <div ndsDialogBody class="nds-stack" data-spacing="sm">
+                @for (line of conteudoLongo(); track line) {
+                  <p>{{ line }}</p>
+                }
+              </div>
+              <div ndsDialogFooter>
+                <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+                <button ndsButton>{{ t('demonstration.labels.action') }}</button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </ng-template>
+
     <ng-template #tplVarNoFooter>
       <div ndsDialog>
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
@@ -909,6 +941,8 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarWithForm = viewChild.required<TemplateRef<unknown>>('tplVarWithForm');
   private readonly tplVarWithScrollContent =
     viewChild.required<TemplateRef<unknown>>('tplVarWithScrollContent');
+  private readonly tplVarScrollingOverlay =
+    viewChild.required<TemplateRef<unknown>>('tplVarScrollingOverlay');
   private readonly tplVarNoFooter = viewChild.required<TemplateRef<unknown>>('tplVarNoFooter');
   private readonly tplVarWithDestructiveAction =
     viewChild.required<TemplateRef<unknown>>('tplVarWithDestructiveAction');
@@ -1087,21 +1121,28 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     // como "showCloseButton={false} no Content e showCloseButton no Footer",
     // que vira um título ilegível. A chave é o identificador estável que também
     // aparece no snippet, e é o que as outras stacks mostram.
+    //
+    // O `code` sai da entrada, e não mais de `VARIANT_CODE[key]`: o snippet da
+    // rota B vive no conteúdo compartilhado, com uma variante por stack.
+    // Escrito aqui ele ficaria preso a esta página, que é como cinco snippets
+    // desta campanha ficaram para trás do código.
     const mapa: {
-      key: keyof typeof VARIANT_CODE;
+      key: string;
       tpl: TemplateRef<unknown>;
+      code: string;
     }[] = [
-      { key: 'default',               tpl: this.tplVarDefault()               },
-      { key: 'withForm',              tpl: this.tplVarWithForm()              },
-      { key: 'withScrollContent',     tpl: this.tplVarWithScrollContent()     },
-      { key: 'noFooter',              tpl: this.tplVarNoFooter()              },
-      { key: 'withDestructiveAction', tpl: this.tplVarWithDestructiveAction() },
-      { key: 'customCloseInFooter',   tpl: this.tplVarCustomCloseInFooter()   },
+      { key: 'default',               tpl: this.tplVarDefault(),               code: VARIANT_CODE.default               },
+      { key: 'withForm',              tpl: this.tplVarWithForm(),              code: VARIANT_CODE.withForm              },
+      { key: 'withScrollContent',     tpl: this.tplVarWithScrollContent(),     code: VARIANT_CODE.withScrollContent     },
+      { key: 'withScrollingOverlay',  tpl: this.tplVarScrollingOverlay(),      code: t('variants.items.withScrollingOverlayCode') },
+      { key: 'noFooter',              tpl: this.tplVarNoFooter(),              code: VARIANT_CODE.noFooter              },
+      { key: 'withDestructiveAction', tpl: this.tplVarWithDestructiveAction(), code: VARIANT_CODE.withDestructiveAction },
+      { key: 'customCloseInFooter',   tpl: this.tplVarCustomCloseInFooter(),   code: VARIANT_CODE.customCloseInFooter   },
     ];
-    const items: DocsVariantItem[] = mapa.map(({ key, tpl }) => ({
+    const items: DocsVariantItem[] = mapa.map(({ key, tpl, code }) => ({
       name: key,
       description: stripHtml(t(`variants.items.${key}`)),
-      code: VARIANT_CODE[key],
+      code,
       trackId: key,
       preview: tpl,
     }));

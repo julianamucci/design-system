@@ -5,6 +5,7 @@ import {
   dialogWithFormSource,
   dialogWithMidiaSource,
   dialogWithScrollSource,
+  dialogOverlayScrollSource,
   dialogControlledSource,
   footerDialogCloseSource,
   dialogPerfilSource,
@@ -22,6 +23,7 @@ const ALL = [
   dialogWithFormSource,
   dialogPerfilSource,
   dialogWithScrollSource,
+  dialogOverlayScrollSource,
   dialogWithActionDestructiveSource,
   dialogWithMidiaSource,
   dialogControlledSource,
@@ -139,6 +141,24 @@ describe('composições estruturais', () => {
     expect(saida).toContain('role="group"');
     expect(saida).toContain('aria-label="Termos de uso"');
     expect(saida).toContain('nds-dialog-body-scroll');
+  });
+
+  it('as duas rotas de rolagem ensinam composições DIFERENTES', () => {
+    // O defeito que esta guarda existe para pegar já aconteceu: as duas rotas
+    // circulavam sob o mesmo nome e três stacks mostravam uma, duas mostravam a
+    // outra. Aqui elas são comparadas em par, e o que separa é o markup.
+    const rotaA = dialogWithScrollSource();
+    const rotaB = dialogOverlayScrollSource();
+
+    // Rota B: liga pelo Content, que é a forma desta stack, e NÃO tem região
+    // rolável aninhada — quem rola é o overlay.
+    expect(rotaB).toContain('<DialogContent scroll>');
+    expect(rotaB).not.toContain('nds-dialog-body-scroll');
+    expect(rotaB).not.toContain('tabIndex={0}');
+
+    // Rota A: o oposto exato, e sem `scroll` no Content.
+    expect(rotaA).toContain('nds-dialog-body-scroll');
+    expect(rotaA).not.toContain('<DialogContent scroll');
   });
 
   it('a ação destrutiva usa a variante do botão, e o painel segue sendo dialog', () => {
