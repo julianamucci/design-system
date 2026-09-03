@@ -245,7 +245,6 @@ export const Command: Story = { render: () => createCommandDocs(), play };
 export const ContextMenu: Story = {
   render: () => createContextMenuDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const CrossStack: Story = { render: () => createCrossStackDocs(), play };
 export const DataTable: Story = { render: () => createDataTableDocs(), play };
@@ -256,7 +255,6 @@ export const Drawer: Story = { render: () => createDrawerDocs(), play };
 export const DropdownMenu: Story = {
   render: () => createDropdownMenuDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Editor: Story = { render: () => createEditorDocs(), play };
 export const Elevation: Story = { render: () => createElevationDocs(), play };
@@ -284,7 +282,6 @@ export const MediaPlayer: Story = { render: () => createMediaPlayerDocs(), play 
 export const Menubar: Story = {
   render: () => createMenubarDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Motion: Story = { render: () => createMotionDocs(), play };
 export const NavigationMenu: Story = {

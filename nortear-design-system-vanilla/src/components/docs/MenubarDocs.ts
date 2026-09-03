@@ -553,7 +553,21 @@ const panel = bar.querySelector('[role="menu"]');
                   'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
                 li.style.minWidth = '180px';
                 li.textContent = 'Excluir arquivo';
-                return li;
+
+                // `role="menuitem"` SOLTO é violação de `aria-required-parent`, e
+                // era real: a varredura do axe reprovou este preview por ele. O
+                // papel só existe dentro de `menu`, `menubar` ou `group` — item
+                // de menu sem menu não é anunciado como item de coisa nenhuma.
+                //
+                // O invólucro é um `div` nu com o papel, e não
+                // `.nds-dropdown-menu-content`: aquela classe é `position:
+                // absolute`, e tiraria o preview do fluxo do quadro que o
+                // enquadra. O que falta aqui é semântica, não desenho.
+                const menu = document.createElement('div');
+                menu.setAttribute('role', 'menu');
+                menu.setAttribute('aria-label', 'Exemplo de item destrutivo');
+                menu.appendChild(li);
+                return menu;
               },
             },
             {
