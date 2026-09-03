@@ -207,7 +207,19 @@ export function terminalBlockWithoutOutputSource(): string {
  */
 export function terminalBlockSequenceSource(): string {
   return vueSnippet(
-    IMPORT,
+    [
+      IMPORT,
+      '',
+      '// A sequência é de quem consome, e por isso ela é DECLARADA aqui: um',
+      '// laço sobre um nome que o snippet não declara não resolve na mão de',
+      '// quem copia.',
+      'const sequencia = [',
+      `  { id: 'build', command: '${COMMAND}', lines: ['built in 8.42s'], status: 'complete', exitCode: 0 },`,
+      "  { id: 'test', command: 'npm test --workspace @nortear/ds', lines: ['ERROR: build failed with 1 error'], status: 'failed', exitCode: 1 },",
+      '  // O que ainda não correu não escreveu nada, e não tem código de saída.',
+      "  { id: 'publish', command: 'npm publish --workspace @nortear/ds', status: 'idle' },",
+      '];',
+    ].join('\n'),
     [
       '<TerminalBlock',
       '  v-for="passo in sequencia"',

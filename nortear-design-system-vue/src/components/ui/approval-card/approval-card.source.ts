@@ -68,6 +68,25 @@ const ACTIONS_SLOT = [
   '</template>',
 ].join('\n');
 
+/**
+ * A lista dos controles, DECLARADA no exemplo.
+ *
+ * Ela é de quem consome — a peça não a conhece, e é justamente por isso que os
+ * controles chegam pelo slot. Mas um laço sobre um nome que o snippet não
+ * declara não resolve na mão de quem copia, e o `v-for` acima itera esta lista:
+ * ou ela aparece no `script setup`, ou o exemplo ensina a montar um slot vazio.
+ * Os três valores são os do vocabulário compartilhado, e é o valor — não o
+ * rótulo — que o atributo carrega.
+ */
+const CHOICES = [
+  '',
+  'const choices = [',
+  "  { value: 'allow-once', label: 'Permitir uma vez' },",
+  "  { value: 'always', label: 'Sempre permitir' },",
+  "  { value: 'deny', label: 'Recusar' },",
+  '];',
+].join('\n');
+
 /** O alcance nomeado pelo exemplo: é assim que quem consome o declara. */
 function scopeOf(name: string): string {
   return `${name}Scope`;
@@ -94,7 +113,10 @@ function approvalTag(opts: CardShape): string {
 }
 
 function build(opts: CardShape): string {
-  return vueSnippet(opts.actions === false ? IMPORT : IMPORT_WITH_BUTTON, approvalTag(opts));
+  // Sem controle nenhum não há laço, e sem laço a lista não teria o que
+  // alimentar: declará-la ali ensinaria a montar dado que ninguém lê.
+  const script = opts.actions === false ? IMPORT : `${IMPORT_WITH_BUTTON}\n${CHOICES}`;
+  return vueSnippet(script, approvalTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve a pergunta por extenso. */
@@ -165,6 +187,7 @@ export function approvalCardOutsideTheGroupSource(): string {
     "import { splitWaitingCalls } from '@shared/primitives/tool-group-summary';",
     '',
     'const { grouped, waiting } = splitWaitingCalls(calls);',
+    CHOICES,
   ].join('\n');
 
   const card = [

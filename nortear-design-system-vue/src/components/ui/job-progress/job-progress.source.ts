@@ -169,7 +169,19 @@ export function jobProgressFailedSource(): string {
  */
 export function jobProgressQueueSource(): string {
   return vueSnippet(
-    IMPORT,
+    [
+      IMPORT,
+      '',
+      '// A fila é de quem consome, e por isso ela é DECLARADA aqui: um laço',
+      '// sobre um nome que o snippet não declara não resolve na mão de quem',
+      '// copia.',
+      'const trabalhos = [',
+      `  { id: 'index', label: '${JOB_LABEL}', status: 'running', count: { done: 1240, total: 5000 } },`,
+      '  // Sem total não há trilha, e isso acontece: a conta continua correndo.',
+      "  { id: 'embed', label: 'Gerando embeddings', status: 'running', count: { done: 320 } },",
+      "  { id: 'warm', label: 'Aquecendo o cache', status: 'idle' },",
+      '];',
+    ].join('\n'),
     [
       '<JobProgress',
       '  v-for="trabalho in trabalhos"',
