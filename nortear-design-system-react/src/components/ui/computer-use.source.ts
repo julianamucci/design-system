@@ -56,17 +56,17 @@ const SCREEN_BLOCK = [
 
 /** Os passos de cada ramo, pelo nome com que o ramo os cita. */
 const STEP_LISTS: Record<string, string[]> = {
-  passos: [
+  steps: [
     '// A sessão do exemplo tem seis passos — aqui, os três primeiros.',
-    'const passos = [',
+    'const steps = [',
     '  { id: "aceitar", action: "Clicar", target: "Aceitar cookies", x: 78, y: 88 },',
     '  { id: "entrar", action: "Clicar", target: "Entrar", x: 86, y: 12 },',
     '  { id: "email", action: "Digitar", target: "o endereço de e-mail", x: 42, y: 38 },',
     '];',
   ],
-  passosCurtos: [
+  shortSteps: [
     '// Uma sessão de dois passos, que é o começo de TODA sessão.',
-    'const passosCurtos = [',
+    'const shortSteps = [',
     '  { id: "abrir", action: "Abrir", target: "o painel de faturas", x: 18, y: 22 },',
     '  { id: "rolar", action: "Rolar", target: "até o fim da lista", x: 62, y: 70 },',
     '];',
@@ -125,7 +125,7 @@ export const computerUseSource: SourceTransform<{
     // Sem passo nenhum não há rastro nem legenda, e o snippet acompanha: passar
     // uma lista vazia e um índice ensinaria a apontar para um passo que não
     // existe.
-    stepsRef: args.withSteps === false ? undefined : 'passos',
+    stepsRef: args.withSteps === false ? undefined : 'steps',
     activeIndex:
       args.withSteps === false || !Number.isFinite(args.activeIndex)
         ? undefined
@@ -146,7 +146,7 @@ export function computerUseWithoutStepsSource(): string {
 
 /** Enquanto o agente dirige: a peça se declara ocupada e a marca ativa pulsa. */
 export function computerUseRunningSource(): string {
-  return build({ status: 'running', stepsRef: 'passos', activeIndex: 3 });
+  return build({ status: 'running', stepsRef: 'steps', activeIndex: 3 });
 }
 
 /**
@@ -156,7 +156,7 @@ export function computerUseRunningSource(): string {
  * pulsa, e marca que pulsa depois do fim diz que o agente continua trabalhando.
  */
 export function computerUseFinishedSource(): string {
-  return build({ status: 'complete', stepsRef: 'passos', activeIndex: 5 });
+  return build({ status: 'complete', stepsRef: 'steps', activeIndex: 5 });
 }
 
 /**
@@ -171,7 +171,7 @@ export function computerUseEveryStatusSource(): string {
     [
       [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
       '',
-      STEP_LISTS.passos.join('\n'),
+      STEP_LISTS.steps.join('\n'),
       '',
       SCREEN_BLOCK,
       '',
@@ -187,7 +187,7 @@ export function computerUseEveryStatusSource(): string {
       // das duas — quem copiasse recebia um componente que não existe. As
       // outras cinco transforms deste arquivo já passavam a tela por variável.
       '    screen={tela}',
-      '    steps={passos}',
+      '    steps={steps}',
       '    activeIndex={3}',
       '    status={status}',
       '    labels={rotulos}',
@@ -204,7 +204,7 @@ export function computerUseEveryStatusSource(): string {
  * marca. É o começo de toda sessão, e não um caso de borda.
  */
 export function computerUseFirstStepSource(): string {
-  return build({ status: 'running', stepsRef: 'passosCurtos', activeIndex: 0 });
+  return build({ status: 'running', stepsRef: 'shortSteps', activeIndex: 0 });
 }
 
 /**
@@ -215,7 +215,7 @@ export function computerUseFirstStepSource(): string {
  * acabou de terminar.
  */
 export function computerUseClampedSource(): string {
-  return build({ status: 'complete', stepsRef: 'passos', activeIndex: 99 });
+  return build({ status: 'complete', stepsRef: 'steps', activeIndex: 99 });
 }
 
 /**
@@ -230,7 +230,7 @@ export function computerUseScreenSource(): string {
     [
       IMPORT,
       '',
-      STEP_LISTS.passos.join('\n'),
+      STEP_LISTS.steps.join('\n'),
       '',
       LABELS_BLOCK,
     ].join('\n'),
@@ -246,7 +246,7 @@ export function computerUseScreenSource(): string {
       tag([
         `url="${DEFAULT_URL}"`,
         'screen={tela}',
-        'steps={passos}',
+        'steps={steps}',
         'activeIndex={3}',
         'status="running"',
         'labels={rotulos}',
@@ -268,7 +268,7 @@ export function computerUseBesideRunSource(): string {
     [
       [IMPORT, 'import { AgentStatus } from "@/components/ui/agent-status";'].join('\n'),
       '',
-      STEP_LISTS.passos.join('\n'),
+      STEP_LISTS.steps.join('\n'),
       '',
       SCREEN_BLOCK,
       '',
@@ -295,7 +295,7 @@ export function computerUseBesideRunSource(): string {
         tag([
           `url="${DEFAULT_URL}"`,
           'screen={tela}',
-          'steps={passos}',
+          'steps={steps}',
           'activeIndex={3}',
           'status="running"',
           'labels={rotulos}',
@@ -315,12 +315,12 @@ export function computerUseBesideRunSource(): string {
  */
 export function computerUsePortraitSource(): string {
   return jsxSnippet(
-    preamble('passos'),
+    preamble('steps'),
     [
       tag([
         'url="m.exemplo.com/entrar"',
         'screen={tela}',
-        'steps={passos}',
+        'steps={steps}',
         'activeIndex={2}',
         'status="running"',
         'labels={rotulos}',

@@ -69,7 +69,7 @@ function spanLines(ref: string): string {
     ref === 'trechosDaJanela'
       ? '// A janela recorta as pontas: um trecho vinha de antes dela, e outro segue depois.'
       : '// Os trechos do exemplo — aqui, os três primeiros.';
-  const itens =
+  const items =
     ref === 'trechosDaJanela'
       ? [
         '{ id: "anterior", label: "Vinha de antes da janela", startMs: -400, durationMs: 700, depth: 0, state: "done" },',
@@ -81,7 +81,7 @@ function spanLines(ref: string): string {
         '{ id: "conferencia", label: "Conferir cada documento", startMs: 270, durationMs: 380, depth: 1, state: "running" },',
         '{ id: "resumo", label: "Escrever o resumo do que falta", startMs: 660, durationMs: 220, depth: 1, state: "pending" },',
       ];
-  return [nota, `const ${ref} = [`, ...itens.map((item) => `  ${item}`), '];'].join('\n');
+  return [nota, `const ${ref} = [`, ...items.map((item) => `  ${item}`), '];'].join('\n');
 }
 
 /**

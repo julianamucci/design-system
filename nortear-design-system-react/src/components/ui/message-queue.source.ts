@@ -87,8 +87,8 @@ function queueLines(ref: string): string {
     ref === 'longQueue'
       ? '// Uma fila que passa de nove — aqui, as três primeiras das doze.'
       : '// As três falas de exemplo, na ordem em que saem.';
-  const state = (indice: number) =>
-    primeiraSaindo && indice === 0 ? 'sending' : 'waiting';
+  const state = (index: number) =>
+    primeiraSaindo && index === 0 ? 'sending' : 'waiting';
   return [
     nota,
     `const ${ref} = [`,
@@ -96,7 +96,7 @@ function queueLines(ref: string): string {
       'Manda o resumo de ontem',
       'E o prazo?',
       'Inclui o gráfico de custo',
-    ].map((texto, i) => `  { id: "m${i + 1}", text: "${texto}", state: "${state(i)}" },`),
+    ].map((phrase, i) => `  { id: "m${i + 1}", text: "${phrase}", state: "${state(i)}" },`),
     '];',
   ].join('\n');
 }

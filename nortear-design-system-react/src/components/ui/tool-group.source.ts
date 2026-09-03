@@ -81,7 +81,7 @@ function callsLines(ref: string): string {
   const estados: Record<string, readonly string[]> = {
     chamadas: ['done', 'done', 'failed'],
     chamadasSemDetalhe: ['done', 'done', 'failed'],
-    chamadasComFalha: ['done', 'done', 'failed'],
+    failedCalls: ['done', 'done', 'failed'],
     chamadasConcluidas: ['done', 'done', 'done'],
     chamadasEmCurso: ['done', 'running', 'pending'],
   };
@@ -169,7 +169,7 @@ export function toolGroupEveryStateSource(): string {
 
 /** O grupo com uma falha, ainda recolhido — o caso que a peça existe para servir. */
 export function toolGroupFailedSource(): string {
-  return build({ calls: 'chamadasComFalha', change: false });
+  return build({ calls: 'failedCalls', change: false });
 }
 
 /** O grupo em que tudo terminou bem. */
