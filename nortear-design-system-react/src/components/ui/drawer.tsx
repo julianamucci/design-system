@@ -27,6 +27,28 @@ import { cn } from "@/lib/utils"
 const DrawerModalContext = React.createContext(true)
 
 /**
+ * Fechamento EXPLÍCITO, e só existe quando `dismissible={false}`.
+ *
+ * O primitivo trata `dismissible={false}` como "não fecha por nada": a guarda
+ * dele é `if (!dismissible && !open) return`, no `onOpenChange` do diálogo que
+ * ele embrulha, e ela engole TODO pedido de fechamento que passe por ali — o do
+ * Escape, o do véu, o do arraste e também o do botão de fechar, que é o mesmo
+ * caminho. Medido em navegador em 2026-09-03: com a saída do rodapé clicada, o
+ * painel continuava aberto.
+ *
+ * Isso deixava a gaveta sem saída nenhuma — armadilha de teclado, WCAG 2.1.2
+ * (nível A) —, e contradizia o que o conteúdo compartilhado promete em
+ * `functional.item7`: sem dispensa por gesto, mas COM saída explícita no
+ * rodapé.
+ *
+ * O contorno não precisa de fork: a guarda só vale para o caminho interno do
+ * primitivo. A propriedade `open` continua sendo respeitada (ele a lê por
+ * estado controlável), então a raiz passa a controlar a abertura e o
+ * `DrawerClose` fecha por aqui, por fora da guarda.
+ */
+const DrawerCloseContext = React.createContext<(() => void) | null>(null)
+
+/**
  * `autoFocus` nasce `false` no primitivo, e o efeito é silencioso: ao abrir, o
  * painel chama `preventDefault()` no `onOpenAutoFocus` e o foco FICA no gatilho,
  * fora do diálogo. O foco continua preso (Tab não escapa), mas quem navega por
@@ -40,11 +62,72 @@ const DrawerModalContext = React.createContext(true)
  */
 function Drawer({
   autoFocus = true,
+  dismissible = true,
+  open,
+  defaultOpen = false,
+  onOpenChange,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
+  /*
+   * A raiz só assume o controle da abertura quando `dismissible={false}` — e a
+   * limitação é medida, não cautela.
+   *
+   * Controlar `open` é o que dá ao `DrawerClose` um caminho por fora da guarda
+   * do primitivo (ver o docblock do contexto acima). Mas o primitivo trata
+   * `open` controlado e `defaultOpen` por caminhos DIFERENTES: com `open` já
+   * verdadeiro no primeiro render ele não roda a transição de entrada, e o
+   * painel fica parado no deslocamento de fechado. Medido em par nesta máquina,
+   * na story `Right` do arquivo de variantes: com o controle ligado para todas
+   * as gavetas, a borda direita do painel parava a 384px de onde devia (o
+   * painel inteiro fora da tela); sem ele, as cinco stories passam.
+   *
+   * Como a gaveta dispensável não precisa do desvio, ela não o paga: segue
+   * exatamente pelo caminho do primitivo, com `defaultOpen` intacto.
+   *
+   * Onde o desvio vale, o painel passa a ENTRAR por transição em vez de já
+   * nascer posicionado — quem afirma geometria logo depois de abrir precisa
+   * esperar a entrada assentar, e a story `NotDismissible` espera. É por isso
+   * que ela mede a posição do painel: sem essa asserção, um painel parado fora
+   * da tela responderia igual a todos os outros passos.
+   */
+  const precisaControlar = !dismissible
+  const controlado = open !== undefined
+  const [abertoInterno, setAbertoInterno] = React.useState(defaultOpen)
+  const aberto = controlado ? open : abertoInterno
+
+  const mudarAbertura = React.useCallback(
+    (novo: boolean) => {
+      if (!controlado) setAbertoInterno(novo)
+      onOpenChange?.(novo)
+    },
+    [controlado, onOpenChange]
+  )
+
+  const fecharExplicito = React.useMemo(
+    /*
+     * Só quando a dispensa está desligada, e isso também é o que dispensa
+     * qualquer proteção contra pedido em dobro: com a dispensa LIGADA este
+     * caminho não existe (fica nulo) e quem fecha é o primitivo; com ela
+     * DESLIGADA o caminho do primitivo é engolido pela guarda dele, e este aqui
+     * é o único que chega. Nunca os dois na mesma vez.
+     */
+    () => (dismissible ? null : () => mudarAbertura(false)),
+    [dismissible, mudarAbertura]
+  )
+
   return (
     <DrawerModalContext.Provider value={props.modal ?? true}>
-      <DrawerPrimitive.Root data-slot="drawer" autoFocus={autoFocus} {...props} />
+      <DrawerCloseContext.Provider value={fecharExplicito}>
+        <DrawerPrimitive.Root
+          data-slot="drawer"
+          autoFocus={autoFocus}
+          dismissible={dismissible}
+          {...(precisaControlar
+            ? { open: aberto, onOpenChange: mudarAbertura }
+            : { open, defaultOpen, onOpenChange })}
+          {...props}
+        />
+      </DrawerCloseContext.Provider>
     </DrawerModalContext.Provider>
   )
 }
@@ -62,9 +145,22 @@ function DrawerPortal({
 }
 
 function DrawerClose({
+  onClick,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Close>) {
-  return <DrawerPrimitive.Close data-slot="drawer-close" {...props} />
+  const fecharExplicito = React.useContext(DrawerCloseContext)
+  return (
+    <DrawerPrimitive.Close
+      data-slot="drawer-close"
+      onClick={(event) => {
+        onClick?.(event)
+        // Nulo quando a dispensa está ligada — aí quem fecha é o primitivo.
+        // Com `dismissible={false}`, este é o ÚNICO caminho que fecha.
+        fecharExplicito?.()
+      }}
+      {...props}
+    />
+  )
 }
 
 function DrawerOverlay({

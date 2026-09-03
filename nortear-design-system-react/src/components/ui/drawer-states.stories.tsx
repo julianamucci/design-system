@@ -264,14 +264,41 @@ export const NotDismissible: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole("button", { name: /^Abrir$/i });
     // A play é reexecutável no painel Interactions, e o último passo FECHA o
     // painel de verdade. Sem restabelecer a precondição, a segunda rodada
     // começaria com a tela vazia e os dois primeiros passos afirmariam nada.
+    //
+    // O gatilho só é PROCURADO dentro deste ramo, e é por isso que ele existe
+    // aqui embaixo em vez de no topo da play: a story nasce `defaultOpen`, e
+    // com o painel aberto a lib põe `aria-hidden` no resto da página — consulta
+    // por papel não enxerga nada ali, e `getByRole` reprovava antes do primeiro
+    // passo. Fechado, o `aria-hidden` sai e o gatilho volta a ser alcançável.
     if (within(document.body).queryAllByRole("dialog").length === 0) {
-      await userEvent.click(trigger);
+      await userEvent.click(canvas.getByRole("button", { name: /^Abrir$/i }));
     }
     const panel = await waitForPortal("dialog");
+
+    await step("O painel ENTRA na tela, e não fica parado fora dela", async () => {
+      // Guarda do desvio que esta variante usa: com `dismissible={false}` a raiz
+      // controla a abertura, e aí o painel ENTRA por transição em vez de já
+      // nascer no lugar. Sem esta asserção o desvio passaria despercebido — os
+      // passos abaixo só contam diálogos e clicam botões, e um painel parado
+      // fora da tela responde a todos eles igual.
+      //
+      // Espera de RELÓGIO, e nunca `waitFor`: a condição lê geometria, e leitura
+      // que força layout dentro do `waitFor` reagenda a própria tentativa pelo
+      // observador de mutação — o prazo não chega, a aba trava e o arquivo morre
+      // sem reportar. Com laço de relógio, o pior caso é reprovar no prazo.
+      const prazo = Date.now() + 2000;
+      let box = panel.getBoundingClientRect();
+      while (Date.now() < prazo && !(box.height > 0 && box.top < window.innerHeight - 1)) {
+        await new Promise((r) => setTimeout(r, 50));
+        box = panel.getBoundingClientRect();
+      }
+      await expect(box.height).toBeGreaterThan(0);
+      await expect(box.top).toBeLessThan(window.innerHeight);
+      await expect(box.bottom).toBeGreaterThan(0);
+    });
 
     await step("Escape não fecha", async () => {
       await userEvent.keyboard("{Escape}");
@@ -303,8 +330,10 @@ export const NotDismissible: Story = {
     });
 
     // Volta a abrir: a foto do Chromatic é do painel aberto, e a próxima rodada
-    // da play precisa do mesmo ponto de partida desta.
-    await userEvent.click(trigger);
+    // da play precisa do mesmo ponto de partida desta. O gatilho é consultado
+    // AQUI, com o painel já fechado — é o único momento em que o `aria-hidden`
+    // da lib não o esconde da consulta por papel.
+    await userEvent.click(canvas.getByRole("button", { name: /^Abrir$/i }));
     await waitForPortal("dialog");
   },
 };
