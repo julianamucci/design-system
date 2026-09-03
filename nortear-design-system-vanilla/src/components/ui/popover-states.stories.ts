@@ -256,7 +256,18 @@ export const Focused: Story = {
       // `:focus-visible` é a condição exata que o CSS compartilhado usa para
       // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
       // casaria a pseudo-classe e o anel não apareceria.
-      const confirmar = within(panel()!).getByRole('button', { name: /confirmar/i });
+      //
+      // O passo CHEGA ao botão por teclado, em vez de herdar o foco do passo
+      // anterior: aquele passo é justamente o que manda o foco para FORA do
+      // painel, então herdar dele era afirmar o anel de um botão que já não
+      // estava focado. Reprovou com `expected false to be true`, e o defeito
+      // era a precondição, não o anel.
+      const p = panel()!;
+      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
+      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+      cancelar.focus();
+      await userEvent.tab();
+      await expect(confirmar).toHaveFocus();
       await expect(confirmar.matches(':focus-visible')).toBe(true);
       // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
       // errada daria verde em qualquer elemento.
