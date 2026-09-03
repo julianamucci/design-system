@@ -296,6 +296,34 @@ export const WithScrollingOverlay: Story = {
       await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
     });
 
+    await step('Abre no TOPO, e o pouso do foco é o painel', async () => {
+      // Este passo é o que faltava, e a falta dele deixou o defeito virar
+      // contrato: o passo seguinte zerava a rolagem para poder medir, e o
+      // comentário registrava como fato que o overlay já vinha rolado até o
+      // fim. Vinha porque o pouso do foco era o primeiro focável do painel —
+      // nesta rota, o botão do rodapé, já que o X do canto é o último filho —,
+      // e o navegador rola o overlay até o que recebe foco. Quem abria um
+      // contrato de vinte cláusulas chegava na última.
+      //
+      // Na rota A o mesmo pouso é inofensivo (painel `fixed`, não rola), e é
+      // por isso que só esta rota mudou.
+      // A asserção é o que o leitor VÊ, e não um número: o cabeçalho tem de
+      // estar dentro da janela do overlay ao abrir. Zero absoluto foi tentado e
+      // é contrato errado — o overlay é um grid `place-items: center` e o
+      // painel traz `margin-block: var(--spacing-8)`, então a origem legítima
+      // desta rota são os 32px da margem, não 0.
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
+      const caixaOv = ov.getBoundingClientRect();
+      const caixaHeader = header.getBoundingClientRect();
+      await expect(caixaHeader.top).toBeGreaterThanOrEqual(caixaOv.top);
+      await expect(caixaHeader.bottom).toBeLessThanOrEqual(caixaOv.bottom);
+
+      // E o complemento que nomeia o defeito antigo: não abre no FIM.
+      await expect(ov.scrollTop).toBeLessThan(ov.scrollHeight - ov.clientHeight);
+      await expect(document.activeElement).toBe(p);
+    });
+
     await step('O painel entra no fluxo, e o cabeçalho sobe junto', async () => {
       // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
       // se move com a rolagem do overlay, e é isso que a asserção mede.
@@ -303,13 +331,8 @@ export const WithScrollingOverlay: Story = {
       const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
       const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
 
-      // O zero é ESTABELECIDO, e não presumido. A versão anterior lia o `antes`
-      // de onde o overlay estivesse e reprovou com `-72 to be less than -1360`:
-      // ao abrir, o foco vai para o primeiro focável do painel, que nesta rota
-      // é o botão do RODAPÉ — o X do canto é o último filho —, e focá-lo rola o
-      // overlay até o fim. O `antes` já vinha de um overlay rolado, e mandar
-      // para 120 subia a rolagem em vez de descer. Fixando a origem, a asserção
-      // volta a medir o que ela diz medir.
+      // O zero é ESTABELECIDO, e não presumido — a rolagem é estado, e o painel
+      // Interactions reexecuta a play no mesmo DOM.
       ov.scrollTop = 0;
       const antes = header.getBoundingClientRect().top;
       ov.scrollTop = 120;

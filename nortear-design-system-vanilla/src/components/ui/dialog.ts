@@ -298,8 +298,29 @@ export function createDialog(options: DialogOptions): DestroyableElement {
     if (options.scroll) overlayEl.appendChild(panelEl);
     else document.body.appendChild(panelEl);
 
-    const focusable = getFocusable(panelEl);
-    focusable[0]?.focus();
+    // O primeiro focável do painel NÃO serve de pouso na rota B. O X do canto é
+    // anexado por último (logo acima), então `getFocusable[0]` é o que estiver
+    // no corpo ou no rodapé — e como ali o painel está no FLUXO do overlay,
+    // focá-lo faz o navegador rolar o overlay até ele: o diálogo abre no FIM do
+    // documento, com o cabeçalho já fora da tela. Medido no React, mesma causa
+    // e mesma ordem de anexação: `scrollTop` 2216 de um máximo de 2216.
+    //
+    // Na rota B o pouso é o PAINEL — o padrão da APG quando não há um primeiro
+    // controle óbvio: o leitor ouve o nome do diálogo e começa do topo. Na rota
+    // A nada muda, porque ali o painel é `fixed` e não rola: o primeiro focável
+    // continua sendo o pouso certo.
+    if (options.scroll) {
+      panelEl.tabIndex = -1;
+      // `preventScroll` não é detalhe: focar o painel sem ele ainda rola o
+      // overlay 88px, encostando o topo do painel no topo da vista e comendo o
+      // respiro que a folha declara. Medido — a asserção reprovou com 88 antes
+      // desta opção entrar. Rolar é o efeito que estamos evitando; o pouso do
+      // foco é o que queremos.
+      panelEl.focus({ preventScroll: true });
+    } else {
+      const focusable = getFocusable(panelEl);
+      focusable[0]?.focus();
+    }
 
     // A página atrás do véu não rola enquanto o diálogo está aberto — sem
     // isto, a roda do mouse sobre o véu rolava o documento inteiro por baixo.
