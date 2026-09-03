@@ -37,6 +37,22 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * O esperador que as sondas de carrossel recebem, com PRAZO EXPLÍCITO.
+ *
+ * As sondas do `carousel-probe` pedem um `aguardar` à story em vez de importar
+ * um runner, e recebiam o `waitFor` cru — que traz o prazo padrão de 1s. Um
+ * segundo cobre a transição (`--duration-base`) numa máquina ociosa e não cobre
+ * numa máquina com três suítes disputando CPU: medido em 2026-09-03, a story
+ * Horizontal reprovou em rodada carregada (12,2s de relógio) e passou sozinha,
+ * sem nenhuma mudança de código.
+ *
+ * O conserto é de PRAZO, não de asserção: o que a sonda cobra continua o mesmo,
+ * só deixa de ser cobrado com um cronômetro dimensionado para máquina vazia.
+ */
+const waitForTransition = (check: () => void): Promise<unknown> =>
+  waitFor(check, { timeout: 4000 });
+
 export const Horizontal: Story = {
   parameters: { covers: ['accessibility.item5', 'accessibility.item7', 'functional.item10', 'visual.item2', 'visual.item6'] },
   render: () => ({
@@ -100,7 +116,7 @@ export const Horizontal: Story = {
       // preferência pede para não acontecer. A sonda liga a preferência pelo
       // mesmo canal do toolbar do Storybook e a desliga no `finally`, senão a
       // story seguinte e a foto dela sairiam envenenadas.
-      const failures = await escalaSobMovimentoReduzido(canvasElement, waitFor);
+      const failures = await escalaSobMovimentoReduzido(canvasElement, waitForTransition);
       await expect(describeFailures(failures)).toBe('');
     });
 
@@ -113,7 +129,7 @@ export const Horizontal: Story = {
       // importa aqui é a COLISÃO de duas regras na propriedade `transform`, e
       // escrevê-la à mão reproduz a colisão inteira.
       const failures = [
-        ...(await feedbackDePointerReprovas(next, waitFor)),
+        ...(await feedbackDePointerReprovas(next, waitForTransition)),
         ...controlReach(next),
       ];
       await expect(describeFailures(failures)).toBe('');
@@ -199,7 +215,7 @@ export const Vertical: Story = {
       // apontar para o lado errado no mesmo quadro em que o botão despencava.
       // Escrita em `translate` + `rotate`, as duas convivem com o `scale`.
       const next = canvas.getByRole('button', { name: 'Próximo item' });
-      const failures = await feedbackDePointerReprovas(next, waitFor);
+      const failures = await feedbackDePointerReprovas(next, waitForTransition);
       await expect(describeFailures(failures)).toBe('');
     });
   },
