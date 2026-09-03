@@ -386,9 +386,9 @@ export const ListenerCleanup: Story = {
 // ─── Por que os eventos são despachados à mão ────────────────────────────────
 //
 // `userEvent.pointer` entrega o começo do gesto e não entrega a soltura no
-// mesmo elemento quando há captura de pointer — o mesmo motivo já registrado
+// mesmo elemento quando há captura de ponteiro — o mesmo motivo já registrado
 // no arraste do Carousel desta stack. O motor assina `pointerdown` /
-// `pointermove` / `pointerup` no panel, então despachar os três direto é o que
+// `pointermove` / `pointerup` no painel, então despachar os três direto é o que
 // entrega o gesto inteiro.
 //
 // ─── Por que a espera é de relógio, e não `waitFor` ──────────────────────────
@@ -407,7 +407,7 @@ function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/** Um passo de pointer, com o evento que o motor assina. */
+/** Um passo de ponteiro, com o evento que o motor assina. */
 function pointer(
   target: HTMLElement,
   type: 'pointerdown' | 'pointermove' | 'pointerup',
@@ -429,7 +429,7 @@ function pointer(
   );
 }
 
-/** O panel está parado na posição de repouso? */
+/** O painel está parado na posição de repouso? */
 function atRest(panel: HTMLElement): boolean {
   const t = getComputedStyle(panel).transform;
   return t === 'none' || t === 'matrix(1, 0, 0, 1, 0, 0)';
@@ -445,7 +445,7 @@ export const DragToDismiss: Story = {
     docs: {
       description: {
         story:
-          'Arrastar o panel na direção de entrada o dispensa; soltar antes de um quarto do seu tamanho o traz de volta. O gesto é extra de pointer: Escape, véu e o botão do rodapé fecham o mesmo panel sem trajeto nenhum (WCAG 2.5.7).',
+          'Arrastar o painel na direção de entrada o dispensa; soltar antes de um quarto do seu tamanho o traz de volta. O gesto é extra de ponteiro: Escape, véu e o botão do rodapé fecham o mesmo painel sem trajeto nenhum (WCAG 2.5.7).',
       },
     },
   },
@@ -453,14 +453,14 @@ export const DragToDismiss: Story = {
     buildBase({
       triggerLabel: 'Abrir drawer',
       title: 'Arraste para dispensar',
-      description: 'Puxe o panel para baixo, ou use Escape.',
+      description: 'Puxe o painel para baixo, ou use Escape.',
       cancelLabel: 'Cancelar',
       actionLabel: 'Salvar',
     }),
   play: async ({ canvasElement, step }) => {
     drawerClearPortais();
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /openPanel drawer/i });
+    const trigger = canvas.getByRole('button', { name: /abrir drawer/i });
 
     async function openPanel(): Promise<HTMLElement> {
       if (within(document.body).queryAllByRole('dialog').length === 0) {
@@ -468,7 +468,7 @@ export const DragToDismiss: Story = {
       }
       const panel = await waitForPortal('dialog');
       // A carência de 500 ms depois da abertura é do gesto, não do teste: nela
-      // o panel ainda está entrando, e a lib de gaveta recusa arrastar pelo
+      // o painel ainda está entrando, e a lib de gaveta recusa arrastar pelo
       // mesmo motivo. Sem esperar, o primeiro `pointermove` seria descartado.
       await wait(600);
       return panel;
@@ -486,7 +486,7 @@ export const DragToDismiss: Story = {
       await nextFrame();
       // Devagar de propósito: 6px em ~150ms dá 0,04 px/ms, um décimo do limiar
       // de velocidade. O que decide aqui é a distância, e 6px não chega a um
-      // quarto de panel nenhum.
+      // quarto de painel nenhum.
       await wait(150);
       pointer(panel, 'pointermove', x, y + 6);
       await nextFrame();
@@ -501,7 +501,7 @@ export const DragToDismiss: Story = {
       await expect(atRest(panel)).toBe(true);
     });
 
-    await step('Arraste além de um quarto do panel dispensa, e o foco volta', async () => {
+    await step('Arraste além de um quarto do painel dispensa, e o foco volta', async () => {
       const panel = await openPanel();
       const box = panel.getBoundingClientRect();
       const x = box.left + box.width / 2;
@@ -523,9 +523,9 @@ export const DragToDismiss: Story = {
       await expect(document.activeElement).toBe(trigger);
     });
 
-    await step('Nada depende do arraste: Escape fecha o mesmo panel', async () => {
+    await step('Nada depende do arraste: Escape fecha o mesmo painel', async () => {
       // É esta a asserção da WCAG 2.5.7. O gesto só dispensa, e dispensar tem
-      // caminho sem trajeto de pointer — este passo prova que o caminho existe
+      // caminho sem trajeto de ponteiro — este passo prova que o caminho existe
       // e leva ao mesmo lugar.
       const panel = await openPanel();
       await expect(panel).toBeVisible();
@@ -538,7 +538,7 @@ export const DragToDismiss: Story = {
       const panel = await openPanel();
       const handle = panel.querySelector<HTMLElement>('.nds-drawer-handle');
       await expect(handle).not.toBeNull();
-      // Afordância visual: o arraste vale no panel inteiro, não nela. Foco ali
+      // Afordância visual: o arraste vale no painel inteiro, não nela. Foco ali
       // seria uma parada de tabulação que não faz nada.
       await expect(handle!.getAttribute('aria-hidden')).toBe('true');
       await expect(handle!.hasAttribute('tabindex')).toBe(false);
