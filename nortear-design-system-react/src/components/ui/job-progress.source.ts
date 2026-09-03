@@ -21,6 +21,69 @@ const IMPORT = 'import { JobProgress } from "@/components/ui/job-progress";';
 const JOB_LABEL = 'Indexando o repositório';
 const ON_ACTION = 'onAction={(intent) => aplicar(intent)}';
 
+/**
+ * Os rótulos, por inteiro.
+ *
+ * Não cabe resumir: o `Record` dos estados é completo por contrato, e as duas
+ * frases da conta existem em par — sem `countWithoutTotal` o caso em que não se
+ * sabe de quantas cairia numa frase com um denominador vazio. Só a AÇÃO é
+ * parcial, e isso é decisão da peça: em espera e concluído não oferecem nada.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  status: {',
+  '    idle: "Em espera",',
+  '    running: "Em andamento",',
+  '    stopped: "Interrompido",',
+  '    complete: "Concluído",',
+  '    failed: "Falhou",',
+  '  },',
+  '  count: "{done} de {total}",',
+  '  // A frase de quando não se sabe de quantas — e ela é o par da de cima.',
+  '  countWithoutTotal: "{done} até agora",',
+  '  action: { running: "Parar", stopped: "Retomar", failed: "Tentar de novo" },',
+  '};',
+].join('\n');
+
+/** Os rótulos da linha de estado da execução, também por inteiro. */
+const RUN_LABELS_BLOCK = [
+  'const rotulosDaExecucao = {',
+  '  status: {',
+  '    idle: "Em espera",',
+  '    running: "Respondendo",',
+  '    stopped: "Interrompida",',
+  '    complete: "Concluída",',
+  '    failed: "Falhou",',
+  '  },',
+  '  action: { running: "Parar", stopped: "Retomar", failed: "Tentar de novo" },',
+  '};',
+].join('\n');
+
+/**
+ * O retorno da ação, declarado com a forma que AQUELE ramo usa.
+ *
+ * Uma linha, e não uma elisão: parar e retomar de verdade são de quem consome.
+ * Na fila ele recebe também o endereço do trabalho, porque ali há mais de um —
+ * e é por isso que a declaração acompanha o ramo em vez de ser uma só.
+ */
+function actionBlock(withId = false): string {
+  return withId
+    ? 'const aplicar = (id, intent) => { /* … */ };'
+    : 'const aplicar = (intent) => { /* … */ };';
+}
+
+/**
+ * O preâmbulo do snippet: o import, os rótulos e o que a marcação chama.
+ *
+ * Ele entra em TODOS os ramos, e é o que os torna copiáveis: a versão anterior
+ * passava `labels={rotulos}` e chamava `aplicar(intent)` sem declarar nenhum
+ * dos dois.
+ */
+function preamble(imports: string[] = [], blocks: string[] = []): string {
+  const partes = [LABELS_BLOCK, ...blocks].flatMap((bloco) => ['', bloco]);
+  return [[IMPORT, ...imports].join('\n'), ...partes].join('\n');
+}
+
 export type JobProgressSnippetOptions = {
   /** Em que pé está o trabalho. */
   status?: string;
@@ -46,8 +109,10 @@ function countAttr(opts: JobProgressSnippetOptions): string | undefined {
 }
 
 function build(opts: JobProgressSnippetOptions): string {
+  const hasAction = opts.action !== false;
+
   return jsxSnippet(
-    IMPORT,
+    preamble([], hasAction ? [actionBlock()] : []),
     `<JobProgress${attrsMultilinha([
       `label="${JOB_LABEL}"`,
       `status="${opts.status ?? 'running'}"`,
@@ -55,7 +120,7 @@ function build(opts: JobProgressSnippetOptions): string {
       'labels={rotulos}',
       // Estado sem rótulo de ação não desenha botão, então o retorno não teria
       // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
-      opts.action === false ? undefined : ON_ACTION,
+      hasAction ? ON_ACTION : undefined,
     ])} />`,
   );
 }
@@ -88,7 +153,9 @@ export const jobProgressSource: SourceTransform<{
  */
 export function jobProgressEveryStatusSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
+    preamble(['import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'], [
+      actionBlock(),
+    ]),
     [
       'RUN_STATUSES.map((status) => (',
       '  <JobProgress',
@@ -151,7 +218,7 @@ export function jobProgressFailedSource(): string {
  */
 export function jobProgressQueueSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble([], [actionBlock(true)]),
     [
       '// A fila é de quem consome, e por isso ela é DECLARADA aqui: um laço',
       '// sobre um nome que o snippet não declara não compila na mão de quem',
@@ -187,7 +254,10 @@ export function jobProgressQueueSource(): string {
  */
 export function jobProgressBesideRunSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { AgentStatus } from "@/components/ui/agent-status";'].join('\n'),
+    preamble(['import { AgentStatus } from "@/components/ui/agent-status";'], [
+      RUN_LABELS_BLOCK,
+      actionBlock(),
+    ]),
     [
       '<div className="nds-stack" data-spacing="lg">',
       '  <AgentStatus status="complete" elapsed="2:11" labels={rotulosDaExecucao} />',

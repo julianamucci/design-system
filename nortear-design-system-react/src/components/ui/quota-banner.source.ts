@@ -44,6 +44,44 @@ function quotaImports(...extra: string[]): string {
   ].join('\n');
 }
 
+/**
+ * Os rótulos da faixa, por INTEIRO.
+ *
+ * Não cabe resumir: `labels` é obrigatória e a palavra de cada nível é um
+ * `Record` completo — um objeto pela metade não compila para quem copia. E
+ * cada chave aqui responde por uma decisão da peça: `left` impede a manchete
+ * de ser lida como o que já foi gasto, `exhausted` troca o zero contado pela
+ * palavra que diz que acabou, e `level` é o que descreve o nível no lugar da
+ * cor.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  title: "Cota do plano",',
+  '  unit: "mensagens",',
+  '  left: "restantes",',
+  '  exhausted: "Cota esgotada",',
+  '  renews: "Renova em",',
+  '  of: "de",',
+  '  level: { normal: "Com folga", warning: "Perto do fim", critical: "No fim" },',
+  '};',
+].join('\n');
+
+/**
+ * Os rótulos da MEDIÇÃO DA JANELA, por inteiro e pelo mesmo motivo.
+ *
+ * Só entram no snippet que mostra as duas peças lado a lado — é lá que a outra
+ * chamada existe, e é lá que ela precisa compilar.
+ */
+const CONTEXT_LABELS_BLOCK = [
+  'const rotulosDaJanela = {',
+  '  title: "Uso da janela de contexto",',
+  '  level: { normal: "Com folga", warning: "Perto do limite", critical: "No limite" },',
+  '  of: "de",',
+  '  unit: "tokens",',
+  '  unbounded: "Sem teto conhecido",',
+  '};',
+].join('\n');
+
 /** O formatador que é de QUEM CONSOME, e nunca do componente. */
 function horizonLines(): string {
   return [
@@ -83,6 +121,8 @@ function build(opts: QuotaBannerSnippetOptions): string {
   return jsxSnippet(
     quotaImports('import { Button } from "@/components/ui/button";'),
     [
+      LABELS_BLOCK,
+      '',
       horizon,
       '',
       '// O CONTROLE É DE QUEM CONSOME. A faixa desenha o lugar de quem responde;',
@@ -122,6 +162,8 @@ export function quotaBannerEveryCaseSource(): string {
   return jsxSnippet(
     quotaImports(),
     [
+      LABELS_BLOCK,
+      '',
       horizonLines(),
       '',
       '// Passar do teto não deixa resto negativo, e a razão para em uma volta:',
@@ -143,6 +185,8 @@ export function quotaBannerAllLevelsSource(): string {
   return jsxSnippet(
     quotaImports(),
     [
+      LABELS_BLOCK,
+      '',
       horizonLines(),
       '',
       '// A palavra do nível é o que descreve, e a cor apenas acompanha: cor',
@@ -204,6 +248,10 @@ export function quotaBannerBesideContextSource(): string {
   return jsxSnippet(
     quotaImports('import { ContextDisplay } from "@/components/ui/context-display";'),
     [
+      LABELS_BLOCK,
+      '',
+      CONTEXT_LABELS_BLOCK,
+      '',
       horizonLines(),
       '',
       '<div className="nds-stack nds-max-w-lg" data-spacing="md">',

@@ -171,7 +171,7 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
           </PaginationLink>
         </PaginationItem>
       ) : (
-        <PaginationItem key={\`reticencias-\${index}\`}>
+        <PaginationItem key={\`reticencias-\${indice}\`}>
           <PaginationEllipsis />
         </PaginationItem>
       ),
@@ -325,7 +325,7 @@ ${indentar(direcional('PaginationPrevious'), '    ')}
           </PaginationLink>
         </PaginationItem>
       ) : (
-        <PaginationItem key={\`reticencias-\${index}\`}>
+        <PaginationItem key={\`reticencias-\${indice}\`}>
           <PaginationEllipsis />
         </PaginationItem>
       ),

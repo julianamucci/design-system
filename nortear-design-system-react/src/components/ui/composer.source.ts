@@ -9,6 +9,13 @@
  * que só existe no arquivo — o componente que resolve os rótulos, o controle
  * que liga a geração. O que se escreve é uma tag com rótulos e um punhado de
  * props, e é isso que o painel mostra.
+ *
+ * OS RÓTULOS ENTRAM INTEIROS E OS MANIPULADORES ENTRAM DECLARADOS. O objeto não
+ * cabe resumir — o componente exige os seis, e um literal pela metade não
+ * compila para quem copia. Os manipuladores ganham uma linha cada porque
+ * `onSubmit={enviar}` sem `enviar` declarado é um símbolo indefinido na
+ * primeira renderização, e o corpo é justamente o que continua sendo de quem
+ * consome: o campo não limpa nem envia por conta própria.
  */
 import {
   attrsMultilinha,
@@ -31,6 +38,33 @@ export type ComposerArgs = {
 
 const IMPORT = 'import { Composer } from "@/components/ui/composer";';
 
+/**
+ * Os rótulos do campo, por INTEIRO.
+ *
+ * `hint` e `limit` são moldes: `{key}` vira a combinação que envia e `{max}`
+ * vira o número do limite. `submit` e `stop` são o nome do MESMO botão em dois
+ * momentos — ele troca de nome, e não só de ícone.
+ */
+const LABELS_BLOCK = [
+  'const labels = {',
+  '  input: "Mensagem",',
+  '  placeholder: "Escreva sua mensagem…",',
+  '  submit: "Enviar",',
+  '  stop: "Parar",',
+  '  hint: "{key} envia",',
+  '  limit: "Até {max} caracteres",',
+  '};',
+].join('\n');
+
+/**
+ * O que se faz com o que foi escrito.
+ *
+ * Uma linha, e o corpo é de quem consome: o componente não limpa o campo nem
+ * envia nada por conta própria, e é justamente essa a responsabilidade que o
+ * snippet existe para nomear.
+ */
+const SUBMIT_BLOCK = 'const enviar = (texto) => { /* … */ };';
+
 const SUBMIT_ON = ['enter', 'modifier'] as const;
 
 /** Linhas visíveis em repouso — o padrão do componente, que não entra no snippet. */
@@ -48,7 +82,12 @@ function tag(parts: Array<string | undefined>): string {
   return `<Composer labels={labels}${attrsMultilinha([...parts, 'onSubmit={enviar}'])} />`;
 }
 
-function build(parts: Array<string | undefined> = [], header: string = IMPORT): string {
+/** O import, os rótulos e o manipulador de envio, mais o que o ramo pedir. */
+function preamble(imports: string = IMPORT, extra: string[] = []): string {
+  return [imports, '', LABELS_BLOCK, ...extra, '', SUBMIT_BLOCK].join('\n');
+}
+
+function build(parts: Array<string | undefined> = [], header: string = preamble()): string {
   return jsxSnippet(header, tag(parts));
 }
 
@@ -76,7 +115,10 @@ export function composerModifierSource(): string {
 
 /** Com texto já escrito: a semente do campo. */
 export function composerFilledSource(): string {
-  return build(['value={rascunho}']);
+  return build(
+    ['value={rascunho}'],
+    preamble(IMPORT, ['', 'const rascunho = "Preciso do resumo de custos até sexta.";']),
+  );
 }
 
 /**
@@ -89,10 +131,14 @@ export function composerFilledSource(): string {
 export function composerRunningSource(): string {
   return build(
     ['running={gerando}', 'onStop={cancelar}'],
-    `${IMPORT}
-
-// O estado de geração é de quem consome: o composer não acompanha a rede.
-const [gerando, setGerando] = useState(false);`,
+    preamble(`${IMPORT}\nimport { useState } from "react";`, [
+      '',
+      '// O estado de geração é de quem consome: o composer não acompanha a rede.',
+      'const [gerando, setGerando] = useState(false);',
+      '',
+      '// Interromper de verdade é de quem tem a conexão na mão.',
+      'const cancelar = () => { /* … */ };',
+    ]),
   );
 }
 
@@ -113,7 +159,6 @@ export function composerDisabledSource(): string {
 export function composerRailSource(): string {
   return build(
     ['railStart={<Button variant="ghost" size="sm">Anexar</Button>}'],
-    `${IMPORT}
-import { Button } from "@/components/ui/button";`,
+    preamble(`${IMPORT}\nimport { Button } from "@/components/ui/button";`),
   );
 }

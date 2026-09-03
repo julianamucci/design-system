@@ -57,11 +57,29 @@ function templateLiteral(content: string): string {
     .replace(/\$\{/g, '\\${');
 }
 
-/** Cabeçalho: import mais a declaração do texto que a prop `content` recebe. */
-function headerWith(content: string): string {
-  return `${IMPORT}
+/**
+ * O ouvinte de link, declarado numa LINHA de código de verdade.
+ *
+ * Elidi-lo — `onLinkClick={(url) => abrir(url)}` sem `abrir` em lugar nenhum —
+ * custa a quem copia exatamente o mesmo que qualquer outro símbolo sem origem:
+ * `abrir is not defined` na primeira vez que alguém tocar num link. O corpo
+ * fica vazio de propósito: para onde o link leva é da aplicação, e inventar
+ * uma navegação aqui ensinaria uma decisão que a peça não toma.
+ */
+const LINK_HANDLER =
+  'const abrir = (url) => { /* a navegação é da aplicação, e não do componente */ };';
 
-const answer = \`${templateLiteral(content)}\`;`;
+/**
+ * Cabeçalho: import, a declaração do texto que a prop `content` recebe e o que
+ * mais o corpo do snippet vier a citar.
+ */
+function headerWith(content: string, declaracoes: readonly string[] = []): string {
+  return [
+    `${IMPORT}
+
+const answer = \`${templateLiteral(content)}\`;`,
+    ...declaracoes,
+  ].join('\n\n');
 }
 
 /** `allow={["paragraph", "code"]}` — só quando a story restringe. */
@@ -77,8 +95,12 @@ function tagMarkdown(partes: Array<string | undefined>): string {
 }
 
 /** Um snippet completo, do cabeçalho ao fechamento da tag. */
-function build(content: string, partes: Array<string | undefined> = []): string {
-  return jsxSnippet(headerWith(content), tagMarkdown(partes));
+function build(
+  content: string,
+  partes: Array<string | undefined> = [],
+  declaracoes: readonly string[] = [],
+): string {
+  return jsxSnippet(headerWith(content, declaracoes), tagMarkdown(partes));
 }
 
 /**
@@ -90,14 +112,20 @@ function build(content: string, partes: Array<string | undefined> = []): string 
 export const markdownSource: SourceTransform<MarkdownArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const allow = Array.isArray(args.allow) && args.allow.length < 8 ? args.allow : undefined;
-  return build(text(args.content) ?? DEFAULT_DOCUMENT, [
-    propBool('streaming', args.streaming),
-    propList('allow', allow),
-    propList('allowedProtocols', args.allowedProtocols),
-    // O corpo do ouvinte é da aplicação, não do componente: o snippet mostra
-    // ONDE ele entra, sem inventar o que ele faz.
-    args.onLinkClick ? 'onLinkClick={(url) => abrir(url)}' : undefined,
-  ]);
+  const comOuvinte = Boolean(args.onLinkClick);
+  return build(
+    text(args.content) ?? DEFAULT_DOCUMENT,
+    [
+      propBool('streaming', args.streaming),
+      propList('allow', allow),
+      propList('allowedProtocols', args.allowedProtocols),
+      // O corpo do ouvinte é da aplicação, não do componente: o snippet mostra
+      // ONDE ele entra, sem inventar o que ele faz. Mas o NOME é declarado
+      // junto — ver `LINK_HANDLER`.
+      comOuvinte ? 'onLinkClick={(url) => abrir(url)}' : undefined,
+    ],
+    comOuvinte ? [LINK_HANDLER] : [],
+  );
 };
 
 /** Lista branca completa: o padrão, e por isso sem `allow` no snippet. */

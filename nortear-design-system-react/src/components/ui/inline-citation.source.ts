@@ -106,6 +106,44 @@ function labelsLines(index: number, title: string): string {
   ].join('\n');
 }
 
+/**
+ * O nome acessível de CADA marca, como função.
+ *
+ * Função, e não objeto: `marker` é o nome acessível de uma marca só, e ele leva
+ * o número — que muda de marca para marca e chega de fora. Um objeto fixo
+ * entregaria a mesma palavra às duas, e o botão da segunda anunciaria o número
+ * da primeira. `unsafeSource` não depende de nada e entra igual nas duas, e o
+ * objeto sai daqui COMPLETO: os dois campos são obrigatórios.
+ */
+function labelFnLines(): string {
+  return [
+    '// O NOME ACESSÍVEL CHEGA ESCRITO, e contém o número que se vê na tela, que',
+    '// é o que a WCAG 2.5.3 pede.',
+    'const rotuloDe = (index, citation) => ({',
+    '  marker: `Fonte ${index}: ${citation.source.title}`,',
+    `  unsafeSource: ${quote('Endereço recusado')},`,
+    '});',
+  ].join('\n');
+}
+
+/**
+ * As citações do exemplo, escritas por extenso.
+ *
+ * Por extenso, e não importadas de um módulo de exemplos: o snippet ensina a
+ * FORMA do dado, e são duas — o suficiente para mostrar que o número chega de
+ * fora, e que a segunda pode não ter trecho nenhum.
+ */
+function citationListLines(): string {
+  return [
+    'const citacoes = [',
+    `  { source: { title: ${quote(TITLE)}, url: ${quote(ADDRESS)} },`,
+    `    excerpt: ${quote('A receita cresceu doze por cento em relação ao ano anterior.')},`,
+    `    anchor: ${quote('Página 12')} },`,
+    `  { source: { title: ${quote(TITLE_MINIMAL)}, url: ${quote('https://exemplo.test/metodo')} } },`,
+    '];',
+  ].join('\n');
+}
+
 /** A marca, com um atributo por linha. */
 function mark(parts: Array<string | undefined>): string {
   const list = parts.filter((part): part is string => Boolean(part));
@@ -204,14 +242,7 @@ export function inlineCitationInSentenceSource(): string {
   return jsxSnippet(
     ['import { Fragment } from "react";', IMPORT].join('\n'),
     [
-      [
-        'const citacoes = [',
-        `  { source: { title: ${quote(TITLE)}, url: ${quote(ADDRESS)} },`,
-        `    excerpt: ${quote('A receita cresceu doze por cento em relação ao ano anterior.')},`,
-        `    anchor: ${quote('Página 12')} },`,
-        `  { source: { title: ${quote(TITLE_MINIMAL)}, url: ${quote('https://exemplo.test/metodo')} } },`,
-        '];',
-      ].join('\n'),
+      [citationListLines(), '', labelFnLines()].join('\n'),
       [
         '// A NUMERAÇÃO CHEGA DE FORA. Ela é conteúdo — é por ela que a frase se',
         '// refere à lista de fontes do turno — e marcas irmãs podem nem estar no',
@@ -252,6 +283,10 @@ export function inlineCitationMutuallyExclusiveSource(): string {
     ].join('\n'),
     [
       [
+        citationListLines(),
+        '',
+        labelFnLines(),
+        '',
         '// A lista das marcas é de quem as montou, e o comando chega por `ref`.',
         'const marcas = useRef<Array<InlineCitationHandle | null>>([]);',
       ].join('\n'),
@@ -294,6 +329,10 @@ export function inlineCitationEveryCaseSource(): string {
   return jsxSnippet(
     IMPORT,
     [
+      citationListLines(),
+      '',
+      labelFnLines(),
+      '',
       '// A peça desenha o que RECEBE: a mesma marca atende a citação inteira, a',
       '// que só tem fonte e a que traz um endereço que não pode virar link.',
       '{citacoes.map((citation, i) => (',

@@ -27,6 +27,77 @@ export type TraceWaterfallSnippetOptions = {
   totalRef?: string;
 };
 
+/**
+ * Os rótulos, por INTEIRO.
+ *
+ * Não cabe resumir: `labels` é obrigatória, e a palavra de cada estado é um
+ * `Record` completo — um objeto pela metade não compila para quem copia. Cada
+ * chave aqui responde por uma decisão da peça: `region` nomeia a camada que
+ * rola (sem ele, quem chega ali por teclado não sabe onde entrou), `axis`
+ * torna a régua dizível, `reading` é o que permite reconstruir a cascata de
+ * ouvido, e `clipped` avisa que o trecho continua fora da janela.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  region: "Tempo do atendimento",',
+  '  axis: "Eixo de {total} ms",',
+  '  duration: "{duration} ms",',
+  '  reading: "Começa em {start} ms e dura {duration} ms.",',
+  '  clipped: "Continua fora da janela mostrada.",',
+  '  state: {',
+  '    pending: "Por começar",',
+  '    running: "Em andamento",',
+  '    done: "Concluído",',
+  '    failed: "Falhou",',
+  '  },',
+  '};',
+].join('\n');
+
+/**
+ * Os trechos, RESUMIDOS a três.
+ *
+ * Resumidos, e não elididos: a versão anterior citava `trechos` sem nunca
+ * declará-los, e quem copiasse recebia um símbolo indefinido. Três porque é o
+ * que ensina a forma de um trecho — onde ele começa, quanto dura, em que
+ * degrau de recuo está e em que pé está — sem tomar a tela inteira do painel.
+ *
+ * O NOME muda por ramo porque é a lista que muda entre os exemplos: um rastro
+ * mais largo que a conversa, rótulos longos, uma janela que recorta as pontas.
+ */
+function spanLines(ref: string): string {
+  const nota =
+    ref === 'trechosDaJanela'
+      ? '// A janela recorta as pontas: um trecho vinha de antes dela, e outro segue depois.'
+      : '// Os trechos do exemplo — aqui, os três primeiros.';
+  const itens =
+    ref === 'trechosDaJanela'
+      ? [
+        '{ id: "anterior", label: "Vinha de antes da janela", startMs: -400, durationMs: 700, depth: 0, state: "done" },',
+        '{ id: "dentro", label: "Cabe inteiro na janela", startMs: 200, durationMs: 150, depth: 1, state: "done" },',
+        '{ id: "seguinte", label: "Segue depois da janela", startMs: 420, durationMs: 900, depth: 1, state: "running" },',
+      ]
+      : [
+        '{ id: "coleta", label: "Coletar os documentos", startMs: 0, durationMs: 260, depth: 0, state: "done" },',
+        '{ id: "conferencia", label: "Conferir cada documento", startMs: 270, durationMs: 380, depth: 1, state: "running" },',
+        '{ id: "resumo", label: "Escrever o resumo do que falta", startMs: 660, durationMs: 220, depth: 1, state: "pending" },',
+      ];
+  return [nota, `const ${ref} = [`, ...itens.map((item) => `  ${item}`), '];'].join('\n');
+}
+
+/**
+ * O preâmbulo: o import, os trechos e os rótulos.
+ *
+ * `spansRef` chega literal (`[]`) quando a story não tem trecho nenhum; nesse
+ * caso não há constante a declarar, e a chamada continua existindo — é o que
+ * aquela story mostra.
+ */
+function preamble(spansRef = 'trechos'): string {
+  const partes = [IMPORT];
+  if (/^[A-Za-z_$][\w$]*$/.test(spansRef)) partes.push(spanLines(spansRef));
+  partes.push(LABELS_BLOCK);
+  return partes.join('\n\n');
+}
+
 /** A tag, sempre com um atributo por linha. */
 function tag(parts: Array<string | undefined>): string {
   const list = parts.filter((part): part is string => Boolean(part));
@@ -35,7 +106,7 @@ function tag(parts: Array<string | undefined>): string {
 
 function build(opts: TraceWaterfallSnippetOptions): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(opts.spansRef ?? 'trechos'),
     tag([
       `spans={${opts.spansRef ?? 'trechos'}}`,
       `totalMs={${opts.totalRef ?? '1200'}}`,
@@ -65,7 +136,7 @@ export const traceWaterfallSource: SourceTransform<{
 /** Os quatro estados de trecho, na mesma régua. */
 export function traceWaterfallEveryStateSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(),
     [
       '// Um trecho por estado, na mesma régua: os quatro têm forma própria —',
       '// na marca e no preenchimento da barra —, e não só cor. A palavra de',
@@ -99,7 +170,7 @@ export function traceWaterfallRunningSource(): string {
  */
 export function traceWaterfallPartialSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(),
     [
       '// REVELAR É PASSAR MENOS TRECHOS, mantendo o eixo. As barras que',
       '// sobram guardam a posição verdadeira em vez de reescalarem para',
@@ -127,7 +198,7 @@ export function traceWaterfallLongLabelsSource(): string {
 /** Uma janela do rastro: o eixo é menor que os trechos que ele mostra. */
 export function traceWaterfallClippedSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble('trechosDaJanela'),
     [
       '// A JANELA: um eixo menor que o rastro recorta as barras das pontas,',
       '// e cada linha recortada avisa em palavras que o trecho continua fora',
@@ -152,7 +223,7 @@ export function traceWaterfallClippedSource(): string {
  */
 export function traceWaterfallTightColumnsSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(),
     [
       tag([
         'spans={trechos}',

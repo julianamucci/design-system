@@ -26,6 +26,65 @@ export type IndicatorSnippetOptions = {
 
 const DEFAULT_LABEL = 'Gerando resposta';
 
+/**
+ * A pergunta e o texto que chega, DECLARADOS.
+ *
+ * Os dois entram nos ramos de composição porque são o que aqueles snippets
+ * ensinam: a troca é de quem monta a conversa, e ela se escreve sobre o texto
+ * que chegou. Elidi-los — `content={pergunta}` sem `pergunta` em lugar nenhum
+ * — entregaria um símbolo indefinido a quem copiasse.
+ *
+ * `texto` nasce vazio de propósito: é a condição vazia que mantém o indicador
+ * na tela, e é ela que o tira de lá quando o primeiro pedaço chega. Quem
+ * consome preenche esse estado à medida que a resposta vem.
+ */
+const QUESTION_BLOCK =
+  'const pergunta = "Como o componente decide se acompanha o fim da conversa?";';
+
+const ANSWER_BLOCK = [
+  '// Vazio enquanto nada chegou: é essa condição que tira o indicador da tela.',
+  'const [texto, setTexto] = useState("");',
+].join('\n');
+
+/**
+ * Os rótulos do CAMPO, por inteiro.
+ *
+ * Só entram no ramo que mostra as duas peças juntas — `labels` é obrigatória
+ * no campo, e um objeto pela metade não compila para quem copia.
+ */
+const COMPOSER_LABELS_BLOCK = [
+  'const labels = {',
+  '  input: "Mensagem",',
+  '  placeholder: "Escreva sua mensagem…",',
+  '  submit: "Enviar",',
+  '  stop: "Parar",',
+  '  hint: "{key} envia",',
+  '  limit: "Até {max} caracteres",',
+  '};',
+].join('\n');
+
+/** O import do estado, que os ramos da troca precisam. */
+const STATE_IMPORT = 'import { useState } from "react";';
+
+/** O que cada ramo de composição precisa ter declarado antes da marcação. */
+type IndicatorPreambleOptions = {
+  /** O ramo mostra a pergunta acima? */
+  question?: boolean;
+  /** O ramo faz a troca pelo texto que chegou? */
+  answer?: boolean;
+  /** O ramo mostra o campo junto? */
+  composer?: boolean;
+};
+
+/** O preâmbulo: os imports e tudo que a marcação daquele ramo referencia. */
+function preamble(imports: readonly string[], opts: IndicatorPreambleOptions = {}): string {
+  const partes = [[...(opts.answer ? [STATE_IMPORT] : []), ...imports].join('\n')];
+  if (opts.question) partes.push(QUESTION_BLOCK);
+  if (opts.answer) partes.push(ANSWER_BLOCK);
+  if (opts.composer) partes.push(COMPOSER_LABELS_BLOCK);
+  return partes.join('\n\n');
+}
+
 /** A peça sozinha, com a frase que lhe mandaram dizer. */
 function element(label: string): string {
   return `<ThinkingIndicator${attrs(propText('label', label))} />`;
@@ -44,7 +103,7 @@ export const thinkingIndicatorSource: SourceTransform<IndicatorSnippetOptions> =
 /** A espera: o indicador no lugar em que a resposta vai aparecer. */
 export function indicatorWaitingSource(): string {
   return jsxSnippet(
-    `${IMPORT}\n${MARKDOWN_IMPORT}`,
+    preamble([IMPORT, MARKDOWN_IMPORT], { question: true }),
     `<div className="nds-stack" data-spacing="sm">
   <Markdown content={pergunta} />
   {/* O indicador é o ÚLTIMO da conversa: ele ocupa o lugar do que ainda não veio. */}
@@ -62,7 +121,7 @@ export function indicatorWaitingSource(): string {
  */
 export function indicatorArrivedSource(): string {
   return jsxSnippet(
-    `${IMPORT}\n${MARKDOWN_IMPORT}`,
+    preamble([IMPORT, MARKDOWN_IMPORT], { answer: true }),
     `{/* Chegou o texto: o indicador sai, e o lugar passa a ser da resposta. */}
 {texto ? <Markdown content={texto} /> : ${element(DEFAULT_LABEL)}}`,
   );
@@ -71,7 +130,7 @@ export function indicatorArrivedSource(): string {
 /** A troca inteira, do jeito que quem consome a escreve. */
 export function indicatorReplacingSource(): string {
   return jsxSnippet(
-    `${IMPORT}\n${MARKDOWN_IMPORT}`,
+    preamble([IMPORT, MARKDOWN_IMPORT], { question: true, answer: true }),
     `<div className="nds-stack" data-spacing="sm">
   <Markdown content={pergunta} />
   {/* Quando o primeiro trecho chega, quem monta a conversa faz a troca: o
@@ -89,7 +148,7 @@ export function indicatorReplacingSource(): string {
  */
 export function indicatorWithComposerSource(): string {
   return jsxSnippet(
-    `${IMPORT}\n${COMPOSER_IMPORT}`,
+    preamble([IMPORT, COMPOSER_IMPORT], { composer: true }),
     `<>
   ${element(DEFAULT_LABEL)}
   {/* Só o campo oferece o que acionar; o indicador não tem controle nenhum. */}

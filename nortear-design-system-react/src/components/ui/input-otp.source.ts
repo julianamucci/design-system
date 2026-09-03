@@ -64,9 +64,16 @@ function otpSnippet({
   depois?: string;
 }): string {
   const lines = attrs.map((atributo) => `    ${atributo}`).join('\n');
+  // O que fazer com o código completo é de quem consome — conferir no servidor,
+  // reenviar, bloquear depois de N tentativas. Mas o nome precisa EXISTIR no
+  // snippet: `onComplete={(valor) => verificarCodigo(valor)}` sem a declaração
+  // entrega um símbolo indefinido a quem copia.
+  const handler = attrs.some((atributo) => atributo.includes('verificarCodigo'))
+    ? 'const verificarCodigo = (valor: string) => { /* … */ };\n'
+    : '';
   return jsxSnippet(
     imports,
-    `const [codigo, setCodigo] = useState("${valueInitial}");
+    `${handler}const [codigo, setCodigo] = useState("${valueInitial}");
 
 <div className="nds-stack" data-spacing="sm">
   <Label htmlFor="${id}">${label}</Label>

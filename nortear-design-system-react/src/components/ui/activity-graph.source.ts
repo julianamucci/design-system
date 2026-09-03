@@ -14,10 +14,74 @@
  * ESCALA, ao contrário, entram POR EXTENSO, e isso é decisão: elas são o que
  * esta peça tem de próprio, e um snippet que as escondesse atrás de um nome
  * ensinaria exatamente o que a peça não é.
+ *
+ * O nome, porém, é DECLARADO — ver `preamble`. Até 2026-09-03 o snippet citava
+ * `atividade` e `rotulos` sem nunca os declarar, e quem copiasse recebia dois
+ * símbolos indefinidos. Resumir a lista é decisão editorial; elidir a
+ * declaração era defeito.
  */
 import { indentar, jsxSnippet, text, type SourceTransform } from "@/lib/story-source"
 
 const IMPORT = 'import { ActivityGraph } from "@/components/ui/activity-graph";'
+
+/**
+ * Os rótulos, por inteiro.
+ *
+ * Não cabe resumir: o componente os exige todos, e um objeto pela metade não
+ * compila para quem copia. São eles o nome acessível da camada que rola, a
+ * frase do total, o nome de cada mês e de cada dia da semana, e a palavra de
+ * cada degrau da escala — o único caminho pelo qual a força da tinta chega a
+ * quem não a vê.
+ */
+const LABELS_BLOCK = [
+  "const rotulos = {",
+  '  region: "Atividade do trimestre",',
+  '  total: "{count} contribuições entre {start} e {end}",',
+  '  dateFormat: "{day} de {month} de {year}",',
+  '  monthsShort: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],',
+  "  monthsLong: [",
+  '    "janeiro", "fevereiro", "março", "abril", "maio", "junho",',
+  '    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",',
+  "  ],",
+  '  weekdaysShort: ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"],',
+  '  none: "Sem atividade em {date}.",',
+  '  one: "{count} contribuição em {date}. Intensidade {level}.",',
+  '  many: "{count} contribuições em {date}. Intensidade {level}.",',
+  "  // Uma palavra a mais que os degraus: a do nível vazio.",
+  '  levels: ["Nenhuma", "Baixa", "Média", "Alta", "Muito alta"],',
+  '  legendLess: "Menos",',
+  '  legendMore: "Mais",',
+  "};",
+].join("\n")
+
+/**
+ * O preâmbulo do snippet: o import, a atividade e os rótulos.
+ *
+ * A ATIVIDADE ENTRA RESUMIDA, e é a única elisão que sobra: a janela do
+ * exemplo tem noventa dias, e despejá-los afogaria a chamada que o snippet
+ * existe para ensinar. Resumida, porém, e não ELIDIDA — a versão anterior
+ * citava `atividade` sem nunca declará-la, e quem copiasse recebia um símbolo
+ * indefinido na primeira renderização.
+ *
+ * `daysRef` chega literal (`[]`) quando a story não tem atividade nenhuma;
+ * nesse caso não há constante a declarar.
+ */
+function preamble(daysRef = "atividade"): string {
+  const parts = [IMPORT, ""]
+  if (/^[A-Za-z_$][\w$]*$/.test(daysRef)) {
+    parts.push(
+      "// Um item por dia da janela — aqui, os três primeiros.",
+      `const ${daysRef} = [`,
+      '  { date: "2026-01-01", count: 0 },',
+      '  { date: "2026-01-02", count: 3 },',
+      '  { date: "2026-01-03", count: 9 },',
+      "];",
+      "",
+    )
+  }
+  parts.push(LABELS_BLOCK)
+  return parts.join("\n")
+}
 
 export type ActivityGraphSnippetOptions = {
   /** Em que pé está a execução que escreve a grade. */
@@ -42,7 +106,7 @@ function tag(parts: Array<string | undefined>): string {
 
 function build(opts: ActivityGraphSnippetOptions): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(opts.daysRef ?? "atividade"),
     tag([
       `days={${opts.daysRef ?? "atividade"}}`,
       `start="${opts.start ?? "2026-01-01"}"`,
@@ -74,7 +138,7 @@ export const activityGraphSource: SourceTransform<{
 /** A escala inteira, do vazio ao nível cheio. */
 export function activityGraphScaleSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble("atividadeDaEscala"),
     [
       "// Um dia por nível, na mesma janela: cada degrau da escala cresce em DUAS",
       "// coisas ao mesmo tempo — a força da tinta e o tamanho do quadrado dentro",
@@ -94,7 +158,7 @@ export function activityGraphScaleSource(): string {
 /** A janela sem atividade nenhuma, que continua sendo uma grade. */
 export function activityGraphEmptySource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble("[]"),
     [
       "// GRADE VAZIA É GRADE, e é a diferença desta peça em relação às irmãs da",
       "// família: um período em que nada aconteceu É a resposta, e devolver nada",
@@ -119,7 +183,7 @@ export function activityGraphBusySource(): string {
 /** Uma janela que não existe: o fim antes do começo. */
 export function activityGraphNoWindowSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(),
     [
       "// FIM ANTES DO COMEÇO NÃO É JANELA, e sem janela não há posição — o",
       "// componente devolve nada, e nem moldura nem parada de teclado chegam à",
@@ -160,7 +224,7 @@ export function activityGraphWeekStartSource(): string {
  */
 export function activityGraphTightCellsSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(),
     [
       tag([
         "days={atividade}",

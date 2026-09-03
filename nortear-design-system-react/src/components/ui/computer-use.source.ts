@@ -9,17 +9,69 @@
  * sufixo `Source` no FIM do nome. Fábrica curried devolveria função em vez de
  * string, e as checagens que leem o snippet nunca chegariam ao snippet.
  *
- * A TELA ENTRA COMO NOME DE VARIÁVEL, e nunca por extenso. Ela é espaço de quem
- * consome (§1 da guideline 17), e um snippet que a montasse por dentro
- * ensinaria justamente o contrário do contrato: que a peça sabe desenhar a tela.
- * O que o snippet mostra é o encaixe — `screen={tela}` — e, num dos casos, o
- * que se põe ali.
+ * A TELA ENTRA COMO NOME DE VARIÁVEL, e nunca montada por dentro da peça: ela é
+ * espaço de quem consome (§1 da guideline 17), e um snippet que a compusesse
+ * lá dentro ensinaria justamente o contrário do contrato. O que o snippet
+ * mostra é o encaixe — `screen={tela}` —, com a declaração de uma linha ao
+ * lado: nome citado sem declaração deixava quem copiava com um símbolo
+ * indefinido. `computerUseScreenSource` é o ramo que abre o encaixe e explica o
+ * texto alternativo.
+ *
+ * OS PASSOS ENTRAM RESUMIDOS a três, com o comentário dizendo que é resumo. A
+ * sessão do exemplo tem seis, e despejá-los afogaria a chamada que o snippet
+ * existe para ensinar.
  */
 import { indentar, jsxSnippet, text, type SourceTransform } from '@/lib/story-source';
 
 const IMPORT = 'import { ComputerUse } from "@/components/ui/computer-use";';
 
 const DEFAULT_URL = 'app.exemplo.com/entrar';
+
+/**
+ * Os rótulos, por inteiro — são dois, e o componente exige os dois.
+ *
+ * `address` é a palavra que apresenta o endereço, e só quem ouve a recebe:
+ * sem ela, uma cadeia solta no começo da figura seria texto sem assunto.
+ * `position` é MOLDE — `{index}` vira a posição do passo e `{total}` vira
+ * quantos são —, porque a palavra que liga os dois números é do idioma.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  address: "Endereço",',
+  '  position: "{index} de {total}",',
+  '};',
+].join('\n');
+
+/**
+ * A tela, em uma linha.
+ *
+ * O texto alternativo vazio é decisão, e a explicação inteira está no ramo que
+ * abre o encaixe: a legenda ao lado já diz o que está acontecendo.
+ */
+const SCREEN_BLOCK = [
+  '// A tela é ESPAÇO de quem consome: a peça nunca cria imagem nenhuma.',
+  'const capturaDaSessao = "/capturas/sessao-de-entrada.png";',
+  'const tela = <img src={capturaDaSessao} alt="" />;',
+].join('\n');
+
+/** Os passos de cada ramo, pelo nome com que o ramo os cita. */
+const STEP_LISTS: Record<string, string[]> = {
+  passos: [
+    '// A sessão do exemplo tem seis passos — aqui, os três primeiros.',
+    'const passos = [',
+    '  { id: "aceitar", action: "Clicar", target: "Aceitar cookies", x: 78, y: 88 },',
+    '  { id: "entrar", action: "Clicar", target: "Entrar", x: 86, y: 12 },',
+    '  { id: "email", action: "Digitar", target: "o endereço de e-mail", x: 42, y: 38 },',
+    '];',
+  ],
+  passosCurtos: [
+    '// Uma sessão de dois passos, que é o começo de TODA sessão.',
+    'const passosCurtos = [',
+    '  { id: "abrir", action: "Abrir", target: "o painel de faturas", x: 18, y: 22 },',
+    '  { id: "rolar", action: "Rolar", target: "até o fim da lista", x: 62, y: 70 },',
+    '];',
+  ],
+};
 
 export type ComputerUseSnippetOptions = {
   /** Em que pé está a sessão. */
@@ -38,9 +90,18 @@ function tag(parts: Array<string | undefined>): string {
   return `<ComputerUse\n${list.map((part) => indentar(part)).join('\n')}\n/>`;
 }
 
+/** O import, os passos do ramo, a tela e os rótulos. */
+function preamble(stepsRef?: string): string {
+  const parts = [IMPORT, ''];
+  const list = stepsRef === undefined ? undefined : STEP_LISTS[stepsRef];
+  if (list !== undefined) parts.push(list.join('\n'), '');
+  parts.push(SCREEN_BLOCK, '', LABELS_BLOCK);
+  return parts.join('\n');
+}
+
 function build(opts: ComputerUseSnippetOptions): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(opts.stepsRef),
     tag([
       `url="${opts.url ?? DEFAULT_URL}"`,
       'screen={tela}',
@@ -107,7 +168,15 @@ export function computerUseFinishedSource(): string {
  */
 export function computerUseEveryStatusSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
+    [
+      [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
+      '',
+      STEP_LISTS.passos.join('\n'),
+      '',
+      SCREEN_BLOCK,
+      '',
+      LABELS_BLOCK,
+    ].join('\n'),
     [
       'RUN_STATUSES.map((status) => (',
       '  <ComputerUse',
@@ -158,8 +227,16 @@ export function computerUseClampedSource(): string {
  */
 export function computerUseScreenSource(): string {
   return jsxSnippet(
-    IMPORT,
     [
+      IMPORT,
+      '',
+      STEP_LISTS.passos.join('\n'),
+      '',
+      LABELS_BLOCK,
+    ].join('\n'),
+    [
+      'const capturaDaSessao = "/capturas/sessao-de-entrada.png";',
+      '',
       '/* Vazio de propósito: a legenda ao lado já diz o que está acontecendo, e',
       '   descrever a tela de outro produto ou repete a legenda ou narra coisa',
       '   que não é desta peça. Quando a tela carrega o que a legenda não diz, o',
@@ -184,11 +261,33 @@ export function computerUseScreenSource(): string {
  * Elas são AUTÔNOMAS e respondem a perguntas diferentes: uma diz em que pé está
  * a resposta inteira e carrega as ações de parar e repetir, a outra mostra onde
  * o agente está tocando. Por isso o snippet monta as duas em sequência, e não
- * passa uma para dentro da outra.
+ * passa uma para dentro da outra — cada uma com os SEUS rótulos.
  */
 export function computerUseBesideRunSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { AgentStatus } from "@/components/ui/agent-status";'].join('\n'),
+    [
+      [IMPORT, 'import { AgentStatus } from "@/components/ui/agent-status";'].join('\n'),
+      '',
+      STEP_LISTS.passos.join('\n'),
+      '',
+      SCREEN_BLOCK,
+      '',
+      LABELS_BLOCK,
+      '',
+      // A linha exige a palavra dos cinco estados: o tipo é `Record` completo
+      // para que estado sem palavra reprove a compilação, em vez de desenhar
+      // uma linha em branco. `action` fica de fora em espera e concluída.
+      'const rotulosDaExecucao = {',
+      '  status: {',
+      '    idle: "Em espera",',
+      '    running: "Respondendo",',
+      '    stopped: "Interrompida",',
+      '    complete: "Concluída",',
+      '    failed: "Falhou",',
+      '  },',
+      '  action: { running: "Parar", stopped: "Retomar", failed: "Tentar de novo" },',
+      '};',
+    ].join('\n'),
     [
       '<div className="nds-stack" data-spacing="sm">',
       '  <AgentStatus status="running" elapsed="0:42" labels={rotulosDaExecucao} />',
@@ -216,7 +315,7 @@ export function computerUseBesideRunSource(): string {
  */
 export function computerUsePortraitSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble('passos'),
     [
       tag([
         'url="m.exemplo.com/entrar"',

@@ -53,6 +53,59 @@ function moneyLines(): string {
   ].join('\n');
 }
 
+/**
+ * Os rótulos, por inteiro.
+ *
+ * Não cabe resumir: o `Record` dos níveis é completo por contrato — nível novo
+ * no primitivo compartilhado reprova a compilação —, e um objeto pela metade
+ * não compila para quem copia. Não há rótulo de unidade: a moeda já está dentro
+ * da quantia, e um segundo lugar para escrevê-la seria uma segunda chance de
+ * discordar dela.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  title: "Custo desta execução",',
+  '  level: { normal: "Com folga", warning: "Perto do teto", critical: "No teto" },',
+  '  of: "de",',
+  '  unbounded: "Sem teto declarado",',
+  '};',
+].join('\n');
+
+/** Os rótulos da medição da janela, também por inteiro. */
+const WINDOW_LABELS_BLOCK = [
+  'const rotulosDaJanela = {',
+  '  title: "Uso da janela de contexto",',
+  '  level: { normal: "Com folga", warning: "Perto do limite", critical: "No limite" },',
+  '  of: "de",',
+  '  unit: "tokens",',
+  '  unbounded: "Sem teto conhecido",',
+  '};',
+].join('\n');
+
+/** Os rótulos da linha de estado da execução, também por inteiro. */
+const RUN_LABELS_BLOCK = [
+  'const rotulosDaExecucao = {',
+  '  status: {',
+  '    idle: "Em espera",',
+  '    running: "Respondendo",',
+  '    stopped: "Interrompida",',
+  '    complete: "Concluída",',
+  '    failed: "Falhou",',
+  '  },',
+  '  action: { running: "Parar", stopped: "Retomar", failed: "Tentar de novo" },',
+  '};',
+].join('\n');
+
+/**
+ * O que o snippet declara antes da marcação: o formatador e os rótulos.
+ *
+ * Entra em TODOS os ramos, e é o que os torna copiáveis — a versão anterior
+ * passava `labels={rotulos}` sem nunca declarar o nome.
+ */
+function setupLines(extra: string[] = []): string {
+  return [moneyLines(), ...[LABELS_BLOCK, ...extra].flatMap((bloco) => ['', bloco])].join('\n');
+}
+
 /** O par do teto, já escrito e com a fração vinda do primitivo. */
 function budgetLiteral(spent: number, budget: number): string {
   return `{ amount: money.format(${budget}), fraction: spentFraction(${spent}, ${budget}) }`;
@@ -77,7 +130,7 @@ function build(opts: CostMeterSnippetOptions): string {
     'labels={rotulos}',
   ])} />`;
 
-  return jsxSnippet(costImports(), [moneyLines(), ...note, '', markup].join('\n'));
+  return jsxSnippet(costImports(), [setupLines(), ...note, '', markup].join('\n'));
 }
 
 /** Transform do `meta` — o Playground, que escreve o gasto e o teto por extenso. */
@@ -100,7 +153,7 @@ export function costMeterEveryCaseSource(): string {
   return jsxSnippet(
     costImports(),
     [
-      moneyLines(),
+      setupLines(),
       '',
       '// Os seis casos, em pares de gasto e teto. Eles são DECLARADOS aqui: um',
       '// laço sobre um nome que o snippet não declara não compila na mão de quem',
@@ -141,7 +194,7 @@ export function costMeterAllLevelsSource(): string {
   return jsxSnippet(
     costImports(),
     [
-      moneyLines(),
+      setupLines(),
       '',
       '// A palavra do nível é o que descreve, e a cor apenas acompanha: cor',
       '// sozinha não descreve estado.',
@@ -188,7 +241,7 @@ export function costMeterBesideContextSource(): string {
   return jsxSnippet(
     costImports('import { ContextDisplay } from "@/components/ui/context-display";'),
     [
-      moneyLines(),
+      setupLines([WINDOW_LABELS_BLOCK]),
       '',
       '<div className="nds-stack nds-max-w-lg" data-spacing="md">',
       '  {/* A outra pergunta, sobre a mesma execução: quanto da janela já foi. */}',
@@ -218,7 +271,7 @@ export function costMeterAfterRunSource(): string {
   return jsxSnippet(
     costImports('import { AgentStatus } from "@/components/ui/agent-status";'),
     [
-      moneyLines(),
+      setupLines([RUN_LABELS_BLOCK]),
       '',
       '<div className="nds-stack nds-max-w-lg" data-spacing="sm">',
       '  <AgentStatus status="complete" labels={rotulosDaExecucao} />',

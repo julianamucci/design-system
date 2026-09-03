@@ -81,6 +81,16 @@ function importOf(names: string[]): string {
   return `import {\n${names.map((name) => `  ${name},`).join("\n")}\n} from "@/components/ui/input-group";`
 }
 
+/**
+ * O que o botão do addon dispara, declarado.
+ *
+ * Uma linha, e não uma elisão: colar da área de transferência, enviar a nota,
+ * revelar a senha — o que o botão FAZ é de quem consome. Mas o nome precisa
+ * EXISTIR no snippet, ou quem copia recebe um símbolo indefinido no primeiro
+ * clique. É a mesma exigência que o compilador faz de expressão de template.
+ */
+const HANDLER_BLOCK = "const handleAddon = () => { /* … */ };"
+
 /** Indenta cada linha não vazia. Blocos aninhados em JSX. */
 function pad(block: string, prefix = "  "): string {
   return block
@@ -153,9 +163,10 @@ export function inputGroupSnippet(o: InputGroupSnippetOptions = {}): string {
   const names = ["InputGroup"]
   if (addons.length) names.push("InputGroupAddon")
   if (addons.some((addon) => addon.label)) names.push("InputGroupText")
-  if (addons.some((addon) => addon.buttonLabel || addon.buttonAccessibleName)) {
-    names.push("InputGroupButton")
-  }
+  const hasButton = addons.some(
+    (addon) => addon.buttonLabel || addon.buttonAccessibleName,
+  )
+  if (hasButton) names.push("InputGroupButton")
   names.push(o.multiline ? "InputGroupTextarea" : "InputGroupInput")
 
   const icons = [
@@ -167,11 +178,18 @@ export function inputGroupSnippet(o: InputGroupSnippetOptions = {}): string {
   ]
 
   const header = [
-    icons.length ? `import { ${icons.join(", ")} } from "lucide-react";` : undefined,
-    importOf(names),
+    [
+      icons.length ? `import { ${icons.join(", ")} } from "lucide-react";` : undefined,
+      importOf(names),
+    ]
+      .filter((part): part is string => Boolean(part))
+      .join("\n"),
+    // Só onde há botão: declarar o que o exemplo não usa ensina a escrever por
+    // hábito, que é o outro lado do mesmo defeito.
+    hasButton ? HANDLER_BLOCK : undefined,
   ]
     .filter((part): part is string => Boolean(part))
-    .join("\n")
+    .join("\n\n")
 
   // A ORDEM VISUAL é da folha, por `order` em `[data-align]`; a ordem da
   // marcação só precisa pôr o campo entre os addons para a leitura sequencial

@@ -12,12 +12,82 @@
  * O Playground é o único que escreve o ITEM por extenso, e é de propósito: lá
  * os controls mudam espécie, recorte e a marca de automático, e um snippet que
  * só mostrasse o nome de uma constante mentiria sobre o que a story renderiza.
- * Nas demais o item é dado de andaime — cinco referências com espécie e
- * recorte —, e despejá-lo faria o painel ensinar o andaime em vez da peça.
+ * Nas demais a lista chega RESUMIDA, com o comentário dizendo que é resumo.
+ *
+ * RESUMIDA, E NUNCA ELIDIDA: a versão anterior citava `labels` sem nunca
+ * declará-lo, e quem copiava recebia um símbolo indefinido na primeira
+ * renderização. Os dois objetos de rótulo entram inteiros — o campo exige os
+ * seis, e a lista exige a palavra de todas as espécies, porque o tipo é
+ * `Record` completo justamente para que espécie sem palavra reprove a
+ * compilação em vez de desenhar uma etiqueta vazia.
  */
 import { attrsMultilinha, jsxSnippet, text, type SourceTransform } from '@/lib/story-source';
 
 const IMPORT = 'import { Composer } from "@/components/ui/composer";';
+
+/** Os rótulos do campo, por inteiro. `{key}` e `{max}` são moldes. */
+const LABELS_BLOCK = [
+  'const labels = {',
+  '  input: "Mensagem",',
+  '  placeholder: "Escreva sua mensagem…",',
+  '  submit: "Enviar",',
+  '  stop: "Parar",',
+  '  hint: "{key} envia",',
+  '  limit: "Até {max} caracteres",',
+  '};',
+].join('\n');
+
+/** Os rótulos da lista, por inteiro. `{label}` vira o nome do item. */
+const CONTEXT_LABELS_BLOCK = [
+  'const contextLabels = {',
+  '  list: "Contexto",',
+  '  remove: "Remover {label}",',
+  '  kind: {',
+  '    selection: "Trecho",',
+  '    file: "Arquivo",',
+  '    directory: "Pasta",',
+  '    page: "Página",',
+  '    repository: "Repositório",',
+  '  },',
+  '  automatic: "Automático",',
+  '};',
+].join('\n');
+
+/** A lista de cada ramo, pelo nome com que o ramo a cita. */
+const CONTEXT_LISTS: Record<string, string[]> = {
+  referencias: [
+    '// A lista do exemplo tem uma etiqueta por espécie — aqui, as três',
+    '// primeiras, da mais estreita para a mais larga.',
+    'const referencias = [',
+    '  { id: "c1", label: "relatorio.ts", kind: "selection", detail: "linhas 12–48" },',
+    '  { id: "c2", label: "medidas.csv", kind: "file" },',
+    '  { id: "c3", label: "src/fachada", kind: "directory" },',
+    '];',
+  ],
+  trecho: [
+    'const trecho = [',
+    '  { id: "c1", label: "relatorio.ts", kind: "selection", detail: "linhas 12–48" },',
+    '];',
+  ],
+  repositorio: [
+    'const repositorio = [',
+    '  { id: "c5", label: "nortear/obra", kind: "repository" },',
+    '];',
+  ],
+  automaticos: [
+    'const automaticos = [',
+    '  { id: "c2", label: "Painel de medidas", kind: "page", automatic: true },',
+    '];',
+  ],
+};
+
+/**
+ * O que se faz com o pedido de remoção.
+ *
+ * Uma linha, e o corpo é de quem consome: a peça relata o pedido e não tira
+ * nada da lista sozinha.
+ */
+const REMOVE_BLOCK = 'const tirar = (id) => { /* … */ };';
 
 export type ContextSnippetOptions = {
   /** Espécie do item que o Playground desenha. */
@@ -40,16 +110,27 @@ function itemLiteral(opts: ContextSnippetOptions): string {
   return `[\n    { ${fields.join(', ')} },\n  ]`;
 }
 
+/** O import, a lista do ramo, os dois objetos de rótulo e o manipulador. */
+function preamble(items: string, withRemove: boolean): string {
+  const parts = [IMPORT, ''];
+  const list = CONTEXT_LISTS[items];
+  if (list !== undefined) parts.push(list.join('\n'), '');
+  parts.push(LABELS_BLOCK, '', CONTEXT_LABELS_BLOCK);
+  if (withRemove) parts.push('', REMOVE_BLOCK);
+  return parts.join('\n');
+}
+
 function build(opts: ContextSnippetOptions, items: string): string {
+  const withRemove = opts.automatic !== true;
   return jsxSnippet(
-    IMPORT,
+    preamble(items, withRemove),
     `<Composer${attrsMultilinha([
       'labels={labels}',
       'contextLabels={contextLabels}',
       `context={${items}}`,
       // Item automático não oferece botão de remover, então o retorno não teria
       // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
-      opts.automatic === true ? undefined : 'onRemoveContext={(item) => tirar(item.id)}',
+      withRemove ? 'onRemoveContext={(item) => tirar(item.id)}' : undefined,
     ])} />`,
   );
 }
@@ -92,5 +173,5 @@ export function contextWithFieldSource(): string {
  * e mostrar as duas props aqui ensinaria a declarar o que não se usa.
  */
 export function contextAbsentSource(): string {
-  return jsxSnippet(IMPORT, '<Composer labels={labels} />');
+  return jsxSnippet([IMPORT, '', LABELS_BLOCK].join('\n'), '<Composer labels={labels} />');
 }

@@ -33,6 +33,124 @@ export type TerminalBlockSnippetOptions = {
   linesRef?: string;
 };
 
+/**
+ * Os rótulos, por INTEIRO.
+ *
+ * Não cabe resumir: `labels` é obrigatória e a palavra de cada estado é um
+ * `Record` completo — um objeto pela metade não compila para quem copia, e é
+ * essa palavra que descreve o estado no lugar do ponto colorido ao lado. O
+ * `exitCode` é MOLDE, e não texto pronto: a palavra que apresenta o número é
+ * do idioma, e o número é dado.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  status: {',
+  '    idle: "Em espera",',
+  '    running: "Em andamento",',
+  '    stopped: "Interrompido",',
+  '    complete: "Concluído",',
+  '    failed: "Falhou",',
+  '  },',
+  '  exitCode: "código de saída {code}",',
+  '};',
+].join('\n');
+
+/**
+ * Os rótulos da LINHA DE ESTADO da execução, por inteiro e pelo mesmo motivo.
+ *
+ * Só entram no snippet que mostra as duas peças empilhadas. `action` fica de
+ * fora em espera e concluída de propósito: começar uma execução é do campo de
+ * mensagem, e sobre uma resposta pronta não há o que fazer ali.
+ */
+const RUN_LABELS_BLOCK = [
+  'const rotulosDaExecucao = {',
+  '  status: {',
+  '    idle: "Em espera",',
+  '    running: "Respondendo",',
+  '    stopped: "Interrompida",',
+  '    complete: "Concluída",',
+  '    failed: "Falhou",',
+  '  },',
+  '  action: { running: "Parar", stopped: "Retomar", failed: "Tentar de novo" },',
+  '};',
+].join('\n');
+
+/**
+ * A saída do exemplo, RESUMIDA a duas linhas.
+ *
+ * Resumida, e não elidida: a versão anterior citava `saida` sem nunca
+ * declará-la, e quem copiasse recebia um símbolo indefinido. Duas linhas
+ * bastam porque neste ramo o assunto não é o que a saída diz — é onde ela
+ * entra.
+ */
+const OUTPUT_BLOCK = [
+  '// O que o comando escreveu — aqui, as duas primeiras linhas.',
+  'const saida = [',
+  '  "vite v7.1.0 building for production...",',
+  '  "transforming (412) src/main.ts",',
+  '];',
+].join('\n');
+
+/**
+ * A saída LONGA, resumida a três das trinta.
+ *
+ * O assunto daquele ramo é a caixa que rola, e não o texto: o que a story
+ * mostra é uma lista mais alta que o teto, e três linhas com a nota de que há
+ * mais ensinam isso sem afogar o painel.
+ */
+const LONG_OUTPUT_BLOCK = [
+  '// Uma saída mais alta que o teto da caixa — aqui, as três primeiras de trinta.',
+  'const saidaLonga = [',
+  '  "vite v7.1.0 building for production...",',
+  '  "transforming (412) src/main.ts",',
+  '  "transforming (908) src/components/ui/terminal-block.ts",',
+  '];',
+].join('\n');
+
+/**
+ * A saída e o código de cada estado, para o ramo que percorre o vocabulário.
+ *
+ * As duas saem de um MAPA, e não de um `if` escrito à mão: estado novo no
+ * vocabulário compartilhado aparece aqui como chave faltando, e não como caso
+ * esquecido. Em espera não escreveu nada, e em espera e em andamento não há
+ * código de saída — o número só existe depois do fim.
+ */
+const STATUS_FUNCTIONS_BLOCK = [
+  'const saidaPorEstado = {',
+  '  idle: [],',
+  '  running: ["transforming (412) src/main.ts"],',
+  '  stopped: ["transforming (612) src/components/ui/chat-thread.ts", "^C"],',
+  '  complete: ["built in 8.42s"],',
+  '  failed: ["ERROR: build failed with 1 error"],',
+  '};',
+  'const saidaDe = (status) => saidaPorEstado[status];',
+  '',
+  '// Cento e trinta é o que um processo devolve quando o sinal de interrupção o',
+  '// alcança: não é zero, e ainda assim ninguém falhou.',
+  'const codigoPorEstado = { stopped: 130, complete: 0, failed: 1 };',
+  'const codigoDe = (status) => codigoPorEstado[status];',
+].join('\n');
+
+/** O que cada ramo precisa ter declarado antes da chamada. */
+type TerminalPreambleOptions = {
+  /** O nome da constante com a saída, quando ela não entra por extenso. */
+  linesRef?: string;
+  /** O ramo percorre os cinco estados, e precisa das duas funções? */
+  statusFunctions?: boolean;
+  /** O ramo mostra a linha de estado da execução junto? */
+  agentStatus?: boolean;
+};
+
+/** O preâmbulo: os imports e tudo que a chamada daquele ramo referencia. */
+function preamble(imports: string, opts: TerminalPreambleOptions = {}): string {
+  const partes = [imports, LABELS_BLOCK];
+  if (opts.agentStatus) partes.push(RUN_LABELS_BLOCK);
+  if (opts.linesRef === 'saida') partes.push(OUTPUT_BLOCK);
+  if (opts.linesRef === 'saidaLonga') partes.push(LONG_OUTPUT_BLOCK);
+  if (opts.statusFunctions) partes.push(STATUS_FUNCTIONS_BLOCK);
+  return partes.join('\n\n');
+}
+
 /** `{[\n  "linha",\n]}`, ou nada quando não há linha nenhuma. */
 function linesLiteral(lines: readonly string[]): string {
   return ['{[', ...lines.map((line) => `  ${JSON.stringify(line)},`), ']}'].join('\n');
@@ -59,7 +177,7 @@ function build(opts: TerminalBlockSnippetOptions): string {
         : undefined;
 
   return jsxSnippet(
-    IMPORT,
+    preamble(IMPORT, { linesRef: opts.linesRef }),
     tag([
       `command="${COMMAND}"`,
       lines,
@@ -98,7 +216,10 @@ export const terminalBlockSource: SourceTransform<{
  */
 export function terminalBlockEveryStatusSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
+    preamble(
+      [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
+      { statusFunctions: true },
+    ),
     [
       'RUN_STATUSES.map((status) => (',
       '  <TerminalBlock',
@@ -193,7 +314,7 @@ export function terminalBlockWithoutOutputSource(): string {
  */
 export function terminalBlockSequenceSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(IMPORT),
     [
       '// A sequência é de quem consome, e por isso ela é DECLARADA aqui: um',
       '// laço sobre um nome que o snippet não declara não compila na mão de quem',
@@ -229,7 +350,10 @@ export function terminalBlockSequenceSource(): string {
  */
 export function terminalBlockBesideRunSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { AgentStatus } from "@/components/ui/agent-status";'].join('\n'),
+    preamble([IMPORT, 'import { AgentStatus } from "@/components/ui/agent-status";'].join('\n'), {
+      linesRef: 'saida',
+      agentStatus: true,
+    }),
     [
       '<div className="nds-stack" data-spacing="lg">',
       '  <AgentStatus status="running" elapsed="0:42" labels={rotulosDaExecucao} />',
@@ -256,7 +380,7 @@ export function terminalBlockBesideRunSource(): string {
  */
 export function terminalBlockLongOutputSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(IMPORT, { linesRef: 'saidaLonga' }),
     [
       tag([
         `command="${COMMAND}"`,

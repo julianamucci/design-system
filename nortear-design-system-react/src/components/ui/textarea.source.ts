@@ -67,7 +67,7 @@ function counter(dica: string, limit: number): string {
     <span>${dica}</span>
     <span
       aria-live="polite"
-      aria-label={\`\${value.length} de ${limit} caracteres usados\`}
+      aria-label={\`\${valor.length} de ${limit} caracteres usados\`}
     >
       {valor.length}/${limit}
     </span>

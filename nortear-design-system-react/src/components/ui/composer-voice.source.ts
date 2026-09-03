@@ -13,6 +13,11 @@
  * propósito: lá os controls mexem nos dois, e um snippet que os omitisse
  * mentiria sobre o que a story renderiza. Nas demais o assunto é o ESTADO, e
  * despejar o resto faria o painel ensinar o andaime em vez da peça.
+ *
+ * O NOME DO OBJETO DE RÓTULOS MUDA COM O RAMO, e a declaração acompanha: sozinho
+ * o ditado recebe `labels`, e dentro do trilho quem recebe `labels` é o CAMPO —
+ * o ditado passa a ser `voiceLabels`. Gerar a declaração com o nome do ramo é o
+ * que impede o snippet de citar um símbolo que ele não declara.
  */
 import { attrsMultilinha, jsxSnippet, text, type SourceTransform } from '@/lib/story-source';
 
@@ -26,6 +31,39 @@ const IMPORT = 'import { ComposerVoice } from "@/components/ui/composer-voice";'
  * é ela que decide o que acontece depois.
  */
 const ON_TOGGLE = 'onToggle={(intent) => (intent === "start" ? comecar() : parar())}';
+
+/**
+ * Os rótulos do ditado, por INTEIRO e com o nome do ramo.
+ *
+ * `start` e `stop` são o nome do MESMO botão em dois momentos — ele troca de
+ * nome, e não só de desenho. `status` é `Record` completo de propósito: é a
+ * palavra do estado que chega a quem não vê o medidor, e é nela que vai o
+ * motivo de o alternador não responder durante a transcrição.
+ */
+function voiceLabelsBlock(name: string): string {
+  return [
+    `const ${name} = {`,
+    '  start: "Ditar",',
+    '  stop: "Parar de ditar",',
+    '  status: {',
+    '    idle: "Ditado desligado",',
+    '    recording: "Gravando",',
+    '    transcribing: "Transcrevendo — não dá para interromper",',
+    '  },',
+    '};',
+  ].join('\n');
+}
+
+/**
+ * O que a peça faz com a intenção que recebe.
+ *
+ * Uma linha cada, e o corpo é de quem consome: pedir o microfone, começar a
+ * captar e mandar o áudio para transcrever são coisas do produto.
+ */
+const HANDLERS_BLOCK = [
+  'const comecar = () => { /* … */ };',
+  'const parar = () => { /* … */ };',
+].join('\n');
 
 export type VoiceSnippetOptions = {
   /** Em que ponto o ditado está. */
@@ -47,9 +85,16 @@ function build(opts: VoiceSnippetOptions): string {
     state === 'recording' && typeof opts.level === 'number' && Number.isFinite(opts.level)
       ? opts.level
       : undefined;
+  // Na transcrição o alternador não responde, então o retorno não teria como
+  // disparar: mostrá-lo ali ensinaria a ligar um fio solto — e sem retorno não
+  // há manipulador a declarar.
+  const withToggle = state !== 'transcribing';
+
+  const parts = [IMPORT, '', voiceLabelsBlock('labels')];
+  if (withToggle) parts.push('', HANDLERS_BLOCK);
 
   return jsxSnippet(
-    IMPORT,
+    parts.join('\n'),
     `<ComposerVoice${attrsMultilinha([
       'labels={labels}',
       // `idle` é o padrão do componente, e documentação não ensina a repetir o
@@ -58,9 +103,7 @@ function build(opts: VoiceSnippetOptions): string {
       level === undefined ? undefined : `level={${level}}`,
       elapsed === undefined ? undefined : `elapsed="${elapsed}"`,
       opts.disabled === true ? 'disabled' : undefined,
-      // Na transcrição o alternador não responde, então o retorno não teria
-      // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
-      state === 'transcribing' ? undefined : ON_TOGGLE,
+      withToggle ? ON_TOGGLE : undefined,
     ])} />`,
   );
 }
@@ -95,6 +138,7 @@ export function voiceDisabledSource(): string {
  *
  * É o único snippet que mostra os dois juntos, porque é a única coisa que a
  * composição ensina: o ditado é peça própria, e quem consome a põe no trilho.
+ * Cada um leva os SEUS rótulos, que é o que a autonomia significa em código.
  */
 export function voiceInRailSource(): string {
   const rail = [
@@ -110,7 +154,24 @@ export function voiceInRailSource(): string {
   ].join('\n');
 
   return jsxSnippet(
-    `import { Composer } from "@/components/ui/composer";\n${IMPORT}`,
+    [
+      `import { Composer } from "@/components/ui/composer";\n${IMPORT}`,
+      '',
+      // O campo exige os seis rótulos: um objeto pela metade não compila para
+      // quem copia, e `{key}` e `{max}` são moldes que o componente preenche.
+      'const labels = {',
+      '  input: "Mensagem",',
+      '  placeholder: "Escreva sua mensagem…",',
+      '  submit: "Enviar",',
+      '  stop: "Parar",',
+      '  hint: "{key} envia",',
+      '  limit: "Até {max} caracteres",',
+      '};',
+      '',
+      voiceLabelsBlock('voiceLabels'),
+      '',
+      HANDLERS_BLOCK,
+    ].join('\n'),
     `<Composer\n  labels={labels}\n${rail}\n/>`,
   );
 }

@@ -19,6 +19,50 @@ import { attrsMultilinha, jsxSnippet, text, type SourceTransform } from '@/lib/s
 
 const IMPORT = 'import { ContextDisplay } from "@/components/ui/context-display";';
 
+/**
+ * Os rótulos, por inteiro.
+ *
+ * Não cabe resumir: o `Record` dos níveis é completo por contrato — nível novo
+ * no primitivo compartilhado reprova a compilação —, e um objeto pela metade
+ * não compila para quem copia. O título não aparece na tela: ele é o que
+ * responde "de que número se trata" a quem ouve.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  "  title: 'Uso da janela de contexto',",
+  "  level: { normal: 'Com folga', warning: 'Perto do limite', critical: 'No limite' },",
+  "  of: 'de',",
+  "  unit: 'tokens',",
+  "  unbounded: 'Sem teto conhecido',",
+  '};',
+].join('\n');
+
+/** A medição de exemplo, para o ramo que a percorre por nome. */
+const USAGE_BLOCK = 'const medicao = { input: 18000, output: 7000, limit: 32000 };';
+
+/** Os rótulos do campo de mensagem, também por inteiro. */
+const FIELD_LABELS_BLOCK = [
+  'const rotulosDoCampo = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  "  limit: 'Até {max} caracteres',",
+  '};',
+].join('\n');
+
+/**
+ * O preâmbulo do snippet: os imports e o que a marcação chama por nome.
+ *
+ * Ele entra em TODOS os ramos, e é o que os torna copiáveis: a versão anterior
+ * passava `labels={rotulos}` e `usage={medicao}` sem declarar nenhum dos dois.
+ */
+function preamble(imports: string[] = [], blocks: string[] = [LABELS_BLOCK]): string {
+  const partes = blocks.flatMap((bloco) => ['', bloco]);
+  return [[IMPORT, ...imports].join('\n'), ...partes].join('\n');
+}
+
 export type ContextDisplaySnippetOptions = {
   /** Consumido pela pergunta. */
   input?: number;
@@ -41,7 +85,7 @@ function build(opts: ContextDisplaySnippetOptions): string {
   const form = text(opts.form);
 
   return jsxSnippet(
-    IMPORT,
+    preamble(),
     `<ContextDisplay${attrsMultilinha([
       `usage={${usageLiteral(opts)}}`,
       // A forma padrão não entra: documentação não ensina a repetir o que o
@@ -75,7 +119,13 @@ export const contextDisplaySource: SourceTransform<ContextDisplaySnippetOptions>
  */
 export function contextDisplayEveryFormSource(): string {
   return jsxSnippet(
-    'import { ContextDisplay, CONTEXT_DISPLAY_FORMS } from "@/components/ui/context-display";',
+    [
+      'import { ContextDisplay, CONTEXT_DISPLAY_FORMS } from "@/components/ui/context-display";',
+      '',
+      USAGE_BLOCK,
+      '',
+      LABELS_BLOCK,
+    ].join('\n'),
     [
       'CONTEXT_DISPLAY_FORMS.map((form) => (',
       '  <ContextDisplay',
@@ -113,7 +163,7 @@ export function contextDisplayTextSource(): string {
  */
 export function contextDisplayAllLevelsSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { budgetLevel } from "@shared/primitives/token-budget";'].join('\n'),
+    preamble(['import { budgetLevel } from "@shared/primitives/token-budget";']),
     [
       '// O limiar é do primitivo, e a comparação é exata.',
       'budgetLevel({ input: 16000, output: 0, limit: 32000 });  // "normal"',
@@ -166,7 +216,10 @@ export function contextDisplayUnboundedSource(): string {
  */
 export function contextDisplayBesideFieldSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { Composer } from "@/components/ui/composer";'].join('\n'),
+    preamble(
+      ['import { Composer } from "@/components/ui/composer";'],
+      [LABELS_BLOCK, FIELD_LABELS_BLOCK],
+    ),
     [
       '<div className="nds-stack" data-spacing="sm">',
       '  <ContextDisplay',

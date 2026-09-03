@@ -28,6 +28,106 @@ export type QueueSnippetOptions = {
   text?: string;
 };
 
+/**
+ * Os rótulos da fila, por INTEIRO.
+ *
+ * Não cabe resumir: `labels` é obrigatória e a palavra de cada estado é um
+ * `Record` completo — um objeto pela metade não compila para quem copia. São
+ * eles o nome acessível da lista, o nome do botão de retirar (com o texto da
+ * mensagem dentro, para que três botões não se chamem todos "Retirar") e a
+ * palavra que distingue a que já saiu, que a folha apenas deixa mais apagada.
+ */
+const QUEUE_LABELS_BLOCK = [
+  'const queueLabels = {',
+  '  list: "Mensagens na fila",',
+  '  withdraw: "Retirar {text}",',
+  '  state: { waiting: "Na fila", sending: "Enviando" },',
+  '};',
+].join('\n');
+
+/**
+ * Os rótulos do CAMPO, por inteiro, pelo mesmo motivo.
+ *
+ * Só entram no snippet que mostra as duas peças empilhadas — é lá que o campo
+ * aparece, e é lá que a chamada dele precisa compilar.
+ */
+const COMPOSER_LABELS_BLOCK = [
+  'const labels = {',
+  '  input: "Mensagem",',
+  '  placeholder: "Escreva sua mensagem…",',
+  '  submit: "Enviar",',
+  '  stop: "Parar",',
+  '  hint: "{key} envia",',
+  '  limit: "Até {max} caracteres",',
+  '};',
+].join('\n');
+
+/**
+ * O retorno ganha DECLARAÇÃO, e não só uma seta em linha.
+ *
+ * Retirar de verdade é de quem envia — a peça só avisa —, então o corpo fica
+ * vazio de propósito. O nome, porém, precisa existir: `onWithdraw={(message)
+ * => withdraw(message.id)}` sem `withdraw` em lugar nenhum entrega a quem
+ * copia um `withdraw is not defined` no primeiro clique.
+ */
+const WITHDRAW_HANDLER =
+  'const withdraw = (id) => { /* retirar de verdade é de quem envia */ };';
+
+/**
+ * A fila do exemplo, RESUMIDA a três falas.
+ *
+ * Resumida, e não elidida: a versão anterior citava `waitingQueue` sem nunca
+ * declará-la. Três porque é a partir da terceira que a posição vira
+ * informação — com duas, "a segunda" e "a última" são a mesma coisa. A fila
+ * longa mostra as três primeiras das doze, que é o que cabe no painel.
+ */
+function queueLines(ref: string): string {
+  const primeiraSaindo = ref !== 'waitingQueue';
+  const nota =
+    ref === 'longQueue'
+      ? '// Uma fila que passa de nove — aqui, as três primeiras das doze.'
+      : '// As três falas de exemplo, na ordem em que saem.';
+  const estado = (indice: number) =>
+    primeiraSaindo && indice === 0 ? 'sending' : 'waiting';
+  return [
+    nota,
+    `const ${ref} = [`,
+    ...[
+      'Manda o resumo de ontem',
+      'E o prazo?',
+      'Inclui o gráfico de custo',
+    ].map((texto, i) => `  { id: "m${i + 1}", text: "${texto}", state: "${estado(i)}" },`),
+    '];',
+  ].join('\n');
+}
+
+/** O que o snippet precisa ter à mão antes da chamada. */
+type QueuePreambleOptions = {
+  /** O nome da constante com a fila, quando ela não entra por extenso. */
+  queueRef?: string;
+  /** O snippet oferece retirar? */
+  withdraw?: boolean;
+  /** O snippet mostra o campo junto? */
+  composer?: boolean;
+};
+
+/**
+ * O preâmbulo: os imports e tudo que a chamada referencia.
+ *
+ * Cada ramo pede o seu — a fila só quando ela chega por nome, o retorno só
+ * onde há o que retirar —, e é isso que faz o snippet de cada story compilar
+ * inteiro na mão de quem o copia.
+ */
+function preamble(opts: QueuePreambleOptions = {}): string {
+  const partes = [opts.composer ? `${IMPORT_COMPOSER}\n${IMPORT}` : IMPORT, QUEUE_LABELS_BLOCK];
+  if (opts.queueRef && /^[A-Za-z_$][\w$]*$/.test(opts.queueRef)) {
+    partes.push(queueLines(opts.queueRef));
+  }
+  if (opts.withdraw) partes.push(WITHDRAW_HANDLER);
+  if (opts.composer) partes.push(COMPOSER_LABELS_BLOCK);
+  return partes.join('\n\n');
+}
+
 /** A mensagem por extenso, na ordem em que o tipo a declara. */
 function messageLiteral(opts: QueueSnippetOptions): string {
   const fields = [
@@ -39,15 +139,16 @@ function messageLiteral(opts: QueueSnippetOptions): string {
 }
 
 function build(opts: QueueSnippetOptions, messages: string): string {
+  // Fila em que nada mais espera não oferece retirar coisa alguma, então o
+  // retorno não teria como disparar: mostrá-lo ali ensinaria a ligar um fio
+  // solto.
+  const comRetorno = opts.state !== 'sending';
   return jsxSnippet(
-    IMPORT,
+    preamble({ queueRef: messages, withdraw: comRetorno }),
     `<MessageQueue${attrsMultilinha([
       'labels={queueLabels}',
       `messages={${messages}}`,
-      // Fila em que nada mais espera não oferece retirar coisa alguma, então o
-      // retorno não teria como disparar: mostrá-lo ali ensinaria a ligar um fio
-      // solto.
-      opts.state === 'sending' ? undefined : 'onWithdraw={(message) => withdraw(message.id)}',
+      comRetorno ? 'onWithdraw={(message) => withdraw(message.id)}' : undefined,
     ])} />`,
   );
 }
@@ -82,7 +183,7 @@ export function queueLongSource(): string {
  * que promete algo que não há.
  */
 export function queueEmptySource(): string {
-  return jsxSnippet(IMPORT, '<MessageQueue labels={queueLabels} messages={[]} />');
+  return jsxSnippet(preamble(), '<MessageQueue labels={queueLabels} messages={[]} />');
 }
 
 /**
@@ -94,7 +195,7 @@ export function queueEmptySource(): string {
  */
 export function queueAboveFieldSource(): string {
   return jsxSnippet(
-    `${IMPORT_COMPOSER}\n${IMPORT}`,
+    preamble({ queueRef: 'waitingQueue', withdraw: true, composer: true }),
     [
       '<div className="nds-stack" data-spacing="xs">',
       '  <MessageQueue',

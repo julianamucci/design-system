@@ -13,12 +13,62 @@
  * propósito: lá os controls mudam os dois, e um snippet que mostrasse só o nome
  * de uma constante mentiria sobre o que a story renderiza. Nas demais o que
  * varia é o estado, e ele continua literal porque é o assunto da story.
+ *
+ * OS RÓTULOS E OS DOIS MANIPULADORES ENTRAM DECLARADOS. O retorno chega como
+ * INTENÇÃO, e o que se faz com ela é de quem consome — mas `comecar` e `parar`
+ * citados sem declaração deixavam quem copiava com dois símbolos indefinidos.
+ * Manipulador em linha não tem passe: declará-lo custa uma linha e termina o
+ * exemplo.
  */
 import { attrsMultilinha, jsxSnippet, text, type SourceTransform } from '@/lib/story-source';
 
 const IMPORT = 'import { AgentStatus } from "@/components/ui/agent-status";';
 
 const ON_ACTION = 'onAction={(intent) => (intent === "stop" ? parar() : comecar())}';
+
+/**
+ * Os rótulos da linha, por INTEIRO.
+ *
+ * `status` traz os cinco estados porque o componente os exige todos: o tipo é
+ * `Record` completo justamente para que estado sem palavra reprove a
+ * compilação, em vez de desenhar uma linha em branco que ninguém repara.
+ * `action` fica de fora em espera e concluída, e isso não é lacuna — começar
+ * uma execução é do campo de mensagem, e sobre uma resposta pronta não há o
+ * que fazer aqui.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  status: {',
+  '    idle: "Em espera",',
+  '    running: "Respondendo",',
+  '    stopped: "Interrompida",',
+  '    complete: "Concluída",',
+  '    failed: "Falhou",',
+  '  },',
+  '  // Cada um diz O QUE FAZ naquele estado: botão que troca de função sem',
+  '  // trocar de nome é o mesmo botão fazendo coisas diferentes.',
+  '  action: { running: "Parar", stopped: "Retomar", failed: "Tentar de novo" },',
+  '};',
+].join('\n');
+
+/**
+ * O que a linha faz com a intenção que recebe.
+ *
+ * Uma linha cada, e o corpo é de quem consome: entre pedir para parar e a
+ * execução ter parado existe uma rede, e é ela que decide o que acontece
+ * depois.
+ */
+const HANDLERS_BLOCK = [
+  'const comecar = () => { /* … */ };',
+  'const parar = () => { /* … */ };',
+].join('\n');
+
+/** O import, os rótulos e os dois manipuladores. */
+function preamble(withAction = true): string {
+  const parts = [IMPORT, '', LABELS_BLOCK];
+  if (withAction) parts.push('', HANDLERS_BLOCK);
+  return parts.join('\n');
+}
 
 export type AgentStatusSnippetOptions = {
   /** Em que pé está a execução. */
@@ -31,16 +81,17 @@ export type AgentStatusSnippetOptions = {
 
 function build(opts: AgentStatusSnippetOptions): string {
   const elapsed = text(opts.elapsed);
+  const withAction = opts.action !== false;
 
   return jsxSnippet(
-    IMPORT,
+    preamble(withAction),
     `<AgentStatus${attrsMultilinha([
       `status="${text(opts.status) ?? 'running'}"`,
       elapsed === undefined ? undefined : `elapsed="${elapsed}"`,
       'labels={rotulos}',
       // Estado sem rótulo de ação não desenha botão, então o retorno não teria
       // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
-      opts.action === false ? undefined : ON_ACTION,
+      withAction ? ON_ACTION : undefined,
     ])} />`,
   );
 }
@@ -60,7 +111,13 @@ export const agentStatusSource: SourceTransform<AgentStatusSnippetOptions> = (_g
  */
 export function agentStatusEveryStateSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
+    [
+      [IMPORT, 'import { RUN_STATUSES } from "@shared/primitives/chat-protocol";'].join('\n'),
+      '',
+      LABELS_BLOCK,
+      '',
+      HANDLERS_BLOCK,
+    ].join('\n'),
     [
       'RUN_STATUSES.map((status) => (',
       '  <AgentStatus',
@@ -99,11 +156,29 @@ export function agentStatusCompleteSource(): string {
  *
  * Ela é AUTÔNOMA: fica acima do campo e nenhum arquivo do campo sabe que ela
  * existe. Por isso o snippet monta as duas lado a lado, e não passa uma para
- * dentro da outra.
+ * dentro da outra — e cada uma leva os SEUS rótulos, que é o que a autonomia
+ * significa em código.
  */
 export function agentStatusAboveFieldSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { Composer } from "@/components/ui/composer";'].join('\n'),
+    [
+      [IMPORT, 'import { Composer } from "@/components/ui/composer";'].join('\n'),
+      '',
+      LABELS_BLOCK,
+      '',
+      // O campo exige os seis rótulos: um objeto pela metade não compila para
+      // quem copia, e `{key}` e `{max}` são moldes que o componente preenche.
+      'const rotulosDoCampo = {',
+      '  input: "Mensagem",',
+      '  placeholder: "Escreva sua mensagem…",',
+      '  submit: "Enviar",',
+      '  stop: "Parar",',
+      '  hint: "{key} envia",',
+      '  limit: "Até {max} caracteres",',
+      '};',
+      '',
+      HANDLERS_BLOCK,
+    ].join('\n'),
     [
       '<div className="nds-stack" data-spacing="sm">',
       '  <AgentStatus',

@@ -25,6 +25,126 @@ export type EditorArgs = {
 const IMPORTS = 'import { Editor } from "@/components/ui/editor";';
 
 /**
+ * Os rótulos, por INTEIRO — e são muitos de propósito.
+ *
+ * Não cabe resumir, e não é falta de economia: `groups` e `actions` são
+ * `Record` de união fechada, então um objeto pela metade nem compila para quem
+ * copia. E o custo de resumir seria pior que o de compilar — todos os botões
+ * são só de ícone, e cada entrada que faltasse aqui é um botão sem nome
+ * acessível na tela, que é exatamente o que o axe reprova na regra
+ * `button-name`. É a mesma razão de `labels` ser a única prop obrigatória.
+ */
+const LABELS_BLOCK = [
+  'const labels = {',
+  '  toolbar: "Formatação",',
+  '  // A moldura inteira é o campo, e não há rótulo visível a que apontar.',
+  '  editorField: "Corpo do texto",',
+  '  groups: {',
+  '    marks: "Marcas de texto",',
+  '    headings: "Títulos",',
+  '    align: "Alinhamento",',
+  '    lists: "Listas",',
+  '    blocks: "Blocos",',
+  '    actions: "Ações",',
+  '    table: "Tabela",',
+  '  },',
+  '  actions: {',
+  '    bold: "Negrito",',
+  '    italic: "Itálico",',
+  '    underline: "Sublinhado",',
+  '    strike: "Tachado",',
+  '    code: "Código",',
+  '    highlight: "Destaque",',
+  '    h1: "Título 1",',
+  '    h2: "Título 2",',
+  '    h3: "Título 3",',
+  '    alignLeft: "Alinhar à esquerda",',
+  '    alignCenter: "Centralizar",',
+  '    alignRight: "Alinhar à direita",',
+  '    alignJustify: "Justificar",',
+  '    bulletList: "Lista com marcadores",',
+  '    orderedList: "Lista numerada",',
+  '    taskList: "Lista de tarefas",',
+  '    blockquote: "Citação",',
+  '    codeBlock: "Bloco de código",',
+  '    link: "Inserir link",',
+  '    image: "Inserir imagem",',
+  '    table: "Inserir tabela",',
+  '    horizontalRule: "Linha divisória",',
+  '    undo: "Desfazer",',
+  '    redo: "Refazer",',
+  '    formula: "Inserir fórmula",',
+  '    // Só aparecem com uma imagem selecionada.',
+  '    imageAlt: "Texto alternativo",',
+  '    imageSmaller: "Diminuir a imagem",',
+  '    imageLarger: "Aumentar a imagem",',
+  '    imageNatural: "Tamanho natural",',
+  '    // Só aparecem com o cursor DENTRO de uma tabela.',
+  '    rowAfter: "Inserir linha abaixo",',
+  '    columnAfter: "Inserir coluna à direita",',
+  '    deleteRow: "Excluir linha",',
+  '    deleteColumn: "Excluir coluna",',
+  '    headerRow: "Alternar linha de cabeçalho",',
+  '    deleteTable: "Excluir tabela",',
+  '  },',
+  '  fields: {',
+  '    formula: "Fórmula em LaTeX",',
+  '    formulaConfirm: "Inserir",',
+  '    link: "Endereço do link",',
+  '    linkConfirm: "Aplicar",',
+  '    linkRemove: "Tirar o link",',
+  '    alt: "Descrição da imagem",',
+  '    altConfirm: "Salvar descrição",',
+  '  },',
+  '};',
+].join('\n');
+
+/**
+ * O par de estado do documento.
+ *
+ * `onChange` devolve o HTML a cada mudança, e guardá-lo é de quem consome — o
+ * componente não guarda documento. O nome precisa EXISTIR no snippet: a versão
+ * anterior passava `onChange={setHtml}` sem nunca declarar o par.
+ */
+const STATE_BLOCK = 'const [html, setHtml] = useState("");';
+
+/** O import de estado, só nos ramos que declaram o par. */
+const IMPORT_STATE = 'import { useState } from "react";';
+
+/**
+ * O armazenamento próprio, declarado.
+ *
+ * O teto e o envio são de quem consome — a que bucket, com que política, com
+ * que limite —, mas os nomes precisam EXISTIR: `MAX_BYTES` e `enviarAoCdn`
+ * apareciam na chamada sem nunca serem declarados.
+ */
+const STORAGE_BLOCK = [
+  '// O teto e o destino são de quem consome: devolver nulo é RECUSA, e não erro.',
+  'const MAX_BYTES = 2 * 1024 * 1024;',
+  'const enviarAoCdn = async (file: File): Promise<string | null> => { /* … */ };',
+].join('\n');
+
+/** A descrição automática, declarada. Quem liga o modelo de visão é quem consome. */
+const DESCRIBE_BLOCK = [
+  '// O arquivo vem nulo para imagem colada de outra página, que chega só como',
+  '// endereço: quem precisa dos bytes devolve nulo nesse caso.',
+  'const descrever = async (file: File | null, src: string): Promise<string | null> => { /* … */ };',
+].join('\n');
+
+/**
+ * O preâmbulo do snippet: os imports, o estado e os rótulos.
+ *
+ * Entra em TODOS os ramos, e é o que os torna copiáveis.
+ */
+function preamble(blocks: string[] = [], withState = true): string {
+  const head = withState ? [IMPORT_STATE, IMPORTS] : [IMPORTS];
+  const partes = [...(withState ? [STATE_BLOCK] : []), LABELS_BLOCK, ...blocks].flatMap(
+    (bloco) => ['', bloco],
+  );
+  return [head.join('\n'), ...partes].join('\n');
+}
+
+/**
  * Conteúdo inicial como atributo de aspas SIMPLES.
  *
  * O HTML de exemplo carrega aspas duplas (`<a href="…">`), e em JSX o atributo
@@ -44,7 +164,7 @@ function editorTag(parts: Array<string | false | null | undefined>): string {
 /** O uso mínimo: rótulos, conteúdo inicial e o HTML de volta a cada mudança. */
 function basicUse(html: string, extra: Array<string | false | null | undefined> = []): string {
   return jsxSnippet(
-    IMPORTS,
+    preamble(),
     editorTag(['labels={labels}', contentAttr(html), ...extra, 'onChange={setHtml}']),
   );
 }
@@ -53,7 +173,7 @@ function basicUse(html: string, extra: Array<string | false | null | undefined> 
 export const editorSource: SourceTransform<EditorArgs> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
   return jsxSnippet(
-    IMPORTS,
+    preamble(),
     editorTag([
       'labels={labels}',
       contentAttr(args.content),
@@ -80,7 +200,9 @@ export const editorAdvancedSource: SourceTransform<EditorArgs> = () =>
 /** Somente leitura: o conteúdo continua navegável, a barra deixa de agir. */
 export const editorReadOnlySource: SourceTransform<EditorArgs> = () =>
   jsxSnippet(
-    IMPORTS,
+    // Sem `onChange` não há documento a guardar, então o par de estado não
+    // entra: declarar o que o exemplo não usa ensina a escrever por hábito.
+    preamble([], false),
     editorTag([
       'labels={labels}',
       contentAttr(
@@ -109,7 +231,7 @@ export const editorWithImageSource: SourceTransform<EditorArgs> = () =>
  */
 export const editorCustomImageStorageSource: SourceTransform<EditorArgs> = () =>
   jsxSnippet(
-    IMPORTS,
+    preamble([STORAGE_BLOCK]),
     editorTag([
       'labels={labels}',
       contentAttr('<p>O armazenamento da imagem é decisão de quem consome.</p>'),
@@ -127,7 +249,7 @@ export const editorCustomImageStorageSource: SourceTransform<EditorArgs> = () =>
  */
 export const editorAiImageDescriptionSource: SourceTransform<EditorArgs> = () =>
   jsxSnippet(
-    IMPORTS,
+    preamble([DESCRIBE_BLOCK]),
     editorTag([
       'labels={labels}',
       contentAttr('<p>A IA propõe a descrição; quem publica confere.</p>'),

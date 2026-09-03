@@ -23,6 +23,49 @@ const IMPORT = 'import { ContextBreakdown } from "@/components/ui/context-breakd
 const IMPORT_EXAMPLES =
   "import { CONTEXT_PARTS_TYPICAL } from '@shared/primitives/context-breakdown-examples';";
 
+/**
+ * Os rótulos, por inteiro.
+ *
+ * Não cabe resumir: `parts` é `Record` aberto, e a origem que ficasse de fora
+ * mostraria o próprio endereço na tela — o defeito que o exemplo justamente não
+ * quer ensinar. O caso da origem sem palavra é produzido TIRANDO uma entrada, e
+ * tem um snippet só para ele.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  "  title: 'De onde veio o contexto',",
+  "  unit: 'tokens',",
+  '  parts: {',
+  "    system: 'Instruções do sistema',",
+  "    history: 'Histórico da conversa',",
+  "    attachments: 'Anexos',",
+  "    tools: 'Resultados de ferramenta',",
+  '  },',
+  '};',
+].join('\n');
+
+/** Os rótulos da medição da janela, também por inteiro. */
+const BUDGET_LABELS_BLOCK = [
+  'const rotulosDaJanela = {',
+  "  title: 'Uso da janela de contexto',",
+  "  level: { normal: 'Com folga', warning: 'Perto do limite', critical: 'No limite' },",
+  "  of: 'de',",
+  "  unit: 'tokens',",
+  "  unbounded: 'Sem teto conhecido',",
+  '};',
+].join('\n');
+
+/**
+ * O preâmbulo do snippet: os imports e os rótulos que a marcação chama.
+ *
+ * Ele entra em TODOS os ramos, e é o que os torna copiáveis: a versão anterior
+ * passava `labels={rotulos}` sem nunca declarar o nome.
+ */
+function preamble(imports: string[] = [], blocks: string[] = [LABELS_BLOCK]): string {
+  const partes = blocks.flatMap((bloco) => ['', bloco]);
+  return [[IMPORT, ...imports].join('\n'), ...partes].join('\n');
+}
+
 export type ContextBreakdownSnippetOptions = {
   /** Consumido pelas instruções do sistema. */
   system?: number;
@@ -56,7 +99,7 @@ function partsLiteral(opts: ContextBreakdownSnippetOptions): string {
 
 function build(opts: ContextBreakdownSnippetOptions): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(),
     [
       '<ContextBreakdown',
       `  parts={${partsLiteral(opts)}}`,
@@ -90,10 +133,9 @@ export const contextBreakdownSource: SourceTransform<ContextBreakdownSnippetOpti
  */
 export function contextBreakdownEveryCaseSource(): string {
   return jsxSnippet(
-    [
-      IMPORT,
+    preamble([
       "import {\n  CONTEXT_PARTS_TYPICAL,\n  CONTEXT_PARTS_SLIVER,\n  CONTEXT_PARTS_SINGLE,\n  CONTEXT_PARTS_EMPTY,\n} from '@shared/primitives/context-breakdown-examples';",
-    ].join('\n'),
+    ]),
     [
       '// A ordem é a de quem mediu, e a peça não a reordena: parcela que sobe de',
       '// lugar entre um turno e o seguinte faz comparar duas fotos diferentes.',
@@ -162,11 +204,10 @@ export function contextBreakdownUnlabeledOriginSource(): string {
  */
 export function contextBreakdownBesideBudgetSource(): string {
   return jsxSnippet(
-    [
-      IMPORT,
-      'import { ContextDisplay } from "@/components/ui/context-display";',
-      IMPORT_EXAMPLES,
-    ].join('\n'),
+    preamble(
+      ['import { ContextDisplay } from "@/components/ui/context-display";', IMPORT_EXAMPLES],
+      [LABELS_BLOCK, BUDGET_LABELS_BLOCK],
+    ),
     [
       '<div className="nds-stack nds-max-w-lg" data-spacing="md">',
       '  {/* "De onde veio" se responde sem saber quanto cabe: o teto é da outra. */}',
@@ -189,13 +230,12 @@ export function contextBreakdownBesideBudgetSource(): string {
  */
 export function contextBreakdownInsideDisclosureSource(): string {
   return jsxSnippet(
-    [
-      IMPORT,
+    preamble([
       'import {\n  Collapsible,\n  CollapsibleTrigger,\n  CollapsibleContent,\n} from "@/components/ui/collapsible";',
       'import { buttonVariants } from "@/components/ui/button";',
       'import { cn } from "@/lib/utils";',
       IMPORT_EXAMPLES,
-    ].join('\n'),
+    ]),
     [
       '<Collapsible defaultOpen>',
       '  {/* O controle mora no hospedeiro, e é botão de verdade: recolher a',

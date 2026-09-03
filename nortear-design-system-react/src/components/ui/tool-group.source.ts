@@ -29,16 +29,102 @@ export type ToolGroupSnippetOptions = {
   change?: boolean;
 };
 
+/**
+ * Os rótulos, por INTEIRO.
+ *
+ * Não cabe resumir: `labels` é obrigatória e as duas palavras de estado são
+ * `Record` completos — um objeto pela metade não compila para quem copia.
+ *
+ * `title` é FUNÇÃO, e não texto pronto: plural é decisão de idioma, e um
+ * componente que escolhesse entre singular e plural escolheria por cinco
+ * idiomas de uma vez. As duas escalas de palavra existem porque o RESUMO fala
+ * do conjunto ("Algo falhou") e a LISTA fala de cada chamada ("Falhou").
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  title: (count) => (count === 1 ? "1 ferramenta" : `${count} ferramentas`),',
+  '  summary: {',
+  '    pending: "Espera por você",',
+  '    running: "Em curso",',
+  '    done: "Concluído",',
+  '    failed: "Algo falhou",',
+  '  },',
+  '  call: {',
+  '    pending: "Esperando você",',
+  '    running: "Em curso",',
+  '    done: "Concluída",',
+  '    failed: "Falhou",',
+  '  },',
+  '};',
+].join('\n');
+
+/**
+ * O retorno ganha DECLARAÇÃO, e não só uma seta em linha.
+ *
+ * Guardar o que a pessoa abriu é de quem consome — o componente só relata o
+ * que já aconteceu —, então o corpo fica vazio. O nome, porém, precisa
+ * existir: `onOpenChange={(aberto) => registrar(aberto)}` sem `registrar` em
+ * lugar nenhum entrega um `registrar is not defined` no primeiro clique.
+ */
+const CHANGE_HANDLER =
+  'const registrar = (aberto) => { /* guardar o que se abriu é de quem consome */ };';
+
+/**
+ * As chamadas de cada exemplo, RESUMIDAS a três.
+ *
+ * Resumidas, e não elididas. O NOME muda por ramo porque é a LISTA que muda
+ * entre os exemplos: o detalhe é campo de cada chamada, e não opção do grupo,
+ * então o control que "tira o detalhe" na verdade troca a lista inteira.
+ */
+function callsLines(ref: string): string {
+  const semDetalhe = ref === 'chamadasSemDetalhe';
+  const estados: Record<string, readonly string[]> = {
+    chamadas: ['done', 'done', 'failed'],
+    chamadasSemDetalhe: ['done', 'done', 'failed'],
+    chamadasComFalha: ['done', 'done', 'failed'],
+    chamadasConcluidas: ['done', 'done', 'done'],
+    chamadasEmCurso: ['done', 'running', 'pending'],
+  };
+  const nomes = ['buscar_documentos', 'ler_arquivo', 'publicar_relatorio'];
+  const detalhes = [
+    'Doze resultados em quatro repositórios.',
+    'docs/shared/guidelines/17-componentes-conversacionais.md',
+    'O destino recusou: falta permissão de escrita.',
+  ];
+  const lista = estados[ref] ?? estados.chamadas!;
+  return [
+    '// Três chamadas de exemplo. O DETALHE é campo de cada uma, e não opção do',
+    '// grupo: é por isso que tirá-lo troca a lista, e não uma propriedade.',
+    `const ${ref} = [`,
+    ...lista.map((state, i) => {
+      const campos = [`id: "c${i + 1}"`, `name: "${nomes[i]}"`, `state: "${state}"`];
+      if (!semDetalhe) campos.push(`detail: "${detalhes[i]}"`);
+      return `  { ${campos.join(', ')} },`;
+    }),
+    '];',
+  ].join('\n');
+}
+
+/** O preâmbulo: o import e tudo que a chamada daquele ramo referencia. */
+function preamble(imports: string, callsRef?: string, change = false): string {
+  const partes = [imports, LABELS_BLOCK];
+  if (callsRef) partes.push(callsLines(callsRef));
+  if (change) partes.push(CHANGE_HANDLER);
+  return partes.join('\n\n');
+}
+
 function build(opts: ToolGroupSnippetOptions): string {
+  const calls = opts.calls ?? 'chamadas';
+  const change = opts.change !== false;
   return jsxSnippet(
-    IMPORT,
+    preamble(IMPORT, calls, change),
     `<ToolGroup${attrsMultilinha([
-      `calls={${opts.calls ?? 'chamadas'}}`,
+      `calls={${calls}}`,
       'labels={rotulos}',
       // A caixa fechada é o padrão, e documentação não ensina a repetir o
       // padrão: só o que difere entra no snippet.
       opts.open === true ? 'open' : undefined,
-      opts.change === false ? undefined : ON_OPEN_CHANGE,
+      change ? ON_OPEN_CHANGE : undefined,
     ])} />`,
   );
 }
@@ -67,7 +153,9 @@ export const toolGroupSource: SourceTransform<{ open?: boolean; detail?: boolean
  */
 export function toolGroupEveryStateSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { TOOL_CALL_STATES } from "@shared/primitives/chat-protocol";'].join('\n'),
+    preamble(
+      [IMPORT, 'import { TOOL_CALL_STATES } from "@shared/primitives/chat-protocol";'].join('\n'),
+    ),
     [
       'const chamadas = TOOL_CALL_STATES.map((state) => ({',
       '  name: `ferramenta_${state}`,',
@@ -113,10 +201,13 @@ export function toolGroupTogglingSource(): string {
  */
 export function toolGroupWaitingOutsideSource(): string {
   return jsxSnippet(
-    [
-      IMPORT,
-      'import { splitWaitingCalls } from "@shared/primitives/tool-group-summary";',
-    ].join('\n'),
+    preamble(
+      [
+        IMPORT,
+        'import { splitWaitingCalls } from "@shared/primitives/tool-group-summary";',
+      ].join('\n'),
+      'chamadas',
+    ),
     [
       '// Pedir autorização dentro de uma caixa fechada é pedir sem mostrar.',
       'const { grouped, waiting } = splitWaitingCalls(chamadas);',
@@ -137,7 +228,7 @@ export function toolGroupWaitingOutsideSource(): string {
  */
 export function toolGroupBeforeAnswerSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(IMPORT, 'chamadas'),
     [
       '<div className="nds-stack" data-spacing="sm">',
       '  <ToolGroup calls={chamadas} labels={rotulos} />',

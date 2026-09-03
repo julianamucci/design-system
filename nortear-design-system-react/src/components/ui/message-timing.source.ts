@@ -42,6 +42,21 @@ const WRITTEN_MEASURES: readonly string[] = [
 ];
 
 /**
+ * Os rótulos, por INTEIRO.
+ *
+ * Não cabe resumir, e não cabe elidir: `labels` é obrigatória, e um objeto
+ * pela metade não compila para quem copia. São dois — o nome da medição, que
+ * não aparece na tela e é o que responde a quem ouve, e a palavra que diz que
+ * a medição ainda não acabou, que é o que descreve o estado no lugar da cor.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  title: "Tempo desta resposta",',
+  '  measuring: "Medindo",',
+  '};',
+].join('\n');
+
+/**
  * O formatador que é de QUEM MEDE, e nunca do componente.
  *
  * A UNIDADE é parâmetro, e não um limiar dentro da função: quem cronometrou já
@@ -101,6 +116,7 @@ function build(opts: MessageTimingSnippetOptions): string {
   const blocks = [
     measures > 0 ? writerLines() : undefined,
     measureLines(measures),
+    LABELS_BLOCK,
     streaming
       ? [
         '// A MEDIÇÃO AINDA ANDA: a peça avisa que aquilo está mudando e abre a',
@@ -172,6 +188,8 @@ export function messageTimingEveryCaseSource(): string {
       '',
       everyMeasureLines(),
       '',
+      LABELS_BLOCK,
+      '',
       '// A peça não reserva espaço para o que não veio, e não reordena o que veio.',
       '[4, 3, 2, 0].map((count) => (',
       '  <MessageTiming',
@@ -199,6 +217,8 @@ export function messageTimingInTightSpaceSource(): string {
       writerLines(),
       '',
       everyMeasureLines(),
+      '',
+      LABELS_BLOCK,
       '',
       '// A FORMA É DO CONTAINER. Estreito, a linha cai em um par por linha; largo,',
       '// ela fica em uma linha só. Não há prop de forma, e não precisa haver.',
@@ -232,6 +252,8 @@ export function messageTimingInsideTooltipSource(): string {
       writerLines(),
       '',
       everyMeasureLines(),
+      '',
+      LABELS_BLOCK,
       '',
       '// O GATILHO É DE QUEM CONSOME, e tem nome próprio: em toque não há ponteiro,',
       '// e o controle precisa dizer o que mostra mesmo sem a dica aparecer.',

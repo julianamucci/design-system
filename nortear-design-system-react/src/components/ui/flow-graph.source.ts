@@ -19,6 +19,83 @@ import { FLOW_NODES_ORDER } from '@shared/primitives/flow-graph-examples';
 
 const IMPORT = 'import { FlowGraph } from "@/components/ui/flow-graph";';
 
+/**
+ * Os rótulos, por inteiro.
+ *
+ * Não cabe resumir: o `Record` dos estados é completo por contrato — os quatro
+ * têm forma própria, e a palavra de cada um é o que chega a quem não vê a forma
+ * —, e um objeto pela metade não compila para quem copia.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  region: "Fluxo do atendimento",',
+  '  dependsOn: "Depende de {sources}.",',
+  '  state: {',
+  '    pending: "Por fazer",',
+  '    running: "Em andamento",',
+  '    done: "Concluído",',
+  '    failed: "Falhou",',
+  '  },',
+  '};',
+].join('\n');
+
+/** O identificador na raiz de uma expressão, ou nada quando ela é literal. */
+function rootName(expression: string): string | undefined {
+  const raiz = /^([A-Za-z_$][\w$]*)/.exec(expression);
+  return raiz?.[1];
+}
+
+/**
+ * Os nós, com o nome que AQUELE ramo usa.
+ *
+ * A LISTA ENTRA RESUMIDA, e é a única elisão: seis nós com cinco campos cada
+ * ocupariam a tela inteira do painel e afogariam a chamada que o snippet existe
+ * para ensinar. Resumida, porém, e não ELIDIDA — a versão anterior citava `nos`
+ * sem nunca declará-lo, e quem copiava recebia um símbolo indefinido.
+ */
+function nodesBlock(name: string): string {
+  return [
+    '// Um item por passo do fluxo — aqui, os quatro primeiros.',
+    `const ${name} = [`,
+    '  { id: "pedido", label: "Ler o pedido", column: 0, row: 1, state: "done" },',
+    '  { id: "catalogo", label: "Buscar no catálogo", column: 1, row: 0, state: "done" },',
+    '  { id: "estoque", label: "Conferir o estoque", column: 1, row: 2, state: "done" },',
+    '  { id: "preco", label: "Comparar preços", column: 2, row: 0, state: "running" },',
+    '];',
+  ].join('\n');
+}
+
+/** As ligações, com o nome que AQUELE ramo usa. Resumidas pelo mesmo motivo. */
+function edgesBlock(name: string): string {
+  return [
+    '// Uma por dependência, entre os nós acima — aqui, as três primeiras.',
+    `const ${name} = [`,
+    '  { from: "pedido", to: "catalogo" },',
+    '  { from: "pedido", to: "estoque" },',
+    '  { from: "catalogo", to: "preco" },',
+    '];',
+  ].join('\n');
+}
+
+/**
+ * O preâmbulo do snippet: o import, os nós, as ligações e os rótulos.
+ *
+ * Cada ramo passa os SEUS nomes, como o modelo da grade de atividade faz: um
+ * ramo que desenha `nosLargos` declara `nosLargos`, e não um `nos` que ele não
+ * usa. Expressão literal (`[]`) não tem constante a declarar.
+ */
+function preamble(nodesRef = 'nos', edgesRef?: string): string {
+  const nodes = rootName(nodesRef);
+  const edges = edgesRef === undefined ? undefined : rootName(edgesRef);
+  return [
+    IMPORT,
+    '',
+    ...(nodes ? [nodesBlock(nodes), ''] : []),
+    ...(edges ? [edgesBlock(edges), ''] : []),
+    LABELS_BLOCK,
+  ].join('\n');
+}
+
 export type FlowGraphSnippetOptions = {
   /** Em que pé está a execução que escreve o grafo. */
   status?: string;
@@ -36,7 +113,7 @@ function tag(parts: Array<string | undefined>): string {
 
 function build(opts: FlowGraphSnippetOptions): string {
   return jsxSnippet(
-    IMPORT,
+    preamble(opts.nodesRef ?? 'nos', opts.edgesRef),
     tag([
       `nodes={${opts.nodesRef ?? 'nos'}}`,
       // Sem ligação nenhuma sobram as caixas nas casas em que foram postas, e o
@@ -82,7 +159,7 @@ export const flowGraphSource: SourceTransform<{
 /** Os quatro estados de nó, na mesma grade. */
 export function flowGraphEveryStateSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble('nos', 'arestas'),
     [
       '// Um nó por estado, na mesma grade: os quatro têm forma própria, e não',
       '// só cor. A palavra de cada um chega a quem não vê a forma.',
@@ -114,7 +191,7 @@ export function flowGraphRunningSource(): string {
  */
 export function flowGraphPartialSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble('nos', 'arestas'),
     [
       '// REVELAR É PASSAR MENOS NÓS. As ligações que perderam uma ponta somem',
       '// sozinhas, e o grafo pela metade se desenha sem nenhuma regra a mais.',
@@ -156,7 +233,7 @@ export function flowGraphRejoinSource(): string {
  */
 export function flowGraphTightColumnsSource(): string {
   return jsxSnippet(
-    IMPORT,
+    preamble('nos', 'arestas'),
     [
       tag([
         'nodes={nos}',

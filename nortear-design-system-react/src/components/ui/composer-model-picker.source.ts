@@ -9,11 +9,15 @@
  * curried devolveria função em vez de string, e as checagens que leem o snippet
  * nunca chegariam ao snippet.
  *
- * A LISTA NÃO É ESCRITA POR EXTENSO em nenhuma das configurações, e isso é
- * decisão. Os controles do Playground mexem em qual modelo está escolhido e em
- * se a lista começa aberta — não nos modelos —, então despejar três objetos de
- * andaime faria o painel ensinar o andaime em vez da peça. O que muda por
- * story é o nome da constante, que é o que diz QUAL lista está na tela.
+ * A LISTA DE MODELOS ENTRA DECLARADA, com o nome do ramo, e é o nome que diz
+ * QUAL lista está na tela. Ela é curta o bastante para caber inteira — dois ou
+ * três modelos —, e cada ramo declara a sua porque `disponiveis` e
+ * `comEtiqueta` não são a mesma coisa: uma tem descrição e nada mais, a outra
+ * carrega a etiqueta curta que é todo o assunto daquela story.
+ *
+ * Nada de nome citado sem declaração: a versão anterior passava `labels` e a
+ * lista sem declará-los, e quem copiava recebia um símbolo indefinido na
+ * primeira renderização.
  */
 import {
   attrsMultilinha,
@@ -26,6 +30,69 @@ import {
 const IMPORT_PICKER =
   'import { ComposerModelPicker } from "@/components/ui/composer-model-picker";'
 const IMPORT_COMPOSER = 'import { Composer } from "@/components/ui/composer";'
+
+/** Os rótulos do seletor, por inteiro. `{label}` vira o nome escolhido. */
+const PICKER_LABELS_BLOCK = [
+  "const pickerLabels = {",
+  '  trigger: "Modelo: {label}",',
+  '  list: "Modelos",',
+  "};",
+].join("\n")
+
+/** Os rótulos do campo, por inteiro — só o ramo do trilho os usa. */
+const LABELS_BLOCK = [
+  "const labels = {",
+  '  input: "Mensagem",',
+  '  placeholder: "Escreva sua mensagem…",',
+  '  submit: "Enviar",',
+  '  stop: "Parar",',
+  '  hint: "{key} envia",',
+  '  limit: "Até {max} caracteres",',
+  "};",
+].join("\n")
+
+/**
+ * A lista de cada ramo, pelo nome com que o ramo a cita.
+ *
+ * `unavailableReason` acompanha todo modelo indisponível, e não é enfeite: é
+ * texto, é o que se anuncia, e sem ele a opção apagada não diz por que não pode
+ * responder.
+ */
+const MODEL_LISTS: Record<string, string[]> = {
+  modelos: [
+    "const modelos = [",
+    '  { id: "fast", label: "Rápido", description: "Responde em segundos." },',
+    '  { id: "balanced", label: "Equilibrado", description: "O meio-termo entre esperar e acertar.", badge: "Novo" },',
+    "  {",
+    '    id: "deep",',
+    '    label: "Profundo",',
+    '    description: "Lê a obra inteira antes de responder, e leva minutos.",',
+    "    unavailable: true,",
+    '    unavailableReason: "Fora do seu plano.",',
+    "  },",
+    "];",
+  ],
+  disponiveis: [
+    "const disponiveis = [",
+    '  { id: "fast", label: "Rápido", description: "Responde em segundos." },',
+    '  { id: "balanced", label: "Equilibrado", description: "O meio-termo entre esperar e acertar." },',
+    "];",
+  ],
+  comEtiqueta: [
+    "const comEtiqueta = [",
+    '  { id: "fast", label: "Rápido", description: "Responde em segundos." },',
+    '  { id: "balanced", label: "Equilibrado", description: "O meio-termo entre esperar e acertar.", badge: "Novo" },',
+    "];",
+  ],
+}
+
+/**
+ * O que se faz com o modelo confirmado.
+ *
+ * Uma linha, e o corpo é de quem consome: o seletor confirma a escolha, e
+ * APLICAR a troca é de quem monta a conversa.
+ */
+const CHOOSE_BLOCK = "const escolher = (id) => { /* … */ };"
 
 export type ModelPickerSnippetOptions = {
   /** Nome da constante da lista que o snippet declara. */
@@ -52,13 +119,24 @@ function picker(opts: ModelPickerSnippetOptions): string {
   ])} />`
 }
 
+/** O import, a lista do ramo, os rótulos e o manipulador. */
+function preamble(opts: ModelPickerSnippetOptions): string {
+  const imports = opts.rail ? `${IMPORT_PICKER}\n${IMPORT_COMPOSER}` : IMPORT_PICKER
+  const list = MODEL_LISTS[text(opts.models) ?? "modelos"] ?? MODEL_LISTS.modelos
+
+  const parts = [imports, "", list.join("\n"), "", PICKER_LABELS_BLOCK]
+  if (opts.rail) parts.push("", LABELS_BLOCK)
+  parts.push("", CHOOSE_BLOCK)
+  return parts.join("\n")
+}
+
 function build(opts: ModelPickerSnippetOptions): string {
-  if (!opts.rail) return jsxSnippet(IMPORT_PICKER, picker(opts))
+  if (!opts.rail) return jsxSnippet(preamble(opts), picker(opts))
 
   // O seletor é AUTÔNOMO: ele não é uma prop do campo, é um controle que quem
   // consome põe no início do trilho — pelo mesmo espaço de qualquer outro.
   return jsxSnippet(
-    `${IMPORT_PICKER}\n${IMPORT_COMPOSER}`,
+    preamble(opts),
     `<Composer\n  labels={labels}\n  railStart={\n${indentar(picker(opts), "    ")}\n  }\n/>`,
   )
 }

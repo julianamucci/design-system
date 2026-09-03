@@ -20,6 +20,61 @@ const IMPORT = 'import { ConnectionState } from "@/components/ui/connection-stat
 
 const ON_RETRY = 'onRetry={() => religar()}';
 
+/**
+ * Os rótulos, por inteiro.
+ *
+ * Não cabe resumir: o `Record` dos estados é completo por contrato, e um objeto
+ * pela metade não compila para quem copia. A ligação de pé fica de fora só da
+ * AÇÃO, e isso é decisão da peça — sobre uma ligação que funciona não há o que
+ * fazer aqui.
+ */
+const LABELS_BLOCK = [
+  'const rotulos = {',
+  '  state: {',
+  '    connected: "Ligado",',
+  '    reconnecting: "Reconectando",',
+  '    disconnected: "Sem ligação",',
+  '  },',
+  '  // Cada rótulo diz O QUE FAZ naquele estado: apressar a tentativa já',
+  '  // marcada é outra coisa que começar uma quando não há nenhuma.',
+  '  action: { reconnecting: "Tentar agora", disconnected: "Reconectar" },',
+  '};',
+].join('\n');
+
+/**
+ * O retorno, declarado.
+ *
+ * Uma linha, e não uma elisão: abrir a ligação de novo é de quem consome — com
+ * que espera, quantas vezes e o que avisar são política de produto —, mas o
+ * nome precisa EXISTIR, ou quem copia recebe um símbolo indefinido.
+ */
+const RETRY_BLOCK = 'const religar = () => { /* … */ };';
+
+/** Os rótulos da linha de estado da execução, também por inteiro. */
+const RUN_LABELS_BLOCK = [
+  'const rotulosDaExecucao = {',
+  '  status: {',
+  '    idle: "Em espera",',
+  '    running: "Respondendo",',
+  '    stopped: "Interrompida",',
+  '    complete: "Concluída",',
+  '    failed: "Falhou",',
+  '  },',
+  '  action: { running: "Parar", stopped: "Retomar", failed: "Tentar de novo" },',
+  '};',
+].join('\n');
+
+/**
+ * O preâmbulo do snippet: os imports, os rótulos e o que a marcação chama.
+ *
+ * Ele entra em TODOS os ramos, e é o que os torna copiáveis: a versão anterior
+ * citava `rotulos` e `religar` sem nunca declará-los.
+ */
+function preamble(imports: string[] = [], blocks: string[] = []): string {
+  const partes = [LABELS_BLOCK, ...blocks].flatMap((bloco) => ['', bloco]);
+  return [[IMPORT, ...imports].join('\n'), ...partes].join('\n');
+}
+
 export type ConnectionStateSnippetOptions = {
   /** Em que pé está a ligação. */
   state?: string;
@@ -32,15 +87,17 @@ export type ConnectionStateSnippetOptions = {
 function build(opts: ConnectionStateSnippetOptions): string {
   const countdown = text(opts.countdown);
 
+  const hasAction = opts.action !== false;
+
   return jsxSnippet(
-    IMPORT,
+    preamble([], hasAction ? [RETRY_BLOCK] : []),
     `<ConnectionState${attrsMultilinha([
       `state="${text(opts.state) ?? 'reconnecting'}"`,
       countdown === undefined ? undefined : `countdown="${countdown}"`,
       'labels={rotulos}',
       // Estado sem rótulo de ação não desenha botão, então o retorno não teria
       // como disparar: mostrá-lo ali ensinaria a ligar um fio solto.
-      opts.action === false ? undefined : ON_RETRY,
+      hasAction ? ON_RETRY : undefined,
     ])} />`,
   );
 }
@@ -63,7 +120,9 @@ export const connectionStateSource: SourceTransform<ConnectionStateSnippetOption
  */
 export function connectionStateEveryStateSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { CONNECTION_STATES } from "@shared/primitives/chat-protocol";'].join('\n'),
+    preamble(['import { CONNECTION_STATES } from "@shared/primitives/chat-protocol";'], [
+      RETRY_BLOCK,
+    ]),
     [
       'CONNECTION_STATES.map((state) => (',
       '  <ConnectionState',
@@ -113,7 +172,10 @@ export function connectionStateDisconnectedSource(): string {
  */
 export function connectionStateBesideRunSource(): string {
   return jsxSnippet(
-    [IMPORT, 'import { AgentStatus } from "@/components/ui/agent-status";'].join('\n'),
+    preamble(['import { AgentStatus } from "@/components/ui/agent-status";'], [
+      RETRY_BLOCK,
+      RUN_LABELS_BLOCK,
+    ]),
     [
       '<div className="nds-stack" data-spacing="sm">',
       '  <ConnectionState',
