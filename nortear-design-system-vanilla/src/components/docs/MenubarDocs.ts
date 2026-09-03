@@ -447,10 +447,10 @@ panel.appendChild(li);`;
         function wrapPreview(child: HTMLElement): HTMLElement {
           const wrap = document.createElement('div');
           wrap.style.contain = 'layout';
-          wrap.className = 'nds-cluster nds-w-full';
+          wrap.className = 'nds-cluster nds-w-full nds-min-h-60';
           wrap.dataset.align = 'start';
           wrap.dataset.justify = 'center';
-          wrap.style.minHeight = '220px';
+
           wrap.style.padding = 'var(--spacing-2)';
           wrap.appendChild(child);
           return wrap;
@@ -521,10 +521,10 @@ const panel = bar.querySelector('[role="menu"]');
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
+                wrap.className = 'nds-cluster nds-min-h-40';
                 wrap.dataset.align = 'start';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '140px';
+
                 wrap.appendChild(
                   createMenubar([
                     {
@@ -550,8 +550,7 @@ const panel = bar.querySelector('[role="menu"]');
                 const li = document.createElement('div');
                 li.setAttribute('role', 'menuitem');
                 li.className =
-                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
-                li.style.minWidth = '180px';
+                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md nds-min-w-48';
                 li.textContent = 'Excluir arquivo';
 
                 // `role="menuitem"` SOLTO é violação de `aria-required-parent`, e

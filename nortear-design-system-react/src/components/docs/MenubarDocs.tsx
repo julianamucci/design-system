@@ -217,9 +217,12 @@ interface MenubarItemProps {
     payload: "Payload",
   };
 
+  // Só MECÂNICA fica no inline: `contain` e `position` não existem como token e
+  // não têm folha para sair. A altura mínima é valor de design — inline ela vence
+  // a folha e sai do tema, da densidade e da escala —, e mora em `.nds-min-h-70`
+  // (17,5rem = os mesmos 280px). A escada nasceu nesta mesma rodada.
   const wrapperStyle: React.CSSProperties = {
     contain: "layout",
-    minHeight: 280,
     position: "relative",
   };
 
@@ -241,7 +244,7 @@ interface MenubarItemProps {
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
           {/* Menu Arquivo (com submenu) */}
-          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+          <div className="nds-stack nds-min-h-70" data-spacing="sm" style={wrapperStyle}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.fileMenu"))}
             </p>
@@ -269,7 +272,7 @@ interface MenubarItemProps {
           </div>
 
           {/* Menu Editar (com shortcuts) */}
-          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+          <div className="nds-stack nds-min-h-70" data-spacing="sm" style={wrapperStyle}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.editMenu"))}
             </p>
@@ -296,7 +299,7 @@ interface MenubarItemProps {
           </div>
 
           {/* Menu Exibir (com checkbox) */}
-          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+          <div className="nds-stack nds-min-h-70" data-spacing="sm" style={wrapperStyle}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.viewMenu"))}
             </p>
@@ -325,7 +328,7 @@ interface MenubarItemProps {
           </div>
 
           {/* Menu Ferramentas (com radio) */}
-          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+          <div className="nds-stack nds-min-h-70" data-spacing="sm" style={wrapperStyle}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.toolsMenu"))}
             </p>
@@ -535,7 +538,7 @@ interface MenubarItemProps {
   </MenubarMenu>
 </Menubar>`,
             preview: (
-              <div style={wrapperStyle}>
+              <div className="nds-min-h-70" style={wrapperStyle}>
                 <Menubar>
                   <MenubarMenu defaultOpen>
                     <MenubarTrigger>Editar</MenubarTrigger>
@@ -578,7 +581,7 @@ interface MenubarItemProps {
   </MenubarMenu>
 </Menubar>`,
             preview: (
-              <div style={wrapperStyle}>
+              <div className="nds-min-h-70" style={wrapperStyle}>
                 <Menubar>
                   <MenubarMenu defaultOpen>
                     <MenubarTrigger>Exibir</MenubarTrigger>
@@ -619,7 +622,7 @@ interface MenubarItemProps {
   </MenubarMenu>
 </Menubar>`,
             preview: (
-              <div style={wrapperStyle}>
+              <div className="nds-min-h-70" style={wrapperStyle}>
                 <Menubar>
                   <MenubarMenu defaultOpen>
                     <MenubarTrigger>Tema</MenubarTrigger>
@@ -674,7 +677,7 @@ interface MenubarItemProps {
   </MenubarMenu>
 </Menubar>`,
             preview: (
-              <div style={wrapperStyle}>
+              <div className="nds-min-h-70" style={wrapperStyle}>
                 <Menubar>
                   <MenubarMenu>
                     <MenubarTrigger>Arquivo</MenubarTrigger>

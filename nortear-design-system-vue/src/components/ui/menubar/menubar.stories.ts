@@ -50,6 +50,14 @@ const MENUS = [
   },
 ];
 
+type PlaygroundArgs = {
+  defaultValue: string;
+  loop: boolean;
+  /** Lado em que o painel abre. Vive no conteúdo, e o Playground o encaminha. */
+  side: 'top' | 'right' | 'bottom' | 'left';
+  'onUpdate:modelValue': (value: string) => void;
+};
+
 const meta = {
   title: 'Primitives/Navigation/Menubar',
   component: Menubar,
@@ -69,17 +77,28 @@ const meta = {
       description: 'A seta dá a volta do último gatilho para o primeiro, e vice-versa.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
+    side: {
+      control: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+      description:
+        'De que lado do gatilho o painel abre. O padrão desce, que é o que a barra de menu faz em toda plataforma.',
+      table: { type: { summary: "'top' | 'right' | 'bottom' | 'left'" }, defaultValue: { summary: "'bottom'" } },
+    },
     'onUpdate:modelValue': { control: false, table: { disable: true } },
   },
   args: {
     defaultValue: '',
     loop: true,
+    side: 'bottom',
     'onUpdate:modelValue': fn(),
   },
-} satisfies Meta<typeof Menubar>;
+} satisfies Meta<PlaygroundArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+// `StoryObj<PlaygroundArgs>` e não `<typeof meta>`: o `component: Menubar` faz o
+// segundo derivar os args do componente RAIZ, e `side` vive no conteúdo. É a
+// mesma forma que o Playground do React usa.
+type Story = StoryObj<PlaygroundArgs>;
 
 export const Playground: Story = {
   parameters: {
@@ -111,7 +130,7 @@ export const Playground: Story = {
         >
           <MenubarMenu v-for="m in menus" :key="m.value" :value="m.value">
             <MenubarTrigger>{{ m.label }}</MenubarTrigger>
-            <MenubarContent>
+            <MenubarContent :side="args.side">
               <MenubarItem v-for="i in m.items" :key="i.label">
                 {{ i.label }}
                 <MenubarShortcut v-if="i.atalho">{{ i.atalho }}</MenubarShortcut>
@@ -164,6 +183,17 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(items[0]);
       });
+    });
+
+    await step('O painel abre do lado que `side` pede', async () => {
+      // `side` era ensinado pelo snippet de extensibilidade e não era exercitado
+      // por nenhuma story — a prop existe (o conteúdo a encaminha ao
+      // posicionador), mas nada provava que ela chega. É o achado
+      // `snippet_sem_lastro`: quem copiasse o snippet não teria como saber se o
+      // que ele ensina vale. O posicionador reescreve `data-side` quando não há
+      // espaço para o lado pedido, então a asserção é contra o ARGUMENTO.
+      const menu = await waitForPortal('menu');
+      await expect(menu.closest('[data-side]')?.getAttribute('data-side')).toBe(args.side);
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {

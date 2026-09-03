@@ -53,6 +53,7 @@ const MENUS = [
 type PlaygroundArgs = {
   modal: boolean
   loopFocus: boolean
+  side: "top" | "right" | "bottom" | "left"
   onOpenChange: (isOpen: boolean) => void
 }
 
@@ -83,11 +84,19 @@ const meta = {
         "A seta dá a volta do último gatilho para o primeiro, e vice-versa.",
       table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
     },
+    side: {
+      control: "select",
+      options: ["top", "right", "bottom", "left"],
+      description:
+        "De que lado do gatilho o painel abre. O padrão desce, que é o que a barra de menu faz em toda plataforma.",
+      table: { type: { summary: '"top" | "right" | "bottom" | "left"' }, defaultValue: { summary: '"bottom"' } },
+    },
     onOpenChange: { control: false, table: { disable: true } },
   },
   args: {
     modal: true,
     loopFocus: true,
+    side: "bottom",
     onOpenChange: fn(),
   },
 } satisfies Meta<PlaygroundArgs>
@@ -110,8 +119,10 @@ export const Playground: Story = {
       "accessibility.item6",
     ],
   },
-  render: ({ modal, loopFocus, onOpenChange }) => (
-    <div style={{ contain: "layout", minHeight: 320, position: "relative" }}>
+  render: ({ modal, loopFocus, side, onOpenChange }) => (
+    // `contain` e `position` são mecânica e ficam inline; a altura mínima é
+    // valor de design e mora em `.nds-min-h-80` (20rem = os mesmos 320px).
+    <div className="nds-min-h-80" style={{ contain: "layout", position: "relative" }}>
       <Menubar modal={modal} loopFocus={loopFocus}>
         {MENUS.map((menu) => (
           <MenubarMenu
@@ -119,7 +130,7 @@ export const Playground: Story = {
             onOpenChange={(isOpen) => onOpenChange?.(isOpen)}
           >
             <MenubarTrigger>{menu.label}</MenubarTrigger>
-            <MenubarContent>
+            <MenubarContent side={side}>
               {menu.items.map((item) => (
                 <MenubarItem key={item.label}>
                   {item.label}
@@ -178,6 +189,19 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(items[0])
       })
+    })
+
+    await step("O painel abre do lado que `side` pede", async () => {
+      // `side` era ensinado pelo snippet de extensibilidade e não era exercitado
+      // por nenhuma story — a prop existe (o conteúdo a encaminha ao
+      // posicionador), mas nada provava que ela chega. É o achado
+      // `snippet_sem_lastro`: quem copiasse o snippet não teria como saber se o
+      // que ele ensina vale. O posicionador reescreve `data-side` quando não há
+      // espaço para o lado pedido, então a asserção é contra o ARGUMENTO.
+      const menu = await waitForPortal("menu")
+      await expect(menu.closest("[data-side]")?.getAttribute("data-side")).toBe(
+        args.side
+      )
     })
 
     await step("Dentro do menu, a seta vertical anda entre os itens", async () => {

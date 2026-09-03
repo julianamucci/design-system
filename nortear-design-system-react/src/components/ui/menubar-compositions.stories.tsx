@@ -86,9 +86,15 @@ type Story = StoryObj<typeof meta>
 const menuItems = (menu: HTMLElement) =>
   Array.from(menu.querySelectorAll<HTMLElement>('[role="menuitem"]'))
 
+// Só MECÂNICA no inline. A altura mínima é valor de design e mora na escada:
+// `.nds-min-h-90` (22,5rem = 360px) para as molduras altas, `.nds-min-h-50`
+// (12,5rem = 200px) para a baixa. Inline a declaração vence a folha e sai do
+// tema, da densidade e da escala.
+//
+// A de 360 vinha de uma CONSTANTE, e por isso o portão não a via — só a de 200,
+// escrita no ponto de uso, aparecia no `audit.mjs`.
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 360,
   position: "relative",
 }
 
@@ -97,7 +103,7 @@ const wrapperStyle: React.CSSProperties = {
 export const WithShortcuts: Story = {
   parameters: { a11y: AXE_WITH_MENU_OPEN, covers: ["visual.item2"] },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-90" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Editar</MenubarTrigger>
@@ -158,7 +164,7 @@ export const WithSubmenu: Story = {
     docs: { source: { transform: menubarSubmenuSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-90" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -238,7 +244,7 @@ export const WithCheckboxItems: Story = {
     docs: { source: { transform: selectionMenubarBoxesSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-90" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Exibir</MenubarTrigger>
@@ -320,7 +326,7 @@ export const WithRadioGroup: Story = {
     docs: { source: { transform: menubarChoiceUnicaSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-90" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Aparência</MenubarTrigger>
@@ -393,7 +399,7 @@ export const EditorCompleto: Story = {
     docs: { source: { transform: menubarEditorSource } },
   },
   render: () => (
-    <div style={{ ...wrapperStyle, minHeight: 200 }}>
+    <div className="nds-min-h-50" style={wrapperStyle}>
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>Arquivo</MenubarTrigger>
