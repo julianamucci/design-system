@@ -183,9 +183,111 @@ function comAncestrais(tokens) {
 // meio à sua maneira, e faltando um nome o script dá a linha por inexistente.
 const LINHA_RX = new RegExp(
   String.raw`\{[^{}]*?\btoken:\s*(['"\`])(--[A-Za-z0-9-]+)\1` +
-    String.raw`[^{}]*?\b(?:value|target|parte):\s*(['"\`])((?:\\.|(?!\3)[^\\])*)\3`,
+    String.raw`[^{}]*?\b(?:value|target|parte|className):\s*(['"\`])((?:\\.|(?!\3)[^\\])*)\3`,
   'g',
 );
+
+/**
+ * A MESMA linha, com a coluna do meio vindo do conteúdo compartilhado.
+ *
+ * Metade das docs pages não escreve o seletor como literal — escreve
+ * `value: tContent('tokens.table.menubarBg.class')`, e o texto mora no
+ * `translations.json`. O `LINHA_RX` acima só casa literal, então essas linhas
+ * não eram lidas: **935 de 1899 linhas do repositório, e 121 das 236 docs pages
+ * com tabela ficavam com ZERO linha legível**.
+ *
+ * O efeito é o pior possível num instrumento: as seções 1 e 3 imprimiam
+ * "nenhuma" — não porque a tabela fecha, mas porque nada foi comparado. O
+ * script já tinha o contador `naoLidos` para separar "não tem linha" de "não sei
+ * ler", só que ele é impresso DENTRO da seção de divergência, que é justamente a
+ * que emudece quando nada é lido. Guarda que só fala quando há outra coisa
+ * falando não guarda nada.
+ */
+const LINHA_I18N_RX = new RegExp(
+  String.raw`\{[^{}]*?\btoken:\s*(['"\`])(--[A-Za-z0-9-]+)\1` +
+    // `[\w$.]+` e não `\w+`: o Svelte chama `$tStore(...)`, e `$` não é `\w`.
+    // Era o que deixava aquela stack em zero linha depois de o resto já ler.
+    String.raw`[^{}]*?\b(?:value|target|parte|className):\s*[\w$.]+\(\s*(['"\`])([^'"\`]+)\3\s*\)`,
+  'g',
+);
+
+/**
+ * A tupla POSICIONAL: `['--input', '.nds-input', 'border']`.
+ *
+ * Token e seletor são os dois primeiros elementos, e a terceira posição é a
+ * chave da descrição. Exige `.nds-` no segundo para não casar array qualquer
+ * que comece com um token.
+ */
+const LINHA_TUPLA_RX = new RegExp(
+  String.raw`\[\s*(['"\`])(--[A-Za-z0-9-]+)\1\s*,\s*(['"\`])([^'"\`]*\.nds-[^'"\`]*)\3`,
+  'g',
+);
+
+/**
+ * A tupla `{ token: '--accent', k: 'accent' }`, resolvida no `.map()`.
+ *
+ * É a forma que o docblock do topo já dava por ilegível ("tupla + `.map()`"),
+ * e ela não é rara: o token vem literal no código e a coluna vem do conteúdo,
+ * por uma CHAVE. Sem casar as duas pontas, toggle, progress e irmãos ficavam em
+ * zero linha. A chave resolve contra `tokens.table.<k>.<coluna>`.
+ */
+// Sem ORDEM fixa e sem nome fixo: o `k` do toggle e o `key` do input-group são
+// a mesma ideia, e o input-group ainda escreve a chave ANTES do token. Casar o
+// bloco inteiro e extrair os dois campos separadamente é o que dispensa uma
+// variante de regex por arquivo.
+const BLOCO_RX = /\{[^{}]*\}/g;
+const CAMPO_TOKEN_RX = /\btoken:\s*(['"`])(--[A-Za-z0-9-]+)\1/;
+const CAMPO_CHAVE_RX = /\b(?:k|key):\s*(['"`])([A-Za-z0-9_]+)\1/;
+
+/** Resolve `tokens.table.x.class` no conteúdo compartilhado do slug. */
+const CONTEUDO = (() => {
+  const p = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(p)) return null;
+  try {
+    const j = JSON.parse(readFileSync(p, 'utf8'));
+    return j['pt-BR'] ?? j.pt ?? Object.values(j)[0] ?? null;
+  } catch {
+    return null;
+  }
+})();
+
+/**
+ * As linhas que o próprio conteúdo compartilhado declara.
+ *
+ * Um filho de `tokens.table` (ou `tokens.items`) que carrega `token` E uma
+ * coluna de seletor É uma linha da tabela — a docs page só a percorre. As
+ * chaves de cabeçalho (`token`, `class`, `part`) são string, não objeto, e
+ * caem fora por isso.
+ */
+function linhasDoConteudo() {
+  // As DUAS, e não a primeira que existir: o accordion tem `tokens.table` com
+  // só os rótulos de cabeçalho e as linhas em `tokens.items`, então parar na
+  // primeira devolvia zero linha para uma tabela completa.
+  const raizes = [CONTEUDO?.tokens?.table, CONTEUDO?.tokens?.items].filter(
+    (r) => r && typeof r === 'object',
+  );
+  if (!raizes.length) return [];
+  const saida = [];
+  for (const v of raizes.flatMap((r) => Object.values(r))) {
+    if (!v || typeof v !== 'object') continue;
+    const token = v.token;
+    const coluna = v.value ?? v.class ?? v.target ?? v.parte;
+    if (typeof token !== 'string' || !token.startsWith('--')) continue;
+    if (typeof coluna !== 'string') continue;
+    saida.push({ token, coluna: coluna.trim() });
+  }
+  return saida;
+}
+
+function porChave(chave) {
+  if (!CONTEUDO) return null;
+  let no = CONTEUDO;
+  for (const parte of chave.split('.')) {
+    if (no == null || typeof no !== 'object') return null;
+    no = no[parte];
+  }
+  return typeof no === 'string' ? no : null;
+}
 
 /**
  * Há uma forma que este script NÃO lê, e é melhor declarar do que fingir: a
@@ -201,6 +303,7 @@ const TOKEN_SOLTO_RX = /(['"`])(--[A-Za-z0-9-]+)\1/g;
 
 const pascal = slug.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
 const linhasPorStack = {};
+const chavesMortas = [];   // tContent que não resolve no conteúdo compartilhado
 const naoLidos = {};   // stack -> quantos tokens ficaram fora do alcance do regex
 
 for (const stack of STACKS) {
@@ -213,14 +316,79 @@ for (const stack of STACKS) {
   const src = readFileSync(join(dir, arq), 'utf8');
   const linhas = [];
   LINHA_RX.lastIndex = 0;
+  const arquivoRel = relative(ROOT, join(dir, arq)).replace(/\\/g, '/');
   for (const m of src.matchAll(LINHA_RX)) {
     linhas.push({
       token: m[2],
       coluna: m[4].replace(/\\(['"`])/g, '$1').trim(),
-      arquivo: relative(ROOT, join(dir, arq)).replace(/\\/g, '/'),
+      arquivo: arquivoRel,
     });
   }
-  linhasPorStack[stack] = linhas;
+
+  // Linhas cuja coluna do meio vem do conteúdo compartilhado. A chave que não
+  // resolve entra como `null` e é CONTADA — chave errada num `tContent` é linha
+  // que o leitor vê vazia, e silenciá-la aqui repetiria o defeito que este
+  // bloco existe para corrigir.
+  LINHA_I18N_RX.lastIndex = 0;
+  for (const m of src.matchAll(LINHA_I18N_RX)) {
+    const texto = porChave(m[4]);
+    if (texto === null) { chavesMortas.push(`${stack}: ${m[4]}`); continue; }
+    linhas.push({ token: m[2], coluna: texto.trim(), arquivo: arquivoRel });
+  }
+
+  LINHA_TUPLA_RX.lastIndex = 0;
+  for (const m of src.matchAll(LINHA_TUPLA_RX)) {
+    linhas.push({ token: m[2], coluna: m[4].trim(), arquivo: arquivoRel });
+  }
+
+  // Tupla `{ token, k }`: o token é literal no código, a coluna vem do conteúdo
+  // por uma chave. Tenta as três colunas que o repositório usa.
+  BLOCO_RX.lastIndex = 0;
+  for (const bloco of src.match(BLOCO_RX) ?? []) {
+    // O bloco que JÁ traz a coluna do meio — literal ou por chamada — foi lido
+    // pelos dois caminhos acima, e a chave dele não é o que a página renderiza.
+    // O Angular é o caso: ele mapeia `value: className` e ignora o `class` do
+    // conteúdo, então resolver o `k` aqui inventava uma linha que ninguém vê.
+    // Foi falso positivo introduzido nesta mesma rodada, pego pela contagem por
+    // stack ter subido de 8 para 16.
+    if (/\b(?:value|target|parte|className):\s*(?:['"`]|[\w$.]+\()/.test(bloco)) continue;
+    const mt = CAMPO_TOKEN_RX.exec(bloco);
+    const mk = CAMPO_CHAVE_RX.exec(bloco);
+    if (!mt || !mk) continue;
+    const chave = mk[2];
+    const texto =
+      porChave(`tokens.table.${chave}.class`) ??
+      porChave(`tokens.table.${chave}.value`) ??
+      porChave(`tokens.items.${chave}.class`) ??
+      porChave(`tokens.items.${chave}.value`);
+    if (texto === null || texto === undefined) { chavesMortas.push(`${stack}: tokens.*.${chave}`); continue; }
+    linhas.push({ token: mt[2], coluna: texto.trim(), arquivo: arquivoRel });
+  }
+
+  // TERCEIRA forma: a docs page não escreve linha nenhuma — ela faz `.map()`
+  // sobre uma lista de chaves e monta cada linha com
+  // `tContent(`tokens.table.${k}.token`)`. Aí o NOME do token também mora no
+  // conteúdo compartilhado, e não há o que casar no código.
+  //
+  // Nesses casos a tabela inteira é legível direto do JSON, e é de lá que ela
+  // sai. Eram 43 slugs — accordion, composer inteiro, chat-thread, editor — em
+  // que este instrumento lia ZERO linhas e imprimia "nenhuma" nas duas seções
+  // de defeito.
+  if (/tokens\.(?:table|items)\.\$\{/.test(src) || /\btokens\?\.items\b/.test(src)) {
+    for (const l of linhasDoConteudo()) linhas.push({ ...l, arquivo: arquivoRel });
+  }
+
+  // DEDUPE por (token, coluna). Uma mesma linha pode casar em mais de um
+  // caminho — o Angular escreve `className` literal E `k`, e sem isto ela era
+  // contada duas vezes, dobrando o total daquela stack e podendo mascarar
+  // divergência real com volume.
+  const vistas = new Set();
+  linhasPorStack[stack] = linhas.filter((l) => {
+    const chave = `${l.token} ${l.coluna}`;
+    if (vistas.has(chave)) return false;
+    vistas.add(chave);
+    return true;
+  });
 
   // Se o arquivo NOMEIA tokens que a varredura de linha não alcançou, a forma
   // dele é uma que este script não lê (tupla + `.map()`). Registrar isso é o que
@@ -344,6 +512,23 @@ if (comoJson) {
 
 console.log(`\n# tabela de tokens — ${slug}`);
 console.log(`folha(s) com seletor ${PREFIXOS.join(' ou ')}: ${folhasDoSlug.join(', ') || '(nenhuma)'}`);
+
+// Quantas linhas ENTRARAM na comparação, por stack. Vem antes de tudo porque é
+// o número que diz se "nenhuma" abaixo significa "fecha" ou "não comparei
+// nada" — e por meio ano significou a segunda coisa em metade das docs pages,
+// em silêncio.
+const totalLinhas = Object.values(linhasPorStack).reduce((s, l) => s + l.length, 0);
+console.log(
+  `linhas comparadas: ${totalLinhas} — ` +
+    STACKS.map((s) => `${s}:${(linhasPorStack[s] ?? []).length}`).join(' '),
+);
+if (!totalLinhas) {
+  console.log('   ⚠ ZERO linhas lidas. As seções abaixo estão vazias por AUSÊNCIA,');
+  console.log('     não por acerto — este slug não foi verificado.');
+}
+if (chavesMortas.length) {
+  console.log(`   ⚠ ${chavesMortas.length} chave(s) de conteúdo que não resolvem: ${chavesMortas.slice(0, 5).join(' · ')}`);
+}
 
 console.log(`\n## 1. linhas que NÃO fecham com a folha (${problemas.length})`);
 if (!problemas.length) console.log('   nenhuma');
