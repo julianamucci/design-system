@@ -357,6 +357,23 @@ export const WithScrollingOverlay: Story = {
       await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
     });
 
+    await step("A leitura começa na PRIMEIRA cláusula", async () => {
+      // Esta rota existe para ler um documento longo, e por isso a posição de
+      // abertura é contrato, não detalhe. O foco inicial default da lib é o
+      // primeiro elemento tabulável do painel — que aqui é um botão do RODAPÉ,
+      // no fim de um contrato de vinte cláusulas. O navegador rola até ele, e
+      // quem abria o diálogo caía na última cláusula: overlay de 3116px em
+      // janela de 900px abria com `scrollTop` 2216, o máximo. Ver o comentário
+      // de `initialFocus` no primitivo.
+      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
+      await expect(ov.scrollTop).toBe(0);
+      // A outra metade, e é ela que dá dentes: se o foco voltar a pousar num
+      // controle do rodapé, o `scrollTop` acima deixa de ser zero.
+      await expect(p.contains(document.activeElement)).toBe(true);
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(footer.contains(document.activeElement)).toBe(false);
+    });
+
     await step("O painel entra no fluxo, e o cabeçalho sobe junto", async () => {
       // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
       // se move com a rolagem do overlay, e é isso que a asserção mede.
@@ -367,6 +384,19 @@ export const WithScrollingOverlay: Story = {
       ov.scrollTop = 120;
       await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
       ov.scrollTop = 0;
+    });
+
+    await step("Clique no painel NÃO fecha, mesmo borbulhando até o overlay", async () => {
+      // Nesta rota o painel é FILHO do overlay, então o clique dentro dele
+      // borbulha até quem dispensa. Nesta stack não há guarda de `target`
+      // escrita à mão, e a leitura da fonte dizia que ela é dispensável —
+      // `useDismiss` decide por `isEventWithinFloatingTree`, que compara o
+      // alvo com o elemento flutuante em vez de olhar o aninhamento. Isto aqui
+      // é a MEDIDA dessa leitura: sem ela, a afirmação valia para o código que
+      // se leu, não para o que o navegador executa.
+      const title = p.querySelector<HTMLElement>('[data-slot="dialog-title"]')!;
+      await userEvent.click(title);
+      await expect(document.querySelector('[data-slot="dialog-content"]')).toBeInTheDocument();
     });
 
     await step("Não há região rolável aninhada nesta rota", async () => {

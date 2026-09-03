@@ -132,6 +132,7 @@ function DialogContent({
   children,
   showCloseButton = true,
   scroll = false,
+  ref,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
@@ -145,8 +146,24 @@ function DialogContent({
   scroll?: boolean
 }) {
   const modal = React.useContext(DialogModalContext)
+
+  /*
+   * O painel precisa de ref PRÓPRIO por causa da rota B, e o de quem chama não
+   * pode ser perdido no caminho — daí a composição abaixo.
+   */
+  const painelRef = React.useRef<HTMLDivElement | null>(null)
+  const guardarPainel = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      painelRef.current = node
+      if (typeof ref === "function") ref(node)
+      else if (ref) (ref as React.RefObject<HTMLDivElement | null>).current = node
+    },
+    [ref]
+  )
+
   const popup = (
     <DialogPrimitive.Popup
+      ref={guardarPainel}
       data-slot="dialog-content"
       className={cn(
         "nds-dialog-content",
@@ -154,6 +171,25 @@ function DialogContent({
         className
       )}
       aria-modal={modal === true ? "true" : undefined}
+      /*
+       * Rota B: o foco inicial pousa no PAINEL, e não no primeiro tabulável.
+       *
+       * O default do base-ui é "primeiro elemento tabulável dentro do popup".
+       * Na rota A isso é inofensivo — o painel é `position: fixed` e não rola,
+       * então tanto faz onde o foco pousa. Na rota B o painel está no fluxo do
+       * overlay, que É a área de rolagem: o primeiro tabulável de um contrato
+       * longo é o botão do RODAPÉ, e o navegador rola até ele para trazê-lo à
+       * vista. Medido nesta stack: overlay de 3116px em janela de 900px abria
+       * com `scrollTop` 2216 — o máximo. Quem abria o contrato caía na última
+       * cláusula, e a rota existe justamente para ler da primeira.
+       *
+       * O painel já é alvo válido: o base-ui lhe dá `tabindex="-1"`. Focá-lo
+       * também é o que a APG recomenda para diálogo de muito conteúdo, e deixa
+       * o Tab seguinte cair no primeiro controle, na ordem natural.
+       *
+       * Antes do espalhamento de propósito: quem compõe pode passar o seu.
+       */
+      initialFocus={scroll ? painelRef : undefined}
       {...props}
     >
       {children}
