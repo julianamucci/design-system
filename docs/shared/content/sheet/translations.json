@@ -311,12 +311,16 @@
         },
         "width": {
           "class": "nds-sheet-content",
-          "part": "Largura do painel à esquerda e à direita, com teto em --sheet-max-width"
+          "part": "Largura do painel à esquerda e à direita"
+        },
+        "maxWidth": {
+          "class": "nds-sheet-content",
+          "part": "Teto da largura do painel à esquerda e à direita"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Largura do painel: declare as custom properties, não uma classe de largura.\n   As regras de lado são (0,2,0) e nenhum utilitário (0,1,0) as vence — quem\n   declara a custom property na mesma caixa ganha, venha de onde vier. */\n.painel-largo {\n  --sheet-width: 90%;\n  --sheet-max-width: 33.75rem;\n}"
+        "web": "/* Largura do painel: declare as custom properties, não uma classe de largura.\n   As regras de lado são (0,2,0) e nenhum utilitário (0,1,0) as vence — quem\n   declara a custom property na mesma caixa ganha, venha de onde vier.\n   Os defaults (75% e 24rem) são declarados em :root pela folha do painel;\n   redefinir aqui é sobrescrever a herança, e declaração vence herança. */\n.painel-largo {\n  --sheet-width: 90%;\n  --sheet-max-width: 33.75rem;\n}"
       }
     },
     "accessibility": {
@@ -793,12 +797,16 @@
         },
         "width": {
           "class": "nds-sheet-content",
-          "part": "Panel width on the left and right, capped by --sheet-max-width"
+          "part": "Panel width on the left and right"
+        },
+        "maxWidth": {
+          "class": "nds-sheet-content",
+          "part": "Cap on the panel width on the left and right"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Panel width: declare the custom properties, not a width class.\n   The side rules are (0,2,0) and no utility (0,1,0) beats them — whoever\n   declares the custom property on the same box wins, wherever it comes from. */\n.painel-largo {\n  --sheet-width: 90%;\n  --sheet-max-width: 33.75rem;\n}"
+        "web": "/* Panel width: declare the custom properties, not a width class.\n   The side rules are (0,2,0) and no utility (0,1,0) beats them — whoever\n   declares the custom property on the same box wins, wherever it comes from.\n   The defaults (75% and 24rem) are declared on :root by the panel stylesheet;\n   redefining here overrides the inherited value, and a declaration beats inheritance. */\n.painel-largo {\n  --sheet-width: 90%;\n  --sheet-max-width: 33.75rem;\n}"
       }
     },
     "accessibility": {
@@ -1275,12 +1283,16 @@
         },
         "width": {
           "class": "nds-sheet-content",
-          "part": "Ancho del panel a la izquierda y a la derecha, con tope en --sheet-max-width"
+          "part": "Ancho del panel a la izquierda y a la derecha"
+        },
+        "maxWidth": {
+          "class": "nds-sheet-content",
+          "part": "Tope del ancho del panel a la izquierda y a la derecha"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Ancho del panel: declara las custom properties, no una clase de ancho.\n   Las reglas de lado son (0,2,0) y ningún utilitario (0,1,0) las vence — quien\n   declara la custom property en la misma caja gana, venga de donde venga. */\n.painel-largo {\n  --sheet-width: 90%;\n  --sheet-max-width: 33.75rem;\n}"
+        "web": "/* Ancho del panel: declara las custom properties, no una clase de ancho.\n   Las reglas de lado son (0,2,0) y ningún utilitario (0,1,0) las vence — quien\n   declara la custom property en la misma caja gana, venga de donde venga.\n   Los valores por defecto (75% y 24rem) se declaran en :root en la hoja del panel;\n   redefinir aquí sobrescribe la herencia, y una declaración vence a la herencia. */\n.painel-largo {\n  --sheet-width: 90%;\n  --sheet-max-width: 33.75rem;\n}"
       }
     },
     "accessibility": {

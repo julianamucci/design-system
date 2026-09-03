@@ -3,12 +3,12 @@
     "title": "Drawer",
     "category": "Overlay",
     "type": "Componente",
-    "description": "Painel deslizante mobile-first que entra por uma das bordas da tela, com véu, foco preso e saída explícita.",
+    "description": "Painel deslizante mobile-first que entra por uma das bordas da tela, com véu, foco preso, arraste para dispensar e saída explícita.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentação do Drawer: painel deslizante com 4 direções, foco preso, corpo rolável e WCAG 2.2 AA.",
-      "aiSummary": "Componente Drawer mobile-first que renderiza um painel deslizante com 4 direções (bottom/top/left/right), com fechamento por Escape, por clique fora e por botão explícito, focus trap e overlay.",
-      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, painel deslizante, focus trap, corpo rolável, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "description": "Documentação do Drawer: painel deslizante com 4 direções, arraste para dispensar, foco preso, corpo rolável e WCAG 2.2 AA.",
+      "aiSummary": "Componente Drawer mobile-first que renderiza um painel deslizante com 4 direções (bottom/top/left/right), com fechamento por Escape, por clique fora, por botão explícito e por arraste para fora da tela, focus trap e overlay.",
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, painel deslizante, focus trap, arraste para dispensar, corpo rolável, WCAG 2.2, WCAG 2.5.7, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -120,7 +120,7 @@
         "item1": "Fluxos mobile em que o painel entra pela borda de baixo.",
         "item2": "Painéis laterais com formulários ou filtros.",
         "item3": "Menu de navegação ou seletor sem hierarquia complexa.",
-        "item4": "Conteúdo dispensável, que sai por Escape, clique no véu ou botão do rodapé."
+        "item4": "Conteúdo dispensável, que sai por Escape, clique no véu, botão do rodapé ou arraste do painel para fora da tela."
       },
       "dont": {
         "title": "Não use quando",
@@ -158,7 +158,7 @@
         }
       },
       "styles": {
-        "bottom": "Padrão mobile-first: entra por baixo, com a alça visível e teto de 80% da altura da tela; cantos arredondados no topo.",
+        "bottom": "Padrão mobile-first: entra por baixo, com a alça visível — a afordância do arraste — e teto de 80% da altura da tela; cantos arredondados no topo.",
         "top": "Entra por cima, com os cantos arredondados embaixo; útil para notificações ou seletores rápidos.",
         "left": "Painel lateral à esquerda: 75% da largura no mobile e teto de 24rem a partir de 40rem de viewport, pelos tokens de largura; cantos arredondados à direita.",
         "right": "Painel lateral à direita (a alternativa de desktop para edição e filtros): mesma régua de largura da esquerda, com os cantos arredondados à esquerda."
@@ -187,7 +187,7 @@
       "open": {
         "label": "Aberto",
         "trigger": "click trigger / defaultOpen=true",
-        "behavior": "Painel visível com véu; foco preso dentro; Escape, clique no véu e a saída do rodapé fecham."
+        "behavior": "Painel visível com véu; foco preso dentro; Escape, clique no véu, a saída do rodapé e o arraste do painel para fora da tela fecham."
       },
       "controlled": {
         "label": "Controlado",
@@ -242,7 +242,7 @@
           "type": "boolean",
           "default": "true",
           "required": "Não",
-          "description": "Permite fechar por Escape e por clique no véu."
+          "description": "Permite fechar por Escape, por clique no véu e por arraste do painel."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -278,16 +278,24 @@
         },
         "handle": {
           "class": "nds-drawer-handle",
-          "part": "Alça do painel, visível apenas na direção de baixo"
+          "part": "Alça do painel, afordância do arraste, visível apenas na direção de baixo"
         },
         "rounded": {
           "class": "nds-drawer-content",
           "part": "Cantos arredondados no lado oposto ao da entrada"
+        },
+        "width": {
+          "class": "nds-drawer-content",
+          "part": "Largura do painel à esquerda e à direita"
+        },
+        "maxWidth": {
+          "class": "nds-drawer-content",
+          "part": "Teto da largura do painel lateral, a partir de 40rem de viewport"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Override de véu para tema custom: redeclare o token, não a cor.\n   Assim o véu continua sendo um ponto só, e o alfa segue no uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Largura do painel lateral: custom property, nunca classe de largura.\n   As regras de direção são mais específicas do que qualquer utilitária,\n   então uma classe de largura chega ao elemento e não pinta nada. */\n.painel-filtros {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
+        "web": "/* Override de véu para tema custom: redeclare o token, não a cor.\n   Assim o véu continua sendo um ponto só, e o alfa segue no uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Largura do painel lateral: custom property, nunca classe de largura.\n   As regras de direção são mais específicas do que qualquer utilitária,\n   então uma classe de largura chega ao elemento e não pinta nada.\n   Os defaults (75% e 24rem) são declarados em :root pela folha do painel;\n   redefinir aqui é sobrescrever a herança, e declaração vence herança. */\n.painel-filtros {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
       }
     },
     "accessibility": {
@@ -298,7 +306,7 @@
         "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> quando presente.",
         "item3": "Focus trap automático: Tab/Shift+Tab circula apenas dentro do Content quando aberto.",
         "item4": "ESC fecha o drawer (quando <code>dismissible=true</code>).",
-        "item5": "Arrastar o painel é um extra de ponteiro onde a plataforma o oferece — nunca o único caminho. Escape, clique no véu e o botão do rodapé cobrem o mesmo objetivo por teclado (WCAG 2.5.7).",
+        "item5": "Arrastar o painel para fora da tela o dispensa, e isso é um extra de ponteiro — nunca o único caminho. Escape, clique no véu e o botão do rodapé cobrem o mesmo objetivo sem trajeto de ponteiro (WCAG 2.5.7). O arraste não faz mais nada além de dispensar: não redimensiona e não para em posição intermediária.",
         "item6": "Painel e véu já param de animar sob <code>prefers-reduced-motion</code>. Animação própria que você acrescentar precisa parar junto — a classe <code>nds-motion-reduce-none</code> faz isso.",
         "item7": "O corpo rolável entra na ordem de tabulação (WCAG 2.1.1) e recebe <code>role=\"group\"</code> quando você lhe dá um nome acessível; sem nome ele fica sem papel, porque nome em elemento sem papel é descartado pelo leitor de tela."
       },
@@ -345,8 +353,8 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Gesto de arrastar</strong>: o fechamento por arraste é um extra de ponteiro, nunca o único caminho. Escape, clique no overlay e o botão de fechar do rodapé cobrem o mesmo objetivo por teclado, então nenhuma ação depende de movimento de ponteiro (WCAG 2.5.7).",
-      "item2": "<strong>Aninhamento</strong>: nunca aninhe Drawers — quebra focus trap e gestos. Para fluxos multi-step, use Stepper dentro do Drawer.",
+      "item1": "<strong>Gesto de arrastar</strong>: arrastar o painel na direção de entrada o dispensa; soltar antes de 25% do tamanho do painel (e devagar) o traz de volta. É um extra de ponteiro, nunca o único caminho — Escape, clique no véu e o botão de fechar do rodapé cobrem o mesmo objetivo sem trajeto (WCAG 2.5.7). O gesto não redimensiona nem para no meio, e é por isso que nenhuma capacidade dele fica sem alternativa.",
+      "item2": "<strong>Aninhamento</strong>: nunca aninhe Drawers — quebra o focus trap e o gesto. Para fluxos multi-step, use Stepper dentro do Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> é o padrão; outros valores funcionam mas são exceções para casos específicos.",
       "item4": "<strong>Portal</strong>: DrawerContent renderiza fora de #storybook-root — testes com axe podem precisar checar <code>document.body</code>.",
       "item5": "<strong>contain: layout</strong>: em previews de Storybook, aplicar <code>contain: layout</code> no wrapper para confinar o portal (ver PATCHES.md#sidebar)."
@@ -392,7 +400,17 @@
         },
         "item7": {
           "action": "Com a dispensa por ponteiro desligada, clicar no véu",
-          "result": "O painel continua aberto, e a saída explícita do rodapé continua fechando",
+          "result": "O painel continua aberto, o arraste também não o dispensa, e a saída explícita do rodapé continua fechando",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Arrastar o painel na direção de entrada e soltar depois de um quarto do seu tamanho",
+          "result": "O painel é dispensado, e o foco volta ao gatilho",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Arrastar o painel poucos pixels e soltar",
+          "result": "O painel volta ao repouso, sem transform residual e sem fechar",
           "priority": "medium"
         }
       },
@@ -405,7 +423,8 @@
         "item4": "Focus trap funcional: Tab não escapa do DrawerContent",
         "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.1.1, 2.4.3)",
         "item6": "Contraste mínimo 4.5:1 entre o texto e o fundo do painel (WCAG 1.4.3)",
-        "item7": "O corpo rolável é alcançável por teclado (tabindex=0) e só recebe role=group quando tem nome acessível (WCAG 2.1.1)"
+        "item7": "O corpo rolável é alcançável por teclado (tabindex=0) e só recebe role=group quando tem nome acessível (WCAG 2.1.1)",
+        "item8": "Tudo o que o arraste faz tem caminho sem trajeto de ponteiro: Escape, clique no véu e botão do rodapé (WCAG 2.5.7)"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -458,12 +477,12 @@
     "title": "Drawer",
     "category": "Overlay",
     "type": "Component",
-    "description": "Mobile-first sliding panel that enters from a screen edge, with a scrim, trapped focus, and an explicit way out.",
+    "description": "Mobile-first sliding panel that enters from a screen edge, with a scrim, trapped focus, drag-to-dismiss, and an explicit exit.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Drawer documentation: sliding panel with 4 directions, trapped focus, scrollable body, and WCAG 2.2 AA.",
-      "aiSummary": "Mobile-first Drawer component renders a sliding panel with 4 directions (bottom/top/left/right), closing via Escape, outside click, and an explicit button, with focus trap and overlay.",
-      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, sliding panel, focus trap, scrollable body, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "description": "Drawer documentation: sliding panel with 4 directions, drag to dismiss, trapped focus, scrollable body, and WCAG 2.2 AA.",
+      "aiSummary": "Mobile-first Drawer component that renders a sliding panel with 4 directions (bottom/top/left/right), closing by Escape, by clicking outside, by an explicit button, and by dragging the panel off screen, with a focus trap and an overlay.",
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, sliding panel, focus trap, drag to dismiss, scrollable body, WCAG 2.2, WCAG 2.5.7, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -575,7 +594,7 @@
         "item1": "Mobile flows where the panel enters from the bottom edge.",
         "item2": "Side panels with forms or filters.",
         "item3": "Navigation menu or selector without complex hierarchy.",
-        "item4": "Dismissible content that leaves by Escape, a click on the scrim, or a footer button."
+        "item4": "Dismissible content that leaves by Escape, a click on the scrim, a footer button, or by dragging the panel off screen."
       },
       "dont": {
         "title": "Do not use when",
@@ -613,7 +632,7 @@
         }
       },
       "styles": {
-        "bottom": "Mobile-first default: enters from below, with the handle visible and a cap of 80% of the screen height; rounded corners on top.",
+        "bottom": "Mobile-first default: enters from below, with the handle visible — the affordance for the drag — and a cap of 80% of the screen height; rounded corners on top.",
         "top": "Enters from above, with rounded corners at the bottom; useful for notifications or quick pickers.",
         "left": "Side panel on the left: 75% of the width on mobile and a 24rem cap from a 40rem viewport up, through the width tokens; rounded corners on the right.",
         "right": "Side panel on the right (the desktop alternative for editing and filters): the same width ruler as the left, with rounded corners on the left."
@@ -642,7 +661,7 @@
       "open": {
         "label": "Open",
         "trigger": "click trigger / defaultOpen=true",
-        "behavior": "Panel visible with the scrim; focus trapped inside; Escape, a click on the scrim, and the footer exit close it."
+        "behavior": "Panel visible with the scrim; focus trapped inside; Escape, a click on the scrim, the footer exit, and dragging the panel off screen close it."
       },
       "controlled": {
         "label": "Controlled",
@@ -697,7 +716,7 @@
           "type": "boolean",
           "default": "true",
           "required": "No",
-          "description": "Allows closing by Escape and by clicking the scrim."
+          "description": "Allows closing by Escape, by clicking the scrim, and by dragging the panel."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -733,16 +752,24 @@
         },
         "handle": {
           "class": "nds-drawer-handle",
-          "part": "Panel handle, visible only in the bottom direction"
+          "part": "Panel handle, the affordance for the drag, visible only in the bottom direction"
         },
         "rounded": {
           "class": "nds-drawer-content",
           "part": "Rounded corners on the side opposite the entry edge"
+        },
+        "width": {
+          "class": "nds-drawer-content",
+          "part": "Panel width on the left and right"
+        },
+        "maxWidth": {
+          "class": "nds-drawer-content",
+          "part": "Cap on the side panel width, from a 40rem viewport up"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Scrim override for a custom theme: redeclare the token, not the colour.\n   That keeps the scrim a single point, and the alpha stays at the use site. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Side panel width: custom property, never a width class.\n   The direction rules are more specific than any utility, so a width class\n   reaches the element and paints nothing. */\n.filters-panel {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
+        "web": "/* Scrim override for a custom theme: redeclare the token, not the colour.\n   That keeps the scrim a single point, and the alpha stays at the use site. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Side panel width: custom property, never a width class.\n   The direction rules are more specific than any utility, so a width class\n   reaches the element and paints nothing.\n   The defaults (75% and 24rem) are declared on :root by the panel stylesheet;\n   redefining here overrides the inherited value, and a declaration beats inheritance. */\n.filters-panel {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
       }
     },
     "accessibility": {
@@ -753,7 +780,7 @@
         "item2": "<code>DrawerDescription</code> optional — links <code>aria-describedby</code> when present.",
         "item3": "Automatic focus trap: Tab/Shift+Tab cycles only within Content when open.",
         "item4": "ESC closes the drawer (when <code>dismissible=true</code>).",
-        "item5": "Dragging the panel is a pointer extra where the platform offers it — never the only path. Escape, a click on the scrim, and the footer button cover the same goal from the keyboard (WCAG 2.5.7).",
+        "item5": "Dragging the panel off screen dismisses it, and that is a pointer extra — never the only path. Escape, a click on the scrim, and the footer button cover the same goal with no pointer path (WCAG 2.5.7). The drag does nothing beyond dismissing: it does not resize and does not rest at an intermediate position.",
         "item6": "Panel and scrim already stop animating under <code>prefers-reduced-motion</code>. Any animation you add on top has to stop as well — the <code>nds-motion-reduce-none</code> class does that.",
         "item7": "The scrollable body joins the tab order (WCAG 2.1.1) and takes <code>role=\"group\"</code> when you give it an accessible name; without a name it carries no role, because a name on a roleless element is discarded by the screen reader."
       },
@@ -800,8 +827,8 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Drag gesture</strong>: closing by dragging is a pointer extra, never the only path. Escape, overlay click, and the footer close button cover the same goal from the keyboard, so no action depends on pointer movement (WCAG 2.5.7).",
-      "item2": "<strong>Nesting</strong>: never nest Drawers — breaks focus trap and gestures. For multi-step flows, use Stepper inside Drawer.",
+      "item1": "<strong>Drag gesture</strong>: dragging the panel toward its entry edge dismisses it; releasing before a quarter of the panel size (and slowly) brings it back. It is a pointer extra, never the only path — Escape, an overlay click, and the footer close button cover the same goal with no path (WCAG 2.5.7). The gesture neither resizes nor rests midway, which is why none of its capabilities is left without an alternative.",
+      "item2": "<strong>Nesting</strong>: never nest Drawers — it breaks the focus trap and the gesture. For multi-step flows, use Stepper inside Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> is the default; other values work but are exceptions for specific cases.",
       "item4": "<strong>Portal</strong>: DrawerContent renders outside #storybook-root — axe tests may need to check <code>document.body</code>.",
       "item5": "<strong>contain: layout</strong>: in Storybook previews, apply <code>contain: layout</code> on the wrapper to confine the portal (see PATCHES.md#sidebar)."
@@ -847,7 +874,17 @@
         },
         "item7": {
           "action": "With pointer dismissal turned off, click the scrim",
-          "result": "The panel stays open, and the explicit footer exit still closes it",
+          "result": "The panel stays open, the drag does not dismiss it either, and the explicit footer exit still closes it",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Drag the panel toward its entry edge and release past a quarter of its size",
+          "result": "The panel is dismissed and focus returns to the trigger",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Drag the panel a few pixels and release",
+          "result": "The panel settles back, with no leftover transform and without closing",
           "priority": "medium"
         }
       },
@@ -860,7 +897,8 @@
         "item4": "Working focus trap: Tab does not escape DrawerContent",
         "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.1.1, 2.4.3)",
         "item6": "Minimum 4.5:1 contrast between text and the panel background (WCAG 1.4.3)",
-        "item7": "The scrollable body is keyboard reachable (tabindex=0) and only takes role=group when it has an accessible name (WCAG 2.1.1)"
+        "item7": "The scrollable body is keyboard reachable (tabindex=0) and only takes role=group when it has an accessible name (WCAG 2.1.1)",
+        "item8": "Everything the drag does has a path with no pointer trajectory: Escape, a scrim click, and the footer button (WCAG 2.5.7)"
       },
       "visual": {
         "title": "Visual Regression",
@@ -913,12 +951,12 @@
     "title": "Drawer",
     "category": "Overlay",
     "type": "Componente",
-    "description": "Panel deslizante mobile-first que entra desde un borde de la pantalla, con velo, foco atrapado y salida explícita.",
+    "description": "Panel deslizante mobile-first que entra desde un borde de la pantalla, con velo, foco atrapado, arrastre para descartar y salida explícita.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentación de Drawer: panel deslizante con 4 direcciones, foco atrapado, cuerpo desplazable y WCAG 2.2 AA.",
-      "aiSummary": "Componente Drawer mobile-first que renderiza un panel deslizante con 4 direcciones (bottom/top/left/right), con cierre por Escape, clic fuera y botón explícito, focus trap y overlay.",
-      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, panel deslizante, focus trap, cuerpo desplazable, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "description": "Documentación de Drawer: panel deslizante con 4 direcciones, arrastre para descartar, foco atrapado, cuerpo desplazable y WCAG 2.2 AA.",
+      "aiSummary": "Componente Drawer mobile-first que renderiza un panel deslizante con 4 direcciones (bottom/top/left/right), con cierre por Escape, clic fuera, botón explícito y arrastre del panel fuera de la pantalla, focus trap y overlay.",
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, panel deslizante, focus trap, arrastre para descartar, cuerpo desplazable, WCAG 2.2, WCAG 2.5.7, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demostración",
@@ -1030,7 +1068,7 @@
         "item1": "Flujos mobile en los que el panel entra por el borde de abajo.",
         "item2": "Paneles laterales con formularios o filtros.",
         "item3": "Menú de navegación o selector sin jerarquía compleja.",
-        "item4": "Contenido dispensable, que sale con Escape, clic en el velo o botón del pie."
+        "item4": "Contenido dispensable, que sale con Escape, clic en el velo, botón del pie o arrastre del panel fuera de la pantalla."
       },
       "dont": {
         "title": "No uses cuando",
@@ -1068,7 +1106,7 @@
         }
       },
       "styles": {
-        "bottom": "Predeterminado mobile-first: entra desde abajo, con el asa visible y techo del 80% de la altura de la pantalla; esquinas redondeadas arriba.",
+        "bottom": "Predeterminado mobile-first: entra desde abajo, con el asa visible —la afordancia del arrastre— y techo del 80% de la altura de la pantalla; esquinas redondeadas arriba.",
         "top": "Entra desde arriba, con las esquinas redondeadas abajo; útil para notificaciones o selectores rápidos.",
         "left": "Panel lateral a la izquierda: 75% del ancho en mobile y techo de 24rem a partir de 40rem de viewport, por los tokens de ancho; esquinas redondeadas a la derecha.",
         "right": "Panel lateral a la derecha (la alternativa de escritorio para edición y filtros): la misma regla de ancho que la izquierda, con las esquinas redondeadas a la izquierda."
@@ -1097,7 +1135,7 @@
       "open": {
         "label": "Abierto",
         "trigger": "click trigger / defaultOpen=true",
-        "behavior": "Panel visible con velo; foco atrapado dentro; Escape, clic en el velo y la salida del pie lo cierran."
+        "behavior": "Panel visible con velo; foco atrapado dentro; Escape, clic en el velo, la salida del pie y el arrastre del panel fuera de la pantalla lo cierran."
       },
       "controlled": {
         "label": "Controlado",
@@ -1152,7 +1190,7 @@
           "type": "boolean",
           "default": "true",
           "required": "No",
-          "description": "Permite cerrar con Escape y con clic en el velo."
+          "description": "Permite cerrar con Escape, con clic en el velo y con arrastre del panel."
         }
       },
       "extensibilityTitle": "Extensibilidad",
@@ -1188,16 +1226,24 @@
         },
         "handle": {
           "class": "nds-drawer-handle",
-          "part": "Asa del panel, visible solo en la dirección de abajo"
+          "part": "Asa del panel, afordancia del arrastre, visible solo en la dirección de abajo"
         },
         "rounded": {
           "class": "nds-drawer-content",
           "part": "Esquinas redondeadas en el lado opuesto al de entrada"
+        },
+        "width": {
+          "class": "nds-drawer-content",
+          "part": "Ancho del panel a la izquierda y a la derecha"
+        },
+        "maxWidth": {
+          "class": "nds-drawer-content",
+          "part": "Tope del ancho del panel lateral, a partir de 40rem de viewport"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Override de velo para tema custom: redeclara el token, no el color.\n   Así el velo sigue siendo un punto solo, y el alfa queda en el uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Ancho del panel lateral: custom property, nunca clase de ancho.\n   Las reglas de dirección son más específicas que cualquier utilitaria, así\n   que una clase de ancho llega al elemento y no pinta nada. */\n.panel-filtros {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
+        "web": "/* Override de velo para tema custom: redeclara el token, no el color.\n   Así el velo sigue siendo un punto solo, y el alfa queda en el uso. */\n[data-slot='drawer-overlay'] {\n  --overlay: 220 40% 10%;\n  backdrop-filter: blur(8px);\n}\n\n/* Ancho del panel lateral: custom property, nunca clase de ancho.\n   Las reglas de dirección son más específicas que cualquier utilitaria, así\n   que una clase de ancho llega al elemento y no pinta nada.\n   Los valores por defecto (75% y 24rem) se declaran en :root en la hoja del panel;\n   redefinir aquí sobrescribe la herencia, y una declaración vence a la herencia. */\n.panel-filtros {\n  --drawer-width: 90%;\n  --drawer-max-width: 28rem;\n}"
       }
     },
     "accessibility": {
@@ -1208,7 +1254,7 @@
         "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> cuando está presente.",
         "item3": "Focus trap automático: Tab/Shift+Tab circula solo dentro del Content cuando está abierto.",
         "item4": "ESC cierra el drawer (cuando <code>dismissible=true</code>).",
-        "item5": "Arrastrar el panel es un extra de puntero donde la plataforma lo ofrece — nunca el único camino. Escape, clic en el velo y el botón del pie cubren el mismo objetivo desde el teclado (WCAG 2.5.7).",
+        "item5": "Arrastrar el panel fuera de la pantalla lo descarta, y eso es un extra de puntero — nunca el único camino. Escape, clic en el velo y el botón del pie cubren el mismo objetivo sin trayecto de puntero (WCAG 2.5.7). El arrastre no hace nada más que descartar: no redimensiona y no se detiene en una posición intermedia.",
         "item6": "El panel y el velo ya dejan de animarse bajo <code>prefers-reduced-motion</code>. La animación propia que agregues también tiene que parar — la clase <code>nds-motion-reduce-none</code> hace eso.",
         "item7": "El cuerpo desplazable entra en el orden de tabulación (WCAG 2.1.1) y recibe <code>role=\"group\"</code> cuando le das un nombre accesible; sin nombre no lleva papel, porque un nombre en un elemento sin papel lo descarta el lector de pantalla."
       },
@@ -1255,8 +1301,8 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Gesto de arrastre</strong>: el cierre por arrastre es un extra de puntero, nunca el único camino. Escape, clic en el overlay y el botón de cerrar del pie cubren el mismo objetivo desde el teclado, así que ninguna acción depende del movimiento del puntero (WCAG 2.5.7).",
-      "item2": "<strong>Anidamiento</strong>: nunca anides Drawers — rompe focus trap y gestos. Para flujos multi-step, usa Stepper dentro del Drawer.",
+      "item1": "<strong>Gesto de arrastre</strong>: arrastrar el panel hacia su borde de entrada lo descarta; soltar antes del 25% del tamaño del panel (y despacio) lo devuelve. Es un extra de puntero, nunca el único camino — Escape, clic en el overlay y el botón de cerrar del pie cubren el mismo objetivo sin trayecto (WCAG 2.5.7). El gesto no redimensiona ni se detiene a mitad de camino, y por eso ninguna de sus capacidades queda sin alternativa.",
+      "item2": "<strong>Anidamiento</strong>: nunca anides Drawers — rompe el focus trap y el gesto. Para flujos multi-step, usa Stepper dentro del Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> es el predeterminado; otros valores funcionan pero son excepciones para casos específicos.",
       "item4": "<strong>Portal</strong>: DrawerContent renderiza fuera de #storybook-root — los tests con axe pueden necesitar revisar <code>document.body</code>.",
       "item5": "<strong>contain: layout</strong>: en previews de Storybook, aplica <code>contain: layout</code> en el wrapper para confinar el portal (ver PATCHES.md#sidebar)."
@@ -1302,7 +1348,17 @@
         },
         "item7": {
           "action": "Con el descarte por puntero desactivado, hacer clic en el velo",
-          "result": "El panel sigue abierto, y la salida explícita del pie lo sigue cerrando",
+          "result": "El panel sigue abierto, el arrastre tampoco lo descarta, y la salida explícita del pie sigue cerrando",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Arrastrar el panel hacia su borde de entrada y soltar pasado un cuarto de su tamaño",
+          "result": "El panel se descarta y el foco vuelve al disparador",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Arrastrar el panel unos pocos píxeles y soltar",
+          "result": "El panel vuelve al reposo, sin transform residual y sin cerrar",
           "priority": "medium"
         }
       },
@@ -1315,7 +1371,8 @@
         "item4": "Focus trap funcional: Tab no escapa de DrawerContent",
         "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.1.1, 2.4.3)",
         "item6": "Contraste mínimo 4.5:1 entre el texto y el fondo del panel (WCAG 1.4.3)",
-        "item7": "El cuerpo desplazable es alcanzable por teclado (tabindex=0) y solo recibe role=group cuando tiene nombre accesible (WCAG 2.1.1)"
+        "item7": "El cuerpo desplazable es alcanzable por teclado (tabindex=0) y solo recibe role=group cuando tiene nombre accesible (WCAG 2.1.1)",
+        "item8": "Todo lo que hace el arrastre tiene camino sin trayecto de puntero: Escape, clic en el velo y botón del pie (WCAG 2.5.7)"
       },
       "visual": {
         "title": "Regresión Visual",
