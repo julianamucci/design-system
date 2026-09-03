@@ -235,6 +235,67 @@ function ligacoesSemMembro(texto: string): string[] {
   return [...soltos].sort();
 }
 
+/**
+ * A MESMA pergunta de `ligacoesSemMembro`, feita ao TEXTO do módulo.
+ *
+ * Por que uma segunda passagem existe: a primeira chama cada construtor UMA
+ * vez, com os padrões, então só o ramo default é conferido. Medido em
+ * 2026-09-03 — 69 dos 82 módulos desta stack mudam a forma do snippet conforme
+ * o arg, e o `scroll-area` monta um conteúdo diferente por orientação: três dos
+ * quatro laços dele ficaram fora da medição e precisaram de leitura humana.
+ *
+ * Declarar os casos módulo a módulo custaria 342 arquivos nas cinco stacks, e
+ * cada caso esquecido voltaria a ser silêncio — a mesma armadilha do portão que
+ * encolhe sozinho. Ler o texto vê TODOS os ramos de uma vez, ao custo de uma
+ * mudança por stack.
+ *
+ * O QUE ELA NÃO VÊ, e por isso a primeira passagem continua:
+ *
+ *  · binding com interpolação (`[size]="${size}"`) — o `${…}` é apagado antes
+ *    da varredura, porque ali o nome é do CONSTRUTOR e não da classe do
+ *    exemplo, e contá-lo inventaria membro faltando em todo módulo;
+ *  · nome declarado no ramo ERRADO: ligado no ramo A e declarado só no B. Aqui
+ *    o membro ao menos existe no exemplo, e o caso é mais raro que o que isto
+ *    passa a pegar.
+ */
+function ligacoesSemMembroNoTexto(bruto: string): string[] {
+  // Os membros que o snippet PUBLICA, nas DUAS formas em que esta stack os
+  // escreve — e a segunda foi um falso positivo meu antes de entrar aqui.
+  //
+  //  1. bloco literal: `export class Exemplo { readonly x = …; }`
+  //  2. montada por ARRAY DE STRINGS: metade dos módulos monta o corpo com
+  //     `['export class Example {', ...body, '}'].join('\n')`, e ali o membro
+  //     mora numa linha citada solta (`'  readonly statuses = RUN_STATUSES;'`).
+  //     Exigir as chaves em volta acusou doze módulos CORRETOS de uma vez.
+  const membros = new Set<string>();
+  for (const cls of bruto.matchAll(/export class \w+ \{([\s\S]*?)\n\}/g)) {
+    for (const m of cls[1]!.matchAll(
+      /^\s*(?:readonly|protected|private|public|static)?\s*(?:readonly\s+)?([A-Za-z_$][\w$]*)\s*[=(:]/gm,
+    )) {
+      membros.add(m[1]!);
+    }
+  }
+  for (const m of bruto.matchAll(/['"`]\s*(?:readonly\s+|protected\s+|private\s+)?([A-Za-z_$][\w$]*)\s*=/g)) {
+    membros.add(m[1]!);
+  }
+
+  // `${…}` sai ANTES de tudo: o que está lá dentro é do construtor.
+  const texto = bruto.replace(/\$\{[^}]*\}/g, '');
+
+  const locais = new Set<string>();
+  for (const m of texto.matchAll(/@for\s*\(\s*([A-Za-z_$][\w$]*)\s+of\s/g)) locais.add(m[1]!);
+  for (const m of texto.matchAll(/;\s*as\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  for (const m of texto.matchAll(/@let\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  for (const m of texto.matchAll(/#([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+
+  const soltos = new Set<string>();
+  for (const m of texto.matchAll(/@for\s*\(\s*[A-Za-z_$][\w$]*\s+of\s+([A-Za-z_$][\w$]*)/g)) {
+    const nome = m[1]!;
+    if (!NAO_E_MEMBRO.has(nome) && !membros.has(nome) && !locais.has(nome)) soltos.add(nome);
+  }
+  return [...soltos].sort();
+}
+
 describe('transforms do painel Code', () => {
   it('existe pelo menos um módulo de source por varredura', () => {
     expect(caminhos.length).toBeGreaterThan(0);
@@ -249,6 +310,17 @@ describe('transforms do painel Code', () => {
     describe(caminho, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
+      });
+
+      // Vale para TODOS os ramos, e não só para o que os args padrão produzem.
+      it('nenhum ramo liga laço sobre membro que a classe não declara', () => {
+        const bruto = fontes[caminho];
+        if (bruto === undefined) return;
+        const soltos = ligacoesSemMembroNoTexto(bruto);
+        expect(
+          soltos,
+          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhuma classe do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
+        ).toEqual([]);
       });
 
       // Esta varredura não filtra por sufixo, então ela não perde teste quando
