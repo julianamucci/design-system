@@ -5,80 +5,11 @@ import { NdsToggle } from './toggle';
 import {
   NdsToggleGroup,
   NdsToggleGroupIcon,
-  type ToggleGroupType,
-  type ToggleGroupOrientation,
 } from './toggle-group';
 import { NdsToggleGroupDocs } from '@/components/docs/ToggleGroupDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import type { ToggleVariant } from './toggle';
-
-type ToggleGroupArgs = {
-  type: ToggleGroupType;
-  variant: ToggleVariant;
-  orientation: ToggleGroupOrientation;
-  disabled: boolean;
-  ariaLabel: string;
-  onValueChange?: (value: string | string[]) => void;
-};
-
-const LABELS = {
-  left: 'Alinhar à esquerda',
-  center: 'Centralizar',
-  right: 'Alinhar à direita',
-};
-
-/**
- * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da
- * story literalmente, com os bindings ligados aos args. O `transform` devolve o
- * uso real, já com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs> }): string {
-  const {
-    type = 'single',
-    variant = 'outline',
-    orientation = 'horizontal',
-    disabled = false,
-    ariaLabel = 'Alinhamento do texto',
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra no snippet — documentação que repete valor
-  // padrão ensina ruído.
-  const attrs = [
-    type === 'single' ? '' : `type="${type}"`,
-    variant === 'default' ? '' : `variant="${variant}"`,
-    orientation === 'horizontal' ? '' : `orientation="${orientation}"`,
-    disabled ? '[disabled]="true"' : '',
-    type === 'single' ? `defaultValue="left"` : `[defaultValue]="['left']"`,
-    // O grupo sem nome acessível anuncia só "barra de ferramentas".
-    `aria-label="${ariaLabel}"`,
-  ].filter(Boolean);
-
-  const variantItem = variant === 'default' ? '' : ` variant="${variant}"`;
-  const items = (['left', 'center', 'right'] as const)
-    .map(
-      (v) =>
-        `      <button ndsToggle${variantItem} value="${v}" aria-label="${LABELS[v]}">\n` +
-        `        <svg ndsToggleGroupIcon kind="align-${v}"></svg>\n` +
-        `      </button>`,
-    )
-    .join('\n');
-
-  return `import { NdsToggle } from '@/components/ui/toggle';
-import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group';
-
-@Component({
-  imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle],
-  template: \`
-    <div
-      ndsToggleGroup
-      ${attrs.join('\n      ')}
-    >
-${items}
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
+import { LABELS } from './toggle-group.fixtures';
+import { toggleGroupPlaygroundSource, type ToggleGroupArgs } from './toggle-group.source';
 
 const meta: Meta<ToggleGroupArgs> = {
   title: 'Primitives/Form/ToggleGroup',
@@ -132,7 +63,7 @@ type Story = StoryObj<ToggleGroupArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: toggleGroupPlaygroundSource } },
     covers: [
       'functional.item3',
       'functional.item4',

@@ -5,52 +5,7 @@ import { NdsSlider } from './slider';
 import { NdsSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { contextoHandleTrack, contrastHandleTrack } from '@shared/testing/slider-probe';
-
-type SliderArgs = {
-  value: number[];
-  min: number;
-  max: number;
-  step: number;
-  disabled: boolean;
-  ariaLabel: string;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SliderArgs> }): string {
-  const {
-    value = [50],
-    min = 0,
-    max = 100,
-    step = 1,
-    disabled = false,
-    ariaLabel = 'Volume',
-  } = ctx.args ?? {};
-
-  const attrs = [
-    `[(value)]="valor"`,
-    `[min]="${min}"`,
-    `[max]="${max}"`,
-    step !== 1 ? `[step]="${step}"` : '',
-    disabled ? '[disabled]="true"' : '',
-    `aria-label="${ariaLabel}"`,
-  ].filter(Boolean).join('\n    ');
-
-  return `import { signal } from '@angular/core';
-import { NdsSlider } from '@/components/ui/slider';
-
-@Component({
-  imports: [NdsSlider],
-  template: \`
-    <div ndsSlider
-      ${attrs}
-    ></div>
-  \`,
-})
-export class Exemplo {
-  // Um array: um item para valor único, dois para intervalo.
-  readonly valor = signal(${JSON.stringify(value)});
-}`;
-}
+import { sliderPlaygroundSource, type SliderArgs } from './slider.source';
 
 const meta: Meta<SliderArgs> = {
   title: 'Primitives/Form/Slider',
@@ -79,7 +34,7 @@ type Story = StoryObj<SliderArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: sliderPlaygroundSource } },
     covers: [
       'functional.item3',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item5',

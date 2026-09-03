@@ -6,67 +6,12 @@ import {
   NdsTabsList,
   NdsTabsTrigger,
   NdsTabsContent,
-  type TabsListVariant,
-  type TabsOrientation,
-  type TabsActivationMode,
 } from './tabs';
 import { NdsTabsDocs } from '@/components/docs/TabsDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { tabsPlaygroundSource, type TabsArgs } from './tabs.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type TabsArgs = {
-  orientation: TabsOrientation;
-  variant: TabsListVariant;
-  activationMode: TabsActivationMode;
-  onValueChange: (value: string) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story como está escrito — com os
- * bindings ligados aos args (`[orientation]="orientation"`). Isso é o andaime da
- * story, não o que alguém escreve para usar Tabs. O `transform` devolve o uso
- * real, com os valores atuais dos controls já resolvidos (ver a nota em
- * `separator.stories.ts`).
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<TabsArgs> }): string {
-  const {
-    orientation = 'horizontal',
-    variant = 'default',
-    activationMode = 'automatic',
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra: snippet que repete valor padrão ensina
-  // ruído a quem copia.
-  const root = ['ndsTabs', 'defaultValue="overview"']
-    .concat(orientation === 'horizontal' ? [] : [`orientation="${orientation}"`])
-    .join(' ');
-  const list = ['ndsTabsList', 'aria-label="Seções do componente"']
-    .concat(variant === 'default' ? [] : [`variant="${variant}"`])
-    .concat(activationMode === 'automatic' ? [] : [`activationMode="${activationMode}"`])
-    .join(' ');
-
-  return `import {
-  NdsTabs, NdsTabsList, NdsTabsTrigger, NdsTabsContent,
-} from '@/components/ui/tabs';
-
-@Component({
-  imports: [NdsTabs, NdsTabsList, NdsTabsTrigger, NdsTabsContent],
-  template: \`
-    <div ${root}>
-      <div ${list}>
-        <button ndsTabsTrigger value="overview">Visão geral</button>
-        <button ndsTabsTrigger value="properties">Propriedades</button>
-        <button ndsTabsTrigger value="examples">Exemplos</button>
-      </div>
-      <div ndsTabsContent value="overview">Conteúdo da visão geral</div>
-      <div ndsTabsContent value="properties">Lista de propriedades</div>
-      <div ndsTabsContent value="examples">Exemplos de uso</div>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<TabsArgs> = {
   title: 'Primitives/Navigation/Tabs',
@@ -114,7 +59,7 @@ type Story = StoryObj<TabsArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: tabsPlaygroundSource } },
     // `visual.item1` NÃO entra aqui: ele é "Default (3 tabs, primeira ativa)" e
     // o Chromatic fotografa o estado FINAL da play — que é a terceira aba
     // ativa, não a primeira. Quem cobre esse item é a story `Default` de

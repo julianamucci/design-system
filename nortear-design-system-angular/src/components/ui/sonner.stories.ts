@@ -1,78 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
-import { NdsToaster, toast, type ToastOptions, type ToastPosition, type ToastType } from './sonner';
+import { NdsToaster, toast, type ToastOptions } from './sonner';
 import { waitForToast, clearToasts, TEXTS } from './sonner.fixtures';
 import { NdsButton } from './button';
 import { NdsSonnerDocs } from '@/components/docs/SonnerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { sonnerPlaygroundSource, type SonnerArgs } from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type SonnerArgs = {
-  type: ToastType;
-  title: string;
-  description: string;
-  actionLabel: string;
-  position: ToastPosition;
-  richColors: boolean;
-  closeButton: boolean;
-  duration: number;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com o botão que só
- * existe para disparar a demonstração e com os bindings ligados aos controls. É
- * o que a pessoa copia, e não é o que ela deve escrever. Ver a nota em
- * `separator.stories.ts`.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SonnerArgs> }): string {
-  const {
-    type = 'success',
-    title = TEXTS.sucesso,
-    description = '',
-    actionLabel = '',
-    position = 'top-right',
-    richColors = true,
-    closeButton = false,
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra no snippet — documentação que repete valor
-  // padrão ensina ruído.
-  const tagAttrs = [
-    `position="${position}"`,
-    richColors ? '[richColors]="true"' : '',
-    closeButton ? '[closeButton]="true"' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const options = [
-    description ? `description: '${description}'` : '',
-    actionLabel ? `action: { label: '${actionLabel}', onClick: () => this.desfazer() }` : '',
-  ].filter(Boolean);
-
-  const call = type === 'default' ? 'toast' : `toast.${type}`;
-  const tagArgs = options.length
-    ? `'${title}', {\n      ${options.join(',\n      ')},\n    }`
-    : `'${title}'`;
-
-  return `import { NdsToaster, toast } from '@/components/ui/sonner';
-
-@Component({
-  imports: [NdsToaster],
-  // O Toaster entra UMA VEZ, no root da aplicação. \`toast()\` é chamado de
-  // qualquer lugar — não precisa de referência ao Toaster nem de injeção.
-  template: \`
-    <div ndsToaster ${tagAttrs}></div>
-  \`,
-})
-export class Exemplo {
-  confirmar(): void {
-    ${call}(${tagArgs});
-  }
-}`;
-}
 
 const meta: Meta<SonnerArgs> = {
   title: 'Primitives/Feedback/Sonner',
@@ -134,7 +70,7 @@ const meta: Meta<SonnerArgs> = {
   },
   args: {
     type: 'success',
-    title: TEXTS.sucesso,
+    title: TEXTS.success,
     description: '',
     actionLabel: '',
     position: 'top-right',
@@ -149,7 +85,7 @@ type Story = StoryObj<SonnerArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: sonnerPlaygroundSource } },
     covers: ['accessibility.item1', 'accessibility.item3'],
   },
   render: (args) => ({
@@ -191,7 +127,7 @@ export const Playground: Story = {
 
     await step('O disparo desenha a notificação na região do Toaster', async () => {
       await userEvent.click(canvas.getByRole('button', { name: 'Disparar notificação' }));
-      const toastEl = await waitForToast({ type: 'success', text: TEXTS.sucesso });
+      const toastEl = await waitForToast({ type: 'success', text: TEXTS.success });
       const region = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
       await expect(region.contains(toastEl)).toBe(true);
       await expect(region).toHaveAttribute('data-position', 'top-right');

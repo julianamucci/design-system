@@ -1,88 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn } from 'storybook/test';
-import { NDS_STEPPER, type StepperLabels } from './stepper';
+import { NDS_STEPPER } from './stepper';
 import { NdsStepperDocs } from '@/components/docs/StepperDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-// ─── Fixture ──────────────────────────────────────────────────────────────────
-//
-// Rótulo do fluxo e títulos das etapas moram em constantes porque a play os
-// procura pelo NOME ACESSÍVEL. Literal escrito duas vezes é o defeito clássico
-// aqui: a busca deixa de casar com a fixture e a story lança em vez de reprovar.
-
-const FLOW_LABEL = 'Progresso do cadastro';
-
-const STEP_TITLES = {
-  account: 'Conta',
-  address: 'Endereço',
-  payment: 'Pagamento',
-  review: 'Revisão',
-} as const;
-
-const STATE_LABELS: StepperLabels = {
-  completed: 'Etapa concluída',
-  current: 'Etapa atual',
-};
-
-/** Quantas etapas a fixture declara — a play compara a contagem com isto. */
-const TOTAL_STEPS = 4;
-
-type StepperArgs = {
-  value: number;
-  ariaLabel: string;
-  labels: StepperLabels;
-  onStepSelect: (step: number) => void;
-};
-
-// ─── Painel Code ──────────────────────────────────────────────────────────────
-//
-// O renderer imprime o `template` da story como está escrito, com os bindings
-// ligados aos args (`[value]="value"`). Isso é o andaime da story, não o que
-// alguém escreve para usar o Stepper. O `transform` devolve o uso real, com os
-// valores atuais dos controls já resolvidos.
-
-function playgroundSource(_gerado: string, ctx: { args?: Partial<StepperArgs> }): string {
-  const { value = 2, ariaLabel = FLOW_LABEL, labels = STATE_LABELS } = ctx.args ?? {};
-
-  const labelsLiteral = `{ completed: '${labels.completed ?? ''}', current: '${labels.current ?? ''}' }`;
-
-  return `import { NDS_STEPPER } from '@/components/ui/stepper';
-
-@Component({
-  imports: [NDS_STEPPER],
-  template: \`
-    <ol
-      ndsStepper
-      [value]="${value}"
-      aria-label="${ariaLabel}"
-      [labels]="${labelsLiteral}"
-      (stepSelect)="irPara($event)"
-    >
-      <li ndsStepperItem [step]="1">
-        <button ndsStepperTrigger>
-          <span ndsStepperIndicator></span>
-          <span ndsStepperTitle>${STEP_TITLES.account}</span>
-          <span ndsStepperDescription>Seus dados</span>
-        </button>
-        <div ndsStepperSeparator></div>
-      </li>
-
-      <li ndsStepperItem [step]="2">
-        <button ndsStepperTrigger>
-          <span ndsStepperIndicator></span>
-          <span ndsStepperTitle>${STEP_TITLES.address}</span>
-        </button>
-      </li>
-    </ol>
-  \`,
-})
-export class Exemplo {
-  irPara(etapa: number) {
-    // A aplicação decide para onde o fluxo vai; o componente só avisa.
-  }
-}`;
-}
+import { FLOW_LABEL, STATE_LABELS, STEP_TITLES, TOTAL_STEPS } from './stepper.fixtures';
+import { stepperPlaygroundSource, type StepperArgs } from './stepper.source';
 
 const meta: Meta<StepperArgs> = {
   title: 'Primitives/Navigation/Stepper',
@@ -137,7 +60,7 @@ type Story = StoryObj<StepperArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: stepperPlaygroundSource } },
     covers: [
       'functional.item1',
       'accessibility.item1',

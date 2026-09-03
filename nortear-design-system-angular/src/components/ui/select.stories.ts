@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
-import { NDS_SELECT, type SelectSide, type SelectAlign, type SelectSize } from './select';
+import { NDS_SELECT } from './select';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { NdsSelectDocs } from '@/components/docs/SelectDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { selectPlaygroundSource, type SelectArgs } from './select.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 //
@@ -18,78 +19,6 @@ export const STATES = [
 ] as const;
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
-
-type SelectArgs = {
-  size: SelectSize;
-  side: SelectSide;
-  align: SelectAlign;
-  placeholder: string;
-  disabled: boolean;
-  required: boolean;
-  invalid: boolean;
-  onValueChange: (value: unknown) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story como está escrito — com o `@for`
- * que monta os itens e com `[side]="side"` ligado ao arg. Isso é o andaime da
- * story, não o que alguém escreve para usar o campo. O `transform` devolve o uso
- * real, com os valores atuais dos controls já resolvidos (ver a nota em
- * `separator.stories.ts`).
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SelectArgs> }): string {
-  const {
-    size = 'default',
-    side = 'bottom',
-    align = 'start',
-    placeholder = 'Selecione...',
-    disabled = false,
-    required = false,
-    invalid = false,
-  } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra: snippet que repete valor default ensina
-  // ruído a quem copia.
-  const root =
-    ['<nds-select [(value)]="estado"']
-      .concat(disabled ? ['disabled'] : [])
-      .concat(required ? ['required'] : [])
-      .concat(invalid ? ['invalid'] : [])
-      .join(' ') + '>';
-
-  const trigger =
-    ['<button ndsSelectTrigger aria-label="Estado"']
-      .concat(size === 'default' ? [] : [`size="${size}"`])
-      .join(' ') + '>';
-
-  const content =
-    ['<ng-template ndsSelectContent']
-      .concat(side === 'bottom' ? [] : [`side="${side}"`])
-      .concat(align === 'start' ? [] : [`align="${align}"`])
-      .join(' ') + '>';
-
-  return `import { NDS_SELECT } from '@/components/ui/select';
-
-@Component({
-  imports: [...NDS_SELECT],
-  template: \`
-    ${root}
-      ${trigger}
-        <span ndsSelectValue placeholder="${placeholder}"></span>
-      </button>
-
-      ${content}
-        <div ndsSelectItem value="sp">São Paulo</div>
-        <div ndsSelectItem value="rj">Rio de Janeiro</div>
-        <div ndsSelectItem value="mg">Minas Gerais</div>
-      </ng-template>
-    </nds-select>
-  \`,
-})
-export class Exemplo {
-  readonly estado = signal<string | undefined>(undefined);
-}`;
-}
 
 const meta: Meta<SelectArgs> = {
   title: 'Primitives/Form/Select',
@@ -152,7 +81,7 @@ type Story = StoryObj<SelectArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: selectPlaygroundSource } },
     covers: [
       'functional.item1',
       'functional.item2',

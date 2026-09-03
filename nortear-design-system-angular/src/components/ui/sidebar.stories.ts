@@ -5,72 +5,7 @@ import { NDS_SIDEBAR } from './sidebar';
 import { NdsButtonIcon } from './button';
 import { NdsSidebarDocs } from '@/components/docs/SidebarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type SidebarArgs = {
-  side: 'left' | 'right';
-  variant: 'sidebar' | 'floating' | 'inset';
-  collapsible: 'offcanvas' | 'icon' | 'none';
-  defaultOpen: boolean;
-  /**
-   * Ponto de virada entre coluna e gaveta. Declarado aqui só para existir na
-   * tabela da aba API Reference: nesta stack ele é token de injeção, entra por
-   * `providers` e nunca por `args` — por isso o argType é `control: false` e
-   * não há valor inicial.
-   */
-  NDS_SIDEBAR_MOBILE_QUERY?: never;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SidebarArgs> }): string {
-  const {
-    side = 'left',
-    variant = 'sidebar',
-    collapsible = 'offcanvas',
-    defaultOpen = true,
-  } = ctx.args ?? {};
-
-  const attrs = [
-    side !== 'left' ? `side="${side}"` : '',
-    variant !== 'sidebar' ? `variant="${variant}"` : '',
-    collapsible !== 'offcanvas' ? `collapsible="${collapsible}"` : '',
-  ].filter(Boolean).join(' ');
-
-  return `import { NDS_SIDEBAR } from '@/components/ui/sidebar';
-
-@Component({
-  imports: [NDS_SIDEBAR],
-  template: \`
-    <div ndsSidebarProvider [defaultOpen]="${defaultOpen}">
-      <div ndsSidebar${attrs ? ' ' + attrs : ''}>
-        <div ndsSidebarHeader>Acme</div>
-
-        <div ndsSidebarContent>
-          <nav aria-label="Navegação principal">
-            <div ndsSidebarGroup>
-              <div ndsSidebarGroupLabel>Plataforma</div>
-              <ul ndsSidebarMenu>
-                <li ndsSidebarMenuItem>
-                  <a ndsSidebarMenuButton href="/painel" [active]="true">Painel</a>
-                </li>
-                <li ndsSidebarMenuItem>
-                  <a ndsSidebarMenuButton href="/ajustes">Ajustes</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-
-        <button ndsSidebarRail></button>
-      </div>
-
-      <main ndsSidebarInset>
-        <button ndsSidebarTrigger>☰</button>
-      </main>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
+import { sidebarPlaygroundSource, type SidebarArgs } from './sidebar.source';
 
 const meta: Meta<SidebarArgs> = {
   title: 'Primitives/Layout/Sidebar',
@@ -132,7 +67,7 @@ type Story = StoryObj<SidebarArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: sidebarPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item6',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',

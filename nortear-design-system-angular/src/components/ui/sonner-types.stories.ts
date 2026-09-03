@@ -93,7 +93,7 @@ export const Success: Story = {
       // descreve é exercido pela story AutoDismiss (functional.item2): aqui a
       // notificação é persistente de propósito, para o axe e o Chromatic
       // medirem sempre o mesmo estado.
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       const toastEl = await waitForToast({ type: 'success' });
       await expect(toastEl).toHaveAttribute('data-type', 'success');
       await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');

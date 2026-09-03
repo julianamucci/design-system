@@ -5,36 +5,7 @@ import { NdsSkeleton } from './skeleton';
 import { NdsSkeletonDocs } from '@/components/docs/SkeletonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
-
-// O CSS do .nds-skeleton não traz forma nem dimensão de propósito — quem usa
-// define a caixa que o conteúdo real vai ocupar.
-// Forma por ATRIBUTO, nunca por medida cravada: guideline 12 — altura é
-// resultado de padding e tipografia, senão o bloco não cresce quando a pessoa
-// aumenta a fonte do navegador.
-type SkeletonArgs = {
-  shape: 'text' | 'heading' | 'avatar' | 'fill';
-  width: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
-  loading: boolean;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SkeletonArgs> }): string {
-  const { shape = 'text', width = '3-4' } = ctx.args ?? {};
-  const widthAttr = shape === 'text' || shape === 'heading' ? ` data-width="${width}"` : '';
-  return `import { NdsSkeleton } from '@/components/ui/skeleton';
-
-@Component({
-  imports: [NdsSkeleton],
-  template: \`
-    <!-- aria-busy no CONTAINER: o esqueleto é aria-hidden e quem anuncia
-         o carregamento é a região que vai receber o conteúdo. -->
-    <div role="status" [attr.aria-busy]="carregando()" aria-label="Carregando conteúdo">
-      <div ndsSkeleton data-shape="${shape}"${widthAttr}></div>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
+import { skeletonPlaygroundSource, type SkeletonArgs } from './skeleton.source';
 
 const meta: Meta<SkeletonArgs> = {
   title: 'Primitives/Feedback/Skeleton',
@@ -71,7 +42,7 @@ type Story = StoryObj<SkeletonArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: skeletonPlaygroundSource } },
     covers: ['functional.item2', 'functional.item3', 'accessibility.item1', 'accessibility.item2'],
   },
   render: (args) => ({

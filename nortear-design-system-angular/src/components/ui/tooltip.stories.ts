@@ -2,86 +2,11 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, SAVE_ICON } from './tooltip.fixtures';
 import { NdsButton } from './button';
 import { NdsTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type TooltipArgs = {
-  label: string;
-  side: 'top' | 'right' | 'bottom' | 'left';
-  align: 'start' | 'center' | 'end';
-  sideOffset: number;
-  delay: number;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-};
-
-/**
- * Ícone `save` do lucide desenhado no próprio template.
- *
- * O mapa do `NdsButtonIcon` não tem `save`, e aqui o ícone é decorativo — quem
- * nomeia o botão é o `aria-label`, que o Tooltip complementa e nunca substitui.
- */
-const ICON_SALVAR = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          class="nds-icon nds-shrink-0"
-        >
-          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
-          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
-          <path d="M7 3v4a1 1 0 0 0 1 1h7" />
-        </svg>`;
-
-/**
- * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da
- * story literalmente, com os bindings ligados aos args. O `transform` devolve o
- * uso real, com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<TooltipArgs> }): string {
-  const {
-    label = 'Salvar (Ctrl+S)',
-    side = 'top',
-    align = 'center',
-    sideOffset = 4,
-    delay = 0,
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra no snippet — documentação que repete valor
-  // padrão ensina ruído.
-  const position = [
-    side !== 'top' ? `side="${side}"` : '',
-    align !== 'center' ? `align="${align}"` : '',
-    sideOffset !== 4 ? `[sideOffset]="${sideOffset}"` : '',
-  ].filter(Boolean).join(' ');
-  const content = position ? `<ng-template ndsTooltipContent ${position}>` : '<ng-template ndsTooltipContent>';
-
-  return `import { NDS_TOOLTIP } from '@/components/ui/tooltip';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [...NDS_TOOLTIP, NdsButton],
-  template: \`
-    <!-- Uma vez no root da app -->
-    <div ndsTooltipProvider [delay]="${delay}">
-      <span ndsTooltip>
-        <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-          ${ICON_SALVAR.replace(/\n/g, '\n  ')}
-        </button>
-
-        ${content}${label}</ng-template>
-      </span>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
+import { tooltipPlaygroundSource, type TooltipArgs } from './tooltip.source';
 
 const meta: Meta<TooltipArgs> = {
   title: 'Primitives/Overlay/Tooltip',
@@ -143,7 +68,7 @@ type Story = StoryObj<TooltipArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: tooltipPlaygroundSource } },
     covers: [
       'functional.item2', 'functional.item3',
       'accessibility.item1', 'accessibility.item3',
@@ -162,7 +87,7 @@ export const Playground: Story = {
             size="icon"
             aria-label="Salvar"
           >
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
 
           <ng-template

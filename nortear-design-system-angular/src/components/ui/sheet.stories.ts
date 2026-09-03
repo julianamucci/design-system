@@ -1,75 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
-import { NDS_SHEET, type SheetSide } from './sheet';
+import { NDS_SHEET } from './sheet';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 import { NdsSheetDocs } from '@/components/docs/SheetDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { sheetPlaygroundSource, type SheetArgs } from './sheet.source';
 
 const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
-
-type SheetArgs = {
-  side: SheetSide;
-  showCloseButton: boolean;
-  modal: boolean;
-  defaultOpen: boolean;
-  triggerLabel: string;
-  onOpenChange: (isOpen: boolean) => void;
-};
-
-/**
- * O painel Code imprime o `template` da story literalmente — com os bindings
- * ligados aos args. `transform` devolve o uso real, com os valores atuais dos
- * controls (armadilha 3 do CLAUDE.md deste stack).
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SheetArgs> }): string {
-  const {
-    side = 'right',
-    showCloseButton = true,
-    modal = true,
-    defaultOpen = false,
-    triggerLabel = t('demonstration.labels.trigger'),
-  } = ctx.args ?? {};
-
-  // Só o que difere do default entra no snippet: documentação que repete valor
-  // padrão ensina ruído.
-  const root = ['<nds-sheet', defaultOpen ? '[defaultOpen]="true"' : '', modal ? '' : '[modal]="false"']
-    .filter(Boolean)
-    .join(' ');
-  const content = [
-    '<ng-template ndsSheetContent',
-    side === 'right' ? '' : `side="${side}"`,
-    showCloseButton ? '' : '[showCloseButton]="false"',
-  ].filter(Boolean).join(' ');
-
-  return `import { NDS_SHEET } from '@/components/ui/sheet';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [...NDS_SHEET, NdsButton],
-  template: \`
-    ${root}>
-      <button ndsSheetTrigger ndsButton variant="outline">${triggerLabel}</button>
-
-      ${content}>
-        <div ndsSheetHeader>
-          <h2 ndsSheetTitle>${t('demonstration.labels.title')}</h2>
-          <p ndsSheetDescription>${t('demonstration.labels.description')}</p>
-        </div>
-
-        <div ndsSheetFooter>
-          <button ndsSheetClose ndsButton variant="outline">${t('demonstration.labels.cancel')}</button>
-          <button ndsButton>${t('demonstration.labels.apply')}</button>
-        </div>
-      </ng-template>
-    </nds-sheet>
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<SheetArgs> = {
   title: 'Primitives/Overlay/Sheet',
@@ -156,7 +97,7 @@ async function close(): Promise<void> {
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: sheetPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'accessibility.item3', 'accessibility.item4', 'accessibility.item5',

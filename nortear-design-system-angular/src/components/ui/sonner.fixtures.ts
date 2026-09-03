@@ -103,7 +103,7 @@ export async function clearToasts(): Promise<void> {
 
 export const TEXTS = {
   padrao: 'Código copiado.',
-  sucesso: 'Alterações salvas.',
+  success: 'Alterações salvas.',
   error: 'Não foi possível salvar. Tente novamente.',
   aviso: 'Sua sessão expira em 5 minutos.',
   info: 'Nova versão disponível.',

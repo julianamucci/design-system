@@ -1,49 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
-import { NdsSwitch, type SwitchSize } from './switch';
+import { NdsSwitch } from './switch';
 import { NdsLabel } from './label';
 import { NdsSwitchDocs } from '@/components/docs/SwitchDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type SwitchArgs = {
-  checked: boolean;
-  size: SwitchSize;
-  disabled: boolean;
-  label: string;
-  onCheckedChange: (checked: boolean) => void;
-};
-
-/** Ver a nota em separator.stories.ts. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SwitchArgs> }): string {
-  const {
-    checked = false,
-    size = 'default',
-    disabled = false,
-    label = 'Receber notificações',
-  } = ctx.args ?? {};
-
-  const attrs = [
-    'id="notificacoes"',
-    checked ? '[checked]="true"' : '',
-    size === 'default' ? '' : `size="${size}"`,
-    disabled ? '[disabled]="true"' : '',
-  ].filter(Boolean).join(' ');
-
-  return `import { NdsSwitch } from '@/components/ui/switch';
-import { NdsLabel } from '@/components/ui/label';
-
-@Component({
-  imports: [NdsSwitch, NdsLabel],
-  template: \`
-    <div class="nds-cluster" data-spacing="sm">
-      <button ndsSwitch ${attrs}></button>
-      <label ndsLabel for="notificacoes">${label}</label>
-    </div>
-  \`,
-})
-export class Exemplo {}`;
-}
+import { switchPlaygroundSource, type SwitchArgs } from './switch.source';
 
 const meta: Meta<SwitchArgs> = {
   title: 'Primitives/Form/Switch',
@@ -84,7 +46,7 @@ type Story = StoryObj<SwitchArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: switchPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2',
       'accessibility.item1', 'accessibility.item4', 'accessibility.item5',

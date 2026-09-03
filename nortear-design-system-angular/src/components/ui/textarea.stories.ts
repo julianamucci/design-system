@@ -6,55 +6,7 @@ import { NdsLabel } from './label';
 import { NdsTextareaDocs } from '@/components/docs/TextareaDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { resizeComputado } from '@shared/testing/textarea-probe';
-
-type TextareaArgs = {
-  label: string;
-  placeholder: string;
-  disabled: boolean;
-  readonly: boolean;
-  invalid: boolean;
-  rows: number;
-  maxlength: number;
-};
-
-/** Ver a nota em separator.stories.ts: o painel Code mostra o andaime da story. */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<TextareaArgs> }): string {
-  const {
-    label = 'Descrição',
-    placeholder = 'ex: Descreva o produto em até 500 caracteres...',
-    disabled = false,
-    readonly = false,
-    invalid = false,
-    rows = 3,
-    maxlength = 500,
-  } = ctx.args ?? {};
-
-  const attrs = [
-    'id="description"',
-    `rows="${rows}"`,
-    `maxlength="${maxlength}"`,
-    `placeholder="${placeholder}"`,
-    'class="nds-resize-y nds-min-h-30"',
-    disabled ? 'disabled' : '',
-    readonly ? 'readonly' : '',
-    invalid ? 'aria-invalid="true"' : '',
-  ].filter(Boolean).join('\n    ');
-
-  return `import { NdsTextarea } from '@/components/ui/textarea';
-import { NdsLabel } from '@/components/ui/label';
-
-@Component({
-  imports: [NdsTextarea, NdsLabel],
-  template: \`
-    <label ndsLabel for="description">${label}</label>
-    <textarea
-      ndsTextarea
-      ${attrs}
-    ></textarea>
-  \`,
-})
-export class Exemplo {}`;
-}
+import { textareaPlaygroundSource, type TextareaArgs } from './textarea.source';
 
 const meta: Meta<TextareaArgs> = {
   title: 'Primitives/Form/Textarea',
@@ -117,7 +69,7 @@ type Story = StoryObj<TextareaArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
+    docs: { source: { transform: textareaPlaygroundSource } },
     covers: ['functional.item1', 'functional.item2', 'functional.item4'],
   },
   render: (args) => ({
