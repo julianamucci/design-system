@@ -57,6 +57,45 @@ const IMPORT_AFTER = [
   "import { AgentStatus } from '@/components/ui/agent-status';",
 ].join('\n');
 
+/**
+ * Os rótulos que o exemplo DECLARA — os desta peça e os das irmãs.
+ *
+ * `:labels="rotulos"` nomeia texto de interface, que é de quem consome, e
+ * nenhum exemplo o declarava: quem copiasse recebia um `labels` indefinido. As
+ * peças vizinhas são AUTÔNOMAS e têm o vocabulário delas, e por isso cada uma
+ * ganha o seu — juntar tudo num objeto só ensinaria uma dependência que não há.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  title: 'Custo desta execução',",
+  "  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },",
+  "  of: 'de',",
+  "  unbounded: 'Sem teto declarado',",
+  '};',
+].join('\n');
+
+const ROTULOS_DA_JANELA = [
+  'const rotulosDaJanela = {',
+  "  title: 'Uso da janela de contexto',",
+  "  level: { normal: 'Com folga', warning: 'Perto do limite', critical: 'No limite' },",
+  "  of: 'de',",
+  "  unit: 'tokens',",
+  "  unbounded: 'Sem teto conhecido',",
+  '};',
+].join('\n');
+
+const ROTULOS_DA_EXECUCAO = [
+  'const rotulosDaExecucao = {',
+  "  status: { idle: 'Em espera', running: 'Respondendo', stopped: 'Interrompida', complete: 'Concluída', failed: 'Falhou' },",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP_BUDGET = [IMPORT_BUDGET, '', ROTULOS].join('\n');
+const SETUP_BESIDE = [IMPORT_BESIDE, '', ROTULOS, '', ROTULOS_DA_JANELA].join('\n');
+const SETUP_AFTER = [IMPORT_AFTER, '', ROTULOS, '', ROTULOS_DA_EXECUCAO].join('\n');
+
 /** O formatador que é de QUEM CONSOME, e nunca do componente. */
 function moneyLines(): string {
   return [
@@ -91,7 +130,7 @@ function build(opts: CostMeterArgs): string {
   const hasBudget = budget > 0;
 
   const script = [
-    IMPORT_BUDGET,
+    SETUP_BUDGET,
     '',
     moneyLines(),
     '',
@@ -126,7 +165,7 @@ export const costMeterSource: SourceTransform<CostMeterArgs> = (_generated, ctx)
 export function costMeterEveryCaseSource(): string {
   return vueSnippet(
     [
-      IMPORT_BUDGET,
+      SETUP_BUDGET,
       '',
       moneyLines(),
       '',
@@ -169,7 +208,7 @@ export function costMeterEveryCaseSource(): string {
 export function costMeterAllLevelsSource(): string {
   return vueSnippet(
     [
-      IMPORT_BUDGET,
+      SETUP_BUDGET,
       '',
       moneyLines(),
       '',
@@ -230,7 +269,7 @@ export function costMeterBesideContextSource(): string {
 
   return vueSnippet(
     [
-      IMPORT_BESIDE,
+      SETUP_BESIDE,
       '',
       moneyLines(),
       '',
@@ -258,7 +297,7 @@ export function costMeterAfterRunSource(): string {
 
   return vueSnippet(
     [
-      IMPORT_AFTER,
+      SETUP_AFTER,
       '',
       moneyLines(),
       '',

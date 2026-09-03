@@ -47,6 +47,64 @@ const IMPORT_BESIDE = [
 
 const DEFAULT_URL = 'app.exemplo.com/entrar';
 
+/**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * `:labels="rotulos"` e `:steps="passos"` nomeiam coisas de quem consome, e
+ * nenhum exemplo as declarava: quem copiasse recebia um `labels` indefinido e
+ * um rastro sobre uma lista que não existe. O rastro é o dado desta peça —
+ * quatro campos por passo, e a coordenada é de quem monta, nunca da peça.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  address: 'Endereço',",
+  "  position: '{index} de {total}',",
+  '};',
+].join('\n');
+
+const PASSOS = [
+  'const passos = [',
+  "  { action: 'Abrir', target: 'a página de entrada', x: 50, y: 18 },",
+  "  { action: 'Digitar', target: 'o endereço de e-mail', x: 38, y: 42 },",
+  "  { action: 'Digitar', target: 'a senha', x: 38, y: 54 },",
+  "  { action: 'Clicar', target: 'Entrar', x: 50, y: 68 },",
+  "  { action: 'Esperar', target: 'a página inicial', x: 50, y: 30 },",
+  "  { action: 'Clicar', target: 'Relatórios', x: 22, y: 24 },",
+  '];',
+].join('\n');
+
+/** Os rótulos da LINHA DE ESTADO, a irmã autônoma que entra num dos exemplos. */
+const ROTULOS_DA_EXECUCAO = [
+  'const rotulosDaExecucao = {',
+  "  status: { idle: 'Em espera', running: 'Respondendo', stopped: 'Interrompida', complete: 'Concluída', failed: 'Falhou' },",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+/** A imagem que preenche o espaço da tela — de quem consome, e nunca da peça. */
+const CAPTURA = [
+  '// A tela é ESPAÇO de quem consome: a peça nunca cria imagem, e o endereço',
+  '// dela sai daqui.',
+  "const capturaDaSessao = '/capturas/sessao-atual.png';",
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', PASSOS].join('\n');
+const SETUP_STATUSES = [IMPORT_STATUSES, '', ROTULOS, '', PASSOS].join('\n');
+const SETUP_BESIDE = [IMPORT_BESIDE, '', ROTULOS, '', ROTULOS_DA_EXECUCAO, '', PASSOS].join('\n');
+
+/**
+ * O `<script setup>` que cada configuração precisa.
+ *
+ * A captura só entra quando o exemplo abre o espaço da tela com uma imagem:
+ * declarar o endereço num exemplo que não o usa ensinaria que a peça precisa
+ * dele, e ela não precisa.
+ */
+function setupFor(opts: ComputerUseSnippetOptions): string {
+  const withImage = opts.screen?.includes('capturaDaSessao') === true;
+  return withImage ? [SETUP, '', CAPTURA].join('\n') : SETUP;
+}
+
 /** A tela de quem consome, no encaixe. Um nome, e não a montagem por extenso. */
 const DEFAULT_SCREEN = '<TelaDaSessao />';
 
@@ -85,7 +143,7 @@ function computerUseTag(opts: ComputerUseSnippetOptions): string {
 }
 
 function build(opts: ComputerUseSnippetOptions): string {
-  return vueSnippet(IMPORT, computerUseTag(opts));
+  return vueSnippet(setupFor(opts), computerUseTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -136,7 +194,7 @@ export function computerUseFinishedSource(): string {
  */
 export function computerUseEveryStatusSource(): string {
   return vueSnippet(
-    IMPORT_STATUSES,
+    SETUP_STATUSES,
     [
       '<ComputerUse',
       '  v-for="status in RUN_STATUSES"',
@@ -211,7 +269,7 @@ export function computerUseBesideRunSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_BESIDE,
+    SETUP_BESIDE,
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">\n${indentar(body)}\n</div>`,
   );
 }

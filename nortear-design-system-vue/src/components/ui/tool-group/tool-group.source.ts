@@ -47,6 +47,36 @@ const IMPORT_SPLIT = [
 ].join('\n');
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * `:labels="rotulos"` e `@open-change="registrar"` nomeiam coisas de quem
+ * consome, e nenhum exemplo as declarava: quem copiasse recebia um `labels`
+ * indefinido e um ouvinte que não existe. QUEM ABRE é o navegador — a peça só
+ * relata o que já aconteceu, e o que se faz com o relato é de fora.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  title: { one: '1 ferramenta', other: '{n} ferramentas' },",
+  "  summary: { pending: 'Espera por você', running: 'Em curso', done: 'Concluído', failed: 'Algo falhou' },",
+  "  call: { pending: 'Esperando você', running: 'Em curso', done: 'Concluída', failed: 'Falhou' },",
+  '};',
+].join('\n');
+
+const REGISTRAR = [
+  'function registrar(open: boolean) {',
+  '  // Quem abre é o navegador: a peça só relata, e o que fazer com o relato',
+  '  // é de quem consome.',
+  '  anotarAbertura(open);',
+  '}',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', REGISTRAR].join('\n');
+const SETUP_SEM_AVISO = [IMPORT, '', ROTULOS].join('\n');
+const SETUP_STATES = [IMPORT_STATES, '', ROTULOS].join('\n');
+const SETUP_SPLIT = [IMPORT_SPLIT, '', ROTULOS].join('\n');
+
+/**
  * A tag do grupo, só com o que o exemplo precisa dizer.
  *
  * O aviso sai por EVENTO nesta stack, e por isso ele está aqui como
@@ -65,7 +95,7 @@ function groupTag(opts: ToolGroupArgs): string {
 }
 
 function build(opts: ToolGroupArgs): string {
-  return vueSnippet(IMPORT, groupTag(opts));
+  return vueSnippet(opts.change === false ? SETUP_SEM_AVISO : SETUP, groupTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve a caixa por extenso. */
@@ -92,7 +122,7 @@ export const toolGroupSource: SourceTransform<{ open?: boolean; detail?: boolean
  */
 export function toolGroupEveryStateSource(): string {
   const script = [
-    IMPORT_STATES,
+    SETUP_STATES,
     '',
     'const chamadas = TOOL_CALL_STATES.map((state) => ({',
     '  name: `ferramenta_${state}`,',
@@ -137,7 +167,7 @@ export function toolGroupTogglingSource(): string {
  */
 export function toolGroupWaitingOutsideSource(): string {
   const script = [
-    IMPORT_SPLIT,
+    SETUP_SPLIT,
     '',
     '// Pedir autorização dentro de uma caixa fechada é pedir sem mostrar.',
     'const { grouped, waiting } = splitWaitingCalls(chamadas);',
@@ -168,7 +198,7 @@ export function toolGroupBeforeAnswerSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT,
+    SETUP_SEM_AVISO,
     `<div class="nds-stack nds-max-w-lg" data-spacing="sm">\n${indentar(body)}\n</div>`,
   );
 }

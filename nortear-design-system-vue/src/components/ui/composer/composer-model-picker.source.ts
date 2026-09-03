@@ -40,6 +40,43 @@ const IMPORT_RAIL =
   "import { Composer, ComposerModelPicker } from '@/components/ui/composer';";
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * É a outra metade da decisão registrada logo abaixo: o aviso de troca entra
+ * sempre porque o componente não troca de modelo sozinho — e um `escolher` que
+ * nunca fosse declarado ensinaria um controle que continua não chegando a lugar
+ * nenhum. Os rótulos seguem o mesmo caminho: texto de interface é de fora.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  trigger: 'Modelo: {label}',",
+  "  list: 'Modelos',",
+  '};',
+].join('\n');
+
+const ESCOLHER = [
+  'function escolher(id: string) {',
+  '  // Trocar de modelo é de quem consome: o seletor só avisa qual foi.',
+  '  usarModelo(id);',
+  '}',
+].join('\n');
+
+/** Os rótulos do CAMPO, que hospeda o seletor no trilho. */
+const ROTULOS_DO_CAMPO = [
+  'const rotulosDoCampo = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', ESCOLHER].join('\n');
+const SETUP_RAIL = [IMPORT_RAIL, '', ROTULOS_DO_CAMPO, '', ROTULOS, '', ESCOLHER].join('\n');
+
+/**
  * O seletor sozinho.
  *
  * O aviso de troca entra SEMPRE: o componente não troca de modelo por conta
@@ -60,7 +97,7 @@ function picker(opts: ModelPickerArgs): string {
 }
 
 function build(opts: ModelPickerArgs): string {
-  if (!opts.rail) return vueSnippet(IMPORT, picker(opts));
+  if (!opts.rail) return vueSnippet(SETUP, picker(opts));
 
   // O seletor é AUTÔNOMO: ele não é uma prop do campo, é um controle que quem
   // consome põe no início do trilho — pelo mesmo espaço de qualquer outro.
@@ -71,7 +108,7 @@ function build(opts: ModelPickerArgs): string {
     '  </template>',
     '</Composer>',
   ].join('\n');
-  return vueSnippet(IMPORT_RAIL, rail);
+  return vueSnippet(SETUP_RAIL, rail);
 }
 
 /** Transform do `meta` — o Playground, cujos controles mexem no escolhido. */

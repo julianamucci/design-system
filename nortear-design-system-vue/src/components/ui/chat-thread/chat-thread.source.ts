@@ -21,13 +21,34 @@ export type ChatThreadArgs = {
 
 const IMPORT = `import { ChatThread } from '@/components/ui/chat-thread';`;
 
+/**
+ * Os rótulos que o exemplo DECLARA.
+ *
+ * A lista de mensagens continua entrando por nome — trinta turnos fariam o
+ * painel ensinar o andaime —, mas o rótulo não: ele é texto de interface, é de
+ * quem consome, e o exemplo não o declarava em lugar nenhum.
+ */
+const LABELS = [
+  'const labels = {',
+  "  jumpToEnd: 'Ir para o fim · {count}',",
+  "  reasoning: 'Raciocínio',",
+  "  sources: 'Fontes',",
+  "  toolState: { running: 'chamando', done: 'pronto', failed: 'falhou', pending: 'aguardando' },",
+  '};',
+].join('\n');
+
+/** O texto do erro, que é de quem executa — a conversa só o mostra. */
+const ERRO = "const erro = 'A resposta não chegou. Tente de novo.';";
+
+const SETUP = `${IMPORT}\n\n${LABELS}`;
+
 /** `<ChatThread … />`, com o que a story de fato passa. */
 function tag(parts: Array<string | undefined>): string {
   return `<ChatThread :messages="messages" :labels="labels"${attrsMultilinha(parts)} />`;
 }
 
 function build(parts: Array<string | undefined> = [], extra = ''): string {
-  return vueSnippet(`${IMPORT}${extra}`, tag(parts));
+  return vueSnippet(`${SETUP}${extra}`, tag(parts));
 }
 
 /** Transform do `meta` — a forma básica. */
@@ -41,7 +62,7 @@ export const chatThreadSource: SourceTransform<ChatThreadArgs> = () => build([`s
  */
 export function chatThreadStreamingSource(): string {
   return vueSnippet(
-    `${IMPORT}
+    `${SETUP}
 
 const messages = ref(inicial);
 
@@ -55,7 +76,7 @@ const patch = (id, campos) => {
 
 /** Com erro de execução — a resposta que não vem. */
 export function chatThreadErrorSource(): string {
-  return build([`:error="erro"`, `size="md"`]);
+  return build([`:error="erro"`, `size="md"`], `\n\n${ERRO}`);
 }
 
 /** Conversa longa, onde a ancoragem no fim tem o que ancorar. */

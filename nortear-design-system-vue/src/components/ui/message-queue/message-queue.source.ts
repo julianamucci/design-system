@@ -48,6 +48,54 @@ const IMPORT_ABOVE_FIELD =
 /** O aviso de retirada, escrito como quem consome o escuta. */
 const ON_WITHDRAW = '@withdraw="(message) => withdraw(message.id)"';
 
+/**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * `:labels="labels"` e o ouvinte da retirada nomeiam coisas de quem consome, e
+ * nenhum exemplo as declarava: quem copiasse recebia um `labels` indefinido e
+ * uma retirada que não existe. TIRAR DA FILA é de fora — a peça só avisa qual
+ * mensagem foi apontada.
+ */
+const LABELS_BODY = [
+  "  list: 'Mensagens na fila',",
+  "  withdraw: 'Retirar {text}',",
+  "  state: { waiting: 'Na fila', sending: 'Enviando' },",
+];
+
+const LABELS = ['const labels = {', ...LABELS_BODY, '};'].join('\n');
+const QUEUE_LABELS = ['const queueLabels = {', ...LABELS_BODY, '};'].join('\n');
+
+const WITHDRAW = [
+  'function withdraw(id: string) {',
+  '  // Tirar da fila é de quem consome: a peça só avisa qual foi apontada.',
+  '  removerDaFila(id);',
+  '}',
+].join('\n');
+
+/** Os rótulos do CAMPO, a peça vizinha, que tem o vocabulário dela. */
+const FIELD_LABELS = [
+  'const labels = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', LABELS, '', WITHDRAW].join('\n');
+const SETUP_SEM_RETIRADA = [IMPORT, '', LABELS].join('\n');
+const SETUP_ABOVE_FIELD = [
+  IMPORT_ABOVE_FIELD,
+  '',
+  QUEUE_LABELS,
+  '',
+  FIELD_LABELS,
+  '',
+  WITHDRAW,
+].join('\n');
+
 /** A mensagem por extenso, na ordem em que o tipo a declara. */
 function messageLiteral(opts: QueueArgs): string {
   const fields = [
@@ -78,22 +126,23 @@ function queueTag(messages: string, opts: TagOptions = {}): string {
 export const messageQueueSource: SourceTransform<QueueArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const tag = queueTag('queue', { withdraw: args.state !== 'sending' });
-  return vueSnippet(`${IMPORT}\n\n${messageLiteral(args)}`, tag);
+  const setup = args.state === 'sending' ? SETUP_SEM_RETIRADA : SETUP;
+  return vueSnippet(`${setup}\n\n${messageLiteral(args)}`, tag);
 };
 
 /** Três esperando a vez: todas se retiram. */
 export function queueWaitingSource(): string {
-  return vueSnippet(IMPORT, queueTag('waitingQueue'));
+  return vueSnippet(SETUP, queueTag('waitingQueue'));
 }
 
 /** A primeira já está indo, e as outras duas esperam. */
 export function queueSendingSource(): string {
-  return vueSnippet(IMPORT, queueTag('sendingQueue'));
+  return vueSnippet(SETUP, queueTag('sendingQueue'));
 }
 
 /** Uma fila que passa de nove, onde a posição ganha dois dígitos. */
 export function queueLongSource(): string {
-  return vueSnippet(IMPORT, queueTag('longQueue'));
+  return vueSnippet(SETUP, queueTag('longQueue'));
 }
 
 /**
@@ -107,7 +156,7 @@ export function queueLongSource(): string {
  */
 export function queueEmptySource(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP_SEM_RETIRADA,
     `<!-- Sem mensagem, a fila não desenha nada. -->\n${queueTag('[]', { withdraw: false })}`,
   );
 }
@@ -124,7 +173,7 @@ export function queueAboveFieldSource(): string {
   const stack = `${queue}\n<Composer :labels="labels" />`;
 
   return vueSnippet(
-    IMPORT_ABOVE_FIELD,
+    SETUP_ABOVE_FIELD,
     `<div class="nds-stack" data-spacing="xs">\n${indentar(stack)}\n</div>`,
   );
 }

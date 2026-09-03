@@ -67,10 +67,25 @@ function attrList(name: string, value: unknown): string {
   return `:${name}="[${items.map((v) => `'${v}'`).join(', ')}]"`;
 }
 
+/**
+ * O ouvinte do link, DECLARADO no exemplo.
+ *
+ * O que ele faz continua sendo da aplicação — abrir noutra aba, confirmar antes
+ * de sair, registrar o clique. O que não podia continuar é ele existir só como
+ * nome no atributo: `@link-click="abrir"` sem declaração nenhuma entrega a quem
+ * copia um ouvinte que não resolve.
+ */
+const ABRIR = [
+  'function abrir(href: string) {',
+  '  // O que fazer com o link é da aplicação: o componente só avisa qual foi.',
+  "  window.open(href, '_blank', 'noopener');",
+  '}',
+].join('\n');
+
 /** Um snippet completo: script com o documento, template com a tag. */
-function build(content: string, partes: string[] = []): string {
+function build(content: string, partes: string[] = [], extra: string[] = []): string {
   return vueSnippet(
-    `${IMPORT}\n\nconst answer = ${documentLiteral(content)}`,
+    [`${IMPORT}\n\nconst answer = ${documentLiteral(content)}`, ...extra].join('\n\n'),
     `<Markdown :content="answer"${attrsMultilinha(partes)} />`,
   );
 }
@@ -87,14 +102,18 @@ export const markdownSource: SourceTransform<MarkdownArgs> = (_gerado, ctx) => {
     ? args.content
     : DEFAULT_DOCUMENT;
   const allow = Array.isArray(args.allow) && args.allow.length < 8 ? args.allow : undefined;
-  return build(content, [
-    attrBool('streaming', args.streaming, false),
-    attrList('allow', allow),
-    attrList('allowed-protocols', args.allowedProtocols),
-    // O corpo do ouvinte é da aplicação, não do componente: o snippet mostra
-    // ONDE ele entra, sem inventar o que ele faz.
-    args.onLinkClick ? '@link-click="abrir"' : '',
-  ]);
+  return build(
+    content,
+    [
+      attrBool('streaming', args.streaming, false),
+      attrList('allow', allow),
+      attrList('allowed-protocols', args.allowedProtocols),
+      // O que o ouvinte FAZ é da aplicação; que ele exista, não: o snippet o
+      // declara junto, ou ensina a ligar um nome que não resolve.
+      args.onLinkClick ? '@link-click="abrir"' : '',
+    ],
+    args.onLinkClick ? [ABRIR] : [],
+  );
 };
 
 /** Lista branca completa: o padrão, e por isso sem `allow` no snippet. */

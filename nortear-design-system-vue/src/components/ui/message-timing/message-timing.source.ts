@@ -35,6 +35,22 @@ export type MessageTimingSnippetOptions = {
 // ensinaria a furar a única porta que a peça tem.
 const IMPORT = "import { MessageTiming } from '@/components/ui/message-timing';";
 
+/**
+ * Os rótulos que o exemplo DECLARA.
+ *
+ * `:labels="rotulos"` nomeia texto de interface, que é de quem consome — e o
+ * exemplo não o declarava em lugar nenhum: quem copiasse recebia um `labels`
+ * indefinido, e é ele que nomeia cada medida a quem lê o número sozinho.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  title: 'Tempo desta resposta',",
+  "  measuring: 'Medindo',",
+  "  speedUnit: 'tok/s',",
+  "  stats: { firstToken: 'Primeiro token', total: 'Total', speed: 'Velocidade', chunks: 'Pedaços' },",
+  '};',
+].join('\n');
+
 const IMPORT_TOOLTIP = [
   IMPORT,
   "import { Button } from '@/components/ui/button';",
@@ -112,6 +128,8 @@ function build(opts: MessageTimingSnippetOptions): string {
   const script = [
     IMPORT,
     '',
+    ROTULOS,
+    '',
     measures > 0 ? `${writerLines()}\n` : '',
     measureLines(measures),
   ]
@@ -185,6 +203,8 @@ export function messageTimingEveryCaseSource(): string {
     [
       IMPORT,
       '',
+      ROTULOS,
+      '',
       writerLines(),
       '',
       'const measured = [',
@@ -221,6 +241,8 @@ export function messageTimingInTightSpaceSource(): string {
   return vueSnippet(
     [
       IMPORT,
+      '',
+      ROTULOS,
       '',
       writerLines(),
       '',
@@ -264,6 +286,8 @@ export function messageTimingInsideTooltipSource(): string {
   return vueSnippet(
     [
       IMPORT_TOOLTIP,
+      '',
+      ROTULOS,
       '',
       writerLines(),
       '',

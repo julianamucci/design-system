@@ -38,6 +38,36 @@ export type ActivityGraphSnippetOptions = {
 const IMPORT = "import { ActivityGraph } from '@/components/ui/activity-graph';";
 
 /**
+ * Os rótulos, POR EXTENSO no exemplo.
+ *
+ * A atividade continua entrando por nome — noventa dias com data e contagem
+ * ocupariam a tela inteira do painel —, mas o rótulo não: ele é o que a grade
+ * diz a quem não enxerga a tinta, e um exemplo que ligasse `rotulos` sem
+ * declarar em lugar nenhum entregaria a quem copia um `labels` indefinido.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  region: 'Atividade do trimestre',",
+  "  total: '{count} contribuições entre {start} e {end}',",
+  "  dateFormat: '{day} de {month} de {year}',",
+  "  none: 'Sem atividade em {date}.',",
+  "  one: '{count} contribuição em {date}. Intensidade {level}.',",
+  "  many: '{count} contribuições em {date}. Intensidade {level}.',",
+  "  legendLess: 'Menos',",
+  "  legendMore: 'Mais',",
+  '  months: {',
+  "    short: { m1: 'jan', m2: 'fev', m3: 'mar', m4: 'abr', m5: 'mai', m6: 'jun', m7: 'jul', m8: 'ago', m9: 'set', m10: 'out', m11: 'nov', m12: 'dez' },",
+  "    long: { m1: 'janeiro', m2: 'fevereiro', m3: 'março', m4: 'abril', m5: 'maio', m6: 'junho', m7: 'julho', m8: 'agosto', m9: 'setembro', m10: 'outubro', m11: 'novembro', m12: 'dezembro' },",
+  '  },',
+  "  weekdays: { d0: 'dom', d1: 'seg', d2: 'ter', d3: 'qua', d4: 'qui', d5: 'sex', d6: 'sáb' },",
+  "  levels: { l0: 'Nenhuma', l1: 'Baixa', l2: 'Média', l3: 'Alta', l4: 'Muito alta' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` do exemplo: o que ele importa e o que ele declara. */
+const SETUP = [IMPORT, '', ROTULOS].join('\n');
+
+/**
  * A tag da peça, com um atributo por linha.
  *
  * Ela não tem evento nenhum: um dia não faz nada, e a grade não tem parte de
@@ -58,7 +88,7 @@ function activityGraphTag(opts: ActivityGraphSnippetOptions): string {
 }
 
 function build(opts: ActivityGraphSnippetOptions): string {
-  return vueSnippet(IMPORT, activityGraphTag(opts));
+  return vueSnippet(SETUP, activityGraphTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -80,7 +110,7 @@ export const activityGraphSource: SourceTransform<{
 /** A escala inteira, do vazio ao nível cheio. */
 export function activityGraphScaleSnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- Um dia por nível, na mesma janela: cada degrau da escala cresce em',
       '     DUAS coisas ao mesmo tempo — a força da tinta e o tamanho do',
@@ -98,7 +128,7 @@ export function activityGraphScaleSnippet(): string {
 /** A janela sem atividade nenhuma, que continua sendo uma grade. */
 export function activityGraphEmptySnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- GRADE VAZIA É GRADE, e é a diferença desta peça em relação às',
       '     irmãs da família: um período em que nada aconteceu É a resposta,',
@@ -116,7 +146,7 @@ export function activityGraphBusySnippet(): string {
 /** Uma janela que não existe: o fim antes do começo. */
 export function activityGraphNoWindowSnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- FIM ANTES DO COMEÇO NÃO É JANELA, e sem janela não há posição — a',
       '     peça não desenha nada, e nem moldura nem parada de teclado chegam',

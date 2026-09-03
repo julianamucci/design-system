@@ -47,6 +47,50 @@ const IMPORT_WITH_STATUS = [
 ].join('\n');
 
 /**
+ * O que o exemplo DECLARA, além do que ele importa.
+ *
+ * `:labels="labels"` nomeia texto de interface, que é de quem consome — e até
+ * aqui nenhum exemplo o declarava: quem copiasse recebia um `labels`
+ * indefinido, e a peça não tem rótulo padrão para cair de volta.
+ */
+const ROTULOS = [
+  'const labels = {',
+  "  plan: 'Plano',",
+  "  state: { pending: 'A fazer', running: 'Fazendo', done: 'Feito', failed: 'Falhou', skipped: 'Pulado' },",
+  '};',
+].join('\n');
+
+/** Os rótulos da linha de estado, que entra ao lado do plano em duas stories. */
+const ROTULOS_DA_LINHA = [
+  'const statusLabels = {',
+  "  status: { idle: 'Em espera', running: 'Respondendo', stopped: 'Interrompida', complete: 'Concluída', failed: 'Falhou' },",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS].join('\n');
+/**
+ * Um rótulo por estado, na ordem em que `PLAN_STEP_STATES` os declara.
+ *
+ * A lista percorrida sai do vocabulário compartilhado; o TEXTO de cada passo é
+ * de quem consome, e por isso ele entra declarado aqui — sem esta linha o
+ * exemplo lia `titles[index]` de um nome que não existe.
+ */
+const TITULOS = [
+  'const titles = [',
+  "  'Ler o arquivo',",
+  "  'Comparar com o trimestre anterior',",
+  "  'Escrever o resumo',",
+  "  'Enviar por e-mail',",
+  "  'Arquivar a versão antiga',",
+  '];',
+].join('\n');
+
+const SETUP_STATES = [IMPORT_STATES, '', ROTULOS, '', TITULOS].join('\n');
+const SETUP_WITH_STATUS = [IMPORT_WITH_STATUS, '', ROTULOS, '', ROTULOS_DA_LINHA].join('\n');
+
+/**
  * A guarda da lista vazia, dita onde ela mora nesta stack.
  *
  * A peça não desenha nada quando não há passo nenhum, e quem copia precisa
@@ -68,7 +112,7 @@ function planTag(steps: string, labels = 'labels'): string {
 }
 
 /** O corpo do snippet, com a guarda da lista vazia sempre presente. */
-function build(steps: string, script: string = IMPORT): string {
+function build(steps: string, script: string = SETUP): string {
   return vueSnippet(script, [EMPTY_NOTE, planTag(steps)].join('\n'));
 }
 
@@ -87,7 +131,7 @@ function stepLiteral(opts: AgentPlanSnippetOptions): string {
 /** Transform do `meta` — o Playground, que escreve o passo por extenso. */
 export const agentPlanSource: SourceTransform<AgentPlanSnippetOptions> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
-  return build('steps', [IMPORT, '', stepLiteral(args)].join('\n'));
+  return build('steps', [IMPORT, '', ROTULOS, '', stepLiteral(args)].join('\n'));
 };
 
 /**
@@ -99,7 +143,7 @@ export const agentPlanSource: SourceTransform<AgentPlanSnippetOptions> = (_gener
  */
 export function agentPlanEveryStateSource(): string {
   return vueSnippet(
-    IMPORT_STATES,
+    SETUP_STATES,
     [
       '<AgentPlan',
       '  :steps="PLAN_STEP_STATES.map((state, index) => ({ label: titles[index], state }))"',
@@ -137,7 +181,7 @@ export function agentPlanLongLabelSource(): string {
  */
 export function agentPlanEmptySource(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- Nada é desenhado: uma lista vazia prometeria zero passos. -->',
       planTag('[]'),
@@ -161,7 +205,7 @@ export function agentPlanProposedWithStatusSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_WITH_STATUS,
+    SETUP_WITH_STATUS,
     `<div class="nds-stack nds-max-w-lg" data-spacing="sm">\n${indentar(body)}\n</div>`,
   );
 }
@@ -182,7 +226,7 @@ export function agentPlanTaskListSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_WITH_STATUS,
+    SETUP_WITH_STATUS,
     `<div class="nds-stack nds-max-w-lg" data-spacing="sm">\n${indentar(body)}\n</div>`,
   );
 }

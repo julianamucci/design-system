@@ -57,6 +57,40 @@ const IMPORT_BESIDE = [
   "import { Composer } from '@/components/ui/composer';",
 ].join('\n');
 
+/**
+ * Os rótulos que o exemplo DECLARA.
+ *
+ * Mesmo motivo das medições declaradas mais abaixo: `:labels="rotulos"` sobre
+ * um nome que o snippet não declara não resolve na mão de quem copia — e é o
+ * rótulo que diz o nível a quem não vê a cor do anel.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  title: 'Uso da janela de contexto',",
+  "  level: { normal: 'Com folga', warning: 'Perto do limite', critical: 'No limite' },",
+  "  of: 'de',",
+  "  unit: 'tokens',",
+  "  unbounded: 'Sem teto conhecido',",
+  '};',
+].join('\n');
+
+/** Os rótulos do CAMPO, a peça vizinha, que tem o vocabulário dela. */
+const ROTULOS_DO_CAMPO = [
+  'const rotulosDoCampo = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS].join('\n');
+const SETUP_FORMS = [IMPORT_FORMS, '', ROTULOS].join('\n');
+const SETUP_BUDGET = [IMPORT_BUDGET, '', ROTULOS].join('\n');
+const SETUP_BESIDE = [IMPORT_BESIDE, '', ROTULOS, '', ROTULOS_DO_CAMPO].join('\n');
+
 /** `{ input: 18000, output: 7000, limit: 32000 }`, sem o teto quando não há. */
 function usageLiteral(opts: ContextDisplayArgs): string {
   const parts = [`input: ${opts.input ?? 0}`, `output: ${opts.output ?? 0}`];
@@ -80,7 +114,7 @@ function displayTag(opts: ContextDisplayArgs): string {
 }
 
 function build(opts: ContextDisplayArgs): string {
-  return vueSnippet(IMPORT, displayTag(opts));
+  return vueSnippet(SETUP, displayTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve a medição por extenso. */
@@ -103,7 +137,7 @@ export const contextDisplaySource: SourceTransform<ContextDisplayArgs> = (_gener
  */
 export function contextDisplayEveryFormSource(): string {
   return vueSnippet(
-    IMPORT_FORMS,
+    SETUP_FORMS,
     [
       '<ContextDisplay',
       '  v-for="form in CONTEXT_DISPLAY_FORMS"',
@@ -141,7 +175,7 @@ export function contextDisplayTextSource(): string {
 export function contextDisplayEveryLevelSource(): string {
   return vueSnippet(
     [
-      IMPORT_BUDGET,
+      SETUP_BUDGET,
       '',
       '// O limiar é do primitivo, e a comparação é exata.',
       "budgetLevel({ input: 16000, output: 0, limit: 32000 });  // 'normal'",
@@ -204,7 +238,7 @@ export function contextDisplayBesideFieldSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_BESIDE,
+    SETUP_BESIDE,
     `<div class="nds-stack nds-max-w-lg" data-spacing="sm">\n${indentar(body)}\n</div>`,
   );
 }

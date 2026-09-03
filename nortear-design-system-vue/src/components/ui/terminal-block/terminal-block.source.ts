@@ -46,6 +46,57 @@ const IMPORT_BESIDE = [
 
 const COMMAND = 'npm run build --workspace @nortear/ds';
 
+/**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * Mesmo motivo da sequência declarada mais abaixo: `:labels="rotulos"` sobre um
+ * nome que o snippet não declara não resolve na mão de quem copia — e é o
+ * rótulo que diz o estado a quem não vê a cor do ponto.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  status: { idle: 'Em espera', running: 'Em andamento', stopped: 'Interrompido', complete: 'Concluído', failed: 'Falhou' },",
+  "  exitCode: 'código de saída {code}',",
+  '};',
+].join('\n');
+
+/**
+ * As duas funções que o laço dos estados chama.
+ *
+ * Elas são de QUEM CONSOME: o que cada estado escreveu e com que número ele
+ * terminou saem da execução, e não da peça. O que não podia continuar é elas
+ * existirem só como nome dentro do binding.
+ */
+const SAIDA_DE = [
+  '// O que cada estado escreveu é de quem executa, e não da peça.',
+  'function saidaDe(status: string): string[] {',
+  "  if (status === 'idle') return [];",
+  "  if (status === 'failed') return ['ERROR: build failed with 1 error'];",
+  "  return ['vite v7.1.0 building for production...', 'built in 8.42s'];",
+  '}',
+  '',
+  '// O número só existe depois do fim: mandá-lo antes seria mandar um',
+  '// resultado que ainda não aconteceu.',
+  'function codigoDe(status: string): number | undefined {',
+  "  if (status === 'complete') return 0;",
+  "  if (status === 'failed') return 1;",
+  '  return undefined;',
+  '}',
+].join('\n');
+
+/** Os rótulos da LINHA DE EXECUÇÃO, a irmã autônoma de um dos exemplos. */
+const ROTULOS_DA_EXECUCAO = [
+  'const rotulosDaExecucao = {',
+  "  status: { idle: 'Em espera', running: 'Respondendo', stopped: 'Interrompida', complete: 'Concluída', failed: 'Falhou' },",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS].join('\n');
+const SETUP_STATUSES = [IMPORT_STATUSES, '', ROTULOS, '', SAIDA_DE].join('\n');
+const SETUP_BESIDE = [IMPORT_BESIDE, '', ROTULOS, '', ROTULOS_DA_EXECUCAO].join('\n');
+
 /** Uma linha de saída como literal de string, dentro do atributo. */
 function lineLiteral(line: string): string {
   return `'${text(line).replace(/'/g, "\\'")}'`;
@@ -85,7 +136,7 @@ function terminalTag(opts: TerminalBlockSnippetOptions): string {
 }
 
 function build(opts: TerminalBlockSnippetOptions): string {
-  return vueSnippet(IMPORT, terminalTag(opts));
+  return vueSnippet(SETUP, terminalTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -113,7 +164,7 @@ export const terminalBlockSource: SourceTransform<{
  */
 export function terminalBlockEveryStatusSource(): string {
   return vueSnippet(
-    IMPORT_STATUSES,
+    SETUP_STATUSES,
     [
       '<TerminalBlock',
       '  v-for="status in RUN_STATUSES"',
@@ -208,7 +259,7 @@ export function terminalBlockWithoutOutputSource(): string {
 export function terminalBlockSequenceSource(): string {
   return vueSnippet(
     [
-      IMPORT,
+      SETUP,
       '',
       '// A sequência é de quem consome, e por isso ela é DECLARADA aqui: um',
       '// laço sobre um nome que o snippet não declara não resolve na mão de',
@@ -249,7 +300,7 @@ export function terminalBlockBesideRunSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_BESIDE,
+    SETUP_BESIDE,
     `<div class="nds-stack nds-max-w-lg" data-spacing="lg">\n${indentar(body)}\n</div>`,
   );
 }

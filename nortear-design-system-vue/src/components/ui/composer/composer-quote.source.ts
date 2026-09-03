@@ -22,6 +22,69 @@ export type QuoteArgs = {
 const IMPORT = "import { Composer } from '@/components/ui/composer';";
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * É a outra metade da decisão registrada logo abaixo: o `@dismiss-quote` entra
+ * sempre para dizer ONDE a responsabilidade continua, e um `responder` que
+ * nunca fosse declarado diria isso ligando um nome que não resolve na mão de
+ * quem copia.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  "  attach: 'Anexar',",
+  '};',
+].join('\n');
+
+const ROTULOS_DA_CITACAO = [
+  'const rotulosDaCitacao = {',
+  "  dismiss: 'Remover citação de {author}',",
+  "  describes: 'Respondendo a {author}',",
+  '};',
+].join('\n');
+
+const RESPONDER = [
+  '// Quem decide que a resposta deixou de responder a alguém é quem consome.',
+  'const citacao = ref(citacaoInicial);',
+  '',
+  'function responder(alvo) {',
+  '  citacao.value = alvo;',
+  '}',
+].join('\n');
+
+/** Os rótulos e a fila dos ANEXOS, que entram só quando o exemplo os mostra. */
+const ANEXOS = [
+  'const rotulosDosAnexos = {',
+  "  list: 'Anexos',",
+  "  remove: 'Remover {name}',",
+  "  state: { pending: 'Na fila', uploading: 'Enviando', ready: 'Pronto', failed: 'Falhou' },",
+  "  unit: { byte: 'B', kb: 'KB', mb: 'MB', gb: 'GB' },",
+  '};',
+  '',
+  'const arquivos = [',
+  "  { id: 'a1', name: 'relatorio.pdf', size: 184320, state: 'ready' },",
+  '];',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [
+  "import { ref } from 'vue';",
+  IMPORT,
+  '',
+  ROTULOS,
+  '',
+  ROTULOS_DA_CITACAO,
+  '',
+  RESPONDER,
+].join('\n');
+const SETUP_COM_ANEXOS = [SETUP, '', ANEXOS].join('\n');
+const SETUP_SEM_CITACAO = [IMPORT, '', ROTULOS].join('\n');
+
+/**
  * O `@dismiss-quote` entra SEMPRE.
  *
  * Sem ele o snippet ensinaria uma citação de onde não se sai — e o componente
@@ -38,7 +101,7 @@ export function quoteSnippet(opts: QuoteArgs = {}): string {
     opts.withAttachments && ':attachments="arquivos"',
     '@dismiss-quote="responder(null)"',
   ]);
-  return vueSnippet(IMPORT, `<Composer${attrs} />`);
+  return vueSnippet(opts.withAttachments ? SETUP_COM_ANEXOS : SETUP, `<Composer${attrs} />`);
 }
 
 /** Transform do `meta` — lê os args da story e devolve o uso real. */
@@ -67,5 +130,5 @@ export function quoteWithAttachmentsSource(): string {
  * existe, e mostrar as duas props ensinaria a declarar o que não se usa.
  */
 export function quoteAbsentSource(): string {
-  return vueSnippet(IMPORT, '<Composer :labels="rotulos" />');
+  return vueSnippet(SETUP_SEM_CITACAO, '<Composer :labels="rotulos" />');
 }

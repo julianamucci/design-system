@@ -54,6 +54,25 @@ const IMPORT_BESIDE = [
   "import { ContextDisplay } from '@/components/ui/context-display';",
 ].join('\n');
 
+/**
+ * Os rótulos da MEDIÇÃO DA JANELA, que entra ao lado da repartição.
+ *
+ * A peça vizinha é autônoma e tem o vocabulário dela: o exemplo ligava
+ * `:labels="rotulosDaJanela"` sem declarar em lugar nenhum, e quem copiasse
+ * recebia a irmã sem uma palavra para dizer.
+ */
+const SETUP_BESIDE = [
+  IMPORT_BESIDE,
+  '',
+  'const rotulosDaJanela = {',
+  "  title: 'Uso da janela de contexto',",
+  "  level: { normal: 'Com folga', warning: 'Perto do limite', critical: 'No limite' },",
+  "  of: 'de',",
+  "  unit: 'tokens',",
+  "  unbounded: 'Sem teto conhecido',",
+  '};',
+].join('\n');
+
 const IMPORT_DISCLOSURE = [
   IMPORT_TYPICAL,
   'import {',
@@ -209,7 +228,7 @@ export function contextBreakdownBesideBudgetSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_BESIDE,
+    SETUP_BESIDE,
     `<div class="nds-stack nds-max-w-lg" data-spacing="md">\n${indentar(body)}\n</div>`,
   );
 }

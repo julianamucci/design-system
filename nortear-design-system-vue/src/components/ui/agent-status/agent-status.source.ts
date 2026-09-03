@@ -48,6 +48,44 @@ const IMPORT_ABOVE = [
 ].join('\n');
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * `:labels="rotulos"` e `@action="aoPedir"` nomeiam coisas de quem consome, e
+ * até aqui nenhum exemplo as declarava: quem copiasse recebia um `labels`
+ * indefinido e um ouvinte que não existe. Parar e recomeçar continuam sendo
+ * decisão de fora — a linha só avisa que alguém pediu, e a intenção vem junto.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  status: { idle: 'Em espera', running: 'Respondendo', stopped: 'Interrompida', complete: 'Concluída', failed: 'Falhou' },",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+const AO_PEDIR = [
+  "function aoPedir(intent: 'stop' | 'start') {",
+  '  // Parar e começar de verdade são de quem consome: a linha só avisa.',
+  "  if (intent === 'stop') pararExecucao();",
+  '  else comecarExecucao();',
+  '}',
+].join('\n');
+
+const ROTULOS_DO_CAMPO = [
+  'const rotulosDoCampo = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', AO_PEDIR].join('\n');
+const SETUP_STATUSES = [IMPORT_STATUSES, '', ROTULOS, '', AO_PEDIR].join('\n');
+const SETUP_ABOVE = [IMPORT_ABOVE, '', ROTULOS, '', ROTULOS_DO_CAMPO, '', AO_PEDIR].join('\n');
+
+/**
  * A tag da linha, só com o que o exemplo precisa dizer.
  *
  * O aviso sai por EVENTO nesta stack, e por isso ele está aqui como `@action`:
@@ -66,7 +104,10 @@ function statusTag(opts: AgentStatusArgs): string {
 }
 
 function build(opts: AgentStatusArgs): string {
-  return vueSnippet(IMPORT, statusTag(opts));
+  // Estado sem rótulo de ação não desenha botão: ali o ouvinte não teria como
+  // disparar, e declará-lo ensinaria a ligar um fio solto.
+  const setup = opts.action === false ? [IMPORT, '', ROTULOS].join('\n') : SETUP;
+  return vueSnippet(setup, statusTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve estado e relógio por extenso. */
@@ -84,7 +125,7 @@ export const agentStatusSource: SourceTransform<AgentStatusArgs> = (_generated, 
  */
 export function agentStatusEveryStateSource(): string {
   return vueSnippet(
-    IMPORT_STATUSES,
+    SETUP_STATUSES,
     [
       '<AgentStatus',
       '  v-for="status in RUN_STATUSES"',
@@ -132,7 +173,7 @@ export function agentStatusAboveFieldSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_ABOVE,
+    SETUP_ABOVE,
     `<div class="nds-stack nds-max-w-lg" data-spacing="sm">\n${indentar(body)}\n</div>`,
   );
 }

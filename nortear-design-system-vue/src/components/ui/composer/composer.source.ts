@@ -30,6 +30,58 @@ const IMPORT_WITH_BUTTON = `${IMPORT}
 import { Button } from '@/components/ui/button';`;
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * É a outra metade da decisão registrada logo abaixo: o vínculo do texto e o
+ * `@submit` entram sempre para dizer ONDE a responsabilidade continua, e um
+ * `texto`, um `labels` e um `enviar` que nunca fossem declarados diriam isso
+ * ligando três nomes que não resolvem na mão de quem copia.
+ */
+const ROTULOS = [
+  'const labels = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+const TEXTO = [
+  '// O texto é de quem consome: o campo não guarda nem limpa nada sozinho.',
+  "const texto = ref('');",
+  '',
+  'function enviar(value: string) {',
+  '  mandarMensagem(value);',
+  "  texto.value = '';",
+  '}',
+].join('\n');
+
+/** O estado de geração e o que interrompe — só nos exemplos que os ligam. */
+const GERANDO = [
+  'const gerando = ref(false);',
+  '',
+  'function cancelar() {',
+  '  // Interromper é de quem consome: o campo só avisa que alguém pediu.',
+  '  pararGeracao();',
+  '}',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+function setupFor(opts: ComposerArgs): string {
+  const base = opts.rail ? IMPORT_WITH_BUTTON : IMPORT;
+  return [
+    "import { ref } from 'vue';",
+    base,
+    '',
+    ROTULOS,
+    '',
+    TEXTO,
+    ...(opts.running ? ['', GERANDO] : []),
+  ].join('\n');
+}
+
+/**
  * O vínculo do texto e o `@submit` entram SEMPRE, mesmo quando a story não
  * passa nenhum dos dois.
  *
@@ -56,10 +108,10 @@ function attributes(opts: ComposerArgs): Array<string | undefined> {
 /** O snippet completo, com ou sem o trilho preenchido. */
 export function composerSnippet(opts: ComposerArgs = {}): string {
   const attrs = attrsMultilinha(attributes(opts));
-  if (!opts.rail) return vueSnippet(IMPORT, `<Composer${attrs} />`);
+  if (!opts.rail) return vueSnippet(setupFor(opts), `<Composer${attrs} />`);
 
   return vueSnippet(
-    IMPORT_WITH_BUTTON,
+    setupFor(opts),
     [
       `<Composer${attrs}>`,
       '  <template #railStart>',

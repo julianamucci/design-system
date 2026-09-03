@@ -31,6 +31,24 @@ export type FlowGraphSnippetOptions = {
 const IMPORT = "import { FlowGraph } from '@/components/ui/flow-graph';";
 
 /**
+ * Os rótulos que o exemplo DECLARA.
+ *
+ * `:labels="rotulos"` nomeia texto de interface, que é de quem consome — e o
+ * exemplo não o declarava em lugar nenhum: quem copiasse recebia um `labels`
+ * indefinido, e é ele que descreve o desenho a quem não vê a seta.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  region: 'Fluxo do atendimento',",
+  "  dependsOn: 'Depende de {sources}.',",
+  "  state: { pending: 'Por fazer', running: 'Em andamento', done: 'Concluído', failed: 'Falhou' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS].join('\n');
+
+/**
  * A tag da peça, com um atributo por linha.
  *
  * Ela não tem evento nenhum e não abre espaço nenhum: um nó não faz nada, e o
@@ -48,7 +66,7 @@ function flowGraphTag(opts: FlowGraphSnippetOptions): string {
 }
 
 function build(opts: FlowGraphSnippetOptions): string {
-  return vueSnippet(IMPORT, flowGraphTag(opts));
+  return vueSnippet(SETUP, flowGraphTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -70,7 +88,7 @@ export const flowGraphSource: SourceTransform<{
 /** Os quatro estados de nó, na mesma grade. */
 export function flowGraphEveryStateSnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- Um nó por estado, na mesma grade: os quatro têm forma própria, e não',
       '     só cor. A palavra de cada um chega a quem não vê a forma. -->',
@@ -97,7 +115,7 @@ export function flowGraphRunningSnippet(): string {
  */
 export function flowGraphPartialSnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- REVELAR É PASSAR MENOS NÓS. As ligações que perderam uma ponta somem',
       '     sozinhas, e o grafo pela metade se desenha sem nenhuma regra a mais. -->',

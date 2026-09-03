@@ -87,6 +87,20 @@ function importOf(names: string[]): string {
 }
 
 /**
+ * O ouvinte do botão do addon, escrito uma vez.
+ *
+ * Revelar a senha, limpar o campo, abrir a busca — o que ele faz é decisão de
+ * quem consome, e o exemplo não escolhe por ninguém. O que ele não pode é
+ * continuar sendo só um nome no atributo.
+ */
+const HANDLE_ADDON = [
+  '',
+  'function handleAddon() {',
+  '  // O que o botão do addon faz é da aplicação: revelar, limpar, buscar.',
+  '}',
+].join('\n')
+
+/**
  * A marcação de um addon, com o que ele carrega dentro.
  *
  * `disabled` vem do GRUPO: um grupo desabilitado não pode ter controle vivo
@@ -177,9 +191,16 @@ export function inputGroupSnippet(o: InputGroupSnippetOptions = {}): string {
     ),
   ]
 
+  // O ouvinte do botão do addon é DECLARADO quando o botão existe. O que ele faz
+  // é da aplicação — revelar a senha, limpar o campo, abrir a busca —, mas a
+  // existência dele não: `@click="handleAddon"` sem declaração nenhuma entrega a
+  // quem copia um ouvinte que não resolve.
+  const hasButton = addons.some(addon => addon.buttonLabel || addon.buttonAccessibleName)
+
   const script = [
     icons.length ? `import { ${icons.join(', ')} } from 'lucide-vue-next'` : undefined,
     importOf(names),
+    hasButton ? HANDLE_ADDON : undefined,
   ]
     .filter((part): part is string => Boolean(part))
     .join('\n')

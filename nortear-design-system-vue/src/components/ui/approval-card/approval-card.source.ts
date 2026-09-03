@@ -48,6 +48,23 @@ const DEFAULT_QUESTION = 'Permitir que o agente publique o relatório?';
 const ON_CHOOSE = '@choose="answer"';
 
 /**
+ * O ouvinte da escolha, DECLARADO no exemplo.
+ *
+ * Mesmo motivo da lista de controles logo abaixo: o que a escolha SIGNIFICA é
+ * de quem consome — deixar passar uma vez, guardar a decisão, recusar —, mas um
+ * ouvinte que existisse só como nome no atributo não resolve na mão de quem
+ * copia.
+ */
+const ANSWER = [
+  '',
+  "function answer(choice: 'allow-once' | 'always' | 'deny') {",
+  '  // O que cada escolha significa é de quem consome: a peça só relata qual',
+  '  // foi apontada.',
+  '  responderAoPedido(choice);',
+  '}',
+].join('\n');
+
+/**
  * Os controles, um por escolha, no espaço que a peça abre.
  *
  * Todos com a MESMA ênfase, e é decisão: dar destaque visual a "permitir" num
@@ -115,7 +132,9 @@ function approvalTag(opts: CardShape): string {
 function build(opts: CardShape): string {
   // Sem controle nenhum não há laço, e sem laço a lista não teria o que
   // alimentar: declará-la ali ensinaria a montar dado que ninguém lê.
-  const script = opts.actions === false ? IMPORT : `${IMPORT_WITH_BUTTON}\n${CHOICES}`;
+  const script = opts.actions === false
+    ? IMPORT
+    : `${IMPORT_WITH_BUTTON}\n${CHOICES}\n${ANSWER}`;
   return vueSnippet(script, approvalTag(opts));
 }
 
@@ -187,7 +206,24 @@ export function approvalCardOutsideTheGroupSource(): string {
     "import { splitWaitingCalls } from '@shared/primitives/tool-group-summary';",
     '',
     'const { grouped, waiting } = splitWaitingCalls(calls);',
+    '',
+    '// A pergunta é de quem pede a autorização, e o alcance sai da própria',
+    '// chamada que espera: os dois são de quem consome, e o exemplo os declara',
+    '// em vez de ligar nomes que não resolvem.',
+    "const question = 'Permitir que o agente execute esta ferramenta?';",
+    '',
+    'function scopeOfWaiting(call) {',
+    "  return [{ label: 'Ferramenta', value: call.name }];",
+    '}',
+    '',
+    '// A caixa recolhida é peça própria, e tem o vocabulário dela.',
+    'const groupLabels = {',
+    "  title: { one: '1 ferramenta', other: '{n} ferramentas' },",
+    "  summary: { pending: 'Espera por você', running: 'Em curso', done: 'Concluído', failed: 'Algo falhou' },",
+    "  call: { pending: 'Esperando você', running: 'Em curso', done: 'Concluída', failed: 'Falhou' },",
+    '};',
     CHOICES,
+    ANSWER,
   ].join('\n');
 
   const card = [
@@ -253,5 +289,5 @@ export function approvalCardAnsweringSource(): string {
     '</ApprovalCard>',
   ].join('\n');
 
-  return vueSnippet(IMPORT_WITH_BUTTON, card);
+  return vueSnippet(`${IMPORT_WITH_BUTTON}\n${ANSWER}`, card);
 }

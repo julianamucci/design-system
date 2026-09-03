@@ -69,9 +69,16 @@ function call(type: string, title: string, options: string[] = []): string {
   return `${fn}('${title}', {\n${options.map((line) => `  ${line}`).join('\n')}\n})`;
 }
 
-/** O corpo do manipulador que o botão dispara. */
-function handler(body: string, name = 'notificar'): string {
-  return `function ${name}() {\n${indentar(body)}\n}`;
+/**
+ * O corpo do manipulador que o botão dispara.
+ *
+ * O nome entra LITERAL, e não por `${…}`: o gatilho é sempre `@click="notificar"`
+ * e o único nome que existiu foi esse. Interpolá-lo escondia a declaração de
+ * quem lê o texto do módulo — a guarda que confere se o exemplo declara o que
+ * liga via, do exemplo publicado, um `function () {` sem nome nenhum.
+ */
+function handler(body: string): string {
+  return `function notificar() {\n${indentar(body)}\n}`;
 }
 
 /**
@@ -273,7 +280,6 @@ export function sonnerWithActionSource(): string {
       call('default', 'Item excluído.', [
         `action: { label: 'Desfazer', onClick: desfazer },`,
       ]),
-      'notificar',
     )}
 
 function desfazer() {

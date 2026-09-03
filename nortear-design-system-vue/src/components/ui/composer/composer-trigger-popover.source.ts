@@ -27,6 +27,42 @@ export type TriggerArgs = {
   command?: boolean;
 };
 
+/**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * O vínculo do texto e o `@submit` dizem ONDE a responsabilidade continua — o
+ * campo não guarda nem envia por conta própria —, e até aqui os dois nomes
+ * apareciam sem nunca serem declarados, o que dizia isso ligando fio solto. Os
+ * rótulos entram pelo mesmo motivo: texto de interface é de quem consome.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+const ROTULOS_DO_SELETOR = [
+  'const rotulosDoSeletor = {',
+  "  empty: 'Nada encontrado',",
+  "  list: 'Sugestões',",
+  "  team: 'Produto',",
+  '};',
+].join('\n');
+
+const TEXTO = [
+  '// O texto é de quem consome: o campo não guarda nem limpa nada sozinho.',
+  "const texto = ref('');",
+  '',
+  'function enviar(value: string) {',
+  '  mandarMensagem(value);',
+  "  texto.value = '';",
+  '}',
+].join('\n');
+
 /** O snippet completo, com um gatilho ou com os dois. */
 export function triggerSnippet(opts: TriggerArgs = {}): string {
   const sources: string[] = [];
@@ -39,8 +75,15 @@ export function triggerSnippet(opts: TriggerArgs = {}): string {
       : `:triggers="[\n    ${sources.join(',\n    ')},\n  ]"`;
 
   const script = [
+    "import { ref } from 'vue';",
     "import { Composer } from '@/components/ui/composer';",
     `import { ${opts.command ? 'COMMAND_TRIGGER, ' : ''}MENTION_TRIGGER } from '@shared/primitives/composer-trigger';`,
+    '',
+    ROTULOS,
+    '',
+    ROTULOS_DO_SELETOR,
+    '',
+    TEXTO,
   ].join('\n');
 
   const attributes = attrsMultilinha([

@@ -48,6 +48,42 @@ const IMPORT_BESIDE = [
 ].join('\n');
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * `:labels="rotulos"` e `@retry="religar"` nomeiam coisas de quem consome, e
+ * nenhum exemplo as declarava: quem copiasse recebia um `labels` indefinido e
+ * um ouvinte que não existe. O que RECONECTAR significa continua sendo decisão
+ * de fora — a linha só avisa que alguém pediu.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  state: { connected: 'Ligado', reconnecting: 'Reconectando', disconnected: 'Sem ligação' },",
+  "  action: { reconnecting: 'Tentar agora', disconnected: 'Reconectar' },",
+  '};',
+].join('\n');
+
+const RELIGAR = [
+  'function religar() {',
+  '  // Reconectar é de quem consome: a linha só avisa que alguém pediu.',
+  '  abrirLigacao();',
+  '}',
+].join('\n');
+
+/** Os rótulos da LINHA DE EXECUÇÃO, a irmã autônoma de um dos exemplos. */
+const ROTULOS_DA_EXECUCAO = [
+  'const rotulosDaExecucao = {',
+  "  status: { idle: 'Em espera', running: 'Respondendo', stopped: 'Interrompida', complete: 'Concluída', failed: 'Falhou' },",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', RELIGAR].join('\n');
+const SETUP_SEM_ACAO = [IMPORT, '', ROTULOS].join('\n');
+const SETUP_STATES = [IMPORT_STATES, '', ROTULOS, '', RELIGAR].join('\n');
+const SETUP_BESIDE = [IMPORT_BESIDE, '', ROTULOS, '', ROTULOS_DA_EXECUCAO, '', RELIGAR].join('\n');
+
+/**
  * A tag da linha, só com o que o exemplo precisa dizer.
  *
  * O aviso sai por EVENTO nesta stack, e por isso ele está aqui como `@retry`:
@@ -66,7 +102,7 @@ function connectionTag(opts: ConnectionStateArgs): string {
 }
 
 function build(opts: ConnectionStateArgs): string {
-  return vueSnippet(IMPORT, connectionTag(opts));
+  return vueSnippet(opts.action === false ? SETUP_SEM_ACAO : SETUP, connectionTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve estado e contagem por extenso. */
@@ -84,7 +120,7 @@ export const connectionStateSource: SourceTransform<ConnectionStateArgs> = (_gen
  */
 export function connectionStateEveryStateSource(): string {
   return vueSnippet(
-    IMPORT_STATES,
+    SETUP_STATES,
     [
       '<ConnectionState',
       '  v-for="state in CONNECTION_STATES"',
@@ -138,7 +174,7 @@ export function connectionStateBesideRunSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_BESIDE,
+    SETUP_BESIDE,
     `<div class="nds-stack nds-max-w-lg" data-spacing="sm">\n${indentar(body)}\n</div>`,
   );
 }

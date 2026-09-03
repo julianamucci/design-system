@@ -80,6 +80,42 @@ const IMPORT_BESIDE = [
   "import { ContextDisplay } from '@/components/ui/context-display';",
 ].join('\n');
 
+/**
+ * Os rótulos que o exemplo DECLARA — os da faixa e os da irmã.
+ *
+ * `:labels="rotulos"` nomeia texto de interface, que é de quem consome, e
+ * nenhum exemplo o declarava: quem copiasse recebia um `labels` indefinido, e é
+ * ele que diz o nível a quem não vê a cor da barra. A medição da janela é
+ * AUTÔNOMA e tem o vocabulário dela, e por isso ganha o seu.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  action: 'Mudar de plano',",
+  "  title: 'Cota do plano',",
+  "  unit: 'mensagens',",
+  "  left: 'restantes',",
+  "  exhausted: 'Cota esgotada',",
+  "  renews: 'Renova em',",
+  "  of: 'de',",
+  "  level: { normal: 'Com folga', warning: 'Perto do fim', critical: 'No fim' },",
+  '};',
+].join('\n');
+
+const ROTULOS_DA_JANELA = [
+  'const rotulosDaJanela = {',
+  "  title: 'Uso da janela de contexto',",
+  "  level: { normal: 'Com folga', warning: 'Perto do limite', critical: 'No limite' },",
+  "  of: 'de',",
+  "  unit: 'tokens',",
+  "  unbounded: 'Sem teto conhecido',",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP_BUDGET = [IMPORT_BUDGET, '', ROTULOS].join('\n');
+const SETUP_ACTION = [IMPORT_ACTION, '', ROTULOS].join('\n');
+const SETUP_BESIDE = [IMPORT_BESIDE, '', ROTULOS, '', ROTULOS_DA_JANELA].join('\n');
+
 /** O formatador que é de QUEM CONSOME, e nunca do componente. */
 function horizonLines(): string {
   return [
@@ -124,7 +160,7 @@ function build(opts: QuotaBannerArgs): string {
   const renews = opts.renews ?? true;
 
   const script = [
-    IMPORT_BUDGET,
+    SETUP_BUDGET,
     '',
     renews
       ? horizonLines()
@@ -157,7 +193,7 @@ export const quotaBannerSource: SourceTransform<QuotaBannerArgs> = (_gerado, ctx
 export function quotaBannerEveryCaseSource(): string {
   return vueSnippet(
     [
-      IMPORT_BUDGET,
+      SETUP_BUDGET,
       '',
       horizonLines(),
       '',
@@ -181,7 +217,7 @@ export function quotaBannerEveryCaseSource(): string {
 export function quotaBannerAllLevelsSource(): string {
   return vueSnippet(
     [
-      IMPORT_BUDGET,
+      SETUP_BUDGET,
       '',
       horizonLines(),
       '',
@@ -235,7 +271,7 @@ export function quotaBannerNoRenewalSource(): string {
 export function quotaBannerWithActionSource(): string {
   return vueSnippet(
     [
-      IMPORT_ACTION,
+      SETUP_ACTION,
       '',
       horizonLines(),
       '',
@@ -264,7 +300,7 @@ export function quotaBannerBesideContextSource(): string {
 
   return vueSnippet(
     [
-      IMPORT_BESIDE,
+      SETUP_BESIDE,
       '',
       horizonLines(),
       '',

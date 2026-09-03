@@ -34,6 +34,58 @@ const IMPORT_IN_RAIL =
   "import { Composer, ComposerVoice } from '@/components/ui/composer';";
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * `:labels="rotulos"` e `@toggle="aoAlternar"` nomeiam coisas de quem consome,
+ * e nenhum exemplo as declarava: quem copiasse recebia um `labels` indefinido e
+ * um ouvinte que não existe. LIGAR E DESLIGAR o ditado é de fora — o controle
+ * só avisa que alguém pediu.
+ */
+function voiceLabels(name: string): string {
+  return [
+    `const ${name} = {`,
+    "  start: 'Ditar',",
+    "  stop: 'Parar de ditar',",
+    '  status: {',
+    "    idle: 'Ditado desligado',",
+    "    recording: 'Gravando',",
+    "    transcribing: 'Transcrevendo — não dá para interromper',",
+    '  },',
+    '};',
+  ].join('\n');
+}
+
+const AO_ALTERNAR = [
+  'function aoAlternar() {',
+  '  // Ligar e desligar o ditado é de quem consome: o controle só avisa.',
+  '  alternarDitado();',
+  '}',
+].join('\n');
+
+/** Os rótulos do CAMPO, que hospeda o controle numa das composições. */
+const ROTULOS_DO_CAMPO = [
+  'const rotulos = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', voiceLabels('rotulos'), '', AO_ALTERNAR].join('\n');
+const SETUP_IN_RAIL = [
+  IMPORT_IN_RAIL,
+  '',
+  ROTULOS_DO_CAMPO,
+  '',
+  voiceLabels('rotulosDaVoz'),
+  '',
+  AO_ALTERNAR,
+].join('\n');
+
+/**
  * A tag do controle, só com o que difere do padrão.
  *
  * Na transcrição o alternador não responde, então o ouvinte não teria como
@@ -58,7 +110,12 @@ function voiceTag(opts: VoiceArgs, labelsName = 'rotulos'): string {
 }
 
 function build(opts: VoiceArgs): string {
-  return vueSnippet(IMPORT, voiceTag(opts));
+  // Na transcrição o alternador não responde, e o ouvinte sai junto: declará-lo
+  // ali ensinaria a ligar um fio solto.
+  const setup = opts.state === 'transcribing'
+    ? [IMPORT, '', voiceLabels('rotulos')].join('\n')
+    : SETUP;
+  return vueSnippet(setup, voiceTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que segue os controls. */
@@ -100,7 +157,7 @@ export function voiceInRailSource(): string {
   );
   const rail = `<template #railStart>\n${indentar(voice)}\n</template>`;
   return vueSnippet(
-    IMPORT_IN_RAIL,
+    SETUP_IN_RAIL,
     `<Composer :labels="rotulos">\n${indentar(rail)}\n</Composer>`,
   );
 }

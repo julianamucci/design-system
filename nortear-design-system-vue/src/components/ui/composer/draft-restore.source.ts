@@ -39,6 +39,55 @@ const IMPORT_ABOVE =
   "import { Composer, DraftRestore } from '@/components/ui/composer';";
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * `:labels="rotulos"` e `@action="aoResponder"` nomeiam coisas de quem consome,
+ * e nenhum exemplo as declarava: quem copiasse recebia um `labels` indefinido e
+ * um ouvinte que não existe. RESTAURAR E DESCARTAR são de fora — a faixa só
+ * avisa qual dos dois foi pedido.
+ */
+function draftLabels(name: string): string {
+  return [
+    `const ${name} = {`,
+    "  title: 'Você tinha um rascunho',",
+    "  restore: 'Restaurar rascunho',",
+    "  discard: 'Descartar rascunho',",
+    '};',
+  ].join('\n');
+}
+
+const AO_RESPONDER = [
+  "function aoResponder(intent: 'restore' | 'discard') {",
+  '  // Restaurar e descartar são de quem consome: a faixa só avisa.',
+  "  if (intent === 'restore') recuperarRascunho();",
+  '  else apagarRascunho();',
+  '}',
+].join('\n');
+
+/** Os rótulos do CAMPO, a peça vizinha, que tem o vocabulário dela. */
+const ROTULOS_DO_CAMPO = [
+  'const rotulos = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', draftLabels('rotulos'), '', AO_RESPONDER].join('\n');
+const SETUP_ABOVE = [
+  IMPORT_ABOVE,
+  '',
+  ROTULOS_DO_CAMPO,
+  '',
+  draftLabels('rotulosDoRascunho'),
+  '',
+  AO_RESPONDER,
+].join('\n');
+
+/**
  * A tag da faixa, só com o que o exemplo precisa dizer.
  *
  * O aviso sai por EVENTO nesta stack, e por isso ele está aqui como `@action`:
@@ -57,7 +106,7 @@ function draftTag(opts: DraftArgs, labelsName = 'rotulos'): string {
 }
 
 function build(opts: DraftArgs): string {
-  return vueSnippet(IMPORT, draftTag(opts));
+  return vueSnippet(SETUP, draftTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que segue os controls. */
@@ -95,7 +144,7 @@ export function draftAboveComposerSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_ABOVE,
+    SETUP_ABOVE,
     `<div class="nds-max-w-lg">\n${indentar(body)}\n</div>`,
   );
 }

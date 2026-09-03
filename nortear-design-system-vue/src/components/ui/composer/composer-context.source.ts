@@ -33,6 +33,50 @@ export type ContextArgs = {
 
 const IMPORT = "import { Composer } from '@/components/ui/composer';";
 
+/**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * É a outra metade da decisão registrada mais abaixo: o `@remove-context` entra
+ * sempre que há o que tirar, para dizer ONDE a responsabilidade continua — e um
+ * `tirar` que nunca fosse declarado diria isso ligando um nome que não resolve.
+ * Os rótulos seguem o mesmo caminho: texto de interface é de quem consome.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
+const ROTULOS_DO_CONTEXTO = [
+  'const rotulosDoContexto = {',
+  "  list: 'Contexto',",
+  "  remove: 'Remover {label}',",
+  '  kind: {',
+  "    selection: 'Trecho',",
+  "    file: 'Arquivo',",
+  "    directory: 'Pasta',",
+  "    page: 'Página',",
+  "    repository: 'Repositório',",
+  '  },',
+  "  automatic: 'Automático',",
+  '};',
+].join('\n');
+
+const TIRAR = [
+  'function tirar(label: string) {',
+  '  // Quem monta a pergunta é quem sabe o que sobra sem aquele item.',
+  '  removerReferencia(label);',
+  '}',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', ROTULOS_DO_CONTEXTO].join('\n');
+const SETUP_SEM_CONTEXTO = [IMPORT, '', ROTULOS].join('\n');
+
 /** O item por extenso, na ordem em que o tipo o declara. */
 function itemLiteral(opts: ContextArgs): string {
   const fields = [
@@ -61,7 +105,10 @@ export function contextSnippet(opts: ContextArgs = {}): string {
     `:context="${items}"`,
     !opts.automatic && '@remove-context="tirar"',
   ]);
-  const script = opts.inline ? `${IMPORT}\n\n${itemLiteral(opts)}` : IMPORT;
+  // Item automático não oferece botão de remover, e o ouvinte sai junto:
+  // declarar `tirar` ali ensinaria a ligar um fio solto.
+  const base = opts.automatic ? SETUP : [SETUP, '', TIRAR].join('\n');
+  const script = opts.inline ? `${base}\n\n${itemLiteral(opts)}` : base;
   return vueSnippet(script, `<Composer${attrs} />`);
 }
 
@@ -101,5 +148,5 @@ export function contextWithFieldSource(): string {
  * e mostrar as duas props aqui ensinaria a declarar o que não se usa.
  */
 export function contextAbsentSource(): string {
-  return vueSnippet(IMPORT, '<Composer :labels="rotulos" />');
+  return vueSnippet(SETUP_SEM_CONTEXTO, '<Composer :labels="rotulos" />');
 }

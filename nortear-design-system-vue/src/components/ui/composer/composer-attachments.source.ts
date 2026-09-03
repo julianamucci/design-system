@@ -21,6 +21,46 @@ export type AttachmentsArgs = {
 const IMPORT = "import { Composer } from '@/components/ui/composer';";
 
 /**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * É a outra metade da decisão registrada logo abaixo: o `@remove-attachment`
+ * entra sempre para dizer ONDE a responsabilidade continua, e um `remover` que
+ * nunca fosse declarado diria isso ligando um nome que não resolve. Os rótulos
+ * seguem o mesmo caminho — são texto de interface, e texto de interface é de
+ * quem consome.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  "  attach: 'Anexar',",
+  '};',
+].join('\n');
+
+const ROTULOS_DOS_ANEXOS = [
+  'const rotulosDosAnexos = {',
+  "  list: 'Anexos',",
+  "  remove: 'Remover {name}',",
+  "  state: { pending: 'Na fila', uploading: 'Enviando', ready: 'Pronto', failed: 'Falhou' },",
+  "  unit: { byte: 'B', kb: 'KB', mb: 'MB', gb: 'GB' },",
+  '};',
+].join('\n');
+
+const REMOVER = [
+  'function remover(id: string) {',
+  '  // Quem sobe o arquivo é quem sabe se dá para cancelar: a fila só avisa.',
+  '  cancelarEnvio(id);',
+  '}',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', ROTULOS_DOS_ANEXOS, '', REMOVER].join('\n');
+const SETUP_SEM_ANEXO = [IMPORT, '', ROTULOS].join('\n');
+
+/**
  * O `@remove-attachment` entra SEMPRE.
  *
  * Sem ele o snippet ensinaria uma fila de onde não se tira nada — e o
@@ -35,7 +75,7 @@ export function attachmentsSnippet(opts: AttachmentsArgs = {}): string {
     `:attachments="${opts.queue ?? 'arquivos'}"`,
     '@remove-attachment="remover"',
   ]);
-  return vueSnippet(IMPORT, `<Composer${attrs} />`);
+  return vueSnippet(SETUP, `<Composer${attrs} />`);
 }
 
 /** Transform do `meta` do Playground: lê os args da story e devolve o uso real. */
@@ -69,5 +109,5 @@ export function attachmentsWithFieldSource(): string {
  * e mostrar as duas props aqui ensinaria a declarar o que não se usa.
  */
 export function attachmentsAbsentSource(): string {
-  return vueSnippet(IMPORT, '<Composer :labels="rotulos" />');
+  return vueSnippet(SETUP_SEM_ANEXO, '<Composer :labels="rotulos" />');
 }

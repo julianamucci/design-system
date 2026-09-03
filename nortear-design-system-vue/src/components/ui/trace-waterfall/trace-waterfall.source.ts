@@ -31,6 +31,27 @@ export type TraceWaterfallSnippetOptions = {
 const IMPORT = "import { TraceWaterfall } from '@/components/ui/trace-waterfall';";
 
 /**
+ * Os rótulos que o exemplo DECLARA.
+ *
+ * `:labels="rotulos"` nomeia texto de interface, que é de quem consome — e o
+ * exemplo não o declarava em lugar nenhum: quem copiasse recebia um `labels`
+ * indefinido, e é ele que conta a leitura a quem não vê a barra.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  "  region: 'Tempo do atendimento',",
+  "  axis: 'Eixo de {total} ms',",
+  "  duration: '{duration} ms',",
+  "  reading: 'Começa em {start} ms e dura {duration} ms.',",
+  "  clipped: 'Continua fora da janela mostrada.',",
+  "  state: { pending: 'Por começar', running: 'Em andamento', done: 'Concluído', failed: 'Falhou' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS].join('\n');
+
+/**
  * A tag da peça, com um atributo por linha.
  *
  * Ela não tem evento nenhum e não abre espaço nenhum: um trecho não faz nada,
@@ -48,7 +69,7 @@ function traceWaterfallTag(opts: TraceWaterfallSnippetOptions): string {
 }
 
 function build(opts: TraceWaterfallSnippetOptions): string {
-  return vueSnippet(IMPORT, traceWaterfallTag(opts));
+  return vueSnippet(SETUP, traceWaterfallTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve os eixos por extenso. */
@@ -70,7 +91,7 @@ export const traceWaterfallSource: SourceTransform<{
 /** Os quatro estados de trecho, na mesma régua. */
 export function traceWaterfallEveryStateSnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- Um trecho por estado, na mesma régua: os quatro têm forma própria —',
       '     na marca e no preenchimento da barra —, e não só cor. A palavra de',
@@ -99,7 +120,7 @@ export function traceWaterfallRunningSnippet(): string {
  */
 export function traceWaterfallPartialSnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- REVELAR É PASSAR MENOS TRECHOS, mantendo o eixo. As barras que',
       '     sobram guardam a posição verdadeira em vez de reescalarem. -->',
@@ -121,7 +142,7 @@ export function traceWaterfallLongLabelsSnippet(): string {
 /** Uma janela do rastro: o eixo é menor que os trechos que ele mostra. */
 export function traceWaterfallClippedSnippet(): string {
   return vueSnippet(
-    IMPORT,
+    SETUP,
     [
       '<!-- A JANELA: um eixo menor que o rastro recorta as barras das pontas,',
       '     e cada linha recortada avisa em palavras que o trecho continua',

@@ -51,6 +51,46 @@ const IMPORT_BESIDE = [
 
 const JOB_LABEL = 'Indexando o repositório';
 
+/**
+ * O que o exemplo DECLARA, e não só o que ele importa.
+ *
+ * Mesmo motivo da fila declarada mais abaixo: `:labels="rotulos"` e
+ * `@action="aplicar"` sobre nomes que o snippet não declara não resolvem na mão
+ * de quem copia. Parar e retomar continuam sendo de fora — a peça só avisa que
+ * alguém pediu, e a intenção vem junto.
+ */
+const ROTULOS = [
+  'const rotulos = {',
+  `  job: '${JOB_LABEL}',`,
+  "  status: { idle: 'Em espera', running: 'Em andamento', stopped: 'Interrompido', complete: 'Concluído', failed: 'Falhou' },",
+  "  count: '{done} de {total}',",
+  "  countWithoutTotal: '{done} até agora',",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+const APLICAR = [
+  "function aplicar(intent: 'stop' | 'start') {",
+  '  // Parar e retomar são de quem consome: a peça só avisa que alguém pediu.',
+  "  if (intent === 'stop') pararTarefa();",
+  '  else retomarTarefa();',
+  '}',
+].join('\n');
+
+/** Os rótulos da LINHA DE EXECUÇÃO, a irmã autônoma de um dos exemplos. */
+const ROTULOS_DA_EXECUCAO = [
+  'const rotulosDaExecucao = {',
+  "  status: { idle: 'Em espera', running: 'Respondendo', stopped: 'Interrompida', complete: 'Concluída', failed: 'Falhou' },",
+  "  action: { running: 'Parar', stopped: 'Retomar', failed: 'Tentar de novo' },",
+  '};',
+].join('\n');
+
+/** O `<script setup>` de cada exemplo: o que importa e o que declara. */
+const SETUP = [IMPORT, '', ROTULOS, '', APLICAR].join('\n');
+const SETUP_SEM_ACAO = [IMPORT, '', ROTULOS].join('\n');
+const SETUP_STATUSES = [IMPORT_STATUSES, '', ROTULOS, '', APLICAR].join('\n');
+const SETUP_BESIDE = [IMPORT_BESIDE, '', ROTULOS, '', ROTULOS_DA_EXECUCAO, '', APLICAR].join('\n');
+
 /** `:count="{ done: 1240, total: 5000 }"`, ou só o feito quando não se sabe. */
 function countAttr(opts: JobProgressArgs): string | undefined {
   if (opts.done === undefined) return undefined;
@@ -81,7 +121,7 @@ function jobTag(opts: JobProgressArgs): string {
 }
 
 function build(opts: JobProgressArgs): string {
-  return vueSnippet(IMPORT, jobTag(opts));
+  return vueSnippet(opts.action === false ? SETUP_SEM_ACAO : SETUP, jobTag(opts));
 }
 
 /** Transform do `meta` — o Playground, que escreve os três eixos por extenso. */
@@ -107,7 +147,7 @@ export const jobProgressSource: SourceTransform<JobProgressArgs> = (_generated, 
  */
 export function jobProgressEveryStatusSource(): string {
   return vueSnippet(
-    IMPORT_STATUSES,
+    SETUP_STATUSES,
     [
       '<JobProgress',
       '  v-for="status in RUN_STATUSES"',
@@ -170,7 +210,7 @@ export function jobProgressFailedSource(): string {
 export function jobProgressQueueSource(): string {
   return vueSnippet(
     [
-      IMPORT,
+      SETUP,
       '',
       '// A fila é de quem consome, e por isso ela é DECLARADA aqui: um laço',
       '// sobre um nome que o snippet não declara não resolve na mão de quem',
@@ -211,7 +251,7 @@ export function jobProgressBesideRunSource(): string {
   ].join('\n');
 
   return vueSnippet(
-    IMPORT_BESIDE,
+    SETUP_BESIDE,
     `<div class="nds-stack nds-max-w-lg" data-spacing="lg">\n${indentar(body)}\n</div>`,
   );
 }

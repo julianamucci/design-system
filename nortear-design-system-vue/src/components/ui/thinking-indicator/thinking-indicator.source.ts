@@ -26,6 +26,25 @@ const IMPORT_INDICATOR =
   "import { ThinkingIndicator } from '@/components/ui/thinking-indicator';";
 const IMPORT_MARKDOWN = "import { Markdown } from '@/components/ui/markdown';";
 
+/**
+ * O que os exemplos DECLARAM, além do que eles importam.
+ *
+ * A pergunta e os rótulos do campo são de quem monta a conversa — e nenhum
+ * exemplo os declarava: quem copiasse recebia um `:content` e um `:labels`
+ * indefinidos, e o indicador ficaria sozinho na tela sem o que o cerca.
+ */
+const QUESTION = "const question = 'Resuma este relatório em três frases.';";
+
+const ROTULOS_DO_CAMPO = [
+  'const labels = {',
+  "  input: 'Mensagem',",
+  "  placeholder: 'Escreva sua mensagem…',",
+  "  submit: 'Enviar',",
+  "  stop: 'Parar',",
+  "  hint: '{key} envia',",
+  '};',
+].join('\n');
+
 /** A tag sozinha, com a frase que o consumidor manda anunciar. */
 function tag(label: string): string {
   return `<ThinkingIndicator${attrs(`label="${text(label)}"`)} />`;
@@ -38,7 +57,7 @@ export const thinkingIndicatorSource: SourceTransform<IndicatorSnippetOptions> =
 /** A espera: o indicador no lugar em que a resposta vai aparecer. */
 export function indicatorWaitingSource(): string {
   return vueSnippet(
-    `${IMPORT_MARKDOWN}\n${IMPORT_INDICATOR}`,
+    `${IMPORT_MARKDOWN}\n${IMPORT_INDICATOR}\n\n${QUESTION}`,
     `<div class="nds-stack" data-spacing="sm">
   <Markdown :content="question" />
   <!-- O indicador é o ÚLTIMO da conversa: ele ocupa o lugar do que ainda não veio. -->
@@ -56,7 +75,7 @@ export function indicatorWaitingSource(): string {
  */
 export function indicatorArrivedSource(): string {
   return vueSnippet(
-    `${IMPORT_MARKDOWN}\n${IMPORT_INDICATOR}`,
+    `${IMPORT_MARKDOWN}\n${IMPORT_INDICATOR}\n\n${QUESTION}`,
     `<div class="nds-stack" data-spacing="sm">
   <Markdown :content="question" />
   <!-- Chegou o texto: o indicador sai, e o lugar passa a ser da resposta. -->
@@ -69,7 +88,7 @@ export function indicatorArrivedSource(): string {
 /** A troca inteira, do jeito que quem consome a escreve. */
 export function indicatorReplacingSource(): string {
   return vueSnippet(
-    `import { ref } from 'vue';\n${IMPORT_MARKDOWN}\n${IMPORT_INDICATOR}\n\n// Quem monta a conversa é quem vira a chave, ao chegar o primeiro trecho.\nconst answer = ref('');`,
+    `import { ref } from 'vue';\n${IMPORT_MARKDOWN}\n${IMPORT_INDICATOR}\n\n${QUESTION}\n\n// Quem monta a conversa é quem vira a chave, ao chegar o primeiro trecho.\nconst answer = ref('');`,
     `<div class="nds-stack" data-spacing="sm">
   <Markdown :content="question" />
   <Markdown v-if="answer" :content="answer" />
@@ -86,7 +105,7 @@ export function indicatorReplacingSource(): string {
  */
 export function indicatorWithComposerSource(): string {
   return vueSnippet(
-    `${IMPORT_INDICATOR}\nimport { Composer } from '@/components/ui/composer';`,
+    `${IMPORT_INDICATOR}\nimport { Composer } from '@/components/ui/composer';\n\n${ROTULOS_DO_CAMPO}`,
     `<div class="nds-stack" data-spacing="sm">
   ${tag(DEFAULT_LABEL)}
   <!-- Só o campo oferece o que acionar; o indicador não tem controle nenhum. -->
