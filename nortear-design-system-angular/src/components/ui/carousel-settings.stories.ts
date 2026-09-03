@@ -242,32 +242,29 @@ export const Autoplay: Story = {
       await expect(canvas.getByRole('button', { name: 'Retomar apresentação' })).toBeInTheDocument();
 
       // O rótulo é o estado declarado; a prova é o viewport não sair do lugar
-      // depois de um intervalo inteiro de autoplay (400ms) ter passado.
+      // depois de dois intervalos inteiros de autoplay (400ms cada) terem
+      // passado.
       //
-      // A medida de referência só vale depois que a rolagem assenta: parar o
-      // relógio não cancela o quadro que já estava em curso, e ler o valor no
-      // instante do clique compararia contra um número ainda em movimento —
-      // a mesma corrida do contraste ~1.0 em elemento a meio do fade.
-      // `NaN` na semente não é descuido, é o que obriga a espera a comparar
-      // amostras SEPARADAS NO TEMPO. Semeando com a posição atual, a primeira
-      // verificação — que roda no mesmo quadro — compararia o valor consigo
-      // mesmo, daria "assentou" e a espera sairia sem provar nada.
+      // A referência é lida DEPOIS de uma espera de relógio, e não por um laço
+      // que tenta detectar "assentou". O laço anterior contava quatro leituras
+      // iguais dentro de um `waitFor`, e quatro leituras iguais NÃO são quatro
+      // instantes separados: o `waitFor` reagenda por conta própria, então com
+      // a máquina carregada — três suítes de navegador ao mesmo tempo, que é
+      // como esta stack é medida — a thread congela, as quatro sondas rodam em
+      // sequência sobre o MESMO quadro e a espera declara "assentou" com uma
+      // rolagem suave ainda pendente do último tique de antes da pausa.
       //
-      // QUATRO leituras, não duas — o mesmo número que o `settle` do gesto
-      // de arrastar usa algumas centenas de linhas abaixo, e pelo mesmo motivo
-      // escrito lá: a rolagem suave desacelera até encostar, e no fim da curva
-      // ela anda menos de meio pixel entre duas leituras enquanto ainda falta
-      // caminho. Este ponto era o único do arquivo com duas, e reprovava sob
-      // carga afirmando que a posição mudara 37px depois de "parada".
-      let estaveis = 0;
-      let previous = NaN;
-      await waitFor(async () => {
-        const agora = viewport.scrollLeft;
-        estaveis = agora === previous ? estaveis + 1 : 0;
-        previous = agora;
-        await expect(estaveis).toBeGreaterThanOrEqual(3);
-      }, { timeout: 3000 });
-      const parado = previous;
+      // Foi exatamente isso que reprovou: referência lida em 237, viewport
+      // terminando em 928 (três slides adiante) com o relógio já parado. O
+      // defeito não era do carrossel — era a referência ter sido tirada no meio
+      // do voo.
+      //
+      // Esperar antes de medir resolve porque a espera é de relógio: se a
+      // thread travar, o próprio temporizador atrasa junto, e quando ele acorda
+      // a rolagem pendente já aterrissou. Os dentes ficam: com o relógio ainda
+      // ligado, a segunda espera veria dois tiques.
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      const parado = viewport.scrollLeft;
 
       await new Promise((resolve) => setTimeout(resolve, 900));
       await expect(viewport.scrollLeft).toBe(parado);
