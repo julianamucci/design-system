@@ -1,7 +1,14 @@
 /*
  * ─── nds-sheet ──────────────────────────────────────────────────────────────
  * Painel deslizante a partir de uma das bordas (top/right/bottom/left).
- * Render via portal. Drawer reusa o sheet com side="bottom".
+ * Render via portal.
+ *
+ * O Drawer é componente PRÓPRIO, com folha própria (`drawer.css`) — a linha que
+ * estava aqui dizia que ele "reusa o sheet com side=bottom", e isso deixou de
+ * ser verdade quando ele ganhou painel, alça, corpo e cantos próprios. O que
+ * ele reusa desta folha, e continua reusando, são três peças: `.nds-sheet-overlay`,
+ * `.nds-sheet-title` e `.nds-sheet-description`. Editar qualquer uma das três
+ * alcança os dois componentes.
  *
  * Estrutura:
  *   <div class="nds-sheet-overlay" />
@@ -36,6 +43,48 @@
  *         direito, o ponto de customização (ver a nota em "Sides").
  */
 
+/* ── Defaults de largura ─────────────────────────────────────────────────── */
+/*
+ * Os dois tokens de largura do painel são DECLARADOS aqui, e o `var()`
+ * que os lê lá embaixo não tem mais fallback.
+ *
+ * ── Por que declarar ────────────────────────────────────────────────────────
+ * Enquanto o valor morava só no fallback (`var(--sheet-width, 75%)`), o token
+ * não existia para quem varre o CSS à procura de declaração — gancho real de
+ * customização, invisível ao leitor. (Estes dois escapavam por acidente:
+ * `sidebar.css` os declara em `.nds-sidebar-mobile`. Os do Drawer não tinham
+ * essa sorte e tiveram de sair da tabela de tokens das docs pages dele.)
+ * Declarado, o default fica num lugar só, em vez de repetido em cada `var()`.
+ *
+ * ── Por que em `:root`, e não no seletor da peça ────────────────────────────
+ * MEDIDO no navegador, com `sheet.css` + `sidebar.css` reais e quatro alvos: o
+ * painel sem override, o `.nds-sidebar-mobile` (que declara `--sheet-width` NO
+ * MESMO ELEMENTO do painel), uma classe de consumidor no painel, e um wrapper
+ * ANCESTRAL declarando o token.
+ *
+ *   | onde declarar                     | padrão | sidebar-mobile | classe | ancestral |
+ *   |-----------------------------------|--------|----------------|--------|-----------|
+ *   | hoje (só fallback)                | 384px  | 288px          | 540px  | 500px     |
+ *   | `[data-side]` da peça     (0,2,0) | 384px  | 384px ✗        | 384px ✗| 384px ✗   |
+ *   | `.nds-sheet-content` base (0,1,0) | 384px  | 288px          | 540px  | 384px ✗   |
+ *   | `:root`                           | 384px  | 288px          | 540px  | 500px     |
+ *
+ * Declarar no seletor da própria peça APAGA os três overrides: valor declarado
+ * na mesma caixa vence por especificidade (0,2,0 contra os 0,1,0 de quem
+ * customiza), e a rota de customização que a doc publica deixa de funcionar.
+ * Declarar na classe base salva os overrides do mesmo elemento — mas só por
+ * ordem de folha, e ainda apaga o override ancestral, porque valor DECLARADO no
+ * elemento vence valor HERDADO venha de onde vier.
+ *
+ * Em `:root` o default só chega ao painel por herança, e herança perde para
+ * qualquer declaração — na própria caixa ou em qualquer ancestral. É a única das
+ * três em que as quatro medidas ficam idênticas às de hoje.
+ */
+:root {
+  --sheet-width: 75%;
+  --sheet-max-width: 24rem;                        /* 384px */
+}
+
 /* ── Overlay ─────────────────────────────────────────────────────────────── */
 .nds-sheet-overlay {
   position: fixed;
@@ -62,23 +111,27 @@
 
 /* ── Sides ───────────────────────────────────────────────────────────────── */
 /*
- * A largura sai de `--sheet-width` / `--sheet-max-width`, com o valor antigo
- * como fallback — nada muda de aparência.
+ * A largura sai de `--sheet-width` / `--sheet-max-width`, declarados em `:root`
+ * no topo desta folha — nada muda de aparência.
  *
- * O motivo é especificidade: estas regras são (0,2,0) e QUALQUER utilitário de
- * largura é (0,1,0), então `class="nds-max-w-lg"` no painel nunca pegava.
- * A doc do Sheet prometia essa customização por classe em react, vue, svelte e
- * angular, e ela não funcionava em nenhuma das quatro. Custom property não
- * disputa especificidade: quem declara na mesma caixa vence, venha de onde vier.
+ * O motivo de a largura ser custom property é especificidade: estas regras são
+ * (0,2,0) e QUALQUER utilitário de largura é (0,1,0), então `class="nds-max-w-lg"`
+ * no painel nunca pegava. A doc do Sheet prometia essa customização por classe
+ * em react, vue, svelte e angular, e ela não funcionava em nenhuma das quatro.
+ * Custom property não disputa especificidade: quem declara vence a herança,
+ * venha da mesma caixa ou de um ancestral.
  *
- *   .nds-sidebar-mobile { --sheet-width: var(--sidebar-width); }
+ *   .nds-sidebar-mobile { --sheet-width: var(--sidebar-width-mobile); }
+ *
+ * É por causa desse caso que o default fica em `:root` e não aqui — ver a
+ * medição no bloco "Defaults de largura".
  */
 .nds-sheet-content[data-side="right"] {
   inset-block: 0;
   right: 0;
   height: 100%;
-  width: var(--sheet-width, 75%);
-  max-width: var(--sheet-max-width, 24rem);        /* 384px */
+  width: var(--sheet-width);
+  max-width: var(--sheet-max-width);
   border-left: 1px solid hsl(var(--border));
   animation: nds-sheet-slide-in-right var(--duration-base) var(--ease-entrance);
 }
@@ -87,8 +140,8 @@
   inset-block: 0;
   left: 0;
   height: 100%;
-  width: var(--sheet-width, 75%);
-  max-width: var(--sheet-max-width, 24rem);
+  width: var(--sheet-width);
+  max-width: var(--sheet-max-width);
   border-right: 1px solid hsl(var(--border));
   animation: nds-sheet-slide-in-left var(--duration-base) var(--ease-entrance);
 }
@@ -289,196 +342,11 @@
   right: var(--spacing-3);
 }
 
-/*
- * ─── nds-drawer (painel arrastável, lib controla o transform inline) ────────
- * Direções via data-vaul-drawer-direction. Reusa nds-sheet-overlay/-title/
- * -description. Handle visível só na direção bottom.
- */
-
-.nds-drawer-content {
-  position: fixed;
-  z-index: var(--z-modal);
-  display: flex;
-  height: auto;
-  flex-direction: column;
-
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-size: var(--text-control);
-}
-
-/*
- * O raio dos cantos vem de `--radius-xl` (14px), não do `0.75rem` (12px) que
- * estava escrito literalmente nas quatro regras de direção. 12px não existe na
- * escala de raios — e não existe de propósito, a régua vai 10 → 14. Valor solto
- * é o tipo de medida que não acompanha o tema quando alguém redefine `--radius`.
- *
- * A troca move 2px em cada canto do drawer nas cinco stacks; conferir no
- * Chromatic junto com a borda da alça do Slider.
- */
-.nds-drawer-content[data-vaul-drawer-direction="bottom"] {
-  inset-inline: 0;
-  bottom: 0;
-  margin-top: var(--spacing-24);
-  max-height: 80vh;
-  border-top: 1px solid hsl(var(--border));
-  border-start-start-radius: var(--radius-xl);
-  border-start-end-radius: var(--radius-xl);
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="top"] {
-  inset-inline: 0;
-  top: 0;
-  margin-bottom: var(--spacing-24);
-  max-height: 80vh;
-  border-bottom: 1px solid hsl(var(--border));
-  border-end-start-radius: var(--radius-xl);
-  border-end-end-radius: var(--radius-xl);
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="left"] {
-  inset-block: 0;
-  left: 0;
-  /* Ver a nota das regras de lado do Sheet: largura por custom property, com o
-   * valor antigo como fallback, porque nenhuma classe vence (0,2,0). */
-  width: var(--drawer-width, 75%);
-  border-right: 1px solid hsl(var(--border));
-  border-start-end-radius: var(--radius-xl);
-  border-end-end-radius: var(--radius-xl);
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="right"] {
-  inset-block: 0;
-  right: 0;
-  width: var(--drawer-width, 75%);
-  border-left: 1px solid hsl(var(--border));
-  border-start-start-radius: var(--radius-xl);
-  border-end-start-radius: var(--radius-xl);
-}
-
-@media (min-width: 40rem) {
-  .nds-drawer-content[data-vaul-drawer-direction="left"],
-  .nds-drawer-content[data-vaul-drawer-direction="right"] {
-    max-width: var(--drawer-max-width, 24rem);
-  }
-}
-
-.nds-drawer-handle {
-  display: none;
-  flex-shrink: 0;
-  margin-inline: auto;
-  margin-top: var(--spacing-4);
-  height: var(--spacing-1);
-  width: 6.25rem;                                  /* 100px */
-  border-radius: var(--radius-full);
-  background-color: hsl(var(--muted));
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-handle {
-  display: block;
-}
-
-.nds-drawer-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-0-5);
-  padding: var(--spacing-4);
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-header,
-.nds-drawer-content[data-vaul-drawer-direction="top"] .nds-drawer-header {
-  text-align: center;
-}
-
-@media (min-width: 48rem) {
-  .nds-drawer-content .nds-drawer-header {
-    text-align: left;
-  }
-}
-
-.nds-drawer-footer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-  margin-top: auto;
-  padding: var(--spacing-4);
-}
-
-/*
- * Corpo rolável do drawer. Não existia: o React resolvia com
- * `style={{ maxHeight }}` inline — CSS inline é proibido no projeto — e as
- * outras stacks não resolviam de jeito nenhum, então conteúdo longo empurrava
- * o rodapé (com os botões de ação) para fora da tela.
- *
- * `min-height: 0` é o que faz o `overflow` funcionar dentro de um flex column:
- * sem ele o item flex tem tamanho mínimo automático igual ao conteúdo e nunca
- * encolhe, então a barra de rolagem simplesmente não aparece.
- */
-.nds-drawer-body {
-  /*
-   * `flex: 1 1 auto`, e não `flex: 1`. O atalho `flex: 1` zera a BASE
-   * (`flex-basis: 0%`), e com base zero o corpo não contribui nada para a
-   * altura automática do painel: o `max-height: 80vh` nunca chega a apertar
-   * ninguém, e o conteúdo transborda o painel em vez de rolar dentro do corpo.
-   * Medido: painel com `clientHeight` 720 e `scrollHeight` 2157.
-   *
-   * Com a base `auto`, a altura hipotética do corpo é a do conteúdo, o teto do
-   * painel entra em ação e a compressão cai sobre o corpo — que encolhe porque
-   * `min-height: 0` desliga o mínimo automático do item flex.
-   */
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-  padding-inline: var(--spacing-4);
-}
-
-/*
- * Entrada e saída do drawer.
- *
- * O `.nds-sheet-content` já animava por `data-starting-style`/`data-ending-style`
- * e o drawer não animava nada — aparecia e sumia num quadro, o que num painel
- * que ocupa a borda inteira da tela lê como salto, não como abertura.
- *
- * A transição é suprimida durante o arraste (`[data-swiping]`): ali quem manda é
- * o transform que a lib escreve a cada quadro seguindo o dedo, e interpolar por
- * cima dele deixaria o painel atrasado em relação ao toque.
- */
-.nds-drawer-content:not([data-swiping]) {
-  transition: transform var(--duration-base) ease-in-out, opacity var(--duration-base) ease-in-out;
-}
-
-.nds-drawer-content[data-starting-style],
-.nds-drawer-content[data-ending-style] {
-  opacity: 0;
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-ending-style] {
-  transform: translateY(100%);
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="top"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="top"][data-ending-style] {
-  transform: translateY(-100%);
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="left"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="left"][data-ending-style] {
-  transform: translateX(-100%);
-}
-
-.nds-drawer-content[data-vaul-drawer-direction="right"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="right"][data-ending-style] {
-  transform: translateX(100%);
-}
-
-/* O bloco cobria só `.nds-sheet-*`; o drawer, que reusa o mesmo overlay e agora
- * tem transição própria, ficava de fora de quem pediu menos movimento. */
+/* Reduced motion do Sheet. O véu é compartilhado com o Drawer, e a folha dele
+ * repete a regra para o painel próprio — cada arquivo desliga o que anima. */
 @media (prefers-reduced-motion: reduce) {
   .nds-sheet-overlay,
-  .nds-sheet-content,
-  .nds-drawer-content,
-  .nds-drawer-content:not([data-swiping]) {
+  .nds-sheet-content {
     animation: none;
     transition: none;
   }

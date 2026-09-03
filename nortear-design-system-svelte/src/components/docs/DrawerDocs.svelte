@@ -827,6 +827,8 @@ interface TriggerProps {
       { token: '--overlay',   value: $tStore('tokens.table.overlay.class'),    description: $tStore('tokens.table.overlay.part')    },
       { token: '--muted',              value: $tStore('tokens.table.handle.class'),     description: $tStore('tokens.table.handle.part')     },
       { token: '--radius-xl',          value: $tStore('tokens.table.rounded.class'),    description: $tStore('tokens.table.rounded.part')    },
+      { token: '--drawer-width',       value: $tStore('tokens.table.width.class'),      description: $tStore('tokens.table.width.part')      },
+      { token: '--drawer-max-width',   value: $tStore('tokens.table.maxWidth.class'),   description: $tStore('tokens.table.maxWidth.part')   },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

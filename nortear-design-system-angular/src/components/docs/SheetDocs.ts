@@ -1068,6 +1068,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       { token: '--overlay', k: 'overlay' },
       { token: '--ring', k: 'ring' },
       { token: '--sheet-width', k: 'width' },
+      { token: '--sheet-max-width', k: 'maxWidth' },
     ].map(({ token, k }) => ({
       token,
       value: t(`tokens.table.${k}.class`),

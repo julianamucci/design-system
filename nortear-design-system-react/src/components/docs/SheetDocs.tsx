@@ -892,6 +892,7 @@ export function SheetDocs() {
           { token: "--overlay", value: tContent("tokens.table.overlay.class"), description: tContent("tokens.table.overlay.part") },
           { token: "--ring", value: tContent("tokens.table.ring.class"), description: tContent("tokens.table.ring.part") },
           { token: "--sheet-width", value: tContent("tokens.table.width.class"), description: tContent("tokens.table.width.part") },
+          { token: "--sheet-max-width", value: tContent("tokens.table.maxWidth.class"), description: tContent("tokens.table.maxWidth.part") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

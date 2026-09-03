@@ -1052,6 +1052,8 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       { token: '--overlay', className: 'nds-sheet-overlay',   k: 'overlay'    },
       { token: '--muted',            className: 'nds-drawer-handle',   k: 'handle'     },
       { token: '--radius-xl',        className: 'nds-drawer-content',  k: 'rounded'    },
+      { token: '--drawer-width',     className: 'nds-drawer-content',  k: 'width'      },
+      { token: '--drawer-max-width', className: 'nds-drawer-content',  k: 'maxWidth'   },
     ].map(({ token, className, k }) => ({
       token,
       value: className,

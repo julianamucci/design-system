@@ -752,6 +752,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
             { token: '--overlay', value: t('tokens.table.overlay.class'), description: t('tokens.table.overlay.part') },
             { token: '--ring', value: t('tokens.table.ring.class'), description: t('tokens.table.ring.part') },
             { token: '--sheet-width', value: t('tokens.table.width.class'), description: t('tokens.table.width.part') },
+            { token: '--sheet-max-width', value: t('tokens.table.maxWidth.class'), description: t('tokens.table.maxWidth.part') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

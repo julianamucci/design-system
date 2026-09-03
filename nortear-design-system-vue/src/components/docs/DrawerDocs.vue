@@ -360,6 +360,8 @@ const tokenRows = computed(() => [
   { token: '--overlay',   value: tContent('tokens.table.overlay.class'),    description: tContent('tokens.table.overlay.part')    },
   { token: '--muted',              value: tContent('tokens.table.handle.class'),     description: tContent('tokens.table.handle.part')     },
   { token: '--radius-xl',          value: tContent('tokens.table.rounded.class'),    description: tContent('tokens.table.rounded.part')    },
+  { token: '--drawer-width',       value: tContent('tokens.table.width.class'),      description: tContent('tokens.table.width.part')      },
+  { token: '--drawer-max-width',   value: tContent('tokens.table.maxWidth.class'),   description: tContent('tokens.table.maxWidth.part')   },
 ]);
 
 const accessibilityItems = computed(() => [

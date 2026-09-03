@@ -795,6 +795,16 @@ interface DrawerProps {
             value: tContent("tokens.table.rounded.class"),
             description: tContent("tokens.table.rounded.part"),
           },
+          {
+            token: "--drawer-width",
+            value: tContent("tokens.table.width.class"),
+            description: tContent("tokens.table.width.part"),
+          },
+          {
+            token: "--drawer-max-width",
+            value: tContent("tokens.table.maxWidth.class"),
+            description: tContent("tokens.table.maxWidth.part"),
+          },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

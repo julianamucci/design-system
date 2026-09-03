@@ -902,6 +902,7 @@ interface TriggerProps {
       { token: '--overlay', value: $tStore('tokens.table.overlay.class'), description: $tStore('tokens.table.overlay.part') },
       { token: '--ring', value: $tStore('tokens.table.ring.class'), description: $tStore('tokens.table.ring.part') },
       { token: '--sheet-width', value: $tStore('tokens.table.width.class'), description: $tStore('tokens.table.width.part') },
+      { token: '--sheet-max-width', value: $tStore('tokens.table.maxWidth.class'), description: $tStore('tokens.table.maxWidth.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

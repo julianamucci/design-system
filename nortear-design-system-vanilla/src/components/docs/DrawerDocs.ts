@@ -737,6 +737,8 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
             { token: '--overlay',   value: t('tokens.table.overlay.class'),    description: t('tokens.table.overlay.part') },
             { token: '--muted',              value: t('tokens.table.handle.class'),     description: t('tokens.table.handle.part') },
             { token: '--radius-xl',          value: t('tokens.table.rounded.class'),    description: t('tokens.table.rounded.part') },
+            { token: '--drawer-width',       value: t('tokens.table.width.class'),      description: t('tokens.table.width.part') },
+            { token: '--drawer-max-width',   value: t('tokens.table.maxWidth.class'),   description: t('tokens.table.maxWidth.part') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

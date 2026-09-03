@@ -1,0 +1,299 @@
+/*
+ * ─── nds-drawer ─────────────────────────────────────────────────────────────
+ * Painel que entra por uma borda da tela, com alça na direção de baixo e gesto
+ * de arraste para dispensar.
+ *
+ * ─── Por que é arquivo próprio, e o que continua morando no Sheet ────────────
+ *
+ * Estas regras viviam no fim de `sheet.css`, e a convivência tinha um custo
+ * medido: a varredura que cobra "custom property declarada no CSS do
+ * componente aparece na tabela de tokens dele" resolve o dono pelo NOME DO
+ * ARQUIVO. Com os dois componentes numa folha só, declarar `--drawer-width`
+ * acusava o Sheet de não documentar um token que é do Drawer — e o Drawer, que
+ * o documenta, não era consultado. Separar não é arrumação: é o que faz a
+ * pergunta chegar a quem tem a resposta.
+ *
+ * O que NÃO se mudou de lugar, de propósito: o véu (`.nds-sheet-overlay`), o
+ * título (`.nds-sheet-title`) e a descrição (`.nds-sheet-description`)
+ * continuam no Sheet, e o Drawer os reusa pelo markup. São a mesma superfície
+ * desenhada uma vez; duplicá-las aqui criaria duas fontes para um valor só.
+ *
+ * Ordem de import: esta folha entra DEPOIS de `sheet.css` em `index.css`, como
+ * as regras entravam antes. Não há empate de especificidade entre as duas (as
+ * classes são distintas), mas a ordem de antes é a ordem provada.
+ *
+ * Estrutura:
+ *   <div class="nds-sheet-overlay" />                (do Sheet)
+ *   <div class="nds-drawer-content" data-vaul-drawer-direction="bottom"
+ *        role="dialog" aria-modal="true">
+ *     <div class="nds-drawer-handle" aria-hidden="true" />
+ *     <div class="nds-drawer-header">
+ *       <h2 class="nds-sheet-title">…</h2>          (do Sheet)
+ *       <p class="nds-sheet-description">…</p>      (do Sheet)
+ *     </div>
+ *     <div class="nds-drawer-body" tabindex="0">…</div>
+ *     <div class="nds-drawer-footer">…</div>
+ *   </div>
+ *
+ * Tokens: --background, --foreground, --border, --muted, --radius-xl,
+ *         --spacing-*, --duration-base
+ *         --drawer-width / --drawer-max-width — largura dos painéis laterais
+ *         esquerdo e direito, o ponto de customização.
+ */
+
+/* ── Defaults de largura ─────────────────────────────────────────────────── */
+/*
+ * Declarados, e não escondidos no fallback de cada `var()`.
+ *
+ * ── Por que em `:root` ──────────────────────────────────────────────────────
+ * Mesma medição registrada no bloco equivalente de `sheet.css`, e a conclusão é
+ * a mesma: valor declarado no seletor da própria peça VENCE quem customiza de
+ * fora — inclusive quem declara o token no mesmo elemento do painel —, porque as
+ * regras de direção são (0,2,0) e qualquer classe de consumidor é (0,1,0). Em
+ * `:root` o default chega por HERANÇA, e herança perde para toda declaração, na
+ * própria caixa ou em qualquer ancestral. É o que mantém funcionando a rota de
+ * customização que a doc publica.
+ */
+:root {
+  --drawer-width: 75%;
+  --drawer-max-width: 24rem;                       /* 384px */
+}
+
+.nds-drawer-content {
+  position: fixed;
+  z-index: var(--z-modal);
+  display: flex;
+  height: auto;
+  flex-direction: column;
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: var(--text-control);
+
+  /*
+   * Sem isto o arraste por toque não existe: o navegador trata o movimento como
+   * rolagem da página e nunca entrega os `pointermove` ao painel. É a mesma
+   * declaração que a lib de gaveta já injeta por conta própria nas três stacks
+   * que a usam — trazê-la para cá não muda nada nelas e liga o gesto nas outras
+   * duas. O valor é o da lib, LIDO na folha que ela injeta
+   * (`[data-vaul-drawer]{touch-action:none}`), e não uma segunda interpretação.
+   *
+   * O que NENHUM portão deste repositório alcança é o toque: a suíte dirige um
+   * ponteiro de mouse, onde `touch-action` não tem efeito. A convivência desta
+   * declaração com a rolagem por toque dentro de `.nds-drawer-body` é herdada da
+   * lib e continua sem medição — em mouse e teclado, que é o que se mede aqui,
+   * nada muda.
+   */
+  touch-action: none;
+}
+
+/*
+ * O raio dos cantos vem de `--radius-xl` (14px), não do `0.75rem` (12px) que
+ * estava escrito literalmente nas quatro regras de direção. 12px não existe na
+ * escala de raios — e não existe de propósito, a régua vai 10 → 14. Valor solto
+ * é o tipo de medida que não acompanha o tema quando alguém redefine `--radius`.
+ *
+ * A troca move 2px em cada canto do drawer nas cinco stacks; conferir no
+ * Chromatic junto com a borda da alça do Slider.
+ */
+.nds-drawer-content[data-vaul-drawer-direction="bottom"] {
+  inset-inline: 0;
+  bottom: 0;
+  margin-top: var(--spacing-24);
+  max-height: 80vh;
+  border-top: 1px solid hsl(var(--border));
+  border-start-start-radius: var(--radius-xl);
+  border-start-end-radius: var(--radius-xl);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="top"] {
+  inset-inline: 0;
+  top: 0;
+  margin-bottom: var(--spacing-24);
+  max-height: 80vh;
+  border-bottom: 1px solid hsl(var(--border));
+  border-end-start-radius: var(--radius-xl);
+  border-end-end-radius: var(--radius-xl);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="left"] {
+  inset-block: 0;
+  left: 0;
+  /* Ver a nota das regras de lado do Sheet: largura por custom property (o
+   * default está em `:root`, no topo da folha), porque nenhuma classe vence
+   * estas regras (0,2,0). */
+  width: var(--drawer-width);
+  border-right: 1px solid hsl(var(--border));
+  border-start-end-radius: var(--radius-xl);
+  border-end-end-radius: var(--radius-xl);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="right"] {
+  inset-block: 0;
+  right: 0;
+  width: var(--drawer-width);
+  border-left: 1px solid hsl(var(--border));
+  border-start-start-radius: var(--radius-xl);
+  border-end-start-radius: var(--radius-xl);
+}
+
+@media (min-width: 40rem) {
+  .nds-drawer-content[data-vaul-drawer-direction="left"],
+  .nds-drawer-content[data-vaul-drawer-direction="right"] {
+    max-width: var(--drawer-max-width);
+  }
+}
+
+.nds-drawer-handle {
+  display: none;
+  flex-shrink: 0;
+  margin-inline: auto;
+  margin-top: var(--spacing-4);
+  height: var(--spacing-1);
+  width: 6.25rem;                                  /* 100px */
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--muted));
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-handle {
+  display: block;
+}
+
+.nds-drawer-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+  padding: var(--spacing-4);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-header,
+.nds-drawer-content[data-vaul-drawer-direction="top"] .nds-drawer-header {
+  text-align: center;
+}
+
+@media (min-width: 48rem) {
+  .nds-drawer-content .nds-drawer-header {
+    text-align: left;
+  }
+}
+
+.nds-drawer-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-top: auto;
+  padding: var(--spacing-4);
+}
+
+/*
+ * Corpo rolável do drawer. Não existia: o React resolvia com
+ * `style={{ maxHeight }}` inline — CSS inline é proibido no projeto — e as
+ * outras stacks não resolviam de jeito nenhum, então conteúdo longo empurrava
+ * o rodapé (com os botões de ação) para fora da tela.
+ *
+ * `min-height: 0` é o que faz o `overflow` funcionar dentro de um flex column:
+ * sem ele o item flex tem tamanho mínimo automático igual ao conteúdo e nunca
+ * encolhe, então a barra de rolagem simplesmente não aparece.
+ */
+.nds-drawer-body {
+  /*
+   * `flex: 1 1 auto`, e não `flex: 1`. O atalho `flex: 1` zera a BASE
+   * (`flex-basis: 0%`), e com base zero o corpo não contribui nada para a
+   * altura automática do painel: o `max-height: 80vh` nunca chega a apertar
+   * ninguém, e o conteúdo transborda o painel em vez de rolar dentro do corpo.
+   * Medido: painel com `clientHeight` 720 e `scrollHeight` 2157.
+   *
+   * Com a base `auto`, a altura hipotética do corpo é a do conteúdo, o teto do
+   * painel entra em ação e a compressão cai sobre o corpo — que encolhe porque
+   * `min-height: 0` desliga o mínimo automático do item flex.
+   */
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding-inline: var(--spacing-4);
+}
+
+/*
+ * Entrada e saída do drawer.
+ *
+ * O `.nds-sheet-content` já animava por `data-starting-style`/`data-ending-style`
+ * e o drawer não animava nada — aparecia e sumia num quadro, o que num painel
+ * que ocupa a borda inteira da tela lê como salto, não como abertura.
+ *
+ * A transição é suprimida durante o arraste: ali quem manda é o transform
+ * escrito a cada quadro seguindo o ponteiro, e interpolar por cima dele deixaria
+ * o painel atrasado em relação ao dedo.
+ *
+ * `[data-swiping]` é escrito pelo motor de ponteiro compartilhado — vanilla e
+ * angular. A versão anterior desta nota dizia que a lib de gaveta escrevia o
+ * atributo, e era FALSO: procurado na fonte publicada, `data-swiping` não
+ * aparece uma única vez; a lib suprime a transição por `style` inline
+ * (`transition: none`), que vence esta folha de qualquer jeito. O seletor era um
+ * gancho que ninguém puxava. Agora duas stacks o puxam, e nas outras três a
+ * supressão continua vindo do inline — mesmo efeito, dois mecanismos.
+ *
+ * Ao soltar, o transform inline é apagado e a volta ao repouso é ESTA transição
+ * — por isso ela é o que precisa parar sob `prefers-reduced-motion`, e o bloco
+ * no fim do arquivo faz isso. O arraste em si não é animação: é o painel
+ * acompanhando o ponteiro, e não há o que reduzir enquanto o dedo está na tela.
+ */
+.nds-drawer-content:not([data-swiping]) {
+  transition: transform var(--duration-base) ease-in-out, opacity var(--duration-base) ease-in-out;
+}
+
+/*
+ * Enquanto o dedo arrasta, o texto do painel não é selecionado.
+ *
+ * A lib de gaveta resolve o mesmo problema com `user-select: none` PERMANENTE no
+ * painel (em ponteiro fino), o que custa a seleção de texto o tempo todo. Aqui a
+ * supressão dura o gesto, que é o instante em que ela é necessária — e o motor
+ * mantém a mesma guarda da lib, que recusa iniciar arraste quando já existe
+ * texto selecionado.
+ */
+.nds-drawer-content[data-swiping] {
+  user-select: none;
+}
+
+.nds-drawer-content[data-starting-style],
+.nds-drawer-content[data-ending-style] {
+  opacity: 0;
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-ending-style] {
+  transform: translateY(100%);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="top"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="top"][data-ending-style] {
+  transform: translateY(-100%);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="left"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="left"][data-ending-style] {
+  transform: translateX(-100%);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="right"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="right"][data-ending-style] {
+  transform: translateX(100%);
+}
+
+/* Reduced motion do Drawer.
+ *
+ * O que isto faz com o ARRASTE: a volta ao repouso, que é a única parte animada
+ * do gesto, passa a ser instantânea — o painel salta de volta em vez de
+ * deslizar. O acompanhamento do ponteiro continua, porque ele não é animação: é
+ * a posição do dedo. O que o motor de ponteiro desliga por conta própria sob a
+ * preferência é a resistência elástica ao puxar o painel PARA ALÉM do aberto,
+ * que é movimento sem intenção correspondente — ver
+ * `docs/shared/primitives/drawer-swipe.ts`.
+ *
+ * O véu é do Sheet e a folha dele já o desliga; aqui fica o painel. */
+@media (prefers-reduced-motion: reduce) {
+  .nds-drawer-content,
+  .nds-drawer-content:not([data-swiping]) {
+    animation: none;
+    transition: none;
+  }
+}
