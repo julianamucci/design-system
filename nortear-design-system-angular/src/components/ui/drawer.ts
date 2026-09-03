@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Directive,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
   computed,
@@ -10,6 +12,7 @@ import {
   inject,
   input,
   isDevMode,
+  output,
   untracked,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -25,12 +28,14 @@ import {
   type RdxDialogOpenChangeReason,
 } from '@radix-ng/primitives/dialog';
 import { cn } from '@/lib/utils';
+import { attachDrawerSwipe, type DrawerSwipeDirection } from '@shared/primitives/drawer-swipe';
 
 // ─── Drawer ───────────────────────────────────────────────────────────────────
 //
 // Painel que entra por uma borda da tela, com alça visível na direção padrão
-// (de baixo). Visual inteiro em classes .nds-drawer-* e .nds-sheet-*, de
-// `docs/shared/styles/nds/sheet.css`.
+// (de baixo). Visual inteiro em classes .nds-drawer-*, de
+// `docs/shared/styles/nds/drawer.css`, mais véu, título e descrição, que vêm de
+// `sheet.css` e são compartilhados com o Sheet.
 //
 // ─── Por que compõe o Dialog do Radix NG ──────────────────────────────────────
 //
@@ -73,27 +78,48 @@ import { cn } from '@/lib/utils';
 // O mecanismo desta stack: tudo isso vem do Dialog do primitivo, listado logo
 // acima — inclusive o `aria-modal`, que aqui NÃO precisa ser escrito à mão.
 //
-// Diverge do Sheet em três pontos deliberados: existe alça decorativa, NÃO
-// existe botão de fechar próprio (a saída visível é a do rodapé), e a largura
-// sai de `--drawer-width`/`--drawer-max-width` em vez dos tokens do Sheet. A
-// quarta divergência é o arraste, e nesta stack ele não existe — ver abaixo.
+// Diverge do Sheet em quatro pontos deliberados: existe gesto de arraste (o
+// Sheet não tem em stack nenhuma), existe alça decorativa, NÃO existe botão de
+// fechar próprio (a saída visível é a do rodapé), e a largura sai de
+// `--drawer-width`/`--drawer-max-width` em vez dos tokens do Sheet.
 //
-// ─── Sem gesto de arrastar, e por quê ─────────────────────────────────────────
+// ─── O gesto de arrastar, e por que ele é escrito à mão ──────────────────────
 //
-// A alça é afordância visual, não um caminho de interação: nenhuma ação deste
-// componente exige movimento de ponteiro, então o critério WCAG 2.5.7 (Dragging
-// Movements) é atendido por construção — fechar é Escape, clique no overlay ou
-// botão de fechar, todos alcançáveis por teclado. A alça leva `aria-hidden`
-// para não anunciar um elemento que não faz nada.
+// O arraste existe nas cinco stacks. Aqui o motor é
+// `@shared/primitives/drawer-swipe`, escrito com eventos de ponteiro a partir da
+// leitura da lib de gaveta que as outras três usam — mesmos limiares, mesma
+// curva de resistência, mesma guarda de rolagem.
 //
-// O `@radix-ng/primitives` 1.1.2 TEM um subpacote `drawer` com gesto de arraste
-// pronto, mas ele é headless de verdade: publica `--drawer-swipe-movement-x/-y`,
-// `--drawer-swipe-strength` e `[data-swiping]` e NÃO aplica transform nenhum —
-// quem desenha o movimento é o CSS de quem consome. O CSS compartilhado não tem
-// uma única regra lendo essas variáveis, e este stack não escreve CSS inline
-// nem edita `docs/shared/`. Ligar o gesto hoje daria um arraste invisível: o
-// painel só sumiria no fim do movimento. Fica registrado no relatório como
-// pendência de CSS compartilhado, não como classe inventada aqui.
+// O `@radix-ng/primitives` 1.1.2 TEM um subpacote `drawer` (não aparece como
+// diretório: está no mapa de `exports` do pacote, em `fesm2022`), com o gesto
+// pronto, pontos de parada e tratamento de teclado virtual. Ele NÃO foi adotado
+// nesta rodada, e a razão não é "dependência nova" — o pacote já está instalado:
+//
+//   · ele é headless de verdade. Publica `--drawer-swipe-movement-x/-y`,
+//     `--drawer-swipe-strength` e `[data-swiping]` e não aplica transform
+//     nenhum; quem desenha o movimento é o CSS de quem consome. O CSS
+//     compartilhado teria de ganhar um `transform` lendo essas variáveis, e
+//     esse `transform` alcançaria as outras quatro stacks, onde ele não tem
+//     origem — mexer no repouso das cinco para ligar o gesto de uma;
+//   · trocar `RdxDialog*` por `RdxDrawer*` refaz a fundação inteira deste
+//     componente (raiz, portal, backdrop, popup, título, descrição, fechador) —
+//     mudança de arquitetura, não de comportamento, e decisão da dona;
+//   · o único portão que exerceria qualquer uma das duas versões é a suíte de
+//     navegador, que não roda nesta rodada.
+//
+// Fica registrado como recomendação: quando a suíte voltar a rodar, o subpacote
+// é o caminho natural desta stack, e o que ele acrescenta sobre o motor à mão é
+// ponto de parada e teclado virtual — capacidades que, se entrarem, precisam de
+// caminho alternativo próprio (WCAG 2.5.7), porque nenhuma delas é coberta por
+// Escape, véu ou botão.
+//
+// ─── WCAG 2.5.7 (Dragging Movements) ─────────────────────────────────────────
+//
+// O gesto só DISPENSA, e dispensar tem três caminhos sem trajeto: Escape,
+// clique no overlay e o botão de saída do rodapé. Enquanto o arraste não
+// existia, o critério era atendido por ausência; agora é atendido por
+// cobertura. A alça segue `aria-hidden` e sem foco: o arraste vale no painel
+// inteiro e não nela, então foco ali seria parada de tabulação sem função.
 
 /** Borda por onde o painel entra. */
 export type DrawerDirection = 'bottom' | 'top' | 'left' | 'right';
@@ -155,6 +181,53 @@ export class NdsDrawerContent {
 }
 
 /**
+ * Instala o arraste para dispensar no painel.
+ *
+ * Diretiva, e não `(pointerdown)` no template, por dois motivos medidos:
+ *
+ *   · o motor compartilhado instala e solta os próprios ouvintes, e uma
+ *     diretiva tem exatamente o ciclo de vida do painel — nasce quando o portal
+ *     cria a view e morre quando ele a destrói. Com bindings de template os
+ *     ouvintes seriam de Angular e os do motor ficariam sem quem os soltasse;
+ *   · a carência de 500 ms depois da abertura, que o motor conta a partir da
+ *     própria construção, precisa começar quando o painel aparece. É a mesma
+ *     janela em que a lib de gaveta recusa arrastar: o painel ainda está
+ *     deslizando para dentro, e ali todo movimento é rolagem.
+ *
+ * Nada aqui roda dentro do ciclo de detecção do Angular: o motor escreve
+ * `transform` e `data-swiping` direto no elemento a cada quadro, que é o que
+ * mantém o painel colado no ponteiro.
+ */
+@Directive({
+  selector: '[ndsDrawerSwipe]',
+  standalone: true,
+})
+export class NdsDrawerSwipe {
+  /** Borda de entrada — e, portanto, o eixo da dispensa. */
+  readonly direction = input<DrawerSwipeDirection>('bottom', { alias: 'ndsDrawerSwipe' });
+
+  /** Painel não dispensável não arrasta, como na lib. */
+  readonly dismissible = input(true, { alias: 'ndsDrawerSwipeDismissible' });
+
+  /** Soltar o painel resolveu por dispensar. */
+  readonly swipeDismiss = output<void>();
+
+  constructor() {
+    const panel = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    const engine = attachDrawerSwipe({
+      panel: panel,
+      // Funções, e não valores: a direção e o `dismissible` são lidos no
+      // instante do gesto, então trocá-los com o painel aberto vale já no
+      // próximo arraste.
+      direction: () => this.direction(),
+      dismissible: () => this.dismissible(),
+      onDismiss: () => this.swipeDismiss.emit(),
+    });
+    inject(DestroyRef).onDestroy(() => engine.destroy());
+  }
+}
+
+/**
  * Raiz do Drawer.
  *
  * `direction` mora AQUI, e não no conteúdo, porque é assim que o conteúdo
@@ -181,7 +254,7 @@ export class NdsDrawerContent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   // O visual inteiro vem de @shared/styles/nds/sheet.css, que é global.
   encapsulation: ViewEncapsulation.None,
-  imports: [NgTemplateOutlet, RdxDialogPortal, RdxDialogBackdrop, RdxDialogPopup],
+  imports: [NgTemplateOutlet, RdxDialogPortal, RdxDialogBackdrop, RdxDialogPopup, NdsDrawerSwipe],
   hostDirectives: [
     {
       directive: RdxDialogRoot,
@@ -214,9 +287,13 @@ export class NdsDrawerContent {
           data-slot="drawer-content"
           [attr.data-vaul-drawer-direction]="direction()"
           [attr.data-state]="state()"
+          [ndsDrawerSwipe]="direction()"
+          [ndsDrawerSwipeDismissible]="swipeEnabled()"
+          (swipeDismiss)="dismissBySwipe()"
         >
           <!-- Alça: pura afordância. O CSS só a mostra na direção de baixo, e
-               ela não recebe foco nem nome — não há gesto atrás dela. -->
+               ela não recebe foco nem nome — o arraste vale no painel inteiro,
+               não nela, então foco aqui seria parada de tabulação sem função. -->
           <div class="nds-drawer-handle" aria-hidden="true"></div>
 
           <ng-container [ngTemplateOutlet]="c.tpl" />
@@ -246,6 +323,32 @@ export class NdsDrawer {
   protected readonly classeDoPainel = computed(() =>
     cn('nds-drawer-content', this.content()?.panelClass()),
   );
+
+  /**
+   * O painel pode ser arrastado para fora?
+   *
+   * Sai de `disablePointerDismissal`, que é o input que o conteúdo compartilhado
+   * documenta como `dismissible` — e a leitura é a certa: arrastar é gesto de
+   * PONTEIRO, exatamente o que aquele input desliga. Escape continua fechando de
+   * qualquer forma, porque diálogo modal que engole Escape é armadilha de
+   * teclado (WCAG 2.1.2).
+   */
+  protected readonly swipeEnabled = computed(() => !this.root.disablePointerDismissal());
+
+  /**
+   * Soltar o painel para fora da tela fecha.
+   *
+   * Fecha pelo model do primitivo, e não por um caminho próprio: assim o
+   * fechamento passa pelo mesmo desmonte, pela mesma devolução de foco ao
+   * gatilho e pela mesma transição de saída que Escape e véu já usam. O motivo
+   * que chega em `onOpenChange` é o de fechamento por código — `drawerCloseReason`
+   * o traduz para `'action'`. É divergência de API de framework em relação à
+   * stack de referência, que informa `'overlay'`: registrada, não "alinhada",
+   * porque aqui o vocabulário do motivo é do primitivo, não nosso.
+   */
+  protected dismissBySwipe(): void {
+    this.root.open.set(false);
+  }
 
   constructor() {
     // Painel modal sem nome acessível é o defeito silencioso deste componente:

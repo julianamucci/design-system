@@ -136,7 +136,9 @@ A fábrica devolve `open()`, `close()`, `toggle()` e `isOpen()` além do `destro
 - `data-vaul-drawer-direction` vai no PAINEL, nunca no wrapper: toda regra de posição, borda e canto do CSS compartilhado lê `.nds-drawer-content[data-vaul-drawer-direction=…]`. Escrito no wrapper, não pinta nada
 - Não há botão de fechar embutido. Quem compõe põe o seu no rodapé e marca com `data-slot="drawer-close"`, que a fábrica liga sozinha — é o equivalente desta stack ao componente `DrawerClose` das outras. Sem a marca, o "Cancelar" do rodapé é um botão inerte
 - Com `dismissible: false`, esse fechador do rodapé passa a ser a ÚNICA saída. Não publique um painel assim sem ele
-- Arrastar é afordância, não mecanismo: a alça não recebe foco nem nome
+- O painel arrasta na direção de entrada e é dispensado quando o gesto passa de um quarto do seu tamanho, ou quando a soltura é rápida. Arrastar é **atalho**, nunca a única via: Escape, clique no fundo e o fechador do rodapé cobrem o mesmo objetivo sem trajeto de ponteiro (WCAG 2.5.7)
+- O gesto só dispensa. Nada de redimensionar nem de parar em posição intermediária: capacidade que só o arraste alcança exige caminho alternativo próprio, e nenhum existe
+- A alça é afordância do gesto, não o gancho dele: arrastar vale no painel inteiro, e por isso a alça não recebe foco nem nome
 - Direção `bottom` é o caso típico em tela estreita
 
 **Acessibilidade**:

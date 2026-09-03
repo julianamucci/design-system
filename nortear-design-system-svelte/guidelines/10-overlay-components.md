@@ -116,6 +116,9 @@ Drawer (direction: top | bottom | left | right)
 **Regras**:
 - `direction` é prop de `<Drawer>` — **não** de `<DrawerContent>`
 - `DrawerTitle` e `DrawerDescription` obrigatórios
+- O painel arrasta na direção de entrada e é dispensado quando o gesto passa de um quarto do seu tamanho, ou quando a soltura é rápida. Arrastar é **atalho**, nunca a única via: Escape, clique no fundo e o fechador do rodapé cobrem o mesmo objetivo sem trajeto de ponteiro (WCAG 2.5.7)
+- O gesto só dispensa. Nada de redimensionar nem de parar em posição intermediária: capacidade que só o arraste alcança exige caminho alternativo próprio, e nenhum existe
+- A alça é afordância do gesto, não o gancho dele: arrastar vale no painel inteiro, e por isso a alça não recebe foco nem nome
 
 ---
 

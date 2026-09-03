@@ -283,6 +283,8 @@ Drawer (direction)
 **Regras**:
 - `direction` na prop do `Drawer` (não no `DrawerContent`)
 - Handle de arrastar: automático apenas em `direction="bottom"` — não aparece em outras direções
+- O painel arrasta na direção de entrada e é dispensado quando o gesto passa de um quarto do seu tamanho, ou quando a soltura é rápida. Arrastar é **atalho**, nunca a única via: Escape, clique no fundo e o fechador do rodapé cobrem o mesmo objetivo sem trajeto de ponteiro (WCAG 2.5.7)
+- O gesto só dispensa. Nada de redimensionar nem de parar em posição intermediária: capacidade que só o arraste alcança exige caminho alternativo próprio, e nenhum existe
 - `DrawerTitle` e `DrawerDescription` obrigatórios para acessibilidade
 - Botões alinhados à direita no rodapé: `.nds-cluster` com `data-justify="end"`. A ordem no DOM segue a ordem visual — `[secundário] [primário]`, confirmação à direita
 - `DrawerClose` envolve o botão de cancelar para fechar o Drawer automaticamente

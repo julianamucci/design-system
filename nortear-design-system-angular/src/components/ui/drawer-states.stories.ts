@@ -292,3 +292,175 @@ export const NotDismissible: Story = {
     await waitForPortal('dialog');
   },
 };
+
+// ─── Arraste para dispensar ───────────────────────────────────────────────────
+//
+// O gesto existe nas CINCO stacks. Aqui e na stack de referência ele vem do
+// motor de pointer compartilhado (`@shared/primitives/drawer-swipe`); nas
+// outras três, da lib de gaveta. Os limiares são os mesmos, e é isso que esta
+// play mede.
+//
+// Os eventos são despachados à mão porque `userEvent.pointer` não entrega a
+// soltura no mesmo elemento quando há captura de pointer — o mesmo motivo já
+// registrado no arraste do Carousel deste stack. E toda espera é de RELÓGIO:
+// `pointermove` mexe no DOM, e um `waitFor` em volta de condição que provoca
+// mutação se reagenda sozinho até a aba morrer sem reportar.
+
+/** Um quadro — o intervalo que separa dois passos de um gesto real. */
+function nextFrame(): Promise<void> {
+  return new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}
+
+/** Um passo de pointer, com o evento que o motor assina. */
+function pointer(
+  target: HTMLElement,
+  type: 'pointerdown' | 'pointermove' | 'pointerup',
+  x: number,
+  y: number,
+): void {
+  target.dispatchEvent(
+    new PointerEvent(type, {
+      pointerId: 1,
+      pointerType: 'mouse',
+      isPrimary: true,
+      clientX: x,
+      clientY: y,
+      button: 0,
+      buttons: type === 'pointerup' ? 0 : 1,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
+
+/** O panel está parado na posição de repouso? */
+function atRest(panel: HTMLElement): boolean {
+  const t = getComputedStyle(panel).transform;
+  return t === 'none' || t === 'matrix(1, 0, 0, 1, 0, 0)';
+}
+
+export const DragToDismiss: Story = {
+  parameters: {
+    covers: ['functional.item8', 'functional.item9', 'accessibility.item8'],
+    // A foto seria a mesma da story `Open`: o que esta story mede é o gesto, e
+    // gesto não aparece em imagem parada.
+    chromatic: { disable: true },
+    docs: {
+      description: {
+        story:
+          'Arrastar o panel na direção de entrada o dispensa; soltar antes de um quarto do seu tamanho o traz de volta. ' +
+          'O gesto é extra de pointer: Escape, véu e o botão do rodapé fecham o mesmo panel sem trajeto nenhum (WCAG 2.5.7).',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      rotuloGatilho: LABEL.trigger(),
+      tituloPainel: LABEL.title(),
+      descricaoPainel: LABEL.descricao(),
+      rotuloFechar: LABEL.close(),
+    },
+    template: `
+      <nds-drawer>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+
+        <ng-template ndsDrawerContent>
+          <div ndsDrawerHeader>
+            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
+            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+          </div>
+
+          <div ndsDrawerFooter>
+            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+          </div>
+        </ng-template>
+      </nds-drawer>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: LABEL.trigger() });
+
+    async function openPanel(): Promise<HTMLElement> {
+      if (within(document.body).queryAllByRole('dialog').length === 0) {
+        await userEvent.click(trigger);
+      }
+      const panel = await waitForPortal('dialog');
+      // A carência de 500 ms depois da abertura é do gesto, não do teste: nela
+      // o panel ainda está entrando, e a lib de gaveta recusa arrastar pelo
+      // mesmo motivo. Sem esperar, o primeiro `pointermove` seria descartado.
+      await wait(600);
+      return panel;
+    }
+
+    await step('Arraste curto volta ao repouso, sem fechar', async () => {
+      const panel = await openPanel();
+      const box = panel.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + 10;
+
+      pointer(panel, 'pointerdown', x, y);
+      await nextFrame();
+      pointer(panel, 'pointermove', x, y + 6);
+      await nextFrame();
+      // Devagar de propósito: 6px em ~150ms dá 0,04 px/ms, um décimo do limiar
+      // de velocidade. O que decide aqui é a distância, e 6px não chega a um
+      // quarto de panel nenhum.
+      await wait(150);
+      pointer(panel, 'pointermove', x, y + 6);
+      await nextFrame();
+      pointer(panel, 'pointerup', x, y + 6);
+
+      await wait(700);
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
+      await expect(panel).toBeVisible();
+      await expect(panel.hasAttribute('data-swiping')).toBe(false);
+      await expect(atRest(panel)).toBe(true);
+    });
+
+    await step('Arraste além de um quarto do panel dispensa, e o foco volta', async () => {
+      const panel = await openPanel();
+      const box = panel.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + 10;
+      const target = Math.max(box.height * 0.6, 80);
+
+      pointer(panel, 'pointerdown', x, y);
+      await nextFrame();
+      for (const fraction of [0.25, 0.5, 0.75, 1]) {
+        pointer(panel, 'pointermove', x, y + target * fraction);
+        await nextFrame();
+      }
+      pointer(panel, 'pointerup', x, y + target);
+
+      await waitForPortalVanish('dialog');
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      await expect(document.activeElement).toBe(trigger);
+    });
+
+    await step('Nada depende do arraste: Escape fecha o mesmo panel', async () => {
+      // É esta a asserção da WCAG 2.5.7. O gesto só dispensa, e dispensar tem
+      // caminho sem trajeto de pointer — este passo prova que o caminho existe
+      // e leva ao mesmo lugar.
+      const panel = await openPanel();
+      await expect(panel).toBeVisible();
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalVanish('dialog');
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+    });
+
+    await step('A alça não é parada de teclado', async () => {
+      const panel = await openPanel();
+      const handle = panel.querySelector<HTMLElement>('.nds-drawer-handle');
+      await expect(handle).not.toBeNull();
+      // Afordância visual: o arraste vale no panel inteiro, não nela. Foco ali
+      // seria uma parada de tabulação que não faz nada.
+      await expect(handle!.getAttribute('aria-hidden')).toBe('true');
+      await expect(handle!.hasAttribute('tabindex')).toBe(false);
+    });
+  },
+};

@@ -169,7 +169,8 @@ nds-drawer
 
 **Regras**:
 - A direção se chama `direction`, não `side` — o Sheet usa `side`. São componentes diferentes e a divergência é intencional: o Drawer se move num eixo, o Sheet encosta num lado
-- Arrastar é **atalho**, não a única via de fechar: o botão de fechar e o Escape continuam obrigatórios
+- O painel arrasta na direção de entrada e é dispensado quando o gesto passa de um quarto do seu tamanho, ou quando a soltura é rápida. Arrastar é **atalho**, nunca a única via: Escape, clique no fundo e o fechador do rodapé cobrem o mesmo objetivo sem trajeto de ponteiro (WCAG 2.5.7)
+- O gesto só dispensa. Nada de redimensionar nem de parar em posição intermediária: capacidade que só o arraste alcança exige caminho alternativo próprio, e nenhum existe
 - Direção inferior é o caso típico em tela estreita
 
 **Acessibilidade**:

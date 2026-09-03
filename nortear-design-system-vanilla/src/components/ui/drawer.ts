@@ -12,14 +12,15 @@
 // mão no WRAPPER — onde nenhuma regra do CSS o lê — e chamando `createSheet`
 // direto para as outras três direções.
 //
-// O CSS compartilhado publica `.nds-drawer-content[data-vaul-drawer-direction]`,
-// `.nds-drawer-handle`, `.nds-drawer-header`, `.nds-drawer-body` e
-// `.nds-drawer-footer`, e nada nesta stack os usava. Como esta é a stack de
+// A folha do Drawer (`docs/shared/styles/nds/drawer.css`) publica
+// `.nds-drawer-content[data-vaul-drawer-direction]`, `.nds-drawer-handle`,
+// `.nds-drawer-header`, `.nds-drawer-body` e `.nds-drawer-footer`, e nada nesta
+// stack os usava. Como esta é a stack de
 // referência de markup, o contrato que ela não cumpre é contrato que não existe.
 // Daí a factory própria: mesmo markup e mesmos `data-slot` das outras stacks.
 //
 // Do Sheet ficam só `.nds-sheet-overlay`, `.nds-sheet-title` e
-// `.nds-sheet-description`, que o próprio CSS compartilhado manda reusar.
+// `.nds-sheet-description`, que as duas folhas mandam reusar.
 //
 // ─── Decisão de acessibilidade, medida na fonte das cinco libs ───────────────
 //
@@ -50,17 +51,24 @@
 //      alça (escondida), cabeçalho, corpo, rodapé.
 //   9. Região viva: NENHUMA. A abertura já move o foco e o papel de diálogo já
 //      é anunciado; uma live region diria a mesma coisa duas vezes.
+//  10. Arraste com alternativa: AS CINCO (WCAG 2.5.7). O gesto só dispensa, e
+//      dispensar tem três caminhos sem trajeto — Escape, clique no véu e o
+//      botão de saída do rodapé. Enquanto o gesto não existia em duas stacks o
+//      critério era atendido por ausência; agora é atendido por cobertura, e a
+//      cobertura é o que precisa continuar verdadeira: capacidade nova de
+//      arraste (redimensionar, parar no meio) só entra com caminho próprio.
 //
 // ─── Onde ele DIVERGE do Sheet, e por quê ────────────────────────────────────
 //
-//   · Gesto de arrastar. Esta stack NÃO tem, e a do Angular também não; as três
-//     que montam sobre a lib de gaveta têm. Onde existe, é extra de ponteiro:
-//     Escape, véu e o botão do rodapé cobrem o mesmo objetivo por teclado, então
-//     nenhuma ação depende de arrastar (WCAG 2.5.7). O Sheet não tem gesto em
-//     stack nenhuma — por isso o conteúdo compartilhado descreve o arraste como
-//     extra, e não como caminho.
-//   · Alça. Afordância visual, com `aria-hidden`, sem foco e sem nome. O Sheet
-//     não tem alça.
+//   · Gesto de arrastar. Existe nas CINCO. Aqui o motor é
+//     `@shared/primitives/drawer-swipe`, escrito com eventos de ponteiro sobre
+//     a leitura da lib que as outras três usam; lá é a própria lib. Em todas é
+//     extra de ponteiro: arrastar só DISPENSA, e dispensar já tem Escape, véu e
+//     o botão do rodapé — nenhuma ação depende de trajeto (WCAG 2.5.7). O Sheet
+//     não tem gesto em stack nenhuma.
+//   · Alça. Afordância visual, com `aria-hidden`, sem foco e sem nome — o
+//     arraste vale no painel inteiro, não nela, então foco ali seria parada de
+//     tabulação sem função. O Sheet não tem alça.
 //   · Botão de fechar. O Sheet traz um X próprio (`.nds-sheet-close`, com
 //     `showCloseButton`); o Drawer não tem X nenhum, e a saída visível é o que
 //     quem compõe puser no rodapé. É por isso que rodapé com saída explícita
@@ -75,6 +83,7 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
+import { attachDrawerSwipe, type DrawerSwipeHandle } from '@shared/primitives/drawer-swipe';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -187,6 +196,14 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
    * e o devolveria ao fechar, e a página nunca mais rolaria.
    */
   let scrollLocked = false;
+  /**
+   * Motor do arraste, vivo só enquanto o painel existe.
+   *
+   * Fica aqui (e não dentro de `open`) porque `desmontarPanel` precisa alcançá-lo:
+   * o painel é removido do documento, e um motor ainda instalado num nó órfão
+   * seguraria o nó inteiro pela referência dos ouvintes.
+   */
+  let swipeEngine: DrawerSwipeHandle | null = null;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'drawer';
@@ -314,6 +331,23 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
 
     getFocusable(panelEl)[0]?.focus();
 
+    /*
+     * Arraste para dispensar — o mesmo gesto que as três stacks com lib de
+     * gaveta trazem pronto, aqui pelo motor compartilhado.
+     *
+     * Fecha por `'overlay'`, e não por um motivo novo: para quem escuta, soltar
+     * o painel para fora da tela é a mesma decisão de "saí sem decidir nada" que
+     * o clique no véu — e o vocabulário de `DrawerCloseReason` é o que o
+     * analytics do produto consome, então motivo novo aqui vira dimensão nova
+     * no GA4 sem que ninguém tenha pedido.
+     */
+    swipeEngine = attachDrawerSwipe({
+      panel: panelEl,
+      direction: () => direction,
+      dismissible: () => dismissible,
+      onDismiss: () => closeWithReason('overlay'),
+    });
+
     document.addEventListener('keydown', handleKeydown);
     onOpenChange?.(true);
   }
@@ -327,6 +361,8 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
    * fechada, ela deixou de existir.
    */
   function desmontarPanel(): void {
+    swipeEngine?.destroy();
+    swipeEngine = null;
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
