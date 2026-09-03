@@ -784,6 +784,24 @@
   color: hsl(var(--muted-foreground));
 }
 
+/*
+ * Sobre a opção COLORIDA, a descrição volta para `--foreground`.
+ *
+ * O comentário acima já dizia a regra e a folha a cumpria só metade: sobre o
+ * `--popover` a descrição em `--muted-foreground` passa, mas a opção escolhida
+ * pinta `--accent / 0.2` por baixo dela — e ali o mesmo par mede 4,1:1 para
+ * texto de 13,3px, abaixo dos 4,5:1 que texto corrido exige (WCAG 1.4.3).
+ * Medido pelo axe na primeira rodada em que esta página entrou na fumaça.
+ *
+ * O nome e a insígnia continuam como estão: são elementos curtos e herdam
+ * `--accent-foreground` da própria opção. Quem não alcançava era a descrição,
+ * que é justamente o texto corrido.
+ */
+.nds-composer-model-option[aria-selected='true'] .nds-composer-model-description,
+.nds-composer-model-option[data-active='true'] .nds-composer-model-description {
+  color: hsl(var(--foreground));
+}
+
 /* ── Ditado por voz ───────────────────────────────────────────────────────────
  *
  * O controle do trilho que escreve por quem fala. Vocabulário em
