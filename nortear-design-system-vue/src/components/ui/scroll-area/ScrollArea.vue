@@ -59,14 +59,17 @@ const props = defineProps<ScrollAreaRootProps & {
    * DISTINTOS: dois grupos de mesmo nome são indistinguíveis para quem navega
    * ouvindo.
    */
-  /* eslint-disable-next-line vue/prop-name-casing --
-     O nome é atributo de ARIA e não pode virar camelCase: `ariaLabel` não
-     nomeia nada no DOM. Mantém o markup idêntico ao das outras quatro stacks,
-     que é o contrato que este design system guarda. */
-  'aria-label'?: string
+  /**
+   * Declarado em camelCase de propósito. O Vue CAMELIZA o nome de toda prop
+   * declarada, então uma prop escrita `'aria-label'` passa a viver em
+   * `props.ariaLabel` — e `props['aria-label']` devolve `undefined` para
+   * sempre. Quem compõe continua escrevendo `aria-label="..."` no template: o
+   * Vue casa o atributo com esta prop, e o markup no DOM não muda.
+   */
+  ariaLabel?: string
 }>()
 
-const delegatedProps = reactiveOmit(props, 'class', 'size', 'aria-label')
+const delegatedProps = reactiveOmit(props, 'class', 'size', 'ariaLabel')
 </script>
 
 <template>
@@ -80,8 +83,8 @@ const delegatedProps = reactiveOmit(props, 'class', 'size', 'aria-label')
       data-slot="scroll-area-viewport"
       tabindex="0"
       class="nds-scroll-area-viewport"
-      :role="props['aria-label'] ? 'group' : undefined"
-      :aria-label="props['aria-label']"
+      :role="props.ariaLabel ? 'group' : undefined"
+      :aria-label="props.ariaLabel"
     >
       <slot />
     </ScrollAreaViewport>
