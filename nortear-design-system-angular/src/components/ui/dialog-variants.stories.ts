@@ -172,7 +172,16 @@ export const WithScrollContent: Story = {
   render: () => ({
     props: {
       labels: LABELS,
-      paragrafos: Array.from({ length: 12 }, (_, i) => `Cláusula ${i + 1}`),
+      // Vinte cláusulas de frase inteira, e não doze rótulos curtos: o corpo
+      // tem teto de 60vh, e a asserção que prova a variante é o corpo TER o que
+      // rolar. Com o texto curto o conteúdo cabia inteiro no teto
+      // (`scrollHeight === clientHeight`) e a rota não acontecia — a mesma
+      // leitura que a story da outra rota faz sobre o overlay.
+      paragrafos: Array.from(
+        { length: 20 },
+        (_, i) =>
+          `Cláusula ${i + 1}: o corpo é a única região que rola, e o cabeçalho e o rodapé ficam parados enquanto o texto passa por baixo deles.`,
+      ),
     },
     template: `
       <div ndsDialog [defaultOpen]="true">
