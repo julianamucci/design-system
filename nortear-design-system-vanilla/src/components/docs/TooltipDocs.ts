@@ -4,8 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createTooltip } from '@/components/ui/tooltip';
-import { Save, Share2, Trash2 } from 'lucide';
-import { createButton, createButtonIcon } from '@/components/ui/button';
+import { createButton, createButtonIcon, type ButtonIconKind } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import tooltipTranslations from '@shared/content/tooltip/translations.json';
 
@@ -58,40 +57,18 @@ function priorityLabel(raw: string): string {
 // ─── Demo builders ────────────────────────────────────────────────────────────
 
 /**
- * SVG a partir de um ícone do lucide.
+ * Botão icon-only da barra de ações da demonstração.
  *
- * Mesmo idioma que `ToggleDocs`, `BadgeDocs` e `InputGroupDocs` já usam: o
- * `createButtonIcon` do primitivo tem um mapa curado (plus, trash, pencil,
- * chevron-right, download, loader, x) e não traz `save` nem `share`, que a
- * demonstração precisa para mostrar a mesma barra de ações das outras stacks.
+ * O ícone vem de `createButtonIcon`, que é a factory de ícone DE BOTÃO desta
+ * stack — `save` e `share` foram acrescentados ao mapa dela para isto. Nove
+ * docs pages do vanilla constroem SVG do lucide à mão, mas o caso delas é
+ * outro: pedem ícones que não são de botão (Bold, Italic, Search, Star), e
+ * ampliar um mapa de botão com eles seria pior.
  */
-type LucideIconNode = [string, Record<string, string>];
-
-function demoLucideSvg(icon: unknown): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'nds-button-icon-svg');
-
-  for (const [tag, attrs] of icon as unknown as LucideIconNode[]) {
-    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
-    svg.appendChild(child);
-  }
-  return svg;
-}
-
-/** Botão icon-only da barra de ações da demonstração. */
-function demoIconButton(icon: unknown, ariaLabel: string): HTMLButtonElement {
+function demoIconButton(kind: ButtonIconKind, ariaLabel: string): HTMLButtonElement {
   const iconWrap = document.createElement('span');
   iconWrap.setAttribute('aria-hidden', 'true');
-  iconWrap.appendChild(demoLucideSvg(icon));
+  iconWrap.appendChild(createButtonIcon(kind));
   return createButton({ variant: 'outline', size: 'icon', 'aria-label': ariaLabel, children: iconWrap });
 }
 
@@ -276,10 +253,10 @@ export function createTooltipDocs(): HTMLElement {
             // outras quatro escrevem, e é o que deixa a divergência visível a
             // uma varredura de fonte. Chave construída em runtime esconde o
             // rótulo de qualquer portão que leia o arquivo.
-            const actions = [
-              { icon: Save,   label: t('demonstration.labels.saveButton'),   text: t('demonstration.labels.save'),   id: 'save' },
-              { icon: Trash2, label: t('demonstration.labels.deleteButton'), text: t('demonstration.labels.delete'), id: 'delete' },
-              { icon: Share2, label: t('demonstration.labels.shareButton'),  text: t('demonstration.labels.share'),  id: 'share' },
+            const actions: Array<{ icon: ButtonIconKind; label: string; text: string; id: string }> = [
+              { icon: 'save',   label: t('demonstration.labels.saveButton'),   text: t('demonstration.labels.save'),   id: 'save' },
+              { icon: 'trash', label: t('demonstration.labels.deleteButton'), text: t('demonstration.labels.delete'), id: 'delete' },
+              { icon: 'share', label: t('demonstration.labels.shareButton'),  text: t('demonstration.labels.share'),  id: 'share' },
             ];
 
             for (const action of actions) {

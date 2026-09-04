@@ -101,9 +101,15 @@ export function createButton(options: ButtonOptions): HTMLButtonElement {
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
-import { Plus, Trash2, Pencil, ChevronRight, Download, Loader2, X } from 'lucide';
+import { Plus, Trash2, Pencil, ChevronRight, Download, Loader2, X, Save, Share2 } from 'lucide';
 
-export type ButtonIconKind = 'plus' | 'trash' | 'pencil' | 'chevron-right' | 'download' | 'loader' | 'x';
+export type ButtonIconKind =
+  | 'plus' | 'trash' | 'pencil' | 'chevron-right' | 'download' | 'loader' | 'x'
+  // 'save' e 'share' entraram para a barra de ações da docs page do tooltip, que
+  // é a mesma das outras quatro stacks. São ícones DE BOTÃO, então o lugar deles
+  // é este mapa — as nove docs pages que constroem SVG do lucide à mão pedem
+  // ícones que não são de botão (Bold, Italic, Search, Star), o que é outro caso.
+  | 'save' | 'share';
 
 type LucideIconNode = [string, Record<string, string>];
 
@@ -115,6 +121,8 @@ const BUTTON_ICON_MAP: Record<ButtonIconKind, LucideIconNode[]> = {
   'download':      Download     as unknown as LucideIconNode[],
   'loader':        Loader2      as unknown as LucideIconNode[],
   'x':             X            as unknown as LucideIconNode[],
+  'save':          Save         as unknown as LucideIconNode[],
+  'share':         Share2       as unknown as LucideIconNode[],
 };
 
 export type ButtonIconSize = 'sm' | 'md' | 'lg';
