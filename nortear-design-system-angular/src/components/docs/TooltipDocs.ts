@@ -1106,11 +1106,14 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // `tokens.table.fill` (cor da seta) fica de fora: este stack não compõe a
-    // Arrow — ver a nota no fim de components/ui/tooltip.ts.
+    // A linha de `tokens.table.fill` (cor da seta) ficava de fora com motivo
+    // declarado — este stack não compunha a Arrow. Ele passou a compor em
+    // 2026-09-04, e a exceção caiu junto: era das cinco a única tabela com
+    // quatro linhas, e a única a mapear `--primary` para o balão em vez da seta.
     return [
       { token: '--primary',            className: 'nds-tooltip-content',    k: 'foreground' },
       { token: '--primary-foreground', className: 'nds-tooltip-content',    k: 'background' },
+      { token: '--primary',            className: 'nds-tooltip-arrow',      k: 'fill'       },
       { token: '--radius-sm',          className: 'nds-tooltip-content',    k: 'radius'     },
       { token: '--z-tooltip',          className: 'nds-tooltip-positioner', k: 'zIndex'     },
     ].map(({ token, className, k }) => ({

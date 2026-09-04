@@ -54,11 +54,11 @@
 	// quem controla de fora, e o retorno da lib volta por `onOpenChange`. Por
 	// isso não dá para resolver com `defaultOpen` — as stories passam `open`
 	// direto, controlado.
-	let raizMontada = $state(false);
+	let rootMounted = $state(false);
 	$effect(() => {
-		raizMontada = true;
+		rootMounted = true;
 	});
-	const abertoParaLib = $derived(raizMontada && open);
+	const openForLib = $derived(rootMounted && open);
 
 	// O id do balão nasce aqui, e não no conteúdo: o gatilho precisa dele mesmo
 	// antes de o balão existir, para saber o que escrever quando abrir. Ver o
@@ -84,7 +84,7 @@
 
 <TooltipPrimitive.Root
 	{...restProps}
-	open={abertoParaLib}
+	open={openForLib}
 	onOpenChange={(v) => {
 		open = v;
 		onOpenChange?.(v);

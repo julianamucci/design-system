@@ -13,6 +13,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import {
   RdxTooltip,
+  RdxTooltipArrow,
   RdxTooltipPopup,
   RdxTooltipPortal,
   RdxTooltipPositioner,
@@ -192,7 +193,7 @@ export class NdsTooltipTrigger {}
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [RdxTooltipPortal, RdxTooltipPositioner, RdxTooltipPopup, NgTemplateOutlet],
+  imports: [RdxTooltipPortal, RdxTooltipPositioner, RdxTooltipPopup, RdxTooltipArrow, NgTemplateOutlet],
   hostDirectives: [
     {
       directive: RdxTooltip,
@@ -222,6 +223,7 @@ export class NdsTooltipTrigger {}
             [attr.data-state]="state()"
           >
             <ng-container [ngTemplateOutlet]="c.template" />
+            <div rdxTooltipArrow class="nds-tooltip-arrow"></div>
           </div>
         </div>
       </ng-template>
@@ -246,24 +248,23 @@ export class NdsTooltip {
 
 // ─── Sobre a Arrow ────────────────────────────────────────────────────────────
 //
-// `RdxTooltipArrow` existe no pacote e NÃO é composto aqui. O motivo é que ele
-// e o `.nds-tooltip-arrow` do CSS compartilhado descrevem duas setas diferentes:
+// Composta desde 2026-09-04. A recusa anterior está registrada aqui porque a
+// premissa dela era verdadeira e DEIXOU de ser:
 //
-//   · o CSS desenha um QUADRADO girado 45°, com `background-color`, e desloca a
-//     ponta com `bottom`/`top`/`left`/`right` por `[data-side]`;
-//   · o primitivo injeta um `<svg>` de `polygon` com `fill="currentColor"` e
-//     escreve `transform`, `left`/`top` e o lado oposto DIRETO no atributo
-//     `style` do host.
+//   · o CSS compartilhado desenhava um QUADRADO girado 45° e deslocava a ponta
+//     por conta própria, com `bottom`/`top`/`left`/`right` em `[data-side]`;
+//   · o `RdxPopperArrow` escreve `position`, o eixo cruzado, o lado oposto e o
+//     `transform` DIRETO no `style` do host — e style inline vence folha.
 //
-// Style inline vence folha, então a rotação de 45° e os deslocamentos do CSS
-// seriam descartados, e o `currentColor` do polígono pegaria a cor do TEXTO do
-// balão (`--primary-foreground`) em vez da cor do fundo. O resultado seria um
-// quadrado sólido com um triângulo mais claro dentro.
+// A folha era descartada em silêncio. Ela passou a desenhar só a FORMA (um
+// triângulo em `clip-path`) e a repetir, nas regras `[data-side]`, exatamente os
+// valores que o `RdxPopperArrow` já aplica — os mesmos da reka-ui e do bits-ui.
+// Não há mais conflito: a lib posiciona, a folha desenha.
 //
-// Sem seta é também o que o Vanilla faz — e ele é a referência cross-stack de
-// markup. Registrado para a passada de CSS compartilhado: a folha precisa de uma
-// variante de seta que sobreviva ao style inline do posicionador (cor via
-// `color`, não `background-color`, e nenhum deslocamento próprio).
+// O segundo motivo continua verdadeiro e é tratado na folha, não aqui: o
+// `RdxArrow` projeta um `<svg>` de polígono com `fill="currentColor"`, que
+// pegaria a cor do TEXTO do balão. É conteúdo de fallback de um `<ng-content>`,
+// e `.nds-tooltip-arrow > svg { display: none }` o cala.
 
 /** As quatro peças — conveniência para o `imports` de quem compõe. */
 export const NDS_TOOLTIP = [

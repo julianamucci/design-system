@@ -124,7 +124,19 @@ const GRACE_MS = 200;
  * também a usam — era a mesma aritmética escrita três vezes, e o balão sempre
  * centrado é o `align: 'center'` de lá.
  */
-const GAP = 6;
+/** Largura e altura da seta, em px — espelham `.nds-tooltip-arrow` na folha. */
+const ARROW_WIDTH = 10;
+const ARROW_HEIGHT = 5;
+
+/**
+ * Vão entre gatilho e balão, em px.
+ *
+ * 9 = os 4 que o conteúdo compartilhado documenta como `sideOffset` + os 5 da
+ * seta, que fica FORA do balão e ocupa o vão. Era 6, e com a seta composta
+ * sobrariam 1px de folga; nas stacks com lib a soma é feita pela própria lib
+ * (`mainAxis: sideOffset + arrowHeight`), e no react ela é explícita.
+ */
+const GAP = ARROW_HEIGHT + 4;
 
 /**
  * Cria um grupo com o padrão do próprio balão avulso.
@@ -217,6 +229,29 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
 
     document.body.appendChild(panelEl);
     positionFloating(trigger, panelEl, side, 'center', GAP);
+
+    // A seta, e o que esta stack faz que as outras quatro recebem de graça.
+    //
+    // A folha compartilhada desenha a FORMA e resolve o eixo PRINCIPAL por
+    // `[data-side]` — encostar na borda e girar para fora. O eixo CRUZADO é a
+    // coordenada que aponta para o gatilho, e nas outras stacks quem a calcula é
+    // o middleware de seta da lib. Aqui não há lib, então é conta nossa.
+    //
+    // `positionFloating` centra o painel no gatilho e não faz clamp de janela,
+    // então o centro do painel É o centro do gatilho: a conta é o meio do
+    // painel, menos meia seta. A dimensão usada é a LARGURA no top/bottom e a
+    // ALTURA no left/right, sem rotação — é o que o `transform` da folha espera
+    // receber, e é o mesmo par que o base-ui devolve (medido: balão de 58px de
+    // largura → `left: 24px`; de 29px de altura → `top: 12px`).
+    const arrowEl = document.createElement('div');
+    arrowEl.className = 'nds-tooltip-arrow';
+    arrowEl.dataset.side = side;
+    panelEl.appendChild(arrowEl);
+
+    const verticalAxis = side === 'top' || side === 'bottom';
+    const panelSpan = verticalAxis ? panelEl.offsetWidth : panelEl.offsetHeight;
+    const arrowSpan = verticalAxis ? ARROW_WIDTH : ARROW_HEIGHT;
+    arrowEl.style[verticalAxis ? 'left' : 'top'] = `${(panelSpan - arrowSpan) / 2}px`;
 
     // `aria-describedby` só enquanto o balão EXISTE. Escrevê-lo na montagem
     // deixa o gatilho apontando para um id ausente o tempo todo — violação de

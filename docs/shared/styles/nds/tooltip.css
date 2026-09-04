@@ -58,8 +58,11 @@
    * `--bits-…` (svelte) — medido em
    * `bits-ui/dist/internal/floating-svelte/floating-utils.svelte.js:18`, que
    * escreve `--bits-${name}-content-transform-origin`. Quem não tem lib cai em
-   * `center`, e isso é o certo para vanilla e angular: o primeiro não anima a
-   * entrada, e o radix-ng não publica origem.
+   * `center`. Quem cai nele é só o VANILLA, que não tem lib e não anima a
+   * entrada — o radix-ng (angular) publica `--transform-origin` no positioner,
+   * e custom property herda, então o balão resolve o PRIMEIRO degrau da cadeia,
+   * o mesmo do base-ui. Este comentário dizia o contrário; medido em 2026-09-04
+   * em `radix-ng-primitives-popper.mjs:562`.
    *
    * Sem o degrau do bits, só o SVELTE perdia a origem direcional — o balão
    * crescia do centro em vez de crescer do gatilho, em silêncio, porque
@@ -115,10 +118,26 @@
  * Foi assim que o `top: 50%` do left/right prendia a seta no canto do balão.
  */
 .nds-tooltip-arrow {
+  position: absolute;
   width: 0.625rem;                               /* 10px — a base do triângulo */
   height: 0.3125rem;                             /* 5px — a altura do bico */
   background-color: hsl(var(--primary));
   clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* A lib do Angular projeta um <svg> de polígono DENTRO da seta, com
+ * `fill="currentColor"` — e como o texto do balão é `--primary-foreground`, ele
+ * desenharia um segundo triângulo, CLARO, por cima do que a folha desenha.
+ *
+ * `visibility` e não `display`: o `<svg>` do `RdxArrow` já traz
+ * `style="display: block"` INLINE, e inline vence folha — `display: none` aqui
+ * foi escrito, medido e não pintou nada (`svgVisivel: "block"` na sonda de
+ * 2026-09-04). A lib não declara `visibility` no svg, então esta ganha sem
+ * precisar de `!important`.
+ *
+ * A forma é da folha nas cinco stacks: é essa regra que torna a seta portável. */
+.nds-tooltip-arrow > svg {
+  visibility: hidden;
 }
 
 .nds-tooltip-arrow[data-side="top"] {
