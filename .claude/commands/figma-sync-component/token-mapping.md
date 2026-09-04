@@ -402,6 +402,22 @@ lugar: o vínculo vence, a propriedade é apagada, e o componente para de aceita
 texto em silêncio. Para que o rótulo padrão siga o idioma, o vínculo vai no
 DEFAULT da propriedade, com `editComponentProperty` — nunca na camada.
 
+**Sombra recortada não parece recortada — parece PESADA.** `clipsContent` nasce
+`true` em todo frame, e auto-layout que abraça o conteúdo dá zero folga para a
+sombra. O que se vê não é uma sombra faltando: é a queda suave virando uma borda
+dura, e o olho lê isso como "sombra forte demais". Foi assim que apareceu na
+página do Tooltip — os blocos de exemplo abraçavam o balão, e a `Elevacao/xl`
+precisa de 40px abaixo (deslocamento 20 + desfoque 25 + espalhamento −5) e 20px
+de lado.
+
+Duas coisas resolvem, e as duas são necessárias: `clipsContent = false` no frame,
+e gap MAIOR que o alcance da sombra entre irmãos numa lista — senão ela deixa de
+ser cortada e passa a invadir o vizinho de cima. Calcule o alcance dos efeitos em
+vez de chutar padding.
+
+É o mesmo defeito que `[data-docs-preview] { overflow: visible }` conserta nas
+docs pages, do outro lado da ponte.
+
 **Instância escondida não expõe filhos.** `instancia.children` devolve `[]`
 enquanto `visible === false`, então uma varredura que pinta ícones pula todos os
 que nascem desligados, sem erro. Ligue, pinte, desligue de volta.
