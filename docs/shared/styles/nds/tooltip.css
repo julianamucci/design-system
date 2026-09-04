@@ -30,7 +30,21 @@
   pointer-events: none;
   box-shadow: var(--elevation-xl);
 
-  transform-origin: var(--transform-origin, var(--reka-tooltip-content-transform-origin, center));
+  /* A cadeia tem de citar as TRÊS libs, e faltava a do Svelte.
+   *
+   * Cada lib headless publica a origem com o seu prefixo: base-ui em
+   * `--transform-origin` (react), reka em `--reka-…` (vue), bits em
+   * `--bits-…` (svelte) — medido em
+   * `bits-ui/dist/internal/floating-svelte/floating-utils.svelte.js:18`, que
+   * escreve `--bits-${name}-content-transform-origin`. Quem não tem lib cai em
+   * `center`, e isso é o certo para vanilla e angular: o primeiro não anima a
+   * entrada, e o radix-ng não publica origem.
+   *
+   * Sem o degrau do bits, só o SVELTE perdia a origem direcional — o balão
+   * crescia do centro em vez de crescer do gatilho, em silêncio, porque
+   * `center` é fallback válido e nada reprova. O padrão de três níveis já
+   * existe na casa: `collapsible.css:25`. */
+  transform-origin: var(--transform-origin, var(--reka-tooltip-content-transform-origin, var(--bits-tooltip-content-transform-origin, center)));
 }
 
 /* Encurta o padding quando há um <kbd> à direita */
