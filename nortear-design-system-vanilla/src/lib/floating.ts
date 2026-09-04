@@ -53,6 +53,14 @@ export function positionFloating(
   // de posicionar, então o painel já está no documento e `offsetWidth` mede sem
   // que ninguém precise mexer no `display`. Um painel fechado aqui não existe;
   // ele é criado ao abrir e removido ao fechar.
+  // A função ESCREVE `top`/`left`, então ela é quem garante o esquema de
+  // posicionamento de que esses dois dependem — e antes de medir, porque
+  // `offsetWidth` de um painel em fluxo mede a largura do pai, não a do
+  // conteúdo. Antes isto vinha da folha de cada painel, o que obrigava
+  // `.nds-tooltip-content` a ser absoluto nas CINCO stacks para servir a uma;
+  // nas outras quatro o balão vive dentro de um wrapper posicionado pela lib, e
+  // sair do fluxo ali colapsa esse wrapper para 0×0.
+  panel.style.position = 'absolute';
   panel.style.visibility = 'hidden';
   const pw = panel.offsetWidth;
   const ph = panel.offsetHeight;

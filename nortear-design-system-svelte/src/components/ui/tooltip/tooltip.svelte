@@ -37,8 +37,28 @@
 	let {
 		defaultOpen = false,
 		open = $bindable(defaultOpen),
+		onOpenChange,
 		...restProps
 	}: TooltipPrimitive.RootProps & { defaultOpen?: boolean } = $props();
+
+	// O balão nunca nasce aberto PARA A LIB — ele abre um tick depois, e a ORDEM
+	// é o assunto. O bits registra a âncora quando o gatilho monta e calcula a
+	// posição uma vez, ao nascer o floating layer: aberto no MESMO tick, ele
+	// nasce sem âncora e não há recálculo. `isPositioned` fica falso para sempre,
+	// o wrapper congela em `translate(0, -200%)` e as variáveis saem
+	// `undefinedpx` — medido em 2026-09-04. Era o que a pessoa via, porque TODAS
+	// as demonstrações da docs page nascem abertas; a mesma cena aberta por hover
+	// posicionava certo.
+	//
+	// O adiamento é da LIB, não do estado: `open` continua sendo a verdade para
+	// quem controla de fora, e o retorno da lib volta por `onOpenChange`. Por
+	// isso não dá para resolver com `defaultOpen` — as stories passam `open`
+	// direto, controlado.
+	let raizMontada = $state(false);
+	$effect(() => {
+		raizMontada = true;
+	});
+	const abertoParaLib = $derived(raizMontada && open);
 
 	// O id do balão nasce aqui, e não no conteúdo: o gatilho precisa dele mesmo
 	// antes de o balão existir, para saber o que escrever quando abrir. Ver o
@@ -62,4 +82,11 @@
 	});
 </script>
 
-<TooltipPrimitive.Root bind:open {...restProps} />
+<TooltipPrimitive.Root
+	{...restProps}
+	open={abertoParaLib}
+	onOpenChange={(v) => {
+		open = v;
+		onOpenChange?.(v);
+	}}
+/>

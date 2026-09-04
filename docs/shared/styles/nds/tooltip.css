@@ -9,8 +9,29 @@
  * Tokens: --primary (bg), --primary-foreground (fg), --radius-sm, --spacing-*
  */
 
+/*
+ * A folha NÃO posiciona o balão, e isso é o contrato: em toda stack existe um
+ * elemento de FORA que é posicionado, e o balão fica em fluxo dentro dele.
+ *
+ *   react e angular  → `.nds-tooltip-positioner`
+ *   vue e svelte     → um wrapper sem classe, da própria lib
+ *   vanilla          → o próprio painel, e por isso `positionFloating` escreve
+ *                      `position: absolute` nele antes de medir
+ *
+ * `position: absolute` morava aqui e derrubava as três stacks de lib de uma vez,
+ * em silêncio: o balão saía do fluxo, o wrapper colapsava para 0×0, e era contra
+ * essa caixa que a lib calculava tudo. Medido em 2026-09-04, com o balão pedindo
+ * `side="top"`:
+ *
+ *   react   wrapper 107×29 — centrado no gatilho, folga 9px
+ *   vue     wrapper 0×0    — balão 34px à direita e 37px ABAIXO do gatilho
+ *   svelte  wrapper 0×0    — `--bits-floating-*: undefined`, nunca calculou
+ *
+ * Junto ia o `min-width: max-content` que os wrappers declaram: fora do fluxo o
+ * balão não o herda, encolhe contra uma caixa de largura zero e o texto quebra
+ * em duas linhas. Era esse o sintoma visível, e ele parecia de tipografia.
+ */
 .nds-tooltip-content {
-  position: absolute;
   z-index: var(--z-tooltip);
 
   display: inline-flex;
@@ -65,21 +86,6 @@
   z-index: var(--z-tooltip);
 }
 
-/* O `position: absolute` de `.nds-tooltip-content` é do VANILLA, que posiciona o
- * próprio balão (`positionFloating` mede o painel e escreve top/left, e a conta
- * exige que ele seja absoluto). Onde existe um POSITIONER, quem é posicionado é
- * ele, e o balão tem de ficar em fluxo dentro: absoluto, o balão sai do fluxo, o
- * positioner colapsa para 0×0 — e é contra essa caixa de largura zero que o
- * cálculo da seta é feito.
- *
- * O sintoma era exato, e por isso vale registrar: a lib devolvia `left: -5px` e
- * `top: -2.5px`, que são METADE da largura e da altura da seta — a conta de
- * centrar 10×5 numa caixa 0×0. A seta ficava colada no canto do balão em vez de
- * apontar para o gatilho, nos quatro lados. Nada reprovava: as duas regras são
- * válidas, e o defeito só existe na combinação. */
-.nds-tooltip-positioner .nds-tooltip-content {
-  position: static;
-}
 
 /* ── Arrow (setinha apontando pro trigger) ───────────────────────────────── */
 /*
