@@ -10,7 +10,8 @@ defineOptions({
 })
 
 const props = withDefaults(defineProps<TooltipContentProps & { class?: HTMLAttributes['class'] }>(), {
-  sideOffset: 0,
+  // 4 e não 0: o conteúdo compartilhado documenta 4, e a lib soma a altura da seta por conta própria.
+  sideOffset: 4,
 })
 
 const emits = defineEmits<TooltipContentEmits>()
@@ -37,7 +38,16 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     >
       <slot />
 
-      <TooltipArrow class="nds-tooltip-arrow" />
+      <!-- `as-child`: sem ele a reka-ui passa a classe para o <svg> INTERNO da
+           seta (o `inheritAttrs: false` do PopperArrow encaminha $attrs para o
+           Arrow), e esse svg é `position: static` — a folha compartilhada
+           pintava um quadrado girado por cima do triângulo que a lib já
+           desenhava, 12px fora do centro do balão. Com `as-child` o elemento
+           estilizado é este <div>, que é o mesmo que React e Svelte entregam:
+           a lib posiciona, a folha desenha a forma. -->
+      <TooltipArrow as-child>
+        <div class="nds-tooltip-arrow"></div>
+      </TooltipArrow>
     </TooltipContent>
   </TooltipPortal>
 </template>

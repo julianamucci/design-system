@@ -65,22 +65,77 @@
   z-index: var(--z-tooltip);
 }
 
-/* ── Arrow (setinha apontando pro trigger) ───────────────────────────────── */
-.nds-tooltip-arrow {
-  z-index: var(--z-tooltip);
-  width: 0.625rem;                               /* 10px */
-  height: 0.625rem;
-  transform: rotate(45deg);
-  border-radius: 2px; /* seta — micro exceção, abaixo da escala */
-  background-color: hsl(var(--primary));
+/* O `position: absolute` de `.nds-tooltip-content` é do VANILLA, que posiciona o
+ * próprio balão (`positionFloating` mede o painel e escreve top/left, e a conta
+ * exige que ele seja absoluto). Onde existe um POSITIONER, quem é posicionado é
+ * ele, e o balão tem de ficar em fluxo dentro: absoluto, o balão sai do fluxo, o
+ * positioner colapsa para 0×0 — e é contra essa caixa de largura zero que o
+ * cálculo da seta é feito.
+ *
+ * O sintoma era exato, e por isso vale registrar: a lib devolvia `left: -5px` e
+ * `top: -2.5px`, que são METADE da largura e da altura da seta — a conta de
+ * centrar 10×5 numa caixa 0×0. A seta ficava colada no canto do balão em vez de
+ * apontar para o gatilho, nos quatro lados. Nada reprovava: as duas regras são
+ * válidas, e o defeito só existe na combinação. */
+.nds-tooltip-positioner .nds-tooltip-content {
+  position: static;
 }
 
-.nds-tooltip-arrow[data-side="top"]    { bottom: -0.375rem; }
-.nds-tooltip-arrow[data-side="bottom"] { top: 0.25rem; }
+/* ── Arrow (setinha apontando pro trigger) ───────────────────────────────── */
+/*
+ * A folha desenha a FORMA e encosta a seta na borda; ela não escolhe onde o
+ * balão está. Isso importa porque as três libs de navegador escrevem a posição
+ * da seta em `style` INLINE, e inline vence folha: medido em 2026-09-04, o
+ * `bottom: -0.375rem` daqui perdia para o `bottom: 0` do bits-ui, e o
+ * `rotate(45deg)` perdia para o `translateY(100%)` dele. Regra que perde não
+ * avisa — ela só não pinta.
+ *
+ * O contrato das três é o mesmo: a seta é colada na borda do
+ * balão (`[lado oposto]: 0`) e girada para FORA, e o que elas esperam receber é
+ * um triângulo com a base em cima e o bico embaixo — o
+ * `<polygon points="0,0 30,0 15,10">` que o bits-ui desenha por padrão. Um
+ * quadrado girado 45°, que era o que estava aqui, não fecha com isso em lado
+ * nenhum.
+ *
+ * A diferença entre elas é só QUEM escreve: reka-ui e bits-ui aplicam os
+ * `transform` abaixo por conta própria, então lá estas regras são inertes e
+ * repetem o valor que já veio inline; o base-ui publica `data-side` e NÃO
+ * aplica transform nenhum — ele entrega só o eixo cruzado (`left` no top/bottom,
+ * `top` no left/right) e espera que a folha faça o resto. Por isso os valores
+ * abaixo são, literais, os mesmos que as outras duas já escrevem inline.
+ *
+ * Nunca declare aqui o eixo CRUZADO (`left: 50%`, `top: 50%`): é ele que as três
+ * libs entregam inline com a coordenada já calculada, e a folha só perderia.
+ * Foi assim que o `top: 50%` do left/right prendia a seta no canto do balão.
+ */
+.nds-tooltip-arrow {
+  width: 0.625rem;                               /* 10px — a base do triângulo */
+  height: 0.3125rem;                             /* 5px — a altura do bico */
+  background-color: hsl(var(--primary));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.nds-tooltip-arrow[data-side="top"] {
+  bottom: 0;
+  transform: translateY(100%);
+}
+.nds-tooltip-arrow[data-side="bottom"] {
+  top: 0;
+  transform-origin: center 0;
+  transform: rotate(180deg);
+}
 .nds-tooltip-arrow[data-side="left"],
-.nds-tooltip-arrow[data-side="inline-start"]  { top: 50%; right: -0.25rem; transform: translateY(-50%) rotate(45deg); }
+.nds-tooltip-arrow[data-side="inline-start"] {
+  right: 0;
+  transform-origin: 100% 0;
+  transform: translateY(50%) rotate(-90deg) translateX(50%);
+}
 .nds-tooltip-arrow[data-side="right"],
-.nds-tooltip-arrow[data-side="inline-end"]    { top: 50%; left: -0.25rem; transform: translateY(-50%) rotate(45deg); }
+.nds-tooltip-arrow[data-side="inline-end"] {
+  left: 0;
+  transform-origin: 0 0;
+  transform: translateY(50%) rotate(90deg) translateX(-50%);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .nds-tooltip-content {

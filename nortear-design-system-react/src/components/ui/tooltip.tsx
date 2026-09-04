@@ -111,6 +111,12 @@ function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
   )
 }
 
+/**
+ * Altura da seta, em px — espelha o `height: 0.3125rem` de `.nds-tooltip-arrow`
+ * na folha compartilhada. Muda lá, muda aqui.
+ */
+const ALTURA_SETA = 5
+
 function TooltipContent({
   className,
   side = "top",
@@ -125,13 +131,27 @@ function TooltipContent({
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
   const descricao = React.useContext(TooltipDescriptionContext)
+  // O base-ui aceita `sideOffset` como número OU como função do contexto de
+  // posicionamento; os dois ramos existem porque somar ao tipo união não
+  // compila, e engolir o ramo de função apagaria em silêncio um deslocamento
+  // que quem chama tenha calculado.
+  const deslocamento: NonNullable<TooltipPrimitive.Positioner.Props["sideOffset"]> =
+    typeof sideOffset === "function"
+      ? (dados) => sideOffset(dados) + ALTURA_SETA
+      : sideOffset + ALTURA_SETA
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}
         side={side}
-        sideOffset={sideOffset}
+        // `sideOffset + ALTURA_SETA`: o base-ui usa o valor cru como distância
+        // até o positioner e NÃO desconta a seta, que vive no vão — reka-ui e
+        // bits-ui somam a altura da seta por conta própria (`mainAxis:
+        // sideOffset + arrowHeight`). Sem somar aqui, os mesmos 4 que o
+        // conteúdo compartilhado documenta dariam 4px de folga em duas stacks e
+        // 1px de SOBREPOSIÇÃO nesta.
+        sideOffset={deslocamento}
         className="nds-tooltip-positioner"
       >
         <TooltipPrimitive.Popup

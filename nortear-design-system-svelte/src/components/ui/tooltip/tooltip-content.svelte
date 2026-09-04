@@ -10,7 +10,8 @@
 		ref = $bindable(null),
 		id,
 		class: className,
-		sideOffset = 0,
+		// 4 e não 0: o conteúdo compartilhado documenta 4, e a lib soma a altura da seta por conta própria.
+		sideOffset = 4,
 		side = "top",
 		children,
 		arrowClasses,
@@ -54,9 +55,14 @@
 		{...restProps}
 	>
 		{@render children?.()}
-		<!-- A seta é posicionada só pela folha compartilhada, por `[data-side]`.
-		     As classes utilitárias que moravam aqui saíram do projeto na migração
-		     para `.nds-*` e não pintavam nada. -->
+		<!-- Quem POSICIONA a seta é o bits-ui, não a folha: o `child` recebe um
+		     `style` inline com `position`, o eixo cruzado, `[lado oposto]: 0` e o
+		     `transform` que a gira para fora — e inline vence folha. A folha
+		     compartilhada entra só com a FORMA (o triângulo em `clip-path`); as
+		     regras `[data-side]` dela repetem exatamente estes valores e existem
+		     para o base-ui, que publica `data-side` e não aplica transform nenhum.
+		     As classes utilitárias que moravam aqui saíram na migração para
+		     `.nds-*` e não pintavam nada. -->
 		<TooltipPrimitive.Arrow>
 			{#snippet child({ props })}
 				<div class={cn("nds-tooltip-arrow", arrowClasses)} {...props}></div>
