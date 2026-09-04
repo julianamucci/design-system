@@ -88,6 +88,42 @@ Passo 2f1 primeiro e traga a lista fechada. Corrigir de um em um custa quatro
 suítes por rodada e só revela o que foi apontado — foi assim que o calendar
 consumiu dezesseis commits.
 
+### Passo 0b — `/cross-stack <slug>`, e ele roda ANTES, não depois
+
+Dispare a skill `cross-stack` para este slug e leia o relatório dela antes de
+tocar em qualquer arquivo. Em modo pipeline ela é report-only; aqui você a usa
+como MEDIÇÃO de entrada.
+
+**Por que no começo, e não no fim.** A pipeline manda cross-stack por último, e
+lá está certo: ela compara cinco implementações depois que os dev-agents
+construíram, e rodá-la antes geraria cascata redundante. Aqui a situação é outra
+— a `/quality` invocada direto trabalha em fix-mode, e o que ela conserta é uma
+stack de cada vez. Sem a lista fechada na mão, ela conserta o que enxerga, o
+cross-stack acha o resto depois, e a rodada recomeça: é exatamente o padrão que
+custou dezesseis commits no calendar, um defeito por rodada, com a suíte verde o
+tempo todo.
+
+A ordem também evita trabalho jogado fora. Metade dos achados cross-stack se
+resolve no CONTEÚDO COMPARTILHADO — uma linha de `translations.json` conserta as
+cinco de uma vez. Descobrir isso depois de já ter corrigido três stacks à mão é
+pagar quatro vezes pelo mesmo defeito.
+
+**O que fazer com o relatório dela:**
+
+- divergência que se resolve no conteúdo compartilhado → corrija ali PRIMEIRO, e
+  as demais verificações desta skill já rodam sobre o estado alinhado;
+- divergência de **API de framework** (nome de prop, forma de composição) → não
+  se alinha: vira `coversNotApplicable` com motivo, ou override no
+  `translations.json`;
+- divergência de markup ou comportamento → o **Vanilla é a referência**, e a
+  correção vai nas outras.
+
+**No fim da rodada, rode-a de novo** — desta vez como verificação, não como
+medição. É barato (o instrumento já está montado) e responde a única pergunta que
+importa ao fechar: as cinco ficaram iguais? Item corrigido sem essa segunda
+passada não conta como resolvido, pela mesma razão que a Fase F da pipeline
+re-roda o audit.
+
 ### Passo 1 — Coletar arquivos em paralelo (1 turno)
 
 **Glob** (4 paralelos): stories de cada stack — `<slug>*.stories.*`
