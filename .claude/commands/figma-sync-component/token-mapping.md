@@ -509,6 +509,58 @@ onde o CSS não usa um — transcreva o rem em px (1rem = 16px).
 CSS e não tem variável. Reproduza como effect e registre na `description` que é
 literal.
 
+**`setBoundVariableForPaint` DEVOLVE o paint com `opacity: 1`, e a correção tem
+de ser uma SEGUNDA atribuição.** A opacidade que você passou no objeto de
+entrada não sobrevive ao vínculo — e o resultado é exatamente o defeito que a
+armadilha do `--accent` descreve, só que criado na hora, em nó novo. Medido em
+2026-09-04 nos oito itens do DropdownMenu: pedi `--accent` a 20% e
+`--destructive` a 10%, saíram as duas cores chapadas por cima do rótulo, e a
+leitura de volta confirmou `opacity: 1` nos seis nós.
+
+O detalhe que custou a segunda rodada: espalhar a opacidade no mesmo objeto que
+carrega o vínculo **também não cola**. Isto FALHA —
+
+    no.fills = [{ ...paintAmarrado, opacity: 0.1 }]   // volta 1
+
+e isto funciona:
+
+    no.fills = [paintAmarrado];
+    no.fills = no.fills.map((f) => ({ ...f, opacity: 0.1 }));
+
+Ou seja: o alfa só gruda depois de o paint já estar NO nó. Paint sem vínculo não
+tem esse problema — o fio literal de 5% do Sheet atravessou as duas rodadas
+intacto, o que ajuda a reconhecer o padrão: se a cor veio de token, confira o
+alfa; se veio cravada, ele está lá.
+
+Vale para tudo que aceita alfa: véu de modal (`--overlay` a 80%), rodapé de
+diálogo (`--muted` a 50%), fio de 1px (`--foreground` a 10%), texto secundário
+sobre accent (85%). Confira sempre lendo de volta — o vínculo estar certo não
+diz nada sobre o alfa.
+
+**Instância criada de um componente cuja opacidade você acabou de corrigir pode
+nascer com a opacidade ANTIGA.** Corolário do de cima, e mais traiçoeiro: a
+instância não é uma cópia viva em tudo, e o que ela captura como override não é
+óbvio. Ao montar composição com instância de estado destacado, leia o `fills` da
+instância, não o do componente.
+
+**`INSTANCE_SWAP` quer o ID do componente, não a `key`.** `addComponentProperty(nome,
+'INSTANCE_SWAP', comp.key)` falha com "Property value is incompatible with
+component property type" — a mesma mensagem que um tipo errado daria, o que
+manda procurar no lugar errado. O que ela aceita é `comp.id` (`174:94`).
+
+**Instância NÃO aceita filho novo** (`Cannot move node. New parent is an instance`).
+Composição de documentação que precisa mostrar conteúdo arbitrário dentro do
+painel — o Popover com campos, o menu com outro conjunto de itens — se monta com
+`detachInstance()`, e o rótulo do exemplo diz que aquilo é cópia destacada. O
+alternativo honesto é `INSTANCE_SWAP` com um componente de recheio; o que não
+vale é fingir que a instância montou o que ela não monta.
+
+**Auto-layout não tem margem negativa.** O separador do menu tem
+`margin-inline: calc(var(--spacing-1) * -1)`, ou seja RASGA os 4px de padding do
+painel e corre de borda a borda. No Figma ele para na borda do item. Divergência
+declarada em anotação, nunca disfarçada com um retângulo mais largo posicionado
+à mão — o que rende é registrar que a folha é quem manda.
+
 ---
 
 ## Convenções já estabelecidas no arquivo
@@ -534,6 +586,16 @@ A página **Accordion** (`6:2`) é o precedente — siga o que está lá.
 - Componentes nomeados por caminho: `Accordion`, `Accordion/Item`,
   `Accordion/Trigger`, `Accordion/Content`. Prefixo `.` marca componente privado
   (`.Accordion/Conteúdo padrão`), ícones em `Icon/*`.
+- **Nome de eixo: o do CÓDIGO quando existe prop; português quando não existe.**
+  O arquivo parece inconsistente e não é. `Alert`, `Badge`, `Button`, `Tooltip`,
+  `AspectRatio` e `Avatar` usam `variant`, `size`, `ratio`, `state` — minúsculos,
+  com os valores do próprio código (`variant=default`). `Accordion` e
+  `AlertDialog` usam `Estado` e `Layout`, em português, porque ali não há prop
+  nenhuma: aberto/fechado é o que o CSS chama de `data-state`, e o layout do
+  rodapé é decisão de desenho. A pergunta é "existe essa palavra na API?" — se
+  existe, ela manda; se não, o eixo é português e maiúsculo. Nome de PROPRIEDADE
+  (`Rótulo`, `Mostrar ícone`, `Ícone do item`) é sempre português, sem exceção
+  em nenhuma página.
 - **Eixo de variante único** sempre que possível (`Estado` = Fechado, Aberto,
   Focado, Desabilitado). O que é 1px vira booleano em vez de eixo: um eixo
   inteiro para uma divisória dobra a matriz e produz duas colunas idênticas.
