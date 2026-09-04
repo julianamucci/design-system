@@ -88,7 +88,15 @@ Em seguida, adicione uma entrada em `patches.md` no formato do template document
 
 ### Pre-commit hook automático
 
-A raiz tem um hook Husky (`.husky/pre-commit`) que bloqueia commits introduzindo qualquer um dos padrões proibidos acima em arquivos `*.stories.*`, `*.test.*` ou `*.spec.*`. O hook é instalado automaticamente quando você roda `npm install` na raiz (graças ao script `prepare`).
+A raiz tem um hook (`.husky/pre-commit`) que bloqueia commits introduzindo qualquer um dos padrões proibidos acima em arquivos `*.stories.*`, `*.test.*` ou `*.spec.*`.
+
+Ele **não se instala sozinho**. Depois de clonar, ligue uma vez:
+
+```bash
+git config core.hooksPath .husky
+```
+
+O hook é um script `sh` versionado, sem dependência de npm: a raiz do monorepo não tem `node_modules` — quem instala é cada stack. Antes disso ele vinha do Husky, que gerava um wrapper em `.husky/_` e o registrava pelo `prepare` de um `npm install` na raiz. Como a pasta `_` é gerada e ignorada, e `core.hooksPath` é config LOCAL do git (não viaja no clone), num clone novo o hook simplesmente não era chamado — sem erro, sem aviso. A linha acima é explícita e não depende de instalar nada.
 
 Se precisar fazer commit emergencial bypassando o hook (raríssimo — só pra release com bug upstream conhecido), use `git commit --no-verify` e abra issue documentando o motivo.
 

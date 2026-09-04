@@ -18,15 +18,9 @@
     "chromatic:svelte": "npm run chromatic --prefix nortear-design-system-svelte",
     "chromatic:vanilla": "npm run chromatic --prefix nortear-design-system-vanilla",
     "chromatic:angular": "npm run chromatic --prefix nortear-design-system-angular",
-    "chromatic:all": "npm run chromatic:react && npm run chromatic:vue && npm run chromatic:svelte && npm run chromatic:vanilla && npm run chromatic:angular",
-    "prepare": "husky"
+    "chromatic:all": "npm run chromatic:react && npm run chromatic:vue && npm run chromatic:svelte && npm run chromatic:vanilla && npm run chromatic:angular"
   },
   "devDependencies": {
-    "echarts-stat": "1.2.0",
-    "husky": "^9.1.7",
-    "mdast-util-from-markdown": "^2.0.3",
-    "mdast-util-gfm": "^3.1.0",
-    "micromark-extension-gfm": "^3.0.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }
