@@ -1,5 +1,6 @@
 import { watchEffect, type Ref, type ComputedRef } from 'vue';
 import { track } from './analytics';
+import { pageViewInedito } from '@shared/primitives/page-view-guard';
 
 type Locale = 'pt-BR' | 'en' | 'es';
 
@@ -162,12 +163,17 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
     targetDoc.head.appendChild(docsJsonldScript);
 
     // ── GA4 page_view ─────────────────────────────────────────────────────
-    track('page_view', {
-      page_location: targetWin.location.href,
-      page_title: fullTitle,
-      component_name: componentSlug,
-      locale,
-    });
+    // Um `page_view` por página VISTA, não por efeito executado — ver o
+    // porquê medido em `docs/shared/primitives/page-view-guard.ts`.
+    const chavePageView = [targetWin.location.href, fullTitle, componentSlug, locale].join('|');
+    if (pageViewInedito(chavePageView)) {
+      track('page_view', {
+        page_location: targetWin.location.href,
+        page_title: fullTitle,
+        component_name: componentSlug,
+        locale,
+      });
+    }
 
     onCleanup(() => {
       targetDoc.title = prevTitle;

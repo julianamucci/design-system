@@ -14,6 +14,7 @@
 
 import { useEffect } from 'react';
 import { track } from './analytics';
+import { pageViewInedito } from '@shared/primitives/page-view-guard';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -104,6 +105,8 @@ function upsertMeta(
 // ─── Hook principal ───────────────────────────────────────────────────────────
 
 export function useSeoEffect({ title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, kind = 'component' }: SeoProps): void {
+  const breadcrumbKey = JSON.stringify(breadcrumb ?? null);
+
   useEffect(() => {
     // Defensive: algumas docs pages importam objetos `locale` de libs externas
     // (ex: ptBR de react-day-picker). Normaliza para string BCP 47.
@@ -231,12 +234,17 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
     // ── GA4 page_view ─────────────────────────────────────────────────────
     // Dispara um page_view no GA4 do manager a cada troca de título/locale.
     // Sem isso, o GA4 só vê a URL inicial do manager e nada das stories.
-    track('page_view', {
-      page_location: targetWin.location.href,
-      page_title: fullTitle,
-      component_name: componentSlug,
-      locale: localeStr as 'pt-BR' | 'en' | 'es',
-    });
+    // Um `page_view` por página VISTA, não por efeito executado — ver o
+    // porquê medido em `docs/shared/primitives/page-view-guard.ts`.
+    const chavePageView = [targetWin.location.href, fullTitle, componentSlug, locale].join('|');
+    if (pageViewInedito(chavePageView)) {
+      track('page_view', {
+        page_location: targetWin.location.href,
+        page_title: fullTitle,
+        component_name: componentSlug,
+        locale: localeStr as 'pt-BR' | 'en' | 'es',
+      });
+    }
 
     // ── Cleanup ───────────────────────────────────────────────────────────
     return () => {
@@ -253,5 +261,17 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
       if (breadcrumbScript) breadcrumbScript.remove();
       docsJsonldScript.remove();
     };
-  }, [title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, kind]);
+    // `breadcrumbKey` e não `breadcrumb`: as docs pages passam um array LITERAL
+    // inline (23 das 98 no react), então a identidade muda a cada render e este
+    // efeito re-rodava SEMPRE. Como a página re-renderiza a cada troca de seção
+    // ativa — o realce da navegação ao rolar —, ele reescrevia título, meta tags
+    // e JSON-LD a cada seção, e disparava um `page_view` junto. Medido em
+    // 2026-09-04: quatro renders, quatro `page_view`, um por
+    // `docs_section_viewed` no console.
+    //
+    // Serializar é o que dá identidade por VALOR a um array que chega novo a
+    // cada render. A alternativa seria `useMemo` em 23 docs pages, o que troca
+    // um conserto por vinte e três oportunidades de esquecer.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, description, locale, componentSlug, breadcrumbKey, aiSummary, aiEntities, kind]);
 }
