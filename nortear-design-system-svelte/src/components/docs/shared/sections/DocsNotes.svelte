@@ -35,7 +35,9 @@
              no carregamento (e fica preso nela). -->
         <Alert variant="default" role="note">
           {#if item.title}
-            <AlertTitle>{item.title}</AlertTitle>
+            <!-- as="h3" e não o h5 padrão do Alert: a seção acima é h2, e h5
+                 pularia dois níveis — `heading-order` do axe. -->
+            <AlertTitle as="h3">{item.title}</AlertTitle>
           {/if}
           <AlertDescription>
             <!-- O <p> é obrigatório: `.nds-alert-description` é `display: grid`,

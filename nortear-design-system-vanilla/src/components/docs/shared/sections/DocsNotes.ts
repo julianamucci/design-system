@@ -41,7 +41,11 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
     // de tela saltava para esta seção ao abrir a página.
     const alert = createAlert({ variant: 'default', role: 'note' });
     if (item.title) {
-      alert.appendChild(createAlertTitle({ text: item.title }));
+      // `as: 'h3'` e não o `h5` padrão do Alert: a seção acima é `h2`, e h5
+      // pularia dois níveis — `heading-order` do axe. O default do Alert é h5
+      // por compatibilidade, e cabe a quem o coloca na página escolher o nível,
+      // como o AlertDocs já faz.
+      alert.appendChild(createAlertTitle({ text: item.title, as: 'h3' }));
     }
     const alertDescription = createAlertDescription();
     const p = document.createElement('p');

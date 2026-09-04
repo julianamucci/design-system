@@ -14,15 +14,17 @@ import { NdsButton } from '@/components/ui/button';
  * `children` no React, `<slot />` no Vue e `children: Snippet` no Svelte. Cada
  * uma usa o mecanismo da sua linguagem, e não há fonte de verdade a alinhar.
  *
- * `componentSlug` é informativo: este container NÃO injeta `data-track*` no que
- * vem por projeção, porque quem controla esse conteúdo é a docs page. Quem
- * quiser rastreio põe os atributos no gatilho, e o observador do DocsPageLayout
- * os captura por `closest('[data-track]')`.
+ * Esta stack NÃO tem o input `componentSlug`, e as outras quatro têm. Não é
+ * lacuna a preencher: lá ele é declaradamente informativo — o container não
+ * injeta `data-track*` no conteúdo projetado, porque quem controla esse
+ * conteúdo é a docs page. Ou seja, as quatro carregam um prop que não faz nada,
+ * e o Angular está mais certo que elas. Quem quiser rastreio põe os atributos
+ * no gatilho, e o observador do DocsPageLayout os captura por
+ * `closest('[data-track]')`.
  */
 
 type DocsDemonstrationArgs = {
   title: string;
-  componentSlug: string;
 };
 
 const meta: Meta<DocsDemonstrationArgs> = {
@@ -41,18 +43,13 @@ const meta: Meta<DocsDemonstrationArgs> = {
   },
   argTypes: {
     title: { control: 'text', description: 'Título da seção.' },
-    componentSlug: {
-      control: 'text',
-      description: 'Informativo. Não injeta rastreio — quem o faz é o gatilho dentro do slot.',
-    },
   },
   args: {
     title: 'Demonstração',
-    componentSlug: 'button',
   },
   render: (args) => ({
     props: args,
-    template: `<nds-docs-demonstration [title]="title" [componentSlug]="componentSlug">
+    template: `<nds-docs-demonstration [title]="title">
       <button ndsButton>Salvar</button>
     </nds-docs-demonstration>`,
   }),
@@ -71,7 +68,7 @@ export const WithTrackedTrigger: Story = {
   parameters: { controls: { disable: true } },
   render: (args) => ({
     props: args,
-    template: `<nds-docs-demonstration [title]="title" [componentSlug]="componentSlug">
+    template: `<nds-docs-demonstration [title]="title">
       <button ndsButton data-track="demo" data-track-id="button:demo:salvar" data-track-label="Salvar">
         Salvar
       </button>

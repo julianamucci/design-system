@@ -33,7 +33,11 @@ export interface DocsNoteItem { title: string; content: string }
             -->
             <div data-slot="alert" role="note" class="nds-alert">
               @if (item.title) {
-                <h5 data-slot="alert-title" class="nds-alert-title">{{ item.title }}</h5>
+                <!-- h3 e nao h5: a secao acima e h2, e h5 pularia dois niveis,
+                     que e a violacao heading-order do axe. Sem crase e sem
+                     chaves neste comentario: ele vive dentro de um template
+                     literal, e os dois o encerrariam. -->
+                <h3 data-slot="alert-title" class="nds-alert-title">{{ item.title }}</h3>
               }
               <div data-slot="alert-description" class="nds-alert-description">
                 <p [innerHTML]="DOMPurify.sanitize(item.content)"></p>

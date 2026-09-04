@@ -34,7 +34,9 @@ export function DocsNotes({ title, items, componentSlug }: DocsNotesProps) {
                   region assertiva e o leitor de tela salta para cá assim que
                   a página monta — era o bug em todas as docs pages. */}
               <Alert variant="default" role="note">
-                {item.title && <AlertTitle>{item.title}</AlertTitle>}
+                {/* `as="h3"` e não o h5 padrão do Alert: a seção acima é h2, e
+                    h5 pularia dois níveis — `heading-order` do axe. */}
+                {item.title && <AlertTitle as="h3">{item.title}</AlertTitle>}
                 <AlertDescription>
                   {/* O <p> é obrigatório: `.nds-alert-description` é `display:
                       grid`, então cada filho vira um item em sua própria linha —

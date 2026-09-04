@@ -46,7 +46,9 @@ function trackId(i: number): string | undefined {
           variant="default"
           role="note"
         >
-          <AlertTitle v-if="item.title">
+          <!-- as="h3" e não o h5 padrão do Alert: a seção acima é h2, e h5
+               pularia dois níveis — `heading-order` do axe. -->
+          <AlertTitle v-if="item.title" as="h3">
             {{ item.title }}
           </AlertTitle>
           <AlertDescription>
