@@ -8,6 +8,7 @@ import {
 } from './editor';
 import { LABELS, PLAYGROUND_CONTENT, createDotPngFile, fluidBox } from './editor.fixtures';
 import {
+  aguardarFoco,
   closeRow,
   openRow,
   rowIsPainted,
@@ -396,7 +397,7 @@ export const Playground: Story = {
       await expect(rowIsPainted(root, 'editor-link')).toBe(true);
 
       const field = canvas.getByRole('textbox', { name: LABELS.fields.link });
-      await expect(field).toHaveFocus();
+      await aguardarFoco(field);
 
       // `javascript:` é o caso que a lista de esquemas existe para barrar. O
       // campo fica marcado como inválido e a linha NÃO fecha.
@@ -413,7 +414,7 @@ export const Playground: Story = {
       // Endereço sem esquema é o que a pessoa digita; quem completa é a barra.
       await expect(anchor).toHaveAttribute('href', 'https://exemplo.com');
       await expect(rowIsPainted(root, 'editor-link')).toBe(false);
-      await expect(open).toHaveFocus();
+      await aguardarFoco(open);
 
       // Com o cursor no link, abrir mostra o endereço ATUAL — é o que torna a
       // linha editável em vez de só um formulário de inserção. Abrindo em
@@ -452,7 +453,7 @@ export const Playground: Story = {
       await expect(rowIsPainted(root, 'editor-formula')).toBe(true);
 
       const field = canvas.getByRole('textbox', { name: LABELS.fields.formula });
-      await expect(field).toHaveFocus();
+      await aguardarFoco(field);
       await userEvent.type(field, 'E = mc^2');
       await userEvent.click(canvas.getByRole('button', { name: LABELS.fields.formulaConfirm }));
 
@@ -472,7 +473,7 @@ export const Playground: Story = {
       // A linha fecha e devolve o foco a quem a abriu.
       await expect(open).toHaveAttribute('aria-expanded', 'false');
       await expect(rowIsPainted(root, 'editor-formula')).toBe(false);
-      await expect(open).toHaveFocus();
+      await aguardarFoco(open);
 
       // E o mesmo botão abre e FECHA, sem inserir nada.
       await openRow(open);

@@ -16,6 +16,20 @@ const props = withDefaults(defineProps<TooltipContentProps & { class?: HTMLAttri
 
 const emits = defineEmits<TooltipContentEmits>()
 
+/*
+ * A seta usa `as-child`: sem ele a reka-ui passa a classe para o <svg> INTERNO
+ * da seta (o `inheritAttrs: false` do PopperArrow encaminha $attrs para o
+ * Arrow), e esse svg é `position: static` — a folha compartilhada pintava um
+ * quadrado girado por cima do triângulo que a lib já desenhava, 12px fora do
+ * centro do balão. Com `as-child` o elemento estilizado é um <div>, que é o
+ * mesmo que React e Svelte entregam: a lib posiciona, a folha desenha a forma.
+ *
+ * Esta explicação mora AQUI, e não no template, porque comentário dentro da
+ * área de conteúdo do balão VAZA para o nome acessível: a reka calcula o texto
+ * do `VisuallyHidden` com `props.ariaLabel || currentElement.textContent`, e
+ * com o comentário ali a sidebar colapsada anunciava "Dashboard `as-child`:
+ * sem ele a reka-…". Medido em 2026-09-04, na suíte do sidebar do Vue.
+ */
 const delegatedProps = reactiveOmit(props, 'class')
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
@@ -38,13 +52,6 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     >
       <slot />
 
-      <!-- `as-child`: sem ele a reka-ui passa a classe para o <svg> INTERNO da
-           seta (o `inheritAttrs: false` do PopperArrow encaminha $attrs para o
-           Arrow), e esse svg é `position: static` — a folha compartilhada
-           pintava um quadrado girado por cima do triângulo que a lib já
-           desenhava, 12px fora do centro do balão. Com `as-child` o elemento
-           estilizado é este <div>, que é o mesmo que React e Svelte entregam:
-           a lib posiciona, a folha desenha a forma. -->
       <TooltipArrow as-child>
         <div class="nds-tooltip-arrow"></div>
       </TooltipArrow>

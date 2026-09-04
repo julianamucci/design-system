@@ -133,3 +133,25 @@ export async function closeRow(button: HTMLElement): Promise<void> {
   if (button.getAttribute('aria-expanded') !== 'false') await userEvent.click(button);
   await expect(button).toHaveAttribute('aria-expanded', 'false');
 }
+
+/**
+ * Espera o foco chegar no elemento, por RELÓGIO, e então assere.
+ *
+ * `openRow` garante que a linha ABRIU (`aria-expanded`), não que o foco já
+ * tenha migrado: quem foca é o componente, um quadro depois de a linha pintar.
+ * A asserção síncrona logo em seguida corria antes disso e reprovava de forma
+ * intermitente — medido em 2026-09-04, num de quatro pontos escritos igual.
+ *
+ * Intermitência não fecha como "não reproduz": ou se controla o tempo, ou fica
+ * aberta. Aqui o tempo é o do quadro, e esperá-lo é o conserto.
+ *
+ * Relógio e não `waitFor`: é a forma que esta casa usa para espera em play, e
+ * não corre o risco de reagendamento por observador de mutação.
+ */
+export async function aguardarFoco(alvo: HTMLElement, prazoMs = 2000): Promise<void> {
+  const fim = performance.now() + prazoMs;
+  while (document.activeElement !== alvo && performance.now() < fim) {
+    await new Promise((resolver) => setTimeout(resolver, 25));
+  }
+  await expect(alvo).toHaveFocus();
+}
