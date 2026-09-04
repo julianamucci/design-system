@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
+import { aliasDoCompartilhado } from '../docs/shared/bundler/alias-pacotes.mjs';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,6 +14,11 @@ export default defineConfig({
     alias: {
       '@': path.resolve(dirname, './src'),
       '@shared': path.resolve(dirname, '../docs/shared'),
+      // Os pacotes npm que o CONTEÚDO COMPARTILHADO importa. Precisam de alias
+      // porque a resolução parte do arquivo em `docs/shared` e SOBE — ela nunca
+      // entra no `node_modules` desta stack. Ver o porquê medido em
+      // `docs/shared/bundler/alias-pacotes.mjs`.
+      ...aliasDoCompartilhado(dirname),
     },
   },
   test: {

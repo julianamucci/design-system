@@ -14,7 +14,15 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["../docs/shared/*"]
+      "@shared/*": ["../docs/shared/*"],
+      // Os pacotes npm que o CONTEÚDO COMPARTILHADO importa. O `tsc` resolve do
+      // mesmo jeito que o bundler — parte do arquivo em `docs/shared` e SOBE —,
+      // então sem estes `paths` ele reprova com TS2307 em código que existe.
+      // Contraparte de `resolve.alias` no vite.config; ver o porquê medido em
+      // `docs/shared/bundler/alias-pacotes.mjs`.
+      "mdast-util-from-markdown": ["./node_modules/mdast-util-from-markdown/index.d.ts"],
+      "mdast-util-gfm": ["./node_modules/mdast-util-gfm/index.d.ts"],
+      "micromark-extension-gfm": ["./node_modules/micromark-extension-gfm/index.d.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", ".storybook/**/*.ts", "vite.config.ts", "../scripts/**/*"]

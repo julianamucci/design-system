@@ -1,6 +1,7 @@
 import type { StorybookConfig } from '@storybook/angular-vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { aliasDoCompartilhado } from '../../docs/shared/bundler/alias-pacotes.mjs';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -100,6 +101,11 @@ const config: StorybookConfig = {
       ...(viteConfig.resolve.alias as Record<string, string>),
       '@': path.resolve(dirname, '../src'),
       '@shared': path.resolve(dirname, '../../docs/shared'),
+      // Mesmo motivo do `@shared` acima, e a mesma armadilha: os pacotes npm
+      // que o conteúdo compartilhado importa não são alcançáveis a partir dele
+      // sem alias. `dirname` aqui é o `.storybook`, então a raiz da stack — que
+      // é onde o `node_modules` vive — fica um nível acima.
+      ...aliasDoCompartilhado(path.resolve(dirname, '..')),
     };
     // `vitest/browser` é MÓDULO VIRTUAL do plugin do Vitest, e o build de
     // PRODUÇÃO do Storybook não carrega esse plugin. O
