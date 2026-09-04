@@ -76,6 +76,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
