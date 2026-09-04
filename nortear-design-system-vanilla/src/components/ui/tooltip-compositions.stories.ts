@@ -50,15 +50,11 @@ export const IconButtonWithShortcut: Story = {
     },
   },
   render: () => {
-    const iconWrap = document.createElement('span');
-    iconWrap.setAttribute('aria-hidden', 'true');
-    iconWrap.appendChild(createButtonIcon('download'));
-
     const trigger = createButton({
       variant: 'ghost',
       size: 'icon',
       'aria-label': 'Salvar',
-      children: iconWrap,
+      children: createButtonIcon('download'),
     });
 
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });

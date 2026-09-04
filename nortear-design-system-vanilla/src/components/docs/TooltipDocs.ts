@@ -66,21 +66,20 @@ function priorityLabel(raw: string): string {
  * ampliar um mapa de botão com eles seria pior.
  */
 function demoIconButton(kind: ButtonIconKind, ariaLabel: string): HTMLButtonElement {
-  const iconWrap = document.createElement('span');
-  iconWrap.setAttribute('aria-hidden', 'true');
-  iconWrap.appendChild(createButtonIcon(kind));
-  return createButton({ variant: 'outline', size: 'icon', 'aria-label': ariaLabel, children: iconWrap });
+  return createButton({
+    variant: 'outline',
+    size: 'icon',
+    'aria-label': ariaLabel,
+    children: createButtonIcon(kind),
+  });
 }
 
 function makeIconButton(ariaLabel: string): HTMLButtonElement {
-  const iconWrap = document.createElement('span');
-  iconWrap.setAttribute('aria-hidden', 'true');
-  iconWrap.appendChild(createButtonIcon('download'));
   return createButton({
     variant: 'ghost',
     size: 'icon',
     'aria-label': ariaLabel,
-    children: iconWrap,
+    children: createButtonIcon('download'),
   });
 }
 
@@ -494,15 +493,11 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
       }
 
       case 'composicoes': {
-        const codeIconShortcut = `const iconWrap = document.createElement('span');
-iconWrap.setAttribute('aria-hidden', 'true');
-iconWrap.appendChild(createButtonIcon('download'));
-
-const trigger = createButton({
+        const codeIconShortcut = `const trigger = createButton({
   variant: 'ghost',
   size: 'icon',
   'aria-label': 'Salvar',
-  children: iconWrap,
+  children: createButtonIcon('download'),
 });
 
 createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
@@ -536,14 +531,11 @@ createTooltip({
 });`;
 
         function buildIconShortcutPreview(): HTMLElement {
-          const iconWrap = document.createElement('span');
-          iconWrap.setAttribute('aria-hidden', 'true');
-          iconWrap.appendChild(createButtonIcon('download'));
           const trigger = createButton({
             variant: 'ghost',
             size: 'icon',
             'aria-label': 'Salvar',
-            children: iconWrap,
+            children: createButtonIcon('download'),
           });
           return createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });
         }
