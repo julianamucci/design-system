@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
   import type { Snippet } from 'svelte';
   import DocsNav, { type DocsNavGroup } from '../DocsNav.svelte';
   import { mountDocsTracking } from '@/lib/docs-tracking';
@@ -67,7 +68,7 @@
     <main
       id="docs-main-content"
       tabindex="-1"
-      aria-labelledby="docs-page-title"
+      aria-labelledby={DOCS_PAGE_TITLE_ID}
       class="ds-docs nds-stack"
       data-spacing="2xl"
     >

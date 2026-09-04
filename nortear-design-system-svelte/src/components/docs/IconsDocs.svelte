@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
   import { onDestroy } from 'svelte';
   // Catálogo de ícones como JSON único, agora COMPARTILHADO pelas cinco stacks
   // (`docs/shared/content/icons/lucide-icons.json`) em vez de uma cópia local.
@@ -134,7 +135,7 @@
   <main
     id="docs-main-content"
     tabindex="-1"
-    aria-labelledby="docs-page-title"
+    aria-labelledby={DOCS_PAGE_TITLE_ID}
     class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
     data-spacing="xl"
   >
@@ -154,7 +155,7 @@
       </div>
 
       <!-- id estável: alvo do aria-labelledby do <main>, mesmo id do DocsHeader. -->
-      <h1 id="docs-page-title" class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
+      <h1 id={DOCS_PAGE_TITLE_ID} class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
         {$tStore('title')}
       </h1>
 

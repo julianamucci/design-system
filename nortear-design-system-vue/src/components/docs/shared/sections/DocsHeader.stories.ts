@@ -1,16 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import DocsHeader from './DocsHeader.vue';
-
-/**
- * Literal, e não constante importada: React, Vanilla e Angular exportam
- * `DOCS_PAGE_TITLE_ID` do próprio módulo do header, e aqui a string está
- * repetida à mão no `DocsHeader.vue`, no `DocsPageLayout.vue`, no
- * `FoundationsRenderer.vue` e em duas docs pages. Não é diferença de API de
- * framework — `<script setup>` não exporta const, mas um bloco `<script>`
- * comum exportaria. É deriva, e a story a fixa até alguém unificar.
- */
-const DOCS_PAGE_TITLE_ID = 'docs-page-title';
+import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 
 /**
  * Primeiro membro de `Doc Components`, a seção dos containers com que as docs

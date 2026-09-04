@@ -1,6 +1,17 @@
+<script lang="ts">
+/**
+ * Bloco `<script>` comum, ao lado do `setup`, só para reexportar o id: em
+ * `<script setup>` tudo é escopo de componente e nada sai como export nomeado.
+ * Era por isso que esta stack repetia a string crua em cinco lugares — não por
+ * limitação do Vue, mas por faltar este bloco.
+ */
+export { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
+</script>
+
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
+import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 
 defineProps<{
   title: string;
@@ -44,7 +55,7 @@ defineProps<{
       <!-- id estável: o <main> do DocsPageLayout aponta para cá via
            aria-labelledby, então o leitor anuncia "principal, <título>". -->
       <h1
-        id="docs-page-title"
+        :id="DOCS_PAGE_TITLE_ID"
         class="nds-text-h1 nds-text-foreground"
       >
         {{ title }}

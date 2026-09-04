@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import DocsNav from '../DocsNav.vue';
 import { mountDocsTracking } from '@/lib/docs-tracking';
@@ -79,7 +80,7 @@ onUnmounted(() => {
         class="ds-docs nds-stack"
         data-spacing="2xl"
         tabindex="-1"
-        aria-labelledby="docs-page-title"
+        :aria-labelledby="DOCS_PAGE_TITLE_ID"
       >
         <slot />
       </main>

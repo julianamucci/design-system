@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { Package, Search } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
@@ -135,7 +136,7 @@ onUnmounted(() => {
       class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
       data-spacing="xl"
       tabindex="-1"
-      aria-labelledby="docs-page-title"
+      :aria-labelledby="DOCS_PAGE_TITLE_ID"
     >
       <!-- ── Header ──────────────────────────────────────────────────────── -->
       <header class="nds-stack nds-border-b-soft nds-pb-8">
@@ -163,7 +164,7 @@ onUnmounted(() => {
 
         <!-- id estável: o <main> acima aponta para cá via aria-labelledby. -->
         <h1
-          id="docs-page-title"
+          :id="DOCS_PAGE_TITLE_ID"
           class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground"
         >
           {{ t('title') }}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
   /**
    * Wrapper de página Foundations.
    * Renderiza header (badges + título + descrição + LanguageSwitcher),
@@ -90,7 +91,7 @@
 
       <!-- id estável: alvo do aria-labelledby do <main> abaixo, mesmo id usado
            pelo DocsHeader nas docs pages de componente. -->
-      <h1 id="docs-page-title" class="nds-text-h1 nds-text-foreground">
+      <h1 id={DOCS_PAGE_TITLE_ID} class="nds-text-h1 nds-text-foreground">
         {$tStore('title')}
       </h1>
 
@@ -107,7 +108,7 @@
     <main
       id="docs-main-content"
       tabindex="-1"
-      aria-labelledby="docs-page-title"
+      aria-labelledby={DOCS_PAGE_TITLE_ID}
       class="ds-docs nds-stack"
       data-spacing="xl"
     >

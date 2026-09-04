@@ -1,6 +1,17 @@
+<script module lang="ts">
+  /**
+   * Bloco `module`, ao lado do de instância, só para reexportar o id: o
+   * `<script>` normal é escopo de componente e nada sai dele como export
+   * nomeado. Era por isso que esta stack repetia a string crua em cinco
+   * lugares — não por limitação do Svelte, mas por faltar este bloco.
+   */
+  export { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
+</script>
+
 <script lang="ts">
   import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
+  import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 
   const { title, description, category, type, installNote }: {
     title: string;
@@ -26,7 +37,7 @@
   <div class="nds-stack" data-spacing="sm">
     <!-- id estável: alvo do aria-labelledby do <main> em DocsPageLayout.
          A docs page é única por iframe, então não há colisão. -->
-    <h1 id="docs-page-title" class="nds-text-h1 nds-text-foreground">{title}</h1>
+    <h1 id={DOCS_PAGE_TITLE_ID} class="nds-text-h1 nds-text-foreground">{title}</h1>
     <p class="nds-text-lead nds-text-muted-foreground nds-max-w-prose">{description}</p>
   </div>
   {#if installNote}

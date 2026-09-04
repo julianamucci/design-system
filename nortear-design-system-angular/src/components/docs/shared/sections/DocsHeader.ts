@@ -1,3 +1,4 @@
+import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,12 +10,14 @@ import { NdsLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import DOMPurify from 'dompurify';
 
 /**
- * Id determinístico do `<h1>` da docs page. O `<main>` do DocsPageLayout aponta
- * para ele via `aria-labelledby`, para que o leitor de tela anuncie
- * "principal, <título da página>" ao chegar no conteúdo. A docs page é única
- * por iframe — não há colisão de id.
+ * Id do `<h1>`, reexportado de `@shared/primitives/docs-page-landmarks`.
+ *
+ * A constante já foi declarada aqui. Passou a ser compartilhada porque o
+ * mesmo id vivia em cinco lugares e as duas pontas — este `<h1>` e o
+ * `aria-labelledby` do `<main>` — só funcionam se concordarem. A reexportação
+ * mantém quem já importava daqui.
  */
-export const DOCS_PAGE_TITLE_ID = 'docs-page-title';
+export { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 
 @Component({
   selector: 'nds-docs-header',

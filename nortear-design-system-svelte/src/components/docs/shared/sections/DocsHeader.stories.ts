@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import DocsHeader from './DocsHeader.svelte';
+import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 
 /**
  * Primeiro membro de `Doc Components`, a seção dos containers com que as docs
@@ -13,14 +14,6 @@ import DocsHeader from './DocsHeader.svelte';
  * quebra nada visível — só faz o leitor de tela anunciar "principal" sem dizer
  * de que página.
  */
-
-/**
- * Literal, e não constante importada: React, Vanilla e Angular exportam
- * `DOCS_PAGE_TITLE_ID` do próprio módulo do header, e aqui a string está
- * repetida à mão no `DocsHeader.svelte`, no `DocsPageLayout.svelte` e nas docs
- * pages de fundamento. É deriva, e a story a fixa até alguém unificar.
- */
-const DOCS_PAGE_TITLE_ID = 'docs-page-title';
 
 const meta = {
   title: 'Doc Components/DocsHeader',

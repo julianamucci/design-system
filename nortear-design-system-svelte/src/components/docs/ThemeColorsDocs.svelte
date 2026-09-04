@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
   import { onMount } from 'svelte';
   import { Badge } from '@/components/ui/badge';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -185,7 +186,7 @@
       </div>
 
       <!-- id estável: alvo do aria-labelledby do <main>, mesmo id do DocsHeader. -->
-      <h1 id="docs-page-title" class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
+      <h1 id={DOCS_PAGE_TITLE_ID} class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
         {$tStore('title')}
       </h1>
 
@@ -202,7 +203,7 @@
     <main
       id="docs-main-content"
       tabindex="-1"
-      aria-labelledby="docs-page-title"
+      aria-labelledby={DOCS_PAGE_TITLE_ID}
       class="ds-docs nds-stack"
       data-spacing="xl"
     >

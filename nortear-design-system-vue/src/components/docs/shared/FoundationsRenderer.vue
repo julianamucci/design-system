@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -225,7 +226,7 @@ track('docs_page_view', {
       class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
       data-spacing="xl"
       tabindex="-1"
-      aria-labelledby="docs-page-title"
+      :aria-labelledby="DOCS_PAGE_TITLE_ID"
     >
       <!-- Header -->
       <header class="nds-stack nds-pb-8">
@@ -254,7 +255,7 @@ track('docs_page_view', {
         <!-- id estável: o <main> acima aponta para cá via aria-labelledby,
              mesmo contrato do DocsHeader das docs pages de componente. -->
         <h1
-          id="docs-page-title"
+          :id="DOCS_PAGE_TITLE_ID"
           class="nds-text-h1 nds-text-foreground"
         >
           {{ t('title') }}
