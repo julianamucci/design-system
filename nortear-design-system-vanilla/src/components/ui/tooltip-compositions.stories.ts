@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip, createTooltipProvider } from './tooltip';
 import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
+import { aguardarSeta } from '@shared/testing/tooltip-arrow-probe';
 import { tooltipSource, tooltipSourceWith, tooltipSourceLados } from './tooltip.source';
 import { createButton, createButtonIcon } from './button';
 
@@ -282,6 +283,17 @@ export const PlacementSides: Story = {
         await expect(balaoDe(trigger)!.textContent).toBe(`Tooltip ${side}`);
       }
     });
+
+    await step('A seta encosta no balão, aponta para o gatilho e para a 4px dele', async () => {
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        const trigger = canvas.getByRole('button', { name: side });
+        // `aguardarSeta` espera por RELÓGIO, não por `waitFor`: a medida força
+        // layout, e o `data-side` aparece antes de a posição assentar. O porquê
+        // dos dois está no módulo compartilhado.
+        await aguardarSeta(balaoDe(trigger)!, trigger);
+      }
+    });
+
 
     await step('Cleanup', async () => { clearPortal(); });
   },

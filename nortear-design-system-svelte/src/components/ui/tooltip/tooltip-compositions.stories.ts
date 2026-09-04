@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 import { balaoDe } from './tooltip.fixtures';
+import { aguardarSeta } from '@shared/testing/tooltip-arrow-probe';
 import { tooltipSource } from './tooltip.source';
 
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
@@ -96,6 +97,10 @@ export const SideTop: Story = {
         await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
       await expect(sideOf(balaoDe(trigger))).toBe('top');
+      // `aguardarSeta` espera por RELÓGIO, não por `waitFor`: a medida força
+      // layout, e o `data-side` aparece antes de a posição assentar. O porquê
+      // dos dois está no módulo compartilhado.
+      await aguardarSeta(balaoDe(trigger)!, trigger);
       await expect(balaoDe(trigger)!.textContent).toContain('Tooltip no topo');
     });
   },
@@ -119,6 +124,10 @@ export const SideBottom: Story = {
         await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
       await expect(sideOf(balaoDe(trigger))).toBe('bottom');
+      // `aguardarSeta` espera por RELÓGIO, não por `waitFor`: a medida força
+      // layout, e o `data-side` aparece antes de a posição assentar. O porquê
+      // dos dois está no módulo compartilhado.
+      await aguardarSeta(balaoDe(trigger)!, trigger);
       await expect(balaoDe(trigger)!.textContent).toContain('Excluir item');
     });
   },
@@ -142,6 +151,10 @@ export const SideLeft: Story = {
         await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
       await expect(sideOf(balaoDe(trigger))).toBe('left');
+      // `aguardarSeta` espera por RELÓGIO, não por `waitFor`: a medida força
+      // layout, e o `data-side` aparece antes de a posição assentar. O porquê
+      // dos dois está no módulo compartilhado.
+      await aguardarSeta(balaoDe(trigger)!, trigger);
       await expect(balaoDe(trigger)!.textContent).toContain('À esquerda');
     });
   },
@@ -165,6 +178,10 @@ export const SideRight: Story = {
         await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
       await expect(sideOf(balaoDe(trigger))).toBe('right');
+      // `aguardarSeta` espera por RELÓGIO, não por `waitFor`: a medida força
+      // layout, e o `data-side` aparece antes de a posição assentar. O porquê
+      // dos dois está no módulo compartilhado.
+      await aguardarSeta(balaoDe(trigger)!, trigger);
       await expect(balaoDe(trigger)!.textContent).toContain('À direita');
     });
   },

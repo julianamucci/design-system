@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
+import { aguardarSeta } from '@shared/testing/tooltip-arrow-probe';
 import {
   actionsTooltipBarSource,
   tooltipButtonIconSource,
@@ -269,7 +270,7 @@ export const FourSides: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const oposto: Record<string, string> = {
       top: 'bottom', bottom: 'top', left: 'right', right: 'left',
     };
@@ -296,6 +297,17 @@ export const FourSides: Story = {
         // O auto-flip por colisão é comportamento documentado: perto da borda o
         // balão troca para o lado oposto em vez de sair da tela.
         await expect([side, oposto[side]]).toContain(sideOf(balao!));
+      }
+    });
+
+    await step('A seta encosta no balão, aponta para o gatilho e para a 4px dele', async () => {
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        const balao = baloes().find((b) => b.textContent?.includes(`Tooltip ${side}`))!;
+        const trigger = within(canvasElement).getByRole('button', { name: side });
+        // `aguardarSeta` espera por RELÓGIO, não por `waitFor`: a medida força
+        // layout, e o `data-side` aparece antes de a posição assentar. O porquê
+        // dos dois está no módulo compartilhado.
+        await aguardarSeta(balao, trigger);
       }
     });
   },

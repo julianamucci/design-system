@@ -3,6 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
 import { balaoDe } from './tooltip.fixtures';
+import { aguardarSeta } from '@shared/testing/tooltip-arrow-probe';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
@@ -255,6 +256,16 @@ export const PlacementSides: Story = {
         await expect([side, oposto[side]]).toContain(
           balaoDe(trigger)!.getAttribute('data-side'),
         );
+      }
+    });
+
+    await step('A seta encosta no balão, aponta para o gatilho e para a 4px dele', async () => {
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        const trigger = canvas.getByRole('button', { name: side });
+        // `aguardarSeta` espera por RELÓGIO, não por `waitFor`: a medida força
+        // layout, e o `data-side` aparece antes de a posição assentar. O porquê
+        // dos dois está no módulo compartilhado.
+        await aguardarSeta(balaoDe(trigger)!, trigger);
       }
     });
   },
