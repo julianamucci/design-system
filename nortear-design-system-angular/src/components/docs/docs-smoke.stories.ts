@@ -290,7 +290,28 @@ export const Pagination: Story = {
 
 export const Tooltip: Story = {
   render: () => ({ template: '<nds-tooltip-docs />' }),
-  play,
+  // Além da fumaça compartilhada: o JSON-LD de BreadcrumbList é ESCRITO no
+  // documento hospedeiro (o pai, quando a página roda em iframe), então ler a
+  // fonte do applySeo não prova que saiu — esta stack passou sem a entrada
+  // `breadcrumb` e nenhum portão viu. Só leitura pura dentro do waitFor.
+  play: async (ctx) => {
+    await play!(ctx);
+    const alvo = window.self !== window.top ? window.parent.document : document;
+    await waitFor(() => {
+      const el = alvo.head.querySelector('script[data-ds-breadcrumb-jsonld]');
+      expect(el, 'BreadcrumbList JSON-LD ausente no documento hospedeiro').not.toBeNull();
+      const ld = JSON.parse(el!.textContent ?? '{}') as {
+        '@type'?: string;
+        itemListElement?: { name?: string }[];
+      };
+      expect(ld['@type']).toBe('BreadcrumbList');
+      expect((ld.itemListElement ?? []).map((i) => i.name)).toEqual([
+        'Components',
+        'Overlay',
+        'Tooltip',
+      ]);
+    });
+  },
 };
 
 export const Sheet: Story = {

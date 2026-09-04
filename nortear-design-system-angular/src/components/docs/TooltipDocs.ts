@@ -45,7 +45,24 @@ import {
 } from '@/components/docs/shared/sections';
 
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
-const { t, dict } = useTranslation(tooltipTranslations as Record<string, unknown>);
+// `props.extensibilityNotes` não existe no conteúdo compartilhado: é nota
+// própria desta stack. A tabela de propriedades tem uma linha a menos que a
+// das outras quatro porque `className` não existe aqui, e o motivo vivia só
+// num comentário de `ui/tooltip.ts` — invisível para quem lê a docs page.
+const { t, dict } = useTranslation(tooltipTranslations as Record<string, unknown>, {
+  'pt-BR': {
+    'props.extensibilityNotes':
+      'Não há propriedade de classe no balão. O conteúdo é declarado como <code>ng-template</code> e o elemento do balão é criado e destruído pelo portal, então quem escreve o template não é dono desse elemento. Classe extra ali seria API nova: enquanto não houver caso concreto, o balão carrega apenas a classe do design system.',
+  },
+  en: {
+    'props.extensibilityNotes':
+      'There is no class property on the bubble. The content is declared as an <code>ng-template</code> and the bubble element is created and destroyed by the portal, so whoever writes the template does not own that element. An extra class there would be new API: until there is a concrete case, the bubble carries only the design system class.',
+  },
+  es: {
+    'props.extensibilityNotes':
+      'No hay propiedad de clase en el globo. El contenido se declara como <code>ng-template</code> y el elemento del globo lo crea y destruye el portal, así que quien escribe la plantilla no es dueño de ese elemento. Una clase extra allí sería API nueva: mientras no haya un caso concreto, el globo lleva solo la clase del design system.',
+  },
+});
 
 const SECTION_IDS = [
   'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
@@ -660,6 +677,7 @@ const COMPOSITION_CODE = {
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
+          [extensibilityNotes]="t('props.extensibilityNotes')"
           [extensibilityCode]="extensibilityCode"
           language="ts"
         />
@@ -1235,6 +1253,11 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
         componentSlug: 'tooltip',
         aiSummary: t('seo.aiSummary'),
         aiEntities: t('seo.aiEntities'),
+        breadcrumb: [
+          { name: 'Components', item: '/components' },
+          { name: t('category'), item: '/components/overlay' },
+          { name: t('title') },
+        ],
       });
       track('docs_page_view', {
         component_name: 'tooltip',
