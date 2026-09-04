@@ -4,6 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createTooltip } from '@/components/ui/tooltip';
+import { Save, Share2, Trash2 } from 'lucide';
 import { createButton, createButtonIcon } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import tooltipTranslations from '@shared/content/tooltip/translations.json';
@@ -55,6 +56,44 @@ function priorityLabel(raw: string): string {
 }
 
 // ─── Demo builders ────────────────────────────────────────────────────────────
+
+/**
+ * SVG a partir de um ícone do lucide.
+ *
+ * Mesmo idioma que `ToggleDocs`, `BadgeDocs` e `InputGroupDocs` já usam: o
+ * `createButtonIcon` do primitivo tem um mapa curado (plus, trash, pencil,
+ * chevron-right, download, loader, x) e não traz `save` nem `share`, que a
+ * demonstração precisa para mostrar a mesma barra de ações das outras stacks.
+ */
+type LucideIconNode = [string, Record<string, string>];
+
+function demoLucideSvg(icon: unknown): SVGSVGElement {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', 'nds-button-icon-svg');
+
+  for (const [tag, attrs] of icon as unknown as LucideIconNode[]) {
+    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+    svg.appendChild(child);
+  }
+  return svg;
+}
+
+/** Botão icon-only da barra de ações da demonstração. */
+function demoIconButton(icon: unknown, ariaLabel: string): HTMLButtonElement {
+  const iconWrap = document.createElement('span');
+  iconWrap.setAttribute('aria-hidden', 'true');
+  iconWrap.appendChild(demoLucideSvg(icon));
+  return createButton({ variant: 'outline', size: 'icon', 'aria-label': ariaLabel, children: iconWrap });
+}
 
 function makeIconButton(ariaLabel: string): HTMLButtonElement {
   const iconWrap = document.createElement('span');
@@ -213,33 +252,45 @@ export function createTooltipDocs(): HTMLElement {
         return createDocsDemonstration({
           title: t('demonstration.title'),
           demoFactory: () => {
+            // Barra de ações com três botões de ícone — o MESMO exemplo que as
+            // outras quatro stacks mostram. Antes daqui saía um grid de três
+            // colunas rotuladas reaproveitando `buildDefaultTooltip` e irmãos,
+            // ou seja: a Demonstração repetia a seção Variantes, que fica logo
+            // abaixo e mostra exatamente aqueles três casos.
+            //
+            // Nenhum portão via, e a razão é estrutural: Variantes e Composições
+            // passam por um container que recebe uma LISTA NOMEADA de cartões,
+            // então dá para enumerar. A Demonstração é um slot livre — aqui um
+            // `demoFactory` —, sem nome e sem cartão, e a sonda de docs page
+            // dava paridade porque `DocsDemonstration` nem emite
+            // `data-docs-preview`.
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'nds-grid nds-w-full nds-min-h-50';
-            wrap.dataset.cols = '3';
+            wrap.style.position = 'relative';
+            wrap.className = 'nds-cluster nds-w-full nds-min-h-30';
+            wrap.dataset.justify = 'center';
+            wrap.dataset.align = 'center';
             wrap.dataset.spacing = 'lg';
 
-            const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
-              { labelKey: 'variants.items.default',      build: buildDefaultTooltip      },
-              { labelKey: 'variants.items.withShortcut', build: buildWithShortcutTooltip },
-              { labelKey: 'variants.items.longText',     build: buildLongTextTooltip     },
+            // Chaves LITERAIS, e não montadas por template: é assim que as
+            // outras quatro escrevem, e é o que deixa a divergência visível a
+            // uma varredura de fonte. Chave construída em runtime esconde o
+            // rótulo de qualquer portão que leia o arquivo.
+            const actions = [
+              { icon: Save,   label: t('demonstration.labels.saveButton'),   text: t('demonstration.labels.save'),   id: 'save' },
+              { icon: Trash2, label: t('demonstration.labels.deleteButton'), text: t('demonstration.labels.delete'), id: 'delete' },
+              { icon: Share2, label: t('demonstration.labels.shareButton'),  text: t('demonstration.labels.share'),  id: 'share' },
             ];
 
-            for (const cell of cells) {
-              const col = document.createElement('div');
-              col.className = 'nds-stack';
-              col.dataset.spacing = 'xs';
-              col.style.contain = 'layout';
-              col.style.position = 'relative';
-              col.classList.add('nds-min-h-30');
-
-              const label = document.createElement('p');
-              label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
-              label.textContent = t(cell.labelKey);
-
-              col.appendChild(label);
-              col.appendChild(cell.build());
-              wrap.appendChild(col);
+            for (const action of actions) {
+              wrap.appendChild(
+                createTooltip({
+                  trigger: demoIconButton(action.icon, action.label),
+                  content: action.text,
+                  side: 'bottom',
+                  onShow: trackTooltipView(action.id),
+                }),
+              );
             }
 
             return wrap;

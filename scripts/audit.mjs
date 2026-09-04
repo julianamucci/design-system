@@ -2101,6 +2101,97 @@ function declaredCoverage(content) {
  * componentes de violação — cada um passa a ser cobrado quando adota.
  * Use `--contract-status` para ver quem ainda não adotou.
  */
+/**
+ * `demonstration_labels_divergent` — a Demonstração mostra o MESMO exemplo nas cinco?
+ *
+ * Era a única seção de exemplo que nenhum portão alcançava, e a razão é
+ * estrutural: Variantes e Composições passam por um container que recebe uma
+ * LISTA NOMEADA de cartões, então dá para enumerar nome a nome. A Demonstração
+ * é um slot livre — `children` no react/vue/svelte, `demoFactory` no vanilla —,
+ * sem nome e sem cartão. Uma sonda que conta cartões vê zero ali e não
+ * estranha, porque zero é o esperado. E a sonda de docs page dava paridade
+ * porque `DocsDemonstration` nem emite `data-docs-preview`: aquela contagem de
+ * previews nunca incluiu esta seção.
+ *
+ * Medido em 2026-09-04 no tooltip: quatro stacks mostravam uma barra com três
+ * botões de ícone, e o vanilla mostrava as três VARIANTES rotuladas —
+ * duplicando a seção que fica logo abaixo. Quem viu foi a dona, abrindo as
+ * cinco lado a lado.
+ *
+ * O que dá para cobrar sem adivinhar layout: o conteúdo compartilhado define
+ * `demonstration.labels.*`, e uma stack que usa outro CONJUNTO de rótulos está
+ * mostrando outro exemplo. É verificação de PRESENÇA — varredura limpa não
+ * prova nada —, por isso a regra compara stacks em vez de procurar um padrão
+ * ruim.
+ *
+ * UM achado por stack divergente, não um por rótulo: onde os conjuntos são
+ * disjuntos (o tabs mostra abas diferentes no angular) a contagem por rótulo
+ * reporta dos dois lados e multiplica.
+ *
+ * OPT-IN, e o número é o motivo: ligada para todos, a regra acha 38 componentes
+ * divergentes. Isso é campanha, não conserto — e portão que despeja backlog
+ * ensina a ignorar o portão, junto com o achado que importava. Cada componente
+ * entra aqui quando sua Demonstração for alinhada. Para ver o backlog inteiro,
+ * troque o conjunto por `null` e rode `--all`.
+ */
+const DEMO_PARIDADE_EXIGIDA = new Set(['tooltip']);
+
+function auditDemonstrationLabels(slug) {
+  if (DEMO_PARIDADE_EXIGIDA && !DEMO_PARIDADE_EXIGIDA.has(slug)) return [];
+
+  const caminho = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const raw = readFile(caminho);
+  if (!raw) return [];
+  let json;
+  try { json = JSON.parse(raw); } catch { return []; }
+  const chaves = Object.keys(json['pt-BR']?.demonstration?.labels ?? {});
+  if (chaves.length === 0) return [];
+
+  const porStack = {};
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    const usadas = new Set();
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      for (const k of chaves) {
+        if (content.includes('demonstration.labels.' + k)) usadas.add(k);
+      }
+    }
+    porStack[stack] = usadas;
+  }
+
+  const adotaram = STACKS.filter((s) => porStack[s].size > 0);
+  if (adotaram.length < 2) return [];
+
+  const assinatura = (c) => [...c].sort().join(',');
+  const contagem = new Map();
+  for (const st of adotaram) {
+    const a = assinatura(porStack[st]);
+    contagem.set(a, (contagem.get(a) ?? 0) + 1);
+  }
+  const [maioria, quantas] = [...contagem.entries()].sort((x, y) => y[1] - x[1])[0];
+  if (quantas < 2) return [];
+
+  const esperado = new Set(maioria.split(','));
+  const quem = adotaram.filter((st) => assinatura(porStack[st]) === maioria);
+
+  const violations = [];
+  for (const stack of adotaram) {
+    if (assinatura(porStack[stack]) === maioria) continue;
+    const faltam = [...esperado].filter((k) => !porStack[stack].has(k));
+    const sobram = [...porStack[stack]].filter((k) => !esperado.has(k));
+    violations.push({
+      category: 'quality', severity: 'medium', slug, stack,
+      file: 'docs/' + slug, rule: 'demonstration_labels_divergent',
+      message: 'a demonstração usa outro conjunto de rótulos que ' + quem.join(', ')
+        + ' — faltam [' + (faltam.join(', ') || 'nenhum')
+        + '], sobram [' + (sobram.join(', ') || 'nenhum') + ']',
+    });
+  }
+  return violations;
+}
+
 function auditContractCoverage(slug) {
   const ids = contractIds(slug);
   if (ids.length === 0) return [];
@@ -5885,6 +5976,7 @@ function auditQuality(slug) {
   violations.push(...auditStoryQuality(slug));
   violations.push(...auditStoryApiReference(slug));
   violations.push(...auditContractCoverage(slug));
+  violations.push(...auditDemonstrationLabels(slug));
   violations.push(...auditPlayIdempotente(slug));
 
   return violations;
