@@ -246,6 +246,9 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     const arrowEl = document.createElement('div');
     arrowEl.className = 'nds-tooltip-arrow';
     arrowEl.dataset.side = side;
+    // `position` é da fábrica, não da folha: nas outras quatro stacks quem a
+    // escreve é a lib, e numa delas o elemento posicionado nem é este.
+    arrowEl.style.position = 'absolute';
     panelEl.appendChild(arrowEl);
 
     const verticalAxis = side === 'top' || side === 'bottom';

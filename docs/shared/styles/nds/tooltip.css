@@ -117,8 +117,19 @@
  * libs entregam inline com a coordenada já calculada, e a folha só perderia.
  * Foi assim que o `top: 50%` do left/right prendia a seta no canto do balão.
  */
+/* SEM `position` aqui, e a razão é a mesma que tirou o `position` do balão, um
+ * nível acima: quem posiciona a seta é a lib, e o elemento que ela posiciona
+ * nem sempre é este.
+ *
+ * base-ui, bits-ui e radix-ng escrevem `position: absolute` INLINE nesta div. A
+ * reka-ui não: ela embrulha a div num <span> e posiciona o SPAN. Declarar
+ * `absolute` aqui tirava a div do fluxo e colapsava esse span para 0x0 —
+ * medido em 2026-09-04: seta 5px fora do centro no top/bottom, que é meia
+ * largura de seta, porque a lib centrava uma caixa de largura zero.
+ *
+ * O vanilla, que não tem lib, declara `position` na fábrica, junto com a
+ * coordenada do eixo cruzado que ele mesmo calcula. */
 .nds-tooltip-arrow {
-  position: absolute;
   width: 0.625rem;                               /* 10px — a base do triângulo */
   height: 0.3125rem;                             /* 5px — a altura do bico */
   background-color: hsl(var(--primary));
