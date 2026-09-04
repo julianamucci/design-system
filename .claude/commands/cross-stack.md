@@ -55,7 +55,7 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 | 3 | Data attributes (`data-slot`) | Grep × 5 | Bug |
 | 4 | Acessibilidade (ARIA) | Grep × 5 | Bug |
 | 5 | Tokens CSS + tokenização de dimensões | Grep × 3 (sem Vanilla) | Bug |
-| 6 | Section containers (15 obrigatórios) | Glob × 5 | Bloqueante |
+| 6 | Section containers (15 obrigatórios) — presença **e CONTEÚDO** | Glob × 5 + **Read × 5** | Bloqueante |
 | 7 | Completude de docs pages (10 sub-checks: IDs, blocos, placeholders, t() count, props/tokens, DOMPurify no call site, structureCode, breadcrumb, SEO completo) | Read × 5 | Variável |
 | 8 | Cobertura de stories | Glob × 5 | Bug |
 | 9 | Do & Don't layout (bug recorrente) | inspeção visual após Read | Bloqueante |
@@ -63,6 +63,22 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 | 11 | Divergências idiomáticas Vanilla (3 camadas: notes, DocsProps, story) | inspeção após Read | Bug |
 | 12 | Higiene `.nds-*` + paridade estrutural (classes redundantes, style inline, wrapper de tabela, items→Card/lista) | Grep × 5 | Bug |
 | 13 | **O que a docs page RENDERIZA** — seções, títulos, cartões, `trackId`, linhas de props e de tokens | **sonda de navegador** (Passo 0) | Bug |
+
+**O check 6 era `Glob` — presença — e por isso os containers nunca eram LIDOS.**
+Eles são o vão de escopo mais caro deste repositório, e o mecanismo vale
+entender: a regra de semântica existe (`quality` §3e — "`<h2>` seções, `<h3>`
+sub-divisões"), mas o alcance dela é `components/docs/*Docs.*`, e os containers
+moram em `components/docs/shared/sections/`. Auditoria POR COMPONENTE olhando
+arquivo COMPARTILHADO: lê-lo 82 vezes é desperdício, e o que aconteceu foi
+lê-lo zero. Resultado medido em 2026-09-03 — o título do cartão é `<h3>` no
+vanilla e no angular e `<p class="nds-font-semibold"` no react, vue e svelte, em
+**102 docs pages**, com `<p>` semibold sendo título só visualmente: quem navega
+por cabeçalhos perde a estrutura inteira da seção.
+
+Ao ler os 15 containers, compare entre stacks e confira a semântica: tag de
+cabeçalho, `scope` de tabela, lista semântica, `<section id>`. É aqui que
+divergência de container aparece — e um defeito ali multiplica por todas as
+páginas da stack, ao contrário de defeito de docs page, que fica numa só.
 
 O check 13 é o único que não se faz por `Grep`, e existe porque os outros doze
 não alcançavam o que a leitora vê. Ele achou, na primeira rodada: tabela de

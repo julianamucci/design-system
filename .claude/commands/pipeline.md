@@ -17,6 +17,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
   - `new` — componente novo: dev + content + quality + audit
   - `full` — igual a `new`, mas pula dev-skills de stacks que já existem e pula ux-writer se `translations.json` já existe (padrão)
   - `audit` — apenas auditoria (scripts + agents com julgamento), sem criar arquivos
+  - `fix` — componente que já existe: mede, CORRIGE e reverifica (ver sequência abaixo)
   - `content` — apenas conteúdo: ux-writer + seo-geo + analytics
 
 ---
@@ -34,7 +35,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
 5. **Context-cache por componente = contrato, não resumo.** `.pipeline-context/<slug>.md` ≤160 linhas. Além de variantes, props, tokens e lista de arquivos, ele **fixa o conteúdo dos exemplos** (ver Fase A.2). Os 4 dev-agents rodam em paralelo e não se veem: o que não estiver escrito ali, cada um inventa do seu jeito — foi assim que a mesma composição virou 4 demos diferentes.
 
    **A pasta é apagada no início de toda execução** (Fase A.0) e regenerada. Não existe reaproveitamento entre execuções: cache é contrato, e contrato velho é pior que contrato nenhum — descreve uma API que mudou, cita classe que não existe mais, e os dev-agents seguem literalmente. Caches de maio deste projeto ainda diziam "Basecoat" e mandavam alinhar overlays com `bg-black/80`. Como a pasta nasce vazia a cada rodada, ela também não precisa entrar nas varreduras de vocabulário morto do `audit.mjs`.
-6. **Audit-mode é report-only.** Agents chamados pela pipeline em `audit` reportam; fixes vão para `FIXES-NEEDED.md`. Skills isoladas (`/quality` fora de pipeline) continuam em fix-mode.
+6. **O MODO decide se a skill corrige, e ela precisa saber em qual está.** Em `audit`, agents reportam e os fixes vão para `FIXES-NEEDED.md`. Em `fix`, `new` e `full`, eles corrigem. Skills isoladas (`/quality` fora de pipeline) são sempre fix-mode.
+
+   O sinal de que a chamada veio da pipeline é o prompt trazer `.pipeline-context/scan-<slug>.json` — as skills já o usam para não re-rodar o scan, e é o mesmo que decide quem manda no cross-stack: **quando a pipeline chama, ela é dona da ordenação dele**, e a skill registra `cross-stack: da pipeline` em vez de disparar o seu. Sem essa regra, `/quality` chamando cross-stack no começo e no fim faria o mesmo instrumento rodar quatro vezes numa passagem de `fix`.
 7. **Glob e Grep nativos, não loops bash.** No Windows loops são lentos; tools do Claude já varrem em paralelo.
 8. **Prompts auto-contidos.** Passe slug, modo, caminho do context-cache, lista exata de arquivos. Nunca delegue "descubra o que fazer".
 9. **Nunca pule uma skill sem registrar.** Script limpo → registre `script-clean, agent skipped`. Erro em uma skill não bloqueia as próximas da mesma fase.
@@ -236,6 +239,69 @@ Fase D:
   Consolidar FIXES-NEEDED.md
   > N violações em X componentes. Aplicar: [1] críticos / [2] críticos+médios / [3] todos / [4] nenhum?
 ```
+
+### Sequência `fix`
+
+Para componente que **já existe** e precisa ser corrigido, não construído nem só
+relatado. É o modo do dia a dia da revisão componente a componente.
+
+```
+Fase A (serial):
+  0. Apagar .pipeline-context/ inteira e recriar vazia (Princípio 5)
+  1. node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
+  2. Gerar .pipeline-context/<slug>.md
+
+Fase B (1 agent, serial — MEDIÇÃO, e é ela que muda tudo):
+  /cross-stack <slug>   report-only, com a SONDA do Passo 0 dela
+
+Fase C (até 5 agents em PARALELO — FIX-MODE, com a lista da Fase B em mãos):
+  /quality <slug>       sempre
+  /analytics <slug>     sempre
+  /seo-geo <slug>       sempre
+  /security <slug>      só se scan.security.length > 0
+  /performance <slug>   só se scan.performance.length > 0
+
+Fase D (serial — PORTÃO, bloqueia o avanço):
+  node scripts/audit.mjs <slug> --json     (re-scan pós-fix)
+  npm test -- <slug>   nas stacks tocadas
+  Falha → corrige e repete. Item aplicado sem re-verificação não conta.
+
+Fase E (1 agent — VERIFICAÇÃO):
+  /cross-stack <slug>   de novo: as cinco ficaram iguais?
+
+Fase F: commits por assunto
+```
+
+**Por que cross-stack roda DUAS vezes, e por que a primeira é no começo.** Em
+`audit` ele vem por último, e está certo: sem correção acontecendo, medir antes
+não previne nada. Aqui há correção, e a Fase C conserta **uma stack por vez** —
+sem a lista fechada na mão, cada skill conserta o que enxerga, o cross-stack acha
+o resto depois, e a rodada recomeça. É o padrão que custou **dezesseis commits no
+calendar**, um defeito por rodada, com a suíte verde o tempo todo.
+
+A ordem também evita trabalho jogado fora: metade dos achados cross-stack se
+resolve numa linha de `translations.json`, que conserta as cinco de uma vez.
+Descobrir isso depois de corrigir três stacks à mão é pagar quatro vezes pelo
+mesmo defeito.
+
+**A `/quality` NÃO chama cross-stack neste modo** — ela detecta que a chamada veio
+da pipeline (o prompt traz `scan-<slug>.json`) e registra `cross-stack: da
+pipeline (Fase B/E)`. Sem isso o mesmo instrumento rodaria quatro vezes numa
+passagem.
+
+**Quem corrige o quê, na Fase C.** As skills rodam em paralelo e não se veem:
+
+| tipo de correção | quem aplica |
+|---|---|
+| arquivo de UMA stack (story, docs page, primitivo) | a skill, direto |
+| `docs/shared/content/<slug>/translations.json` | **o orquestrador**, num commit só |
+| `docs/shared/styles/nds/*.css` e containers de seção | **o orquestrador**, num commit só |
+
+Conteúdo compartilhado renderiza nas cinco: duas skills editando o mesmo
+`translations.json` em paralelo é a colisão que já apagou override alheio nesta
+casa. A skill que achar defeito ali **reporta e não edita**.
+
+---
 
 ### Sequência `content`
 
