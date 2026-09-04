@@ -515,6 +515,16 @@ literal.
 
 A página **Accordion** (`6:2`) é o precedente — siga o que está lá.
 
+- **Idioma: anotação em INGLÊS, description em português.** A divisão é de
+  público, não de gosto. Anotação é superfície de Dev Mode, lida junto com o
+  código, e o vocabulário ali é o do CSS (`--primary`, `padding-inline`,
+  `clip-path`). Description é a ficha do componente na biblioteca, lida por quem
+  monta tela. Description de VARIÁVEL segue a de componente: português.
+
+  Escrevi as seis anotações do Tooltip em português antes de conferir, e a
+  sonda depois mostrou que o arquivo inteiro estava em inglês — 0 exceções em
+  todas as páginas. Vale rodar a sonda ao acrescentar componente, porque uma
+  anotação em português não reprova nada e só aparece a quem lê.
 - **Uma página por componente**, com o nome do componente.
 - **A spec vive em anotação de Dev Mode, ancorada no nó a que se refere** — não
   num frame de texto. Ver "Anotações" na skill (Etapa 5b). O frame
