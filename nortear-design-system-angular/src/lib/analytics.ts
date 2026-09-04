@@ -10,6 +10,7 @@
  */
 
 import { registrarAction } from '@shared/primitives/faro';
+import { logarEvento } from '@shared/primitives/analytics-debug';
 
 declare global {
   interface Window {
@@ -460,6 +461,13 @@ export function track<T extends keyof AnalyticsEvents>(
   registrarAction(event, params as Record<string, unknown>);
 
   const gtag = getManagerGtag();
-  if (typeof gtag !== 'function') return;
+  const entregue = typeof gtag === 'function';
+
+  // Antes do early-return: com GA4 desconfigurado o evento voltava sem
+  // vestígio, e quem inspeciona não tinha como separar "o componente não
+  // disparou" de "disparou e não havia para onde mandar".
+  logarEvento(event, params as Record<string, unknown>, entregue);
+
+  if (!entregue) return;
   gtag('event', event, params as Record<string, unknown>);
 }

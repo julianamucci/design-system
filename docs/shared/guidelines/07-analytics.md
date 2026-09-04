@@ -432,6 +432,49 @@ export function track(event: EventName, payload: TrackPayload): void {
 
 ---
 
+## Como inspecionar os eventos que estão saindo
+
+Ligue o modo de depuração acrescentando `?debugAnalytics=1` à URL do Storybook.
+Cada `track()` passa a escrever no console o nome do evento, o payload e **se o
+gtag recebeu**. `?debugAnalytics=0` desliga.
+
+```
+http://localhost:6006/?debugAnalytics=1&path=/docs/components-overlay-tooltip--docs
+```
+
+O modo persiste em `localStorage` de propósito: o Storybook reescreve a URL do
+manager a cada navegação e leva o parâmetro embora, então sem persistir ele
+morreria no primeiro clique na barra lateral — que é justamente quando se quer
+observar.
+
+Três armadilhas que este modo existe para evitar, e que custam tempo a quem
+tenta inspecionar sem ele:
+
+1. **As docs pages rodam no IFRAME**, e o `track()` encaminha para
+   `window.top.gtag`. Quem abre o console no contexto do
+   `storybook-preview-iframe` olha para um `dataLayer` vazio e conclui que o
+   componente não dispara nada. É preciso trocar o contexto do DevTools para a
+   página de cima.
+2. **Sem GA4 configurado o evento some sem vestígio**, o que é indistinguível
+   de "o componente não disparou". Por isso o log diz `gtag ✓` ou `gtag ✗`.
+3. **Boa parte do analytics não é ouvinte de DOM.** No tooltip, por exemplo, o
+   `tooltip_view` sai de um callback `onShow` chamado de dentro do componente —
+   o painel *Event Listeners* do DevTools não mostra nada disso, e está certo:
+   não há ouvinte para mostrar. Quem procura ali conclui que o botão não tem
+   analytics.
+
+Sem ligar o modo, o caminho manual é inspecionar o `dataLayer` do manager (não
+o do iframe):
+
+```js
+dataLayer.filter(a => a[0] === 'event').map(a => [a[1], a[2]])
+```
+
+E com o Measurement ID real em `.env.development`, o **DebugView** do GA4 é o
+único lugar que mostra o evento como a ferramenta de fato o recebe.
+
+---
+
 ## Integração com Ferramentas de Analytics
 
 | Ferramenta | Implementação do corpo de `track` |
