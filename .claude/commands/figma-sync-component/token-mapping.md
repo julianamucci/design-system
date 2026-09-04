@@ -85,7 +85,7 @@ Se algum dia uma variável aparecer sem `codeSyntax`, o caminho continua servind
 | `Raio` | 13 | `default`, `warm`, `cold` |
 | `Camada` | 8 | `default` |
 | `Opacidade` | 8 | `light`, `dark` |
-| `Elevacao` | 4 | `light`, `dark` |
+| `Elevacao` | 11 | `light`, `dark` |
 | `Fonte` | 1 | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` |
 
 Os nomes e as contagens coincidem com os do export desde 2026-09-02. Se alguma
@@ -224,7 +224,29 @@ vazia — o custo é uma passada a mais e o ganho é não depender da ordem de
 | `Tipografia` | `tamanho/`, `escala/`, `peso/`, `entrelinha/`, `espacamento-letra/` |
 | `Movimento` | `duracao/`, `curva/`, `deslocamento/` |
 | `Texto`, `Opacidade` | `<slug>/` — o conteúdo é por componente |
-| `Raio`, `Elevacao`, `Camada`, `Fonte` | sem prefixo |
+| `Elevacao` | `cor/` para as camadas de sombra; as quatro strings sem prefixo |
+| `Raio`, `Camada`, `Fonte` | sem prefixo |
+
+**Sombra não é variável, é ESTILO com campos amarrados.** A leitura óbvia — "o
+Figma não tem variável de efeito, então a sombra fica em string" — é meia
+verdade, e a metade que falta custou o arquivo inteiro sem sombra nenhuma até
+2026-09-04. É verdade que `VariableResolvedDataType` é só
+`BOOLEAN | COLOR | FLOAT | STRING`. O que existe são os CINCO campos de um
+efeito — `color`, `radius`, `spread`, `offsetX`, `offsetY` —, cada um amarrável,
+e o estilo de efeito como unidade reutilizável.
+
+Como está montado: quatro estilos (`Elevacao/sm` a `/xl`) com a geometria
+LITERAL e a cor de cada camada amarrada a uma variável `cor/*`. A divisão não é
+arbitrária — decompondo os tokens, a geometria é IDÊNTICA entre claro e escuro e
+só o alfa muda (0.1 → 0.3). Amarrar os 28 números acrescentaria variáveis que
+nunca variam; as 7 cores carregam a diferença de modo inteira.
+
+As `cor/*` **não têm `codeSyntax`**, e é de propósito: as sombras vivem inteiras
+em `--elevation-*` e o CSS não nomeia a cor de cada camada. São modelagem do
+lado do Figma, como a coleção `Opacidade` — e, como ela, derivam se alguém
+editar `tokens.css` sem passar por aqui. As quatro strings continuam na coleção:
+são o que um dev copia no Dev Mode, e são elas que a sincronia por
+`codeSyntax` compara.
 
 `Dimensao` guarda mais que espaçamento: `altura/height-*`, `tamanho/size-*` e
 `traco/border-width-default` moram lá.
