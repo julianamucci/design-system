@@ -1,19 +1,39 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-import { deriveSlugFromUrl } from '@/lib/docs-tracking';
-
-interface Section {
+<script lang="ts">
+/**
+ * Bloco `<script>` comum, ao lado do `setup`, só para exportar os tipos: em
+ * `<script setup>` tudo é escopo de componente e nada sai como export nomeado.
+ *
+ * Era por isso que a forma do grupo de navegação vivia declarada DUAS vezes
+ * nesta stack, byte a byte igual, aqui e no `DocsPageLayout.vue` — e por isso
+ * as 83 docs pages que montam `navGroups` conferiam cada uma contra a cópia do
+ * arquivo que estivessem, não contra um contrato único. As outras quatro stacks
+ * exportam `DocsNavGroup` do seu próprio `DocsNav`; esta passa a exportar
+ * também.
+ *
+ * Enquanto as duas cópias eram idênticas nada quebrava. O risco era o dia em
+ * que `sections` ganhasse um campo: com um tipo só, o compilador aponta todos os
+ * pontos que precisam acompanhar; com duas, cada arquivo aprova a si mesmo.
+ */
+export interface DocsNavSection {
   id: string;
   label: string;
 }
 
-interface Group {
+export interface DocsNavGroup {
   label: string;
-  sections: Section[];
+  sections: DocsNavSection[];
 }
+</script>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { deriveSlugFromUrl } from '@/lib/docs-tracking';
+// Sem import de `DocsNavGroup` aqui: os dois blocos de script do SFC dividem o
+// mesmo escopo de módulo, então importar do próprio arquivo colide com a
+// declaração ao lado (`TS2440`). O que o `<script>` declara, o `setup` já vê.
 
 const props = defineProps<{
-  groups: Group[];
+  groups: DocsNavGroup[];
   activeSection?: string;
   /** Slug do componente — usado no data-track-id (ex: "alert" → `alert:nav:anatomia`). */
   componentSlug?: string;

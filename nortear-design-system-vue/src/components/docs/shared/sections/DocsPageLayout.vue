@@ -2,20 +2,11 @@
 import { DOCS_PAGE_TITLE_ID } from '@shared/primitives/docs-page-landmarks';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import DocsNav from '../DocsNav.vue';
+import type { DocsNavGroup } from '../DocsNav.vue';
 import { mountDocsTracking } from '@/lib/docs-tracking';
 
-interface Section {
-  id: string;
-  label: string;
-}
-
-interface Group {
-  label: string;
-  sections: Section[];
-}
-
 const props = defineProps<{
-  navGroups: Group[];
+  navGroups: DocsNavGroup[];
   activeSection?: string;
   /** Slug do componente — habilita tracking automático via data-track*. */
   componentSlug?: string;

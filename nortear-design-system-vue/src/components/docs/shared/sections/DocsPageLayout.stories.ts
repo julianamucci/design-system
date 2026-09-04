@@ -3,18 +3,7 @@ import { expect } from 'storybook/test';
 import DocsPageLayout from './DocsPageLayout.vue';
 import DocsHeader from './DocsHeader.vue';
 import DocsStates from './DocsStates.vue';
-
-/**
- * Declarado aqui, e não importado: nesta stack o tipo do grupo de navegação é
- * uma `interface Group` LOCAL do `DocsPageLayout.vue`, sem export. As outras
- * quatro o expõem — React e Vanilla de `DocsNav.ts(x)`, Svelte de um
- * `<script module>` do `DocsNav.svelte`, Angular de `DocsNav.ts`. É deriva, não
- * diferença de framework, e a story usa a forma estrutural até alguém unificar.
- */
-type DocsNavGroup = {
-  label: string;
-  sections: { id: string; label: string }[];
-};
+import type { DocsNavGroup } from '../DocsNav.vue';
 
 /**
  * A moldura de toda docs page: barra lateral de navegação à esquerda, cabeçalho
