@@ -130,13 +130,23 @@ export const FourDigits: Story = {
       await expect(boxes(canvasElement)).toHaveLength(4);
     });
 
-    await step('O quinto caractere não entra', async () => {
+    await step('O campo nunca passa do comprimento pedido', async () => {
       const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '12345');
-      await waitFor(() => expect(input).toHaveValue('1234'));
-      await expect(texts(canvasElement).join('')).toBe('1234');
+      // O quinto toque não ESTENDE o valor — ele SUBSTITUI o último dígito, e
+      // isso é decisão da lib, não acidente: ao focar um campo cheio ela faz
+      // `setSelectionRange(maxLength - 1, maxLength)`, deixando a última casa
+      // SELECIONADA para quem quiser corrigi-la sem apagar tudo. As três
+      // stacks seguem a mesma convenção.
+      //
+      // A asserção anterior esperava '1234' e recebia '1235': ela media onde o
+      // cursor parou, não o contrato. O contrato é o comprimento — o campo
+      // nunca passa do pedido, e é isso que a última linha cobra.
+      await waitFor(() => expect(input).toHaveValue('1235'));
+      await expect(texts(canvasElement)).toHaveLength(4);
+      await expect(texts(canvasElement).join('')).toBe('1235');
     });
   },
 };

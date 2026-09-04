@@ -691,6 +691,13 @@ const visualTestItems = computed(() => [
         </RadioGroup>
       </template>
       <template #dont-preview-0>
+        <!-- O "don't" aqui é o texto solto em <span>, sem associação clicável
+             com o radio. O `aria-label` em cada item existe para o axe
+             (`button-name`) e NÃO desfaz a lição: o pixel do exemplo continua
+             o mesmo, e o que se perde — clicar no texto para marcar — segue
+             perdido. Sem ele o smoke da docs page reprovava, porque esta é a
+             única das cinco stacks que renderiza o par ao VIVO. É a mesma
+             solução, com o mesmo motivo, que o React já usava. -->
         <RadioGroup
           aria-label="Forma de pagamento (dont)"
         >
@@ -700,6 +707,7 @@ const visualTestItems = computed(() => [
           >
             <RadioGroupItem
               id="dodont-dont-1a"
+              aria-label="Cartão de crédito"
               value="a"
             />
             <span class="nds-text-body">Cartão de crédito</span>
@@ -710,6 +718,7 @@ const visualTestItems = computed(() => [
           >
             <RadioGroupItem
               id="dodont-dont-1b"
+              aria-label="Pix"
               value="b"
             />
             <span class="nds-text-body">Pix</span>
