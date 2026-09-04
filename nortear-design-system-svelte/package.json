@@ -88,6 +88,7 @@
     "vitest": "^4.1.10"
   },
   "overrides": {
-    "devalue": "^5.8.1"
+    "devalue": "^5.8.1",
+    "cookie": "^0.7.0"
   }
 }
