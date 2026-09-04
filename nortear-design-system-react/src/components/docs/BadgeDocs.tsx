@@ -531,12 +531,12 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           {
             name: "Alert",
             description: toPlainText(tContent("related.alert")),
-            path: "?path=/docs/primitives-feedback-alert--docs",
+            path: "?path=/docs/components-feedback-alert--docs",
           },
           {
             name: "Button",
             description: toPlainText(tContent("related.button")),
-            path: "?path=/docs/primitives-form-button--docs",
+            path: "?path=/docs/components-form-button--docs",
           },
         ]}
       />

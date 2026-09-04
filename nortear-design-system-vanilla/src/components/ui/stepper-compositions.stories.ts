@@ -14,7 +14,7 @@ import { stepperSource, stepperSourceWith } from './stepper.source';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'Primitives/Navigation/Stepper/Compositions',
+  title: 'Components/Navigation/Stepper/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -22,7 +22,7 @@ import {
 // procuraria a diferença que não existe.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/MessageQueue/States',
+  title: 'Components/Conversational/MessageQueue/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsMessageQueue] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

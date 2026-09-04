@@ -24,7 +24,7 @@ import { RUN_STATUSES, type JobCount, type RunStatus } from '@shared/primitives/
 // muda é o que a barra pode dizer.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/JobProgress/States',
+  title: 'Components/Conversational/JobProgress/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

@@ -321,10 +321,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.composer.name'),               description: toPlainText(tContent('related.items.composer.description')),               path: '?path=/docs/primitives-conversational-composer--docs' },
-  { name: tContent('related.items.composerTriggerPopover.name'), description: toPlainText(tContent('related.items.composerTriggerPopover.description')), path: '?path=/docs/primitives-conversational-composertriggerpopover--docs' },
-  { name: tContent('related.items.select.name'),                 description: toPlainText(tContent('related.items.select.description')),                 path: '?path=/docs/primitives-form-select--docs' },
-  { name: tContent('related.items.badge.name'),                  description: toPlainText(tContent('related.items.badge.description')),                  path: '?path=/docs/primitives-feedback-badge--docs' },
+  { name: tContent('related.items.composer.name'),               description: toPlainText(tContent('related.items.composer.description')),               path: '?path=/docs/components-conversational-composer--docs' },
+  { name: tContent('related.items.composerTriggerPopover.name'), description: toPlainText(tContent('related.items.composerTriggerPopover.description')), path: '?path=/docs/components-conversational-composertriggerpopover--docs' },
+  { name: tContent('related.items.select.name'),                 description: toPlainText(tContent('related.items.select.description')),                 path: '?path=/docs/components-form-select--docs' },
+  { name: tContent('related.items.badge.name'),                  description: toPlainText(tContent('related.items.badge.description')),                  path: '?path=/docs/components-feedback-badge--docs' },
 ]);
 
 const noteItems = computed(() =>

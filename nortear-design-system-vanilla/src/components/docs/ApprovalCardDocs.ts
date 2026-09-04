@@ -414,10 +414,10 @@ export function createApprovalCardDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.toolGroup.name'),   description: toPlainText(t('related.items.toolGroup.description')),   path: '?path=/docs/primitives-conversational-toolgroup--docs'  },
-            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-            { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs'       },
-            { name: t('related.items.button.name'),      description: toPlainText(t('related.items.button.description')),      path: '?path=/docs/primitives-form-button--docs'               },
+            { name: t('related.items.toolGroup.name'),   description: toPlainText(t('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'  },
+            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },
+            { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/components-overlay-alertdialog--docs'       },
+            { name: t('related.items.button.name'),      description: toPlainText(t('related.items.button.description')),      path: '?path=/docs/components-form-button--docs'               },
           ],
         });
 

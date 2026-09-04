@@ -356,10 +356,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'NavigationMenu', description: toPlainText(tContent('related.navigationMenu')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-  { name: 'Stepper',        description: toPlainText(tContent('related.stepper')),        path: '?path=/docs/primitives-navigation-stepper--docs'        },
-  { name: 'Tabs',           description: toPlainText(tContent('related.tabs')),           path: '?path=/docs/primitives-navigation-tabs--docs'           },
-  { name: 'DropdownMenu',   description: toPlainText(tContent('related.dropdownMenu')),   path: '?path=/docs/primitives-overlay-dropdownmenu--docs'   },
+  { name: 'NavigationMenu', description: toPlainText(tContent('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
+  { name: 'Stepper',        description: toPlainText(tContent('related.stepper')),        path: '?path=/docs/components-navigation-stepper--docs'        },
+  { name: 'Tabs',           description: toPlainText(tContent('related.tabs')),           path: '?path=/docs/components-navigation-tabs--docs'           },
+  { name: 'DropdownMenu',   description: toPlainText(tContent('related.dropdownMenu')),   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
 ]);
 
 const noteItems = computed(() => [

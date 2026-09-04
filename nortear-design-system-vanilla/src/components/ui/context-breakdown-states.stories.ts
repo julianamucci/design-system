@@ -23,7 +23,7 @@ import { contextSlices, contextTotal } from '@shared/primitives/token-budget';
 // por isso que o nome e o número de cada parcela são texto.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextBreakdown/States',
+  title: 'Components/Conversational/ContextBreakdown/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

@@ -27,7 +27,7 @@ export const DIAMETER: Record<AvatarSize, number> = {
 };
 
 const meta: Meta<AvatarArgs> = {
-  title: 'Primitives/Display/Avatar',
+  title: 'Components/Display/Avatar',
   tags: ['autodocs', 'display'],
   // As três constantes abaixo são DADO, e sem esta linha o CSF as trata como
   // story: o plugin de teste tenta escrever `.parameters` numa string, o módulo

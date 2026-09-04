@@ -791,10 +791,10 @@ export type ToggleOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.toggleGroup.name'), description: stripHtml(t('related.items.toggleGroup.description')), path: '?path=/docs/primitives-form-togglegroup--docs' },
-            { name: t('related.items.switch.name'),      description: stripHtml(t('related.items.switch.description')),      path: '?path=/docs/primitives-form-switch--docs'      },
-            { name: t('related.items.checkbox.name'),    description: stripHtml(t('related.items.checkbox.description')),    path: '?path=/docs/primitives-form-checkbox--docs'    },
-            { name: t('related.items.button.name'),      description: stripHtml(t('related.items.button.description')),      path: '?path=/docs/primitives-form-button--docs'      },
+            { name: t('related.items.toggleGroup.name'), description: stripHtml(t('related.items.toggleGroup.description')), path: '?path=/docs/components-form-togglegroup--docs' },
+            { name: t('related.items.switch.name'),      description: stripHtml(t('related.items.switch.description')),      path: '?path=/docs/components-form-switch--docs'      },
+            { name: t('related.items.checkbox.name'),    description: stripHtml(t('related.items.checkbox.description')),    path: '?path=/docs/components-form-checkbox--docs'    },
+            { name: t('related.items.button.name'),      description: stripHtml(t('related.items.button.description')),      path: '?path=/docs/components-form-button--docs'      },
           ],
         });
 

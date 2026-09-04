@@ -16,7 +16,7 @@ import {
 const CAPTION = "Faturas recentes"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
-  title: "Primitives/Tables/DataTable",
+  title: "Components/Tables/DataTable",
   component: DataTable<Invoice>,
   tags: ["autodocs", "tables"],
   parameters: {

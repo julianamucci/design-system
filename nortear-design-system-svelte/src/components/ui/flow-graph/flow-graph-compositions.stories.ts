@@ -34,7 +34,7 @@ import {
 // para trás e quando ele chega pela metade.
 
 const meta: Meta<typeof FlowGraph> = {
-  title: 'Primitives/Conversational/FlowGraph/Compositions',
+  title: 'Components/Conversational/FlowGraph/Compositions',
   component: FlowGraph,
   tags: ['conversational'],
   parameters: {

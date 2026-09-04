@@ -434,10 +434,10 @@ export interface ModelOption {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.composer.name'),               description: toPlainText(t('related.items.composer.description')),               path: '?path=/docs/primitives-conversational-composer--docs' },
-            { name: t('related.items.composerTriggerPopover.name'), description: toPlainText(t('related.items.composerTriggerPopover.description')), path: '?path=/docs/primitives-conversational-composertriggerpopover--docs' },
-            { name: t('related.items.select.name'),                 description: toPlainText(t('related.items.select.description')),                 path: '?path=/docs/primitives-form-select--docs' },
-            { name: t('related.items.badge.name'),                  description: toPlainText(t('related.items.badge.description')),                  path: '?path=/docs/primitives-feedback-badge--docs' },
+            { name: t('related.items.composer.name'),               description: toPlainText(t('related.items.composer.description')),               path: '?path=/docs/components-conversational-composer--docs' },
+            { name: t('related.items.composerTriggerPopover.name'), description: toPlainText(t('related.items.composerTriggerPopover.description')), path: '?path=/docs/components-conversational-composertriggerpopover--docs' },
+            { name: t('related.items.select.name'),                 description: toPlainText(t('related.items.select.description')),                 path: '?path=/docs/components-form-select--docs' },
+            { name: t('related.items.badge.name'),                  description: toPlainText(t('related.items.badge.description')),                  path: '?path=/docs/components-feedback-badge--docs' },
           ],
         });
 

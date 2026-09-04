@@ -20,7 +20,7 @@ import {
 // o que NÃO pode morar dentro dele.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ToolGroup/Compositions',
+  title: 'Components/Conversational/ToolGroup/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

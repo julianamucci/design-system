@@ -28,7 +28,7 @@ import { isVoiceBusy, type VoiceState } from '@shared/primitives/chat-protocol';
 // a diferença que não existe.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerVoice/States',
+  title: 'Components/Conversational/ComposerVoice/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

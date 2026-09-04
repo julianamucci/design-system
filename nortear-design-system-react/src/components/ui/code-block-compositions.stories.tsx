@@ -81,7 +81,7 @@ const gutterWords = (canvasElement: HTMLElement) =>
   );
 
 const meta = {
-  title: "Primitives/Display/CodeBlock/Compositions",
+  title: "Components/Display/CodeBlock/Compositions",
   component: CodeBlock,
   tags: ["display"],
   parameters: {

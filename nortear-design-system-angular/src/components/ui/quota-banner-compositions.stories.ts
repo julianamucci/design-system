@@ -26,7 +26,7 @@ import {
 // guideline 17).
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/QuotaBanner/Compositions',
+  title: 'Components/Conversational/QuotaBanner/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsQuotaBanner, NdsContextDisplay, NdsButton] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

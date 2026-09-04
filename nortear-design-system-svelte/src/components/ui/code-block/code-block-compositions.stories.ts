@@ -97,7 +97,7 @@ const meta: Meta = {
       },
     },
   },
-  title: 'Primitives/Display/CodeBlock/Compositions',
+  title: 'Components/Display/CodeBlock/Compositions',
   component: CodeBlock,
   tags: ['display'],
 };

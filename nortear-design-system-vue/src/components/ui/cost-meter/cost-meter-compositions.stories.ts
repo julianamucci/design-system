@@ -21,7 +21,7 @@ import { budgetLevel, spentFraction, usedFraction } from '@shared/primitives/tok
 // (§4.2 da guideline 17).
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/CostMeter/Compositions',
+  title: 'Components/Conversational/CostMeter/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

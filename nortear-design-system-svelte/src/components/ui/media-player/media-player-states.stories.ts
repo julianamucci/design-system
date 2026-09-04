@@ -28,7 +28,7 @@ const pauseSpy = fn();
 const endedSpy = fn();
 
 const meta: Meta<typeof MediaPlayer> = {
-  title: 'Primitives/Display/MediaPlayer/States',
+  title: 'Components/Display/MediaPlayer/States',
   component: MediaPlayer,
   tags: ['display'],
   parameters: {

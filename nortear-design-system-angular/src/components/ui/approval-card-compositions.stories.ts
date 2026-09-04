@@ -30,7 +30,7 @@ import { APPROVAL_CHOICE_ALLOW_ONCE } from '@shared/primitives/approval-card-exa
 // acontece quando alguém aperta um controle — que, do lado de cá, é só um aviso.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ApprovalCard/Compositions',
+  title: 'Components/Conversational/ApprovalCard/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsApprovalCard, NdsToolGroup, NdsButton] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

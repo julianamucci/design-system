@@ -1032,22 +1032,22 @@ interface ComboboxContentProps {
           {
             name: tContent("related.items.select.name"),
             description: toPlainText(tContent("related.items.select.description")),
-            path: "?path=/docs/primitives-form-select--docs",
+            path: "?path=/docs/components-form-select--docs",
           },
           {
             name: tContent("related.items.command.name"),
             description: toPlainText(tContent("related.items.command.description")),
-            path: "?path=/docs/primitives-overlay-command--docs",
+            path: "?path=/docs/components-overlay-command--docs",
           },
           {
             name: tContent("related.items.input.name"),
             description: toPlainText(tContent("related.items.input.description")),
-            path: "?path=/docs/primitives-form-input--docs",
+            path: "?path=/docs/components-form-input--docs",
           },
           {
             name: tContent("related.items.form.name"),
             description: toPlainText(tContent("related.items.form.description")),
-            path: "?path=/docs/primitives-form-form--docs",
+            path: "?path=/docs/components-form-form--docs",
           },
         ]}
       />

@@ -19,7 +19,7 @@ type SelectArgs = {
 };
 
 const meta: Meta<SelectArgs> = {
-  title: 'Primitives/Form/Select',
+  title: 'Components/Form/Select',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createSelectDocs), source: { transform: selectSource } },

@@ -884,10 +884,10 @@ export class NdsStepperDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'tabs',       path: '?path=/docs/primitives-navigation-tabs--docs'       },
-      { key: 'breadcrumb', path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
-      { key: 'progress',   path: '?path=/docs/primitives-feedback-progress--docs'     },
-      { key: 'form',       path: '?path=/docs/primitives-form-form--docs'             },
+      { key: 'tabs',       path: '?path=/docs/components-navigation-tabs--docs'       },
+      { key: 'breadcrumb', path: '?path=/docs/components-navigation-breadcrumb--docs' },
+      { key: 'progress',   path: '?path=/docs/components-feedback-progress--docs'     },
+      { key: 'form',       path: '?path=/docs/components-form-form--docs'             },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

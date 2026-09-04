@@ -24,7 +24,7 @@ import { budgetLevel, spentFraction, usedFraction } from '@shared/primitives/tok
 // guideline 17).
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/QuotaBanner/Compositions',
+  title: 'Components/Conversational/QuotaBanner/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

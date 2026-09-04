@@ -30,7 +30,7 @@ import {
 // fotografar o nada.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/DraftRestore/States',
+  title: 'Components/Conversational/DraftRestore/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsDraftRestore] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

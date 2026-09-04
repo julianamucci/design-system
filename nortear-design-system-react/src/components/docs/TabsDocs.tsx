@@ -900,22 +900,22 @@ interface TabsContentProps {
           {
             name: tContent("related.items.stepper.name"),
             description: toPlainText(tContent("related.items.stepper.description")),
-            path: "?path=/docs/primitives-navigation-stepper--docs",
+            path: "?path=/docs/components-navigation-stepper--docs",
           },
           {
             name: tContent("related.items.accordion.name"),
             description: toPlainText(tContent("related.items.accordion.description")),
-            path: "?path=/docs/primitives-disclosure-accordion--docs",
+            path: "?path=/docs/components-disclosure-accordion--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
             description: toPlainText(tContent("related.items.sidebar.description")),
-            path: "?path=/docs/primitives-layout-sidebar--docs",
+            path: "?path=/docs/components-layout-sidebar--docs",
           },
           {
             name: tContent("related.items.toggleGroup.name"),
             description: toPlainText(tContent("related.items.toggleGroup.description")),
-            path: "?path=/docs/primitives-form-togglegroup--docs",
+            path: "?path=/docs/components-form-togglegroup--docs",
           },
         ]}
       />

@@ -11,7 +11,7 @@ import { agentStatusAboveFieldSource, agentStatusRunningSource } from './agent-s
 // alguém aperta a ação — que, do lado de cá, é só um aviso.
 
 const meta: Meta<typeof AgentStatus> = {
-  title: 'Primitives/Conversational/AgentStatus/Compositions',
+  title: 'Components/Conversational/AgentStatus/Compositions',
   component: AgentStatus,
   tags: ['conversational'],
   parameters: {

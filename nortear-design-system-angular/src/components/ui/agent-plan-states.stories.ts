@@ -32,7 +32,7 @@ import {
 // pé está cada passo.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/AgentPlan/States',
+  title: 'Components/Conversational/AgentPlan/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsAgentPlan] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

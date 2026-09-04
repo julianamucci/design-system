@@ -18,7 +18,7 @@ import {
 const aoRodarComando = fn();
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Command/Compositions',
+  title: 'Components/Overlay/Command/Compositions',
   component: Command,
   tags: ['overlay'],
   parameters: {

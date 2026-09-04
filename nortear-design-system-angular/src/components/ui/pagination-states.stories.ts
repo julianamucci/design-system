@@ -18,7 +18,7 @@ import {
 // Controls aparece vazio.
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Pagination/States',
+  title: 'Components/Navigation/Pagination/States',
   tags: ['navigation'],
   decorators: [
     moduleMetadata({

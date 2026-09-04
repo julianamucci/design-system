@@ -31,7 +31,7 @@ import {
 // fotografa a escala inteira lado a lado, e não cinco grades.
 
 const meta: Meta<typeof ActivityGraph> = {
-  title: 'Primitives/Conversational/ActivityGraph/States',
+  title: 'Components/Conversational/ActivityGraph/States',
   component: ActivityGraph,
   tags: ['conversational'],
   parameters: {

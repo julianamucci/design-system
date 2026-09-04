@@ -1136,12 +1136,12 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'table',        name: 'Table',        path: '?path=/docs/primitives-tables-table--docs'        },
-      { key: 'chart',        name: 'Chart',        path: '?path=/docs/primitives-display-chart--docs'        },
-      { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/primitives-navigation-pagination--docs'   },
-      { key: 'checkbox',     name: 'Checkbox',     path: '?path=/docs/primitives-form-checkbox--docs'     },
-      { key: 'input',        name: 'Input',        path: '?path=/docs/primitives-form-input--docs'        },
-      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { key: 'table',        name: 'Table',        path: '?path=/docs/components-tables-table--docs'        },
+      { key: 'chart',        name: 'Chart',        path: '?path=/docs/components-display-chart--docs'        },
+      { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/components-navigation-pagination--docs'   },
+      { key: 'checkbox',     name: 'Checkbox',     path: '?path=/docs/components-form-checkbox--docs'     },
+      { key: 'input',        name: 'Input',        path: '?path=/docs/components-form-input--docs'        },
+      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

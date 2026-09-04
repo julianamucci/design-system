@@ -447,10 +447,10 @@ export function ComposerDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.chatThread.name"), description: toPlainText(tContent("related.items.chatThread.description")), path: "?path=/docs/primitives-conversational-chatthread--docs" },
-          { name: tContent("related.items.textarea.name"),   description: toPlainText(tContent("related.items.textarea.description")),   path: "?path=/docs/primitives-form-textarea--docs" },
-          { name: tContent("related.items.button.name"),     description: toPlainText(tContent("related.items.button.description")),     path: "?path=/docs/primitives-form-button--docs" },
-          { name: tContent("related.items.editor.name"),     description: toPlainText(tContent("related.items.editor.description")),     path: "?path=/docs/primitives-form-editor--docs" },
+          { name: tContent("related.items.chatThread.name"), description: toPlainText(tContent("related.items.chatThread.description")), path: "?path=/docs/components-conversational-chatthread--docs" },
+          { name: tContent("related.items.textarea.name"),   description: toPlainText(tContent("related.items.textarea.description")),   path: "?path=/docs/components-form-textarea--docs" },
+          { name: tContent("related.items.button.name"),     description: toPlainText(tContent("related.items.button.description")),     path: "?path=/docs/components-form-button--docs" },
+          { name: tContent("related.items.editor.name"),     description: toPlainText(tContent("related.items.editor.description")),     path: "?path=/docs/components-form-editor--docs" },
         ]}
       />
 

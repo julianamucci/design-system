@@ -8,7 +8,7 @@ import { NdsChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<ChartArgs> = {
-  title: 'Primitives/Display/Chart',
+  title: 'Components/Display/Chart',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [NdsChart] })],
   parameters: {

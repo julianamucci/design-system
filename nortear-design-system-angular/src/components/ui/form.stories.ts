@@ -8,7 +8,7 @@ import { NdsFormDocs } from '@/components/docs/FormDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<FormArgs> = {
-  title: 'Primitives/Form/Form',
+  title: 'Components/Form/Form',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [...NDS_FORM, NdsInput] })],
   parameters: {

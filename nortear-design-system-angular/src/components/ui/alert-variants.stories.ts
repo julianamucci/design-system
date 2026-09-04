@@ -12,7 +12,7 @@ import {
 import { themeContrast, themeReprovas } from '@shared/testing/alert-probe';
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Alert/Variants',
+  title: 'Components/Feedback/Alert/Variants',
   tags: ['feedback'],
   decorators: [
     moduleMetadata({

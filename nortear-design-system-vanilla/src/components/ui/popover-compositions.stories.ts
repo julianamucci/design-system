@@ -13,7 +13,7 @@ import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Popover/Compositions',
+  title: 'Components/Overlay/Popover/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

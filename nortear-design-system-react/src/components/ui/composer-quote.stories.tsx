@@ -24,7 +24,7 @@ function QuoteExample() {
 }
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ComposerQuote",
+  title: "Components/Conversational/ComposerQuote",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

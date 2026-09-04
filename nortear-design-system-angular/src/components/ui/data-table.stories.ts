@@ -12,7 +12,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const INVOICE_KEY = (invoice: InvoiceDT) => invoice.id;
 
 const meta: Meta<DataTableArgs> = {
-  title: 'Primitives/Tables/DataTable',
+  title: 'Components/Tables/DataTable',
   tags: ['autodocs', 'tables'],
   decorators: [moduleMetadata({ imports: [NdsDataTable] })],
   parameters: {

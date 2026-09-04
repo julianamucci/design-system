@@ -10,7 +10,7 @@ import {
 } from './label.source';
 
 const meta = {
-  title: 'Primitives/Form/Label/Compositions',
+  title: 'Components/Form/Label/Compositions',
   component: Label,
   tags: ['form'],
   parameters: {

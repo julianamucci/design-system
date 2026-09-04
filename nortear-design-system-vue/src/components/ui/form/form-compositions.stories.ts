@@ -8,7 +8,7 @@ import { Fieldset as FieldsetRoot, FormField } from './index';
 import { formFieldsetSource, formMultiplosFieldsSource } from './form.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Form/Compositions',
+  title: 'Components/Form/Form/Compositions',
   tags: ['form'],
   parameters: {
     layout: 'padded',

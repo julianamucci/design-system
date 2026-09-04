@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tableSource } from './table.source';
 
 const meta: Meta = {
-  title: 'Primitives/Tables/Table',
+  title: 'Components/Tables/Table',
   component: Table,
   tags: ['autodocs', 'tables'],
   parameters: {

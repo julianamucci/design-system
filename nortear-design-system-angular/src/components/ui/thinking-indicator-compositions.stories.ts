@@ -27,7 +27,7 @@ import {
 // e a convivência com o campo que já oferece interromper.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ThinkingIndicator/Compositions',
+  title: 'Components/Conversational/ThinkingIndicator/Compositions',
   tags: ['conversational'],
   decorators: [
     moduleMetadata({

@@ -16,7 +16,7 @@ import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-
 import { dropdownMenuSource } from './dropdown-menu.source';
 
 const meta = {
-  title: 'Primitives/Overlay/DropdownMenu',
+  title: 'Components/Overlay/DropdownMenu',
   component: DropdownMenu,
   tags: ['autodocs', 'overlay'],
   parameters: {

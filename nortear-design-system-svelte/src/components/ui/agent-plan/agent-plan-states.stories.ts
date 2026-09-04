@@ -31,7 +31,7 @@ import {
 // pé está cada passo.
 
 const meta: Meta<typeof AgentPlan> = {
-  title: 'Primitives/Conversational/AgentPlan/States',
+  title: 'Components/Conversational/AgentPlan/States',
   component: AgentPlan,
   tags: ['conversational'],
   parameters: {

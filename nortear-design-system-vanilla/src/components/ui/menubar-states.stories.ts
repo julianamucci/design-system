@@ -22,7 +22,7 @@ const EXIBICOES = [
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'Primitives/Navigation/Menubar/States',
+  title: 'Components/Navigation/Menubar/States',
   parameters: {
     layout: 'padded',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.

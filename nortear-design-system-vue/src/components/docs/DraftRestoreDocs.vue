@@ -320,10 +320,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.composer.name'),    description: toPlainText(tContent('related.items.composer.description')),    path: '?path=/docs/primitives-conversational-composer--docs' },
-  { name: tContent('related.items.alert.name'),       description: toPlainText(tContent('related.items.alert.description')),       path: '?path=/docs/primitives-feedback-alert--docs' },
-  { name: tContent('related.items.alertDialog.name'), description: toPlainText(tContent('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-  { name: tContent('related.items.sonner.name'),      description: toPlainText(tContent('related.items.sonner.description')),      path: '?path=/docs/primitives-feedback-sonner--docs' },
+  { name: tContent('related.items.composer.name'),    description: toPlainText(tContent('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
+  { name: tContent('related.items.alert.name'),       description: toPlainText(tContent('related.items.alert.description')),       path: '?path=/docs/components-feedback-alert--docs' },
+  { name: tContent('related.items.alertDialog.name'), description: toPlainText(tContent('related.items.alertDialog.description')), path: '?path=/docs/components-overlay-alertdialog--docs' },
+  { name: tContent('related.items.sonner.name'),      description: toPlainText(tContent('related.items.sonner.description')),      path: '?path=/docs/components-feedback-sonner--docs' },
 ]);
 
 const noteItems = computed(() =>

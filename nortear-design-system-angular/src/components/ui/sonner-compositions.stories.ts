@@ -20,7 +20,7 @@ import {
 const undoSpy = fn();
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Sonner/Compositions',
+  title: 'Components/Feedback/Sonner/Compositions',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster] })],
   parameters: {

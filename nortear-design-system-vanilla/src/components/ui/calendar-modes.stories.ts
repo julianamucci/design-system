@@ -15,7 +15,7 @@ import {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Calendar/Modes',
+  title: 'Components/Form/Calendar/Modes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

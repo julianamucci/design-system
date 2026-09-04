@@ -8,7 +8,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { radioGroupSource } from "./radio-group.source";
 
 const meta = {
-  title: "Primitives/Form/RadioGroup",
+  title: "Components/Form/RadioGroup",
   component: RadioGroup,
   tags: ["autodocs", "form"],
   parameters: {

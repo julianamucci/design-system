@@ -18,7 +18,7 @@ import { contextWithFieldSource } from './composer-context.source';
 // divide o campo com uma mensagem citada.
 
 const meta: Meta<typeof Composer> = {
-  title: 'Primitives/Conversational/ComposerContext/Compositions',
+  title: 'Components/Conversational/ComposerContext/Compositions',
   component: Composer,
   tags: ['conversational'],
   parameters: {

@@ -23,7 +23,7 @@ import {
 } from "./progress.source";
 
 const meta = {
-  title: "Primitives/Feedback/Progress/Compositions",
+  title: "Components/Feedback/Progress/Compositions",
   tags: ["feedback"],
   component: Progress,
   parameters: {

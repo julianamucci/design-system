@@ -88,7 +88,7 @@ class DemoCommandPalette {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Command/Compositions',
+  title: 'Components/Overlay/Command/Compositions',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [DemoCommandPalette] })],
   parameters: {

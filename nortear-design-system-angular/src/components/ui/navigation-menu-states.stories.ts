@@ -5,7 +5,7 @@ import { NDS_NAVIGATION_MENU } from './navigation-menu';
 import { waitForPanel, popupOpen } from './navigation-menu.fixtures';
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/NavigationMenu/States',
+  title: 'Components/Navigation/NavigationMenu/States',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_NAVIGATION_MENU] })],
   parameters: {

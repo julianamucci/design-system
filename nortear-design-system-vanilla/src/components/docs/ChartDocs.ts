@@ -980,9 +980,9 @@ export interface ChartOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/primitives-tables-table--docs' },
-            { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/primitives-layout-card--docs' },
-            { name: 'DataTable', description: toPlainText(t('related.dataTable')), path: '?path=/docs/primitives-tables-datatable--docs' },
+            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/components-tables-table--docs' },
+            { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/components-layout-card--docs' },
+            { name: 'DataTable', description: toPlainText(t('related.dataTable')), path: '?path=/docs/components-tables-datatable--docs' },
           ],
         });
 

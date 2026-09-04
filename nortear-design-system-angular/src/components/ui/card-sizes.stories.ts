@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { NDS_CARD } from './card';
 
 const meta: Meta = {
-  title: 'Primitives/Layout/Card/Sizes',
+  title: 'Components/Layout/Card/Sizes',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_CARD] })],
   parameters: {

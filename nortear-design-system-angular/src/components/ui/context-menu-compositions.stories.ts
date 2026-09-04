@@ -9,7 +9,7 @@ import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 // Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/ContextMenu/Compositions',
+  title: 'Components/Overlay/ContextMenu/Compositions',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {

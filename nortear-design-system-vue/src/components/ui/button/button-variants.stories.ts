@@ -13,7 +13,7 @@ import {
 } from './button.source';
 
 const meta: Meta<any> = {
-  title: 'Primitives/Form/Button/Variants',
+  title: 'Components/Form/Button/Variants',
   component: Button,
   tags: ['form'],
   parameters: {

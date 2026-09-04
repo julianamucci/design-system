@@ -16,7 +16,7 @@ import { isContextRemovable, type ContextItem } from '@shared/primitives/chat-pr
 // não há etiqueta nenhuma. A espécie — que é forma — mora em `Variants`.
 
 const meta: Meta<typeof Composer> = {
-  title: 'Primitives/Conversational/ComposerContext/States',
+  title: 'Components/Conversational/ComposerContext/States',
   component: Composer,
   tags: ['conversational'],
   parameters: {

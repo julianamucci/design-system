@@ -469,10 +469,10 @@ export function ComposerTriggerPopoverDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.composer.name"), description: toPlainText(tContent("related.items.composer.description")), path: "?path=/docs/primitives-conversational-composer--docs" },
-          { name: tContent("related.items.combobox.name"), description: toPlainText(tContent("related.items.combobox.description")), path: "?path=/docs/primitives-form-combobox--docs" },
-          { name: tContent("related.items.command.name"),  description: toPlainText(tContent("related.items.command.description")),  path: "?path=/docs/primitives-overlay-command--docs" },
-          { name: tContent("related.items.popover.name"),  description: toPlainText(tContent("related.items.popover.description")),  path: "?path=/docs/primitives-overlay-popover--docs" },
+          { name: tContent("related.items.composer.name"), description: toPlainText(tContent("related.items.composer.description")), path: "?path=/docs/components-conversational-composer--docs" },
+          { name: tContent("related.items.combobox.name"), description: toPlainText(tContent("related.items.combobox.description")), path: "?path=/docs/components-form-combobox--docs" },
+          { name: tContent("related.items.command.name"),  description: toPlainText(tContent("related.items.command.description")),  path: "?path=/docs/components-overlay-command--docs" },
+          { name: tContent("related.items.popover.name"),  description: toPlainText(tContent("related.items.popover.description")),  path: "?path=/docs/components-overlay-popover--docs" },
         ]}
       />
 

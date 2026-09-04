@@ -14,7 +14,7 @@ import type { VoiceState } from '@shared/primitives/chat-protocol';
 // outro controle — e é isso que estas stories mostram.
 
 const meta: Meta<typeof ComposerVoiceRailStory> = {
-  title: 'Primitives/Conversational/ComposerVoice/Compositions',
+  title: 'Components/Conversational/ComposerVoice/Compositions',
   component: ComposerVoiceRailStory,
   tags: ['conversational'],
   parameters: {

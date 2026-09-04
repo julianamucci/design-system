@@ -21,7 +21,7 @@ const PORTRAIT_SRC =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80";
 
 const meta = {
-  title: "Primitives/Layout/AspectRatio/Variants",
+  title: "Components/Layout/AspectRatio/Variants",
   tags: ["layout"],
   component: AspectRatio,
   parameters: {

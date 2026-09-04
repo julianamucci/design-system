@@ -6,7 +6,7 @@ import { NdsButton } from './button';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/DropdownMenu/Compositions',
+  title: 'Components/Overlay/DropdownMenu/Compositions',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {

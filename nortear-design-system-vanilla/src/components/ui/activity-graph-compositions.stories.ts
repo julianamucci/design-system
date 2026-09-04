@@ -30,7 +30,7 @@ import {
 // aperta a casa.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ActivityGraph/Compositions',
+  title: 'Components/Conversational/ActivityGraph/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

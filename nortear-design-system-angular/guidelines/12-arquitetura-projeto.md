@@ -189,7 +189,7 @@ order: [
 ]
 ```
 
-Não existe lista de categorias mantida à mão, e agora é verdade: o filtro por categoria vem das `tags` do meta de cada arquivo de story, e a categoria também é a PASTA no título (`Primitives/<Categoria>/<Componente>`). As duas são conferidas uma contra a outra pela regra `story_sem_categoria` do `audit.mjs`.
+Não existe lista de categorias mantida à mão, e agora é verdade: o filtro por categoria vem das `tags` do meta de cada arquivo de story, e a categoria também é a PASTA no título (`Components/<Categoria>/<Componente>`). As duas são conferidas uma contra a outra pela regra `story_sem_categoria` do `audit.mjs`.
 
 Houve um `src/lib/story-tags.ts` que se dizia a fonte canônica desse mapeamento. Ninguém o importava, e ele estava desatualizado em vinte componentes — uma lista mantida à mão que ninguém mantinha. Saiu em 2026-08-31.
 

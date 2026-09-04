@@ -12,7 +12,7 @@ import {
 import { Separator } from "./separator";
 
 const meta = {
-  title: "Primitives/Layout/ScrollArea/Compositions",
+  title: "Components/Layout/ScrollArea/Compositions",
   tags: ["layout"],
   component: ScrollArea,
   parameters: {

@@ -317,10 +317,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Switch',     description: toPlainText(tContent('related.switch')),     path: '?path=/docs/primitives-form-switch--docs'      },
-  { name: 'RadioGroup', description: toPlainText(tContent('related.radioGroup')), path: '?path=/docs/primitives-form-radiogroup--docs'  },
-  { name: 'Form',       description: toPlainText(tContent('related.form')),       path: '?path=/docs/primitives-form-form--docs'        },
-  { name: 'Select',     description: toPlainText(tContent('related.select')),     path: '?path=/docs/primitives-form-select--docs'      },
+  { name: 'Switch',     description: toPlainText(tContent('related.switch')),     path: '?path=/docs/components-form-switch--docs'      },
+  { name: 'RadioGroup', description: toPlainText(tContent('related.radioGroup')), path: '?path=/docs/components-form-radiogroup--docs'  },
+  { name: 'Form',       description: toPlainText(tContent('related.form')),       path: '?path=/docs/components-form-form--docs'        },
+  { name: 'Select',     description: toPlainText(tContent('related.select')),     path: '?path=/docs/components-form-select--docs'      },
 ]);
 
 const noteItems = computed(() => [

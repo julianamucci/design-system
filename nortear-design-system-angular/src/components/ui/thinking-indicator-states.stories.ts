@@ -24,7 +24,7 @@ import {
 // desenho de sempre, prometendo uma verificação que não acontece.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ThinkingIndicator/States',
+  title: 'Components/Conversational/ThinkingIndicator/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsMarkdown, NdsThinkingIndicator] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

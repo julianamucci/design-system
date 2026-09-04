@@ -19,7 +19,7 @@ import { contextWithFieldSource } from './composer-context.source';
 // divide o campo com uma mensagem citada.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerContext/Compositions',
+  title: 'Components/Conversational/ComposerContext/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

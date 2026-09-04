@@ -20,7 +20,7 @@ import {
 // não em `States`.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerModelPicker/Variants',
+  title: 'Components/Conversational/ComposerModelPicker/Variants',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposerModelPicker] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

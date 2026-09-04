@@ -1018,11 +1018,11 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'contextMenu', path: '?path=/docs/primitives-overlay-contextmenu--docs' },
-      { key: 'menubar',     path: '?path=/docs/primitives-navigation-menubar--docs'     },
-      { key: 'command',     path: '?path=/docs/primitives-overlay-command--docs'     },
-      { key: 'popover',     path: '?path=/docs/primitives-overlay-popover--docs'     },
-      { key: 'select',      path: '?path=/docs/primitives-form-select--docs'      },
+      { key: 'contextMenu', path: '?path=/docs/components-overlay-contextmenu--docs' },
+      { key: 'menubar',     path: '?path=/docs/components-navigation-menubar--docs'     },
+      { key: 'command',     path: '?path=/docs/components-overlay-command--docs'     },
+      { key: 'popover',     path: '?path=/docs/components-overlay-popover--docs'     },
+      { key: 'select',      path: '?path=/docs/components-form-select--docs'      },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

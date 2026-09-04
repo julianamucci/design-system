@@ -16,7 +16,7 @@ const DAY_ESCOLHIDO = parseDate('2026-04-12');
 const DAYS_ESCOLHIDOS = [parseDate('2026-04-08'), parseDate('2026-04-12'), parseDate('2026-04-16')];
 
 const meta: Meta<CalendarArgs> = {
-  title: 'Primitives/Form/Calendar',
+  title: 'Components/Form/Calendar',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsCalendar] })],
   parameters: {

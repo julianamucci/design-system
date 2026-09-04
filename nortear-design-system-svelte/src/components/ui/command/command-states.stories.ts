@@ -19,7 +19,7 @@ import {
 const onChoose = fn();
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Command/States',
+  title: 'Components/Overlay/Command/States',
   component: Command.Root,
   tags: ['overlay'],
   parameters: {

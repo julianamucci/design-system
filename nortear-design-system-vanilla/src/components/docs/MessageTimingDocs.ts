@@ -423,10 +423,10 @@ export interface MessageTimingLabels {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.agentStatus.name'),    description: toPlainText(t('related.items.agentStatus.description')),    path: '?path=/docs/primitives-conversational-agentstatus--docs'    },
-            { name: t('related.items.contextDisplay.name'), description: toPlainText(t('related.items.contextDisplay.description')), path: '?path=/docs/primitives-conversational-contextdisplay--docs' },
-            { name: t('related.items.chatThread.name'),     description: toPlainText(t('related.items.chatThread.description')),     path: '?path=/docs/primitives-conversational-chatthread--docs'     },
-            { name: t('related.items.tooltip.name'),        description: toPlainText(t('related.items.tooltip.description')),        path: '?path=/docs/primitives-overlay-tooltip--docs'               },
+            { name: t('related.items.agentStatus.name'),    description: toPlainText(t('related.items.agentStatus.description')),    path: '?path=/docs/components-conversational-agentstatus--docs'    },
+            { name: t('related.items.contextDisplay.name'), description: toPlainText(t('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
+            { name: t('related.items.chatThread.name'),     description: toPlainText(t('related.items.chatThread.description')),     path: '?path=/docs/components-conversational-chatthread--docs'     },
+            { name: t('related.items.tooltip.name'),        description: toPlainText(t('related.items.tooltip.description')),        path: '?path=/docs/components-overlay-tooltip--docs'               },
           ],
         });
 

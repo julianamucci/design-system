@@ -17,7 +17,7 @@ import {
 // Playground, e não se repete aqui.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerAttachments/States',
+  title: 'Components/Conversational/ComposerAttachments/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

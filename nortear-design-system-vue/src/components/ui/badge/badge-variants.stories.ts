@@ -10,7 +10,7 @@ import {
 } from './badge.source';
 
 const meta = {
-  title: 'Primitives/Feedback/Badge/Variants',
+  title: 'Components/Feedback/Badge/Variants',
   component: Badge,
   tags: ['feedback'],
   parameters: {

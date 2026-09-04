@@ -860,10 +860,10 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'stepper',     path: '?path=/docs/primitives-navigation-stepper--docs'     },
-      { key: 'accordion',   path: '?path=/docs/primitives-disclosure-accordion--docs'   },
-      { key: 'sidebar',     path: '?path=/docs/primitives-layout-sidebar--docs'     },
-      { key: 'toggleGroup', path: '?path=/docs/primitives-form-togglegroup--docs' },
+      { key: 'stepper',     path: '?path=/docs/components-navigation-stepper--docs'     },
+      { key: 'accordion',   path: '?path=/docs/components-disclosure-accordion--docs'   },
+      { key: 'sidebar',     path: '?path=/docs/components-layout-sidebar--docs'     },
+      { key: 'toggleGroup', path: '?path=/docs/components-form-togglegroup--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

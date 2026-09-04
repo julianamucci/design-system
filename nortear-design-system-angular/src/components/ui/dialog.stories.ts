@@ -17,7 +17,7 @@ import { NdsDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<DialogArgs> = {
-  title: 'Primitives/Overlay/Dialog',
+  title: 'Components/Overlay/Dialog',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DIALOG, NdsButton] })],
   parameters: {

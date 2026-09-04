@@ -27,7 +27,7 @@ import {
 // dizer.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComputerUse/States',
+  title: 'Components/Conversational/ComputerUse/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComputerUse, NdsComputerUseDemoScreen] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

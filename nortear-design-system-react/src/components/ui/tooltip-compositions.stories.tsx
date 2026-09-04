@@ -32,7 +32,7 @@ function sideOf(balao: HTMLElement | null): string | null {
 }
 
 const meta = {
-  title: "Primitives/Overlay/Tooltip/Compositions",
+  title: "Components/Overlay/Tooltip/Compositions",
   tags: ["overlay"],
   component: Tooltip,
   decorators: [

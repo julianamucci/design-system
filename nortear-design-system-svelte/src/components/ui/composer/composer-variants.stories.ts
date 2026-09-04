@@ -14,7 +14,7 @@ import {
 // dica promete — e a dica tem de dizer a verdade sobre o dispositivo.
 
 const meta: Meta<typeof Composer> = {
-  title: 'Primitives/Conversational/Composer/Variants',
+  title: 'Components/Conversational/Composer/Variants',
   component: Composer,
   tags: ['conversational'],
   parameters: {

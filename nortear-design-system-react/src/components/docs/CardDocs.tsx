@@ -840,12 +840,12 @@ interface CardProps extends React.ComponentProps<"div"> {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "Separator", description: toPlainText(tContent("related.separator")),            path: "?path=/docs/primitives-layout-separator--docs" },
-          { name: "Accordion", description: toPlainText(tContent("related.accordion")),            path: "?path=/docs/primitives-disclosure-accordion--docs" },
-          { name: "Alert",     description: toPlainText(tContent("related.alert")),                path: "?path=/docs/primitives-feedback-alert--docs" },
-          { name: "Button",    description: toPlainText(tContent("related.button")),    path: "?path=/docs/primitives-form-button--docs" },
-          { name: "Badge",     description: toPlainText(tContent("related.badge")),     path: "?path=/docs/primitives-feedback-badge--docs" },
-          { name: "Avatar",    description: toPlainText(tContent("related.avatar")),    path: "?path=/docs/primitives-display-avatar--docs" },
+          { name: "Separator", description: toPlainText(tContent("related.separator")),            path: "?path=/docs/components-layout-separator--docs" },
+          { name: "Accordion", description: toPlainText(tContent("related.accordion")),            path: "?path=/docs/components-disclosure-accordion--docs" },
+          { name: "Alert",     description: toPlainText(tContent("related.alert")),                path: "?path=/docs/components-feedback-alert--docs" },
+          { name: "Button",    description: toPlainText(tContent("related.button")),    path: "?path=/docs/components-form-button--docs" },
+          { name: "Badge",     description: toPlainText(tContent("related.badge")),     path: "?path=/docs/components-feedback-badge--docs" },
+          { name: "Avatar",    description: toPlainText(tContent("related.avatar")),    path: "?path=/docs/components-display-avatar--docs" },
         ]}
       />
 

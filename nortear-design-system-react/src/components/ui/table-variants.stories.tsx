@@ -24,7 +24,7 @@ import {
 // ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: "Primitives/Tables/Table/Variants",
+  title: "Components/Tables/Table/Variants",
   tags: ["tables"],
   parameters: {
     layout: "padded",

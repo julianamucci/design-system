@@ -15,7 +15,7 @@ const COUNTRIES = [
 ] as const;
 
 const meta: Meta = {
-  title: 'Primitives/Form/Combobox/States',
+  title: 'Components/Form/Combobox/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_COMBOBOX] })],
   parameters: {

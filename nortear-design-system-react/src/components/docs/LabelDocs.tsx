@@ -429,22 +429,22 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
           {
             name: "Input",
             description: toPlainText(tContent("related.input")),
-            path: "?path=/docs/primitives-form-input--docs",
+            path: "?path=/docs/components-form-input--docs",
           },
           {
             name: "FormField",
             description: toPlainText(tContent("related.formField")),
-            path: "?path=/docs/primitives-form-form--docs",
+            path: "?path=/docs/components-form-form--docs",
           },
           {
             name: "Checkbox",
             description: toPlainText(tContent("related.checkbox")),
-            path: "?path=/docs/primitives-form-checkbox--docs",
+            path: "?path=/docs/components-form-checkbox--docs",
           },
           {
             name: "RadioGroup",
             description: toPlainText(tContent("related.radioGroup")),
-            path: "?path=/docs/primitives-form-radiogroup--docs",
+            path: "?path=/docs/components-form-radiogroup--docs",
           },
         ]}
       />

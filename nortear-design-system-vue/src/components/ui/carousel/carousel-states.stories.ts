@@ -4,7 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import { carouselFirstSlideSource, carouselLastSlideSource } from './carousel.source';
 
 const meta = {
-  title: 'Primitives/Display/Carousel/States',
+  title: 'Components/Display/Carousel/States',
   component: Carousel,
   tags: ['display'],
   parameters: {

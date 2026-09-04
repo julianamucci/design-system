@@ -5,7 +5,7 @@ import { NdsTabs, NdsTabsList, NdsTabsTrigger, NdsTabsContent, NdsTabsIcon } fro
 import { NdsBadge } from './badge';
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Tabs/Compositions',
+  title: 'Components/Navigation/Tabs/Compositions',
   tags: ['navigation'],
   decorators: [
     moduleMetadata({

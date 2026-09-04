@@ -23,7 +23,7 @@ import {
 // que aconteceu dentro dela.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ToolGroup/States',
+  title: 'Components/Conversational/ToolGroup/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsToolGroup] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

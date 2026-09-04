@@ -31,7 +31,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ContextDisplay',
+  title: 'Components/Conversational/ContextDisplay',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsContextDisplay] })],
   parameters: {

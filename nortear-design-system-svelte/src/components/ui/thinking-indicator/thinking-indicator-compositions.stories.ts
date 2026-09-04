@@ -20,7 +20,7 @@ import {
 // aba de docs usa como referência.
 
 const meta: Meta<typeof ThinkingIndicatorRevealStory> = {
-  title: 'Primitives/Conversational/ThinkingIndicator/Compositions',
+  title: 'Components/Conversational/ThinkingIndicator/Compositions',
   component: ThinkingIndicatorRevealStory,
   tags: ['conversational'],
   parameters: {

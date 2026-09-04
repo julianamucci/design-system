@@ -35,7 +35,7 @@ import {
 // anunciado pelo leitor de tela e sem cor gasta.
 
 const meta: Meta = {
-  title: 'Primitives/Form/InputGroup/States',
+  title: 'Components/Form/InputGroup/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_INPUT_GROUP, NdsButton] })],
   parameters: {

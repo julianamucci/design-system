@@ -955,10 +955,10 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.toggle.name'),     description: stripHtml(t('related.items.toggle.description')),     path: '?path=/docs/primitives-form-toggle--docs'     },
-            { name: t('related.items.tabs.name'),       description: stripHtml(t('related.items.tabs.description')),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
-            { name: t('related.items.radioGroup.name'), description: stripHtml(t('related.items.radioGroup.description')), path: '?path=/docs/primitives-form-radiogroup--docs' },
-            { name: t('related.items.checkbox.name'),   description: stripHtml(t('related.items.checkbox.description')),   path: '?path=/docs/primitives-form-checkbox--docs'   },
+            { name: t('related.items.toggle.name'),     description: stripHtml(t('related.items.toggle.description')),     path: '?path=/docs/components-form-toggle--docs'     },
+            { name: t('related.items.tabs.name'),       description: stripHtml(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs'       },
+            { name: t('related.items.radioGroup.name'), description: stripHtml(t('related.items.radioGroup.description')), path: '?path=/docs/components-form-radiogroup--docs' },
+            { name: t('related.items.checkbox.name'),   description: stripHtml(t('related.items.checkbox.description')),   path: '?path=/docs/components-form-checkbox--docs'   },
           ],
         });
 

@@ -12,7 +12,7 @@ import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 // base: o que muda entre eles é só o input passado ao bloco.
 
 const meta: Meta = {
-  title: 'Primitives/Display/CodeBlock/Compositions',
+  title: 'Components/Display/CodeBlock/Compositions',
   tags: ['display'],
   // `NdsButton` entra porque a composição da fila projeta um botão do design
   // system dentro do bloco — sem ele no módulo, a diretiva não se aplicaria e o

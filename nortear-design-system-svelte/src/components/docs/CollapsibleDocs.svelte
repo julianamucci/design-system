@@ -773,10 +773,10 @@ interface CollapsibleContentProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/primitives-disclosure-accordion--docs' },
-      { name: 'Sheet',     description: $tStore('related.sheet'),     path: '?path=/docs/primitives-overlay-sheet--docs'     },
-      { name: 'Button',    description: $tStore('related.button'),    path: '?path=/docs/primitives-form-button--docs'    },
-      { name: 'Tabs',      description: $tStore('related.tabs'),      path: '?path=/docs/primitives-navigation-tabs--docs'      },
+      { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/components-disclosure-accordion--docs' },
+      { name: 'Sheet',     description: $tStore('related.sheet'),     path: '?path=/docs/components-overlay-sheet--docs'     },
+      { name: 'Button',    description: $tStore('related.button'),    path: '?path=/docs/components-form-button--docs'    },
+      { name: 'Tabs',      description: $tStore('related.tabs'),      path: '?path=/docs/components-navigation-tabs--docs'      },
     ]}
   />
 

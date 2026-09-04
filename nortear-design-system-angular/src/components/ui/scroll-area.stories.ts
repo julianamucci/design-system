@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { scrollAreaPlaygroundSource, type ScrollAreaArgs } from './scroll-area.source';
 
 const meta: Meta<ScrollAreaArgs> = {
-  title: 'Primitives/Layout/ScrollArea',
+  title: 'Components/Layout/ScrollArea',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [NdsScrollArea] })],
   parameters: {

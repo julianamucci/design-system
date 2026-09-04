@@ -17,7 +17,7 @@ import { NdsLabel } from './label';
 // impor forma ao que ele carrega.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Popover/Compositions',
+  title: 'Components/Overlay/Popover/Compositions',
   tags: ['overlay'],
   decorators: [
     moduleMetadata({ imports: [...NDS_POPOVER, NdsButton, NdsCheckbox, NdsInput, NdsLabel] }),

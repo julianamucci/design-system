@@ -28,7 +28,7 @@ import sheetTranslations from "@shared/content/sheet/translations.json";
 // fechado, o painel nem está no DOM.
 
 const meta = {
-  title: "Primitives/Overlay/Sheet/Variants",
+  title: "Components/Overlay/Sheet/Variants",
   tags: ["overlay"],
   component: Sheet,
   parameters: {

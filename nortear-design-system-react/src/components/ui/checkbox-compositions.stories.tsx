@@ -12,7 +12,7 @@ import {
 } from "./checkbox.source";
 
 const meta = {
-  title: "Primitives/Form/Checkbox/Compositions",
+  title: "Components/Form/Checkbox/Compositions",
   tags: ["form"],
   component: Checkbox,
   parameters: {

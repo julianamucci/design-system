@@ -10,7 +10,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 import { AREA_CLICK_DIREITO, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
 
 const meta: Meta<ContextMenuArgs> = {
-  title: 'Primitives/Overlay/ContextMenu',
+  title: 'Components/Overlay/ContextMenu',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {

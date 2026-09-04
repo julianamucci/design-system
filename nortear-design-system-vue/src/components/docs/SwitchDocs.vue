@@ -350,10 +350,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Checkbox',   description: toPlainText(tContent('related.items.checkbox.description')),   path: '?path=/docs/primitives-form-checkbox--docs'   },
-  { name: 'Toggle',     description: toPlainText(tContent('related.items.toggle.description')),     path: '?path=/docs/primitives-form-toggle--docs'     },
-  { name: 'RadioGroup', description: toPlainText(tContent('related.items.radioGroup.description')), path: '?path=/docs/primitives-form-radiogroup--docs' },
-  { name: 'Form',       description: toPlainText(tContent('related.items.form.description')),       path: '?path=/docs/primitives-form-form--docs'       },
+  { name: 'Checkbox',   description: toPlainText(tContent('related.items.checkbox.description')),   path: '?path=/docs/components-form-checkbox--docs'   },
+  { name: 'Toggle',     description: toPlainText(tContent('related.items.toggle.description')),     path: '?path=/docs/components-form-toggle--docs'     },
+  { name: 'RadioGroup', description: toPlainText(tContent('related.items.radioGroup.description')), path: '?path=/docs/components-form-radiogroup--docs' },
+  { name: 'Form',       description: toPlainText(tContent('related.items.form.description')),       path: '?path=/docs/components-form-form--docs'       },
 ]);
 
 const noteItems = computed(() => [

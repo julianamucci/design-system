@@ -15,7 +15,7 @@ import { modelPickerInRailSource } from './composer-model-picker.source';
 // o que separa um menu de uma pilha de divs clicáveis.
 
 const meta: Meta<typeof ComposerModelPickerStory> = {
-  title: 'Primitives/Conversational/ComposerModelPicker/Compositions',
+  title: 'Components/Conversational/ComposerModelPicker/Compositions',
   component: ComposerModelPickerStory,
   tags: ['conversational'],
   parameters: {

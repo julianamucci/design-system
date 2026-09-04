@@ -18,7 +18,7 @@ import {
 // não muda de desenho por causa dela.
 
 const meta: Meta<typeof ApprovalCardShapeStory> = {
-  title: 'Primitives/Conversational/ApprovalCard/States',
+  title: 'Components/Conversational/ApprovalCard/States',
   component: ApprovalCardShapeStory,
   tags: ['conversational'],
   parameters: {

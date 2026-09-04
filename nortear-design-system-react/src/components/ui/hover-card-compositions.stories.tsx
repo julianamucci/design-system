@@ -24,7 +24,7 @@ import {
 // precisa capturar, e o estado fechado já está em UI/HoverCard/States.
 
 const meta = {
-  title: "Primitives/Overlay/HoverCard/Compositions",
+  title: "Components/Overlay/HoverCard/Compositions",
   tags: ["overlay"],
   component: HoverCard,
   parameters: {

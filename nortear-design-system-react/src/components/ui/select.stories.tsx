@@ -15,7 +15,7 @@ import { SelectDocs } from "@/components/docs/SelectDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Form/Select",
+  title: "Components/Form/Select",
   component: Select,
   tags: ["autodocs", "form"],
   parameters: {

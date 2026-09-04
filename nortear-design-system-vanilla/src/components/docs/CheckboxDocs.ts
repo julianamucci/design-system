@@ -785,10 +785,10 @@ export type CheckboxOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Switch',     description: toPlainText(t('related.switch')),     path: '?path=/docs/primitives-form-switch--docs'      },
-            { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/primitives-form-radiogroup--docs'  },
-            { name: 'Form',       description: stripHtml(t('related.form')),       path: '?path=/docs/primitives-form-form--docs'        },
-            { name: 'Select',     description: stripHtml(t('related.select')),     path: '?path=/docs/primitives-form-select--docs'      },
+            { name: 'Switch',     description: toPlainText(t('related.switch')),     path: '?path=/docs/components-form-switch--docs'      },
+            { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/components-form-radiogroup--docs'  },
+            { name: 'Form',       description: stripHtml(t('related.form')),       path: '?path=/docs/components-form-form--docs'        },
+            { name: 'Select',     description: stripHtml(t('related.select')),     path: '?path=/docs/components-form-select--docs'      },
           ],
         });
 

@@ -18,7 +18,7 @@ const COUNTRIES: ComboboxOption[] = [
 ];
 
 const meta: Meta = {
-	title: 'Primitives/Form/Combobox/States',
+	title: 'Components/Form/Combobox/States',
 	tags: ['form'],
 	parameters: {
 		layout: 'padded',

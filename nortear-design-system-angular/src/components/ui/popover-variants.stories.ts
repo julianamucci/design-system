@@ -13,7 +13,7 @@ import { NdsLabel } from './label';
 // mesmo `<ng-template ndsPopoverContent>`.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Popover/Variants',
+  title: 'Components/Overlay/Popover/Variants',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton, NdsInput, NdsLabel] })],
   parameters: {

@@ -35,7 +35,7 @@ import { clockText, firstControl, until, seekValueTextPattern } from './media-pl
 // contrato entram todas — as que o `render` resolve sozinho entram como
 // documentação, com `control: false`.
 const meta: Meta<typeof MediaPlayer> = {
-  title: 'Primitives/Display/MediaPlayer',
+  title: 'Components/Display/MediaPlayer',
   component: MediaPlayer,
   tags: ['autodocs', 'display'],
   parameters: {

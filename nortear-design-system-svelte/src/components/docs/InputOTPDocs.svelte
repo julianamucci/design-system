@@ -696,10 +696,10 @@ interface InputOTPProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.input.name'),  description: $tStore('related.items.input.description'),  path: '?path=/docs/primitives-form-input--docs'  },
-      { name: $tStore('related.items.form.name'),   description: $tStore('related.items.form.description'),   path: '?path=/docs/primitives-form-form--docs'   },
-      { name: $tStore('related.items.label.name'),  description: $tStore('related.items.label.description'),  path: '?path=/docs/primitives-form-label--docs'  },
-      { name: $tStore('related.items.button.name'), description: $tStore('related.items.button.description'), path: '?path=/docs/primitives-form-button--docs' },
+      { name: $tStore('related.items.input.name'),  description: $tStore('related.items.input.description'),  path: '?path=/docs/components-form-input--docs'  },
+      { name: $tStore('related.items.form.name'),   description: $tStore('related.items.form.description'),   path: '?path=/docs/components-form-form--docs'   },
+      { name: $tStore('related.items.label.name'),  description: $tStore('related.items.label.description'),  path: '?path=/docs/components-form-label--docs'  },
+      { name: $tStore('related.items.button.name'), description: $tStore('related.items.button.description'), path: '?path=/docs/components-form-button--docs' },
     ]}
   />
 

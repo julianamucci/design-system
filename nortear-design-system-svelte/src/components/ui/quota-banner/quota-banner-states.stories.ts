@@ -33,7 +33,7 @@ import {
 // delas —, e é o texto ao lado que responde.
 
 const meta: Meta<typeof QuotaBanner> = {
-  title: 'Primitives/Conversational/QuotaBanner/States',
+  title: 'Components/Conversational/QuotaBanner/States',
   component: QuotaBanner,
   tags: ['conversational'],
   parameters: {

@@ -12,7 +12,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Popover/States',
+  title: 'Components/Overlay/Popover/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

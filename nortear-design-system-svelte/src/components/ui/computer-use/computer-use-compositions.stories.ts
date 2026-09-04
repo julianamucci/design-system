@@ -19,7 +19,7 @@ import { COMPUTER_URL_LONG } from '@shared/primitives/computer-use-examples';
 // o quadro que não tem a proporção que a tela pede.
 
 const meta: Meta<typeof ComputerUse> = {
-  title: 'Primitives/Conversational/ComputerUse/Compositions',
+  title: 'Components/Conversational/ComputerUse/Compositions',
   component: ComputerUse,
   tags: ['conversational'],
   parameters: {

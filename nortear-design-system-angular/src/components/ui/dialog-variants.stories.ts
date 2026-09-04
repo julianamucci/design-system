@@ -23,7 +23,7 @@ import {
 // painel, não o gatilho.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Dialog/Variants',
+  title: 'Components/Overlay/Dialog/Variants',
   tags: ['overlay'],
   decorators: [
     moduleMetadata({ imports: [...NDS_DIALOG, NdsButton, NdsInput, NdsLabel] }),

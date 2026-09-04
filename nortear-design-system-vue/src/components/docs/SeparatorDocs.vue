@@ -211,10 +211,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.card.name'),           description: toPlainText(tContent('related.items.card.description')),           path: '?path=/docs/primitives-layout-card--docs'           },
-  { name: tContent('related.items.sheet.name'),          description: toPlainText(tContent('related.items.sheet.description')),          path: '?path=/docs/primitives-overlay-sheet--docs'          },
-  { name: tContent('related.items.sidebar.name'),        description: toPlainText(tContent('related.items.sidebar.description')),        path: '?path=/docs/primitives-layout-sidebar--docs'        },
-  { name: tContent('related.items.navigationMenu.name'), description: toPlainText(tContent('related.items.navigationMenu.description')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
+  { name: tContent('related.items.card.name'),           description: toPlainText(tContent('related.items.card.description')),           path: '?path=/docs/components-layout-card--docs'           },
+  { name: tContent('related.items.sheet.name'),          description: toPlainText(tContent('related.items.sheet.description')),          path: '?path=/docs/components-overlay-sheet--docs'          },
+  { name: tContent('related.items.sidebar.name'),        description: toPlainText(tContent('related.items.sidebar.description')),        path: '?path=/docs/components-layout-sidebar--docs'        },
+  { name: tContent('related.items.navigationMenu.name'), description: toPlainText(tContent('related.items.navigationMenu.description')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
 ]);
 
 const noteItems = computed(() => [

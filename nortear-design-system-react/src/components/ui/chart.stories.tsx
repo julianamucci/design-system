@@ -15,7 +15,7 @@ const series = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
 const LABEL = 'Acessos mensais no desktop, de janeiro a junho';
 
 const meta = {
-  title: 'Primitives/Display/Chart',
+  title: 'Components/Display/Chart',
   component: ChartContainer,
   tags: ['autodocs', 'display'],
   parameters: {

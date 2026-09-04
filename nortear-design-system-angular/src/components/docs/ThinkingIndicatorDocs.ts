@@ -529,10 +529,10 @@ export class NdsThinkingIndicatorDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'agentStatus', path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { key: 'chatThread',  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { key: 'skeleton',    path: '?path=/docs/primitives-feedback-skeleton--docs' },
-      { key: 'progress',    path: '?path=/docs/primitives-feedback-progress--docs' },
+      { key: 'agentStatus', path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { key: 'chatThread',  path: '?path=/docs/components-conversational-chatthread--docs' },
+      { key: 'skeleton',    path: '?path=/docs/components-feedback-skeleton--docs' },
+      { key: 'progress',    path: '?path=/docs/components-feedback-progress--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

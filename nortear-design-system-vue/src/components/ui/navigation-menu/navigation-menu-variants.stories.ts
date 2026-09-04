@@ -16,7 +16,7 @@ import {
 } from './navigation-menu.source';
 
 const meta = {
-  title: 'Primitives/Navigation/NavigationMenu/Variants',
+  title: 'Components/Navigation/NavigationMenu/Variants',
   component: NavigationMenu,
   tags: ['navigation'],
   parameters: {

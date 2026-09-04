@@ -518,10 +518,10 @@ interface InlineCitationCommands {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { name: $tStore('related.items.hoverCard.name'),  description: toPlainText($tStore('related.items.hoverCard.description')),  path: '?path=/docs/primitives-overlay-hovercard--docs'        },
-      { name: $tStore('related.items.popover.name'),    description: toPlainText($tStore('related.items.popover.description')),    path: '?path=/docs/primitives-overlay-popover--docs'          },
-      { name: $tStore('related.items.tooltip.name'),    description: toPlainText($tStore('related.items.tooltip.description')),    path: '?path=/docs/primitives-overlay-tooltip--docs'          },
+      { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
+      { name: $tStore('related.items.hoverCard.name'),  description: toPlainText($tStore('related.items.hoverCard.description')),  path: '?path=/docs/components-overlay-hovercard--docs'        },
+      { name: $tStore('related.items.popover.name'),    description: toPlainText($tStore('related.items.popover.description')),    path: '?path=/docs/components-overlay-popover--docs'          },
+      { name: $tStore('related.items.tooltip.name'),    description: toPlainText($tStore('related.items.tooltip.description')),    path: '?path=/docs/components-overlay-tooltip--docs'          },
     ]}
   />
 

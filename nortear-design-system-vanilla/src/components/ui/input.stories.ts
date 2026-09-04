@@ -17,7 +17,7 @@ type InputArgs = {
 };
 
 const meta: Meta<InputArgs> = {
-  title: 'Primitives/Form/Input',
+  title: 'Components/Form/Input',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createInputDocs), source: { transform: inputSource } },

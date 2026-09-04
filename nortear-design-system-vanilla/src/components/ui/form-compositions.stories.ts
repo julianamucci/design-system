@@ -12,7 +12,7 @@ import { createTextarea } from './textarea';
 import { createButton } from './button';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Form/Compositions',
+  title: 'Components/Form/Form/Compositions',
   tags: ['form'],
   parameters: {
     layout: 'padded',

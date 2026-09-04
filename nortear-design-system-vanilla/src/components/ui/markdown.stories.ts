@@ -24,7 +24,7 @@ const BLOCKS: MdBlockKind[] = [
 ];
 
 const meta: Meta<MarkdownArgs> = {
-  title: 'Primitives/Conversational/Markdown',
+  title: 'Components/Conversational/Markdown',
   tags: ['autodocs', 'conversational'],
   parameters: {
     docs: {

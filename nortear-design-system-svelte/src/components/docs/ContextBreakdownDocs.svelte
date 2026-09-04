@@ -419,10 +419,10 @@ interface ContextSlice {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/primitives-conversational-contextdisplay--docs' },
-      { name: $tStore('related.items.chatThread.name'),     description: toPlainText($tStore('related.items.chatThread.description')),     path: '?path=/docs/primitives-conversational-chatthread--docs'     },
-      { name: $tStore('related.items.chart.name'),          description: toPlainText($tStore('related.items.chart.description')),          path: '?path=/docs/primitives-display-chart--docs'                  },
-      { name: $tStore('related.items.progress.name'),       description: toPlainText($tStore('related.items.progress.description')),       path: '?path=/docs/primitives-feedback-progress--docs'              },
+      { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
+      { name: $tStore('related.items.chatThread.name'),     description: toPlainText($tStore('related.items.chatThread.description')),     path: '?path=/docs/components-conversational-chatthread--docs'     },
+      { name: $tStore('related.items.chart.name'),          description: toPlainText($tStore('related.items.chart.description')),          path: '?path=/docs/components-display-chart--docs'                  },
+      { name: $tStore('related.items.progress.name'),       description: toPlainText($tStore('related.items.progress.description')),       path: '?path=/docs/components-feedback-progress--docs'              },
     ]}
   />
 

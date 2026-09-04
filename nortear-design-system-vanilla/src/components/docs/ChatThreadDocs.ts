@@ -420,10 +420,10 @@ export interface ChatThreadOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.markdown.name'), description: toPlainText(t('related.items.markdown.description')), path: '?path=/docs/primitives-conversational-markdown--docs' },
-            { name: t('related.items.avatar.name'),   description: toPlainText(t('related.items.avatar.description')),   path: '?path=/docs/primitives-display-avatar--docs' },
-            { name: t('related.items.button.name'),   description: toPlainText(t('related.items.button.description')),   path: '?path=/docs/primitives-form-button--docs' },
-            { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/primitives-feedback-skeleton--docs' },
+            { name: t('related.items.markdown.name'), description: toPlainText(t('related.items.markdown.description')), path: '?path=/docs/components-conversational-markdown--docs' },
+            { name: t('related.items.avatar.name'),   description: toPlainText(t('related.items.avatar.description')),   path: '?path=/docs/components-display-avatar--docs' },
+            { name: t('related.items.button.name'),   description: toPlainText(t('related.items.button.description')),   path: '?path=/docs/components-form-button--docs' },
+            { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/components-feedback-skeleton--docs' },
           ],
         });
 

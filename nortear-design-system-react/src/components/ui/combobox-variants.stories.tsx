@@ -23,7 +23,7 @@ import {
 } from "./combobox.source";
 
 const meta: Meta = {
-  title: "Primitives/Form/Combobox/Variants",
+  title: "Components/Form/Combobox/Variants",
   component: Combobox,
   tags: ["form"],
   parameters: {

@@ -20,7 +20,7 @@ const firstPause = fn();
 const secondPause = fn();
 
 const meta: Meta<typeof MediaPlayer> = {
-  title: 'Primitives/Display/MediaPlayer/Compositions',
+  title: 'Components/Display/MediaPlayer/Compositions',
   component: MediaPlayer,
   tags: ['display'],
   parameters: {

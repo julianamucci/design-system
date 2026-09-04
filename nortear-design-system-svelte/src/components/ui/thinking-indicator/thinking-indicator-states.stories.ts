@@ -18,7 +18,7 @@ import {
 // desenho de sempre, prometendo uma verificação que não acontece.
 
 const meta: Meta<typeof ThinkingIndicatorPlaceStory> = {
-  title: 'Primitives/Conversational/ThinkingIndicator/States',
+  title: 'Components/Conversational/ThinkingIndicator/States',
   component: ThinkingIndicatorPlaceStory,
   tags: ['conversational'],
   parameters: {

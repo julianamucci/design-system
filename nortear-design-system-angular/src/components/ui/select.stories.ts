@@ -21,7 +21,7 @@ export const STATES = [
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<SelectArgs> = {
-  title: 'Primitives/Form/Select',
+  title: 'Components/Form/Select',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [...NDS_SELECT] })],
   parameters: {

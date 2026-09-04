@@ -27,7 +27,7 @@ const STATE_LABELS = {
 const onStepSelect = fn();
 
 const meta: Meta<any> = {
-  title: 'Primitives/Navigation/Stepper/States',
+  title: 'Components/Navigation/Stepper/States',
   component: Stepper,
   tags: ['navigation'],
   parameters: {

@@ -19,7 +19,7 @@ import { budgetLevel, usedFraction } from '@shared/primitives/token-budget';
 // 17).
 
 const meta: Meta<typeof QuotaBanner> = {
-  title: 'Primitives/Conversational/QuotaBanner/Compositions',
+  title: 'Components/Conversational/QuotaBanner/Compositions',
   component: QuotaBanner,
   tags: ['conversational'],
   parameters: {

@@ -7,7 +7,7 @@ import AspectRatioGridStory from './AspectRatioGridStory.svelte';
 import { gridAspectRatioSource, aspectRatioSource } from './aspect-ratio.source';
 
 const meta: Meta = {
-  title: 'Primitives/Layout/AspectRatio/Compositions',
+  title: 'Components/Layout/AspectRatio/Compositions',
   component: AspectRatioStory,
   tags: ['layout'],
   parameters: {

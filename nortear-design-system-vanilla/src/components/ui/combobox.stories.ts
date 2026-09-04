@@ -50,7 +50,7 @@ type ComboboxArgs = {
 };
 
 const meta: Meta<ComboboxArgs> = {
-  title: 'Primitives/Form/Combobox',
+  title: 'Components/Form/Combobox',
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'padded',

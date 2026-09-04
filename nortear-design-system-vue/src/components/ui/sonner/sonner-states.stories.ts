@@ -28,7 +28,7 @@ import {
 // resultado depender da carga da máquina.
 
 const meta = {
-  title: 'Primitives/Feedback/Sonner/States',
+  title: 'Components/Feedback/Sonner/States',
   tags: ['feedback'],
   parameters: {
     layout: 'padded',

@@ -712,10 +712,10 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'dialog', name: 'Dialog', path: '?path=/docs/primitives-overlay-dialog--docs' },
-      { key: 'sonner', name: 'Sonner', path: '?path=/docs/primitives-feedback-sonner--docs' },
-      { key: 'alert',  name: 'Alert',  path: '?path=/docs/primitives-feedback-alert--docs'  },
-      { key: 'button', name: 'Button', path: '?path=/docs/primitives-form-button--docs' },
+      { key: 'dialog', name: 'Dialog', path: '?path=/docs/components-overlay-dialog--docs' },
+      { key: 'sonner', name: 'Sonner', path: '?path=/docs/components-feedback-sonner--docs' },
+      { key: 'alert',  name: 'Alert',  path: '?path=/docs/components-feedback-alert--docs'  },
+      { key: 'button', name: 'Button', path: '?path=/docs/components-form-button--docs' },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 

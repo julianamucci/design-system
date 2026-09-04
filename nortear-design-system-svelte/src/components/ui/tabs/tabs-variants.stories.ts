@@ -9,7 +9,7 @@ import TabsStory from './TabsStory.svelte';
 import { tabsLineSource, tabsSource, tabsVerticalSource } from './tabs.source';
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Tabs/Variants',
+  title: 'Components/Navigation/Tabs/Variants',
   component: TabsStory,
   tags: ['navigation'],
   parameters: {

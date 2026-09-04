@@ -863,22 +863,22 @@ interface SliderProps {
           {
             name: tContent("related.items.input.name"),
             description: toPlainText(tContent("related.items.input.description")),
-            path: "?path=/docs/primitives-form-input--docs",
+            path: "?path=/docs/components-form-input--docs",
           },
           {
             name: tContent("related.items.switch.name"),
             description: toPlainText(tContent("related.items.switch.description")),
-            path: "?path=/docs/primitives-form-switch--docs",
+            path: "?path=/docs/components-form-switch--docs",
           },
           {
             name: tContent("related.items.progress.name"),
             description: toPlainText(tContent("related.items.progress.description")),
-            path: "?path=/docs/primitives-feedback-progress--docs",
+            path: "?path=/docs/components-feedback-progress--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
             description: toPlainText(tContent("related.items.radioGroup.description")),
-            path: "?path=/docs/primitives-form-radiogroup--docs",
+            path: "?path=/docs/components-form-radiogroup--docs",
           },
         ]}
       />

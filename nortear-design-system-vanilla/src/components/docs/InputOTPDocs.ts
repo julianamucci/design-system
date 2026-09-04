@@ -674,10 +674,10 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.input.name'),  description: toPlainText(t('related.items.input.description')),  path: '?path=/docs/primitives-form-input--docs'  },
-            { name: t('related.items.form.name'),   description: toPlainText(t('related.items.form.description')),   path: '?path=/docs/primitives-form-form--docs'   },
-            { name: t('related.items.label.name'),  description: toPlainText(t('related.items.label.description')),  path: '?path=/docs/primitives-form-label--docs'  },
-            { name: t('related.items.button.name'), description: toPlainText(t('related.items.button.description')), path: '?path=/docs/primitives-form-button--docs' },
+            { name: t('related.items.input.name'),  description: toPlainText(t('related.items.input.description')),  path: '?path=/docs/components-form-input--docs'  },
+            { name: t('related.items.form.name'),   description: toPlainText(t('related.items.form.description')),   path: '?path=/docs/components-form-form--docs'   },
+            { name: t('related.items.label.name'),  description: toPlainText(t('related.items.label.description')),  path: '?path=/docs/components-form-label--docs'  },
+            { name: t('related.items.button.name'), description: toPlainText(t('related.items.button.description')), path: '?path=/docs/components-form-button--docs' },
           ],
         });
 

@@ -476,10 +476,10 @@ interface ActivityDay {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.chart.name'),          description: toPlainText(t('related.items.chart.description')),          path: '?path=/docs/primitives-display-chart--docs'                 },
-            { name: t('related.items.calendar.name'),       description: toPlainText(t('related.items.calendar.description')),       path: '?path=/docs/primitives-form-calendar--docs'                 },
-            { name: t('related.items.traceWaterfall.name'), description: toPlainText(t('related.items.traceWaterfall.description')), path: '?path=/docs/primitives-conversational-tracewaterfall--docs' },
-            { name: t('related.items.jobProgress.name'),    description: toPlainText(t('related.items.jobProgress.description')),    path: '?path=/docs/primitives-conversational-jobprogress--docs'    },
+            { name: t('related.items.chart.name'),          description: toPlainText(t('related.items.chart.description')),          path: '?path=/docs/components-display-chart--docs'                 },
+            { name: t('related.items.calendar.name'),       description: toPlainText(t('related.items.calendar.description')),       path: '?path=/docs/components-form-calendar--docs'                 },
+            { name: t('related.items.traceWaterfall.name'), description: toPlainText(t('related.items.traceWaterfall.description')), path: '?path=/docs/components-conversational-tracewaterfall--docs' },
+            { name: t('related.items.jobProgress.name'),    description: toPlainText(t('related.items.jobProgress.description')),    path: '?path=/docs/components-conversational-jobprogress--docs'    },
           ],
         });
 

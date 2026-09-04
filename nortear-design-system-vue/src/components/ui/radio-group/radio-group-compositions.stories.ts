@@ -11,7 +11,7 @@ import {
 } from './radio-group.source';
 
 const meta = {
-  title: 'Primitives/Form/RadioGroup/Compositions',
+  title: 'Components/Form/RadioGroup/Compositions',
   component: RadioGroup,
   tags: ['form'],
   parameters: {

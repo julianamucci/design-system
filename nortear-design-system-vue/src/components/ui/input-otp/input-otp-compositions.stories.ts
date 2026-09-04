@@ -16,7 +16,7 @@ import {
 } from './input-otp.source';
 
 const meta = {
-  title: 'Primitives/Form/InputOTP/Compositions',
+  title: 'Components/Form/InputOTP/Compositions',
   component: InputOTP,
   tags: ['form'],
   parameters: {

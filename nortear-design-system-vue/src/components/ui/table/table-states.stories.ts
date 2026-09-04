@@ -19,7 +19,7 @@ import {
 } from './table.source';
 
 const meta: Meta = {
-  title: 'Primitives/Tables/Table/States',
+  title: 'Components/Tables/Table/States',
   tags: ['tables'],
   parameters: {
     layout: 'padded',

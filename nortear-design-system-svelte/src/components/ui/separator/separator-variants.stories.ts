@@ -9,7 +9,7 @@ import {
 } from './separator.source';
 
 const meta: Meta = {
-  title: 'Primitives/Layout/Separator/Variants',
+  title: 'Components/Layout/Separator/Variants',
   component: SeparatorStory,
   tags: ['layout'],
   parameters: {

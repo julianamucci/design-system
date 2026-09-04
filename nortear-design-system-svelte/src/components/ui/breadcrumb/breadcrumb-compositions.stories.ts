@@ -7,7 +7,7 @@ import BreadcrumbStory from './BreadcrumbStory.svelte';
 import { breadcrumbResponsivoSource, breadcrumbSource } from './breadcrumb.source';
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Breadcrumb/Compositions',
+  title: 'Components/Navigation/Breadcrumb/Compositions',
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {

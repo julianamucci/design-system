@@ -10,7 +10,7 @@ import {
 } from './carousel.source';
 
 const meta: Meta = {
-  title: 'Primitives/Display/Carousel/Settings',
+  title: 'Components/Display/Carousel/Settings',
   component: Carousel,
   tags: ['display'],
   parameters: {

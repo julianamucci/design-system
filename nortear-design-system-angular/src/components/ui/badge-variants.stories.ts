@@ -13,7 +13,7 @@ const VARIANTS: { variant: BadgeVariant; label: string }[] = [
 ];
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Badge/Variants',
+  title: 'Components/Feedback/Badge/Variants',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsBadge] })],
   parameters: { layout: 'padded', controls: { disable: true } },

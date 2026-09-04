@@ -10,7 +10,7 @@ const ITEMS_NEUTROS = ['Novo', 'Abrir', 'Salvar'] as const;
 const ITEMS_WITH_PERIGO = ['Salvar', 'Descartar alterações'] as const;
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Menubar/Variants',
+  title: 'Components/Navigation/Menubar/Variants',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_MENUBAR] })],
   parameters: {

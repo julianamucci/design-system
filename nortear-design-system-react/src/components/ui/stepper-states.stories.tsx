@@ -36,7 +36,7 @@ const OUT_OF_ORDER_STEP = 4;
 const onStepSelect = fn();
 
 const meta: Meta = {
-  title: "Primitives/Navigation/Stepper/States",
+  title: "Components/Navigation/Stepper/States",
   component: Stepper,
   tags: ["navigation"],
   parameters: {

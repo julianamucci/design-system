@@ -16,7 +16,7 @@ import {
 } from "./command.source";
 
 const meta = {
-  title: "Primitives/Overlay/Command/States",
+  title: "Components/Overlay/Command/States",
   tags: ["overlay"],
   component: Command,
   parameters: {

@@ -18,7 +18,7 @@ import { INVOICES, TOTAL } from './table.fixtures';
 import { tablePlaygroundSource, type TableArgs } from './table.source';
 
 const meta: Meta<TableArgs> = {
-  title: 'Primitives/Tables/Table',
+  title: 'Components/Tables/Table',
   tags: ['autodocs', 'tables'],
   decorators: [
     moduleMetadata({

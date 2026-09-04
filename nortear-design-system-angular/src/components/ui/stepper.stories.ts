@@ -8,7 +8,7 @@ import { FLOW_LABEL, STATE_LABELS, STEP_TITLES, TOTAL_STEPS } from './stepper.fi
 import { stepperPlaygroundSource, type StepperArgs } from './stepper.source';
 
 const meta: Meta<StepperArgs> = {
-  title: 'Primitives/Navigation/Stepper',
+  title: 'Components/Navigation/Stepper',
   tags: ['autodocs', 'navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_STEPPER] })],
   parameters: {

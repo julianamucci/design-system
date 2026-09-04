@@ -5,7 +5,7 @@ import { NdsSeparator } from './separator';
 import { NDS_CARD } from './card';
 
 const meta: Meta = {
-  title: 'Primitives/Layout/Separator/Compositions',
+  title: 'Components/Layout/Separator/Compositions',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsSeparator, ...NDS_CARD] })],
   parameters: {

@@ -23,7 +23,7 @@ import {
 // estado, nunca no meio de uma transição.
 
 const meta = {
-  title: "Primitives/Feedback/Sonner/Types",
+  title: "Components/Feedback/Sonner/Types",
   tags: ["feedback"],
   parameters: {
     layout: "padded",

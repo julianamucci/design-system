@@ -17,7 +17,7 @@ import {
 } from './table.source';
 
 const meta: Meta = {
-  title: 'Primitives/Tables/Table/Variants',
+  title: 'Components/Tables/Table/Variants',
   component: Table,
   tags: ['tables'],
   parameters: {

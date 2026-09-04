@@ -31,7 +31,7 @@ import { APPROVAL_CHOICE_ALLOW_ONCE } from "@shared/primitives/approval-card-exa
 // aviso.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ApprovalCard/Compositions",
+  title: "Components/Conversational/ApprovalCard/Compositions",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

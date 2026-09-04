@@ -22,7 +22,7 @@ import {
 } from './sheet.source';
 
 const meta = {
-  title: 'Primitives/Overlay/Sheet/Compositions',
+  title: 'Components/Overlay/Sheet/Compositions',
   component: Sheet,
   tags: ['overlay'],
   parameters: {

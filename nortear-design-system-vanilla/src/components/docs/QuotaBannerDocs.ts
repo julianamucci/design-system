@@ -432,10 +432,10 @@ export interface QuotaBannerLabels {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.contextDisplay.name'), description: toPlainText(t('related.items.contextDisplay.description')), path: '?path=/docs/primitives-conversational-contextdisplay--docs' },
-            { name: t('related.items.costMeter.name'),      description: toPlainText(t('related.items.costMeter.description')),      path: '?path=/docs/primitives-conversational-costmeter--docs'      },
-            { name: t('related.items.alert.name'),          description: toPlainText(t('related.items.alert.description')),          path: '?path=/docs/primitives-feedback-alert--docs'                },
-            { name: t('related.items.progress.name'),       description: toPlainText(t('related.items.progress.description')),       path: '?path=/docs/primitives-feedback-progress--docs'             },
+            { name: t('related.items.contextDisplay.name'), description: toPlainText(t('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
+            { name: t('related.items.costMeter.name'),      description: toPlainText(t('related.items.costMeter.description')),      path: '?path=/docs/components-conversational-costmeter--docs'      },
+            { name: t('related.items.alert.name'),          description: toPlainText(t('related.items.alert.description')),          path: '?path=/docs/components-feedback-alert--docs'                },
+            { name: t('related.items.progress.name'),       description: toPlainText(t('related.items.progress.description')),       path: '?path=/docs/components-feedback-progress--docs'             },
           ],
         });
 

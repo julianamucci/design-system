@@ -18,7 +18,7 @@ import {
 // repete aqui.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/Composer/States',
+  title: 'Components/Conversational/Composer/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

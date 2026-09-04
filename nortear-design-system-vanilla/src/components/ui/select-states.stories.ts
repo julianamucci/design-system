@@ -8,7 +8,7 @@ import { focusMeasureRing } from '@shared/testing/select-probe';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Select/States',
+  title: 'Components/Form/Select/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

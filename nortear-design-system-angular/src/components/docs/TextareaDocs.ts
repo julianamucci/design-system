@@ -836,10 +836,10 @@ export class NdsTextareaDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'input',    path: '?path=/docs/primitives-form-input--docs'    },
-      { key: 'label',    path: '?path=/docs/primitives-form-label--docs'    },
-      { key: 'form',     path: '?path=/docs/primitives-form-form--docs'     },
-      { key: 'inputOTP', path: '?path=/docs/primitives-form-inputotp--docs' },
+      { key: 'input',    path: '?path=/docs/components-form-input--docs'    },
+      { key: 'label',    path: '?path=/docs/components-form-label--docs'    },
+      { key: 'form',     path: '?path=/docs/components-form-form--docs'     },
+      { key: 'inputOTP', path: '?path=/docs/components-form-inputotp--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

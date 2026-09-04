@@ -445,10 +445,10 @@ export interface ModelOption {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.composer.name'),               description: toPlainText($tStore('related.items.composer.description')),               path: '?path=/docs/primitives-conversational-composer--docs' },
-      { name: $tStore('related.items.composerTriggerPopover.name'), description: toPlainText($tStore('related.items.composerTriggerPopover.description')), path: '?path=/docs/primitives-conversational-composertriggerpopover--docs' },
-      { name: $tStore('related.items.select.name'),                 description: toPlainText($tStore('related.items.select.description')),                 path: '?path=/docs/primitives-form-select--docs' },
-      { name: $tStore('related.items.badge.name'),                  description: toPlainText($tStore('related.items.badge.description')),                  path: '?path=/docs/primitives-feedback-badge--docs' },
+      { name: $tStore('related.items.composer.name'),               description: toPlainText($tStore('related.items.composer.description')),               path: '?path=/docs/components-conversational-composer--docs' },
+      { name: $tStore('related.items.composerTriggerPopover.name'), description: toPlainText($tStore('related.items.composerTriggerPopover.description')), path: '?path=/docs/components-conversational-composertriggerpopover--docs' },
+      { name: $tStore('related.items.select.name'),                 description: toPlainText($tStore('related.items.select.description')),                 path: '?path=/docs/components-form-select--docs' },
+      { name: $tStore('related.items.badge.name'),                  description: toPlainText($tStore('related.items.badge.description')),                  path: '?path=/docs/components-feedback-badge--docs' },
     ]}
   />
 

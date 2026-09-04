@@ -578,9 +578,9 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Popover',  description: $tStore('related.popover'),  path: '?path=/docs/primitives-overlay-popover--docs'  },
-      { name: 'Form',     description: toPlainText($tStore('related.form')),     path: '?path=/docs/primitives-form-form--docs'     },
-      { name: 'Input',    description: toPlainText($tStore('related.input')),    path: '?path=/docs/primitives-form-input--docs'    },
+      { name: 'Popover',  description: $tStore('related.popover'),  path: '?path=/docs/components-overlay-popover--docs'  },
+      { name: 'Form',     description: toPlainText($tStore('related.form')),     path: '?path=/docs/components-form-form--docs'     },
+      { name: 'Input',    description: toPlainText($tStore('related.input')),    path: '?path=/docs/components-form-input--docs'    },
     ]}
   />
 

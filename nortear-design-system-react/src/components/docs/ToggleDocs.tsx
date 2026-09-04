@@ -739,22 +739,22 @@ import { Bold } from "lucide-react";`;
           {
             name: tContent("related.items.toggleGroup.name"),
             description: toPlainText(tContent("related.items.toggleGroup.description")),
-            path: "?path=/docs/primitives-form-togglegroup--docs",
+            path: "?path=/docs/components-form-togglegroup--docs",
           },
           {
             name: tContent("related.items.switch.name"),
             description: toPlainText(tContent("related.items.switch.description")),
-            path: "?path=/docs/primitives-form-switch--docs",
+            path: "?path=/docs/components-form-switch--docs",
           },
           {
             name: tContent("related.items.checkbox.name"),
             description: toPlainText(tContent("related.items.checkbox.description")),
-            path: "?path=/docs/primitives-form-checkbox--docs",
+            path: "?path=/docs/components-form-checkbox--docs",
           },
           {
             name: tContent("related.items.button.name"),
             description: toPlainText(tContent("related.items.button.description")),
-            path: "?path=/docs/primitives-form-button--docs",
+            path: "?path=/docs/components-form-button--docs",
           },
         ]}
       />

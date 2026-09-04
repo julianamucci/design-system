@@ -24,7 +24,7 @@ import {
 // mesma foto três vezes.
 
 const meta: Meta<typeof InlineCitationStory> = {
-  title: 'Primitives/Conversational/InlineCitation/States',
+  title: 'Components/Conversational/InlineCitation/States',
   component: InlineCitationStory,
   tags: ['conversational'],
   parameters: {

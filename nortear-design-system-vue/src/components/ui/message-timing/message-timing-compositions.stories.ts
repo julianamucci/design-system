@@ -33,7 +33,7 @@ import { balaoDe } from '@/components/ui/tooltip/tooltip.fixtures';
 // herda a política de foco que vem com ela.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/MessageTiming/Compositions',
+  title: 'Components/Conversational/MessageTiming/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

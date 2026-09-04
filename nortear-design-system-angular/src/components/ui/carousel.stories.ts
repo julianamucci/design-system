@@ -10,7 +10,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<CarouselArgs> = {
-  title: 'Primitives/Display/Carousel',
+  title: 'Components/Display/Carousel',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio] })],
   parameters: {

@@ -29,7 +29,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/MessageTiming',
+  title: 'Components/Conversational/MessageTiming',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

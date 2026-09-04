@@ -32,7 +32,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ActivityGraph',
+  title: 'Components/Conversational/ActivityGraph',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

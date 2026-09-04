@@ -8,7 +8,7 @@ import { NdsCheckboxDocs } from '@/components/docs/CheckboxDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<CheckboxArgs> = {
-  title: 'Primitives/Form/Checkbox',
+  title: 'Components/Form/Checkbox',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsCheckbox, NdsLabel] })],
   parameters: {

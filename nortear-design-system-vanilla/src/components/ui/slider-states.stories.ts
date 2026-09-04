@@ -15,7 +15,7 @@ import {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Slider/States',
+  title: 'Components/Form/Slider/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

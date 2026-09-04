@@ -694,17 +694,17 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           {
             name: "Popover",
             description: toPlainText(tContent("related.popover")),
-            path: "?path=/docs/primitives-overlay-popover--docs",
+            path: "?path=/docs/components-overlay-popover--docs",
           },
           {
             name: "Form",
             description: toPlainText(tContent("related.form")),
-            path: "?path=/docs/primitives-form-form--docs",
+            path: "?path=/docs/components-form-form--docs",
           },
           {
             name: "Input",
             description: toPlainText(tContent("related.input")),
-            path: "?path=/docs/primitives-form-input--docs",
+            path: "?path=/docs/components-form-input--docs",
           },
         ]}
       />

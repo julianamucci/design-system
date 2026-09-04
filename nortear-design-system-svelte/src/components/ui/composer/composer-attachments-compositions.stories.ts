@@ -13,7 +13,7 @@ import {
 // A fila junto do campo, o pedido de remoção, e o caso em que ela não existe.
 
 const meta: Meta<typeof Composer> = {
-  title: 'Primitives/Conversational/ComposerAttachments/Compositions',
+  title: 'Components/Conversational/ComposerAttachments/Compositions',
   component: Composer,
   tags: ['conversational'],
   parameters: {

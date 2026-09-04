@@ -1146,12 +1146,12 @@ export function createSidebarDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-            { name: 'Tabs',           description: toPlainText(t('related.tabs')),           path: '?path=/docs/primitives-navigation-tabs--docs'           },
-            { name: 'Sheet',          description: toPlainText(t('related.sheet')),          path: '?path=/docs/primitives-overlay-sheet--docs'          },
-            { name: 'Accordion',      description: toPlainText(t('related.accordion')),      path: '?path=/docs/primitives-disclosure-accordion--docs'      },
-            { name: 'Tooltip',        description: toPlainText(t('related.tooltip')),        path: '?path=/docs/primitives-overlay-tooltip--docs'        },
-            { name: 'Separator',      description: toPlainText(t('related.separator')),      path: '?path=/docs/primitives-layout-separator--docs'      },
+            { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
+            { name: 'Tabs',           description: toPlainText(t('related.tabs')),           path: '?path=/docs/components-navigation-tabs--docs'           },
+            { name: 'Sheet',          description: toPlainText(t('related.sheet')),          path: '?path=/docs/components-overlay-sheet--docs'          },
+            { name: 'Accordion',      description: toPlainText(t('related.accordion')),      path: '?path=/docs/components-disclosure-accordion--docs'      },
+            { name: 'Tooltip',        description: toPlainText(t('related.tooltip')),        path: '?path=/docs/components-overlay-tooltip--docs'        },
+            { name: 'Separator',      description: toPlainText(t('related.separator')),      path: '?path=/docs/components-layout-separator--docs'      },
           ],
         });
 

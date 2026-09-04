@@ -16,7 +16,7 @@ type ProgressArgs = {
 };
 
 const meta: Meta<ProgressArgs> = {
-  title: 'Primitives/Feedback/Progress',
+  title: 'Components/Feedback/Progress',
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',

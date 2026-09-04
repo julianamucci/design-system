@@ -17,7 +17,7 @@ import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'Primitives/Display/CodeBlock/Compositions',
+  title: 'Components/Display/CodeBlock/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

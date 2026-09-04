@@ -25,7 +25,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ToolGroup',
+  title: 'Components/Conversational/ToolGroup',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsToolGroup] })],
   parameters: {

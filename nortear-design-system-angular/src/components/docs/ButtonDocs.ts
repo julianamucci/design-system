@@ -732,11 +732,11 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { name: 'Toggle',       description: toPlainText(t('related.toggle')),      path: '?path=/docs/primitives-form-toggle--docs'       },
-      { name: 'Switch',       description: t('related.switch'),      path: '?path=/docs/primitives-form-switch--docs'       },
-      { name: 'Form',         description: toPlainText(t('related.form')),        path: '?path=/docs/primitives-form-form--docs'         },
-      { name: 'Dialog',       description: t('related.dialog'),      path: '?path=/docs/primitives-overlay-dialog--docs'       },
-      { name: 'Alert Dialog', description: t('related.alertDialog'), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
+      { name: 'Toggle',       description: toPlainText(t('related.toggle')),      path: '?path=/docs/components-form-toggle--docs'       },
+      { name: 'Switch',       description: t('related.switch'),      path: '?path=/docs/components-form-switch--docs'       },
+      { name: 'Form',         description: toPlainText(t('related.form')),        path: '?path=/docs/components-form-form--docs'         },
+      { name: 'Dialog',       description: t('related.dialog'),      path: '?path=/docs/components-overlay-dialog--docs'       },
+      { name: 'Alert Dialog', description: t('related.alertDialog'), path: '?path=/docs/components-overlay-alertdialog--docs' },
     ];
   });
 

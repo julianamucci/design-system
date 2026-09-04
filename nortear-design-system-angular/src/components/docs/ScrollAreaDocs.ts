@@ -244,10 +244,10 @@ const TOKENS: Record<string, { token: string; target: string }> = {
 };
 
 const CAMINHOS: Record<string, string> = {
-  resizable: '?path=/docs/primitives-layout-resizable--docs',
-  sheet: '?path=/docs/primitives-overlay-sheet--docs',
-  dialog: '?path=/docs/primitives-overlay-dialog--docs',
-  command: '?path=/docs/primitives-overlay-command--docs',
+  resizable: '?path=/docs/components-layout-resizable--docs',
+  sheet: '?path=/docs/components-overlay-sheet--docs',
+  dialog: '?path=/docs/components-overlay-dialog--docs',
+  command: '?path=/docs/components-overlay-command--docs',
 };
 
 @Component({

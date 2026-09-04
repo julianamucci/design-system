@@ -9,7 +9,7 @@ import {
 } from "./switch.source";
 
 const meta = {
-  title: "Primitives/Form/Switch/Variants",
+  title: "Components/Form/Switch/Variants",
   tags: ["form"],
   component: Switch,
   parameters: {

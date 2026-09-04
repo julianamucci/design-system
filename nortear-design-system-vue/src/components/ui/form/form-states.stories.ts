@@ -11,7 +11,7 @@ import {
 } from './form.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Form/States',
+  title: 'Components/Form/Form/States',
   tags: ['form'],
   parameters: {
     layout: 'padded',

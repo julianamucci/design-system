@@ -23,7 +23,7 @@ import { commandWithGroupsSource } from './command.source';
  * conteúdo: `-variants` espelha `variants.items`, `-states` espelha `states`.
  */
 const meta = {
-  title: 'Primitives/Overlay/Command/Variants',
+  title: 'Components/Overlay/Command/Variants',
   component: Command,
   tags: ['overlay'],
   parameters: {

@@ -25,7 +25,7 @@ import {
 // voltou, como terminou — e o que muda é o que cada parte tem para dizer.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/TerminalBlock/States',
+  title: 'Components/Conversational/TerminalBlock/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsTerminalBlock] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

@@ -553,10 +553,10 @@ declare function isRunFinished(status: RunStatus): boolean;`;
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.codeBlock.name'),   description: toPlainText($tStore('related.items.codeBlock.description')),   path: '?path=/docs/primitives-display-codeblock--docs'           },
-      { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/primitives-conversational-toolgroup--docs'   },
-      { name: $tStore('related.items.jobProgress.name'), description: toPlainText($tStore('related.items.jobProgress.description')), path: '?path=/docs/primitives-conversational-jobprogress--docs' },
+      { name: $tStore('related.items.codeBlock.name'),   description: toPlainText($tStore('related.items.codeBlock.description')),   path: '?path=/docs/components-display-codeblock--docs'           },
+      { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'   },
+      { name: $tStore('related.items.jobProgress.name'), description: toPlainText($tStore('related.items.jobProgress.description')), path: '?path=/docs/components-conversational-jobprogress--docs' },
     ]}
   />
 

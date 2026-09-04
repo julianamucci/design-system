@@ -15,7 +15,7 @@ import {
 // A citação convivendo com o resto da moldura, e o que acontece ao dispensá-la.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerQuote/Compositions',
+  title: 'Components/Conversational/ComposerQuote/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

@@ -22,7 +22,7 @@ type ButtonArgs = {
 };
 
 const meta: Meta<ButtonArgs> = {
-  title: 'Primitives/Form/Button',
+  title: 'Components/Form/Button',
   tags: ['autodocs', 'form'],
   parameters: {
     design: figmaDesign('button'),

@@ -20,7 +20,7 @@ import {
 // guideline 17 lida em voz alta: o componente desenha o que recebe.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/InlineCitation/Compositions',
+  title: 'Components/Conversational/InlineCitation/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

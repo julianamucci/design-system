@@ -26,7 +26,7 @@ import {
 // painel nem está no DOM.
 
 const meta = {
-  title: 'Primitives/Overlay/Sheet/Variants',
+  title: 'Components/Overlay/Sheet/Variants',
   component: Sheet,
   tags: ['overlay'],
   parameters: {

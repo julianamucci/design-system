@@ -884,10 +884,10 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'select',  path: '?path=/docs/primitives-form-select--docs'  },
-      { key: 'command', path: '?path=/docs/primitives-overlay-command--docs' },
-      { key: 'input',   path: '?path=/docs/primitives-form-input--docs'   },
-      { key: 'form',    path: '?path=/docs/primitives-form-form--docs'    },
+      { key: 'select',  path: '?path=/docs/components-form-select--docs'  },
+      { key: 'command', path: '?path=/docs/components-overlay-command--docs' },
+      { key: 'input',   path: '?path=/docs/components-form-input--docs'   },
+      { key: 'form',    path: '?path=/docs/components-form-form--docs'    },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

@@ -5,7 +5,7 @@ import { NdsRadioGroup, NdsRadioGroupItem } from './radio-group';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
-  title: 'Primitives/Form/RadioGroup/Variants',
+  title: 'Components/Form/RadioGroup/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel] })],
   parameters: {

@@ -34,7 +34,7 @@ type PlaygroundArgs = {
 const SCOPE_OPTIONS = [...APPROVAL_EXAMPLE_NAMES, 'none'] as const;
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ApprovalCard',
+  title: 'Components/Conversational/ApprovalCard',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsApprovalCard, NdsButton] })],
   parameters: {

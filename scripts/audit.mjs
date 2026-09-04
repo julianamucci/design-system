@@ -879,7 +879,7 @@ const STORY_VARIANT_SUFFIXES = [
  * Grupo da barra lateral, lido do NOME DO ARQUIVO.
  *
  * É o arquivo que decide, não o `title`: o `title` do sufixo é sempre
- * `Primitives/<Categoria>/<Slug>/<Grupo>` e repete a informação. Ler do nome
+ * `Components/<Categoria>/<Slug>/<Grupo>` e repete a informação. Ler do nome
  * dispensa parsear o `meta` e funciona igual nas cinco stacks.
  */
 function grupoDaStory(caminhoRelativo) {
@@ -4059,7 +4059,7 @@ function auditTemasCompletos() {
  * Medido em 2026-08-30: 93 arquivos nas cinco stacks, 77 deles no Angular, que
  * nasceu sem esta convenção.
  *
- * Desde que a árvore virou `Primitives/<Categoria>/<Componente>`, a categoria
+ * Desde que a árvore virou `Components/<Categoria>/<Componente>`, a categoria
  * também é a PASTA — e a regra confere as duas uma contra a outra. Tag que
  * discorda da pasta produz o mesmo sintoma da tag ausente, e só esta regra vê.
  *
@@ -4147,18 +4147,18 @@ function auditStoryCategoryTag() {
       const content = readFile(file);
       if (!content) continue;
 
-      // Ancorado em `Primitives/`, e não no primeiro `title:` do arquivo: o
+      // Ancorado em `Components/`, e não no primeiro `title:` do arquivo: o
       // `code-block.stories` declara `title: 'exemplo.ts'` num fixture ANTES do
       // meta, e ler o primeiro fazia o arquivo escapar da regra inteira — o
       // portão que filtra excluindo em silêncio. São 5 arquivos assim hoje.
-      const titulo = (content.match(/title:\s*['"](Primitives\/[^'"]+)['"]/) || [])[1];
+      const titulo = (content.match(/title:\s*['"](Components\/[^'"]+)['"]/) || [])[1];
       if (!titulo) continue;
 
       const bloco = content.match(/tags:\s*\[([\s\S]*?)\]/);
       const tags = bloco ? [...bloco[1].matchAll(/['"]([^'"]+)['"]/g)].map((m) => m[1]) : [];
       const declarada = tags.find((t) => CATEGORIAS_SIDEBAR.has(t));
 
-      // A pasta é a verdade visível: `Primitives/Form/Button/Variants` põe a
+      // A pasta é a verdade visível: `Components/Form/Button/Variants` põe a
       // story dentro de Formulário quer a tag concorde ou não. Conferir uma
       // contra a outra pega os dois defeitos com a mesma regra — a tag ausente
       // e a tag que discorda da pasta, que produz o MESMO sintoma: a story está
@@ -4734,7 +4734,7 @@ function auditSidebarVocab(slug) {
 /**
  * `sanitize` do Storybook (`storybook/internal/csf`), copiado porque o audit não
  * carrega o Storybook. É ele que transforma o `title` do meta no id da URL:
- * `Primitives/Form/Button` → `primitives-form-button`, e a aba de docs é esse id
+ * `Components/Form/Button` → `components-form-button`, e a aba de docs é esse id
  * mais `--docs`. Acento NÃO é removido — `QA/Nome Acessível` vira
  * `qa-nome-acessível`, e é assim que o Storybook resolve mesmo.
  */

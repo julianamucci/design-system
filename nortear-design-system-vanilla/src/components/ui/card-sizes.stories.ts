@@ -11,7 +11,7 @@ import { cardSource, cardSourceWith } from './card.source';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'Primitives/Layout/Card/Sizes',
+  title: 'Components/Layout/Card/Sizes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -17,7 +17,7 @@ type DropdownArgs = {
 };
 
 const meta: Meta<DropdownArgs> = {
-  title: 'Primitives/Overlay/DropdownMenu',
+  title: 'Components/Overlay/DropdownMenu',
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',

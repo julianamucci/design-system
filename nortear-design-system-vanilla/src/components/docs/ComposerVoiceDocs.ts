@@ -417,10 +417,10 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.composer.name'),            description: toPlainText(t('related.items.composer.description')),            path: '?path=/docs/primitives-conversational-composer--docs' },
-            { name: t('related.items.composerAttachments.name'), description: toPlainText(t('related.items.composerAttachments.description')), path: '?path=/docs/primitives-conversational-composerattachments--docs' },
-            { name: t('related.items.mediaPlayer.name'),         description: toPlainText(t('related.items.mediaPlayer.description')),         path: '?path=/docs/primitives-display-mediaplayer--docs' },
-            { name: t('related.items.button.name'),              description: toPlainText(t('related.items.button.description')),              path: '?path=/docs/primitives-form-button--docs' },
+            { name: t('related.items.composer.name'),            description: toPlainText(t('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
+            { name: t('related.items.composerAttachments.name'), description: toPlainText(t('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },
+            { name: t('related.items.mediaPlayer.name'),         description: toPlainText(t('related.items.mediaPlayer.description')),         path: '?path=/docs/components-display-mediaplayer--docs' },
+            { name: t('related.items.button.name'),              description: toPlainText(t('related.items.button.description')),              path: '?path=/docs/components-form-button--docs' },
           ],
         });
 

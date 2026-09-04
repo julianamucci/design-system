@@ -10,7 +10,7 @@ import { tabsLineSource, tabsDefaultSource, tabsVerticalSource } from './tabs.so
 const TRANSPARENTE = 'rgba(0, 0, 0, 0)';
 
 const meta: Meta<any> = {
-  title: 'Primitives/Navigation/Tabs/Variants',
+  title: 'Components/Navigation/Tabs/Variants',
   component: Tabs,
   tags: ['navigation'],
   parameters: {

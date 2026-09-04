@@ -22,7 +22,7 @@ import {
 // ação — que, do lado de cá, é só um aviso.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/JobProgress/Compositions',
+  title: 'Components/Conversational/JobProgress/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsJobProgress, NdsAgentStatus] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

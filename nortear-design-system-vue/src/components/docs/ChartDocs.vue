@@ -476,9 +476,9 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Table',     description: toPlainText(tContent('related.table')),     path: '?path=/docs/primitives-tables-table--docs'      },
-  { name: 'Card',      description: toPlainText(tContent('related.card')),      path: '?path=/docs/primitives-layout-card--docs'       },
-  { name: 'DataTable', description: toPlainText(tContent('related.dataTable')), path: '?path=/docs/primitives-tables-datatable--docs'  },
+  { name: 'Table',     description: toPlainText(tContent('related.table')),     path: '?path=/docs/components-tables-table--docs'      },
+  { name: 'Card',      description: toPlainText(tContent('related.card')),      path: '?path=/docs/components-layout-card--docs'       },
+  { name: 'DataTable', description: toPlainText(tContent('related.dataTable')), path: '?path=/docs/components-tables-datatable--docs'  },
 ]);
 
 const noteItems = computed(() => [

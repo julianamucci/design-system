@@ -928,11 +928,11 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'AlertDialog', description: toPlainText($tStore('related.alertDialog')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-      { name: 'Sheet',       description: $tStore('related.sheet'),                  path: '?path=/docs/primitives-overlay-sheet--docs'       },
-      { name: 'Popover',     description: $tStore('related.popover'),                path: '?path=/docs/primitives-overlay-popover--docs'     },
-      { name: 'Form',        description: $tStore('related.form'),                   path: '?path=/docs/primitives-form-form--docs'        },
-      { name: 'Drawer',      description: $tStore('related.drawer'),                 path: '?path=/docs/primitives-overlay-drawer--docs'      },
+      { name: 'AlertDialog', description: toPlainText($tStore('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
+      { name: 'Sheet',       description: $tStore('related.sheet'),                  path: '?path=/docs/components-overlay-sheet--docs'       },
+      { name: 'Popover',     description: $tStore('related.popover'),                path: '?path=/docs/components-overlay-popover--docs'     },
+      { name: 'Form',        description: $tStore('related.form'),                   path: '?path=/docs/components-form-form--docs'        },
+      { name: 'Drawer',      description: $tStore('related.drawer'),                 path: '?path=/docs/components-overlay-drawer--docs'      },
     ]}
   />
 

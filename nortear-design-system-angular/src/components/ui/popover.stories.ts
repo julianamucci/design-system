@@ -9,7 +9,7 @@ import { NdsPopoverDocs } from '@/components/docs/PopoverDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<PopoverArgs> = {
-  title: 'Primitives/Overlay/Popover',
+  title: 'Components/Overlay/Popover',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
   parameters: {

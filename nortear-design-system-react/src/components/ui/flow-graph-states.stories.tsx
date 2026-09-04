@@ -28,7 +28,7 @@ import {
 // grade fotografa os quatro estados de nó lado a lado, e não quatro grafos.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/FlowGraph/States",
+  title: "Components/Conversational/FlowGraph/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

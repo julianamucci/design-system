@@ -23,7 +23,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/TerminalBlock',
+  title: 'Components/Conversational/TerminalBlock',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

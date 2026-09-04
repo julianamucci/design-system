@@ -19,7 +19,7 @@ import { INVOICES, TOTAL, STATUS_VARIANT } from './table.fixtures';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'Primitives/Tables/Table/Variants',
+  title: 'Components/Tables/Table/Variants',
   tags: ['tables'],
   decorators: [
     moduleMetadata({

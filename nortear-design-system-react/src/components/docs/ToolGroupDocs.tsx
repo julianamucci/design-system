@@ -435,10 +435,10 @@ export function ToolGroupDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/primitives-conversational-chatthread--docs" },
-          { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/primitives-conversational-agentstatus--docs" },
-          { name: tContent("related.items.badge.name"),       description: toPlainText(tContent("related.items.badge.description")),       path: "?path=/docs/primitives-feedback-badge--docs"             },
-          { name: tContent("related.items.accordion.name"),   description: toPlainText(tContent("related.items.accordion.description")),   path: "?path=/docs/primitives-disclosure-accordion--docs"       },
+          { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/components-conversational-chatthread--docs" },
+          { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/components-conversational-agentstatus--docs" },
+          { name: tContent("related.items.badge.name"),       description: toPlainText(tContent("related.items.badge.description")),       path: "?path=/docs/components-feedback-badge--docs"             },
+          { name: tContent("related.items.accordion.name"),   description: toPlainText(tContent("related.items.accordion.description")),   path: "?path=/docs/components-disclosure-accordion--docs"       },
         ]}
       />
 

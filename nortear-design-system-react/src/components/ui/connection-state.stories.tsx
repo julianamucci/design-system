@@ -43,7 +43,7 @@ function PlaygroundExample({ state, countdown }: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/ConnectionState",
+  title: "Components/Conversational/ConnectionState",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

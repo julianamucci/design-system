@@ -38,7 +38,7 @@ const INDICATOR_SLOT = '[data-slot="stepper-indicator"]';
 const selectSpy = fn();
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Stepper/States',
+  title: 'Components/Navigation/Stepper/States',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_STEPPER] })],
   parameters: {

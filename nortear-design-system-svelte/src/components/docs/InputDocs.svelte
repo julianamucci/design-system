@@ -604,11 +604,11 @@ interface InputProps extends HTMLInputAttributes {
       <DocsRelated
         title={$tStore('related.title')}
         items={[
-          { name: 'Textarea',  description: $tStore('related.textarea'),  path: '?path=/docs/primitives-form-textarea--docs'  },
-          { name: 'InputOTP',  description: $tStore('related.inputOTP'),  path: '?path=/docs/primitives-form-inputotp--docs'  },
-          { name: 'Select',    description: $tStore('related.select'),    path: '?path=/docs/primitives-form-select--docs'    },
-          { name: 'Form',      description: $tStore('related.form'),      path: '?path=/docs/primitives-form-form--docs'      },
-          { name: 'Label',     description: $tStore('related.label'),     path: '?path=/docs/primitives-form-label--docs'     },
+          { name: 'Textarea',  description: $tStore('related.textarea'),  path: '?path=/docs/components-form-textarea--docs'  },
+          { name: 'InputOTP',  description: $tStore('related.inputOTP'),  path: '?path=/docs/components-form-inputotp--docs'  },
+          { name: 'Select',    description: $tStore('related.select'),    path: '?path=/docs/components-form-select--docs'    },
+          { name: 'Form',      description: $tStore('related.form'),      path: '?path=/docs/components-form-form--docs'      },
+          { name: 'Label',     description: $tStore('related.label'),     path: '?path=/docs/components-form-label--docs'     },
         ]}
       />
 

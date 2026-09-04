@@ -444,10 +444,10 @@ interface ComposerQuoteLabels {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.composer.name'),    description: toPlainText($tStore('related.items.composer.description')),    path: '?path=/docs/primitives-conversational-composer--docs' },
-      { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { name: $tStore('related.items.attachments.name'), description: toPlainText($tStore('related.items.attachments.description')), path: '?path=/docs/primitives-conversational-composerattachments--docs' },
-      { name: $tStore('related.items.markdown.name'),    description: toPlainText($tStore('related.items.markdown.description')),    path: '?path=/docs/primitives-conversational-markdown--docs' },
+      { name: $tStore('related.items.composer.name'),    description: toPlainText($tStore('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
+      { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },
+      { name: $tStore('related.items.attachments.name'), description: toPlainText($tStore('related.items.attachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },
+      { name: $tStore('related.items.markdown.name'),    description: toPlainText($tStore('related.items.markdown.description')),    path: '?path=/docs/components-conversational-markdown--docs' },
     ]}
   />
 

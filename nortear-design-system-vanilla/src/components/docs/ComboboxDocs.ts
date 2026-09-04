@@ -997,10 +997,10 @@ export type ComboboxElement = HTMLDivElement & {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.select.name'),  description: stripHtml(t('related.items.select.description')),  path: '?path=/docs/primitives-form-select--docs'  },
-            { name: t('related.items.command.name'), description: stripHtml(t('related.items.command.description')), path: '?path=/docs/primitives-overlay-command--docs' },
-            { name: t('related.items.input.name'),   description: stripHtml(t('related.items.input.description')),   path: '?path=/docs/primitives-form-input--docs'   },
-            { name: t('related.items.form.name'),    description: stripHtml(t('related.items.form.description')),    path: '?path=/docs/primitives-form-form--docs'    },
+            { name: t('related.items.select.name'),  description: stripHtml(t('related.items.select.description')),  path: '?path=/docs/components-form-select--docs'  },
+            { name: t('related.items.command.name'), description: stripHtml(t('related.items.command.description')), path: '?path=/docs/components-overlay-command--docs' },
+            { name: t('related.items.input.name'),   description: stripHtml(t('related.items.input.description')),   path: '?path=/docs/components-form-input--docs'   },
+            { name: t('related.items.form.name'),    description: stripHtml(t('related.items.form.description')),    path: '?path=/docs/components-form-form--docs'    },
           ],
         });
 

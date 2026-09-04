@@ -46,7 +46,7 @@ const meta: Meta = {
       source: { transform: chartSource },
     },
   },
-  title: 'Primitives/Display/Chart/States',
+  title: 'Components/Display/Chart/States',
   component: ChartContainer,
   tags: ['display'],
 };

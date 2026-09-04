@@ -22,7 +22,7 @@ import {
 // sempre a mesma, e o que muda é se ainda há por onde pedir.
 
 const meta: Meta<typeof ConnectionState> = {
-  title: 'Primitives/Conversational/ConnectionState/States',
+  title: 'Components/Conversational/ConnectionState/States',
   component: ConnectionState,
   tags: ['conversational'],
   parameters: {

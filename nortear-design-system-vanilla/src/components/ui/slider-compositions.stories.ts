@@ -9,7 +9,7 @@ import { apertarTecla, handleValue } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Slider/Compositions',
+  title: 'Components/Form/Slider/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

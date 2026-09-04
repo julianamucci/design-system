@@ -428,10 +428,10 @@ interface ChatToolCall {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-            { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-            { name: t('related.items.badge.name'),       description: toPlainText(t('related.items.badge.description')),       path: '?path=/docs/primitives-feedback-badge--docs'             },
-            { name: t('related.items.accordion.name'),   description: toPlainText(t('related.items.accordion.description')),   path: '?path=/docs/primitives-disclosure-accordion--docs'       },
+            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },
+            { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
+            { name: t('related.items.badge.name'),       description: toPlainText(t('related.items.badge.description')),       path: '?path=/docs/components-feedback-badge--docs'             },
+            { name: t('related.items.accordion.name'),   description: toPlainText(t('related.items.accordion.description')),   path: '?path=/docs/components-disclosure-accordion--docs'       },
           ],
         });
 

@@ -12,7 +12,7 @@ import {
 import { paginationRangeSource, paginationFirstPageSource } from './pagination.source';
 
 const meta = {
-  title: 'Primitives/Navigation/Pagination/States',
+  title: 'Components/Navigation/Pagination/States',
   component: Pagination,
   tags: ['navigation'],
   parameters: {

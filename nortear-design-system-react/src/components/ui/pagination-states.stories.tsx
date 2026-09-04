@@ -12,7 +12,7 @@ import {
 import { paginationDisabledSource, paginationSource } from "./pagination.source";
 
 const meta = {
-  title: "Primitives/Navigation/Pagination/States",
+  title: "Components/Navigation/Pagination/States",
   tags: ["navigation"],
   component: Pagination,
   parameters: {

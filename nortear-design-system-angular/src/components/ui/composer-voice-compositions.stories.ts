@@ -20,7 +20,7 @@ import { voiceInRailSource } from './composer-voice.source';
 // controle — e é isso que estas stories mostram.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerVoice/Compositions',
+  title: 'Components/Conversational/ComposerVoice/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer, NdsComposerVoice] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

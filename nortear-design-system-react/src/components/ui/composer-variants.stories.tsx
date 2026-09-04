@@ -10,7 +10,7 @@ import { composerEnterSource, composerModifierSource, composerSource } from "./c
 // dica promete — e a dica tem de dizer a verdade sobre o dispositivo.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/Composer/Variants",
+  title: "Components/Conversational/Composer/Variants",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

@@ -9,7 +9,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'Primitives/Tables/DataTable/States',
+  title: 'Components/Tables/DataTable/States',
   parameters: {
     layout: 'padded',
     controls: { disable: true },

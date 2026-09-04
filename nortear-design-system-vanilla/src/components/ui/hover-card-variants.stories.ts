@@ -17,7 +17,7 @@ import { construirDuasLines, construirLink, emFrase } from './hover-card.fixture
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/HoverCard/Variants',
+  title: 'Components/Overlay/HoverCard/Variants',
   parameters: {
     layout: 'padded',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.

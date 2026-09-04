@@ -12,7 +12,7 @@ import { NdsAccordionDocs } from '@/components/docs/AccordionDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<AccordionArgs> = {
-  title: 'Primitives/Disclosure/Accordion',
+  title: 'Components/Disclosure/Accordion',
   tags: ['autodocs', 'disclosure'],
   decorators: [
     moduleMetadata({

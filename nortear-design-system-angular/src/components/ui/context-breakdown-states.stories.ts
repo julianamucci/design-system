@@ -24,7 +24,7 @@ import {
 // é por isso que o nome e o número de cada parcela são texto.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextBreakdown/States',
+  title: 'Components/Conversational/ContextBreakdown/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsContextBreakdown] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

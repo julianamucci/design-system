@@ -426,10 +426,10 @@ export function MessageTimingDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.agentStatus.name"),    description: toPlainText(tContent("related.items.agentStatus.description")),    path: "?path=/docs/primitives-conversational-agentstatus--docs"    },
-          { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/primitives-conversational-contextdisplay--docs" },
-          { name: tContent("related.items.chatThread.name"),     description: toPlainText(tContent("related.items.chatThread.description")),     path: "?path=/docs/primitives-conversational-chatthread--docs"     },
-          { name: tContent("related.items.tooltip.name"),        description: toPlainText(tContent("related.items.tooltip.description")),        path: "?path=/docs/primitives-overlay-tooltip--docs"               },
+          { name: tContent("related.items.agentStatus.name"),    description: toPlainText(tContent("related.items.agentStatus.description")),    path: "?path=/docs/components-conversational-agentstatus--docs"    },
+          { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/components-conversational-contextdisplay--docs" },
+          { name: tContent("related.items.chatThread.name"),     description: toPlainText(tContent("related.items.chatThread.description")),     path: "?path=/docs/components-conversational-chatthread--docs"     },
+          { name: tContent("related.items.tooltip.name"),        description: toPlainText(tContent("related.items.tooltip.description")),        path: "?path=/docs/components-overlay-tooltip--docs"               },
         ]}
       />
 

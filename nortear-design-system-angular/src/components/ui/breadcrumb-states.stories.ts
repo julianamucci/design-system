@@ -19,7 +19,7 @@ import { navigationEspionada } from './breadcrumb.fixtures';
 // Controls aparece vazio.
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Breadcrumb/States',
+  title: 'Components/Navigation/Breadcrumb/States',
   tags: ['navigation'],
   decorators: [
     moduleMetadata({

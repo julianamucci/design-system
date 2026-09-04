@@ -925,10 +925,10 @@ export type TextareaOptions = {
           title: t('related.title'),
           componentSlug: 'textarea',
           items: [
-            { name: t('related.items.input.name'),    description: stripHtml(t('related.items.input.description')),    path: '?path=/docs/primitives-form-input--docs'    },
-            { name: t('related.items.label.name'),    description: stripHtml(t('related.items.label.description')),    path: '?path=/docs/primitives-form-label--docs'    },
-            { name: t('related.items.form.name'),     description: stripHtml(t('related.items.form.description')),     path: '?path=/docs/primitives-form-form--docs'     },
-            { name: t('related.items.inputOTP.name'), description: stripHtml(t('related.items.inputOTP.description')), path: '?path=/docs/primitives-form-inputotp--docs' },
+            { name: t('related.items.input.name'),    description: stripHtml(t('related.items.input.description')),    path: '?path=/docs/components-form-input--docs'    },
+            { name: t('related.items.label.name'),    description: stripHtml(t('related.items.label.description')),    path: '?path=/docs/components-form-label--docs'    },
+            { name: t('related.items.form.name'),     description: stripHtml(t('related.items.form.description')),     path: '?path=/docs/components-form-form--docs'     },
+            { name: t('related.items.inputOTP.name'), description: stripHtml(t('related.items.inputOTP.description')), path: '?path=/docs/components-form-inputotp--docs' },
           ],
         });
 

@@ -20,7 +20,7 @@ import type { VoiceState } from "@shared/primitives/chat-protocol"
 // outro controle — e é isso que estas stories mostram.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ComposerVoice/Compositions",
+  title: "Components/Conversational/ComposerVoice/Compositions",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

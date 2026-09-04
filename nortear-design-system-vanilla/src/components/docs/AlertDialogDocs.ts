@@ -620,10 +620,10 @@ export interface AlertDialogOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Dialog', description: toPlainText(t('related.dialog')), path: '?path=/docs/primitives-overlay-dialog--docs' },
-            { name: 'Sonner', description: toPlainText(t('related.sonner')), path: '?path=/docs/primitives-feedback-sonner--docs' },
-            { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/primitives-feedback-alert--docs'  },
-            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/primitives-form-button--docs' },
+            { name: 'Dialog', description: toPlainText(t('related.dialog')), path: '?path=/docs/components-overlay-dialog--docs' },
+            { name: 'Sonner', description: toPlainText(t('related.sonner')), path: '?path=/docs/components-feedback-sonner--docs' },
+            { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/components-feedback-alert--docs'  },
+            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/components-form-button--docs' },
           ],
         });
 

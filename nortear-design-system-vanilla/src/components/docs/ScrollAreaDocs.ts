@@ -619,10 +619,10 @@ export interface ScrollAreaOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: stripHtml(t('related.items.resizable.name')), description: stripHtml(t('related.items.resizable.description')), path: '?path=/docs/primitives-layout-resizable--docs' },
-            { name: stripHtml(t('related.items.sheet.name')),     description: stripHtml(t('related.items.sheet.description')),     path: '?path=/docs/primitives-overlay-sheet--docs' },
-            { name: stripHtml(t('related.items.dialog.name')),    description: stripHtml(t('related.items.dialog.description')),    path: '?path=/docs/primitives-overlay-dialog--docs' },
-            { name: stripHtml(t('related.items.command.name')),   description: stripHtml(t('related.items.command.description')),   path: '?path=/docs/primitives-overlay-command--docs' },
+            { name: stripHtml(t('related.items.resizable.name')), description: stripHtml(t('related.items.resizable.description')), path: '?path=/docs/components-layout-resizable--docs' },
+            { name: stripHtml(t('related.items.sheet.name')),     description: stripHtml(t('related.items.sheet.description')),     path: '?path=/docs/components-overlay-sheet--docs' },
+            { name: stripHtml(t('related.items.dialog.name')),    description: stripHtml(t('related.items.dialog.description')),    path: '?path=/docs/components-overlay-dialog--docs' },
+            { name: stripHtml(t('related.items.command.name')),   description: stripHtml(t('related.items.command.description')),   path: '?path=/docs/components-overlay-command--docs' },
           ],
         });
 

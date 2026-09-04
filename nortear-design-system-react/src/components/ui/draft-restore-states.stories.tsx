@@ -30,7 +30,7 @@ import {
 // Chromatic sabe fotografar o nada.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/DraftRestore/States",
+  title: "Components/Conversational/DraftRestore/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

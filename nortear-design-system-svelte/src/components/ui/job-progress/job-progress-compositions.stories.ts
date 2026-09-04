@@ -16,7 +16,7 @@ import {
 // ação — que, do lado de cá, é só um aviso.
 
 const meta: Meta<typeof JobProgress> = {
-  title: 'Primitives/Conversational/JobProgress/Compositions',
+  title: 'Components/Conversational/JobProgress/Compositions',
   component: JobProgress,
   tags: ['conversational'],
   parameters: {

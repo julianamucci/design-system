@@ -37,7 +37,7 @@ const VALUE_REGIOES = Object.fromEntries(
 );
 
 const meta = {
-  title: "Primitives/Form/Select/Variants",
+  title: "Components/Form/Select/Variants",
   tags: ["form"],
   component: Select,
   parameters: {

@@ -13,7 +13,7 @@ import { sheetPlaygroundSource, type SheetArgs } from './sheet.source';
 const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
 
 const meta: Meta<SheetArgs> = {
-  title: 'Primitives/Overlay/Sheet',
+  title: 'Components/Overlay/Sheet',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
   parameters: {

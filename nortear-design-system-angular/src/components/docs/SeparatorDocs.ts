@@ -573,10 +573,10 @@ export class NdsSeparatorDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'card',           path: '?path=/docs/primitives-layout-card--docs'            },
-      { key: 'sheet',          path: '?path=/docs/primitives-overlay-sheet--docs'           },
-      { key: 'sidebar',        path: '?path=/docs/primitives-layout-sidebar--docs'         },
-      { key: 'navigationMenu', path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
+      { key: 'card',           path: '?path=/docs/components-layout-card--docs'            },
+      { key: 'sheet',          path: '?path=/docs/components-overlay-sheet--docs'           },
+      { key: 'sidebar',        path: '?path=/docs/components-layout-sidebar--docs'         },
+      { key: 'navigationMenu', path: '?path=/docs/components-navigation-navigationmenu--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

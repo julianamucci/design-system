@@ -402,10 +402,10 @@
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { name: $tStore('related.items.skeleton.name'),    description: toPlainText($tStore('related.items.skeleton.description')),    path: '?path=/docs/primitives-feedback-skeleton--docs' },
-      { name: $tStore('related.items.progress.name'),    description: toPlainText($tStore('related.items.progress.description')),    path: '?path=/docs/primitives-feedback-progress--docs' },
+      { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },
+      { name: $tStore('related.items.skeleton.name'),    description: toPlainText($tStore('related.items.skeleton.description')),    path: '?path=/docs/components-feedback-skeleton--docs' },
+      { name: $tStore('related.items.progress.name'),    description: toPlainText($tStore('related.items.progress.description')),    path: '?path=/docs/components-feedback-progress--docs' },
     ]}
   />
 

@@ -5,7 +5,7 @@ import { baseColumns } from './data-table.fixtures';
 import { dataTableNoResultsSource } from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
-  title: 'Primitives/Tables/DataTable/States',
+  title: 'Components/Tables/DataTable/States',
   component: DataTable as never,
   tags: ['tables'],
   parameters: {

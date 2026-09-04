@@ -436,10 +436,10 @@ declare function isRunFinished(status: RunStatus): boolean;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.codeBlock.name'),   description: toPlainText(t('related.items.codeBlock.description')),   path: '?path=/docs/primitives-display-codeblock--docs'           },
-            { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-            { name: t('related.items.toolGroup.name'),   description: toPlainText(t('related.items.toolGroup.description')),   path: '?path=/docs/primitives-conversational-toolgroup--docs'   },
-            { name: t('related.items.jobProgress.name'), description: toPlainText(t('related.items.jobProgress.description')), path: '?path=/docs/primitives-conversational-jobprogress--docs' },
+            { name: t('related.items.codeBlock.name'),   description: toPlainText(t('related.items.codeBlock.description')),   path: '?path=/docs/components-display-codeblock--docs'           },
+            { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
+            { name: t('related.items.toolGroup.name'),   description: toPlainText(t('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'   },
+            { name: t('related.items.jobProgress.name'), description: toPlainText(t('related.items.jobProgress.description')), path: '?path=/docs/components-conversational-jobprogress--docs' },
           ],
         });
 

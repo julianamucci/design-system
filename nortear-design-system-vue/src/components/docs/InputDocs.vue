@@ -336,11 +336,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Textarea',  description: toPlainText(tContent('related.textarea')),  path: '?path=/docs/primitives-form-textarea--docs'  },
-  { name: 'InputOTP',  description: toPlainText(tContent('related.inputOTP')),  path: '?path=/docs/primitives-form-inputotp--docs'  },
-  { name: 'Select',    description: toPlainText(tContent('related.select')),    path: '?path=/docs/primitives-form-select--docs'    },
-  { name: 'Form',      description: toPlainText(tContent('related.form')),      path: '?path=/docs/primitives-form-form--docs'      },
-  { name: 'Label',     description: toPlainText(tContent('related.label')),     path: '?path=/docs/primitives-form-label--docs'     },
+  { name: 'Textarea',  description: toPlainText(tContent('related.textarea')),  path: '?path=/docs/components-form-textarea--docs'  },
+  { name: 'InputOTP',  description: toPlainText(tContent('related.inputOTP')),  path: '?path=/docs/components-form-inputotp--docs'  },
+  { name: 'Select',    description: toPlainText(tContent('related.select')),    path: '?path=/docs/components-form-select--docs'    },
+  { name: 'Form',      description: toPlainText(tContent('related.form')),      path: '?path=/docs/components-form-form--docs'      },
+  { name: 'Label',     description: toPlainText(tContent('related.label')),     path: '?path=/docs/components-form-label--docs'     },
 ]);
 
 const noteItems = computed(() => [

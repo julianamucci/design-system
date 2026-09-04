@@ -44,7 +44,7 @@ const seriesMulti = [
 const FRASE_VAZIA = 'Nenhum dado disponível para o período selecionado.';
 
 const meta: Meta = {
-  title: 'Primitives/Display/Chart/States',
+  title: 'Components/Display/Chart/States',
   tags: ['display'],
   parameters: {
     layout: 'padded',

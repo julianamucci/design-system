@@ -38,7 +38,7 @@ import {
 // janela mais curta que o rastro e quando ele chega pela metade.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/TraceWaterfall/Compositions',
+  title: 'Components/Conversational/TraceWaterfall/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsTraceWaterfall] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

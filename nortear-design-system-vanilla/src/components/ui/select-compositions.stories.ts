@@ -8,7 +8,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Select/Compositions',
+  title: 'Components/Form/Select/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

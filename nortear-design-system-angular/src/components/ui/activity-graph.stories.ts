@@ -35,7 +35,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ActivityGraph',
+  title: 'Components/Conversational/ActivityGraph',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsActivityGraph] })],
   parameters: {

@@ -32,7 +32,7 @@ import {
 // delas —, e é o texto ao lado que responde.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/QuotaBanner/States",
+  title: "Components/Conversational/QuotaBanner/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

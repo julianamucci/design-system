@@ -594,9 +594,9 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'popover',    name: 'Popover', path: '?path=/docs/primitives-overlay-popover--docs' },
-      { key: 'form',       name: 'Form',    path: '?path=/docs/primitives-form-form--docs'    },
-      { key: 'input',      name: 'Input',   path: '?path=/docs/primitives-form-input--docs'   },
+      { key: 'popover',    name: 'Popover', path: '?path=/docs/components-overlay-popover--docs' },
+      { key: 'form',       name: 'Form',    path: '?path=/docs/components-form-form--docs'    },
+      { key: 'input',      name: 'Input',   path: '?path=/docs/components-form-input--docs'   },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 

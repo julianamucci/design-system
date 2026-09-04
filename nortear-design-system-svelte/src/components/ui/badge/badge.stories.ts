@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { badgeSource } from './badge.source';
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Badge',
+  title: 'Components/Feedback/Badge',
   component: Badge,
   tags: ['autodocs', 'feedback'],
   parameters: {

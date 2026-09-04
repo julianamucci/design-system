@@ -33,7 +33,7 @@ import {
 // extensibilidade. A docs page é a prova: ela tem seção de Variantes e NÃO tem
 // seção de Composições, nem entrada `nav.compositions`.
 const meta = {
-  title: 'Primitives/Overlay/AlertDialog/Variants',
+  title: 'Components/Overlay/AlertDialog/Variants',
   component: AlertDialog,
   tags: ['overlay'],
   parameters: {

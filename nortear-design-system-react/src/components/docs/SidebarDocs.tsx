@@ -1288,37 +1288,37 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
           {
             name: "NavigationMenu",
             description: toPlainText(tContent("related.navigationMenu")),
-            path: "?path=/docs/primitives-navigation-navigationmenu--docs",
+            path: "?path=/docs/components-navigation-navigationmenu--docs",
           },
           {
             name: "Tabs",
             description: toPlainText(tContent("related.tabs")),
-            path: "?path=/docs/primitives-navigation-tabs--docs",
+            path: "?path=/docs/components-navigation-tabs--docs",
           },
           {
             name: "Sheet",
             description: toPlainText(tContent("related.sheet")),
-            path: "?path=/docs/primitives-overlay-sheet--docs",
+            path: "?path=/docs/components-overlay-sheet--docs",
           },
           {
             name: "Accordion",
             description: toPlainText(tContent("related.accordion")),
-            path: "?path=/docs/primitives-disclosure-accordion--docs",
+            path: "?path=/docs/components-disclosure-accordion--docs",
           },
           {
             name: "Tooltip",
             description: toPlainText(tContent("related.tooltip")),
-            path: "?path=/docs/primitives-overlay-tooltip--docs",
+            path: "?path=/docs/components-overlay-tooltip--docs",
           },
           {
             name: "Separator",
             description: toPlainText(tContent("related.separator")),
-            path: "?path=/docs/primitives-layout-separator--docs",
+            path: "?path=/docs/components-layout-separator--docs",
           },
           {
             name: "Skeleton",
             description: toPlainText(tContent("related.skeleton")),
-            path: "?path=/docs/primitives-feedback-skeleton--docs",
+            path: "?path=/docs/components-feedback-skeleton--docs",
           },
         ]}
       />

@@ -752,10 +752,10 @@ export class NdsTraceWaterfallDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'flowGraph',     path: '?path=/docs/primitives-conversational-flowgraph--docs'     },
-      { key: 'agentPlan',     path: '?path=/docs/primitives-conversational-agentplan--docs'     },
-      { key: 'messageTiming', path: '?path=/docs/primitives-conversational-messagetiming--docs' },
-      { key: 'progress',      path: '?path=/docs/primitives-feedback-progress--docs'            },
+      { key: 'flowGraph',     path: '?path=/docs/components-conversational-flowgraph--docs'     },
+      { key: 'agentPlan',     path: '?path=/docs/components-conversational-agentplan--docs'     },
+      { key: 'messageTiming', path: '?path=/docs/components-conversational-messagetiming--docs' },
+      { key: 'progress',      path: '?path=/docs/components-feedback-progress--docs'            },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

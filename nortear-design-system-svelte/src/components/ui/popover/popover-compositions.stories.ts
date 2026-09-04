@@ -11,7 +11,7 @@ import { popoverSource } from './popover.source';
 // API: todas são arranjo de conteúdo dentro do mesmo `PopoverContent`.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Popover/Compositions',
+  title: 'Components/Overlay/Popover/Compositions',
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {

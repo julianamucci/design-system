@@ -571,10 +571,10 @@ export class NdsChatThreadDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'markdown', path: '?path=/docs/primitives-conversational-markdown--docs' },
-      { key: 'avatar',   path: '?path=/docs/primitives-display-avatar--docs'   },
-      { key: 'button',   path: '?path=/docs/primitives-form-button--docs'   },
-      { key: 'skeleton', path: '?path=/docs/primitives-feedback-skeleton--docs' },
+      { key: 'markdown', path: '?path=/docs/components-conversational-markdown--docs' },
+      { key: 'avatar',   path: '?path=/docs/components-display-avatar--docs'   },
+      { key: 'button',   path: '?path=/docs/components-form-button--docs'   },
+      { key: 'skeleton', path: '?path=/docs/components-feedback-skeleton--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

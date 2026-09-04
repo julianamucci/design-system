@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { NdsResizable, NdsResizablePanel, NdsResizableHandle } from './resizable';
 
 const meta: Meta = {
-  title: 'Primitives/Layout/Resizable/Variants',
+  title: 'Components/Layout/Resizable/Variants',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsResizable, NdsResizablePanel, NdsResizableHandle] })],
   // Sem argTypes nesta suíte: sem desligar, o painel Controls abre vazio.

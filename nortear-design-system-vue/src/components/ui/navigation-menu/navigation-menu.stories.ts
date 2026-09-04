@@ -15,7 +15,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { navigationMenuSource } from './navigation-menu.source';
 
 const meta = {
-  title: 'Primitives/Navigation/NavigationMenu',
+  title: 'Components/Navigation/NavigationMenu',
   component: NavigationMenu,
   tags: ['autodocs', 'navigation'],
   parameters: {

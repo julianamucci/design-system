@@ -9,7 +9,7 @@ import { NdsInputDocs } from '@/components/docs/InputDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<InputArgs> = {
-  title: 'Primitives/Form/Input',
+  title: 'Components/Form/Input',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsInput, NdsLabel] })],
   parameters: {

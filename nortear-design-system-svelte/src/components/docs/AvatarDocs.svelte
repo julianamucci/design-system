@@ -529,10 +529,10 @@ interface AvatarFallbackProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Badge',        description: $tStore('related.badge'),        path: '?path=/docs/primitives-feedback-badge--docs'        },
-      { name: 'AspectRatio',  description: $tStore('related.aspectRatio'),  path: '?path=/docs/primitives-layout-aspectratio--docs'  },
-      { name: 'Tooltip',      description: $tStore('related.tooltip'),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
-      { name: 'Card',         description: $tStore('related.card'),         path: '?path=/docs/primitives-layout-card--docs'         },
+      { name: 'Badge',        description: $tStore('related.badge'),        path: '?path=/docs/components-feedback-badge--docs'        },
+      { name: 'AspectRatio',  description: $tStore('related.aspectRatio'),  path: '?path=/docs/components-layout-aspectratio--docs'  },
+      { name: 'Tooltip',      description: $tStore('related.tooltip'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
+      { name: 'Card',         description: $tStore('related.card'),         path: '?path=/docs/components-layout-card--docs'         },
     ]}
   />
 

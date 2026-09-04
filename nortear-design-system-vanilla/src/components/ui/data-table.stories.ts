@@ -26,7 +26,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta = {
-  title: 'Primitives/Tables/DataTable',
+  title: 'Components/Tables/DataTable',
   tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',

@@ -27,7 +27,7 @@ import { INVOICES, type Invoice } from './table.fixtures';
 // existe aqui; entra quando ele existir.
 
 const meta: Meta = {
-  title: 'Primitives/Tables/Table/Compositions',
+  title: 'Components/Tables/Table/Compositions',
   tags: ['tables'],
   decorators: [
     moduleMetadata({

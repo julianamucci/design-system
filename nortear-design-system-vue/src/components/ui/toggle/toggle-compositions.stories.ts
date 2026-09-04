@@ -10,7 +10,7 @@ import {
 } from './toggle.source';
 
 const meta = {
-  title: 'Primitives/Form/Toggle/Compositions',
+  title: 'Components/Form/Toggle/Compositions',
   component: Toggle,
   tags: ['form'],
   parameters: {

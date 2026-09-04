@@ -372,10 +372,10 @@
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.codeBlock.name'), description: toPlainText($tStore('related.items.codeBlock.description')), path: '?path=/docs/primitives-display-codeblock--docs' },
-      { name: $tStore('related.items.editor.name'),    description: toPlainText($tStore('related.items.editor.description')),    path: '?path=/docs/primitives-form-editor--docs' },
-      { name: $tStore('related.items.table.name'),     description: toPlainText($tStore('related.items.table.description')),     path: '?path=/docs/primitives-tables-table--docs' },
-      { name: $tStore('related.items.skeleton.name'),  description: toPlainText($tStore('related.items.skeleton.description')),  path: '?path=/docs/primitives-feedback-skeleton--docs' },
+      { name: $tStore('related.items.codeBlock.name'), description: toPlainText($tStore('related.items.codeBlock.description')), path: '?path=/docs/components-display-codeblock--docs' },
+      { name: $tStore('related.items.editor.name'),    description: toPlainText($tStore('related.items.editor.description')),    path: '?path=/docs/components-form-editor--docs' },
+      { name: $tStore('related.items.table.name'),     description: toPlainText($tStore('related.items.table.description')),     path: '?path=/docs/components-tables-table--docs' },
+      { name: $tStore('related.items.skeleton.name'),  description: toPlainText($tStore('related.items.skeleton.description')),  path: '?path=/docs/components-feedback-skeleton--docs' },
     ]}
   />
 

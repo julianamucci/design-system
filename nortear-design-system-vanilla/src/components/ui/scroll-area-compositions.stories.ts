@@ -12,7 +12,7 @@ import { createBadge } from './badge';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'Primitives/Layout/ScrollArea/Compositions',
+  title: 'Components/Layout/ScrollArea/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

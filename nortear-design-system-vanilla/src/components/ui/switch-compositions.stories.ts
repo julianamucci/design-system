@@ -26,7 +26,7 @@ import { definir } from './switch.fixtures';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Switch/Compositions',
+  title: 'Components/Form/Switch/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

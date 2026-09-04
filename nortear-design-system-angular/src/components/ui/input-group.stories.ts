@@ -35,7 +35,7 @@ type InputGroupArgs = {
 };
 
 const meta: Meta<InputGroupArgs> = {
-  title: 'Primitives/Form/InputGroup',
+  title: 'Components/Form/InputGroup',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [...NDS_INPUT_GROUP, NdsButton] })],
   parameters: {

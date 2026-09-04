@@ -683,10 +683,10 @@ export class NdsEditorDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { name: 'Textarea',    description: t('related.textarea'),    path: '?path=/docs/primitives-form-textarea--docs'     },
-      { name: 'Code Block',  description: t('related.codeBlock'),   path: '?path=/docs/primitives-display-codeblock--docs'    },
-      { name: 'Toggle Group', description: t('related.toggleGroup'), path: '?path=/docs/primitives-form-togglegroup--docs' },
-      { name: 'Button',      description: t('related.button'),      path: '?path=/docs/primitives-form-button--docs'       },
+      { name: 'Textarea',    description: t('related.textarea'),    path: '?path=/docs/components-form-textarea--docs'     },
+      { name: 'Code Block',  description: t('related.codeBlock'),   path: '?path=/docs/components-display-codeblock--docs'    },
+      { name: 'Toggle Group', description: t('related.toggleGroup'), path: '?path=/docs/components-form-togglegroup--docs' },
+      { name: 'Button',      description: t('related.button'),      path: '?path=/docs/components-form-button--docs'       },
     ];
   });
 

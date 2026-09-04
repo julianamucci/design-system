@@ -9,7 +9,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { resizeComputado } from "@shared/testing/textarea-probe";
 
 const meta = {
-  title: "Primitives/Form/Textarea",
+  title: "Components/Form/Textarea",
   component: Textarea,
   tags: ["autodocs", "form"],
   parameters: {

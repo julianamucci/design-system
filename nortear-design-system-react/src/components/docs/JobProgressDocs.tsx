@@ -486,10 +486,10 @@ export function JobProgressDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.agentStatus.name"),     description: toPlainText(tContent("related.items.agentStatus.description")),     path: "?path=/docs/primitives-conversational-agentstatus--docs"     },
-          { name: tContent("related.items.agentPlan.name"),       description: toPlainText(tContent("related.items.agentPlan.description")),       path: "?path=/docs/primitives-conversational-agentplan--docs"       },
-          { name: tContent("related.items.progress.name"),        description: toPlainText(tContent("related.items.progress.description")),        path: "?path=/docs/primitives-feedback-progress--docs"              },
-          { name: tContent("related.items.connectionState.name"), description: toPlainText(tContent("related.items.connectionState.description")), path: "?path=/docs/primitives-conversational-connectionstate--docs" },
+          { name: tContent("related.items.agentStatus.name"),     description: toPlainText(tContent("related.items.agentStatus.description")),     path: "?path=/docs/components-conversational-agentstatus--docs"     },
+          { name: tContent("related.items.agentPlan.name"),       description: toPlainText(tContent("related.items.agentPlan.description")),       path: "?path=/docs/components-conversational-agentplan--docs"       },
+          { name: tContent("related.items.progress.name"),        description: toPlainText(tContent("related.items.progress.description")),        path: "?path=/docs/components-feedback-progress--docs"              },
+          { name: tContent("related.items.connectionState.name"), description: toPlainText(tContent("related.items.connectionState.description")), path: "?path=/docs/components-conversational-connectionstate--docs" },
         ]}
       />
 

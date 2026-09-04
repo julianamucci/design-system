@@ -22,7 +22,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "Primitives/Overlay/Drawer/Variants",
+  title: "Components/Overlay/Drawer/Variants",
   tags: ["overlay"],
   component: Drawer,
   parameters: {

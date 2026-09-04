@@ -11,7 +11,7 @@ import { waitForOpen, waitForClosed, panelOpen } from './hover-card.fixtures';
 // cursor.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/HoverCard/Variants',
+  title: 'Components/Overlay/HoverCard/Variants',
   tags: ['overlay'],
   // Sem o Avatar aqui: estas duas stories falam de TEMPO, e o cartão traz só
   // texto. O preview com avatar mora em UI/HoverCard/Compositions.

@@ -800,22 +800,22 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           {
             name: tContent("related.items.toggle.name"),
             description: toPlainText(tContent("related.items.toggle.description")),
-            path: "?path=/docs/primitives-form-toggle--docs",
+            path: "?path=/docs/components-form-toggle--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
             description: toPlainText(tContent("related.items.tabs.description")),
-            path: "?path=/docs/primitives-navigation-tabs--docs",
+            path: "?path=/docs/components-navigation-tabs--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
             description: toPlainText(tContent("related.items.radioGroup.description")),
-            path: "?path=/docs/primitives-form-radiogroup--docs",
+            path: "?path=/docs/components-form-radiogroup--docs",
           },
           {
             name: tContent("related.items.checkbox.name"),
             description: toPlainText(tContent("related.items.checkbox.description")),
-            path: "?path=/docs/primitives-form-checkbox--docs",
+            path: "?path=/docs/components-form-checkbox--docs",
           },
         ]}
       />

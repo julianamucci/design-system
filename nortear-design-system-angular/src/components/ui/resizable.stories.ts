@@ -7,7 +7,7 @@ import { NdsResizableDocs } from '@/components/docs/ResizableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<ResizableArgs> = {
-  title: 'Primitives/Layout/Resizable',
+  title: 'Components/Layout/Resizable',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [NdsResizable, NdsResizablePanel, NdsResizableHandle] })],
   parameters: {

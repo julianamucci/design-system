@@ -13,7 +13,7 @@ import { NdsResizable, NdsResizablePanel, NdsResizableHandle } from './resizable
 const layoutsEmitidos: number[][] = [];
 
 const meta: Meta = {
-  title: 'Primitives/Layout/Resizable/States',
+  title: 'Components/Layout/Resizable/States',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsResizable, NdsResizablePanel, NdsResizableHandle] })],
   parameters: { layout: 'padded', controls: { disable: true } },

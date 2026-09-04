@@ -50,7 +50,7 @@ function PlaygroundExample({ state, text }: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/MessageQueue",
+  title: "Components/Conversational/MessageQueue",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

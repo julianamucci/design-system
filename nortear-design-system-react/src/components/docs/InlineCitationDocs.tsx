@@ -521,10 +521,10 @@ export function InlineCitationDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.chatThread.name"), description: toPlainText(tContent("related.items.chatThread.description")), path: "?path=/docs/primitives-conversational-chatthread--docs" },
-          { name: tContent("related.items.hoverCard.name"),  description: toPlainText(tContent("related.items.hoverCard.description")),  path: "?path=/docs/primitives-overlay-hovercard--docs"        },
-          { name: tContent("related.items.popover.name"),    description: toPlainText(tContent("related.items.popover.description")),    path: "?path=/docs/primitives-overlay-popover--docs"          },
-          { name: tContent("related.items.tooltip.name"),    description: toPlainText(tContent("related.items.tooltip.description")),    path: "?path=/docs/primitives-overlay-tooltip--docs"          },
+          { name: tContent("related.items.chatThread.name"), description: toPlainText(tContent("related.items.chatThread.description")), path: "?path=/docs/components-conversational-chatthread--docs" },
+          { name: tContent("related.items.hoverCard.name"),  description: toPlainText(tContent("related.items.hoverCard.description")),  path: "?path=/docs/components-overlay-hovercard--docs"        },
+          { name: tContent("related.items.popover.name"),    description: toPlainText(tContent("related.items.popover.description")),    path: "?path=/docs/components-overlay-popover--docs"          },
+          { name: tContent("related.items.tooltip.name"),    description: toPlainText(tContent("related.items.tooltip.description")),    path: "?path=/docs/components-overlay-tooltip--docs"          },
         ]}
       />
 

@@ -13,7 +13,7 @@ const LABELS = { completed: 'Etapa concluída', current: 'Etapa atual' };
 const TOTAL_STEPS = 4;
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Stepper',
+  title: 'Components/Navigation/Stepper',
   component: Stepper,
   tags: ['autodocs', 'navigation'],
   parameters: {

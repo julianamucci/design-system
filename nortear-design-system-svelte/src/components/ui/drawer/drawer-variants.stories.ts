@@ -6,7 +6,7 @@ import DrawerStory from './DrawerStory.svelte';
 import { drawerSource, drawerWithScrollSource } from './drawer.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Drawer/Variants',
+  title: 'Components/Overlay/Drawer/Variants',
   component: DrawerStory,
   tags: ['overlay'],
   parameters: {

@@ -20,7 +20,7 @@ import { COLUMNS, INVOICES } from './table.fixtures';
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'Primitives/Tables/Table/States',
+  title: 'Components/Tables/Table/States',
   parameters: {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     actions: { disable: true },

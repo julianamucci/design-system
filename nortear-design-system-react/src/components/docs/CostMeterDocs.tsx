@@ -422,10 +422,10 @@ export function CostMeterDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.contextDisplay.name"),   description: toPlainText(tContent("related.items.contextDisplay.description")),   path: "?path=/docs/primitives-conversational-contextdisplay--docs" },
-          { name: tContent("related.items.contextBreakdown.name"), description: toPlainText(tContent("related.items.contextBreakdown.description")), path: "?path=/docs/primitives-conversational-contextbreakdown--docs" },
-          { name: tContent("related.items.agentStatus.name"),      description: toPlainText(tContent("related.items.agentStatus.description")),      path: "?path=/docs/primitives-conversational-agentstatus--docs" },
-          { name: tContent("related.items.progress.name"),         description: toPlainText(tContent("related.items.progress.description")),         path: "?path=/docs/primitives-feedback-progress--docs" },
+          { name: tContent("related.items.contextDisplay.name"),   description: toPlainText(tContent("related.items.contextDisplay.description")),   path: "?path=/docs/components-conversational-contextdisplay--docs" },
+          { name: tContent("related.items.contextBreakdown.name"), description: toPlainText(tContent("related.items.contextBreakdown.description")), path: "?path=/docs/components-conversational-contextbreakdown--docs" },
+          { name: tContent("related.items.agentStatus.name"),      description: toPlainText(tContent("related.items.agentStatus.description")),      path: "?path=/docs/components-conversational-agentstatus--docs" },
+          { name: tContent("related.items.progress.name"),         description: toPlainText(tContent("related.items.progress.description")),         path: "?path=/docs/components-feedback-progress--docs" },
         ]}
       />
 

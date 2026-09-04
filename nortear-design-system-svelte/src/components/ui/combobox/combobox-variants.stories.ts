@@ -77,7 +77,7 @@ function contrast(first: string, second: string): number {
 }
 
 const meta: Meta = {
-	title: 'Primitives/Form/Combobox/Variants',
+	title: 'Components/Form/Combobox/Variants',
 	tags: ['form'],
 	parameters: {
 		layout: 'padded',

@@ -9,7 +9,7 @@ import BadgeSemanticasStory from './BadgeSemanticasStory.svelte';
 import { badgeDestructiveSource, badgeSemanticasSource, badgeSource } from './badge.source';
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Badge/Variants',
+  title: 'Components/Feedback/Badge/Variants',
   component: Badge,
   tags: ['feedback'],
   parameters: {

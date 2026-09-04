@@ -12,7 +12,7 @@ import { InputOTPDocs } from "@/components/docs/InputOTPDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Form/InputOTP",
+  title: "Components/Form/InputOTP",
   component: InputOTP,
   tags: ["autodocs", "form"],
   parameters: {

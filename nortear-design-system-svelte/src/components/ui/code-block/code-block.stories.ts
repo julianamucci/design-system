@@ -23,7 +23,7 @@ const DEMO_CODE = `<script lang="ts">
 // fixture), então aqui Meta<typeof Componente> é o tipo certo: os args SÃO as
 // props do componente.
 const meta = {
-  title: 'Primitives/Display/CodeBlock',
+  title: 'Components/Display/CodeBlock',
   component: CodeBlock,
   tags: ['autodocs', 'display'],
   parameters: {

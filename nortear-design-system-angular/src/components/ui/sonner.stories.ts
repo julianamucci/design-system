@@ -11,7 +11,7 @@ import { sonnerPlaygroundSource, type SonnerArgs } from './sonner.source';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<SonnerArgs> = {
-  title: 'Primitives/Feedback/Sonner',
+  title: 'Components/Feedback/Sonner',
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster, NdsButton] })],
   parameters: {

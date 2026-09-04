@@ -16,7 +16,7 @@ const onDismissQuote = fn();
 // ações ficam desligados: vazios, seriam duas abas prometendo interação que
 // não há.
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerQuote',
+  title: 'Components/Conversational/ComposerQuote',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

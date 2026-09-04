@@ -24,7 +24,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/DraftRestore',
+  title: 'Components/Conversational/DraftRestore',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsDraftRestore] })],
   parameters: {

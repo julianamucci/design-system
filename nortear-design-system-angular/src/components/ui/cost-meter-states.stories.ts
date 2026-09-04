@@ -32,7 +32,7 @@ import {
 // terceira —, e é o texto ao lado que responde.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/CostMeter/States',
+  title: 'Components/Conversational/CostMeter/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsCostMeter] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

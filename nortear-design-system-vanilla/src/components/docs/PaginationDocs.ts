@@ -644,9 +644,9 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
-            { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
-            { name: t('related.items.button.name'),     description: toPlainText(t('related.items.button.description')),     path: '?path=/docs/primitives-form-button--docs'     },
+            { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/components-navigation-breadcrumb--docs' },
+            { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs'       },
+            { name: t('related.items.button.name'),     description: toPlainText(t('related.items.button.description')),     path: '?path=/docs/components-form-button--docs'     },
           ],
         });
 

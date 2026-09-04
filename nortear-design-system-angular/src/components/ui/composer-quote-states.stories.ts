@@ -16,7 +16,7 @@ import {
 // o que acontece quando ele não cabe, e quando não há citação nenhuma.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerQuote/States',
+  title: 'Components/Conversational/ComposerQuote/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

@@ -19,7 +19,7 @@ type PlaygroundArgs = Omit<ComponentProps<typeof Toggle>, "onPressedChange"> & {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Form/Toggle",
+  title: "Components/Form/Toggle",
   component: Toggle,
   tags: ["autodocs", "form"],
   parameters: {

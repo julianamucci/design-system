@@ -863,10 +863,10 @@ interface InputGroupButtonProps {
     title={$tStore('related.title')}
     componentSlug={SLUG}
     items={[
-      { name: $tStore('related.items.input.name'),    description: toPlainText($tStore('related.items.input.description')),    path: '?path=/docs/primitives-form-input--docs'    },
-      { name: $tStore('related.items.textarea.name'), description: toPlainText($tStore('related.items.textarea.description')), path: '?path=/docs/primitives-form-textarea--docs' },
-      { name: $tStore('related.items.button.name'),   description: toPlainText($tStore('related.items.button.description')),   path: '?path=/docs/primitives-form-button--docs'   },
-      { name: $tStore('related.items.form.name'),     description: toPlainText($tStore('related.items.form.description')),     path: '?path=/docs/primitives-form-form--docs'     },
+      { name: $tStore('related.items.input.name'),    description: toPlainText($tStore('related.items.input.description')),    path: '?path=/docs/components-form-input--docs'    },
+      { name: $tStore('related.items.textarea.name'), description: toPlainText($tStore('related.items.textarea.description')), path: '?path=/docs/components-form-textarea--docs' },
+      { name: $tStore('related.items.button.name'),   description: toPlainText($tStore('related.items.button.description')),   path: '?path=/docs/components-form-button--docs'   },
+      { name: $tStore('related.items.form.name'),     description: toPlainText($tStore('related.items.form.description')),     path: '?path=/docs/components-form-form--docs'     },
     ]}
   />
 

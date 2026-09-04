@@ -21,7 +21,7 @@ import {
 // cascatas.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/TraceWaterfall/States',
+  title: 'Components/Conversational/TraceWaterfall/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

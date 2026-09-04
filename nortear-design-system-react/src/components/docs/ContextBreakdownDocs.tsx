@@ -421,10 +421,10 @@ export function ContextBreakdownDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/primitives-conversational-contextdisplay--docs" },
-          { name: tContent("related.items.chatThread.name"),     description: toPlainText(tContent("related.items.chatThread.description")),     path: "?path=/docs/primitives-conversational-chatthread--docs"     },
-          { name: tContent("related.items.chart.name"),          description: toPlainText(tContent("related.items.chart.description")),          path: "?path=/docs/primitives-display-chart--docs"                  },
-          { name: tContent("related.items.progress.name"),       description: toPlainText(tContent("related.items.progress.description")),       path: "?path=/docs/primitives-feedback-progress--docs"              },
+          { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/components-conversational-contextdisplay--docs" },
+          { name: tContent("related.items.chatThread.name"),     description: toPlainText(tContent("related.items.chatThread.description")),     path: "?path=/docs/components-conversational-chatthread--docs"     },
+          { name: tContent("related.items.chart.name"),          description: toPlainText(tContent("related.items.chart.description")),          path: "?path=/docs/components-display-chart--docs"                  },
+          { name: tContent("related.items.progress.name"),       description: toPlainText(tContent("related.items.progress.description")),       path: "?path=/docs/components-feedback-progress--docs"              },
         ]}
       />
 

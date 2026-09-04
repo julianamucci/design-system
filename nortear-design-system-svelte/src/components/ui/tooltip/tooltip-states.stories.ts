@@ -18,7 +18,7 @@ function wait(ms: number): Promise<void> {
 }
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Tooltip/States',
+  title: 'Components/Overlay/Tooltip/States',
   component: TooltipStory,
   tags: ['overlay'],
   parameters: {

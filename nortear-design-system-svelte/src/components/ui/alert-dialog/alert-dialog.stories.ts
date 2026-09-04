@@ -14,7 +14,7 @@ import { alertDialogSource } from './alert-dialog.source';
 const DEMO = { table: { category: 'Demonstração' } } as const;
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/AlertDialog',
+  title: 'Components/Overlay/AlertDialog',
   component: AlertDialog,
   tags: ['autodocs', 'overlay'],
   parameters: {

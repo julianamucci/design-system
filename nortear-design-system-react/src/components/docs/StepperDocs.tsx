@@ -656,24 +656,24 @@ interface StepperItemProps {
           {
             name: tContent("related.items.tabs.name"),
             description: toPlainText(tContent("related.items.tabs.description")),
-            path: "?path=/docs/primitives-navigation-tabs--docs",
+            path: "?path=/docs/components-navigation-tabs--docs",
           },
           {
             name: tContent("related.items.breadcrumb.name"),
             description: toPlainText(
               tContent("related.items.breadcrumb.description"),
             ),
-            path: "?path=/docs/primitives-navigation-breadcrumb--docs",
+            path: "?path=/docs/components-navigation-breadcrumb--docs",
           },
           {
             name: tContent("related.items.progress.name"),
             description: toPlainText(tContent("related.items.progress.description")),
-            path: "?path=/docs/primitives-feedback-progress--docs",
+            path: "?path=/docs/components-feedback-progress--docs",
           },
           {
             name: tContent("related.items.form.name"),
             description: toPlainText(tContent("related.items.form.description")),
-            path: "?path=/docs/primitives-form-form--docs",
+            path: "?path=/docs/components-form-form--docs",
           },
         ]}
       />

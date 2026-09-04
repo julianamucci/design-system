@@ -16,7 +16,7 @@ import {
 } from "@shared/testing/textarea-probe";
 
 const meta = {
-  title: "Primitives/Form/Textarea/States",
+  title: "Components/Form/Textarea/States",
   tags: ["form"],
   component: Textarea,
   parameters: {

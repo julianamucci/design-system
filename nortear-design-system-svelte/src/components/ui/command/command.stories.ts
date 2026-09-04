@@ -8,7 +8,7 @@ import CommandStory from './CommandStory.svelte';
 import { commandSource } from './command.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Command',
+  title: 'Components/Overlay/Command',
   component: Command,
   tags: ['autodocs', 'overlay'],
   parameters: {

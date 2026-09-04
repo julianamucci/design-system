@@ -19,7 +19,7 @@ import { budgetLevel, usedFraction } from '@shared/primitives/token-budget';
 // guideline 17).
 
 const meta: Meta<typeof CostMeter> = {
-  title: 'Primitives/Conversational/CostMeter/Compositions',
+  title: 'Components/Conversational/CostMeter/Compositions',
   component: CostMeter,
   tags: ['conversational'],
   parameters: {

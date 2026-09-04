@@ -25,7 +25,7 @@ import {
 // quanto cabe, que é o único que não desenha medidor nenhum.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextDisplay/States',
+  title: 'Components/Conversational/ContextDisplay/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

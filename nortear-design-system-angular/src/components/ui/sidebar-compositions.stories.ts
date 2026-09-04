@@ -8,7 +8,7 @@ import { NDS_TOOLTIP } from './tooltip';
 import { NdsButtonIcon } from './button';
 
 const meta: Meta = {
-  title: 'Primitives/Layout/Sidebar/Compositions',
+  title: 'Components/Layout/Sidebar/Compositions',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR, NdsSeparator] })],
   parameters: { layout: 'fullscreen', controls: { disable: true } },

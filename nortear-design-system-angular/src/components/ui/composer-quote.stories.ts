@@ -17,7 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const onDismissQuote = fn();
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerQuote',
+  title: 'Components/Conversational/ComposerQuote',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

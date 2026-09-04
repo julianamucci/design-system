@@ -32,7 +32,7 @@ import {
 // consome aperta a casa.
 
 const meta: Meta<typeof ActivityGraph> = {
-  title: 'Primitives/Conversational/ActivityGraph/Compositions',
+  title: 'Components/Conversational/ActivityGraph/Compositions',
   component: ActivityGraph,
   tags: ['conversational'],
   parameters: {

@@ -552,8 +552,8 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'alert',  name: 'Alert',  path: '?path=/docs/primitives-feedback-alert--docs'  },
-      { key: 'button', name: 'Button', path: '?path=/docs/primitives-form-button--docs' },
+      { key: 'alert',  name: 'Alert',  path: '?path=/docs/components-feedback-alert--docs'  },
+      { key: 'button', name: 'Button', path: '?path=/docs/components-form-button--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: t(`related.${key}`),

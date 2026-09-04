@@ -810,10 +810,10 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'checkbox', path: '?path=/docs/primitives-form-checkbox--docs' },
-      { key: 'switch',   path: '?path=/docs/primitives-form-switch--docs'   },
-      { key: 'select',   path: '?path=/docs/primitives-form-select--docs'   },
-      { key: 'form',     path: '?path=/docs/primitives-form-form--docs'     },
+      { key: 'checkbox', path: '?path=/docs/components-form-checkbox--docs' },
+      { key: 'switch',   path: '?path=/docs/components-form-switch--docs'   },
+      { key: 'select',   path: '?path=/docs/components-form-select--docs'   },
+      { key: 'form',     path: '?path=/docs/components-form-form--docs'     },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

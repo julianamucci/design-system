@@ -1040,10 +1040,10 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { name: 'Accordion', k: 'accordion', path: '?path=/docs/primitives-disclosure-accordion--docs' },
-      { name: 'Sheet',     k: 'sheet',     path: '?path=/docs/primitives-overlay-sheet--docs'     },
-      { name: 'Button',    k: 'button',    path: '?path=/docs/primitives-form-button--docs'    },
-      { name: 'Tabs',      k: 'tabs',      path: '?path=/docs/primitives-navigation-tabs--docs'      },
+      { name: 'Accordion', k: 'accordion', path: '?path=/docs/components-disclosure-accordion--docs' },
+      { name: 'Sheet',     k: 'sheet',     path: '?path=/docs/components-overlay-sheet--docs'     },
+      { name: 'Button',    k: 'button',    path: '?path=/docs/components-form-button--docs'    },
+      { name: 'Tabs',      k: 'tabs',      path: '?path=/docs/components-navigation-tabs--docs'      },
     ].map(({ name, k, path }) => ({
       name,
       description: toPlainText(t(`related.${k}`)),

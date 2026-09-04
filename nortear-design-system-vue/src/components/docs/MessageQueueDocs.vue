@@ -322,10 +322,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.composer.name'),      description: toPlainText(tContent('related.items.composer.description')),      path: '?path=/docs/primitives-conversational-composer--docs' },
-  { name: tContent('related.items.composerQuote.name'), description: toPlainText(tContent('related.items.composerQuote.description')), path: '?path=/docs/primitives-conversational-composerquote--docs' },
-  { name: tContent('related.items.chatThread.name'),    description: toPlainText(tContent('related.items.chatThread.description')),    path: '?path=/docs/primitives-conversational-chatthread--docs' },
-  { name: tContent('related.items.badge.name'),         description: toPlainText(tContent('related.items.badge.description')),         path: '?path=/docs/primitives-feedback-badge--docs' },
+  { name: tContent('related.items.composer.name'),      description: toPlainText(tContent('related.items.composer.description')),      path: '?path=/docs/components-conversational-composer--docs' },
+  { name: tContent('related.items.composerQuote.name'), description: toPlainText(tContent('related.items.composerQuote.description')), path: '?path=/docs/components-conversational-composerquote--docs' },
+  { name: tContent('related.items.chatThread.name'),    description: toPlainText(tContent('related.items.chatThread.description')),    path: '?path=/docs/components-conversational-chatthread--docs' },
+  { name: tContent('related.items.badge.name'),         description: toPlainText(tContent('related.items.badge.description')),         path: '?path=/docs/components-feedback-badge--docs' },
 ]);
 
 const noteItems = computed(() =>

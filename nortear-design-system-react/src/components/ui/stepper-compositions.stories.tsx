@@ -37,7 +37,7 @@ const CURRENT_STEP = 2;
 const onStepSelect = fn();
 
 const meta: Meta = {
-  title: "Primitives/Navigation/Stepper/Compositions",
+  title: "Components/Navigation/Stepper/Compositions",
   component: Stepper,
   tags: ["navigation"],
   parameters: {

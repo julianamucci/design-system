@@ -19,7 +19,7 @@ import {
 } from './breadcrumb.source';
 
 const meta = {
-  title: 'Primitives/Navigation/Breadcrumb/States',
+  title: 'Components/Navigation/Breadcrumb/States',
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {

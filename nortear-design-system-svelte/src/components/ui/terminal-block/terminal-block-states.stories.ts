@@ -26,7 +26,7 @@ import {
 // voltou, como terminou — e o que muda é o que cada parte tem para dizer.
 
 const meta: Meta<typeof TerminalBlock> = {
-  title: 'Primitives/Conversational/TerminalBlock/States',
+  title: 'Components/Conversational/TerminalBlock/States',
   component: TerminalBlock,
   tags: ['conversational'],
   parameters: {

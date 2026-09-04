@@ -381,10 +381,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Accordion', description: toPlainText(tContent('related.accordion')), path: '?path=/docs/primitives-disclosure-accordion--docs' },
-  { name: 'Sheet',     description: toPlainText(tContent('related.sheet')),     path: '?path=/docs/primitives-overlay-sheet--docs'     },
-  { name: 'Button',    description: toPlainText(tContent('related.button')),    path: '?path=/docs/primitives-form-button--docs'    },
-  { name: 'Tabs',      description: toPlainText(tContent('related.tabs')),      path: '?path=/docs/primitives-navigation-tabs--docs'      },
+  { name: 'Accordion', description: toPlainText(tContent('related.accordion')), path: '?path=/docs/components-disclosure-accordion--docs' },
+  { name: 'Sheet',     description: toPlainText(tContent('related.sheet')),     path: '?path=/docs/components-overlay-sheet--docs'     },
+  { name: 'Button',    description: toPlainText(tContent('related.button')),    path: '?path=/docs/components-form-button--docs'    },
+  { name: 'Tabs',      description: toPlainText(tContent('related.tabs')),      path: '?path=/docs/components-navigation-tabs--docs'      },
 ]);
 
 const noteItems = computed(() => [

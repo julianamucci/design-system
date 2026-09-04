@@ -36,7 +36,7 @@ type PlaygroundArgs = {
 const RENEWAL_MINUTES = 192;
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/QuotaBanner',
+  title: 'Components/Conversational/QuotaBanner',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsQuotaBanner] })],
   parameters: {

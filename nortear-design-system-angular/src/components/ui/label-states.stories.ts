@@ -10,7 +10,7 @@ import { NdsLabel } from './label';
 import { NdsInput } from './input';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Label/States',
+  title: 'Components/Form/Label/States',
   decorators: [moduleMetadata({ imports: [NdsLabel, NdsInput] })],
   tags: ['form'],
   parameters: {

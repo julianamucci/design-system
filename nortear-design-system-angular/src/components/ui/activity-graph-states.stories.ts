@@ -34,7 +34,7 @@ import {
 // fotografa a escala inteira lado a lado, e não cinco grades.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ActivityGraph/States',
+  title: 'Components/Conversational/ActivityGraph/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsActivityGraph] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

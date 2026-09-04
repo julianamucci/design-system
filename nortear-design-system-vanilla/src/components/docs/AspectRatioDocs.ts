@@ -521,9 +521,9 @@ export interface AspectRatioOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Card',       description: toPlainText(t('related.card')),       path: '?path=/docs/primitives-layout-card--docs' },
-            { name: 'Avatar',     description: toPlainText(t('related.avatar')),     path: '?path=/docs/primitives-display-avatar--docs' },
-            { name: 'Skeleton',   description: toPlainText(t('related.skeleton')),   path: '?path=/docs/primitives-feedback-skeleton--docs' },
+            { name: 'Card',       description: toPlainText(t('related.card')),       path: '?path=/docs/components-layout-card--docs' },
+            { name: 'Avatar',     description: toPlainText(t('related.avatar')),     path: '?path=/docs/components-display-avatar--docs' },
+            { name: 'Skeleton',   description: toPlainText(t('related.skeleton')),   path: '?path=/docs/components-feedback-skeleton--docs' },
           ],
         });
 

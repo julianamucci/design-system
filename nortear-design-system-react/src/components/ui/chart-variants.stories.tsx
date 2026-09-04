@@ -92,7 +92,7 @@ function shareOfFirst(value: number): string {
 }
 
 const meta: Meta = {
-  title: 'Primitives/Display/Chart/Types',
+  title: 'Components/Display/Chart/Types',
   tags: ['display'],
   // Sem argTypes: sem isto o painel Controls abre vazio.
   parameters: {

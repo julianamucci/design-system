@@ -17,7 +17,7 @@ import { separadores, mountInline } from './command.fixtures';
  */
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Command/Variants',
+  title: 'Components/Overlay/Command/Variants',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

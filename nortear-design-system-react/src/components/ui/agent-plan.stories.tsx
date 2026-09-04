@@ -45,7 +45,7 @@ function PlaygroundExample({ state, label, detail }: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/AgentPlan",
+  title: "Components/Conversational/AgentPlan",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

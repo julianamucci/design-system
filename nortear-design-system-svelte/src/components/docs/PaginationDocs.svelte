@@ -691,9 +691,9 @@ interface PaginationDirectionalProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.breadcrumb.name'), description: $tStore('related.items.breadcrumb.description'), path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
-      { name: $tStore('related.items.tabs.name'),       description: $tStore('related.items.tabs.description'),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
-      { name: $tStore('related.items.button.name'),     description: $tStore('related.items.button.description'),     path: '?path=/docs/primitives-form-button--docs'     },
+      { name: $tStore('related.items.breadcrumb.name'), description: $tStore('related.items.breadcrumb.description'), path: '?path=/docs/components-navigation-breadcrumb--docs' },
+      { name: $tStore('related.items.tabs.name'),       description: $tStore('related.items.tabs.description'),       path: '?path=/docs/components-navigation-tabs--docs'       },
+      { name: $tStore('related.items.button.name'),     description: $tStore('related.items.button.description'),     path: '?path=/docs/components-form-button--docs'     },
     ]}
   />
 

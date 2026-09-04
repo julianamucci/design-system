@@ -23,7 +23,7 @@ import { hoverCardControlledSource, hoverCardPerfilSource } from './hover-card.s
 // desabilitado é o `disabled` do elemento nativo.
 
 const meta = {
-  title: 'Primitives/Overlay/HoverCard/States',
+  title: 'Components/Overlay/HoverCard/States',
   component: HoverCard,
   tags: ['overlay'],
   parameters: {

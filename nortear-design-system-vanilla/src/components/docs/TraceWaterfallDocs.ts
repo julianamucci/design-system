@@ -476,10 +476,10 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.flowGraph.name'),     description: toPlainText(t('related.items.flowGraph.description')),     path: '?path=/docs/primitives-conversational-flowgraph--docs'     },
-            { name: t('related.items.agentPlan.name'),     description: toPlainText(t('related.items.agentPlan.description')),     path: '?path=/docs/primitives-conversational-agentplan--docs'     },
-            { name: t('related.items.messageTiming.name'), description: toPlainText(t('related.items.messageTiming.description')), path: '?path=/docs/primitives-conversational-messagetiming--docs' },
-            { name: t('related.items.progress.name'),      description: toPlainText(t('related.items.progress.description')),      path: '?path=/docs/primitives-feedback-progress--docs'            },
+            { name: t('related.items.flowGraph.name'),     description: toPlainText(t('related.items.flowGraph.description')),     path: '?path=/docs/components-conversational-flowgraph--docs'     },
+            { name: t('related.items.agentPlan.name'),     description: toPlainText(t('related.items.agentPlan.description')),     path: '?path=/docs/components-conversational-agentplan--docs'     },
+            { name: t('related.items.messageTiming.name'), description: toPlainText(t('related.items.messageTiming.description')), path: '?path=/docs/components-conversational-messagetiming--docs' },
+            { name: t('related.items.progress.name'),      description: toPlainText(t('related.items.progress.description')),      path: '?path=/docs/components-feedback-progress--docs'            },
           ],
         });
 

@@ -21,7 +21,7 @@ import { canWithdraw, type QueuedMessage } from '@shared/primitives/chat-protoco
 // procuraria a diferença que não existe.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/MessageQueue/States',
+  title: 'Components/Conversational/MessageQueue/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

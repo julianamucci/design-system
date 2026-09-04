@@ -34,7 +34,7 @@ const block = createCodeBlock({
 document.querySelector('#app')?.append(block);`;
 
 const meta: Meta<CodeBlockArgs> = {
-  title: 'Primitives/Display/CodeBlock',
+  title: 'Components/Display/CodeBlock',
   tags: ['autodocs', 'display'],
   parameters: {
     docs: {

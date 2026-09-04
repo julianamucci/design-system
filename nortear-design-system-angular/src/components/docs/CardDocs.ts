@@ -635,12 +635,12 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'separator', name: 'Separator', path: '?path=/docs/primitives-layout-separator--docs' },
-      { key: 'accordion', name: 'Accordion', path: '?path=/docs/primitives-disclosure-accordion--docs' },
-      { key: 'alert',     name: 'Alert',     path: '?path=/docs/primitives-feedback-alert--docs'     },
-      { key: 'button',    name: 'Button',    path: '?path=/docs/primitives-form-button--docs'    },
-      { key: 'badge',     name: 'Badge',     path: '?path=/docs/primitives-feedback-badge--docs'     },
-      { key: 'avatar',    name: 'Avatar',    path: '?path=/docs/primitives-display-avatar--docs'    },
+      { key: 'separator', name: 'Separator', path: '?path=/docs/components-layout-separator--docs' },
+      { key: 'accordion', name: 'Accordion', path: '?path=/docs/components-disclosure-accordion--docs' },
+      { key: 'alert',     name: 'Alert',     path: '?path=/docs/components-feedback-alert--docs'     },
+      { key: 'button',    name: 'Button',    path: '?path=/docs/components-form-button--docs'    },
+      { key: 'badge',     name: 'Badge',     path: '?path=/docs/components-feedback-badge--docs'     },
+      { key: 'avatar',    name: 'Avatar',    path: '?path=/docs/components-display-avatar--docs'    },
     ].map(({ key, name, path }) => ({
       name: name,
       description: t(`related.${key}`),

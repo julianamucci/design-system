@@ -39,7 +39,7 @@ interface SidebarPlaygroundArgs {
 }
 
 const meta = {
-  title: 'Primitives/Layout/Sidebar',
+  title: 'Components/Layout/Sidebar',
   component: Sidebar,
   tags: ['autodocs', 'layout'],
   parameters: {

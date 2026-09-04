@@ -587,10 +587,10 @@ export class NdsMessageTimingDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'agentStatus',    path: '?path=/docs/primitives-conversational-agentstatus--docs'    },
-      { key: 'contextDisplay', path: '?path=/docs/primitives-conversational-contextdisplay--docs' },
-      { key: 'chatThread',     path: '?path=/docs/primitives-conversational-chatthread--docs'     },
-      { key: 'tooltip',        path: '?path=/docs/primitives-overlay-tooltip--docs'               },
+      { key: 'agentStatus',    path: '?path=/docs/components-conversational-agentstatus--docs'    },
+      { key: 'contextDisplay', path: '?path=/docs/components-conversational-contextdisplay--docs' },
+      { key: 'chatThread',     path: '?path=/docs/components-conversational-chatthread--docs'     },
+      { key: 'tooltip',        path: '?path=/docs/components-overlay-tooltip--docs'               },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

@@ -505,10 +505,10 @@ export function createEditorDocs(): HTMLElement {
           title: t('related.title'),
           componentSlug: 'editor',
           items: [
-            { name: 'Textarea',    description: toPlainText(t('related.textarea')),    path: '?path=/docs/primitives-form-textarea--docs' },
-            { name: 'CodeBlock',   description: toPlainText(t('related.codeBlock')),   path: '?path=/docs/primitives-display-codeblock--docs' },
-            { name: 'ToggleGroup', description: toPlainText(t('related.toggleGroup')), path: '?path=/docs/primitives-form-togglegroup--docs' },
-            { name: 'Button',      description: toPlainText(t('related.button')),      path: '?path=/docs/primitives-form-button--docs' },
+            { name: 'Textarea',    description: toPlainText(t('related.textarea')),    path: '?path=/docs/components-form-textarea--docs' },
+            { name: 'CodeBlock',   description: toPlainText(t('related.codeBlock')),   path: '?path=/docs/components-display-codeblock--docs' },
+            { name: 'ToggleGroup', description: toPlainText(t('related.toggleGroup')), path: '?path=/docs/components-form-togglegroup--docs' },
+            { name: 'Button',      description: toPlainText(t('related.button')),      path: '?path=/docs/components-form-button--docs' },
           ],
         });
 

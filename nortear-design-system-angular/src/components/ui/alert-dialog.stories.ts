@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 const meta: Meta<AlertDialogArgs> = {
-  title: 'Primitives/Overlay/AlertDialog',
+  title: 'Components/Overlay/AlertDialog',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {

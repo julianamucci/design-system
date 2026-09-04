@@ -14,7 +14,7 @@ import { tabsPlaygroundSource, type TabsArgs } from './tabs.source';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<TabsArgs> = {
-  title: 'Primitives/Navigation/Tabs',
+  title: 'Components/Navigation/Tabs',
   tags: ['autodocs', 'navigation'],
   decorators: [
     moduleMetadata({ imports: [NdsTabs, NdsTabsList, NdsTabsTrigger, NdsTabsContent] }),

@@ -343,11 +343,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Input',    description: toPlainText(tContent('related.input')),    path: '?path=/docs/primitives-form-input--docs'    },
-  { name: 'Textarea', description: toPlainText(tContent('related.textarea')), path: '?path=/docs/primitives-form-textarea--docs' },
-  { name: 'Select',   description: toPlainText(tContent('related.select')),   path: '?path=/docs/primitives-form-select--docs'   },
-  { name: 'Checkbox', description: toPlainText(tContent('related.checkbox')), path: '?path=/docs/primitives-form-checkbox--docs' },
-  { name: 'Label',    description: toPlainText(tContent('related.label')),    path: '?path=/docs/primitives-form-label--docs'    },
+  { name: 'Input',    description: toPlainText(tContent('related.input')),    path: '?path=/docs/components-form-input--docs'    },
+  { name: 'Textarea', description: toPlainText(tContent('related.textarea')), path: '?path=/docs/components-form-textarea--docs' },
+  { name: 'Select',   description: toPlainText(tContent('related.select')),   path: '?path=/docs/components-form-select--docs'   },
+  { name: 'Checkbox', description: toPlainText(tContent('related.checkbox')), path: '?path=/docs/components-form-checkbox--docs' },
+  { name: 'Label',    description: toPlainText(tContent('related.label')),    path: '?path=/docs/components-form-label--docs'    },
 ]);
 
 const noteItems = computed(() =>

@@ -29,7 +29,7 @@ const startOfLabel: ComboboxFilter = (item, query) => {
 };
 
 const meta: Meta = {
-	title: 'Primitives/Form/Combobox/Compositions',
+	title: 'Components/Form/Combobox/Compositions',
 	tags: ['form'],
 	parameters: {
 		layout: 'padded',

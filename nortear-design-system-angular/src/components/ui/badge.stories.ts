@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<BadgeArgs> = {
-  title: 'Primitives/Feedback/Badge',
+  title: 'Components/Feedback/Badge',
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [NdsBadge] })],
   parameters: {

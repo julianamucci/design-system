@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { buttonSource } from './button.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Button',
+  title: 'Components/Form/Button',
   component: Button,
   tags: ['autodocs', 'form'],
   parameters: {

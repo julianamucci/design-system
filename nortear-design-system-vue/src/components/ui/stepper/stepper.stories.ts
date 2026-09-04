@@ -30,7 +30,7 @@ const STATE_LABELS = {
 };
 
 const meta: Meta<any> = {
-  title: 'Primitives/Navigation/Stepper',
+  title: 'Components/Navigation/Stepper',
   component: Stepper,
   tags: ['autodocs', 'navigation'],
   parameters: {

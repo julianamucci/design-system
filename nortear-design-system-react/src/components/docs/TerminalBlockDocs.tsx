@@ -502,10 +502,10 @@ export function TerminalBlockDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.codeBlock.name"),   description: toPlainText(tContent("related.items.codeBlock.description")),   path: "?path=/docs/primitives-display-codeblock--docs"           },
-          { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/primitives-conversational-agentstatus--docs" },
-          { name: tContent("related.items.toolGroup.name"),   description: toPlainText(tContent("related.items.toolGroup.description")),   path: "?path=/docs/primitives-conversational-toolgroup--docs"   },
-          { name: tContent("related.items.jobProgress.name"), description: toPlainText(tContent("related.items.jobProgress.description")), path: "?path=/docs/primitives-conversational-jobprogress--docs" },
+          { name: tContent("related.items.codeBlock.name"),   description: toPlainText(tContent("related.items.codeBlock.description")),   path: "?path=/docs/components-display-codeblock--docs"           },
+          { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/components-conversational-agentstatus--docs" },
+          { name: tContent("related.items.toolGroup.name"),   description: toPlainText(tContent("related.items.toolGroup.description")),   path: "?path=/docs/components-conversational-toolgroup--docs"   },
+          { name: tContent("related.items.jobProgress.name"), description: toPlainText(tContent("related.items.jobProgress.description")), path: "?path=/docs/components-conversational-jobprogress--docs" },
         ]}
       />
 

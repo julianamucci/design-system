@@ -15,7 +15,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<AlertArgs> = {
-  title: 'Primitives/Feedback/Alert',
+  title: 'Components/Feedback/Alert',
   tags: ['autodocs', 'feedback'],
   decorators: [
     moduleMetadata({

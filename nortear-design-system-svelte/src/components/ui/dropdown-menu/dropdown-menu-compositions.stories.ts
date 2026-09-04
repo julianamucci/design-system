@@ -13,7 +13,7 @@ import {
 } from './dropdown-menu.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/DropdownMenu/Compositions',
+  title: 'Components/Overlay/DropdownMenu/Compositions',
   component: DropdownMenuStory,
   tags: ['overlay'],
   parameters: {

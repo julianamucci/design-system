@@ -28,7 +28,7 @@ type AlertDialogArgs = {
 const DEMO = { table: { category: 'Demonstração' } } as const;
 
 const meta: Meta<AlertDialogArgs> = {
-  title: 'Primitives/Overlay/AlertDialog',
+  title: 'Components/Overlay/AlertDialog',
   tags: ['autodocs', 'overlay'],
   parameters: {
     design: figmaDesign('alertDialog'),

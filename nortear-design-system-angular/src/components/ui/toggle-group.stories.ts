@@ -12,7 +12,7 @@ import { LABELS } from './toggle-group.fixtures';
 import { toggleGroupPlaygroundSource, type ToggleGroupArgs } from './toggle-group.source';
 
 const meta: Meta<ToggleGroupArgs> = {
-  title: 'Primitives/Form/ToggleGroup',
+  title: 'Components/Form/ToggleGroup',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle] })],
   parameters: {

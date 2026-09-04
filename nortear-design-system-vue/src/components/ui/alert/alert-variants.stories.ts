@@ -19,7 +19,7 @@ import {
 } from './alert.source';
 
 const meta = {
-  title: 'Primitives/Feedback/Alert/Variants',
+  title: 'Components/Feedback/Alert/Variants',
   component: Alert,
   tags: ['feedback'],
   parameters: {

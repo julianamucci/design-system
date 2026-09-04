@@ -11,7 +11,7 @@ import {
 } from "./skeleton.source";
 
 const meta = {
-  title: "Primitives/Feedback/Skeleton/Compositions",
+  title: "Components/Feedback/Skeleton/Compositions",
   tags: ["feedback"],
   component: Skeleton,
   parameters: {

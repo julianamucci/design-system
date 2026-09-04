@@ -22,7 +22,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "Primitives/Overlay/Drawer/Compositions",
+  title: "Components/Overlay/Drawer/Compositions",
   tags: ["overlay"],
   component: Drawer,
   parameters: {

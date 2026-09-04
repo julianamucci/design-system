@@ -22,7 +22,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Breadcrumb',
+  title: 'Components/Navigation/Breadcrumb',
   tags: ['autodocs', 'navigation'],
   parameters: {
     design: figmaDesign('breadcrumb'),

@@ -9,7 +9,7 @@ import { NdsDrawerDocs } from '@/components/docs/DrawerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<DrawerArgs> = {
-  title: 'Primitives/Overlay/Drawer',
+  title: 'Components/Overlay/Drawer',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton] })],
   parameters: {

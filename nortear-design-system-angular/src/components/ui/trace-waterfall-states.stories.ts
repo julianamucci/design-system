@@ -26,7 +26,7 @@ import {
 // outro, e não quatro cascatas.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/TraceWaterfall/States',
+  title: 'Components/Conversational/TraceWaterfall/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsTraceWaterfall] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

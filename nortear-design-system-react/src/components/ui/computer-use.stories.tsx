@@ -38,7 +38,7 @@ function PlaygroundExample({ status, activeIndex, withSteps }: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/ComputerUse",
+  title: "Components/Conversational/ComputerUse",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

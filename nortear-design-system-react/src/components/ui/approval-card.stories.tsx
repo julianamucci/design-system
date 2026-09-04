@@ -49,7 +49,7 @@ function PlaygroundExample({ question, scope }: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/ApprovalCard",
+  title: "Components/Conversational/ApprovalCard",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

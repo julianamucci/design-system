@@ -16,7 +16,7 @@ import {
 // quando alguém aperta a ação — que, do lado de cá, é só um aviso.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ConnectionState/Compositions',
+  title: 'Components/Conversational/ConnectionState/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsConnectionState, NdsAgentStatus] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

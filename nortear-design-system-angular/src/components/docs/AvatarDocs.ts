@@ -727,10 +727,10 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'badge',       name: 'Badge',       path: '?path=/docs/primitives-feedback-badge--docs'       },
-      { key: 'aspectRatio', name: 'AspectRatio', path: '?path=/docs/primitives-layout-aspectratio--docs' },
-      { key: 'tooltip',     name: 'Tooltip',     path: '?path=/docs/primitives-overlay-tooltip--docs'     },
-      { key: 'card',        name: 'Card',        path: '?path=/docs/primitives-layout-card--docs'        },
+      { key: 'badge',       name: 'Badge',       path: '?path=/docs/components-feedback-badge--docs'       },
+      { key: 'aspectRatio', name: 'AspectRatio', path: '?path=/docs/components-layout-aspectratio--docs' },
+      { key: 'tooltip',     name: 'Tooltip',     path: '?path=/docs/components-overlay-tooltip--docs'     },
+      { key: 'card',        name: 'Card',        path: '?path=/docs/components-layout-card--docs'        },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

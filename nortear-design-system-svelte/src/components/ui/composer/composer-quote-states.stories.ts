@@ -15,7 +15,7 @@ import {
 // é o que acontece quando ele não cabe, e quando não há citação nenhuma.
 
 const meta: Meta<typeof Composer> = {
-  title: 'Primitives/Conversational/ComposerQuote/States',
+  title: 'Components/Conversational/ComposerQuote/States',
   component: Composer,
   tags: ['conversational'],
   parameters: {

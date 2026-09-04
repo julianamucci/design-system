@@ -457,10 +457,10 @@ export function QuotaBannerDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/primitives-conversational-contextdisplay--docs" },
-          { name: tContent("related.items.costMeter.name"),      description: toPlainText(tContent("related.items.costMeter.description")),      path: "?path=/docs/primitives-conversational-costmeter--docs" },
-          { name: tContent("related.items.alert.name"),          description: toPlainText(tContent("related.items.alert.description")),          path: "?path=/docs/primitives-feedback-alert--docs" },
-          { name: tContent("related.items.progress.name"),       description: toPlainText(tContent("related.items.progress.description")),       path: "?path=/docs/primitives-feedback-progress--docs" },
+          { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/components-conversational-contextdisplay--docs" },
+          { name: tContent("related.items.costMeter.name"),      description: toPlainText(tContent("related.items.costMeter.description")),      path: "?path=/docs/components-conversational-costmeter--docs" },
+          { name: tContent("related.items.alert.name"),          description: toPlainText(tContent("related.items.alert.description")),          path: "?path=/docs/components-feedback-alert--docs" },
+          { name: tContent("related.items.progress.name"),       description: toPlainText(tContent("related.items.progress.description")),       path: "?path=/docs/components-feedback-progress--docs" },
         ]}
       />
 

@@ -31,7 +31,7 @@ const GROUPS = [
 ];
 
 const meta: Meta = {
-  title: 'Primitives/Form/Select/Variants',
+  title: 'Components/Form/Select/Variants',
   component: Select,
   tags: ['form'],
   parameters: {

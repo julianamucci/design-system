@@ -18,7 +18,7 @@ const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 // A quinta variação é de CONTEÚDO, não de direção: corpo mais alto que o painel.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Drawer/Variants',
+  title: 'Components/Overlay/Drawer/Variants',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton] })],
   parameters: {

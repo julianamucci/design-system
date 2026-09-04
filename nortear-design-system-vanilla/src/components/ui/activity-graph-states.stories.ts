@@ -32,7 +32,7 @@ import {
 // escala inteira lado a lado, e não cinco grades.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ActivityGraph/States',
+  title: 'Components/Conversational/ActivityGraph/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

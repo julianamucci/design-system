@@ -45,7 +45,7 @@ const ITEMS_WITH_BLOCK = [
 ] as const
 
 const meta = {
-  title: "Primitives/Navigation/Menubar/States",
+  title: "Components/Navigation/Menubar/States",
   tags: ["navigation"],
   component: Menubar,
   parameters: {

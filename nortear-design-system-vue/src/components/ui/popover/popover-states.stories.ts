@@ -20,7 +20,7 @@ import {
 } from './popover.source';
 
 const meta = {
-  title: 'Primitives/Overlay/Popover/States',
+  title: 'Components/Overlay/Popover/States',
   component: Popover,
   tags: ['overlay'],
   parameters: {

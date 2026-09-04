@@ -32,7 +32,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: chartWithDicaSource } },
   },
-  title: 'Primitives/Display/Chart/Settings',
+  title: 'Components/Display/Chart/Settings',
   tags: ['display'],
 };
 export default meta;

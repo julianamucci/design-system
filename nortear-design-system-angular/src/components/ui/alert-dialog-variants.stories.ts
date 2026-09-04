@@ -21,7 +21,7 @@ import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 // compara por nome.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/AlertDialog/Variants',
+  title: 'Components/Overlay/AlertDialog/Variants',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {

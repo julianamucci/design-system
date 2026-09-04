@@ -11,7 +11,7 @@ import { SlideCard, viewportVisible } from "./carousel.fixtures";
 import { carouselSource, carouselLastSlideSource } from "./carousel.source";
 
 const meta = {
-  title: "Primitives/Display/Carousel/States",
+  title: "Components/Display/Carousel/States",
   tags: ["display"],
   component: Carousel,
   parameters: {

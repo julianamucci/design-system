@@ -25,7 +25,7 @@ import {
 // outro, e não quatro cascatas.
 
 const meta: Meta<typeof TraceWaterfall> = {
-  title: 'Primitives/Conversational/TraceWaterfall/States',
+  title: 'Components/Conversational/TraceWaterfall/States',
   component: TraceWaterfall,
   tags: ['conversational'],
   parameters: {

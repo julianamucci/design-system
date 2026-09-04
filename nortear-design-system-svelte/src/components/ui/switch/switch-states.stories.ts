@@ -5,7 +5,7 @@ import SwitchStory from './SwitchStory.svelte';
 import { switchSource } from './switch.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Switch/States',
+  title: 'Components/Form/Switch/States',
   component: SwitchStory,
   tags: ['form'],
   parameters: {

@@ -18,7 +18,7 @@ import {
 
 const meta: Meta = {
   tags: ['conversational'],
-  title: 'Primitives/Conversational/ChatThread/States',
+  title: 'Components/Conversational/ChatThread/States',
   parameters: {
     layout: 'padded',
     controls: { disable: true },

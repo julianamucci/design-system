@@ -9,7 +9,7 @@ import { NdsInput } from './input';
 // conteúdo compartilhado documenta em `variants.items`.
 
 const meta: Meta = {
-  title: 'Primitives/Form/Form/Variants',
+  title: 'Components/Form/Form/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_FORM, NdsInput] })],
   parameters: { layout: 'padded', controls: { disable: true } },

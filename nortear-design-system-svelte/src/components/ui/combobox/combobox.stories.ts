@@ -27,7 +27,7 @@ const COUNTRIES: ComboboxOption[] = [
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-	title: 'Primitives/Form/Combobox',
+	title: 'Components/Form/Combobox',
 	tags: ['autodocs', 'form'],
 	parameters: {
 		layout: 'padded',

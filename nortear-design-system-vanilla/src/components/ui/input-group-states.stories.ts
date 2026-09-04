@@ -27,7 +27,7 @@ import { inputGroupSource, inputGroupSourceWith } from './input-group.source';
 // atributo nativo do campo, anunciado pelo leitor de tela e sem cor gasta.
 
 const meta: Meta = {
-  title: 'Primitives/Form/InputGroup/States',
+  title: 'Components/Form/InputGroup/States',
   tags: ['form'],
   parameters: {
     actions: { disable: true },

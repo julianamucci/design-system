@@ -29,7 +29,7 @@ const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
 // nada além do que o carrossel já expõe.
 
 const meta: Meta = {
-  title: 'Primitives/Display/Carousel/Compositions',
+  title: 'Components/Display/Carousel/Compositions',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio, NdsButton, ...NDS_CARD] })],
   parameters: {

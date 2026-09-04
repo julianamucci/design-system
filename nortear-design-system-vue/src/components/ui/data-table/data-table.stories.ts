@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { dataTableSource } from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
-  title: 'Primitives/Tables/DataTable',
+  title: 'Components/Tables/DataTable',
   component: DataTable as never,
   tags: ['autodocs', 'tables'],
   parameters: {

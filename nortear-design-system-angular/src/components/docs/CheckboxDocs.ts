@@ -553,10 +553,10 @@ export class NdsCheckboxDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'switch',     name: 'Switch',      path: '?path=/docs/primitives-form-switch--docs'      },
-      { key: 'radioGroup', name: 'Radio Group', path: '?path=/docs/primitives-form-radiogroup--docs'  },
-      { key: 'form',       name: 'Form',        path: '?path=/docs/primitives-form-form--docs'        },
-      { key: 'select',     name: 'Select',      path: '?path=/docs/primitives-form-select--docs'      },
+      { key: 'switch',     name: 'Switch',      path: '?path=/docs/components-form-switch--docs'      },
+      { key: 'radioGroup', name: 'Radio Group', path: '?path=/docs/components-form-radiogroup--docs'  },
+      { key: 'form',       name: 'Form',        path: '?path=/docs/components-form-form--docs'        },
+      { key: 'select',     name: 'Select',      path: '?path=/docs/components-form-select--docs'      },
     ].map(({ key, name, path }) => ({
       name: name,
       description: t(`related.${key}`),

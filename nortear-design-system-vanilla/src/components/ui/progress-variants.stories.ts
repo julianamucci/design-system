@@ -17,7 +17,7 @@ import {
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'Primitives/Feedback/Progress/Variants',
+  title: 'Components/Feedback/Progress/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

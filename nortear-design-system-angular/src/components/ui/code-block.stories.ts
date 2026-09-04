@@ -27,7 +27,7 @@ const DEMO_CODE = [
 ].join('\n');
 
 const meta: Meta<CodeBlockArgs> = {
-  title: 'Primitives/Display/CodeBlock',
+  title: 'Components/Display/CodeBlock',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [NdsCodeBlock] })],
   parameters: {

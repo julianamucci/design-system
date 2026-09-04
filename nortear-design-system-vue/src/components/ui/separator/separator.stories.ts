@@ -17,7 +17,7 @@ type SeparatorArgs = {
 };
 
 const meta: Meta<any> = {
-  title: 'Primitives/Layout/Separator',
+  title: 'Components/Layout/Separator',
   component: Separator,
   tags: ['autodocs', 'layout'],
   parameters: {

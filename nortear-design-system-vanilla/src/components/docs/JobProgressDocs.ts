@@ -437,10 +437,10 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.agentStatus.name'),     description: toPlainText(t('related.items.agentStatus.description')),     path: '?path=/docs/primitives-conversational-agentstatus--docs'     },
-            { name: t('related.items.agentPlan.name'),       description: toPlainText(t('related.items.agentPlan.description')),       path: '?path=/docs/primitives-conversational-agentplan--docs'       },
-            { name: t('related.items.progress.name'),        description: toPlainText(t('related.items.progress.description')),        path: '?path=/docs/primitives-feedback-progress--docs'              },
-            { name: t('related.items.connectionState.name'), description: toPlainText(t('related.items.connectionState.description')), path: '?path=/docs/primitives-conversational-connectionstate--docs' },
+            { name: t('related.items.agentStatus.name'),     description: toPlainText(t('related.items.agentStatus.description')),     path: '?path=/docs/components-conversational-agentstatus--docs'     },
+            { name: t('related.items.agentPlan.name'),       description: toPlainText(t('related.items.agentPlan.description')),       path: '?path=/docs/components-conversational-agentplan--docs'       },
+            { name: t('related.items.progress.name'),        description: toPlainText(t('related.items.progress.description')),        path: '?path=/docs/components-feedback-progress--docs'              },
+            { name: t('related.items.connectionState.name'), description: toPlainText(t('related.items.connectionState.description')), path: '?path=/docs/components-conversational-connectionstate--docs' },
           ],
         });
 

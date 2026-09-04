@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { switchPlaygroundSource, type SwitchArgs } from './switch.source';
 
 const meta: Meta<SwitchArgs> = {
-  title: 'Primitives/Form/Switch',
+  title: 'Components/Form/Switch',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsSwitch, NdsLabel] })],
   parameters: {

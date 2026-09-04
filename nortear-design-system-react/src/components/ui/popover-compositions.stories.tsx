@@ -29,7 +29,7 @@ import {
 // ele carrega.
 
 const meta = {
-  title: "Primitives/Overlay/Popover/Compositions",
+  title: "Components/Overlay/Popover/Compositions",
   tags: ["overlay"],
   component: Popover,
   parameters: {

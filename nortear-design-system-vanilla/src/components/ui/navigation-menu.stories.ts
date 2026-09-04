@@ -14,7 +14,7 @@ type NavigationMenuArgs = {
 };
 
 const meta: Meta<NavigationMenuArgs> = {
-  title: 'Primitives/Navigation/NavigationMenu',
+  title: 'Components/Navigation/NavigationMenu',
   tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',

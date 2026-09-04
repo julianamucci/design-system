@@ -571,10 +571,10 @@ export class NdsDraftRestoreDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'composer',    path: '?path=/docs/primitives-conversational-composer--docs' },
-      { key: 'alert',       path: '?path=/docs/primitives-feedback-alert--docs' },
-      { key: 'alertDialog', path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-      { key: 'sonner',      path: '?path=/docs/primitives-feedback-sonner--docs' },
+      { key: 'composer',    path: '?path=/docs/components-conversational-composer--docs' },
+      { key: 'alert',       path: '?path=/docs/components-feedback-alert--docs' },
+      { key: 'alertDialog', path: '?path=/docs/components-overlay-alertdialog--docs' },
+      { key: 'sonner',      path: '?path=/docs/components-feedback-sonner--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

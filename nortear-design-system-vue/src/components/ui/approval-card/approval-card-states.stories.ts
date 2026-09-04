@@ -26,7 +26,7 @@ import {
 // não muda de desenho por causa dela.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ApprovalCard/States',
+  title: 'Components/Conversational/ApprovalCard/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

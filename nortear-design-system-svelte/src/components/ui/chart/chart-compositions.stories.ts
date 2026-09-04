@@ -23,7 +23,7 @@ const meta: Meta = {
       source: { transform: chartSource },
     },
   },
-  title: 'Primitives/Display/Chart/Compositions',
+  title: 'Components/Display/Chart/Compositions',
   component: ChartContainer,
   tags: ['display'],
 };

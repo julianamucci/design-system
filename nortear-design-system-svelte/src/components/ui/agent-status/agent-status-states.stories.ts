@@ -18,7 +18,7 @@ import { RUN_STATUSES, type RunStatus } from '@shared/primitives/chat-protocol';
 // sempre a mesma, e o que muda é em que pé está a resposta.
 
 const meta: Meta<typeof AgentStatus> = {
-  title: 'Primitives/Conversational/AgentStatus/States',
+  title: 'Components/Conversational/AgentStatus/States',
   component: AgentStatus,
   tags: ['conversational'],
   parameters: {

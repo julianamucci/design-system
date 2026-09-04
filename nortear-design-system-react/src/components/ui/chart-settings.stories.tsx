@@ -23,7 +23,7 @@ const seriesMulti = [
 ];
 
 const meta: Meta = {
-  title: 'Primitives/Display/Chart/Settings',
+  title: 'Components/Display/Chart/Settings',
   tags: ['display'],
   parameters: {
     layout: 'padded',

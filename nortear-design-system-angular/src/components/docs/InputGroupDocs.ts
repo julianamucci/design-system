@@ -1065,10 +1065,10 @@ export class NdsInputGroupDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'input',    path: '?path=/docs/primitives-form-input--docs'    },
-      { key: 'textarea', path: '?path=/docs/primitives-form-textarea--docs' },
-      { key: 'button',   path: '?path=/docs/primitives-form-button--docs'   },
-      { key: 'form',     path: '?path=/docs/primitives-form-form--docs'     },
+      { key: 'input',    path: '?path=/docs/components-form-input--docs'    },
+      { key: 'textarea', path: '?path=/docs/components-form-textarea--docs' },
+      { key: 'button',   path: '?path=/docs/components-form-button--docs'   },
+      { key: 'form',     path: '?path=/docs/components-form-form--docs'     },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

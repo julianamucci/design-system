@@ -18,7 +18,7 @@ type SwitchArgs = {
 };
 
 const meta: Meta<SwitchArgs> = {
-  title: 'Primitives/Form/Switch',
+  title: 'Components/Form/Switch',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createSwitchDocs), source: { transform: switchSource } },

@@ -7,7 +7,7 @@ import { selectSource, selectSourceWith } from './select.source';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Select/Variants',
+  title: 'Components/Form/Select/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

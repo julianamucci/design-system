@@ -740,10 +740,10 @@ export function getStepperValue(root: HTMLElement): number;`;
           title: t('related.title'),
           componentSlug: 'stepper',
           items: [
-            { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/primitives-navigation-tabs--docs' },
-            { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
-            { name: t('related.items.progress.name'),   description: toPlainText(t('related.items.progress.description')),   path: '?path=/docs/primitives-feedback-progress--docs' },
-            { name: t('related.items.form.name'),       description: toPlainText(t('related.items.form.description')),       path: '?path=/docs/primitives-form-form--docs' },
+            { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs' },
+            { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/components-navigation-breadcrumb--docs' },
+            { name: t('related.items.progress.name'),   description: toPlainText(t('related.items.progress.description')),   path: '?path=/docs/components-feedback-progress--docs' },
+            { name: t('related.items.form.name'),       description: toPlainText(t('related.items.form.description')),       path: '?path=/docs/components-form-form--docs' },
           ],
         });
 

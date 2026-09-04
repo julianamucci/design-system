@@ -18,7 +18,7 @@ import { codeBlockPaletteSource, codeBlockSource } from './code-block.source';
  * `Text` é a prova de que texto simples continua sem cor.
  */
 const meta = {
-  title: 'Primitives/Display/CodeBlock/Variants',
+  title: 'Components/Display/CodeBlock/Variants',
   component: CodeBlock,
   tags: ['display'],
   parameters: {

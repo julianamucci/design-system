@@ -33,7 +33,7 @@ import {
 // para trás e quando ele chega pela metade.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/FlowGraph/Compositions',
+  title: 'Components/Conversational/FlowGraph/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsFlowGraph] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

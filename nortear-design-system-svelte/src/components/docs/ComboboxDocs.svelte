@@ -959,10 +959,10 @@ interface ComboboxChipProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.select.name'),  description: $tStore('related.items.select.description'),  path: '?path=/docs/primitives-form-select--docs' },
-      { name: $tStore('related.items.command.name'), description: $tStore('related.items.command.description'), path: '?path=/docs/primitives-overlay-command--docs' },
-      { name: $tStore('related.items.input.name'),   description: $tStore('related.items.input.description'),   path: '?path=/docs/primitives-form-input--docs' },
-      { name: $tStore('related.items.form.name'),    description: $tStore('related.items.form.description'),    path: '?path=/docs/primitives-form-form--docs' },
+      { name: $tStore('related.items.select.name'),  description: $tStore('related.items.select.description'),  path: '?path=/docs/components-form-select--docs' },
+      { name: $tStore('related.items.command.name'), description: $tStore('related.items.command.description'), path: '?path=/docs/components-overlay-command--docs' },
+      { name: $tStore('related.items.input.name'),   description: $tStore('related.items.input.description'),   path: '?path=/docs/components-form-input--docs' },
+      { name: $tStore('related.items.form.name'),    description: $tStore('related.items.form.description'),    path: '?path=/docs/components-form-form--docs' },
     ]}
   />
 

@@ -595,10 +595,10 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.flowGraph.name'),     description: toPlainText($tStore('related.items.flowGraph.description')),     path: '?path=/docs/primitives-conversational-flowgraph--docs'     },
-      { name: $tStore('related.items.agentPlan.name'),     description: toPlainText($tStore('related.items.agentPlan.description')),     path: '?path=/docs/primitives-conversational-agentplan--docs'     },
-      { name: $tStore('related.items.messageTiming.name'), description: toPlainText($tStore('related.items.messageTiming.description')), path: '?path=/docs/primitives-conversational-messagetiming--docs' },
-      { name: $tStore('related.items.progress.name'),      description: toPlainText($tStore('related.items.progress.description')),      path: '?path=/docs/primitives-feedback-progress--docs'            },
+      { name: $tStore('related.items.flowGraph.name'),     description: toPlainText($tStore('related.items.flowGraph.description')),     path: '?path=/docs/components-conversational-flowgraph--docs'     },
+      { name: $tStore('related.items.agentPlan.name'),     description: toPlainText($tStore('related.items.agentPlan.description')),     path: '?path=/docs/components-conversational-agentplan--docs'     },
+      { name: $tStore('related.items.messageTiming.name'), description: toPlainText($tStore('related.items.messageTiming.description')), path: '?path=/docs/components-conversational-messagetiming--docs' },
+      { name: $tStore('related.items.progress.name'),      description: toPlainText($tStore('related.items.progress.description')),      path: '?path=/docs/components-feedback-progress--docs'            },
     ]}
   />
 

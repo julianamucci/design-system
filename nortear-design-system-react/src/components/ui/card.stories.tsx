@@ -14,7 +14,7 @@ import { CardDocs } from "@/components/docs/CardDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Layout/Card",
+  title: "Components/Layout/Card",
   component: Card,
   tags: ["autodocs", "layout"],
   parameters: {

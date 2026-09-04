@@ -435,10 +435,10 @@ export function ComposerVoiceDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.composer.name"),            description: toPlainText(tContent("related.items.composer.description")),            path: "?path=/docs/primitives-conversational-composer--docs" },
-          { name: tContent("related.items.composerAttachments.name"), description: toPlainText(tContent("related.items.composerAttachments.description")), path: "?path=/docs/primitives-conversational-composerattachments--docs" },
-          { name: tContent("related.items.mediaPlayer.name"),         description: toPlainText(tContent("related.items.mediaPlayer.description")),         path: "?path=/docs/primitives-display-mediaplayer--docs" },
-          { name: tContent("related.items.button.name"),              description: toPlainText(tContent("related.items.button.description")),              path: "?path=/docs/primitives-form-button--docs" },
+          { name: tContent("related.items.composer.name"),            description: toPlainText(tContent("related.items.composer.description")),            path: "?path=/docs/components-conversational-composer--docs" },
+          { name: tContent("related.items.composerAttachments.name"), description: toPlainText(tContent("related.items.composerAttachments.description")), path: "?path=/docs/components-conversational-composerattachments--docs" },
+          { name: tContent("related.items.mediaPlayer.name"),         description: toPlainText(tContent("related.items.mediaPlayer.description")),         path: "?path=/docs/components-display-mediaplayer--docs" },
+          { name: tContent("related.items.button.name"),              description: toPlainText(tContent("related.items.button.description")),              path: "?path=/docs/components-form-button--docs" },
         ]}
       />
 

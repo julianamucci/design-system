@@ -16,7 +16,7 @@ import { EditorDocs } from '@/components/docs/EditorDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta = {
-  title: 'Primitives/Form/Editor',
+  title: 'Components/Form/Editor',
   component: Editor,
   tags: ['autodocs', 'form'],
   parameters: {

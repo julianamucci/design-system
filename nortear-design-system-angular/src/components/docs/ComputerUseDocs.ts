@@ -709,10 +709,10 @@ export class NdsComputerUseDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'agentStatus',   path: '?path=/docs/primitives-conversational-agentstatus--docs'   },
-      { key: 'toolGroup',     path: '?path=/docs/primitives-conversational-toolgroup--docs'     },
-      { key: 'terminalBlock', path: '?path=/docs/primitives-conversational-terminalblock--docs' },
-      { key: 'agentPlan',     path: '?path=/docs/primitives-conversational-agentplan--docs'     },
+      { key: 'agentStatus',   path: '?path=/docs/components-conversational-agentstatus--docs'   },
+      { key: 'toolGroup',     path: '?path=/docs/components-conversational-toolgroup--docs'     },
+      { key: 'terminalBlock', path: '?path=/docs/components-conversational-terminalblock--docs' },
+      { key: 'agentPlan',     path: '?path=/docs/components-conversational-agentplan--docs'     },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

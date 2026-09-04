@@ -9,7 +9,7 @@ import { createInput } from './input';
 // conteúdo compartilhado documenta em `variants.items`.
 
 const meta: Meta = {
-  title: 'Primitives/Form/Form/Variants',
+  title: 'Components/Form/Form/Variants',
   tags: ['form'],
   parameters: {
     layout: 'padded',

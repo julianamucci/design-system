@@ -1268,12 +1268,12 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'dataTable',    name: 'DataTable',    path: '?path=/docs/primitives-tables-datatable--docs'    },
-      { key: 'badge',        name: 'Badge',        path: '?path=/docs/primitives-feedback-badge--docs'        },
-      { key: 'skeleton',     name: 'Skeleton',     path: '?path=/docs/primitives-feedback-skeleton--docs'     },
-      { key: 'avatar',       name: 'Avatar',       path: '?path=/docs/primitives-display-avatar--docs'       },
-      { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/primitives-navigation-pagination--docs'   },
-      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { key: 'dataTable',    name: 'DataTable',    path: '?path=/docs/components-tables-datatable--docs'    },
+      { key: 'badge',        name: 'Badge',        path: '?path=/docs/components-feedback-badge--docs'        },
+      { key: 'skeleton',     name: 'Skeleton',     path: '?path=/docs/components-feedback-skeleton--docs'     },
+      { key: 'avatar',       name: 'Avatar',       path: '?path=/docs/components-display-avatar--docs'       },
+      { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/components-navigation-pagination--docs'   },
+      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

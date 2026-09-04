@@ -30,7 +30,7 @@ function QueueExample() {
 }
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ComposerAttachments",
+  title: "Components/Conversational/ComposerAttachments",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

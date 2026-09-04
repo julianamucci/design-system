@@ -16,7 +16,7 @@ import { triggerPopoverSource } from './composer-trigger-popover.source';
 // tecla de envio ESCOLHE em vez de enviar.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerTriggerPopover/Compositions',
+  title: 'Components/Conversational/ComposerTriggerPopover/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

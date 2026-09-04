@@ -19,7 +19,7 @@ import { NdsCalendar } from './calendar';
 // foto do Chromatic passaria a divergir sozinha.
 
 const meta: Meta = {
-  title: 'Primitives/Form/Calendar/Variants',
+  title: 'Components/Form/Calendar/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsCalendar] })],
   parameters: {

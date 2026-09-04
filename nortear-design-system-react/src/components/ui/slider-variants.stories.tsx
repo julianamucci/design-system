@@ -6,7 +6,7 @@ import { sliderRangeSource, sliderSource, sliderVerticalSource } from "./slider.
 import { alcasDoSlider, sliderTrack, handleValue } from "@shared/testing/slider-probe";
 
 const meta = {
-  title: "Primitives/Form/Slider/Variants",
+  title: "Components/Form/Slider/Variants",
   tags: ["form"],
   component: Slider,
   parameters: {

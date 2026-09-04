@@ -879,10 +879,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
-      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
-      { name: $tStore('related.items.dialog.name'),       description: $tStore('related.items.dialog.description'),       path: '?path=/docs/primitives-overlay-dialog--docs'       },
-      { name: $tStore('related.items.hoverCard.name'),    description: $tStore('related.items.hoverCard.description'),    path: '?path=/docs/primitives-overlay-hovercard--docs'    },
+      { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
+      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: $tStore('related.items.dialog.name'),       description: $tStore('related.items.dialog.description'),       path: '?path=/docs/components-overlay-dialog--docs'       },
+      { name: $tStore('related.items.hoverCard.name'),    description: $tStore('related.items.hoverCard.description'),    path: '?path=/docs/components-overlay-hovercard--docs'    },
     ]}
   />
 

@@ -17,7 +17,7 @@ type CheckboxArgs = {
 };
 
 const meta: Meta<CheckboxArgs> = {
-  title: 'Primitives/Form/Checkbox',
+  title: 'Components/Form/Checkbox',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: {

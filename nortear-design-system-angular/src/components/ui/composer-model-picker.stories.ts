@@ -27,7 +27,7 @@ type PlaygroundArgs = {
 const MODEL_IDS = everyModel().map((model) => model.id);
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ComposerModelPicker',
+  title: 'Components/Conversational/ComposerModelPicker',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposerModelPicker] })],
   parameters: {

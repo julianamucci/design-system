@@ -21,7 +21,7 @@ import {
 } from './drawer.source';
 
 const meta = {
-  title: 'Primitives/Overlay/Drawer/States',
+  title: 'Components/Overlay/Drawer/States',
   component: Drawer,
   tags: ['overlay'],
   parameters: {

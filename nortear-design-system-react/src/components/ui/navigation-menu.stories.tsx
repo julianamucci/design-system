@@ -22,7 +22,7 @@ type PlaygroundArgs = {
 };
 
 const meta = {
-  title: "Primitives/Navigation/NavigationMenu",
+  title: "Components/Navigation/NavigationMenu",
   component: NavigationMenu,
   tags: ["autodocs", "navigation"],
   parameters: {

@@ -16,7 +16,7 @@ import { NdsHoverCardDocs } from '@/components/docs/HoverCardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<HoverCardArgs> = {
-  title: 'Primitives/Overlay/HoverCard',
+  title: 'Components/Overlay/HoverCard',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR] })],
   parameters: {

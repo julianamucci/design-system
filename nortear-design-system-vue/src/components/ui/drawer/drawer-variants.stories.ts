@@ -22,7 +22,7 @@ import {
 } from './drawer.source';
 
 const meta = {
-  title: 'Primitives/Overlay/Drawer/Variants',
+  title: 'Components/Overlay/Drawer/Variants',
   component: Drawer,
   tags: ['overlay'],
   parameters: {

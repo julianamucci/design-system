@@ -11,7 +11,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<DropdownMenuArgs> = {
-  title: 'Primitives/Overlay/DropdownMenu',
+  title: 'Components/Overlay/DropdownMenu',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {

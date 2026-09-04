@@ -587,10 +587,10 @@ export function TraceWaterfallDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.flowGraph.name"),     description: toPlainText(tContent("related.items.flowGraph.description")),     path: "?path=/docs/primitives-conversational-flowgraph--docs"     },
-          { name: tContent("related.items.agentPlan.name"),     description: toPlainText(tContent("related.items.agentPlan.description")),     path: "?path=/docs/primitives-conversational-agentplan--docs"     },
-          { name: tContent("related.items.messageTiming.name"), description: toPlainText(tContent("related.items.messageTiming.description")), path: "?path=/docs/primitives-conversational-messagetiming--docs" },
-          { name: tContent("related.items.progress.name"),      description: toPlainText(tContent("related.items.progress.description")),      path: "?path=/docs/primitives-feedback-progress--docs"            },
+          { name: tContent("related.items.flowGraph.name"),     description: toPlainText(tContent("related.items.flowGraph.description")),     path: "?path=/docs/components-conversational-flowgraph--docs"     },
+          { name: tContent("related.items.agentPlan.name"),     description: toPlainText(tContent("related.items.agentPlan.description")),     path: "?path=/docs/components-conversational-agentplan--docs"     },
+          { name: tContent("related.items.messageTiming.name"), description: toPlainText(tContent("related.items.messageTiming.description")), path: "?path=/docs/components-conversational-messagetiming--docs" },
+          { name: tContent("related.items.progress.name"),      description: toPlainText(tContent("related.items.progress.description")),      path: "?path=/docs/components-feedback-progress--docs"            },
         ]}
       />
 

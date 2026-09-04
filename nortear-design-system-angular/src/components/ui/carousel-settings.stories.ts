@@ -6,7 +6,7 @@ import { NdsAspectRatio } from './aspect-ratio';
 import { NdsButton } from './button';
 
 const meta: Meta = {
-  title: 'Primitives/Display/Carousel/Settings',
+  title: 'Components/Display/Carousel/Settings',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio, NdsButton] })],
   parameters: { layout: 'centered', controls: { disable: true } },

@@ -24,7 +24,7 @@ import { APPROVAL_CHOICE_ALLOW_ONCE } from '@shared/primitives/approval-card-exa
 // ser type-checada contra as props do primeiro — mesma escolha já feita nas
 // composições do diálogo.
 const meta: Meta = {
-  title: 'Primitives/Conversational/ApprovalCard/Compositions',
+  title: 'Components/Conversational/ApprovalCard/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

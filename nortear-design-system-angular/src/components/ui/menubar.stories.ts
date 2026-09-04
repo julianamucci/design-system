@@ -53,7 +53,7 @@ const MENUS: MenuDemo[] = [
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<MenubarArgs> = {
-  title: 'Primitives/Navigation/Menubar',
+  title: 'Components/Navigation/Menubar',
   tags: ['autodocs', 'navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_MENUBAR] })],
   parameters: {

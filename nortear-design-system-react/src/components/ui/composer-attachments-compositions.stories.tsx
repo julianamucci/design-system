@@ -19,7 +19,7 @@ import type { Attachment } from "@shared/primitives/chat-protocol"
 // A fila junto do campo, o pedido de remoção, e o caso em que ela não existe.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ComposerAttachments/Compositions",
+  title: "Components/Conversational/ComposerAttachments/Compositions",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

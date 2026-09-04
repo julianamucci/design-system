@@ -807,11 +807,11 @@ export type ContextMenuOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs'  },
-            { name: 'Menubar',      description: toPlainText(t('related.menubar')),      path: '?path=/docs/primitives-navigation-menubar--docs'       },
-            { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/primitives-overlay-dialog--docs'        },
-            { name: 'AlertDialog',  description: toPlainText(t('related.alertDialog')),  path: '?path=/docs/primitives-overlay-alertdialog--docs'   },
-            { name: 'Tooltip',      description: toPlainText(t('related.tooltip')),      path: '?path=/docs/primitives-overlay-tooltip--docs'       },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs'  },
+            { name: 'Menubar',      description: toPlainText(t('related.menubar')),      path: '?path=/docs/components-navigation-menubar--docs'       },
+            { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/components-overlay-dialog--docs'        },
+            { name: 'AlertDialog',  description: toPlainText(t('related.alertDialog')),  path: '?path=/docs/components-overlay-alertdialog--docs'   },
+            { name: 'Tooltip',      description: toPlainText(t('related.tooltip')),      path: '?path=/docs/components-overlay-tooltip--docs'       },
           ],
         });
 

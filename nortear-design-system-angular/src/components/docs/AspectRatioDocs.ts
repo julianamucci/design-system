@@ -515,9 +515,9 @@ export class NdsAspectRatioDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'avatar',   name: 'Avatar',   path: '?path=/docs/primitives-display-avatar--docs'   },
-      { key: 'card',     name: 'Card',     path: '?path=/docs/primitives-layout-card--docs'     },
-      { key: 'skeleton', name: 'Skeleton', path: '?path=/docs/primitives-feedback-skeleton--docs' },
+      { key: 'avatar',   name: 'Avatar',   path: '?path=/docs/components-display-avatar--docs'   },
+      { key: 'card',     name: 'Card',     path: '?path=/docs/components-layout-card--docs'     },
+      { key: 'skeleton', name: 'Skeleton', path: '?path=/docs/components-feedback-skeleton--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: t(`related.${key}`),

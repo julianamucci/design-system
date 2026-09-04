@@ -15,7 +15,7 @@ import {
 // dica promete — e a dica tem de dizer a verdade sobre o dispositivo.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/Composer/Variants',
+  title: 'Components/Conversational/Composer/Variants',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

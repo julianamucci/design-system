@@ -14,7 +14,7 @@ import {
 } from "./resizable.source";
 
 const meta = {
-  title: "Primitives/Layout/Resizable/Variants",
+  title: "Components/Layout/Resizable/Variants",
   tags: ["layout"],
   component: ResizablePanelGroup,
   parameters: {

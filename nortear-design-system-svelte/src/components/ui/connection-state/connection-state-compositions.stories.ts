@@ -14,7 +14,7 @@ import {
 // quando alguém aperta a ação — que, do lado de cá, é só um aviso.
 
 const meta: Meta<typeof ConnectionState> = {
-  title: 'Primitives/Conversational/ConnectionState/Compositions',
+  title: 'Components/Conversational/ConnectionState/Compositions',
   component: ConnectionState,
   tags: ['conversational'],
   parameters: {

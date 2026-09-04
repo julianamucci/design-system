@@ -19,7 +19,7 @@ import { draftAboveComposerSource } from './draft-restore.source';
 // stories mostram.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/DraftRestore/Compositions',
+  title: 'Components/Conversational/DraftRestore/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer, NdsDraftRestore] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

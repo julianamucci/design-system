@@ -22,7 +22,7 @@ const meta: Meta<StatesArgs> = {
   args: {
     onClick: fn(),
   },
-  title: 'Primitives/Form/Button/States',
+  title: 'Components/Form/Button/States',
 };
 
 export default meta;

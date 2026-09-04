@@ -20,7 +20,7 @@ import { contextTotal, usedTokens } from '@shared/primitives/token-budget';
 // nenhum por isso.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextBreakdown/Compositions',
+  title: 'Components/Conversational/ContextBreakdown/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

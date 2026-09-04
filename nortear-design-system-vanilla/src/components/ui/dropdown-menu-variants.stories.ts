@@ -8,7 +8,7 @@ import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/DropdownMenu/Variants',
+  title: 'Components/Overlay/DropdownMenu/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

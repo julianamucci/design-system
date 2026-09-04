@@ -521,10 +521,10 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Dialog', description: $tStore('related.dialog'), path: '?path=/docs/primitives-overlay-dialog--docs' },
-      { name: 'Sonner', description: $tStore('related.sonner'), path: '?path=/docs/primitives-feedback-sonner--docs' },
-      { name: 'Alert',  description: $tStore('related.alert'),  path: '?path=/docs/primitives-feedback-alert--docs'  },
-      { name: 'Button', description: $tStore('related.button'), path: '?path=/docs/primitives-form-button--docs' },
+      { name: 'Dialog', description: $tStore('related.dialog'), path: '?path=/docs/components-overlay-dialog--docs' },
+      { name: 'Sonner', description: $tStore('related.sonner'), path: '?path=/docs/components-feedback-sonner--docs' },
+      { name: 'Alert',  description: $tStore('related.alert'),  path: '?path=/docs/components-feedback-alert--docs'  },
+      { name: 'Button', description: $tStore('related.button'), path: '?path=/docs/components-form-button--docs' },
     ]}
   />
 

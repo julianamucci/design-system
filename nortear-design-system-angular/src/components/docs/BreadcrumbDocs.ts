@@ -906,10 +906,10 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'navigationMenu', name: 'NavigationMenu', path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-      { key: 'stepper',        name: 'Stepper',        path: '?path=/docs/primitives-navigation-stepper--docs'        },
-      { key: 'tabs',           name: 'Tabs',           path: '?path=/docs/primitives-navigation-tabs--docs'           },
-      { key: 'dropdownMenu',   name: 'DropdownMenu',   path: '?path=/docs/primitives-overlay-dropdownmenu--docs'   },
+      { key: 'navigationMenu', name: 'NavigationMenu', path: '?path=/docs/components-navigation-navigationmenu--docs' },
+      { key: 'stepper',        name: 'Stepper',        path: '?path=/docs/components-navigation-stepper--docs'        },
+      { key: 'tabs',           name: 'Tabs',           path: '?path=/docs/components-navigation-tabs--docs'           },
+      { key: 'dropdownMenu',   name: 'DropdownMenu',   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

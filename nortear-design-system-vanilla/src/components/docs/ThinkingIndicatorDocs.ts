@@ -407,10 +407,10 @@ export function createThinkingIndicatorDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-            { name: t('related.items.skeleton.name'),    description: toPlainText(t('related.items.skeleton.description')),    path: '?path=/docs/primitives-feedback-skeleton--docs' },
-            { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/primitives-feedback-progress--docs' },
+            { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
+            { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },
+            { name: t('related.items.skeleton.name'),    description: toPlainText(t('related.items.skeleton.description')),    path: '?path=/docs/components-feedback-skeleton--docs' },
+            { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/components-feedback-progress--docs' },
           ],
         });
 

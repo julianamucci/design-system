@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 
 const meta = {
-  title: "Primitives/Overlay/Command/Compositions",
+  title: "Components/Overlay/Command/Compositions",
   tags: ["overlay"],
   component: Command,
   parameters: {

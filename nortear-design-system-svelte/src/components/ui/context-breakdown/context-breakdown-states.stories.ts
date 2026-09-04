@@ -24,7 +24,7 @@ import { contextSlices, contextTotal } from '@shared/primitives/token-budget';
 // é por isso que o nome e o número de cada parcela são texto.
 
 const meta: Meta<typeof ContextBreakdown> = {
-  title: 'Primitives/Conversational/ContextBreakdown/States',
+  title: 'Components/Conversational/ContextBreakdown/States',
   component: ContextBreakdown,
   tags: ['conversational'],
   parameters: {

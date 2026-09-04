@@ -41,7 +41,7 @@ const withoutAccent = (text: string): string =>
 const COUNTRY_LABELS = COUNTRIES.map((item) => item.label);
 
 const meta: Meta = {
-  title: 'Primitives/Form/Combobox/Compositions',
+  title: 'Components/Form/Combobox/Compositions',
   tags: ['form'],
   parameters: {
     layout: 'padded',

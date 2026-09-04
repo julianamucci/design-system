@@ -11,7 +11,7 @@ import { quoteShortSource, quoteWithAttachmentsSource } from './composer-quote.s
 // A citação convivendo com o resto da moldura, e o que acontece ao dispensá-la.
 
 const meta: Meta<typeof Composer> = {
-  title: 'Primitives/Conversational/ComposerQuote/Compositions',
+  title: 'Components/Conversational/ComposerQuote/Compositions',
   component: Composer,
   tags: ['conversational'],
   parameters: {

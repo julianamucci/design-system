@@ -582,10 +582,10 @@ export function FlowGraphDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.agentPlan.name"),   description: toPlainText(tContent("related.items.agentPlan.description")),   path: "?path=/docs/primitives-conversational-agentplan--docs"   },
-          { name: tContent("related.items.toolGroup.name"),   description: toPlainText(tContent("related.items.toolGroup.description")),   path: "?path=/docs/primitives-conversational-toolgroup--docs"   },
-          { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/primitives-conversational-agentstatus--docs" },
-          { name: tContent("related.items.chart.name"),       description: toPlainText(tContent("related.items.chart.description")),       path: "?path=/docs/primitives-display-chart--docs"              },
+          { name: tContent("related.items.agentPlan.name"),   description: toPlainText(tContent("related.items.agentPlan.description")),   path: "?path=/docs/components-conversational-agentplan--docs"   },
+          { name: tContent("related.items.toolGroup.name"),   description: toPlainText(tContent("related.items.toolGroup.description")),   path: "?path=/docs/components-conversational-toolgroup--docs"   },
+          { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/components-conversational-agentstatus--docs" },
+          { name: tContent("related.items.chart.name"),       description: toPlainText(tContent("related.items.chart.description")),       path: "?path=/docs/components-display-chart--docs"              },
         ]}
       />
 

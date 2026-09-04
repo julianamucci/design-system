@@ -14,7 +14,7 @@ import { NdsCalendar } from './calendar';
 // documentar o que promete.
 
 const meta: Meta = {
-  title: 'Primitives/Form/Calendar/States',
+  title: 'Components/Form/Calendar/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsCalendar] })],
   parameters: {

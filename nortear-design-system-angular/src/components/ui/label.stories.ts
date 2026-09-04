@@ -10,7 +10,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<LabelArgs> = {
-  title: 'Primitives/Form/Label',
+  title: 'Components/Form/Label',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsLabel, NdsInput] })],
   parameters: {

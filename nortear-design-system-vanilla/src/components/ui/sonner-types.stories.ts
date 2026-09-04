@@ -17,7 +17,7 @@ import { waitForToast, clearToasts, mountToaster, PERSISTENT, TEXTS } from './so
 // estado, nunca no meio de uma transição.
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Sonner/Types',
+  title: 'Components/Feedback/Sonner/Types',
   tags: ['feedback'],
   parameters: {
     layout: 'padded',

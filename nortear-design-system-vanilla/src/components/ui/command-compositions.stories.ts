@@ -22,7 +22,7 @@ import { open as abrirDialog, waitForClosed, panel } from './dialog.fixtures';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Command/Compositions',
+  title: 'Components/Overlay/Command/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

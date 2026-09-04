@@ -9,7 +9,7 @@ import {
 } from "@shared/testing/skeleton-probe";
 
 const meta = {
-  title: "Primitives/Feedback/Skeleton/States",
+  title: "Components/Feedback/Skeleton/States",
   tags: ["feedback"],
   component: Skeleton,
   parameters: {

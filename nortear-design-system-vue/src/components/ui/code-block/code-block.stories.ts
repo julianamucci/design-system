@@ -16,7 +16,7 @@ const source = 'const x = 1'
 </template>`;
 
 const meta = {
-  title: 'Primitives/Display/CodeBlock',
+  title: 'Components/Display/CodeBlock',
   component: CodeBlock,
   tags: ['autodocs', 'display'],
   parameters: {

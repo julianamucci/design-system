@@ -18,7 +18,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 // axe tem para examinar — fechado, o painel nem está no DOM.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Sheet/Compositions',
+  title: 'Components/Overlay/Sheet/Compositions',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton, NdsInput, NdsLabel] })],
   parameters: {

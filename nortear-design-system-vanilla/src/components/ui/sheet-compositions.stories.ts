@@ -12,7 +12,7 @@ import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Sheet/Compositions',
+  title: 'Components/Overlay/Sheet/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

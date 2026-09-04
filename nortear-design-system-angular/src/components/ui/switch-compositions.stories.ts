@@ -17,7 +17,7 @@ import { NdsButton } from './button';
 // de contrato entre as stacks (`contract_divergent` no audit.mjs).
 
 const meta: Meta = {
-  title: 'Primitives/Form/Switch/Compositions',
+  title: 'Components/Form/Switch/Compositions',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsSwitch, NdsLabel, NdsButton] })],
   parameters: {

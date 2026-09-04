@@ -18,7 +18,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<NavigationMenuArgs> = {
-  title: 'Primitives/Navigation/NavigationMenu',
+  title: 'Components/Navigation/NavigationMenu',
   tags: ['autodocs', 'navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_NAVIGATION_MENU] })],
   parameters: {

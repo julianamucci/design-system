@@ -580,17 +580,17 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
           {
             name: "Card",
             description: toPlainText(tContent("related.card")),
-            path: "?path=/docs/primitives-layout-card--docs",
+            path: "?path=/docs/components-layout-card--docs",
           },
           {
             name: "Avatar",
             description: toPlainText(tContent("related.avatar")),
-            path: "?path=/docs/primitives-display-avatar--docs",
+            path: "?path=/docs/components-display-avatar--docs",
           },
           {
             name: "Skeleton",
             description: toPlainText(tContent("related.skeleton")),
-            path: "?path=/docs/primitives-feedback-skeleton--docs",
+            path: "?path=/docs/components-feedback-skeleton--docs",
           },
         ]}
       />

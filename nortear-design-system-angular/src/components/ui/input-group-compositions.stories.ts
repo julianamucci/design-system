@@ -41,7 +41,7 @@ import {
 // prova que o grupo empilha sozinho.
 
 const meta: Meta = {
-  title: 'Primitives/Form/InputGroup/Compositions',
+  title: 'Components/Form/InputGroup/Compositions',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_INPUT_GROUP, NdsButton] })],
   parameters: {

@@ -592,10 +592,10 @@ export class NdsApprovalCardDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'toolGroup',   path: '?path=/docs/primitives-conversational-toolgroup--docs'  },
-      { key: 'chatThread',  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { key: 'alertDialog', path: '?path=/docs/primitives-overlay-alertdialog--docs'       },
-      { key: 'button',      path: '?path=/docs/primitives-form-button--docs'               },
+      { key: 'toolGroup',   path: '?path=/docs/components-conversational-toolgroup--docs'  },
+      { key: 'chatThread',  path: '?path=/docs/components-conversational-chatthread--docs' },
+      { key: 'alertDialog', path: '?path=/docs/components-overlay-alertdialog--docs'       },
+      { key: 'button',      path: '?path=/docs/components-form-button--docs'               },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

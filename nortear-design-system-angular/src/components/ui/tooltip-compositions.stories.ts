@@ -62,7 +62,7 @@ const ICON_INFO = `<svg
         </svg>`;
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Tooltip/Compositions',
+  title: 'Components/Overlay/Tooltip/Compositions',
   tags: ['overlay'],
   decorators: [
     moduleMetadata({

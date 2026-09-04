@@ -716,10 +716,10 @@ interface NavigationMenuLinkProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.menubar.name'),    description: $tStore('related.items.menubar.description'),    path: '?path=/docs/primitives-navigation-menubar--docs'    },
-      { name: $tStore('related.items.sidebar.name'),    description: $tStore('related.items.sidebar.description'),    path: '?path=/docs/primitives-layout-sidebar--docs'    },
-      { name: $tStore('related.items.breadcrumb.name'), description: $tStore('related.items.breadcrumb.description'), path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
-      { name: $tStore('related.items.tabs.name'),       description: $tStore('related.items.tabs.description'),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
+      { name: $tStore('related.items.menubar.name'),    description: $tStore('related.items.menubar.description'),    path: '?path=/docs/components-navigation-menubar--docs'    },
+      { name: $tStore('related.items.sidebar.name'),    description: $tStore('related.items.sidebar.description'),    path: '?path=/docs/components-layout-sidebar--docs'    },
+      { name: $tStore('related.items.breadcrumb.name'), description: $tStore('related.items.breadcrumb.description'), path: '?path=/docs/components-navigation-breadcrumb--docs' },
+      { name: $tStore('related.items.tabs.name'),       description: $tStore('related.items.tabs.description'),       path: '?path=/docs/components-navigation-tabs--docs'       },
     ]}
   />
 

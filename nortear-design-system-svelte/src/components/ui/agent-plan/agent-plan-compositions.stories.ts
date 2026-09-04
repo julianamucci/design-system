@@ -19,7 +19,7 @@ import {
 // forma. Duas peças aqui seriam duas páginas para uma coisa só.
 
 const meta: Meta<typeof AgentPlan> = {
-  title: 'Primitives/Conversational/AgentPlan/Compositions',
+  title: 'Components/Conversational/AgentPlan/Compositions',
   component: AgentPlan,
   tags: ['conversational'],
   parameters: {

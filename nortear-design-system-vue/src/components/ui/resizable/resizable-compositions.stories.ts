@@ -12,7 +12,7 @@ import {
 } from './resizable.source';
 
 const meta = {
-  title: 'Primitives/Layout/Resizable/Compositions',
+  title: 'Components/Layout/Resizable/Compositions',
   component: ResizablePanelGroup,
   tags: ['layout'],
   parameters: {

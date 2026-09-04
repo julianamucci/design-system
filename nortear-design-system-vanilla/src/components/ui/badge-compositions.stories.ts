@@ -13,7 +13,7 @@ import {
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'Primitives/Feedback/Badge/Compositions',
+  title: 'Components/Feedback/Badge/Compositions',
   parameters: {
     design: figmaDesign('badge'),
     controls: { disable: true },

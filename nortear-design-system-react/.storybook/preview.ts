@@ -202,7 +202,7 @@ const preview: Preview = {
           // identificador ele aborta a inicialização dos projetos do vitest, e
           // a suíte de navegador das cinco stacks para de subir sem que o build
           // ou o lint acusem nada.
-          'Primitives', [
+          'Components', [
             'Conversational', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],   // Conversacional
             'Display', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],          // Display
             'Disclosure', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],       // Expansão
@@ -214,6 +214,10 @@ const preview: Preview = {
             'Tables', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],           // Tabelas
             '*', ['*', ['Docs', 'Playground', 'Variants', 'Sizes', 'Compositions', 'States', '*']],                // categoria nova cai aqui, no fim
           ],
+          // Os containers com que as docs pages são escritas. Não são API da
+          // biblioteca — ninguém instala um DocsHeader —, e por isso ficam fora
+          // de 'Components': a árvore não deve prometer contrato onde não há.
+          'Doc Components', ['*', ['Docs', 'Playground', 'Variants', 'States', '*']],
           '*',
         ],
       },

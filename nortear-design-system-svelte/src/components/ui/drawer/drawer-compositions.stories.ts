@@ -10,7 +10,7 @@ import {
 } from './drawer.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Drawer/Compositions',
+  title: 'Components/Overlay/Drawer/Compositions',
   component: DrawerStory,
   tags: ['overlay'],
   parameters: {

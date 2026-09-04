@@ -21,7 +21,7 @@ import { useI18nStore } from "@/lib/i18n"
 // mostram.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/MessageQueue/Compositions",
+  title: "Components/Conversational/MessageQueue/Compositions",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

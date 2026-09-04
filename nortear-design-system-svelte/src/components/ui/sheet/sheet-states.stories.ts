@@ -9,7 +9,7 @@ import { sheetSource, sheetTermosWithScrollSource } from './sheet.source';
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Sheet/States',
+  title: 'Components/Overlay/Sheet/States',
   component: SheetStory,
   tags: ['overlay'],
   parameters: {

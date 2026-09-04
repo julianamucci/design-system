@@ -19,7 +19,7 @@ import {
 } from '@shared/testing/breadcrumb-probe';
 
 const meta = {
-  title: 'Primitives/Navigation/Breadcrumb',
+  title: 'Components/Navigation/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs', 'navigation'],
   parameters: {

@@ -14,7 +14,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Sheet/States',
+  title: 'Components/Overlay/Sheet/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

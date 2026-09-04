@@ -5,7 +5,7 @@ import { inputSource, inputSourceWith, inputSourcePrefixo } from './input.source
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Input/Compositions',
+  title: 'Components/Form/Input/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

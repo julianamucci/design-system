@@ -10,7 +10,7 @@ const LABEL_NEXT = 'Ir para a próxima página';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'Primitives/Navigation/Pagination/Variants',
+  title: 'Components/Navigation/Pagination/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

@@ -25,7 +25,7 @@ import {
 // não muda de desenho por causa dela.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ApprovalCard/States',
+  title: 'Components/Conversational/ApprovalCard/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsApprovalCard, NdsButton] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

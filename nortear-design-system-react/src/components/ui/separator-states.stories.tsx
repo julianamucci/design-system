@@ -4,7 +4,7 @@ import { Separator } from "./separator";
 import { separatorSemanticoSource, separatorSource } from "./separator.source";
 
 const meta = {
-  title: "Primitives/Layout/Separator/States",
+  title: "Components/Layout/Separator/States",
   tags: ["layout"],
   component: Separator,
   parameters: {

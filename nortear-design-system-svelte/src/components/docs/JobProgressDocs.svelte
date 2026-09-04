@@ -480,10 +480,10 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.agentStatus.name'),     description: toPlainText($tStore('related.items.agentStatus.description')),     path: '?path=/docs/primitives-conversational-agentstatus--docs'     },
-      { name: $tStore('related.items.agentPlan.name'),       description: toPlainText($tStore('related.items.agentPlan.description')),       path: '?path=/docs/primitives-conversational-agentplan--docs'       },
-      { name: $tStore('related.items.progress.name'),        description: toPlainText($tStore('related.items.progress.description')),        path: '?path=/docs/primitives-feedback-progress--docs'              },
-      { name: $tStore('related.items.connectionState.name'), description: toPlainText($tStore('related.items.connectionState.description')), path: '?path=/docs/primitives-conversational-connectionstate--docs' },
+      { name: $tStore('related.items.agentStatus.name'),     description: toPlainText($tStore('related.items.agentStatus.description')),     path: '?path=/docs/components-conversational-agentstatus--docs'     },
+      { name: $tStore('related.items.agentPlan.name'),       description: toPlainText($tStore('related.items.agentPlan.description')),       path: '?path=/docs/components-conversational-agentplan--docs'       },
+      { name: $tStore('related.items.progress.name'),        description: toPlainText($tStore('related.items.progress.description')),        path: '?path=/docs/components-feedback-progress--docs'              },
+      { name: $tStore('related.items.connectionState.name'), description: toPlainText($tStore('related.items.connectionState.description')), path: '?path=/docs/components-conversational-connectionstate--docs' },
     ]}
   />
 

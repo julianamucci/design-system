@@ -650,10 +650,10 @@ export class NdsTerminalBlockDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'codeBlock',   path: '?path=/docs/primitives-display-codeblock--docs'          },
-      { key: 'agentStatus', path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { key: 'toolGroup',   path: '?path=/docs/primitives-conversational-toolgroup--docs'   },
-      { key: 'jobProgress', path: '?path=/docs/primitives-conversational-jobprogress--docs' },
+      { key: 'codeBlock',   path: '?path=/docs/components-display-codeblock--docs'          },
+      { key: 'agentStatus', path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { key: 'toolGroup',   path: '?path=/docs/components-conversational-toolgroup--docs'   },
+      { key: 'jobProgress', path: '?path=/docs/components-conversational-jobprogress--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

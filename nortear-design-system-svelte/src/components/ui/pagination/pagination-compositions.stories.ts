@@ -11,7 +11,7 @@ const LABEL_NEXT = 'Ir para a próxima página';
 const onPageChange = fn();
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Pagination/Compositions',
+  title: 'Components/Navigation/Pagination/Compositions',
   component: PaginationStory,
   tags: ['navigation'],
   parameters: {

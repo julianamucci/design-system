@@ -13,7 +13,7 @@ import { contextDisplayBesideFieldSource } from './context-display.source';
 // lado do campo, não é entrada dele e não entra na descrição acessível dele.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextDisplay/Compositions',
+  title: 'Components/Conversational/ContextDisplay/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsContextDisplay, NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

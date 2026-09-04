@@ -32,7 +32,7 @@ import {
 // consome aperta a casa.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ActivityGraph/Compositions',
+  title: 'Components/Conversational/ActivityGraph/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsActivityGraph] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

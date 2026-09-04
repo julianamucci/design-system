@@ -29,7 +29,7 @@ import {
 // endereço, quadro e legenda — e o que muda é quanto cada parte tem para dizer.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComputerUse/States',
+  title: 'Components/Conversational/ComputerUse/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

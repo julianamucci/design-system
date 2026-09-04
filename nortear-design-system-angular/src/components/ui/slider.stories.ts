@@ -8,7 +8,7 @@ import { contextoHandleTrack, contrastHandleTrack } from '@shared/testing/slider
 import { sliderPlaygroundSource, type SliderArgs } from './slider.source';
 
 const meta: Meta<SliderArgs> = {
-  title: 'Primitives/Form/Slider',
+  title: 'Components/Form/Slider',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsSlider] })],
   parameters: {

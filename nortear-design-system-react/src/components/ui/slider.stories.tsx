@@ -8,7 +8,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { handleLimites, handleValue } from "@shared/testing/slider-probe";
 
 const meta = {
-  title: "Primitives/Form/Slider",
+  title: "Components/Form/Slider",
   component: Slider,
   tags: ["autodocs", "form"],
   parameters: {

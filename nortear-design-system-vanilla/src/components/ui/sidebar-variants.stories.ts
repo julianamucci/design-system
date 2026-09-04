@@ -17,7 +17,7 @@ import { sidebarSource, sidebarSourceWith } from './sidebar.source';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'Primitives/Layout/Sidebar/Variants',
+  title: 'Components/Layout/Sidebar/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'fullscreen',

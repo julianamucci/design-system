@@ -33,7 +33,7 @@ function PlaygroundExample({ mention, command }: Args) {
 }
 
 const meta: Meta<Args> = {
-  title: "Primitives/Conversational/ComposerTriggerPopover",
+  title: "Components/Conversational/ComposerTriggerPopover",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

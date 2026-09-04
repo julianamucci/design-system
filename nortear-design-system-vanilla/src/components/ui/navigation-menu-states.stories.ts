@@ -17,7 +17,7 @@ import {
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'Primitives/Navigation/NavigationMenu/States',
+  title: 'Components/Navigation/NavigationMenu/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

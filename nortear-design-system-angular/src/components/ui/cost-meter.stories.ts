@@ -25,7 +25,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/CostMeter',
+  title: 'Components/Conversational/CostMeter',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsCostMeter] })],
   parameters: {

@@ -17,7 +17,7 @@ import { modelPickerInRailSource } from './composer-model-picker.source';
 // o que separa um menu de uma pilha de divs clicáveis.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerModelPicker/Compositions',
+  title: 'Components/Conversational/ComposerModelPicker/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer, NdsComposerModelPicker] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

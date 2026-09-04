@@ -36,7 +36,7 @@ function contraste(a: string, b: string): number {
 }
 
 const meta = {
-  title: "Primitives/Overlay/Tooltip/Variants",
+  title: "Components/Overlay/Tooltip/Variants",
   tags: ["overlay"],
   component: Tooltip,
   decorators: [

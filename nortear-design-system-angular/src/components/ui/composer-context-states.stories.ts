@@ -21,7 +21,7 @@ import {
 // há etiqueta nenhuma. A espécie — que é forma — mora em `Variants`.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerContext/States',
+  title: 'Components/Conversational/ComposerContext/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

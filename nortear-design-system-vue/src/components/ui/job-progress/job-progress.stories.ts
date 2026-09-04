@@ -45,7 +45,7 @@ const countOf = (args: PlaygroundArgs): JobCount | undefined =>
     : undefined;
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/JobProgress',
+  title: 'Components/Conversational/JobProgress',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

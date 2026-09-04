@@ -21,7 +21,7 @@ import { queueAboveFieldSource, queueLongSource } from './message-queue.source';
 // mostram.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/MessageQueue/Compositions',
+  title: 'Components/Conversational/MessageQueue/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer, NdsMessageQueue] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

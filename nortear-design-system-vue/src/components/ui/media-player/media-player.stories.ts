@@ -44,7 +44,7 @@ function keepPlayer(instance: MediaPlayerApi | null): void {
 }
 
 const meta = {
-  title: 'Primitives/Display/MediaPlayer',
+  title: 'Components/Display/MediaPlayer',
   component: MediaPlayer,
   tags: ['autodocs', 'display'],
   parameters: {

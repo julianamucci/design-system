@@ -17,7 +17,7 @@ import {
 // tecla de envio ESCOLHE em vez de enviar.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerTriggerPopover/Compositions',
+  title: 'Components/Conversational/ComposerTriggerPopover/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

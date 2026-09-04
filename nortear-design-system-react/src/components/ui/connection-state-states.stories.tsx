@@ -25,7 +25,7 @@ import {
 // sempre a mesma, e o que muda é se ainda há por onde pedir.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ConnectionState/States",
+  title: "Components/Conversational/ConnectionState/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

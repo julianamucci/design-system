@@ -25,7 +25,7 @@ import {
 // desenho de sempre, prometendo uma verificação que não acontece.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ThinkingIndicator/States",
+  title: "Components/Conversational/ThinkingIndicator/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

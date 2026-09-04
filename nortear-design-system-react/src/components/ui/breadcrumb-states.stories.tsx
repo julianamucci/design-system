@@ -20,7 +20,7 @@ import {
 } from "./breadcrumb.source";
 
 const meta = {
-  title: "Primitives/Navigation/Breadcrumb/States",
+  title: "Components/Navigation/Breadcrumb/States",
   tags: ["navigation"],
   component: Breadcrumb,
   parameters: {

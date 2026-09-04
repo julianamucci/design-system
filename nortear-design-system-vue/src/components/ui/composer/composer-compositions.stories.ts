@@ -13,7 +13,7 @@ import { composerRailSource } from './composer.source';
 // para marcação que quem consome fornece.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/Composer/Compositions',
+  title: 'Components/Conversational/Composer/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

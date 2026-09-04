@@ -11,7 +11,7 @@ import { contextDisplayBesideFieldSource } from './context-display.source';
 // lado do campo, não é prop dele e não entra na descrição acessível dele.
 
 const meta: Meta<typeof ContextDisplay> = {
-  title: 'Primitives/Conversational/ContextDisplay/Compositions',
+  title: 'Components/Conversational/ContextDisplay/Compositions',
   component: ContextDisplay,
   tags: ['conversational'],
   parameters: {

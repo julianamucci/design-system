@@ -669,10 +669,10 @@ interface SwitchProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.checkbox.name'),   description: $tStore('related.items.checkbox.description'),   path: '?path=/docs/primitives-form-checkbox--docs' },
-      { name: $tStore('related.items.toggle.name'),     description: $tStore('related.items.toggle.description'),     path: '?path=/docs/primitives-form-toggle--docs' },
-      { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/primitives-form-radiogroup--docs' },
-      { name: $tStore('related.items.form.name'),       description: $tStore('related.items.form.description'),       path: '?path=/docs/primitives-form-form--docs' },
+      { name: $tStore('related.items.checkbox.name'),   description: $tStore('related.items.checkbox.description'),   path: '?path=/docs/components-form-checkbox--docs' },
+      { name: $tStore('related.items.toggle.name'),     description: $tStore('related.items.toggle.description'),     path: '?path=/docs/components-form-toggle--docs' },
+      { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/components-form-radiogroup--docs' },
+      { name: $tStore('related.items.form.name'),       description: $tStore('related.items.form.description'),       path: '?path=/docs/components-form-form--docs' },
     ]}
   />
 

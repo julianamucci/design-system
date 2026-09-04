@@ -800,22 +800,22 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
               {
                 name: "Switch",
                 description: toPlainText(tContent("related.switch")),
-                path: "?path=/docs/primitives-form-switch--docs",
+                path: "?path=/docs/components-form-switch--docs",
               },
               {
                 name: "RadioGroup",
                 description: toPlainText(tContent("related.radioGroup")),
-                path: "?path=/docs/primitives-form-radiogroup--docs",
+                path: "?path=/docs/components-form-radiogroup--docs",
               },
               {
                 name: "Form",
                 description: toPlainText(tContent("related.form")),
-                path: "?path=/docs/primitives-form-form--docs",
+                path: "?path=/docs/components-form-form--docs",
               },
               {
                 name: "Select",
                 description: stripHtml(tContent("related.select")),
-                path: "?path=/docs/primitives-form-select--docs",
+                path: "?path=/docs/components-form-select--docs",
               },
             ]}
           />

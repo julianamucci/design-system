@@ -8,7 +8,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { switchSource } from "./switch.source";
 
 const meta = {
-  title: "Primitives/Form/Switch",
+  title: "Components/Form/Switch",
   component: Switch,
   tags: ["autodocs", "form"],
   parameters: {

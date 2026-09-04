@@ -1015,27 +1015,27 @@ const [showRulers, setShowRulers] = useState(false);
           {
             name: "DropdownMenu",
             description: toPlainText(tContent("related.dropdownMenu")),
-            path: "?path=/docs/primitives-overlay-dropdownmenu--docs",
+            path: "?path=/docs/components-overlay-dropdownmenu--docs",
           },
           {
             name: "Menubar",
             description: toPlainText(tContent("related.menubar")),
-            path: "?path=/docs/primitives-navigation-menubar--docs",
+            path: "?path=/docs/components-navigation-menubar--docs",
           },
           {
             name: "Dialog",
             description: toPlainText(tContent("related.dialog")),
-            path: "?path=/docs/primitives-overlay-dialog--docs",
+            path: "?path=/docs/components-overlay-dialog--docs",
           },
           {
             name: "AlertDialog",
             description: toPlainText(tContent("related.alertDialog")),
-            path: "?path=/docs/primitives-overlay-alertdialog--docs",
+            path: "?path=/docs/components-overlay-alertdialog--docs",
           },
           {
             name: "Tooltip",
             description: toPlainText(tContent("related.tooltip")),
-            path: "?path=/docs/primitives-overlay-tooltip--docs",
+            path: "?path=/docs/components-overlay-tooltip--docs",
           },
         ]}
       />

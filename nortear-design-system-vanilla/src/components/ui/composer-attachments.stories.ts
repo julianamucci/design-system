@@ -16,7 +16,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const onRemoveAttachment = fn();
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerAttachments',
+  title: 'Components/Conversational/ComposerAttachments',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

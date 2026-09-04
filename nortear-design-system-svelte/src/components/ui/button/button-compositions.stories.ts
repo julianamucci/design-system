@@ -29,7 +29,7 @@ const meta: Meta = {
       source: { transform: buttonSource },
     },
   },
-  title: 'Primitives/Form/Button/Compositions',
+  title: 'Components/Form/Button/Compositions',
   component: Button,
   tags: ['form'],
 };

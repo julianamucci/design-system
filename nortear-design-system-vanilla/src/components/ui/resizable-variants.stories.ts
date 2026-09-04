@@ -10,7 +10,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'Primitives/Layout/Resizable/Variants',
+  title: 'Components/Layout/Resizable/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

@@ -14,7 +14,7 @@ import {
 } from './tabs.source';
 
 const meta: Meta<any> = {
-  title: 'Primitives/Navigation/Tabs/Compositions',
+  title: 'Components/Navigation/Tabs/Compositions',
   component: Tabs,
   tags: ['navigation'],
   parameters: {

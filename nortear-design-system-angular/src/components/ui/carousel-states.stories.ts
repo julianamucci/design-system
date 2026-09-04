@@ -11,7 +11,7 @@ import { NdsAspectRatio } from './aspect-ratio';
 // botão que continua vivo e não faz nada é pior do que um botão apagado.
 
 const meta: Meta = {
-  title: 'Primitives/Display/Carousel/States',
+  title: 'Components/Display/Carousel/States',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio] })],
   parameters: {

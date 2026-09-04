@@ -673,10 +673,10 @@ interface StepperPartProps {
     title={$tStore('related.title')}
     componentSlug="stepper"
     items={[
-      { name: $tStore('related.items.tabs.name'),       description: $tStore('related.items.tabs.description'),       path: '?path=/docs/primitives-navigation-tabs--docs'       },
-      { name: $tStore('related.items.breadcrumb.name'), description: $tStore('related.items.breadcrumb.description'), path: '?path=/docs/primitives-navigation-breadcrumb--docs' },
-      { name: $tStore('related.items.progress.name'),   description: $tStore('related.items.progress.description'),   path: '?path=/docs/primitives-feedback-progress--docs'     },
-      { name: $tStore('related.items.form.name'),       description: $tStore('related.items.form.description'),       path: '?path=/docs/primitives-form-form--docs'             },
+      { name: $tStore('related.items.tabs.name'),       description: $tStore('related.items.tabs.description'),       path: '?path=/docs/components-navigation-tabs--docs'       },
+      { name: $tStore('related.items.breadcrumb.name'), description: $tStore('related.items.breadcrumb.description'), path: '?path=/docs/components-navigation-breadcrumb--docs' },
+      { name: $tStore('related.items.progress.name'),   description: $tStore('related.items.progress.description'),   path: '?path=/docs/components-feedback-progress--docs'     },
+      { name: $tStore('related.items.form.name'),       description: $tStore('related.items.form.description'),       path: '?path=/docs/components-form-form--docs'             },
     ]}
   />
 

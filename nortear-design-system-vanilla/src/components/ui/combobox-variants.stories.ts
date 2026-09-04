@@ -59,7 +59,7 @@ const GROCERY_GROUPS = GROCERIES.reduce<Record<string, string[]>>((groups, item)
 }, {});
 
 const meta: Meta = {
-  title: 'Primitives/Form/Combobox/Variants',
+  title: 'Components/Form/Combobox/Variants',
   tags: ['form'],
   parameters: {
     layout: 'padded',

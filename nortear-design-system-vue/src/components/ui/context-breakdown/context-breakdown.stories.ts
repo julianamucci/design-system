@@ -28,7 +28,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ContextBreakdown',
+  title: 'Components/Conversational/ContextBreakdown',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

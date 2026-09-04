@@ -22,7 +22,7 @@ interface TableArgs {
 }
 
 const meta: Meta<TableArgs> = {
-  title: 'Primitives/Tables/Table',
+  title: 'Components/Tables/Table',
   component: Table,
   tags: ['autodocs', 'tables'],
   parameters: {

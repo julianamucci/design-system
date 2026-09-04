@@ -595,10 +595,10 @@ export class NdsComposerModelPickerDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'composer',               path: '?path=/docs/primitives-conversational-composer--docs' },
-      { key: 'composerTriggerPopover', path: '?path=/docs/primitives-conversational-composertriggerpopover--docs' },
-      { key: 'select',                 path: '?path=/docs/primitives-form-select--docs' },
-      { key: 'badge',                  path: '?path=/docs/primitives-feedback-badge--docs' },
+      { key: 'composer',               path: '?path=/docs/components-conversational-composer--docs' },
+      { key: 'composerTriggerPopover', path: '?path=/docs/components-conversational-composertriggerpopover--docs' },
+      { key: 'select',                 path: '?path=/docs/components-form-select--docs' },
+      { key: 'badge',                  path: '?path=/docs/components-feedback-badge--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

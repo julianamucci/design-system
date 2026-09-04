@@ -619,10 +619,10 @@ interface SliderProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.input.name'),      description: $tStore('related.items.input.description'),      path: '?path=/docs/primitives-form-input--docs'      },
-      { name: $tStore('related.items.switch.name'),     description: $tStore('related.items.switch.description'),     path: '?path=/docs/primitives-form-switch--docs'     },
-      { name: $tStore('related.items.progress.name'),   description: $tStore('related.items.progress.description'),   path: '?path=/docs/primitives-feedback-progress--docs'   },
-      { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/primitives-form-radiogroup--docs' },
+      { name: $tStore('related.items.input.name'),      description: $tStore('related.items.input.description'),      path: '?path=/docs/components-form-input--docs'      },
+      { name: $tStore('related.items.switch.name'),     description: $tStore('related.items.switch.description'),     path: '?path=/docs/components-form-switch--docs'     },
+      { name: $tStore('related.items.progress.name'),   description: $tStore('related.items.progress.description'),   path: '?path=/docs/components-feedback-progress--docs'   },
+      { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/components-form-radiogroup--docs' },
     ]}
   />
 

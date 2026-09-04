@@ -18,7 +18,7 @@ const DEMO_CODE = `import { CodeBlock } from "@/components/ui/code-block";
 // O botão copiar leva só o código.`;
 
 const meta = {
-  title: "Primitives/Display/CodeBlock",
+  title: "Components/Display/CodeBlock",
   component: CodeBlock,
   tags: ["autodocs", "display"],
   parameters: {

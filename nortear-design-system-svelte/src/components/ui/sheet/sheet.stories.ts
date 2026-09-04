@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sheetSource } from './sheet.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Sheet',
+  title: 'Components/Overlay/Sheet',
   component: SheetStory,
   tags: ['autodocs', 'overlay'],
   parameters: {

@@ -439,10 +439,10 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.composer.name'),            description: toPlainText($tStore('related.items.composer.description')),            path: '?path=/docs/primitives-conversational-composer--docs' },
-      { name: $tStore('related.items.composerAttachments.name'), description: toPlainText($tStore('related.items.composerAttachments.description')), path: '?path=/docs/primitives-conversational-composerattachments--docs' },
-      { name: $tStore('related.items.mediaPlayer.name'),         description: toPlainText($tStore('related.items.mediaPlayer.description')),         path: '?path=/docs/primitives-display-mediaplayer--docs' },
-      { name: $tStore('related.items.button.name'),              description: toPlainText($tStore('related.items.button.description')),              path: '?path=/docs/primitives-form-button--docs' },
+      { name: $tStore('related.items.composer.name'),            description: toPlainText($tStore('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
+      { name: $tStore('related.items.composerAttachments.name'), description: toPlainText($tStore('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },
+      { name: $tStore('related.items.mediaPlayer.name'),         description: toPlainText($tStore('related.items.mediaPlayer.description')),         path: '?path=/docs/components-display-mediaplayer--docs' },
+      { name: $tStore('related.items.button.name'),              description: toPlainText($tStore('related.items.button.description')),              path: '?path=/docs/components-form-button--docs' },
     ]}
   />
 

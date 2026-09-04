@@ -805,9 +805,9 @@ declare function buildRadarOption(o: {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Table',     description: $tStore('related.table'),     path: '?path=/docs/primitives-tables-table--docs'     },
-      { name: 'Card',      description: $tStore('related.card'),      path: '?path=/docs/primitives-layout-card--docs'      },
-      { name: 'DataTable', description: $tStore('related.dataTable'), path: '?path=/docs/primitives-tables-datatable--docs' },
+      { name: 'Table',     description: $tStore('related.table'),     path: '?path=/docs/components-tables-table--docs'     },
+      { name: 'Card',      description: $tStore('related.card'),      path: '?path=/docs/components-layout-card--docs'      },
+      { name: 'DataTable', description: $tStore('related.dataTable'), path: '?path=/docs/components-tables-datatable--docs' },
     ]}
   />
 

@@ -20,7 +20,7 @@ import {
 // stories provam a regra pelo lado que importa: onde o gatilho NÃO vale.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerTriggerPopover/Variants',
+  title: 'Components/Conversational/ComposerTriggerPopover/Variants',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

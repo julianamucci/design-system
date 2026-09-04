@@ -832,10 +832,10 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
           title: t('related.title'),
           componentSlug: SLUG,
           items: [
-            { name: t('related.items.input.name'),    description: toPlainText(t('related.items.input.description')),    path: '?path=/docs/primitives-form-input--docs' },
-            { name: t('related.items.textarea.name'), description: toPlainText(t('related.items.textarea.description')), path: '?path=/docs/primitives-form-textarea--docs' },
-            { name: t('related.items.button.name'),   description: toPlainText(t('related.items.button.description')),   path: '?path=/docs/primitives-form-button--docs' },
-            { name: t('related.items.form.name'),     description: toPlainText(t('related.items.form.description')),     path: '?path=/docs/primitives-form-form--docs' },
+            { name: t('related.items.input.name'),    description: toPlainText(t('related.items.input.description')),    path: '?path=/docs/components-form-input--docs' },
+            { name: t('related.items.textarea.name'), description: toPlainText(t('related.items.textarea.description')), path: '?path=/docs/components-form-textarea--docs' },
+            { name: t('related.items.button.name'),   description: toPlainText(t('related.items.button.description')),   path: '?path=/docs/components-form-button--docs' },
+            { name: t('related.items.form.name'),     description: toPlainText(t('related.items.form.description')),     path: '?path=/docs/components-form-form--docs' },
           ],
         });
 

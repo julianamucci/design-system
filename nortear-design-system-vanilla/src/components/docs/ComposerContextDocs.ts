@@ -413,10 +413,10 @@ export interface ContextItem {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.composer.name'),            description: toPlainText(t('related.items.composer.description')),            path: '?path=/docs/primitives-conversational-composer--docs' },
-            { name: t('related.items.composerAttachments.name'), description: toPlainText(t('related.items.composerAttachments.description')), path: '?path=/docs/primitives-conversational-composerattachments--docs' },
-            { name: t('related.items.composerQuote.name'),       description: toPlainText(t('related.items.composerQuote.description')),       path: '?path=/docs/primitives-conversational-composerquote--docs' },
-            { name: t('related.items.badge.name'),               description: toPlainText(t('related.items.badge.description')),               path: '?path=/docs/primitives-feedback-badge--docs' },
+            { name: t('related.items.composer.name'),            description: toPlainText(t('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
+            { name: t('related.items.composerAttachments.name'), description: toPlainText(t('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },
+            { name: t('related.items.composerQuote.name'),       description: toPlainText(t('related.items.composerQuote.description')),       path: '?path=/docs/components-conversational-composerquote--docs' },
+            { name: t('related.items.badge.name'),               description: toPlainText(t('related.items.badge.description')),               path: '?path=/docs/components-feedback-badge--docs' },
           ],
         });
 

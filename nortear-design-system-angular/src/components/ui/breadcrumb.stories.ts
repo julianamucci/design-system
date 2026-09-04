@@ -23,7 +23,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<BreadcrumbArgs> = {
-  title: 'Primitives/Navigation/Breadcrumb',
+  title: 'Components/Navigation/Breadcrumb',
   tags: ['autodocs', 'navigation'],
   decorators: [
     moduleMetadata({

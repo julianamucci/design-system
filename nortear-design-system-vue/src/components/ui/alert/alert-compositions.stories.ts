@@ -12,7 +12,7 @@ import {
 } from './alert.source';
 
 const meta = {
-  title: 'Primitives/Feedback/Alert/Compositions',
+  title: 'Components/Feedback/Alert/Compositions',
   component: Alert,
   tags: ['feedback'],
   parameters: {

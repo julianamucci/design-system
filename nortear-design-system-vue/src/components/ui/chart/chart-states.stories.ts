@@ -45,7 +45,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: chartEmptySource } },
   },
-  title: 'Primitives/Display/Chart/States',
+  title: 'Components/Display/Chart/States',
   tags: ['display'],
 };
 export default meta;

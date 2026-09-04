@@ -647,9 +647,9 @@ export type CommandSeparator = { type: 'separator' };`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Select',       description: toPlainText(t('related.select')),       path: '?path=/docs/primitives-form-select--docs'        },
-            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs'  },
-            { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/primitives-overlay-dialog--docs'        },
+            { name: 'Select',       description: toPlainText(t('related.select')),       path: '?path=/docs/components-form-select--docs'        },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs'  },
+            { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/components-overlay-dialog--docs'        },
           ],
         });
 

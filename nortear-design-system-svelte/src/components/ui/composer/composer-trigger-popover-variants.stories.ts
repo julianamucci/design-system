@@ -19,7 +19,7 @@ import {
 // stories provam a regra pelo lado que importa: onde o gatilho NÃO vale.
 
 const meta: Meta<typeof Composer> = {
-  title: 'Primitives/Conversational/ComposerTriggerPopover/Variants',
+  title: 'Components/Conversational/ComposerTriggerPopover/Variants',
   component: Composer,
   tags: ['conversational'],
   parameters: {

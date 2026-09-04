@@ -32,7 +32,7 @@ import {
 // terceira —, e é o texto ao lado que responde.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/CostMeter/States",
+  title: "Components/Conversational/CostMeter/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

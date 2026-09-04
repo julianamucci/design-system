@@ -10,7 +10,7 @@ import {
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'Primitives/Feedback/Progress/States',
+  title: 'Components/Feedback/Progress/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

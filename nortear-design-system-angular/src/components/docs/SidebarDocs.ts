@@ -841,12 +841,12 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'navigationMenu', name: 'Navigation Menu', path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-      { key: 'tabs',           name: 'Tabs',            path: '?path=/docs/primitives-navigation-tabs--docs'           },
-      { key: 'sheet',          name: 'Sheet',           path: '?path=/docs/primitives-overlay-sheet--docs'          },
-      { key: 'accordion',      name: 'Accordion',       path: '?path=/docs/primitives-disclosure-accordion--docs'      },
-      { key: 'separator',      name: 'Separator',       path: '?path=/docs/primitives-layout-separator--docs'      },
-      { key: 'skeleton',       name: 'Skeleton',        path: '?path=/docs/primitives-feedback-skeleton--docs'       },
+      { key: 'navigationMenu', name: 'Navigation Menu', path: '?path=/docs/components-navigation-navigationmenu--docs' },
+      { key: 'tabs',           name: 'Tabs',            path: '?path=/docs/components-navigation-tabs--docs'           },
+      { key: 'sheet',          name: 'Sheet',           path: '?path=/docs/components-overlay-sheet--docs'          },
+      { key: 'accordion',      name: 'Accordion',       path: '?path=/docs/components-disclosure-accordion--docs'      },
+      { key: 'separator',      name: 'Separator',       path: '?path=/docs/components-layout-separator--docs'      },
+      { key: 'skeleton',       name: 'Skeleton',        path: '?path=/docs/components-feedback-skeleton--docs'       },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 

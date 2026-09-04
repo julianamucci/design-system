@@ -544,10 +544,10 @@ export class NdsConnectionStateDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'agentStatus', path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { key: 'chatThread',  path: '?path=/docs/primitives-conversational-chatthread--docs'  },
-      { key: 'alert',       path: '?path=/docs/primitives-feedback-alert--docs'             },
-      { key: 'badge',       path: '?path=/docs/primitives-feedback-badge--docs'             },
+      { key: 'agentStatus', path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { key: 'chatThread',  path: '?path=/docs/components-conversational-chatthread--docs'  },
+      { key: 'alert',       path: '?path=/docs/components-feedback-alert--docs'             },
+      { key: 'badge',       path: '?path=/docs/components-feedback-badge--docs'             },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

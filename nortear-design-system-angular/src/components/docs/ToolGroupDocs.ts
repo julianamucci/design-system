@@ -549,10 +549,10 @@ export class NdsToolGroupDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'chatThread',  path: '?path=/docs/primitives-conversational-chatthread--docs'  },
-      { key: 'agentStatus', path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { key: 'badge',       path: '?path=/docs/primitives-feedback-badge--docs'             },
-      { key: 'accordion',   path: '?path=/docs/primitives-disclosure-accordion--docs'       },
+      { key: 'chatThread',  path: '?path=/docs/components-conversational-chatthread--docs'  },
+      { key: 'agentStatus', path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { key: 'badge',       path: '?path=/docs/components-feedback-badge--docs'             },
+      { key: 'accordion',   path: '?path=/docs/components-disclosure-accordion--docs'       },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

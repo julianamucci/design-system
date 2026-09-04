@@ -827,22 +827,22 @@ interface ToasterProps {
           {
             name: "Alert",
             description: toPlainText(tContent("related.alert")),
-            path: "?path=/docs/primitives-feedback-alert--docs",
+            path: "?path=/docs/components-feedback-alert--docs",
           },
           {
             name: "AlertDialog",
             description: toPlainText(tContent("related.alertDialog")),
-            path: "?path=/docs/primitives-overlay-alertdialog--docs",
+            path: "?path=/docs/components-overlay-alertdialog--docs",
           },
           {
             name: "Badge",
             description: toPlainText(tContent("related.badge")),
-            path: "?path=/docs/primitives-feedback-badge--docs",
+            path: "?path=/docs/components-feedback-badge--docs",
           },
           {
             name: "Progress",
             description: toPlainText(tContent("related.progress")),
-            path: "?path=/docs/primitives-feedback-progress--docs",
+            path: "?path=/docs/components-feedback-progress--docs",
           },
         ]}
       />

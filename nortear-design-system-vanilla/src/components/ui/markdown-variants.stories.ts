@@ -13,7 +13,7 @@ import { MARKDOWN_COMMENT } from '@shared/primitives/markdown-examples';
 
 const meta: Meta = {
   tags: ['conversational'],
-  title: 'Primitives/Conversational/Markdown/Variants',
+  title: 'Components/Conversational/Markdown/Variants',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

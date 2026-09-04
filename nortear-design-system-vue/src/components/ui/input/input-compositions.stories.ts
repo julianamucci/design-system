@@ -20,7 +20,7 @@ import {
 } from './input.source';
 
 const meta = {
-  title: 'Primitives/Form/Input/Compositions',
+  title: 'Components/Form/Input/Compositions',
   component: Input,
   tags: ['form'],
   parameters: {

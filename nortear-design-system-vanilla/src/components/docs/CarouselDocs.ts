@@ -811,10 +811,10 @@ export type CarouselOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/primitives-navigation-tabs--docs' },
-            { name: 'ScrollArea', description: toPlainText(t('related.scrollArea')), path: '?path=/docs/primitives-layout-scrollarea--docs' },
-            { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/primitives-layout-card--docs' },
-            { name: 'Pagination', description: toPlainText(t('related.pagination')), path: '?path=/docs/primitives-navigation-pagination--docs' },
+            { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/components-navigation-tabs--docs' },
+            { name: 'ScrollArea', description: toPlainText(t('related.scrollArea')), path: '?path=/docs/components-layout-scrollarea--docs' },
+            { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/components-layout-card--docs' },
+            { name: 'Pagination', description: toPlainText(t('related.pagination')), path: '?path=/docs/components-navigation-pagination--docs' },
           ],
         });
 

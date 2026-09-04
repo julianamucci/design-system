@@ -16,7 +16,7 @@ import {
 // guideline 17 lida em voz alta: o componente desenha o que recebe.
 
 const meta: Meta<typeof InlineCitationInSentenceStory> = {
-  title: 'Primitives/Conversational/InlineCitation/Compositions',
+  title: 'Components/Conversational/InlineCitation/Compositions',
   component: InlineCitationInSentenceStory,
   tags: ['conversational'],
   parameters: {

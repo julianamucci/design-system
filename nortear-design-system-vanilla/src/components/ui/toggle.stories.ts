@@ -20,7 +20,7 @@ type ToggleArgs = {
 };
 
 const meta: Meta<ToggleArgs> = {
-  title: 'Primitives/Form/Toggle',
+  title: 'Components/Form/Toggle',
   tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createToggleDocs), source: { transform: toggleSource } },

@@ -52,7 +52,7 @@ type MediaPlayerArgs = {
 };
 
 const meta: Meta<MediaPlayerArgs> = {
-  title: 'Primitives/Display/MediaPlayer',
+  title: 'Components/Display/MediaPlayer',
   tags: ['autodocs', 'display'],
   decorators: [moduleMetadata({ imports: [MediaPlayerComponent] })],
   parameters: {

@@ -23,7 +23,7 @@ import {
 // e o que responde é a palavra que abre a linha, ou a sua ausência.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/MessageTiming/States',
+  title: 'Components/Conversational/MessageTiming/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

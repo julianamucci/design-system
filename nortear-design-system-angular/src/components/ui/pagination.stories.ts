@@ -23,7 +23,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<PaginationArgs> = {
-  title: 'Primitives/Navigation/Pagination',
+  title: 'Components/Navigation/Pagination',
   tags: ['autodocs', 'navigation'],
   decorators: [
     moduleMetadata({

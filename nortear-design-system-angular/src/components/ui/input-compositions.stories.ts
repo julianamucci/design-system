@@ -11,7 +11,7 @@ import { NdsLabel } from './label';
 // `visual.item4`, que estavam descobertos desde o Bloco 2.
 
 const meta: Meta = {
-  title: 'Primitives/Form/Input/Input Group',
+  title: 'Components/Form/Input/Input Group',
   tags: ['form'],
   decorators: [
     moduleMetadata({

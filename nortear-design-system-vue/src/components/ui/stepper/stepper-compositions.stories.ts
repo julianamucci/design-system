@@ -33,7 +33,7 @@ const BACK_LABEL = 'Voltar';
 const NEXT_LABEL = 'Avançar';
 
 const meta: Meta<any> = {
-  title: 'Primitives/Navigation/Stepper/Compositions',
+  title: 'Components/Navigation/Stepper/Compositions',
   component: Stepper,
   tags: ['navigation'],
   parameters: {

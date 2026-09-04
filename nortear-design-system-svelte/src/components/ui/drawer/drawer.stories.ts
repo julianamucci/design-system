@@ -16,7 +16,7 @@ const LABEL = {
 };
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Drawer',
+  title: 'Components/Overlay/Drawer',
   component: DrawerStory,
   tags: ['autodocs', 'overlay'],
   parameters: {

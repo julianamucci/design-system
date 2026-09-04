@@ -35,7 +35,7 @@ type EditorArgs = {
 };
 
 const meta: Meta<EditorArgs> = {
-  title: 'Primitives/Form/Editor',
+  title: 'Components/Form/Editor',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [EditorComponent] })],
   parameters: {

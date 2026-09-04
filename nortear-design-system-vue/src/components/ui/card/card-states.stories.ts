@@ -24,7 +24,7 @@ const onNavigate = fn();
 const onSave = fn();
 
 const meta = {
-  title: 'Primitives/Layout/Card/States',
+  title: 'Components/Layout/Card/States',
   component: Card,
   tags: ['layout'],
   parameters: {

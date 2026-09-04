@@ -452,10 +452,10 @@ export interface CostMeterLabels {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.contextDisplay.name'),   description: toPlainText($tStore('related.items.contextDisplay.description')),   path: '?path=/docs/primitives-conversational-contextdisplay--docs'   },
-      { name: $tStore('related.items.contextBreakdown.name'), description: toPlainText($tStore('related.items.contextBreakdown.description')), path: '?path=/docs/primitives-conversational-contextbreakdown--docs' },
-      { name: $tStore('related.items.agentStatus.name'),      description: toPlainText($tStore('related.items.agentStatus.description')),      path: '?path=/docs/primitives-conversational-agentstatus--docs'      },
-      { name: $tStore('related.items.progress.name'),         description: toPlainText($tStore('related.items.progress.description')),         path: '?path=/docs/primitives-feedback-progress--docs'                },
+      { name: $tStore('related.items.contextDisplay.name'),   description: toPlainText($tStore('related.items.contextDisplay.description')),   path: '?path=/docs/components-conversational-contextdisplay--docs'   },
+      { name: $tStore('related.items.contextBreakdown.name'), description: toPlainText($tStore('related.items.contextBreakdown.description')), path: '?path=/docs/components-conversational-contextbreakdown--docs' },
+      { name: $tStore('related.items.agentStatus.name'),      description: toPlainText($tStore('related.items.agentStatus.description')),      path: '?path=/docs/components-conversational-agentstatus--docs'      },
+      { name: $tStore('related.items.progress.name'),         description: toPlainText($tStore('related.items.progress.description')),         path: '?path=/docs/components-feedback-progress--docs'                },
     ]}
   />
 

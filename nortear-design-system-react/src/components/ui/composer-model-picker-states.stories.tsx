@@ -15,7 +15,7 @@ import { isModelSelectable } from "@shared/primitives/chat-protocol"
 // mora em `Variants`.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ComposerModelPicker/States",
+  title: "Components/Conversational/ComposerModelPicker/States",
   tags: ["conversational"],
   parameters: {
     // A lista abre PARA CIMA: no topo do quadro ela sairia da foto.

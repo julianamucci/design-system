@@ -21,7 +21,7 @@ import type { PlanStep, RunStatus } from '@shared/primitives/chat-protocol';
 // forma. Duas peças aqui seriam duas páginas para uma coisa só.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/AgentPlan/Compositions',
+  title: 'Components/Conversational/AgentPlan/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

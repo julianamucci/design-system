@@ -532,10 +532,10 @@ export class NdsMessageQueueDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'composer',      path: '?path=/docs/primitives-conversational-composer--docs' },
-      { key: 'composerQuote', path: '?path=/docs/primitives-conversational-composerquote--docs' },
-      { key: 'chatThread',    path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { key: 'badge',         path: '?path=/docs/primitives-feedback-badge--docs' },
+      { key: 'composer',      path: '?path=/docs/components-conversational-composer--docs' },
+      { key: 'composerQuote', path: '?path=/docs/components-conversational-composerquote--docs' },
+      { key: 'chatThread',    path: '?path=/docs/components-conversational-chatthread--docs' },
+      { key: 'badge',         path: '?path=/docs/components-feedback-badge--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

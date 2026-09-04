@@ -22,7 +22,7 @@ import {
 // forma. Duas peças aqui seriam duas páginas para uma coisa só.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/AgentPlan/Compositions',
+  title: 'Components/Conversational/AgentPlan/Compositions',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsAgentPlan, NdsAgentStatus] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

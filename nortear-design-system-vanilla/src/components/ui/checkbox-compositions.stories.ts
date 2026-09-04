@@ -10,7 +10,7 @@ import {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Checkbox/Compositions',
+  title: 'Components/Form/Checkbox/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

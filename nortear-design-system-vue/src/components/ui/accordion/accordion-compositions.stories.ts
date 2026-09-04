@@ -17,7 +17,7 @@ import {
 } from './accordion.source';
 
 const meta = {
-  title: 'Primitives/Disclosure/Accordion/Compositions',
+  title: 'Components/Disclosure/Accordion/Compositions',
   tags: ['disclosure'],
   parameters: {
     design: figmaDesign('accordionTrigger'),

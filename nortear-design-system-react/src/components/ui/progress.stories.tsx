@@ -11,7 +11,7 @@ import {
 } from "@shared/testing/progress-probe";
 
 const meta = {
-  title: "Primitives/Feedback/Progress",
+  title: "Components/Feedback/Progress",
   component: Progress,
   tags: ["autodocs", "feedback"],
   parameters: {

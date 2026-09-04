@@ -512,22 +512,22 @@ export function EditorDocs() {
           {
             name: "Textarea",
             description: toPlainText(tContent("related.textarea")),
-            path: "?path=/docs/primitives-form-textarea--docs",
+            path: "?path=/docs/components-form-textarea--docs",
           },
           {
             name: "CodeBlock",
             description: toPlainText(tContent("related.codeBlock")),
-            path: "?path=/docs/primitives-display-codeblock--docs",
+            path: "?path=/docs/components-display-codeblock--docs",
           },
           {
             name: "ToggleGroup",
             description: toPlainText(tContent("related.toggleGroup")),
-            path: "?path=/docs/primitives-form-togglegroup--docs",
+            path: "?path=/docs/components-form-togglegroup--docs",
           },
           {
             name: "Button",
             description: toPlainText(tContent("related.button")),
-            path: "?path=/docs/primitives-form-button--docs",
+            path: "?path=/docs/components-form-button--docs",
           },
         ]}
       />

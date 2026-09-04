@@ -36,7 +36,7 @@ import {
 // janela mais curta que o rastro e quando ele chega pela metade.
 
 const meta: Meta<typeof TraceWaterfall> = {
-  title: 'Primitives/Conversational/TraceWaterfall/Compositions',
+  title: 'Components/Conversational/TraceWaterfall/Compositions',
   component: TraceWaterfall,
   tags: ['conversational'],
   parameters: {

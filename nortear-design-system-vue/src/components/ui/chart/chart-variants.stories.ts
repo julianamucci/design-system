@@ -71,7 +71,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: chartBarSource } },
   },
-  title: 'Primitives/Display/Chart/Variants',
+  title: 'Components/Display/Chart/Variants',
   tags: ['display'],
 };
 export default meta;

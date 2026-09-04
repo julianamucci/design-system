@@ -419,10 +419,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.tooltip.name'),      description: toPlainText(tContent('related.items.tooltip.description')),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
-  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
-  { name: tContent('related.items.dialog.name'),       description: toPlainText(tContent('related.items.dialog.description')),       path: '?path=/docs/primitives-overlay-dialog--docs'       },
-  { name: tContent('related.items.hoverCard.name'),    description: toPlainText(tContent('related.items.hoverCard.description')),    path: '?path=/docs/primitives-overlay-hovercard--docs'    },
+  { name: tContent('related.items.tooltip.name'),      description: toPlainText(tContent('related.items.tooltip.description')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
+  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+  { name: tContent('related.items.dialog.name'),       description: toPlainText(tContent('related.items.dialog.description')),       path: '?path=/docs/components-overlay-dialog--docs'       },
+  { name: tContent('related.items.hoverCard.name'),    description: toPlainText(tContent('related.items.hoverCard.description')),    path: '?path=/docs/components-overlay-hovercard--docs'    },
 ]);
 
 const noteItems = computed(() => [

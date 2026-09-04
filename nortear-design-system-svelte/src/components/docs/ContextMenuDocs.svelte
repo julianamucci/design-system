@@ -901,11 +901,11 @@ interface ContextMenuRadioGroupProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
-      { name: 'Menubar',      description: $tStore('related.menubar'),      path: '?path=/docs/primitives-navigation-menubar--docs'      },
-      { name: 'Dialog',       description: $tStore('related.dialog'),       path: '?path=/docs/primitives-overlay-dialog--docs'       },
-      { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/primitives-overlay-alertdialog--docs'  },
-      { name: 'Tooltip',      description: $tStore('related.tooltip'),      path: '?path=/docs/primitives-overlay-tooltip--docs'      },
+      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: 'Menubar',      description: $tStore('related.menubar'),      path: '?path=/docs/components-navigation-menubar--docs'      },
+      { name: 'Dialog',       description: $tStore('related.dialog'),       path: '?path=/docs/components-overlay-dialog--docs'       },
+      { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/components-overlay-alertdialog--docs'  },
+      { name: 'Tooltip',      description: $tStore('related.tooltip'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
     ]}
   />
 

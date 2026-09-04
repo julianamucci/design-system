@@ -18,7 +18,7 @@ import {
 } from './dialog.fixtures';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Dialog/Compositions',
+  title: 'Components/Overlay/Dialog/Compositions',
   // `tags` estava aninhado dentro de `docs.description` — no lugar errado o
   // Storybook simplesmente ignora, e estas stories ficavam fora do grupo de
   // overlays.

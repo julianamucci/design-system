@@ -9,7 +9,7 @@ import { calendarWithPopoverSource, calendarSource } from "./calendar.source";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 
 const meta = {
-  title: "Primitives/Form/Calendar/Compositions",
+  title: "Components/Form/Calendar/Compositions",
   tags: ["form"],
   component: Calendar,
   parameters: {

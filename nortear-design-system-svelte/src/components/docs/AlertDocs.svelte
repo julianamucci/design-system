@@ -606,10 +606,10 @@ interface AlertTitleProps {
       <DocsRelated
         title={$tStore('related.title')}
         items={[
-          { name: 'Sonner',      description: $tStore('related.sonner'),      path: '?path=/docs/primitives-feedback-sonner--docs'      },
-          { name: 'AlertDialog', description: $tStore('related.alertDialog'), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-          { name: 'Badge',       description: $tStore('related.badge'),       path: '?path=/docs/primitives-feedback-badge--docs'       },
-          { name: 'Progress',    description: $tStore('related.progress'),    path: '?path=/docs/primitives-feedback-progress--docs'    },
+          { name: 'Sonner',      description: $tStore('related.sonner'),      path: '?path=/docs/components-feedback-sonner--docs'      },
+          { name: 'AlertDialog', description: $tStore('related.alertDialog'), path: '?path=/docs/components-overlay-alertdialog--docs' },
+          { name: 'Badge',       description: $tStore('related.badge'),       path: '?path=/docs/components-feedback-badge--docs'       },
+          { name: 'Progress',    description: $tStore('related.progress'),    path: '?path=/docs/components-feedback-progress--docs'    },
         ]}
       />
 

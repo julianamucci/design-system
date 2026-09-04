@@ -327,10 +327,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Dialog', description: toPlainText(tContent('related.dialog')), path: '?path=/docs/primitives-overlay-dialog--docs' },
-  { name: 'Sonner', description: toPlainText(tContent('related.sonner')), path: '?path=/docs/primitives-feedback-sonner--docs' },
-  { name: 'Alert',  description: toPlainText(tContent('related.alert')),  path: '?path=/docs/primitives-feedback-alert--docs'  },
-  { name: 'Button', description: toPlainText(tContent('related.button')), path: '?path=/docs/primitives-form-button--docs' },
+  { name: 'Dialog', description: toPlainText(tContent('related.dialog')), path: '?path=/docs/components-overlay-dialog--docs' },
+  { name: 'Sonner', description: toPlainText(tContent('related.sonner')), path: '?path=/docs/components-feedback-sonner--docs' },
+  { name: 'Alert',  description: toPlainText(tContent('related.alert')),  path: '?path=/docs/components-feedback-alert--docs'  },
+  { name: 'Button', description: toPlainText(tContent('related.button')), path: '?path=/docs/components-form-button--docs' },
 ]);
 
 const noteItems = computed(() => [

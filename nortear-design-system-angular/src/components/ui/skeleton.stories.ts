@@ -8,7 +8,7 @@ import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
 import { skeletonPlaygroundSource, type SkeletonArgs } from './skeleton.source';
 
 const meta: Meta<SkeletonArgs> = {
-  title: 'Primitives/Feedback/Skeleton',
+  title: 'Components/Feedback/Skeleton',
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [NdsSkeleton] })],
   parameters: {

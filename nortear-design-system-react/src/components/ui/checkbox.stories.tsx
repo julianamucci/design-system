@@ -6,7 +6,7 @@ import { CheckboxDocs } from "@/components/docs/CheckboxDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Form/Checkbox",
+  title: "Components/Form/Checkbox",
   component: Checkbox,
   tags: ["autodocs", "form"],
   parameters: {

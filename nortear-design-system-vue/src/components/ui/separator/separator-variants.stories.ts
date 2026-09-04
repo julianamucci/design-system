@@ -4,7 +4,7 @@ import { Separator } from './index';
 import { separatorHorizontalSource, separatorVerticalSource } from './separator.source';
 
 const meta: Meta<any> = {
-  title: 'Primitives/Layout/Separator/Variants',
+  title: 'Components/Layout/Separator/Variants',
   component: Separator,
   tags: ['layout'],
   parameters: {

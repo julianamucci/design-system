@@ -614,10 +614,10 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.agentPlan.name'),   description: toPlainText($tStore('related.items.agentPlan.description')),   path: '?path=/docs/primitives-conversational-agentplan--docs'   },
-      { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/primitives-conversational-toolgroup--docs'   },
-      { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { name: $tStore('related.items.chart.name'),       description: toPlainText($tStore('related.items.chart.description')),       path: '?path=/docs/primitives-display-chart--docs'              },
+      { name: $tStore('related.items.agentPlan.name'),   description: toPlainText($tStore('related.items.agentPlan.description')),   path: '?path=/docs/components-conversational-agentplan--docs'   },
+      { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'   },
+      { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { name: $tStore('related.items.chart.name'),       description: toPlainText($tStore('related.items.chart.description')),       path: '?path=/docs/components-display-chart--docs'              },
     ]}
   />
 

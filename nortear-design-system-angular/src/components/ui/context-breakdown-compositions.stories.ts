@@ -26,7 +26,7 @@ import {
 // mantém `aria-expanded` no elemento que se aperta, sem código de ligação.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextBreakdown/Compositions',
+  title: 'Components/Conversational/ContextBreakdown/Compositions',
   tags: ['conversational'],
   decorators: [
     moduleMetadata({

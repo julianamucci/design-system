@@ -13,7 +13,7 @@ import { CarouselDocs } from "@/components/docs/CarouselDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Display/Carousel",
+  title: "Components/Display/Carousel",
   component: Carousel,
   tags: ["autodocs", "display"],
   parameters: {

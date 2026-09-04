@@ -15,7 +15,7 @@ import { isModelSelectable } from '@shared/primitives/chat-protocol';
 // em `Variants`.
 
 const meta: Meta<typeof ComposerModelPickerStory> = {
-  title: 'Primitives/Conversational/ComposerModelPicker/States',
+  title: 'Components/Conversational/ComposerModelPicker/States',
   component: ComposerModelPickerStory,
   tags: ['conversational'],
   parameters: {

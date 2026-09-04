@@ -20,7 +20,7 @@ import type { ModelOption } from "@shared/primitives/chat-protocol"
 // não em `States`.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ComposerModelPicker/Variants",
+  title: "Components/Conversational/ComposerModelPicker/Variants",
   tags: ["conversational"],
   parameters: {
     // A lista abre PARA CIMA: no topo do quadro ela sairia da foto.

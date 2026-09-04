@@ -14,7 +14,7 @@ const ITEMS_WITH_BLOCK = [
 ] as const;
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Menubar/States',
+  title: 'Components/Navigation/Menubar/States',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_MENUBAR] })],
   parameters: {

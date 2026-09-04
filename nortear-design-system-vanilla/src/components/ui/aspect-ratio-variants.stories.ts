@@ -7,7 +7,7 @@ import { expect } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'Primitives/Layout/AspectRatio/Variants',
+  title: 'Components/Layout/AspectRatio/Variants',
   parameters: {
     design: figmaDesign('aspectRatio'),
     controls: { disable: true },

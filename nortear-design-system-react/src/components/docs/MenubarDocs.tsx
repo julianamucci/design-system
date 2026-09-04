@@ -924,22 +924,22 @@ interface MenubarItemProps {
           {
             name: tContent("related.items.navigationMenu.name"),
             description: toPlainText(tContent("related.items.navigationMenu.description")),
-            path: "?path=/docs/primitives-navigation-navigationmenu--docs",
+            path: "?path=/docs/components-navigation-navigationmenu--docs",
           },
           {
             name: tContent("related.items.dropdownMenu.name"),
             description: toPlainText(tContent("related.items.dropdownMenu.description")),
-            path: "?path=/docs/primitives-overlay-dropdownmenu--docs",
+            path: "?path=/docs/components-overlay-dropdownmenu--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
             description: toPlainText(tContent("related.items.sidebar.description")),
-            path: "?path=/docs/primitives-layout-sidebar--docs",
+            path: "?path=/docs/components-layout-sidebar--docs",
           },
           {
             name: tContent("related.items.command.name"),
             description: toPlainText(tContent("related.items.command.description")),
-            path: "?path=/docs/primitives-overlay-command--docs",
+            path: "?path=/docs/components-overlay-command--docs",
           },
         ]}
       />

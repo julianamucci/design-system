@@ -26,7 +26,7 @@ type HoverCardPlaygroundArgs = {
 const HoverCardForArgs = HoverCard as unknown as React.ComponentType<HoverCardPlaygroundArgs>;
 
 const meta = {
-  title: "Primitives/Overlay/HoverCard",
+  title: "Components/Overlay/HoverCard",
   component: HoverCardForArgs,
   tags: ["autodocs", "overlay"],
   parameters: {

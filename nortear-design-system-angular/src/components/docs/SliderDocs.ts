@@ -685,10 +685,10 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'input',      path: '?path=/docs/primitives-form-input--docs'     },
-      { key: 'switch',     path: '?path=/docs/primitives-form-switch--docs'    },
-      { key: 'progress',   path: '?path=/docs/primitives-feedback-progress--docs'  },
-      { key: 'radioGroup', path: '?path=/docs/primitives-form-radiogroup--docs' },
+      { key: 'input',      path: '?path=/docs/components-form-input--docs'     },
+      { key: 'switch',     path: '?path=/docs/components-form-switch--docs'    },
+      { key: 'progress',   path: '?path=/docs/components-feedback-progress--docs'  },
+      { key: 'radioGroup', path: '?path=/docs/components-form-radiogroup--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),

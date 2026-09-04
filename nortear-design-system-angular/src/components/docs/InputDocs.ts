@@ -609,11 +609,11 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'textarea',   name: 'Textarea',   path: '?path=/docs/primitives-form-textarea--docs'   },
-      { key: 'inputOTP',   name: 'Input OTP',  path: '?path=/docs/primitives-form-inputotp--docs'   },
-      { key: 'select',     name: 'Select',     path: '?path=/docs/primitives-form-select--docs'     },
-      { key: 'form',       name: 'Form',       path: '?path=/docs/primitives-form-form--docs'       },
-      { key: 'label',      name: 'Label',      path: '?path=/docs/primitives-form-label--docs'      },
+      { key: 'textarea',   name: 'Textarea',   path: '?path=/docs/components-form-textarea--docs'   },
+      { key: 'inputOTP',   name: 'Input OTP',  path: '?path=/docs/components-form-inputotp--docs'   },
+      { key: 'select',     name: 'Select',     path: '?path=/docs/components-form-select--docs'     },
+      { key: 'form',       name: 'Form',       path: '?path=/docs/components-form-form--docs'       },
+      { key: 'label',      name: 'Label',      path: '?path=/docs/components-form-label--docs'      },
     ].map(({ key, name, path }) => ({
       name: name,
       description: t(`related.${key}`),

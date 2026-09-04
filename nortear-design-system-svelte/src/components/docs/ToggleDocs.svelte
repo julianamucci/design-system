@@ -625,10 +625,10 @@ interface ToggleProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.toggleGroup.name'), description: $tStore('related.items.toggleGroup.description'), path: '?path=/docs/primitives-form-togglegroup--docs' },
-      { name: $tStore('related.items.switch.name'),      description: $tStore('related.items.switch.description'),      path: '?path=/docs/primitives-form-switch--docs' },
-      { name: $tStore('related.items.checkbox.name'),    description: $tStore('related.items.checkbox.description'),    path: '?path=/docs/primitives-form-checkbox--docs' },
-      { name: $tStore('related.items.button.name'),      description: $tStore('related.items.button.description'),      path: '?path=/docs/primitives-form-button--docs' },
+      { name: $tStore('related.items.toggleGroup.name'), description: $tStore('related.items.toggleGroup.description'), path: '?path=/docs/components-form-togglegroup--docs' },
+      { name: $tStore('related.items.switch.name'),      description: $tStore('related.items.switch.description'),      path: '?path=/docs/components-form-switch--docs' },
+      { name: $tStore('related.items.checkbox.name'),    description: $tStore('related.items.checkbox.description'),    path: '?path=/docs/components-form-checkbox--docs' },
+      { name: $tStore('related.items.button.name'),      description: $tStore('related.items.button.description'),      path: '?path=/docs/components-form-button--docs' },
     ]}
   />
 

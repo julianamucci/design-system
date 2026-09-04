@@ -554,9 +554,9 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/primitives-feedback-progress--docs' },
-            { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/primitives-layout-aspectratio--docs' },
-            { name: t('related.items.card.name'),        description: toPlainText(t('related.items.card.description')),        path: '?path=/docs/primitives-layout-card--docs' },
+            { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/components-feedback-progress--docs' },
+            { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/components-layout-aspectratio--docs' },
+            { name: t('related.items.card.name'),        description: toPlainText(t('related.items.card.description')),        path: '?path=/docs/components-layout-card--docs' },
           ],
         });
 

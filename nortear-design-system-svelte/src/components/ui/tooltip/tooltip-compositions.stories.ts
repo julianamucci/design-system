@@ -14,7 +14,7 @@ function sideOf(balao: HTMLElement | null): string | null {
 }
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Tooltip/Compositions',
+  title: 'Components/Overlay/Tooltip/Compositions',
   component: TooltipStory,
   tags: ['overlay'],
   parameters: {

@@ -29,7 +29,7 @@ type SidebarArgs = {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<SidebarArgs> = {
-  title: 'Primitives/Layout/Sidebar',
+  title: 'Components/Layout/Sidebar',
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'fullscreen',

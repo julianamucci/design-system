@@ -20,7 +20,7 @@ import type { QueuedMessage } from '@shared/primitives/chat-protocol';
 // mostram.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/MessageQueue/Compositions',
+  title: 'Components/Conversational/MessageQueue/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

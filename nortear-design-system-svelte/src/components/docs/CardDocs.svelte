@@ -682,12 +682,12 @@ interface CardPartProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Separator', description: $tStore('related.separator'), path: '?path=/docs/primitives-layout-separator--docs' },
-      { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/primitives-disclosure-accordion--docs' },
-      { name: 'Alert',     description: $tStore('related.alert'),     path: '?path=/docs/primitives-feedback-alert--docs'     },
-      { name: 'Button',    description: toPlainText($tStore('related.button')), path: '?path=/docs/primitives-form-button--docs' },
-      { name: 'Badge',     description: toPlainText($tStore('related.badge')),  path: '?path=/docs/primitives-feedback-badge--docs' },
-      { name: 'Avatar',    description: toPlainText($tStore('related.avatar')), path: '?path=/docs/primitives-display-avatar--docs' },
+      { name: 'Separator', description: $tStore('related.separator'), path: '?path=/docs/components-layout-separator--docs' },
+      { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/components-disclosure-accordion--docs' },
+      { name: 'Alert',     description: $tStore('related.alert'),     path: '?path=/docs/components-feedback-alert--docs'     },
+      { name: 'Button',    description: toPlainText($tStore('related.button')), path: '?path=/docs/components-form-button--docs' },
+      { name: 'Badge',     description: toPlainText($tStore('related.badge')),  path: '?path=/docs/components-feedback-badge--docs' },
+      { name: 'Avatar',    description: toPlainText($tStore('related.avatar')), path: '?path=/docs/components-display-avatar--docs' },
     ]}
   />
 

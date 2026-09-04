@@ -21,7 +21,7 @@ const onSave = fn();
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'Primitives/Layout/Card/States',
+  title: 'Components/Layout/Card/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

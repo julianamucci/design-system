@@ -9,7 +9,7 @@ import {
 } from './tabs.source';
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Tabs/States',
+  title: 'Components/Navigation/Tabs/States',
   component: TabsStory,
   tags: ['navigation'],
   parameters: {

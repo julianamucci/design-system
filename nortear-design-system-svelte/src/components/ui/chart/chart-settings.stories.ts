@@ -32,7 +32,7 @@ const meta: Meta = {
       source: { transform: chartSource },
     },
   },
-  title: 'Primitives/Display/Chart/Settings',
+  title: 'Components/Display/Chart/Settings',
   component: ChartContainer,
   tags: ['display'],
 };

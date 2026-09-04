@@ -15,7 +15,7 @@ import type { Attachment } from '@shared/primitives/chat-protocol';
 // Playground, e não se repete aqui.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerAttachments/States',
+  title: 'Components/Conversational/ComposerAttachments/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

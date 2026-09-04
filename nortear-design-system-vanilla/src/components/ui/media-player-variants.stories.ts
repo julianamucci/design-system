@@ -21,7 +21,7 @@ import { clockText, firstControl, until } from './media-player.play-helpers';
 import { mediaPlayerSource, mediaPlayerSourceWith } from './media-player.source';
 
 const meta: Meta = {
-  title: 'Primitives/Display/MediaPlayer/Variants',
+  title: 'Components/Display/MediaPlayer/Variants',
   tags: ['display'],
   // Sem `argTypes` próprios, o painel Controls ficaria vazio e a aba Actions
   // prometeria um evento que nenhum arg alimenta.

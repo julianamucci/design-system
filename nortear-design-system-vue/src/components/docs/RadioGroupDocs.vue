@@ -351,10 +351,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.checkbox.name'), description: toPlainText(tContent('related.items.checkbox.description')), path: '?path=/docs/primitives-form-checkbox--docs' },
-  { name: tContent('related.items.switch.name'),   description: toPlainText(tContent('related.items.switch.description')),   path: '?path=/docs/primitives-form-switch--docs'   },
-  { name: tContent('related.items.select.name'),   description: toPlainText(tContent('related.items.select.description')),   path: '?path=/docs/primitives-form-select--docs'   },
-  { name: tContent('related.items.form.name'),     description: toPlainText(tContent('related.items.form.description')),     path: '?path=/docs/primitives-form-form--docs'     },
+  { name: tContent('related.items.checkbox.name'), description: toPlainText(tContent('related.items.checkbox.description')), path: '?path=/docs/components-form-checkbox--docs' },
+  { name: tContent('related.items.switch.name'),   description: toPlainText(tContent('related.items.switch.description')),   path: '?path=/docs/components-form-switch--docs'   },
+  { name: tContent('related.items.select.name'),   description: toPlainText(tContent('related.items.select.description')),   path: '?path=/docs/components-form-select--docs'   },
+  { name: tContent('related.items.form.name'),     description: toPlainText(tContent('related.items.form.description')),     path: '?path=/docs/components-form-form--docs'     },
 ]);
 
 const noteItems = computed(() => [

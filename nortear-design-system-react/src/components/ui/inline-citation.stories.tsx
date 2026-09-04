@@ -59,7 +59,7 @@ function PlaygroundExample(args: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/InlineCitation",
+  title: "Components/Conversational/InlineCitation",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

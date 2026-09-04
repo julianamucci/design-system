@@ -636,10 +636,10 @@ export class NdsInlineCitationDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'chatThread', path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { key: 'hoverCard',  path: '?path=/docs/primitives-overlay-hovercard--docs'         },
-      { key: 'popover',    path: '?path=/docs/primitives-overlay-popover--docs'           },
-      { key: 'tooltip',    path: '?path=/docs/primitives-overlay-tooltip--docs'           },
+      { key: 'chatThread', path: '?path=/docs/components-conversational-chatthread--docs' },
+      { key: 'hoverCard',  path: '?path=/docs/components-overlay-hovercard--docs'         },
+      { key: 'popover',    path: '?path=/docs/components-overlay-popover--docs'           },
+      { key: 'tooltip',    path: '?path=/docs/components-overlay-tooltip--docs'           },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

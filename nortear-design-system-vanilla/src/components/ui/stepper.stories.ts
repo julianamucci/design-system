@@ -35,7 +35,7 @@ type StepperArgs = {
 };
 
 const meta: Meta<StepperArgs> = {
-  title: 'Primitives/Navigation/Stepper',
+  title: 'Components/Navigation/Stepper',
   tags: ['autodocs', 'navigation'],
   parameters: {
     docs: {

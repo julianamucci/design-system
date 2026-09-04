@@ -22,7 +22,7 @@ import {
 // que aconteceu dentro dela.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ToolGroup/States',
+  title: 'Components/Conversational/ToolGroup/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

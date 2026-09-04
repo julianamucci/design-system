@@ -23,7 +23,7 @@ import { inputGroupAlignmentsSource } from './input-group.source';
 // a pessoa vê — em vez do nome do atributo sozinho.
 
 const meta: Meta = {
-  title: 'Primitives/Form/InputGroup/Variants',
+  title: 'Components/Form/InputGroup/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [...NDS_INPUT_GROUP, NdsButton] })],
   parameters: {

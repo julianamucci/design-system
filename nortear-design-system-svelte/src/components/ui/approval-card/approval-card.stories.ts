@@ -33,7 +33,7 @@ const SCOPE_OPTIONS = [...APPROVAL_EXAMPLE_NAMES, 'none'] as const;
 // O docgen do Svelte está desligado no .storybook/main.ts: a aba
 // "API Reference" sai só destes argTypes.
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ApprovalCard',
+  title: 'Components/Conversational/ApprovalCard',
   component: ApprovalCardStory,
   tags: ['autodocs', 'conversational'],
   parameters: {

@@ -23,7 +23,7 @@ const IMG_THIRD = 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'Primitives/Display/Avatar/Compositions',
+  title: 'Components/Display/Avatar/Compositions',
   parameters: {
     design: [figmaDesign('avatar', 'Avatar'), figmaDesign('avatarGroup', 'Grupo')],
     controls: { disable: true },

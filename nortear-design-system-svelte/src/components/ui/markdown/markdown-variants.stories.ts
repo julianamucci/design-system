@@ -14,7 +14,7 @@ import { MARKDOWN_COMMENT } from '@shared/primitives/markdown-examples';
 // se vê que o documento muda de forma sem perder conteúdo.
 
 const meta = {
-  title: 'Primitives/Conversational/Markdown/Variants',
+  title: 'Components/Conversational/Markdown/Variants',
   component: Markdown,
   tags: ['conversational'],
   parameters: {

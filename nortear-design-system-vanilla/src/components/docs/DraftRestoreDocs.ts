@@ -424,10 +424,10 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.composer.name'),    description: toPlainText(t('related.items.composer.description')),    path: '?path=/docs/primitives-conversational-composer--docs' },
-            { name: t('related.items.alert.name'),       description: toPlainText(t('related.items.alert.description')),       path: '?path=/docs/primitives-feedback-alert--docs' },
-            { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs' },
-            { name: t('related.items.sonner.name'),      description: toPlainText(t('related.items.sonner.description')),      path: '?path=/docs/primitives-feedback-sonner--docs' },
+            { name: t('related.items.composer.name'),    description: toPlainText(t('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
+            { name: t('related.items.alert.name'),       description: toPlainText(t('related.items.alert.description')),       path: '?path=/docs/components-feedback-alert--docs' },
+            { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/components-overlay-alertdialog--docs' },
+            { name: t('related.items.sonner.name'),      description: toPlainText(t('related.items.sonner.description')),      path: '?path=/docs/components-feedback-sonner--docs' },
           ],
         });
 

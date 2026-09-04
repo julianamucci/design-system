@@ -397,10 +397,10 @@ interface LabelProps {
     title={$tStore('related.title')}
     componentSlug="label"
     items={[
-      { name: 'Input',      description: $tStore('related.input'),      path: '?path=/docs/primitives-form-input--docs'      },
-      { name: 'FormField',  description: $tStore('related.formField'),  path: '?path=/docs/primitives-form-form--docs'  },
-      { name: 'Checkbox',   description: $tStore('related.checkbox'),   path: '?path=/docs/primitives-form-checkbox--docs'   },
-      { name: 'RadioGroup', description: $tStore('related.radioGroup'), path: '?path=/docs/primitives-form-radiogroup--docs' },
+      { name: 'Input',      description: $tStore('related.input'),      path: '?path=/docs/components-form-input--docs'      },
+      { name: 'FormField',  description: $tStore('related.formField'),  path: '?path=/docs/components-form-form--docs'  },
+      { name: 'Checkbox',   description: $tStore('related.checkbox'),   path: '?path=/docs/components-form-checkbox--docs'   },
+      { name: 'RadioGroup', description: $tStore('related.radioGroup'), path: '?path=/docs/components-form-radiogroup--docs' },
     ]}
   />
 

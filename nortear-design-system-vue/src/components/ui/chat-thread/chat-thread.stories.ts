@@ -15,7 +15,7 @@ import { CHAT_CONVERSA } from '@shared/primitives/chat-examples';
 const HEIGHT = 'lg' as const;
 
 const meta = {
-  title: 'Primitives/Conversational/ChatThread',
+  title: 'Components/Conversational/ChatThread',
   component: ChatThread,
   tags: ['autodocs', 'conversational'],
   parameters: {

@@ -9,7 +9,7 @@ import { NdsCollapsibleDocs } from '@/components/docs/CollapsibleDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<CollapsibleArgs> = {
-  title: 'Primitives/Disclosure/Collapsible',
+  title: 'Components/Disclosure/Collapsible',
   tags: ['autodocs', 'disclosure'],
   decorators: [moduleMetadata({ imports: [...NDS_COLLAPSIBLE, NdsButton] })],
   parameters: {

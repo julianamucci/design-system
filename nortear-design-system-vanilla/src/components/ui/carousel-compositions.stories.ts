@@ -26,7 +26,7 @@ const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'Primitives/Display/Carousel/Compositions',
+  title: 'Components/Display/Carousel/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -24,7 +24,7 @@ type CardArgs = {
 };
 
 const meta: Meta<CardArgs> = {
-  title: 'Primitives/Layout/Card',
+  title: 'Components/Layout/Card',
   tags: ['autodocs', 'layout'],
   parameters: {
     docs: {

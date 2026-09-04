@@ -7,7 +7,7 @@ import { buildDrawerFooter, buildDrawerWrapper, openPeloTrigger } from './drawer
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Drawer/Compositions',
+  title: 'Components/Overlay/Drawer/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

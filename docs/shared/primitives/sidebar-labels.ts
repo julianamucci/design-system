@@ -23,7 +23,13 @@ type Traducao = Partial<Record<Locale, string>>;
 /** Seções e subseções: o caminho que a pessoa percorre até a story. */
 const STRUCTURE: Record<string, Traducao> = {
   // Nível 1
-  Primitives: { 'pt-BR': 'Primitivos', es: 'Primitivos' },
+  Components: { 'pt-BR': 'Componentes', es: 'Componentes' },
+  // Os containers de seção que TODA docs page monta — DocsHeader, DocsProps,
+  // DocsTokens e companhia. Ficam fora de `Components` de propósito: não são
+  // peças que o consumidor da biblioteca instala, são o andaime com que a
+  // documentação é escrita, e misturar os dois faria a árvore prometer API
+  // onde não há.
+  'Doc Components': { 'pt-BR': 'Componentes de doc', es: 'Componentes de doc' },
   Foundations: { 'pt-BR': 'Fundamentos', es: 'Fundamentos' },
   About: { 'pt-BR': 'Sobre', es: 'Acerca de' },
 

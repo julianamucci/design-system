@@ -601,10 +601,10 @@ interface HandleProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.scrollArea.name'),  description: $tStore('related.items.scrollArea.description'),  path: '?path=/docs/primitives-layout-scrollarea--docs'   },
-      { name: $tStore('related.items.sheet.name'),       description: $tStore('related.items.sheet.description'),       path: '?path=/docs/primitives-overlay-sheet--docs'        },
-      { name: $tStore('related.items.separator.name'),   description: $tStore('related.items.separator.description'),   path: '?path=/docs/primitives-layout-separator--docs'    },
-      { name: $tStore('related.items.aspectRatio.name'), description: $tStore('related.items.aspectRatio.description'), path: '?path=/docs/primitives-layout-aspectratio--docs'  },
+      { name: $tStore('related.items.scrollArea.name'),  description: $tStore('related.items.scrollArea.description'),  path: '?path=/docs/components-layout-scrollarea--docs'   },
+      { name: $tStore('related.items.sheet.name'),       description: $tStore('related.items.sheet.description'),       path: '?path=/docs/components-overlay-sheet--docs'        },
+      { name: $tStore('related.items.separator.name'),   description: $tStore('related.items.separator.description'),   path: '?path=/docs/components-layout-separator--docs'    },
+      { name: $tStore('related.items.aspectRatio.name'), description: $tStore('related.items.aspectRatio.description'), path: '?path=/docs/components-layout-aspectratio--docs'  },
     ]}
   />
 

@@ -365,10 +365,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.combobox.name'),     description: toPlainText(tContent('related.items.combobox.description')),     path: '?path=/docs/primitives-form-combobox--docs'      },
-  { name: tContent('related.items.radioGroup.name'),   description: toPlainText(tContent('related.items.radioGroup.description')),   path: '?path=/docs/primitives-form-radiogroup--docs'    },
-  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/primitives-overlay-dropdownmenu--docs'  },
-  { name: tContent('related.items.form.name'),         description: toPlainText(tContent('related.items.form.description')),         path: '?path=/docs/primitives-form-form--docs'          },
+  { name: tContent('related.items.combobox.name'),     description: toPlainText(tContent('related.items.combobox.description')),     path: '?path=/docs/components-form-combobox--docs'      },
+  { name: tContent('related.items.radioGroup.name'),   description: toPlainText(tContent('related.items.radioGroup.description')),   path: '?path=/docs/components-form-radiogroup--docs'    },
+  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/components-overlay-dropdownmenu--docs'  },
+  { name: tContent('related.items.form.name'),         description: toPlainText(tContent('related.items.form.description')),         path: '?path=/docs/components-form-form--docs'          },
 ]);
 
 const noteItems = computed(() => [

@@ -502,12 +502,12 @@ const columns: DataTableColumn<Invoice>[] = [
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Table',        description: $tStore('related.table'),        path: '?path=/docs/primitives-tables-table--docs'        },
-      { name: 'Chart',        description: $tStore('related.chart'),        path: '?path=/docs/primitives-display-chart--docs'        },
-      { name: 'Pagination',   description: $tStore('related.pagination'),   path: '?path=/docs/primitives-navigation-pagination--docs'   },
-      { name: 'Checkbox',     description: $tStore('related.checkbox'),     path: '?path=/docs/primitives-form-checkbox--docs'     },
-      { name: 'Input',        description: $tStore('related.input'),        path: '?path=/docs/primitives-form-input--docs'        },
-      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/primitives-overlay-dropdownmenu--docs' },
+      { name: 'Table',        description: $tStore('related.table'),        path: '?path=/docs/components-tables-table--docs'        },
+      { name: 'Chart',        description: $tStore('related.chart'),        path: '?path=/docs/components-display-chart--docs'        },
+      { name: 'Pagination',   description: $tStore('related.pagination'),   path: '?path=/docs/components-navigation-pagination--docs'   },
+      { name: 'Checkbox',     description: $tStore('related.checkbox'),     path: '?path=/docs/components-form-checkbox--docs'     },
+      { name: 'Input',        description: $tStore('related.input'),        path: '?path=/docs/components-form-input--docs'        },
+      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
     ]}
   />
 

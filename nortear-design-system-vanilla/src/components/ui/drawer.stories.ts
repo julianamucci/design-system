@@ -23,7 +23,7 @@ type DrawerArgs = {
 };
 
 const meta: Meta<DrawerArgs> = {
-  title: 'Primitives/Overlay/Drawer',
+  title: 'Components/Overlay/Drawer',
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',

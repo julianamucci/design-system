@@ -12,7 +12,7 @@ import {
 } from './dropdown-menu.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/DropdownMenu/States',
+  title: 'Components/Overlay/DropdownMenu/States',
   component: DropdownMenuStory,
   tags: ['overlay'],
   parameters: {

@@ -43,7 +43,7 @@ type PlaygroundArgs = {
 const DEMO = { table: { category: 'Demonstração' } } as const;
 
 const meta = {
-  title: 'Primitives/Overlay/AlertDialog',
+  title: 'Components/Overlay/AlertDialog',
   component: AlertDialog,
   tags: ['autodocs', 'overlay'],
   parameters: {

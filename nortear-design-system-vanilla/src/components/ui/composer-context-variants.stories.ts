@@ -22,7 +22,7 @@ import { CONTEXT_KINDS, type ContextItem } from '@shared/primitives/chat-protoco
 // `States`.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerContext/Variants',
+  title: 'Components/Conversational/ComposerContext/Variants',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

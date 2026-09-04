@@ -738,12 +738,12 @@ export interface CardFooterOptions      { class?: string; }`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Separator', description: toPlainText(t('related.separator')), path: '?path=/docs/primitives-layout-separator--docs' },
-            { name: 'Accordion', description: toPlainText(t('related.accordion')), path: '?path=/docs/primitives-disclosure-accordion--docs' },
-            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/primitives-feedback-alert--docs' },
-            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/primitives-form-button--docs' },
-            { name: 'Badge', description: toPlainText(t('related.badge')), path: '?path=/docs/primitives-feedback-badge--docs' },
-            { name: 'Avatar', description: toPlainText(t('related.avatar')), path: '?path=/docs/primitives-display-avatar--docs' },
+            { name: 'Separator', description: toPlainText(t('related.separator')), path: '?path=/docs/components-layout-separator--docs' },
+            { name: 'Accordion', description: toPlainText(t('related.accordion')), path: '?path=/docs/components-disclosure-accordion--docs' },
+            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/components-feedback-alert--docs' },
+            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/components-form-button--docs' },
+            { name: 'Badge', description: toPlainText(t('related.badge')), path: '?path=/docs/components-feedback-badge--docs' },
+            { name: 'Avatar', description: toPlainText(t('related.avatar')), path: '?path=/docs/components-display-avatar--docs' },
           ],
         });
 

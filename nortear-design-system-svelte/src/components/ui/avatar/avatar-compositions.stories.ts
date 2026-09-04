@@ -13,7 +13,7 @@ import {
 } from './avatar.source';
 
 const meta: Meta = {
-  title: 'Primitives/Display/Avatar/Compositions',
+  title: 'Components/Display/Avatar/Compositions',
   component: Avatar,
   tags: ['display'],
   parameters: {

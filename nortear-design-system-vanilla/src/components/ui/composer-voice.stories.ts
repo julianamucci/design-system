@@ -30,7 +30,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ComposerVoice',
+  title: 'Components/Conversational/ComposerVoice',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

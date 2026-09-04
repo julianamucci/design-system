@@ -19,7 +19,7 @@ import {
 } from './editor.fixtures';
 
 const meta = {
-  title: 'Primitives/Form/Editor/States',
+  title: 'Components/Form/Editor/States',
   component: Editor,
   tags: ['form'],
   parameters: {

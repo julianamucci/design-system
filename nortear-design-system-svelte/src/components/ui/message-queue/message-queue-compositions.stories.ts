@@ -13,7 +13,7 @@ import { queueAboveFieldSource, queueLongSource } from './message-queue.source';
 // mostram.
 
 const meta: Meta<typeof MessageQueueAboveComposerStory> = {
-  title: 'Primitives/Conversational/MessageQueue/Compositions',
+  title: 'Components/Conversational/MessageQueue/Compositions',
   component: MessageQueueAboveComposerStory,
   tags: ['conversational'],
   parameters: {

@@ -16,7 +16,7 @@ import {
 } from './textarea.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Textarea/States',
+  title: 'Components/Form/Textarea/States',
   component: TextareaStory,
   tags: ['form'],
   parameters: {

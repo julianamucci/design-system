@@ -848,10 +848,10 @@ export class NdsActivityGraphDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'chart',          path: '?path=/docs/primitives-display-chart--docs'                 },
-      { key: 'calendar',       path: '?path=/docs/primitives-form-calendar--docs'                  },
-      { key: 'traceWaterfall', path: '?path=/docs/primitives-conversational-tracewaterfall--docs'  },
-      { key: 'jobProgress',    path: '?path=/docs/primitives-conversational-jobprogress--docs'     },
+      { key: 'chart',          path: '?path=/docs/components-display-chart--docs'                 },
+      { key: 'calendar',       path: '?path=/docs/components-form-calendar--docs'                  },
+      { key: 'traceWaterfall', path: '?path=/docs/components-conversational-tracewaterfall--docs'  },
+      { key: 'jobProgress',    path: '?path=/docs/components-conversational-jobprogress--docs'     },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

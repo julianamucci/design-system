@@ -5,7 +5,7 @@ import { endClose, montar } from './dropdown-menu.fixtures';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/DropdownMenu/Compositions',
+  title: 'Components/Overlay/DropdownMenu/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

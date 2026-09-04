@@ -18,7 +18,7 @@ import {
 // precisa capturar, e o estado fechado já está em UI/HoverCard/States.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/HoverCard/Compositions',
+  title: 'Components/Overlay/HoverCard/Compositions',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR] })],
   parameters: {

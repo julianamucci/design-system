@@ -9,7 +9,7 @@ import {
 import { skeletonMovimentoReduzidoSource, skeletonPulsandoSource } from './skeleton.source';
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Skeleton/States',
+  title: 'Components/Feedback/Skeleton/States',
   component: Skeleton,
   tags: ['feedback'],
   parameters: {

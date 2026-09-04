@@ -28,7 +28,7 @@ import {
 // diferença que não existe.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerVoice/States',
+  title: 'Components/Conversational/ComposerVoice/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposerVoice] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

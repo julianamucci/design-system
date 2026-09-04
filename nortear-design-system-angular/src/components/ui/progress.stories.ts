@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { percentualDesenhado } from '@shared/testing/progress-probe';
 
 const meta: Meta<ProgressArgs> = {
-  title: 'Primitives/Feedback/Progress',
+  title: 'Components/Feedback/Progress',
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [...NDS_PROGRESS] })],
   parameters: {

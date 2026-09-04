@@ -7,7 +7,7 @@ import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Popover/Variants',
+  title: 'Components/Overlay/Popover/Variants',
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {

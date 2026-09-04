@@ -13,7 +13,7 @@ const PROPORCOES = [
 ];
 
 const meta: Meta = {
-  title: 'Primitives/Layout/AspectRatio/Variants',
+  title: 'Components/Layout/AspectRatio/Variants',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsAspectRatio] })],
   parameters: { layout: 'padded', controls: { disable: true } },

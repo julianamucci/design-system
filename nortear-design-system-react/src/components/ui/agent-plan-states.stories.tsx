@@ -32,7 +32,7 @@ import {
 // pé está cada passo.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/AgentPlan/States",
+  title: "Components/Conversational/AgentPlan/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

@@ -20,7 +20,7 @@ import { createButton } from './button';
 // seção de Composições, nem entrada `nav.compositions`.
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/AlertDialog/Variants',
+  title: 'Components/Overlay/AlertDialog/Variants',
   parameters: {
     design: figmaDesign('alertDialog'),
     controls: { disable: true },

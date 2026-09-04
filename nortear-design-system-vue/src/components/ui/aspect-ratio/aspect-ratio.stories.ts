@@ -12,7 +12,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { aspectRatioSource } from './aspect-ratio.source';
 
 const meta = {
-  title: 'Primitives/Layout/AspectRatio',
+  title: 'Components/Layout/AspectRatio',
   component: AspectRatio,
   tags: ['autodocs', 'layout'],
   parameters: {

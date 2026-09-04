@@ -755,9 +755,9 @@ export function createTooltipProvider(
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.popover.name'),   description: toPlainText(t('related.items.popover.description')),   path: '?path=/docs/primitives-overlay-popover--docs'    },
-            { name: t('related.items.hoverCard.name'), description: toPlainText(t('related.items.hoverCard.description')), path: '?path=/docs/primitives-overlay-hovercard--docs'  },
-            { name: t('related.items.button.name'),    description: toPlainText(t('related.items.button.description')),    path: '?path=/docs/primitives-form-button--docs'     },
+            { name: t('related.items.popover.name'),   description: toPlainText(t('related.items.popover.description')),   path: '?path=/docs/components-overlay-popover--docs'    },
+            { name: t('related.items.hoverCard.name'), description: toPlainText(t('related.items.hoverCard.description')), path: '?path=/docs/components-overlay-hovercard--docs'  },
+            { name: t('related.items.button.name'),    description: toPlainText(t('related.items.button.description')),    path: '?path=/docs/components-form-button--docs'     },
           ],
         });
 

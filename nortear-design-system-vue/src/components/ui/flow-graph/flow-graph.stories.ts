@@ -30,7 +30,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/FlowGraph',
+  title: 'Components/Conversational/FlowGraph',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

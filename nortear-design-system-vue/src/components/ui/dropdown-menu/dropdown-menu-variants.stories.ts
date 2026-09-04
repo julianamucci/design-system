@@ -16,7 +16,7 @@ import {
 } from './dropdown-menu.source';
 
 const meta = {
-  title: 'Primitives/Overlay/DropdownMenu/Variants',
+  title: 'Components/Overlay/DropdownMenu/Variants',
   component: DropdownMenu,
   tags: ['overlay'],
   parameters: {

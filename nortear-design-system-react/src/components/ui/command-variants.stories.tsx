@@ -24,7 +24,7 @@ import { LayoutIcon, TypeIcon, MinusIcon } from "lucide-react";
  * conteúdo: `-variants` espelha `variants.items`, `-states` espelha `states`.
  */
 const meta = {
-  title: "Primitives/Overlay/Command/Variants",
+  title: "Components/Overlay/Command/Variants",
   tags: ["overlay"],
   component: Command,
   parameters: {

@@ -9,7 +9,7 @@ import {
 import { NdsToggle, NdsToggleIcon } from './toggle';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Toggle/States',
+  title: 'Components/Form/Toggle/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsToggle, NdsToggleIcon] })],
   parameters: {

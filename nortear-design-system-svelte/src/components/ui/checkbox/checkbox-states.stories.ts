@@ -25,7 +25,7 @@ const FERRAMENTAS = {
 };
 
 const meta: Meta = {
-  title: 'Primitives/Form/Checkbox/States',
+  title: 'Components/Form/Checkbox/States',
   component: Checkbox,
   tags: ['form'],
   parameters: {

@@ -28,7 +28,7 @@ type PlaygroundArgs = {
 };
 
 const meta = {
-  title: "Primitives/Layout/Resizable",
+  title: "Components/Layout/Resizable",
   component: ResizablePanelGroup,
   tags: ["autodocs", "layout"],
   parameters: {

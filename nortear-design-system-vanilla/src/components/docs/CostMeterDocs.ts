@@ -409,10 +409,10 @@ export interface CostMeterLabels {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.contextDisplay.name'),   description: toPlainText(t('related.items.contextDisplay.description')),   path: '?path=/docs/primitives-conversational-contextdisplay--docs'   },
-            { name: t('related.items.contextBreakdown.name'), description: toPlainText(t('related.items.contextBreakdown.description')), path: '?path=/docs/primitives-conversational-contextbreakdown--docs' },
-            { name: t('related.items.agentStatus.name'),      description: toPlainText(t('related.items.agentStatus.description')),      path: '?path=/docs/primitives-conversational-agentstatus--docs'      },
-            { name: t('related.items.progress.name'),         description: toPlainText(t('related.items.progress.description')),         path: '?path=/docs/primitives-feedback-progress--docs'                },
+            { name: t('related.items.contextDisplay.name'),   description: toPlainText(t('related.items.contextDisplay.description')),   path: '?path=/docs/components-conversational-contextdisplay--docs'   },
+            { name: t('related.items.contextBreakdown.name'), description: toPlainText(t('related.items.contextBreakdown.description')), path: '?path=/docs/components-conversational-contextbreakdown--docs' },
+            { name: t('related.items.agentStatus.name'),      description: toPlainText(t('related.items.agentStatus.description')),      path: '?path=/docs/components-conversational-agentstatus--docs'      },
+            { name: t('related.items.progress.name'),         description: toPlainText(t('related.items.progress.description')),         path: '?path=/docs/components-feedback-progress--docs'                },
           ],
         });
 

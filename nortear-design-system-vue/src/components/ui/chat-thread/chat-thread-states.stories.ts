@@ -22,7 +22,7 @@ import {
 // repete aqui.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ChatThread/States',
+  title: 'Components/Conversational/ChatThread/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

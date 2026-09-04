@@ -21,7 +21,7 @@ const TRIGGER_CLASSES = "nds-cluster nds-w-full nds-px-4";
 const CHEVRON_CLASSES = "nds-icon nds-shrink-0 nds-transition-transform nds-chevron";
 
 const meta = {
-  title: "Primitives/Disclosure/Collapsible/Compositions",
+  title: "Components/Disclosure/Collapsible/Compositions",
   tags: ["disclosure"],
   component: Collapsible,
   parameters: {

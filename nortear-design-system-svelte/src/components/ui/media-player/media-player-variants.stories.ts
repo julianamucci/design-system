@@ -28,7 +28,7 @@ import {
 } from './media-player.source';
 
 const meta: Meta<typeof MediaPlayer> = {
-  title: 'Primitives/Display/MediaPlayer/Variants',
+  title: 'Components/Display/MediaPlayer/Variants',
   component: MediaPlayer,
   tags: ['display'],
   parameters: {

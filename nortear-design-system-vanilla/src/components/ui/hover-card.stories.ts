@@ -26,7 +26,7 @@ type HoverCardArgs = {
 };
 
 const meta: Meta<HoverCardArgs> = {
-  title: 'Primitives/Overlay/HoverCard',
+  title: 'Components/Overlay/HoverCard',
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',

@@ -42,7 +42,7 @@ function PlaygroundExample({ input, output, limit, form }: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/ContextDisplay",
+  title: "Components/Conversational/ContextDisplay",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

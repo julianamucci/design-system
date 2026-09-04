@@ -19,7 +19,7 @@ type AccordionArgs = {
 };
 
 const meta: Meta<AccordionArgs> = {
-  title: 'Primitives/Disclosure/Accordion',
+  title: 'Components/Disclosure/Accordion',
   tags: ['autodocs', 'disclosure'],
   parameters: {
     design: figmaDesign('accordion'),

@@ -29,7 +29,7 @@ import { balaoDe } from '@/components/ui/tooltip/tooltip.fixtures';
 // declara por estado ligado à raiz.
 
 const meta: Meta<typeof MessageTiming> = {
-  title: 'Primitives/Conversational/MessageTiming/Compositions',
+  title: 'Components/Conversational/MessageTiming/Compositions',
   component: MessageTiming,
   tags: ['conversational'],
   parameters: {

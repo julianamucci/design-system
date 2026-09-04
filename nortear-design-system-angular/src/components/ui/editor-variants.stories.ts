@@ -6,7 +6,7 @@ import { EDITOR_CONTENT, EDITOR_LABELS, waitUntil } from './editor.fixtures';
 import { editorBasicSource, editorAdvancedSource } from './editor.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Editor/Variants',
+  title: 'Components/Form/Editor/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [EditorComponent] })],
   parameters: {

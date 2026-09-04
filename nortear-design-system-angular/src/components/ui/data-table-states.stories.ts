@@ -7,7 +7,7 @@ import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT } from './data-table.fixtures'
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'Primitives/Tables/DataTable/States',
+  title: 'Components/Tables/DataTable/States',
   tags: ['tables'],
   decorators: [moduleMetadata({ imports: [NdsDataTable] })],
   parameters: {

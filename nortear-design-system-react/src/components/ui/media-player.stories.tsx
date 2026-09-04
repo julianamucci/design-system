@@ -32,7 +32,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const AUDIO_SOURCE = silentWav(DEMO_SECONDS);
 
 const meta = {
-  title: 'Primitives/Display/MediaPlayer',
+  title: 'Components/Display/MediaPlayer',
   component: MediaPlayer,
   tags: ['autodocs', 'display'],
   parameters: {

@@ -27,7 +27,7 @@ import {
 // mesma foto três vezes.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/InlineCitation/States',
+  title: 'Components/Conversational/InlineCitation/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsInlineCitation] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

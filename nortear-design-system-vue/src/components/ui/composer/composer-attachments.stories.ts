@@ -21,7 +21,7 @@ const onRemoveAttachment = fn();
 // painel de controles e o de ações ficam desligados — vazios, seriam duas abas
 // prometendo interação que não há.
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComposerAttachments',
+  title: 'Components/Conversational/ComposerAttachments',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

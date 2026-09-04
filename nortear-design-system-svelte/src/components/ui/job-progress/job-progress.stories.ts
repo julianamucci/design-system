@@ -44,7 +44,7 @@ const countOf = (args: PlaygroundArgs): JobCount | undefined =>
 // O docgen do Svelte está desligado no .storybook/main.ts: a aba
 // "API Reference" sai só destes argTypes.
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/JobProgress',
+  title: 'Components/Conversational/JobProgress',
   component: JobProgressStory,
   tags: ['autodocs', 'conversational'],
   parameters: {

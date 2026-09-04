@@ -578,10 +578,10 @@ export class NdsCostMeterDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'contextDisplay',   path: '?path=/docs/primitives-conversational-contextdisplay--docs'   },
-      { key: 'contextBreakdown', path: '?path=/docs/primitives-conversational-contextbreakdown--docs' },
-      { key: 'agentStatus',      path: '?path=/docs/primitives-conversational-agentstatus--docs'      },
-      { key: 'progress',         path: '?path=/docs/primitives-feedback-progress--docs'               },
+      { key: 'contextDisplay',   path: '?path=/docs/components-conversational-contextdisplay--docs'   },
+      { key: 'contextBreakdown', path: '?path=/docs/components-conversational-contextbreakdown--docs' },
+      { key: 'agentStatus',      path: '?path=/docs/components-conversational-agentstatus--docs'      },
+      { key: 'progress',         path: '?path=/docs/components-feedback-progress--docs'               },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

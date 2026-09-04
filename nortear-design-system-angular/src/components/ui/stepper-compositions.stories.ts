@@ -28,7 +28,7 @@ const NEXT_LABEL = 'Avançar';
 const SELECTED_STEP = 3;
 
 const meta: Meta = {
-  title: 'Primitives/Navigation/Stepper/Compositions',
+  title: 'Components/Navigation/Stepper/Compositions',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_STEPPER, NdsButton] })],
   parameters: {

@@ -33,7 +33,7 @@ type PlaygroundArgs = {
 };
 
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/TraceWaterfall',
+  title: 'Components/Conversational/TraceWaterfall',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

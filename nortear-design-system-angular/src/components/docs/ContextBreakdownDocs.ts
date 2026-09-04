@@ -518,10 +518,10 @@ export class NdsContextBreakdownDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'contextDisplay', path: '?path=/docs/primitives-conversational-contextdisplay--docs' },
-      { key: 'chatThread',     path: '?path=/docs/primitives-conversational-chatthread--docs'     },
-      { key: 'chart',          path: '?path=/docs/primitives-display-chart--docs'                 },
-      { key: 'progress',       path: '?path=/docs/primitives-feedback-progress--docs'             },
+      { key: 'contextDisplay', path: '?path=/docs/components-conversational-contextdisplay--docs' },
+      { key: 'chatThread',     path: '?path=/docs/components-conversational-chatthread--docs'     },
+      { key: 'chart',          path: '?path=/docs/components-display-chart--docs'                 },
+      { key: 'progress',       path: '?path=/docs/components-feedback-progress--docs'             },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

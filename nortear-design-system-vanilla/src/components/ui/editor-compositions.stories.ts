@@ -14,7 +14,7 @@ import { openRow, selectImage, waitForAlt } from './editor.play-helpers';
 import { editorSource, editorSourceWith } from './editor.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Editor/Compositions',
+  title: 'Components/Form/Editor/Compositions',
   tags: ['form'],
   parameters: {
     layout: 'padded',

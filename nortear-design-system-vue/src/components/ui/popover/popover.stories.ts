@@ -16,7 +16,7 @@ import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta = {
-  title: 'Primitives/Overlay/Popover',
+  title: 'Components/Overlay/Popover',
   component: Popover,
   tags: ['autodocs', 'overlay'],
   parameters: {

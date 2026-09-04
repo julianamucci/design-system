@@ -6,7 +6,7 @@ import { SeparatorDocs } from "@/components/docs/SeparatorDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Layout/Separator",
+  title: "Components/Layout/Separator",
   component: Separator,
   tags: ["autodocs", "layout"],
   parameters: {

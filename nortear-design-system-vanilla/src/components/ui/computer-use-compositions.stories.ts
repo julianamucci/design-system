@@ -23,7 +23,7 @@ import {
 // o quadro que não tem a proporção que a tela pede.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ComputerUse/Compositions',
+  title: 'Components/Conversational/ComputerUse/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

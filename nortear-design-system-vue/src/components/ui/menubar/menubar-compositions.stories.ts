@@ -48,7 +48,7 @@ const THEMES = [
 const MENUS_EDITOR = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'];
 
 const meta = {
-  title: 'Primitives/Navigation/Menubar/Compositions',
+  title: 'Components/Navigation/Menubar/Compositions',
   component: Menubar,
   tags: ['navigation'],
   parameters: {

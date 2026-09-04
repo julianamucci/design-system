@@ -10,7 +10,7 @@ import {
 } from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Skeleton/States',
+  title: 'Components/Feedback/Skeleton/States',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsSkeleton] })],
   parameters: { layout: 'padded', controls: { disable: true } },

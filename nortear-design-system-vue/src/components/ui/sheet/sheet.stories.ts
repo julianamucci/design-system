@@ -34,7 +34,7 @@ type SheetArgs = {
 };
 
 const meta = {
-  title: 'Primitives/Overlay/Sheet',
+  title: 'Components/Overlay/Sheet',
   component: Sheet,
   tags: ['autodocs', 'overlay'],
   parameters: {

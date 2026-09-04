@@ -33,7 +33,7 @@ import {
 // terceira —, e é o texto ao lado que responde.
 
 const meta: Meta<typeof CostMeter> = {
-  title: 'Primitives/Conversational/CostMeter/States',
+  title: 'Components/Conversational/CostMeter/States',
   component: CostMeter,
   tags: ['conversational'],
   parameters: {

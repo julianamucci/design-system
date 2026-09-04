@@ -6,7 +6,7 @@ import { TabsDocs } from "@/components/docs/TabsDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Navigation/Tabs",
+  title: "Components/Navigation/Tabs",
   component: Tabs,
   tags: ["autodocs", "navigation"],
   parameters: {

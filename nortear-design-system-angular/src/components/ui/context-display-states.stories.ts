@@ -26,7 +26,7 @@ import {
 // se sabe quanto cabe, que é a única situação sem medidor nenhum.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextDisplay/States',
+  title: 'Components/Conversational/ContextDisplay/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsContextDisplay] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

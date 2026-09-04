@@ -20,7 +20,7 @@ import {
 // configurações de uma propriedade.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Dialog/Compositions',
+  title: 'Components/Overlay/Dialog/Compositions',
   tags: ['overlay'],
   decorators: [
     moduleMetadata({

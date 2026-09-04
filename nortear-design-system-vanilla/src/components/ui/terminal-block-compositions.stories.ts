@@ -20,7 +20,7 @@ import {
 // é maior que o espaço — que é a pergunta de desenho mais difícil desta peça.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/TerminalBlock/Compositions',
+  title: 'Components/Conversational/TerminalBlock/Compositions',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

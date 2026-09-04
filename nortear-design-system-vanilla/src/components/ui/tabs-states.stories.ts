@@ -6,7 +6,7 @@ import { tabsSource, tabsSourceWith } from './tabs.source';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'Primitives/Navigation/Tabs/States',
+  title: 'Components/Navigation/Tabs/States',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

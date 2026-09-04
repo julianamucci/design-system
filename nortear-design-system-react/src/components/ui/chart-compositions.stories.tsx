@@ -16,7 +16,7 @@ const CARD_TITLE = 'Acessos por mês';
 const DESIGN_TITLE = 'Vendas mensais';
 
 const meta: Meta = {
-  title: 'Primitives/Display/Chart/Compositions',
+  title: 'Components/Display/Chart/Compositions',
   tags: ['display'],
   parameters: {
     layout: 'padded',

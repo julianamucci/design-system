@@ -444,8 +444,8 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Alert',   description: $tStore('related.alert'),  path: '?path=/docs/primitives-feedback-alert--docs'   },
-      { name: 'Button',  description: $tStore('related.button'), path: '?path=/docs/primitives-form-button--docs'  },
+      { name: 'Alert',   description: $tStore('related.alert'),  path: '?path=/docs/components-feedback-alert--docs'   },
+      { name: 'Button',  description: $tStore('related.button'), path: '?path=/docs/components-form-button--docs'  },
     ]}
   />
 

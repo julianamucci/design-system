@@ -38,7 +38,7 @@ function PlaygroundExample({ value, open }: PlaygroundArgs) {
 const MODEL_IDS = everyModel().map((model) => model.id)
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/ComposerModelPicker",
+  title: "Components/Conversational/ComposerModelPicker",
   tags: ["autodocs", "conversational"],
   parameters: {
     // Centrado, e não com recuo: a lista abre PARA CIMA, e no topo do quadro

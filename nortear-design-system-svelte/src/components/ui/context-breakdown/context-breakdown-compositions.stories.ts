@@ -23,7 +23,7 @@ import { contextTotal, usedTokens } from '@shared/primitives/token-budget';
 // por estado ligado à raiz.
 
 const meta: Meta<typeof ContextBreakdown> = {
-  title: 'Primitives/Conversational/ContextBreakdown/Compositions',
+  title: 'Components/Conversational/ContextBreakdown/Compositions',
   component: ContextBreakdown,
   tags: ['conversational'],
   parameters: {

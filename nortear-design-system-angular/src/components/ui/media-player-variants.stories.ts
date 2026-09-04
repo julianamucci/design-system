@@ -27,7 +27,7 @@ import {
 } from './media-player.source';
 
 const meta: Meta = {
-  title: 'Primitives/Display/MediaPlayer/Variants',
+  title: 'Components/Display/MediaPlayer/Variants',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [MediaPlayerComponent] })],
   // Sem `argTypes` próprios, o painel Controls ficaria vazio e a aba Actions

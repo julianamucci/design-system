@@ -9,7 +9,7 @@ import { type Invoice, invoices, currency, statusVariant, baseColumns } from './
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'Primitives/Tables/DataTable/Compositions',
+  title: 'Components/Tables/DataTable/Compositions',
   parameters: {
     layout: 'padded',
     controls: { disable: true },

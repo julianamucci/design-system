@@ -1257,13 +1257,13 @@ interface SidebarMenuButtonProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
-      { name: 'Tabs',           description: $tStore('related.tabs'),           path: '?path=/docs/primitives-navigation-tabs--docs'           },
-      { name: 'Sheet',          description: $tStore('related.sheet'),          path: '?path=/docs/primitives-overlay-sheet--docs'          },
-      { name: 'Accordion',      description: $tStore('related.accordion'),      path: '?path=/docs/primitives-disclosure-accordion--docs'      },
-      { name: 'Tooltip',        description: $tStore('related.tooltip'),        path: '?path=/docs/primitives-overlay-tooltip--docs'        },
-      { name: 'Separator',      description: $tStore('related.separator'),      path: '?path=/docs/primitives-layout-separator--docs'      },
-      { name: 'Skeleton',       description: $tStore('related.skeleton'),       path: '?path=/docs/primitives-feedback-skeleton--docs'       },
+      { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
+      { name: 'Tabs',           description: $tStore('related.tabs'),           path: '?path=/docs/components-navigation-tabs--docs'           },
+      { name: 'Sheet',          description: $tStore('related.sheet'),          path: '?path=/docs/components-overlay-sheet--docs'          },
+      { name: 'Accordion',      description: $tStore('related.accordion'),      path: '?path=/docs/components-disclosure-accordion--docs'      },
+      { name: 'Tooltip',        description: $tStore('related.tooltip'),        path: '?path=/docs/components-overlay-tooltip--docs'        },
+      { name: 'Separator',      description: $tStore('related.separator'),      path: '?path=/docs/components-layout-separator--docs'      },
+      { name: 'Skeleton',       description: $tStore('related.skeleton'),       path: '?path=/docs/components-feedback-skeleton--docs'       },
     ]}
   />
 

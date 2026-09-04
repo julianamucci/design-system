@@ -38,7 +38,7 @@ type InputGroupArgs = {
 };
 
 const meta: Meta<InputGroupArgs> = {
-  title: 'Primitives/Form/InputGroup',
+  title: 'Components/Form/InputGroup',
   component: InputGroup,
   tags: ['autodocs', 'form'],
   parameters: {

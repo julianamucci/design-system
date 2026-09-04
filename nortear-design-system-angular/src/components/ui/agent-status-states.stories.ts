@@ -18,7 +18,7 @@ import {
 // sempre a mesma, e o que muda é em que pé está a resposta.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/AgentStatus/States',
+  title: 'Components/Conversational/AgentStatus/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsAgentStatus] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

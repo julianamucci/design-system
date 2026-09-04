@@ -7,7 +7,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { toggleGroupSource } from "./toggle-group.source";
 
 const meta = {
-  title: "Primitives/Form/ToggleGroup",
+  title: "Components/Form/ToggleGroup",
   component: ToggleGroup,
   tags: ["autodocs", "form"],
   parameters: {

@@ -11,7 +11,7 @@ import {
 } from './aspect-ratio.source';
 
 const meta = {
-  title: 'Primitives/Layout/AspectRatio/Variants',
+  title: 'Components/Layout/AspectRatio/Variants',
   component: AspectRatio,
   tags: ['layout'],
   parameters: {

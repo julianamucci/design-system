@@ -15,7 +15,7 @@ import { separatorPlaygroundSource, type SeparatorArgs } from './separator.sourc
 // para quem chegar por ali.
 
 const meta: Meta<SeparatorArgs> = {
-  title: 'Primitives/Layout/Separator',
+  title: 'Components/Layout/Separator',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [NdsSeparator] })],
   parameters: {

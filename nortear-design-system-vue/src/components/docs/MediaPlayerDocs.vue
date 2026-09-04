@@ -381,10 +381,10 @@ const keyboardItems = computed(() =>
 );
 
 const relatedItems = computed(() => [
-  { name: 'AspectRatio', description: toPlainText(tContent('related.aspectRatio')), path: '?path=/docs/primitives-layout-aspectratio--docs' },
-  { name: 'Sonner',      description: toPlainText(tContent('related.sonner')),      path: '?path=/docs/primitives-feedback-sonner--docs'      },
-  { name: 'Button',      description: toPlainText(tContent('related.button')),      path: '?path=/docs/primitives-form-button--docs'      },
-  { name: 'Card',        description: toPlainText(tContent('related.card')),        path: '?path=/docs/primitives-layout-card--docs'        },
+  { name: 'AspectRatio', description: toPlainText(tContent('related.aspectRatio')), path: '?path=/docs/components-layout-aspectratio--docs' },
+  { name: 'Sonner',      description: toPlainText(tContent('related.sonner')),      path: '?path=/docs/components-feedback-sonner--docs'      },
+  { name: 'Button',      description: toPlainText(tContent('related.button')),      path: '?path=/docs/components-form-button--docs'      },
+  { name: 'Card',        description: toPlainText(tContent('related.card')),        path: '?path=/docs/components-layout-card--docs'        },
 ]);
 
 const noteItems = computed(() =>

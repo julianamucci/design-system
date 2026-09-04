@@ -12,7 +12,7 @@ import { draftAboveComposerSource } from './draft-restore.source';
 // estas stories mostram.
 
 const meta: Meta<typeof DraftRestoreAboveComposerStory> = {
-  title: 'Primitives/Conversational/DraftRestore/Compositions',
+  title: 'Components/Conversational/DraftRestore/Compositions',
   component: DraftRestoreAboveComposerStory,
   tags: ['conversational'],
   parameters: {

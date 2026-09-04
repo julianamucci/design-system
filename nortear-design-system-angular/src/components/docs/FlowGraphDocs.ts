@@ -774,10 +774,10 @@ export class NdsFlowGraphDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'agentPlan',   path: '?path=/docs/primitives-conversational-agentplan--docs'   },
-      { key: 'toolGroup',   path: '?path=/docs/primitives-conversational-toolgroup--docs'   },
-      { key: 'agentStatus', path: '?path=/docs/primitives-conversational-agentstatus--docs' },
-      { key: 'chart',       path: '?path=/docs/primitives-display-chart--docs'              },
+      { key: 'agentPlan',   path: '?path=/docs/components-conversational-agentplan--docs'   },
+      { key: 'toolGroup',   path: '?path=/docs/components-conversational-toolgroup--docs'   },
+      { key: 'agentStatus', path: '?path=/docs/components-conversational-agentstatus--docs' },
+      { key: 'chart',       path: '?path=/docs/components-display-chart--docs'              },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

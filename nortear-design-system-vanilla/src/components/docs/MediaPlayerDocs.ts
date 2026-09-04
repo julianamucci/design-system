@@ -575,10 +575,10 @@ export function createMediaPlayerDocs(): HTMLElement {
           title: t('related.title'),
           componentSlug: 'media-player',
           items: [
-            { name: 'AspectRatio', description: toPlainText(t('related.aspectRatio')), path: '?path=/docs/primitives-layout-aspectratio--docs' },
-            { name: 'Sonner',      description: toPlainText(t('related.sonner')),      path: '?path=/docs/primitives-feedback-sonner--docs' },
-            { name: 'Button',      description: toPlainText(t('related.button')),      path: '?path=/docs/primitives-form-button--docs' },
-            { name: 'Card',        description: toPlainText(t('related.card')),        path: '?path=/docs/primitives-layout-card--docs' },
+            { name: 'AspectRatio', description: toPlainText(t('related.aspectRatio')), path: '?path=/docs/components-layout-aspectratio--docs' },
+            { name: 'Sonner',      description: toPlainText(t('related.sonner')),      path: '?path=/docs/components-feedback-sonner--docs' },
+            { name: 'Button',      description: toPlainText(t('related.button')),      path: '?path=/docs/components-form-button--docs' },
+            { name: 'Card',        description: toPlainText(t('related.card')),        path: '?path=/docs/components-layout-card--docs' },
           ],
         });
 

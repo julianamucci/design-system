@@ -13,7 +13,7 @@ import { stepperSource, stepperSourceWith } from './stepper.source';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'Primitives/Navigation/Stepper/States',
+  title: 'Components/Navigation/Stepper/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

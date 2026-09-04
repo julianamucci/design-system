@@ -635,10 +635,10 @@ export class NdsJobProgressDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'agentStatus',     path: '?path=/docs/primitives-conversational-agentstatus--docs'     },
-      { key: 'agentPlan',       path: '?path=/docs/primitives-conversational-agentplan--docs'       },
-      { key: 'progress',        path: '?path=/docs/primitives-feedback-progress--docs'              },
-      { key: 'connectionState', path: '?path=/docs/primitives-conversational-connectionstate--docs' },
+      { key: 'agentStatus',     path: '?path=/docs/components-conversational-agentstatus--docs'     },
+      { key: 'agentPlan',       path: '?path=/docs/components-conversational-agentplan--docs'       },
+      { key: 'progress',        path: '?path=/docs/components-feedback-progress--docs'              },
+      { key: 'connectionState', path: '?path=/docs/components-conversational-connectionstate--docs' },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

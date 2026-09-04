@@ -7,7 +7,7 @@ import { NdsCommandDocs } from '@/components/docs/CommandDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<CommandArgs> = {
-  title: 'Primitives/Overlay/Command',
+  title: 'Components/Overlay/Command',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_COMMAND] })],
   parameters: {

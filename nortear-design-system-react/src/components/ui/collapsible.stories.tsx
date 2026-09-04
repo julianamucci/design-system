@@ -22,7 +22,7 @@ const PANEL_CLASSES =
 const TRIGGER_CLASSES = "nds-cluster nds-w-full nds-px-4";
 
 const meta = {
-  title: "Primitives/Disclosure/Collapsible",
+  title: "Components/Disclosure/Collapsible",
   component: Collapsible,
   tags: ["autodocs", "disclosure"],
   parameters: {

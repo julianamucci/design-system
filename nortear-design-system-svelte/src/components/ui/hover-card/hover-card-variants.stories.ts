@@ -15,7 +15,7 @@ import { hoverCardWaitDefaultSource, hoverCardSource } from './hover-card.source
 // cursor.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/HoverCard/Variants',
+  title: 'Components/Overlay/HoverCard/Variants',
   component: HoverCardStory,
   tags: ['overlay'],
   parameters: {

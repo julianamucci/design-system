@@ -19,7 +19,7 @@ type ChatThreadArgs = {
 const ALTURA = 'lg' as const;
 
 const meta: Meta<ChatThreadArgs> = {
-  title: 'Primitives/Conversational/ChatThread',
+  title: 'Components/Conversational/ChatThread',
   tags: ['autodocs', 'conversational'],
   parameters: {
     layout: 'padded',

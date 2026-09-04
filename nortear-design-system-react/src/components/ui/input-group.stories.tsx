@@ -45,7 +45,7 @@ interface InputGroupArgs {
 }
 
 const meta: Meta<InputGroupArgs> = {
-  title: "Primitives/Form/InputGroup",
+  title: "Components/Form/InputGroup",
   tags: ["autodocs", "form"],
   parameters: {
     layout: "padded",

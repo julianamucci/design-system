@@ -20,7 +20,7 @@ import { StepperDocs } from "@/components/docs/StepperDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const meta = {
-  title: "Primitives/Navigation/Stepper",
+  title: "Components/Navigation/Stepper",
   component: Stepper,
   tags: ["autodocs", "navigation"],
   parameters: {

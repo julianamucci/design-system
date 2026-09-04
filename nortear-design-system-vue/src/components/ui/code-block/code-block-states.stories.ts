@@ -27,7 +27,7 @@ const rootOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
 
 const meta = {
-  title: 'Primitives/Display/CodeBlock/States',
+  title: 'Components/Display/CodeBlock/States',
   component: CodeBlock,
   tags: ['display'],
   parameters: {

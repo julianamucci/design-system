@@ -748,24 +748,24 @@ export function InputGroupDocs() {
           {
             name: tContent("related.items.input.name"),
             description: toPlainText(tContent("related.items.input.description")),
-            path: "?path=/docs/primitives-form-input--docs",
+            path: "?path=/docs/components-form-input--docs",
           },
           {
             name: tContent("related.items.textarea.name"),
             description: toPlainText(
               tContent("related.items.textarea.description"),
             ),
-            path: "?path=/docs/primitives-form-textarea--docs",
+            path: "?path=/docs/components-form-textarea--docs",
           },
           {
             name: tContent("related.items.button.name"),
             description: toPlainText(tContent("related.items.button.description")),
-            path: "?path=/docs/primitives-form-button--docs",
+            path: "?path=/docs/components-form-button--docs",
           },
           {
             name: tContent("related.items.form.name"),
             description: toPlainText(tContent("related.items.form.description")),
-            path: "?path=/docs/primitives-form-form--docs",
+            path: "?path=/docs/components-form-form--docs",
           },
         ]}
       />

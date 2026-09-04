@@ -23,7 +23,7 @@ const meta: Meta = {
       source: { transform: accordionSource },
     },
   },
-  title: 'Primitives/Disclosure/Accordion/Variants',
+  title: 'Components/Disclosure/Accordion/Variants',
   component: Accordion,
   tags: ['disclosure'],
 };

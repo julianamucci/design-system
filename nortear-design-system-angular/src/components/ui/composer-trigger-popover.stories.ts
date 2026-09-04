@@ -18,7 +18,7 @@ const onSubmit = fn();
 type Args = { mention: boolean; command: boolean };
 
 const meta: Meta<Args> = {
-  title: 'Primitives/Conversational/ComposerTriggerPopover',
+  title: 'Components/Conversational/ComposerTriggerPopover',
   tags: ['autodocs', 'conversational'],
   decorators: [moduleMetadata({ imports: [NdsComposer] })],
   parameters: {

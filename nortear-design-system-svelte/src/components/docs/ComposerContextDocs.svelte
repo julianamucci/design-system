@@ -418,10 +418,10 @@ interface ContextItem {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.composer.name'),            description: toPlainText($tStore('related.items.composer.description')),            path: '?path=/docs/primitives-conversational-composer--docs' },
-      { name: $tStore('related.items.composerAttachments.name'), description: toPlainText($tStore('related.items.composerAttachments.description')), path: '?path=/docs/primitives-conversational-composerattachments--docs' },
-      { name: $tStore('related.items.composerQuote.name'),       description: toPlainText($tStore('related.items.composerQuote.description')),       path: '?path=/docs/primitives-conversational-composerquote--docs' },
-      { name: $tStore('related.items.badge.name'),               description: toPlainText($tStore('related.items.badge.description')),               path: '?path=/docs/primitives-feedback-badge--docs' },
+      { name: $tStore('related.items.composer.name'),            description: toPlainText($tStore('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
+      { name: $tStore('related.items.composerAttachments.name'), description: toPlainText($tStore('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },
+      { name: $tStore('related.items.composerQuote.name'),       description: toPlainText($tStore('related.items.composerQuote.description')),       path: '?path=/docs/components-conversational-composerquote--docs' },
+      { name: $tStore('related.items.badge.name'),               description: toPlainText($tStore('related.items.badge.description')),               path: '?path=/docs/components-feedback-badge--docs' },
     ]}
   />
 

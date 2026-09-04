@@ -28,7 +28,7 @@ const FRAME = `
 `;
 
 const meta = {
-  title: 'Primitives/Feedback/Sonner/Types',
+  title: 'Components/Feedback/Sonner/Types',
   tags: ['feedback'],
   parameters: {
     layout: 'padded',

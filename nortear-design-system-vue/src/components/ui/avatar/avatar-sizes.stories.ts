@@ -14,7 +14,7 @@ const IMG_MARIA =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 
 const meta = {
-  title: 'Primitives/Display/Avatar/Sizes',
+  title: 'Components/Display/Avatar/Sizes',
   component: Avatar,
   tags: ['display'],
   parameters: {

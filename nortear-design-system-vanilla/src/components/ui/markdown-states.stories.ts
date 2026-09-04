@@ -11,7 +11,7 @@ import { MARKDOWN_STREAMING, MARKDOWN_UNSAFE } from '@shared/primitives/markdown
 
 const meta: Meta = {
   tags: ['conversational'],
-  title: 'Primitives/Conversational/Markdown/States',
+  title: 'Components/Conversational/Markdown/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

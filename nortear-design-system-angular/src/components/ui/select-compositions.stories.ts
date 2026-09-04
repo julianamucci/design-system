@@ -30,7 +30,7 @@ async function openWithKeyboard(trigger: HTMLElement, name: string): Promise<HTM
 }
 
 const meta: Meta = {
-  title: 'Primitives/Form/Select/Compositions',
+  title: 'Components/Form/Select/Compositions',
   tags: ['form'],
   decorators: [
     moduleMetadata({ imports: [...NDS_SELECT, NdsButton, NdsLabel, ReactiveFormsModule] }),

@@ -19,7 +19,7 @@ import {
 // cursor.
 
 const meta = {
-  title: "Primitives/Overlay/HoverCard/Variants",
+  title: "Components/Overlay/HoverCard/Variants",
   tags: ["overlay"],
   component: HoverCard,
   parameters: {

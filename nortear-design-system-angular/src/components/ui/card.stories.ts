@@ -10,7 +10,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<CardArgs> = {
-  title: 'Primitives/Layout/Card',
+  title: 'Components/Layout/Card',
   tags: ['autodocs', 'layout'],
   decorators: [moduleMetadata({ imports: [...NDS_CARD, NdsButton] })],
   parameters: {

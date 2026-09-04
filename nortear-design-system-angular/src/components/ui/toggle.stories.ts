@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { togglePlaygroundSource, type ToggleArgs } from './toggle.source';
 
 const meta: Meta<ToggleArgs> = {
-  title: 'Primitives/Form/Toggle',
+  title: 'Components/Form/Toggle',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsToggle, NdsToggleIcon] })],
   parameters: {

@@ -8,7 +8,7 @@ import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'Primitives/Tables/DataTable/Settings',
+  title: 'Components/Tables/DataTable/Settings',
   parameters: {
     layout: 'padded',
     controls: { disable: true },

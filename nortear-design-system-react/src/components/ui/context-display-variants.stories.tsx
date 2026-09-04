@@ -19,7 +19,7 @@ import {
 // barra e texto dizem a mesma coisa, e a escolha entre elas é de espaço.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/ContextDisplay/Variants",
+  title: "Components/Conversational/ContextDisplay/Variants",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

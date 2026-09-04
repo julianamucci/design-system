@@ -12,7 +12,7 @@ import { inputSource, inputSourceWith } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Input/States',
+  title: 'Components/Form/Input/States',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

@@ -15,7 +15,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Sheet/Variants',
+  title: 'Components/Overlay/Sheet/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

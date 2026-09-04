@@ -22,7 +22,7 @@ import { useI18nStore } from "@/lib/i18n"
 // procuraria a diferença que não existe.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/MessageQueue/States",
+  title: "Components/Conversational/MessageQueue/States",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

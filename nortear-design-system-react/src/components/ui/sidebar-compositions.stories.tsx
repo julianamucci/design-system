@@ -301,7 +301,7 @@ function SidebarWithSearch() {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "Primitives/Layout/Sidebar/Compositions",
+  title: "Components/Layout/Sidebar/Compositions",
   tags: ["layout"],
   component: Sidebar,
   parameters: {

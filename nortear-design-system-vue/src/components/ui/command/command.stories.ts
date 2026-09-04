@@ -23,7 +23,7 @@ type CommandArgs = {
 };
 
 const meta = {
-  title: 'Primitives/Overlay/Command',
+  title: 'Components/Overlay/Command',
   component: Command,
   tags: ['autodocs', 'overlay'],
   parameters: {

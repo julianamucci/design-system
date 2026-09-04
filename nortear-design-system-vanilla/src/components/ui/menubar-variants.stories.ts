@@ -11,7 +11,7 @@ const ITEMS_WITH_PERIGO = ['Salvar', 'Descartar alterações'] as const;
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'Primitives/Navigation/Menubar/Variants',
+  title: 'Components/Navigation/Menubar/Variants',
   parameters: {
     layout: 'padded',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.

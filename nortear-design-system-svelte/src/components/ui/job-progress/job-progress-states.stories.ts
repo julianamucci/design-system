@@ -26,7 +26,7 @@ import { RUN_STATUSES, type RunStatus } from '@shared/primitives/chat-protocol';
 // muda é o que a barra pode dizer.
 
 const meta: Meta<typeof JobProgress> = {
-  title: 'Primitives/Conversational/JobProgress/States',
+  title: 'Components/Conversational/JobProgress/States',
   component: JobProgress,
   tags: ['conversational'],
   parameters: {

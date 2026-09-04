@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { dropdownMenuSource } from './dropdown-menu.source';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/DropdownMenu',
+  title: 'Components/Overlay/DropdownMenu',
   component: DropdownMenuStory,
   tags: ['autodocs', 'overlay'],
   parameters: {

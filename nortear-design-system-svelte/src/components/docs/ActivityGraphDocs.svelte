@@ -641,10 +641,10 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.chart.name'),          description: toPlainText($tStore('related.items.chart.description')),          path: '?path=/docs/primitives-display-chart--docs'                 },
-      { name: $tStore('related.items.calendar.name'),       description: toPlainText($tStore('related.items.calendar.description')),       path: '?path=/docs/primitives-form-calendar--docs'                 },
-      { name: $tStore('related.items.traceWaterfall.name'), description: toPlainText($tStore('related.items.traceWaterfall.description')), path: '?path=/docs/primitives-conversational-tracewaterfall--docs' },
-      { name: $tStore('related.items.jobProgress.name'),    description: toPlainText($tStore('related.items.jobProgress.description')),    path: '?path=/docs/primitives-conversational-jobprogress--docs'    },
+      { name: $tStore('related.items.chart.name'),          description: toPlainText($tStore('related.items.chart.description')),          path: '?path=/docs/components-display-chart--docs'                 },
+      { name: $tStore('related.items.calendar.name'),       description: toPlainText($tStore('related.items.calendar.description')),       path: '?path=/docs/components-form-calendar--docs'                 },
+      { name: $tStore('related.items.traceWaterfall.name'), description: toPlainText($tStore('related.items.traceWaterfall.description')), path: '?path=/docs/components-conversational-tracewaterfall--docs' },
+      { name: $tStore('related.items.jobProgress.name'),    description: toPlainText($tStore('related.items.jobProgress.description')),    path: '?path=/docs/components-conversational-jobprogress--docs'    },
     ]}
   />
 

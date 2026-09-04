@@ -15,7 +15,7 @@ import {
 } from './calendar.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Calendar/Modes',
+  title: 'Components/Form/Calendar/Modes',
   component: Calendar,
   tags: ['form'],
   parameters: {

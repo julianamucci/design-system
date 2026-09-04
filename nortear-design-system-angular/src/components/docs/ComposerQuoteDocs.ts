@@ -556,10 +556,10 @@ export class NdsComposerQuoteDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'composer',    path: '?path=/docs/primitives-conversational-composer--docs'            },
-      { key: 'chatThread',  path: '?path=/docs/primitives-conversational-chatthread--docs'          },
-      { key: 'attachments', path: '?path=/docs/primitives-conversational-composerattachments--docs' },
-      { key: 'markdown',    path: '?path=/docs/primitives-conversational-markdown--docs'            },
+      { key: 'composer',    path: '?path=/docs/components-conversational-composer--docs'            },
+      { key: 'chatThread',  path: '?path=/docs/components-conversational-chatthread--docs'          },
+      { key: 'attachments', path: '?path=/docs/components-conversational-composerattachments--docs' },
+      { key: 'markdown',    path: '?path=/docs/components-conversational-markdown--docs'            },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: toPlainText(t(`related.items.${key}.description`)),

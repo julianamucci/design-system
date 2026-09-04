@@ -12,7 +12,7 @@ import {
 } from './select.source';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Select/Compositions',
+  title: 'Components/Form/Select/Compositions',
   component: Select,
   tags: ['form'],
   parameters: {

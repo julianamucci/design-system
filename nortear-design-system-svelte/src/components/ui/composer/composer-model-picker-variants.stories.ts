@@ -19,7 +19,7 @@ import type { ModelOption } from '@shared/primitives/chat-protocol';
 // não em `States`.
 
 const meta: Meta<typeof ComposerModelPickerStory> = {
-  title: 'Primitives/Conversational/ComposerModelPicker/Variants',
+  title: 'Components/Conversational/ComposerModelPicker/Variants',
   component: ComposerModelPickerStory,
   tags: ['conversational'],
   parameters: {

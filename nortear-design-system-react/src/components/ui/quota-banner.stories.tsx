@@ -45,7 +45,7 @@ function PlaygroundExample(args: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/QuotaBanner",
+  title: "Components/Conversational/QuotaBanner",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

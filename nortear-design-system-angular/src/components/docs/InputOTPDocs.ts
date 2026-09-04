@@ -637,10 +637,10 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     const d = dict();
     const caminhos: Record<string, string> = {
-      input:  '?path=/docs/primitives-form-input--docs',
-      form:   '?path=/docs/primitives-form-form--docs',
-      label:  '?path=/docs/primitives-form-label--docs',
-      button: '?path=/docs/primitives-form-button--docs',
+      input:  '?path=/docs/components-form-input--docs',
+      form:   '?path=/docs/components-form-form--docs',
+      label:  '?path=/docs/components-form-label--docs',
+      button: '?path=/docs/components-form-button--docs',
     };
     return keysWith(d, 'related.items', 'name')
       .filter((k) => caminhos[k])

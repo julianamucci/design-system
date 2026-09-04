@@ -26,7 +26,7 @@ type PlaygroundArgs = {
 // O docgen do Svelte está desligado no .storybook/main.ts: a aba
 // "API Reference" sai só destes argTypes.
 const meta: Meta<PlaygroundArgs> = {
-  title: 'Primitives/Conversational/ComposerContext',
+  title: 'Components/Conversational/ComposerContext',
   component: ComposerContextStory,
   tags: ['autodocs', 'conversational'],
   parameters: {

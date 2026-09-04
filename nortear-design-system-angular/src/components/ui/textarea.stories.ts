@@ -9,7 +9,7 @@ import { resizeComputado } from '@shared/testing/textarea-probe';
 import { textareaPlaygroundSource, type TextareaArgs } from './textarea.source';
 
 const meta: Meta<TextareaArgs> = {
-  title: 'Primitives/Form/Textarea',
+  title: 'Components/Form/Textarea',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsTextarea, NdsLabel] })],
   parameters: {

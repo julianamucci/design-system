@@ -626,10 +626,10 @@ interface TabsContentProps {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.stepper.name'),     description: $tStore('related.items.stepper.description'),     path: '?path=/docs/primitives-navigation-stepper--docs'      },
-      { name: $tStore('related.items.accordion.name'),   description: $tStore('related.items.accordion.description'),   path: '?path=/docs/primitives-disclosure-accordion--docs'    },
-      { name: $tStore('related.items.sidebar.name'),     description: $tStore('related.items.sidebar.description'),     path: '?path=/docs/primitives-layout-sidebar--docs'      },
-      { name: $tStore('related.items.toggleGroup.name'), description: $tStore('related.items.toggleGroup.description'), path: '?path=/docs/primitives-form-togglegroup--docs'  },
+      { name: $tStore('related.items.stepper.name'),     description: $tStore('related.items.stepper.description'),     path: '?path=/docs/components-navigation-stepper--docs'      },
+      { name: $tStore('related.items.accordion.name'),   description: $tStore('related.items.accordion.description'),   path: '?path=/docs/components-disclosure-accordion--docs'    },
+      { name: $tStore('related.items.sidebar.name'),     description: $tStore('related.items.sidebar.description'),     path: '?path=/docs/components-layout-sidebar--docs'      },
+      { name: $tStore('related.items.toggleGroup.name'), description: $tStore('related.items.toggleGroup.description'), path: '?path=/docs/components-form-togglegroup--docs'  },
     ]}
   />
 

@@ -20,7 +20,7 @@ import {
 // barra e texto dizem a mesma coisa, e a escolha entre elas é de espaço.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/ContextDisplay/Variants',
+  title: 'Components/Conversational/ContextDisplay/Variants',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsContextDisplay] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

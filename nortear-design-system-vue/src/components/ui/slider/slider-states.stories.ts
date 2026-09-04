@@ -21,7 +21,7 @@ import {
 } from './slider.source';
 
 const meta = {
-  title: 'Primitives/Form/Slider/States',
+  title: 'Components/Form/Slider/States',
   component: Slider,
   tags: ['form'],
   parameters: {

@@ -13,7 +13,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: buttonSource } },
   },
-  title: 'Primitives/Form/Button/Variants',
+  title: 'Components/Form/Button/Variants',
 };
 
 export default meta;

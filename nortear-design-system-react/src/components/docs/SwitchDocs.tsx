@@ -752,22 +752,22 @@ import { Label } from "@/components/ui/label";`;
           {
             name: tContent("related.items.checkbox.name"),
             description: toPlainText(tContent("related.items.checkbox.description")),
-            path: "?path=/docs/primitives-form-checkbox--docs",
+            path: "?path=/docs/components-form-checkbox--docs",
           },
           {
             name: tContent("related.items.toggle.name"),
             description: toPlainText(tContent("related.items.toggle.description")),
-            path: "?path=/docs/primitives-form-toggle--docs",
+            path: "?path=/docs/components-form-toggle--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
             description: toPlainText(tContent("related.items.radioGroup.description")),
-            path: "?path=/docs/primitives-form-radiogroup--docs",
+            path: "?path=/docs/components-form-radiogroup--docs",
           },
           {
             name: tContent("related.items.form.name"),
             description: toPlainText(tContent("related.items.form.description")),
-            path: "?path=/docs/primitives-form-form--docs",
+            path: "?path=/docs/components-form-form--docs",
           },
         ]}
       />

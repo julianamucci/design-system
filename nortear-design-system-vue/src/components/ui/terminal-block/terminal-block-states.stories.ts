@@ -29,7 +29,7 @@ import {
 // que voltou, como terminou — e o que muda é o que cada parte tem para dizer.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/TerminalBlock/States',
+  title: 'Components/Conversational/TerminalBlock/States',
   tags: ['conversational'],
   parameters: {
     layout: 'padded',

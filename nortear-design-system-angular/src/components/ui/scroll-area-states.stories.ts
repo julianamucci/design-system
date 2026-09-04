@@ -13,7 +13,7 @@ import { focusDeclaradoRing } from '@shared/testing/scroll-area-probe';
 // ausência de teto, que é o erro de uso mais comum do componente.
 
 const meta: Meta = {
-  title: 'Primitives/Layout/ScrollArea/States',
+  title: 'Components/Layout/ScrollArea/States',
   tags: ['layout'],
   decorators: [moduleMetadata({ imports: [NdsScrollArea, NdsButton] })],
   parameters: {

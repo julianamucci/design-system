@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipPlaygroundSource, type TooltipArgs } from './tooltip.source';
 
 const meta: Meta<TooltipArgs> = {
-  title: 'Primitives/Overlay/Tooltip',
+  title: 'Components/Overlay/Tooltip',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_TOOLTIP, NdsButton] })],
   parameters: {

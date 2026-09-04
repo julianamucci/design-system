@@ -48,7 +48,7 @@ function PlaygroundExample({ kind, detail, automatic }: PlaygroundArgs) {
 }
 
 const meta: Meta<PlaygroundArgs> = {
-  title: "Primitives/Conversational/ComposerContext",
+  title: "Components/Conversational/ComposerContext",
   tags: ["autodocs", "conversational"],
   parameters: {
     layout: "padded",

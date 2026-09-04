@@ -8,7 +8,7 @@ import { WRAPPER, comando, regiaoVazia, zerarSearch, mountInline } from './comma
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Command/States',
+  title: 'Components/Overlay/Command/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

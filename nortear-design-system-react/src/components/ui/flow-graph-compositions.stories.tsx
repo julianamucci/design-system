@@ -32,7 +32,7 @@ import {
 // para trás e quando ele chega pela metade.
 
 const meta: Meta = {
-  title: "Primitives/Conversational/FlowGraph/Compositions",
+  title: "Components/Conversational/FlowGraph/Compositions",
   tags: ["conversational"],
   parameters: {
     layout: "padded",

@@ -17,7 +17,7 @@ export const IMG_PLACEHOLDER =
   "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='800' height='450' fill='%23cbd5e1'/%3E%3C/svg%3E";
 
 const meta: Meta<AspectRatioArgs> = {
-  title: 'Primitives/Layout/AspectRatio',
+  title: 'Components/Layout/AspectRatio',
   tags: ['autodocs', 'layout'],
   // `IMG_PLACEHOLDER` é DADO, e sem esta linha o CSF o trata como story: o
   // plugin de teste tenta escrever `.parameters` numa string, o módulo ESM está

@@ -492,10 +492,10 @@ export interface QuotaBannerLabels {
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/primitives-conversational-contextdisplay--docs' },
-      { name: $tStore('related.items.costMeter.name'),      description: toPlainText($tStore('related.items.costMeter.description')),      path: '?path=/docs/primitives-conversational-costmeter--docs'      },
-      { name: $tStore('related.items.alert.name'),          description: toPlainText($tStore('related.items.alert.description')),          path: '?path=/docs/primitives-feedback-alert--docs'                },
-      { name: $tStore('related.items.progress.name'),       description: toPlainText($tStore('related.items.progress.description')),       path: '?path=/docs/primitives-feedback-progress--docs'             },
+      { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
+      { name: $tStore('related.items.costMeter.name'),      description: toPlainText($tStore('related.items.costMeter.description')),      path: '?path=/docs/components-conversational-costmeter--docs'      },
+      { name: $tStore('related.items.alert.name'),          description: toPlainText($tStore('related.items.alert.description')),          path: '?path=/docs/components-feedback-alert--docs'                },
+      { name: $tStore('related.items.progress.name'),       description: toPlainText($tStore('related.items.progress.description')),       path: '?path=/docs/components-feedback-progress--docs'             },
     ]}
   />
 

@@ -9,7 +9,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'Primitives/Overlay/Drawer/States',
+  title: 'Components/Overlay/Drawer/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

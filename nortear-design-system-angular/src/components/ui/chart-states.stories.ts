@@ -45,7 +45,7 @@ function rowCells(row: HTMLTableRowElement): (string | undefined)[] {
 }
 
 const meta: Meta = {
-  title: 'Primitives/Display/Chart/States',
+  title: 'Components/Display/Chart/States',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [NdsChart] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

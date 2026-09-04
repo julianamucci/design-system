@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sidebarPlaygroundSource, type SidebarArgs } from './sidebar.source';
 
 const meta: Meta<SidebarArgs> = {
-  title: 'Primitives/Layout/Sidebar',
+  title: 'Components/Layout/Sidebar',
   tags: ['layout', 'autodocs'],
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR, NdsButtonIcon] })],
   parameters: {

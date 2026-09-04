@@ -25,7 +25,7 @@ import {
 // que muda é o que a barra pode dizer.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/JobProgress/States',
+  title: 'Components/Conversational/JobProgress/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsJobProgress] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

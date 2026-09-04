@@ -10,7 +10,7 @@ import {
 import { baseColumns, invoices, type Invoice } from "./data-table.fixtures"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
-  title: "Primitives/Tables/DataTable/Settings",
+  title: "Components/Tables/DataTable/Settings",
   tags: ["tables"],
   component: DataTable<Invoice>,
   parameters: {

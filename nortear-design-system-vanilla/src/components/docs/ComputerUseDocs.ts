@@ -446,10 +446,10 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.agentStatus.name'),   description: toPlainText(t('related.items.agentStatus.description')),   path: '?path=/docs/primitives-conversational-agentstatus--docs'   },
-            { name: t('related.items.toolGroup.name'),     description: toPlainText(t('related.items.toolGroup.description')),     path: '?path=/docs/primitives-conversational-toolgroup--docs'     },
-            { name: t('related.items.terminalBlock.name'), description: toPlainText(t('related.items.terminalBlock.description')), path: '?path=/docs/primitives-conversational-terminalblock--docs' },
-            { name: t('related.items.agentPlan.name'),     description: toPlainText(t('related.items.agentPlan.description')),     path: '?path=/docs/primitives-conversational-agentplan--docs'     },
+            { name: t('related.items.agentStatus.name'),   description: toPlainText(t('related.items.agentStatus.description')),   path: '?path=/docs/components-conversational-agentstatus--docs'   },
+            { name: t('related.items.toolGroup.name'),     description: toPlainText(t('related.items.toolGroup.description')),     path: '?path=/docs/components-conversational-toolgroup--docs'     },
+            { name: t('related.items.terminalBlock.name'), description: toPlainText(t('related.items.terminalBlock.description')), path: '?path=/docs/components-conversational-terminalblock--docs' },
+            { name: t('related.items.agentPlan.name'),     description: toPlainText(t('related.items.agentPlan.description')),     path: '?path=/docs/components-conversational-agentplan--docs'     },
           ],
         });
 

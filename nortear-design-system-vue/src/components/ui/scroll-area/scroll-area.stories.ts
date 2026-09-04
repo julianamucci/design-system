@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { scrollAreaSource } from './scroll-area.source';
 
 const meta = {
-  title: 'Primitives/Layout/ScrollArea',
+  title: 'Components/Layout/ScrollArea',
   component: ScrollArea,
   tags: ['autodocs', 'layout'],
   parameters: {

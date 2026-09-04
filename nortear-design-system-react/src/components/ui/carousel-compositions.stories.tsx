@@ -33,7 +33,7 @@ const accessibleName = (position: number, total: number) =>
 const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
 
 const meta = {
-  title: "Primitives/Display/Carousel/Compositions",
+  title: "Components/Display/Carousel/Compositions",
   tags: ["display"],
   component: Carousel,
   parameters: {

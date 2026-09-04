@@ -13,7 +13,7 @@ const meta: Meta = {
     actions: { disable: true },
     docs: { source: { transform: accordionSource } },
   },
-  title: 'Primitives/Disclosure/Accordion/Variants',
+  title: 'Components/Disclosure/Accordion/Variants',
 };
 
 export default meta;

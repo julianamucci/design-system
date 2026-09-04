@@ -28,7 +28,7 @@ import {
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta = {
-  title: 'Primitives/Overlay/Sheet/States',
+  title: 'Components/Overlay/Sheet/States',
   component: Sheet,
   tags: ['overlay'],
   parameters: {

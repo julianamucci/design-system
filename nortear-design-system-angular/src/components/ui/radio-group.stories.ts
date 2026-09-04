@@ -8,7 +8,7 @@ import { NdsRadioGroupDocs } from '@/components/docs/RadioGroupDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta<RadioGroupArgs> = {
-  title: 'Primitives/Form/RadioGroup',
+  title: 'Components/Form/RadioGroup',
   tags: ['autodocs', 'form'],
   decorators: [moduleMetadata({ imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel] })],
   parameters: {

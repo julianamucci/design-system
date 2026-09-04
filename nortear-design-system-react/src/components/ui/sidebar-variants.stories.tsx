@@ -113,7 +113,7 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "Primitives/Layout/Sidebar/Variants",
+  title: "Components/Layout/Sidebar/Variants",
   tags: ["layout"],
   component: Sidebar,
   parameters: {

@@ -392,10 +392,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.chart.name'),          description: toPlainText(tContent('related.items.chart.description')),          path: '?path=/docs/primitives-display-chart--docs'                 },
-  { name: tContent('related.items.calendar.name'),       description: toPlainText(tContent('related.items.calendar.description')),       path: '?path=/docs/primitives-form-calendar--docs'                 },
-  { name: tContent('related.items.traceWaterfall.name'), description: toPlainText(tContent('related.items.traceWaterfall.description')), path: '?path=/docs/primitives-conversational-tracewaterfall--docs' },
-  { name: tContent('related.items.jobProgress.name'),    description: toPlainText(tContent('related.items.jobProgress.description')),    path: '?path=/docs/primitives-conversational-jobprogress--docs'    },
+  { name: tContent('related.items.chart.name'),          description: toPlainText(tContent('related.items.chart.description')),          path: '?path=/docs/components-display-chart--docs'                 },
+  { name: tContent('related.items.calendar.name'),       description: toPlainText(tContent('related.items.calendar.description')),       path: '?path=/docs/components-form-calendar--docs'                 },
+  { name: tContent('related.items.traceWaterfall.name'), description: toPlainText(tContent('related.items.traceWaterfall.description')), path: '?path=/docs/components-conversational-tracewaterfall--docs' },
+  { name: tContent('related.items.jobProgress.name'),    description: toPlainText(tContent('related.items.jobProgress.description')),    path: '?path=/docs/components-conversational-jobprogress--docs'    },
 ]);
 
 const noteItems = computed(() =>

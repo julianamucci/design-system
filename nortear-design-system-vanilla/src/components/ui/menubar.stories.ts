@@ -50,7 +50,7 @@ type MenubarArgs = {
 };
 
 const meta: Meta<MenubarArgs> = {
-  title: 'Primitives/Navigation/Menubar',
+  title: 'Components/Navigation/Menubar',
   tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',

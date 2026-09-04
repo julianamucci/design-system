@@ -6,7 +6,7 @@ import { NdsInput } from './input';
 import { NdsCheckbox } from './checkbox';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Label/Compositions',
+  title: 'Components/Form/Label/Compositions',
   decorators: [moduleMetadata({ imports: [NdsLabel, NdsInput, NdsCheckbox] })],
   tags: ['form'],
   parameters: {

@@ -18,7 +18,7 @@ import { TERMINAL_COMMAND } from '@shared/primitives/terminal-block-examples';
 // é maior que o espaço — que é a pergunta de desenho mais difícil desta peça.
 
 const meta: Meta<typeof TerminalBlock> = {
-  title: 'Primitives/Conversational/TerminalBlock/Compositions',
+  title: 'Components/Conversational/TerminalBlock/Compositions',
   component: TerminalBlock,
   tags: ['conversational'],
   parameters: {

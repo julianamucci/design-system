@@ -15,7 +15,7 @@ import {
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'Primitives/Form/Label/Compositions',
+  title: 'Components/Form/Label/Compositions',
   parameters: {
     layout: 'centered',
     actions: { disable: true },

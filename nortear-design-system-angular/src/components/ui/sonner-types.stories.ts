@@ -17,7 +17,7 @@ import { waitForToast, clearToasts, PERSISTENT, TEXTS } from './sonner.fixtures'
 // estado, nunca no meio de uma transição.
 
 const meta: Meta = {
-  title: 'Primitives/Feedback/Sonner/Types',
+  title: 'Components/Feedback/Sonner/Types',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsToaster] })],
   parameters: {

@@ -32,7 +32,7 @@ import {
 // delas —, e é o texto ao lado que responde.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/QuotaBanner/States',
+  title: 'Components/Conversational/QuotaBanner/States',
   tags: ['conversational'],
   decorators: [moduleMetadata({ imports: [NdsQuotaBanner] })],
   // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.

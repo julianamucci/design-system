@@ -7,7 +7,7 @@ import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/DropdownMenu/Variants',
+  title: 'Components/Overlay/DropdownMenu/Variants',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {

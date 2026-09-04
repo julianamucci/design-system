@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sidebarSource } from './sidebar.source';
 
 const meta: Meta = {
-  title: 'Primitives/Layout/Sidebar',
+  title: 'Components/Layout/Sidebar',
   component: Sidebar,
   tags: ['autodocs', 'layout'],
   parameters: {

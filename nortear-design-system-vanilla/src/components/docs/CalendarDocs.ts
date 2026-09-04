@@ -623,9 +623,9 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Popover', description: toPlainText(t('related.popover')), path: '?path=/docs/primitives-overlay-popover--docs' },
-            { name: 'Form', description: toPlainText(t('related.form')), path: '?path=/docs/primitives-form-form--docs' },
-            { name: 'Input', description: toPlainText(t('related.input')), path: '?path=/docs/primitives-form-input--docs' },
+            { name: 'Popover', description: toPlainText(t('related.popover')), path: '?path=/docs/components-overlay-popover--docs' },
+            { name: 'Form', description: toPlainText(t('related.form')), path: '?path=/docs/components-form-form--docs' },
+            { name: 'Input', description: toPlainText(t('related.input')), path: '?path=/docs/components-form-input--docs' },
           ],
         });
 

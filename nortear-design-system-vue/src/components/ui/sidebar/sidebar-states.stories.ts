@@ -28,7 +28,7 @@ import {
 } from './sidebar.source';
 
 const meta = {
-  title: 'Primitives/Layout/Sidebar/States',
+  title: 'Components/Layout/Sidebar/States',
   component: Sidebar,
   tags: ['layout'],
   parameters: {

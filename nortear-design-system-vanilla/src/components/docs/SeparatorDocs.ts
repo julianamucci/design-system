@@ -598,10 +598,10 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.card.name'),           description: toPlainText(t('related.items.card.description')),           path: '?path=/docs/primitives-layout-card--docs' },
-            { name: t('related.items.sheet.name'),          description: toPlainText(t('related.items.sheet.description')),          path: '?path=/docs/primitives-overlay-sheet--docs' },
-            { name: t('related.items.sidebar.name'),        description: toPlainText(t('related.items.sidebar.description')),        path: '?path=/docs/primitives-layout-sidebar--docs' },
-            { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/primitives-navigation-navigationmenu--docs' },
+            { name: t('related.items.card.name'),           description: toPlainText(t('related.items.card.description')),           path: '?path=/docs/components-layout-card--docs' },
+            { name: t('related.items.sheet.name'),          description: toPlainText(t('related.items.sheet.description')),          path: '?path=/docs/components-overlay-sheet--docs' },
+            { name: t('related.items.sidebar.name'),        description: toPlainText(t('related.items.sidebar.description')),        path: '?path=/docs/components-layout-sidebar--docs' },
+            { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
           ],
         });
 

@@ -444,10 +444,10 @@ export function ApprovalCardDocs() {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: tContent("related.items.toolGroup.name"),   description: toPlainText(tContent("related.items.toolGroup.description")),   path: "?path=/docs/primitives-conversational-toolgroup--docs"  },
-          { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/primitives-conversational-chatthread--docs" },
-          { name: tContent("related.items.alertDialog.name"), description: toPlainText(tContent("related.items.alertDialog.description")), path: "?path=/docs/primitives-overlay-alertdialog--docs"       },
-          { name: tContent("related.items.button.name"),      description: toPlainText(tContent("related.items.button.description")),      path: "?path=/docs/primitives-form-button--docs"               },
+          { name: tContent("related.items.toolGroup.name"),   description: toPlainText(tContent("related.items.toolGroup.description")),   path: "?path=/docs/components-conversational-toolgroup--docs"  },
+          { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/components-conversational-chatthread--docs" },
+          { name: tContent("related.items.alertDialog.name"), description: toPlainText(tContent("related.items.alertDialog.description")), path: "?path=/docs/components-overlay-alertdialog--docs"       },
+          { name: tContent("related.items.button.name"),      description: toPlainText(tContent("related.items.button.description")),      path: "?path=/docs/components-form-button--docs"               },
         ]}
       />
 

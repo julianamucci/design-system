@@ -13,7 +13,7 @@ import { carouselSource, carouselLastSlideSource } from './carousel.source';
 // estado, e é ele que o Chromatic fotografa e o axe varre.
 
 const meta: Meta = {
-  title: 'Primitives/Display/Carousel/States',
+  title: 'Components/Display/Carousel/States',
   component: Carousel,
   tags: ['display'],
   parameters: {

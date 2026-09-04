@@ -10,7 +10,7 @@ import {
 } from "./separator.source";
 
 const meta = {
-  title: "Primitives/Layout/Separator/Compositions",
+  title: "Components/Layout/Separator/Compositions",
   tags: ["layout"],
   component: Separator,
   parameters: {

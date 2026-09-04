@@ -20,7 +20,7 @@ type SheetArgs = {
 };
 
 const meta: Meta<SheetArgs> = {
-  title: 'Primitives/Overlay/Sheet',
+  title: 'Components/Overlay/Sheet',
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',

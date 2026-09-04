@@ -19,7 +19,7 @@ import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'Primitives/Display/CodeBlock/States',
+  title: 'Components/Display/CodeBlock/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

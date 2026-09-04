@@ -31,7 +31,7 @@ import { NdsButton } from './button';
 // balão, sem nó órfão nenhum.
 
 const meta: Meta = {
-  title: 'Primitives/Conversational/MessageTiming/Compositions',
+  title: 'Components/Conversational/MessageTiming/Compositions',
   tags: ['conversational'],
   decorators: [
     moduleMetadata({ imports: [NdsMessageTiming, ...NDS_TOOLTIP, NdsButton] }),

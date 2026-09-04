@@ -10,7 +10,7 @@ import {
 } from '@shared/testing/textarea-probe';
 
 const meta: Meta = {
-  title: 'Primitives/Form/Textarea/Variants',
+  title: 'Components/Form/Textarea/Variants',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsTextarea, NdsLabel] })],
   parameters: {

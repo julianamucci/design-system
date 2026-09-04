@@ -447,10 +447,10 @@
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/primitives-conversational-toolgroup--docs'  },
-      { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/primitives-conversational-chatthread--docs' },
-      { name: $tStore('related.items.alertDialog.name'), description: toPlainText($tStore('related.items.alertDialog.description')), path: '?path=/docs/primitives-overlay-alertdialog--docs'       },
-      { name: $tStore('related.items.button.name'),      description: toPlainText($tStore('related.items.button.description')),      path: '?path=/docs/primitives-form-button--docs'               },
+      { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'  },
+      { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },
+      { name: $tStore('related.items.alertDialog.name'), description: toPlainText($tStore('related.items.alertDialog.description')), path: '?path=/docs/components-overlay-alertdialog--docs'       },
+      { name: $tStore('related.items.button.name'),      description: toPlainText($tStore('related.items.button.description')),      path: '?path=/docs/components-form-button--docs'               },
     ]}
   />
 

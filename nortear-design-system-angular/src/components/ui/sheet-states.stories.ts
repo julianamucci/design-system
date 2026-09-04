@@ -14,7 +14,7 @@ const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
 // fica no lugar quando o conteúdo cresce.
 
 const meta: Meta = {
-  title: 'Primitives/Overlay/Sheet/States',
+  title: 'Components/Overlay/Sheet/States',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
   parameters: {

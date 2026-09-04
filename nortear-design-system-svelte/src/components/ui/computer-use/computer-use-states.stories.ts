@@ -27,7 +27,7 @@ import {
 // dizer.
 
 const meta: Meta<typeof ComputerUse> = {
-  title: 'Primitives/Conversational/ComputerUse/States',
+  title: 'Components/Conversational/ComputerUse/States',
   component: ComputerUse,
   tags: ['conversational'],
   parameters: {

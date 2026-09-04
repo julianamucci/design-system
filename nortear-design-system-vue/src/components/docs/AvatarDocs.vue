@@ -252,10 +252,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Badge',       description: toPlainText(tContent('related.badge')),       path: '?path=/docs/primitives-feedback-badge--docs'       },
-  { name: 'AspectRatio', description: toPlainText(tContent('related.aspectRatio')), path: '?path=/docs/primitives-layout-aspectratio--docs' },
-  { name: 'Tooltip',     description: toPlainText(tContent('related.tooltip')),     path: '?path=/docs/primitives-overlay-tooltip--docs'     },
-  { name: 'Card',        description: toPlainText(tContent('related.card')),        path: '?path=/docs/primitives-layout-card--docs'        },
+  { name: 'Badge',       description: toPlainText(tContent('related.badge')),       path: '?path=/docs/components-feedback-badge--docs'       },
+  { name: 'AspectRatio', description: toPlainText(tContent('related.aspectRatio')), path: '?path=/docs/components-layout-aspectratio--docs' },
+  { name: 'Tooltip',     description: toPlainText(tContent('related.tooltip')),     path: '?path=/docs/components-overlay-tooltip--docs'     },
+  { name: 'Card',        description: toPlainText(tContent('related.card')),        path: '?path=/docs/components-layout-card--docs'        },
 ]);
 
 const noteItems = computed(() => [
