@@ -2192,6 +2192,75 @@ function auditDemonstrationLabels(slug) {
   return violations;
 }
 
+/**
+ * `icone_de_botao_embrulhado` — SVG de ícone dentro de um elemento antes de virar filho do botão.
+ *
+ * Medido em 2026-09-04, na docs page do tooltip do vanilla: o ícone ficava
+ * 2,2px ACIMA do centro num botão de 36x36, e ninguém via porque 2px não
+ * chamam atenção sozinhos — foi comparando a demo do tooltip com a do button,
+ * lado a lado, que a diferença apareceu.
+ *
+ * A causa é que a folha do botão fala em filho DIRETO, em três lugares:
+ *
+ *   `.nds-button`               inline-flex + align-items:center. Um <span> é
+ *                               `inline`: vira item flex com caixa de linha e
+ *                               alinha por BASELINE. Daí os 2,2px.
+ *   `.nds-button:has(> svg)`    reduz o respiro lateral — não casa com o span.
+ *   `.nds-button-icon-xs > svg` ajusta o tamanho — também não casa.
+ *
+ * E o embrulho não serve à acessibilidade: `createButtonIcon` já põe
+ * `aria-hidden` no próprio SVG. O `ButtonDocs` sempre appendou direto.
+ *
+ * Vale também dentro de SNIPPET: o padrão estava no código publicado da
+ * composição do tooltip, ensinando o defeito a quem copia — e esse é o pior
+ * lugar para ele estar, porque sai da página para o projeto de outra pessoa.
+ *
+ * A detecção é por JANELA, e não por análise de fluxo: `const X =
+ * document.createElement(...)`, depois `X.appendChild(createButtonIcon(...))`,
+ * depois `children: X`. As três coisas juntas e perto é o padrão; qualquer uma
+ * sozinha é uso legítimo.
+ */
+function auditIconeDeBotaoEmbrulhado(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const { all } = filesForSlug(slug, stack);
+    for (const file of all) {
+      const content = readFile(file);
+      if (!content || !content.includes('createButtonIcon')) continue;
+      const linhas = content.split('\n');
+
+      for (let i = 0; i < linhas.length; i++) {
+        const criacao = linhas[i].match(/(?:const|let)\s+([A-Za-z_$][\w$]*)\s*=\s*document\.createElement\(/);
+        if (!criacao) continue;
+        const nome = criacao[1];
+
+        const janelaAppend = linhas.slice(i + 1, i + 9).join('\n');
+        if (!janelaAppend.includes(nome + '.appendChild(createButtonIcon(')) continue;
+
+        // `includes` e comparação de string, e não regex montado por concatenação:
+        // as barras invertidas de `\s` e `\b` não sobreviveram à camada de aspas
+        // quando esta regra foi escrita, o padrão virou `children:s*NOME`, e o
+        // portão nasceu sem dentes. Só apareceu ao replantar o defeito.
+        const temChildren = linhas.slice(i + 1, i + 20).some((l) => {
+          const t = l.trim();
+          if (!t.startsWith('children:')) return false;
+          return t.slice('children:'.length).trim().replace(/,$/, '') === nome;
+        });
+        if (!temChildren) continue;
+
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file, line: i + 1, rule: 'icone_de_botao_embrulhado',
+          message: 'o ícone vai para o botão dentro de `' + nome + '` — a folha do botão'
+            + ' seleciona o SVG como filho DIRETO em três regras, e o embrulho tira o ícone'
+            + ' do centro. Passe `createButtonIcon(...)` direto em `children`',
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditContractCoverage(slug) {
   const ids = contractIds(slug);
   if (ids.length === 0) return [];
@@ -5977,6 +6046,7 @@ function auditQuality(slug) {
   violations.push(...auditStoryApiReference(slug));
   violations.push(...auditContractCoverage(slug));
   violations.push(...auditDemonstrationLabels(slug));
+  violations.push(...auditIconeDeBotaoEmbrulhado(slug));
   violations.push(...auditPlayIdempotente(slug));
 
   return violations;
