@@ -88,27 +88,45 @@ Passo 2f1 primeiro e traga a lista fechada. Corrigir de um em um custa quatro
 suítes por rodada e só revela o que foi apontado — foi assim que o calendar
 consumiu dezesseis commits.
 
-### Passo 0b — `/cross-stack <slug>`, e ele roda ANTES, não depois
+### Passo 0b — `/cross-stack <slug>` — SÓ em invocação direta, e no começo
 
-Dispare a skill `cross-stack` para este slug e leia o relatório dela antes de
-tocar em qualquer arquivo. Em modo pipeline ela é report-only; aqui você a usa
-como MEDIÇÃO de entrada.
+**Primeiro decida se este passo é seu.** O sinal é o mesmo do Passo 0: se o
+prompt trouxe `.pipeline-context/scan-<slug>.json`, quem chama é a pipeline.
 
-**Por que no começo, e não no fim.** A pipeline manda cross-stack por último, e
-lá está certo: ela compara cinco implementações depois que os dev-agents
-construíram, e rodá-la antes geraria cascata redundante. Aqui a situação é outra
-— a `/quality` invocada direto trabalha em fix-mode, e o que ela conserta é uma
-stack de cada vez. Sem a lista fechada na mão, ela conserta o que enxerga, o
-cross-stack acha o resto depois, e a rodada recomeça: é exatamente o padrão que
-custou dezesseis commits no calendar, um defeito por rodada, com a suíte verde o
-tempo todo.
+| quem chamou | roda cross-stack? | por quê |
+|---|---|---|
+| **pipeline, modo `audit`** | **NÃO** | ela já agenda cross-stack na Fase C, e ali você é **report-only** (Princípio 6): sem correção sua, não há uma stack corrigida por vez para prevenir. Chamar aqui seria a terceira rodada do mesmo instrumento na mesma passagem |
+| **pipeline, modo `new`/`full`** | **NÃO** | mesma coisa: você é a Fase D, cross-stack é a Fase E. A ordenação é dela |
+| **`/quality <slug>` direto** | **SIM**, no começo e no fim | aqui você está em **fix-mode**, e é só aqui que o risco existe |
+
+Em modo pipeline, registre `cross-stack: da pipeline (Fase C/E)` e siga para o
+Passo 1. Nunca pule uma skill sem registrar.
+
+---
+
+**Em invocação direta**, dispare `cross-stack` e leia o relatório antes de tocar
+em qualquer arquivo — como MEDIÇÃO de entrada.
+
+**Por que no começo aqui, e por último na pipeline — e por que não é
+contradição.** São perguntas diferentes feitas ao mesmo instrumento.
+
+Na pipeline ele é VERIFICAÇÃO: compara cinco implementações depois que os
+dev-agents construíram, e rodá-lo antes geraria cascata redundante. Aqui ele é
+MEDIÇÃO: a `/quality` direta está em fix-mode e conserta uma stack de cada vez.
+Sem a lista fechada na mão, ela conserta o que enxerga, o cross-stack acha o
+resto depois, e a rodada recomeça — exatamente o padrão que custou dezesseis
+commits no calendar, um defeito por rodada, com a suíte verde o tempo todo.
+
+O que decide não é "começo ou fim", é **se há correção acontecendo**. Onde você
+não corrige, medir antes não previne nada.
 
 A ordem também evita trabalho jogado fora. Metade dos achados cross-stack se
 resolve no CONTEÚDO COMPARTILHADO — uma linha de `translations.json` conserta as
 cinco de uma vez. Descobrir isso depois de já ter corrigido três stacks à mão é
 pagar quatro vezes pelo mesmo defeito.
 
-**O que fazer com o relatório dela:**
+**O que fazer com o relatório dela** (você está em fix-mode; em modo pipeline
+este passo nem roda):
 
 - divergência que se resolve no conteúdo compartilhado → corrija ali PRIMEIRO, e
   as demais verificações desta skill já rodam sobre o estado alinhado;
