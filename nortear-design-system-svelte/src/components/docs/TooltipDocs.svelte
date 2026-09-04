@@ -437,6 +437,7 @@ interface TooltipTriggerProps {
     title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
+    componentSlug="tooltip"
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -744,7 +745,7 @@ interface TooltipTriggerProps {
     ]}
     interfaceCode={interfaceCode}
     extensibilityTitle={$tStore('props.extensibilityTitle')}
-    extensibilityNotes={$tStore('props.extensibilityCode')}
+    extensibilityCode={$tStore('props.extensibilityCode')}
   />
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
@@ -794,6 +795,7 @@ interface TooltipTriggerProps {
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
     title={$tStore('related.title')}
+    componentSlug="tooltip"
     items={[
       { name: $tStore('related.items.popover.name'),   description: $tStore('related.items.popover.description'),   path: '?path=/docs/components-overlay-popover--docs'   },
       { name: $tStore('related.items.hoverCard.name'), description: $tStore('related.items.hoverCard.description'), path: '?path=/docs/components-overlay-hovercard--docs' },
@@ -804,6 +806,7 @@ interface TooltipTriggerProps {
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
     title={$tStore('notes.title')}
+    componentSlug="tooltip"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

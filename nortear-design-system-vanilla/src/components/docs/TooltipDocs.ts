@@ -345,6 +345,7 @@ export function createTooltipDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
+          componentSlug: 'tooltip',
           code: `import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';`,
           secondaryDescription: 'Espera compartilhada por grupo e marcação no conteúdo:',
           secondaryCode: `// Uma barra de ícones: quem já parou uma vez não espera de novo no vizinho.
@@ -365,7 +366,7 @@ createTooltip({
   content: atalho,
   side: 'bottom',
   delayDuration: 0,          // este abre na hora
-  onShow: () => track('tooltip_show', { component: 'tooltip' }),
+  onShow: () => track('tooltip_view', { component: 'tooltip' }),
 });`,
         });
 
@@ -708,7 +709,11 @@ export function createTooltipProvider(
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes:
+          // `extensibilityCode` e não `extensibilityNotes`: a fenda de notas
+          // passa por `DOMPurify.sanitize()` + `innerHTML`, onde `createTooltip`
+          // com `<`/`>` viraria tag desconhecida e sumiria, e as quebras de
+          // linha colapsariam. Snippet vai para o CodeBlock.
+          extensibilityCode:
             t('props.extensibilityCode') +
             '\n\n// O balão não tem estado controlado nem seta apontando para o gatilho, e\n// a posição escolhida em `side` é a final — não há reposicionamento\n// automático quando falta espaço na tela.',
         });
@@ -754,6 +759,7 @@ export function createTooltipProvider(
       case 'relacionados':
         return createDocsRelated({
           title: t('related.title'),
+          componentSlug: 'tooltip',
           items: [
             { name: t('related.items.popover.name'),   description: toPlainText(t('related.items.popover.description')),   path: '?path=/docs/components-overlay-popover--docs'    },
             { name: t('related.items.hoverCard.name'), description: toPlainText(t('related.items.hoverCard.description')), path: '?path=/docs/components-overlay-hovercard--docs'  },
@@ -770,6 +776,7 @@ export function createTooltipProvider(
 
         return createDocsNotes({
           title: t('notes.title'),
+          componentSlug: 'tooltip',
           items: [
             ...[1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
             { title: '', content: DOMPurify.sanitize(extraNote) },

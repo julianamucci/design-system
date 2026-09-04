@@ -159,6 +159,16 @@ const codeImportBasic = `import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";`;
 
+// Segundo bloco da seção Importação: onde o Provider é montado. Ele vai UMA
+// vez, no topo da árvore que compartilha a espera — é ele que faz percorrer
+// uma barra de ícones parecer um movimento só, e sem ele cada balão espera
+// do zero.
+const codeImportProvider = `<!-- Uma vez, no topo da árvore que compartilha a espera. -->
+<!-- skip-delay-duration: janela em que o vizinho abre na hora, depois de um fechar. -->
+<TooltipProvider :delay-duration="400" :skip-delay-duration="300">
+  <App />
+</TooltipProvider>`;
+
 const codeDefault = `<Tooltip>
   <TooltipTrigger as-child>
     <Button variant="ghost" size="icon" aria-label="Salvar">
@@ -653,6 +663,8 @@ const a11yCritCols = computed(() => ({
       <DocsImport
         :title="tContent('import.title')"
         :code="codeImportBasic"
+        :secondary-code="codeImportProvider"
+        component-slug="tooltip"
       />
 
       <!-- ── Variantes ────────────────────────────────────────────── -->
@@ -930,7 +942,7 @@ const a11yCritCols = computed(() => ({
         ]"
         :interface-code="interfaceCode"
         :extensibility-title="tContent('props.extensibilityTitle')"
-        :extensibility-notes="tContent('props.extensibilityCode')"
+        :extensibility-code="tContent('props.extensibilityCode')"
       />
 
       <!-- ── Tokens ───────────────────────────────────────────────── -->
@@ -961,12 +973,14 @@ const a11yCritCols = computed(() => ({
       <DocsRelated
         :title="tContent('related.title')"
         :items="relatedItems"
+        component-slug="tooltip"
       />
 
       <!-- ── Notas ────────────────────────────────────────────────── -->
       <DocsNotes
         :title="tContent('notes.title')"
         :items="noteItems"
+        component-slug="tooltip"
       />
 
       <!-- ── Analytics ────────────────────────────────────────────── -->

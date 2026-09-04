@@ -150,6 +150,16 @@ export function TooltipDocs() {
   TooltipContent,
 } from "@/components/ui/tooltip";`;
 
+  // Segundo bloco da seção Importação: onde o Provider é montado. Ele vai UMA
+  // vez, no topo da árvore que compartilha a espera — é ele que faz percorrer
+  // uma barra de ícones parecer um movimento só, e sem ele cada balão espera
+  // do zero.
+  const codeImportProvider = `// Uma vez, no topo da árvore que compartilha a espera.
+<TooltipProvider delay={400} timeout={300}>
+  {/* \`timeout\`: janela em que o vizinho abre na hora, depois de um fechar. */}
+  <App />
+</TooltipProvider>`;
+
   const structureCode = tContent("anatomy.structureCode");
 
   const codeDefault = `<Tooltip>
@@ -436,7 +446,12 @@ interface TooltipContentProps {
         />
 
         {/* ── Importação ────────────────────────────────────────────── */}
-        <DocsImport title={tContent("import.title")} code={codeImport} />
+        <DocsImport
+          title={tContent("import.title")}
+          code={codeImport}
+          secondaryCode={codeImportProvider}
+          componentSlug="tooltip"
+        />
 
         {/* ── Variantes ─────────────────────────────────────────────── */}
         <DocsCompositions
@@ -827,7 +842,11 @@ interface TooltipContentProps {
           ]}
           interfaceCode={interfaceCode}
           extensibilityTitle={tContent("props.extensibilityTitle")}
-          extensibilityNotes={tContent("props.extensibilityCode")}
+          // `extensibilityCode` e não `extensibilityNotes`: a fenda de notas
+          // passa por `DOMPurify.sanitize()` + `innerHTML`, onde
+          // `<TooltipProvider>` e `<Button>` são tags desconhecidas e somem,
+          // e as quebras de linha colapsam. Snippet vai para o CodeBlock.
+          extensibilityCode={tContent("props.extensibilityCode")}
         />
 
         {/* ── Tokens ────────────────────────────────────────────────── */}
