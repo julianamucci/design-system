@@ -1161,11 +1161,20 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     const d = dict();
-    // `notes.item1` lista as libs de React, Vue, Svelte e Vanilla. Não entra:
-    // cada stack lê a própria documentação isolada, e citar as outras pelo nome
-    // vaza comparação cross-stack (regra da raiz) — além de não valer aqui, que
-    // roda em @radix-ng/primitives.
-    return stringsFromDict(d, 'notes').slice(1).map((content) => ({ title: '', content }));
+    // As QUATRO notas entram, e o `.slice(1)` que descartava a primeira saiu.
+    //
+    // A exclusão tinha motivo escrito e verdadeiro quando foi feita: o
+    // `notes.item1` de então listava as libs de React, Vue, Svelte e Vanilla, e
+    // citar outra stack pelo nome vaza comparação cross-stack — regra da raiz.
+    // O texto foi neutralizado depois, e hoje fala de comportamento e visual em
+    // camadas separadas: atraso de abertura, exibição por foco, descarte por
+    // Escape, posicionamento ancorado e ligação por `aria-describedby`. Tudo
+    // isso vale aqui.
+    //
+    // Exclusão declarada precisa da premissa verificável, senão ela sobrevive ao
+    // motivo — foi o que aconteceu: esta stack mostrava três notas e as outras
+    // quatro, e o comentário defendia um texto que não existe mais.
+    return stringsFromDict(d, 'notes').map((content) => ({ title: '', content }));
   });
 
   protected readonly analyticsCols = computed(() => {
