@@ -134,7 +134,21 @@ export const PauseOnHover: Story = {
     });
 
     await step('Ao sair o ponteiro, o restante do prazo volta a correr', async () => {
-      await userEvent.unhover(toastsOnScreen()[0]);
+      // Sair é MOVER o ponteiro, e a coordenada é parte do gesto — por isso os
+      // eventos vão explícitos aqui em vez de `userEvent.unhover`.
+      //
+      // A partir do svelte-sonner 1.2.1 o Toaster só desfaz o `expanded` (que é o
+      // que mantém o cronômetro parado) se o ponteiro tiver se movido mais de 1px
+      // desde a última posição conhecida. A guarda existe para o Firefox, que
+      // dispara `mouseleave` quando a torrada some pelo botão de fechar sem
+      // ninguém mexer o mouse. `userEvent.unhover` dispara nas MESMAS coordenadas
+      // do hover, então para a lib o ponteiro nunca saiu.
+      //
+      // Os handlers ficam no <ol> da lista, não na torrada: é nele que a posição
+      // é registrada e comparada. Medido em par na subida 1.2.0 → 1.2.1.
+      const lista = toastsOnScreen()[0].closest("ol")!;
+      lista.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: 10, clientY: 10 }));
+      lista.dispatchEvent(new MouseEvent("mouseleave", { clientX: 400, clientY: 400 }));
       await waitForNoToasts();
       await expect(toastsOnScreen().length).toBe(0);
     });
