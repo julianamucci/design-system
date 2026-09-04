@@ -167,6 +167,12 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'tooltip';
   wrapper.style.display = 'contents';
+  // O gatilho se NOMEIA, como nas outras quatro stacks: lá o `data-slot` do
+  // TooltipTrigger é espalhado por último sobre o elemento recebido e vence o
+  // do componente interno. Aqui o wrapper se nomeava e o gatilho não, então
+  // `[data-slot="tooltip-trigger"]` não existia no DOM desta stack — a peça
+  // ficava inatingível por seletor.
+  trigger.dataset.slot = 'tooltip-trigger';
   wrapper.appendChild(trigger);
 
   /** O ponteiro está dentro da caixa que une gatilho e balão? */
