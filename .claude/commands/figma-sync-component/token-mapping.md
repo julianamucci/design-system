@@ -248,6 +248,21 @@ editar `tokens.css` sem passar por aqui. As quatro strings continuam na coleçã
 são o que um dev copia no Dev Mode, e são elas que a sincronia por
 `codeSyntax` compara.
 
+**O `-1` e o `-2` do nome são as duas luzes, e a ordem importa.** `md`, `lg` e
+`xl` têm DUAS sombras separadas por vírgula no CSS, e não são variações da mesma
+coisa. A camada 1 desloca e desfoca mais (4/6, 10/15, 20/25) e é a mais escura:
+é a sombra PROJETADA, que desenha a distância entre o objeto e a superfície. A
+camada 2 é curta e mais clara (2/4, 4/6, 10/10): é a de CONTATO, colada na base,
+que ancora o elemento. Sem a segunda o objeto flutua sem tocar nada; sem a
+primeira, parece colado.
+
+O `sm` tem uma camada só, e é coerente: a 1px de deslocamento não há distância a
+desenhar, então a projetada seria redundante.
+
+Os valores são o `shadow-*` do Tailwind v2, herdados da fase anterior à saída do
+Tailwind e nunca revistos — reconhecimento, não fonte: o commit que os trouxe
+(`9160d3fa8`) não registra procedência, e a folha não traz nota.
+
 `Dimensao` guarda mais que espaçamento: `altura/height-*`, `tamanho/size-*` e
 `traco/border-width-default` moram lá.
 
