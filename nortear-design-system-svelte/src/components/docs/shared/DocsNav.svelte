@@ -1,15 +1,19 @@
+<script module lang="ts">
+  /**
+   * A forma do menu vem de `@shared/primitives/docs-nav`, e é a mesma nas cinco
+   * stacks. Reexportada daqui para quem já importava deste arquivo não mudar.
+   *
+   * O bloco tem de ser `module`, e isso custou uma rodada: o `<script>` de
+   * instância SURFACE um `export interface` — era assim que o tipo saía daqui
+   * antes —, mas NÃO surface um `export type { … } from`. Reexportação precisa
+   * de escopo de módulo de verdade.
+   */
+  export type { DocsNavSection, DocsNavGroup } from '@shared/primitives/docs-nav';
+</script>
+
 <script lang="ts">
   import { deriveSlugFromUrl } from '@/lib/docs-tracking';
-
-  export interface DocsNavSection {
-    id: string;
-    label: string;
-  }
-
-  export interface DocsNavGroup {
-    label: string;
-    sections: DocsNavSection[];
-  }
+  import type { DocsNavGroup } from '@shared/primitives/docs-nav';
 
   interface Props {
     groups: DocsNavGroup[];

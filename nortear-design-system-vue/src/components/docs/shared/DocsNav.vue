@@ -6,31 +6,24 @@
  * Era por isso que a forma do grupo de navegação vivia declarada DUAS vezes
  * nesta stack, byte a byte igual, aqui e no `DocsPageLayout.vue` — e por isso
  * as 83 docs pages que montam `navGroups` conferiam cada uma contra a cópia do
- * arquivo que estivessem, não contra um contrato único. As outras quatro stacks
- * exportam `DocsNavGroup` do seu próprio `DocsNav`; esta passa a exportar
- * também.
+ * arquivo que estivessem, não contra um contrato único.
  *
- * Enquanto as duas cópias eram idênticas nada quebrava. O risco era o dia em
- * que `sections` ganhasse um campo: com um tipo só, o compilador aponta todos os
- * pontos que precisam acompanhar; com duas, cada arquivo aprova a si mesmo.
+ * Hoje o tipo não nasce aqui: vem de `@shared/primitives/docs-nav`, que é o
+ * mesmo para as cinco stacks. Este bloco só o repassa, para quem já importava
+ * deste arquivo não precisar mudar.
  */
-export interface DocsNavSection {
-  id: string;
-  label: string;
-}
-
-export interface DocsNavGroup {
-  label: string;
-  sections: DocsNavSection[];
-}
+export type { DocsNavSection, DocsNavGroup } from '@shared/primitives/docs-nav';
 </script>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { deriveSlugFromUrl } from '@/lib/docs-tracking';
-// Sem import de `DocsNavGroup` aqui: os dois blocos de script do SFC dividem o
-// mesmo escopo de módulo, então importar do próprio arquivo colide com a
-// declaração ao lado (`TS2440`). O que o `<script>` declara, o `setup` já vê.
+// Importado do módulo compartilhado, não do bloco ao lado. `export type { X }
+// from '…'` REEXPORTA sem criar vínculo local, então o nome não fica em escopo
+// aqui — e, pela mesma razão, importá-lo não colide com nada. Enquanto o bloco
+// DECLARAVA o tipo era o oposto: os dois scripts do SFC dividem o mesmo escopo
+// de módulo, e o import batia com a declaração (`TS2440`).
+import type { DocsNavGroup } from '@shared/primitives/docs-nav';
 
 const props = defineProps<{
   groups: DocsNavGroup[];

@@ -1,15 +1,12 @@
 import { useMemo } from 'react';
 import { deriveSlugFromUrl } from '@/lib/docs-tracking';
 
-export interface DocsNavSection {
-  id: string;
-  label: string;
-}
-
-export interface DocsNavGroup {
-  label: string;
-  sections: DocsNavSection[];
-}
+/**
+ * A forma do menu vem de `@shared/primitives/docs-nav`, e é a mesma nas cinco
+ * stacks. Reexportada daqui para quem já importava deste arquivo não mudar.
+ */
+export type { DocsNavSection, DocsNavGroup } from '@shared/primitives/docs-nav';
+import type { DocsNavGroup } from '@shared/primitives/docs-nav';
 
 export interface DocsNavProps {
   groups: DocsNavGroup[];
