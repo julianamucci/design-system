@@ -88,11 +88,32 @@ function applyLabel(el: HTMLElement): void {
  * Um marcador que nós mesmos escrevemos atravessa o portal junto com o elemento,
  * e `document.querySelector` o encontra onde quer que a lib o tenha posto.
  */
-let panelId = 0
-const marker = `nds-popover-${++panelId}`
-
+/*
+ * O painel se identifica pelo PRÓPRIO `aria-label`, não por um marcador novo.
+ *
+ * A primeira versão que funcionou cravava um `data-nds-panel` só para achar o
+ * elemento — atributo que nenhuma das outras quatro stacks tem, ou seja
+ * divergência de markup criada para uso interno. Não é preciso: o `aria-label`
+ * de quem compõe JÁ chega ao elemento por fallthrough. O que a lib vence é o
+ * `aria-labelledby`, que ela escreve por conta própria — medido em 2026-09-05
+ * com um experimento que removeu o mecanismo inteiro e sobrepôs por binding:
+ * reprovou em 6155ms, o prazo inteiro do helper.
+ *
+ * A comparação é em JS, não em seletor: montar `[aria-label="..."]` com texto
+ * traduzido exige escapar aspas e acentos, e escape em camada de string é onde
+ * esta campanha já tropeçou três vezes.
+ *
+ * Dois painéis abertos com o mesmo rótulo cairiam no primeiro, e aplicar a
+ * mesma correção a qualquer um deles dá no mesmo — o rótulo é o mesmo.
+ */
 function findPanel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>(`[data-nds-panel="${marker}"]`)
+  const label = String(attrs['aria-label'] ?? '').trim()
+  if (!label) return null
+  const todos = document.querySelectorAll<HTMLElement>('[data-slot="popover-content"]')
+  for (const el of todos) {
+    if (el.getAttribute('aria-label') === label) return el
+  }
+  return null
 }
 
 function attachLabel(el: HTMLElement): void {
@@ -136,7 +157,6 @@ onBeforeUnmount(() => {
     <PopoverContent
       ref="panelRef"
       data-slot="popover-content"
-      :data-nds-panel="marker"
       v-bind="{ ...$attrs, ...forwarded }"
       :aria-modal="ariaModal"
       :class="cn( 'nds-popover-content', props.class, )"
