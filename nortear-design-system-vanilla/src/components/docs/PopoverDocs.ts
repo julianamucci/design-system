@@ -746,24 +746,28 @@ createPopover({ trigger, content });`;
         }
 
         function buildTableFilterPreview(): HTMLElement {
-          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Filtros' });
+          const trigger = createButton({
+            variant: 'outline',
+            size: 'sm',
+            label: t('variants.compositions.tableFilter.trigger'),
+          });
           const content = document.createElement('div');
           content.className = 'nds-stack';
           content.dataset.spacing = 'xs';
 
-          const title = createPopoverTitle({ text: 'Filtrar por status' });
+          const title = createPopoverTitle({ text: t('variants.compositions.tableFilter.title') });
           content.appendChild(title);
 
-          for (const opt of ['Ativo', 'Pendente', 'Arquivado']) {
+          for (const opt of ['active', 'pending', 'archived'] as const) {
             const row = document.createElement('label');
             row.className = 'nds-cluster nds-text-body';
             row.dataset.spacing = 'xs';
             const cb = document.createElement('input');
             cb.type = 'checkbox';
             cb.className = 'nds-icon-sm';
-            if (opt === 'Ativo') cb.checked = true;
+            if (opt === 'active') cb.checked = true;
             const text = document.createElement('span');
-            text.textContent = opt;
+            text.textContent = t(`variants.compositions.tableFilter.${opt}`);
             row.append(cb, text);
             content.appendChild(row);
           }
@@ -773,8 +777,8 @@ createPopover({ trigger, content });`;
           actions.dataset.spacing = 'sm';
           actions.dataset.justify = 'end';
           actions.append(
-            createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),
-            createButton({ variant: 'default', size: 'sm', label: 'Aplicar' }),
+            createButton({ variant: 'ghost',   size: 'sm', label: t('variants.compositions.tableFilter.clear') }),
+            createButton({ variant: 'default', size: 'sm', label: t('variants.compositions.tableFilter.apply') }),
           );
           content.appendChild(actions);
 
@@ -788,31 +792,38 @@ createPopover({ trigger, content });`;
         }
 
         function buildColorPickerPreview(): HTMLElement {
-          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Escolher cor da etiqueta' });
+          const trigger = createButton({
+            variant: 'outline',
+            size: 'sm',
+            label: t('variants.compositions.colorPicker.trigger'),
+          });
           const content = document.createElement('div');
           content.className = 'nds-stack';
           content.dataset.spacing = 'xs';
 
-          const title = createPopoverTitle({ text: 'Cor da etiqueta' });
+          const title = createPopoverTitle({ text: t('variants.compositions.colorPicker.title') });
 
           const grid = document.createElement('div');
           grid.className = 'nds-grid';
           grid.dataset.cols = '6';
           grid.dataset.spacing = 'xs';
 
+          // A lista guarda a CHAVE, não o rótulo: o nome acessível de cada
+          // amostra sai de `variants.compositions.colorPicker.<chave>`, então a
+          // prévia fala o idioma da página em vez de português em `en` e `es`.
           const swatches = [
-            { name: 'Primária',   className: 'nds-bg-primary'     },
-            { name: 'Secundária', className: 'nds-bg-secondary'   },
-            { name: 'Sucesso',    className: 'nds-bg-success'     },
-            { name: 'Atenção',    className: 'nds-bg-warning'     },
-            { name: 'Informação', className: 'nds-bg-info'        },
-            { name: 'Destrutiva', className: 'nds-bg-destructive' },
+            { key: 'primary',     className: 'nds-bg-primary'     },
+            { key: 'secondary',   className: 'nds-bg-secondary'   },
+            { key: 'success',     className: 'nds-bg-success'     },
+            { key: 'warning',     className: 'nds-bg-warning'     },
+            { key: 'info',        className: 'nds-bg-info'        },
+            { key: 'destructive', className: 'nds-bg-destructive' },
           ];
 
           for (const s of swatches) {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.setAttribute('aria-label', s.name);
+            btn.setAttribute('aria-label', t(`variants.compositions.colorPicker.${s.key}`));
             btn.className = `${SWATCH_CLASSES} ${s.className}`;
             grid.appendChild(btn);
           }
@@ -828,18 +839,22 @@ createPopover({ trigger, content });`;
         }
 
         function buildQuickSettingsPreview(): HTMLElement {
-          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Configurações' });
+          const trigger = createButton({
+            variant: 'outline',
+            size: 'sm',
+            label: t('variants.compositions.quickSettings.trigger'),
+          });
           const content = document.createElement('div');
           content.className = 'nds-stack';
           content.dataset.spacing = 'sm';
 
-          const title = createPopoverTitle({ text: 'Preferências rápidas' });
+          const title = createPopoverTitle({ text: t('variants.compositions.quickSettings.title') });
           content.appendChild(title);
 
           const toggles = [
-            { id: 'cfg-notifs-bc',  label: 'Notificações',  checked: true  },
-            { id: 'cfg-dark-bc',    label: 'Modo escuro',   checked: false },
-            { id: 'cfg-compact-bc', label: 'Modo compacto', checked: false },
+            { id: 'cfg-notifs-bc',  key: 'notifications', checked: true  },
+            { id: 'cfg-dark-bc',    key: 'darkMode',      checked: false },
+            { id: 'cfg-compact-bc', key: 'compactMode',   checked: false },
           ];
 
           for (const tg of toggles) {
@@ -847,7 +862,10 @@ createPopover({ trigger, content });`;
             row.className = 'nds-cluster';
             row.dataset.spacing = 'sm';
             row.dataset.justify = 'between';
-            const label = createLabel({ text: tg.label, htmlFor: tg.id });
+            const label = createLabel({
+              text: t(`variants.compositions.quickSettings.${tg.key}`),
+              htmlFor: tg.id,
+            });
             const cb = document.createElement('input');
             cb.type = 'checkbox';
             cb.id = tg.id;

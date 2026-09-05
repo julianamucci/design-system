@@ -88,7 +88,11 @@ const getNavGroups = (t: (key: string) => string) => [
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 /**
- * Amostra de cor do exemplo de paleta — as MESMAS classes e nomes das stories.
+ * Amostra de cor do exemplo de paleta — as MESMAS classes das stories.
+ *
+ * A lista guarda a CHAVE, não o rótulo: o nome acessível de cada amostra sai de
+ * `variants.compositions.colorPicker.<chave>`, então a prévia fala o idioma da
+ * página. Rótulo cravado aqui mostrava português em `en` e `es`.
  *
  * A cor sai de token do tema, nunca de hexadecimal em `style` inline: trocar de
  * marca reescreve a paleta sem tocar na página, e a amostra continua legível no
@@ -97,12 +101,12 @@ const getNavGroups = (t: (key: string) => string) => [
  */
 const SWATCH_CLASSES = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring";
 const SWATCH_COLORS = [
-  { name: "Primária",   className: "nds-bg-primary"     },
-  { name: "Secundária", className: "nds-bg-secondary"   },
-  { name: "Sucesso",    className: "nds-bg-success"     },
-  { name: "Atenção",    className: "nds-bg-warning"     },
-  { name: "Informação", className: "nds-bg-info"        },
-  { name: "Destrutiva", className: "nds-bg-destructive" },
+  { key: "primary",     className: "nds-bg-primary"     },
+  { key: "secondary",   className: "nds-bg-secondary"   },
+  { key: "success",     className: "nds-bg-success"     },
+  { key: "warning",     className: "nds-bg-warning"     },
+  { key: "info",        className: "nds-bg-info"        },
+  { key: "destructive", className: "nds-bg-destructive" },
 ];
 
 /**
@@ -717,27 +721,35 @@ interface PopoverContentProps {
               <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover onOpenChange={rastrearPopover("docs_composicoes", "table-filter")}>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm">Filtros</Button>
+                    <Button variant="outline" size="sm">
+                      {tContent("variants.compositions.tableFilter.trigger")}
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent>
                     <PopoverHeader>
-                      <PopoverTitle>Filtrar por status</PopoverTitle>
+                      <PopoverTitle>
+                        {tContent("variants.compositions.tableFilter.title")}
+                      </PopoverTitle>
                     </PopoverHeader>
                     <div className="nds-stack" data-spacing="xs">
-                      {["Ativo", "Pendente", "Arquivado"].map((opt) => (
+                      {(["active", "pending", "archived"] as const).map((opt) => (
                         <label key={opt} className="nds-cluster nds-text-body" data-spacing="xs">
                           <input
                             type="checkbox"
-                            defaultChecked={opt === "Ativo"}
+                            defaultChecked={opt === "active"}
                             className="nds-icon-sm"
                           />
-                          {opt}
+                          {tContent(`variants.compositions.tableFilter.${opt}`)}
                         </label>
                       ))}
                     </div>
                     <div className="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
-                      <Button variant="ghost" size="sm">Limpar</Button>
-                      <Button size="sm">Aplicar</Button>
+                      <Button variant="ghost" size="sm">
+                        {tContent("variants.compositions.tableFilter.clear")}
+                      </Button>
+                      <Button size="sm">
+                        {tContent("variants.compositions.tableFilter.apply")}
+                      </Button>
                     </div>
                   </PopoverContent>
                 </Popover>
@@ -781,18 +793,22 @@ interface PopoverContentProps {
               <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover onOpenChange={rastrearPopover("docs_composicoes", "color-picker")}>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm">Escolher cor da etiqueta</Button>
+                    <Button variant="outline" size="sm">
+                      {tContent("variants.compositions.colorPicker.trigger")}
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent>
                     <PopoverHeader>
-                      <PopoverTitle>Cor da etiqueta</PopoverTitle>
+                      <PopoverTitle>
+                        {tContent("variants.compositions.colorPicker.title")}
+                      </PopoverTitle>
                     </PopoverHeader>
                     <div className="nds-grid" data-cols="6" data-spacing="xs">
                       {SWATCH_COLORS.map((s) => (
                         <button
-                          key={s.name}
+                          key={s.key}
                           type="button"
-                          aria-label={s.name}
+                          aria-label={tContent(`variants.compositions.colorPicker.${s.key}`)}
                           className={`${SWATCH_CLASSES} ${s.className}`}
                         />
                       ))}
@@ -835,24 +851,30 @@ interface PopoverContentProps {
               <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
                 <Popover onOpenChange={rastrearPopover("docs_composicoes", "quick-settings")}>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm">Configurações</Button>
+                    <Button variant="outline" size="sm">
+                      {tContent("variants.compositions.quickSettings.trigger")}
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent>
                     <PopoverHeader>
-                      <PopoverTitle>Preferências rápidas</PopoverTitle>
+                      <PopoverTitle>
+                        {tContent("variants.compositions.quickSettings.title")}
+                      </PopoverTitle>
                     </PopoverHeader>
                     <div className="nds-stack" data-spacing="sm">
                       {[
-                        { id: "cfg-notifs", label: "Notificações", checked: true },
-                        { id: "cfg-dark", label: "Modo escuro", checked: false },
-                        { id: "cfg-compact", label: "Modo compacto", checked: false },
-                      ].map((t) => (
-                        <div key={t.id} className="nds-cluster" data-spacing="sm" data-justify="between">
-                          <Label htmlFor={t.id}>{t.label}</Label>
+                        { id: "cfg-notifs", key: "notifications", checked: true },
+                        { id: "cfg-dark", key: "darkMode", checked: false },
+                        { id: "cfg-compact", key: "compactMode", checked: false },
+                      ].map((pref) => (
+                        <div key={pref.id} className="nds-cluster" data-spacing="sm" data-justify="between">
+                          <Label htmlFor={pref.id}>
+                            {tContent(`variants.compositions.quickSettings.${pref.key}`)}
+                          </Label>
                           <input
-                            id={t.id}
+                            id={pref.id}
                             type="checkbox"
-                            defaultChecked={t.checked}
+                            defaultChecked={pref.checked}
                             className="nds-icon-sm"
                           />
                         </div>

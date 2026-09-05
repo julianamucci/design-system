@@ -165,17 +165,37 @@
         "tableFilter": {
           "name": "Filtro de tabela",
           "description": "Popover com checkboxes (<code>Ativo</code>, <code>Pendente</code>, <code>Arquivado</code>) e par de botões <code>Limpar</code> / <code>Aplicar</code> ao final. Disparado por um trigger \"Filtros\" próximo à tabela.",
-          "use": "Filtros contextuais em listas e tabelas onde múltiplas opções podem ser combinadas. Para uma única escolha exclusiva, prefira <code>Select</code> ou <code>RadioGroup</code>."
+          "use": "Filtros contextuais em listas e tabelas onde múltiplas opções podem ser combinadas. Para uma única escolha exclusiva, prefira <code>Select</code> ou <code>RadioGroup</code>.",
+          "trigger": "Filtros",
+          "title": "Filtrar por status",
+          "active": "Ativo",
+          "pending": "Pendente",
+          "archived": "Arquivado",
+          "clear": "Limpar",
+          "apply": "Aplicar"
         },
         "colorPicker": {
           "name": "Seletor de cor",
           "description": "Popover com grid de swatches (botões redondos coloridos), cada um com <code>aria-label</code> descritivo da cor. Foco navega entre swatches via <kbd>Tab</kbd> e respeita anel de foco visível.",
-          "use": "Escolha rápida de uma cor de paleta restrita (até ~12 opções). Para escolha livre via valor HEX ou HSL, prefira um input dedicado com preview."
+          "use": "Escolha rápida de uma cor de paleta restrita (até ~12 opções). Para escolha livre via valor HEX ou HSL, prefira um input dedicado com preview.",
+          "trigger": "Escolher cor da etiqueta",
+          "title": "Cor da etiqueta",
+          "primary": "Primária",
+          "secondary": "Secundária",
+          "success": "Sucesso",
+          "warning": "Atenção",
+          "info": "Informação",
+          "destructive": "Destrutiva"
         },
         "quickSettings": {
           "name": "Configurações rápidas",
           "description": "Popover com lista de toggles (<code>Notificações</code>, <code>Modo escuro</code>, <code>Modo compacto</code>) em formato <code>Label</code> + checkbox alinhados. Cada linha controla uma preferência independente.",
-          "use": "Atalho para preferências booleanas independentes próximas ao ponto de uso. Para painéis maiores de configuração, prefira uma página ou <code>Dialog</code>."
+          "use": "Atalho para preferências booleanas independentes próximas ao ponto de uso. Para painéis maiores de configuração, prefira uma página ou <code>Dialog</code>.",
+          "trigger": "Configurações",
+          "title": "Preferências rápidas",
+          "notifications": "Notificações",
+          "darkMode": "Modo escuro",
+          "compactMode": "Modo compacto"
         }
       },
       "panelLabels": {
@@ -628,17 +648,37 @@
         "tableFilter": {
           "name": "Table filter",
           "description": "Popover with checkboxes (<code>Active</code>, <code>Pending</code>, <code>Archived</code>) and a <code>Clear</code> / <code>Apply</code> button pair at the end. Triggered by a \"Filters\" button near the table.",
-          "use": "Contextual filters on lists and tables where multiple options can be combined. For a single exclusive choice, prefer <code>Select</code> or <code>RadioGroup</code>."
+          "use": "Contextual filters on lists and tables where multiple options can be combined. For a single exclusive choice, prefer <code>Select</code> or <code>RadioGroup</code>.",
+          "trigger": "Filters",
+          "title": "Filter by status",
+          "active": "Active",
+          "pending": "Pending",
+          "archived": "Archived",
+          "clear": "Clear",
+          "apply": "Apply"
         },
         "colorPicker": {
           "name": "Color picker",
           "description": "Popover with a grid of swatches (round colored buttons), each with a descriptive <code>aria-label</code>. Focus moves between swatches via <kbd>Tab</kbd> and respects the visible focus ring.",
-          "use": "Quick choice from a constrained palette (up to ~12 options). For free HEX or HSL input, prefer a dedicated field with preview."
+          "use": "Quick choice from a constrained palette (up to ~12 options). For free HEX or HSL input, prefer a dedicated field with preview.",
+          "trigger": "Choose label colour",
+          "title": "Label colour",
+          "primary": "Primary",
+          "secondary": "Secondary",
+          "success": "Success",
+          "warning": "Warning",
+          "info": "Info",
+          "destructive": "Destructive"
         },
         "quickSettings": {
           "name": "Quick settings",
           "description": "Popover with a list of toggles (<code>Notifications</code>, <code>Dark mode</code>, <code>Compact mode</code>) as aligned <code>Label</code> + checkbox rows. Each row controls an independent preference.",
-          "use": "Shortcut for independent boolean preferences close to the point of use. For larger settings panels, prefer a dedicated page or <code>Dialog</code>."
+          "use": "Shortcut for independent boolean preferences close to the point of use. For larger settings panels, prefer a dedicated page or <code>Dialog</code>.",
+          "trigger": "Settings",
+          "title": "Quick preferences",
+          "notifications": "Notifications",
+          "darkMode": "Dark mode",
+          "compactMode": "Compact mode"
         }
       },
       "panelLabels": {
@@ -1091,17 +1131,37 @@
         "tableFilter": {
           "name": "Filtro de tabla",
           "description": "Popover con checkboxes (<code>Activo</code>, <code>Pendiente</code>, <code>Archivado</code>) y par de botones <code>Limpiar</code> / <code>Aplicar</code> al final. Disparado por un trigger \"Filtros\" cerca de la tabla.",
-          "use": "Filtros contextuales en listas y tablas donde se pueden combinar varias opciones. Para una única elección exclusiva, prefiere <code>Select</code> o <code>RadioGroup</code>."
+          "use": "Filtros contextuales en listas y tablas donde se pueden combinar varias opciones. Para una única elección exclusiva, prefiere <code>Select</code> o <code>RadioGroup</code>.",
+          "trigger": "Filtros",
+          "title": "Filtrar por estado",
+          "active": "Activo",
+          "pending": "Pendiente",
+          "archived": "Archivado",
+          "clear": "Limpiar",
+          "apply": "Aplicar"
         },
         "colorPicker": {
           "name": "Selector de color",
           "description": "Popover con grid de swatches (botones redondos coloreados), cada uno con <code>aria-label</code> descriptivo del color. El foco navega entre swatches con <kbd>Tab</kbd> y respeta el anillo de foco visible.",
-          "use": "Elección rápida de un color en una paleta acotada (hasta ~12 opciones). Para elección libre vía HEX o HSL, prefiere un input dedicado con preview."
+          "use": "Elección rápida de un color en una paleta acotada (hasta ~12 opciones). Para elección libre vía HEX o HSL, prefiere un input dedicado con preview.",
+          "trigger": "Elegir color de la etiqueta",
+          "title": "Color de la etiqueta",
+          "primary": "Primaria",
+          "secondary": "Secundaria",
+          "success": "Éxito",
+          "warning": "Atención",
+          "info": "Información",
+          "destructive": "Destructiva"
         },
         "quickSettings": {
           "name": "Configuración rápida",
           "description": "Popover con lista de toggles (<code>Notificaciones</code>, <code>Modo oscuro</code>, <code>Modo compacto</code>) como filas <code>Label</code> + checkbox alineadas. Cada fila controla una preferencia independiente.",
-          "use": "Atajo para preferencias booleanas independientes cerca del punto de uso. Para paneles de configuración mayores, prefiere una página o <code>Dialog</code>."
+          "use": "Atajo para preferencias booleanas independientes cerca del punto de uso. Para paneles de configuración mayores, prefiere una página o <code>Dialog</code>.",
+          "trigger": "Configuración",
+          "title": "Preferencias rápidas",
+          "notifications": "Notificaciones",
+          "darkMode": "Modo oscuro",
+          "compactMode": "Modo compacto"
         }
       },
       "panelLabels": {

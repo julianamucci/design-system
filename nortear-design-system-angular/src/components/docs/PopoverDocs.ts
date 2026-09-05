@@ -275,11 +275,11 @@ const COMPOSITION_CODE = {
   </ng-template>
 </div>`,
   quickSettings: `<div ndsPopover>
-  <button ndsPopoverTrigger ndsButton variant="outline">Configurações rápidas</button>
+  <button ndsPopoverTrigger ndsButton variant="outline">Configurações</button>
 
   <ng-template ndsPopoverContent align="end">
     <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Preferências</h3>
+      <h3 ndsPopoverTitle>Preferências rápidas</h3>
     </div>
 
     <div class="nds-cluster" data-justify="between">
@@ -454,11 +454,11 @@ const COMPOSITION_CODE = {
     <ng-template #tplCompFiltro>
       <div ndsPopover (onOpenChange)="onChange('table-filter', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
-          {{ t('variants.compositions.tableFilter.name') }}
+          {{ t('variants.compositions.tableFilter.trigger') }}
         </button>
         <ng-template ndsPopoverContent align="start">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('variants.compositions.tableFilter.name') }}</h3>
+            <h3 ndsPopoverTitle>{{ t('variants.compositions.tableFilter.title') }}</h3>
           </div>
 
           <div class="nds-stack" data-spacing="sm">
@@ -471,8 +471,11 @@ const COMPOSITION_CODE = {
           </div>
 
           <div class="nds-cluster" data-justify="end" data-spacing="sm">
+            <button ndsButton variant="ghost" size="sm">
+              {{ t('variants.compositions.tableFilter.clear') }}
+            </button>
             <button ndsPopoverClose ndsButton size="sm">
-              {{ t('demonstration.labels.save') }}
+              {{ t('variants.compositions.tableFilter.apply') }}
             </button>
           </div>
         </ng-template>
@@ -482,15 +485,15 @@ const COMPOSITION_CODE = {
     <ng-template #tplCompCores>
       <div ndsPopover (onOpenChange)="onChange('color-picker', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
-          {{ t('variants.compositions.colorPicker.name') }}
+          {{ t('variants.compositions.colorPicker.trigger') }}
         </button>
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('variants.compositions.colorPicker.name') }}</h3>
+            <h3 ndsPopoverTitle>{{ t('variants.compositions.colorPicker.title') }}</h3>
           </div>
 
           <div class="nds-cluster" data-spacing="sm">
-            @for (cor of amostrasDeCor; track cor.className) {
+            @for (cor of amostrasDeCor(); track cor.className) {
               <button
                 type="button"
                 [class]="swatchClasses + ' ' + cor.className"
@@ -505,11 +508,11 @@ const COMPOSITION_CODE = {
     <ng-template #tplCompPreferencias>
       <div ndsPopover (onOpenChange)="onChange('quick-settings', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
-          {{ t('variants.compositions.quickSettings.name') }}
+          {{ t('variants.compositions.quickSettings.trigger') }}
         </button>
         <ng-template ndsPopoverContent align="end">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('variants.compositions.quickSettings.name') }}</h3>
+            <h3 ndsPopoverTitle>{{ t('variants.compositions.quickSettings.title') }}</h3>
           </div>
 
           <div class="nds-stack" data-spacing="sm">
@@ -719,21 +722,28 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
   protected readonly ctxVarFormulario = { gatilho: 'form', secao: 'docs_variantes' };
   protected readonly ctxCompPerfil = { gatilho: 'edit-profile', secao: 'docs_composicoes' };
 
-  /** Os três status do filtro de tabela, tirados da descrição da composição. */
+  /**
+   * Os três status do filtro de tabela.
+   *
+   * O rótulo sai da CHAVE de cada opção, não da prosa ao lado: a versão
+   * anterior extraía os `<code>` da descrição da composição, então bastava
+   * reescrever a frase para a prévia renderizar o número errado de caixas — em
+   * silêncio, sem portão nenhum ver.
+   */
   protected readonly opcoesFiltro = computed(() => {
     dict();
-    return codesFrom(t('variants.compositions.tableFilter.description')).map((label, i) => ({
+    return (['active', 'pending', 'archived'] as const).map((key, i) => ({
       id: `pd-filtro-${i + 1}`,
-      label,
+      label: t(`variants.compositions.tableFilter.${key}`),
     }));
   });
 
-  /** As preferências booleanas, tiradas da descrição da composição. */
+  /** As preferências booleanas, cada uma pela sua chave. */
   protected readonly preferencias = computed(() => {
     dict();
-    return codesFrom(t('variants.compositions.quickSettings.description')).map((label, i) => ({
+    return (['notifications', 'darkMode', 'compactMode'] as const).map((key, i) => ({
       id: `pd-pref-${i + 1}`,
-      label,
+      label: t(`variants.compositions.quickSettings.${key}`),
     }));
   });
 
@@ -742,21 +752,20 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * de marca reescreve a paleta sem tocar no exemplo — e nenhuma cor precisa de
    * `style` inline, que este sistema não admite.
    *
-   * O nome acessível é o próprio token. Não é falta de tradução: `primary` e
-   * `destructive` são identificadores da paleta, iguais nos três idiomas, e
-   * traduzi-los desligaria o rótulo do que a pessoa encontra no CSS.
+   * A lista guarda a CHAVE, não o rótulo: o nome acessível de cada amostra sai
+   * de `variants.compositions.colorPicker.<chave>` — a descrição da composição
+   * promete "aria-label descritivo da cor", e descritivo em `en` não é
+   * "Primária".
    */
-  protected readonly amostrasDeCor = [
-    // O nome acessível é o mesmo das cinco stories: quem não distingue a cor
-    // depende dele, e nome diferente entre prévia e story parte o contrato em
-    // dois sem nenhum portão ver.
-    { className: 'nds-bg-primary',     label: 'Primária'   },
-    { className: 'nds-bg-secondary',   label: 'Secundária' },
-    { className: 'nds-bg-success',     label: 'Sucesso'    },
-    { className: 'nds-bg-warning',     label: 'Atenção'    },
-    { className: 'nds-bg-info',        label: 'Informação' },
-    { className: 'nds-bg-destructive', label: 'Destrutiva' },
-  ];
+  protected readonly amostrasDeCor = computed(() => {
+    dict();
+    return (['primary', 'secondary', 'success', 'warning', 'info', 'destructive'] as const).map(
+      (key) => ({
+        className: `nds-bg-${key}`,
+        label: t(`variants.compositions.colorPicker.${key}`),
+      }),
+    );
+  });
 
   /**
    * Abertura e fechamento de QUALQUER popover desta página.
@@ -1217,24 +1226,6 @@ const priorityKeyMap: Record<string, string> = {
 
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
-}
-
-/**
- * Rótulos tirados dos `<code>` do PRIMEIRO parêntese de uma frase.
- *
- * As descrições das composições já enumeram os itens de cada exemplo
- * ("checkboxes (<code>Ativo</code>, <code>Pendente</code>, <code>Arquivado</code>)").
- * Ler dali mantém o exemplo trilíngue e em sincronia com o texto ao lado —
- * repetir a lista em literal aqui garantiria que um dia os dois divergissem.
- *
- * O recorte pelo parêntese não é enfeite: a mesma frase cita depois os botões
- * (`Limpar` / `Aplicar`) e o componente alternativo, também em `<code>`. Varrer
- * a frase inteira renderizaria cinco caixas de seleção onde há três.
- */
-function codesFrom(frase: string): string[] {
-  const group = /\(([^)]*)\)/.exec(String(frase ?? ''));
-  const target = group ? group[1] : String(frase ?? '');
-  return [...target.matchAll(/<code>([^<]+)<\/code>/g)].map((m) => m[1]);
 }
 
 /** `base.item1`, `base.item2`, … enquanto existirem. Nunca contar à mão. */

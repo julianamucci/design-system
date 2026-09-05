@@ -29,15 +29,18 @@
 
   // A cor sai de TOKEN do tema, nunca de hexadecimal em style inline: trocar de
   // marca reescreve a paleta sem tocar no exemplo, e a amostra continua legível
-  // no tema escuro. Mesma paleta, mesmos nomes e mesmas classes das stories.
+  // no tema escuro. Mesma paleta e mesmas classes das stories. A lista guarda a
+  // CHAVE, não o rótulo: o nome acessível sai de
+  // `variants.compositions.colorPicker.<chave>`, então a prévia fala o idioma da
+  // página em vez de mostrar português em `en` e `es`.
   const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
   const SWATCH_COLORS = [
-    { name: 'Primária',   className: 'nds-bg-primary'     },
-    { name: 'Secundária', className: 'nds-bg-secondary'   },
-    { name: 'Sucesso',    className: 'nds-bg-success'     },
-    { name: 'Atenção',    className: 'nds-bg-warning'     },
-    { name: 'Informação', className: 'nds-bg-info'        },
-    { name: 'Destrutiva', className: 'nds-bg-destructive' },
+    { key: 'primary',     className: 'nds-bg-primary'     },
+    { key: 'secondary',   className: 'nds-bg-secondary'   },
+    { key: 'success',     className: 'nds-bg-success'     },
+    { key: 'warning',     className: 'nds-bg-warning'     },
+    { key: 'info',        className: 'nds-bg-info'        },
+    { key: 'destructive', className: 'nds-bg-destructive' },
   ];
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
@@ -673,30 +676,30 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
-          <Button variant="outline" {...props}>{$tStore('variants.compositions.tableFilter.name')}</Button>
+          <Button variant="outline" {...props}>{$tStore('variants.compositions.tableFilter.trigger')}</Button>
         {/snippet}
       </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
-          <PopoverTitle>Filtrar por status</PopoverTitle>
+          <PopoverTitle>{$tStore('variants.compositions.tableFilter.title')}</PopoverTitle>
         </PopoverHeader>
  <div class="nds-stack nds-pt-1" data-spacing="sm">
           <label class="nds-cluster nds-text-body" data-spacing="sm">
             <input type="checkbox" checked class="nds-size-4" />
-            <span>Ativo</span>
+            <span>{$tStore('variants.compositions.tableFilter.active')}</span>
           </label>
           <label class="nds-cluster nds-text-body" data-spacing="sm">
             <input type="checkbox" class="nds-size-4" />
-            <span>Pendente</span>
+            <span>{$tStore('variants.compositions.tableFilter.pending')}</span>
           </label>
           <label class="nds-cluster nds-text-body" data-spacing="sm">
             <input type="checkbox" class="nds-size-4" />
-            <span>Arquivado</span>
+            <span>{$tStore('variants.compositions.tableFilter.archived')}</span>
           </label>
         </div>
  <div class="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
-          <Button variant="ghost" size="sm">Limpar</Button>
-          <Button size="sm">Aplicar</Button>
+          <Button variant="ghost" size="sm">{$tStore('variants.compositions.tableFilter.clear')}</Button>
+          <Button size="sm">{$tStore('variants.compositions.tableFilter.apply')}</Button>
         </div>
       </PopoverContent>
     </Popover>
@@ -708,18 +711,18 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
-          <Button variant="outline" {...props}>{$tStore('variants.compositions.colorPicker.name')}</Button>
+          <Button variant="outline" {...props}>{$tStore('variants.compositions.colorPicker.trigger')}</Button>
         {/snippet}
       </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
-          <PopoverTitle>Cor da etiqueta</PopoverTitle>
+          <PopoverTitle>{$tStore('variants.compositions.colorPicker.title')}</PopoverTitle>
         </PopoverHeader>
  <div class="nds-grid nds-pt-1" data-cols="6" data-spacing="xs">
-          {#each SWATCH_COLORS as s (s.name)}
+          {#each SWATCH_COLORS as s (s.key)}
             <button
               type="button"
-              aria-label={s.name}
+              aria-label={$tStore(`variants.compositions.colorPicker.${s.key}`)}
               class="{SWATCH_CLASSES} {s.className}"
             ></button>
           {/each}
@@ -734,22 +737,22 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
-          <Button variant="outline" {...props}>{$tStore('variants.compositions.quickSettings.name')}</Button>
+          <Button variant="outline" {...props}>{$tStore('variants.compositions.quickSettings.trigger')}</Button>
         {/snippet}
       </PopoverTrigger>
       <PopoverContent>
         <PopoverHeader>
-          <PopoverTitle>Preferências rápidas</PopoverTitle>
+          <PopoverTitle>{$tStore('variants.compositions.quickSettings.title')}</PopoverTitle>
         </PopoverHeader>
  <div class="nds-stack nds-pt-1" data-spacing="sm">
           {#each [
-            { id: 'cfg-notifs-sv',  label: 'Notificações',  checked: true  },
-            { id: 'cfg-dark-sv',    label: 'Modo escuro',   checked: false },
-            { id: 'cfg-compact-sv', label: 'Modo compacto', checked: false },
-          ] as t (t.id)}
+            { id: 'cfg-notifs-sv',  key: 'notifications', checked: true  },
+            { id: 'cfg-dark-sv',    key: 'darkMode',      checked: false },
+            { id: 'cfg-compact-sv', key: 'compactMode',   checked: false },
+          ] as pref (pref.id)}
             <div class="nds-cluster" data-spacing="sm" data-justify="between">
-              <label for={t.id} class="nds-text-body">{t.label}</label>
-              <input id={t.id} type="checkbox" checked={t.checked} class="nds-size-4" />
+              <label for={pref.id} class="nds-text-body">{$tStore(`variants.compositions.quickSettings.${pref.key}`)}</label>
+              <input id={pref.id} type="checkbox" checked={pref.checked} class="nds-size-4" />
             </div>
           {/each}
         </div>

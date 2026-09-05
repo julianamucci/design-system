@@ -177,15 +177,17 @@ function handlePopoverOpenChange(triggerLabel: string, location: string, open: b
 
 // A cor sai de TOKEN do tema, nunca de hexadecimal: trocar de marca reescreve
 // a paleta sem tocar no exemplo, e a amostra continua legível no tema escuro.
-// Mesma paleta, mesmos nomes e mesmas classes das cinco stories.
+// Mesma paleta e mesmas classes das cinco stories. A lista guarda a CHAVE, não
+// o rótulo: o nome acessível sai de `variants.compositions.colorPicker.<chave>`,
+// então a prévia fala o idioma da página em vez de mostrar português em `en`.
 const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
 const swatches = [
-  { name: 'Primária',   className: 'nds-bg-primary'     },
-  { name: 'Secundária', className: 'nds-bg-secondary'   },
-  { name: 'Sucesso',    className: 'nds-bg-success'     },
-  { name: 'Atenção',    className: 'nds-bg-warning'     },
-  { name: 'Informação', className: 'nds-bg-info'        },
-  { name: 'Destrutiva', className: 'nds-bg-destructive' },
+  { key: 'primary',     className: 'nds-bg-primary'     },
+  { key: 'secondary',   className: 'nds-bg-secondary'   },
+  { key: 'success',     className: 'nds-bg-success'     },
+  { key: 'warning',     className: 'nds-bg-warning'     },
+  { key: 'info',        className: 'nds-bg-info'        },
+  { key: 'destructive', className: 'nds-bg-destructive' },
 ];
 
 const codeImportBasic = `import {
@@ -911,7 +913,7 @@ const a11yCritCols = computed(() => ({
                 variant="outline"
                 size="sm"
               >
-                Filtros
+                {{ tContent('variants.compositions.tableFilter.trigger') }}
               </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -919,7 +921,7 @@ const a11yCritCols = computed(() => ({
               align="start"
             >
               <PopoverHeader>
-                <PopoverTitle>Filtrar por status</PopoverTitle>
+                <PopoverTitle>{{ tContent('variants.compositions.tableFilter.title') }}</PopoverTitle>
               </PopoverHeader>
               <div
                 class="nds-stack"
@@ -933,7 +935,7 @@ const a11yCritCols = computed(() => ({
                     type="checkbox"
                     checked
                     class="nds-icon-sm"
-                  > Ativo
+                  > {{ tContent('variants.compositions.tableFilter.active') }}
                 </label>
                 <label
                   class="nds-cluster nds-text-body"
@@ -942,7 +944,7 @@ const a11yCritCols = computed(() => ({
                   <input
                     type="checkbox"
                     class="nds-icon-sm"
-                  > Pendente
+                  > {{ tContent('variants.compositions.tableFilter.pending') }}
                 </label>
                 <label
                   class="nds-cluster nds-text-body"
@@ -951,7 +953,7 @@ const a11yCritCols = computed(() => ({
                   <input
                     type="checkbox"
                     class="nds-icon-sm"
-                  > Arquivado
+                  > {{ tContent('variants.compositions.tableFilter.archived') }}
                 </label>
               </div>
               <div
@@ -963,10 +965,10 @@ const a11yCritCols = computed(() => ({
                   variant="ghost"
                   size="sm"
                 >
-                  Limpar
+                  {{ tContent('variants.compositions.tableFilter.clear') }}
                 </Button>
                 <Button size="sm">
-                  Aplicar
+                  {{ tContent('variants.compositions.tableFilter.apply') }}
                 </Button>
               </div>
             </PopoverContent>
@@ -984,7 +986,7 @@ const a11yCritCols = computed(() => ({
                 variant="outline"
                 size="sm"
               >
-                Cor
+                {{ tContent('variants.compositions.colorPicker.trigger') }}
               </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -992,7 +994,7 @@ const a11yCritCols = computed(() => ({
               align="start"
             >
               <PopoverHeader>
-                <PopoverTitle>Cor da etiqueta</PopoverTitle>
+                <PopoverTitle>{{ tContent('variants.compositions.colorPicker.title') }}</PopoverTitle>
               </PopoverHeader>
               <div
                 class="nds-grid"
@@ -1001,9 +1003,9 @@ const a11yCritCols = computed(() => ({
               >
                 <button
                   v-for="s in swatches"
-                  :key="s.name"
+                  :key="s.key"
                   type="button"
-                  :aria-label="s.name"
+                  :aria-label="tContent(`variants.compositions.colorPicker.${s.key}`)"
                   :class="[SWATCH_CLASSES, s.className]"
                 />
               </div>
@@ -1022,7 +1024,7 @@ const a11yCritCols = computed(() => ({
                 variant="outline"
                 size="sm"
               >
-                Configurações
+                {{ tContent('variants.compositions.quickSettings.trigger') }}
               </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -1030,7 +1032,7 @@ const a11yCritCols = computed(() => ({
               align="start"
             >
               <PopoverHeader>
-                <PopoverTitle>Preferências rápidas</PopoverTitle>
+                <PopoverTitle>{{ tContent('variants.compositions.quickSettings.title') }}</PopoverTitle>
               </PopoverHeader>
               <div
                 class="nds-stack"
@@ -1041,7 +1043,7 @@ const a11yCritCols = computed(() => ({
                   data-spacing="sm"
                   data-justify="between"
                 >
-                  <Label for="cfg-notifs-vue">Notificações</Label>
+                  <Label for="cfg-notifs-vue">{{ tContent('variants.compositions.quickSettings.notifications') }}</Label>
                   <input
                     id="cfg-notifs-vue"
                     type="checkbox"
@@ -1054,7 +1056,7 @@ const a11yCritCols = computed(() => ({
                   data-spacing="sm"
                   data-justify="between"
                 >
-                  <Label for="cfg-dark-vue">Modo escuro</Label>
+                  <Label for="cfg-dark-vue">{{ tContent('variants.compositions.quickSettings.darkMode') }}</Label>
                   <input
                     id="cfg-dark-vue"
                     type="checkbox"
@@ -1066,7 +1068,7 @@ const a11yCritCols = computed(() => ({
                   data-spacing="sm"
                   data-justify="between"
                 >
-                  <Label for="cfg-compact-vue">Modo compacto</Label>
+                  <Label for="cfg-compact-vue">{{ tContent('variants.compositions.quickSettings.compactMode') }}</Label>
                   <input
                     id="cfg-compact-vue"
                     type="checkbox"
