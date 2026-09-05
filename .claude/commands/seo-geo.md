@@ -96,6 +96,46 @@ Obrigatória nos 3 idiomas:
 
 ## Processo de Auditoria
 
+### Passo 0 — Audit determinístico
+
+**Se o prompt já trouxe `.pipeline-context/scan-<slug>.json`** — é a pipeline
+chamando, o script já rodou no Passo 4 dela. Filtre `category: "seo"` e **não
+rode de novo**.
+
+**Se não trouxe** — foi invocação direta. Rode:
+
+```bash
+node scripts/audit.mjs <slug> --category seo --json
+```
+
+A categoria `seo` **não existia até 2026-09-05**, e é por isso que este passo é
+novo. O `runAudit` despachava por `security`, `performance`, `analytics` e
+`quality`; esta skill conferia limite de caractere em CHECKBOX manual, o que
+significa que nada media o assunto entre uma invocação e outra — e ela não é
+invocada desde abril de 2026. O backlog que apareceu quando o runner nasceu:
+**21 `title` acima de 60 e 93 `description` acima de 155**, em 84 componentes.
+
+| Regra | O que pega |
+|---|---|
+| `seo_title_longo` | `seo.title` acima de 60 caracteres, por locale. O Google trunca por volta daí: não é penalidade, é a frase cortada no meio para quem procura |
+| `seo_description_longo` | `seo.description` acima de 155, por locale. Mesma mecânica, no trecho abaixo do link |
+| `seo_title_suffix` | `· Design System` escrito no JSON — o `useSeoEffect` já acrescenta, e o resultado é o sufixo duplicado |
+| `manager_head_de_outra_stack` | o `manager-head.html` de uma stack anuncia OUTRA. Sai sob `_infra`, é por stack e nasce de cópia. Medido em 2026-09-05: o do Angular era o do Vanilla palavra por palavra — `description`, `og:title` e `og:description` dizendo "componentes Vanilla TS", e `keywords` com "vanilla" duas vezes, num Storybook de Angular |
+| `dead_lib_in_infra` (em `.storybook/*.html`) | lib morta nos metas. Quatro stacks anunciavam "construídos com Tailwind CSS" |
+
+**As duas últimas são a lição de escopo desta skill.** O Passo 4 daqui abria o
+`manager-head.html` e fazia UM grep (`googletagmanager.com`) — e o caminho
+estava escrito sem o ponto (`nortear-design-system-*/storybook/`), então nem
+esse casava. Três leitores diferentes abriam aquele arquivo medindo uma linha
+cada: este, o `measurement_id_committed` e o `ga4_in_preview_head`. **Arquivo
+lido por regra que mede uma linha é arquivo não auditado.**
+
+O script julga forma. Esta skill julga **conteúdo**: se o título diz o que a
+página é, se a descrição vende o componente certo, se o `aiSummary` descreve
+este componente e não a categoria dele.
+
+---
+
 ### Passo 1 — Coletar em paralelo
 
 Dispare em paralelo no mesmo turno:
@@ -105,6 +145,7 @@ Dispare em paralelo no mesmo turno:
 - `Glob` de `nortear-design-system-vue/src/components/docs/*<Slug>Docs.vue`
 - `Glob` de `nortear-design-system-svelte/src/components/docs/*<Slug>Docs.svelte`
 - `Glob` de `nortear-design-system-vanilla/src/components/docs/*<Slug>Docs.ts`
+- `Glob` de `nortear-design-system-angular/src/components/docs/*<Slug>Docs.ts`
 
 Depois leia as docs pages encontradas (em paralelo) para verificar o `useSeoEffect`.
 
@@ -127,18 +168,57 @@ Para cada stack no escopo:
 - [ ] Vue: recebe `computed()` (não objeto literal — quebraria reatividade ao trocar locale)
 - [ ] Svelte: chamado dentro de `$effect()` com `return cleanup`
 
-### Passo 4 (condicional) — Verificar infraestrutura GA4
+### Passo 4 — Metas da stack (`.storybook/manager-head.html`)
 
-Execute apenas se suspeitar de problema de infraestrutura (sintoma: todos os eventos aparecem como `/iframe.html` no GA4):
+Não é condicional, e não é sobre GA4. Este arquivo é servido em **toda página**
+do Storybook publicado — é o que buscador e prévia de link leem antes de
+qualquer docs page. O `useSeoEffect` cuida do `title`/`description` **por
+página**; estes metas são a stack se apresentando, e ninguém os olhava.
+
+Nas cinco, confira e corrija:
+
+- [ ] `description` e `keywords` nomeiam a **própria** stack e a lib headless
+      **dela** — react/base-ui, vue/reka-ui, svelte/bits-ui, angular/radix-ng,
+      vanilla/typescript. O `manager_head_de_outra_stack` cobre o pertencimento;
+      a lib certa é julgamento seu
+- [ ] nenhuma lib morta (`dead_lib_in_infra` varre `.storybook/*.html`)
+- [ ] `og:title` e `og:description` acompanham — no Angular eles diziam
+      "Vanilla" e passaram por todas as rodadas
+- [ ] sem termo repetido em `keywords` (o vanilla listava "vanilla" duas vezes)
+
+Infraestrutura GA4, quando houver sintoma (todos os eventos como `/iframe.html`):
 
 ```
-Grep "googletagmanager.com" em nortear-design-system-*/storybook/manager-head.html → deve existir
-Grep "googletagmanager.com" em nortear-design-system-*/storybook/preview-head.html → deve estar ausente
+Grep "googletagmanager.com" em nortear-design-system-*/.storybook/manager-head.html → deve existir
+Grep "googletagmanager.com" em nortear-design-system-*/.storybook/preview-head.html → deve estar ausente
 Grep "window.top" em nortear-design-system-*/src/lib/analytics.ts → deve existir
 Grep "page_view" em nortear-design-system-*/src/lib/use-seo.ts → deve existir
 ```
 
-Use 4 `Grep` em paralelo por check — não loops bash seriais.
+O `.storybook` leva ponto. Sem ele os quatro greps varrem caminho inexistente e
+voltam vazios — que é indistinguível de "conferido, tudo certo", e foi o estado
+desta skill até 2026-09-05.
+
+### Passo 5 — Corrigir (fix-mode é o padrão)
+
+`--audit` é read-only. Sem ele, **corrija**; não anote para depois.
+
+**Encurtar `title` e `description` é reescrever, não truncar.** Cortar no
+limite produz frase sem verbo, e o campo passa a ser pior que o longo. Regras:
+
+- o `title` nomeia o componente e a categoria, nessa ordem, e para aí — o
+  `useSeoEffect` já acrescenta `· Design System`, que conta no limite do
+  navegador mas não no do JSON
+- a `description` diz o que o componente faz e para quem, numa frase. Enumeração
+  de props é o que mais estoura os 155: `provider, trigger, content, arrow,
+  posicionamento, delay e suporte WCAG` é lista de anatomia, e a anatomia já tem
+  seção própria na página
+- **os três locales são reescritos juntos.** Pt-BR curto e en longo é o mesmo
+  componente com duas promessas, e o `hreflang` aponta um para o outro
+- nada de abreviação nem de corte de acento para caber
+
+Ao mexer no `translations.json`, releia o Passo 0 depois: é o único portão que
+mede o resultado.
 
 ---
 

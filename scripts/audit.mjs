@@ -4566,49 +4566,6 @@ function auditStorybookInfra() {
       }
     }
 
-    // O `manager-head.html` anuncia a stack para quem chega de fora: `keywords`,
-    // `description`, `og:*`. É por stack e nasce de cópia, e cópia sem revisão
-    // aqui não quebra nada — só mente. Medido em 2026-09-05: o do Angular era o
-    // do Vanilla palavra por palavra, anunciando "componentes Vanilla TS" e
-    // `keywords` com "vanilla" DUAS vezes, num Storybook de Angular.
-    //
-    // Nenhuma varredura de vocabulário alcança isto, porque nenhuma palavra
-    // errada foi escrita — "vanilla" é termo vivo do projeto. O que está errado é
-    // o arquivo em que ela está. Por isso a verificação é de PERTENCIMENTO: o
-    // arquivo tem de nomear a própria stack e não pode nomear outra.
-    //
-    // `vanilla` é a exceção pelos dois lados: o CSS `.nds-*` é "vanilla CSS" em
-    // qualquer stack, e o nome da stack é o mesmo termo. Ela não conta como
-    // menção alheia — o que sobra é o caso que importa, que é a stack não se
-    // nomear.
-    const head = join(sb, 'manager-head.html');
-    if (existsSync(head)) {
-      const txt = readFile(head) || '';
-      // Sem barra invertida de proposito. A versao anterior usava `\b` dentro de
-      // template literal e a barra nao sobreviveu a travessia ate o arquivo:
-      // virou o escape de BACKSPACE, a expressao passou a procurar um caractere
-      // de controle, e as cinco stacks reprovaram por nao se nomearem. Falso
-      // positivo em bloco e o sintoma barato desse erro; falso NEGATIVO em
-      // bloco seria o caro, e e o mesmo defeito.
-      const limiteDePalavra = (termo) => new RegExp(`(^|[^a-z])${termo}([^a-z]|$)`, "i");
-      const nomeDaStack = limiteDePalavra(stack);
-      if (!nomeDaStack.test(txt)) {
-        violations.push({
-          category: 'quality', severity: 'high', slug: '_infra', stack,
-          file: relative(ROOT, head), rule: 'manager_head_de_outra_stack',
-          message: `os metas não nomeiam "${stack}" em lugar nenhum — o arquivo é por stack e nasce de cópia; sem o nome próprio ele anuncia a stack de quem foi copiado`,
-        });
-      }
-      const alheias = STACKS.filter((s) => s !== stack && s !== 'vanilla')
-        .filter((s) => limiteDePalavra(s).test(txt));
-      if (alheias.length) {
-        violations.push({
-          category: 'quality', severity: 'high', slug: '_infra', stack,
-          file: relative(ROOT, head), rule: 'manager_head_de_outra_stack',
-          message: `os metas nomeiam ${alheias.join(', ')} — este arquivo é servido em toda página do Storybook de ${stack} e anuncia outra stack para buscador e link compartilhado`,
-        });
-      }
-    }
 
     // O listener de canal só é exigido onde o renderer pula o re-render do
     // decorator ao voltar a toolbar para Default. O renderer html (vanilla)
@@ -6225,12 +6182,124 @@ function auditQuality(slug) {
 
 // ─── CLI ────────────────────────────────────────────────────────────────────
 
+/**
+ * SEO — a quarta categoria, e ela não existia.
+ *
+ * O `runAudit` despachava por `security`, `performance`, `analytics` e
+ * `quality`. A `/seo-geo` é skill desde o começo do projeto e nunca teve runner:
+ * o processo dela abria os arquivos à mão e conferia limite de caractere em
+ * CHECKBOX, o que significa que nada media o assunto entre uma invocação e
+ * outra — e ela não é invocada desde abril de 2026. Medido em 2026-09-05: 21
+ * `title` acima de 60 e 93 `description` acima de 155, em 84 componentes.
+ *
+ * Rótulo de categoria sem runner é pior que categoria errada: some de toda
+ * chamada com `--category`. Escrevi `category: 'seo'` nas regras do
+ * manager-head horas antes e tive de trocar por `quality` justamente por isso;
+ * agora a categoria existe e elas voltam para casa.
+ *
+ * Os limites não são estéticos. O Google trunca o título por volta de 60
+ * caracteres e a descrição por volta de 155 — passar disso não é penalidade, é
+ * a frase sendo cortada no meio para quem procura.
+ */
+function auditSeo(slug) {
+  const violations = [];
+
+  const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const raw = readFile(contentFile);
+  if (raw) {
+    let json = null;
+    try { json = JSON.parse(raw); } catch { json = null; }
+    const LIMITES = [
+      { chave: 'title', max: 60, onde: 'a aba do navegador e o resultado de busca' },
+      { chave: 'description', max: 155, onde: 'o trecho abaixo do link no resultado de busca' },
+    ];
+    for (const locale of ['pt-BR', 'en', 'es']) {
+      const seo = json && json[locale] && json[locale].seo;
+      if (!seo) continue;
+      for (const { chave, max, onde } of LIMITES) {
+        const valor = seo[chave];
+        if (typeof valor !== 'string' || valor.length <= max) continue;
+        violations.push({
+          category: 'seo', severity: 'medium', slug, stack: 'shared',
+          file: relative(ROOT, contentFile), rule: `seo_${chave}_longo`,
+          message: `seo.${chave} do locale ${locale} tem ${valor.length} caracteres (limite ${max}) — ${onde} corta a frase no meio`,
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
+/**
+ * A metade do SEO que é por STACK, não por slug.
+ *
+ * Nasceu dentro de `auditSeo(slug)` e estava errada ali: `runAudit` roda por
+ * componente, então a varredura das cinco stacks se repetiria a cada um dos 84
+ * — o mesmo achado 84 vezes em `--all`, que é como um portão ensina a ser
+ * ignorado. Sai sob `_infra`, como as outras verificações de mecanismo.
+ */
+function auditSeoInfra() {
+  const violations = [];
+
+  for (const stack of STACKS) {
+    const sb = join(ROOT, stackDir(stack), '.storybook');
+    if (!existsSync(sb)) continue;
+    // O `manager-head.html` anuncia a stack para quem chega de fora: `keywords`,
+    // `description`, `og:*`. É por stack e nasce de cópia, e cópia sem revisão
+    // aqui não quebra nada — só mente. Medido em 2026-09-05: o do Angular era o
+    // do Vanilla palavra por palavra, anunciando "componentes Vanilla TS" e
+    // `keywords` com "vanilla" DUAS vezes, num Storybook de Angular.
+    //
+    // Nenhuma varredura de vocabulário alcança isto, porque nenhuma palavra
+    // errada foi escrita — "vanilla" é termo vivo do projeto. O que está errado é
+    // o arquivo em que ela está. Por isso a verificação é de PERTENCIMENTO: o
+    // arquivo tem de nomear a própria stack e não pode nomear outra.
+    //
+    // `vanilla` é a exceção pelos dois lados: o CSS `.nds-*` é "vanilla CSS" em
+    // qualquer stack, e o nome da stack é o mesmo termo. Ela não conta como
+    // menção alheia — o que sobra é o caso que importa, que é a stack não se
+    // nomear.
+    const head = join(sb, 'manager-head.html');
+    if (existsSync(head)) {
+      const txt = readFile(head) || '';
+      // Sem barra invertida de proposito. A versao anterior usava `\b` dentro de
+      // template literal e a barra nao sobreviveu a travessia ate o arquivo:
+      // virou o escape de BACKSPACE, a expressao passou a procurar um caractere
+      // de controle, e as cinco stacks reprovaram por nao se nomearem. Falso
+      // positivo em bloco e o sintoma barato desse erro; falso NEGATIVO em
+      // bloco seria o caro, e e o mesmo defeito.
+      const limiteDePalavra = (termo) => new RegExp(`(^|[^a-z])${termo}([^a-z]|$)`, "i");
+      const nomeDaStack = limiteDePalavra(stack);
+      if (!nomeDaStack.test(txt)) {
+        violations.push({
+          category: 'seo', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, head), rule: 'manager_head_de_outra_stack',
+          message: `os metas não nomeiam "${stack}" em lugar nenhum — o arquivo é por stack e nasce de cópia; sem o nome próprio ele anuncia a stack de quem foi copiado`,
+        });
+      }
+      const alheias = STACKS.filter((s) => s !== stack && s !== 'vanilla')
+        .filter((s) => limiteDePalavra(s).test(txt));
+      if (alheias.length) {
+        violations.push({
+          category: 'seo', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, head), rule: 'manager_head_de_outra_stack',
+          message: `os metas nomeiam ${alheias.join(', ')} — este arquivo é servido em toda página do Storybook de ${stack} e anuncia outra stack para buscador e link compartilhado`,
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
 function runAudit(slug, category) {
   const runners = {
     security: auditSecurity,
     performance: auditPerformance,
     analytics: auditAnalytics,
     quality: auditQuality,
+    seo: auditSeo,
   };
 
   if (category && runners[category]) {
@@ -6242,6 +6311,7 @@ function runAudit(slug, category) {
     ...auditPerformance(slug),
     ...auditAnalytics(slug),
     ...auditQuality(slug),
+    ...auditSeo(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
     ...auditSnippetSemLastro(slug),
@@ -6436,6 +6506,10 @@ if (!category || category === 'analytics') {
 // existe para impedir: manter o portão seria manter um verde que não mede nada.
 // Pelo mesmo motivo, o ramo de `index.html` de `tema_ausente_no_ponto_de_entrada`
 // saiu; o ramo de `preview-head.html` continua, porque o arquivo continua.
+if (!category || category === 'seo') {
+  const infra = auditSeoInfra();
+  if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
+}
 if (!category || category === 'quality') {
   const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
