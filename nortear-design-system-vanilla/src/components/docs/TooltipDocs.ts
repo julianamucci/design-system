@@ -66,7 +66,7 @@ function priorityLabel(raw: string): string {
  * ampliar um mapa de botão com eles seria pior.
  */
 /** Preview vivo do Do & Don't: botão de ícone com balão, numa moldura centrada. */
-function buildDoDont(id: string, conteudo: string): HTMLElement {
+function buildDoDont(id: string, text: string): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-cluster nds-w-full nds-min-h-20';
   wrap.dataset.justify = 'center';
@@ -75,7 +75,7 @@ function buildDoDont(id: string, conteudo: string): HTMLElement {
   wrap.appendChild(
     createTooltip({
       trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
-      content: conteudo,
+      content: text,
       side: 'bottom',
       onShow: trackTooltipView('docs_do_dont', id),
     }),
