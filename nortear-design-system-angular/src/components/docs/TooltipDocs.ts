@@ -427,24 +427,50 @@ const COMPOSITION_CODE = {
          renderizá-lo de verdade colocaria uma violação de button-name dentro
          da própria página que ensina a evitá-la. -->
     <ng-template #tplDoDont1Do>
-      <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-        {{ uxIcone().good }}
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
+        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair1-do', $event)">
+          <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
+            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+          </button>
+          <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.save') }}</ng-template>
+        </span>
       </div>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-        {{ uxIcone().bad }}
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
+        <!-- Anti-padrão didático: o balão no lugar do rótulo. O aria-label fica
+             para o axe — sem ele o botão icon-only não tem nome acessível e a
+             docs page reprova —, e a lição continua no CONTEUDO do balão, que
+             só repete o rótulo em vez de acrescentar. -->
+        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair1-dont', $event)">
+          <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
+            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+          </button>
+          <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.saveButton') }}</ng-template>
+        </span>
       </div>
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <div class="nds-text-caption nds-text-muted-foreground">
-        {{ uxTexto().good }}
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
+        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair2-do', $event)">
+          <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
+            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+          </button>
+          <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.save') }}</ng-template>
+        </span>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <div class="nds-text-caption nds-text-muted-foreground nds-italic">
-        {{ uxTexto().bad }}
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
+        <!-- Vivo de propósito: a lição é o TAMANHO do balão, e só renderizado
+             ele mostra o que o texto longo faz. -->
+        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair2-dont', $event)">
+          <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
+            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+          </button>
+          <ng-template ndsTooltipContent side="bottom">Clique aqui para salvar o documento e voltar à tela inicial.</ng-template>
+        </span>
       </div>
     </ng-template>
 

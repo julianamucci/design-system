@@ -179,7 +179,7 @@ export function TooltipDocs() {
 
   const codeDefault = `<Tooltip>
   <TooltipTrigger asChild>
-    <Button variant="ghost" size="icon" aria-label="Salvar">
+    <Button variant="outline" size="icon" aria-label="Salvar">
       <Save aria-hidden="true" />
     </Button>
   </TooltipTrigger>
@@ -188,7 +188,7 @@ export function TooltipDocs() {
 
   const codeWithShortcut = `<Tooltip>
   <TooltipTrigger asChild>
-    <Button variant="ghost" size="icon" aria-label="Salvar">
+    <Button variant="outline" size="icon" aria-label="Salvar">
       <Save aria-hidden="true" />
     </Button>
   </TooltipTrigger>
@@ -382,17 +382,46 @@ interface TooltipContentProps {
               doLabel: tNav("common.do"),
               dontLabel: tNav("common.dont"),
               doPreview: (
-                <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                  &lt;Button aria-label="Salvar"&gt;
-                  <br />
-                  + Tooltip "Salvar (Ctrl+S)"
+                <div
+                  className="nds-cluster nds-w-full nds-min-h-20"
+                  data-justify="center"
+                  data-align="center"
+                  style={{ contain: "layout" }}
+                >
+                  <Tooltip onOpenChange={rastrearTooltip("docs_do_dont", "pair1-do")}>
+                    <TooltipTrigger
+                      render={(props) => (
+                        <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
+                          <Save aria-hidden="true" />
+                        </Button>
+                      )}
+                    />
+                    <TooltipContent side="bottom">{labelSave}</TooltipContent>
+                  </Tooltip>
                 </div>
               ),
               dontPreview: (
-                <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                  &lt;Button&gt; (without aria-label)
-                  <br />
-                  + Tooltip "Salvar"
+                <div
+                  className="nds-cluster nds-w-full nds-min-h-20"
+                  data-justify="center"
+                  data-align="center"
+                  style={{ contain: "layout" }}
+                >
+                {/* Anti-padrão didático: o balão no lugar do rótulo. O
+                    `aria-label` fica para o axe — sem ele o botão
+                    icon-only não tem nome acessível e a docs page
+                    reprova —, e a lição continua no CONTEÚDO do balão,
+                    que só repete o rótulo em vez de acrescentar. */}
+                  <Tooltip onOpenChange={rastrearTooltip("docs_do_dont", "pair1-dont")}>
+                    <TooltipTrigger
+                      render={(props) => (
+                        <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
+                          <Save aria-hidden="true" />
+                        </Button>
+                      )}
+                    />
+                    <TooltipContent side="bottom">{labelSaveBtn}</TooltipContent>
+                  </Tooltip>
                 </div>
               ),
               doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
@@ -402,11 +431,50 @@ interface TooltipContentProps {
               doLabel: tNav("common.do"),
               dontLabel: tNav("common.dont"),
               doPreview: (
-                <div className="nds-text-caption nds-text-muted-foreground">"Salvar (Ctrl+S)"</div>
+                <div
+                  className="nds-cluster nds-w-full nds-min-h-20"
+                  data-justify="center"
+                  data-align="center"
+                  style={{ contain: "layout" }}
+                >
+                  <Tooltip onOpenChange={rastrearTooltip("docs_do_dont", "pair2-do")}>
+                    <TooltipTrigger
+                      render={(props) => (
+                        <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
+                          <Save aria-hidden="true" />
+                        </Button>
+                      )}
+                    />
+                    <TooltipContent side="bottom">
+                      <span>{labelSaveBtn}</span>
+                      <kbd className="nds-kbd">Ctrl</kbd>
+                      <kbd className="nds-kbd">S</kbd>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               ),
               dontPreview: (
-                <div className="nds-text-caption nds-text-muted-foreground nds-italic">
-                  "Clique aqui para salvar o documento atual no servidor."
+                <div
+                  className="nds-cluster nds-w-full nds-min-h-20"
+                  data-justify="center"
+                  data-align="center"
+                  style={{ contain: "layout" }}
+                >
+                  {/* Vivo de propósito: a lição é o TAMANHO do balão, e só
+                      renderizado ele mostra o que o texto longo faz. */}
+                  <Tooltip onOpenChange={rastrearTooltip("docs_do_dont", "pair2-dont")}>
+                    <TooltipTrigger
+                      render={(props) => (
+                        <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
+                          <Save aria-hidden="true" />
+                        </Button>
+                      )}
+                    />
+                    
+                    <TooltipContent side="bottom" className="nds-max-w-xs">
+                      Clique aqui para salvar o documento e voltar à tela inicial.
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               ),
               doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
@@ -414,8 +482,6 @@ interface TooltipContentProps {
             },
           ]}
         />
-
-        {/* ── Importação ────────────────────────────────────────────── */}
         <DocsImport
           title={tContent("import.title")}
           code={codeImport}
@@ -439,7 +505,7 @@ interface TooltipContentProps {
                 <Tooltip onOpenChange={rastrearTooltip("docs_variantes", "default")}>
                   <TooltipTrigger
                     render={(props) => (
-                      <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
+                      <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
                         <Save aria-hidden="true" />
                       </Button>
                     )}
@@ -457,7 +523,7 @@ interface TooltipContentProps {
                 <Tooltip onOpenChange={rastrearTooltip("docs_variantes", "withShortcut")}>
                   <TooltipTrigger
                     render={(props) => (
-                      <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
+                      <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
                         <Save aria-hidden="true" />
                       </Button>
                     )}
@@ -545,7 +611,7 @@ interface TooltipContentProps {
               code: `<Tooltip>
   <TooltipTrigger
     render={(props) => (
-      <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
+      <Button {...props} variant="outline" size="icon" aria-label="Salvar">
         <Save aria-hidden="true" />
       </Button>
     )}
@@ -560,7 +626,7 @@ interface TooltipContentProps {
                 <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "iconButtonWithShortcut")}>
                   <TooltipTrigger
                     render={(props) => (
-                      <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
+                      <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
                         <Save aria-hidden="true" />
                       </Button>
                     )}
@@ -639,7 +705,7 @@ interface TooltipContentProps {
     <Tooltip>
       <TooltipTrigger
         render={(props) => (
-          <Button {...props} variant="ghost" size="icon" aria-label="Ajuda sobre Token de API">
+          <Button {...props} variant="outline" size="icon" aria-label="Ajuda sobre Token de API">
             <HelpCircle aria-hidden="true" />
           </Button>
         )}
@@ -662,7 +728,7 @@ interface TooltipContentProps {
                         render={(props) => (
                           <Button
                             {...props}
-                            variant="ghost"
+                            variant="outline"
                             size="icon"
                             aria-label={
                               locale === "en"
@@ -705,7 +771,7 @@ interface TooltipContentProps {
     <Tooltip>
       <TooltipTrigger
         render={(props) => (
-          <Button {...props} variant="ghost" size="icon" aria-label="O que é LCP">
+          <Button {...props} variant="outline" size="icon" aria-label="O que é LCP">
             <Info aria-hidden="true" />
           </Button>
         )}
@@ -726,7 +792,7 @@ interface TooltipContentProps {
                         render={(props) => (
                           <Button
                             {...props}
-                            variant="ghost"
+                            variant="outline"
                             size="icon"
                             aria-label={
                               locale === "en"

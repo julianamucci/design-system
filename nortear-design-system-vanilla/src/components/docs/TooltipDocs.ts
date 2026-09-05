@@ -65,6 +65,24 @@ function priorityLabel(raw: string): string {
  * outro: pedem ícones que não são de botão (Bold, Italic, Search, Star), e
  * ampliar um mapa de botão com eles seria pior.
  */
+/** Preview vivo do Do & Don't: botão de ícone com balão, numa moldura centrada. */
+function buildDoDont(id: string, conteudo: string): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-cluster nds-w-full nds-min-h-20';
+  wrap.dataset.justify = 'center';
+  wrap.dataset.align = 'center';
+  wrap.style.contain = 'layout';
+  wrap.appendChild(
+    createTooltip({
+      trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
+      content: conteudo,
+      side: 'bottom',
+      onShow: trackTooltipView('docs_do_dont', id),
+    }),
+  );
+  return wrap;
+}
+
 function demoIconButton(kind: ButtonIconKind, ariaLabel: string): HTMLButtonElement {
   return createButton({
     variant: 'outline',
@@ -76,7 +94,7 @@ function demoIconButton(kind: ButtonIconKind, ariaLabel: string): HTMLButtonElem
 
 function makeIconButton(ariaLabel: string): HTMLButtonElement {
   return createButton({
-    variant: 'ghost',
+    variant: 'outline',
     size: 'icon',
     'aria-label': ariaLabel,
     children: createButtonIcon('download'),
@@ -335,40 +353,26 @@ export function createTooltipDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-text-caption nds-font-mono';
-                wrap.textContent = 'aria-label="Salvar" + Tooltip "Salvar (Ctrl+S)"';
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-text-caption nds-font-mono';
-                wrap.textContent = 'Tooltip "Salvar" (sem aria-label)';
-                return wrap;
-              },
+              doPreviewFactory: () => buildDoDont('pair1-do', t('demonstration.labels.save')),
+              // Anti-padrão didático: o balão no lugar do rótulo. O `aria-label`
+              // fica para o axe — sem ele o botão icon-only não tem nome
+              // acessível e a docs page reprova —, e a lição continua no
+              // CONTEÚDO do balão, que só repete o rótulo em vez de acrescentar.
+              dontPreviewFactory: () => buildDoDont('pair1-dont', t('demonstration.labels.saveButton')),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = '"Salvar (Ctrl+S)"';
-                return code;
-              },
-              dontPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = '"Clique aqui para abrir o formulário…"';
-                return code;
-              },
+              doPreviewFactory: () => buildDoDont('pair2-do', t('demonstration.labels.save')),
+              // Vivo de propósito: a lição é o TAMANHO do balão, e só
+              // renderizado ele mostra o que o texto longo faz.
+              dontPreviewFactory: () =>
+                buildDoDont('pair2-dont', 'Clique aqui para salvar o documento e voltar à tela inicial.'),
             },
           ],
         });
-
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
@@ -408,7 +412,7 @@ createTooltip({ trigger, content: 'Salvar', side: 'top' });`;
 
         const codeShortcut = `// Botão icon-only mantém aria-label obrigatório
 const trigger = createButton({
-  variant: 'ghost',
+  variant: 'outline',
   size: 'icon',
   'aria-label': 'Salvar',
   children: iconSvg,
@@ -508,7 +512,7 @@ for (const acao of acoes) {
   }));
 }`;
         const codeIconShortcut = `const trigger = createButton({
-  variant: 'ghost',
+  variant: 'outline',
   size: 'icon',
   'aria-label': 'Salvar',
   children: createButtonIcon('download'),
@@ -517,7 +521,7 @@ for (const acao of acoes) {
 createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
 
         const codeFormHelp = `const help = createButton({
-  variant: 'ghost',
+  variant: 'outline',
   size: 'icon-sm',
   'aria-label': 'Ajuda sobre Token de API',
   label: '?',
@@ -531,7 +535,7 @@ createTooltip({
 });`;
 
         const codeMetric = `const help = createButton({
-  variant: 'ghost',
+  variant: 'outline',
   size: 'icon-sm',
   'aria-label': 'O que é LCP',
   label: 'i',
@@ -571,7 +575,7 @@ createTooltip({
 
         function buildIconShortcutPreview(): HTMLElement {
           const trigger = createButton({
-            variant: 'ghost',
+            variant: 'outline',
             size: 'icon',
             'aria-label': 'Salvar',
             children: createButtonIcon('download'),
@@ -600,7 +604,7 @@ createTooltip({
           label.htmlFor = 'api-token-bc-comp';
 
           const help = createButton({
-            variant: 'ghost',
+            variant: 'outline',
             size: 'icon-sm',
             'aria-label': 'Ajuda sobre Token de API',
             label: '?',
@@ -641,7 +645,7 @@ createTooltip({
           title.textContent = 'LCP';
 
           const help = createButton({
-            variant: 'ghost',
+            variant: 'outline',
             size: 'icon-sm',
             'aria-label': 'O que é LCP',
             label: 'i',

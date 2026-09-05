@@ -178,7 +178,7 @@ const codeImportProvider = `<!-- Uma vez, no topo da árvore que compartilha a e
 
 const codeDefault = `<Tooltip>
   <TooltipTrigger as-child>
-    <Button variant="ghost" size="icon" aria-label="Salvar">
+    <Button variant="outline" size="icon" aria-label="Salvar">
       <Save aria-hidden="true" />
     </Button>
   </TooltipTrigger>
@@ -189,7 +189,7 @@ const codeDefault = `<Tooltip>
 
 const codeWithShortcut = `<Tooltip>
   <TooltipTrigger as-child>
-    <Button variant="ghost" size="icon" aria-label="Salvar">
+    <Button variant="outline" size="icon" aria-label="Salvar">
       <Save aria-hidden="true" />
     </Button>
   </TooltipTrigger>
@@ -200,7 +200,7 @@ const codeWithShortcut = `<Tooltip>
 
 const codeLongText = `<Tooltip>
   <TooltipTrigger as-child>
-    <Button variant="ghost" size="icon" aria-label="Info">
+    <Button variant="outline" size="icon" aria-label="Info">
       <Info aria-hidden="true" />
     </Button>
   </TooltipTrigger>
@@ -254,7 +254,7 @@ const variantItems = computed(() => [
 
 const codeCompIconShortcut = `<Tooltip>
   <TooltipTrigger as-child>
-    <Button variant="ghost" size="icon" aria-label="Salvar">
+    <Button variant="outline" size="icon" aria-label="Salvar">
       <Save aria-hidden="true" />
     </Button>
   </TooltipTrigger>
@@ -268,7 +268,7 @@ const codeCompFormHelp = `<div class="nds-stack nds-w-full nds-max-w-sm" data-sp
     <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger as-child>
-        <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API">
+        <Button variant="outline" size="icon" aria-label="Ajuda sobre Token de API">
           <HelpCircle aria-hidden="true" />
         </Button>
       </TooltipTrigger>
@@ -285,7 +285,7 @@ const codeCompMetric = `<div class="nds-stack" data-spacing="xs">
     <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger as-child>
-        <Button variant="ghost" size="icon" aria-label="O que é LCP">
+        <Button variant="outline" size="icon" aria-label="O que é LCP">
           <Info aria-hidden="true" />
         </Button>
       </TooltipTrigger>
@@ -651,11 +651,18 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <div
-              class="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic"
-            >
-              "Clique aqui para salvar o documento e voltar à tela inicial."
-            </div>
+            <!-- Vivo de propósito: a lição é o TAMANHO do balão, e só
+                 renderizado ele mostra o que o texto longo faz. -->
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_do_dont', 'pair2-dont', open)">
+              <TooltipTrigger as-child>
+                <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.saveButton')">
+                  <Save aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" class="nds-max-w-xs">
+                Clique aqui para salvar o documento e voltar à tela inicial.
+              </TooltipContent>
+            </Tooltip>
           </div>
         </template>
       </DocsDoDont>
@@ -817,7 +824,7 @@ const a11yCritCols = computed(() => ({
             <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'iconButtonWithShortcut', open)">
               <TooltipTrigger as-child>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
                   aria-label="Salvar"
                 >
@@ -884,7 +891,7 @@ const a11yCritCols = computed(() => ({
                 <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'formFieldHelp', open)">
                   <TooltipTrigger as-child>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="icon"
                       aria-label="Ajuda sobre Token de API"
                     >
@@ -930,7 +937,7 @@ const a11yCritCols = computed(() => ({
                 <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'metricDescription', open)">
                   <TooltipTrigger as-child>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="icon"
                       aria-label="O que é LCP"
                     >

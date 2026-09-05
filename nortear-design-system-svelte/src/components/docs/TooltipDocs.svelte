@@ -150,7 +150,7 @@
 <Tooltip>
   <TooltipTrigger>
     {#snippet child({ props })}
-      <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
+      <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
         <Save aria-hidden="true" class="nds-icon" />
       </Button>
     {/snippet}
@@ -532,7 +532,7 @@ interface TooltipTriggerProps {
         code: `<Tooltip>
   <TooltipTrigger>
     {#snippet child({ props })}
-      <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
+      <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
         <Save aria-hidden="true" />
       </Button>
     {/snippet}
@@ -576,7 +576,7 @@ interface TooltipTriggerProps {
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
-          <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
+          <Button variant="outline" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
             <HelpCircle aria-hidden="true" />
           </Button>
         {/snippet}
@@ -601,7 +601,7 @@ interface TooltipTriggerProps {
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
-          <Button variant="ghost" size="icon" aria-label="O que é LCP" {...props}>
+          <Button variant="outline" size="icon" aria-label="O que é LCP" {...props}>
             <Info aria-hidden="true" />
           </Button>
         {/snippet}
@@ -623,7 +623,7 @@ interface TooltipTriggerProps {
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'iconButtonWithShortcut', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
+            <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
@@ -684,7 +684,7 @@ interface TooltipTriggerProps {
           <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'formFieldHelp', o)}>
             <TooltipTrigger>
               {#snippet child({ props })}
-                <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
+                <Button variant="outline" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
                   <HelpCircle aria-hidden="true" class="nds-icon" />
                 </Button>
               {/snippet}
@@ -712,7 +712,7 @@ interface TooltipTriggerProps {
           <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'metricDescription', o)}>
             <TooltipTrigger>
               {#snippet child({ props })}
-                <Button variant="ghost" size="icon" aria-label="O que é LCP" {...props}>
+                <Button variant="outline" size="icon" aria-label="O que é LCP" {...props}>
                   <Info aria-hidden="true" class="nds-icon" />
                 </Button>
               {/snippet}
