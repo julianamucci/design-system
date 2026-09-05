@@ -476,6 +476,79 @@ function auditPerformance(slug) {
 
 function auditAnalytics(slug) {
   const violations = [];
+  // ── `location` diz a SEÇÃO, e por muito tempo disse sempre a mesma ─────────
+  //
+  // Norma em `docs/shared/guidelines/07-analytics.md`, "location nas docs
+  // pages": o vocabulário é `docs_<section-id>`, o mesmo id que o
+  // `docs_section_viewed` manda em `section_id` e o mesmo que ocupa o meio do
+  // `data-track-id` de três partes. Um vocabulário só é o que permite cruzar as
+  // três coisas no GA4.
+  //
+  // A norma existia e nada a media. Medido em 2026-09-05, fora do sheet: 140
+  // docs pages usam `location`, e 31 mandam SÓ `docs_demo` com três ou mais
+  // chamadas — Variantes, Composições e Do & Dont reportando "veio da
+  // demonstração". O parâmetro existe para responder de onde veio o clique e
+  // respondia sempre a mesma coisa.
+  //
+  // A segunda regra pega o outro lado, que apareceu uma vez só e teria passado
+  // para sempre: o SheetDocs do react tinha vocabulário PRÓPRIO — `docs:comp:
+  // filters`, `docs:dodont:pair1:do`, `docs:variants:right` —, com dois-pontos
+  // e em inglês. Nada casava com nada, e o valor parecia mais rico justamente
+  // por ser mais específico. A granularidade extra não se perde: ela já viaja
+  // no `label` e no `data-track-id` do elemento.
+  const SECOES_DOCS = [
+    'docs_demo', 'docs_variantes', 'docs_composicoes', 'docs_estados',
+    'docs_do_dont', 'docs_importacao', 'docs_propriedades', 'docs_tokens',
+    'docs_acessibilidade', 'docs_relacionados', 'docs_notas', 'docs_anatomia',
+    'docs_quando_usar', 'docs_analytics', 'docs_testes',
+  ];
+  // NOMES DE EVENTO que também começam com `docs_` e não são `location`. Sem
+  // esta lista, `track('docs_section_viewed', …)` seria acusado de vocabulário
+  // inválido em toda docs page do repositório.
+  const EVENTOS_DOCS = [
+    'docs_code_copy', 'docs_demo_click', 'docs_link_click', 'docs_nav_click',
+    'docs_page_view', 'docs_related_click', 'docs_section_viewed', 'docs_variant_click',
+  ];
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      // A varredura é pelo VALOR, não pela chave `location:`.
+      //
+      // A primeira versão desta regra procurava `location[=:]` e nasceu cega
+      // para duas das cinco stacks: vue e angular passam a seção como ARGUMENTO
+      // POSICIONAL (`rastrearSheet('docs_do_dont', 'right', aberto)`,
+      // `aoMudarPainel('right', 'docs_do_dont', ev)`), e ali não existe a
+      // palavra `location` em lugar nenhum. As duas devolviam zero achado, que
+      // em check de PRESENÇA é indistinguível de "conferido, tudo certo" — o
+      // mesmo erro de leitura que já custou caro nesta casa mais de uma vez.
+      const achados = [...content.matchAll(/["'](docs[_:][A-Za-z0-9_:-]*)["']/g)]
+        .filter((m) => !EVENTOS_DOCS.includes(m[1]));
+      if (achados.length === 0) continue;
+
+      for (const m of achados) {
+        if (SECOES_DOCS.includes(m[1])) continue;
+        violations.push({
+          category: 'analytics', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), line: content.slice(0, m.index).split('\n').length,
+          rule: 'location_fora_do_vocabulario',
+          message: `location "${m[1]}" não está no vocabulário docs_<section-id> — sem um vocabulário só, location, section_id e data-track-id não cruzam no GA4. Detalhe por elemento vai no label, não aqui`,
+        });
+      }
+
+      const valores = new Set(achados.map((m) => m[1]));
+      if (achados.length >= 3 && valores.size === 1 && valores.has('docs_demo')) {
+        violations.push({
+          category: 'analytics', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), line: content.slice(0, achados[0].index).split('\n').length,
+          rule: 'location_so_da_demo',
+          message: `as ${achados.length} chamadas desta docs page mandam "docs_demo" — Variantes, Composições, Estados e Do & Dont renderizam componente VIVO, e clique ali é tão real quanto na demo. O valor sai de ONDE O ELEMENTO ESTÁ, nunca de constante no topo do arquivo`,
+        });
+      }
+    }
+  }
+
 
   // 1. UI primitives não podem importar de @/lib/analytics
   for (const stack of STACKS) {
@@ -5289,6 +5362,59 @@ function auditButtonGap(slug) {
     return compactos >= botoes ? 'sm' : 'md';
   };
 
+  /**
+   * Botão que renderiza em PORTAL não é irmão de ninguém no cluster.
+   *
+   * A regra mede contenção no TEXTO-FONTE, e portal quebra exatamente isso: o
+   * `<SheetContent>` fica escrito dentro do `nds-cluster` e renderiza no
+   * `body`. Medido em 2026-09-05 no sheet, quando a Demonstração das cinco
+   * passou a trazer o painel inline: o cluster tem UM filho real — o gatilho —
+   * e a regra contava três, porque somava Cancelar e Aplicar do
+   * `<SheetFooter>`. Com dois botões "agrupados" ela passava a exigir `md`
+   * onde `sm` é o certo, e o contrato ficava impossível de cumprir.
+   *
+   * O react escapava por acidente: lá o painel está extraído num
+   * `<SheetDemo/>`, então o texto do cluster não contém botão nenhum além do
+   * componente. Vue e Svelte, que escrevem o painel inline, reprovavam os dois.
+   *
+   * Todo overlay desta casa nomeia o conteúdo portalado com sufixo `Content`
+   * (Sheet, Dialog, AlertDialog, Popover, DropdownMenu, Tooltip, HoverCard,
+   * Select, Drawer). Recortar essas subárvores antes de contar é o que alinha a
+   * contagem ao DOM — que é onde o gap existe.
+   */
+  const semPortais = (escopo) => {
+    let saida = escopo;
+    for (let volta = 0; volta < 12; volta++) {
+      // Duas formas, porque o Angular escreve o portal como ATRIBUTO de
+      // diretiva (`<div ndsSheetContent>`) e não como tag própria. Procurar só
+      // a tag PascalCase deixava o Angular reprovando sozinho depois que as
+      // outras quatro limparam — e "quatro limparam, uma não" parece defeito
+      // da stack quando é buraco do detector.
+      const porTag = /<([A-Z][A-Za-z]*Content)\b/.exec(saida);
+      const porAtributo = /<([a-zA-Z][\w-]*)[^>]*\bnds[A-Za-z]*Content\b/.exec(saida);
+      const m = !porTag ? porAtributo
+        : !porAtributo ? porTag
+        : (porTag.index <= porAtributo.index ? porTag : porAtributo);
+      if (!m) break;
+      const tag = m[1];
+      // Fechamento CASADO, contando aninhamento: o alvo do Angular é `div`, e
+      // `div` dentro de `div` é o caso comum. `indexOf` do primeiro `</div>`
+      // cortaria no lugar errado e devolveria botão de volta para a contagem.
+      const marcas = new RegExp('<(/?)' + tag + '\b', 'g');
+      marcas.lastIndex = m.index;
+      let profundidade = 0;
+      let fim = -1;
+      let mm;
+      while ((mm = marcas.exec(saida)) !== null) {
+        profundidade += mm[1] === '/' ? -1 : 1;
+        if (profundidade === 0) { fim = mm.index + mm[0].length; break; }
+      }
+      if (fim === -1) { saida = saida.slice(0, m.index); break; }
+      saida = saida.slice(0, m.index) + saida.slice(fim);
+    }
+    return saida;
+  };
+
   /** Um botão sozinho não tem vizinho: não existe gap a medir. */
   const agrupaBotoes = (escopo) => (escopo.match(BOTAO_G) || []).length >= 2;
 
@@ -5325,7 +5451,7 @@ function auditButtonGap(slug) {
         // O conteúdo começa depois do `>` da abertura: sem isso, um trigger
         // que É um botão e usa `nds-cluster` para arrumar rótulo e ícone por
         // dentro se acusaria a si mesmo.
-        const escopo = escopoDaTag(content, m.index, m[1], m.index + m[0].length);
+        const escopo = semPortais(escopoDaTag(content, m.index, m[1], m.index + m[0].length));
         if (!agrupaBotoes(escopo)) continue;
         const piso = pisoDo(escopo);
         if (aceitavel(piso, valor)) continue;
