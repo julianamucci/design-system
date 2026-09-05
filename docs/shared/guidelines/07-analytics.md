@@ -86,6 +86,50 @@ interface WithFieldName {
 
 ---
 
+### `location` nas docs pages — a SEÇÃO, não a página
+
+Num produto, `location` é o contexto de negócio (`"header"`, `"checkout_form"`).
+Nas docs pages do design system o contexto é a **seção**, e o vocabulário é
+`docs_<section-id>` — o mesmo id que o `docs_section_viewed` manda em
+`section_id` e o mesmo que ocupa a posição do meio no `data-track-id` de três
+partes (`{component}:{section}:{element}`). Um vocabulário só é o que permite
+cruzar as três coisas no GA4.
+
+| seção | `location` |
+|---|---|
+| demonstracao | `docs_demo` ¹ |
+| variantes | `docs_variantes` |
+| composicoes | `docs_composicoes` |
+| estados | `docs_estados` |
+| do-dont | `docs_do_dont` |
+| importacao | `docs_importacao` |
+| propriedades | `docs_propriedades` |
+| tokens | `docs_tokens` |
+| acessibilidade | `docs_acessibilidade` |
+| relacionados | `docs_relacionados` |
+| notas | `docs_notas` |
+| anatomia · quando-usar · analytics · testes | `docs_<id>`, se ganharem interativo |
+
+¹ `docs_demo` é herança, não exceção de estilo. Renomear para
+`docs_demonstracao` partiria a série no GA4 em duas, e são 275 chamadas — fica
+como está até alguém decidir pagar a migração. As demais nascem no padrão
+regular.
+
+**O valor vem de ONDE O ELEMENTO ESTÁ, nunca de constante no topo do arquivo.**
+Medido em 2026-09-04: 275 das ocorrências nas docs pages eram `docs_demo`,
+inclusive em elementos de Variantes, Composições e Do & Dont. O parâmetro
+existe para responder "de onde veio este clique" e respondia sempre a mesma
+coisa. Exemplo do defeito, no vanilla: o `save-icon` do tooltip é o preview da
+seção **Variantes** e reportava `docs_demo`, porque a seção estava cravada na
+função de tracking em vez de vir do call site.
+
+E o alcance não é só a demonstração: Variantes, Composições, Estados e Do & Dont
+renderizam componentes **vivos**, e um clique ali é tão real quanto na demo.
+Esses elementos disparam o evento do produto (`button_click`, `tooltip_view`,
+`dialog_open`…) com o `location` da própria seção.
+
+---
+
 ## Catálogo de Eventos por Componente
 
 ### Componentes interativos — rastrear sempre

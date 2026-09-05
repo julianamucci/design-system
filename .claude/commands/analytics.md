@@ -75,6 +75,21 @@ Qualquer violação em `_infra` tem prioridade sobre gaps por página: corrija a
 
 Vale para todos os campos livres (`label`, `action`, `action_label`, `destination`, `task`, `trigger_label`, `field_name`). `destination` acompanha a chave (`'#dashboard'`). Campos que já são estáveis por natureza (`component`, `variant`, `side`, `reason`, `trigger`) não têm risco. **Única exceção**: `page_title` no `docs_page_view` — campo padrão do GA4, human-readable por definição, e o payload já carrega `locale`.
 
+**Regra de `location` — a SEÇÃO onde o elemento está, não a página.** O
+vocabulário (`docs_<section-id>`, com `docs_demo` como herança) é norma e mora
+na guideline: `docs/shared/guidelines/07-analytics.md`, "`location` nas docs
+pages". Aqui interessa o que auditar.
+
+Medido em 2026-09-04: **275 ocorrências de `location: 'docs_demo'`** nas docs
+pages, inclusive em elementos de Variantes, Composições e Do & Dont. O
+parâmetro existe para responder "de onde veio este clique" e respondia sempre a
+mesma coisa. Exemplo, no vanilla: o `save-icon` do tooltip é o preview da seção
+**Variantes** e reportava `docs_demo`, porque a seção estava cravada na função
+de tracking em vez de vir do call site.
+
+O sintoma é sempre o mesmo: valor que não depende de onde o elemento está —
+constante no topo do arquivo, ou literal repetido em toda chamada.
+
 Contexto do mecanismo (pós-fix sistêmico):
 - O observer monta **sempre** que a página usa `DocsPageLayout` — `componentSlug` é opcional e derivado do `?id=` do iframe (`ui-button--docs` → `button`). Passe o prop apenas quando o slug derivado estiver errado (ex.: id de story fora do padrão `ui-<slug>--docs`).
 - `DocsDemonstration` é **auto-instrumentada** (`data-track-container`): cliques em elementos interativos dentro da demo são resolvidos e rastreados sem instrumentação por página. `data-track*` manual em elementos internos tem precedência — use para labels/ids mais ricos, não por obrigação.
@@ -89,6 +104,15 @@ Para cada docs page, verificar:
 4b. **Payloads com texto traduzido** — ver "Regra de payload" acima (o `_infra` do Passo 0 já aponta via `i18n_text_in_payload`)
 5. **Stories com `track()` direto** — contaminação indevida (precisa remover)
 6. **`translations.json` `analytics.table.*`** com eventos do produto (não `docs_*`)
+7. **`location` reflete a SEÇÃO** — ver a regra acima. O sintoma é constante no
+   topo do arquivo (`const LOCATION = 'docs_demo'`) ou literal repetido em toda
+   chamada: se o valor não vem de onde o elemento está, ele não diz nada. Grep
+   rápido: `location: 'docs_demo'` em arquivo cuja docs page tem preview vivo
+   fora da demonstração
+8. **Seções com componente VIVO disparam evento do produto** — Variantes,
+   Composições, Estados e Do & Dont renderizam o componente de verdade, e um
+   clique ali é tão real quanto na demo. Hoje a maioria só emite os `docs_*`
+   automáticos. Cobrar o evento do componente, com o `location` da seção
 
 ### Passo 3 — Modo audit ou fix
 
@@ -98,6 +122,9 @@ Para cada docs page, verificar:
 - Corrigir violações `_infra` primeiro (mount incondicional no layout, `data-track-container` na demonstração, `mountDocsTracking` em páginas fora do layout)
 - Adicionar `data-track`, `data-track-id` (3 partes), `data-track-label` em interativos fora de `DocsDemonstration`
 - Remover `track()` direto de stories
+- Trocar `location` cravado pelo id da seção que contém o elemento — e ligar o
+  evento do produto nas seções com componente vivo (Variantes, Composições,
+  Estados, Do & Dont), não só na demonstração
 - Adicionar eventos faltantes em `analytics.table.*` no `translations.json`
 
 ---
