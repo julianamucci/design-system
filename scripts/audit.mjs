@@ -2002,6 +2002,25 @@ function auditDeadLibInfra() {
     ...walkDir(join(ROOT, 'docs', 'shared', 'tokens'), ['.css']),
     ...walkDir(join(ROOT, 'docs', 'shared', 'themes'), ['.css']),
     ...walkDir(join(ROOT, 'docs', 'shared', 'styles'), ['.css']),
+    // O `.storybook/` de cada stack, e ele é o buraco mais caro desta lista
+    // porque não é infra que GERA código — é infra que o leitor RECEBE. O
+    // `manager-head.html` é servido em toda página do Storybook publicado, e as
+    // quatro stacks não-react anunciavam nos metas `description` e `keywords`
+    // "construídos com Tailwind CSS", uma lib que saiu do projeto. Medido em
+    // 2026-09-05, oito ocorrências, zero ruído.
+    //
+    // O furo não foi de varredura, foi de CATEGORIA: as três regras de
+    // vocabulário se organizam por "código que um slug possui"
+    // (`dead_lib_reference`, `tailwind_utility_in_docs`) ou "instrução que gera
+    // código" (esta). Um `<meta>` estático no manager não é nem um nem outro —
+    // nenhum slug o possui, e ele não gera nada. Por isso sobreviveu a rodadas
+    // de quality, cross-stack e analytics no mesmo componente.
+    //
+    // Pior: o arquivo ERA aberto. O `measurement_id_committed` lê o
+    // `manager-head.html` inteiro e casa uma única expressão (`G-XXXXXXXX`).
+    // Arquivo lido por regra que mede uma linha é arquivo não auditado, e a
+    // varredura limpa dela não dizia nada sobre o resto.
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), '.storybook'), ['.html'])),
   ];
 
   for (const file of targets) {
@@ -4543,6 +4562,50 @@ function auditStorybookInfra() {
           category: 'security', severity: 'high', slug: '_infra', stack,
           file: relative(ROOT, f), rule: 'measurement_id_committed',
           message: `ID de medição ${m[0]} escrito no arquivo — o repositório é público; injetar por variável de ambiente no build`,
+        });
+      }
+    }
+
+    // O `manager-head.html` anuncia a stack para quem chega de fora: `keywords`,
+    // `description`, `og:*`. É por stack e nasce de cópia, e cópia sem revisão
+    // aqui não quebra nada — só mente. Medido em 2026-09-05: o do Angular era o
+    // do Vanilla palavra por palavra, anunciando "componentes Vanilla TS" e
+    // `keywords` com "vanilla" DUAS vezes, num Storybook de Angular.
+    //
+    // Nenhuma varredura de vocabulário alcança isto, porque nenhuma palavra
+    // errada foi escrita — "vanilla" é termo vivo do projeto. O que está errado é
+    // o arquivo em que ela está. Por isso a verificação é de PERTENCIMENTO: o
+    // arquivo tem de nomear a própria stack e não pode nomear outra.
+    //
+    // `vanilla` é a exceção pelos dois lados: o CSS `.nds-*` é "vanilla CSS" em
+    // qualquer stack, e o nome da stack é o mesmo termo. Ela não conta como
+    // menção alheia — o que sobra é o caso que importa, que é a stack não se
+    // nomear.
+    const head = join(sb, 'manager-head.html');
+    if (existsSync(head)) {
+      const txt = readFile(head) || '';
+      // Sem barra invertida de proposito. A versao anterior usava `\b` dentro de
+      // template literal e a barra nao sobreviveu a travessia ate o arquivo:
+      // virou o escape de BACKSPACE, a expressao passou a procurar um caractere
+      // de controle, e as cinco stacks reprovaram por nao se nomearem. Falso
+      // positivo em bloco e o sintoma barato desse erro; falso NEGATIVO em
+      // bloco seria o caro, e e o mesmo defeito.
+      const limiteDePalavra = (termo) => new RegExp(`(^|[^a-z])${termo}([^a-z]|$)`, "i");
+      const nomeDaStack = limiteDePalavra(stack);
+      if (!nomeDaStack.test(txt)) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, head), rule: 'manager_head_de_outra_stack',
+          message: `os metas não nomeiam "${stack}" em lugar nenhum — o arquivo é por stack e nasce de cópia; sem o nome próprio ele anuncia a stack de quem foi copiado`,
+        });
+      }
+      const alheias = STACKS.filter((s) => s !== stack && s !== 'vanilla')
+        .filter((s) => limiteDePalavra(s).test(txt));
+      if (alheias.length) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, head), rule: 'manager_head_de_outra_stack',
+          message: `os metas nomeiam ${alheias.join(', ')} — este arquivo é servido em toda página do Storybook de ${stack} e anuncia outra stack para buscador e link compartilhado`,
         });
       }
     }
