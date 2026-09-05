@@ -91,19 +91,43 @@ export async function waitForPortal(
 
   return await waitFor(
     async () => {
-      // Em casos onde o portal Reka aparece com data-state=open mas findByRole
-      // ignora por aria-hidden temporário, fallback para querySelector direto.
+      // O fallback existe porque o `findByRole` DESCARTA elemento sob
+      // `aria-hidden`, e o portal da reka passa por esse estado por um instante
+      // na abertura. Mas a versão anterior caía num `querySelector` que não
+      // filtrava por NOME — então `waitForPortal(role, { name })` prometia
+      // esperar o nome e devolvia o primeiro portal aberto, com o nome que
+      // fosse.
+      //
+      // Isso é portão sem dentes na infra de teste, e o custo é pior que o de
+      // um teste que falha: a story pede a espera, o helper a engole, e a
+      // asserção seguinte mede a janela que ela queria atravessar. Medido em
+      // 2026-09-05 no popover do vue, onde o painel se nomeia por `aria-label`
+      // só depois que a lib solta o `aria-labelledby` do gatilho: a story
+      // esperava pelo nome certo e recebia o do gatilho, e a correção na story
+      // não mudou nada porque o helper nunca esperou.
+      //
+      // `hidden: true` é a opção da própria biblioteca para o motivo real do
+      // fallback, e ela PRESERVA o filtro de nome. Com nome pedido não há
+      // segunda rede: deixar passar sem conferir é o defeito que esta linha
+      // corrige.
       let el: HTMLElement;
       try {
         el = name
           ? await body.findByRole(role, { name })
           : await body.findByRole(role);
       } catch (err) {
-        const candidate = document.querySelector(
-          `[role="${role}"][data-state="open"]`,
-        ) as HTMLElement | null;
-        if (!candidate) throw err;
-        el = candidate;
+        try {
+          el = name
+            ? await body.findByRole(role, { name, hidden: true })
+            : await body.findByRole(role, { hidden: true });
+        } catch {
+          if (name) throw err;
+          const candidate = document.querySelector(
+            `[role="${role}"][data-state="open"]`,
+          ) as HTMLElement | null;
+          if (!candidate) throw err;
+          el = candidate;
+        }
       }
 
       if (el.getAttribute("data-state") === "closed") {

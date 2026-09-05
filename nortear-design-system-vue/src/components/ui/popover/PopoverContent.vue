@@ -69,23 +69,63 @@ function applyLabel(el: HTMLElement): void {
   if (el.getAttribute('aria-label') !== label) el.setAttribute('aria-label', label)
 }
 
-function resolvePanel(attempt = 0): void {
-  const el = panelRef.value?.$el
-  if (!(el instanceof HTMLElement)) {
-    // O `$el` do `Presence` começa como comentário e vira o nó no quadro
-    // seguinte — ler uma vez só perderia o painel na abertura.
-    if (attempt < 10) requestAnimationFrame(() => resolvePanel(attempt + 1))
-    return
-  }
+/*
+ * O painel é achado no DOM por um marcador PRÓPRIO, não pelo `$el` do Vue.
+ *
+ * Três tentativas falharam antes, e todas partiam de `panelRef.value?.$el`:
+ *
+ * 1. `requestAnimationFrame` até dez vezes — desistia em silêncio.
+ * 2. `watch(() => panelRef.value?.$el, …)` — PIOR: `$el` não é reativo no Vue 3
+ *    (é um getter para `instance.vnode.el`), e template ref é atribuído uma vez,
+ *    então o watcher dispara no máximo duas vezes.
+ * 3. laço de relógio de 2s a cada 50ms — e aqui veio o dado que fechou o caso:
+ *    o teste reprovou em 6094ms contra 6115ms da tentativa anterior, bit a bit
+ *    o mesmo. Com 2s de tentativas contra dois disparos e resultado idêntico,
+ *    TEMPO não é a variável.
+ *
+ * O que sobra é o alvo: o conteúdo vive sob `PopoverPortal`, ou seja dentro de
+ * um `Teleport`, e o `$el` do componente ali não é o nó que o leitor de tela vê.
+ * Um marcador que nós mesmos escrevemos atravessa o portal junto com o elemento,
+ * e `document.querySelector` o encontra onde quer que a lib o tenha posto.
+ */
+let panelId = 0
+const marker = `nds-popover-${++panelId}`
+
+function findPanel(): HTMLElement | null {
+  return document.querySelector<HTMLElement>(`[data-nds-panel="${marker}"]`)
+}
+
+function attachLabel(el: HTMLElement): void {
   applyLabel(el)
   labelObserver?.disconnect()
   labelObserver = new MutationObserver(() => applyLabel(el))
   labelObserver.observe(el, { attributes: true, attributeFilter: ['aria-labelledby', 'aria-label'] })
 }
 
-onMounted(() => resolvePanel())
+let deadline = 0
+let timer: ReturnType<typeof setTimeout> | null = null
+
+function resolvePanel(): void {
+  const el = findPanel()
+  if (el) {
+    attachLabel(el)
+    return
+  }
+  if (performance.now() > deadline) return
+  timer = setTimeout(resolvePanel, 50)
+}
+
+onMounted(() => {
+  deadline = performance.now() + 2000
+  resolvePanel()
+})
+
+
+
 
 onBeforeUnmount(() => {
+  if (timer) clearTimeout(timer)
+  timer = null
   labelObserver?.disconnect()
   labelObserver = null
 })
@@ -96,6 +136,7 @@ onBeforeUnmount(() => {
     <PopoverContent
       ref="panelRef"
       data-slot="popover-content"
+      :data-nds-panel="marker"
       v-bind="{ ...$attrs, ...forwarded }"
       :aria-modal="ariaModal"
       :class="cn( 'nds-popover-content', props.class, )"

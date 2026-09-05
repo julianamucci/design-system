@@ -82,7 +82,14 @@ export const Default: Story = {
       // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe. E o
       // `aria-labelledby` que a lib crava no gatilho tem de ter saído: com ele
       // de pé o leitor de tela anunciaria o botão, não o painel.
-      const dialog = await waitForPortal('dialog');
+      // Espera pelo NOME, não só pelo portal. A reka crava o `aria-labelledby`
+      // do gatilho por último e o `PopoverContent` o arranca depois — e só
+      // consegue quando o `$el` do `Presence` deixa de ser comentário e vira nó,
+      // o que leva um quadro ou dois. Pedir o portal e afirmar o nome no mesmo
+      // instante media a janela ANTES da correção: medido em 2026-09-05, o nome
+      // recebido era "Ver atalhos", o rótulo do gatilho. O `name` do helper
+      // reagenda até assentar, e as asserções seguintes viram leitura simples.
+      const dialog = await waitForPortal('dialog', { name: 'Informações adicionais' });
       await expect(dialog).toHaveAccessibleName('Informações adicionais');
       await expect(dialog).not.toHaveAttribute('aria-labelledby');
     });
