@@ -148,8 +148,9 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 /**
  * Abertura e fechamento de qualquer popover VIVO desta página.
  *
- * `triggerLabel` é um id estável (`basico`, `formulario`, …) e nunca o texto
- * traduzido: o rótulo traduzido partiria o mesmo evento em três valores no GA4.
+ * `triggerLabel` é um id estável em kebab-case (`demo`, `par1-do`, `with-title`,
+ * …), fixado igual nas cinco stacks para que a série JUNTE no GA4, e nunca o
+ * texto traduzido: o rótulo traduzido partiria o mesmo evento em três valores.
  * `location` diz de qual seção o exemplo saiu — a demonstração herda
  * `docs_demo`, e as demais seções se nomeiam, senão todo preview da página
  * chegaria ao relatório como se fosse a demonstração.
@@ -503,7 +504,7 @@ const a11yCritCols = computed(() => ({
         data-justify="center"
         data-spacing="sm"
       >
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('basico', 'docs_demo', open)">
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('demo', 'docs_demo', open)">
           <PopoverTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -625,12 +626,9 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('com_titulo', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par1-do', 'docs_do_dont', open)">
           <PopoverTrigger as-child>
-            <Button
-              variant="outline"
-              size="sm"
-            >
+            <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </PopoverTrigger>
@@ -653,12 +651,9 @@ const a11yCritCols = computed(() => ({
           rótulo do botão em vez do assunto do painel — exatamente o que a
           legenda ao lado critica.
         -->
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('sem_titulo', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par1-dont', 'docs_do_dont', open)">
           <PopoverTrigger as-child>
-            <Button
-              variant="outline"
-              size="sm"
-            >
+            <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </PopoverTrigger>
@@ -670,16 +665,13 @@ const a11yCritCols = computed(() => ({
         </Popover>
       </template>
       <template #do-preview-1>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('gatilho_claro', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par2-do', 'docs_do_dont', open)">
           <PopoverTrigger as-child>
-            <Button
-              variant="outline"
-              size="sm"
-            >
+            <Button variant="outline">
               {{ tContent('demonstration.labels.form.trigger') }}
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="center">
+          <PopoverContent align="start">
             <PopoverHeader>
               <PopoverTitle>
                 {{ tContent('demonstration.labels.form.trigger') }}
@@ -690,16 +682,13 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-1>
         <!-- Mesmo painel do lado bom: o que muda é só o rótulo do gatilho. -->
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('gatilho_vago', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par2-dont', 'docs_do_dont', open)">
           <PopoverTrigger as-child>
-            <Button
-              variant="outline"
-              size="sm"
-            >
+            <Button variant="outline">
               {{ tContent('doDont.pair2.dontTrigger') }}
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="center">
+          <PopoverContent align="start">
             <PopoverHeader>
               <PopoverTitle>
                 {{ tContent('demonstration.labels.form.trigger') }}
@@ -751,7 +740,7 @@ const a11yCritCols = computed(() => ({
         </Popover>
       </template>
       <template #variant-preview-1>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('withTitle', 'docs_variantes', open)">
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('with-title', 'docs_variantes', open)">
           <PopoverTrigger as-child>
             <Button
               variant="outline"
@@ -852,7 +841,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('editProfile', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('edit-profile', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -916,7 +905,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('tableFilter', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('table-filter', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -989,7 +978,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('colorPicker', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('color-picker', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -1027,7 +1016,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('quickSettings', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('quick-settings', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"

@@ -370,7 +370,7 @@ const COMPOSITION_CODE = {
     <!-- ─── Previews das variantes ─────────────────────────────────────── -->
 
     <ng-template #tplVarDefault>
-      <div ndsPopover (onOpenChange)="onChange('basico', 'docs_variantes', $event)">
+      <div ndsPopover (onOpenChange)="onChange('default', 'docs_variantes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.trigger') }}
         </button>
@@ -384,7 +384,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplVarWithTitle>
-      <div ndsPopover (onOpenChange)="onChange('com-titulo', 'docs_variantes', $event)">
+      <div ndsPopover (onOpenChange)="onChange('with-title', 'docs_variantes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.title') }}
         </button>
@@ -452,7 +452,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplCompFiltro>
-      <div ndsPopover (onOpenChange)="onChange('filtro-tabela', 'docs_composicoes', $event)">
+      <div ndsPopover (onOpenChange)="onChange('table-filter', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.tableFilter.name') }}
         </button>
@@ -480,7 +480,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplCompCores>
-      <div ndsPopover (onOpenChange)="onChange('cor-etiqueta', 'docs_composicoes', $event)">
+      <div ndsPopover (onOpenChange)="onChange('color-picker', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.colorPicker.name') }}
         </button>
@@ -503,7 +503,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplCompPreferencias>
-      <div ndsPopover (onOpenChange)="onChange('preferencias', 'docs_composicoes', $event)">
+      <div ndsPopover (onOpenChange)="onChange('quick-settings', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.quickSettings.name') }}
         </button>
@@ -548,7 +548,7 @@ const COMPOSITION_CODE = {
              na sua seção. -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-cluster" data-justify="center" data-spacing="sm">
-            <div ndsPopover (onOpenChange)="onChange('basico', 'docs_demo', $event)">
+            <div ndsPopover (onOpenChange)="onChange('demo', 'docs_demo', $event)">
               <button ndsPopoverTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
@@ -716,8 +716,8 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * template: o `ngTemplateOutlet` recria a view quando o contexto troca de
    * identidade, e um literal nova a cada verificação fecharia o painel aberto.
    */
-  protected readonly ctxVarFormulario = { gatilho: 'formulario', secao: 'docs_variantes' };
-  protected readonly ctxCompPerfil = { gatilho: 'editar-perfil', secao: 'docs_composicoes' };
+  protected readonly ctxVarFormulario = { gatilho: 'form', secao: 'docs_variantes' };
+  protected readonly ctxCompPerfil = { gatilho: 'edit-profile', secao: 'docs_composicoes' };
 
   /** Os três status do filtro de tabela, tirados da descrição da composição. */
   protected readonly opcoesFiltro = computed(() => {
@@ -763,7 +763,9 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    *
    * O evento sai do handler da docs page, nunca de dentro do primitivo de UI —
    * é o que a regra `analytics_in_ui_primitive` proíbe. O rótulo é um id
-   * estável e não o texto traduzido, que viraria três valores distintos no GA4.
+   * estável em kebab-case (`demo`, `par1-do`, `with-title`, …), o MESMO nas
+   * cinco stacks para que a série junte no GA4, e nunca o texto traduzido, que
+   * viraria três valores distintos.
    *
    * `secao` vem do CALL SITE e não de constante aqui dentro: Variantes,
    * Composições e Do & Dont renderizam o componente VIVO, e um clique ali é tão

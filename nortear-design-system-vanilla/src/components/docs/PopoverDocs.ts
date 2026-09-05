@@ -134,7 +134,7 @@ function buildUntitledPopover(
   });
 }
 
-function buildDefaultPopover(location: string, triggerId = 'basico'): HTMLElement {
+function buildDefaultPopover(location: string, triggerId = 'default'): HTMLElement {
   return buildUntitledPopover(
     location,
     triggerId,
@@ -147,10 +147,19 @@ function buildDefaultPopover(location: string, triggerId = 'basico'): HTMLElemen
 /**
  * O exemplo canônico do Popover — o mesmo que o Playground da story renderiza.
  *
- * Um gatilho `outline`, painel `align: 'center'` nascendo fechado, cabeçalho
- * com título e descrição e um rodapé com Cancelar + Salvar.
+ * Um gatilho `outline`, painel `align: 'center'` nascendo fechado e cabeçalho
+ * com título e descrição.
+ *
+ * `showActions` liga o rodapé Cancelar + Salvar, e só a Demonstração o pede: a
+ * variante `withTitle` existe para mostrar `PopoverHeader` com título e
+ * descrição, e o par 1 do Do & Don't para mostrar que o painel tem nome
+ * acessível próprio. Nos dois, o rodapé é da Demonstração e distrai do assunto.
  */
-function buildWithTitlePopover(location: string, triggerId = 'com-titulo'): HTMLElement {
+function buildWithTitlePopover(
+  location: string,
+  triggerId = 'with-title',
+  showActions = false,
+): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
 
   const content = document.createElement('div');
@@ -166,15 +175,18 @@ function buildWithTitlePopover(location: string, triggerId = 'com-titulo'): HTML
     createPopoverDescription({ text: t('demonstration.labels.description') }),
   );
 
-  const actions = document.createElement('div');
-  actions.className = 'nds-cluster';
-  actions.dataset.spacing = 'sm';
-  actions.dataset.justify = 'end';
-  const cancel = createButton({ variant: 'ghost', size: 'sm', label: t('demonstration.labels.cancel') });
-  const save = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.save') });
-  actions.append(cancel, save);
+  content.appendChild(header);
 
-  content.append(header, actions);
+  if (showActions) {
+    const actions = document.createElement('div');
+    actions.className = 'nds-cluster';
+    actions.dataset.spacing = 'sm';
+    actions.dataset.justify = 'end';
+    const cancel = createButton({ variant: 'ghost', size: 'sm', label: t('demonstration.labels.cancel') });
+    const save = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.save') });
+    actions.append(cancel, save);
+    content.appendChild(actions);
+  }
 
   return createPopover({
     trigger,
@@ -216,7 +228,7 @@ function buildTriggerLabelPopover(
   });
 }
 
-function buildFormPopover(location: string, triggerId = 'formulario'): HTMLElement {
+function buildFormPopover(location: string, triggerId = 'form'): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.form.trigger') });
 
   const content = document.createElement('form');
@@ -238,9 +250,17 @@ function buildFormPopover(location: string, triggerId = 'formulario'): HTMLEleme
   const emailInput = createInput({ id: 'popover-demo-email', type: 'email', placeholder: 'name@example.com' });
   emailRow.append(emailLabel, emailInput);
 
+  // Dois botões, não um: o conteúdo compartilhado descreve "Inputs e botões",
+  // e um formulário em painel flutuante precisa de saída sem confirmar.
+  const actions = document.createElement('div');
+  actions.className = 'nds-cluster';
+  actions.dataset.spacing = 'sm';
+  actions.dataset.justify = 'end';
+  const cancel = createButton({ variant: 'ghost', size: 'sm', label: t('demonstration.labels.cancel'), type: 'button' });
   const submit = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.form.submit'), type: 'submit' });
+  actions.append(cancel, submit);
 
-  content.append(nameRow, emailRow, submit);
+  content.append(nameRow, emailRow, actions);
 
   return createPopover({
     trigger,
@@ -358,7 +378,7 @@ export function createPopoverDocs(): HTMLElement {
             wrap.className = 'nds-cluster';
             wrap.dataset.justify = 'center';
             wrap.dataset.spacing = 'sm';
-            wrap.appendChild(buildWithTitlePopover('docs_demo', 'basico'));
+            wrap.appendChild(buildWithTitlePopover('docs_demo', 'demo', true));
             return wrap;
           },
         });
@@ -518,7 +538,7 @@ createPopover({ trigger, content });`;
         const codeForm = `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
 const form = document.createElement('form');
-// ... Inputs + submit button
+// ... Inputs + botões (Cancelar + Atualizar)
 createPopover({ trigger, content: form });`;
 
         return createDocsVariants({
@@ -721,7 +741,7 @@ createPopover({ trigger, content });`;
             content: form,
             side: 'bottom',
             align: 'start',
-            onOpenChange: trackPopoverOpenChange('editar-perfil', 'docs_composicoes'),
+            onOpenChange: trackPopoverOpenChange('edit-profile', 'docs_composicoes'),
           });
         }
 
@@ -763,7 +783,7 @@ createPopover({ trigger, content });`;
             content,
             side: 'bottom',
             align: 'start',
-            onOpenChange: trackPopoverOpenChange('filtro-tabela', 'docs_composicoes'),
+            onOpenChange: trackPopoverOpenChange('table-filter', 'docs_composicoes'),
           });
         }
 
@@ -803,7 +823,7 @@ createPopover({ trigger, content });`;
             content,
             side: 'bottom',
             align: 'start',
-            onOpenChange: trackPopoverOpenChange('cor-etiqueta', 'docs_composicoes'),
+            onOpenChange: trackPopoverOpenChange('color-picker', 'docs_composicoes'),
           });
         }
 
@@ -842,7 +862,7 @@ createPopover({ trigger, content });`;
             content,
             side: 'bottom',
             align: 'start',
-            onOpenChange: trackPopoverOpenChange('preferencias', 'docs_composicoes'),
+            onOpenChange: trackPopoverOpenChange('quick-settings', 'docs_composicoes'),
           });
         }
 
