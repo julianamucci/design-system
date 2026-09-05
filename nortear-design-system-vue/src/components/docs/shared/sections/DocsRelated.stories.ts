@@ -43,9 +43,9 @@ const meta: Meta<typeof DocsRelated> = {
     title: "Relacionados",
     items: [
       {
-        name: "Link",
-        description: "Leva a outro endereço. O navegador deixa abrir em nova aba; o botão não.",
-        path: "?path=/docs/components-navigation-link--docs"
+        name: "Switch",
+        description: "Configuração on/off com efeito imediato — muda ao alternar, sem confirmar.",
+        path: "?path=/docs/components-form-switch--docs"
       },
       {
         name: "Toggle",

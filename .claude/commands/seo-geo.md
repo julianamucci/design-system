@@ -121,7 +121,7 @@ invocada desde abril de 2026. O backlog que apareceu quando o runner nasceu:
 | `seo_description_longo` | `seo.description` acima de 155, por locale. Mesma mecânica, no trecho abaixo do link |
 | `seo_title_suffix` | `· Design System` escrito no JSON — o `useSeoEffect` já acrescenta, e o resultado é o sufixo duplicado |
 | `manager_head_de_outra_stack` | o `manager-head.html` de uma stack anuncia OUTRA. Sai sob `_infra`, é por stack e nasce de cópia. Medido em 2026-09-05: o do Angular era o do Vanilla palavra por palavra — `description`, `og:title` e `og:description` dizendo "componentes Vanilla TS", e `keywords` com "vanilla" duas vezes, num Storybook de Angular |
-| `dead_lib_in_infra` (em `.storybook/*.html`) | lib morta nos metas. Quatro stacks anunciavam "construídos com Tailwind CSS" |
+| `dead_lib_in_infra` (em `.storybook/*.html`) | lib morta nos metas. Quatro stacks anunciavam "construídos com Tailwind CSS" — lib que saiu do projeto e nunca deve voltar a ser ensinada aqui |
 
 **As duas últimas são a lição de escopo desta skill.** O Passo 4 daqui abria o
 `manager-head.html` e fazia UM grep (`googletagmanager.com`) — e o caminho
