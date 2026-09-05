@@ -3678,9 +3678,15 @@ function auditTaxonomy(slug) {
   const push = (rule, severity, message) =>
     violations.push({ category: 'quality', severity, slug, stack: 'shared', file: rel, rule, message });
 
+  // `panelLabels` entrou em 2026-09-05 e NÃO é variante: é o nome acessível de
+  // uma delas. O popover documenta a variante "Default" como painel de conteúdo
+  // livre, sem título visível, e o Do & Don't da mesma página exigia título —
+  // a página ensinava como padrão o que proibia três seções abaixo. A decisão
+  // foi manter a variante e nomear o painel por `aria-label`, o que pede um
+  // texto por variante. Sem esta linha a regra o lê como variante solta.
   const HEADERS = new Set(['title', 'cols', 'note', 'items', 'styles', 'sizes',
     'compositions', 'compositionsTitle', 'visualTitle', 'description',
-    'stylesTitle', 'sizesTitle']);
+    'stylesTitle', 'sizesTitle', 'panelLabels']);
   // `variants.items` guarda STRING; `compositions` e `states` guardam OBJETO.
   // Para inventariar chaves, aceite as duas formas — filtrar por objeto aqui
   // descartava os items inteiros e a comparação de duplicidade nunca rodava.
