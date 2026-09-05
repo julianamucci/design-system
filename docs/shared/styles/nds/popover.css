@@ -86,11 +86,19 @@
   font-size: var(--text-control);
 }
 
+/* `margin: 0` nos dois, como dialog, sheet e alert-dialog já fazem — e aqui
+ * faltava. O título é `h*` e a descrição é `<p>`: o agente de usuário dá a eles
+ * `1.33em` e `1em` de margem vertical, e dentro de um container FLEX margem não
+ * colapsa. As duas somavam, e o espaço entre título e descrição saía quase do
+ * tamanho de uma linha. Medido pela dona na tela, em 2026-09-05 — nenhum portão
+ * desta casa abre folha de estilo. */
 .nds-popover-title {
+  margin: 0;
   font-weight: var(--font-weight-medium, 500);
 }
 
 .nds-popover-description {
+  margin: 0;
   color: hsl(var(--muted-foreground));
 }
 
