@@ -2261,6 +2261,106 @@ function auditIconeDeBotaoEmbrulhado(slug) {
   return violations;
 }
 
+/**
+ * `dodont_preview_sem_componente` — o Do & Don't mostra o componente ou uma imitação?
+ *
+ * A seção é obrigatória, os previews são código como qualquer outro, e o
+ * conteúdo compartilhado só traz a LEGENDA — então cada stack inventa o próprio
+ * par. O `pipeline.md` já chamava isto de "buraco recorrente", mas no contrato
+ * do context-cache, que é spec para CONSTRUIR e é apagado a cada execução.
+ * Nunca virou verificação.
+ *
+ * Medido em 2026-09-04 no tooltip: o Do & Don't era imitação em monoespaçado no
+ * react, no vanilla e no angular, e componente vivo no vue e no svelte. Nada
+ * pegava. O contrato de docs page cobra preview VAZIO e preview desalinhado, e
+ * uma imitação bem construída passa nos dois; a sonda de docs page enumera
+ * CARTÕES NOMEADOS, e Do & Don't é slot livre.
+ *
+ * Por que comparar stacks em vez de definir "imitação": definir exigiria julgar
+ * markup. Comparar não — se três instanciam o componente e duas não, a
+ * divergência é o achado, e o que fazer com ela está na guideline 08 §15 (toda
+ * seção com exemplo traz componente VIVO).
+ *
+ * A detecção é por JANELA a partir do marcador de cada preview, como a regra de
+ * `demonstration.labels`: o Do & Don't não tem fronteira sintática comum às
+ * cinco — no svelte os previews são snippets DECLARADOS FORA do elemento.
+ */
+const MARCADOR_DODONT = {
+  react: /(?:doPreview|dontPreview):/,
+  vue: /<template #(?:do|dont)-preview-/,
+  svelte: /\{#snippet (?:do|dont)Pair/,
+  vanilla: /(?:doPreviewFactory|dontPreviewFactory):/,
+  angular: /<ng-template #tplDoDont/,
+};
+
+/** Como cada stack INSTANCIA o componente do slug. */
+function tokenDeInstancia(slug, stack) {
+  const Slug = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+  if (stack === 'vanilla') return 'create' + Slug + '(';
+  if (stack === 'angular') return 'nds' + Slug;
+  return '<' + Slug;
+}
+
+function auditDoDontPreview(slug) {
+  const porStack = {};
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    const token = tokenDeInstancia(slug, stack);
+    let total = 0;
+    let vivos = 0;
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      const linhas = content.split('\n');
+      const marcas = [];
+      for (let i = 0; i < linhas.length; i++) {
+        if (MARCADOR_DODONT[stack].test(linhas[i])) marcas.push(i);
+      }
+      // Um nível de INDIREÇÃO: o preview costuma chamar um helper local em vez
+      // de instanciar na própria linha (`buildDoDont(...)` no vanilla). Sem
+      // isto a regra acusava imitação onde havia componente vivo — falso
+      // positivo medido na primeira rodada, antes de commitar.
+      const fabricas = new Set();
+      for (let n = 0; n < linhas.length; n++) {
+        const decl = linhas[n].match(/(?:function|const)[ ]+([A-Za-z_$][A-Za-z0-9_$]*)[ ]*[=(]/);
+        if (!decl) continue;
+        if (linhas.slice(n, n + 40).some((l) => l.includes(token))) fabricas.add(decl[1]);
+      }
+
+      for (let k = 0; k < marcas.length; k++) {
+        const inicio = marcas[k];
+        const ate = Math.min(marcas[k + 1] ?? linhas.length, inicio + 40);
+        const janela = linhas.slice(inicio, ate);
+        total += 1;
+        const viva = janela.some((l) => l.includes(token))
+          || janela.some((l) => [...fabricas].some((f) => l.includes(f + '(')));
+        if (viva) vivos += 1;
+      }
+    }
+    porStack[stack] = { total, vivos };
+  }
+
+  const comSecao = STACKS.filter((s) => porStack[s].total > 0);
+  if (comSecao.length < 2) return [];
+
+  const todosVivos = comSecao.filter((s) => porStack[s].vivos === porStack[s].total);
+  if (todosVivos.length === 0) return [];   // nenhuma instancia: é decisão de conteúdo, não divergência
+
+  const violations = [];
+  for (const stack of comSecao) {
+    const { total, vivos } = porStack[stack];
+    if (vivos === total) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug, stack,
+      file: 'docs/' + slug, rule: 'dodont_preview_sem_componente',
+      message: 'o Do & Don\'t mostra imitação em ' + (total - vivos) + ' de ' + total
+        + ' previews — ' + todosVivos.join(', ') + ' instancia' + (todosVivos.length > 1 ? 'm' : '')
+        + ' o componente em todos. Guideline 08 §15: toda seção com exemplo traz componente VIVO',
+    });
+  }
+  return violations;
+}
+
 function auditContractCoverage(slug) {
   const ids = contractIds(slug);
   if (ids.length === 0) return [];
@@ -6047,6 +6147,7 @@ function auditQuality(slug) {
   violations.push(...auditContractCoverage(slug));
   violations.push(...auditDemonstrationLabels(slug));
   violations.push(...auditIconeDeBotaoEmbrulhado(slug));
+  violations.push(...auditDoDontPreview(slug));
   violations.push(...auditPlayIdempotente(slug));
 
   return violations;
