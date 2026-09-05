@@ -37,7 +37,7 @@ import { Button } from '@/components/ui/button'
     </PopoverTrigger>
     <PopoverContent>
       <PopoverHeader>
-        <PopoverTitle>Configuracoes de exibição</PopoverTitle>
+        <PopoverTitle>Configurações de exibição</PopoverTitle>
         <PopoverDescription>
           Ajuste a aparência do conteúdo da página.
         </PopoverDescription>
@@ -105,14 +105,15 @@ describe('transforms das stories de variante', () => {
     const saida = popoverContentLivreSource();
     expect(saida).not.toContain('PopoverTitle');
     expect(saida).not.toContain('PopoverHeader');
-    // Sem título o painel herda o nome do gatilho, então o gatilho precisa
-    // nomear a ação: "Ver atalhos", nunca "Mais".
+    // Sem título, o painel DECLARA o próprio nome: o snippet que a página
+    // ensina não pode deixá-lo cair na herança do rótulo do gatilho.
+    expect(saida).toContain('<PopoverContent aria-label="Informações adicionais">');
     expect(saida).toContain('<Button variant="outline">Ver atalhos</Button>');
   });
 
   it('o cabeçalho completo traz título e descrição no lugar do texto solto', () => {
     const saida = popoverWithTitleSource();
-    expect(saida).toContain('<PopoverTitle>Configuracoes de exibição</PopoverTitle>');
+    expect(saida).toContain('<PopoverTitle>Configurações de exibição</PopoverTitle>');
     expect(saida).toContain('<PopoverDescription>');
     // `aria-labelledby` é DERIVADO do título pelo componente; escrevê-lo à mão
     // ensinaria a duplicar o que a peça já faz.

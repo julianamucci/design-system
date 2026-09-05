@@ -170,7 +170,7 @@ export const QuickSettings: Story = {
   args: {
     open: true,
     variant: 'quickSettings',
-    triggerLabel: 'Configuracoes rápidas',
+    triggerLabel: 'Configurações rápidas',
     title: 'Preferências',
     description: 'Cada linha vale por si — nada aqui depende do resto.',
   },

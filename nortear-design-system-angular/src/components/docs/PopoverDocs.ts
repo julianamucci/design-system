@@ -10,12 +10,13 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import type { RdxPopoverOpenChange } from '@radix-ng/primitives/popover';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { stripHtml, toPlainText } from '@/lib/strip-html';
+import { toPlainText } from '@/lib/strip-html';
 import { NDS_POPOVER } from '@/components/ui/popover';
 import { NdsButton } from '@/components/ui/button';
 import { NdsCheckbox } from '@/components/ui/checkbox';
@@ -196,7 +197,8 @@ const VARIANT_CODE = {
   default: `<div ndsPopover>
   <button ndsPopoverTrigger ndsButton variant="outline">Ver atalhos</button>
 
-  <ng-template ndsPopoverContent>
+  <!-- Sem título dentro, o nome do painel vem do input da diretiva -->
+  <ng-template ndsPopoverContent ariaLabel="Informações adicionais">
     <p class="nds-text-body">Use Ctrl+K para abrir a busca.</p>
   </ng-template>
 </div>`,
@@ -294,6 +296,7 @@ const COMPOSITION_CODE = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
+    NgTemplateOutlet,
     ...NDS_POPOVER, NdsButton, NdsCheckbox, NdsInput, NdsLabel,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
@@ -305,7 +308,7 @@ const COMPOSITION_CODE = {
     <!-- ─── Previews do Do & Don't ─────────────────────────────────────── -->
 
     <ng-template #tplDoDont1Do>
-      <div ndsPopover>
+      <div ndsPopover (onOpenChange)="onChange('par1-do', 'docs_do_dont', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.trigger') }}
         </button>
@@ -321,19 +324,21 @@ const COMPOSITION_CODE = {
     <ng-template #tplDoDont1Dont>
       <!-- Sem título: o painel cai no nome de reserva herdado do gatilho, que
            mantém o axe verde mas devolve ao leitor o rótulo do botão em vez do
-           assunto do painel — exatamente o que a legenda critica. -->
-      <div ndsPopover>
+           assunto do painel — exatamente o que a legenda critica. O parágrafo é
+           a chave doDont.pair1.dontBody, escrito para ilustrar essa perda; reaproveitar
+           a descrição da demonstração dizia outra coisa. -->
+      <div ndsPopover (onOpenChange)="onChange('par1-dont', 'docs_do_dont', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.trigger') }}
         </button>
         <ng-template ndsPopoverContent>
-          <p class="nds-text-body">{{ t('demonstration.labels.description') }}</p>
+          <p class="nds-text-body">{{ t('doDont.pair1.dontBody') }}</p>
         </ng-template>
       </div>
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <div ndsPopover>
+      <div ndsPopover (onOpenChange)="onChange('par2-do', 'docs_do_dont', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.form.trigger') }}
         </button>
@@ -346,8 +351,14 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplDoDont2Dont>
-      <div ndsPopover>
-        <button ndsPopoverTrigger ndsButton variant="outline">{{ rotuloVago() }}</button>
+      <!-- Mesmo painel, gatilho vago: o que a lição compara é o RÓTULO. O texto
+           é a chave doDont.pair2.dontTrigger — a legenda promete "Clique aqui", e
+           derivar a primeira palavra do rótulo bom devolvia "Editar", que é um
+           verbo truncado e não um rótulo vago. -->
+      <div ndsPopover (onOpenChange)="onChange('par2-dont', 'docs_do_dont', $event)">
+        <button ndsPopoverTrigger ndsButton variant="outline">
+          {{ t('doDont.pair2.dontTrigger') }}
+        </button>
         <ng-template ndsPopoverContent align="start">
           <div ndsPopoverHeader>
             <h3 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h3>
@@ -359,18 +370,21 @@ const COMPOSITION_CODE = {
     <!-- ─── Previews das variantes ─────────────────────────────────────── -->
 
     <ng-template #tplVarDefault>
-      <div ndsPopover>
+      <div ndsPopover (onOpenChange)="onChange('basico', 'docs_variantes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.trigger') }}
         </button>
-        <ng-template ndsPopoverContent>
+        <!-- Painel de conteúdo LIVRE: sem título, nomeado pelo input da
+             diretiva. O atributo aria-label escrito no ng-template não
+             chegaria a elemento nenhum — template não renderiza. -->
+        <ng-template ndsPopoverContent [ariaLabel]="t('variants.panelLabels.default')">
           <p class="nds-text-body">{{ t('demonstration.labels.description') }}</p>
         </ng-template>
       </div>
     </ng-template>
 
     <ng-template #tplVarWithTitle>
-      <div ndsPopover>
+      <div ndsPopover (onOpenChange)="onChange('com-titulo', 'docs_variantes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.title') }}
         </button>
@@ -385,8 +399,14 @@ const COMPOSITION_CODE = {
 
     <!-- ─── Previews das composições ───────────────────────────────────── -->
 
-    <ng-template #tplFormulario>
-      <div ndsPopover>
+    <!-- Um molde, dois usos: a variante "Form" e a composição "Editar perfil"
+         são o mesmo exemplo. Só o par (gatilho, seção) muda, e ele chega por
+         contexto do outlet — sem isso o exemplo da Composição reportaria
+         "veio das Variantes". Os dois contextos são campos estáveis da classe:
+         objeto literal no template muda de identidade a cada verificação e o
+         outlet recriaria a view, fechando o painel sozinho. -->
+    <ng-template #tplFormulario let-gatilho="gatilho" let-secao="secao">
+      <div ndsPopover (onOpenChange)="onChange(gatilho, secao, $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.form.trigger') }}
         </button>
@@ -417,8 +437,22 @@ const COMPOSITION_CODE = {
       </div>
     </ng-template>
 
+    <ng-template #tplVarFormulario>
+      <ng-container
+        [ngTemplateOutlet]="tplFormulario"
+        [ngTemplateOutletContext]="ctxVarFormulario"
+      />
+    </ng-template>
+
+    <ng-template #tplCompPerfil>
+      <ng-container
+        [ngTemplateOutlet]="tplFormulario"
+        [ngTemplateOutletContext]="ctxCompPerfil"
+      />
+    </ng-template>
+
     <ng-template #tplCompFiltro>
-      <div ndsPopover>
+      <div ndsPopover (onOpenChange)="onChange('filtro-tabela', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.tableFilter.name') }}
         </button>
@@ -446,7 +480,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplCompCores>
-      <div ndsPopover>
+      <div ndsPopover (onOpenChange)="onChange('cor-etiqueta', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.colorPicker.name') }}
         </button>
@@ -469,7 +503,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplCompPreferencias>
-      <div ndsPopover>
+      <div ndsPopover (onOpenChange)="onChange('preferencias', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.quickSettings.name') }}
         </button>
@@ -507,26 +541,22 @@ const COMPOSITION_CODE = {
       </div>
 
       <ng-container docsMain>
+        <!-- Um gatilho só, e o mesmo exemplo do Playground da story: mesmo
+             rótulo, mesmo painel, mesmo rodapé. O formulário e a lista de
+             preferências que moravam aqui não sumiram da página — são a
+             variante "Form" e a composição "Configurações rápidas", cada uma
+             na sua seção. -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-cluster" data-spacing="md">
-            <div ndsPopover (onOpenChange)="onChange('basico', $event)">
+          <div class="nds-cluster" data-justify="center" data-spacing="sm">
+            <div ndsPopover (onOpenChange)="onChange('basico', 'docs_demo', $event)">
               <button ndsPopoverTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
 
-              <ng-template ndsPopoverContent>
+              <ng-template ndsPopoverContent align="center">
                 <div ndsPopoverHeader>
                   <h3 ndsPopoverTitle>{{ t('demonstration.labels.title') }}</h3>
                   <p ndsPopoverDescription>{{ t('demonstration.labels.description') }}</p>
-                </div>
-
-                <div class="nds-stack" data-spacing="sm">
-                  @for (pref of preferencias(); track pref.id) {
-                    <div class="nds-cluster" data-justify="between">
-                      <label ndsLabel [attr.for]="'demo-' + pref.id">{{ pref.label }}</label>
-                      <button ndsCheckbox [id]="'demo-' + pref.id"></button>
-                    </div>
-                  }
                 </div>
 
                 <div class="nds-cluster" data-justify="end" data-spacing="sm">
@@ -535,41 +565,6 @@ const COMPOSITION_CODE = {
                   </button>
                   <button ndsPopoverClose ndsButton size="sm">
                     {{ t('demonstration.labels.save') }}
-                  </button>
-                </div>
-              </ng-template>
-            </div>
-
-            <div ndsPopover (onOpenChange)="onChange('formulario', $event)">
-              <button ndsPopoverTrigger ndsButton variant="outline">
-                {{ t('demonstration.labels.form.trigger') }}
-              </button>
-
-              <ng-template ndsPopoverContent align="start">
-                <div ndsPopoverHeader>
-                  <h3 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h3>
-                </div>
-
-                <div class="nds-stack" data-spacing="sm">
-                  <label ndsLabel for="pd-demo-nome">
-                    {{ t('demonstration.labels.form.name') }}
-                  </label>
-                  <input ndsInput id="pd-demo-nome" value="Ana Ribeiro" />
-                </div>
-
-                <div class="nds-stack" data-spacing="sm">
-                  <label ndsLabel for="pd-demo-email">
-                    {{ t('demonstration.labels.form.email') }}
-                  </label>
-                  <input ndsInput id="pd-demo-email" type="email" value="ana@nortear.com.br" />
-                </div>
-
-                <div class="nds-cluster" data-justify="end" data-spacing="sm">
-                  <button ndsPopoverClose ndsButton variant="ghost" size="sm">
-                    {{ t('demonstration.labels.cancel') }}
-                  </button>
-                  <button ndsPopoverClose ndsButton size="sm">
-                    {{ t('demonstration.labels.form.submit') }}
                   </button>
                 </div>
               </ng-template>
@@ -705,18 +700,24 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
 
   /**
    * O formulário aparece duas vezes — como variante "Form" e como composição
-   * "Editar perfil". Um molde só, dois usos.
+   * "Editar perfil". Um molde só, dois usos, e cada uso entra por um invólucro
+   * que instancia o molde com o seu contexto de analytics.
    *
-   * `#tplFormulario` JÁ é a TemplateRef, então o outlet recebe `tplFormulario()`
-   * e não `tplFormulario()()`.
+   * O molde em si não precisa de `viewChild`: dentro do template, `#tplFormulario`
+   * JÁ é a TemplateRef e o `ngTemplateOutlet` a recebe direto — a variável de
+   * referência sombreia o membro da classe, e chamá-la reprova com TS2349.
    */
-  protected readonly tplFormulario = viewChild.required<TemplateRef<unknown>>('tplFormulario');
+  private readonly tplVarFormulario =
+    viewChild.required<TemplateRef<unknown>>('tplVarFormulario');
+  private readonly tplCompPerfil = viewChild.required<TemplateRef<unknown>>('tplCompPerfil');
 
-  /** Rótulo vago do segundo "don't" — a primeira palavra do bom, sem objeto. */
-  protected readonly rotuloVago = computed(() => {
-    dict();
-    return stripHtml(t('demonstration.labels.form.trigger')).split(' ')[0];
-  });
+  /**
+   * Os dois contextos do molde do formulário. São campos, não literais no
+   * template: o `ngTemplateOutlet` recria a view quando o contexto troca de
+   * identidade, e um literal nova a cada verificação fecharia o painel aberto.
+   */
+  protected readonly ctxVarFormulario = { gatilho: 'formulario', secao: 'docs_variantes' };
+  protected readonly ctxCompPerfil = { gatilho: 'editar-perfil', secao: 'docs_composicoes' };
 
   /** Os três status do filtro de tabela, tirados da descrição da composição. */
   protected readonly opcoesFiltro = computed(() => {
@@ -758,25 +759,31 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
   ];
 
   /**
-   * Abertura e fechamento do popover na demonstração.
+   * Abertura e fechamento de QUALQUER popover desta página.
    *
    * O evento sai do handler da docs page, nunca de dentro do primitivo de UI —
    * é o que a regra `analytics_in_ui_primitive` proíbe. O rótulo é um id
    * estável e não o texto traduzido, que viraria três valores distintos no GA4.
+   *
+   * `secao` vem do CALL SITE e não de constante aqui dentro: Variantes,
+   * Composições e Do & Dont renderizam o componente VIVO, e um clique ali é tão
+   * real quanto na demonstração — com a seção cravada no handler, os quatro
+   * respondiam "veio da demonstração". `docs_demo` é herança do vocabulário do
+   * GA4, não exceção de estilo.
    */
-  protected onChange(qual: string, evento: RdxPopoverOpenChange): void {
+  protected onChange(qual: string, secao: string, evento: RdxPopoverOpenChange): void {
     if (evento.open) {
       track('popover_open', {
         component: 'popover',
         trigger_label: qual,
-        location: 'docs_demo',
+        location: secao,
       });
       return;
     }
     track('popover_close', {
       component: 'popover',
       reason: evento.reason,
-      location: 'docs_demo',
+      location: secao,
     });
   }
 
@@ -866,8 +873,9 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
       { key: 'default',   tpl: this.tplVarDefault()   },
       { key: 'withTitle', tpl: this.tplVarWithTitle() },
       // A variante "Form" e a composição "Editar perfil" são o mesmo exemplo no
-      // conteúdo compartilhado — um molde só, instanciado nas duas seções.
-      { key: 'form',      tpl: this.tplFormulario()   },
+      // conteúdo compartilhado — um molde só, instanciado nas duas seções, cada
+      // uma com o seu par (gatilho, seção) de analytics.
+      { key: 'form',      tpl: this.tplVarFormulario() },
     ];
     return mapa.map(({ key, tpl }) => ({
       name: t(`variants.items.${key}`),
@@ -886,7 +894,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
       key: 'editProfile' | 'tableFilter' | 'colorPicker' | 'quickSettings';
       tpl: TemplateRef<unknown>;
     }[] = [
-      { key: 'editProfile',   tpl: this.tplFormulario()       },
+      { key: 'editProfile',   tpl: this.tplCompPerfil()       },
       { key: 'tableFilter',   tpl: this.tplCompFiltro()       },
       { key: 'colorPicker',   tpl: this.tplCompCores()        },
       { key: 'quickSettings', tpl: this.tplCompPreferencias() },

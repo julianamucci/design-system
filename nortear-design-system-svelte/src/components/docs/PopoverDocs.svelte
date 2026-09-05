@@ -10,6 +10,8 @@
     PopoverClose,
   } from '@/components/ui/popover';
   import { Button } from '@/components/ui/button';
+  import { Input } from '@/components/ui/input';
+  import { Label } from '@/components/ui/label';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -160,7 +162,7 @@
       <Button {...props}>Abrir popover</Button>
     {/snippet}
   </PopoverTrigger>
-  <PopoverContent>
+  <PopoverContent aria-label="Informações adicionais">
     <p class="nds-text-body">Conteúdo contextual livre.</p>
   </PopoverContent>
 </Popover>`;
@@ -198,9 +200,11 @@
       <PopoverTitle>Editar perfil</PopoverTitle>
       <PopoverDescription>Atualize seu nome e e-mail.</PopoverDescription>
     </PopoverHeader>
- <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => { e.preventDefault(); save(); }}>
-      <Input name="name" />
-      <Input name="email" type="email" />
+    <form class="nds-stack" data-spacing="sm" onsubmit={(e) => { e.preventDefault(); save(); }}>
+      <div class="nds-stack" data-spacing="xs">
+        <Label for="perfil-nome">Nome</Label>
+        <Input id="perfil-nome" value="Maria Silva" />
+      </div>
       <Button type="submit" size="sm">Atualizar</Button>
     </form>
   </PopoverContent>
@@ -254,75 +258,30 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-cluster nds-w-full" data-spacing="lg" data-justify="center">
-      <!-- Default -->
-      <div class="nds-stack" data-spacing="sm" style="contain: layout; align-items: center">
-        <Popover onOpenChange={(o: boolean) => (o
-          ? track('popover_open', { component: 'popover', trigger_label: 'trigger', location: 'docs_demo' })
-          : track('popover_close', { component: 'popover', location: 'docs_demo' }))}>
-          <PopoverTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
-            {/snippet}
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverHeader>
-              <PopoverTitle>{$tStore('demonstration.labels.title')}</PopoverTitle>
-              <PopoverDescription>{$tStore('demonstration.labels.description')}</PopoverDescription>
-            </PopoverHeader>
- <div class="nds-cluster nds-pt-1" data-spacing="sm" data-justify="end">
-              <PopoverClose>
-                {#snippet child({ props })}
-                  <Button variant="outline" size="sm" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
-                {/snippet}
-              </PopoverClose>
-              <Button size="sm">{$tStore('demonstration.labels.save')}</Button>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      <!-- Form -->
-      <div class="nds-stack" data-spacing="sm" style="contain: layout; align-items: center">
-        <Popover onOpenChange={(o: boolean) => (o
-          ? track('popover_open', { component: 'popover', trigger_label: 'form-trigger', location: 'docs_demo' })
-          : track('popover_close', { component: 'popover', location: 'docs_demo' }))}>
-          <PopoverTrigger>
-            {#snippet child({ props })}
-              <Button {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
-            {/snippet}
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverHeader>
-              <PopoverTitle>{$tStore('demonstration.labels.form.trigger')}</PopoverTitle>
-              <PopoverDescription>{$tStore('demonstration.labels.description')}</PopoverDescription>
-            </PopoverHeader>
- <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
-              <label class="nds-stack nds-text-body" data-spacing="xs">
-                <span>{$tStore('demonstration.labels.form.name')}</span>
-                <input
-                  type="text"
-                  class="nds-bg-background nds-border-default nds-text-body nds-px-4"
-                  style="border-radius: var(--radius-input); height: var(--height-default)"
-                  value="Maria Silva"
-                />
-              </label>
-              <label class="nds-stack nds-text-body" data-spacing="xs">
-                <span>{$tStore('demonstration.labels.form.email')}</span>
-                <input
-                  type="email"
-                  class="nds-bg-background nds-border-default nds-text-body nds-px-4"
-                  style="border-radius: var(--radius-input); height: var(--height-default)"
-                  value="maria@exemplo.com"
-                />
-              </label>
- <div class="nds-cluster nds-pt-1" data-justify="end">
-                <Button type="submit" size="sm">{$tStore('demonstration.labels.form.submit')}</Button>
-              </div>
-            </form>
-          </PopoverContent>
-        </Popover>
-      </div>
+    <div class="nds-cluster" data-spacing="sm" data-justify="center">
+      <Popover onOpenChange={(o: boolean) => (o
+        ? track('popover_open', { component: 'popover', trigger_label: 'trigger', location: 'docs_demo' })
+        : track('popover_close', { component: 'popover', location: 'docs_demo' }))}>
+        <PopoverTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+          {/snippet}
+        </PopoverTrigger>
+        <PopoverContent align="center">
+          <PopoverHeader>
+            <PopoverTitle>{$tStore('demonstration.labels.title')}</PopoverTitle>
+            <PopoverDescription>{$tStore('demonstration.labels.description')}</PopoverDescription>
+          </PopoverHeader>
+          <div class="nds-cluster" data-spacing="sm" data-justify="end">
+            <PopoverClose>
+              {#snippet child({ props })}
+                <Button variant="ghost" size="sm" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
+              {/snippet}
+            </PopoverClose>
+            <Button size="sm">{$tStore('demonstration.labels.save')}</Button>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   </DocsDemonstration>
 
@@ -426,37 +385,72 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet doPair1()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'trigger', location: 'docs_do_dont' })
+      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
         {/snippet}
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent align="center">
         <PopoverHeader>
-          <PopoverTitle>Configurações</PopoverTitle>
-          <PopoverDescription>Ajuste a aparência do conteúdo.</PopoverDescription>
+          <PopoverTitle>{$tStore('demonstration.labels.title')}</PopoverTitle>
+          <PopoverDescription>{$tStore('demonstration.labels.description')}</PopoverDescription>
         </PopoverHeader>
       </PopoverContent>
     </Popover>
   {/snippet}
   {#snippet dontPair1()}
-    <Popover>
+    <!-- Sem título: o painel cai no nome de reserva herdado do gatilho, que
+         mantém o axe verde mas devolve ao leitor o rótulo do botão em vez do
+         assunto do painel — exatamente o que a legenda critica. -->
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'trigger', location: 'docs_do_dont' })
+      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
         {/snippet}
       </PopoverTrigger>
-      <PopoverContent>
-        <p class="nds-text-body">Conteúdo sem título — leitor de tela perde contexto.</p>
+      <PopoverContent align="center">
+        <p class="nds-text-body">{$tStore('doDont.pair1.dontBody')}</p>
       </PopoverContent>
     </Popover>
   {/snippet}
   {#snippet doPair2()}
-    <Button>Editar perfil</Button>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'form-trigger', location: 'docs_do_dont' })
+      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
+        {/snippet}
+      </PopoverTrigger>
+      <PopoverContent align="start">
+        <PopoverHeader>
+          <PopoverTitle>{$tStore('demonstration.labels.form.trigger')}</PopoverTitle>
+        </PopoverHeader>
+      </PopoverContent>
+    </Popover>
   {/snippet}
   {#snippet dontPair2()}
-    <Button variant="outline">Clique aqui</Button>
+    <!-- Painel idêntico ao do par correto: o que reprova aqui é só o rótulo do
+         gatilho, que não diz o que o clique faz. -->
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'vague-trigger', location: 'docs_do_dont' })
+      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{$tStore('doDont.pair2.dontTrigger')}</Button>
+        {/snippet}
+      </PopoverTrigger>
+      <PopoverContent align="start">
+        <PopoverHeader>
+          <PopoverTitle>{$tStore('demonstration.labels.form.trigger')}</PopoverTitle>
+        </PopoverHeader>
+      </PopoverContent>
+    </Popover>
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -477,19 +471,26 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet variantDefault()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'default', location: 'docs_variantes' })
+      : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
         {/snippet}
       </PopoverTrigger>
-      <PopoverContent>
+      <!-- Painel de conteúdo LIVRE: sem título, nomeado por `aria-label`. O
+           efeito do PopoverContent só age quando ninguém nomeou, então o
+           rótulo declarado aqui vence a herança do texto do gatilho. -->
+      <PopoverContent aria-label={$tStore('variants.panelLabels.default')}>
         <p class="nds-text-body">Conteúdo contextual livre.</p>
       </PopoverContent>
     </Popover>
   {/snippet}
   {#snippet variantWithTitle()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'with-title', location: 'docs_variantes' })
+      : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.title')}</Button>
@@ -534,14 +535,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
     </PopoverHeader>
     <form class="nds-stack" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
-      <label class="nds-stack nds-text-body" data-spacing="xs">
-        <span>Nome</span>
-        <input type="text" value="Joana Silva" />
-      </label>
-      <label class="nds-stack nds-text-body" data-spacing="xs">
-        <span>Email</span>
-        <input type="email" value="joana@example.com" />
-      </label>
+      <div class="nds-stack" data-spacing="xs">
+        <Label for="perfil-nome">Nome</Label>
+        <Input id="perfil-nome" value="Joana Silva" />
+      </div>
+      <div class="nds-stack" data-spacing="xs">
+        <Label for="perfil-email">Email</Label>
+        <Input id="perfil-email" type="email" value="joana@example.com" />
+      </div>
       <Button type="submit" size="sm">Atualizar</Button>
     </form>
   </PopoverContent>
@@ -643,7 +644,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet compEditProfile()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'edit-profile', location: 'docs_composicoes' })
+      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
@@ -654,25 +657,15 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <PopoverTitle>Dados do perfil</PopoverTitle>
           <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
         </PopoverHeader>
- <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
-          <label class="nds-stack nds-text-body" data-spacing="xs">
-            <span>Nome</span>
-            <input
-              type="text"
-              class="nds-bg-background nds-border-default nds-text-body nds-px-4"
-              style="border-radius: var(--radius-input); height: var(--height-default)"
-              value="Joana Silva"
-            />
-          </label>
-          <label class="nds-stack nds-text-body" data-spacing="xs">
-            <span>Email</span>
-            <input
-              type="email"
-              class="nds-bg-background nds-border-default nds-text-body nds-px-4"
-              style="border-radius: var(--radius-input); height: var(--height-default)"
-              value="joana@example.com"
-            />
-          </label>
+        <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="popover-comp-nome">{$tStore('demonstration.labels.form.name')}</Label>
+            <Input id="popover-comp-nome" value="Joana Silva" />
+          </div>
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="popover-comp-email">{$tStore('demonstration.labels.form.email')}</Label>
+            <Input id="popover-comp-email" type="email" value="joana@example.com" />
+          </div>
           <div class="nds-cluster" data-justify="end">
             <Button type="submit" size="sm">Atualizar</Button>
           </div>
@@ -682,7 +675,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compTableFilter()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'table-filter', location: 'docs_composicoes' })
+      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('variants.compositions.tableFilter.name')}</Button>
@@ -715,7 +710,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compColorPicker()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'color-picker', location: 'docs_composicoes' })
+      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('variants.compositions.colorPicker.name')}</Button>
@@ -739,7 +736,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compQuickSettings()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'quick-settings', location: 'docs_composicoes' })
+      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('variants.compositions.quickSettings.name')}</Button>
@@ -766,7 +765,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet variantForm()}
-    <Popover>
+    <Popover onOpenChange={(o: boolean) => (o
+      ? track('popover_open', { component: 'popover', trigger_label: 'form-trigger', location: 'docs_variantes' })
+      : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
@@ -777,15 +778,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <PopoverTitle>Editar perfil</PopoverTitle>
           <PopoverDescription>Atualize seu nome e e-mail.</PopoverDescription>
         </PopoverHeader>
- <form class="nds-stack nds-pt-1" data-spacing="sm">
-          <input
-            type="text"
-            aria-label={$tStore('demonstration.labels.form.name')}
-            class="nds-bg-background nds-border-default nds-text-body nds-px-4"
-            style="border-radius: var(--radius-input); height: var(--height-default)"
-            value="Maria Silva"
-          />
- <div class="nds-cluster nds-pt-1" data-justify="end">
+        <form class="nds-stack nds-pt-1" data-spacing="sm">
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="popover-var-nome">{$tStore('demonstration.labels.form.name')}</Label>
+            <Input id="popover-var-nome" value="Maria Silva" />
+          </div>
+          <div class="nds-cluster nds-pt-1" data-justify="end">
             <Button size="sm">Atualizar</Button>
           </div>
         </form>

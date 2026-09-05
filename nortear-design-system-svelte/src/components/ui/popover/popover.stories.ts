@@ -98,7 +98,7 @@ const meta: Meta = {
     sideOffset: 4,
     defaultOpen: false,
     triggerLabel: 'Abrir popover',
-    title: 'Configuracoes de exibição',
+    title: 'Configurações de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
@@ -155,7 +155,7 @@ export const Playground: Story = {
       const p = await open();
       await expect(p).toBeVisible();
       await expect(p).toHaveClass(/nds-popover-content/);
-      await expect(p).toHaveAccessibleName(/Configuracoes de exibição/i);
+      await expect(p).toHaveAccessibleName(/Configurações de exibição/i);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 

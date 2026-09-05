@@ -25,7 +25,7 @@ const meta: Meta = {
         component:
           'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. ' +
           'O painel sempre precisa de nome acessível: com título ele vem do ' +
-          'aria-labelledby, sem título ele herda o texto do gatilho.',
+          'aria-labelledby, sem título ele é declarado por aria-label.',
       },
     },
   },
@@ -41,7 +41,7 @@ export const Default: Story = {
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Ver atalhos</button>
 
-        <ng-template ndsPopoverContent>
+        <ng-template ndsPopoverContent ariaLabel="Informações adicionais">
           <p class="nds-text-body">
             Use <kbd class="nds-kbd">Ctrl</kbd> + <kbd class="nds-kbd">K</kbd> para abrir a
             busca em qualquer tela.
@@ -54,12 +54,12 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: 'Ver atalhos' });
 
-    await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
+    await step('Sem título, o painel se nomeia por aria-label', async () => {
       // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe. O
-      // Vanilla resolve assim, e este stack copia: o texto do gatilho vira
-      // aria-label do painel enquanto não houver `ndsPopoverTitle`.
+      // Vanilla resolve assim, e este stack copia: sem `ndsPopoverTitle`, o
+      // nome do painel se DECLARA — herdar o do gatilho anunciaria o botão.
       await open(trigger);
-      const dialogo = screen.getByRole('dialog', { name: 'Ver atalhos' });
+      const dialogo = screen.getByRole('dialog', { name: 'Informações adicionais' });
       await expect(dialogo).toBeVisible();
       await expect(dialogo).not.toHaveAttribute('aria-labelledby');
     });

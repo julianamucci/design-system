@@ -103,7 +103,7 @@ export const Open: Story = {
         </PopoverTrigger>
         <PopoverContent>
           <PopoverHeader>
-            <PopoverTitle>Configuracoes de exibição</PopoverTitle>
+            <PopoverTitle>Configurações de exibição</PopoverTitle>
             <PopoverDescription>
               Ajuste a aparência do conteúdo da página.
             </PopoverDescription>

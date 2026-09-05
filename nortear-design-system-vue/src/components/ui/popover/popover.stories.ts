@@ -110,7 +110,7 @@ export const Playground: Story = {
           </PopoverTrigger>
           <PopoverContent :side="args.side" :align="args.align">
             <PopoverHeader>
-              <PopoverTitle>Configuracoes de exibição</PopoverTitle>
+              <PopoverTitle>Configurações de exibição</PopoverTitle>
               <PopoverDescription>
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
@@ -175,7 +175,7 @@ export const Playground: Story = {
       const id = p.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)).toHaveAttribute('data-slot', 'popover-title');
-      await expect(p).toHaveAccessibleName(/Configuracoes de exibição/i);
+      await expect(p).toHaveAccessibleName(/Configurações de exibição/i);
     });
 
     await step('O painel não é modal', async () => {

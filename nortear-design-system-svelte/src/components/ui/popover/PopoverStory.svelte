@@ -39,6 +39,12 @@
     emailLabel?: string;
     submitLabel?: string;
     variant?: Variant;
+    /**
+     * Nome acessível DECLARADO do painel. Só faz sentido na composição sem
+     * título: onde há `PopoverTitle`, quem nomeia é o `aria-labelledby`, e um
+     * `aria-label` junto venceria o título visível.
+     */
+    panelLabel?: string;
     onAction?: () => void;
     onCancel?: () => void;
   }
@@ -63,6 +69,7 @@
     emailLabel = 'Email',
     submitLabel = 'Atualizar',
     variant = 'default',
+    panelLabel = undefined,
     onAction,
     onCancel,
   }: Props = $props();
@@ -99,10 +106,17 @@
       <Popover bind:open {modal}>
         <PopoverTrigger>
           {#snippet child({ props })}
-            <Button {...props}>{triggerLabel}</Button>
+            <Button variant="outline" {...props}>{triggerLabel}</Button>
           {/snippet}
         </PopoverTrigger>
-        <PopoverContent {side} {align} {sideOffset}>
+        <!-- `undefined` não escreve atributo nenhum: as composições com título
+             seguem nomeadas pelo `aria-labelledby` do próprio título. -->
+        <PopoverContent
+          {side}
+          {align}
+          {sideOffset}
+          aria-label={variant === 'default' ? panelLabel : undefined}
+        >
           {#if variant === 'form'}
             <PopoverHeader>
               <PopoverTitle>{title}</PopoverTitle>
@@ -149,7 +163,7 @@
                   <!-- `closeECancelar` encadeia o handler da lib: ver o
                        porquê no bloco de documentação da função, acima. -->
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     {...props}
                     onclick={(event: MouseEvent) => closeECancelar(props, event)}

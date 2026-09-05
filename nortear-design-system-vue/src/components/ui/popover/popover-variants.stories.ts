@@ -31,7 +31,7 @@ const meta = {
       source: { transform: popoverContentLivreSource },
       description: {
         component:
-          'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. O painel sempre precisa de nome acessível: com título ele vem do aria-labelledby, sem título ele herda o texto do gatilho.',
+          'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. O painel sempre precisa de nome acessível: com título ele vem do aria-labelledby, sem título ele é declarado por aria-label.',
       },
     },
   },
@@ -58,7 +58,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          'Conteúdo livre — apenas PopoverContent com texto. Sem título, o painel herda o nome acessível do gatilho.',
+          'Conteúdo livre — apenas PopoverContent com texto. Sem título, o painel declara o próprio nome por aria-label.',
       },
     },
   },
@@ -70,7 +70,7 @@ export const Default: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Ver atalhos</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom">
+          <PopoverContent side="bottom" aria-label="Informações adicionais">
             <p class="nds-text-body">Use Ctrl+K para abrir a busca em qualquer tela.</p>
           </PopoverContent>
         </Popover>
@@ -78,10 +78,13 @@ export const Default: Story = {
     `,
   }),
   play: async ({ step }) => {
-    await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
-      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe.
+    await step('Sem título, o painel se nomeia por aria-label', async () => {
+      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe. E o
+      // `aria-labelledby` que a lib crava no gatilho tem de ter saído: com ele
+      // de pé o leitor de tela anunciaria o botão, não o painel.
       const dialog = await waitForPortal('dialog');
-      await expect(dialog).toHaveAccessibleName('Ver atalhos');
+      await expect(dialog).toHaveAccessibleName('Informações adicionais');
+      await expect(dialog).not.toHaveAttribute('aria-labelledby');
     });
 
     await step('E carrega a classe do design system com o conteúdo livre', async () => {
@@ -111,11 +114,11 @@ export const WithTitle: Story = {
       <div class="nds-min-h-70" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
-            <Button variant="outline">Configuracoes</Button>
+            <Button variant="outline">Configurações</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom">
             <PopoverHeader>
-              <PopoverTitle>Configuracoes de exibição</PopoverTitle>
+              <PopoverTitle>Configurações de exibição</PopoverTitle>
               <PopoverDescription>
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
@@ -137,7 +140,7 @@ export const WithTitle: Story = {
       const title = document.getElementById(id!)!;
       await expect(title).toHaveAttribute('data-slot', 'popover-title');
       await expect(title).toHaveClass(/nds-popover-title/);
-      await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
+      await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
     });
 
     await step('E a descrição usa a classe própria', async () => {

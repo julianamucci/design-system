@@ -46,6 +46,7 @@ export const Default: Story = {
         transform: popoverSourceWith({
           triggerLabel: 'Ver atalhos',
           text: 'Use Ctrl+K para abrir a busca em qualquer tela.',
+          ariaLabel: 'Informações adicionais',
         }),
       },
     },
@@ -57,7 +58,7 @@ export const Default: Story = {
     content.className = 'nds-text-body';
     content.textContent = 'Use Ctrl+K para abrir a busca em qualquer tela.';
 
-    const el = createPopover({ trigger, content });
+    const el = createPopover({ trigger, content, ariaLabel: 'Informações adicionais' });
     queueMicrotask(() => trigger.click());
     return centralizar(el);
   },
@@ -65,10 +66,11 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /ver atalhos/i });
 
-    await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
-      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe.
+    await step('Sem título, o painel se nomeia por aria-label', async () => {
+      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe — e o
+      // nome herdado do gatilho anunciaria o botão, não o painel.
       const p = await open(trigger);
-      await expect(p).toHaveAttribute('aria-label', 'Ver atalhos');
+      await expect(p).toHaveAttribute('aria-label', 'Informações adicionais');
       await expect(p).not.toHaveAttribute('aria-labelledby');
     });
 
@@ -82,7 +84,7 @@ export const Default: Story = {
 export const WithTitle: Story = {
   parameters: { covers: ['visual.item2', 'accessibility.item5'] },
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Configuracoes de exibição' });
+    const trigger = createButton({ variant: 'outline', label: 'Configurações de exibição' });
 
     // Cabeçalho, título e descrição saem das sub-fábricas. Montar a `<div>` e
     // escrever `.nds-popover-title` à mão era o contorno de quando elas não
@@ -90,7 +92,7 @@ export const WithTitle: Story = {
     // compunha lembrar de escrevê-lo.
     const content = createPopoverHeader();
     content.append(
-      createPopoverTitle({ text: 'Configuracoes de exibição' }),
+      createPopoverTitle({ text: 'Configurações de exibição' }),
       createPopoverDescription({ text: 'Ajuste a aparência do conteúdo da página.' }),
     );
 
@@ -100,7 +102,7 @@ export const WithTitle: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: 'Configuracoes de exibição' });
+    const trigger = canvas.getByRole('button', { name: 'Configurações de exibição' });
 
     await step('O título nomeia o painel por aria-labelledby', async () => {
       const p = await open(trigger);
@@ -109,7 +111,7 @@ export const WithTitle: Story = {
       const title = document.getElementById(id!)!;
       await expect(title).toHaveAttribute('data-slot', 'popover-title');
       await expect(title).toHaveClass(/nds-popover-title/);
-      await expect(title.textContent?.trim()).toBe('Configuracoes de exibição');
+      await expect(title.textContent?.trim()).toBe('Configurações de exibição');
     });
 
     await step('E a descrição usa a classe própria, não a de título', async () => {

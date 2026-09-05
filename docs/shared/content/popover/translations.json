@@ -130,12 +130,14 @@
     "doDont": {
       "title": "Boas práticas",
       "pair1": {
-        "do": "Sempre forneça PopoverTitle para acessibilidade.",
-        "dont": "Não omita o título — leitores de tela ficam sem contexto."
+        "do": "O painel sempre tem nome acessível: título visível, ou aria-label quando o conteúdo é livre.",
+        "dont": "Não deixe o painel sem nome — o leitor de tela anuncia só o rótulo do gatilho.",
+        "dontBody": "Painel sem título: quem usa leitor de tela ouve o rótulo do gatilho e nada mais."
       },
       "pair2": {
         "do": "Use trigger com verbo claro como \"Editar perfil\".",
-        "dont": "Não use \"Clique aqui\" ou ícone sem aria-label."
+        "dont": "Não use \"Clique aqui\" ou ícone sem aria-label.",
+        "dontTrigger": "Clique aqui"
       }
     },
     "import": {
@@ -175,6 +177,9 @@
           "description": "Popover com lista de toggles (<code>Notificações</code>, <code>Modo escuro</code>, <code>Modo compacto</code>) em formato <code>Label</code> + checkbox alinhados. Cada linha controla uma preferência independente.",
           "use": "Atalho para preferências booleanas independentes próximas ao ponto de uso. Para painéis maiores de configuração, prefira uma página ou <code>Dialog</code>."
         }
+      },
+      "panelLabels": {
+        "default": "Informações adicionais"
       }
     },
     "states": {
@@ -588,12 +593,14 @@
     "doDont": {
       "title": "Best practices",
       "pair1": {
-        "do": "Always provide PopoverTitle for accessibility.",
-        "dont": "Don't omit the title — screen readers lose context."
+        "do": "The panel always has an accessible name: a visible title, or aria-label when the content is free-form.",
+        "dont": "Do not leave the panel unnamed — a screen reader announces only the trigger label.",
+        "dontBody": "Panel with no title: a screen reader user hears the trigger label and nothing else."
       },
       "pair2": {
         "do": "Use a trigger with a clear verb like \"Edit profile\".",
-        "dont": "Don't use \"Click here\" or icon-only without aria-label."
+        "dont": "Don't use \"Click here\" or icon-only without aria-label.",
+        "dontTrigger": "Click here"
       }
     },
     "import": {
@@ -633,6 +640,9 @@
           "description": "Popover with a list of toggles (<code>Notifications</code>, <code>Dark mode</code>, <code>Compact mode</code>) as aligned <code>Label</code> + checkbox rows. Each row controls an independent preference.",
           "use": "Shortcut for independent boolean preferences close to the point of use. For larger settings panels, prefer a dedicated page or <code>Dialog</code>."
         }
+      },
+      "panelLabels": {
+        "default": "Additional information"
       }
     },
     "states": {
@@ -1046,12 +1056,14 @@
     "doDont": {
       "title": "Buenas prácticas",
       "pair1": {
-        "do": "Provee siempre PopoverTitle para accesibilidad.",
-        "dont": "No omitas el título — los lectores de pantalla pierden contexto."
+        "do": "El panel siempre tiene nombre accesible: título visible, o aria-label cuando el contenido es libre.",
+        "dont": "No dejes el panel sin nombre — el lector de pantalla anuncia solo la etiqueta del disparador.",
+        "dontBody": "Panel sin título: quien usa lector de pantalla oye la etiqueta del disparador y nada más."
       },
       "pair2": {
         "do": "Usa un trigger con verbo claro como \"Editar perfil\".",
-        "dont": "No uses \"Haz clic aquí\" o icono solo sin aria-label."
+        "dont": "No uses \"Haz clic aquí\" o icono solo sin aria-label.",
+        "dontTrigger": "Haz clic aquí"
       }
     },
     "import": {
@@ -1091,6 +1103,9 @@
           "description": "Popover con lista de toggles (<code>Notificaciones</code>, <code>Modo oscuro</code>, <code>Modo compacto</code>) como filas <code>Label</code> + checkbox alineadas. Cada fila controla una preferencia independiente.",
           "use": "Atajo para preferencias booleanas independientes cerca del punto de uso. Para paneles de configuración mayores, prefiere una página o <code>Dialog</code>."
         }
+      },
+      "panelLabels": {
+        "default": "Información adicional"
       }
     },
     "states": {

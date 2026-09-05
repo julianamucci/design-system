@@ -4,7 +4,6 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import DOMPurify from 'dompurify';
 import {
   Popover,
   PopoverContent,
@@ -146,17 +145,30 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 // ─── Analytics — demo events ──────────────────────────────────────────────────
 
-function handleDemoOpenChange(triggerLabel: string, open: boolean) {
+/**
+ * Abertura e fechamento de qualquer popover VIVO desta página.
+ *
+ * `triggerLabel` é um id estável (`basico`, `formulario`, …) e nunca o texto
+ * traduzido: o rótulo traduzido partiria o mesmo evento em três valores no GA4.
+ * `location` diz de qual seção o exemplo saiu — a demonstração herda
+ * `docs_demo`, e as demais seções se nomeiam, senão todo preview da página
+ * chegaria ao relatório como se fosse a demonstração.
+ */
+function handlePopoverOpenChange(triggerLabel: string, location: string, open: boolean) {
   if (open) {
     track('popover_open', {
       component: 'popover',
       trigger_label: triggerLabel,
-      location: 'docs_demo',
+      location,
     });
   } else {
+    // Sem `reason`: a reka-ui não publica o motivo do fechamento em
+    // `@update:open`, e o campo é opcional no tipo. Cravar 'user' aqui seria
+    // fingir um dado — o mesmo defeito que o react carregava e que esta rodada
+    // removeu. Campo ausente é honesto; campo inventado contamina a série.
     track('popover_close', {
       component: 'popover',
-      location: 'docs_demo',
+      location,
     });
   }
 }
@@ -188,7 +200,7 @@ const codeDefault = `<Popover>
   <PopoverTrigger as-child>
     <Button>Abrir popover</Button>
   </PopoverTrigger>
-  <PopoverContent>
+  <PopoverContent aria-label="Informações adicionais">
     <p class="nds-text-body">Conteúdo livre.</p>
   </PopoverContent>
 </Popover>`;
@@ -479,144 +491,53 @@ const a11yCritCols = computed(() => ({
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
+    <!--
+      UM exemplo, o mesmo do Playground da story: as outras duas variações não
+      somem da página — elas SÃO as variantes `default` e `form`, que têm seção
+      própria logo abaixo. Repeti-las aqui fazia a demonstração competir com a
+      seção que existe para isso.
+    -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-grid nds-w-full"
-        data-cols="3"
-        data-spacing="lg"
+        class="nds-cluster"
+        data-justify="center"
+        data-spacing="sm"
       >
-        <!-- Default -->
-        <div
-          class="nds-stack nds-min-h-60"
-          data-spacing="xs"
-          style="contain: layout; position: relative"
-        >
-          <p
-            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
-            v-html="DOMPurify.sanitize(tContent('variants.items.default'))"
-          />
-          <Popover @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.trigger'), open)">
-            <PopoverTrigger as-child>
-              <Button variant="outline">
-                {{ tContent('demonstration.labels.trigger') }}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              side="bottom"
-              align="start"
-            >
-              <PopoverTitle class="nds-text-body nds-font-medium">
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('basico', 'docs_demo', open)">
+          <PopoverTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center">
+            <PopoverHeader>
+              <PopoverTitle>
                 {{ tContent('demonstration.labels.title') }}
               </PopoverTitle>
-              <p class="nds-text-caption nds-text-muted-foreground">
+              <PopoverDescription>
                 {{ tContent('demonstration.labels.description') }}
-              </p>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <!-- With title and actions -->
-        <div
-          class="nds-stack nds-min-h-60"
-          data-spacing="xs"
-          style="contain: layout; position: relative"
-        >
-          <p
-            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
-            v-html="DOMPurify.sanitize(tContent('variants.items.withTitle'))"
-          />
-          <Popover @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.title'), open)">
-            <PopoverTrigger as-child>
-              <Button variant="outline">
-                {{ tContent('demonstration.labels.title') }}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              side="bottom"
-              align="start"
+              </PopoverDescription>
+            </PopoverHeader>
+            <div
+              class="nds-cluster"
+              data-spacing="sm"
+              data-justify="end"
             >
-              <PopoverHeader>
-                <PopoverTitle>
-                  {{ tContent('demonstration.labels.title') }}
-                </PopoverTitle>
-                <PopoverDescription>
-                  {{ tContent('demonstration.labels.description') }}
-                </PopoverDescription>
-              </PopoverHeader>
-              <div
-                class="nds-cluster"
-                data-spacing="sm"
-                data-justify="end"
+              <Button
+                variant="ghost"
+                size="sm"
               >
-                <Button
-                  variant="outline"
-                  size="sm"
-                >
-                  {{ tContent('demonstration.labels.cancel') }}
-                </Button>
-                <Button size="sm">
-                  {{ tContent('demonstration.labels.save') }}
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <!-- Form -->
-        <div
-          class="nds-stack nds-min-h-70"
-          data-spacing="xs"
-          style="contain: layout; position: relative"
-        >
-          <p
-            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
-            v-html="DOMPurify.sanitize(tContent('variants.items.form'))"
-          />
-          <Popover @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.form.trigger'), open)">
-            <PopoverTrigger as-child>
-              <Button variant="outline">
-                {{ tContent('demonstration.labels.form.trigger') }}
+                {{ tContent('demonstration.labels.cancel') }}
               </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              side="bottom"
-              align="start"
-            >
-              <PopoverHeader>
-                <PopoverTitle>
-                  {{ tContent('demonstration.labels.form.trigger') }}
-                </PopoverTitle>
-              </PopoverHeader>
-              <form
-                class="nds-stack"
-                data-spacing="sm"
-                @submit.prevent
-              >
-                <Label
-                  for="popover-demo-name"
-                  class="nds-text-caption"
-                >{{ tContent('demonstration.labels.form.name') }}</Label>
-                <Input id="popover-demo-name" />
-                <Label
-                  for="popover-demo-email"
-                  class="nds-text-caption"
-                >{{ tContent('demonstration.labels.form.email') }}</Label>
-                <Input
-                  id="popover-demo-email"
-                  type="email"
-                />
-                <Button
-                  type="submit"
-                  size="sm"
-                >
-                  {{ tContent('demonstration.labels.form.submit') }}
-                </Button>
-              </form>
-            </PopoverContent>
-          </Popover>
-        </div>
+              <Button size="sm">
+                {{ tContent('demonstration.labels.save') }}
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </DocsDemonstration>
+
 
     <!-- ── Anatomia ─────────────────────────────────────────────── -->
     <DocsAnatomy
@@ -688,68 +609,104 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Do & Don't ───────────────────────────────────────────── -->
+    <!--
+      Os quatro previews são popovers VIVOS, nascendo fechados — e o lado
+      "evite" carrega o defeito DE VERDADE (painel sem `PopoverTitle`, gatilho
+      sem objeto), porque é ele a lição. Descrever o erro em texto estático
+      ensina a frase e esconde o efeito; abrir o painel sem título mostra ao
+      leitor o que sobra para quem usa leitor de tela. Os rótulos saem do
+      conteúdo compartilhado, nunca de literal em português cravado aqui.
+    -->
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
-        <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-20"
-        >
-          <div
-            class="nds-text-body nds-stack"
-            data-spacing="xs"
-          >
-            <div class="nds-font-medium">
-              Configurações de exibição
-            </div>
-            <div class="nds-text-caption nds-text-muted-foreground">
-              + PopoverTitle anunciado pelo SR
-            </div>
-          </div>
-        </div>
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('com_titulo', 'docs_do_dont', open)">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center">
+            <PopoverHeader>
+              <PopoverTitle>
+                {{ tContent('demonstration.labels.title') }}
+              </PopoverTitle>
+              <PopoverDescription>
+                {{ tContent('demonstration.labels.description') }}
+              </PopoverDescription>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
       </template>
       <template #dont-preview-0>
-        <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-20"
-        >
-          <div class="nds-text-body">
-            <div class="nds-text-caption nds-text-muted-foreground nds-italic">
-              Sem título — SR fica sem contexto
-            </div>
-          </div>
-        </div>
+        <!--
+          Sem `PopoverTitle`: o painel cai no nome de reserva herdado do
+          gatilho, que mantém o axe verde e ainda assim devolve ao leitor o
+          rótulo do botão em vez do assunto do painel — exatamente o que a
+          legenda ao lado critica.
+        -->
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('sem_titulo', 'docs_do_dont', open)">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center">
+            <p class="nds-text-body">
+              {{ tContent('doDont.pair1.dontBody') }}
+            </p>
+          </PopoverContent>
+        </Popover>
       </template>
       <template #do-preview-1>
-        <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
-        >
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            Editar perfil
-          </Button>
-        </div>
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('gatilho_claro', 'docs_do_dont', open)">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.form.trigger') }}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center">
+            <PopoverHeader>
+              <PopoverTitle>
+                {{ tContent('demonstration.labels.form.trigger') }}
+              </PopoverTitle>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
       </template>
       <template #dont-preview-1>
-        <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
-        >
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            Clique aqui
-          </Button>
-        </div>
+        <!-- Mesmo painel do lado bom: o que muda é só o rótulo do gatilho. -->
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('gatilho_vago', 'docs_do_dont', open)">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('doDont.pair2.dontTrigger') }}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center">
+            <PopoverHeader>
+              <PopoverTitle>
+                {{ tContent('demonstration.labels.form.trigger') }}
+              </PopoverTitle>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
       </template>
     </DocsDoDont>
 
@@ -764,35 +721,122 @@ const a11yCritCols = computed(() => ({
       :title="tContent('variants.title')"
       :items="variantItems"
     >
+      <!--
+        As três variantes são componentes VIVOS, nascendo fechadas. O que havia
+        aqui era imitação estática — texto monoespaçado nomeando as peças —, e
+        imitação não mostra posicionamento, foco nem dispensa: só o nome do que
+        deveria estar acontecendo.
+      -->
       <template #variant-preview-0>
-        <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
-        >
-          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-            PopoverContent (sem header)
-          </div>
-        </div>
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('default', 'docs_variantes', open)">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
+          </PopoverTrigger>
+          <!-- Painel de conteúdo LIVRE: sem título, nomeado por `aria-label`.
+               Sem ele o painel herdaria o rótulo do gatilho, que é o defeito
+               que o anti-exemplo do Do & Don't existe para mostrar. -->
+          <PopoverContent
+            align="center"
+            :aria-label="tContent('variants.panelLabels.default')"
+          >
+            <p class="nds-text-body">
+              {{ tContent('demonstration.labels.description') }}
+            </p>
+          </PopoverContent>
+        </Popover>
       </template>
       <template #variant-preview-1>
-        <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
-        >
-          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-            PopoverHeader + Title + Description
-          </div>
-        </div>
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('withTitle', 'docs_variantes', open)">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.title') }}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center">
+            <PopoverHeader>
+              <PopoverTitle>
+                {{ tContent('demonstration.labels.title') }}
+              </PopoverTitle>
+              <PopoverDescription>
+                {{ tContent('demonstration.labels.description') }}
+              </PopoverDescription>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
       </template>
       <template #variant-preview-2>
-        <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
-        >
-          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-            form (Inputs + submit)
-          </div>
-        </div>
+        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('form', 'docs_variantes', open)">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.form.trigger') }}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center">
+            <PopoverHeader>
+              <PopoverTitle>
+                {{ tContent('demonstration.labels.form.trigger') }}
+              </PopoverTitle>
+            </PopoverHeader>
+            <form
+              class="nds-stack"
+              data-spacing="sm"
+              @submit.prevent
+            >
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
+                <Label
+                  for="pv-name-vue"
+                  class="nds-text-caption"
+                >{{ tContent('demonstration.labels.form.name') }}</Label>
+                <Input id="pv-name-vue" />
+              </div>
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
+                <Label
+                  for="pv-email-vue"
+                  class="nds-text-caption"
+                >{{ tContent('demonstration.labels.form.email') }}</Label>
+                <Input
+                  id="pv-email-vue"
+                  type="email"
+                />
+              </div>
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+                data-justify="end"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                >
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                >
+                  {{ tContent('demonstration.labels.form.submit') }}
+                </Button>
+              </div>
+            </form>
+          </PopoverContent>
+        </Popover>
       </template>
     </DocsVariants>
 
@@ -808,7 +852,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover>
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('editProfile', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -872,7 +916,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover>
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('tableFilter', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -945,7 +989,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover>
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('colorPicker', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -983,7 +1027,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover>
+          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('quickSettings', 'docs_composicoes', open)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"

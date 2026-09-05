@@ -139,6 +139,17 @@ export type PopoverOptions = {
    * mentir para quem usa leitor de tela.
    */
   modal?: boolean;
+  /**
+   * Nome acessível EXPLÍCITO do painel, para o painel de conteúdo livre — o que
+   * não tem `createPopoverTitle` dentro.
+   *
+   * Só age quando não há título: com título quem nomeia é o `aria-labelledby`,
+   * e os dois contratos no mesmo elemento são ambiguidade, não redundância.
+   * Sem esta opção o painel continua herdando o texto do gatilho, que é a rede
+   * de segurança da regra `aria-dialog-name` do axe — e é exatamente o que o
+   * anti-exemplo do Do & Don't precisa continuar mostrando.
+   */
+  ariaLabel?: string;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
@@ -315,7 +326,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
         trigger.getAttribute('aria-label') ||
         trigger.textContent?.trim() ||
         'Popover';
-      panelEl.setAttribute('aria-label', triggerName);
+      panelEl.setAttribute('aria-label', options.ariaLabel?.trim() || triggerName);
     }
 
     document.body.appendChild(panelEl);

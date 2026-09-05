@@ -142,6 +142,19 @@ export class NdsPopoverContent {
 
   /** Deslocamento em pixels a partir do alinhamento `start`/`end`. */
   readonly alignOffset = input(0, { transform: numberAttribute });
+
+  /**
+   * Nome acessível EXPLÍCITO do painel, para o painel de conteúdo livre — o que
+   * não tem `ndsPopoverTitle` dentro.
+   *
+   * Entra como INPUT da diretiva, e não como `aria-label` no `<ng-template>`:
+   * template não renderiza elemento, então o atributo escrito ali não chegaria
+   * a lugar nenhum. Quem o aplica é o `[attr.aria-label]` do painel lá embaixo.
+   *
+   * Só age quando não há título — com título quem nomeia é o `aria-labelledby`
+   * do primitivo. Sem este input o painel segue herdando o texto do gatilho.
+   */
+  readonly ariaLabel = input<string | undefined>(undefined);
 }
 
 // ─── NdsPopover ───────────────────────────────────────────────────────────────
@@ -298,17 +311,20 @@ export class NdsPopover {
   }
 
   /**
-   * Nome acessível de reserva para o painel.
+   * Nome acessível do painel quando não há título.
    *
    * `role="dialog"` sem nome reprova na regra `aria-dialog-name` do axe, e a
    * variante "apenas conteúdo" do conteúdo compartilhado não tem título. O
    * Vanilla — referência de markup — resolve exatamente assim: com título, o
-   * primitivo liga `aria-labelledby`; sem título, o painel herda o texto
-   * acessível do gatilho. Devolve `null` quando há título para não deixar os
-   * dois contratos no mesmo elemento.
+   * primitivo liga `aria-labelledby`; sem título, vale o `ariaLabel` declarado
+   * por quem compõe e, na falta dele, o texto acessível do gatilho como rede de
+   * segurança. Devolve `null` quando há título para não deixar os dois
+   * contratos no mesmo elemento.
    */
   protected readonly rotuloDeReserva = computed(() => {
     if (this.root.titleId()) return null;
+    const declarado = this.content()?.ariaLabel()?.trim();
+    if (declarado) return declarado;
     const trigger = this.root.trigger();
     return trigger?.getAttribute('aria-label') || trigger?.textContent?.trim() || null;
   });

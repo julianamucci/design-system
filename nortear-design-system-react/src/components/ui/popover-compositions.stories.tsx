@@ -258,7 +258,7 @@ export const QuickSettings: Story = {
     <div className={wrapperClass} style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
-          <Button variant="outline">Configuracoes rápidas</Button>
+          <Button variant="outline">Configurações rápidas</Button>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverHeader>

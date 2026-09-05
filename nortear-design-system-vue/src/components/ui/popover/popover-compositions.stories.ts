@@ -259,7 +259,7 @@ export const QuickSettings: Story = {
       <div class="nds-min-h-80" style="contain: layout">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
-            <Button variant="outline">Configuracoes rápidas</Button>
+            <Button variant="outline">Configurações rápidas</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom">
             <PopoverHeader>

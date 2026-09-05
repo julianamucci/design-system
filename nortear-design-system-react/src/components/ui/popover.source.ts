@@ -126,9 +126,10 @@ ${ACTIONS_DEFAULT}`,
 };
 
 /**
- * Conteúdo livre — a AUSÊNCIA de título é o assunto. Sem `PopoverTitle` o painel
- * herda o nome acessível do gatilho, que é como o Vanilla (referência de
- * markup) resolve o caso: um diálogo anônimo reprovaria no axe.
+ * Conteúdo livre — a ausência de título é o assunto, e o `aria-label` é a
+ * resposta: sem `PopoverTitle` o nome do painel se DECLARA, em vez de cair na
+ * herança do rótulo do gatilho. Um `role="dialog"` anônimo reprovaria no axe, e
+ * um nomeado pelo botão anuncia a porta em vez do que há atrás dela.
  */
 export function popoverContentLivreSource(): string {
   return jsxSnippet(
@@ -137,7 +138,7 @@ ${IMPORT_BUTTON}`,
     popover(
       '',
       'Ver atalhos',
-      '',
+      ' aria-label="Informações adicionais"',
       `    <p className="nds-text-body">
       Use Ctrl+K para abrir a busca em qualquer tela.
     </p>`,

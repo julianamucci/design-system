@@ -24,6 +24,11 @@ export type PopoverArgs = {
   emailLabel: string;
   submitLabel: string;
   variant: 'default' | 'withTitle' | 'form' | 'tableFilter' | 'colorPicker' | 'quickSettings';
+  /**
+   * Nome acessível declarado do painel, para a composição SEM título. Com
+   * título quem nomeia é o `aria-labelledby`, e o rótulo não entra no snippet.
+   */
+  panelLabel?: string;
 };
 
 /** Monta o `import` do design system com uma peça por linha. */
@@ -40,11 +45,15 @@ function header(title: string, description: string): string {
     </PopoverHeader>`;
 }
 
-/** Botão que fecha o painel por dentro — o único papel do `PopoverClose`. */
-function close(label: string, variant: 'outline' | 'ghost', indentacao: string): string {
+/**
+ * Botão que fecha o painel por dentro — o único papel do `PopoverClose`.
+ * Sempre `ghost`: a ação secundária não disputa peso com o botão primário do
+ * rodapé, e é essa a variante que a story renderiza.
+ */
+function close(label: string, indentacao: string): string {
   return `${indentacao}<PopoverClose>
 ${indentacao}  {#snippet child({ props })}
-${indentacao}    <Button variant="${variant}" size="sm" {...props}>${label}</Button>
+${indentacao}    <Button variant="ghost" size="sm" {...props}>${label}</Button>
 ${indentacao}  {/snippet}
 ${indentacao}</PopoverClose>`;
 }
@@ -97,7 +106,7 @@ function salvar(evento: SubmitEvent) {
         <Input id="perfil-email" type="email" bind:value={email} />
       </div>
       <div class="nds-cluster" data-justify="end" data-spacing="sm">
-${close(a.cancelLabel, 'ghost', '        ')}
+${close(a.cancelLabel, '        ')}
         <Button type="submit" size="sm">${a.submitLabel}</Button>
       </div>
     </form>`,
@@ -179,7 +188,7 @@ ${close(a.cancelLabel, 'ghost', '        ')}
     state: '',
     markup: `${head}
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
-${close(a.cancelLabel, 'outline', '      ')}
+${close(a.cancelLabel, '      ')}
       <Button size="sm">${a.saveLabel}</Button>
     </div>`,
   };
@@ -222,6 +231,9 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     a.side === 'bottom' ? '' : `side="${a.side}"`,
     a.align === 'center' ? '' : `align="${a.align}"`,
     a.sideOffset === 4 ? '' : `sideOffset={${a.sideOffset}}`,
+    // Só a composição sem título declara nome: com `PopoverTitle` dentro, o
+    // `aria-label` venceria o título visível em vez de somar a ele.
+    a.panelLabel && a.variant === 'default' ? `aria-label="${a.panelLabel}"` : '',
   );
 
   return svelteSnippet(
@@ -229,7 +241,7 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     `<Popover${isOpen ? ' bind:open={aberto}' : ''}>
   <PopoverTrigger>
     {#snippet child({ props })}
-      <Button {...props}>${a.triggerLabel}</Button>
+      <Button variant="outline" {...props}>${a.triggerLabel}</Button>
     {/snippet}
   </PopoverTrigger>
   <PopoverContent${propsDoContent}>

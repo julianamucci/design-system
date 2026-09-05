@@ -72,7 +72,7 @@ export const Closed: Story = {
     defaultOpen: false,
     variant: 'withTitle',
     triggerLabel: 'Abrir popover',
-    title: 'Configuracoes de exibição',
+    title: 'Configurações de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
   },
   play: async ({ canvasElement, step }) => {
@@ -106,7 +106,7 @@ export const Open: Story = {
     defaultOpen: true,
     variant: 'withTitle',
     triggerLabel: 'Abrir popover',
-    title: 'Configuracoes de exibição',
+    title: 'Configurações de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
@@ -131,7 +131,7 @@ export const Open: Story = {
       // atributo NÃO está na lista de ARIA documentada (role, labelledby,
       // describedby, expanded). Registrado no relatório da rodada.
       await expect(panel()).toHaveAttribute('role', 'dialog');
-      await expect(panel()).toHaveAccessibleName(/Configuracoes de exibição/i);
+      await expect(panel()).toHaveAccessibleName(/Configurações de exibição/i);
     });
   },
 };

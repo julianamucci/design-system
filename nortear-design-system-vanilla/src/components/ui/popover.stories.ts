@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
-import { createPopover } from './popover';
+import {
+  createPopover,
+  createPopoverDescription,
+  createPopoverHeader,
+  createPopoverTitle,
+} from './popover';
 import { open, panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 import { createButton } from './button';
@@ -67,7 +72,7 @@ const meta: Meta<PopoverArgs> = {
   },
   args: {
     triggerLabel: 'Abrir popover',
-    title: 'Configuracoes de exibição',
+    title: 'Configurações de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     side: 'bottom',
     align: 'center',
@@ -86,21 +91,15 @@ function buildContent(args: PopoverArgs): HTMLElement {
   content.className = 'nds-stack';
   content.dataset.spacing = 'sm';
 
-  const header = document.createElement('div');
-  header.className = 'nds-stack';
-  header.dataset.spacing = 'xs';
-
-  const title = document.createElement('h4');
-  title.className = 'nds-popover-title';
-  title.dataset.slot = 'popover-title';
-  title.textContent = args.title;
-
-  const desc = document.createElement('p');
-  desc.className = 'nds-popover-description';
-  desc.dataset.slot = 'popover-description';
-  desc.textContent = args.description;
-
-  header.append(title, desc);
+  // Cabeçalho, título e descrição saem das sub-fábricas — as mesmas que o
+  // painel Code mostra e que a Demonstração da docs page usa. Escrever
+  // `class` e `data-slot` à mão aqui deixaria a story livre para divergir do
+  // componente sem nenhum portão ver.
+  const header = createPopoverHeader();
+  header.append(
+    createPopoverTitle({ text: args.title }),
+    createPopoverDescription({ text: args.description }),
+  );
 
   const actions = document.createElement('div');
   actions.className = 'nds-cluster';

@@ -20,7 +20,7 @@ const meta: Meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. O painel sempre precisa de nome acessível: com título ele vem do aria-labelledby, sem título ele herda o texto do gatilho.',
+          'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. O painel sempre precisa de nome acessível: com título ele vem do aria-labelledby, sem título ele é declarado por aria-label.',
       },
     },
   },
@@ -35,7 +35,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          'Conteúdo livre — apenas `PopoverContent` com texto. Sem título, o painel herda o nome acessível do gatilho.',
+          'Conteúdo livre — apenas `PopoverContent` com texto. Sem título, o painel declara o próprio nome por `aria-label`.',
       },
     },
   },
@@ -44,12 +44,14 @@ export const Default: Story = {
     variant: 'default',
     triggerLabel: 'Ver atalhos',
     description: 'Use Ctrl+K para abrir a busca em qualquer tela.',
+    panelLabel: 'Informações adicionais',
   },
   play: async ({ step }) => {
-    await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
-      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe.
+    await step('Sem título, o painel se nomeia por aria-label', async () => {
+      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe — e o
+      // nome herdado do gatilho anunciaria o botão, não o painel.
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
-      await expect(dialog).toHaveAccessibleName('Ver atalhos');
+      await expect(dialog).toHaveAccessibleName('Informações adicionais');
     });
 
     await step('E carrega a classe do design system com o conteúdo livre', async () => {
@@ -74,8 +76,8 @@ export const WithTitle: Story = {
   args: {
     open: true,
     variant: 'withTitle',
-    triggerLabel: 'Configuracoes',
-    title: 'Configuracoes de exibição',
+    triggerLabel: 'Configurações',
+    title: 'Configurações de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
@@ -88,7 +90,7 @@ export const WithTitle: Story = {
       const title = document.getElementById(id!)!;
       await expect(title).toHaveAttribute('data-slot', 'popover-title');
       await expect(title).toHaveClass(/nds-popover-title/);
-      await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
+      await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
     });
 
     await step('Tab caminha entre os controles internos', async () => {

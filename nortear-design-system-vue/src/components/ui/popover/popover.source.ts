@@ -67,7 +67,7 @@ function configPanel(recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<PopoverContent>
 ${p}  <PopoverHeader>
-${p}    <PopoverTitle>Configuracoes de exibição</PopoverTitle>
+${p}    <PopoverTitle>Configurações de exibição</PopoverTitle>
 ${p}    <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
 ${p}  </PopoverHeader>
 ${p}  <div class="nds-cluster" data-justify="end" data-spacing="sm">
@@ -118,7 +118,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   </PopoverTrigger>
   <PopoverContent${position}>
     <PopoverHeader>
-      <PopoverTitle>Configuracoes de exibição</PopoverTitle>
+      <PopoverTitle>Configurações de exibição</PopoverTitle>
       <PopoverDescription>
         Ajuste a aparência do conteúdo da página.
       </PopoverDescription>
@@ -134,8 +134,9 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
 
 /**
  * Conteúdo livre: só o painel com um texto. SEM título — e a ausência é o
- * assunto, porque é ela que faz o painel herdar o nome acessível do gatilho.
- * Um painel de papel `dialog` sem nome nenhum reprovaria em `aria-dialog-name`.
+ * assunto, porque é ela que obriga o painel a DECLARAR o próprio nome por
+ * `aria-label`. Um painel de papel `dialog` sem nome nenhum reprovaria em
+ * `aria-dialog-name`, e um nomeado pelo gatilho anunciaria o botão.
  */
 export function popoverContentLivreSource(): string {
   return vueSnippet(
@@ -144,7 +145,7 @@ import { Button } from '@/components/ui/button'`,
     popover({
       root: ':default-open="true"',
       label: 'Ver atalhos',
-      panel: `  <PopoverContent>
+      panel: `  <PopoverContent aria-label="Informações adicionais">
     <p class="nds-text-body">Use Ctrl+K para abrir a busca em qualquer tela.</p>
   </PopoverContent>`,
     }),
@@ -160,7 +161,7 @@ export function popoverWithTitleSource(): string {
     IMPORT_BASE,
     popover({
       root: ':default-open="true"',
-      label: 'Configuracoes',
+      label: 'Configurações',
       panel: configPanel(),
     }),
   );
@@ -459,7 +460,7 @@ const preferencias = reactive<Record<string, boolean>>({
 })`,
     popover({
       root: ':default-open="true"',
-      label: 'Configuracoes rápidas',
+      label: 'Configurações rápidas',
       panel: `  <PopoverContent>
     <PopoverHeader>
       <PopoverTitle>Preferências</PopoverTitle>

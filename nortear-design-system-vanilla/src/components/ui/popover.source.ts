@@ -26,6 +26,12 @@ export type PopoverSnippetOptions = {
    * para conteúdo que vem de fora; definida, ela substitui título e descrição.
    */
   text?: string;
+  /**
+   * Nome acessível DECLARADO do painel. Só entra no snippet do painel sem
+   * título: com título quem nomeia é o `aria-labelledby`, e os dois juntos
+   * seriam ambiguidade.
+   */
+  ariaLabel?: string;
   side?: PopoverSide;
   align?: PopoverAlign;
   sideOffset?: number;
@@ -76,6 +82,9 @@ function panelLines(o: PopoverSnippetOptions, content: string): string[] {
     ['side', o.side && o.side !== 'bottom' ? text(o.side) : undefined],
     ['align', o.align && o.align !== 'center' ? text(o.align) : undefined],
     ['sideOffset', o.sideOffset !== undefined && o.sideOffset !== 8 ? String(o.sideOffset) : undefined],
+    // Só o painel sem título declara nome: `o.text` é justamente a forma que
+    // troca cabeçalho por texto solto.
+    ['ariaLabel', o.ariaLabel && typeof o.text === 'string' ? text(o.ariaLabel) : undefined],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],
     ['modal', o.modal ? 'true' : undefined],
     [

@@ -20,7 +20,7 @@ describe('popoverSource', () => {
 <Popover>
   <PopoverTrigger>
     {#snippet child({ props })}
-      <Button {...props}>Abrir popover</Button>
+      <Button variant="outline" {...props}>Abrir popover</Button>
     {/snippet}
   </PopoverTrigger>
   <PopoverContent>
@@ -31,7 +31,7 @@ describe('popoverSource', () => {
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
       <PopoverClose>
         {#snippet child({ props })}
-          <Button variant="outline" size="sm" {...props}>Cancelar</Button>
+          <Button variant="ghost" size="sm" {...props}>Cancelar</Button>
         {/snippet}
       </PopoverClose>
       <Button size="sm">Salvar</Button>
@@ -67,7 +67,7 @@ describe('popoverSource', () => {
 
   it('o rótulo do gatilho acompanha o control', () => {
     expect(popoverSource('', { args: { triggerLabel: 'Ver atalhos' } })).toContain(
-      '<Button {...props}>Ver atalhos</Button>',
+      '<Button variant="outline" {...props}>Ver atalhos</Button>',
     );
   });
 

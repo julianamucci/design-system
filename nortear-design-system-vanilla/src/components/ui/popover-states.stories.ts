@@ -43,7 +43,7 @@ function buildSimpleContent(text: string): HTMLElement {
   // compartilhado documenta — escrever os dois à mão era o que fazia o contrato
   // divergir quando um dos lados mudava.
   c.append(
-    createPopoverTitle({ text: 'Configuracoes de exibição' }),
+    createPopoverTitle({ text: 'Configurações de exibição' }),
     createPopoverDescription({ text }),
   );
   return c;
@@ -104,7 +104,7 @@ export const Open: Story = {
     await step('E é nomeado pelo título que ele mesmo carrega', async () => {
       const id = panel()!.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)?.textContent).toMatch(/Configuracoes de exibição/);
+      await expect(document.getElementById(id!)?.textContent).toMatch(/Configurações de exibição/);
     });
   },
 };

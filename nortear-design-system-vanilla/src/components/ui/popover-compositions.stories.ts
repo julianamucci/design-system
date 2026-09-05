@@ -22,7 +22,7 @@ const meta: Meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          'Composicoes reais do Popover: EditarPerfil (form inline), FiltroDeTabela (checkboxes + ação), SeletorDeCor (swatches) e ConfiguracoesRapidas (toggles via inputs), mais a story de lado de abertura — arranjo do painel, não estado dele. Demonstra uso prático em fluxos comuns de produto.',
+          'Composicoes reais do Popover: EditarPerfil (form inline), FiltroDeTabela (checkboxes + ação), SeletorDeCor (swatches) e ConfiguraçõesRapidas (toggles via inputs), mais a story de lado de abertura — arranjo do painel, não estado dele. Demonstra uso prático em fluxos comuns de produto.',
       },
     },
   },
@@ -214,7 +214,7 @@ export const ColorPicker: Story = {
 
 export const QuickSettings: Story = {
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Configuracoes' });
+    const trigger = createButton({ variant: 'outline', label: 'Configurações' });
 
     const content = document.createElement('div');
     content.className = 'nds-stack';

@@ -53,7 +53,7 @@ const sharedComponents = {
 const SIMPLE_PANEL = `
           <PopoverContent side="bottom">
             <PopoverHeader>
-              <PopoverTitle>Configuracoes de exibição</PopoverTitle>
+              <PopoverTitle>Configurações de exibição</PopoverTitle>
               <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
             </PopoverHeader>
             <div class="nds-cluster" data-justify="end" data-spacing="sm">

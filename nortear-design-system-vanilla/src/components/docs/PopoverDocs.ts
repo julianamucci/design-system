@@ -64,12 +64,24 @@ function priorityLabel(raw: string): string {
 
 // ─── Demo builders ────────────────────────────────────────────────────────────
 
-function trackPopoverOpenChange(triggerLabel: string): (open: boolean) => void {
+/**
+ * Rastreio de abertura e fechamento de um painel desta página.
+ *
+ * `location` vem do CALL SITE, não de constante no topo do arquivo: quem sabe
+ * em que seção o elemento está é quem o monta, e Variantes, Composições e
+ * Do & Don't renderizam componente vivo — clique ali é tão real quanto na
+ * demonstração. O vocabulário é `docs_<section-id>`, o mesmo que o
+ * `docs_section_viewed` manda em `section_id`.
+ *
+ * `triggerId` é um identificador estável e não o texto traduzido: o rótulo
+ * viraria três valores distintos no GA4, um por idioma.
+ */
+function trackPopoverOpenChange(triggerId: string, location: string): (open: boolean) => void {
   return (open) => {
     if (open) {
-      track('popover_open', { component: 'popover', trigger_label: triggerLabel, location: 'docs_demo' });
+      track('popover_open', { component: 'popover', trigger_label: triggerId, location });
     } else {
-      track('popover_close', { component: 'popover', location: 'docs_demo' });
+      track('popover_close', { component: 'popover', location });
     }
   };
 }
@@ -77,8 +89,31 @@ function trackPopoverOpenChange(triggerLabel: string): (open: boolean) => void {
 /** Amostra de cor do exemplo de paleta — a MESMA das cinco stories. */
 const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
 
-function buildDefaultPopover(): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
+/**
+ * Painel SEM título: um `<p>` solto dentro do `PopoverContent`.
+ *
+ * É a variante "Default" do conteúdo compartilhado — conteúdo livre — e é
+ * também o "don't" do primeiro par de boas práticas: sem cabeçalho, o painel
+ * cai no nome de reserva herdado do gatilho e devolve ao leitor de tela o
+ * rótulo do botão em vez do assunto do painel. Fora dessas duas leituras, o
+ * exemplo canônico da página é `buildWithTitlePopover`.
+ */
+/**
+ * Painel SEM título.
+ *
+ * `ariaLabel` é opcional de propósito, e é o que separa os dois usos: a
+ * variante "conteúdo livre" declara o nome do painel, e o anti-exemplo do
+ * Do & Don't NÃO declara — é justamente o painel sem nome próprio, que cai no
+ * rótulo do gatilho, que a legenda daquele par critica.
+ */
+function buildUntitledPopover(
+  location: string,
+  triggerId: string,
+  label: string,
+  body: string,
+  ariaLabel?: string,
+): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label });
 
   const content = document.createElement('div');
   content.className = 'nds-stack';
@@ -86,7 +121,7 @@ function buildDefaultPopover(): HTMLElement {
 
   const p = document.createElement('p');
   p.className = 'nds-text-body';
-  p.textContent = t('demonstration.labels.description');
+  p.textContent = body;
   content.appendChild(p);
 
   return createPopover({
@@ -94,11 +129,28 @@ function buildDefaultPopover(): HTMLElement {
     content,
     side: 'bottom',
     align: 'center',
-    onOpenChange: trackPopoverOpenChange(t('demonstration.labels.trigger')),
+    ariaLabel,
+    onOpenChange: trackPopoverOpenChange(triggerId, location),
   });
 }
 
-function buildWithTitlePopover(): HTMLElement {
+function buildDefaultPopover(location: string, triggerId = 'basico'): HTMLElement {
+  return buildUntitledPopover(
+    location,
+    triggerId,
+    t('demonstration.labels.trigger'),
+    t('demonstration.labels.description'),
+    t('variants.panelLabels.default'),
+  );
+}
+
+/**
+ * O exemplo canônico do Popover — o mesmo que o Playground da story renderiza.
+ *
+ * Um gatilho `outline`, painel `align: 'center'` nascendo fechado, cabeçalho
+ * com título e descrição e um rodapé com Cancelar + Salvar.
+ */
+function buildWithTitlePopover(location: string, triggerId = 'com-titulo'): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
 
   const content = document.createElement('div');
@@ -128,12 +180,43 @@ function buildWithTitlePopover(): HTMLElement {
     trigger,
     content,
     side: 'bottom',
-    align: 'start',
-    onOpenChange: trackPopoverOpenChange(t('demonstration.labels.trigger')),
+    align: 'center',
+    onOpenChange: trackPopoverOpenChange(triggerId, location),
   });
 }
 
-function buildFormPopover(): HTMLElement {
+/**
+ * Painel de título só, para o par 2 do Do & Don't.
+ *
+ * O painel é o MESMO dos dois lados: o que muda é o rótulo do gatilho, que é
+ * exatamente o assunto da lição — verbo e objeto de um lado, "Clique aqui" do
+ * outro.
+ */
+function buildTriggerLabelPopover(
+  location: string,
+  triggerId: string,
+  label: string,
+): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label });
+
+  const content = document.createElement('div');
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'sm';
+
+  const header = createPopoverHeader();
+  header.append(createPopoverTitle({ text: t('demonstration.labels.form.trigger') }));
+  content.appendChild(header);
+
+  return createPopover({
+    trigger,
+    content,
+    side: 'bottom',
+    align: 'start',
+    onOpenChange: trackPopoverOpenChange(triggerId, location),
+  });
+}
+
+function buildFormPopover(location: string, triggerId = 'formulario'): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.form.trigger') });
 
   const content = document.createElement('form');
@@ -164,7 +247,7 @@ function buildFormPopover(): HTMLElement {
     content,
     side: 'bottom',
     align: 'start',
-    onOpenChange: trackPopoverOpenChange(t('demonstration.labels.form.trigger')),
+    onOpenChange: trackPopoverOpenChange(triggerId, location),
   });
 }
 
@@ -266,35 +349,16 @@ export function createPopoverDocs(): HTMLElement {
       case 'demonstracao':
         return createDocsDemonstration({
           title: t('demonstration.title'),
+          // A demonstração é UM exemplo, o canônico: gatilho `outline`, painel
+          // fechado, cabeçalho com título e descrição, rodapé com Cancelar e
+          // Salvar. As três variações que moravam aqui não sumiram da página —
+          // elas SÃO a seção Variantes, logo abaixo, com nome e código ao lado.
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.style.contain = 'layout';
-            wrap.className = 'nds-grid nds-w-full nds-min-h-50';
-            wrap.dataset.cols = '3';
-            wrap.dataset.spacing = 'lg';
-
-            const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
-              { labelKey: 'variants.items.default',   build: buildDefaultPopover   },
-              { labelKey: 'variants.items.withTitle', build: buildWithTitlePopover },
-              { labelKey: 'variants.items.form',      build: buildFormPopover      },
-            ];
-
-            for (const cell of cells) {
-              const col = document.createElement('div');
-              col.className = 'nds-stack nds-min-h-30';
-              col.dataset.spacing = 'xs';
-              col.style.contain = 'layout';
-              col.style.position = 'relative';
-
-              const label = document.createElement('p');
-              label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
-              label.textContent = t(cell.labelKey);
-
-              col.appendChild(label);
-              col.appendChild(cell.build());
-              wrap.appendChild(col);
-            }
-
+            wrap.className = 'nds-cluster';
+            wrap.dataset.justify = 'center';
+            wrap.dataset.spacing = 'sm';
+            wrap.appendChild(buildWithTitlePopover('docs_demo', 'basico'));
             return wrap;
           },
         });
@@ -361,46 +425,35 @@ export function createPopoverDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-stack nds-text-body';
-                wrap.dataset.spacing = 'xs';
-                const title = document.createElement('div');
-                title.className = 'nds-font-medium';
-                title.textContent = t('demonstration.labels.title');
-                const desc = document.createElement('div');
-                desc.className = 'nds-text-caption nds-text-muted-foreground';
-                desc.textContent = '+ PopoverTitle anunciado pelo SR';
-                wrap.append(title, desc);
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-text-body';
-                const note = document.createElement('div');
-                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
-                note.textContent = 'sem título — SR sem contexto';
-                wrap.append(note);
-                return wrap;
-              },
+              // Os quatro previews são o COMPONENTE, não uma descrição dele: o
+              // defeito do "don't" é real e abrindo o painel a pessoa o ouve.
+              // Todos nascem fechados — quatro painéis abertos ao mesmo tempo se
+              // empilham, e o axe passaria a medir o overlay no lugar da página.
+              doPreviewFactory: () => buildWithTitlePopover('docs_do_dont', 'par1-do'),
+              dontPreviewFactory: () => buildUntitledPopover(
+                'docs_do_dont',
+                'par1-dont',
+                t('demonstration.labels.trigger'),
+                t('doDont.pair1.dontBody'),
+              ),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = '"Editar perfil"';
-                return code;
-              },
-              dontPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = '"Clique aqui"';
-                return code;
-              },
+              doPreviewFactory: () => buildTriggerLabelPopover(
+                'docs_do_dont',
+                'par2-do',
+                t('demonstration.labels.form.trigger'),
+              ),
+              // Mesmo painel, gatilho vago: o que a lição compara é o rótulo, e
+              // pôr conteúdo diferente dos dois lados trocaria o assunto.
+              dontPreviewFactory: () => buildTriggerLabelPopover(
+                'docs_do_dont',
+                'par2-dont',
+                t('doDont.pair2.dontTrigger'),
+              ),
             },
           ],
         });
@@ -441,7 +494,14 @@ popover.toggle();`,
 const content = document.createElement('div');
 content.textContent = 'Ajuste a aparência do conteúdo.';
 
-createPopover({ trigger, content, side: 'bottom', align: 'center' });`;
+// Sem título dentro, o nome do painel se declara aqui.
+createPopover({
+  trigger,
+  content,
+  side: 'bottom',
+  align: 'center',
+  ariaLabel: 'Informações adicionais',
+});`;
 
         const codeWithTitle = `const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
@@ -469,21 +529,21 @@ createPopover({ trigger, content: form });`;
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
-              previewFactory: () => buildDefaultPopover(),
+              previewFactory: () => buildDefaultPopover('docs_variantes'),
             },
             {
               trackId: 'withTitle',
               name: t('variants.items.withTitle'),
               description: stripHtml(t('variants.styles.withTitle')),
               code: codeWithTitle,
-              previewFactory: () => buildWithTitlePopover(),
+              previewFactory: () => buildWithTitlePopover('docs_variantes'),
             },
             {
               trackId: 'form',
               name: t('variants.items.form'),
               description: stripHtml(t('variants.styles.form')),
               code: codeForm,
-              previewFactory: () => buildFormPopover(),
+              previewFactory: () => buildFormPopover('docs_variantes'),
             },
           ],
         });
@@ -654,7 +714,15 @@ createPopover({ trigger, content });`;
           const submit = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.form.submit'), type: 'submit' });
           form.append(heading, nameRow, emailRow, submit);
 
-          return createPopover({ trigger, content: form, side: 'bottom', align: 'start' });
+          // A composição também é componente vivo: o clique aqui vale tanto
+          // quanto o da demonstração, e `location` diz de QUAL seção ele veio.
+          return createPopover({
+            trigger,
+            content: form,
+            side: 'bottom',
+            align: 'start',
+            onOpenChange: trackPopoverOpenChange('editar-perfil', 'docs_composicoes'),
+          });
         }
 
         function buildTableFilterPreview(): HTMLElement {
@@ -690,7 +758,13 @@ createPopover({ trigger, content });`;
           );
           content.appendChild(actions);
 
-          return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+          return createPopover({
+            trigger,
+            content,
+            side: 'bottom',
+            align: 'start',
+            onOpenChange: trackPopoverOpenChange('filtro-tabela', 'docs_composicoes'),
+          });
         }
 
         function buildColorPickerPreview(): HTMLElement {
@@ -724,7 +798,13 @@ createPopover({ trigger, content });`;
           }
 
           content.append(title, grid);
-          return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+          return createPopover({
+            trigger,
+            content,
+            side: 'bottom',
+            align: 'start',
+            onOpenChange: trackPopoverOpenChange('cor-etiqueta', 'docs_composicoes'),
+          });
         }
 
         function buildQuickSettingsPreview(): HTMLElement {
@@ -757,7 +837,13 @@ createPopover({ trigger, content });`;
             content.appendChild(row);
           }
 
-          return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+          return createPopover({
+            trigger,
+            content,
+            side: 'bottom',
+            align: 'start',
+            onOpenChange: trackPopoverOpenChange('preferencias', 'docs_composicoes'),
+          });
         }
 
         return createDocsCompositions({
