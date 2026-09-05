@@ -18,11 +18,11 @@
         "description": "Configure os filtros para refinar os resultados.",
         "cancel": "Cancelar",
         "apply": "Aplicar filtros",
-        "section": "Categoria",
         "rightLabel": "Painel direito",
         "leftLabel": "Painel esquerdo",
         "topLabel": "Painel superior",
-        "bottomLabel": "Painel inferior"
+        "bottomLabel": "Painel inferior",
+        "body": "Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o conteúdo passa da altura da tela."
       }
     },
     "anatomy": {
@@ -144,7 +144,11 @@
       "title": "Boas práticas",
       "pair1": {
         "do": "Sempre forneça SheetTitle e SheetDescription para acessibilidade.",
-        "dont": "Não omita Title/Description — leitores de tela ficam sem contexto."
+        "dont": "Não omita Title/Description — leitores de tela ficam sem contexto.",
+        "dontTrigger": "Abrir",
+        "dontTitle": "Sem título visível",
+        "dontDescription": "Sem descrição visível",
+        "dontBody": "Conteúdo sem cabeçalho — leitores de tela perdem contexto."
       },
       "pair2": {
         "do": "Use side adequado ao contexto: right para filtros, bottom para mobile.",
@@ -173,7 +177,9 @@
         "advancedFilters": {
           "name": "Filtros avançados",
           "description": "Painel <code>side=\"right\"</code> com formulário de filtros no body e ações <code>Cancelar</code> + ação primária no footer. Caso canônico do Sheet em desktop.",
-          "use": "Refinamento de listagens longas (catálogo, busca, relatórios) sem trocar de página. Mantenha o trigger próximo aos resultados que serão filtrados."
+          "use": "Refinamento de listagens longas (catálogo, busca, relatórios) sem trocar de página. Mantenha o trigger próximo aos resultados que serão filtrados.",
+          "fieldCategory": "Categoria",
+          "fieldMinPrice": "Preço mínimo"
         },
         "secondaryNavigation": {
           "name": "Navegação secundária",
@@ -504,11 +510,11 @@
         "description": "Configure the filters to refine results.",
         "cancel": "Cancel",
         "apply": "Apply filters",
-        "section": "Category",
         "rightLabel": "Right panel",
         "leftLabel": "Left panel",
         "topLabel": "Top panel",
-        "bottomLabel": "Bottom panel"
+        "bottomLabel": "Bottom panel",
+        "body": "Panel content: a form, a list or a message. This is the area that scrolls when the content exceeds the screen height."
       }
     },
     "anatomy": {
@@ -630,7 +636,11 @@
       "title": "Best practices",
       "pair1": {
         "do": "Always provide SheetTitle and SheetDescription for accessibility.",
-        "dont": "Don't omit Title/Description — screen readers lose context."
+        "dont": "Don't omit Title/Description — screen readers lose context.",
+        "dontTrigger": "Open",
+        "dontTitle": "No visible title",
+        "dontDescription": "No visible description",
+        "dontBody": "Content with no header — screen readers lose context."
       },
       "pair2": {
         "do": "Use side appropriate to context: right for filters, bottom for mobile.",
@@ -659,7 +669,9 @@
         "advancedFilters": {
           "name": "Advanced filters",
           "description": "<code>side=\"right\"</code> panel with a filters form in the body and <code>Cancel</code> + primary action in the footer. Canonical Sheet use case on desktop.",
-          "use": "Refining long lists (catalog, search, reports) without leaving the page. Keep the trigger close to the results being filtered."
+          "use": "Refining long lists (catalog, search, reports) without leaving the page. Keep the trigger close to the results being filtered.",
+          "fieldCategory": "Category",
+          "fieldMinPrice": "Minimum price"
         },
         "secondaryNavigation": {
           "name": "Secondary navigation",
@@ -990,11 +1002,11 @@
         "description": "Configura los filtros para refinar los resultados.",
         "cancel": "Cancelar",
         "apply": "Aplicar filtros",
-        "section": "Categoría",
         "rightLabel": "Panel derecho",
         "leftLabel": "Panel izquierdo",
         "topLabel": "Panel superior",
-        "bottomLabel": "Panel inferior"
+        "bottomLabel": "Panel inferior",
+        "body": "Contenido del panel: formulario, lista o mensaje. Es esta área la que se desplaza cuando el contenido supera la altura de la pantalla."
       }
     },
     "anatomy": {
@@ -1116,7 +1128,11 @@
       "title": "Buenas prácticas",
       "pair1": {
         "do": "Provee siempre SheetTitle y SheetDescription para accesibilidad.",
-        "dont": "No omitas Title/Description — los lectores de pantalla pierden contexto."
+        "dont": "No omitas Title/Description — los lectores de pantalla pierden contexto.",
+        "dontTrigger": "Abrir",
+        "dontTitle": "Sin título visible",
+        "dontDescription": "Sin descripción visible",
+        "dontBody": "Contenido sin encabezado — los lectores de pantalla pierden contexto."
       },
       "pair2": {
         "do": "Usa el side adecuado al contexto: right para filtros, bottom para móvil.",
@@ -1145,7 +1161,9 @@
         "advancedFilters": {
           "name": "Filtros avanzados",
           "description": "Panel <code>side=\"right\"</code> con formulario de filtros en el body y acciones <code>Cancelar</code> + acción primaria en el footer. Caso canónico del Sheet en desktop.",
-          "use": "Refinamiento de listas largas (catálogo, búsqueda, reportes) sin salir de la página. Mantén el trigger cerca de los resultados que se filtrarán."
+          "use": "Refinamiento de listas largas (catálogo, búsqueda, reportes) sin salir de la página. Mantén el trigger cerca de los resultados que se filtrarán.",
+          "fieldCategory": "Categoría",
+          "fieldMinPrice": "Precio mínimo"
         },
         "secondaryNavigation": {
           "name": "Navegación secundaria",

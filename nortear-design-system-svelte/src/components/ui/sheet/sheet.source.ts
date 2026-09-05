@@ -22,10 +22,14 @@ export type SheetArgs = {
 /**
  * Corpo entre cabeçalho e rodapé. `nenhum` é o painel só de decisão.
  *
+ * `texto` é o corpo do exemplo canônico — um parágrafo entre o cabeçalho e o
+ * rodapé — e é o default: o snippet tem de descrever o painel que a story
+ * renderiza, e o painel sem corpo esconde justamente a área que rola.
+ *
  * `navegacao` é o único que dispensa o rodapé: um menu não tem o que confirmar,
  * e a saída dele é o X do canto — é o que as outras quatro stacks já mostram.
  */
-type Body = 'nenhum' | 'formulario' | 'rolagem' | 'navegacao';
+type Body = 'nenhum' | 'texto' | 'formulario' | 'rolagem' | 'navegacao';
 
 type Options = Partial<SheetArgs> & { body?: Body };
 
@@ -37,7 +41,7 @@ const DEFAULT: SheetArgs & { body: Body } = {
   description: 'Configure os filtros para refinar os resultados.',
   actionLabel: 'Aplicar filtros',
   cancelLabel: 'Cancelar',
-  body: 'nenhum',
+  body: 'texto',
 };
 
 /** Peças do design system que a composição usa, na ordem em que se lê o painel. */
@@ -68,6 +72,16 @@ ${extras.join('\n')}`;
 
 /** Corpo rolável ou formulário, indentado para dentro do conteúdo. */
 function panelBody(body: Body): string {
+  if (body === 'texto') {
+    return `
+    <SheetBody>
+      <p class="nds-text-body nds-text-muted-foreground">
+        Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o
+        conteúdo passa da altura da tela.
+      </p>
+    </SheetBody>
+`;
+  }
   if (body === 'formulario') {
     return `
     <SheetBody>

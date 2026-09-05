@@ -19,7 +19,6 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_SHEET, sheetCloseReason } from '@/components/ui/sheet';
 import { NdsButton } from '@/components/ui/button';
 import { NdsLabel } from '@/components/ui/label';
-import { NdsCheckbox } from '@/components/ui/checkbox';
 import { NdsInput } from '@/components/ui/input';
 import uiTranslations from '@/i18n/ui.json';
 import sheetTranslations from '@shared/content/sheet/translations.json';
@@ -191,8 +190,8 @@ const VARIANT_CODE = (side: string, tituloVar: string) => `<nds-sheet>
   </ng-template>
 </nds-sheet>`;
 
-const COMPOSITION_CODE = {
-  advancedFilters: `<nds-sheet>
+/** O snippet dos filtros leva os rótulos dos campos, que são conteúdo traduzido. */
+const COMPOSITION_CODE_FILTERS = (fieldCategory: string, fieldMinPrice: string) => `<nds-sheet>
   <button ndsSheetTrigger ndsButton variant="outline">Abrir filtros</button>
 
   <ng-template ndsSheetContent side="right">
@@ -201,19 +200,23 @@ const COMPOSITION_CODE = {
       <p ndsSheetDescription>Configure os filtros para refinar os resultados.</p>
     </div>
 
-    <div ndsSheetBody class="nds-stack" data-spacing="sm">
-      <div class="nds-cluster" data-spacing="sm">
-        <button ndsCheckbox id="cat-1"></button>
-        <label ndsLabel for="cat-1">Categoria</label>
-      </div>
+    <div ndsSheetBody>
+      <form id="filtros" class="nds-grid" data-spacing="md">
+        <label ndsLabel for="cat">${fieldCategory}</label>
+        <input ndsInput id="cat" value="Eletrônicos" />
+        <label ndsLabel for="min">${fieldMinPrice}</label>
+        <input ndsInput id="min" type="number" value="100" />
+      </form>
     </div>
 
     <div ndsSheetFooter>
-      <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
-      <button ndsButton>Aplicar filtros</button>
+      <button ndsSheetClose ndsButton type="button" variant="outline">Cancelar</button>
+      <button ndsButton type="submit" form="filtros">Aplicar filtros</button>
     </div>
   </ng-template>
-</nds-sheet>`,
+</nds-sheet>`;
+
+const COMPOSITION_CODE = {
   secondaryNavigation: `<nds-sheet>
   <button ndsSheetTrigger ndsButton variant="outline">Abrir menu</button>
 
@@ -295,7 +298,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ...NDS_SHEET, NdsButton, NdsLabel, NdsCheckbox, NdsInput,
+    ...NDS_SHEET, NdsButton, NdsLabel, NdsInput,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsCompositions, NdsDocsStates, NdsDocsProps, NdsDocsTokens,
@@ -306,30 +309,38 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
     <!-- ─── Do & Don't ─────────────────────────────────────────────────── -->
 
     <ng-template #tplDoDont1Do>
-      <nds-sheet>
+      <!-- O preview é componente VIVO, então o clique aqui é tão real quanto o
+           da demonstração: dispara o evento do produto com o location DESTA
+           seção. O label leva o lado (valor estável), nunca o texto traduzido. -->
+      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton>{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton (click)="aoAplicar('right', 'docs_do_dont')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
     </ng-template>
 
     <ng-template #tplDoDont1Dont>
-      <!-- O "don't" é o painel sem descrição. O título continua presente: um
-           diálogo modal anônimo não é exemplo ruim, é armadilha — quem usa
-           leitor de tela ficaria sem saber onde entrou. -->
-      <nds-sheet>
-        <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
+      <!-- O "don't" é o painel sem cabeçalho VISÍVEL. Título e descrição
+           continuam no DOM, os dois em nds-sr-only: um diálogo modal anônimo
+           não é exemplo ruim, é armadilha — quem usa leitor de tela ficaria sem
+           saber onde entrou. O que o exemplo mostra é a perda de quem enxerga. -->
+      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_do_dont', $event)">
+        <button ndsSheetTrigger ndsButton variant="outline">{{ t('doDont.pair1.dontTrigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h3>
+            <h2 ndsSheetTitle class="nds-sr-only">{{ t('doDont.pair1.dontTitle') }}</h2>
+            <p ndsSheetDescription class="nds-sr-only">{{ t('doDont.pair1.dontDescription') }}</p>
+          </div>
+          <div ndsSheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{{ t('doDont.pair1.dontBody') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
@@ -339,16 +350,16 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.rightLabel') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.rightLabel') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton>{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton (click)="aoAplicar('right', 'docs_do_dont')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -357,16 +368,16 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
     <ng-template #tplDoDont2Dont>
       <!-- Mesmo painel forçado ao topo: cabe, mas contraria o fluxo de quem
            esperava o filtro do lado dos resultados. -->
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('top', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="top">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.topLabel') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.topLabel') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton>{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton (click)="aoAplicar('top', 'docs_do_dont')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -375,64 +386,64 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
     <!-- ─── Variantes: os quatro lados ─────────────────────────────────── -->
 
     <ng-template #tplVarRight>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.rightLabel') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.rightLabel') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton>{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton (click)="aoAplicar('right', 'docs_variantes')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
     </ng-template>
 
     <ng-template #tplVarLeft>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('left', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="left">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.leftLabel') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.leftLabel') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton>{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton (click)="aoAplicar('left', 'docs_variantes')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
     </ng-template>
 
     <ng-template #tplVarTop>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('top', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="top">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.topLabel') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.topLabel') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton>{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton (click)="aoAplicar('top', 'docs_variantes')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
     </ng-template>
 
     <ng-template #tplVarBottom>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('bottom', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="bottom">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.bottomLabel') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.bottomLabel') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton>{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton (click)="aoAplicar('bottom', 'docs_variantes')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -441,37 +452,54 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
     <!-- ─── Composições ────────────────────────────────────────────────── -->
 
     <ng-template #tplCompFiltros>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h3>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
 
-          <div ndsSheetBody class="nds-stack" data-spacing="sm">
-            @for (opcao of opcoesDeFiltro(); track opcao.id) {
-              <div class="nds-cluster" data-spacing="sm">
-                <button ndsCheckbox [id]="opcao.id"></button>
-                <label ndsLabel [attr.for]="opcao.id">{{ opcao.label }}</label>
+          <div ndsSheetBody>
+            <!-- O guard de submit existe para o preview ao vivo: sem ele, um
+                 Enter dentro do campo tentaria navegar a página. -->
+            <form
+              id="docs-sheet-filtros"
+              class="nds-grid"
+              data-spacing="md"
+              (submit)="$event.preventDefault(); aoAplicar('right', 'docs_composicoes')"
+            >
+              <div class="nds-grid" data-spacing="xs">
+                <label ndsLabel for="docs-sheet-category">
+                  {{ t('variants.compositions.advancedFilters.fieldCategory') }}
+                </label>
+                <input ndsInput id="docs-sheet-category" value="Eletrônicos" />
               </div>
-            }
+              <div class="nds-grid" data-spacing="xs">
+                <label ndsLabel for="docs-sheet-min">
+                  {{ t('variants.compositions.advancedFilters.fieldMinPrice') }}
+                </label>
+                <input ndsInput id="docs-sheet-min" type="number" value="100" />
+              </div>
+            </form>
           </div>
 
+          <!-- O rodapé fica FORA do corpo: é ele que continua visível quando o
+               conteúdo rola. O atributo form religa o botão ao formulário. -->
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton (click)="aoAplicar('composicoes')">{{ t('demonstration.labels.apply') }}</button>
+            <button ndsSheetClose ndsButton type="button" variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+            <button ndsButton type="submit" form="docs-sheet-filtros">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
     </ng-template>
 
     <ng-template #tplCompNavegacao>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('left', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="left">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('variants.compositions.secondaryNavigation.name') }}</h3>
+            <h2 ndsSheetTitle>{{ t('variants.compositions.secondaryNavigation.name') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
 
@@ -493,11 +521,11 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
     </ng-template>
 
     <ng-template #tplCompPerfil>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('variants.compositions.profileEdit.name') }}</h3>
+            <h2 ndsSheetTitle>{{ t('variants.compositions.profileEdit.name') }}</h2>
             <p ndsSheetDescription>{{ profileEditDescription() }}</p>
           </div>
 
@@ -530,11 +558,11 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
     </ng-template>
 
     <ng-template #tplCompPainelInferior>
-      <nds-sheet>
+      <nds-sheet (onOpenChange)="aoMudarPainel('bottom', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="bottom">
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ t('variants.compositions.bottomPanel.name') }}</h3>
+            <h2 ndsSheetTitle>{{ t('variants.compositions.bottomPanel.name') }}</h2>
             <p ndsSheetDescription>{{ bottomPanelDescription() }}</p>
           </div>
 
@@ -569,59 +597,33 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-cluster nds-w-full" data-spacing="md">
-            <!-- Painel canônico: lado direito, corpo com filtros, rodapé com
-                 Cancelar + ação primária. -->
-            <nds-sheet (onOpenChange)="aoMudarPainel('demo_filtros', $event)">
+          <div class="nds-cluster" data-justify="center" data-spacing="sm">
+            <!-- UM painel, o canônico: lado direito, nasce fechado, corpo com o
+                 texto que descreve a área rolável, rodapé com Cancelar + ação
+                 primária. É o mesmo exemplo do Playground da story. -->
+            <nds-sheet (onOpenChange)="aoMudarPainel('demo_filtros', 'docs_demo', $event)">
               <button ndsSheetTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
 
               <ng-template ndsSheetContent side="right">
                 <div ndsSheetHeader>
-                  <h3 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h3>
+                  <h2 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h2>
                   <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
                 </div>
 
-                <div ndsSheetBody class="nds-stack" data-spacing="sm">
-                  @for (opcao of opcoesDeFiltro(); track opcao.id) {
-                    <div class="nds-cluster" data-spacing="sm">
-                      <button ndsCheckbox [id]="'demo-' + opcao.id"></button>
-                      <label ndsLabel [attr.for]="'demo-' + opcao.id">{{ opcao.label }}</label>
-                    </div>
-                  }
+                <div ndsSheetBody>
+                  <p class="nds-text-body nds-text-muted-foreground">
+                    {{ t('demonstration.labels.body') }}
+                  </p>
                 </div>
 
                 <div ndsSheetFooter>
                   <button ndsSheetClose ndsButton variant="outline">
                     {{ t('demonstration.labels.cancel') }}
                   </button>
-                  <button ndsButton (click)="aoAplicar('demo_filtros')">
+                  <button ndsButton (click)="aoAplicar('demo_filtros', 'docs_demo')">
                     {{ t('demonstration.labels.apply') }}
-                  </button>
-                </div>
-              </ng-template>
-            </nds-sheet>
-
-            <!-- Painel controlado por fora: o botão abaixo é o dono do estado. -->
-            <button ndsButton (click)="painelControlado.set(true)">
-              {{ t('demonstration.labels.leftLabel') }}
-            </button>
-
-            <nds-sheet
-              [open]="painelControlado()"
-              (openChange)="painelControlado.set($event)"
-              (onOpenChange)="aoMudarPainel('demo_controlado', $event)"
-            >
-              <ng-template ndsSheetContent side="left">
-                <div ndsSheetHeader>
-                  <h3 ndsSheetTitle>{{ t('demonstration.labels.leftLabel') }}</h3>
-                  <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
-                </div>
-
-                <div ndsSheetFooter>
-                  <button ndsSheetClose ndsButton variant="outline">
-                    {{ t('demonstration.labels.cancel') }}
                   </button>
                 </div>
               </ng-template>
@@ -744,9 +746,6 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
-  /** Estado do painel controlado da demonstração — dono do valor é a página. */
-  protected readonly painelControlado = signal(false);
-
   private readonly tplDoDont1Do = viewChild.required<TemplateRef<unknown>>('tplDoDont1Do');
   private readonly tplDoDont1Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont1Dont');
   private readonly tplDoDont2Do = viewChild.required<TemplateRef<unknown>>('tplDoDont2Do');
@@ -759,13 +758,6 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
   private readonly tplCompNavegacao = viewChild.required<TemplateRef<unknown>>('tplCompNavegacao');
   private readonly tplCompPerfil = viewChild.required<TemplateRef<unknown>>('tplCompPerfil');
   private readonly tplCompPainelInferior = viewChild.required<TemplateRef<unknown>>('tplCompPainelInferior');
-
-  /** Três opções de filtro derivadas do conteúdo — nada de literal em português. */
-  protected readonly opcoesDeFiltro = computed(() => {
-    dict();
-    const base = t('demonstration.labels.section');
-    return [1, 2, 3].map((i) => ({ id: `filtro-${i}`, label: `${base} ${i}` }));
-  });
 
   /** Destinos do exemplo de navegação secundária. */
   protected readonly destinosDeNavegacao = computed(() => {
@@ -795,32 +787,37 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
   });
 
   /**
-   * Abertura e fechamento dos painéis da demonstração.
+   * Abertura e fechamento de qualquer painel VIVO desta página.
    *
    * O evento nasce AQUI, na camada de produto — o primitivo de UI não importa
    * `@/lib/analytics`. O payload leva valores estáveis (`qual`, `reason`), nunca
    * o texto traduzido, que viraria três valores distintos no GA4.
+   *
+   * `location` é `docs_<section-id>` da seção que RENDERIZA o painel (guideline
+   * 07, "`location` nas docs pages") e vem do call site, sem default: constante
+   * no topo do arquivo é exatamente como toda chamada passou a dizer
+   * `docs_demo`, inclusive nas de Variantes, Composições e Do & Don't.
    */
-  protected aoMudarPainel(qual: string, evento: RdxDialogOpenChange): void {
+  protected aoMudarPainel(qual: string, location: string, evento: RdxDialogOpenChange): void {
     if (evento.open) {
-      track('dialog_open', { component: 'sheet', label: qual, location: 'docs_demo' });
+      track('dialog_open', { component: 'sheet', label: qual, location });
       return;
     }
     track('dialog_close', {
       component: 'sheet',
       label: qual,
       reason: sheetCloseReason(evento.reason),
-      location: 'docs_demo',
+      location,
     });
   }
 
-  /** Ação primária do rodapé. */
-  protected aoAplicar(qual: string): void {
+  /** Ação primária do rodapé. `location` vem do call site, pelo mesmo motivo. */
+  protected aoAplicar(qual: string, location: string): void {
     track('dialog_confirm', {
       component: 'sheet',
-      action: 'apply_filters',
+      action: 'apply',
       label: qual,
-      location: 'docs_demo',
+      location,
     });
   }
 
@@ -931,17 +928,25 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
     const mapa: {
       key: 'advancedFilters' | 'secondaryNavigation' | 'profileEdit' | 'bottomPanel';
       tpl: TemplateRef<unknown>;
+      code: string;
     }[] = [
-      { key: 'advancedFilters',     tpl: this.tplCompFiltros()        },
-      { key: 'secondaryNavigation', tpl: this.tplCompNavegacao()      },
-      { key: 'profileEdit',         tpl: this.tplCompPerfil()         },
-      { key: 'bottomPanel',         tpl: this.tplCompPainelInferior() },
+      {
+        key: 'advancedFilters',
+        tpl: this.tplCompFiltros(),
+        code: COMPOSITION_CODE_FILTERS(
+          t('variants.compositions.advancedFilters.fieldCategory'),
+          t('variants.compositions.advancedFilters.fieldMinPrice'),
+        ),
+      },
+      { key: 'secondaryNavigation', tpl: this.tplCompNavegacao(),      code: COMPOSITION_CODE.secondaryNavigation },
+      { key: 'profileEdit',         tpl: this.tplCompPerfil(),         code: COMPOSITION_CODE.profileEdit         },
+      { key: 'bottomPanel',         tpl: this.tplCompPainelInferior(), code: COMPOSITION_CODE.bottomPanel         },
     ];
-    return mapa.map(({ key, tpl }) => ({
+    return mapa.map(({ key, tpl, code }) => ({
       name: t(`variants.compositions.${key}.name`),
       description: t(`variants.compositions.${key}.description`),
       useWhen: t(`variants.compositions.${key}.use`),
-      code: COMPOSITION_CODE[key],
+      code,
       trackId: key,
       preview: tpl,
     }));

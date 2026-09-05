@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -20,6 +21,9 @@ const LABELS = {
   trigger: 'Abrir filtros',
   title: 'Filtros avançados',
   description: 'Configure os filtros para refinar os resultados.',
+  // Fixture em pt-BR: a story não consome o conteúdo compartilhado, mas diz a
+  // mesma coisa que `demonstration.labels.body` na docs page.
+  body: 'Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o conteúdo passa da altura da tela.',
   cancel: 'Cancelar',
   apply: 'Aplicar filtros',
 };
@@ -139,6 +143,7 @@ export const Playground: Story = {
   render: (args) => ({
     components: {
       Sheet,
+      SheetBody,
       SheetClose,
       SheetContent,
       SheetDescription,
@@ -166,6 +171,9 @@ export const Playground: Story = {
             <SheetTitle>{{ rotulos.title }}</SheetTitle>
             <SheetDescription>{{ rotulos.description }}</SheetDescription>
           </SheetHeader>
+          <SheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{{ rotulos.body }}</p>
+          </SheetBody>
           <SheetFooter>
             <SheetClose as-child>
               <Button variant="outline">{{ rotulos.cancel }}</Button>

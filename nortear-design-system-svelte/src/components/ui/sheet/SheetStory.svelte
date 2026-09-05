@@ -106,6 +106,18 @@
                 {/each}
               </nav>
             </SheetBody>
+          {:else}
+            <!--
+              O caso default também tem corpo. Antes ele ia do cabeçalho direto
+              ao rodapé, e o Playground mostrava um painel sem a área que rola —
+              justamente a peça que a Demonstração da docs page apresenta.
+            -->
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o
+                conteúdo passa da altura da tela.
+              </p>
+            </SheetBody>
           {/if}
 
           {#if variant !== 'secondaryNav'}

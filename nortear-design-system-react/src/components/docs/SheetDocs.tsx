@@ -90,11 +90,17 @@ type DemoProps = {
   description: string;
   cancel: string;
   apply: string;
+  body?: string;
   side?: "top" | "right" | "bottom" | "left";
   location: string;
 };
 
-function SheetDemo({ trigger, title, description, cancel, apply, side = "right", location }: DemoProps) {
+type FiltersFormDemoProps = DemoProps & {
+  fieldCategory: string;
+  fieldMinPrice: string;
+};
+
+function SheetDemo({ trigger, title, description, cancel, apply, body, side = "right", location }: DemoProps) {
   return (
     <div style={{ contain: "layout" }}>
       {/* label usa o SIDE (valor estável, não localizado) — texto traduzido
@@ -115,13 +121,18 @@ function SheetDemo({ trigger, title, description, cancel, apply, side = "right",
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>{description}</SheetDescription>
           </SheetHeader>
+          {body ? (
+            <SheetBody>
+              <p className="nds-text-body nds-text-muted-foreground">{body}</p>
+            </SheetBody>
+          ) : null}
           <SheetFooter>
             <SheetClose render={<Button variant="outline" />}>{cancel}</SheetClose>
             <Button
               onClick={() =>
                 track("dialog_confirm", {
                   component: "sheet",
-                  action: apply,
+                  action: "apply",
                   location,
                 })
               }
@@ -135,7 +146,7 @@ function SheetDemo({ trigger, title, description, cancel, apply, side = "right",
   );
 }
 
-function FiltersFormDemo({ trigger, title, description, cancel, apply, location }: DemoProps) {
+function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCategory, fieldMinPrice, location }: FiltersFormDemoProps) {
   return (
     <div style={{ contain: "layout" }}>
       <Sheet
@@ -162,17 +173,17 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, location 
                 e.preventDefault();
                 track("dialog_confirm", {
                   component: "sheet",
-                  action: apply,
+                  action: "apply",
                   location,
                 });
               }}
             >
               <div className="nds-grid" data-spacing="xs">
-                <Label htmlFor="docs-sheet-category">Categoria</Label>
+                <Label htmlFor="docs-sheet-category">{fieldCategory}</Label>
                 <Input id="docs-sheet-category" defaultValue="Eletrônicos" />
               </div>
               <div className="nds-grid" data-spacing="xs">
-                <Label htmlFor="docs-sheet-min">Preço mínimo</Label>
+                <Label htmlFor="docs-sheet-min">{fieldMinPrice}</Label>
                 <Input id="docs-sheet-min" type="number" defaultValue="100" />
               </div>
             </form>
@@ -318,14 +329,8 @@ export function SheetDocs() {
             description={tContent("demonstration.labels.description")}
             cancel={tContent("demonstration.labels.cancel")}
             apply={tContent("demonstration.labels.apply")}
-            location="docs_demo"
-          />
-          <FiltersFormDemo
-            trigger={tContent("demonstration.labels.trigger")}
-            title={tContent("demonstration.labels.title")}
-            description={tContent("demonstration.labels.description")}
-            cancel={tContent("demonstration.labels.cancel")}
-            apply={tContent("demonstration.labels.apply")}
+            body={tContent("demonstration.labels.body")}
+            side="right"
             location="docs_demo"
           />
         </div>
@@ -440,25 +445,36 @@ export function SheetDocs() {
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
-                location="docs:dodont:pair1:do"
+                location="docs_do_dont"
               />
             ),
             dontPreview: (
               <div style={{ contain: "layout" }}>
-                <Sheet>
+                <Sheet
+                  onOpenChange={(open, details) =>
+                    track(open ? "dialog_open" : "dialog_close", {
+                      component: "sheet",
+                      label: "right",
+                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      location: "docs_do_dont",
+                    })
+                  }
+                >
                   <SheetTrigger render={<Button variant="outline" />}>
-                    Abrir
+                    {tContent("doDont.pair1.dontTrigger")}
                   </SheetTrigger>
                   <SheetContent side="right">
                     {/* Sem Title/Description — exemplo do "Don't" */}
                     <SheetHeader>
-                      <SheetTitle className="nds-sr-only">Sem título visível</SheetTitle>
+                      <SheetTitle className="nds-sr-only">
+                        {tContent("doDont.pair1.dontTitle")}
+                      </SheetTitle>
                       <SheetDescription className="nds-sr-only">
-                        Sem descrição visível
+                        {tContent("doDont.pair1.dontDescription")}
                       </SheetDescription>
                     </SheetHeader>
                     <p className="nds-px-4 nds-text-body">
-                      Conteúdo sem cabeçalho — leitores de tela perdem contexto.
+                      {tContent("doDont.pair1.dontBody")}
                     </p>
                   </SheetContent>
                 </Sheet>
@@ -478,7 +494,7 @@ export function SheetDocs() {
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
                 side="right"
-                location="docs:dodont:pair2:do"
+                location="docs_do_dont"
               />
             ),
             dontPreview: (
@@ -489,7 +505,7 @@ export function SheetDocs() {
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
                 side="top"
-                location="docs:dodont:pair2:dont"
+                location="docs_do_dont"
               />
             ),
             doCaption: stripHtml(tContent("doDont.pair2.do")),
@@ -517,7 +533,7 @@ export function SheetDocs() {
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
                 side="right"
-                location="docs:variants:right"
+                location="docs_variantes"
               />
             ),
           },
@@ -534,7 +550,7 @@ export function SheetDocs() {
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
                 side="left"
-                location="docs:variants:left"
+                location="docs_variantes"
               />
             ),
           },
@@ -551,7 +567,7 @@ export function SheetDocs() {
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
                 side="top"
-                location="docs:variants:top"
+                location="docs_variantes"
               />
             ),
           },
@@ -568,7 +584,7 @@ export function SheetDocs() {
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
                 side="bottom"
-                location="docs:variants:bottom"
+                location="docs_variantes"
               />
             ),
           },
@@ -613,7 +629,9 @@ export function SheetDocs() {
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
-                location="docs:comp:filters"
+                fieldCategory={tContent("variants.compositions.advancedFilters.fieldCategory")}
+                fieldMinPrice={tContent("variants.compositions.advancedFilters.fieldMinPrice")}
+                location="docs_composicoes"
               />
             ),
           },
@@ -641,7 +659,16 @@ export function SheetDocs() {
 </Sheet>`,
             preview: (
               <div style={{ contain: "layout" }}>
-                <Sheet>
+                <Sheet
+                  onOpenChange={(open, details) =>
+                    track(open ? "dialog_open" : "dialog_close", {
+                      component: "sheet",
+                      label: "left",
+                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      location: "docs_composicoes",
+                    })
+                  }
+                >
                   <SheetTrigger render={<Button variant="outline" />}>Abrir menu</SheetTrigger>
                   <SheetContent side="left">
                     <SheetHeader>
@@ -691,7 +718,16 @@ export function SheetDocs() {
 </Sheet>`,
             preview: (
               <div style={{ contain: "layout" }}>
-                <Sheet>
+                <Sheet
+                  onOpenChange={(open, details) =>
+                    track(open ? "dialog_open" : "dialog_close", {
+                      component: "sheet",
+                      label: "right",
+                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      location: "docs_composicoes",
+                    })
+                  }
+                >
                   <SheetTrigger render={<Button variant="outline" />}>Editar perfil</SheetTrigger>
                   <SheetContent side="right">
                     <SheetHeader>
@@ -753,7 +789,16 @@ export function SheetDocs() {
 </Sheet>`,
             preview: (
               <div style={{ contain: "layout" }}>
-                <Sheet>
+                <Sheet
+                  onOpenChange={(open, details) =>
+                    track(open ? "dialog_open" : "dialog_close", {
+                      component: "sheet",
+                      label: "bottom",
+                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      location: "docs_composicoes",
+                    })
+                  }
+                >
                   <SheetTrigger render={<Button variant="outline" />}>Abrir ações</SheetTrigger>
                   <SheetContent side="bottom">
                     <SheetHeader>

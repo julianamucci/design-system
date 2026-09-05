@@ -3,6 +3,7 @@ import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -176,6 +177,14 @@ export const Playground: Story = {
               {t("demonstration.labels.description")}
             </SheetDescription>
           </SheetHeader>
+          {/* Fixture em pt-BR: story não consome o conteúdo compartilhado, mas
+              diz a mesma coisa que "demonstration.labels.body". */}
+          <SheetBody>
+            <p className="nds-text-body nds-text-muted-foreground">
+              Conteúdo do painel: formulário, lista ou mensagem. É esta área que
+              rola quando o conteúdo passa da altura da tela.
+            </p>
+          </SheetBody>
           <SheetFooter>
             <SheetClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}

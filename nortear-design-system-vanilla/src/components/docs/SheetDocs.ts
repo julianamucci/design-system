@@ -61,23 +61,53 @@ function priorityLabel(raw: string): string {
 
 type SheetDemoOptions = {
   side?: SheetSide;
+  /**
+   * `docs_<section-id>` da seção que RENDERIZA este exemplo — guideline 07,
+   * "`location` nas docs pages". Obrigatório e sem default: quem sabe a seção é
+   * o call site, e default aqui é exatamente como todas as chamadas passaram a
+   * reportar `docs_demo`.
+   */
+  location: string;
   triggerLabel: string;
   title: string;
   description: string;
   cancelLabel: string;
   applyLabel: string;
   bodyText?: string;
+  /**
+   * Esconde título e descrição visualmente, mantendo-os no DOM.
+   *
+   * É o anti-padrão do primeiro "don't": o painel continua com nome acessível
+   * (o `aria-labelledby` aponta para o mesmo `h2`), então o exemplo mostra a
+   * PERDA de contexto visual sem virar violação real de axe. Sem isto o
+   * preview seria imitação estática — guideline 08 §15.
+   */
+  srOnlyHeader?: boolean;
+  /** Corpo já montado — usado pelas composições que mostram um formulário. */
+  bodyEl?: HTMLElement;
 };
+
+/** Corpo do exemplo: o parágrafo canônico, ou o que a composição já montou. */
+function buildDemoBody(opts: SheetDemoOptions): HTMLElement {
+  if (opts.bodyEl) return opts.bodyEl;
+  const paragraph = document.createElement('p');
+  paragraph.className = 'nds-text-body nds-text-muted-foreground';
+  paragraph.textContent = opts.bodyText ?? t('demonstration.labels.body');
+  return paragraph;
+}
+
+/** Esconde o cabeçalho do painel recém-aberto SEM tirá-lo do DOM. */
+function hideHeaderVisually(): void {
+  // O painel só é portado para o `body` na abertura, e o Sheet fecha os
+  // outros ao abrir — o último `sheet-content` do documento é este.
+  const panel = [...document.querySelectorAll<HTMLElement>('[data-slot="sheet-content"]')].pop();
+  panel?.querySelector('.nds-sheet-title')?.classList.add('nds-sr-only');
+  panel?.querySelector('.nds-sheet-description')?.classList.add('nds-sr-only');
+}
 
 function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: opts.triggerLabel });
-
-  const body = document.createElement('div');
-  body.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-  body.dataset.spacing = 'sm';
-  const p = document.createElement('p');
-  p.textContent = opts.bodyText ?? 'Conteúdo do painel — imagine campos de filtro aqui.';
-  body.appendChild(p);
+  const body = buildDemoBody(opts);
 
   const cancel = createButton({ variant: 'outline', label: opts.cancelLabel });
   const apply = createButton({ variant: 'default', label: opts.applyLabel });
@@ -101,8 +131,8 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   apply.addEventListener('click', () => {
     track('dialog_confirm', {
       component: 'sheet',
-      action: opts.applyLabel,
-      location: 'docs_demo',
+      action: 'apply',
+      location: opts.location,
     });
     pendingReason = 'action';
     closeFromAction();
@@ -117,10 +147,11 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
     footer,
     onOpenChange: (open) => {
       if (open) {
+        if (opts.srOnlyHeader) hideHeaderVisually();
         track('dialog_open', {
           component: 'sheet',
           label: opts.side ?? 'right',
-          location: 'docs_demo',
+          location: opts.location,
         });
       }
     },
@@ -129,7 +160,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
         component: 'sheet',
         label: opts.side ?? 'right',
         reason: pendingReason ?? reason,
-        location: 'docs_demo',
+        location: opts.location,
       });
       pendingReason = null;
     },
@@ -240,10 +271,12 @@ export function createSheetDocs(): HTMLElement {
             wrap.dataset.justify = 'center';
             wrap.dataset.spacing = 'sm';
             wrap.appendChild(buildSheetDemo({
+              location: 'docs_demo',
               side: 'right',
               triggerLabel: t('demonstration.labels.trigger'),
               title: t('demonstration.labels.title'),
               description: t('demonstration.labels.description'),
+              bodyText: t('demonstration.labels.body'),
               cancelLabel: t('demonstration.labels.cancel'),
               applyLabel: t('demonstration.labels.apply'),
             }));
@@ -313,46 +346,57 @@ export function createSheetDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-stack nds-text-body';
-                wrap.dataset.spacing = 'xs';
-                const title = document.createElement('div');
-                title.className = 'nds-font-medium';
-                title.textContent = t('demonstration.labels.title');
-                const desc = document.createElement('div');
-                desc.className = 'nds-text-caption nds-text-muted-foreground';
-                desc.textContent = t('demonstration.labels.description');
-                wrap.append(title, desc);
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-text-body';
-                const note = document.createElement('div');
-                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
-                note.textContent = 'sem Title/Description — SR sem contexto';
-                wrap.append(note);
-                return wrap;
-              },
+              // Os quatro previews são o componente VIVO (guideline 08 §15),
+              // inclusive o "don't" — a lição do primeiro par só existe
+              // renderizada. Todos NASCEM FECHADOS: painel modal aberto na
+              // docs page empilha overlay e o axe passa a medir o overlay.
+              doPreviewFactory: () => buildSheetDemo({
+                location: 'docs_do_dont',
+                side: 'right',
+                triggerLabel: t('demonstration.labels.trigger'),
+                title: t('demonstration.labels.title'),
+                description: t('demonstration.labels.description'),
+                bodyText: t('demonstration.labels.body'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                applyLabel: t('demonstration.labels.apply'),
+              }),
+              dontPreviewFactory: () => buildSheetDemo({
+                location: 'docs_do_dont',
+                side: 'right',
+                srOnlyHeader: true,
+                triggerLabel: t('doDont.pair1.dontTrigger'),
+                title: t('doDont.pair1.dontTitle'),
+                description: t('doDont.pair1.dontDescription'),
+                bodyText: t('doDont.pair1.dontBody'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                applyLabel: t('demonstration.labels.apply'),
+              }),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = "side='right' (filtros desktop)";
-                return code;
-              },
-              dontPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = "side='top' em todos os contextos";
-                return code;
-              },
+              doPreviewFactory: () => buildSheetDemo({
+                location: 'docs_do_dont',
+                side: 'right',
+                triggerLabel: t('demonstration.labels.trigger'),
+                title: t('demonstration.labels.title'),
+                description: t('demonstration.labels.description'),
+                bodyText: t('demonstration.labels.body'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                applyLabel: t('demonstration.labels.apply'),
+              }),
+              dontPreviewFactory: () => buildSheetDemo({
+                location: 'docs_do_dont',
+                side: 'top',
+                triggerLabel: t('demonstration.labels.trigger'),
+                title: t('demonstration.labels.title'),
+                description: t('demonstration.labels.description'),
+                bodyText: t('demonstration.labels.body'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                applyLabel: t('demonstration.labels.apply'),
+              }),
             },
           ],
         });
@@ -387,6 +431,7 @@ createSheet({
               description: stripHtml(t('variants.styles.right')),
               code: codeRight,
               previewFactory: () => buildSheetDemo({
+                location: 'docs_variantes',
                 side: 'right',
                 triggerLabel: t('demonstration.labels.trigger'),
                 title: t('demonstration.labels.rightLabel'),
@@ -401,6 +446,7 @@ createSheet({
               description: stripHtml(t('variants.styles.left')),
               code: codeLeft,
               previewFactory: () => buildSheetDemo({
+                location: 'docs_variantes',
                 side: 'left',
                 triggerLabel: t('demonstration.labels.leftLabel'),
                 title: t('demonstration.labels.leftLabel'),
@@ -415,6 +461,7 @@ createSheet({
               description: stripHtml(t('variants.styles.top')),
               code: codeTop,
               previewFactory: () => buildSheetDemo({
+                location: 'docs_variantes',
                 side: 'top',
                 triggerLabel: t('demonstration.labels.topLabel'),
                 title: t('demonstration.labels.topLabel'),
@@ -429,6 +476,7 @@ createSheet({
               description: stripHtml(t('variants.styles.bottom')),
               code: codeBottom,
               previewFactory: () => buildSheetDemo({
+                location: 'docs_variantes',
                 side: 'bottom',
                 triggerLabel: t('demonstration.labels.bottomLabel'),
                 title: t('demonstration.labels.bottomLabel'),
@@ -442,6 +490,28 @@ createSheet({
       }
 
       case 'composicoes': {
+        // Os rótulos vêm do conteúdo compartilhado: campo de filtro cravado em
+        // português deixaria a composição meio traduzida nas outras duas línguas.
+        const buildAdvancedFiltersBody = () => {
+          const form = document.createElement('form');
+          form.className = 'nds-stack';
+          form.dataset.spacing = 'sm';
+          ([
+            [t('variants.compositions.advancedFilters.fieldCategory'), 'filtro-categoria', 'Eletrônicos'],
+            [t('variants.compositions.advancedFilters.fieldMinPrice'), 'filtro-preco-min', '100'],
+          ] as const).forEach(([label, id, value]) => {
+            const field = document.createElement('div');
+            field.className = 'nds-stack';
+            field.dataset.spacing = 'xs';
+            field.append(
+              createLabel({ text: label, htmlFor: id }),
+              createInput({ id, value }),
+            );
+            form.appendChild(field);
+          });
+          return form;
+        };
+
         const buildSecondaryNavBody = () => {
           const nav = document.createElement('nav');
           nav.setAttribute('aria-label', 'Navegação secundária');
@@ -505,7 +575,14 @@ createSheet({
               useWhen: stripHtml(t('variants.compositions.advancedFilters.use')),
               code: `const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
 const form = document.createElement('form');
-// ...campos de filtro
+form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
+form.append(
+  createLabel({ text: '${t('variants.compositions.advancedFilters.fieldCategory')}', htmlFor: 'filtro-categoria' }),
+  createInput({ id: 'filtro-categoria', value: 'Eletrônicos' }),
+  createLabel({ text: '${t('variants.compositions.advancedFilters.fieldMinPrice')}', htmlFor: 'filtro-preco-min' }),
+  createInput({ id: 'filtro-preco-min', value: '100' }),
+);
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
@@ -522,10 +599,12 @@ createSheet({
   footer,
 });`,
               previewFactory: () => buildSheetDemo({
+                location: 'docs_composicoes',
                 side: 'right',
                 triggerLabel: t('demonstration.labels.trigger'),
                 title: t('demonstration.labels.title'),
                 description: t('demonstration.labels.description'),
+                bodyEl: buildAdvancedFiltersBody(),
                 cancelLabel: t('demonstration.labels.cancel'),
                 applyLabel: t('demonstration.labels.apply'),
               }),

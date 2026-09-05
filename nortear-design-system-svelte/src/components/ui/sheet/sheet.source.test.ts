@@ -12,6 +12,7 @@ describe('sheetSource', () => {
       `<script lang="ts">
   import {
     Sheet,
+    SheetBody,
     SheetClose,
     SheetContent,
     SheetDescription,
@@ -34,6 +35,13 @@ describe('sheetSource', () => {
       <SheetTitle>Filtros avançados</SheetTitle>
       <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
     </SheetHeader>
+
+    <SheetBody>
+      <p class="nds-text-body nds-text-muted-foreground">
+        Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o
+        conteúdo passa da altura da tela.
+      </p>
+    </SheetBody>
     <SheetFooter>
       <SheetClose>
         {#snippet child({ props })}

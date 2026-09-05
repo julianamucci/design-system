@@ -152,19 +152,27 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 // label usa o SIDE (valor estável, não localizado) — texto traduzido
 // fragmentaria o mesmo evento em 3 valores no GA4.
-function handleDemoOpenChange(open: boolean, side = 'right') {
+//
+// `location` vem de QUEM CHAMA, nunca de constante no topo do arquivo: ele
+// existe para dizer de ONDE veio o clique, e cravá-lo em 'docs_demo' fazia a
+// página inteira responder a mesma coisa. Vocabulário em
+// `docs/shared/guidelines/07-analytics.md`.
+//
+// E o alcance não é só a demonstração: Do & Dont, Variantes e Composições
+// renderizam Sheets VIVOS — abrir um painel ali é tão real quanto na demo.
+function rastrearSheet(location: string, side: string, open: boolean) {
   track(open ? 'dialog_open' : 'dialog_close', {
     component: 'sheet',
     label: side,
-    location: 'docs_demo',
+    location,
   });
 }
 
-function handleDemoApply() {
+function rastrearConfirmacao(location: string, action = 'apply') {
   track('dialog_confirm', {
     component: 'sheet',
-    action: 'apply',
-    location: 'docs_demo',
+    action,
+    location,
   });
 }
 // ─── Code strings ─────────────────────────────────────────────────────────────
@@ -496,11 +504,11 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-cluster nds-w-full"
+        class="nds-cluster"
         data-justify="center"
-        data-spacing="md"
+        data-spacing="sm"
       >
-        <Sheet @update:open="(o: boolean) => handleDemoOpenChange(o, 'right')">
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_demo', 'right', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -512,13 +520,9 @@ const a11yCritCols = computed(() => ({
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
             <SheetBody>
-              <div
-                class="nds-grid"
-                data-spacing="md"
-              >
-                <Label for="demo-category">{{ tContent('demonstration.labels.section') }}</Label>
-                <Input id="demo-category" />
-              </div>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
             </SheetBody>
             <SheetFooter>
               <SheetClose as-child>
@@ -526,7 +530,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="handleDemoApply">
+              <Button @click="rastrearConfirmacao('docs_demo')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -615,7 +619,7 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'right', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -623,47 +627,56 @@ const a11yCritCols = computed(() => ({
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
-              <SheetTitle>Filtros avançados</SheetTitle>
-              <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+              <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
+              <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
             <SheetFooter>
               <SheetClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button>Aplicar filtros</Button>
+              <Button @click="rastrearConfirmacao('docs_do_dont')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
+      <!--
+        O anti-exemplo mantém o `nds-sr-only`: a lição é o painel SEM cabeçalho
+        visível, e o nome acessível continua no DOM. O que mudou é a origem do
+        texto — literal em pt-BR mostrava português em `en` e `es`.
+      -->
       <template #dont-preview-0>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'right', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
-              {{ tContent('demonstration.labels.trigger') }}
+              {{ tContent('doDont.pair1.dontTrigger') }}
             </Button>
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle class="nds-sr-only">
-                Sem título visível
+                {{ tContent('doDont.pair1.dontTitle') }}
               </SheetTitle>
               <SheetDescription class="nds-sr-only">
-                Sem descrição visível
+                {{ tContent('doDont.pair1.dontDescription') }}
               </SheetDescription>
             </SheetHeader>
             <div class="nds-p-4 nds-text-body nds-text-muted-foreground">
-              Painel sem Title/Description visíveis — leitores de tela ficam sem contexto.
+              {{ tContent('doDont.pair1.dontBody') }}
             </div>
             <SheetFooter>
-              <Button>Aplicar</Button>
+              <Button @click="rastrearConfirmacao('docs_do_dont')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
       <template #do-preview-1>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'right', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -671,14 +684,24 @@ const a11yCritCols = computed(() => ({
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
-              <SheetTitle>Filtros avançados</SheetTitle>
-              <SheetDescription>Refine os resultados pelos filtros laterais.</SheetDescription>
+              <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
+              <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetFooter>
+              <SheetClose as-child>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+              </SheetClose>
+              <Button @click="rastrearConfirmacao('docs_do_dont')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
       <template #dont-preview-1>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'top', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -686,9 +709,19 @@ const a11yCritCols = computed(() => ({
           </SheetTrigger>
           <SheetContent side="top">
             <SheetHeader>
-              <SheetTitle>Filtros avançados</SheetTitle>
-              <SheetDescription>Top fixo para filtros desktop costuma desorientar.</SheetDescription>
+              <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
+              <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetFooter>
+              <SheetClose as-child>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+              </SheetClose>
+              <Button @click="rastrearConfirmacao('docs_do_dont')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
@@ -706,7 +739,7 @@ const a11yCritCols = computed(() => ({
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'right', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -723,13 +756,15 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button>{{ tContent('demonstration.labels.apply') }}</Button>
+              <Button @click="rastrearConfirmacao('docs_variantes')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
       <template #variant-preview-1>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'left', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -744,7 +779,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-2>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'top', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -759,7 +794,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-3>
-        <Sheet>
+        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'bottom', o)">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -784,7 +819,7 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <div style="contain: layout">
-          <Sheet>
+          <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'right', o)">
             <SheetTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.trigger') }}
@@ -799,12 +834,12 @@ const a11yCritCols = computed(() => ({
                 class="nds-grid nds-px-4"
                 data-spacing="md"
               >
-                <Label for="comp-cat">Categoria</Label>
+                <Label for="comp-cat">{{ tContent('variants.compositions.advancedFilters.fieldCategory') }}</Label>
                 <Input
                   id="comp-cat"
                   default-value="Eletrônicos"
                 />
-                <Label for="comp-min">Preço mínimo</Label>
+                <Label for="comp-min">{{ tContent('variants.compositions.advancedFilters.fieldMinPrice') }}</Label>
                 <Input
                   id="comp-min"
                   type="number"
@@ -817,7 +852,9 @@ const a11yCritCols = computed(() => ({
                     Cancelar
                   </Button>
                 </SheetClose>
-                <Button>Aplicar filtros</Button>
+                <Button @click="rastrearConfirmacao('docs_composicoes')">
+                  Aplicar filtros
+                </Button>
               </SheetFooter>
             </SheetContent>
           </Sheet>
@@ -825,7 +862,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div style="contain: layout">
-          <Sheet>
+          <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'left', o)">
             <SheetTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.trigger') }}
@@ -864,7 +901,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div style="contain: layout">
-          <Sheet>
+          <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'right', o)">
             <SheetTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.trigger') }}
@@ -916,7 +953,10 @@ const a11yCritCols = computed(() => ({
                     Cancelar
                   </Button>
                 </SheetClose>
-                <Button type="submit">
+                <Button
+                  type="submit"
+                  @click="rastrearConfirmacao('docs_composicoes', 'save')"
+                >
                   Salvar alterações
                 </Button>
               </SheetFooter>
@@ -926,7 +966,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <div style="contain: layout">
-          <Sheet>
+          <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'bottom', o)">
             <SheetTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.trigger') }}

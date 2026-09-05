@@ -172,7 +172,7 @@ export const LongScrollBody: Story = {
       rotuloAplicar: LABELS.aplicar(),
       paragrafos: Array.from({ length: 24 }, (_, i) => ({
         id: `p-${i}`,
-        text: `${t('demonstration.labels.section')} ${i + 1} — ${LABELS.descricao()}`,
+        text: `${i + 1} — ${t('demonstration.labels.body')}`,
       })),
     },
     template: `

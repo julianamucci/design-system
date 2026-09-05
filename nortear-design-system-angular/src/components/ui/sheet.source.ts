@@ -8,7 +8,7 @@
  * copia ficaria sem portão nenhum.
  *
  * O que o snippet ensina: o painel é uma composição do barril `NDS_SHEET` —
- * raiz, gatilho e um `ng-template` de conteúdo com cabeçalho e rodapé. Os
+ * raiz, gatilho e um `ng-template` de conteúdo com cabeçalho, corpo e rodapé. Os
  * textos saem do MESMO `translations.json` que a story usa; ler dali, e não
  * repetir literal, é o que impede o snippet de ensinar um rótulo que a
  * demonstração não mostra mais.
@@ -69,6 +69,10 @@ import { NdsButton } from '@/components/ui/button';
         <div ndsSheetHeader>
           <h2 ndsSheetTitle>${t('demonstration.labels.title')}</h2>
           <p ndsSheetDescription>${t('demonstration.labels.description')}</p>
+        </div>
+
+        <div ndsSheetBody>
+          <p class="nds-text-body nds-text-muted-foreground">${t('demonstration.labels.body')}</p>
         </div>
 
         <div ndsSheetFooter>
