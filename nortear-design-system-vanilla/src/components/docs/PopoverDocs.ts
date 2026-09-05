@@ -120,7 +120,6 @@ function buildUntitledPopover(
   content.dataset.spacing = 'xs';
 
   const p = document.createElement('p');
-  p.className = 'nds-text-body';
   p.textContent = body;
   content.appendChild(p);
 

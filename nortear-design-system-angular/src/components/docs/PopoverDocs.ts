@@ -199,7 +199,7 @@ const VARIANT_CODE = {
 
   <!-- Sem título dentro, o nome do painel vem do input da diretiva -->
   <ng-template ndsPopoverContent ariaLabel="Informações adicionais">
-    <p class="nds-text-body">Use Ctrl+K para abrir a busca.</p>
+    <p>Use Ctrl+K para abrir a busca.</p>
   </ng-template>
 </div>`,
   withTitle: `<div ndsPopover>
@@ -334,7 +334,7 @@ const COMPOSITION_CODE = {
           {{ t('demonstration.labels.trigger') }}
         </button>
         <ng-template ndsPopoverContent>
-          <p class="nds-text-body">{{ t('doDont.pair1.dontBody') }}</p>
+          <p>{{ t('doDont.pair1.dontBody') }}</p>
         </ng-template>
       </div>
     </ng-template>
@@ -380,7 +380,7 @@ const COMPOSITION_CODE = {
              diretiva. O atributo aria-label escrito no ng-template não
              chegaria a elemento nenhum — template não renderiza. -->
         <ng-template ndsPopoverContent [ariaLabel]="t('variants.panelLabels.default')">
-          <p class="nds-text-body">{{ t('demonstration.labels.description') }}</p>
+          <p>{{ t('demonstration.labels.description') }}</p>
         </ng-template>
       </div>
     </ng-template>

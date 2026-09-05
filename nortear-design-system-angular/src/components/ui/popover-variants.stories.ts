@@ -42,7 +42,7 @@ export const Default: Story = {
         <button ndsPopoverTrigger ndsButton variant="outline">Ver atalhos</button>
 
         <ng-template ndsPopoverContent ariaLabel="Informações adicionais">
-          <p class="nds-text-body">
+          <p>
             Use <kbd class="nds-kbd">Ctrl</kbd> + <kbd class="nds-kbd">K</kbd> para abrir a
             busca em qualquer tela.
           </p>

@@ -55,7 +55,6 @@ export const Default: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Ver atalhos' });
 
     const content = document.createElement('p');
-    content.className = 'nds-text-body';
     content.textContent = 'Use Ctrl+K para abrir a busca em qualquer tela.';
 
     const el = createPopover({ trigger, content, ariaLabel: 'Informações adicionais' });

@@ -71,7 +71,7 @@ export const Default: Story = {
             <Button variant="outline">Ver atalhos</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" aria-label="Informações adicionais">
-            <p class="nds-text-body">Use Ctrl+K para abrir a busca em qualquer tela.</p>
+            <p>Use Ctrl+K para abrir a busca em qualquer tela.</p>
           </PopoverContent>
         </Popover>
       </div>

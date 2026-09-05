@@ -220,7 +220,7 @@
               {/each}
             </div>
           {:else}
-            <p class="nds-text-body">{description}</p>
+            <p>{description}</p>
           {/if}
         </PopoverContent>
       </Popover>

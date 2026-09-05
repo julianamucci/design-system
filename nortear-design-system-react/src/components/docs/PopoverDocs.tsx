@@ -218,7 +218,7 @@ export function PopoverDocs() {
     <Button variant="outline">Abrir popover</Button>
   </PopoverTrigger>
   <PopoverContent aria-label="Informações adicionais">
-    <p className="nds-text-body">Conteúdo livre.</p>
+    <p>Conteúdo livre.</p>
   </PopoverContent>
 </Popover>`;
 
@@ -457,7 +457,7 @@ interface PopoverContentProps {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="center">
-                  <p className="nds-text-body">
+                  <p>
                     {tContent("doDont.pair1.dontBody")}
                   </p>
                 </PopoverContent>
@@ -535,7 +535,7 @@ interface PopoverContentProps {
                     do rótulo do gatilho. O painel com título é a variante
                     seguinte; ter os dois nomes aqui seria ambiguidade. */}
                 <PopoverContent aria-label={tContent("variants.panelLabels.default")}>
-                  <p className="nds-text-body">
+                  <p>
                     {tContent("demonstration.labels.description")}
                   </p>
                 </PopoverContent>

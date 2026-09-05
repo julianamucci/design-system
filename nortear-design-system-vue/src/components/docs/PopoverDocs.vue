@@ -204,7 +204,7 @@ const codeDefault = `<Popover>
     <Button>Abrir popover</Button>
   </PopoverTrigger>
   <PopoverContent aria-label="Informações adicionais">
-    <p class="nds-text-body">Conteúdo livre.</p>
+    <p>Conteúdo livre.</p>
   </PopoverContent>
 </Popover>`;
 
@@ -660,7 +660,7 @@ const a11yCritCols = computed(() => ({
             </Button>
           </PopoverTrigger>
           <PopoverContent align="center">
-            <p class="nds-text-body">
+            <p>
               {{ tContent('doDont.pair1.dontBody') }}
             </p>
           </PopoverContent>
@@ -735,7 +735,7 @@ const a11yCritCols = computed(() => ({
             align="center"
             :aria-label="tContent('variants.panelLabels.default')"
           >
-            <p class="nds-text-body">
+            <p>
               {{ tContent('demonstration.labels.description') }}
             </p>
           </PopoverContent>

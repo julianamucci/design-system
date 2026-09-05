@@ -77,7 +77,7 @@ function part(a: PopoverArgs): Part {
       names: [],
       externos: [],
       state: '',
-      markup: `    <p class="nds-text-body">${a.description}</p>`,
+      markup: `    <p>${a.description}</p>`,
     };
   }
 

@@ -166,7 +166,7 @@
     {/snippet}
   </PopoverTrigger>
   <PopoverContent aria-label="Informações adicionais">
-    <p class="nds-text-body">Conteúdo contextual livre.</p>
+    <p>Conteúdo contextual livre.</p>
   </PopoverContent>
 </Popover>`;
 
@@ -419,7 +419,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         {/snippet}
       </PopoverTrigger>
       <PopoverContent align="center">
-        <p class="nds-text-body">{$tStore('doDont.pair1.dontBody')}</p>
+        <p>{$tStore('doDont.pair1.dontBody')}</p>
       </PopoverContent>
     </Popover>
   {/snippet}
@@ -488,7 +488,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
            efeito do PopoverContent só age quando ninguém nomeou, então o
            rótulo declarado aqui vence a herança do texto do gatilho. -->
       <PopoverContent aria-label={$tStore('variants.panelLabels.default')}>
-        <p class="nds-text-body">{$tStore('demonstration.labels.description')}</p>
+        <p>{$tStore('demonstration.labels.description')}</p>
       </PopoverContent>
     </Popover>
   {/snippet}
