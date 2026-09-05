@@ -2128,13 +2128,20 @@ function declaredCoverage(content) {
  * disjuntos (o tabs mostra abas diferentes no angular) a contagem por rótulo
  * reporta dos dois lados e multiplica.
  *
- * OPT-IN, e o número é o motivo: ligada para todos, a regra acha 38 componentes
- * divergentes. Isso é campanha, não conserto — e portão que despeja backlog
- * ensina a ignorar o portão, junto com o achado que importava. Cada componente
- * entra aqui quando sua Demonstração for alinhada. Para ver o backlog inteiro,
- * troque o conjunto por `null` e rode `--all`.
+ * LIGADA para todos desde 2026-09-05, e o número era o motivo de não estar: são
+ * 35 componentes e 59 achados (medido no dia; a leitura de 38 é anterior às
+ * correções desta campanha), que é campanha e não conserto. O que mudou é a
+ * revisão ser componente a componente — o backlog não chega junto, chega um
+ * slug por vez, no `audit.mjs <slug>` de quem está sendo revisado. Ela é irmã da
+ * `dodont_preview_sem_componente`, que nasceu ligada pelo mesmo motivo e traz
+ * outros 94; as duas cobram a mesma coisa (guideline 08 §15 — a Demonstração
+ * traz o exemplo do Playground, as demais seções a versão do caso de uso delas)
+ * em seções diferentes.
+ *
+ * Quem lê `--all` de uma vez recebe as duas somadas. Se um dia isso atrapalhar,
+ * o mecanismo do opt-in continua aqui: troque o `null` por um `Set` de slugs.
  */
-const DEMO_PARIDADE_EXIGIDA = new Set(['tooltip']);
+const DEMO_PARIDADE_EXIGIDA = null;
 
 function auditDemonstrationLabels(slug) {
   if (DEMO_PARIDADE_EXIGIDA && !DEMO_PARIDADE_EXIGIDA.has(slug)) return [];
