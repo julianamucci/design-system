@@ -85,9 +85,14 @@ function makeIconButton(ariaLabel: string): HTMLButtonElement {
 
 // tooltip_view usa o callback onShow da factory: dispara quando o tooltip é
 // de fato exibido (após o delay interno), sem espelhar constante de timing.
-function trackTooltipView(triggerId: string): () => void {
+//
+// O `location` vem de quem chama, e não de constante: ele existe para dizer de
+// ONDE veio o evento, e cravá-lo em `docs_demo` fazia toda a página responder a
+// mesma coisa — inclusive os previews da seção VARIANTES, que reportavam ter
+// vindo da demonstração. Vocabulário na guideline 07 de analytics.
+function trackTooltipView(location: string, triggerId: string): () => void {
   return () =>
-    track('tooltip_view', { component: 'tooltip', trigger_id: triggerId, location: 'docs_demo' });
+    track('tooltip_view', { component: 'tooltip', trigger_id: triggerId, location });
 }
 
 function buildDefaultTooltip(): HTMLElement {
@@ -100,7 +105,7 @@ function buildDefaultTooltip(): HTMLElement {
     trigger,
     content: t('demonstration.labels.save'),
     side: 'top',
-    onShow: trackTooltipView('save'),
+    onShow: trackTooltipView('docs_variantes', 'default'),
   });
 }
 
@@ -110,7 +115,7 @@ function buildWithShortcutTooltip(): HTMLElement {
     trigger,
     content: t('demonstration.labels.save'),
     side: 'bottom',
-    onShow: trackTooltipView('save-icon'),
+    onShow: trackTooltipView('docs_variantes', 'withShortcut'),
   });
 }
 
@@ -125,7 +130,7 @@ function buildLongTextTooltip(): HTMLElement {
     content: t('demonstration.labels.share'),
     side: 'top',
     class: 'nds-max-w-xs nds-whitespace-normal',
-    onShow: trackTooltipView('share'),
+    onShow: trackTooltipView('docs_variantes', 'longText'),
   });
 }
 
@@ -264,7 +269,7 @@ export function createTooltipDocs(): HTMLElement {
                   trigger: demoIconButton(action.icon, action.label),
                   content: action.text,
                   side: 'bottom',
-                  onShow: trackTooltipView(action.id),
+                  onShow: trackTooltipView('docs_demo', action.id),
                 }),
               );
             }
@@ -446,7 +451,12 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
 
           for (const { side, label } of sides) {
             const trigger = createButton({ variant: 'outline', label, 'aria-label': label });
-            const el = createTooltip({ trigger, content: `Tooltip ${label}`, side });
+            const el = createTooltip({
+              trigger,
+              content: `Tooltip ${label}`,
+              side,
+              onShow: trackTooltipView('docs_variantes', `positioningSides-${side}`),
+            });
             grid.appendChild(el);
           }
 
@@ -537,7 +547,12 @@ createTooltip({
             'aria-label': 'Salvar',
             children: createButtonIcon('download'),
           });
-          return createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });
+          return createTooltip({
+            trigger,
+            content: 'Salvar (Ctrl+S)',
+            side: 'bottom',
+            onShow: trackTooltipView('docs_composicoes', 'iconButtonWithShortcut'),
+          });
         }
 
         function buildFormHelpPreview(): HTMLElement {
@@ -566,6 +581,7 @@ createTooltip({
             trigger: help,
             content: 'Cole o token gerado em Configurações > Integrações.',
             side: 'right',
+            onShow: trackTooltipView('docs_composicoes', 'formFieldHelp'),
             class: 'nds-max-w-xs nds-whitespace-normal',
           });
 
@@ -606,6 +622,7 @@ createTooltip({
             trigger: help,
             content: 'Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.',
             side: 'top',
+            onShow: trackTooltipView('docs_composicoes', 'metricDescription'),
             class: 'nds-max-w-xs nds-whitespace-normal',
           });
 

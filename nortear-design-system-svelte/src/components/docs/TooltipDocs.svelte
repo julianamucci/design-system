@@ -15,6 +15,22 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
+
+  /**
+   * `tooltip_view` de QUALQUER seção que renderize um tooltip vivo.
+   *
+   * O `location` vem de quem chama, e não de constante: ele existe para dizer
+   * de ONDE veio o evento, e cravá-lo em `docs_demo` fazia toda a página
+   * responder a mesma coisa. Vocabulário na guideline 07 de analytics.
+   *
+   * E o alcance não era só o `location`: dos 17 tooltips VIVOS desta página,
+   * só os 3 da demonstração disparavam evento. Do & Dont, Variantes e
+   * Composições renderizam o componente de verdade.
+   */
+  function rastrearTooltip(location: string, triggerId: string, isOpen: boolean) {
+    if (!isOpen) return;
+    track('tooltip_view', { component: 'tooltip', trigger_id: triggerId, location });
+  }
   import { createActiveSection } from '@/lib/use-active-section.svelte';
   import DOMPurify from 'dompurify';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
@@ -238,7 +254,7 @@ interface TooltipTriggerProps {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <TooltipProvider delayDuration={200}>
       <div class="nds-cluster nds-w-full nds-min-h-30" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; position: relative">
-        <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'save', location: 'docs_demo' }); }}>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'save', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
               <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
@@ -249,7 +265,7 @@ interface TooltipTriggerProps {
           <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
         </Tooltip>
 
-        <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'delete', location: 'docs_demo' }); }}>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'delete', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
               <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.deleteButton')} {...props}>
@@ -260,7 +276,7 @@ interface TooltipTriggerProps {
           <TooltipContent>{$tStore('demonstration.labels.delete')}</TooltipContent>
         </Tooltip>
 
-        <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'share', location: 'docs_demo' }); }}>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'share', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
               <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.shareButton')} {...props}>
@@ -373,7 +389,7 @@ interface TooltipTriggerProps {
 
   {#snippet doPair1()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-do', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -387,7 +403,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet dontPair1()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-dont', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <!-- Anti-pattern didático (tooltip no lugar do rótulo); aria-label
@@ -403,7 +419,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet doPair2()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-do', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -417,7 +433,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet dontPair2()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-dont', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -474,7 +490,7 @@ interface TooltipTriggerProps {
 
   {#snippet variantDefault()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'default', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -488,7 +504,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet variantWithShortcut()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'withShortcut', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
@@ -506,7 +522,7 @@ interface TooltipTriggerProps {
   {/snippet}
   {#snippet variantLongText()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'longText', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Compartilhar link" {...props}>
@@ -601,7 +617,7 @@ interface TooltipTriggerProps {
 
   {#snippet compIconShortcut()}
     <TooltipProvider delayDuration={0}>
-      <Tooltip>
+      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'iconButtonWithShortcut', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
@@ -623,7 +639,7 @@ interface TooltipTriggerProps {
       <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
           <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">Token de API</label>
-          <Tooltip>
+          <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'formFieldHelp', o)}>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
@@ -651,7 +667,7 @@ interface TooltipTriggerProps {
       <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
-          <Tooltip>
+          <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'metricDescription', o)}>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="ghost" size="icon" aria-label="O que é LCP" {...props}>
@@ -672,7 +688,7 @@ interface TooltipTriggerProps {
   {#snippet variantPositioningSides()}
     <TooltipProvider delayDuration={0}>
       <div class="nds-grid nds-w-full nds-min-h-40" data-spacing="xl" style="contain: layout; place-items: center">
-        <Tooltip>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-top', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>Top</Button>
@@ -680,7 +696,7 @@ interface TooltipTriggerProps {
           </TooltipTrigger>
           <TooltipContent side="top">Tooltip top</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-right', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>Right</Button>
@@ -688,7 +704,7 @@ interface TooltipTriggerProps {
           </TooltipTrigger>
           <TooltipContent side="right">Tooltip right</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-bottom', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>Bottom</Button>
@@ -696,7 +712,7 @@ interface TooltipTriggerProps {
           </TooltipTrigger>
           <TooltipContent side="bottom">Tooltip bottom</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-left', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>Left</Button>

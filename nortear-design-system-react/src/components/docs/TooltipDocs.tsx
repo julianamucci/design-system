@@ -83,6 +83,21 @@ const getNavGroups = (t: (key: string) => string) => [
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
+/**
+ * `tooltip_view` de QUALQUER seção que renderize um tooltip vivo.
+ *
+ * O `location` vem de quem chama, e não de constante: ele existe para dizer de
+ * ONDE veio o evento, e cravá-lo em `docs_demo` fazia toda a página responder a
+ * mesma coisa. Vocabulário em `docs/shared/guidelines/07-analytics.md`.
+ *
+ * E o alcance não era só o `location`: dos 10 tooltips VIVOS desta página, só
+ * os 3 da demonstração disparavam evento. Variantes e Composições renderizam o
+ * componente de verdade, e um hover ali é tão real quanto na demo.
+ */
+const rastrearTooltip = (location: string, triggerId: string) => (open: boolean) => {
+  if (!open) return;
+  track("tooltip_view", { component: "tooltip", trigger_id: triggerId, location });
+};
 export function TooltipDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(tooltipTranslations);
@@ -251,16 +266,7 @@ interface TooltipContentProps {
             data-spacing="lg"
             style={{ contain: "layout", position: "relative" }}
           >
-            <Tooltip
-              onOpenChange={(open) =>
-                open &&
-                track("tooltip_view", {
-                  component: "tooltip",
-                  trigger_id: "save",
-                  location: "docs_demo",
-                })
-              }
-            >
+            <Tooltip onOpenChange={rastrearTooltip("docs_demo", "save")}>
               <TooltipTrigger
                 render={(props) => (
                   <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
@@ -271,16 +277,7 @@ interface TooltipContentProps {
               <TooltipContent>{labelSave}</TooltipContent>
             </Tooltip>
 
-            <Tooltip
-              onOpenChange={(open) =>
-                open &&
-                track("tooltip_view", {
-                  component: "tooltip",
-                  trigger_id: "delete",
-                  location: "docs_demo",
-                })
-              }
-            >
+            <Tooltip onOpenChange={rastrearTooltip("docs_demo", "delete")}>
               <TooltipTrigger
                 render={(props) => (
                   <Button {...props} variant="ghost" size="icon" aria-label={labelDeleteBtn}>
@@ -291,16 +288,7 @@ interface TooltipContentProps {
               <TooltipContent>{labelDelete}</TooltipContent>
             </Tooltip>
 
-            <Tooltip
-              onOpenChange={(open) =>
-                open &&
-                track("tooltip_view", {
-                  component: "tooltip",
-                  trigger_id: "share",
-                  location: "docs_demo",
-                })
-              }
-            >
+            <Tooltip onOpenChange={rastrearTooltip("docs_demo", "share")}>
               <TooltipTrigger
                 render={(props) => (
                   <Button {...props} variant="ghost" size="icon" aria-label={labelShareBtn}>
@@ -466,7 +454,7 @@ interface TooltipContentProps {
               description: stripHtml(tContent("variants.styles.default")),
               code: codeDefault,
               preview: (
-                <Tooltip>
+                <Tooltip onOpenChange={rastrearTooltip("docs_variantes", "default")}>
                   <TooltipTrigger
                     render={(props) => (
                       <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
@@ -484,7 +472,7 @@ interface TooltipContentProps {
               description: stripHtml(tContent("variants.styles.withShortcut")),
               code: codeWithShortcut,
               preview: (
-                <Tooltip>
+                <Tooltip onOpenChange={rastrearTooltip("docs_variantes", "withShortcut")}>
                   <TooltipTrigger
                     render={(props) => (
                       <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
@@ -506,7 +494,7 @@ interface TooltipContentProps {
               description: stripHtml(tContent("variants.styles.longText")),
               code: codeLongText,
               preview: (
-                <Tooltip>
+                <Tooltip onOpenChange={rastrearTooltip("docs_variantes", "longText")}>
                   <TooltipTrigger
                     render={(props) => (
                       <Button {...props} variant="outline">
@@ -544,7 +532,7 @@ interface TooltipContentProps {
               preview: (
                 <div className="nds-grid nds-w-full nds-min-h-40" data-spacing="xl" style={{ contain: "layout", placeItems: "center" }}>
                   {(["top", "right", "bottom", "left"] as const).map((side) => (
-                    <Tooltip key={side}>
+                    <Tooltip key={side} onOpenChange={rastrearTooltip("docs_variantes", `positioningSides-${side}`)}>
                       <TooltipTrigger
                         render={(props) => (
                           <Button {...props} variant="outline">
@@ -587,7 +575,7 @@ interface TooltipContentProps {
   </TooltipContent>
 </Tooltip>`,
               preview: (
-                <Tooltip>
+                <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "iconButtonWithShortcut")}>
                   <TooltipTrigger
                     render={(props) => (
                       <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
@@ -632,7 +620,7 @@ interface TooltipContentProps {
                     <label htmlFor="api-token-react-comp" className="nds-text-body nds-font-medium">
                       {locale === "en" ? "API Token" : locale === "es" ? "Token de API" : "Token de API"}
                     </label>
-                    <Tooltip>
+                    <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "formFieldHelp")}>
                       <TooltipTrigger
                         render={(props) => (
                           <Button
@@ -696,7 +684,7 @@ interface TooltipContentProps {
                 <div className="nds-stack" data-spacing="xs" style={{ alignItems: 'flex-start' }}>
                   <div className="nds-cluster" data-spacing="sm">
                     <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
-                    <Tooltip>
+                    <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "metricDescription")}>
                       <TooltipTrigger
                         render={(props) => (
                           <Button

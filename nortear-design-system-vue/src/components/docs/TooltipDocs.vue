@@ -142,13 +142,20 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 // ─── Analytics — demo events ──────────────────────────────────────────────────
 
-function handleDemoTooltipOpenChange(triggerId: string, open: boolean) {
+/**
+ * `tooltip_view` de QUALQUER seção que renderize um tooltip vivo.
+ *
+ * O `location` vem de quem chama, e não de constante: ele existe para dizer de
+ * ONDE veio o evento, e cravá-lo em `docs_demo` fazia toda a página responder a
+ * mesma coisa. Vocabulário em `docs/shared/guidelines/07-analytics.md`.
+ *
+ * E o alcance não era só o `location`: dos 16 tooltips VIVOS desta página, só
+ * os 3 da demonstração disparavam evento. Do & Dont, Variantes e Composições
+ * renderizam o componente de verdade, e um hover ali é tão real quanto na demo.
+ */
+function rastrearTooltip(location: string, triggerId: string, open: boolean) {
   if (!open) return;
-  track('tooltip_view', {
-    component: 'tooltip',
-    trigger_id: triggerId,
-    location: 'docs_demo',
-  });
+  track('tooltip_view', { component: 'tooltip', trigger_id: triggerId, location });
 }
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
@@ -444,7 +451,7 @@ const a11yCritCols = computed(() => ({
           data-spacing="lg"
           style="contain: layout; position: relative"
         >
-          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('save', open)">
+          <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_demo', 'save', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
@@ -459,7 +466,7 @@ const a11yCritCols = computed(() => ({
             </TooltipContent>
           </Tooltip>
 
-          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('delete', open)">
+          <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_demo', 'delete', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
@@ -474,7 +481,7 @@ const a11yCritCols = computed(() => ({
             </TooltipContent>
           </Tooltip>
 
-          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('share', open)">
+          <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_demo', 'share', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
@@ -577,7 +584,7 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_do_dont', 'pair1-do', open)">
               <TooltipTrigger as-child>
                 <Button
                   variant="outline"
@@ -600,7 +607,7 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_do_dont', 'pair1-dont', open)">
               <TooltipTrigger as-child>
                 <!-- Anti-pattern didático (tooltip no lugar do rótulo); aria-label
                      invisível mantém o botão nomeado para o axe sem mudar o visual. -->
@@ -625,7 +632,7 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_do_dont', 'pair2-do', open)">
               <TooltipTrigger as-child>
                 <Button
                   variant="outline"
@@ -682,7 +689,7 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'default', open)">
               <TooltipTrigger as-child>
                 <Button
                   variant="outline"
@@ -705,7 +712,7 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'withShortcut', open)">
               <TooltipTrigger as-child>
                 <Button
                   variant="outline"
@@ -730,7 +737,7 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'longText', open)">
               <TooltipTrigger as-child>
                 <Button
                   variant="outline"
@@ -755,7 +762,7 @@ const a11yCritCols = computed(() => ({
             class="nds-grid nds-w-full nds-min-h-40"
             data-spacing="xl"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-top', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
                   Top
@@ -765,7 +772,7 @@ const a11yCritCols = computed(() => ({
                 Tooltip top
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-right', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
                   Right
@@ -775,7 +782,7 @@ const a11yCritCols = computed(() => ({
                 Tooltip right
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-bottom', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
                   Bottom
@@ -785,7 +792,7 @@ const a11yCritCols = computed(() => ({
                 Tooltip bottom
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-left', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
                   Left
@@ -813,7 +820,7 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="center"
           >
-            <Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'iconButtonWithShortcut', open)">
               <TooltipTrigger as-child>
                 <Button
                   variant="ghost"
@@ -851,7 +858,7 @@ const a11yCritCols = computed(() => ({
                   for="api-token-vue-comp"
                   class="nds-text-body nds-font-medium"
                 >Token de API</label>
-                <Tooltip>
+                <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'formFieldHelp', open)">
                   <TooltipTrigger as-child>
                     <Button
                       variant="ghost"
@@ -897,7 +904,7 @@ const a11yCritCols = computed(() => ({
                 <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
                   LCP
                 </p>
-                <Tooltip>
+                <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'metricDescription', open)">
                   <TooltipTrigger as-child>
                     <Button
                       variant="ghost"

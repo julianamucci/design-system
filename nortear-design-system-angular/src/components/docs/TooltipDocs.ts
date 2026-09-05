@@ -440,7 +440,7 @@ const COMPOSITION_CODE = {
 
     <!-- Variantes -->
     <ng-template #tplVarDefault>
-      <span ndsTooltip>
+      <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'default', $event)">
         <button
           ndsTooltipTrigger
           ndsButton
@@ -455,7 +455,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplVarComAtalho>
-      <span ndsTooltip>
+      <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'withShortcut', $event)">
         <button
           ndsTooltipTrigger
           ndsButton
@@ -474,7 +474,7 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplVarTextoLongo>
-      <span ndsTooltip>
+      <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'longText', $event)">
         <button ndsTooltipTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.shareButton') }}
         </button>
@@ -485,7 +485,7 @@ const COMPOSITION_CODE = {
     <ng-template #tplVarLados>
       <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
         @for (side of lados; track side) {
-          <span ndsTooltip>
+          <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'positioningSides-' + side, $event)">
             <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="side">
               {{ side }}
             </button>
@@ -497,7 +497,7 @@ const COMPOSITION_CODE = {
 
     <!-- Composições -->
     <ng-template #tplCompAtalho>
-      <span ndsTooltip>
+      <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'iconButtonWithShortcut', $event)">
         <button
           ndsTooltipTrigger
           ndsButton
@@ -519,7 +519,7 @@ const COMPOSITION_CODE = {
       <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <label ndsLabel for="tooltip-token-api">{{ rotuloCampo() }}</label>
-          <span ndsTooltip>
+          <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'formFieldHelp', $event)">
             <button
               ndsTooltipTrigger
               ndsButton
@@ -541,7 +541,7 @@ const COMPOSITION_CODE = {
         <div ndsCardHeader>
           <div class="nds-cluster" data-spacing="sm">
             <span ndsCardTitle>LCP</span>
-            <span ndsTooltip>
+            <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'metricDescription', $event)">
               <button
                 ndsTooltipTrigger
                 ndsButton
@@ -583,7 +583,7 @@ const COMPOSITION_CODE = {
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-cluster" data-spacing="sm" data-justify="center">
-            <span ndsTooltip (openChange)="aoAlternar('save', $event)">
+            <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'save', $event)">
               <button
                 ndsTooltipTrigger
                 ndsButton
@@ -596,7 +596,7 @@ const COMPOSITION_CODE = {
               <ng-template ndsTooltipContent>{{ t('demonstration.labels.save') }}</ng-template>
             </span>
 
-            <span ndsTooltip (openChange)="aoAlternar('delete', $event)">
+            <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'delete', $event)">
               <button
                 ndsTooltipTrigger
                 ndsButton
@@ -609,7 +609,7 @@ const COMPOSITION_CODE = {
               <ng-template ndsTooltipContent>{{ t('demonstration.labels.delete') }}</ng-template>
             </span>
 
-            <span ndsTooltip (openChange)="aoAlternar('share', $event)">
+            <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'share', $event)">
               <button
                 ndsTooltipTrigger
                 ndsButton
@@ -763,13 +763,21 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
    * payload leva o id do gatilho, valor estável — o texto traduzido viraria três
    * eventos diferentes no GA4, um por idioma.
    */
-  protected aoAlternar(trigger: string, isOpen: boolean): void {
+  /**
+   * `tooltip_view` de QUALQUER seção que renderize um tooltip vivo.
+   *
+   * O `location` vem de quem chama, e não de constante: ele existe para dizer
+   * de ONDE veio o evento, e cravá-lo em `docs_demo` fazia toda a página
+   * responder a mesma coisa. Vocabulário na guideline 07 de analytics.
+   *
+   * E o alcance não era só o `location`: dos 10 tooltips VIVOS desta página,
+   * só os 3 da demonstração disparavam evento. Variantes e Composições
+   * renderizam o componente de verdade, e um hover ali é tão real quanto na
+   * demo. O Do & Dont daqui não tem tooltip vivo — no vue e no svelte tem.
+   */
+  protected aoAlternar(location: string, trigger: string, isOpen: boolean): void {
     if (!isOpen) return;
-    track('tooltip_view', {
-      component: 'tooltip',
-      trigger_id: trigger,
-      location: 'docs_demo',
-    });
+    track('tooltip_view', { component: 'tooltip', trigger_id: trigger, location });
   }
 
   protected readonly navGroups = computed(() => {
