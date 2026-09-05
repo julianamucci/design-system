@@ -186,7 +186,7 @@ export function popoverWithFormSnippet(o: PopoverSnippetOptions = {}): string {
     blockTrigger({ ...o, triggerLabel: o.triggerLabel ?? 'Editar perfil' }),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
-formulario.dataset.spacing = 'sm';
+formulario.dataset.spacing = 'md';
 formulario.addEventListener('submit', (e) => e.preventDefault());
 
 // Rótulo e campo amarrados por \`htmlFor\`/\`id\`: sem o par, o campo chega ao

@@ -96,7 +96,7 @@ function salvar(evento: SubmitEvent) {
   evento.preventDefault();
 }`,
       markup: `${head}
-    <form class="nds-stack" data-spacing="sm" onsubmit={salvar}>
+    <form class="nds-stack" data-spacing="md" onsubmit={salvar}>
       <div class="nds-stack" data-spacing="xs">
         <Label for="perfil-nome">${a.nameLabel}</Label>
         <Input id="perfil-nome" bind:value={nome} />

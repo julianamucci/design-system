@@ -280,7 +280,7 @@ const codeEditProfile = `<Popover>
       <PopoverTitle>Dados do perfil</PopoverTitle>
       <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="sm" @submit.prevent>
+    <form class="nds-stack" data-spacing="md" @submit.prevent>
       <div class="nds-stack" data-spacing="xs">
         <Label for="pc-name">Nome</Label>
         <Input id="pc-name" model-value="Joana Silva" />
@@ -781,7 +781,7 @@ const a11yCritCols = computed(() => ({
             </PopoverHeader>
             <form
               class="nds-stack"
-              data-spacing="sm"
+              data-spacing="md"
               @submit.prevent
             >
               <div
@@ -861,7 +861,7 @@ const a11yCritCols = computed(() => ({
               </PopoverHeader>
               <form
                 class="nds-stack"
-                data-spacing="xs"
+                data-spacing="md"
                 @submit.prevent
               >
                 <div

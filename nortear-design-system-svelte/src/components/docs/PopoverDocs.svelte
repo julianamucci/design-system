@@ -194,7 +194,7 @@
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
+    <form class="nds-stack" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
       <div class="nds-stack" data-spacing="xs">
         <Label for="perfil-nome">Nome</Label>
         <Input id="perfil-nome" value="Maria Silva" />
@@ -531,7 +531,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <PopoverTitle>Dados do perfil</PopoverTitle>
       <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
+    <form class="nds-stack" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
       <div class="nds-stack" data-spacing="xs">
         <Label for="perfil-nome">Nome</Label>
         <Input id="perfil-nome" value="Joana Silva" />
@@ -653,7 +653,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>{$tStore('variants.compositions.editProfile.name')}</PopoverTitle>
         </PopoverHeader>
-        <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
+        <form class="nds-stack nds-pt-1" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
           <div class="nds-stack" data-spacing="xs">
             <Label for="popover-comp-nome">{$tStore('demonstration.labels.form.name')}</Label>
             <Input id="popover-comp-nome" value="Joana Silva" />
@@ -773,7 +773,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>{$tStore('demonstration.labels.form.trigger')}</PopoverTitle>
         </PopoverHeader>
-        <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e: SubmitEvent) => e.preventDefault()}>
+        <form class="nds-stack nds-pt-1" data-spacing="md" onsubmit={(e: SubmitEvent) => e.preventDefault()}>
           <div class="nds-stack" data-spacing="xs">
             <Label for="popover-var-nome">{$tStore('demonstration.labels.form.name')}</Label>
             <Input id="popover-var-nome" value="Maria Silva" />

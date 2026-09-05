@@ -124,7 +124,7 @@
             </PopoverHeader>
             <form
               class="nds-stack"
-              data-spacing="sm"
+              data-spacing="md"
               onsubmit={(e) => {
                 e.preventDefault();
                 onAction?.();

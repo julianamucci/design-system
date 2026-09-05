@@ -220,15 +220,17 @@ const VARIANT_CODE = {
       <h3 ndsPopoverTitle>Editar perfil</h3>
     </div>
 
-    <div class="nds-stack" data-spacing="sm">
-      <label ndsLabel for="nome">Nome</label>
-      <input ndsInput id="nome" value="Ana Ribeiro" />
-    </div>
+    <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
+      <div class="nds-stack" data-spacing="xs">
+        <label ndsLabel for="nome">Nome</label>
+        <input ndsInput id="nome" value="Ana Ribeiro" />
+      </div>
 
-    <div class="nds-cluster" data-justify="end" data-spacing="sm">
-      <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-      <button ndsPopoverClose ndsButton size="sm">Atualizar</button>
-    </div>
+      <div class="nds-cluster" data-justify="end" data-spacing="sm">
+        <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
+        <button ndsPopoverClose ndsButton size="sm">Atualizar</button>
+      </div>
+    </form>
   </ng-template>
 </div>`,
 };
@@ -415,24 +417,31 @@ const COMPOSITION_CODE = {
             <h3 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h3>
           </div>
 
-          <div class="nds-stack" data-spacing="sm">
-            <label ndsLabel for="pd-perfil-nome">{{ t('demonstration.labels.form.name') }}</label>
-            <input ndsInput id="pd-perfil-nome" value="Ana Ribeiro" />
-          </div>
+          <!-- Os grupos de campo vivem DENTRO de um form com respiro md: o
+               gap do painel é 10px, e sem este agrupador os 8px de dentro do
+               grupo ficavam MAIORES que a distância entre grupos — a segunda
+               label encostava no input da primeira. Mesma forma das outras
+               quatro stacks. -->
+          <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="pd-perfil-nome">{{ t('demonstration.labels.form.name') }}</label>
+              <input ndsInput id="pd-perfil-nome" value="Ana Ribeiro" />
+            </div>
 
-          <div class="nds-stack" data-spacing="sm">
-            <label ndsLabel for="pd-perfil-email">{{ t('demonstration.labels.form.email') }}</label>
-            <input ndsInput id="pd-perfil-email" type="email" value="ana@nortear.com.br" />
-          </div>
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="pd-perfil-email">{{ t('demonstration.labels.form.email') }}</label>
+              <input ndsInput id="pd-perfil-email" type="email" value="ana@nortear.com.br" />
+            </div>
 
-          <div class="nds-cluster" data-justify="end" data-spacing="sm">
-            <button ndsPopoverClose ndsButton variant="ghost" size="sm">
-              {{ t('demonstration.labels.cancel') }}
-            </button>
-            <button ndsPopoverClose ndsButton size="sm">
-              {{ t('demonstration.labels.form.submit') }}
-            </button>
-          </div>
+            <div class="nds-cluster" data-justify="end" data-spacing="sm">
+              <button ndsPopoverClose ndsButton variant="ghost" size="sm">
+                {{ t('demonstration.labels.cancel') }}
+              </button>
+              <button ndsPopoverClose ndsButton size="sm">
+                {{ t('demonstration.labels.form.submit') }}
+              </button>
+            </div>
+          </form>
         </ng-template>
       </div>
     </ng-template>

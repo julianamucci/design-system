@@ -233,7 +233,7 @@ function buildFormPopover(location: string, triggerId = 'form'): HTMLElement {
 
   const content = document.createElement('form');
   content.className = 'nds-stack';
-  content.dataset.spacing = 'sm';
+  content.dataset.spacing = 'md';
   content.addEventListener('submit', (e) => e.preventDefault());
 
   const nameRow = document.createElement('div');
@@ -574,7 +574,7 @@ createPopover({ trigger, content: form });`;
 
 const form = document.createElement('form');
 form.className = 'nds-stack';
-form.dataset.spacing = 'sm';
+form.dataset.spacing = 'md';
 form.addEventListener('submit', (e) => e.preventDefault());
 
 const title = createPopoverTitle({ text: 'Dados do perfil' });
@@ -710,7 +710,7 @@ createPopover({ trigger, content });`;
           const trigger = createButton({ variant: 'outline', size: 'sm', label: t('demonstration.labels.form.trigger') });
           const form = document.createElement('form');
           form.className = 'nds-stack';
-          form.dataset.spacing = 'xs';
+          form.dataset.spacing = 'md';
           form.addEventListener('submit', (e) => e.preventDefault());
 
           const heading = createPopoverTitle({ text: t('demonstration.labels.form.trigger') });

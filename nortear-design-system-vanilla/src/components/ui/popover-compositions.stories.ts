@@ -54,7 +54,7 @@ export const EditProfile: Story = {
 
     const form = document.createElement('form');
     form.className = 'nds-stack';
-    form.dataset.spacing = 'sm';
+    form.dataset.spacing = 'md';
     form.addEventListener('submit', (e) => e.preventDefault());
 
     const title = createPopoverTitle({ text: 'Dados do perfil' });

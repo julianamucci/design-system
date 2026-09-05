@@ -143,7 +143,7 @@ export const Form: Story = {
 
     const content = document.createElement('form');
     content.className = 'nds-stack';
-    content.dataset.spacing = 'sm';
+    content.dataset.spacing = 'md';
     content.addEventListener('submit', (e) => e.preventDefault());
 
     const title = document.createElement('h4');

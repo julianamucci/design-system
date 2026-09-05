@@ -629,7 +629,7 @@ interface PopoverContentProps {
     </PopoverHeader>
     <form
       className="nds-stack"
-      data-spacing="sm"
+      data-spacing="md"
       onSubmit={(e) => e.preventDefault()}
     >
       <div className="nds-stack" data-spacing="xs">
@@ -660,7 +660,7 @@ interface PopoverContentProps {
                     </PopoverHeader>
                     <form
                       className="nds-stack"
-                      data-spacing="xs"
+                      data-spacing="md"
                       onSubmit={(e) => e.preventDefault()}
                     >
                       <div className="nds-stack" data-spacing="xs">

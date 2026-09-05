@@ -134,20 +134,22 @@ export const Form: Story = {
             <p ndsPopoverDescription>Altere o nome e o email da conta.</p>
           </div>
 
-          <div class="nds-stack" data-spacing="sm">
-            <label ndsLabel for="pv-form-nome">Nome</label>
-            <input ndsInput id="pv-form-nome" value="Ana Ribeiro" />
-          </div>
+          <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="pv-form-nome">Nome</label>
+              <input ndsInput id="pv-form-nome" value="Ana Ribeiro" />
+            </div>
 
-          <div class="nds-stack" data-spacing="sm">
-            <label ndsLabel for="pv-form-email">Email</label>
-            <input ndsInput id="pv-form-email" type="email" value="ana@nortear.com.br" />
-          </div>
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="pv-form-email">Email</label>
+              <input ndsInput id="pv-form-email" type="email" value="ana@nortear.com.br" />
+            </div>
 
-          <div class="nds-cluster" data-justify="end" data-spacing="sm">
-            <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-            <button ndsPopoverClose ndsButton size="sm">Atualizar</button>
-          </div>
+            <div class="nds-cluster" data-justify="end" data-spacing="sm">
+              <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
+              <button ndsPopoverClose ndsButton size="sm">Atualizar</button>
+            </div>
+          </form>
         </ng-template>
       </div>
     `,

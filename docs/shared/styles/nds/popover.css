@@ -79,11 +79,24 @@
   transition: opacity var(--duration-fast) ease-in, transform var(--duration-fast) ease-in;
 }
 
+/* O tamanho do texto vive no CONTEÚDO, não no header.
+ *
+ * Enquanto morava em `.nds-popover-header`, só o cabeçalho encolhia: a variante
+ * "Default", que é painel de conteúdo livre e não tem header, ficava com texto
+ * visivelmente maior que as outras duas na mesma página. O popover é superfície
+ * pequena — o corpo dele tem um tamanho só, com header ou sem. */
+.nds-popover-content {
+  font-size: var(--text-control);
+}
+
+/* 6px, como dialog e sheet. Eram 2px, e o valor passou anos escondido: o título
+ * é `h*` e a descrição é `<p>`, e as margens do navegador — que em container
+ * flex NÃO colapsam — empurravam os dois para longe por cima deste gap. Zerar a
+ * margem descobriu o número real, que estava fora da escala da família. */
 .nds-popover-header {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-0-5);
-  font-size: var(--text-control);
+  gap: var(--spacing-1-5);
 }
 
 /* `margin: 0` nos dois, como dialog, sheet e alert-dialog já fazem — e aqui
