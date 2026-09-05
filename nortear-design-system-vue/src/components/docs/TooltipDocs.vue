@@ -444,7 +444,7 @@ const a11yCritCols = computed(() => ({
           data-spacing="lg"
           style="contain: layout; position: relative"
         >
-          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('demo-save', open)">
+          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('save', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
@@ -459,7 +459,7 @@ const a11yCritCols = computed(() => ({
             </TooltipContent>
           </Tooltip>
 
-          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('demo-delete', open)">
+          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('delete', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
@@ -474,7 +474,7 @@ const a11yCritCols = computed(() => ({
             </TooltipContent>
           </Tooltip>
 
-          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('demo-share', open)">
+          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('share', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
