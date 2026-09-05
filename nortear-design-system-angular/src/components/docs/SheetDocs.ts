@@ -319,6 +319,9 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
             <h2 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
+          <div ndsSheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{{ t('demonstration.labels.body') }}</p>
+          </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
             <button ndsButton (click)="aoAplicar('right', 'docs_do_dont')">{{ t('demonstration.labels.apply') }}</button>
@@ -344,6 +347,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+            <button ndsButton (click)="aoAplicar('right', 'docs_do_dont')">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -354,8 +358,11 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ t('demonstration.labels.rightLabel') }}</h2>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
+          </div>
+          <div ndsSheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{{ t('demonstration.labels.body') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
@@ -372,8 +379,11 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="top">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ t('demonstration.labels.topLabel') }}</h2>
+            <h2 ndsSheetTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
+          </div>
+          <div ndsSheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{{ t('demonstration.labels.body') }}</p>
           </div>
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
@@ -533,7 +543,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
             <!-- A confirmação é o envio do próprio formulário — não um botão
                  solto. O guard de submit aqui existe só para o preview ao vivo:
                  sem ele, um Enter dentro do campo tentaria navegar a página. -->
-            <form class="nds-grid" data-spacing="sm" (submit)="$event.preventDefault()">
+            <form class="nds-grid" data-spacing="sm" (submit)="$event.preventDefault(); aoAplicar('right', 'docs_composicoes', 'save')">
               <div class="nds-grid" data-spacing="xs">
                 <label ndsLabel for="comp-profile-name">Nome</label>
                 <input ndsInput id="comp-profile-name" value="Juliana Mucci" />
@@ -601,7 +611,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
             <!-- UM painel, o canônico: lado direito, nasce fechado, corpo com o
                  texto que descreve a área rolável, rodapé com Cancelar + ação
                  primária. É o mesmo exemplo do Playground da story. -->
-            <nds-sheet (onOpenChange)="aoMudarPainel('demo_filtros', 'docs_demo', $event)">
+            <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_demo', $event)">
               <button ndsSheetTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
@@ -622,7 +632,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
                   <button ndsSheetClose ndsButton variant="outline">
                     {{ t('demonstration.labels.cancel') }}
                   </button>
-                  <button ndsButton (click)="aoAplicar('demo_filtros', 'docs_demo')">
+                  <button ndsButton (click)="aoAplicar('right', 'docs_demo')">
                     {{ t('demonstration.labels.apply') }}
                   </button>
                 </div>
@@ -812,10 +822,15 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
   }
 
   /** Ação primária do rodapé. `location` vem do call site, pelo mesmo motivo. */
-  protected aoAplicar(qual: string, location: string): void {
+  /**
+   * `action` nomeia a ação que o botão FAZ, e por isso é parâmetro: o rodapé de
+   * filtros aplica, o de perfil salva. As cinco stacks mandavam `apply` no botão
+   * "Salvar alterações" até 2026-09-05 — valor estável, mas errado.
+   */
+  protected aoAplicar(qual: string, location: string, action: 'apply' | 'save' = 'apply'): void {
     track('dialog_confirm', {
       component: 'sheet',
-      action: 'apply',
+      action,
       label: qual,
       location,
     });

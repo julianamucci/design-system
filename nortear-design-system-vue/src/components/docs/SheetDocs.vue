@@ -168,10 +168,11 @@ function rastrearSheet(location: string, side: string, open: boolean) {
   });
 }
 
-function rastrearConfirmacao(location: string, action = 'apply') {
+function rastrearConfirmacao(location: string, side: string, action = 'apply') {
   track('dialog_confirm', {
     component: 'sheet',
     action,
+    label: side,
     location,
   });
 }
@@ -530,7 +531,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_demo')">
+              <Button @click="rastrearConfirmacao('docs_demo', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -630,13 +631,18 @@ const a11yCritCols = computed(() => ({
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
+            </SheetBody>
             <SheetFooter>
               <SheetClose as-child>
                 <Button variant="outline">
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_do_dont')">
+              <Button @click="rastrearConfirmacao('docs_do_dont', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -664,11 +670,18 @@ const a11yCritCols = computed(() => ({
                 {{ tContent('doDont.pair1.dontDescription') }}
               </SheetDescription>
             </SheetHeader>
-            <div class="nds-p-4 nds-text-body nds-text-muted-foreground">
-              {{ tContent('doDont.pair1.dontBody') }}
-            </div>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('doDont.pair1.dontBody') }}
+              </p>
+            </SheetBody>
             <SheetFooter>
-              <Button @click="rastrearConfirmacao('docs_do_dont')">
+              <SheetClose as-child>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+              </SheetClose>
+              <Button @click="rastrearConfirmacao('docs_do_dont', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -687,13 +700,18 @@ const a11yCritCols = computed(() => ({
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
+            </SheetBody>
             <SheetFooter>
               <SheetClose as-child>
                 <Button variant="outline">
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_do_dont')">
+              <Button @click="rastrearConfirmacao('docs_do_dont', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -712,13 +730,18 @@ const a11yCritCols = computed(() => ({
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
+            </SheetBody>
             <SheetFooter>
               <SheetClose as-child>
                 <Button variant="outline">
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_do_dont')">
+              <Button @click="rastrearConfirmacao('docs_do_dont', 'top')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -756,7 +779,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_variantes')">
+              <Button @click="rastrearConfirmacao('docs_variantes', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -852,7 +875,7 @@ const a11yCritCols = computed(() => ({
                     Cancelar
                   </Button>
                 </SheetClose>
-                <Button @click="rastrearConfirmacao('docs_composicoes')">
+                <Button @click="rastrearConfirmacao('docs_composicoes', 'right')">
                   Aplicar filtros
                 </Button>
               </SheetFooter>
@@ -955,7 +978,7 @@ const a11yCritCols = computed(() => ({
                 </SheetClose>
                 <Button
                   type="submit"
-                  @click="rastrearConfirmacao('docs_composicoes', 'save')"
+                  @click="rastrearConfirmacao('docs_composicoes', 'right', 'save')"
                 >
                   Salvar alterações
                 </Button>

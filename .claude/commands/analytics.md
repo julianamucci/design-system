@@ -112,7 +112,23 @@ Para cada docs page, verificar:
 8. **Seções com componente VIVO disparam evento do produto** — Variantes,
    Composições, Estados e Do & Dont renderizam o componente de verdade, e um
    clique ali é tão real quanto na demo. Hoje a maioria só emite os `docs_*`
-   automáticos. Cobrar o evento do componente, com o `location` da seção
+   automáticos. Cobrar o evento do componente, com o `location` da seção.
+
+   **Este é o check que mais rende, e o único desta lista sem portão.** Medido
+   no `sheet` em 2026-09-05, num componente só: 12 previews vivos no vue, 4 no
+   react, 3 no vanilla e vários no svelte e no angular não disparavam evento
+   NENHUM — nem errado, ausente. Os portões `location_so_da_demo` e
+   `location_fora_do_vocabulario` pegam o `location` errado; evento que nunca
+   foi escrito, nenhum grep acha. É verificação de PRESENÇA, e varredura limpa
+   não prova nada aqui.
+
+   Não existe regra determinística porque detectar "instância viva sem `track`
+   por perto" só sai por aproximação, e portão que inunda ensina a ignorar o
+   portão — a mesma razão que fez a `demonstration_labels_divergent` nascer
+   opt-in. Enquanto não houver, **este passo é o portão**: conte as instâncias
+   do componente na docs page e conte as chamadas de `track`. Se a segunda for
+   menor, a diferença é preview mudo, e cada um deles é um clique que o produto
+   não vê.
 
 ### Passo 3 — Modo audit ou fix
 

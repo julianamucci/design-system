@@ -147,19 +147,23 @@ function SheetDemo({ trigger, title, description, cancel, apply, body, side = "r
 }
 
 function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCategory, fieldMinPrice, location }: FiltersFormDemoProps) {
+  const side = "right";
   return (
     <div style={{ contain: "layout" }}>
+      {/* label usa o SIDE (valor estável, não localizado) — texto traduzido
+          fragmentaria o mesmo evento em 3 valores no GA4. */}
       <Sheet
         onOpenChange={(open, details) =>
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
-            ...(open ? { trigger_label: trigger } : { reason: mapCloseReason(details?.reason) }),
+            label: side,
+            ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
             location,
           })
         }
       >
         <SheetTrigger render={<Button variant="outline" />}>{trigger}</SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side={side}>
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>{description}</SheetDescription>
@@ -445,6 +449,7 @@ export function SheetDocs() {
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
+                body={tContent("demonstration.labels.body")}
                 location="docs_do_dont"
               />
             ),
@@ -473,9 +478,27 @@ export function SheetDocs() {
                         {tContent("doDont.pair1.dontDescription")}
                       </SheetDescription>
                     </SheetHeader>
-                    <p className="nds-px-4 nds-text-body">
-                      {tContent("doDont.pair1.dontBody")}
-                    </p>
+                    <SheetBody>
+                      <p className="nds-text-body nds-text-muted-foreground">
+                        {tContent("doDont.pair1.dontBody")}
+                      </p>
+                    </SheetBody>
+                    <SheetFooter>
+                      <SheetClose render={<Button variant="outline" />}>
+                        {tContent("demonstration.labels.cancel")}
+                      </SheetClose>
+                      <Button
+                        onClick={() =>
+                          track("dialog_confirm", {
+                            component: "sheet",
+                            action: "apply",
+                            location: "docs_do_dont",
+                          })
+                        }
+                      >
+                        {tContent("demonstration.labels.apply")}
+                      </Button>
+                    </SheetFooter>
                   </SheetContent>
                 </Sheet>
               </div>
@@ -493,6 +516,7 @@ export function SheetDocs() {
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
+                body={tContent("demonstration.labels.body")}
                 side="right"
                 location="docs_do_dont"
               />
@@ -504,6 +528,7 @@ export function SheetDocs() {
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
+                body={tContent("demonstration.labels.body")}
                 side="top"
                 location="docs_do_dont"
               />
@@ -756,7 +781,19 @@ export function SheetDocs() {
                       <SheetClose render={<Button type="button" variant="outline" />}>
                         Cancelar
                       </SheetClose>
-                      <Button type="submit" form="docs-sheet-perfil">Salvar alterações</Button>
+                      <Button
+                        type="submit"
+                        form="docs-sheet-perfil"
+                        onClick={() =>
+                          track("dialog_confirm", {
+                            component: "sheet",
+                            action: "save",
+                            location: "docs_composicoes",
+                          })
+                        }
+                      >
+                        Salvar alterações
+                      </Button>
                     </SheetFooter>
                   </SheetContent>
                 </Sheet>

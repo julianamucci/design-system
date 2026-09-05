@@ -475,9 +475,9 @@ interface TriggerProps {
           </SheetHeader>
           <SheetFooter>
             <SheetClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_variantes' })}>Aplicar</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'right', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -498,9 +498,9 @@ interface TriggerProps {
           </SheetHeader>
           <SheetFooter>
             <SheetClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_variantes' })}>Aplicar</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'left', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -521,9 +521,9 @@ interface TriggerProps {
           </SheetHeader>
           <SheetFooter>
             <SheetClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_variantes' })}>Aplicar</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'top', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -544,9 +544,9 @@ interface TriggerProps {
           </SheetHeader>
           <SheetFooter>
             <SheetClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_variantes' })}>Aplicar</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'bottom', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -794,7 +794,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </SheetClose>
-            <Button type="submit" form="docs-sheet-perfil">Salvar alterações</Button>
+            <Button type="submit" form="docs-sheet-perfil" onclick={() => track('dialog_confirm', { component: 'sheet', action: 'save', label: 'right', location: 'docs_composicoes' })}>Salvar alterações</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

@@ -640,6 +640,26 @@ createSheet({
                   title: 'Menu',
                   description: 'Navegue entre as áreas do sistema.',
                   content: buildSecondaryNavBody(),
+                  // Preview VIVO: clique aqui é tão real quanto na demonstração.
+                  // Mesmo padrão do `buildSheetDemo` — `label` carrega o side,
+                  // que é valor estável, nunca texto traduzido.
+                  onOpenChange: (open) => {
+                    if (open) {
+                      track('dialog_open', {
+                        component: 'sheet',
+                        label: 'left',
+                        location: 'docs_composicoes',
+                      });
+                    }
+                  },
+                  onClose: (reason) => {
+                    track('dialog_close', {
+                      component: 'sheet',
+                      label: 'left',
+                      reason,
+                      location: 'docs_composicoes',
+                    });
+                  },
                 });
               },
             },
@@ -683,13 +703,23 @@ createSheet({
 });`,
               previewFactory: () => {
                 const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+                const save = createButton({ variant: 'default', label: 'Salvar alterações' });
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
                 footer.dataset.spacing = 'md';
                 footer.append(
                   createButton({ variant: 'outline', label: 'Cancelar' }),
-                  createButton({ variant: 'default', label: 'Salvar alterações' }),
+                  save,
                 );
+                // `action` nomeia a ação que o BOTÃO faz: aqui ele salva, então
+                // 'save'. 'apply' segue certo nos previews de filtros.
+                save.addEventListener('click', () => {
+                  track('dialog_confirm', {
+                    component: 'sheet',
+                    action: 'save',
+                    location: 'docs_composicoes',
+                  });
+                });
                 return createSheet({
                   trigger,
                   side: 'right',
@@ -697,6 +727,23 @@ createSheet({
                   description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
                   content: buildProfileEditBody(),
                   footer,
+                  onOpenChange: (open) => {
+                    if (open) {
+                      track('dialog_open', {
+                        component: 'sheet',
+                        label: 'right',
+                        location: 'docs_composicoes',
+                      });
+                    }
+                  },
+                  onClose: (reason) => {
+                    track('dialog_close', {
+                      component: 'sheet',
+                      label: 'right',
+                      reason,
+                      location: 'docs_composicoes',
+                    });
+                  },
                 });
               },
             },
@@ -739,6 +786,23 @@ createSheet({
                   description: 'Escolha uma das ações disponíveis para este item.',
                   content: buildBottomPanelBody(),
                   footer,
+                  onOpenChange: (open) => {
+                    if (open) {
+                      track('dialog_open', {
+                        component: 'sheet',
+                        label: 'bottom',
+                        location: 'docs_composicoes',
+                      });
+                    }
+                  },
+                  onClose: (reason) => {
+                    track('dialog_close', {
+                      component: 'sheet',
+                      label: 'bottom',
+                      reason,
+                      location: 'docs_composicoes',
+                    });
+                  },
                 });
               },
             },
