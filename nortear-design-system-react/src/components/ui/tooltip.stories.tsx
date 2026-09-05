@@ -112,7 +112,7 @@ export const Playground: Story = {
         >
           <TooltipTrigger
             render={(props) => (
-              <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
+              <Button {...props} variant="outline" size="icon" aria-label="Salvar">
                 <Save aria-hidden="true" />
               </Button>
             )}

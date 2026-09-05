@@ -306,6 +306,20 @@ const codeCompSides = `<div class="nds-grid nds-w-full" data-spacing="xl" style=
   </Tooltip>
 </div>`;
 
+const codeCompActionBar = `<TooltipProvider :delay-duration="400" :skip-delay-duration="200">
+  <div class="nds-cluster" data-spacing="lg">
+    <Tooltip>
+      <TooltipTrigger as-child>
+        <Button variant="outline" size="icon" aria-label="Salvar">
+          <Save aria-hidden="true" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">Salvar (Ctrl+S)</TooltipContent>
+    </Tooltip>
+    <!-- … um Tooltip por ação, cada botão com o seu aria-label -->
+  </div>
+</TooltipProvider>`;
+
 const compositionItems = computed(() => [
   {
     trackId: 'iconButtonWithShortcut',
@@ -313,6 +327,13 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.iconButtonWithShortcut.description'),
     useWhen: tContent('variants.compositions.iconButtonWithShortcut.use'),
     code: codeCompIconShortcut,
+  },
+  {
+    trackId: 'actionBar',
+    name: tContent('variants.compositions.actionBar.name'),
+    description: tContent('variants.compositions.actionBar.description'),
+    useWhen: tContent('variants.compositions.actionBar.use'),
+    code: codeCompActionBar,
   },
   {
     trackId: 'formFieldHelp',
@@ -444,6 +465,9 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Demonstração ─────────────────────────────────────────── -->
       <DocsDemonstration :title="tContent('demonstration.title')">
+        <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma
+             fonte, dois lugares. A barra de três ações que morava aqui virou a
+             composição `actionBar`, que é o que ela sempre foi. -->
         <div
           class="nds-cluster nds-w-full nds-min-h-30"
           data-justify="center"
@@ -463,36 +487,6 @@ const a11yCritCols = computed(() => ({
             </TooltipTrigger>
             <TooltipContent side="bottom">
               {{ tContent('demonstration.labels.save') }}
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_demo', 'delete', open)">
-            <TooltipTrigger as-child>
-              <Button
-                variant="outline"
-                size="icon"
-                :aria-label="tContent('demonstration.labels.deleteButton')"
-              >
-                <Trash2 aria-hidden="true" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              {{ tContent('demonstration.labels.delete') }}
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_demo', 'share', open)">
-            <TooltipTrigger as-child>
-              <Button
-                variant="outline"
-                size="icon"
-                :aria-label="tContent('demonstration.labels.shareButton')"
-              >
-                <Share2 aria-hidden="true" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              {{ tContent('demonstration.labels.share') }}
             </TooltipContent>
           </Tooltip>
         </div>
@@ -839,6 +833,35 @@ const a11yCritCols = computed(() => ({
           </div>
         </template>
         <template #variant-preview-1>
+          <div class="nds-cluster" data-justify="center" data-align="center" data-spacing="lg">
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'actionBar-save', open)">
+              <TooltipTrigger as-child>
+                <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.saveButton')">
+                  <Save aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">{{ tContent('demonstration.labels.save') }}</TooltipContent>
+            </Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'actionBar-delete', open)">
+              <TooltipTrigger as-child>
+                <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.deleteButton')">
+                  <Trash2 aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">{{ tContent('demonstration.labels.delete') }}</TooltipContent>
+            </Tooltip>
+            <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'actionBar-share', open)">
+              <TooltipTrigger as-child>
+                <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.shareButton')">
+                  <Share2 aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">{{ tContent('demonstration.labels.share') }}</TooltipContent>
+            </Tooltip>
+          </div>
+        </template>
+
+        <template #variant-preview-2>
           <div
             style="contain: layout"
             class="nds-cluster nds-w-full nds-min-h-30"
@@ -885,7 +908,7 @@ const a11yCritCols = computed(() => ({
             </div>
           </div>
         </template>
-        <template #variant-preview-2>
+        <template #variant-preview-3>
           <div
             style="contain: layout"
             class="nds-cluster nds-w-full nds-min-h-30"

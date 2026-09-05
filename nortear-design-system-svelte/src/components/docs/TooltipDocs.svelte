@@ -252,6 +252,9 @@ interface TooltipTriggerProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
+    <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma fonte,
+         dois lugares. A barra de três ações que morava aqui virou a composição
+         `actionBar`, que é o que ela sempre foi. -->
     <TooltipProvider delayDuration={200}>
       <div class="nds-cluster nds-w-full nds-min-h-30" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; position: relative">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'save', o)}>
@@ -263,28 +266,6 @@ interface TooltipTriggerProps {
             {/snippet}
           </TooltipTrigger>
           <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
-        </Tooltip>
-
-        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'delete', o)}>
-          <TooltipTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.deleteButton')} {...props}>
-                <Trash2 aria-hidden="true" class="nds-icon" />
-              </Button>
-            {/snippet}
-          </TooltipTrigger>
-          <TooltipContent>{$tStore('demonstration.labels.delete')}</TooltipContent>
-        </Tooltip>
-
-        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'share', o)}>
-          <TooltipTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.shareButton')} {...props}>
-                <Share2 aria-hidden="true" class="nds-icon" />
-              </Button>
-            {/snippet}
-          </TooltipTrigger>
-          <TooltipContent>{$tStore('demonstration.labels.share')}</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
@@ -563,6 +544,28 @@ interface TooltipTriggerProps {
         preview: compIconShortcut,
       },
       {
+        trackId: 'actionBar',
+        name: $tStore('variants.compositions.actionBar.name'),
+        description: $tStore('variants.compositions.actionBar.description'),
+        useWhen: $tStore('variants.compositions.actionBar.use'),
+        code: `<TooltipProvider delayDuration={400} skipDelayDuration={200}>
+  <div class="nds-cluster" data-spacing="lg">
+    <Tooltip>
+      <TooltipTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
+            <Save aria-hidden="true" />
+          </Button>
+        {/snippet}
+      </TooltipTrigger>
+      <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+    </Tooltip>
+    <!-- … um Tooltip por ação, cada botão com o seu aria-label -->
+  </div>
+</TooltipProvider>`,
+        preview: compActionBar,
+      },
+      {
         trackId: 'formFieldHelp',
         name: $tStore('variants.compositions.formFieldHelp.name'),
         description: $tStore('variants.compositions.formFieldHelp.description'),
@@ -631,6 +634,45 @@ interface TooltipTriggerProps {
           <kbd data-slot="kbd" class="nds-kbd">S</kbd>
         </TooltipContent>
       </Tooltip>
+    </TooltipProvider>
+  {/snippet}
+
+  {#snippet compActionBar()}
+    <!-- O Provider é do snippet, como nos irmãos: cada preview monta isolado, e
+         sem ele o bits-ui aborta com `Context "Tooltip.Provider" not found`. -->
+    <TooltipProvider delayDuration={400} skipDelayDuration={200}>
+        <div class="nds-cluster" data-justify="center" data-align="center" data-spacing="lg">
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'actionBar-save', o)}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
+                <Save aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
+        </Tooltip>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'actionBar-delete', o)}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.deleteButton')} {...props}>
+                <Trash2 aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent>{$tStore('demonstration.labels.delete')}</TooltipContent>
+        </Tooltip>
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'actionBar-share', o)}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.shareButton')} {...props}>
+                <Share2 aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent>{$tStore('demonstration.labels.share')}</TooltipContent>
+        </Tooltip>
+      </div>
     </TooltipProvider>
   {/snippet}
 

@@ -112,7 +112,7 @@ const ANATOMY_CODE = `<!-- Uma vez, no root da app -->
 
 <!-- Onde precisar -->
 <span ndsTooltip>
-  <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
+  <button ndsTooltipTrigger ndsButton variant="outline" size="icon" aria-label="Salvar">
     <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
   </button>
 
@@ -184,7 +184,7 @@ const EXTENSIBILITY_CODE = `<!-- delay por gatilho: vence o do provider só nest
   <button
     ndsTooltipTrigger
     ndsButton
-    variant="ghost"
+    variant="outline"
     size="icon"
     aria-label="Salvar"
     [delay]="0"
@@ -213,14 +213,14 @@ const TOKENS_CODE = `/* Tokens que o balão consome */
 
 const VARIANT_CODE = {
   default: `<span ndsTooltip>
-  <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
+  <button ndsTooltipTrigger ndsButton variant="outline" size="icon" aria-label="Salvar">
     <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
   </button>
 
   <ng-template ndsTooltipContent>Salvar</ng-template>
 </span>`,
   withShortcut: `<span ndsTooltip>
-  <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
+  <button ndsTooltipTrigger ndsButton variant="outline" size="icon" aria-label="Salvar">
     <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
   </button>
 
@@ -249,8 +249,18 @@ const VARIANT_CODE = {
 };
 
 const COMPOSITION_CODE = {
+  actionBar: `<div ndsTooltipProvider [delay]="400" [skipDelay]="200" class="nds-cluster">
+  @for (acao of acoes; track acao.id) {
+    <span ndsTooltip>
+      <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="acao.label">
+        <svg ndsButtonIcon [kind]="acao.icon" aria-hidden="true"></svg>
+      </button>
+      <ng-template ndsTooltipContent side="bottom">{{ acao.texto }}</ng-template>
+    </span>
+  }
+</div>`,
   iconButtonWithShortcut: `<span ndsTooltip>
-  <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
+  <button ndsTooltipTrigger ndsButton variant="outline" size="icon" aria-label="Salvar">
     <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
   </button>
 
@@ -267,7 +277,7 @@ const COMPOSITION_CODE = {
     <button
       ndsTooltipTrigger
       ndsButton
-      variant="ghost"
+      variant="outline"
       size="icon-sm"
       aria-label="Onde encontrar o token da API"
     >
@@ -287,7 +297,7 @@ const COMPOSITION_CODE = {
       <span ndsCardTitle>LCP</span>
 
       <span ndsTooltip>
-        <button ndsTooltipTrigger ndsButton variant="ghost" size="icon-sm" aria-label="O que é LCP">
+        <button ndsTooltipTrigger ndsButton variant="outline" size="icon-sm" aria-label="O que é LCP">
           <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
         </button>
 
@@ -444,7 +454,7 @@ const COMPOSITION_CODE = {
         <button
           ndsTooltipTrigger
           ndsButton
-          variant="ghost"
+          variant="outline"
           size="icon"
           [attr.aria-label]="t('demonstration.labels.saveButton')"
         >
@@ -459,7 +469,7 @@ const COMPOSITION_CODE = {
         <button
           ndsTooltipTrigger
           ndsButton
-          variant="ghost"
+          variant="outline"
           size="icon"
           [attr.aria-label]="t('demonstration.labels.saveButton')"
         >
@@ -496,12 +506,54 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <!-- Composições -->
+    <ng-template #tplCompBarraAcoes>
+      <div class="nds-cluster" data-spacing="lg" data-justify="center" data-align="center">
+              <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'actionBar-save', $event)">
+                <button
+                  ndsTooltipTrigger
+                  ndsButton
+                  variant="outline"
+                  size="icon"
+                  [attr.aria-label]="t('demonstration.labels.saveButton')"
+                >
+                  <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
+                </button>
+                <ng-template ndsTooltipContent>{{ t('demonstration.labels.save') }}</ng-template>
+              </span>
+  
+              <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'actionBar-delete', $event)">
+                <button
+                  ndsTooltipTrigger
+                  ndsButton
+                  variant="outline"
+                  size="icon"
+                  [attr.aria-label]="t('demonstration.labels.deleteButton')"
+                >
+                  <ng-container [ngTemplateOutlet]="tplIconeExcluir" />
+                </button>
+                <ng-template ndsTooltipContent>{{ t('demonstration.labels.delete') }}</ng-template>
+              </span>
+  
+              <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'actionBar-share', $event)">
+                <button
+                  ndsTooltipTrigger
+                  ndsButton
+                  variant="outline"
+                  size="icon"
+                  [attr.aria-label]="t('demonstration.labels.shareButton')"
+                >
+                  <ng-container [ngTemplateOutlet]="tplIconeCompartilhar" />
+                </button>
+                <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.share') }}</ng-template>
+              </span>
+      </div>
+    </ng-template>
     <ng-template #tplCompAtalho>
       <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'iconButtonWithShortcut', $event)">
         <button
           ndsTooltipTrigger
           ndsButton
-          variant="ghost"
+          variant="outline"
           size="icon"
           [attr.aria-label]="t('demonstration.labels.saveButton')"
         >
@@ -523,7 +575,7 @@ const COMPOSITION_CODE = {
             <button
               ndsTooltipTrigger
               ndsButton
-              variant="ghost"
+              variant="outline"
               size="icon-sm"
               [attr.aria-label]="rotuloCampo()"
             >
@@ -545,7 +597,7 @@ const COMPOSITION_CODE = {
               <button
                 ndsTooltipTrigger
                 ndsButton
-                variant="ghost"
+                variant="outline"
                 size="icon-sm"
                 [attr.aria-label]="metricaRotulo()"
               >
@@ -582,44 +634,22 @@ const COMPOSITION_CODE = {
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
+          <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma
+               fonte, dois lugares. A barra de três ações que morava aqui virou
+               a composição actionBar, que é o que ela sempre foi. Sem crase
+               aqui: o template inteiro é um template literal, e crase o encerra. -->
           <div class="nds-cluster" data-spacing="sm" data-justify="center">
             <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'save', $event)">
               <button
                 ndsTooltipTrigger
                 ndsButton
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 [attr.aria-label]="t('demonstration.labels.saveButton')"
               >
                 <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
               </button>
               <ng-template ndsTooltipContent>{{ t('demonstration.labels.save') }}</ng-template>
-            </span>
-
-            <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'delete', $event)">
-              <button
-                ndsTooltipTrigger
-                ndsButton
-                variant="ghost"
-                size="icon"
-                [attr.aria-label]="t('demonstration.labels.deleteButton')"
-              >
-                <ng-container [ngTemplateOutlet]="tplIconeExcluir" />
-              </button>
-              <ng-template ndsTooltipContent>{{ t('demonstration.labels.delete') }}</ng-template>
-            </span>
-
-            <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'share', $event)">
-              <button
-                ndsTooltipTrigger
-                ndsButton
-                variant="ghost"
-                size="icon"
-                [attr.aria-label]="t('demonstration.labels.shareButton')"
-              >
-                <ng-container [ngTemplateOutlet]="tplIconeCompartilhar" />
-              </button>
-              <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.share') }}</ng-template>
             </span>
           </div>
         </nds-docs-demonstration>
@@ -751,6 +781,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarComAtalho = viewChild.required<TemplateRef<unknown>>('tplVarComAtalho');
   private readonly tplVarTextoLongo = viewChild.required<TemplateRef<unknown>>('tplVarTextoLongo');
   private readonly tplVarLados = viewChild.required<TemplateRef<unknown>>('tplVarLados');
+  private readonly tplCompBarraAcoes = viewChild.required<TemplateRef<unknown>>('tplCompBarraAcoes');
   private readonly tplCompAtalho = viewChild.required<TemplateRef<unknown>>('tplCompAtalho');
   private readonly tplCompCampo = viewChild.required<TemplateRef<unknown>>('tplCompCampo');
   private readonly tplCompMetrica = viewChild.required<TemplateRef<unknown>>('tplCompMetrica');
@@ -978,10 +1009,11 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   protected readonly compositionItems = computed(() => {
     dict();
     const mapa: {
-      key: 'iconButtonWithShortcut' | 'formFieldHelp' | 'metricDescription';
+      key: 'iconButtonWithShortcut' | 'actionBar' | 'formFieldHelp' | 'metricDescription';
       tpl: TemplateRef<unknown>;
     }[] = [
       { key: 'iconButtonWithShortcut', tpl: this.tplCompAtalho()  },
+      { key: 'actionBar',              tpl: this.tplCompBarraAcoes() },
       { key: 'formFieldHelp',          tpl: this.tplCompCampo()   },
       { key: 'metricDescription',      tpl: this.tplCompMetrica() },
     ];

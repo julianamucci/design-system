@@ -158,6 +158,11 @@
           "description": "Botão icon-only com <code>aria-label</code> próprio e Tooltip complementar exibindo o atalho de teclado (ex.: \"Salvar (Ctrl+S)\"). O Tooltip não substitui o <code>aria-label</code>.",
           "use": "Botões de ação rápida em toolbars/headers que possuem hotkey. O <code>aria-label</code> garante anúncio em mobile/AT; o Tooltip reforça visualmente o atalho para usuários de mouse e teclado."
         },
+        "actionBar": {
+          "name": "Barra de ações",
+          "description": "Vários botões icon-only lado a lado, cada um com <code>aria-label</code> próprio e Tooltip complementar. O Provider compartilha a espera: o primeiro balão aguarda o atraso, e os vizinhos abrem na hora enquanto a pessoa percorre a barra.",
+          "use": "Toolbars e cabeçalhos com três ou mais ações de ícone. Sem rótulo visível a pessoa precisa adivinhar cada ícone — o Tooltip é o que torna a economia de espaço aceitável, e o <code>aria-label</code> continua sendo o que responde em touch, onde não há hover."
+        },
         "formFieldHelp": {
           "name": "Campo de form com ajuda",
           "description": "Ícone \"?\" ao lado do label de um campo, com Tooltip explicando onde encontrar ou como gerar o valor esperado. O texto cabe em uma linha e respeita o limite de largura do balão.",
@@ -608,6 +613,11 @@
           "description": "Icon-only button with its own <code>aria-label</code> and a complementary Tooltip showing the keyboard shortcut (e.g. \"Save (Ctrl+S)\"). The Tooltip doesn't replace the <code>aria-label</code>.",
           "use": "Quick-action buttons in toolbars/headers that have a hotkey. The <code>aria-label</code> ensures announcement on mobile/AT; the Tooltip visually reinforces the shortcut for mouse and keyboard users."
         },
+        "actionBar": {
+          "name": "Action bar",
+          "description": "Several icon-only buttons side by side, each with its own <code>aria-label</code> and a complementary Tooltip. The Provider shares the delay: the first bubble waits, and its neighbours open instantly as the person moves along the bar.",
+          "use": "Toolbars and headers with three or more icon actions. With no visible label people have to guess each icon — the Tooltip is what makes the saved space acceptable, and the <code>aria-label</code> is still what answers on touch, where there is no hover."
+        },
         "formFieldHelp": {
           "name": "Form field with help",
           "description": "\"?\" icon next to a field label, with a Tooltip explaining where to find or how to generate the expected value. Text fits on one line and respects the bubble's width limit.",
@@ -1057,6 +1067,11 @@
           "name": "Icon-button con atajo",
           "description": "Botón icon-only con su propio <code>aria-label</code> y un Tooltip complementario que muestra el atajo de teclado (ej. \"Guardar (Ctrl+S)\"). El Tooltip no sustituye al <code>aria-label</code>.",
           "use": "Botones de acción rápida en toolbars/headers con hotkey. El <code>aria-label</code> garantiza el anuncio en móvil/AT; el Tooltip refuerza visualmente el atajo para usuarios de mouse y teclado."
+        },
+        "actionBar": {
+          "name": "Barra de acciones",
+          "description": "Varios botones solo-icono uno al lado del otro, cada uno con su propio <code>aria-label</code> y un Tooltip complementario. El Provider comparte la espera: la primera burbuja aguarda el retraso y las vecinas abren al instante mientras la persona recorre la barra.",
+          "use": "Barras de herramientas y encabezados con tres o más acciones de icono. Sin etiqueta visible hay que adivinar cada icono — el Tooltip es lo que hace aceptable el ahorro de espacio, y el <code>aria-label</code> sigue siendo lo que responde en táctil, donde no hay hover."
         },
         "formFieldHelp": {
           "name": "Campo de form con ayuda",

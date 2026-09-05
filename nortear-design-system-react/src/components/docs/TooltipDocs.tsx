@@ -259,6 +259,10 @@ interface TooltipContentProps {
       >
         {/* ── Demonstração ──────────────────────────────────────────── */}
         <DocsDemonstration title={tContent("demonstration.title")}>
+          {/* O MESMO exemplo do Playground da story — guideline 08 §15. Uma
+              fonte, dois lugares: a página abre mostrando exatamente o que o
+              Playground exercita. A barra de três ações que morava aqui virou a
+              composição `actionBar`, que é o que ela sempre foi. */}
           <div
             className="nds-cluster nds-min-h-30"
             data-justify="center"
@@ -269,34 +273,12 @@ interface TooltipContentProps {
             <Tooltip onOpenChange={rastrearTooltip("docs_demo", "save")}>
               <TooltipTrigger
                 render={(props) => (
-                  <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
+                  <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
                     <Save aria-hidden="true" />
                   </Button>
                 )}
               />
               <TooltipContent>{labelSave}</TooltipContent>
-            </Tooltip>
-
-            <Tooltip onOpenChange={rastrearTooltip("docs_demo", "delete")}>
-              <TooltipTrigger
-                render={(props) => (
-                  <Button {...props} variant="ghost" size="icon" aria-label={labelDeleteBtn}>
-                    <Trash2 aria-hidden="true" />
-                  </Button>
-                )}
-              />
-              <TooltipContent>{labelDelete}</TooltipContent>
-            </Tooltip>
-
-            <Tooltip onOpenChange={rastrearTooltip("docs_demo", "share")}>
-              <TooltipTrigger
-                render={(props) => (
-                  <Button {...props} variant="ghost" size="icon" aria-label={labelShareBtn}>
-                    <Share2 aria-hidden="true" />
-                  </Button>
-                )}
-              />
-              <TooltipContent>{labelShare}</TooltipContent>
             </Tooltip>
           </div>
         </DocsDemonstration>
@@ -589,6 +571,61 @@ interface TooltipContentProps {
                     <kbd className="nds-kbd">S</kbd>
                   </TooltipContent>
                 </Tooltip>
+              ),
+            },
+            {
+              trackId: "actionBar",
+              name: tContent("variants.compositions.actionBar.name"),
+              description: tContent("variants.compositions.actionBar.description"),
+              useWhen: tContent("variants.compositions.actionBar.use"),
+              code: `<TooltipProvider delay={400} skipDelay={200}>
+  <div className="nds-cluster" data-spacing="lg">
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <Button {...props} variant="outline" size="icon" aria-label="Salvar">
+            <Save aria-hidden="true" />
+          </Button>
+        )}
+      />
+      <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+    </Tooltip>
+    {/* … um Tooltip por ação, cada botão com o seu aria-label */}
+  </div>
+</TooltipProvider>`,
+              preview: (
+                <div className="nds-cluster" data-justify="center" data-align="center" data-spacing="lg">
+                  <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "actionBar-save")}>
+                    <TooltipTrigger
+                      render={(props) => (
+                        <Button {...props} variant="outline" size="icon" aria-label={labelSaveBtn}>
+                          <Save aria-hidden="true" />
+                        </Button>
+                      )}
+                    />
+                    <TooltipContent>{labelSave}</TooltipContent>
+                  </Tooltip>
+                  <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "actionBar-delete")}>
+                    <TooltipTrigger
+                      render={(props) => (
+                        <Button {...props} variant="outline" size="icon" aria-label={labelDeleteBtn}>
+                          <Trash2 aria-hidden="true" />
+                        </Button>
+                      )}
+                    />
+                    <TooltipContent>{labelDelete}</TooltipContent>
+                  </Tooltip>
+                  <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "actionBar-share")}>
+                    <TooltipTrigger
+                      render={(props) => (
+                        <Button {...props} variant="outline" size="icon" aria-label={labelShareBtn}>
+                          <Share2 aria-hidden="true" />
+                        </Button>
+                      )}
+                    />
+                    <TooltipContent>{labelShare}</TooltipContent>
+                  </Tooltip>
+                </div>
               ),
             },
             {

@@ -83,7 +83,7 @@ export const Playground: Story = {
           <button
             ndsTooltipTrigger
             ndsButton
-            variant="ghost"
+            variant="outline"
             size="icon"
             aria-label="Salvar"
           >

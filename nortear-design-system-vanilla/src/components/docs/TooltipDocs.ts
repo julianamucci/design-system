@@ -257,22 +257,17 @@ export function createTooltipDocs(): HTMLElement {
             // outras quatro escrevem, e é o que deixa a divergência visível a
             // uma varredura de fonte. Chave construída em runtime esconde o
             // rótulo de qualquer portão que leia o arquivo.
-            const actions: Array<{ icon: ButtonIconKind; label: string; text: string; id: string }> = [
-              { icon: 'save',   label: t('demonstration.labels.saveButton'),   text: t('demonstration.labels.save'),   id: 'save' },
-              { icon: 'trash', label: t('demonstration.labels.deleteButton'), text: t('demonstration.labels.delete'), id: 'delete' },
-              { icon: 'share', label: t('demonstration.labels.shareButton'),  text: t('demonstration.labels.share'),  id: 'share' },
-            ];
-
-            for (const action of actions) {
-              wrap.appendChild(
-                createTooltip({
-                  trigger: demoIconButton(action.icon, action.label),
-                  content: action.text,
-                  side: 'bottom',
-                  onShow: trackTooltipView('docs_demo', action.id),
-                }),
-              );
-            }
+            // O MESMO exemplo do Playground da story — guideline 08 §15. Uma
+            // fonte, dois lugares. A barra de três ações que morava aqui virou a
+            // composição `actionBar`, que é o que ela sempre foi.
+            wrap.appendChild(
+              createTooltip({
+                trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
+                content: t('demonstration.labels.save'),
+                side: 'bottom',
+                onShow: trackTooltipView('docs_demo', 'save'),
+              }),
+            );
 
             return wrap;
           },
@@ -503,6 +498,15 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
       }
 
       case 'composicoes': {
+        const codeActionBar = `const provider = createTooltipProvider({ delayDuration: 400, skipDelayDuration: 200 });
+
+for (const acao of acoes) {
+  barra.appendChild(provider.createTooltip({
+    trigger: criarBotaoDeIcone(acao.icon, acao.label),
+    content: acao.text,
+    side: 'bottom',
+  }));
+}`;
         const codeIconShortcut = `const trigger = createButton({
   variant: 'ghost',
   size: 'icon',
@@ -539,6 +543,31 @@ createTooltip({
   side: 'top',
   class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
+
+        function buildActionBarPreview(): HTMLElement {
+          const barra = document.createElement('div');
+          barra.className = 'nds-cluster';
+          barra.dataset.justify = 'center';
+          barra.dataset.align = 'center';
+          barra.dataset.spacing = 'lg';
+
+          const acoes: Array<{ icon: ButtonIconKind; label: string; text: string; id: string }> = [
+            { icon: 'save',  label: t('demonstration.labels.saveButton'),   text: t('demonstration.labels.save'),   id: 'actionBar-save' },
+            { icon: 'trash', label: t('demonstration.labels.deleteButton'), text: t('demonstration.labels.delete'), id: 'actionBar-delete' },
+            { icon: 'share', label: t('demonstration.labels.shareButton'),  text: t('demonstration.labels.share'),  id: 'actionBar-share' },
+          ];
+          for (const acao of acoes) {
+            barra.appendChild(
+              createTooltip({
+                trigger: demoIconButton(acao.icon, acao.label),
+                content: acao.text,
+                side: 'bottom',
+                onShow: trackTooltipView('docs_composicoes', acao.id),
+              }),
+            );
+          }
+          return barra;
+        }
 
         function buildIconShortcutPreview(): HTMLElement {
           const trigger = createButton({
@@ -648,6 +677,14 @@ createTooltip({
               useWhen: stripHtml(t('variants.compositions.iconButtonWithShortcut.use')),
               code: codeIconShortcut,
               previewFactory: buildIconShortcutPreview,
+            },
+            {
+              trackId: 'actionBar',
+              name: stripHtml(t('variants.compositions.actionBar.name')),
+              description: stripHtml(t('variants.compositions.actionBar.description')),
+              useWhen: stripHtml(t('variants.compositions.actionBar.use')),
+              code: codeActionBar,
+              previewFactory: buildActionBarPreview,
             },
             {
               trackId: 'formFieldHelp',
