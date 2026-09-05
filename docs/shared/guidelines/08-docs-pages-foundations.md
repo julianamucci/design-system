@@ -723,3 +723,51 @@ Toda foundation page usa o renderer genérico da stack (`FoundationPage.tsx` / `
 `cols` = objeto `{ chave: rótulo }`; `rows` = objeto `{ id: { <chave da coluna>: valor } }` — cada célula mapeada pela CHAVE da coluna, nunca por posição. O componente `Table` é renderizado direto, sem wrapper com borda.
 
 **PROIBIDO gerar `rows` como array (posicional)** — `rows: [["a","b"], …]` ou `rows: { "0": ["a","b"] }`. A forma posicional quebrou os renderers Svelte/Vanilla três vezes (squash em célula única, texto solto com vírgulas); todas as tabelas existentes foram normalizadas para a forma canônica em 2026-07. Os renderers ainda toleram arrays por segurança, mas conteúdo novo deve usar SOMENTE a forma por chave.
+
+## 15. Toda seção com exemplo traz COMPONENTE VIVO
+
+Regra da dona, 2026-09-04. Vale para Demonstração, Variantes, Composições,
+Estados e Do & Don't — toda seção que mostra um exemplo mostra o componente
+**funcionando**, não uma imitação em markup estático.
+
+Por que isso não é preferência estética:
+
+- **Imitação mente e ninguém percebe.** Um bloco monoespaçado que se parece com
+  o componente não recebe as classes `.nds-*` reais, não responde a tema, a
+  densidade nem à escala de tipografia, e continua idêntico no dia em que o
+  componente mudar. É documentação que descola do produto sem emitir sinal.
+- **Nada audita imitação.** O contrato de docs page cobra preview VAZIO e
+  preview desalinhado; uma imitação bem construída passa nos dois. Divergência
+  aqui só aparece a olho, comparando as cinco lado a lado — que foi como ela
+  apareceu: Do & Don't com tooltip vivo no vue e no svelte, e imitação estática
+  no react, no vanilla e no angular.
+- **Sem componente vivo não há evento.** A instrumentação de analytics
+  acompanha o componente; imitação não dispara nada, e a seção fica invisível
+  no GA4 mesmo tendo interação.
+
+### Qual exemplo vai em cada seção
+
+| seção | o exemplo é |
+|---|---|
+| **Demonstração** | o MESMO do Playground da story. Uma fonte, dois lugares — a página abre mostrando exatamente o que o Playground exercita |
+| Variantes | uma instância por variante, representando aquela variante |
+| Composições | o componente no caso de uso que a composição documenta |
+| Estados | o componente no estado descrito |
+| Do & Don't | o par certo/errado, os DOIS vivos — inclusive o "don't", que só ensina se o defeito for real |
+
+A Demonstração amarrada ao Playground evita a deriva que já aconteceu duas
+vezes neste repositório: a seção vira um exemplo próprio, ninguém compara, e a
+página passa a ensinar uma coisa e a story a exercitar outra.
+
+### Overlay na docs page nasce FECHADO
+
+Componente que abre em camada — `dialog`, `alert-dialog`, `sheet`, `drawer`,
+`popover`, `command` em modo palette — entra na docs page **fechado**, com o
+gatilho visível. Quem lê abre.
+
+Vivo não quer dizer aberto. Overlay aberto por padrão cobre a própria página,
+empilha quando a seção tem mais de um, rouba o foco de quem navega por teclado
+e deixa a regressão visual fotografando a camada em vez da seção. O tooltip é a
+exceção natural — ele não tem estado persistente e some ao sair o ponteiro —,
+mas mesmo ele não nasce aberto fora de story de regressão visual.
+
