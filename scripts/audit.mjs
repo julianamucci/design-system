@@ -587,6 +587,24 @@ function auditAnalytics(slug) {
         for (const [key, val] of Object.entries(table)) {
           if (typeof val === 'string' && EVENT_RX.test(val)) eventsInTr.add(val);
           else if (val && typeof val === 'object' && EVENT_RX.test(key)) eventsInTr.add(key);
+          // Evento anunciado em PROSA, dentro de `<code>`.
+          //
+          // A coleta acima só via valor exato ou chave, e por isso seis
+          // componentes escapavam inteiros: drawer, dropdown-menu, hover-card,
+          // input-otp, menubar e navigation-menu não têm `analytics.table` —
+          // eles nomeiam os eventos no meio da `description`. Medido em
+          // 2026-09-06: 15 eventos anunciados assim, e NENHUM dos 15 existe em
+          // `AnalyticsEvents`. Documentação de evento que ninguém dispara e que
+          // o tipo não conhece, com o portão verde o tempo todo.
+          //
+          // O `<code>` é a marca: prosa cita `location` e `label` sem ele, e o
+          // `EVENT_RX` exige o sublinhado, então nome de campo não entra.
+          if (typeof val === 'string') {
+            for (const m of val.matchAll(/<code>([^<]+)<\/code>/g)) {
+              const dentro = m[1].trim();
+              if (EVENT_RX.test(dentro)) eventsInTr.add(dentro);
+            }
+          }
         }
       }
     } catch { /* JSON inválido não é responsabilidade deste check */ }
