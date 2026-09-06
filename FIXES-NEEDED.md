@@ -34,7 +34,7 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 10 itens
+## Aberto de verdade — 15 itens
 
 ### Precisam de decisão da dona (2)
 
@@ -43,7 +43,7 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (11)
+### Dívida de fundação, sem dono de componente (12)
 - [ ] **O `toggle-group` do Vanilla ganhou três capacidades que as outras quatro stacks não têm.** (Aberto em 2026-08-27, ao montar a barra do protótipo de editor.) Vanilla é a referência, então a divergência é dívida de porte, não decisão:
 
   | capacidade | por que existe |
@@ -157,6 +157,27 @@ histórico; a lista de cima é o que está por fazer.
   Conclusão: os 10 prefixos cobrem a superfície de risco real. A regra estar em zero é **higiene**, não ponto cego. Envolver as famílias "descobertas" reintroduziria o defeito que a regra existe para pegar — foi o que a conferência já tinha provado em `accessibility.aria.*`.
 
   **Armadilha de método, para quem revisitar:** um filtro por sufixo de chave (`/\.label$/`) devolve 54 falsos "títulos com markup" — são `props.table.label` (descrição de uma prop chamada "label"), `variants.items.label` (variante chamada "label") e `accessibility.aria.label` (descrição do atributo). **Nome de chave não diz destino**; só o container diz.
+
+- [ ] **O título do bloco "Leitor de tela" vira o primeiro item da própria lista, em 54 componentes.** (Aberto em 2026-09-06, ao revisar o conteúdo do popover.) As docs pages de react, vue, svelte e vanilla montam a lista assim:
+
+  ```
+  Object.values(traducoes[locale]?.accessibility?.screenReader ?? {})
+  ```
+
+  e `accessibility.screenReader` tem uma chave `title` junto com os itens. O resultado na tela é um `<h3>` "Leitor de tela" — que vem de `common.screenReader`, do dicionário de UI — seguido de um `<li>` dizendo "Leitor de Tela". O container não filtra: `DocsAccessibility` recebe `screenReaderItems` e imprime um `<li>` por entrada.
+
+  **Medido**: 54 dos 76 componentes com a seção têm a chave `title` dentro de `screenReader`; 22 não têm e escapam por acidente. São 4 stacks, então a conta de superfície é 54 × 4.
+
+  **O Angular não reproduz**, e é o que dá a forma do conserto: lá a lista é montada por chave nomeada, não por `Object.values` de um objeto que mistura título e itens.
+
+  Duas saídas, e a escolha é de quem pegar:
+
+  | saída | custo | risco |
+  |---|---|---|
+  | filtrar `title` no ponto de montagem das 4 stacks | 4 arquivos por componente que tenha docs page própria — ou um helper compartilhado, se houver um | nenhum; o `title` continua no JSON e volta a ter só o uso que já tem |
+  | tirar `title` de `screenReader` nos 54 | 54 arquivos × 3 idiomas | a chave pode estar em uso em alguma stack que a lê nominalmente |
+
+  **Como medir depois de consertar**: a asserção é que nenhum item da lista repita o texto do `<h3>` acima dela. Vale como portão genérico da seção, não só para esta chave — o mesmo defeito volta no dia em que outro objeto de conteúdo ganhar um `title` e for lido por `Object.values`.
 
 ### Divergência cross-stack do carrossel (3)
 
