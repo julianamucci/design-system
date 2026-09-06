@@ -29,7 +29,7 @@ export type SheetArgs = {
  * `navegacao` é o único que dispensa o rodapé: um menu não tem o que confirmar,
  * e a saída dele é o X do canto — é o que as outras quatro stacks já mostram.
  */
-type Body = 'nenhum' | 'texto' | 'formulario' | 'rolagem' | 'navegacao';
+type Body = 'nenhum' | 'texto' | 'formulario' | 'perfil' | 'rolagem' | 'navegacao' | 'acoes';
 
 type Options = Partial<SheetArgs> & { body?: Body };
 
@@ -46,20 +46,23 @@ const DEFAULT: SheetArgs & { body: Body } = {
 
 /** Peças do design system que a composição usa, na ordem em que se lê o painel. */
 function imports(body: Body): string {
+  // O menu não tem rodapé, e por isso não importa as peças dele: import morto
+  // no exemplo é a linha que quem copia apaga depois de descobrir sozinho.
+  const withoutFooter = body === 'navegacao';
   const parts = [
     'Sheet',
     body !== 'nenhum' ? 'SheetBody' : '',
-    'SheetClose',
+    withoutFooter ? '' : 'SheetClose',
     'SheetContent',
     'SheetDescription',
-    'SheetFooter',
+    withoutFooter ? '' : 'SheetFooter',
     'SheetHeader',
     'SheetTitle',
     'SheetTrigger',
   ].filter(Boolean);
 
   const extras = [`import { Button } from "@/components/ui/button";`];
-  if (body === 'formulario') {
+  if (body === 'formulario' || body === 'perfil') {
     extras.push(`import { Input } from "@/components/ui/input";`);
     extras.push(`import { Label } from "@/components/ui/label";`);
   }
@@ -83,18 +86,56 @@ function panelBody(body: Body): string {
 `;
   }
   if (body === 'formulario') {
+    // Empilhamento, e não grade: é o que a folha compartilhada define para
+    // formulário de painel, e o que o Vanilla renderiza.
     return `
     <SheetBody>
-      <form class="nds-grid" data-spacing="sm">
-        <div class="nds-grid" data-spacing="xs">
+      <form class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
           <Label for="sheet-nome">Nome</Label>
           <Input id="sheet-nome" value="Maria Silva" />
         </div>
-        <div class="nds-grid" data-spacing="xs">
+        <div class="nds-stack" data-spacing="xs">
           <Label for="sheet-email">Email</Label>
           <Input id="sheet-email" type="email" value="maria@exemplo.com" />
         </div>
       </form>
+    </SheetBody>
+`;
+  }
+  if (body === 'perfil') {
+    // Três campos, na ordem das outras stacks: Nome, Nome de usuário, Bio. O
+    // formulário genérico de filtros tem dois, e a edição de perfil deixava o
+    // do meio de fora quando os dois compartilhavam o mesmo corpo.
+    return `
+    <SheetBody>
+      <form class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="perfil-nome">Nome</Label>
+          <Input id="perfil-nome" value="Juliana Mucci" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="perfil-usuario">Nome de usuário</Label>
+          <Input id="perfil-usuario" value="@julianamucci" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="perfil-bio">Bio</Label>
+          <Input id="perfil-bio" value="Designer de sistemas em São Paulo" />
+        </div>
+      </form>
+    </SheetBody>
+`;
+  }
+  if (body === 'acoes') {
+    // Fileira de ações no lugar de formulário: a decisão é a própria ação
+    // clicada, e por isso o rodapé só oferece a saída.
+    return `
+    <SheetBody>
+      <div class="nds-cluster" data-spacing="md">
+        {#each acoes as acao (acao.label)}
+          <Button variant={acao.variant}>{acao.label}</Button>
+        {/each}
+      </div>
     </SheetBody>
 `;
   }
@@ -145,9 +186,19 @@ function panel(o: Options): string {
   // monta o painel — e continua voltando para lá a cada fechamento.
   const controlled = open !== undefined;
   const state = controlled ? `\n\nlet open = $state(${open});` : '';
+  // As CINCO seções: o conteúdo compartilhado descreve a lista, e uma stack com
+  // quatro documentava uma composição que não existe.
   const secoesList =
     body === 'navegacao'
-      ? `\n\nconst secoes = ['Dashboard', 'Projetos', 'Equipe', 'Configurações'];`
+      ? `\n\nconst secoes = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];`
+      : '';
+  const acoesList =
+    body === 'acoes'
+      ? `\n\nconst acoes = [
+  { label: 'Compartilhar', variant: 'outline' },
+  { label: 'Duplicar', variant: 'outline' },
+  { label: 'Excluir', variant: 'destructive' },
+];`
       : '';
   const paragrafosList =
     body === 'rolagem'
@@ -158,10 +209,23 @@ function panel(o: Options): string {
       : '';
 
   // Menu não confirma nada: sem rodapé, a saída é o X do canto.
+  //
+  // A fileira de ações fica no meio-termo: tem rodapé, mas só com a saída — a
+  // decisão já foi tomada no corpo, e repetir uma confirmação ali diria que
+  // falta um passo que não existe.
   const footerBlock =
     body === 'navegacao'
       ? ''
-      : `    <SheetFooter>
+      : body === 'acoes'
+        ? `    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>${cancelLabel}</Button>
+        {/snippet}
+      </SheetClose>
+    </SheetFooter>
+`
+        : `    <SheetFooter>
       <SheetClose>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>${cancelLabel}</Button>
@@ -172,7 +236,7 @@ function panel(o: Options): string {
 `;
 
   return svelteSnippet(
-    `${imports(body)}${state}${secoesList}${paragrafosList}`,
+    `${imports(body)}${state}${secoesList}${acoesList}${paragrafosList}`,
     `<Sheet${attrs(controlled ? 'bind:open' : '')}>
   <SheetTrigger>
     {#snippet child({ props })}
@@ -213,10 +277,10 @@ export function sheetFiltersAvancadosSource(): string {
 export function perfilSheetEditSource(): string {
   return panel({
     open: true,
-    body: 'formulario',
+    body: 'perfil',
     triggerLabel: 'Editar perfil',
     title: 'Editar perfil',
-    description: 'Atualize seu nome e e-mail. As mudanças são salvas ao confirmar.',
+    description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
     actionLabel: 'Salvar alterações',
   });
 }
@@ -243,5 +307,23 @@ export function sheetNavegacaoSecundariaSource(): string {
     triggerLabel: 'Abrir menu',
     title: 'Menu',
     description: 'Navegue entre as áreas do sistema.',
+  });
+}
+
+/**
+ * Composição: painel inferior com uma fileira de ações no corpo.
+ *
+ * O mesmo desenho do Drawer em tela estreita, sem o gesto de arrastar — quando
+ * o gesto faz parte da interação esperada, o componente é o Drawer.
+ */
+export function sheetBottomPanelSource(): string {
+  return panel({
+    open: true,
+    side: 'bottom',
+    body: 'acoes',
+    triggerLabel: 'Abrir ações',
+    title: 'Ações rápidas',
+    description: 'Escolha uma das ações disponíveis para este item.',
+    cancelLabel: 'Fechar',
   });
 }

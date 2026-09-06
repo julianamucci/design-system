@@ -160,12 +160,37 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 //
 // E o alcance não é só a demonstração: Do & Dont, Variantes e Composições
 // renderizam Sheets VIVOS — abrir um painel ali é tão real quanto na demo.
+// O `update:open` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o payload
+// de `dialog_close` promete `reason`. Os dois caminhos que a lib anuncia por
+// evento próprio ficam anotados aqui; o que sobra é o botão, tanto o X do canto
+// quanto a saída do rodapé, que fecham pelo mesmo `SheetClose`.
+//
+// Uma variável para a página inteira basta: o painel é modal, e nunca há dois
+// abertos ao mesmo tempo.
+type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
+let pendingCloseReason: SheetCloseReason | null = null;
+
+// Ouvintes prontos para `v-bind` no conteúdo: `escapeKeyDown` e
+// `pointerDownOutside` são emits do primitivo, e chegam lá pelo repasse do
+// SheetContent.
+const closeWatch = {
+  onEscapeKeyDown: () => { pendingCloseReason = 'escape'; },
+  onPointerDownOutside: () => { pendingCloseReason = 'overlay'; },
+};
+
 function rastrearSheet(location: string, side: string, open: boolean) {
-  track(open ? 'dialog_open' : 'dialog_close', {
+  if (open) {
+    pendingCloseReason = null;
+    track('dialog_open', { component: 'sheet', label: side, location });
+    return;
+  }
+  track('dialog_close', {
     component: 'sheet',
     label: side,
+    reason: pendingCloseReason ?? 'close-button',
     location,
   });
+  pendingCloseReason = null;
 }
 
 function rastrearConfirmacao(location: string, side: string, action = 'apply') {
@@ -190,23 +215,38 @@ const codeImportBasic = `import {
   SheetTrigger,
 } from "@/components/ui/sheet";`;
 
-const codeRight = `<Sheet>
+/**
+ * Snippet de uma direção, montado a partir das MESMAS chaves que o preview
+ * ao lado renderiza.
+ *
+ * Antes as três outras direções nasciam de `codeRight.replace('"right"',
+ * '"left"')`: a substituição trocava o lado e deixava o título de filtros no
+ * lugar, então o painel da imagem se chamava "Painel esquerdo" e o código
+ * dizia "Filtros avançados". Derivar snippet por substituição de string é a
+ * raiz do desencontro, e por isso ele agora nasce da chave.
+ */
+function codeSide(side: string, title: string): string {
+  return `<Sheet>
   <SheetTrigger as-child>
-    <Button variant="outline">Abrir filtros</Button>
+    <Button variant="outline">${tContent('demonstration.labels.trigger')}</Button>
   </SheetTrigger>
-  <SheetContent side="right">
+  <SheetContent side="${side}">
     <SheetHeader>
-      <SheetTitle>Filtros avançados</SheetTitle>
-      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+      <SheetTitle>${title}</SheetTitle>
+      <SheetDescription>${tContent('demonstration.labels.description')}</SheetDescription>
     </SheetHeader>
+    <SheetBody>
+      <p class="nds-text-body nds-text-muted-foreground">${tContent('demonstration.labels.body')}</p>
+    </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
-        <Button variant="outline">Cancelar</Button>
+        <Button variant="outline">${tContent('demonstration.labels.cancel')}</Button>
       </SheetClose>
-      <Button>Aplicar filtros</Button>
+      <Button>${tContent('demonstration.labels.apply')}</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`;
+}
 
 const codeCustomizationTokens = `/* Em globals.css — override do Sheet via tokens */
 :root {
@@ -250,114 +290,145 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { trackId: 'right', name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
-  { trackId: 'left', name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeRight.replace('"right"', '"left"') },
-  { trackId: 'top', name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeRight.replace('"right"', '"top"') },
-  { trackId: 'bottom', name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeRight.replace('"right"', '"bottom"') },
+  { trackId: 'right',  name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeSide('right',  tContent('demonstration.labels.rightLabel'))  },
+  { trackId: 'left',   name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeSide('left',   tContent('demonstration.labels.leftLabel'))   },
+  { trackId: 'top',    name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeSide('top',    tContent('demonstration.labels.topLabel'))    },
+  { trackId: 'bottom', name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeSide('bottom', tContent('demonstration.labels.bottomLabel')) },
 ]);
 
-const codeCompAdvancedFilters = `<Sheet>
+/**
+ * Lista que mora inteira no conteúdo compartilhado.
+ *
+ * `flattenDict` não desmonta array: o caminho da chave devolve a lista, e é
+ * dela que saem as seções do menu e a fileira de ações.
+ */
+function contentList(key: string): string[] {
+  const value = tContent(key) as unknown;
+  return Array.isArray(value) ? (value as string[]) : [];
+}
+
+function codeAdvancedFilters(): string {
+  return `<Sheet>
   <SheetTrigger as-child>
-    <Button variant="outline">Abrir filtros</Button>
+    <Button variant="outline">${tContent('demonstration.labels.trigger')}</Button>
   </SheetTrigger>
   <SheetContent side="right">
     <SheetHeader>
-      <SheetTitle>Filtros avançados</SheetTitle>
-      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+      <SheetTitle>${tContent('demonstration.labels.title')}</SheetTitle>
+      <SheetDescription>${tContent('demonstration.labels.description')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="filtros" class="nds-grid" data-spacing="md">
-        <Label for="cat">Categoria</Label>
-        <Input id="cat" default-value="Eletrônicos" />
-        <Label for="min">Preço mínimo</Label>
-        <Input id="min" type="number" default-value="100" />
+      <form id="filters" class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="category">${tContent('variants.compositions.advancedFilters.fieldCategory')}</Label>
+          <Input id="category" default-value="${tContent('variants.compositions.advancedFilters.categoryValue')}" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="min-price">${tContent('variants.compositions.advancedFilters.fieldMinPrice')}</Label>
+          <Input id="min-price" type="number" default-value="100" />
+        </div>
       </form>
     </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
-        <Button variant="outline">Cancelar</Button>
+        <Button variant="outline">${tContent('demonstration.labels.cancel')}</Button>
       </SheetClose>
-      <Button type="submit" form="filtros">Aplicar filtros</Button>
+      <Button type="submit" form="filters">${tContent('demonstration.labels.apply')}</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`;
+}
 
-const codeCompSecondaryNav = `<Sheet>
+function codeSecondaryNav(): string {
+  const links = contentList('variants.compositions.secondaryNavigation.items')
+    .map(
+      (item) =>
+        `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">${item}</a>`,
+    )
+    .join('\n');
+  return `<Sheet>
   <SheetTrigger as-child>
-    <Button variant="outline">Abrir menu</Button>
+    <Button variant="outline">${tContent('variants.compositions.secondaryNavigation.trigger')}</Button>
   </SheetTrigger>
   <SheetContent side="left">
     <SheetHeader>
-      <SheetTitle>Menu</SheetTitle>
-      <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+      <SheetTitle>${tContent('variants.compositions.secondaryNavigation.panelTitle')}</SheetTitle>
+      <SheetDescription>${tContent('variants.compositions.secondaryNavigation.panelDescription')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">
-        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
-        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
-        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+      <nav aria-label="${tContent('variants.compositions.secondaryNavigation.navLabel')}" class="nds-stack" data-spacing="xs">
+${links}
       </nav>
     </SheetBody>
   </SheetContent>
 </Sheet>`;
+}
 
-const codeCompProfileEdit = `<Sheet>
+function codeProfileEdit(): string {
+  return `<Sheet>
   <SheetTrigger as-child>
-    <Button variant="outline">Editar perfil</Button>
+    <Button variant="outline">${tContent('variants.compositions.profileEdit.trigger')}</Button>
   </SheetTrigger>
   <SheetContent side="right">
     <SheetHeader>
-      <SheetTitle>Editar perfil</SheetTitle>
-      <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+      <SheetTitle>${tContent('variants.compositions.profileEdit.panelTitle')}</SheetTitle>
+      <SheetDescription>${tContent('variants.compositions.profileEdit.panelDescription')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form class="nds-grid" data-spacing="sm">
-        <div class="nds-grid" data-spacing="xs">
-          <Label for="profile-name">Nome</Label>
-          <Input id="profile-name" default-value="Juliana Mucci" />
+      <form id="profile" class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="profile-name">${tContent('variants.compositions.profileEdit.fieldName')}</Label>
+          <Input id="profile-name" default-value="${tContent('variants.compositions.profileEdit.fieldNameValue')}" />
         </div>
-        <div class="nds-grid" data-spacing="xs">
-          <Label for="profile-handle">Username</Label>
-          <Input id="profile-handle" default-value="@julianamucci" />
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="profile-handle">${tContent('variants.compositions.profileEdit.fieldHandle')}</Label>
+          <Input id="profile-handle" default-value="${tContent('variants.compositions.profileEdit.fieldHandleValue')}" />
         </div>
-        <div class="nds-grid" data-spacing="xs">
-          <Label for="profile-bio">Bio</Label>
-          <Input id="profile-bio" default-value="Designer de sistemas em São Paulo" />
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="profile-bio">${tContent('variants.compositions.profileEdit.fieldBio')}</Label>
+          <Input id="profile-bio" default-value="${tContent('variants.compositions.profileEdit.fieldBioValue')}" />
         </div>
       </form>
     </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
-        <Button variant="outline">Cancelar</Button>
+        <Button variant="outline">${tContent('demonstration.labels.cancel')}</Button>
       </SheetClose>
-      <Button type="submit">Salvar alterações</Button>
+      <Button type="submit" form="profile">${tContent('variants.compositions.profileEdit.submit')}</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`;
+}
 
-const codeCompBottomPanel = `<Sheet>
+function codeBottomPanel(): string {
+  const actions = contentList('variants.compositions.bottomPanel.actions')
+    .map(
+      (action, index, list) =>
+        `        <Button variant="${index === list.length - 1 ? 'destructive' : 'outline'}">${action}</Button>`,
+    )
+    .join('\n');
+  return `<Sheet>
   <SheetTrigger as-child>
-    <Button variant="outline">Abrir ações</Button>
+    <Button variant="outline">${tContent('variants.compositions.bottomPanel.trigger')}</Button>
   </SheetTrigger>
   <SheetContent side="bottom">
     <SheetHeader>
-      <SheetTitle>Ações rápidas</SheetTitle>
-      <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+      <SheetTitle>${tContent('variants.compositions.bottomPanel.panelTitle')}</SheetTitle>
+      <SheetDescription>${tContent('variants.compositions.bottomPanel.panelDescription')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
       <div class="nds-cluster" data-spacing="md">
-        <Button variant="outline">Compartilhar</Button>
-        <Button variant="outline">Duplicar</Button>
-        <Button variant="destructive">Excluir</Button>
+${actions}
       </div>
     </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
-        <Button variant="outline">Fechar</Button>
+        <Button variant="outline">${tContent('variants.compositions.bottomPanel.close')}</Button>
       </SheetClose>
     </SheetFooter>
   </SheetContent>
 </Sheet>`;
+}
 
 const compositionItems = computed(() => [
   {
@@ -365,30 +436,50 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.advancedFilters.name'),
     description: tContent('variants.compositions.advancedFilters.description'),
     useWhen: tContent('variants.compositions.advancedFilters.use'),
-    code: codeCompAdvancedFilters,
+    code: codeAdvancedFilters(),
   },
   {
     trackId: 'secondaryNavigation',
     name: tContent('variants.compositions.secondaryNavigation.name'),
     description: tContent('variants.compositions.secondaryNavigation.description'),
     useWhen: tContent('variants.compositions.secondaryNavigation.use'),
-    code: codeCompSecondaryNav,
+    code: codeSecondaryNav(),
   },
   {
     trackId: 'profileEdit',
     name: tContent('variants.compositions.profileEdit.name'),
     description: tContent('variants.compositions.profileEdit.description'),
     useWhen: tContent('variants.compositions.profileEdit.use'),
-    code: codeCompProfileEdit,
+    code: codeProfileEdit(),
   },
   {
     trackId: 'bottomPanel',
     name: tContent('variants.compositions.bottomPanel.name'),
     description: tContent('variants.compositions.bottomPanel.description'),
     useWhen: tContent('variants.compositions.bottomPanel.use'),
-    code: codeCompBottomPanel,
+    code: codeBottomPanel(),
   },
 ]);
+
+/** As seções do menu, na ordem em que o conteúdo compartilhado as declara. */
+const secondaryNavItems = computed(() =>
+  contentList('variants.compositions.secondaryNavigation.items'),
+);
+
+/**
+ * A fileira de ações do painel inferior.
+ *
+ * A última é a destrutiva — é o conteúdo que decide quantas ações existem, e a
+ * posição é o que decide a variante, para que acrescentar uma quarta ação não
+ * exija mexer aqui.
+ */
+const bottomPanelActions = computed(() => {
+  const actions = contentList('variants.compositions.bottomPanel.actions');
+  return actions.map((label, index) => ({
+    label,
+    variant: index === actions.length - 1 ? ('destructive' as const) : ('outline' as const),
+  }));
+});
 
 const stateItems = computed(() => [
   { label: tContent('states.closed.label'),         trigger: toPlainText(tContent('states.closed.trigger')),         behavior: toPlainText(tContent('states.closed.behavior')) },
@@ -515,7 +606,10 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="right">
+          <SheetContent
+            side="right"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
@@ -626,7 +720,10 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="right">
+          <SheetContent
+            side="right"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
@@ -661,7 +758,10 @@ const a11yCritCols = computed(() => ({
               {{ tContent('doDont.pair1.dontTrigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="right">
+          <SheetContent
+            side="right"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle class="nds-sr-only">
                 {{ tContent('doDont.pair1.dontTitle') }}
@@ -695,7 +795,10 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="right">
+          <SheetContent
+            side="right"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
@@ -725,7 +828,10 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="top">
+          <SheetContent
+            side="top"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
@@ -761,6 +867,12 @@ const a11yCritCols = computed(() => ({
       :title="tContent('variants.title')"
       :items="variantItems"
     >
+      <!--
+        As quatro direções renderizam o MESMO painel: cabeçalho, corpo rolável e
+        rodapé. Três delas iam do cabeçalho direto ao fim, sem corpo e sem
+        rodapé, enquanto o snippet ao lado mostrava os três — a direção é o que
+        muda entre elas, e era a única coisa que não estava mudando sozinha.
+      -->
       <template #variant-preview-0>
         <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'right', o)">
           <SheetTrigger as-child>
@@ -768,11 +880,19 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="right">
+          <SheetContent
+            side="right"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.rightLabel') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
+            </SheetBody>
             <SheetFooter>
               <SheetClose as-child>
                 <Button variant="outline">
@@ -793,11 +913,29 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
+          <SheetContent
+            side="left"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.leftLabel') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
+            </SheetBody>
+            <SheetFooter>
+              <SheetClose as-child>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+              </SheetClose>
+              <Button @click="rastrearConfirmacao('docs_variantes', 'left')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
@@ -808,11 +946,29 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="top">
+          <SheetContent
+            side="top"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.topLabel') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
+            </SheetBody>
+            <SheetFooter>
+              <SheetClose as-child>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+              </SheetClose>
+              <Button @click="rastrearConfirmacao('docs_variantes', 'top')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
@@ -823,11 +979,29 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.trigger') }}
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom">
+          <SheetContent
+            side="bottom"
+            v-bind="closeWatch"
+          >
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.bottomLabel') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.body') }}
+              </p>
+            </SheetBody>
+            <SheetFooter>
+              <SheetClose as-child>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+              </SheetClose>
+              <Button @click="rastrearConfirmacao('docs_variantes', 'bottom')">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </template>
@@ -840,6 +1014,15 @@ const a11yCritCols = computed(() => ({
       component-slug="sheet"
       :items="compositionItems"
     >
+      <!--
+        Os quatro previews montam o corpo dentro do SheetBody, e não solto no
+        conteúdo com um recuo à mão: é ele que traz a área que rola, o
+        `tabindex` que a região rolável exige e o `role="group"` que dá nome a
+        ela. Sem ele o rodapé rola junto e as ações somem de alcance.
+
+        O texto vem TODO de chave: literal em português mostrava português nas
+        páginas em inglês e espanhol, no meio de uma seção traduzida.
+      -->
       <template #variant-preview-0>
         <div style="contain: layout">
           <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'right', o)">
@@ -848,35 +1031,55 @@ const a11yCritCols = computed(() => ({
                 {{ tContent('demonstration.labels.trigger') }}
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent
+              side="right"
+              v-bind="closeWatch"
+            >
               <SheetHeader>
-                <SheetTitle>Filtros avançados</SheetTitle>
-                <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+                <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
+                <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
               </SheetHeader>
-              <form
-                class="nds-grid nds-px-4"
-                data-spacing="md"
-              >
-                <Label for="comp-cat">{{ tContent('variants.compositions.advancedFilters.fieldCategory') }}</Label>
-                <Input
-                  id="comp-cat"
-                  default-value="Eletrônicos"
-                />
-                <Label for="comp-min">{{ tContent('variants.compositions.advancedFilters.fieldMinPrice') }}</Label>
-                <Input
-                  id="comp-min"
-                  type="number"
-                  default-value="100"
-                />
-              </form>
+              <SheetBody>
+                <form
+                  id="docs-sheet-filters"
+                  class="nds-stack"
+                  data-spacing="sm"
+                >
+                  <div
+                    class="nds-stack"
+                    data-spacing="xs"
+                  >
+                    <Label for="comp-category">{{ tContent('variants.compositions.advancedFilters.fieldCategory') }}</Label>
+                    <Input
+                      id="comp-category"
+                      :default-value="tContent('variants.compositions.advancedFilters.categoryValue')"
+                    />
+                  </div>
+                  <div
+                    class="nds-stack"
+                    data-spacing="xs"
+                  >
+                    <Label for="comp-min-price">{{ tContent('variants.compositions.advancedFilters.fieldMinPrice') }}</Label>
+                    <Input
+                      id="comp-min-price"
+                      type="number"
+                      default-value="100"
+                    />
+                  </div>
+                </form>
+              </SheetBody>
               <SheetFooter>
                 <SheetClose as-child>
                   <Button variant="outline">
-                    Cancelar
+                    {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </SheetClose>
-                <Button @click="rastrearConfirmacao('docs_composicoes', 'right')">
-                  Aplicar filtros
+                <Button
+                  type="submit"
+                  form="docs-sheet-filters"
+                  @click="rastrearConfirmacao('docs_composicoes', 'right')"
+                >
+                  {{ tContent('demonstration.labels.apply') }}
                 </Button>
               </SheetFooter>
             </SheetContent>
@@ -888,36 +1091,31 @@ const a11yCritCols = computed(() => ({
           <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'left', o)">
             <SheetTrigger as-child>
               <Button variant="outline">
-                {{ tContent('demonstration.labels.trigger') }}
+                {{ tContent('variants.compositions.secondaryNavigation.trigger') }}
               </Button>
             </SheetTrigger>
-            <SheetContent side="left">
+            <SheetContent
+              side="left"
+              v-bind="closeWatch"
+            >
               <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-                <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+                <SheetTitle>{{ tContent('variants.compositions.secondaryNavigation.panelTitle') }}</SheetTitle>
+                <SheetDescription>{{ tContent('variants.compositions.secondaryNavigation.panelDescription') }}</SheetDescription>
               </SheetHeader>
-              <nav
-                aria-label="Navegação secundária"
-                class="nds-stack nds-px-4"
-                data-spacing="xs"
-              >
-                <a
-                  href="#"
-                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
-                >Dashboard</a>
-                <a
-                  href="#"
-                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
-                >Projetos</a>
-                <a
-                  href="#"
-                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
-                >Equipe</a>
-                <a
-                  href="#"
-                  class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
-                >Configurações</a>
-              </nav>
+              <SheetBody>
+                <nav
+                  :aria-label="tContent('variants.compositions.secondaryNavigation.navLabel')"
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <a
+                    v-for="item in secondaryNavItems"
+                    :key="item"
+                    href="#"
+                    class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
+                  >{{ item }}</a>
+                </nav>
+              </SheetBody>
             </SheetContent>
           </Sheet>
         </div>
@@ -927,60 +1125,67 @@ const a11yCritCols = computed(() => ({
           <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'right', o)">
             <SheetTrigger as-child>
               <Button variant="outline">
-                {{ tContent('demonstration.labels.trigger') }}
+                {{ tContent('variants.compositions.profileEdit.trigger') }}
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent
+              side="right"
+              v-bind="closeWatch"
+            >
               <SheetHeader>
-                <SheetTitle>Editar perfil</SheetTitle>
-                <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+                <SheetTitle>{{ tContent('variants.compositions.profileEdit.panelTitle') }}</SheetTitle>
+                <SheetDescription>{{ tContent('variants.compositions.profileEdit.panelDescription') }}</SheetDescription>
               </SheetHeader>
-              <form
-                class="nds-grid nds-px-4"
-                data-spacing="sm"
-              >
-                <div
-                  class="nds-grid"
-                  data-spacing="xs"
+              <SheetBody>
+                <form
+                  id="docs-sheet-profile"
+                  class="nds-stack"
+                  data-spacing="sm"
                 >
-                  <Label for="comp-profile-name">Nome</Label>
-                  <Input
-                    id="comp-profile-name"
-                    default-value="Juliana Mucci"
-                  />
-                </div>
-                <div
-                  class="nds-grid"
-                  data-spacing="xs"
-                >
-                  <Label for="comp-profile-handle">Username</Label>
-                  <Input
-                    id="comp-profile-handle"
-                    default-value="@julianamucci"
-                  />
-                </div>
-                <div
-                  class="nds-grid"
-                  data-spacing="xs"
-                >
-                  <Label for="comp-profile-bio">Bio</Label>
-                  <Input
-                    id="comp-profile-bio"
-                    default-value="Designer de sistemas em São Paulo"
-                  />
-                </div>
-              </form>
+                  <div
+                    class="nds-stack"
+                    data-spacing="xs"
+                  >
+                    <Label for="comp-profile-name">{{ tContent('variants.compositions.profileEdit.fieldName') }}</Label>
+                    <Input
+                      id="comp-profile-name"
+                      :default-value="tContent('variants.compositions.profileEdit.fieldNameValue')"
+                    />
+                  </div>
+                  <div
+                    class="nds-stack"
+                    data-spacing="xs"
+                  >
+                    <Label for="comp-profile-handle">{{ tContent('variants.compositions.profileEdit.fieldHandle') }}</Label>
+                    <Input
+                      id="comp-profile-handle"
+                      :default-value="tContent('variants.compositions.profileEdit.fieldHandleValue')"
+                    />
+                  </div>
+                  <div
+                    class="nds-stack"
+                    data-spacing="xs"
+                  >
+                    <Label for="comp-profile-bio">{{ tContent('variants.compositions.profileEdit.fieldBio') }}</Label>
+                    <Input
+                      id="comp-profile-bio"
+                      :default-value="tContent('variants.compositions.profileEdit.fieldBioValue')"
+                    />
+                  </div>
+                </form>
+              </SheetBody>
               <SheetFooter>
                 <SheetClose as-child>
                   <Button variant="outline">
-                    Cancelar
+                    {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </SheetClose>
                 <Button
                   type="submit"
+                  form="docs-sheet-profile"
                   @click="rastrearConfirmacao('docs_composicoes', 'right', 'save')"
                 >
-                  Salvar alterações
+                  {{ tContent('variants.compositions.profileEdit.submit') }}
                 </Button>
               </SheetFooter>
             </SheetContent>
@@ -992,32 +1197,35 @@ const a11yCritCols = computed(() => ({
           <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'bottom', o)">
             <SheetTrigger as-child>
               <Button variant="outline">
-                {{ tContent('demonstration.labels.trigger') }}
+                {{ tContent('variants.compositions.bottomPanel.trigger') }}
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom">
+            <SheetContent
+              side="bottom"
+              v-bind="closeWatch"
+            >
               <SheetHeader>
-                <SheetTitle>Ações rápidas</SheetTitle>
-                <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+                <SheetTitle>{{ tContent('variants.compositions.bottomPanel.panelTitle') }}</SheetTitle>
+                <SheetDescription>{{ tContent('variants.compositions.bottomPanel.panelDescription') }}</SheetDescription>
               </SheetHeader>
-              <div
-                class="nds-cluster nds-px-4"
-                data-spacing="md"
-              >
-                <Button variant="outline">
-                  Compartilhar
-                </Button>
-                <Button variant="outline">
-                  Duplicar
-                </Button>
-                <Button variant="destructive">
-                  Excluir
-                </Button>
-              </div>
+              <SheetBody>
+                <div
+                  class="nds-cluster"
+                  data-spacing="md"
+                >
+                  <Button
+                    v-for="action in bottomPanelActions"
+                    :key="action.label"
+                    :variant="action.variant"
+                  >
+                    {{ action.label }}
+                  </Button>
+                </div>
+              </SheetBody>
               <SheetFooter>
                 <SheetClose as-child>
                   <Button variant="outline">
-                    Fechar
+                    {{ tContent('variants.compositions.bottomPanel.close') }}
                   </Button>
                 </SheetClose>
               </SheetFooter>

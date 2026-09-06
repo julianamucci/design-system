@@ -27,6 +27,21 @@ export type SheetArgs = {
 const LABEL_TRIGGER = 'Abrir filtros';
 
 /**
+ * As cinco seções da navegação secundária.
+ *
+ * A lista é a mesma nas cinco stacks — o conteúdo compartilhado a descreve, e
+ * uma stack com quatro itens documenta uma composição que não existe.
+ */
+const NAV_SECTIONS = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];
+
+/** A fileira de ações do painel inferior, com a destrutiva por último. */
+const BOTTOM_ACTIONS: Array<[string, 'outline' | 'destructive']> = [
+  ['Compartilhar', 'outline'],
+  ['Duplicar', 'outline'],
+  ['Excluir', 'destructive'],
+];
+
+/**
  * Import do design system com as peças que a composição usa.
  *
  * `SheetOverlay` não entra em lista nenhuma: ele não é exportado do pacote — o
@@ -47,6 +62,23 @@ function header(title: string, descricao: string, recuo = 2): string {
 ${p}  <SheetTitle>${title}</SheetTitle>
 ${p}  <SheetDescription>${descricao}</SheetDescription>
 ${p}</SheetHeader>`;
+}
+
+/**
+ * Corpo rolável do painel canônico.
+ *
+ * O Playground RENDERIZA este parágrafo, e o snippet ia do cabeçalho direto ao
+ * rodapé: quem copiasse recebia um painel sem a área que rola — justamente a
+ * peça que o `SheetBody` existe para trazer, e a que a docs page apresenta.
+ */
+function body(recuo = 2): string {
+  const p = ' '.repeat(recuo);
+  return `${p}<SheetBody>
+${p}  <p class="nds-text-body nds-text-muted-foreground">
+${p}    Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o
+${p}    conteúdo passa da altura da tela.
+${p}  </p>
+${p}</SheetBody>`;
 }
 
 /**
@@ -87,6 +119,7 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
   );
   return vueSnippet(
     `${importing([
+      'SheetBody',
       'SheetClose',
       'SheetContent',
       'SheetDescription',
@@ -99,6 +132,7 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
 ${TRIGGER(text(args.triggerLabel, LABEL_TRIGGER))}
   <SheetContent${content}>
 ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
+${body(4)}
 ${footer('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
@@ -263,7 +297,7 @@ ${header(
 /** Campos empilhados dentro do corpo rolável, com rótulo ligado ao campo. */
 function field(id: string, label: string, value: string, recuo: number): string {
   const p = ' '.repeat(recuo);
-  return `${p}<div class="nds-grid" data-spacing="xs">
+  return `${p}<div class="nds-stack" data-spacing="xs">
 ${p}  <Label for="${id}">${label}</Label>
 ${p}  <Input id="${id}" default-value="${value}" />
 ${p}</div>`;
@@ -291,7 +325,7 @@ ${FIELD}`,
   <SheetContent>
 ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
     <SheetBody>
-      <div class="nds-grid" data-spacing="md">
+      <div class="nds-stack" data-spacing="sm">
 ${field('cat', 'Categoria', 'Componentes', 8)}
 ${field('status', 'Status', 'Estável', 8)}
 ${field('lang', 'Idioma', 'Português', 8)}
@@ -328,9 +362,9 @@ ${header(
   4,
 )}
     <SheetBody>
-      <form class="nds-grid" data-spacing="sm">
+      <form class="nds-stack" data-spacing="sm">
 ${field('profile-name', 'Nome', 'Juliana Mucci', 8)}
-${field('profile-handle', 'Username', '@julianamucci', 8)}
+${field('profile-handle', 'Nome de usuário', '@julianamucci', 8)}
 ${field('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
       </form>
     </SheetBody>
@@ -350,13 +384,10 @@ ${field('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
  * ação. O `nav` leva nome próprio porque a página tem outra navegação.
  */
 export function sheetNavigationSecundariaSource(): string {
-  const sections = ['Dashboard', 'Componentes', 'Tokens', 'Documentação', 'Configurações'];
-  const links = sections
-    .map(
-      (section) =>
-        `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">${section}</a>`,
-    )
-    .join('\n');
+  const links = NAV_SECTIONS.map(
+    (section) =>
+      `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">${section}</a>`,
+  ).join('\n');
   return vueSnippet(
     importing([
       'SheetBody',
@@ -367,12 +398,52 @@ export function sheetNavigationSecundariaSource(): string {
     ]),
     `<Sheet default-open>
   <SheetContent side="left">
-${header('Navegação', 'Acesse as seções principais da aplicação.', 4)}
+${header('Menu', 'Navegue entre as áreas do sistema.', 4)}
     <SheetBody>
-      <nav class="nds-stack" data-spacing="xs" aria-label="Seções">
+      <nav class="nds-stack" data-spacing="xs" aria-label="Navegação secundária">
 ${links}
       </nav>
     </SheetBody>
+  </SheetContent>
+</Sheet>`,
+  );
+}
+
+/**
+ * Painel inferior: uma fileira de ações no corpo, no lugar de formulário.
+ *
+ * Sem confirmação nenhuma no rodapé — a decisão é a própria ação clicada, e o
+ * rodapé só oferece a saída. É o que separa esta composição do painel de
+ * filtros, que confirma.
+ */
+export function sheetBottomPanelSource(): string {
+  const actions = BOTTOM_ACTIONS.map(
+    ([label, variant]) => `        <Button variant="${variant}">${label}</Button>`,
+  ).join('\n');
+  return vueSnippet(
+    `${importing([
+      'SheetBody',
+      'SheetClose',
+      'SheetContent',
+      'SheetDescription',
+      'SheetFooter',
+      'SheetHeader',
+      'SheetTitle',
+    ])}
+${BUTTON}`,
+    `<Sheet default-open>
+  <SheetContent side="bottom">
+${header('Ações rápidas', 'Escolha uma das ações disponíveis para este item.', 4)}
+    <SheetBody>
+      <div class="nds-cluster" data-spacing="md">
+${actions}
+      </div>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose as-child>
+        <Button variant="outline">Fechar</Button>
+      </SheetClose>
+    </SheetFooter>
   </SheetContent>
 </Sheet>`,
   );

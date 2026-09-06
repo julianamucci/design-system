@@ -13,9 +13,10 @@ import {
   SheetTrigger,
 } from "./sheet";
 import {
-  sheetSideEsquerdoSource,
-  sheetSideInferiorSource,
-  sheetSideSuperiorSource,
+  sheetSideBottomSource,
+  sheetSideLeftSource,
+  sheetSideRightSource,
+  sheetSideTopSource,
   sheetSource,
 } from "./sheet.source";
 import { Button } from "./button";
@@ -93,6 +94,10 @@ export const Right: Story = {
   parameters: {
     covers: ["accessibility.item1", "accessibility.item2", "visual.item1"],
     docs: {
+      // Sem transform próprio esta story caía no do `meta`, que lê os controls
+      // do Playground: o painel Code publicava "Filtros avançados" enquanto o
+      // preview ao lado mostrava "Painel direito".
+      source: { transform: sheetSideRightSource },
       description: {
         story:
           "Padrão para desktop — desliza da direita e ocupa 75% da largura, com teto de 24rem. " +
@@ -116,7 +121,7 @@ export const Left: Story = {
     covers: ["visual.item2"],
     docs: {
       // A direção é afirmada no `render` e não há control neste arquivo.
-      source: { transform: sheetSideEsquerdoSource },
+      source: { transform: sheetSideLeftSource },
       description: {
         story:
           "Desliza da esquerda. Mesma medida do right, do outro lado — é a direção da " +
@@ -138,7 +143,7 @@ export const Top: Story = {
   parameters: {
     docs: {
       // A direção é afirmada no `render` e não há control neste arquivo.
-      source: { transform: sheetSideSuperiorSource },
+      source: { transform: sheetSideTopSource },
       description: {
         story:
           "Desliza do topo e ocupa a largura inteira, com altura definida pelo conteúdo. " +
@@ -161,7 +166,7 @@ export const Bottom: Story = {
     covers: ["visual.item3"],
     docs: {
       // A direção é afirmada no `render` e não há control neste arquivo.
-      source: { transform: sheetSideInferiorSource },
+      source: { transform: sheetSideBottomSource },
       description: {
         story:
           "Desliza de baixo — o mesmo desenho do Drawer, sem o gesto de arrastar. " +

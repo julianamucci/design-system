@@ -84,6 +84,40 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
+/**
+ * Snippet de uma direção — o MESMO painel nas quatro, e só a borda e o título
+ * mudam.
+ *
+ * Sai de função porque os quatro previews desta seção são o mesmo `SheetDemo`:
+ * com quatro literais soltos, três deles passaram a ensinar painéis que ninguém
+ * renderiza ("Navegação", "Notificações", "Ações rápidas", em fragmento sem
+ * gatilho nem rodapé) e o quarto publicava o título do Playground. O texto vem
+ * em português, como todo snippet copiável do design system.
+ */
+const codeForSide = (side: string, title: string) => `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
+  <SheetContent side="${side}">
+    <SheetHeader>
+      <SheetTitle>${title}</SheetTitle>
+      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+    </SheetHeader>
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <Button>Aplicar filtros</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+
+/**
+ * Lista do conteúdo compartilhado. `t()` devolve o valor cru e o achatamento
+ * preserva array inteiro; a checagem existe porque chave ausente volta como o
+ * próprio caminho, e um `.map` sobre string renderizaria letra por letra.
+ */
+function listFromContent(t: (key: string) => string, key: string): string[] {
+  const value = t(key) as unknown;
+  return Array.isArray(value) ? (value as string[]) : [];
+}
+
 type DemoProps = {
   trigger: string;
   title: string;
@@ -98,6 +132,7 @@ type DemoProps = {
 type FiltersFormDemoProps = DemoProps & {
   fieldCategory: string;
   fieldMinPrice: string;
+  categoryValue: string;
 };
 
 function SheetDemo({ trigger, title, description, cancel, apply, body, side = "right", location }: DemoProps) {
@@ -146,7 +181,7 @@ function SheetDemo({ trigger, title, description, cancel, apply, body, side = "r
   );
 }
 
-function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCategory, fieldMinPrice, location }: FiltersFormDemoProps) {
+function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCategory, fieldMinPrice, categoryValue, location }: FiltersFormDemoProps) {
   const side = "right";
   return (
     <div style={{ contain: "layout" }}>
@@ -169,10 +204,12 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
             <SheetDescription>{description}</SheetDescription>
           </SheetHeader>
           <SheetBody>
+            {/* `nds-stack` com `sm` fora e `xs` no par rótulo ↔ campo é o ritmo
+                do Vanilla, referência de markup da casa. */}
             <form
-              id="docs-sheet-filtros"
-              className="nds-grid"
-              data-spacing="md"
+              id="docs-sheet-filters"
+              className="nds-stack"
+              data-spacing="sm"
               onSubmit={(e) => {
                 e.preventDefault();
                 track("dialog_confirm", {
@@ -182,11 +219,13 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
                 });
               }}
             >
-              <div className="nds-grid" data-spacing="xs">
+              <div className="nds-stack" data-spacing="xs">
                 <Label htmlFor="docs-sheet-category">{fieldCategory}</Label>
-                <Input id="docs-sheet-category" defaultValue="Eletrônicos" />
+                {/* O valor de exemplo é conteúdo, não fixture: cravado, a
+                    página em en/es mostrava "Eletrônicos" dentro do campo. */}
+                <Input id="docs-sheet-category" defaultValue={categoryValue} />
               </div>
-              <div className="nds-grid" data-spacing="xs">
+              <div className="nds-stack" data-spacing="xs">
                 <Label htmlFor="docs-sheet-min">{fieldMinPrice}</Label>
                 <Input id="docs-sheet-min" type="number" defaultValue="100" />
               </div>
@@ -198,7 +237,7 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
             <SheetClose render={<Button type="button" variant="outline" />}>
               {cancel}
             </SheetClose>
-            <Button type="submit" form="docs-sheet-filtros">{apply}</Button>
+            <Button type="submit" form="docs-sheet-filters">{apply}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -221,6 +260,17 @@ export function SheetDocs() {
         >)[locale]?.accessibility?.screenReader ?? {},
       ),
     [locale],
+  );
+
+  // Listas das composições: o `t()` só devolve string, então as duas passam
+  // por `listFromContent`, que é onde a forma do valor é conferida uma vez.
+  const navigationItems = useMemo(
+    () => listFromContent(tContent, "variants.compositions.secondaryNavigation.items"),
+    [tContent],
+  );
+  const bottomPanelActions = useMemo(
+    () => listFromContent(tContent, "variants.compositions.bottomPanel.actions"),
+    [tContent],
   );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
@@ -276,41 +326,10 @@ export function SheetDocs() {
   SheetTrigger,
 } from "@/components/ui/sheet";`;
 
-  const codeRight = `<Sheet>
-  <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
-  <SheetContent side="right">
-    <SheetHeader>
-      <SheetTitle>Filtros avançados</SheetTitle>
-      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
-    </SheetHeader>
-    <SheetFooter>
-      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-      <Button>Aplicar filtros</Button>
-    </SheetFooter>
-  </SheetContent>
-</Sheet>`;
-
-  const codeLeft = `<SheetContent side="left">
-  <SheetHeader>
-    <SheetTitle>Navegação</SheetTitle>
-    <SheetDescription>Acesse seções secundárias do app.</SheetDescription>
-  </SheetHeader>
-  {/* itens de menu */}
-</SheetContent>`;
-
-  const codeTop = `<SheetContent side="top">
-  <SheetHeader>
-    <SheetTitle>Notificações</SheetTitle>
-    <SheetDescription>Avisos importantes deslizam do topo.</SheetDescription>
-  </SheetHeader>
-</SheetContent>`;
-
-  const codeBottom = `<SheetContent side="bottom">
-  <SheetHeader>
-    <SheetTitle>Ações rápidas</SheetTitle>
-    <SheetDescription>Compartilhar, duplicar ou excluir.</SheetDescription>
-  </SheetHeader>
-</SheetContent>`;
+  const codeRight = codeForSide("right", "Painel direito");
+  const codeLeft = codeForSide("left", "Painel esquerdo");
+  const codeTop = codeForSide("top", "Painel superior");
+  const codeBottom = codeForSide("bottom", "Painel inferior");
 
   return (
     <DocsPageLayout
@@ -634,16 +653,20 @@ export function SheetDocs() {
       <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="filtros" className="nds-grid" data-spacing="md">
-        <Label htmlFor="cat">Categoria</Label>
-        <Input id="cat" defaultValue="Eletrônicos" />
-        <Label htmlFor="min">Preço mínimo</Label>
-        <Input id="min" type="number" defaultValue="100" />
+      <form id="filters" className="nds-stack" data-spacing="sm">
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="category">Categoria</Label>
+          <Input id="category" defaultValue="Eletrônicos" />
+        </div>
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="min">Preço mínimo</Label>
+          <Input id="min" type="number" defaultValue="100" />
+        </div>
       </form>
     </SheetBody>
     <SheetFooter>
       <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-      <Button type="submit" form="filtros">Aplicar filtros</Button>
+      <Button type="submit" form="filters">Aplicar filtros</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`,
@@ -656,6 +679,7 @@ export function SheetDocs() {
                 apply={tContent("demonstration.labels.apply")}
                 fieldCategory={tContent("variants.compositions.advancedFilters.fieldCategory")}
                 fieldMinPrice={tContent("variants.compositions.advancedFilters.fieldMinPrice")}
+                categoryValue={tContent("variants.compositions.advancedFilters.categoryValue")}
                 location="docs_composicoes"
               />
             ),
@@ -674,10 +698,11 @@ export function SheetDocs() {
     </SheetHeader>
     <SheetBody>
       <nav aria-label="Navegação secundária" className="nds-stack" data-spacing="xs">
-      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
-      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
-      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
-      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
+        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
+        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
+        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Faturas</a>
       </nav>
     </SheetBody>
   </SheetContent>
@@ -694,18 +719,36 @@ export function SheetDocs() {
                     })
                   }
                 >
-                  <SheetTrigger render={<Button variant="outline" />}>Abrir menu</SheetTrigger>
+                  <SheetTrigger render={<Button variant="outline" />}>
+                    {tContent("variants.compositions.secondaryNavigation.trigger")}
+                  </SheetTrigger>
                   <SheetContent side="left">
                     <SheetHeader>
-                      <SheetTitle>Menu</SheetTitle>
-                      <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+                      <SheetTitle>
+                        {tContent("variants.compositions.secondaryNavigation.panelTitle")}
+                      </SheetTitle>
+                      <SheetDescription>
+                        {tContent("variants.compositions.secondaryNavigation.panelDescription")}
+                      </SheetDescription>
                     </SheetHeader>
                     <SheetBody>
-                      <nav aria-label="Navegação secundária" className="nds-stack" data-spacing="xs">
-                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
-                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
-                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
-                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
+                      {/* O nome da <nav> vem do conteúdo compartilhado: é ele
+                          que o leitor de tela anuncia, e cravado em português
+                          a página em en/es anunciava no idioma errado. */}
+                      <nav
+                        aria-label={tContent("variants.compositions.secondaryNavigation.navLabel")}
+                        className="nds-stack"
+                        data-spacing="xs"
+                      >
+                        {navigationItems.map((item) => (
+                          <a
+                            key={item}
+                            href="#"
+                            className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
+                          >
+                            {item}
+                          </a>
+                        ))}
                       </nav>
                     </SheetBody>
                   </SheetContent>
@@ -726,18 +769,24 @@ export function SheetDocs() {
       <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="perfil" className="nds-grid" data-spacing="sm">
-        <Label htmlFor="nome">Nome</Label>
-        <Input id="nome" defaultValue="Juliana Mucci" />
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" defaultValue="@julianamucci" />
-        <Label htmlFor="bio">Bio</Label>
-        <Input id="bio" defaultValue="Designer de sistemas em São Paulo" />
+      <form id="profile" className="nds-stack" data-spacing="sm">
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="name">Nome</Label>
+          <Input id="name" defaultValue="Juliana Mucci" />
+        </div>
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="handle">Nome de usuário</Label>
+          <Input id="handle" defaultValue="@julianamucci" />
+        </div>
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="bio">Bio</Label>
+          <Input id="bio" defaultValue="Designer de sistemas em São Paulo" />
+        </div>
       </form>
     </SheetBody>
     <SheetFooter>
       <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-      <Button type="submit" form="perfil">Salvar alterações</Button>
+      <Button type="submit" form="profile">Salvar alterações</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`,
@@ -753,46 +802,71 @@ export function SheetDocs() {
                     })
                   }
                 >
-                  <SheetTrigger render={<Button variant="outline" />}>Editar perfil</SheetTrigger>
+                  <SheetTrigger render={<Button variant="outline" />}>
+                    {tContent("variants.compositions.profileEdit.trigger")}
+                  </SheetTrigger>
                   <SheetContent side="right">
                     <SheetHeader>
-                      <SheetTitle>Editar perfil</SheetTitle>
+                      <SheetTitle>
+                        {tContent("variants.compositions.profileEdit.panelTitle")}
+                      </SheetTitle>
                       <SheetDescription>
-                        Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
+                        {tContent("variants.compositions.profileEdit.panelDescription")}
                       </SheetDescription>
                     </SheetHeader>
                     <SheetBody>
-                      <form id="docs-sheet-perfil" className="nds-grid" data-spacing="sm">
-                        <div className="nds-grid" data-spacing="xs">
-                          <Label htmlFor="docs-sheet-profile-name">Nome</Label>
-                          <Input id="docs-sheet-profile-name" defaultValue="Juliana Mucci" />
+                      <form
+                        id="docs-sheet-profile"
+                        className="nds-stack"
+                        data-spacing="sm"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          track("dialog_confirm", {
+                            component: "sheet",
+                            action: "save",
+                            location: "docs_composicoes",
+                          });
+                        }}
+                      >
+                        <div className="nds-stack" data-spacing="xs">
+                          <Label htmlFor="docs-sheet-profile-name">
+                            {tContent("variants.compositions.profileEdit.fieldName")}
+                          </Label>
+                          <Input
+                            id="docs-sheet-profile-name"
+                            defaultValue={tContent("variants.compositions.profileEdit.fieldNameValue")}
+                          />
                         </div>
-                        <div className="nds-grid" data-spacing="xs">
-                          <Label htmlFor="docs-sheet-profile-handle">Username</Label>
-                          <Input id="docs-sheet-profile-handle" defaultValue="@julianamucci" />
+                        <div className="nds-stack" data-spacing="xs">
+                          <Label htmlFor="docs-sheet-profile-handle">
+                            {tContent("variants.compositions.profileEdit.fieldHandle")}
+                          </Label>
+                          <Input
+                            id="docs-sheet-profile-handle"
+                            defaultValue={tContent("variants.compositions.profileEdit.fieldHandleValue")}
+                          />
                         </div>
-                        <div className="nds-grid" data-spacing="xs">
-                          <Label htmlFor="docs-sheet-profile-bio">Bio</Label>
-                          <Input id="docs-sheet-profile-bio" defaultValue="Designer de sistemas em São Paulo" />
+                        <div className="nds-stack" data-spacing="xs">
+                          <Label htmlFor="docs-sheet-profile-bio">
+                            {tContent("variants.compositions.profileEdit.fieldBio")}
+                          </Label>
+                          <Input
+                            id="docs-sheet-profile-bio"
+                            defaultValue={tContent("variants.compositions.profileEdit.fieldBioValue")}
+                          />
                         </div>
                       </form>
                     </SheetBody>
                     <SheetFooter>
                       <SheetClose render={<Button type="button" variant="outline" />}>
-                        Cancelar
+                        {tContent("demonstration.labels.cancel")}
                       </SheetClose>
-                      <Button
-                        type="submit"
-                        form="docs-sheet-perfil"
-                        onClick={() =>
-                          track("dialog_confirm", {
-                            component: "sheet",
-                            action: "save",
-                            location: "docs_composicoes",
-                          })
-                        }
-                      >
-                        Salvar alterações
+                      {/* Quem confirma é o ENVIO do formulário: o rodapé mora
+                          fora do corpo rolável, e só o atributo `form` liga o
+                          botão ao `form` — é o que faz o Enter num campo valer
+                          tanto quanto o clique. */}
+                      <Button type="submit" form="docs-sheet-profile">
+                        {tContent("variants.compositions.profileEdit.submit")}
                       </Button>
                     </SheetFooter>
                   </SheetContent>
@@ -836,23 +910,38 @@ export function SheetDocs() {
                     })
                   }
                 >
-                  <SheetTrigger render={<Button variant="outline" />}>Abrir ações</SheetTrigger>
+                  <SheetTrigger render={<Button variant="outline" />}>
+                    {tContent("variants.compositions.bottomPanel.trigger")}
+                  </SheetTrigger>
                   <SheetContent side="bottom">
                     <SheetHeader>
-                      <SheetTitle>Ações rápidas</SheetTitle>
+                      <SheetTitle>
+                        {tContent("variants.compositions.bottomPanel.panelTitle")}
+                      </SheetTitle>
                       <SheetDescription>
-                        Escolha uma das ações disponíveis para este item.
+                        {tContent("variants.compositions.bottomPanel.panelDescription")}
                       </SheetDescription>
                     </SheetHeader>
                     <SheetBody>
                       <div className="nds-cluster" data-spacing="md">
-                        <Button variant="outline">Compartilhar</Button>
-                        <Button variant="outline">Duplicar</Button>
-                        <Button variant="destructive">Excluir</Button>
+                        {/* A destrutiva é a ÚLTIMA e a única com a variante que
+                            a anuncia — a ordem vem do conteúdo compartilhado. */}
+                        {bottomPanelActions.map((action, index) => (
+                          <Button
+                            key={action}
+                            variant={
+                              index === bottomPanelActions.length - 1 ? "destructive" : "outline"
+                            }
+                          >
+                            {action}
+                          </Button>
+                        ))}
                       </div>
                     </SheetBody>
                     <SheetFooter>
-                      <SheetClose render={<Button variant="outline" />}>Fechar</SheetClose>
+                      <SheetClose render={<Button variant="outline" />}>
+                        {tContent("variants.compositions.bottomPanel.close")}
+                      </SheetClose>
                     </SheetFooter>
                   </SheetContent>
                 </Sheet>

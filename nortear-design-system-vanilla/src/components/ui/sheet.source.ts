@@ -12,7 +12,20 @@ import {
 import type { SheetSide } from './sheet';
 
 /** O que ocupa o `content` do painel. Muda o CORPO, não a chamada. */
-export type SheetBody = 'texto' | 'paragrafos' | 'acoes' | 'navegacao' | 'formulario';
+export type SheetBody = 'text' | 'paragraphs' | 'actions' | 'navigation' | 'form' | 'profile';
+
+/**
+ * Texto do corpo de uma linha — o mesmo parágrafo que a Demonstração da docs
+ * page mostra (`demonstration.labels.body`, pt-BR).
+ *
+ * Mora aqui, e não na fixture, porque este módulo é o único do par que não toca
+ * o DOM: a suíte unitária roda em `node` e importar a fixture traria a fábrica
+ * de botão junto. As stories o importam de volta, para que o painel Code e o
+ * preview não possam divergir — que era o defeito: o snippet ensinava um texto
+ * e o preview renderizava outro.
+ */
+export const SHEET_BODY_TEXT =
+  'Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o conteúdo passa da altura da tela.';
 
 /** O que as stories usam da `SheetOptions`, mais o corpo que cada uma monta. */
 export type SheetSnippetOptions = {
@@ -55,9 +68,11 @@ type Body = { imports: string[]; block: string };
 function bodyText(): Body {
   return {
     imports: [],
-    block: `const corpo = document.createElement('div');
+    // Parágrafo, e não `div`: é o que o preview monta. O texto sai da mesma
+    // constante que as stories usam.
+    block: `const corpo = document.createElement('p');
 corpo.className = 'nds-text-body nds-text-muted-foreground';
-corpo.textContent = 'Conteúdo do painel (formulário, lista, mensagem).';`,
+corpo.textContent = ${text(SHEET_BODY_TEXT)};`,
   };
 }
 
@@ -125,16 +140,39 @@ corpo.append(
   };
 }
 
+/**
+ * Corpo da composição de edição de perfil — dois campos, como o preview.
+ *
+ * Separado de `bodyForm` porque o assunto é outro: lá são filtros de uma
+ * listagem, aqui são dados de uma pessoa, e o snippet de cada composição tem de
+ * mostrar o que aquele painel renderiza.
+ */
+function bodyProfile(): Body {
+  return {
+    imports: [importing('form', 'createFormField'), importing('input', 'createInput')],
+    block: `const corpo = document.createElement('form');
+corpo.className = 'nds-stack';
+corpo.dataset.spacing = 'sm';
+corpo.append(
+  createFormField({ label: 'Nome', input: createInput({ value: 'Juliana Mucci' }) }),
+  createFormField({ label: 'Nome de usuário', input: createInput({ value: '@julianamucci' }) }),
+  createFormField({ label: 'Bio', input: createInput({ value: 'Designer de sistemas em São Paulo' }) }),
+);`,
+  };
+}
+
 function bodyOf(o: SheetSnippetOptions): Body {
   switch (o.body) {
-    case 'paragrafos':
+    case 'paragraphs':
       return bodyParagrafos(o.paragrafos ?? 24);
-    case 'acoes':
+    case 'actions':
       return bodyActions();
-    case 'navegacao':
+    case 'navigation':
       return bodyNavigation();
-    case 'formulario':
+    case 'form':
       return bodyForm();
+    case 'profile':
+      return bodyProfile();
     default:
       return bodyText();
   }
@@ -161,7 +199,7 @@ function footer(o: SheetSnippetOptions): { block?: string; referencia?: string }
     referencia: 'rodape',
     block: `const rodape = document.createElement('div');
 rodape.className = 'nds-cluster';
-rodape.dataset.spacing = 'sm';
+rodape.dataset.spacing = 'md';
 rodape.append(
 ${buttons.map((b) => `  ${b},`).join('\n')}
 );

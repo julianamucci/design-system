@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
 import {
+  sheetBottomPanelSource,
   sheetEditPerfilSource,
   sheetFiltersAvancadosSource,
   sheetNavigationSecundariaSource,
@@ -36,7 +37,7 @@ const meta = {
       description: {
         component:
           'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
-          'perfil e navegação secundária.',
+          'perfil, navegação secundária e painel de ações na base.',
       },
     },
   },
@@ -81,16 +82,16 @@ export const AdvancedFilters: Story = {
             <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <div class="nds-grid" data-spacing="md">
-              <div class="nds-grid" data-spacing="xs">
+            <div class="nds-stack" data-spacing="sm">
+              <div class="nds-stack" data-spacing="xs">
                 <Label for="cat">Categoria</Label>
                 <Input id="cat" defaultValue="Componentes" />
               </div>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <Label for="status">Status</Label>
                 <Input id="status" defaultValue="Estável" />
               </div>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <Label for="lang">Idioma</Label>
                 <Input id="lang" defaultValue="Português" />
               </div>
@@ -133,16 +134,16 @@ export const ProfileEdit: Story = {
             <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <form class="nds-grid" data-spacing="sm">
-              <div class="nds-grid" data-spacing="xs">
+            <form class="nds-stack" data-spacing="sm">
+              <div class="nds-stack" data-spacing="xs">
                 <Label for="profile-name">Nome</Label>
                 <Input id="profile-name" defaultValue="Juliana Mucci" />
               </div>
-              <div class="nds-grid" data-spacing="xs">
-                <Label for="profile-handle">Username</Label>
+              <div class="nds-stack" data-spacing="xs">
+                <Label for="profile-handle">Nome de usuário</Label>
                 <Input id="profile-handle" defaultValue="@julianamucci" />
               </div>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <Label for="profile-bio">Bio</Label>
                 <Input id="profile-bio" defaultValue="Designer de sistemas em São Paulo" />
               </div>
@@ -161,8 +162,11 @@ export const ProfileEdit: Story = {
   play: async () => {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAccessibleName(/Editar perfil/i);
-    const name = within(panel).getByLabelText(/Nome/i);
-    await expect(name).toBeVisible();
+    // Ordem conferida por ÍNDICE, e não por presença: o campo do meio já sumiu
+    // uma vez, e um `getByLabelText` solto o aceitaria de volta em qualquer
+    // posição — ou casaria dois rótulos, já que um deles começa pelo outro.
+    const rotulos = [...panel.querySelectorAll('label')].map((el) => el.textContent?.trim());
+    await expect(rotulos).toEqual(['Nome', 'Nome de usuário', 'Bio']);
   },
 };
 
@@ -181,16 +185,16 @@ export const SecondaryNavigation: Story = {
       <Sheet default-open>
         <SheetContent side="left">
           <SheetHeader>
-            <SheetTitle>Navegação</SheetTitle>
-            <SheetDescription>Acesse as seções principais da aplicação.</SheetDescription>
+            <SheetTitle>Menu</SheetTitle>
+            <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <nav class="nds-stack" data-spacing="xs" aria-label="Seções">
-              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Dashboard</a>
-              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Componentes</a>
-              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Tokens</a>
-              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Documentação</a>
-              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Configurações</a>
+            <nav class="nds-stack" data-spacing="xs" aria-label="Navegação secundária">
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Faturas</a>
             </nav>
           </SheetBody>
         </SheetContent>
@@ -200,7 +204,58 @@ export const SecondaryNavigation: Story = {
   play: async () => {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'left');
-    const nav = within(panel).getByRole('navigation');
+    const nav = within(panel).getByRole('navigation', { name: /Navegação secundária/i });
     await expect(nav).toBeVisible();
+    // As CINCO seções: o conteúdo compartilhado descreve a lista, e uma stack
+    // com quatro documentava uma composição que não existe.
+    await expect(within(nav).getAllByRole('link')).toHaveLength(5);
+    await expect(within(nav).getByRole('link', { name: 'Faturas' })).toBeVisible();
+  },
+};
+
+export const BottomPanel: Story = {
+  parameters: {
+    docs: {
+      // Painel de baixo e SEM confirmação: a decisão é a própria ação clicada, e
+      // o rodapé só oferece a saída. O snippet do meta traria o par
+      // cancelar/aplicar, que nesta composição não existe.
+      source: { transform: sheetBottomPanelSource },
+      description: {
+        story: 'Fileira de ações no painel inferior — o desenho do Drawer sem o gesto de arrastar.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <Sheet default-open>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>Ações rápidas</SheetTitle>
+            <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+          </SheetHeader>
+          <SheetBody>
+            <div class="nds-cluster" data-spacing="md">
+              <Button variant="outline">Compartilhar</Button>
+              <Button variant="outline">Duplicar</Button>
+              <Button variant="destructive">Excluir</Button>
+            </div>
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose as-child>
+              <Button variant="outline">Fechar</Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    `,
+  }),
+  play: async () => {
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'bottom');
+    await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
+    await expect(within(panel).getByRole('button', { name: 'Compartilhar' })).toBeVisible();
+    // Sem confirmação: o rodapé oferece apenas a saída.
+    await expect(within(panel).queryByRole('button', { name: /Aplicar/i })).toBeNull();
   },
 };

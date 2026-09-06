@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import { createSheet, type SheetSide } from './sheet';
-import { makeFooter } from './sheet.fixtures';
+import { makeBody, makeFooter } from './sheet.fixtures';
 import { sheetSource, sheetSourceWith } from './sheet.source';
 import { createButton } from './button';
 
@@ -36,13 +36,6 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function makeBody(text: string): HTMLElement {
-  const body = document.createElement('div');
-  body.className = 'nds-text-body nds-text-muted-foreground';
-  body.textContent = text;
-  return body;
-}
-
 function buildSheetSide(opts: {
   side: SheetSide;
   triggerLabel: string;
@@ -55,7 +48,8 @@ function buildSheetSide(opts: {
     side: opts.side,
     title: opts.title,
     description: opts.description,
-    content: makeBody('Conteúdo do painel — formulário, lista ou mensagem.'),
+    // Corpo e rodapé canônicos — os mesmos que o painel Code publica.
+    content: makeBody(),
     footer: makeFooter('Cancelar', 'Aplicar filtros'),
   });
   queueMicrotask(() => trigger.click());
@@ -72,7 +66,20 @@ function buildSheetSide(opts: {
 export const Right: Story = {
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item2', 'visual.item1'],
-    docs: { description: { story: 'Desliza da direita. Padrão para filtros em desktop.' } },
+    // `right` é o lado padrão, mas gatilho, título e descrição desta story não
+    // são os do `meta`: sem o override, o painel Code publicaria os do
+    // Playground e o leitor copiaria um exemplo que não é o que ele está vendo.
+    docs: {
+      source: {
+        transform: sheetSourceWith({
+          side: 'right',
+          triggerLabel: 'Abrir painel direito',
+          title: 'Painel direito',
+          description: 'Filtros avançados encostados à direita.',
+        }),
+      },
+      description: { story: 'Desliza da direita. Padrão para filtros em desktop.' },
+    },
   },
   render: () => buildSheetSide({
     side: 'right',

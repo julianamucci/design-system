@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  sheetBottomPanelSource,
   sheetOpenSource,
   sheetControlledSource,
   sheetEditPerfilSource,
@@ -21,6 +22,7 @@ describe('sheetPlaygroundSource', () => {
       `<script setup lang="ts">
 import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -42,6 +44,12 @@ import { Button } from '@/components/ui/button'
         <SheetTitle>Filtros avançados</SheetTitle>
         <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
       </SheetHeader>
+      <SheetBody>
+        <p class="nds-text-body nds-text-muted-foreground">
+          Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o
+          conteúdo passa da altura da tela.
+        </p>
+      </SheetBody>
       <SheetFooter>
         <SheetClose as-child>
           <Button variant="outline">Cancelar</Button>
@@ -52,6 +60,15 @@ import { Button } from '@/components/ui/button'
   </Sheet>
 </template>`,
     );
+  });
+
+  it('o corpo rolável entra no snippet, porque a story o RENDERIZA', () => {
+    // O Playground mostra um parágrafo entre cabeçalho e rodapé, e o snippet ia
+    // de um ao outro: quem copiasse perdia a área que rola.
+    const saida = sheetPlaygroundSource();
+    expect(saida).toContain('      <SheetBody>\n');
+    expect(saida).toContain('  SheetBody,\n');
+    expect(saida).toContain('<p class="nds-text-body nds-text-muted-foreground">');
   });
 
   it('o lado mora no conteúdo, nunca na raiz', () => {
@@ -162,21 +179,55 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<Input id="cat" default-value="Componentes" />');
     // O rótulo se liga ao campo pelo id, e não por proximidade visual.
     expect(saida).toContain('<Label for="cat">Categoria</Label>');
+    // Empilhamento, e não grade: é o que a folha compartilhada define para
+    // formulário de painel, e o que o Vanilla renderiza.
+    expect(saida).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
+    expect(saida).not.toContain('nds-grid');
   });
 
   it('a edição de perfil embrulha os campos num form e confirma por submit', () => {
     const saida = sheetEditPerfilSource();
-    expect(saida).toContain('<form class="nds-grid" data-spacing="sm">');
+    expect(saida).toContain('<form class="nds-stack" data-spacing="sm">');
     expect(saida).toContain('<Button type="submit">Salvar alterações</Button>');
+  });
+
+  it('os três campos do perfil saem na ordem Nome · Nome de usuário · Bio', () => {
+    // Por ÍNDICE: a ordem é a das outras stacks, e o campo do meio já saiu do
+    // snippet uma vez sem que nada reprovasse.
+    const rotulos = [...sheetEditPerfilSource().matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map(
+      (m) => m[1],
+    );
+    expect(rotulos).toEqual(['Nome', 'Nome de usuário', 'Bio']);
   });
 
   it('a navegação secundária abre à esquerda e não tem rodapé', () => {
     const saida = sheetNavigationSecundariaSource();
     expect(saida).toContain('<SheetContent side="left">');
-    expect(saida).toContain('<nav class="nds-stack" data-spacing="xs" aria-label="Seções">');
+    expect(saida).toContain(
+      '<nav class="nds-stack" data-spacing="xs" aria-label="Navegação secundária">',
+    );
     expect(saida).not.toContain('SheetFooter');
     // Sem botão nenhum, o import do Button seria import morto no exemplo.
     expect(saida).not.toContain('@/components/ui/button');
+  });
+
+  it('a navegação secundária lista as CINCO seções, na ordem do conteúdo', () => {
+    const saida = sheetNavigationSecundariaSource();
+    for (const secao of ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas']) {
+      expect(saida).toContain(`>${secao}</a>`);
+    }
+    expect(saida.match(/<a href="#"/g)).toHaveLength(5);
+  });
+
+  it('o painel inferior traz a fileira de ações e um rodapé só de saída', () => {
+    const saida = sheetBottomPanelSource();
+    expect(saida).toContain('<SheetContent side="bottom">');
+    expect(saida).toContain('<div class="nds-cluster" data-spacing="md">');
+    expect(saida).toContain('<Button variant="destructive">Excluir</Button>');
+    expect(saida).toContain('<Button variant="outline">Fechar</Button>');
+    // A decisão é a ação clicada: não há confirmação a repetir no rodapé.
+    expect(saida).not.toContain('Aplicar filtros');
   });
 
   it('o formulário longo repete campos para que haja o que rolar', () => {

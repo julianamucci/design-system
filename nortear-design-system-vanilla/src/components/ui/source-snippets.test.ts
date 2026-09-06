@@ -154,6 +154,11 @@ const HELPERS = new Set<string>([
   // A data que o calendário usa nos exemplos. É DADO, e mora no módulo de
   // snippet porque é ele que precisa do valor como texto.
   'DATA_DE_EXEMPLO',
+  // O texto do corpo do painel do Sheet. Mesmo caso da data acima: é DADO, e
+  // mora no módulo de snippet porque ele é o único do par que não toca o DOM —
+  // a fixture das stories o importa de lá para que o painel Code e o preview
+  // não possam mostrar corpos diferentes.
+  'SHEET_BODY_TEXT',
 ]);
 
 /**

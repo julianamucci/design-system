@@ -78,6 +78,23 @@ function header(title = TITLE, descricao = DESCRIPTION): string {
 }
 
 /**
+ * Corpo do painel — a área que ROLA.
+ *
+ * Entra no snippet canônico porque o Playground o renderiza ao lado: painel só
+ * com cabeçalho e rodapé ensinaria uma composição que a demonstração não
+ * mostra, e some justamente a peça que separa "conteúdo longo" de "ação fora de
+ * alcance". O texto é o mesmo de `demonstration.labels.body`, em português.
+ */
+function body(): string {
+  return `    <SheetBody>
+      <p className="nds-text-body nds-text-muted-foreground">
+        Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola
+        quando o conteúdo passa da altura da tela.
+      </p>
+    </SheetBody>`;
+}
+
+/**
  * Rodapé com a saída explícita à esquerda e a ação primária por último no DOM.
  * A ordem de leitura e de foco é a do markup — inverter aqui mudaria o que o
  * teclado alcança primeiro, mesmo com o CSS desenhando o contrário.
@@ -121,11 +138,11 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
     propBool('showCloseButton', args.showCloseButton, true),
   );
   return jsxSnippet(
-    `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
+    `${importingSheet(...PARTS_BASE, 'SheetBody')}\n${IMPORT_BUTTON}`,
     sheet(
       root,
       panel,
-      `${header()}\n${footer()}`,
+      `${header()}\n${body()}\n${footer()}`,
       childText(args.triggerLabel, 'Abrir filtros'),
     ),
   );
@@ -146,10 +163,21 @@ function bySide(side: string, title: string): string {
 }
 
 /**
+ * Direita: o padrão de desktop. `side="right"` é o valor default do componente e
+ * o snippet do `meta` o OMITE de propósito — aqui ele é escrito, porque a
+ * direção é o assunto da story e é o que o `render` ao lado passa. Sem este
+ * construtor a story caía no transform do `meta` e publicava "Filtros avançados"
+ * enquanto o preview mostrava "Painel direito".
+ */
+export function sheetSideRightSource(): string {
+  return bySide('right', 'Painel direito');
+}
+
+/**
  * Esquerda: a direção é o assunto e nenhum control a descreve neste arquivo. É
  * o lado da navegação secundária — onde a pessoa espera encontrar o menu.
  */
-export function sheetSideEsquerdoSource(): string {
+export function sheetSideLeftSource(): string {
   return bySide('left', 'Painel esquerdo');
 }
 
@@ -157,7 +185,7 @@ export function sheetSideEsquerdoSource(): string {
  * Topo: ocupa a largura inteira e a altura vem do conteúdo. Serve a filtros
  * horizontais e avisos ricos demais para caber num Alert.
  */
-export function sheetSideSuperiorSource(): string {
+export function sheetSideTopSource(): string {
   return bySide('top', 'Painel superior');
 }
 
@@ -165,7 +193,7 @@ export function sheetSideSuperiorSource(): string {
  * Base: o mesmo desenho do Drawer, sem o gesto de arrastar. Quando o gesto
  * importa, o componente é o Drawer.
  */
-export function sheetSideInferiorSource(): string {
+export function sheetSideBottomSource(): string {
   return bySide('bottom', 'Painel inferior');
 }
 
@@ -247,6 +275,9 @@ const [aberto, setAberto] = useState(false);`,
  * Formulário de filtros no corpo do painel. O `SheetBody` é quem rola: cabeçalho
  * e rodapé ficam parados, e é isso que mantém "Aplicar" ao alcance mesmo com a
  * lista de campos crescendo.
+ *
+ * O ritmo do formulário (`nds-stack` com `sm` fora e `xs` no par rótulo ↔
+ * campo) é o do Vanilla, que é a referência de markup da casa.
  */
 export function sheetFiltersSource(): string {
   return jsxSnippet(
@@ -261,18 +292,18 @@ import { Label } from "@/components/ui/label";`,
     <SheetBody>
       <form
         className="nds-stack"
-        data-spacing="md"
+        data-spacing="sm"
         onSubmit={(evento) => evento.preventDefault()}
       >
-        <div className="nds-stack" data-spacing="sm">
+        <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="filtro-categoria">Categoria</Label>
           <Input id="filtro-categoria" defaultValue="Eletrônicos" />
         </div>
-        <div className="nds-stack" data-spacing="sm">
+        <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="filtro-minimo">Preço mínimo</Label>
           <Input id="filtro-minimo" type="number" defaultValue="100" />
         </div>
-        <div className="nds-stack" data-spacing="sm">
+        <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="filtro-maximo">Preço máximo</Label>
           <Input id="filtro-maximo" type="number" defaultValue="2000" />
         </div>
@@ -329,11 +360,59 @@ const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações"];`,
 }
 
 /**
+ * Edição de perfil: um `form` no corpo e o par descartar ↔ confirmar no rodapé.
+ *
+ * Quem confirma é o `type="submit"` ligado ao `form` pelo id — o rodapé mora
+ * FORA do corpo rolável, então o botão não está dentro do formulário e só o
+ * atributo o alcança. Botão solto com `onClick` deixaria de fora o Enter no
+ * campo, que é como a maioria envia um formulário curto.
+ */
+export function sheetProfileEditSource(): string {
+  return jsxSnippet(
+    `${importingSheet(...PARTS_BASE, 'SheetBody')}
+${IMPORT_BUTTON}
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";`,
+    sheet(
+      '',
+      '',
+      `${header('Editar perfil', 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.')}
+    <SheetBody>
+      <form
+        id="profile-form"
+        className="nds-stack"
+        data-spacing="sm"
+        onSubmit={(evento) => evento.preventDefault()}
+      >
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="profile-name">Nome</Label>
+          <Input id="profile-name" defaultValue="Juliana Mucci" />
+        </div>
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="profile-handle">Nome de usuário</Label>
+          <Input id="profile-handle" defaultValue="@julianamucci" />
+        </div>
+        <div className="nds-stack" data-spacing="xs">
+          <Label htmlFor="profile-bio">Bio</Label>
+          <Input id="profile-bio" defaultValue="Designer de sistemas em São Paulo" />
+        </div>
+      </form>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <Button type="submit" form="profile-form">Salvar alterações</Button>
+    </SheetFooter>`,
+      'Editar perfil',
+    ),
+  );
+}
+
+/**
  * Painel inferior de ações. A ação destrutiva fica por último e é a única com a
  * variante que a anuncia — três botões destrutivos lado a lado tirariam o peso
  * justamente do que precisa de peso.
  */
-export function sheetPanelInferiorSource(): string {
+export function sheetBottomPanelSource(): string {
   return jsxSnippet(
     `${importingSheet(...PARTS_BASE, 'SheetBody')}
 ${IMPORT_BUTTON}`,

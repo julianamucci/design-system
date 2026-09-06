@@ -4,6 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSheet, type SheetSide } from './sheet';
 import { sheetSource } from './sheet.source';
 import { createButton } from './button';
+import { makeBody } from './sheet.fixtures';
 import { createSheetDocs } from '@/components/docs/SheetDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -86,10 +87,8 @@ function buildPlayground(args: SheetArgs): HTMLElement {
   // Mesmo texto que a Demonstração da docs page mostra
   // (`demonstration.labels.body`): o Playground e ela renderizam O MESMO
   // exemplo, e aqui a fixture é pt-BR porque a story não passa por i18n.
-  const body = document.createElement('p');
-  body.className = 'nds-text-body nds-text-muted-foreground';
-  body.textContent =
-    'Conteúdo do painel: formulário, lista ou mensagem. É esta área que rola quando o conteúdo passa da altura da tela.';
+  // O parágrafo vem da fixture, que lê a mesma constante que o painel Code.
+  const body = makeBody();
 
   const cancel = createButton({ variant: 'outline', label: args.cancelLabel });
   const apply = createButton({ variant: 'default', label: args.applyLabel });

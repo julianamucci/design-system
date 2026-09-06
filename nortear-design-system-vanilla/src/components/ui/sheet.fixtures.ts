@@ -11,6 +11,21 @@
 // fraco: quem quer o fechamento pede.
 
 import { createButton } from './button';
+import { SHEET_BODY_TEXT } from './sheet.source';
+
+/**
+ * Corpo de uma linha — o parágrafo canônico do painel.
+ *
+ * O texto vem de `sheet.source.ts` porque é ele que o painel Code publica: com
+ * a constante compartilhada, snippet e preview não podem mostrar corpos
+ * diferentes.
+ */
+export function makeBody(text: string = SHEET_BODY_TEXT): HTMLElement {
+  const body = document.createElement('p');
+  body.className = 'nds-text-body nds-text-muted-foreground';
+  body.textContent = text;
+  return body;
+}
 
 /**
  * Rodapé de duas ações — cancelar à esquerda, ação principal à direita.

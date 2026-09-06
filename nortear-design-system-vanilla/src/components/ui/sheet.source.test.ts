@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  SHEET_BODY_TEXT,
   sheetControlledSnippet,
   sheetSnippet,
   sheetSource,
   sheetSourceWith,
 } from './sheet.source';
+import sheetTranslations from '@shared/content/sheet/translations.json';
 
 describe('sheetSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do painel', () => {
@@ -50,14 +52,14 @@ describe('sheetSnippet', () => {
   });
 
   it('troca o corpo conforme a composição, sempre com peças do design system', () => {
-    const form = sheetSnippet({ body: 'formulario' });
+    const form = sheetSnippet({ body: 'form' });
     expect(form).toContain("import { createFormField } from '@/components/ui/form';");
     expect(form).toContain('createFormField({ label:');
 
-    const navigation = sheetSnippet({ body: 'navegacao' });
+    const navigation = sheetSnippet({ body: 'navigation' });
     expect(navigation).toContain("corpo.setAttribute('aria-label', 'Seções');");
 
-    const paragrafos = sheetSnippet({ body: 'paragrafos', paragrafos: 8 });
+    const paragrafos = sheetSnippet({ body: 'paragraphs', paragrafos: 8 });
     expect(paragrafos).toContain('i <= 8');
   });
 
@@ -67,8 +69,51 @@ describe('sheetSnippet', () => {
   });
 
   it('não repete o import do botão quando o corpo também o usa', () => {
-    const code = sheetSnippet({ body: 'acoes' });
+    const code = sheetSnippet({ body: 'actions' });
     expect(code.match(/from '@\/components\/ui\/button'/g)).toHaveLength(1);
+  });
+});
+
+/**
+ * O snippet ENSINA o que o preview MOSTRA.
+ *
+ * Os três casos abaixo nasceram de uma divergência medida: o painel Code
+ * publicava um corpo em `div` com um texto curto enquanto o Playground
+ * renderizava o parágrafo da Demonstração, e o rodapé do snippet vinha com
+ * `spacing=sm` contra o `md` de todos os previews. Quem copiava recebia um
+ * exemplo parecido, e não o que estava vendo.
+ */
+describe('paridade entre snippet e preview', () => {
+  const CONTENT = sheetTranslations['pt-BR'];
+
+  it('monta o corpo padrão como parágrafo, com o texto da Demonstração', () => {
+    const code = sheetSnippet();
+    expect(SHEET_BODY_TEXT).toBe(CONTENT.demonstration.labels.body);
+    expect(code).toContain("const corpo = document.createElement('p');");
+    expect(code).toContain(`corpo.textContent = '${SHEET_BODY_TEXT}';`);
+    expect(code).not.toContain("const corpo = document.createElement('div');");
+  });
+
+  it('monta o rodapé com o mesmo espaçamento que os previews usam', () => {
+    expect(sheetSnippet()).toContain("rodape.dataset.spacing = 'md';");
+    expect(sheetSnippet()).not.toContain("rodape.dataset.spacing = 'sm';");
+  });
+
+  it('dá à edição de perfil os campos que o conteúdo compartilhado documenta', () => {
+    const code = sheetSnippet({ body: 'profile' });
+    const profile = CONTENT.variants.compositions.profileEdit;
+    expect(code).toContain(
+      `createFormField({ label: '${profile.fieldName}', input: createInput({ value: '${profile.fieldNameValue}' }) }),`,
+    );
+    expect(code).toContain(
+      `createFormField({ label: '${profile.fieldHandle}', input: createInput({ value: '${profile.fieldHandleValue}' }) }),`,
+    );
+    expect(code).toContain(
+      `createFormField({ label: '${profile.fieldBio}', input: createInput({ value: '${profile.fieldBioValue}' }) }),`,
+    );
+    // O corpo de filtros tem outros campos: trocar um pelo outro é o defeito
+    // que esta composição existe para não repetir.
+    expect(code).not.toContain('Categoria');
   });
 });
 
@@ -140,7 +185,7 @@ function referenciasSoltas(code: string): string[] {
 
 describe('coerência dos snippets', () => {
   it('não referencia símbolo que o próprio snippet não declara', () => {
-    expect(referenciasSoltas(sheetSnippet({ body: 'formulario' }))).toEqual([]);
+    expect(referenciasSoltas(sheetSnippet({ body: 'form' }))).toEqual([]);
     expect(referenciasSoltas(sheetControlledSnippet())).toEqual([]);
   });
 

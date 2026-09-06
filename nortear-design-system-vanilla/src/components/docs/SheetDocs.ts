@@ -409,18 +409,37 @@ import { createButton } from '@/components/ui/button';`,
         });
 
       case 'variantes': {
-        const codeRight = `const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
+        // Um construtor, e não quatro literais: os três lados que não eram o
+        // padrão vinham como uma linha só, com `trigger`, `title` e `content`
+        // indefinidos — quem copiasse receberia código que não roda. O lado é a
+        // única coisa que muda de um card para o outro.
+        const variantCode = (side: SheetSide, panelTitle: string) =>
+          `const trigger = createButton({ variant: 'outline', label: '${t('demonstration.labels.trigger')}' });
+
+const body = document.createElement('p');
+body.className = 'nds-text-body nds-text-muted-foreground';
+body.textContent = '${t('demonstration.labels.body')}';
+
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.spacing = 'md';
+footer.append(
+  createButton({ variant: 'outline', label: '${t('demonstration.labels.cancel')}' }),
+  createButton({ variant: 'default', label: '${t('demonstration.labels.apply')}' }),
+);
+
 createSheet({
   trigger,
-  side: 'right',
-  title: 'Filtros avançados',
-  description: 'Configure os filtros para refinar os resultados.',
+  side: '${side}',
+  title: '${panelTitle}',
+  description: '${t('demonstration.labels.description')}',
   content: body,
   footer,
 });`;
-        const codeLeft = `createSheet({ trigger, side: 'left', title, description, content, footer });`;
-        const codeTop = `createSheet({ trigger, side: 'top', title, description, content, footer });`;
-        const codeBottom = `createSheet({ trigger, side: 'bottom', title, description, content, footer });`;
+        const codeRight = variantCode('right', t('demonstration.labels.rightLabel'));
+        const codeLeft = variantCode('left', t('demonstration.labels.leftLabel'));
+        const codeTop = variantCode('top', t('demonstration.labels.topLabel'));
+        const codeBottom = variantCode('bottom', t('demonstration.labels.bottomLabel'));
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -448,7 +467,10 @@ createSheet({
               previewFactory: () => buildSheetDemo({
                 location: 'docs_variantes',
                 side: 'left',
-                triggerLabel: t('demonstration.labels.leftLabel'),
+                // O gatilho nomeia a AÇÃO ("Abrir filtros"), e não o lado: é o
+                // que `usage.uxWriting.table.trigger` manda, e o rótulo do
+                // lado continua no título do painel.
+                triggerLabel: t('demonstration.labels.trigger'),
                 title: t('demonstration.labels.leftLabel'),
                 description: t('demonstration.labels.description'),
                 cancelLabel: t('demonstration.labels.cancel'),
@@ -463,7 +485,10 @@ createSheet({
               previewFactory: () => buildSheetDemo({
                 location: 'docs_variantes',
                 side: 'top',
-                triggerLabel: t('demonstration.labels.topLabel'),
+                // O gatilho nomeia a AÇÃO ("Abrir filtros"), e não o lado: é o
+                // que `usage.uxWriting.table.trigger` manda, e o rótulo do
+                // lado continua no título do painel.
+                triggerLabel: t('demonstration.labels.trigger'),
                 title: t('demonstration.labels.topLabel'),
                 description: t('demonstration.labels.description'),
                 cancelLabel: t('demonstration.labels.cancel'),
@@ -478,7 +503,10 @@ createSheet({
               previewFactory: () => buildSheetDemo({
                 location: 'docs_variantes',
                 side: 'bottom',
-                triggerLabel: t('demonstration.labels.bottomLabel'),
+                // O gatilho nomeia a AÇÃO ("Abrir filtros"), e não o lado: é o
+                // que `usage.uxWriting.table.trigger` manda, e o rótulo do
+                // lado continua no título do painel.
+                triggerLabel: t('demonstration.labels.trigger'),
                 title: t('demonstration.labels.bottomLabel'),
                 description: t('demonstration.labels.description'),
                 cancelLabel: t('demonstration.labels.cancel'),
@@ -492,12 +520,17 @@ createSheet({
       case 'composicoes': {
         // Os rótulos vêm do conteúdo compartilhado: campo de filtro cravado em
         // português deixaria a composição meio traduzida nas outras duas línguas.
+        //
+        // Lista do conteúdo compartilhado: o `flattenDict` do i18n indexa array
+        // por posição (`items.0`), então a leitura é por índice.
+        const listOf = (path: string, total: number) =>
+          Array.from({ length: total }, (_, i) => t(`${path}.${i}`));
         const buildAdvancedFiltersBody = () => {
           const form = document.createElement('form');
           form.className = 'nds-stack';
           form.dataset.spacing = 'sm';
           ([
-            [t('variants.compositions.advancedFilters.fieldCategory'), 'filtro-categoria', 'Eletrônicos'],
+            [t('variants.compositions.advancedFilters.fieldCategory'), 'filtro-categoria', t('variants.compositions.advancedFilters.categoryValue')],
             [t('variants.compositions.advancedFilters.fieldMinPrice'), 'filtro-preco-min', '100'],
           ] as const).forEach(([label, id, value]) => {
             const field = document.createElement('div');
@@ -514,10 +547,10 @@ createSheet({
 
         const buildSecondaryNavBody = () => {
           const nav = document.createElement('nav');
-          nav.setAttribute('aria-label', 'Navegação secundária');
+          nav.setAttribute('aria-label', t('variants.compositions.secondaryNavigation.navLabel'));
           nav.className = 'nds-stack';
           nav.dataset.spacing = 'xs';
-          ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'].forEach((label) => {
+          listOf('variants.compositions.secondaryNavigation.items', 5).forEach((label) => {
             const a = document.createElement('a');
             a.href = '#';
             a.className = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
@@ -531,10 +564,25 @@ createSheet({
           const form = document.createElement('form');
           form.className = 'nds-stack';
           form.dataset.spacing = 'sm';
+          // Os três campos saem do conteúdo compartilhado, na ordem que as
+          // cinco stacks usam. O valor do nome de usuário é identificador, e
+          // por isso é o mesmo nos três idiomas.
           ([
-            ['Nome', 'profile-name', 'Juliana Mucci'],
-            ['Username', 'profile-handle', '@julianamucci'],
-            ['Bio', 'profile-bio', 'Designer de sistemas em São Paulo'],
+            [
+              t('variants.compositions.profileEdit.fieldName'),
+              'profile-name',
+              t('variants.compositions.profileEdit.fieldNameValue'),
+            ],
+            [
+              t('variants.compositions.profileEdit.fieldHandle'),
+              'profile-handle',
+              t('variants.compositions.profileEdit.fieldHandleValue'),
+            ],
+            [
+              t('variants.compositions.profileEdit.fieldBio'),
+              'profile-bio',
+              t('variants.compositions.profileEdit.fieldBioValue'),
+            ],
           ] as const).forEach(([label, id, value]) => {
             const field = document.createElement('div');
             field.className = 'nds-stack';
@@ -555,10 +603,14 @@ createSheet({
           const list = document.createElement('div');
           list.className = 'nds-cluster';
           list.dataset.spacing = 'md';
+          const [share, duplicate, remove] = listOf(
+            'variants.compositions.bottomPanel.actions',
+            3,
+          );
           list.append(
-            createButton({ variant: 'outline', label: 'Compartilhar' }),
-            createButton({ variant: 'outline', label: 'Duplicar' }),
-            createButton({ variant: 'destructive', label: 'Excluir' }),
+            createButton({ variant: 'outline', label: share }),
+            createButton({ variant: 'outline', label: duplicate }),
+            createButton({ variant: 'destructive', label: remove }),
           );
           return list;
         };
@@ -571,15 +623,15 @@ createSheet({
             {
               trackId: 'advancedFilters',
               name: stripHtml(t('variants.compositions.advancedFilters.name')),
-              description: stripHtml(t('variants.compositions.advancedFilters.description')),
-              useWhen: stripHtml(t('variants.compositions.advancedFilters.use')),
-              code: `const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
+              description: t('variants.compositions.advancedFilters.description'),
+              useWhen: t('variants.compositions.advancedFilters.use'),
+              code: `const trigger = createButton({ variant: 'outline', label: '${t('demonstration.labels.trigger')}' });
 const form = document.createElement('form');
 form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
 form.append(
   createLabel({ text: '${t('variants.compositions.advancedFilters.fieldCategory')}', htmlFor: 'filtro-categoria' }),
-  createInput({ id: 'filtro-categoria', value: 'Eletrônicos' }),
+  createInput({ id: 'filtro-categoria', value: '${t('variants.compositions.advancedFilters.categoryValue')}' }),
   createLabel({ text: '${t('variants.compositions.advancedFilters.fieldMinPrice')}', htmlFor: 'filtro-preco-min' }),
   createInput({ id: 'filtro-preco-min', value: '100' }),
 );
@@ -587,14 +639,14 @@ const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
 footer.append(
-  createButton({ variant: 'outline', label: 'Cancelar' }),
-  createButton({ variant: 'default', label: 'Aplicar filtros' }),
+  createButton({ variant: 'outline', label: '${t('demonstration.labels.cancel')}' }),
+  createButton({ variant: 'default', label: '${t('demonstration.labels.apply')}' }),
 );
 createSheet({
   trigger,
   side: 'right',
-  title: 'Filtros avançados',
-  description: 'Configure os filtros para refinar os resultados.',
+  title: '${t('demonstration.labels.title')}',
+  description: '${t('demonstration.labels.description')}',
   content: form,
   footer,
 });`,
@@ -612,13 +664,15 @@ createSheet({
             {
               trackId: 'secondaryNavigation',
               name: stripHtml(t('variants.compositions.secondaryNavigation.name')),
-              description: stripHtml(t('variants.compositions.secondaryNavigation.description')),
-              useWhen: stripHtml(t('variants.compositions.secondaryNavigation.use')),
-              code: `const nav = document.createElement('nav');
-nav.setAttribute('aria-label', 'Navegação secundária');
+              description: t('variants.compositions.secondaryNavigation.description'),
+              useWhen: t('variants.compositions.secondaryNavigation.use'),
+              code: `const trigger = createButton({ variant: 'outline', label: '${t('variants.compositions.secondaryNavigation.trigger')}' });
+
+const nav = document.createElement('nav');
+nav.setAttribute('aria-label', '${t('variants.compositions.secondaryNavigation.navLabel')}');
 nav.className = 'nds-stack';
 nav.dataset.spacing = 'xs';
-['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'].forEach(label => {
+['${listOf('variants.compositions.secondaryNavigation.items', 5).join("', '")}'].forEach(label => {
   const a = document.createElement('a');
   a.href = '#';
   a.className = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
@@ -628,17 +682,20 @@ nav.dataset.spacing = 'xs';
 createSheet({
   trigger,
   side: 'left',
-  title: 'Menu',
-  description: 'Navegue entre as áreas do sistema.',
+  title: '${t('variants.compositions.secondaryNavigation.panelTitle')}',
+  description: '${t('variants.compositions.secondaryNavigation.panelDescription')}',
   content: nav,
 });`,
               previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Abrir menu' });
+                const trigger = createButton({
+                  variant: 'outline',
+                  label: t('variants.compositions.secondaryNavigation.trigger'),
+                });
                 return createSheet({
                   trigger,
                   side: 'left',
-                  title: 'Menu',
-                  description: 'Navegue entre as áreas do sistema.',
+                  title: t('variants.compositions.secondaryNavigation.panelTitle'),
+                  description: t('variants.compositions.secondaryNavigation.panelDescription'),
                   content: buildSecondaryNavBody(),
                   // Preview VIVO: clique aqui é tão real quanto na demonstração.
                   // Mesmo padrão do `buildSheetDemo` — `label` carrega o side,
@@ -666,16 +723,16 @@ createSheet({
             {
               trackId: 'profileEdit',
               name: stripHtml(t('variants.compositions.profileEdit.name')),
-              description: stripHtml(t('variants.compositions.profileEdit.description')),
-              useWhen: stripHtml(t('variants.compositions.profileEdit.use')),
-              code: `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+              description: t('variants.compositions.profileEdit.description'),
+              useWhen: t('variants.compositions.profileEdit.use'),
+              code: `const trigger = createButton({ variant: 'outline', label: '${t('variants.compositions.profileEdit.trigger')}' });
 const form = document.createElement('form');
 form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
 [
-  ['Nome', 'profile-name', 'Juliana Mucci'],
-  ['Username', 'profile-handle', '@julianamucci'],
-  ['Bio', 'profile-bio', 'Designer de sistemas em São Paulo'],
+  ['${t('variants.compositions.profileEdit.fieldName')}', 'profile-name', '${t('variants.compositions.profileEdit.fieldNameValue')}'],
+  ['${t('variants.compositions.profileEdit.fieldHandle')}', 'profile-handle', '${t('variants.compositions.profileEdit.fieldHandleValue')}'],
+  ['${t('variants.compositions.profileEdit.fieldBio')}', 'profile-bio', '${t('variants.compositions.profileEdit.fieldBioValue')}'],
 ].forEach(([label, id, value]) => {
   const field = document.createElement('div');
   field.className = 'nds-stack';
@@ -690,25 +747,31 @@ const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
 footer.append(
-  createButton({ variant: 'outline', label: 'Cancelar' }),
-  createButton({ variant: 'default', label: 'Salvar alterações' }),
+  createButton({ variant: 'outline', label: '${t('demonstration.labels.cancel')}' }),
+  createButton({ variant: 'default', label: '${t('variants.compositions.profileEdit.submit')}' }),
 );
 createSheet({
   trigger,
   side: 'right',
-  title: 'Editar perfil',
-  description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+  title: '${t('variants.compositions.profileEdit.panelTitle')}',
+  description: '${t('variants.compositions.profileEdit.panelDescription')}',
   content: form,
   footer,
 });`,
               previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
-                const save = createButton({ variant: 'default', label: 'Salvar alterações' });
+                const trigger = createButton({
+                  variant: 'outline',
+                  label: t('variants.compositions.profileEdit.trigger'),
+                });
+                const save = createButton({
+                  variant: 'default',
+                  label: t('variants.compositions.profileEdit.submit'),
+                });
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
                 footer.dataset.spacing = 'md';
                 footer.append(
-                  createButton({ variant: 'outline', label: 'Cancelar' }),
+                  createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
                   save,
                 );
                 // `action` nomeia a ação que o BOTÃO faz: aqui ele salva, então
@@ -723,8 +786,8 @@ createSheet({
                 return createSheet({
                   trigger,
                   side: 'right',
-                  title: 'Editar perfil',
-                  description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+                  title: t('variants.compositions.profileEdit.panelTitle'),
+                  description: t('variants.compositions.profileEdit.panelDescription'),
                   content: buildProfileEditBody(),
                   footer,
                   onOpenChange: (open) => {
@@ -750,40 +813,48 @@ createSheet({
             {
               trackId: 'bottomPanel',
               name: stripHtml(t('variants.compositions.bottomPanel.name')),
-              description: stripHtml(t('variants.compositions.bottomPanel.description')),
-              useWhen: stripHtml(t('variants.compositions.bottomPanel.use')),
-              code: `const trigger = createButton({ variant: 'outline', label: 'Abrir ações' });
+              description: t('variants.compositions.bottomPanel.description'),
+              useWhen: t('variants.compositions.bottomPanel.use'),
+              code: `const trigger = createButton({ variant: 'outline', label: '${t('variants.compositions.bottomPanel.trigger')}' });
 const list = document.createElement('div');
 list.className = 'nds-cluster';
 list.dataset.spacing = 'md';
 list.append(
-  createButton({ variant: 'outline', label: 'Compartilhar' }),
-  createButton({ variant: 'outline', label: 'Duplicar' }),
-  createButton({ variant: 'destructive', label: 'Excluir' }),
+  createButton({ variant: 'outline', label: '${t('variants.compositions.bottomPanel.actions.0')}' }),
+  createButton({ variant: 'outline', label: '${t('variants.compositions.bottomPanel.actions.1')}' }),
+  createButton({ variant: 'destructive', label: '${t('variants.compositions.bottomPanel.actions.2')}' }),
 );
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
-footer.append(createButton({ variant: 'outline', label: 'Fechar' }));
+footer.append(createButton({ variant: 'outline', label: '${t('variants.compositions.bottomPanel.close')}' }));
 createSheet({
   trigger,
   side: 'bottom',
-  title: 'Ações rápidas',
-  description: 'Escolha uma das ações disponíveis para este item.',
+  title: '${t('variants.compositions.bottomPanel.panelTitle')}',
+  description: '${t('variants.compositions.bottomPanel.panelDescription')}',
   content: list,
   footer,
 });`,
               previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Abrir ações' });
+                const trigger = createButton({
+                  variant: 'outline',
+                  label: t('variants.compositions.bottomPanel.trigger'),
+                });
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
                 footer.dataset.spacing = 'md';
-                footer.append(createButton({ variant: 'outline', label: 'Fechar' }));
+                footer.append(
+                  createButton({
+                    variant: 'outline',
+                    label: t('variants.compositions.bottomPanel.close'),
+                  }),
+                );
                 return createSheet({
                   trigger,
                   side: 'bottom',
-                  title: 'Ações rápidas',
-                  description: 'Escolha uma das ações disponíveis para este item.',
+                  title: t('variants.compositions.bottomPanel.panelTitle'),
+                  description: t('variants.compositions.bottomPanel.panelDescription'),
                   content: buildBottomPanelBody(),
                   footer,
                   onOpenChange: (open) => {

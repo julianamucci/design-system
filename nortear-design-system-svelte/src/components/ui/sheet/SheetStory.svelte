@@ -19,7 +19,16 @@
   // de story que ninguém renderiza é a mesma dívida da peça sem story — parece
   // coberto e não é. `secondaryNav` entra porque a composição de navegação é
   // documentada no conteúdo compartilhado e só esta stack não a mostrava.
-  type Variant = 'default' | 'withForm' | 'withScrollContent' | 'secondaryNav';
+  // `actionRow` entra pelo mesmo motivo que `secondaryNav` entrou: o painel
+  // inferior é documentado no conteúdo compartilhado e só esta stack não tinha
+  // story para ele.
+  type Variant =
+    | 'default'
+    | 'withForm'
+    | 'profileForm'
+    | 'withScrollContent'
+    | 'secondaryNav'
+    | 'actionRow';
 
   interface Props {
     open?: boolean;
@@ -50,6 +59,19 @@
     onAction,
     onCancel,
   }: Props = $props();
+
+  /**
+   * As CINCO seções do menu: o conteúdo compartilhado descreve a lista, e uma
+   * stack com quatro documentava uma composição que não existe.
+   */
+  const SECTIONS = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];
+
+  /** A fileira do painel inferior, com a ação destrutiva por último. */
+  const ACTIONS = [
+    { label: 'Compartilhar', variant: 'outline' as const },
+    { label: 'Duplicar', variant: 'outline' as const },
+    { label: 'Excluir', variant: 'destructive' as const },
+  ];
 </script>
 
 <div style="contain: layout">
@@ -67,15 +89,37 @@
           </SheetHeader>
 
           {#if variant === 'withForm'}
+            <!-- Empilhamento, e não grade: é o que a folha compartilhada define
+                 para formulário de painel, e o que o Vanilla renderiza. -->
             <SheetBody>
-              <form class="nds-grid" data-spacing="sm">
-                <div class="nds-grid" data-spacing="xs">
+              <form class="nds-stack" data-spacing="sm">
+                <div class="nds-stack" data-spacing="xs">
                   <Label for="sheet-story-nome">Nome</Label>
                   <Input id="sheet-story-nome" value="Maria Silva" />
                 </div>
-                <div class="nds-grid" data-spacing="xs">
+                <div class="nds-stack" data-spacing="xs">
                   <Label for="sheet-story-email">Email</Label>
                   <Input id="sheet-story-email" type="email" value="maria@exemplo.com" />
+                </div>
+              </form>
+            </SheetBody>
+          {:else if variant === 'profileForm'}
+            <!-- Três campos, na ordem das outras stacks: Nome, Nome de usuário,
+                 Bio. O `withForm` genérico tem dois, e a edição de perfil
+                 perdia o do meio enquanto os dois dividiam o mesmo corpo. -->
+            <SheetBody>
+              <form class="nds-stack" data-spacing="sm">
+                <div class="nds-stack" data-spacing="xs">
+                  <Label for="sheet-story-perfil-nome">Nome</Label>
+                  <Input id="sheet-story-perfil-nome" value="Juliana Mucci" />
+                </div>
+                <div class="nds-stack" data-spacing="xs">
+                  <Label for="sheet-story-perfil-usuario">Nome de usuário</Label>
+                  <Input id="sheet-story-perfil-usuario" value="@julianamucci" />
+                </div>
+                <div class="nds-stack" data-spacing="xs">
+                  <Label for="sheet-story-perfil-bio">Bio</Label>
+                  <Input id="sheet-story-perfil-bio" value="Designer de sistemas em São Paulo" />
                 </div>
               </form>
             </SheetBody>
@@ -98,13 +142,21 @@
                    e dois sem nome distinto ficam indistinguíveis para quem
                    navega por marcos. -->
               <nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">
-                {#each ['Dashboard', 'Projetos', 'Equipe', 'Configurações'] as item (item)}
+                {#each SECTIONS as item (item)}
                   <a
                     href="#{item.toLowerCase()}"
                     class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
                   >{item}</a>
                 {/each}
               </nav>
+            </SheetBody>
+          {:else if variant === 'actionRow'}
+            <SheetBody>
+              <div class="nds-cluster" data-spacing="md">
+                {#each ACTIONS as action (action.label)}
+                  <Button variant={action.variant}>{action.label}</Button>
+                {/each}
+              </div>
             </SheetBody>
           {:else}
             <!--
@@ -121,6 +173,11 @@
           {/if}
 
           {#if variant !== 'secondaryNav'}
+            <!--
+              A fileira de ações tem rodapé, mas só com a saída: a decisão já foi
+              tomada no corpo, e repetir uma confirmação aqui diria que falta um
+              passo que não existe.
+            -->
             <SheetFooter>
               <SheetClose>
                 {#snippet child({ props })}
@@ -141,9 +198,11 @@
                   >{cancelLabel}</Button>
                 {/snippet}
               </SheetClose>
-              <Button onclick={onAction}>
-                {actionLabel}
-              </Button>
+              {#if variant !== 'actionRow'}
+                <Button onclick={onAction}>
+                  {actionLabel}
+                </Button>
+              {/if}
             </SheetFooter>
           {/if}
         </SheetContent>

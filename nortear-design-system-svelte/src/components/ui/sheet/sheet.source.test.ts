@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   perfilSheetEditSource,
+  sheetBottomPanelSource,
   sheetFiltersAvancadosSource,
+  sheetNavegacaoSecundariaSource,
   sheetSource,
   sheetTermosWithScrollSource,
 } from './sheet.source';
@@ -103,12 +105,44 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<SheetBody>');
     expect(saida).toContain('import { Input } from "@/components/ui/input";');
     expect(saida).toContain('<Label for="sheet-nome">Nome</Label>');
+    // Empilhamento, e não grade: é o que a folha compartilhada define para
+    // formulário de painel, e o que o Vanilla renderiza.
+    expect(saida).toContain('<form class="nds-stack" data-spacing="sm">');
+    expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
+    expect(saida).not.toContain('nds-grid');
   });
 
-  it('a edição de perfil muda a decisão do rodapé, não a estrutura', () => {
+  it('a navegação secundária publica as CINCO seções e o marco com nome', () => {
+    const saida = sheetNavegacaoSecundariaSource();
+    expect(saida).toContain('<SheetContent side="left">');
+    expect(saida).toContain(
+      "const secoes = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];",
+    );
+    expect(saida).toContain('<nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">');
+    // Um menu não confirma nada: a saída é o X do canto.
+    expect(saida).not.toContain('SheetFooter');
+  });
+
+  it('o painel inferior traz a fileira de ações e um rodapé só de saída', () => {
+    const saida = sheetBottomPanelSource();
+    expect(saida).toContain('<SheetContent side="bottom">');
+    expect(saida).toContain('<div class="nds-cluster" data-spacing="md">');
+    expect(saida).toContain('{#each acoes as acao (acao.label)}');
+    expect(saida).toContain("{ label: 'Excluir', variant: 'destructive' },");
+    expect(saida).toContain('<SheetFooter>');
+    expect(saida).toContain('<Button variant="outline" {...props}>Fechar</Button>');
+    // A decisão é a ação clicada: não há confirmação a repetir no rodapé.
+    expect(saida).not.toContain('Aplicar filtros');
+  });
+
+  it('a edição de perfil traz os três campos, na ordem das outras stacks', () => {
     const saida = perfilSheetEditSource();
     expect(saida).toContain('<SheetTitle>Editar perfil</SheetTitle>');
     expect(saida).toContain('<Button>Salvar alterações</Button>');
+    // Por ÍNDICE: a ordem é a das outras stacks, e o campo do meio já saiu do
+    // snippet uma vez sem que nada reprovasse.
+    const rotulos = [...saida.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
+    expect(rotulos).toEqual(['Nome', 'Nome de usuário', 'Bio']);
   });
 
   it('os termos com rolagem deixam o corpo rolar, e o rodapé fica', () => {

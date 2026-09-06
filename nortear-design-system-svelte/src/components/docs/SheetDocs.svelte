@@ -119,6 +119,58 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  /**
+   * Lista que mora inteira no conteúdo compartilhado.
+   *
+   * O achatamento do dicionário não desmonta array: o caminho da chave devolve
+   * a lista, e é dela que saem as seções do menu e a fileira de ações.
+   */
+  function contentList(t: (k: string) => string, key: string): string[] {
+    const value = t(key) as unknown;
+    return Array.isArray(value) ? (value as string[]) : [];
+  }
+
+  // ─── Analytics — motivo do fechamento ───────────────────────────────────────
+
+  // O `onOpenChange` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o
+  // payload de `dialog_close` promete `reason`. Os dois caminhos que a lib
+  // anuncia por evento próprio ficam anotados aqui; o que sobra é o botão,
+  // tanto o X do canto quanto a saída do rodapé, que fecham pelo mesmo
+  // `SheetClose`.
+  //
+  // Uma variável para a página inteira basta: o painel é modal, e nunca há dois
+  // abertos ao mesmo tempo.
+  type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
+  let pendingCloseReason: SheetCloseReason | null = null;
+
+  /** Ouvintes prontos para espalhar no conteúdo, que os repassa ao primitivo. */
+  const closeWatch = {
+    onEscapeKeydown: () => { pendingCloseReason = 'escape'; },
+    onInteractOutside: () => { pendingCloseReason = 'overlay'; },
+  };
+
+  /**
+   * Abertura e fechamento de qualquer painel VIVO desta página.
+   *
+   * `label` carrega o SIDE (valor estável, não localizado) — texto traduzido
+   * partiria o mesmo evento em três valores no GA4. `location` vem de QUEM
+   * CHAMA, porque ele existe para dizer de ONDE veio o clique.
+   */
+  function trackSheet(location: string, side: string, open: boolean): void {
+    if (open) {
+      pendingCloseReason = null;
+      track('dialog_open', { component: 'sheet', label: side, location });
+      return;
+    }
+    track('dialog_close', {
+      component: 'sheet',
+      label: side,
+      reason: pendingCloseReason ?? 'close-button',
+      location,
+    });
+    pendingCloseReason = null;
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import {
@@ -155,10 +207,199 @@
   </SheetContent>
 </Sheet>`;
 
-  const codeRight = `<SheetContent side="right">...</SheetContent>`;
-  const codeLeft = `<SheetContent side="left">...</SheetContent>`;
-  const codeTop = `<SheetContent side="top">...</SheetContent>`;
-  const codeBottom = `<SheetContent side="bottom">...</SheetContent>`;
+  /**
+   * Snippet de uma direção, montado a partir das MESMAS chaves que o preview ao
+   * lado renderiza.
+   *
+   * Antes os quatro eram `<SheetContent side="…">...</SheetContent>`, com as
+   * reticências literais: o preview mostrava um painel vivo e completo, e o
+   * código ao lado não era copiável — as reticências não são sintaxe, são um
+   * pedido para o leitor adivinhar o resto.
+   */
+  function codeSide(side: string, title: string, t: (key: string) => string): string {
+    return `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>${t('demonstration.labels.trigger')}</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="${side}">
+    <SheetHeader>
+      <SheetTitle>${title}</SheetTitle>
+      <SheetDescription>${t('demonstration.labels.description')}</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <p class="nds-text-body nds-text-muted-foreground">${t('demonstration.labels.body')}</p>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>${t('demonstration.labels.cancel')}</Button>
+        {/snippet}
+      </SheetClose>
+      <Button>${t('demonstration.labels.apply')}</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+  }
+
+  // Os quatro snippets de composição saem das MESMAS chaves que o preview ao
+  // lado renderiza — nome de campo, rótulo de ação e item de menu inclusive.
+  // Literal em português mostrava português no meio de uma seção em inglês.
+
+  function codeAdvancedFilters(t: (key: string) => string): string {
+    return `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>${t('demonstration.labels.trigger')}</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>${t('demonstration.labels.title')}</SheetTitle>
+      <SheetDescription>${t('demonstration.labels.description')}</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <form id="filters" class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="category">${t('variants.compositions.advancedFilters.fieldCategory')}</Label>
+          <Input id="category" value="${t('variants.compositions.advancedFilters.categoryValue')}" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="min-price">${t('variants.compositions.advancedFilters.fieldMinPrice')}</Label>
+          <Input id="min-price" type="number" value="100" />
+        </div>
+      </form>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button type="button" variant="outline" {...props}>${t('demonstration.labels.cancel')}</Button>
+        {/snippet}
+      </SheetClose>
+      <Button type="submit" form="filters">${t('demonstration.labels.apply')}</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+  }
+
+  function codeSecondaryNav(t: (key: string) => string): string {
+    // Os links saem escritos, um a um, e não por laço: o exemplo tem de ser
+    // copiável inteiro, e um `{#each}` pediria uma lista que ele não declara.
+    const links = contentList(t, 'variants.compositions.secondaryNavigation.items')
+      .map(
+        (item) =>
+          `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">${item}</a>`,
+      )
+      .join('\n');
+    return `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>${t('variants.compositions.secondaryNavigation.trigger')}</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>${t('variants.compositions.secondaryNavigation.panelTitle')}</SheetTitle>
+      <SheetDescription>${t('variants.compositions.secondaryNavigation.panelDescription')}</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <nav aria-label="${t('variants.compositions.secondaryNavigation.navLabel')}" class="nds-stack" data-spacing="xs">
+${links}
+      </nav>
+    </SheetBody>
+  </SheetContent>
+</Sheet>`;
+  }
+
+  function codeProfileEdit(t: (key: string) => string): string {
+    return `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>${t('variants.compositions.profileEdit.trigger')}</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>${t('variants.compositions.profileEdit.panelTitle')}</SheetTitle>
+      <SheetDescription>${t('variants.compositions.profileEdit.panelDescription')}</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <form id="profile" class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="profile-name">${t('variants.compositions.profileEdit.fieldName')}</Label>
+          <Input id="profile-name" value="${t('variants.compositions.profileEdit.fieldNameValue')}" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="profile-handle">${t('variants.compositions.profileEdit.fieldHandle')}</Label>
+          <Input id="profile-handle" value="${t('variants.compositions.profileEdit.fieldHandleValue')}" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="profile-bio">${t('variants.compositions.profileEdit.fieldBio')}</Label>
+          <Input id="profile-bio" value="${t('variants.compositions.profileEdit.fieldBioValue')}" />
+        </div>
+      </form>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button type="button" variant="outline" {...props}>${t('demonstration.labels.cancel')}</Button>
+        {/snippet}
+      </SheetClose>
+      <Button type="submit" form="profile">${t('variants.compositions.profileEdit.submit')}</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+  }
+
+  function codeBottomPanel(t: (key: string) => string): string {
+    const actions = panelActions(t)
+      .map(
+        (action) =>
+          `        <Button variant="${action.variant}">${action.label}</Button>`,
+      )
+      .join('\n');
+    return `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>${t('variants.compositions.bottomPanel.trigger')}</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>${t('variants.compositions.bottomPanel.panelTitle')}</SheetTitle>
+      <SheetDescription>${t('variants.compositions.bottomPanel.panelDescription')}</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <div class="nds-cluster" data-spacing="md">
+${actions}
+      </div>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>${t('variants.compositions.bottomPanel.close')}</Button>
+        {/snippet}
+      </SheetClose>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+  }
+
+  /**
+   * A fileira de ações do painel inferior.
+   *
+   * A última é a destrutiva — é o conteúdo que decide quantas ações existem, e
+   * a posição é o que decide a variante, para que acrescentar uma quarta ação
+   * não exija mexer aqui.
+   */
+  function panelActions(t: (key: string) => string) {
+    const actions = contentList(t, 'variants.compositions.bottomPanel.actions');
+    return actions.map((label, index) => ({
+      label,
+      variant: index === actions.length - 1 ? ('destructive' as const) : ('outline' as const),
+    }));
+  }
 
   const interfaceCode = `// Sheet (Root) — bits-ui Dialog
 interface SheetProps {
@@ -210,13 +451,13 @@ interface TriggerProps {
       traduzido, que partiria o mesmo evento em três valores no GA4.
     -->
     <div class="nds-cluster" data-justify="center" data-spacing="sm" style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_demo' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_demo', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.title')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
@@ -343,13 +584,13 @@ interface TriggerProps {
 
   {#snippet doPair1()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_do_dont' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_do_dont', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.title')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
@@ -369,13 +610,13 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_do_dont' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_do_dont', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('doDont.pair1.dontTrigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" {...closeWatch}>
           <!-- Cabeçalho só para leitor de tela: é ESTE o defeito ilustrado —
                quem enxerga fica sem título e sem descrição visíveis. -->
           <SheetHeader>
@@ -394,13 +635,13 @@ interface TriggerProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_do_dont' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_do_dont', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.title')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
@@ -420,13 +661,13 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'top', location: 'docs_do_dont' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_do_dont', 'top', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="top">
+        <SheetContent side="top" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.title')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
@@ -453,26 +694,29 @@ interface TriggerProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { trackId: 'right', name: $tStore('variants.items.right'),  description: stripHtml($tStore('variants.styles.right')),  code: codeRight,  preview: variantRight  },
-      { trackId: 'left', name: $tStore('variants.items.left'),   description: stripHtml($tStore('variants.styles.left')),   code: codeLeft,   preview: variantLeft   },
-      { trackId: 'top', name: $tStore('variants.items.top'),    description: stripHtml($tStore('variants.styles.top')),    code: codeTop,    preview: variantTop    },
-      { trackId: 'bottom', name: $tStore('variants.items.bottom'), description: stripHtml($tStore('variants.styles.bottom')), code: codeBottom, preview: variantBottom },
+      { trackId: 'right',  name: $tStore('variants.items.right'),  description: stripHtml($tStore('variants.styles.right')),  code: codeSide('right',  $tStore('demonstration.labels.rightLabel'),  $tStore), preview: variantRight  },
+      { trackId: 'left',   name: $tStore('variants.items.left'),   description: stripHtml($tStore('variants.styles.left')),   code: codeSide('left',   $tStore('demonstration.labels.leftLabel'),   $tStore), preview: variantLeft   },
+      { trackId: 'top',    name: $tStore('variants.items.top'),    description: stripHtml($tStore('variants.styles.top')),    code: codeSide('top',    $tStore('demonstration.labels.topLabel'),    $tStore), preview: variantTop    },
+      { trackId: 'bottom', name: $tStore('variants.items.bottom'), description: stripHtml($tStore('variants.styles.bottom')), code: codeSide('bottom', $tStore('demonstration.labels.bottomLabel'), $tStore), preview: variantBottom },
     ]}
   />
 
   {#snippet variantRight()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_variantes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_variantes', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.rightLabel')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
           </SheetHeader>
+          <SheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
+          </SheetBody>
           <SheetFooter>
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
@@ -485,17 +729,20 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantLeft()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'left', location: 'docs_variantes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_variantes', 'left', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="left">
+        <SheetContent side="left" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.leftLabel')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
           </SheetHeader>
+          <SheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
+          </SheetBody>
           <SheetFooter>
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
@@ -508,17 +755,20 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantTop()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'top', location: 'docs_variantes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_variantes', 'top', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="top">
+        <SheetContent side="top" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.topLabel')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
           </SheetHeader>
+          <SheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
+          </SheetBody>
           <SheetFooter>
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
@@ -531,17 +781,20 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantBottom()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'bottom', location: 'docs_variantes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_variantes', 'bottom', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="bottom">
+        <SheetContent side="bottom" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.bottomLabel')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
           </SheetHeader>
+          <SheetBody>
+            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
+          </SheetBody>
           <SheetFooter>
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
@@ -564,35 +817,7 @@ interface TriggerProps {
         name: $tStore('variants.compositions.advancedFilters.name'),
         description: $tStore('variants.compositions.advancedFilters.description'),
         useWhen: $tStore('variants.compositions.advancedFilters.use'),
-        code: `<Sheet>
-  <SheetTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Abrir filtros</Button>
-    {/snippet}
-  </SheetTrigger>
-  <SheetContent side="right">
-    <SheetHeader>
-      <SheetTitle>Filtros avançados</SheetTitle>
-      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
-    </SheetHeader>
-    <SheetBody>
-      <form id="filtros" class="nds-grid" data-spacing="md">
-        <Label for="cat">${$tStore('variants.compositions.advancedFilters.fieldCategory')}</Label>
-        <Input id="cat" value="Eletrônicos" />
-        <Label for="min">${$tStore('variants.compositions.advancedFilters.fieldMinPrice')}</Label>
-        <Input id="min" type="number" value="100" />
-      </form>
-    </SheetBody>
-    <SheetFooter>
-      <SheetClose>
-        {#snippet child({ props })}
-          <Button variant="outline" {...props}>Cancelar</Button>
-        {/snippet}
-      </SheetClose>
-      <Button type="submit" form="filtros">Aplicar filtros</Button>
-    </SheetFooter>
-  </SheetContent>
-</Sheet>`,
+        code: codeAdvancedFilters($tStore),
         preview: compAdvancedFilters,
       },
       {
@@ -600,18 +825,7 @@ interface TriggerProps {
         name: $tStore('variants.compositions.secondaryNavigation.name'),
         description: $tStore('variants.compositions.secondaryNavigation.description'),
         useWhen: $tStore('variants.compositions.secondaryNavigation.use'),
-        code: `<SheetContent side="left">
-  <SheetHeader>
-    <SheetTitle>Menu</SheetTitle>
-    <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
-  </SheetHeader>
-  <nav aria-label="Navegação secundária" class="nds-stack nds-px-4" data-spacing="xs">
-    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
-    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
-    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
-    <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
-  </nav>
-</SheetContent>`,
+        code: codeSecondaryNav($tStore),
         preview: compSecondaryNav,
       },
       {
@@ -619,43 +833,7 @@ interface TriggerProps {
         name: $tStore('variants.compositions.profileEdit.name'),
         description: $tStore('variants.compositions.profileEdit.description'),
         useWhen: $tStore('variants.compositions.profileEdit.use'),
-        code: `<Sheet>
-  <SheetTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Editar perfil</Button>
-    {/snippet}
-  </SheetTrigger>
-  <SheetContent side="right">
-    <SheetHeader>
-      <SheetTitle>Editar perfil</SheetTitle>
-      <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
-    </SheetHeader>
-    <SheetBody>
-      <form id="perfil" class="nds-grid" data-spacing="sm">
-        <div class="nds-grid" data-spacing="xs">
-          <Label for="nome">Nome</Label>
-          <Input id="nome" value="Juliana Mucci" />
-        </div>
-        <div class="nds-grid" data-spacing="xs">
-          <Label for="username">Username</Label>
-          <Input id="username" value="@julianamucci" />
-        </div>
-        <div class="nds-grid" data-spacing="xs">
-          <Label for="bio">Bio</Label>
-          <Input id="bio" value="Designer de sistemas em São Paulo" />
-        </div>
-      </form>
-    </SheetBody>
-    <SheetFooter>
-      <SheetClose>
-        {#snippet child({ props })}
-          <Button variant="outline" {...props}>Cancelar</Button>
-        {/snippet}
-      </SheetClose>
-      <Button type="submit" form="perfil">Salvar alterações</Button>
-    </SheetFooter>
-  </SheetContent>
-</Sheet>`,
+        code: codeProfileEdit($tStore),
         preview: compProfileEdit,
       },
       {
@@ -663,64 +841,47 @@ interface TriggerProps {
         name: $tStore('variants.compositions.bottomPanel.name'),
         description: $tStore('variants.compositions.bottomPanel.description'),
         useWhen: $tStore('variants.compositions.bottomPanel.use'),
-        code: `<Sheet>
-  <SheetTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Abrir ações</Button>
-    {/snippet}
-  </SheetTrigger>
-  <SheetContent side="bottom">
-    <SheetHeader>
-      <SheetTitle>Ações rápidas</SheetTitle>
-      <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
-    </SheetHeader>
-    <SheetBody>
-      <div class="nds-cluster" data-spacing="md">
-        <Button variant="outline">Compartilhar</Button>
-        <Button variant="outline">Duplicar</Button>
-        <Button variant="destructive">Excluir</Button>
-      </div>
-    </SheetBody>
-    <SheetFooter>
-      <SheetClose>
-        {#snippet child({ props })}
-          <Button variant="outline" {...props}>Fechar</Button>
-        {/snippet}
-      </SheetClose>
-    </SheetFooter>
-  </SheetContent>
-</Sheet>`,
+        code: codeBottomPanel($tStore),
         preview: compBottomPanel,
       },
     ]}
   />
 
+  <!--
+    Os quatro previews montam o corpo dentro do SheetBody, e não solto no
+    conteúdo com um recuo à mão: é ele que traz a área que rola, o `tabindex`
+    que a região rolável exige e o `role="group"` que dá nome a ela. Sem ele o
+    rodapé rola junto e as ações somem de alcance.
+
+    O texto vem TODO de chave: literal em português mostrava português nas
+    páginas em inglês e espanhol, no meio de uma seção traduzida.
+  -->
   {#snippet compAdvancedFilters()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_composicoes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_composicoes', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" {...closeWatch}>
           <SheetHeader>
             <SheetTitle>{$tStore('demonstration.labels.title')}</SheetTitle>
             <SheetDescription>{$tStore('demonstration.labels.description')}</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <form id="docs-sheet-filtros" class="nds-grid" data-spacing="md"
+            <form id="docs-sheet-filters" class="nds-stack" data-spacing="sm"
                   onsubmit={(e: SubmitEvent) => {
                     e.preventDefault();
-                    track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_composicoes' });
+                    track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'right', location: 'docs_composicoes' });
                   }}>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <Label for="docs-sheet-category">{$tStore('variants.compositions.advancedFilters.fieldCategory')}</Label>
-                <Input id="docs-sheet-category" value="Eletrônicos" />
+                <Input id="docs-sheet-category" value={$tStore('variants.compositions.advancedFilters.categoryValue')} />
               </div>
-              <div class="nds-grid" data-spacing="xs">
-                <Label for="docs-sheet-min">{$tStore('variants.compositions.advancedFilters.fieldMinPrice')}</Label>
-                <Input id="docs-sheet-min" type="number" value="100" />
+              <div class="nds-stack" data-spacing="xs">
+                <Label for="docs-sheet-min-price">{$tStore('variants.compositions.advancedFilters.fieldMinPrice')}</Label>
+                <Input id="docs-sheet-min-price" type="number" value="100" />
               </div>
             </form>
           </SheetBody>
@@ -730,7 +891,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button type="submit" form="docs-sheet-filtros">{$tStore('demonstration.labels.apply')}</Button>
+            <Button type="submit" form="docs-sheet-filters">{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -739,23 +900,24 @@ interface TriggerProps {
 
   {#snippet compSecondaryNav()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'left', location: 'docs_composicoes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_composicoes', 'left', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+            <Button variant="outline" {...props}>{$tStore('variants.compositions.secondaryNavigation.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="left">
+        <SheetContent side="left" {...closeWatch}>
           <SheetHeader>
-            <SheetTitle>Menu</SheetTitle>
-            <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+            <SheetTitle>{$tStore('variants.compositions.secondaryNavigation.panelTitle')}</SheetTitle>
+            <SheetDescription>{$tStore('variants.compositions.secondaryNavigation.panelDescription')}</SheetDescription>
           </SheetHeader>
-          <nav aria-label="Navegação secundária" class="nds-stack nds-px-4" data-spacing="xs">
-            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
-            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
-            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
-            <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
-          </nav>
+          <SheetBody>
+            <nav aria-label={$tStore('variants.compositions.secondaryNavigation.navLabel')} class="nds-stack" data-spacing="xs">
+              {#each contentList($tStore, 'variants.compositions.secondaryNavigation.items') as item (item)}
+                <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">{item}</a>
+              {/each}
+            </nav>
+          </SheetBody>
         </SheetContent>
       </Sheet>
     </div>
@@ -763,38 +925,38 @@ interface TriggerProps {
 
   {#snippet compProfileEdit()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_composicoes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_composicoes', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+            <Button variant="outline" {...props}>{$tStore('variants.compositions.profileEdit.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" {...closeWatch}>
           <SheetHeader>
-            <SheetTitle>Editar perfil</SheetTitle>
-            <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
+            <SheetTitle>{$tStore('variants.compositions.profileEdit.panelTitle')}</SheetTitle>
+            <SheetDescription>{$tStore('variants.compositions.profileEdit.panelDescription')}</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <form id="docs-sheet-perfil" class="nds-grid" data-spacing="sm">
-              <div class="nds-grid" data-spacing="xs">
-                <Label for="docs-sheet-profile-name">Nome</Label>
-                <Input id="docs-sheet-profile-name" value="Juliana Mucci" />
+            <form id="docs-sheet-profile" class="nds-stack" data-spacing="sm">
+              <div class="nds-stack" data-spacing="xs">
+                <Label for="docs-sheet-profile-name">{$tStore('variants.compositions.profileEdit.fieldName')}</Label>
+                <Input id="docs-sheet-profile-name" value={$tStore('variants.compositions.profileEdit.fieldNameValue')} />
               </div>
-              <div class="nds-grid" data-spacing="xs">
-                <Label for="docs-sheet-profile-handle">Username</Label>
-                <Input id="docs-sheet-profile-handle" value="@julianamucci" />
+              <div class="nds-stack" data-spacing="xs">
+                <Label for="docs-sheet-profile-handle">{$tStore('variants.compositions.profileEdit.fieldHandle')}</Label>
+                <Input id="docs-sheet-profile-handle" value={$tStore('variants.compositions.profileEdit.fieldHandleValue')} />
               </div>
-              <div class="nds-grid" data-spacing="xs">
-                <Label for="docs-sheet-profile-bio">Bio</Label>
-                <Input id="docs-sheet-profile-bio" value="Designer de sistemas em São Paulo" />
+              <div class="nds-stack" data-spacing="xs">
+                <Label for="docs-sheet-profile-bio">{$tStore('variants.compositions.profileEdit.fieldBio')}</Label>
+                <Input id="docs-sheet-profile-bio" value={$tStore('variants.compositions.profileEdit.fieldBioValue')} />
               </div>
             </form>
           </SheetBody>
           <SheetFooter>
             <SheetClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button type="submit" form="docs-sheet-perfil" onclick={() => track('dialog_confirm', { component: 'sheet', action: 'save', label: 'right', location: 'docs_composicoes' })}>Salvar alterações</Button>
+            <Button type="submit" form="docs-sheet-profile" onclick={() => track('dialog_confirm', { component: 'sheet', action: 'save', label: 'right', location: 'docs_composicoes' })}>{$tStore('variants.compositions.profileEdit.submit')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -803,27 +965,27 @@ interface TriggerProps {
 
   {#snippet compBottomPanel()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'bottom', location: 'docs_composicoes' })}>
+      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_composicoes', 'bottom', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
+            <Button variant="outline" {...props}>{$tStore('variants.compositions.bottomPanel.trigger')}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent side="bottom">
+        <SheetContent side="bottom" {...closeWatch}>
           <SheetHeader>
-            <SheetTitle>Ações rápidas</SheetTitle>
-            <SheetDescription>Escolha uma das ações disponíveis para este item.</SheetDescription>
+            <SheetTitle>{$tStore('variants.compositions.bottomPanel.panelTitle')}</SheetTitle>
+            <SheetDescription>{$tStore('variants.compositions.bottomPanel.panelDescription')}</SheetDescription>
           </SheetHeader>
           <SheetBody>
             <div class="nds-cluster" data-spacing="md">
-              <Button variant="outline">Compartilhar</Button>
-              <Button variant="outline">Duplicar</Button>
-              <Button variant="destructive">Excluir</Button>
+              {#each panelActions($tStore) as action (action.label)}
+                <Button variant={action.variant}>{action.label}</Button>
+              {/each}
             </div>
           </SheetBody>
           <SheetFooter>
             <SheetClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Fechar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.compositions.bottomPanel.close')}</Button>{/snippet}
             </SheetClose>
           </SheetFooter>
         </SheetContent>

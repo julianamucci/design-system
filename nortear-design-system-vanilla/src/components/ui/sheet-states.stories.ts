@@ -4,7 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
 import { sheetSource, sheetSourceWith, sheetSourceControlled } from './sheet.source';
 import { createButton } from './button';
-import { makeFooter } from './sheet.fixtures';
+import { makeBody, makeFooter } from './sheet.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -43,9 +43,8 @@ function buildSheet(opts: {
   openInitially?: boolean;
 }): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: opts.triggerLabel });
-  const body = document.createElement('div');
-  body.className = 'nds-text-body nds-text-muted-foreground';
-  body.textContent = 'Conteúdo do painel.';
+  // Corpo canônico — o mesmo parágrafo que o painel Code publica.
+  const body = makeBody();
 
   const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
   const action = createButton({ variant: 'default', label: 'Aplicar filtros' });
@@ -145,7 +144,7 @@ export const LongScrollBody: Story = {
       // onde está sem nenhuma opção extra.
       source: {
         transform: sheetSourceWith({
-          body: 'paragrafos',
+          body: 'paragraphs',
           triggerLabel: 'Ler termos',
           title: 'Termos de uso',
           description: 'Leia atentamente antes de aceitar.',
@@ -232,9 +231,7 @@ export const WithCloseButtonHidden: Story = {
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
-    const body = document.createElement('div');
-    body.className = 'nds-text-body nds-text-muted-foreground';
-    body.textContent = 'Conteúdo do painel.';
+    const body = makeBody();
 
     const sheet = createSheet({
       trigger,

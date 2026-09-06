@@ -5,6 +5,7 @@ import { expect, within } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 import {
   perfilSheetEditSource,
+  sheetBottomPanelSource,
   sheetFiltersAvancadosSource,
   sheetNavegacaoSecundariaSource,
   sheetSource,
@@ -26,7 +27,8 @@ const meta: Meta = {
       description: {
         component:
           'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
-          'perfil e navegação secundária. Renderizadas abertas para a captura visual.',
+          'perfil, navegação secundária e painel de ações na base. Renderizadas abertas ' +
+          'para a captura visual.',
       },
     },
   },
@@ -69,10 +71,10 @@ export const ProfileEdit: Story = {
   args: {
     open: true,
     side: 'right',
-    variant: 'withForm',
+    variant: 'profileForm',
     triggerLabel: 'Editar perfil',
     title: 'Editar perfil',
-    description: 'Atualize seu nome e e-mail. As mudanças são salvas ao confirmar.',
+    description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
     actionLabel: 'Salvar alterações',
     cancelLabel: 'Cancelar',
   },
@@ -91,6 +93,11 @@ export const ProfileEdit: Story = {
     await expect(panel).toBeVisible();
     await expect(panel).toHaveAttribute('aria-modal', 'true');
     await expect(panel).toHaveAccessibleName(/Editar perfil/i);
+    // Ordem conferida por ÍNDICE, e não por presença: o campo do meio já sumiu
+    // uma vez, e uma busca solta o aceitaria de volta em qualquer posição — ou
+    // casaria dois rótulos, já que um deles começa pelo outro.
+    const rotulos = [...panel.querySelectorAll('label')].map((el) => el.textContent?.trim());
+    await expect(rotulos).toEqual(['Nome', 'Nome de usuário', 'Bio']);
   },
 };
 
@@ -118,7 +125,46 @@ export const SecondaryNavigation: Story = {
     await expect(panel).toHaveAttribute('data-side', 'left');
     const nav = within(panel).getByRole('navigation', { name: /Navegação secundária/i });
     await expect(nav).toBeVisible();
+    // As CINCO seções: o conteúdo compartilhado descreve a lista, e quatro
+    // documentavam uma composição que não existe.
+    await expect(within(nav).getAllByRole('link')).toHaveLength(5);
+    await expect(within(nav).getByRole('link', { name: 'Faturas' })).toBeVisible();
     // Sem rodapé: a saída é o X do canto, e é ela que sustenta o painel sem ações.
     await expect(panel.querySelector('[data-slot="sheet-footer"]')).toBeNull();
+  },
+};
+
+export const BottomPanel: Story = {
+  args: {
+    open: true,
+    side: 'bottom',
+    variant: 'actionRow',
+    triggerLabel: 'Abrir ações',
+    title: 'Ações rápidas',
+    description: 'Escolha uma das ações disponíveis para este item.',
+    cancelLabel: 'Fechar',
+  },
+  parameters: {
+    docs: {
+      source: { transform: sheetBottomPanelSource },
+      description: {
+        story:
+          'Fileira de ações deslizando de baixo — o mesmo desenho do Drawer, sem o gesto ' +
+          'de arrastar. Quando o gesto importa, o componente é o Drawer.',
+      },
+    },
+  },
+  play: async () => {
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'bottom');
+    await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
+    await expect(within(panel).getByRole('button', { name: 'Compartilhar' })).toBeVisible();
+    // O rodapé existe, mas só com a saída: a decisão foi a ação clicada no
+    // corpo. A busca é DENTRO do rodapé porque o X do canto também se chama
+    // "Fechar" — no painel inteiro haveria dois.
+    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
+    await expect(footer).not.toBeNull();
+    await expect(within(footer!).getAllByRole('button')).toHaveLength(1);
+    await expect(within(footer!).getByRole('button', { name: 'Fechar' })).toBeVisible();
   },
 };
