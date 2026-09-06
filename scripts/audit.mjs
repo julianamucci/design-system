@@ -6682,9 +6682,14 @@ function auditSnippetEmSlotDeProsa(slug) {
  * A verificação é uma COMPARAÇÃO, não um vocabulário: extrai os identificadores
  * declarados em cada idioma e cobra que sejam os mesmos. Sem lista de palavras
  * não há morfologia para inundar — e ela pega o espanhol, que nenhuma lista de
- * português pegaria. Comentário e literal de texto ficam de fora por
- * construção: só entram nomes atrás de `const`/`let`/`var`/`function`, e esses
- * SÃO para diferir entre idiomas.
+ * português pegaria.
+ *
+ * O COMENTÁRIO SAI ANTES, e a primeira versão desta regra não o tirava: o
+ * comentário em inglês do stepper diz "let the item grow", e `let the` casou
+ * como declaração de variável. Comentário é a única parte do snippet que É para
+ * diferir entre idiomas, então lê-lo aqui garante falso positivo — e é a
+ * armadilha que esta casa já tinha documentado, em portão que casa palavra
+ * solta.
  */
 function auditCodigoTraduzidoEmSnippet(slug) {
   const violations = [];
@@ -6696,7 +6701,8 @@ function auditCodigoTraduzidoEmSnippet(slug) {
   if (!json || !json['pt-BR']) return violations;
 
   const declaracoes = (texto) =>
-    [...String(texto).matchAll(/\b(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g)].map((m) => m[1]);
+    [...stripComments(String(texto)).matchAll(/\b(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g)]
+      .map((m) => m[1]);
 
   const caminhos = [];
   const walk = (obj, prefixo) => {
