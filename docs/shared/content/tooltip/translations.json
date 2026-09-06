@@ -193,12 +193,12 @@
       "closed": {
         "label": "Closed",
         "trigger": "estado inicial",
-        "behavior": "Estado inicial — conteúdo desmontado, <code>data-state=\"closed\"</code>."
+        "behavior": "Estado inicial — o balão não existe no DOM; só o gatilho está na página."
       },
       "open": {
         "label": "Open",
         "trigger": "hover/focus no trigger",
-        "behavior": "Visível — <code>data-state=\"open\"</code> ou <code>delayed-open</code>, posicionado por <code>side</code>."
+        "behavior": "Visível — o balão existe enquanto está aberto, ancorado ao gatilho pelo lado escolhido, e o gatilho o referencia por <code>aria-describedby</code>."
       },
       "hover": {
         "label": "Hover",
@@ -213,7 +213,7 @@
       "delayed": {
         "label": "Delayed",
         "trigger": "antes do delay completar",
-        "behavior": "Em delay — <code>data-state=\"delayed-open\"</code> antes da animação completar."
+        "behavior": "Em espera — o ponteiro já está sobre o gatilho e a contagem do atraso corre; o balão ainda não foi criado."
       },
       "cols": {
         "state": "Estado",
@@ -661,12 +661,12 @@
       "closed": {
         "label": "Closed",
         "trigger": "initial state",
-        "behavior": "Initial state — content unmounted, <code>data-state=\"closed\"</code>."
+        "behavior": "Initial state — the tooltip does not exist in the DOM; only the trigger is on the page."
       },
       "open": {
         "label": "Open",
         "trigger": "hover/focus on the trigger",
-        "behavior": "Visible — <code>data-state=\"open\"</code> or <code>delayed-open</code>, positioned by <code>side</code>."
+        "behavior": "Visible — the tooltip exists only while open, anchored to the trigger on the chosen side, and the trigger points to it through <code>aria-describedby</code>."
       },
       "hover": {
         "label": "Hover",
@@ -681,7 +681,7 @@
       "delayed": {
         "label": "Delayed",
         "trigger": "before the delay completes",
-        "behavior": "In delay — <code>data-state=\"delayed-open\"</code> before animation completes."
+        "behavior": "Waiting — the pointer is already over the trigger and the delay is counting down; the tooltip has not been created yet."
       },
       "cols": {
         "state": "State",
@@ -1129,12 +1129,12 @@
       "closed": {
         "label": "Closed",
         "trigger": "estado inicial",
-        "behavior": "Estado inicial — contenido desmontado, <code>data-state=\"closed\"</code>."
+        "behavior": "Estado inicial — el globo no existe en el DOM; solo el disparador está en la página."
       },
       "open": {
         "label": "Open",
         "trigger": "hover/focus en el trigger",
-        "behavior": "Visible — <code>data-state=\"open\"</code> o <code>delayed-open</code>, posicionado por <code>side</code>."
+        "behavior": "Visible — el globo existe solo mientras está abierto, anclado al disparador por el lado elegido, y el disparador lo referencia con <code>aria-describedby</code>."
       },
       "hover": {
         "label": "Hover",
@@ -1149,7 +1149,7 @@
       "delayed": {
         "label": "Delayed",
         "trigger": "antes de que se complete el delay",
-        "behavior": "En delay — <code>data-state=\"delayed-open\"</code> antes de completar la animación."
+        "behavior": "En espera — el puntero ya está sobre el disparador y el retraso corre; el globo aún no se ha creado."
       },
       "cols": {
         "state": "Estado",
