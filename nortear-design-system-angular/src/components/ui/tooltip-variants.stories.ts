@@ -2,8 +2,13 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, SAVE_ICON } from './tooltip.fixtures';
 import { NdsButton } from './button';
+import {
+  tooltipDefaultSource,
+  tooltipLongTextSource,
+  tooltipWithShortcutSource,
+} from './tooltip.source';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
@@ -11,22 +16,6 @@ import { NdsButton } from './button';
 //
 // Os quatro lados de posicionamento moram em -compositions, e não aqui: é onde
 // react e vanilla já os publicavam, e o grupo da barra lateral sai do ARQUIVO.
-
-const ICON_SALVAR = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          class="nds-icon nds-shrink-0"
-        >
-          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
-          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
-          <path d="M7 3v4a1 1 0 0 0 1 1h7" />
-        </svg>`;
 
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {
@@ -67,13 +56,13 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  parameters: { covers: ['visual.item1', 'accessibility.item2'] },
+  parameters: { covers: ['visual.item1', 'accessibility.item2'], docs: { source: { transform: tooltipDefaultSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip [defaultOpen]="true">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
           <ng-template ndsTooltipContent>Salvar</ng-template>
         </span>
@@ -104,13 +93,13 @@ export const Default: Story = {
 };
 
 export const WithShortcut: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: { covers: ['visual.item2'], docs: { source: { transform: tooltipWithShortcutSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip [defaultOpen]="true">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
           <ng-template ndsTooltipContent
             ><span>Salvar</span
@@ -146,7 +135,7 @@ export const WithShortcut: Story = {
 };
 
 export const LongText: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: { covers: ['visual.item4'], docs: { source: { transform: tooltipLongTextSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">

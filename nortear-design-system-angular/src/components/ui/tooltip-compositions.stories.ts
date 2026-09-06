@@ -2,8 +2,14 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, HELP_ICON, INFO_ICON, SAVE_ICON } from './tooltip.fixtures';
 import { aguardarSeta } from '@shared/testing/tooltip-arrow-probe';
+import {
+  tooltipFormFieldHelpSource,
+  tooltipIconButtonShortcutSource,
+  tooltipMetricDescriptionSource,
+  tooltipPlacementSidesSource,
+} from './tooltip.source';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
@@ -13,54 +19,6 @@ import { NdsCard, NdsCardContent, NdsCardHeader, NdsCardTitle } from './card';
 // lados de posicionamento. As composições repetem a mesma regra: o Tooltip
 // acrescenta contexto a um elemento que JÁ se explica sozinho — nunca é o único
 // portador da informação.
-
-const ICON_SALVAR = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          class="nds-icon nds-shrink-0"
-        >
-          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
-          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
-          <path d="M7 3v4a1 1 0 0 0 1 1h7" />
-        </svg>`;
-
-const ICON_AJUDA = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          class="nds-icon nds-shrink-0"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-          <path d="M12 17h.01" />
-        </svg>`;
-
-const ICON_INFO = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          class="nds-icon nds-shrink-0"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 16v-4" />
-          <path d="M12 8h.01" />
-        </svg>`;
 
 const meta: Meta = {
   title: 'Components/Overlay/Tooltip/Compositions',
@@ -94,12 +52,13 @@ export default meta;
 type Story = StoryObj;
 
 export const IconButtonWithShortcut: Story = {
+  parameters: { docs: { source: { transform: tooltipIconButtonShortcutSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-cluster nds-p-8" data-spacing="sm">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
           <ng-template ndsTooltipContent
             ><span>Salvar</span
@@ -127,6 +86,7 @@ export const IconButtonWithShortcut: Story = {
 };
 
 export const HelpInFormField: Story = {
+  parameters: { docs: { source: { transform: tooltipFormFieldHelpSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-stack nds-p-8 nds-w-sm" data-spacing="sm">
@@ -140,7 +100,7 @@ export const HelpInFormField: Story = {
               size="icon-sm"
               aria-label="Onde encontrar o token da API"
             >
-              ${ICON_AJUDA}
+              ${HELP_ICON}
             </button>
             <ng-template ndsTooltipContent side="right"
               >Gere em Configurações › Acesso › Tokens</ng-template
@@ -175,6 +135,7 @@ export const HelpInFormField: Story = {
 };
 
 export const MetricDescription: Story = {
+  parameters: { docs: { source: { transform: tooltipMetricDescriptionSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
@@ -190,7 +151,7 @@ export const MetricDescription: Story = {
                   size="icon-sm"
                   aria-label="O que é LCP"
                 >
-                  ${ICON_INFO}
+                  ${INFO_ICON}
                 </button>
                 <ng-template ndsTooltipContent
                   >LCP — Largest Contentful Paint</ng-template
@@ -221,7 +182,7 @@ export const MetricDescription: Story = {
 };
 
 export const PlacementSides: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: { covers: ['visual.item3'], docs: { source: { transform: tooltipPlacementSidesSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-grid nds-p-8" data-cols="2" data-spacing="xl">

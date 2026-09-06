@@ -50,3 +50,43 @@ export const SAVE_ICON = `<svg
           <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
           <path d="M7 3v4a1 1 0 0 0 1 1h7" />
         </svg>`;
+
+/**
+ * Ícone `circle-help` do lucide — o gatilho de ajuda ao lado de um rótulo.
+ *
+ * Mesma razão do `SAVE_ICON`: o desenho tem dois leitores, a story que o
+ * renderiza e `tooltip.source.ts`, que o publica no painel Code. Em duas cópias
+ * é assim que o `aria-hidden` sai de uma delas sem ninguém ver.
+ */
+export const HELP_ICON = `<svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          class="nds-icon nds-shrink-0"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+          <path d="M12 17h.01" />
+        </svg>`;
+
+/** Ícone `info` do lucide — o gatilho que expande uma sigla. */
+export const INFO_ICON = `<svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          class="nds-icon nds-shrink-0"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>`;

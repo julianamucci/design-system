@@ -2,29 +2,19 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, SAVE_ICON } from './tooltip.fixtures';
 import { NdsButton } from './button';
+import {
+  tooltipClosedSource,
+  tooltipDelaySource,
+  tooltipOpenSource,
+  tooltipPersistenceSource,
+} from './tooltip.source';
 
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois do delay do provider) e aberto por foco (na hora).
 // A diferença entre os dois últimos é o que a WCAG 1.4.13 cobra: o tooltip não
 // pode depender do mouse.
-
-const ICON_SALVAR = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          class="nds-icon nds-shrink-0"
-        >
-          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
-          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
-          <path d="M7 3v4a1 1 0 0 0 1 1h7" />
-        </svg>`;
 
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
 const LONG_DELAY = 600;
@@ -58,12 +48,13 @@ export default meta;
 type Story = StoryObj;
 
 export const Closed: Story = {
+  parameters: { docs: { source: { transform: tooltipClosedSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>
@@ -86,13 +77,14 @@ export const Closed: Story = {
 };
 
 export const Open: Story = {
+  parameters: { docs: { source: { transform: tooltipOpenSource } } },
   render: () => ({
     props: { isOpen: true },
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip [open]="isOpen" (openChange)="isOpen = $event">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>
@@ -123,14 +115,14 @@ export const Open: Story = {
 };
 
 export const Hover: Story = {
-  parameters: { covers: ['functional.item1'] },
+  parameters: { covers: ['functional.item1'], docs: { source: { transform: tooltipDelaySource } } },
   render: () => ({
     props: { delay: LONG_DELAY },
     template: `
       <div ndsTooltipProvider [delay]="delay" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>
@@ -158,14 +150,14 @@ export const Hover: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ['functional.item2'] },
+  parameters: { covers: ['functional.item2'], docs: { source: { transform: tooltipDelaySource } } },
   render: () => ({
     props: { delay: LONG_DELAY },
     template: `
       <div ndsTooltipProvider [delay]="delay" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICON_SALVAR}
+            ${SAVE_ICON}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>
@@ -195,7 +187,7 @@ export const Focus: Story = {
 };
 
 export const PersistenceInBubble: Story = {
-  parameters: { covers: ['functional.item4'] },
+  parameters: { covers: ['functional.item4'], docs: { source: { transform: tooltipPersistenceSource } } },
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
