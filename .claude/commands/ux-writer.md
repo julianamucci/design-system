@@ -78,6 +78,41 @@ O `translations.json` é compartilhado entre React, Vue, Svelte e Vanilla. Cada 
 
 **Nunca** compare stacks dentro do texto ("No React…, em Vue…"). Cada docs page é consumida isoladamente — o leitor do Storybook do Vue não tem contexto do React, e a comparação vaza. Divergência de API entre libs vai para `patches.md`, não para o `translations.json`. Se a diferença precisa aparecer na página, use overrides de `useTranslation` por stack.
 
+### O CÓDIGO dentro de `*Code` não se traduz
+
+As chaves terminadas em `Code` existem nos três idiomas, e é aí que mora a
+armadilha: você está gerando `pt-BR`, `en` e `es`, o passo 3 do processo manda
+"gerar JSON completo nos 3 idiomas", e a regra de tom manda "mesma informação,
+não tradução literal". Aplicado a um bloco de código, isso vira **reescrever o
+nome das variáveis** — e foi o que aconteceu.
+
+Medido em 2026-09-06: **150 identificadores em 49 chaves de 30 componentes**. O
+popover publicava `const cabecalho` para quem lia em português, `const header`
+em inglês e `const encabezado` em espanhol. Duas pessoas lendo a mesma página em
+línguas diferentes copiavam variáveis diferentes para o mesmo componente.
+
+Dentro de um snippet, três coisas e só três:
+
+| o que | traduz? | por quê |
+|---|---|---|
+| identificador (`const`, `let`, `function`, parâmetro) | **NUNCA** — inglês nos três | código se escreve em inglês, e código não muda com a língua de quem lê |
+| comentário | **sim** | é prosa, e é para quem lê |
+| literal de texto de tela (`'Salvar'`, `text: 'Início'`) | **sim** | é o que apareceria na interface |
+
+O snippet do popover, correto, mostra as três de uma vez: comentário em
+português (`// Cabeçalho, título e descrição são fábricas`), identificador em
+inglês (`const header`), literal traduzido.
+
+**A forma mais segura de gerar**: escreva o snippet UMA vez, em inglês nos
+identificadores, e copie para os três idiomas trocando só comentário e literal
+de tela. Nunca gere o bloco de código de novo por idioma — gerar de novo é
+exatamente o que renomeia.
+
+**Portão**: `codigo_traduzido_em_snippet`, no `audit.mjs`. Ele compara os
+identificadores declarados nos três idiomas e reprova quando diferem — é
+comparação, não lista de palavras, então pega o espanhol também. Corre junto com
+`identificador_pt`, que guarda a mesma regra no código de verdade.
+
 **Auditoria**: `node scripts/audit.mjs <slug> --category quality --json` reporta violações com rule `translation_literal_prop`. Ver guideline `docs/shared/guidelines/11-consistencia-cross-stack.md` §"Textos de instrução API-neutros".
 
 ### Tom de voz
@@ -85,7 +120,9 @@ O `translations.json` é compartilhado entre React, Vue, Svelte e Vanilla. Cada 
 - **Técnico mas acessível** — evite jargão sem explicar
 - **Direto e conciso** — frases curtas, voz ativa
 - **Prescritivo** — "use X" em vez de "você pode usar X"
-- **Consistente entre idiomas** — mesma informação, não tradução literal
+- **Consistente entre idiomas** — mesma informação, não tradução literal. Vale
+  para PROSA. Bloco de código é o contrário: ele se copia, e só comentário e
+  literal de tela mudam — ver "O CÓDIGO dentro de `*Code` não se traduz" acima
 
 ### Regras por idioma
 
@@ -102,7 +139,7 @@ O `translations.json` é compartilhado entre React, Vue, Svelte e Vanilla. Cada 
 
 1. **Ler em paralelo**: componente Vanilla + guideline de categoria
 2. **Identificar** variantes, props, estados reais — sem inventar
-3. **Gerar** JSON completo nos 3 idiomas seguindo schema
+3. **Gerar** JSON completo nos 3 idiomas seguindo schema — a PROSA nos três; o bloco de código UMA vez, copiado para os três com só comentário e literal de tela trocados
 4. **Validar** chaves existem em todos os idiomas + limites de caracteres (ver schema)
 
 ---

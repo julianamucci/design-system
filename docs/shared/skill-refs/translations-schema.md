@@ -227,8 +227,14 @@ definida. Ninguém vê bloco vazio, mas a lacuna é contada por
 - [ ] Seção `doDont` presente como nível 1 (separada de `usage.do`/`usage.dont`)
 - [ ] Seção `accessibility` completa (keyboard, aria, screenReader)
 - [ ] Seção `nav` com todas as labels de navegação
-- [ ] Sem traduções literais — cada idioma soa natural
+- [ ] Sem traduções literais — cada idioma soa natural. **Vale para prosa**: em
+      chave `*Code`, o bloco se COPIA entre os idiomas (ver item abaixo)
 - [ ] Termos técnicos mantidos em inglês nos 3 idiomas
+- [ ] **Identificador dentro de `*Code` é o MESMO nos 3 idiomas, em inglês** —
+      só comentário e literal de tela traduzem. Medido em 2026-09-06: 150
+      identificadores em 49 chaves de 30 componentes publicavam `cabecalho` /
+      `header` / `encabezado` conforme a língua de quem lia. Portão:
+      `codigo_traduzido_em_snippet`
 - [ ] **Zero emojis** ou ícones decorativos em qualquer string
 
 ---
