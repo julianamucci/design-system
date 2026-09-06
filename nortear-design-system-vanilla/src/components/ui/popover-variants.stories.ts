@@ -58,7 +58,7 @@ export const Default: Story = {
     content.textContent = 'Use Ctrl+K para abrir a busca em qualquer tela.';
 
     const el = createPopover({ trigger, content, ariaLabel: 'Informações adicionais' });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
   play: async ({ canvasElement, step }) => {
@@ -96,7 +96,7 @@ export const WithTitle: Story = {
     );
 
     const el = createPopover({ trigger, content });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
   play: async ({ canvasElement, step }) => {
@@ -172,7 +172,7 @@ export const Form: Story = {
     content.append(nameRow, emailRow, submit);
 
     const el = createPopover({ trigger, content });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
   play: async ({ canvasElement, step }) => {

@@ -83,7 +83,7 @@ export const Open: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
     const el = createPopover({ trigger, content: buildSimpleContent('Ajuste a aparência do conteúdo da página.') });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return empilharCentrado([el]);
   },
   play: async ({ canvasElement, step }) => {

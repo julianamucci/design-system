@@ -82,7 +82,7 @@ export const EditProfile: Story = {
     form.append(title, desc, nameRow, emailRow, submit);
 
     const el = createPopover({ trigger, content: form });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
   play: async ({ step }) => {
@@ -137,7 +137,7 @@ export const TableFilter: Story = {
     content.appendChild(actions);
 
     const el = createPopover({ trigger, content });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
   play: async ({ step }) => {
@@ -193,7 +193,7 @@ export const ColorPicker: Story = {
     content.append(title, grid);
 
     const el = createPopover({ trigger, content });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
   play: async ({ step }) => {
@@ -253,7 +253,7 @@ export const QuickSettings: Story = {
     }
 
     const el = createPopover({ trigger, content });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
   play: async ({ step }) => {
@@ -289,7 +289,7 @@ export const SideTop: Story = {
     );
 
     const el = createPopover({ trigger, content, side: 'top' });
-    queueMicrotask(() => trigger.click());
+    queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
 
     // Espaço ACIMA do gatilho, senão o painel não cabe e o auto-flip o manda
     // para baixo — a story mediria o recurso oposto ao que documenta. Vem da

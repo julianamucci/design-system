@@ -160,7 +160,7 @@ export const Playground: Story = {
     container.append(el, externo);
 
     if (args.defaultOpen) {
-      queueMicrotask(() => trigger.click());
+      queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     }
     return container;
   },
