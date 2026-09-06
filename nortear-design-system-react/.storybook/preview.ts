@@ -105,6 +105,20 @@ if (typeof document !== 'undefined') {
     marcaAnterior = marca;
     const eixos = themeAxisDefaults[marca as ThemeId];
     if (!eixos || Object.keys(eixos).length === 0) return;
+    // Aplica AQUI, e não só emite.
+    //
+    // O `onGlobals` aplica as classes com os globals do INSTANTE, e nesse
+    // instante os eixos ainda são os do tema anterior — quem os atualiza é este
+    // `emit`, e a correção do `<html>` dependia do eco voltar. Medido em
+    // 2026-09-06 no vanilla: indo ao Cold e voltando ao Default, a barra passava
+    // a apontar Inter (o manager atualizou) e a página seguia em PT Serif (o
+    // `<html>` continuava com `fonte-pt-serif`). Toolbar certa e tela errada é a
+    // assinatura de quem confia no eco.
+    //
+    // Aplicar antes de emitir tira a dependência: o emit continua, porque é ele
+    // que move a toolbar, mas a tela não espera por ele. As duas chamadas
+    // convergem para o mesmo estado, então o eco, quando chega, não faz nada.
+    applyAxisClasses(eixos);
     try {
       addons.getChannel().emit(UPDATE_GLOBALS, { globals: eixos });
     } catch {
