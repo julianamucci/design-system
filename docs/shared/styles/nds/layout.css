@@ -76,17 +76,34 @@
  *
  * Tokens: --stack-gap (override via data-spacing)
  */
+/*
+ * `gap`, e não `margin-top` no filho — e a diferença não é de estilo.
+ *
+ * Até 2026-09-06 o espaçamento saía de
+ * `.nds-stack > :not(:first-child) { margin-top: var(--stack-gap) }`. A margem
+ * é aplicada NO FILHO, e `var()` resolve contra as custom properties do próprio
+ * filho: quando o filho também é `.nds-stack` com o seu `data-spacing`, ele
+ * redeclara `--stack-gap` em si mesmo e a margem lê o valor DELE. O
+ * `data-spacing` do PAI ficava inerte.
+ *
+ * Medido no popover: um `<form class="nds-stack" data-spacing="md">` com duas
+ * linhas `.nds-stack[data-spacing="xs"]` dentro renderizava 4px entre as linhas,
+ * não 16px — e trocar o pai de `sm` para `md` não mudou um pixel, porque nos dois
+ * casos quem era lido era o `xs` do filho. Levou uma rodada inteira de "corrigi e
+ * continua igual" até alguém olhar a regra em vez do markup.
+ *
+ * `gap` resolve no CONTAINER, então o aninhamento passa a funcionar como a
+ * documentação sempre prometeu. Some junto a briga de especificidade que a regra
+ * antiga travava com o `margin: 0` do `.nds-list-none` — sem margem, não há
+ * disputa. E há precedente na própria folha: o `.nds-page`, logo acima, já usa
+ * `gap`.
+ */
 .nds-stack {
   --stack-gap: var(--spacing-4);  /* default: 16px */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-}
-
-/* :not(:first-child) ≡ "* + *" mas com especificidade 0-2-0 — precisa vencer
- * o `margin: 0` de .nds-list-none (utilities.css carrega depois deste arquivo). */
-.nds-stack > :not(:first-child) {
-  margin-top: var(--stack-gap);
+  gap: var(--stack-gap);
 }
 
 .nds-stack[data-spacing="xs"]  { --stack-gap: var(--spacing-1);  }  /* 4px  */
@@ -97,7 +114,22 @@
 .nds-stack[data-spacing="2xl"] { --stack-gap: var(--spacing-12); }  /* 48px */
 
 /* data-recursive="true" aplica o gap a TODOS os descendentes, não só filhos
- * diretos. Útil para prose / artigos longos onde tudo herda o mesmo ritmo. */
+ * diretos. Útil para prose / artigos longos onde tudo herda o mesmo ritmo.
+ *
+ * O `gap: 0` não é detalhe: sem ele, o filho DIRETO de um stack recursivo
+ * ganharia os dois espaçamentos — o `gap` do container e a margem desta regra —,
+ * e o ritmo do primeiro nível sairia dobrado. A margem continua sendo a única
+ * fonte aqui porque `gap` só alcança filhos diretos, e o ponto desta variante é
+ * justamente alcançar mais fundo.
+ *
+ * Efeito colateral assumido: dentro de um stack recursivo, o defeito de
+ * aninhamento que o `gap` corrigiu permanece — um descendente que declare o
+ * próprio `--stack-gap` lê o dele. Prose aninhada é raro e o ritmo é o mesmo em
+ * todos os níveis por definição desta variante. */
+.nds-stack[data-recursive="true"] {
+  gap: 0;
+}
+
 .nds-stack[data-recursive="true"] * + * {
   margin-top: var(--stack-gap);
 }
