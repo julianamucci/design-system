@@ -190,107 +190,172 @@ const VARIANT_CODE = (side: string, tituloVar: string) => `<nds-sheet>
   </ng-template>
 </nds-sheet>`;
 
-/** O snippet dos filtros leva os rótulos dos campos, que são conteúdo traduzido. */
-const COMPOSITION_CODE_FILTERS = (fieldCategory: string, fieldMinPrice: string) => `<nds-sheet>
-  <button ndsSheetTrigger ndsButton variant="outline">Abrir filtros</button>
+const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
+
+// ─── Snippets das composições ────────────────────────────────────────────────
+//
+// Cada snippet reproduz o preview INTEIRO — gatilho, cabeçalho, corpo e rodapé
+// —, e recebe os textos por parâmetro porque eles são conteúdo compartilhado:
+// cravados em português, o snippet ensinava um painel diferente do que a página
+// em en/es mostra logo ao lado dele.
+//
+// As listas são montadas por concatenação, e não por crase aninhada: o portão
+// de identificador lê o arquivo pareando crases, e crase dentro de crase inverte
+// o pareamento dali para a frente.
+
+const navLinksSnippet = (items: string[]) =>
+  items
+    .map((item) => '        <a href="#" class="' + LINK_CLASSES + '">' + item + '</a>')
+    .join('\n');
+
+/** A destrutiva é a ÚLTIMA da fileira, e a única que se anuncia como tal. */
+const actionButtonsSnippet = (actions: string[]) =>
+  actions
+    .map(
+      (action, index) =>
+        '        <button ndsButton variant="' +
+        (index === actions.length - 1 ? 'destructive' : 'outline') +
+        '">' + action + '</button>',
+    )
+    .join('\n');
+
+const COMPOSITION_CODE_FILTERS = (labels: {
+  trigger: string;
+  title: string;
+  description: string;
+  fieldCategory: string;
+  fieldMinPrice: string;
+  categoryValue: string;
+  cancel: string;
+  apply: string;
+}) => `<nds-sheet>
+  <button ndsSheetTrigger ndsButton variant="outline">${labels.trigger}</button>
 
   <ng-template ndsSheetContent side="right">
     <div ndsSheetHeader>
-      <h2 ndsSheetTitle>Filtros avançados</h2>
-      <p ndsSheetDescription>Configure os filtros para refinar os resultados.</p>
+      <h2 ndsSheetTitle>${labels.title}</h2>
+      <p ndsSheetDescription>${labels.description}</p>
     </div>
 
     <div ndsSheetBody>
-      <form id="filtros" class="nds-grid" data-spacing="md">
-        <label ndsLabel for="cat">${fieldCategory}</label>
-        <input ndsInput id="cat" value="Eletrônicos" />
-        <label ndsLabel for="min">${fieldMinPrice}</label>
-        <input ndsInput id="min" type="number" value="100" />
+      <form id="filters" class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="filters-category">${labels.fieldCategory}</label>
+          <input ndsInput id="filters-category" value="${labels.categoryValue}" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="filters-min-price">${labels.fieldMinPrice}</label>
+          <input ndsInput id="filters-min-price" type="number" value="100" />
+        </div>
       </form>
     </div>
 
     <div ndsSheetFooter>
-      <button ndsSheetClose ndsButton type="button" variant="outline">Cancelar</button>
-      <button ndsButton type="submit" form="filtros">Aplicar filtros</button>
+      <button ndsSheetClose ndsButton type="button" variant="outline">${labels.cancel}</button>
+      <button ndsButton type="submit" form="filters">${labels.apply}</button>
     </div>
   </ng-template>
 </nds-sheet>`;
 
-const COMPOSITION_CODE = {
-  secondaryNavigation: `<nds-sheet>
-  <button ndsSheetTrigger ndsButton variant="outline">Abrir menu</button>
+const COMPOSITION_CODE_NAVIGATION = (labels: {
+  trigger: string;
+  panelTitle: string;
+  panelDescription: string;
+  navLabel: string;
+  items: string[];
+}) => `<nds-sheet>
+  <button ndsSheetTrigger ndsButton variant="outline">${labels.trigger}</button>
 
   <ng-template ndsSheetContent side="left">
     <div ndsSheetHeader>
-      <h2 ndsSheetTitle>Navegação secundária</h2>
-      <p ndsSheetDescription>Navegue entre as áreas do sistema.</p>
+      <h2 ndsSheetTitle>${labels.panelTitle}</h2>
+      <p ndsSheetDescription>${labels.panelDescription}</p>
     </div>
 
     <div ndsSheetBody>
       <!-- Marco de navegação com nome próprio: a página já tem um <nav>, e dois
            sem nome distinto ficam indistinguíveis para quem navega por marcos. -->
-      <nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">
-        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
-        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+      <nav aria-label="${labels.navLabel}" class="nds-stack" data-spacing="xs">
+${navLinksSnippet(labels.items)}
       </nav>
     </div>
   </ng-template>
-</nds-sheet>`,
-  profileEdit: `<nds-sheet>
-  <button ndsSheetTrigger ndsButton variant="outline">Editar perfil</button>
+</nds-sheet>`;
+
+const COMPOSITION_CODE_PROFILE = (labels: {
+  trigger: string;
+  panelTitle: string;
+  panelDescription: string;
+  fieldName: string;
+  fieldNameValue: string;
+  fieldHandle: string;
+  fieldHandleValue: string;
+  fieldBio: string;
+  fieldBioValue: string;
+  cancel: string;
+  submit: string;
+}) => `<nds-sheet>
+  <button ndsSheetTrigger ndsButton variant="outline">${labels.trigger}</button>
 
   <ng-template ndsSheetContent side="right">
     <div ndsSheetHeader>
-      <h2 ndsSheetTitle>Editar perfil</h2>
-      <p ndsSheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</p>
+      <h2 ndsSheetTitle>${labels.panelTitle}</h2>
+      <p ndsSheetDescription>${labels.panelDescription}</p>
     </div>
 
     <div ndsSheetBody>
-      <form class="nds-grid" data-spacing="sm">
-        <div class="nds-grid" data-spacing="xs">
-          <label ndsLabel for="profile-name">Nome</label>
-          <input ndsInput id="profile-name" value="Juliana Mucci" />
+      <form id="profile" class="nds-stack" data-spacing="sm">
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="profile-name">${labels.fieldName}</label>
+          <input ndsInput id="profile-name" value="${labels.fieldNameValue}" />
         </div>
-        <div class="nds-grid" data-spacing="xs">
-          <label ndsLabel for="profile-handle">Username</label>
-          <input ndsInput id="profile-handle" value="@julianamucci" />
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="profile-handle">${labels.fieldHandle}</label>
+          <input ndsInput id="profile-handle" value="${labels.fieldHandleValue}" />
         </div>
-        <div class="nds-grid" data-spacing="xs">
-          <label ndsLabel for="profile-bio">Bio</label>
-          <input ndsInput id="profile-bio" value="Designer de sistemas em São Paulo" />
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="profile-bio">${labels.fieldBio}</label>
+          <input ndsInput id="profile-bio" value="${labels.fieldBioValue}" />
         </div>
       </form>
     </div>
 
+    <!-- Quem confirma é o ENVIO do formulário. O rodapé mora fora do corpo que
+         rola, então é o atributo form que religa o botão — e é ele que faz o
+         Enter dentro de um campo valer tanto quanto o clique. -->
     <div ndsSheetFooter>
-      <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
-      <button ndsButton type="submit">Salvar alterações</button>
+      <button ndsSheetClose ndsButton type="button" variant="outline">${labels.cancel}</button>
+      <button ndsButton type="submit" form="profile">${labels.submit}</button>
     </div>
   </ng-template>
-</nds-sheet>`,
-  bottomPanel: `<nds-sheet>
-  <button ndsSheetTrigger ndsButton variant="outline">Abrir ações</button>
+</nds-sheet>`;
+
+const COMPOSITION_CODE_BOTTOM = (labels: {
+  trigger: string;
+  panelTitle: string;
+  panelDescription: string;
+  actions: string[];
+  close: string;
+}) => `<nds-sheet>
+  <button ndsSheetTrigger ndsButton variant="outline">${labels.trigger}</button>
 
   <ng-template ndsSheetContent side="bottom">
     <div ndsSheetHeader>
-      <h2 ndsSheetTitle>Ações rápidas</h2>
-      <p ndsSheetDescription>Escolha uma das ações disponíveis para este item.</p>
+      <h2 ndsSheetTitle>${labels.panelTitle}</h2>
+      <p ndsSheetDescription>${labels.panelDescription}</p>
     </div>
 
-    <div ndsSheetBody class="nds-cluster" data-spacing="md">
-      <button ndsButton variant="outline">Compartilhar</button>
-      <button ndsButton variant="outline">Duplicar</button>
-      <button ndsButton variant="destructive">Excluir</button>
+    <div ndsSheetBody>
+      <div class="nds-cluster" data-spacing="md">
+${actionButtonsSnippet(labels.actions)}
+      </div>
     </div>
 
     <div ndsSheetFooter>
-      <button ndsSheetClose ndsButton variant="outline">Fechar</button>
+      <button ndsSheetClose ndsButton variant="outline">${labels.close}</button>
     </div>
   </ng-template>
-</nds-sheet>`,
-};
-
-const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
+</nds-sheet>`;
 
 @Component({
   selector: 'nds-sheet-docs',
@@ -474,18 +539,24 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
             <!-- O guard de submit existe para o preview ao vivo: sem ele, um
                  Enter dentro do campo tentaria navegar a página. -->
             <form
-              id="docs-sheet-filtros"
-              class="nds-grid"
-              data-spacing="md"
+              id="docs-sheet-filters"
+              class="nds-stack"
+              data-spacing="sm"
               (submit)="$event.preventDefault(); aoAplicar('right', 'docs_composicoes')"
             >
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="docs-sheet-category">
                   {{ t('variants.compositions.advancedFilters.fieldCategory') }}
                 </label>
-                <input ndsInput id="docs-sheet-category" value="Eletrônicos" />
+                <!-- O valor de exemplo é CONTEÚDO, não fixture: cravado, a
+                     página em en/es mostrava "Eletrônicos" dentro do campo. -->
+                <input
+                  ndsInput
+                  id="docs-sheet-category"
+                  [value]="t('variants.compositions.advancedFilters.categoryValue')"
+                />
               </div>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="docs-sheet-min">
                   {{ t('variants.compositions.advancedFilters.fieldMinPrice') }}
                 </label>
@@ -498,7 +569,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
                conteúdo rola. O atributo form religa o botão ao formulário. -->
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton type="button" variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton type="submit" form="docs-sheet-filtros">{{ t('demonstration.labels.apply') }}</button>
+            <button ndsButton type="submit" form="docs-sheet-filters">{{ t('demonstration.labels.apply') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -506,23 +577,25 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
 
     <ng-template #tplCompNavegacao>
       <nds-sheet (onOpenChange)="aoMudarPainel('left', 'docs_composicoes', $event)">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ t('variants.compositions.secondaryNavigation.trigger') }}</button>
         <ng-template ndsSheetContent side="left">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ t('variants.compositions.secondaryNavigation.name') }}</h2>
-            <p ndsSheetDescription>{{ t('demonstration.labels.description') }}</p>
+            <h2 ndsSheetTitle>{{ t('variants.compositions.secondaryNavigation.panelTitle') }}</h2>
+            <p ndsSheetDescription>{{ t('variants.compositions.secondaryNavigation.panelDescription') }}</p>
           </div>
 
           <div ndsSheetBody>
             <!-- Nome próprio no marco: a docs page já tem um <nav>, e dois marcos
-                 sem nome distinto ficam indistinguíveis na lista de regiões. -->
+                 sem nome distinto ficam indistinguíveis na lista de regiões. O
+                 nome sai do conteúdo compartilhado porque é ele que o leitor de
+                 tela anuncia — cravado, anunciaria em português em en/es. -->
             <nav
-              [attr.aria-label]="t('variants.compositions.secondaryNavigation.name')"
+              [attr.aria-label]="t('variants.compositions.secondaryNavigation.navLabel')"
               class="nds-stack"
               data-spacing="xs"
             >
-              @for (destination of destinosDeNavegacao(); track destination.id) {
-                <a href="#" [class]="linkClasses">{{ destination.label }}</a>
+              @for (destination of navigationItems(); track destination) {
+                <a href="#" [class]="linkClasses">{{ destination }}</a>
               }
             </nav>
           </div>
@@ -532,36 +605,64 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
 
     <ng-template #tplCompPerfil>
       <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_composicoes', $event)">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ t('variants.compositions.profileEdit.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ t('variants.compositions.profileEdit.name') }}</h2>
-            <p ndsSheetDescription>{{ profileEditDescription() }}</p>
+            <h2 ndsSheetTitle>{{ t('variants.compositions.profileEdit.panelTitle') }}</h2>
+            <p ndsSheetDescription>{{ t('variants.compositions.profileEdit.panelDescription') }}</p>
           </div>
 
           <div ndsSheetBody>
             <!-- A confirmação é o envio do próprio formulário — não um botão
                  solto. O guard de submit aqui existe só para o preview ao vivo:
                  sem ele, um Enter dentro do campo tentaria navegar a página. -->
-            <form class="nds-grid" data-spacing="sm" (submit)="$event.preventDefault(); aoAplicar('right', 'docs_composicoes', 'save')">
-              <div class="nds-grid" data-spacing="xs">
-                <label ndsLabel for="comp-profile-name">Nome</label>
-                <input ndsInput id="comp-profile-name" value="Juliana Mucci" />
+            <form
+              id="docs-sheet-profile"
+              class="nds-stack"
+              data-spacing="sm"
+              (submit)="$event.preventDefault(); aoAplicar('right', 'docs_composicoes', 'save')"
+            >
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="docs-sheet-profile-name">
+                  {{ t('variants.compositions.profileEdit.fieldName') }}
+                </label>
+                <input
+                  ndsInput
+                  id="docs-sheet-profile-name"
+                  [value]="t('variants.compositions.profileEdit.fieldNameValue')"
+                />
               </div>
-              <div class="nds-grid" data-spacing="xs">
-                <label ndsLabel for="comp-profile-handle">Username</label>
-                <input ndsInput id="comp-profile-handle" value="@julianamucci" />
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="docs-sheet-profile-handle">
+                  {{ t('variants.compositions.profileEdit.fieldHandle') }}
+                </label>
+                <input
+                  ndsInput
+                  id="docs-sheet-profile-handle"
+                  [value]="t('variants.compositions.profileEdit.fieldHandleValue')"
+                />
               </div>
-              <div class="nds-grid" data-spacing="xs">
-                <label ndsLabel for="comp-profile-bio">Bio</label>
-                <input ndsInput id="comp-profile-bio" value="Designer de sistemas em São Paulo" />
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="docs-sheet-profile-bio">
+                  {{ t('variants.compositions.profileEdit.fieldBio') }}
+                </label>
+                <input
+                  ndsInput
+                  id="docs-sheet-profile-bio"
+                  [value]="t('variants.compositions.profileEdit.fieldBioValue')"
+                />
               </div>
             </form>
           </div>
 
+          <!-- O rodapé mora fora do corpo que rola, e só o atributo form religa
+               o botão ao formulário — é ele que faz o Enter num campo valer
+               tanto quanto o clique. -->
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-            <button ndsButton type="submit">Salvar alterações</button>
+            <button ndsSheetClose ndsButton type="button" variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+            <button ndsButton type="submit" form="docs-sheet-profile">
+              {{ t('variants.compositions.profileEdit.submit') }}
+            </button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -569,21 +670,28 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
 
     <ng-template #tplCompPainelInferior>
       <nds-sheet (onOpenChange)="aoMudarPainel('bottom', 'docs_composicoes', $event)">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ t('variants.compositions.bottomPanel.trigger') }}</button>
         <ng-template ndsSheetContent side="bottom">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ t('variants.compositions.bottomPanel.name') }}</h2>
-            <p ndsSheetDescription>{{ bottomPanelDescription() }}</p>
+            <h2 ndsSheetTitle>{{ t('variants.compositions.bottomPanel.panelTitle') }}</h2>
+            <p ndsSheetDescription>{{ t('variants.compositions.bottomPanel.panelDescription') }}</p>
           </div>
 
-          <div ndsSheetBody class="nds-cluster" data-spacing="md">
-            <button ndsButton variant="outline">Compartilhar</button>
-            <button ndsButton variant="outline">Duplicar</button>
-            <button ndsButton variant="destructive">Excluir</button>
+          <!-- A fileira vai DENTRO do corpo, num div próprio: o slot de corpo é
+               quem rola e carrega o flex do painel, e escrever nds-cluster nele
+               disputaria as duas coisas. -->
+          <div ndsSheetBody>
+            <div class="nds-cluster" data-spacing="md">
+              <!-- A destrutiva é a ÚLTIMA e a única com a variante que a
+                   anuncia — a ordem vem do conteúdo compartilhado. -->
+              @for (action of bottomPanelActions(); track action; let last = $last) {
+                <button ndsButton [variant]="last ? 'destructive' : 'outline'">{{ action }}</button>
+              }
+            </div>
           </div>
 
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+            <button ndsSheetClose ndsButton variant="outline">{{ t('variants.compositions.bottomPanel.close') }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -769,32 +877,20 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
   private readonly tplCompPerfil = viewChild.required<TemplateRef<unknown>>('tplCompPerfil');
   private readonly tplCompPainelInferior = viewChild.required<TemplateRef<unknown>>('tplCompPainelInferior');
 
-  /** Destinos do exemplo de navegação secundária. */
-  protected readonly destinosDeNavegacao = computed(() => {
-    dict();
-    return [
-      { id: 'nav-1', label: t('demonstration.labels.rightLabel') },
-      { id: 'nav-2', label: t('demonstration.labels.leftLabel') },
-      { id: 'nav-3', label: t('demonstration.labels.topLabel') },
-      { id: 'nav-4', label: t('demonstration.labels.bottomLabel') },
-    ];
-  });
-
   /**
-   * Descrições próprias das duas composições novas, em texto puro: o conteúdo
-   * compartilhado traz `<code>` para a lista de composições (renderizada via
-   * `NdsDocsCompositions`), mas o preview ao vivo interpola dentro de um `<p>`
-   * — sem `toPlainText`, as tags apareceriam literalmente na tela.
+   * Listas das duas composições que renderizam conteúdo repetido.
+   *
+   * Saem do conteúdo compartilhado, não de constante local: os destinos do menu
+   * eram os quatro rótulos de LADO do painel ("Painel direito", "Painel
+   * superior"), que descrevem a variante e não destino nenhum de navegação.
    */
-  protected readonly profileEditDescription = computed(() => {
-    dict();
-    return toPlainText(t('variants.compositions.profileEdit.description'));
-  });
+  protected readonly navigationItems = computed(() =>
+    listFromDict(dict(), 'variants.compositions.secondaryNavigation.items'),
+  );
 
-  protected readonly bottomPanelDescription = computed(() => {
-    dict();
-    return toPlainText(t('variants.compositions.bottomPanel.description'));
-  });
+  protected readonly bottomPanelActions = computed(() =>
+    listFromDict(dict(), 'variants.compositions.bottomPanel.actions'),
+  );
 
   /**
    * Abertura e fechamento de qualquer painel VIVO desta página.
@@ -948,14 +1044,56 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       {
         key: 'advancedFilters',
         tpl: this.tplCompFiltros(),
-        code: COMPOSITION_CODE_FILTERS(
-          t('variants.compositions.advancedFilters.fieldCategory'),
-          t('variants.compositions.advancedFilters.fieldMinPrice'),
-        ),
+        code: COMPOSITION_CODE_FILTERS({
+          trigger: t('demonstration.labels.trigger'),
+          title: t('demonstration.labels.title'),
+          description: t('demonstration.labels.description'),
+          fieldCategory: t('variants.compositions.advancedFilters.fieldCategory'),
+          fieldMinPrice: t('variants.compositions.advancedFilters.fieldMinPrice'),
+          categoryValue: t('variants.compositions.advancedFilters.categoryValue'),
+          cancel: t('demonstration.labels.cancel'),
+          apply: t('demonstration.labels.apply'),
+        }),
       },
-      { key: 'secondaryNavigation', tpl: this.tplCompNavegacao(),      code: COMPOSITION_CODE.secondaryNavigation },
-      { key: 'profileEdit',         tpl: this.tplCompPerfil(),         code: COMPOSITION_CODE.profileEdit         },
-      { key: 'bottomPanel',         tpl: this.tplCompPainelInferior(), code: COMPOSITION_CODE.bottomPanel         },
+      {
+        key: 'secondaryNavigation',
+        tpl: this.tplCompNavegacao(),
+        code: COMPOSITION_CODE_NAVIGATION({
+          trigger: t('variants.compositions.secondaryNavigation.trigger'),
+          panelTitle: t('variants.compositions.secondaryNavigation.panelTitle'),
+          panelDescription: t('variants.compositions.secondaryNavigation.panelDescription'),
+          navLabel: t('variants.compositions.secondaryNavigation.navLabel'),
+          items: this.navigationItems(),
+        }),
+      },
+      {
+        key: 'profileEdit',
+        tpl: this.tplCompPerfil(),
+        code: COMPOSITION_CODE_PROFILE({
+          trigger: t('variants.compositions.profileEdit.trigger'),
+          panelTitle: t('variants.compositions.profileEdit.panelTitle'),
+          panelDescription: t('variants.compositions.profileEdit.panelDescription'),
+          fieldName: t('variants.compositions.profileEdit.fieldName'),
+          fieldNameValue: t('variants.compositions.profileEdit.fieldNameValue'),
+          fieldHandle: t('variants.compositions.profileEdit.fieldHandle'),
+          fieldHandleValue: t('variants.compositions.profileEdit.fieldHandleValue'),
+          fieldBio: t('variants.compositions.profileEdit.fieldBio'),
+          fieldBioValue: t('variants.compositions.profileEdit.fieldBioValue'),
+          cancel: t('demonstration.labels.cancel'),
+          submit: t('variants.compositions.profileEdit.submit'),
+        }),
+      },
+      {
+        key: 'bottomPanel',
+        tpl: this.tplCompPainelInferior(),
+        code: COMPOSITION_CODE_BOTTOM({
+          trigger: t('variants.compositions.bottomPanel.trigger'),
+          panelTitle: t('variants.compositions.bottomPanel.panelTitle'),
+          panelDescription: t('variants.compositions.bottomPanel.panelDescription'),
+          actions: this.bottomPanelActions(),
+          close: t('variants.compositions.bottomPanel.close'),
+        }),
+      },
     ];
     return mapa.map(({ key, tpl, code }) => ({
       name: t(`variants.compositions.${key}.name`),
@@ -1269,6 +1407,20 @@ const priorityKeyMap: Record<string, string> = {
 
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
+}
+
+/**
+ * Lista do conteúdo compartilhado.
+ *
+ * O achatamento do i18n indexa array por posição (`items.0`), e `t()` só
+ * devolve string — a leitura é pelo dicionário, até a primeira posição ausente.
+ * O total vem do conteúdo, e não de um número cravado aqui, que envelheceria
+ * calado no dia em que a lista compartilhada ganhasse mais um item.
+ */
+function listFromDict(d: Record<string, string>, base: string): string[] {
+  const out: string[] = [];
+  for (let i = 0; d[`${base}.${i}`] !== undefined; i++) out.push(d[`${base}.${i}`]);
+  return out;
 }
 
 function itemsFromDict<K extends string>(
