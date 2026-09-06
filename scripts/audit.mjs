@@ -6500,6 +6500,52 @@ function auditQuality(slug) {
  * adiante. O nome da variável entra por busca de texto, não por regex montado:
  * `new RegExp` com escape em string é onde esta campanha tropeçou quatro vezes.
  */
+/**
+ * Construtor de snippet sem teste de comportamento.
+ *
+ * Há duas camadas de proteção sobre o painel Code, e elas não se substituem. O
+ * `source-snippets.test.ts` de cada stack varre TODOS os construtores e prova
+ * coerência de import — que o snippet importa o que usa. É varredura genérica, e
+ * roda 1129 casos no angular, 3303 no react.
+ *
+ * O que ela não alcança é se o snippet ensina o CERTO: que ele omite o valor
+ * padrão em vez de repeti-lo, que bate com o exemplo que a story renderiza ao
+ * lado, que não vazou binding que só existe dentro da story. Isso é asserção por
+ * componente, e é o `<slug>.source.test.ts`.
+ *
+ * A distância entre as duas apareceu nesta campanha duas vezes, nos dois
+ * sentidos: no popover, o preview mudou e o snippet continuou ensinando a forma
+ * antiga; no hover-card, o snippet do angular prometia Limpar/Aplicar enquanto o
+ * preview mostrava um botão Salvar. Nenhum portão viu — quem lê copia o snippet,
+ * não o preview.
+ *
+ * Medido em 2026-09-06: 220 construtores sem teste nas cinco stacks (angular 3
+ * de 82, react 31, vue 50, svelte 52, vanilla 54). Nenhuma dev-skill mandava
+ * escrever o arquivo, e nenhum portão o cobrava — as cinco só pediam para
+ * declarar `docs.source.transform` na Playground.
+ *
+ * LIGADA e não opt-in, pela mesma razão do `dodont_preview_sem_componente`: numa
+ * varredura `--all` os 220 assustam, mas na revisão componente a componente são
+ * no máximo cinco achados por vez, um por stack.
+ */
+function auditSourceSemTeste(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      if (!/\.source\.tsx?$/.test(file)) continue;
+      const teste = file.replace(/\.source\.tsx?$/, '.source.test.ts');
+      if (existsSync(teste)) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: relative(ROOT, file), rule: 'source_sem_teste',
+        message: `${basename(file)} não tem \`${basename(teste)}\` — a varredura genérica prova que o snippet importa o que usa, não que ele ensina o certo: omitir o valor padrão, bater com a story ao lado, não vazar binding que só existe nela`,
+      });
+    }
+  }
+  return violations;
+}
+
 function auditTraducaoRecortada(slug) {
   const violations = [];
   const METODOS = ['split', 'slice', 'substring', 'substr', 'indexOf', 'match', 'charAt'];
@@ -6637,7 +6683,14 @@ function runAudit(slug, category) {
     security: auditSecurity,
     performance: auditPerformance,
     analytics: auditAnalytics,
-    quality: auditQuality,
+    // As duas regras novas se declaram category: quality e precisam sair pelo
+    // MESMO despacho, senao --category quality as ignora e --all devolve zero.
+    // Mesmo defeito do rotulo seo sem runner, corrigido um dia antes.
+    quality: (alvo) => [
+      ...auditQuality(alvo),
+      ...auditTraducaoRecortada(alvo),
+      ...auditSourceSemTeste(alvo),
+    ],
     seo: auditSeo,
   };
 
@@ -6652,6 +6705,7 @@ function runAudit(slug, category) {
     ...auditQuality(slug),
     ...auditSeo(slug),
     ...auditTraducaoRecortada(slug),
+    ...auditSourceSemTeste(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
     ...auditSnippetSemLastro(slug),
