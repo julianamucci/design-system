@@ -89,6 +89,42 @@ export function positionFloating(
     else top = rect.top + scrollY + rect.height / 2 - ph / 2;
   }
 
+  // ── Correção de borda, e SÓ no eixo cruzado ────────────────────────────────
+  //
+  // Sem isto o painel simplesmente sai da tela. Medido em 2026-09-06 com uma
+  // sonda que amostra o `body` quadro a quadro: um painel de 288px centrado num
+  // gatilho a x=53 ficava em **x=-91**, e ficava lá — não é transição nem
+  // corrida, é a coordenada calculada. Na tela aparece como um card cortado na
+  // margem esquerda. As outras quatro stacks não tinham o defeito porque a lib
+  // headless de cada uma traz detecção de colisão ligada por padrão; o vanilla,
+  // que é a referência de contrato da casa, era o único posicionando sem ela.
+  //
+  // O eixo importa, e a primeira tentativa errou nisso: clampar TAMBÉM o eixo
+  // principal empurra o painel por cima do gatilho quando falta espaço, o que
+  // desfaz o `side` pedido. As suítes pegaram na hora — `Side Top` do popover e
+  // `Placement Sides` do tooltip afirmam essa relação. Encaixar sem espaço é
+  // trabalho de `flip` (trocar o lado), não de `shift` (deslizar no cruzado), e
+  // `flip` não existe aqui: pedir `top` e receber `bottom` mudaria o contrato de
+  // quem chamou, e o `data-side` que a folha lê para desenhar a seta.
+  //
+  // `Math.max(min, …)` por FORA: com painel maior que a janela os dois limites
+  // se cruzam, e nessa ordem sobra o de cima — encostar na margem de início é
+  // melhor que empurrar para fora do lado oposto.
+  const respiro = 8;
+  if (side === 'bottom' || side === 'top') {
+    const larguraVisivel = document.documentElement.clientWidth;
+    left = Math.max(
+      scrollX + respiro,
+      Math.min(left, scrollX + larguraVisivel - pw - respiro),
+    );
+  } else {
+    const alturaVisivel = document.documentElement.clientHeight;
+    top = Math.max(
+      scrollY + respiro,
+      Math.min(top, scrollY + alturaVisivel - ph - respiro),
+    );
+  }
+
   panel.style.top = `${top}px`;
   panel.style.left = `${left}px`;
 }
