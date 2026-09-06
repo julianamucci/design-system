@@ -939,6 +939,16 @@ interface PopoverContentProps {
             behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
+            label: tContent("states.controlled.label"),
+            trigger: toPlainText(tContent("states.controlled.trigger")),
+            behavior: toPlainText(tContent("states.controlled.behavior")),
+          },
+          {
+            label: tContent("states.modal.label"),
+            trigger: toPlainText(tContent("states.modal.trigger")),
+            behavior: toPlainText(tContent("states.modal.behavior")),
+          },
+          {
             label: tContent("states.transitioning.label"),
             trigger: toPlainText(tContent("states.transitioning.trigger")),
             behavior: toPlainText(tContent("states.transitioning.behavior")),
@@ -1084,6 +1094,9 @@ interface PopoverContentProps {
           tContent("accessibility.aria.labelledBy"),
           tContent("accessibility.aria.describedBy"),
           tContent("accessibility.aria.expanded"),
+          tContent("accessibility.aria.hasPopup"),
+          tContent("accessibility.aria.controls"),
+          tContent("accessibility.aria.modal"),
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[

@@ -219,6 +219,16 @@
         "trigger": "click no trigger",
         "behavior": "Aberto — <code>data-state=\"open\"</code>, foco no primeiro elemento focável."
       },
+      "controlled": {
+        "label": "Controlled",
+        "trigger": "open governado por fora",
+        "behavior": "O painel não guarda estado próprio — abrir e fechar passam pelo consumidor, avisado a cada mudança."
+      },
+      "modal": {
+        "label": "Modal",
+        "trigger": "modal ativo",
+        "behavior": "Foco preso no painel, rolagem da página travada e <code>aria-modal=\"true\"</code>, as três juntas. O padrão é não-modal."
+      },
       "transitioning": {
         "label": "Transitioning",
         "trigger": "animação de entrada/saída",
@@ -355,7 +365,10 @@
         "role": "<code>role=\"dialog\"</code> no <code>PopoverContent</code>",
         "labelledBy": "<code>aria-labelledby</code> aponta para o título; sem título, o nome vem de <code>aria-label</code>",
         "describedBy": "<code>aria-describedby</code> aponta para a <code>PopoverDescription</code>",
-        "expanded": "<code>aria-expanded</code> no trigger reflete o estado open/closed"
+        "expanded": "<code>aria-expanded</code> no trigger reflete o estado open/closed",
+        "hasPopup": "<code>aria-haspopup=\"dialog\"</code> no trigger, par do <code>aria-expanded</code>",
+        "controls": "<code>aria-controls</code> no trigger aponta para o painel só enquanto ele existe — apontar para id ausente reprova em <code>aria-valid-attr-value</code>",
+        "modal": "<code>aria-modal=\"true\"</code> no painel apenas no modo modal; no padrão o atributo não existe, nem como <code>\"false\"</code>"
       },
       "screenReader": {
         "title": "Leitor de Tela",
@@ -707,6 +720,16 @@
         "trigger": "click on trigger",
         "behavior": "Open — <code>data-state=\"open\"</code>, focus on the first focusable element."
       },
+      "controlled": {
+        "label": "Controlled",
+        "trigger": "open governed from outside",
+        "behavior": "The panel keeps no state of its own — opening and closing go through the consumer, told on every change."
+      },
+      "modal": {
+        "label": "Modal",
+        "trigger": "modal enabled",
+        "behavior": "Focus trapped in the panel, page scroll locked and <code>aria-modal=\"true\"</code>, the three together. The default is non-modal."
+      },
       "transitioning": {
         "label": "Transitioning",
         "trigger": "enter/exit animation",
@@ -843,7 +866,10 @@
         "role": "<code>role=\"dialog\"</code> on the <code>PopoverContent</code>",
         "labelledBy": "<code>aria-labelledby</code> points to the title; with no title, the name comes from <code>aria-label</code>",
         "describedBy": "<code>aria-describedby</code> points to <code>PopoverDescription</code>",
-        "expanded": "<code>aria-expanded</code> on trigger reflects open/closed state"
+        "expanded": "<code>aria-expanded</code> on trigger reflects open/closed state",
+        "hasPopup": "<code>aria-haspopup=\"dialog\"</code> on the trigger, the counterpart of <code>aria-expanded</code>",
+        "controls": "<code>aria-controls</code> on the trigger points to the panel only while it exists — pointing at a missing id fails <code>aria-valid-attr-value</code>",
+        "modal": "<code>aria-modal=\"true\"</code> on the panel in modal mode only; by default the attribute is absent, not even as <code>\"false\"</code>"
       },
       "screenReader": {
         "title": "Screen Reader",
@@ -1195,6 +1221,16 @@
         "trigger": "clic en el trigger",
         "behavior": "Abierto — <code>data-state=\"open\"</code>, foco en el primer elemento focalizable."
       },
+      "controlled": {
+        "label": "Controlled",
+        "trigger": "open gobernado desde fuera",
+        "behavior": "El panel no guarda estado propio — abrir y cerrar pasan por el consumidor, avisado en cada cambio."
+      },
+      "modal": {
+        "label": "Modal",
+        "trigger": "modal activo",
+        "behavior": "Foco atrapado en el panel, scroll de la página bloqueado y <code>aria-modal=\"true\"</code>, las tres juntas. Por defecto es no modal."
+      },
       "transitioning": {
         "label": "Transitioning",
         "trigger": "animación de entrada/salida",
@@ -1331,7 +1367,10 @@
         "role": "<code>role=\"dialog\"</code> en el <code>PopoverContent</code>",
         "labelledBy": "<code>aria-labelledby</code> apunta al título; sin título, el nombre viene de <code>aria-label</code>",
         "describedBy": "<code>aria-describedby</code> apunta a <code>PopoverDescription</code>",
-        "expanded": "<code>aria-expanded</code> en el trigger refleja el estado open/closed"
+        "expanded": "<code>aria-expanded</code> en el trigger refleja el estado open/closed",
+        "hasPopup": "<code>aria-haspopup=\"dialog\"</code> en el trigger, par de <code>aria-expanded</code>",
+        "controls": "<code>aria-controls</code> en el trigger apunta al panel solo mientras existe — apuntar a un id ausente falla en <code>aria-valid-attr-value</code>",
+        "modal": "<code>aria-modal=\"true\"</code> en el panel solo en modo modal; por defecto el atributo no existe, ni como <code>\"false\"</code>"
       },
       "screenReader": {
         "title": "Lector de Pantalla",

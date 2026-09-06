@@ -837,6 +837,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     items={[
       { label: $tStore('states.closed.label'),        trigger: toPlainText($tStore('states.closed.trigger')),        behavior: toPlainText($tStore('states.closed.behavior')) },
       { label: $tStore('states.open.label'),          trigger: toPlainText($tStore('states.open.trigger')),          behavior: toPlainText($tStore('states.open.behavior')) },
+      { label: $tStore('states.controlled.label'),    trigger: toPlainText($tStore('states.controlled.trigger')),    behavior: toPlainText($tStore('states.controlled.behavior')) },
+      { label: $tStore('states.modal.label'),         trigger: toPlainText($tStore('states.modal.trigger')),         behavior: toPlainText($tStore('states.modal.behavior')) },
       { label: $tStore('states.transitioning.label'), trigger: toPlainText($tStore('states.transitioning.trigger')), behavior: toPlainText($tStore('states.transitioning.behavior')) },
       { label: $tStore('states.focused.label'),       trigger: toPlainText($tStore('states.focused.trigger')),       behavior: toPlainText($tStore('states.focused.behavior')) },
     ]}
@@ -903,6 +905,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       $tStore('accessibility.aria.labelledBy'),
       $tStore('accessibility.aria.describedBy'),
       $tStore('accessibility.aria.expanded'),
+      $tStore('accessibility.aria.hasPopup'),
+      $tStore('accessibility.aria.controls'),
+      $tStore('accessibility.aria.modal'),
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[

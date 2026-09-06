@@ -992,6 +992,8 @@ createPopover({ trigger, content });`;
           items: [
             { label: t('states.closed.label'),        trigger: toPlainText(t('states.closed.trigger')),        behavior: toPlainText(t('states.closed.behavior')) },
             { label: t('states.open.label'),          trigger: toPlainText(t('states.open.trigger')),          behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.controlled.label'),    trigger: toPlainText(t('states.controlled.trigger')),    behavior: toPlainText(t('states.controlled.behavior')) },
+            { label: t('states.modal.label'),         trigger: toPlainText(t('states.modal.trigger')),         behavior: toPlainText(t('states.modal.behavior')) },
             { label: t('states.transitioning.label'), trigger: toPlainText(t('states.transitioning.trigger')), behavior: toPlainText(t('states.transitioning.behavior')) },
             { label: t('states.focused.label'),       trigger: toPlainText(t('states.focused.trigger')),       behavior: toPlainText(t('states.focused.behavior')) },
           ],
@@ -1105,7 +1107,7 @@ export function createPopoverDescription(options?: PopoverPartOptions): HTMLElem
           // e deixar os quatro atributos de fora perde a metade verificável.
           items: [
             ...[1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
-            ...['role', 'labelledBy', 'describedBy', 'expanded'].map(k =>
+            ...['role', 'labelledBy', 'describedBy', 'expanded', 'hasPopup', 'controls', 'modal'].map(k =>
               DOMPurify.sanitize(t(`accessibility.aria.${k}`)),
             ),
           ],

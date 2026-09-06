@@ -976,7 +976,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
 
   protected readonly stateItems = computed(() => {
     dict();
-    return ['closed', 'open', 'transitioning', 'focused'].map((k) => ({
+    return ['closed', 'open', 'controlled', 'modal', 'transitioning', 'focused'].map((k) => ({
       label: t(`states.${k}.label`),
       trigger: toPlainText(t(`states.${k}.trigger`)),
       behavior: toPlainText(t(`states.${k}.behavior`)),
@@ -1103,6 +1103,9 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
       t('accessibility.aria.labelledBy'),
       t('accessibility.aria.describedBy'),
       t('accessibility.aria.expanded'),
+      t('accessibility.aria.hasPopup'),
+      t('accessibility.aria.controls'),
+      t('accessibility.aria.modal'),
     ];
   });
 

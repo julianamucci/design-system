@@ -418,6 +418,8 @@ const compositionItems = computed(() => [
 const stateItems = computed(() => [
   { label: tContent('states.closed.label'),        trigger: toPlainText(tContent('states.closed.trigger')),        behavior: toPlainText(tContent('states.closed.behavior')) },
   { label: tContent('states.open.label'),          trigger: toPlainText(tContent('states.open.trigger')),          behavior: toPlainText(tContent('states.open.behavior')) },
+  { label: tContent('states.controlled.label'),    trigger: toPlainText(tContent('states.controlled.trigger')),    behavior: toPlainText(tContent('states.controlled.behavior')) },
+  { label: tContent('states.modal.label'),         trigger: toPlainText(tContent('states.modal.trigger')),         behavior: toPlainText(tContent('states.modal.behavior')) },
   { label: tContent('states.transitioning.label'), trigger: toPlainText(tContent('states.transitioning.trigger')), behavior: toPlainText(tContent('states.transitioning.behavior')) },
   { label: tContent('states.focused.label'),       trigger: toPlainText(tContent('states.focused.trigger')),       behavior: toPlainText(tContent('states.focused.behavior')) },
 ]);
@@ -465,6 +467,9 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.aria.labelledBy'),
   tContent('accessibility.aria.describedBy'),
   tContent('accessibility.aria.expanded'),
+  tContent('accessibility.aria.hasPopup'),
+  tContent('accessibility.aria.controls'),
+  tContent('accessibility.aria.modal'),
 ]);
 
 const keyboardItems = computed(() => [
