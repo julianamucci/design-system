@@ -59,7 +59,7 @@ import { NdsButton } from '@/components/ui/button';
     <!-- Uma vez no root da app -->
     <div ndsTooltipProvider [delay]="${delay}">
       <span ndsTooltip>
-        <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
+        <button ndsTooltipTrigger ndsButton variant="outline" size="icon" aria-label="Salvar">
           ${SAVE_ICON.replace(/\n/g, '\n  ')}
         </button>
 

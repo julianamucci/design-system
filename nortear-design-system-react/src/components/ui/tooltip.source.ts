@@ -46,10 +46,10 @@ import { Save } from "lucide-react";`;
  * do próprio `aria-label` — quem chega pelo toque nunca vê o balão, então o
  * tooltip não pode ser o único portador do nome.
  */
-function triggerIcon(label = 'Salvar'): string {
+function triggerIcon(label = 'Salvar', variant: 'ghost' | 'outline' = 'ghost'): string {
   return `    <TooltipTrigger
       render={(props) => (
-        <Button {...props} variant="ghost" size="icon" aria-label="${label}">
+        <Button {...props} variant="${variant}" size="icon" aria-label="${label}">
           <Save aria-hidden="true" />
         </Button>
       )}
@@ -85,7 +85,7 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
     IMPORT_DEFAULT,
     withProvider(
       `  <Tooltip${root}>
-${triggerIcon()}
+${triggerIcon('Salvar', 'outline')}
     <TooltipContent${position}>Salvar (Ctrl+S)</TooltipContent>
   </Tooltip>`,
     ),

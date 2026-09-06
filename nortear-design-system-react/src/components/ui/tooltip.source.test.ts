@@ -83,6 +83,28 @@ describe('o gatilho é o botão de verdade', () => {
     }
   });
 
+  it('o do Playground é outline, a mesma variante que a story renderiza', () => {
+    // Nenhum caso deste arquivo olhava a variante do gatilho, e foi essa
+    // cegueira que deixou o defeito de pé: as stories foram alinhadas em
+    // `outline`, o construtor ficou em `ghost`, e o leitor via um preview
+    // contornado ao lado de um snippet fantasma.
+    expect(tooltipSource()).toContain(
+      '<Button {...props} variant="outline" size="icon" aria-label="Salvar">',
+    );
+    expect(tooltipSource()).not.toContain('variant="ghost"');
+  });
+
+  it('a barra de ações segue em ghost, porque é o que a story dela renderiza', () => {
+    // O par do caso acima: dentro de uma barra o botão perde o contorno
+    // próprio. É este caso que prova que a correção foi cirúrgica no Playground
+    // e não uma troca global de variante nos oito usos do construtor.
+    const saida = iconsTooltipBarSource();
+    for (const label of ['Salvar', 'Compartilhar', 'Excluir']) {
+      expect(saida).toContain(`<Button {...props} variant="ghost" size="icon" aria-label="${label}">`);
+    }
+    expect(saida).not.toContain('variant="outline"');
+  });
+
   it('o botão só-ícone carrega o próprio nome — o balão não é o único portador', () => {
     for (const fn of [tooltipSource, tooltipCurtoSource, tooltipOpenSource, tooltipWithDelaySource]) {
       const saida = fn();
