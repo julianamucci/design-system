@@ -350,6 +350,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
         { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
         { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: $tStore('usage.scenarios.item5.a') },
+        { s: $tStore('usage.scenarios.item6.s'), u: $tStore('usage.scenarios.item6.u'), a: $tStore('usage.scenarios.item6.a') },
       ],
     }}
     uxWriting={{
@@ -890,12 +891,18 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
+      // Os itens da lista mais o bloco `aria`: o container tem uma lista só, e
+      // deixar os quatro atributos de fora perde a metade verificável.
       $tStore('accessibility.items.item1'),
       $tStore('accessibility.items.item2'),
       $tStore('accessibility.items.item3'),
       $tStore('accessibility.items.item4'),
       $tStore('accessibility.items.item5'),
       $tStore('accessibility.items.item6'),
+      $tStore('accessibility.aria.role'),
+      $tStore('accessibility.aria.labelledBy'),
+      $tStore('accessibility.aria.describedBy'),
+      $tStore('accessibility.aria.expanded'),
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[

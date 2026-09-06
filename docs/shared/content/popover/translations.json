@@ -83,6 +83,11 @@
           "s": "Preview ao hover",
           "u": "Não",
           "a": "HoverCard"
+        },
+        "item6": {
+          "s": "Tarefa curta que não pode ser interrompida",
+          "u": "Sim, em modo modal",
+          "a": "Dialog, se for longa"
         }
       },
       "uxWriting": {
@@ -566,6 +571,11 @@
           "s": "Hover preview",
           "u": "No",
           "a": "HoverCard"
+        },
+        "item6": {
+          "s": "Short task that must not be interrupted",
+          "u": "Yes, in modal mode",
+          "a": "Dialog, if it is long"
         }
       },
       "uxWriting": {
@@ -1049,6 +1059,11 @@
           "s": "Vista previa al hover",
           "u": "No",
           "a": "HoverCard"
+        },
+        "item6": {
+          "s": "Tarea corta que no puede interrumpirse",
+          "u": "Sí, en modo modal",
+          "a": "Dialog, si es larga"
         }
       },
       "uxWriting": {

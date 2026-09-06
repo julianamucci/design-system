@@ -452,6 +452,8 @@ const tokenRows = computed(() => [
   { token: '--ring',               value: tContent('tokens.table.ring.class'),              description: tContent('tokens.table.ring.part')              },
 ]);
 
+// Os itens da lista mais o bloco `aria`: o container tem uma lista só, e deixar
+// os quatro atributos de fora perde a metade verificável da seção.
 const accessibilityItems = computed(() => [
   tContent('accessibility.items.item1'),
   tContent('accessibility.items.item2'),
@@ -459,6 +461,10 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.items.item4'),
   tContent('accessibility.items.item5'),
   tContent('accessibility.items.item6'),
+  tContent('accessibility.aria.role'),
+  tContent('accessibility.aria.labelledBy'),
+  tContent('accessibility.aria.describedBy'),
+  tContent('accessibility.aria.expanded'),
 ]);
 
 const keyboardItems = computed(() => [
@@ -611,6 +617,7 @@ const a11yCritCols = computed(() => ({
           { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
           { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
           { s: tContent('usage.scenarios.item5.s'), u: tContent('usage.scenarios.item5.u'), a: tContent('usage.scenarios.item5.a') },
+          { s: tContent('usage.scenarios.item6.s'), u: tContent('usage.scenarios.item6.u'), a: tContent('usage.scenarios.item6.a') },
         ],
       }"
       :ux-writing="{

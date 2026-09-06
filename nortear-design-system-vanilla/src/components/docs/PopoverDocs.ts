@@ -408,7 +408,7 @@ export function createPopoverDocs(): HTMLElement {
               use: t('usage.scenarios.cols.use'),
               alternative: t('usage.scenarios.cols.alternative'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               s: t(`usage.scenarios.item${i}.s`),
               u: t(`usage.scenarios.item${i}.u`),
               a: t(`usage.scenarios.item${i}.a`),
@@ -1101,7 +1101,14 @@ export function createPopoverDescription(options?: PopoverPartOptions): HTMLElem
           screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
+          // Os itens da lista mais o bloco `aria`: o container tem uma lista só,
+          // e deixar os quatro atributos de fora perde a metade verificável.
+          items: [
+            ...[1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
+            ...['role', 'labelledBy', 'describedBy', 'expanded'].map(k =>
+              DOMPurify.sanitize(t(`accessibility.aria.${k}`)),
+            ),
+          ],
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',       description: toPlainText(t('accessibility.keyboard.tab'))      },
