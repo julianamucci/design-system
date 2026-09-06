@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, type ComponentProps } from "react";
+import { useCallback, useEffect, useMemo, useState, type ComponentProps } from "react";
 import {
   Popover,
   PopoverContent,
@@ -97,9 +97,12 @@ const getNavGroups = (t: (key: string) => string) => [
  * A cor sai de token do tema, nunca de hexadecimal em `style` inline: trocar de
  * marca reescreve a paleta sem tocar na página, e a amostra continua legível no
  * tema escuro. `nds-focus-ring` é o anel de foco que a própria descrição desta
- * composição promete.
+ * composição promete; `nds-ring-selected` é o anel da ESCOLHA, e é estático:
+ * ele casa o próprio `aria-pressed` do botão, então não há classe de estado a
+ * alternar — duplicar o estado numa segunda fonte é como ele some da tela sem
+ * sumir do leitor de tela.
  */
-const SWATCH_CLASSES = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring";
+const SWATCH_CLASSES = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected";
 const SWATCH_COLORS = [
   { key: "primary",     className: "nds-bg-primary"     },
   { key: "secondary",   className: "nds-bg-secondary"   },
@@ -145,6 +148,27 @@ const rastrearPopover =
 export function PopoverDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(popoverTranslations);
+
+  // ─── Paleta da composição "seletor de cor" ────────────────────────────────
+  //
+  // A seção de composições renderiza componente VIVO, e um seletor onde a
+  // escolha não acontece documenta um desenho, não um componente. A amostra
+  // nasce escolhida para o estado ser legível sem interação.
+  //
+  // O estado é anunciado por `aria-pressed` — o atributo de botão alternador
+  // que o `toggle` deste sistema já usa. O `label` do evento é a CHAVE da cor,
+  // nunca o texto traduzido, que dividiria uma série em três no GA4.
+  const [selectedColor, setCorSelecionada] = useState<string>("primary");
+  const selectColor = useCallback((key: string) => {
+    setCorSelecionada(key);
+    track("option_select", {
+      component: "popover",
+      field_name: "label_color",
+      value: key,
+      label: key,
+      location: "docs_composicoes",
+    });
+  }, []);
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria.
@@ -770,20 +794,24 @@ interface PopoverContentProps {
       <PopoverTitle>Cor da etiqueta</PopoverTitle>
     </PopoverHeader>
     {/* A cor sai de token do tema, nunca de style inline. */}
-    <div className="nds-grid" data-cols="6" data-spacing="xs">
+    {/* \`data-fixed\` é o que faz o grid respeitar as seis colunas: sem ele,
+        \`data-cols\` cai no auto-fit e o painel estreito rende UMA coluna. */}
+    <div className="nds-grid" data-cols="6" data-fixed data-spacing="xs">
       {[
-        { name: "Primária",   className: "nds-bg-primary"     },
-        { name: "Secundária", className: "nds-bg-secondary"   },
-        { name: "Sucesso",    className: "nds-bg-success"     },
-        { name: "Atenção",    className: "nds-bg-warning"     },
-        { name: "Informação", className: "nds-bg-info"        },
-        { name: "Destrutiva", className: "nds-bg-destructive" },
+        { key: "primary",     name: "Primária",   className: "nds-bg-primary"     },
+        { key: "secondary",   name: "Secundária", className: "nds-bg-secondary"   },
+        { key: "success",     name: "Sucesso",    className: "nds-bg-success"     },
+        { key: "warning",     name: "Atenção",    className: "nds-bg-warning"     },
+        { key: "info",        name: "Informação", className: "nds-bg-info"        },
+        { key: "destructive", name: "Destrutiva", className: "nds-bg-destructive" },
       ].map((s) => (
         <button
-          key={s.name}
+          key={s.key}
           type="button"
           aria-label={s.name}
-          className={"nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring " + s.className}
+          aria-pressed={selectedColor === s.key}
+          onClick={() => setCorSelecionada(s.key)}
+          className={"nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected " + s.className}
         />
       ))}
     </div>
@@ -803,12 +831,14 @@ interface PopoverContentProps {
                         {tContent("variants.compositions.colorPicker.title")}
                       </PopoverTitle>
                     </PopoverHeader>
-                    <div className="nds-grid" data-cols="6" data-spacing="xs">
+                    <div className="nds-grid" data-cols="6" data-fixed data-spacing="xs">
                       {SWATCH_COLORS.map((s) => (
                         <button
                           key={s.key}
                           type="button"
                           aria-label={tContent(`variants.compositions.colorPicker.${s.key}`)}
+                          aria-pressed={selectedColor === s.key}
+                          onClick={() => selectColor(s.key)}
                           className={`${SWATCH_CLASSES} ${s.className}`}
                         />
                       ))}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -177,10 +177,12 @@ function handlePopoverOpenChange(triggerLabel: string, location: string, open: b
 
 // A cor sai de TOKEN do tema, nunca de hexadecimal: trocar de marca reescreve
 // a paleta sem tocar no exemplo, e a amostra continua legível no tema escuro.
-// Mesma paleta e mesmas classes das cinco stories. A lista guarda a CHAVE, não
+// Mesma paleta das cinco stories, mais `nds-ring-selected`: o anel da ESCOLHA,
+// estático, que casa o próprio `aria-pressed` do botão — não há classe de
+// estado a alternar. A lista guarda a CHAVE, não
 // o rótulo: o nome acessível sai de `variants.compositions.colorPicker.<chave>`,
 // então a prévia fala o idioma da página em vez de mostrar português em `en`.
-const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected';
 const swatches = [
   { key: 'primary',     className: 'nds-bg-primary'     },
   { key: 'secondary',   className: 'nds-bg-secondary'   },
@@ -189,6 +191,24 @@ const swatches = [
   { key: 'info',        className: 'nds-bg-info'        },
   { key: 'destructive', className: 'nds-bg-destructive' },
 ];
+
+// A seção de composições renderiza componente VIVO, e um seletor onde a escolha
+// não acontece documenta um desenho, não um componente. Seleção única, anunciada
+// por `aria-pressed` — o atributo de botão alternador que o `toggle` deste
+// sistema já usa. Uma amostra nasce escolhida para o estado ser legível sem
+// interação. O `label` do evento é a CHAVE da cor, nunca o texto traduzido, que
+// dividiria uma série em três no GA4.
+const selectedColor = ref('primary');
+function selectColor(key: string) {
+  selectedColor.value = key;
+  track('option_select', {
+    component: 'popover',
+    field_name: 'label_color',
+    value: key,
+    label: key,
+    location: 'docs_composicoes',
+  });
+}
 
 const codeImportBasic = `import {
   Popover,
@@ -321,16 +341,22 @@ const codeTableFilter = `<Popover>
 </Popover>`;
 
 const codeColorPicker = `<script setup>
+import { ref } from 'vue';
+
 // A cor sai de token do tema, nunca de style inline.
-const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected';
 const swatches = [
-  { name: 'Primária',   className: 'nds-bg-primary'     },
-  { name: 'Secundária', className: 'nds-bg-secondary'   },
-  { name: 'Sucesso',    className: 'nds-bg-success'     },
-  { name: 'Atenção',    className: 'nds-bg-warning'     },
-  { name: 'Informação', className: 'nds-bg-info'        },
-  { name: 'Destrutiva', className: 'nds-bg-destructive' },
+  { key: 'primary',     name: 'Primária',   className: 'nds-bg-primary'     },
+  { key: 'secondary',   name: 'Secundária', className: 'nds-bg-secondary'   },
+  { key: 'success',     name: 'Sucesso',    className: 'nds-bg-success'     },
+  { key: 'warning',     name: 'Atenção',    className: 'nds-bg-warning'     },
+  { key: 'info',        name: 'Informação', className: 'nds-bg-info'        },
+  { key: 'destructive', name: 'Destrutiva', className: 'nds-bg-destructive' },
 ];
+
+// Seleção única: a escolhida se anuncia por \`aria-pressed\`, e uma nasce
+// escolhida para o estado ser legível sem interação.
+const selectedColor = ref('primary');
 <\/script>
 
 <Popover>
@@ -341,8 +367,18 @@ const swatches = [
     <PopoverHeader>
       <PopoverTitle>Cor da etiqueta</PopoverTitle>
     </PopoverHeader>
-    <div class="nds-grid" data-cols="6" data-spacing="xs">
-      <button v-for="s in swatches" :key="s.name" type="button" :aria-label="s.name" :class="[SWATCH_CLASSES, s.className]" />
+    <!-- \`data-fixed\` é o que faz o grid respeitar as seis colunas: sem ele,
+         \`data-cols\` cai no auto-fit e o painel estreito rende UMA coluna. -->
+    <div class="nds-grid" data-cols="6" data-fixed data-spacing="xs">
+      <button
+        v-for="s in swatches"
+        :key="s.key"
+        type="button"
+        :aria-label="s.name"
+        :aria-pressed="selectedColor === s.key ? 'true' : 'false'"
+        :class="[SWATCH_CLASSES, s.className]"
+        @click="selectedColor = s.key"
+      />
     </div>
   </PopoverContent>
 </Popover>`;
@@ -999,6 +1035,7 @@ const a11yCritCols = computed(() => ({
               <div
                 class="nds-grid"
                 data-cols="6"
+                data-fixed
                 data-spacing="xs"
               >
                 <button
@@ -1006,7 +1043,9 @@ const a11yCritCols = computed(() => ({
                   :key="s.key"
                   type="button"
                   :aria-label="tContent(`variants.compositions.colorPicker.${s.key}`)"
+                  :aria-pressed="selectedColor === s.key ? 'true' : 'false'"
                   :class="[SWATCH_CLASSES, s.className]"
+                  @click="selectColor(s.key)"
                 />
               </div>
             </PopoverContent>

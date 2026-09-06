@@ -86,8 +86,12 @@ function trackPopoverOpenChange(triggerId: string, location: string): (open: boo
   };
 }
 
-/** Amostra de cor do exemplo de paleta — a MESMA das cinco stories. */
-const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
+/**
+ * Amostra de cor do exemplo de paleta — a MESMA das cinco stories, mais
+ * `nds-ring-selected`: o anel da ESCOLHA, estático, que casa o próprio
+ * `aria-pressed` do botão. Não há classe de estado a alternar.
+ */
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected';
 
 /**
  * Painel SEM título: um `<p>` solto dentro do `PopoverContent`.
@@ -649,26 +653,46 @@ const title = createPopoverTitle({ text: 'Cor da etiqueta' });
 const grid = document.createElement('div');
 grid.className = 'nds-grid';
 grid.dataset.cols = '6';
+// Sem \`data-fixed\` o \`data-cols\` cai no auto-fit, e num painel estreito
+// cabe UMA coluna: é ele que faz o grid respeitar as seis.
+grid.dataset.fixed = 'true';
 grid.dataset.spacing = 'xs';
 
 // A cor sai de token do tema, nunca de style inline: trocar de marca
 // reescreve a paleta sem tocar no exemplo.
 const swatches = [
-  { name: 'Primária',   className: 'nds-bg-primary'     },
-  { name: 'Secundária', className: 'nds-bg-secondary'   },
-  { name: 'Sucesso',    className: 'nds-bg-success'     },
-  { name: 'Atenção',    className: 'nds-bg-warning'     },
-  { name: 'Informação', className: 'nds-bg-info'        },
-  { name: 'Destrutiva', className: 'nds-bg-destructive' },
+  { key: 'primary',     name: 'Primária',   className: 'nds-bg-primary'     },
+  { key: 'secondary',   name: 'Secundária', className: 'nds-bg-secondary'   },
+  { key: 'success',     name: 'Sucesso',    className: 'nds-bg-success'     },
+  { key: 'warning',     name: 'Atenção',    className: 'nds-bg-warning'     },
+  { key: 'info',        name: 'Informação', className: 'nds-bg-info'        },
+  { key: 'destructive', name: 'Destrutiva', className: 'nds-bg-destructive' },
 ];
+
+// Seleção única: a escolhida se anuncia por \`aria-pressed\`, e uma nasce
+// escolhida para o estado ser legível sem interação.
+const buttons = new Map();
+let selectedColor = 'primary';
+
+function applySelection() {
+  for (const [key, btn] of buttons) {
+    btn.setAttribute('aria-pressed', String(key === selectedColor));
+  }
+}
 
 for (const s of swatches) {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.setAttribute('aria-label', s.name);
-  btn.className = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring ' + s.className;
+  btn.className = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected ' + s.className;
+  btn.addEventListener('click', () => {
+    selectedColor = s.key;
+    applySelection();
+  });
+  buttons.set(s.key, btn);
   grid.appendChild(btn);
 }
+applySelection();
 
 content.append(title, grid);
 createPopover({ trigger, content });`;
@@ -805,6 +829,10 @@ createPopover({ trigger, content });`;
           const grid = document.createElement('div');
           grid.className = 'nds-grid';
           grid.dataset.cols = '6';
+          // Sem `data-fixed` o `data-cols` cai no auto-fit da regra base, cujo
+          // `--grid-min` é 16rem: dentro do painel cabe UMA coluna, e o
+          // atributo vira no-op silencioso.
+          grid.dataset.fixed = 'true';
           grid.dataset.spacing = 'xs';
 
           // A lista guarda a CHAVE, não o rótulo: o nome acessível de cada
@@ -819,13 +847,42 @@ createPopover({ trigger, content });`;
             { key: 'destructive', className: 'nds-bg-destructive' },
           ];
 
+          // A seção de composições renderiza componente VIVO, e um seletor onde
+          // a escolha não acontece documenta um desenho, não um componente.
+          // Seleção única, anunciada por `aria-pressed` — o atributo de botão
+          // alternador que o `toggle` deste sistema já usa. Uma amostra nasce
+          // escolhida para o estado ser legível sem interação.
+          const buttons = new Map<string, HTMLButtonElement>();
+          let selectedColor = 'primary';
+
+          function applySelection() {
+            for (const [key, btn] of buttons) {
+              btn.setAttribute('aria-pressed', String(key === selectedColor));
+            }
+          }
+
           for (const s of swatches) {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.setAttribute('aria-label', t(`variants.compositions.colorPicker.${s.key}`));
             btn.className = `${SWATCH_CLASSES} ${s.className}`;
+            btn.addEventListener('click', () => {
+              selectedColor = s.key;
+              applySelection();
+              // O `label` é a CHAVE da cor, nunca o texto traduzido, que
+              // dividiria uma série em três no GA4.
+              track('option_select', {
+                component: 'popover',
+                field_name: 'label_color',
+                value: s.key,
+                label: s.key,
+                location: 'docs_composicoes',
+              });
+            });
+            buttons.set(s.key, btn);
             grid.appendChild(btn);
           }
+          applySelection();
 
           content.append(title, grid);
           return createPopover({

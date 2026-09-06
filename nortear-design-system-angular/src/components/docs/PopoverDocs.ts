@@ -105,7 +105,10 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
+// Amostra de cor do exemplo de paleta. `nds-ring-selected` é o anel da ESCOLHA,
+// e é estático: ele casa o próprio `aria-pressed` do botão, então não há classe
+// de estado a alternar no clique.
+const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected';
 
 // A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
 // descreve um elemento `<nds-popover>` que este stack não tem: a raiz é uma
@@ -266,11 +269,16 @@ const COMPOSITION_CODE = {
       <h3 ndsPopoverTitle>Cor da etiqueta</h3>
     </div>
 
-    <div class="nds-cluster" data-spacing="sm">
+    <!-- \`data-fixed\` é o que faz o grid respeitar as seis colunas: sem ele,
+         \`data-cols\` cai no auto-fit e o painel estreito rende UMA coluna.
+         A escolha é única e se anuncia por \`aria-pressed\`. -->
+    <div class="nds-grid" data-cols="6" data-fixed data-spacing="xs">
       <button
         type="button"
-        class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-bg-primary"
+        class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected nds-bg-primary"
         aria-label="Primária"
+        [attr.aria-pressed]="selectedColor() === 'primary' ? 'true' : 'false'"
+        (click)="selectedColor.set('primary')"
       ></button>
       <!-- … demais amostras -->
     </div>
@@ -501,12 +509,14 @@ const COMPOSITION_CODE = {
             <h3 ndsPopoverTitle>{{ t('variants.compositions.colorPicker.title') }}</h3>
           </div>
 
-          <div class="nds-cluster" data-spacing="sm">
-            @for (cor of amostrasDeCor(); track cor.className) {
+          <div class="nds-grid" data-cols="6" data-fixed data-spacing="xs">
+            @for (cor of amostrasDeCor(); track cor.key) {
               <button
                 type="button"
                 [class]="swatchClasses + ' ' + cor.className"
                 [attr.aria-label]="cor.label"
+                [attr.aria-pressed]="selectedColor() === cor.key ? 'true' : 'false'"
+                (click)="selectColor(cor.key)"
               ></button>
             }
           </div>
@@ -770,11 +780,37 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
     dict();
     return (['primary', 'secondary', 'success', 'warning', 'info', 'destructive'] as const).map(
       (key) => ({
+        key,
         className: `nds-bg-${key}`,
         label: t(`variants.compositions.colorPicker.${key}`),
       }),
     );
   });
+
+  /**
+   * Escolha da amostra de cor.
+   *
+   * A seção de composições renderiza componente VIVO, e um seletor onde a
+   * escolha não acontece documenta um desenho, não um componente. Seleção
+   * única, anunciada por `aria-pressed` — o atributo de botão alternador que o
+   * `toggle` deste sistema já usa. Uma amostra nasce escolhida para o estado
+   * ser legível sem interação.
+   *
+   * O `label` do evento é a CHAVE da cor, nunca o texto traduzido, que viraria
+   * três valores distintos no GA4.
+   */
+  protected readonly selectedColor = signal<string>('primary');
+
+  protected selectColor(key: string): void {
+    this.selectedColor.set(key);
+    track('option_select', {
+      component: 'popover',
+      field_name: 'label_color',
+      value: key,
+      label: key,
+      location: 'docs_composicoes',
+    });
+  }
 
   /**
    * Abertura e fechamento de QUALQUER popover desta página.

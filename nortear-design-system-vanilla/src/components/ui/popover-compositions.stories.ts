@@ -164,6 +164,10 @@ export const ColorPicker: Story = {
     const grid = document.createElement('div');
     grid.className = 'nds-grid';
     grid.dataset.cols = '6';
+    // Sem `data-fixed` o `data-cols` cai no auto-fit da regra base, cujo
+    // `--grid-min` é 16rem: dentro do painel cabe UMA coluna, e o atributo vira
+    // no-op silencioso.
+    grid.dataset.fixed = 'true';
     grid.dataset.spacing = 'xs';
 
     // A cor sai de token do tema, nunca de hexadecimal cravado: trocar de marca

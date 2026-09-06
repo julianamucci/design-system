@@ -29,11 +29,13 @@
 
   // A cor sai de TOKEN do tema, nunca de hexadecimal em style inline: trocar de
   // marca reescreve a paleta sem tocar no exemplo, e a amostra continua legível
-  // no tema escuro. Mesma paleta e mesmas classes das stories. A lista guarda a
+  // no tema escuro. Mesma paleta das stories, mais `nds-ring-selected`: o anel
+  // da ESCOLHA, estático, que casa o próprio `aria-pressed` do botão — não há
+  // classe de estado a alternar. A lista guarda a
   // CHAVE, não o rótulo: o nome acessível sai de
   // `variants.compositions.colorPicker.<chave>`, então a prévia fala o idioma da
   // página em vez de mostrar português em `en` e `es`.
-  const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring';
+  const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected';
   const SWATCH_COLORS = [
     { key: 'primary',     className: 'nds-bg-primary'     },
     { key: 'secondary',   className: 'nds-bg-secondary'   },
@@ -42,6 +44,24 @@
     { key: 'info',        className: 'nds-bg-info'        },
     { key: 'destructive', className: 'nds-bg-destructive' },
   ];
+
+  // A seção de composições renderiza componente VIVO, e um seletor onde a
+  // escolha não acontece documenta um desenho, não um componente. Seleção
+  // única, anunciada por `aria-pressed` — o atributo de botão alternador que o
+  // `toggle` deste sistema já usa. Uma amostra nasce escolhida para o estado
+  // ser legível sem interação. O `label` do evento é a CHAVE da cor, nunca o
+  // texto traduzido, que dividiria uma série em três no GA4.
+  let selectedColor = $state('primary');
+  function selectColor(key: string) {
+    selectedColor = key;
+    track('option_select', {
+      component: 'popover',
+      field_name: 'label_color',
+      value: key,
+      label: key,
+      location: 'docs_composicoes',
+    });
+  }
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(popoverTranslations);
@@ -595,9 +615,17 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     <PopoverHeader>
       <PopoverTitle>Cor da etiqueta</PopoverTitle>
     </PopoverHeader>
-    <div class="nds-grid" data-cols="6" data-spacing="xs">
-      {#each swatches as s}
-        <button type="button" aria-label={s.name} class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring {s.className}"></button>
+    <!-- \`data-fixed\` é o que faz o grid respeitar as seis colunas: sem ele,
+         \`data-cols\` cai no auto-fit e o painel estreito rende UMA coluna. -->
+    <div class="nds-grid" data-cols="6" data-fixed data-spacing="xs">
+      {#each swatches as s (s.key)}
+        <button
+          type="button"
+          aria-label={s.name}
+          aria-pressed={selectedColor === s.key}
+          onclick={() => (selectedColor = s.key)}
+          class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected {s.className}"
+        ></button>
       {/each}
     </div>
   </PopoverContent>
@@ -718,11 +746,13 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>{$tStore('variants.compositions.colorPicker.title')}</PopoverTitle>
         </PopoverHeader>
- <div class="nds-grid nds-pt-1" data-cols="6" data-spacing="xs">
+ <div class="nds-grid nds-pt-1" data-cols="6" data-fixed data-spacing="xs">
           {#each SWATCH_COLORS as s (s.key)}
             <button
               type="button"
               aria-label={$tStore(`variants.compositions.colorPicker.${s.key}`)}
+              aria-pressed={selectedColor === s.key}
+              onclick={() => selectColor(s.key)}
               class="{SWATCH_CLASSES} {s.className}"
             ></button>
           {/each}

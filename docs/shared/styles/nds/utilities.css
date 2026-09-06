@@ -468,6 +468,33 @@
 /* ── ring simples (anel decorativo — ex.: avatares sobrepostos) ──────────── */
 .nds-ring-background { box-shadow: 0 0 0 2px hsl(var(--background)); }
 
+/* ── seleção PERSISTENTE, e ela não é foco ───────────────────────────────────
+ *
+ * O sistema tinha três anéis e nenhum servia para dizer "este é o escolhido":
+ * `.nds-focus-ring` e `.nds-focus-ring-inset` estão presos a `:focus-visible` e
+ * `:focus`, então somem quando o foco sai, e `.nds-ring-background` é só o vão
+ * em `--background`, invisível sobre um painel da mesma cor.
+ *
+ * A falta apareceu em 2026-09-06, na paleta de swatches do popover: os seis
+ * botões tinham `aria-pressed` correto e nenhum sinal na tela — o estado chegava
+ * ao leitor de tela e não a quem enxerga. Contornar com borda não resolve:
+ * `nds-border-primary` desaparece justamente na amostra `primary`, que é a cor
+ * da borda.
+ *
+ * A forma é a mesma do anel de foco de propósito — dois degraus, o primeiro em
+ * `--background` para abrir um vão e o segundo em `--ring` — porque é assim que
+ * ele se destaca sobre QUALQUER cor de fundo, que é o requisito de uma paleta.
+ * Foco e seleção podem coexistir no mesmo elemento; quando isso acontece, o
+ * `:focus-visible` vence por vir depois na folha, e é o comportamento certo:
+ * enquanto o teclado está ali, o que importa é onde ele está.
+ *
+ * `[aria-pressed="true"]` e não uma classe própria: o estado já existe no DOM
+ * por acessibilidade, e duplicá-lo numa classe cria duas fontes para um valor
+ * só — que é como a seleção some da tela sem sumir do leitor. */
+.nds-ring-selected[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+
 /* ── responsivos: basis do carousel + visibilidade por breakpoint ────────── */
 /* Os cortes 640/768/1024 são herdados do framework que saiu; ficaram porque
  * as docs pages e stories já os assumiam. */

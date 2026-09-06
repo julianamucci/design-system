@@ -292,9 +292,32 @@
 
 /* data-fixed — respeita EXATAMENTE o data-cols (colunas fixas, sem auto-fit).
  * Use quando o número de colunas é intencional (ex.: grids de cards em pares).
- * minmax(0, 1fr) permite as colunas encolherem sem estourar o container. */
+ * minmax(0, 1fr) permite as colunas encolherem sem estourar o container.
+ *
+ * 3 a 6 entraram em 2026-09-06, e o motivo é medido: só o `2` tinha regra, e
+ * `data-cols` com qualquer outro valor caía no `auto-fit` da regra base — que
+ * usa `--grid-min: 16rem`. Dentro de um painel estreito cabe UMA coluna, então o
+ * atributo virava no-op silencioso. Foi assim que a paleta de swatches do
+ * popover, escrita com `data-cols="6"`, renderizou os seis em coluna única.
+ *
+ * O repositório tem 18 usos de valores sem regra — 9 de `6`, 7 de `4`, 2 de `3`
+ * — contra 158 do `2`. Estes seletores atendem os que pedirem `data-fixed`; os
+ * demais continuam em auto-fit, que para card responsivo é o comportamento certo.
+ * Nada aqui os quebra: o que não tem `data-fixed` segue como estava. */
 .nds-grid[data-fixed][data-cols="2"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.nds-grid[data-fixed][data-cols="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.nds-grid[data-fixed][data-cols="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.nds-grid[data-fixed][data-cols="5"] {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.nds-grid[data-fixed][data-cols="6"] {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 
