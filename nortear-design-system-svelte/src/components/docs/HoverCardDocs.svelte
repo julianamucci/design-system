@@ -233,8 +233,6 @@ interface HoverCardContentProps {
     >
       {$tStore('demonstration.sentenceBefore')}
       <HoverCard
-        openDelay={150}
-        closeDelay={100}
         onOpenChange={(o: boolean) => trackHoverCard(o, 'user-profile', 'docs_demo')}
       >
         <HoverCardTrigger>
@@ -364,8 +362,6 @@ interface HoverCardContentProps {
   {#snippet doPair1()}
     <div class="nds-min-h-40" style="contain: layout; position: relative">
       <HoverCard
-        openDelay={150}
-        closeDelay={100}
         onOpenChange={(o: boolean) => trackHoverCard(o, 'par1-do', 'docs_do_dont')}
       >
         <HoverCardTrigger>
@@ -386,8 +382,6 @@ interface HoverCardContentProps {
   {#snippet dontPair1()}
     <div class="nds-min-h-40" style="contain: layout; position: relative">
       <HoverCard
-        openDelay={150}
-        closeDelay={100}
         onOpenChange={(o: boolean) => trackHoverCard(o, 'par1-dont', 'docs_do_dont')}
       >
         <HoverCardTrigger>

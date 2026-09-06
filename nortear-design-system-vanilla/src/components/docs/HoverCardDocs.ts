@@ -141,7 +141,7 @@ function buildPlainMention(): HTMLElement {
 function buildDoDontPreview(
   triggerId: string,
   trigger: HTMLElement,
-  delays: { openDelay?: number; closeDelay?: number },
+  delays: { openDelay?: number; closeDelay?: number } = {},
 ): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-min-h-40';
@@ -381,7 +381,11 @@ export function createHoverCardDocs(): HTMLElement {
 
             sentence.append(
               document.createTextNode(`${t('demonstration.sentenceBefore')} `),
-              buildProfilePreview('docs_demo', { openDelay: 150, closeDelay: 100 }),
+              // Sem espera declarada: a demonstração usa o padrão do sistema
+              // (600ms para abrir, 300ms para fechar). Um valor curto aqui
+              // demonstraria o "dont" do par 2 desta mesma página, que cobra
+              // ≥300ms, e contradiria o snippet ao lado.
+              buildProfilePreview('docs_demo'),
               document.createTextNode(` ${t('demonstration.sentenceAfter')}`),
             );
 
@@ -452,20 +456,18 @@ export function createHoverCardDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               // Gatilho que é LINK de verdade: navegável por clique e por
-              // teclado, com o cartão apenas complementando o caminho.
+              // teclado, com o cartão apenas complementando o caminho. A espera
+              // fica no padrão do sistema nos DOIS lados: aqui a lição é o
+              // gatilho, e um valor curto seria o defeito que o par 2 ensina.
               doPreviewFactory: () =>
                 buildDoDontPreview(
                   'par1-do',
                   construirLink(t('demonstration.mention'), '#joana'),
-                  { openDelay: 150, closeDelay: 100 },
                 ),
               // O defeito FICA: menção sem link nenhum. É o que a legenda
               // ensina, e imitação em markup não ensinaria.
               dontPreviewFactory: () =>
-                buildDoDontPreview('par1-dont', buildPlainMention(), {
-                  openDelay: 150,
-                  closeDelay: 100,
-                }),
+                buildDoDontPreview('par1-dont', buildPlainMention()),
             },
             {
               doLabel: tNav('common.do'),
@@ -702,6 +704,9 @@ export type HoverCardOptions = {
   content: HTMLElement;
   side?: HoverCardSide;
   align?: HoverCardAlign;
+  openDelay?: number;
+  closeDelay?: number;
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
@@ -729,7 +734,9 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
                 { name: 'align',        type: "'start' | 'center' | 'end'",               defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) },
                 { name: 'onOpenChange', type: '(open: boolean) => void',                  defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                                   defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
-                { name: 'openDelay',    type: 'number',                                   defaultValue: '300',       required: 'Não', description: toPlainText(t('props.table.openDelay.description')) + ' NOTA: factory Nortear usa constante interna SHOW_DELAY (não-prop).' },
+                { name: 'openDelay',    type: 'number',                                   defaultValue: '600',       required: 'Não', description: toPlainText(t('props.table.openDelay.description')) },
+                { name: 'closeDelay',   type: 'number',                                   defaultValue: '300',       required: 'Não', description: toPlainText(t('props.table.closeDelay.description')) },
+                { name: 'defaultOpen',  type: 'boolean',                                  defaultValue: 'false',     required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) },
               ],
             },
           ],

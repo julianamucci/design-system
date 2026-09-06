@@ -373,8 +373,9 @@ interface HoverCardContentProps {
 
         O gatilho fica DENTRO da frase de propósito: é o cerco de texto que
         dispensa o alvo em linha do mínimo de 24px da WCAG 2.5.8. As esperas
-        são as do Playground (150/100), curtas porque quem abre a seção quer
-        ver o cartão, não cronometrar 600ms.
+        são as do sistema (600ms para abrir, 300ms para fechar): aqui a lição
+        é a menção dentro da frase, não o atraso, e a página exige ≥300ms
+        para abrir. Quem quiser ver atraso customizado tem a variante própria.
       */}
       <DocsDemonstration title={tContent("demonstration.title")}>
         <p
@@ -383,8 +384,6 @@ interface HoverCardContentProps {
         >
           {tContent("demonstration.sentenceBefore")}{" "}
           <HoverCard
-            openDelay={150}
-            closeDelay={100}
             onOpenChange={(open) => trackHoverCard(open, "user-profile", "docs_demo")}
           >
             <HoverCardTrigger asChild>
@@ -502,8 +501,6 @@ interface HoverCardContentProps {
             doPreview: (
               <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
                 <HoverCard
-                  openDelay={150}
-                  closeDelay={100}
                   onOpenChange={(open) => trackHoverCard(open, "par1-do", "docs_do_dont")}
                 >
                   <HoverCardTrigger asChild>
@@ -518,8 +515,6 @@ interface HoverCardContentProps {
             dontPreview: (
               <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
                 <HoverCard
-                  openDelay={150}
-                  closeDelay={100}
                   onOpenChange={(open) => trackHoverCard(open, "par1-dont", "docs_do_dont")}
                 >
                   <HoverCardTrigger asChild>

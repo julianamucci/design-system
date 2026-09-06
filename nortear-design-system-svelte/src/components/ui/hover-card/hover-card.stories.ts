@@ -71,10 +71,11 @@ const meta: Meta = {
   args: {
     side: 'bottom',
     align: 'center',
-    // Espera curta no playground: quem abre a story quer ver o cartão, não
-    // cronometrar 600ms. O padrão real está descrito nos argTypes.
-    openDelay: 150,
-    closeDelay: 100,
+    // Espera do SISTEMA: 600ms para abrir e 300ms para fechar. O Playground é
+    // o exemplo canônico, e a página exige espera de abertura de ao menos
+    // 300ms — atraso customizado é assunto da variante `withDelay`.
+    openDelay: 600,
+    closeDelay: 300,
     defaultOpen: false,
     triggerLabel: '@joana',
     // O Playground abre no cartão de PERFIL, como nas outras quatro stacks — e

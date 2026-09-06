@@ -326,7 +326,11 @@ const VARIANT_CODE = {
          ou seja texto simples, sem papel de link e fora da ordem de tabulação.
          É ele que ensina — quem usa toque não tem para onde ir, e a
          informação do cartão fica inalcançável. O par 2 contrasta a espera de
-         abertura, e cada lado carrega o valor que a legenda descreve. -->
+         abertura, e cada lado carrega o valor que a legenda descreve.
+
+         O par 1 NÃO declara espera: ali a lição é o gatilho, e o cartão usa o
+         padrão do sistema (600ms para abrir, 300ms para fechar). Um valor
+         curto ali demonstraria justamente o "dont" do par 2. -->
     <ng-template #tplDoDont1Do>
       <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('par1-do', 'docs_do_dont', $event)">
@@ -334,8 +338,6 @@ const VARIANT_CODE = {
             ndsHoverCardTrigger
             href="?path=/docs/components-display-avatar--docs"
             [class]="classesGatilho"
-            [openDelay]="150"
-            [closeDelay]="100"
           >{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
@@ -352,8 +354,6 @@ const VARIANT_CODE = {
           <a
             ndsHoverCardTrigger
             [class]="classesGatilho"
-            [openDelay]="150"
-            [closeDelay]="100"
           >{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />

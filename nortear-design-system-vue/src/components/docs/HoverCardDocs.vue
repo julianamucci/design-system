@@ -432,8 +432,9 @@ const a11yCritCols = computed(() => ({
 
       O gatilho fica DENTRO da frase de propósito: é o cerco de texto que
       dispensa o alvo em linha do mínimo de 24px da WCAG 2.5.8. As esperas são
-      as do Playground (150/100), curtas porque quem abre a seção quer ver o
-      cartão, não cronometrar 600ms.
+      as do sistema (600ms para abrir, 300ms para fechar): aqui a lição é a
+      menção dentro da frase, não o atraso, e a página exige ≥300ms para
+      abrir. Quem quiser ver atraso customizado tem a variante própria.
     -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <p
@@ -442,8 +443,6 @@ const a11yCritCols = computed(() => ({
       >
         {{ tContent('demonstration.sentenceBefore') }}
         <HoverCard
-          :open-delay="150"
-          :close-delay="100"
           @update:open="(open: boolean) => trackHoverCard(open, 'user-profile', 'docs_demo')"
         >
           <HoverCardTrigger as-child>
@@ -567,8 +566,6 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
-            :open-delay="150"
-            :close-delay="100"
             @update:open="(open: boolean) => trackHoverCard(open, 'par1-do', 'docs_do_dont')"
           >
             <HoverCardTrigger as-child>
@@ -608,8 +605,6 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
-            :open-delay="150"
-            :close-delay="100"
             @update:open="(open: boolean) => trackHoverCard(open, 'par1-dont', 'docs_do_dont')"
           >
             <HoverCardTrigger as-child>

@@ -60,10 +60,12 @@ const meta: Meta<HoverCardArgs> = {
     triggerLabel: '@joana',
     side: 'bottom',
     align: 'center',
-    // Delays curtos no playground: quem abre a story quer ver o cartão, não
-    // cronometrar 600ms. Os padrões reais estão descritos nos argTypes.
-    openDelay: 150,
-    closeDelay: 100,
+    // A espera PADRÃO do gatilho, e não um valor curto de conveniência: a
+    // diretriz de uso desta página cobra ≥300ms, e o Playground é o exemplo
+    // canônico que o leitor copia. O transform omite o que é padrão, então a
+    // caixa de código sai sem os dois bindings.
+    openDelay: 600,
+    closeDelay: 300,
     onOpenChange: fn(),
   },
 };

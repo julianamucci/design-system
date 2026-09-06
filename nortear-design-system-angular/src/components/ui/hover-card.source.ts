@@ -33,8 +33,8 @@ export function hoverCardPlaygroundSource(
     triggerLabel = '@joana',
     side = 'bottom',
     align = 'center',
-    openDelay = 150,
-    closeDelay = 100,
+    openDelay = 600,
+    closeDelay = 300,
   } = ctx.args ?? {};
 
   // Só o que difere do padrão entra no snippet — repetir valor padrão ensina
