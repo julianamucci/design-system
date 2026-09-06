@@ -11,6 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import type { RdxPreviewCardOpenChange } from '@radix-ng/primitives/preview-card';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
@@ -263,7 +264,7 @@ const VARIANT_CODE = {
     <div class="nds-stack" data-spacing="sm">
       <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs">
         <span class="nds-rounded-sm nds-bg-muted nds-px-1" aria-hidden="true">D</span>
-        <span class="nds-truncate">design-system.dev/overlays</span>
+        <span class="nds-truncate">design-system.dev</span>
       </div>
       <p class="nds-text-body nds-font-medium">Guia de overlays acessíveis</p>
     </div>
@@ -279,7 +280,7 @@ const VARIANT_CODE = {
 
   <ng-template ndsHoverCardContent>
     <div class="nds-stack" data-spacing="xs">
-      <p class="nds-text-body nds-font-medium">WCAG 2.2 nível AA</p>
+      <p class="nds-text-body nds-font-medium">WCAG 2.2</p>
       <p class="nds-text-caption nds-text-muted-foreground">Definição em uma ou duas frases.</p>
     </div>
   </ng-template>
@@ -288,15 +289,15 @@ const VARIANT_CODE = {
   <button
     ndsHoverCardTrigger
     class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-  >LCP 1.8s</button>
+  >3,42%</button>
 
   <ng-template ndsHoverCardContent>
     <div class="nds-stack" data-spacing="xs">
       <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
-        <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-        <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+        <p class="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+        <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
       </div>
-      <p class="nds-text-caption nds-text-muted-foreground">Bom até 2,5s; ruim acima de 4s.</p>
+      <p class="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos</p>
     </div>
   </ng-template>
 </span>`,
@@ -316,35 +317,82 @@ const VARIANT_CODE = {
   ],
   template: `
     <!-- ── Previews do Do & Don't ──────────────────────────────────────────
-         Estáticos de propósito: os dois lados de um par precisam ser
-         DISTINGUÍVEIS lado a lado, e dois cartões fechados seriam idênticos na
-         tela. O componente vivo está na demonstração e nas variantes. -->
+         Os quatro são o componente VIVO e FECHADO (§15 da guideline 08):
+         imitação em markup não recebe as classes reais, não responde a tema
+         nem a densidade, e não dispara evento nenhum — a seção ficava
+         invisível no GA4 tendo interação.
+
+         O "don't" do par 1 mantém o DEFEITO: o gatilho é uma âncora SEM href,
+         ou seja texto simples, sem papel de link e fora da ordem de tabulação.
+         É ele que ensina — quem usa toque não tem para onde ir, e a
+         informação do cartão fica inalcançável. O par 2 contrasta a espera de
+         abertura, e cada lado carrega o valor que a legenda descreve. -->
     <ng-template #tplDoDont1Do>
-      <div class="nds-stack" data-spacing="xs">
-        <p class="nds-text-body">
-          <a href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
-        </p>
-        <p class="nds-text-caption nds-text-muted-foreground">
-          {{ t('variants.items.userProfile.name') }} · /users/joana
-        </p>
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
+        <span ndsHoverCard (onOpenChange)="onChange('par1-do', 'docs_do_dont', $event)">
+          <a
+            ndsHoverCardTrigger
+            href="?path=/docs/components-display-avatar--docs"
+            [class]="classesGatilho"
+            [openDelay]="150"
+            [closeDelay]="100"
+          >{{ mencao() }}</a>
+          <ng-template ndsHoverCardContent>
+            <ng-container [ngTemplateOutlet]="cartaoPerfil" />
+          </ng-template>
+        </span>
       </div>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <div class="nds-stack" data-spacing="xs">
-        <!-- Sem link nenhum: no toque, o conteúdo do cartão simplesmente não
-             existe para quem lê. -->
-        <p class="nds-text-body"><span [class]="classesGatilho">{{ mencao }}</span></p>
-        <p class="nds-text-caption nds-text-muted-foreground nds-italic">
-          {{ t('usage.dont.item3') }}
-        </p>
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
+        <span ndsHoverCard (onOpenChange)="onChange('par1-dont', 'docs_do_dont', $event)">
+          <!-- Sem href de propósito: a diretiva de gatilho só casa com âncora e
+               com botão, e uma âncora sem href não é link — não navega e não
+               recebe foco. O defeito é justamente esse. -->
+          <a
+            ndsHoverCardTrigger
+            [class]="classesGatilho"
+            [openDelay]="150"
+            [closeDelay]="100"
+          >{{ mencao() }}</a>
+          <ng-template ndsHoverCardContent>
+            <ng-container [ngTemplateOutlet]="cartaoPerfil" />
+          </ng-template>
+        </span>
       </div>
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <p class="nds-text-body nds-font-mono">openDelay = 500</p>
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
+        <span ndsHoverCard (onOpenChange)="onChange('par2-do', 'docs_do_dont', $event)">
+          <a
+            ndsHoverCardTrigger
+            href="?path=/docs/components-display-avatar--docs"
+            [class]="classesGatilho"
+            [openDelay]="500"
+            [closeDelay]="200"
+          >{{ mencao() }}</a>
+          <ng-template ndsHoverCardContent>
+            <ng-container [ngTemplateOutlet]="cartaoPerfil" />
+          </ng-template>
+        </span>
+      </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <p class="nds-text-body nds-font-mono">openDelay = 0</p>
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
+        <span ndsHoverCard (onOpenChange)="onChange('par2-dont', 'docs_do_dont', $event)">
+          <a
+            ndsHoverCardTrigger
+            href="?path=/docs/components-display-avatar--docs"
+            [class]="classesGatilho"
+            [openDelay]="0"
+            [closeDelay]="200"
+          >{{ mencao() }}</a>
+          <ng-template ndsHoverCardContent>
+            <ng-container [ngTemplateOutlet]="cartaoPerfil" />
+          </ng-template>
+        </span>
+      </div>
     </ng-template>
 
     <!-- ── Previews das variantes ──────────────────────────────────────────
@@ -354,8 +402,8 @@ const VARIANT_CODE = {
     <ng-template #tplVarDefault>
       <p class="nds-text-body">
         {{ t('demonstration.labels.userProfile') }}:
-        <span ndsHoverCard>
-          <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
+        <span ndsHoverCard (onOpenChange)="onChange('default', 'docs_variantes', $event)">
+          <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -366,14 +414,14 @@ const VARIANT_CODE = {
     <ng-template #tplVarWithDelay>
       <p class="nds-text-body">
         {{ t('demonstration.labels.userProfile') }}:
-        <span ndsHoverCard>
+        <span ndsHoverCard (onOpenChange)="onChange('with-delay', 'docs_variantes', $event)">
           <a
             ndsHoverCardTrigger
             href="?path=/docs/components-display-avatar--docs"
             [class]="classesGatilho"
             [openDelay]="500"
             [closeDelay]="200"
-          >{{ mencao }}</a>
+          >{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -384,8 +432,8 @@ const VARIANT_CODE = {
     <ng-template #tplVarUserProfile>
       <p class="nds-text-body">
         {{ t('usage.scenarios.item1.s') }}
-        <span ndsHoverCard>
-          <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
+        <span ndsHoverCard (onOpenChange)="onChange('user-profile', 'docs_variantes', $event)">
+          <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -395,24 +443,23 @@ const VARIANT_CODE = {
 
     <ng-template #tplVarLinkPreview>
       <p class="nds-text-body">
-        {{ t('demonstration.labels.linkPreview') }}:
-        <span ndsHoverCard>
+        {{ t('variants.items.linkPreview.name') }}:
+        <span ndsHoverCard (onOpenChange)="onChange('link-preview', 'docs_variantes', $event)">
           <a
             ndsHoverCardTrigger
             href="?path=/docs/components-layout-card--docs"
             [class]="classesGatilho"
             [openDelay]="500"
-          >design-system.dev</a>
+          >{{ t('variants.items.linkPreview.cardDomain') }}</a>
           <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="sm">
               <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs">
                 <span class="nds-rounded-sm nds-bg-muted nds-px-1" aria-hidden="true">D</span>
-                <span class="nds-truncate">design-system.dev/overlays</span>
+                <span class="nds-truncate">{{ t('variants.items.linkPreview.cardDomain') }}</span>
               </div>
               <p class="nds-text-body nds-font-medium nds-leading-none">
-                {{ t('related.items.popover.name') }} · {{ t('related.items.tooltip.name') }}
+                {{ t('variants.items.linkPreview.cardTitle') }}
               </p>
-              <p class="nds-text-caption nds-text-muted-foreground">{{ resumoLinkPreview() }}</p>
             </div>
           </ng-template>
         </span>
@@ -421,13 +468,17 @@ const VARIANT_CODE = {
 
     <ng-template #tplVarDefinition>
       <p class="nds-text-body">
-        {{ t('demonstration.labels.definitionTooltip') }}:
-        <span ndsHoverCard>
+        {{ t('variants.items.definitionTooltip.name') }}:
+        <span ndsHoverCard (onOpenChange)="onChange('definition-tooltip', 'docs_variantes', $event)">
           <button ndsHoverCardTrigger [class]="classesGatilhoBotao">WCAG 2.2 AA</button>
           <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
-              <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
-              <p class="nds-text-caption nds-text-muted-foreground">{{ resumoDefinicao() }}</p>
+              <p class="nds-text-body nds-font-medium nds-leading-none">
+                {{ t('variants.items.definitionTooltip.cardTerm') }}
+              </p>
+              <p class="nds-text-caption nds-text-muted-foreground">
+                {{ t('variants.items.definitionTooltip.cardMeaning') }}
+              </p>
             </div>
           </ng-template>
         </span>
@@ -436,18 +487,22 @@ const VARIANT_CODE = {
 
     <ng-template #tplVarMetric>
       <p class="nds-text-body">
-        {{ t('demonstration.labels.metricExplainer') }}:
-        <span ndsHoverCard>
-          <button ndsHoverCardTrigger [class]="classesGatilhoBotao">LCP 1.8s</button>
+        {{ t('variants.items.metricExplainer.name') }}:
+        <span ndsHoverCard (onOpenChange)="onChange('metric-explainer', 'docs_variantes', $event)">
+          <button ndsHoverCardTrigger [class]="classesGatilhoBotao">3,42%</button>
           <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
-                <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-                <!-- A cor semântica fica no número; a descrição segue na cor de
+                <p class="nds-text-body nds-font-medium">
+                  {{ t('variants.items.metricExplainer.cardMetric') }}
+                </p>
+                <!-- A cor semântica fica no número; a fórmula segue na cor de
                      corpo, que é o que garante o contraste do texto corrido. -->
-                <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+                <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
               </div>
-              <p class="nds-text-caption nds-text-muted-foreground">{{ resumoMetrica() }}</p>
+              <p class="nds-text-caption nds-text-muted-foreground">
+                {{ t('variants.items.metricExplainer.cardFormula') }}
+              </p>
             </div>
           </ng-template>
         </span>
@@ -462,8 +517,12 @@ const VARIANT_CODE = {
           <span ndsAvatarFallback aria-hidden="true">JS</span>
         </span>
         <div class="nds-stack" data-spacing="xs">
-          <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
-          <p class="nds-text-caption nds-text-muted-foreground">{{ subtituloPerfil }}</p>
+          <p class="nds-text-body nds-font-medium nds-leading-none">
+            {{ t('variants.items.userProfile.cardName') }}
+          </p>
+          <p class="nds-text-caption nds-text-muted-foreground">
+            {{ t('variants.items.userProfile.cardMeta') }}
+          </p>
         </div>
       </div>
     </ng-template>
@@ -483,54 +542,26 @@ const VARIANT_CODE = {
       </div>
 
       <ng-container docsMain>
+        <!-- UM gatilho, o mesmo do Playground da story (§15 da guideline 08):
+             a menção dentro de uma frase, revelando o cartão de perfil. Os
+             outros três exemplos que moravam aqui SÃO as variantes de preview
+             de link, de definição e de métrica, e cada uma já tem preview vivo
+             na seção Variantes — repeti-los aqui fazia a página abrir ensinando
+             quatro coisas e a story exercitar uma. -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="lg">
-            <p class="nds-text-body">
-              {{ t('demonstration.labels.userProfile') }}:
-              <span ndsHoverCard>
-                <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao }}</a>
-                <ng-template ndsHoverCardContent>
-                  <ng-container [ngTemplateOutlet]="cartaoPerfil" />
-                </ng-template>
-              </span>
-            </p>
-
-            <p class="nds-text-body">
-              {{ t('demonstration.labels.linkPreview') }}:
-              <span ndsHoverCard>
-                <a ndsHoverCardTrigger href="?path=/docs/components-layout-card--docs" [class]="classesGatilho">design-system.dev</a>
-                <ng-template ndsHoverCardContent>
-                  <div class="nds-stack" data-spacing="sm">
-                    <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs">
-                      <span class="nds-rounded-sm nds-bg-muted nds-px-1" aria-hidden="true">D</span>
-                      <span class="nds-truncate">design-system.dev/overlays</span>
-                    </div>
-                    <p class="nds-text-caption nds-text-muted-foreground">{{ resumoLinkPreview() }}</p>
-                  </div>
-                </ng-template>
-              </span>
-            </p>
-
-            <p class="nds-text-body">
-              {{ t('demonstration.labels.definitionTooltip') }}:
-              <span ndsHoverCard>
-                <button ndsHoverCardTrigger [class]="classesGatilhoBotao">WCAG 2.2 AA</button>
-                <ng-template ndsHoverCardContent>
-                  <p class="nds-text-caption nds-text-muted-foreground">{{ resumoDefinicao() }}</p>
-                </ng-template>
-              </span>
-            </p>
-
-            <p class="nds-text-body">
-              {{ t('demonstration.labels.metricExplainer') }}:
-              <span ndsHoverCard>
-                <button ndsHoverCardTrigger [class]="classesGatilhoBotao">LCP 1.8s</button>
-                <ng-template ndsHoverCardContent>
-                  <p class="nds-text-caption nds-text-muted-foreground">{{ resumoMetrica() }}</p>
-                </ng-template>
-              </span>
-            </p>
-          </div>
+          <p
+            class="nds-text-body nds-max-w-sm nds-min-h-50"
+            style="contain: layout; position: relative"
+          >
+            {{ t('demonstration.sentenceBefore') }}
+            <span ndsHoverCard (onOpenChange)="onChange('user-profile', 'docs_demo', $event)">
+              <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
+              <ng-template ndsHoverCardContent>
+                <ng-container [ngTemplateOutlet]="cartaoPerfil" />
+              </ng-template>
+            </span>
+            {{ t('demonstration.sentenceAfter') }}
+          </p>
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
@@ -641,18 +672,15 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly classesGatilhoBotao = CLASSES_TRIGGER_BUTTON;
 
   /**
-   * A menção é dado de exemplo, não texto de interface: um `@` mais um nome
-   * próprio se lê igual nos três idiomas, então fica fora do conteúdo
-   * traduzido — o mesmo critério das outras stacks.
+   * A menção TEM chave no conteúdo compartilhado (`demonstration.mention`), e
+   * é a mesma que a frase do Playground cerca. Literal aqui seria texto de
+   * página nascido dentro da stack: invisível para quem edita o conteúdo, e
+   * igual nos três idiomas por acaso, não por decisão.
    */
-  protected readonly mencao = '@joana';
-
-  /**
-   * Mesma linha das outras quatro stacks, propositalmente idêntica: a
-   * regressão visual compara o mesmo cartão em cinco portas, e um texto
-   * diferente viraria diferença sem que nada tivesse mudado.
-   */
-  protected readonly subtituloPerfil = 'Designer · 142 seguidores';
+  protected readonly mencao = computed(() => {
+    dict();
+    return t('demonstration.mention');
+  });
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -667,27 +695,40 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarDefinition = viewChild.required<TemplateRef<unknown>>('tplVarDefinition');
   private readonly tplVarMetric = viewChild.required<TemplateRef<unknown>>('tplVarMetric');
 
-  /** Primeira frase de uma descrição do conteúdo — cabe numa linha do cartão. */
-  private primeiraFrase(key: string): string {
-    const limpo = stripHtml(t(key));
-    const corte = limpo.indexOf('.');
-    return corte > 0 ? limpo.slice(0, corte + 1) : limpo;
+  /**
+   * Abertura e fechamento de QUALQUER cartão desta página.
+   *
+   * O evento sai do handler da docs page, nunca de dentro do primitivo de UI —
+   * é o que a regra `analytics_in_ui_primitive` proíbe. O rótulo é um id
+   * ESTÁVEL em kebab-case (`user-profile`, `link-preview`, …), o mesmo nas
+   * cinco stacks para que a série junte no GA4, e nunca o texto do gatilho, que
+   * viraria um valor por idioma.
+   *
+   * A seção vem do CALL SITE: a Demonstração e as Variantes renderizam o
+   * componente vivo, e uma abertura ali é tão real numa quanto na outra — com a
+   * seção cravada aqui dentro, as seis responderiam "veio da demonstração".
+   * `docs_demo` é herança do vocabulário do GA4, não exceção de estilo.
+   *
+   * O output escolhido é `onOpenChange`, não `openChange`: o segundo é o model
+   * do `open` e entrega só o booleano, enquanto o primeiro traz a CAUSA
+   * (`trigger-hover`, `escape-key`, `outside-press`) — que é justamente o que
+   * `hover_card_close.reason` existe para registrar.
+   */
+  protected onChange(triggerId: string, section: string, event: RdxPreviewCardOpenChange): void {
+    if (event.open) {
+      track('hover_card_open', {
+        component: 'hover-card',
+        trigger_label: triggerId,
+        location: section,
+      });
+      return;
+    }
+    track('hover_card_close', {
+      component: 'hover-card',
+      reason: event.reason,
+      location: section,
+    });
   }
-
-  protected readonly resumoLinkPreview = computed(() => {
-    dict();
-    return this.primeiraFrase('variants.items.linkPreview.description');
-  });
-
-  protected readonly resumoDefinicao = computed(() => {
-    dict();
-    return this.primeiraFrase('variants.items.definitionTooltip.description');
-  });
-
-  protected readonly resumoMetrica = computed(() => {
-    dict();
-    return this.primeiraFrase('variants.items.metricExplainer.description');
-  });
 
   protected readonly navGroups = computed(() => {
     dict();
@@ -1027,14 +1068,20 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     // O conteúdo compartilhado do HoverCard não tem tabela de eventos, só a
-    // descrição — e é ela que diz quais são e o que carregam. Nenhum evento
-    // sai desta página: abrir um cartão é intenção baixa demais para virar
-    // evento, e é o próprio conteúdo que recomenda usar o delay como filtro.
+    // descrição — e é ela que diz quais são e para que servem. Os dois SAEM
+    // desta página: todo cartão vivo, na Demonstração e nas Variantes, passa
+    // pelo handler `onChange`. O payload aqui é o que o evento tipado carrega
+    // de fato — `trigger_label` é id estável do gatilho, nunca o texto dele.
     return [
       {
-        event: 'hover_card_open / hover_card_close',
+        event: 'hover_card_open',
         trigger: toPlainText(t('analytics.description')),
-        payload: 'component, location, label',
+        payload: 'component, trigger_label, location',
+      },
+      {
+        event: 'hover_card_close',
+        trigger: toPlainText(t('analytics.description')),
+        payload: 'component, reason, location',
       },
       {
         event: 'docs_page_view',

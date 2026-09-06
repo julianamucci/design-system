@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createHoverCard } from '@/components/ui/hover-card';
 import { createAvatar } from '@/components/ui/avatar';
+import { CLASSES_TRIGGER_LINK, construirButton, construirLink } from '@/components/ui/hover-card.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import hoverCardTranslations from '@shared/content/hover-card/translations.json';
 
@@ -54,42 +55,115 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-// ─── Demo builders ────────────────────────────────────────────────────────────
+// ─── Analytics dos previews ───────────────────────────────────────────────────
+//
+// Todo preview VIVO desta página anuncia abertura e fechamento. `trigger_label`
+// carrega um id ESTÁVEL (`user-profile`, `link-preview`…), nunca o texto do
+// gatilho: o texto é traduzido, e mandá-lo partiria um evento em três no GA4.
+function trackHoverCard(triggerLabel: string, location: string) {
+  return (open: boolean) => {
+    if (open) {
+      track('hover_card_open', { component: 'hover-card', trigger_label: triggerLabel, location });
+    } else {
+      track('hover_card_close', { component: 'hover-card', location });
+    }
+  };
+}
 
-function buildProfilePreview(): HTMLElement {
-  const trigger = document.createElement('a');
-  trigger.href = '#joana';
-  trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.textContent = '@joana';
+// ─── Preview builders ─────────────────────────────────────────────────────────
+//
+// Os gatilhos saem da fixture das stories (`construirLink`, `construirButton`):
+// uma fonte só para o Playground e para a docs page. O miolo dos cartões é
+// montado aqui porque o texto vem do conteúdo compartilhado — a
+// fixture não fala i18n.
+//
+// O espaçamento é o da fixture: `data-align="start"` no cluster e
+// `data-spacing="xs"` no stack. Sem os dois, o vão entre nome e subtítulo pula
+// de 4px para 16px.
 
-  const content = document.createElement('div');
-  content.className = 'nds-cluster';
-  content.dataset.spacing = 'sm';
-
-  const avatar = createAvatar({ fallbackText: 'JS' });
+/** Cartão de perfil — avatar, nome e uma métrica curta. */
+function buildProfileCard(): HTMLElement {
+  const root = document.createElement('div');
+  root.className = 'nds-cluster';
+  root.dataset.spacing = 'sm';
+  root.dataset.align = 'start';
 
   const info = document.createElement('div');
   info.className = 'nds-stack';
+  info.dataset.spacing = 'xs';
+
   const name = document.createElement('p');
-  name.className = 'nds-font-medium nds-text-body';
-  name.textContent = 'Joana Silva';
+  name.className = 'nds-text-body nds-font-medium nds-leading-none';
+  name.textContent = t('variants.items.userProfile.cardName');
+
   const meta = document.createElement('p');
   meta.className = 'nds-text-caption nds-text-muted-foreground';
-  meta.textContent = 'Designer · 142 seguidores';
-  info.appendChild(name);
-  info.appendChild(meta);
+  meta.textContent = t('variants.items.userProfile.cardMeta');
 
-  content.appendChild(avatar);
-  content.appendChild(info);
-
-  return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
+  info.append(name, meta);
+  root.append(createAvatar({ fallbackText: 'JS' }), info);
+  return root;
 }
 
-function buildLinkPreview(): HTMLElement {
-  const trigger = document.createElement('a');
-  trigger.href = '#link';
-  trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.textContent = 'design-system.dev';
+function buildProfilePreview(
+  location: string,
+  delays?: { openDelay?: number; closeDelay?: number },
+): HTMLElement {
+  return createHoverCard({
+    trigger: construirLink(t('demonstration.mention'), '#joana'),
+    content: buildProfileCard(),
+    side: 'bottom',
+    align: 'start',
+    ...delays,
+    onOpenChange: trackHoverCard('user-profile', location),
+  });
+}
+
+/**
+ * Gatilho do "don't" do par 1: uma menção que NÃO navega.
+ *
+ * `<span>` sem `href` e sem papel de link, de propósito — é o defeito que a
+ * legenda descreve. Quem usa toque não tem para onde ir, e a informação do
+ * cartão fica inalcançável. As classes são as mesmas do gatilho certo: o que
+ * separa os dois lados do par é o comportamento, não a aparência.
+ */
+function buildPlainMention(): HTMLElement {
+  const span = document.createElement('span');
+  span.className = CLASSES_TRIGGER_LINK;
+  span.textContent = t('demonstration.mention');
+  return span;
+}
+
+/**
+ * Preview de um lado do Do & Don't — componente VIVO e FECHADO (guideline 08
+ * §15). Muda só o gatilho e as esperas, que é o que cada par contrasta.
+ */
+function buildDoDontPreview(
+  triggerId: string,
+  trigger: HTMLElement,
+  delays: { openDelay?: number; closeDelay?: number },
+): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-min-h-40';
+  // Mecânica de layout, não valor de design: o painel abre em portal, e a
+  // reserva de altura mais o `relative` impedem que ele empurre o par seguinte.
+  wrap.style.contain = 'layout';
+  wrap.style.position = 'relative';
+  wrap.append(
+    createHoverCard({
+      trigger,
+      content: buildProfileCard(),
+      side: 'bottom',
+      align: 'start',
+      ...delays,
+      onOpenChange: trackHoverCard(triggerId, 'docs_do_dont'),
+    }),
+  );
+  return wrap;
+}
+
+function buildLinkPreview(location: string): HTMLElement {
+  const domain = t('variants.items.linkPreview.cardDomain');
 
   const content = document.createElement('div');
   content.className = 'nds-stack';
@@ -97,69 +171,97 @@ function buildLinkPreview(): HTMLElement {
 
   const meta = document.createElement('div');
   meta.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
-  meta.dataset.spacing = 'sm';
+  meta.dataset.spacing = 'xs';
+  meta.dataset.align = 'center';
+
   const favicon = document.createElement('span');
-  favicon.className = 'nds-icon nds-rounded-sm nds-bg-muted';
-  favicon.style.display = 'inline-flex';
-  favicon.style.alignItems = 'center';
-  favicon.style.justifyContent = 'center';
+  favicon.className = 'nds-rounded-sm nds-bg-muted nds-px-1';
+  favicon.setAttribute('aria-hidden', 'true');
   favicon.textContent = 'D';
+
   const url = document.createElement('span');
-  url.textContent = 'design-system.dev';
-  meta.appendChild(favicon);
-  meta.appendChild(url);
+  url.className = 'nds-truncate';
+  url.textContent = domain;
+  meta.append(favicon, url);
 
   const title = document.createElement('p');
-  title.className = 'nds-font-medium';
-  title.textContent = 'Guia de overlays acessíveis';
+  title.className = 'nds-text-body nds-font-medium nds-leading-none';
+  title.textContent = t('variants.items.linkPreview.cardTitle');
 
-  content.appendChild(meta);
-  content.appendChild(title);
+  content.append(meta, title);
 
-  return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
+  return createHoverCard({
+    trigger: construirLink(domain, '#link'),
+    content,
+    side: 'bottom',
+    align: 'start',
+    onOpenChange: trackHoverCard('link-preview', location),
+  });
 }
 
-function buildDefinitionPreview(): HTMLElement {
-  const trigger = document.createElement('a');
-  trigger.href = '#wcag';
-  trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.textContent = 'WCAG 2.2';
+function buildDefinitionPreview(location: string): HTMLElement {
+  const term = t('variants.items.definitionTooltip.cardTerm');
 
   const content = document.createElement('div');
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'xs';
+
   const title = document.createElement('p');
-  title.className = 'nds-font-medium nds-text-body';
-  title.textContent = 'WCAG 2.2';
+  title.className = 'nds-text-body nds-font-medium nds-leading-none';
+  title.textContent = term;
+
   const desc = document.createElement('p');
   desc.className = 'nds-text-caption nds-text-muted-foreground';
-  desc.textContent = 'Web Content Accessibility Guidelines: padrão internacional de acessibilidade.';
-  content.appendChild(title);
-  content.appendChild(desc);
+  desc.textContent = t('variants.items.definitionTooltip.cardMeaning');
 
-  return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
+  content.append(title, desc);
+
+  return createHoverCard({
+    // Gatilho que NÃO navega: botão sem moldura, sublinhado pontilhado e cursor
+    // de ajuda. O glossário continua sendo o caminho alternativo obrigatório.
+    trigger: construirButton(term),
+    content,
+    side: 'bottom',
+    align: 'start',
+    onOpenChange: trackHoverCard('definition-tooltip', location),
+  });
 }
 
-function buildMetricPreview(): HTMLElement {
-  const trigger = document.createElement('a');
-  trigger.href = '#metric';
-  trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.textContent = '3,42%';
-
+function buildMetricPreview(location: string): HTMLElement {
   const content = document.createElement('div');
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'xs';
+
+  const head = document.createElement('div');
+  head.className = 'nds-cluster';
+  head.dataset.spacing = 'sm';
+  head.dataset.justify = 'between';
+  head.dataset.align = 'baseline';
+
   const label = document.createElement('p');
-  label.className = 'nds-text-caption nds-text-muted-foreground';
-  label.textContent = 'Conversão (últimos 30d)';
-  const value = document.createElement('p');
-  value.className = 'nds-text-h4 nds-font-semibold';
+  label.className = 'nds-text-body nds-font-medium';
+  label.textContent = t('variants.items.metricExplainer.cardMetric');
+
+  const value = document.createElement('span');
+  value.className = 'nds-text-caption nds-font-medium nds-text-success';
   value.textContent = '3,42%';
+  head.append(label, value);
+
   const desc = document.createElement('p');
   desc.className = 'nds-text-caption nds-text-muted-foreground';
-  desc.textContent = 'Cliques no CTA / usuários únicos.';
-  content.appendChild(label);
-  content.appendChild(value);
-  content.appendChild(desc);
+  desc.textContent = t('variants.items.metricExplainer.cardFormula');
 
-  return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
+  content.append(head, desc);
+
+  return createHoverCard({
+    trigger: construirButton('3,42%'),
+    content,
+    side: 'bottom',
+    align: 'start',
+    onOpenChange: trackHoverCard('metric-explainer', location),
+  });
 }
+
 
 // ─── createHoverCardDocs ──────────────────────────────────────────────────────
 
@@ -256,42 +358,34 @@ export function createHoverCardDocs(): HTMLElement {
     switch (id) {
 
       case 'demonstracao':
+        // UM exemplo, o MESMO do Playground da story (guideline 08 §15): a
+        // menção dentro da frase que o rótulo traduzido forma. Os outros três
+        // gatilhos que moravam aqui não sumiram da página — são as variantes
+        // `linkPreview`, `definitionTooltip` e `metricExplainer`, logo abaixo.
         return createDocsDemonstration({
           title: t('demonstration.title'),
+          componentSlug: 'hover-card',
           demoFactory: () => {
-            const wrap = document.createElement('div');
-            wrap.style.contain = 'layout';
-            wrap.className = 'nds-grid nds-w-full';
-            wrap.dataset.cols = '2';
-            wrap.dataset.spacing = 'lg';
-            wrap.dataset.min = '16rem';
-            wrap.classList.add('nds-min-h-40');
+            // A frase inteira vem do conteúdo compartilhado (`sentenceBefore` +
+            // `mention` + `sentenceAfter`) — a MESMA que o Playground monta.
+            // Prosa em português fixa aqui reapareceria em `en` e `es`. E o
+            // cerco não é enfeite: é ele que dispensa o alvo em linha do mínimo
+            // de 24px da WCAG 2.5.8; um link solto de 20px seria violação.
+            const sentence = document.createElement('p');
+            sentence.className = 'nds-text-body nds-max-w-sm nds-min-h-50';
+            // Mecânica de layout, não valor de design: o painel abre num portal,
+            // e a reserva de altura mais o `relative` impedem que ele empurre a
+            // seção seguinte ao abrir.
+            sentence.style.contain = 'layout';
+            sentence.style.position = 'relative';
 
-            const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
-              { labelKey: 'demonstration.labels.userProfile',       build: buildProfilePreview    },
-              { labelKey: 'demonstration.labels.linkPreview',       build: buildLinkPreview       },
-              { labelKey: 'demonstration.labels.definitionTooltip', build: buildDefinitionPreview },
-              { labelKey: 'demonstration.labels.metricExplainer',   build: buildMetricPreview     },
-            ];
+            sentence.append(
+              document.createTextNode(`${t('demonstration.sentenceBefore')} `),
+              buildProfilePreview('docs_demo', { openDelay: 150, closeDelay: 100 }),
+              document.createTextNode(` ${t('demonstration.sentenceAfter')}`),
+            );
 
-            for (const cell of cells) {
-              const col = document.createElement('div');
-              col.className = 'nds-stack';
-              col.dataset.spacing = 'sm';
-              col.style.contain = 'layout';
-              col.style.position = 'relative';
-              col.classList.add('nds-min-h-25');
-
-              const label = document.createElement('p');
-              label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
-              label.innerHTML = DOMPurify.sanitize(t(cell.labelKey));
-
-              col.appendChild(label);
-              col.appendChild(cell.build());
-              wrap.appendChild(col);
-            }
-
-            return wrap;
+            return sentence;
           },
         });
 
@@ -357,51 +451,41 @@ export function createHoverCardDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-text-body nds-stack';
-                wrap.dataset.spacing = 'xs';
-                const link = document.createElement('div');
-                link.className = 'nds-text-primary nds-underline';
-                link.textContent = '@joana';
-                const note = document.createElement('div');
-                note.className = 'nds-text-caption nds-text-muted-foreground';
-                note.textContent = '+ link para /users/joana';
-                wrap.appendChild(link);
-                wrap.appendChild(note);
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-text-body';
-                const link = document.createElement('div');
-                link.className = 'nds-text-primary nds-underline';
-                link.textContent = '@joana';
-                const note = document.createElement('div');
-                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
-                note.textContent = 'apenas hover (touch users perdem)';
-                wrap.appendChild(link);
-                wrap.appendChild(note);
-                return wrap;
-              },
+              // Gatilho que é LINK de verdade: navegável por clique e por
+              // teclado, com o cartão apenas complementando o caminho.
+              doPreviewFactory: () =>
+                buildDoDontPreview(
+                  'par1-do',
+                  construirLink(t('demonstration.mention'), '#joana'),
+                  { openDelay: 150, closeDelay: 100 },
+                ),
+              // O defeito FICA: menção sem link nenhum. É o que a legenda
+              // ensina, e imitação em markup não ensinaria.
+              dontPreviewFactory: () =>
+                buildDoDontPreview('par1-dont', buildPlainMention(), {
+                  openDelay: 150,
+                  closeDelay: 100,
+                }),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = 'openDelay={500}';
-                return code;
-              },
-              dontPreviewFactory: () => {
-                const code = document.createElement('div');
-                code.className = 'nds-text-body nds-font-mono';
-                code.textContent = 'openDelay={0}';
-                return code;
-              },
+              // A espera é o assunto do par, então cada lado CARREGA o valor
+              // que a legenda descreve — 500ms contra zero.
+              doPreviewFactory: () =>
+                buildDoDontPreview(
+                  'par2-do',
+                  construirLink(t('demonstration.mention'), '#joana'),
+                  { openDelay: 500, closeDelay: 200 },
+                ),
+              dontPreviewFactory: () =>
+                buildDoDontPreview(
+                  'par2-dont',
+                  construirLink(t('demonstration.mention'), '#joana'),
+                  { openDelay: 0, closeDelay: 200 },
+                ),
             },
           ],
         });
@@ -413,23 +497,32 @@ export function createHoverCardDocs(): HTMLElement {
         });
 
       case 'variantes': {
+        // As duas variantes de TEMPO mostram o componente vivo, e não um par de
+        // números em monoespaçado: imitação não recebe as classes reais, não
+        // responde a tema nem a densidade, e não dispara evento (guideline 08
+        // §15). Nascem fechadas — quem lê é que abre, e é a espera que se compara.
         const codeDefault = `const trigger = document.createElement('a');
 trigger.href = '/users/joana';
+trigger.className = 'nds-text-primary nds-font-medium nds-hover-underline';
 trigger.textContent = '@joana';
 
-const content = document.createElement('div');
-content.textContent = 'Joana Silva · Designer';
-
+// Sem \`openDelay\`/\`closeDelay\`: a factory usa a espera padrão do design
+// system — 600ms para abrir, 300ms para fechar.
 createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`;
 
-        const codeWithDelay = `// Nortear factory: delays internos fixos (SHOW_DELAY=300ms, HIDE_DELAY=150ms).
-// Para customizar, ajuste constantes no fonte de hover-card.ts ou
-// implemente wrapper com setTimeout próprio antes de chamar createHoverCard.
-const trigger = document.createElement('a');
+        const codeWithDelay = `const trigger = document.createElement('a');
+trigger.href = '/users/joana';
+trigger.className = 'nds-text-primary nds-font-medium nds-hover-underline';
 trigger.textContent = '@joana';
-const content = document.createElement('div');
-content.textContent = 'Preview';
-createHoverCard({ trigger, content });`;
+
+createHoverCard({
+  trigger,
+  content,
+  side: 'bottom',
+  align: 'start',
+  openDelay: 500,
+  closeDelay: 200,
+});`;
 
         return createDocsCompositions({
           id: 'variantes',
@@ -442,19 +535,15 @@ createHoverCard({ trigger, content });`;
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
-              previewFactory: () => buildProfilePreview(),
+              previewFactory: () => buildProfilePreview('docs_variantes'),
             },
             {
               trackId: 'withDelay',
               name: t('variants.items.withDelay'),
               description: stripHtml(t('variants.styles.withDelay')),
               code: codeWithDelay,
-              previewFactory: () => {
-                const note = document.createElement('div');
-                note.className = 'nds-text-caption nds-font-mono nds-text-muted-foreground';
-                note.textContent = 'SHOW_DELAY=300 / HIDE_DELAY=150 (factory)';
-                return note;
-              },
+              previewFactory: () =>
+                buildProfilePreview('docs_variantes', { openDelay: 500, closeDelay: 200 }),
             },
             {
               name: stripHtml(t('variants.items.userProfile.name')),
@@ -463,27 +552,28 @@ createHoverCard({ trigger, content });`;
               useWhen: stripHtml(t('variants.items.userProfile.use')),
               code: `const trigger = document.createElement('a');
 trigger.href = '/users/joana';
-trigger.className = 'nds-text-primary nds-hover-underline';
+trigger.className = 'nds-text-primary nds-font-medium nds-hover-underline';
 trigger.textContent = '@joana';
 
 const content = document.createElement('div');
 content.className = 'nds-cluster';
-content.dataset.spacing = 'md';
+content.dataset.spacing = 'sm';
+content.dataset.align = 'start';
 
-const avatar = createAvatar({ fallbackText: 'JS' });
 const info = document.createElement('div');
 info.className = 'nds-stack';
+info.dataset.spacing = 'xs';
 const name = document.createElement('p');
-name.className = 'nds-font-medium nds-text-body';
+name.className = 'nds-text-body nds-font-medium nds-leading-none';
 name.textContent = 'Joana Silva';
 const meta = document.createElement('p');
 meta.className = 'nds-text-caption nds-text-muted-foreground';
 meta.textContent = 'Designer · 142 seguidores';
 info.append(name, meta);
-content.append(avatar, info);
+content.append(createAvatar({ fallbackText: 'JS' }), info);
 
 const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
-              previewFactory: () => buildProfilePreview(),
+              previewFactory: () => buildProfilePreview('docs_variantes'),
             },
             {
               name: stripHtml(t('variants.items.linkPreview.name')),
@@ -492,30 +582,34 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               useWhen: stripHtml(t('variants.items.linkPreview.use')),
               code: `const trigger = document.createElement('a');
 trigger.href = 'https://design-system.dev';
-trigger.className = 'nds-text-primary nds-hover-underline';
+trigger.className = 'nds-text-primary nds-font-medium nds-hover-underline';
 trigger.textContent = 'design-system.dev';
 
 const content = document.createElement('div');
 content.className = 'nds-stack';
+content.dataset.spacing = 'sm';
 
 const meta = document.createElement('div');
 meta.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+meta.dataset.spacing = 'xs';
+meta.dataset.align = 'center';
 const favicon = document.createElement('span');
-favicon.className = 'nds-cluster nds-rounded nds-bg-muted';
-favicon.dataset.justify = 'center';
+favicon.className = 'nds-rounded-sm nds-bg-muted nds-px-1';
+favicon.setAttribute('aria-hidden', 'true');
 favicon.textContent = 'D';
 const url = document.createElement('span');
+url.className = 'nds-truncate';
 url.textContent = 'design-system.dev';
 meta.append(favicon, url);
 
 const title = document.createElement('p');
-title.className = 'nds-font-medium';
+title.className = 'nds-text-body nds-font-medium nds-leading-none';
 title.textContent = 'Guia de overlays acessíveis';
 
 content.append(meta, title);
 
 const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
-              previewFactory: () => buildLinkPreview(),
+              previewFactory: () => buildLinkPreview('docs_variantes'),
             },
             {
               name: stripHtml(t('variants.items.definitionTooltip.name')),
@@ -526,38 +620,22 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
 trigger.type = 'button';
 trigger.className =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
-trigger.textContent = 'WCAG 2.2 AA';
+trigger.textContent = 'WCAG 2.2';
 
 const content = document.createElement('div');
+content.className = 'nds-stack';
+content.dataset.spacing = 'xs';
 const term = document.createElement('p');
-term.className = 'nds-font-medium nds-text-body';
-term.textContent = 'WCAG 2.2 AA';
+term.className = 'nds-text-body nds-font-medium nds-leading-none';
+term.textContent = 'WCAG 2.2';
 const def = document.createElement('p');
 def.className = 'nds-text-caption nds-text-muted-foreground';
 def.textContent =
-  'Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.';
+  'Web Content Accessibility Guidelines: padrão internacional de acessibilidade para conteúdo web.';
 content.append(term, def);
 
 const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
-              previewFactory: () => {
-                const trigger = document.createElement('button');
-                trigger.type = 'button';
-                trigger.className =
-                  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
-                trigger.textContent = 'WCAG 2.2 AA';
-
-                const content = document.createElement('div');
-                const term = document.createElement('p');
-                term.className = 'nds-font-medium nds-text-body';
-                term.textContent = 'WCAG 2.2 AA';
-                const def = document.createElement('p');
-                def.className = 'nds-text-caption nds-text-muted-foreground';
-                def.textContent =
-                  'Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.';
-                content.append(term, def);
-
-                return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
-              },
+              previewFactory: () => buildDefinitionPreview('docs_variantes'),
             },
             {
               name: stripHtml(t('variants.items.metricExplainer.name')),
@@ -568,58 +646,32 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
 trigger.type = 'button';
 trigger.className =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
-trigger.textContent = 'LCP 1.8s';
+trigger.textContent = '3,42%';
 
 const content = document.createElement('div');
+content.className = 'nds-stack';
+content.dataset.spacing = 'xs';
+
 const head = document.createElement('div');
 head.className = 'nds-cluster';
 head.dataset.spacing = 'sm';
 head.dataset.justify = 'between';
-head.style.alignItems = 'baseline';
+head.dataset.align = 'baseline';
 const metric = document.createElement('p');
 metric.className = 'nds-text-body nds-font-medium';
-metric.textContent = 'Largest Contentful Paint';
+metric.textContent = 'Conversão (últimos 30d)';
 const value = document.createElement('span');
 value.className = 'nds-text-caption nds-font-medium nds-text-success';
-value.textContent = '1.8s';
+value.textContent = '3,42%';
 head.append(metric, value);
 
 const desc = document.createElement('p');
 desc.className = 'nds-text-caption nds-text-muted-foreground';
-desc.textContent =
-  'Tempo até o maior elemento visível ser renderizado. Bom: <2.5s · Ruim: >4s.';
+desc.textContent = 'Cliques no CTA / usuários únicos';
 content.append(head, desc);
 
 const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
-              previewFactory: () => {
-                const trigger = document.createElement('button');
-                trigger.type = 'button';
-                trigger.className =
-                  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
-                trigger.textContent = 'LCP 1.8s';
-
-                const content = document.createElement('div');
-                const head = document.createElement('div');
-                head.className = 'nds-cluster';
-                head.dataset.justify = 'between';
-                head.dataset.align = 'baseline';
-                head.dataset.spacing = 'sm';
-                const metric = document.createElement('p');
-                metric.className = 'nds-text-body nds-font-medium';
-                metric.textContent = 'Largest Contentful Paint';
-                const value = document.createElement('span');
-                value.className = 'nds-text-caption nds-font-medium nds-text-success';
-                value.textContent = '1.8s';
-                head.append(metric, value);
-
-                const desc = document.createElement('p');
-                desc.className = 'nds-text-caption nds-text-muted-foreground';
-                desc.textContent =
-                  'Tempo até o maior elemento visível ser renderizado. Bom: <2.5s · Ruim: >4s.';
-                content.append(head, desc);
-
-                return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
-              },
+              previewFactory: () => buildMetricPreview('docs_variantes'),
             },
           ],
         });
@@ -757,12 +809,12 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
             {
               event: 'hover_card_open',
               trigger: 'onOpenChange(true)',
-              payload: "{ component: 'hover-card', location, label }",
+              payload: "{ component: 'hover-card', trigger_label, location }",
             },
             {
               event: 'hover_card_close',
               trigger: 'onOpenChange(false)',
-              payload: "{ component: 'hover-card', location, label }",
+              payload: "{ component: 'hover-card', location }",
             },
             {
               event: '—',

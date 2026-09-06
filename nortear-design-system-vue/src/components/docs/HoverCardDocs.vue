@@ -4,13 +4,12 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import DOMPurify from 'dompurify';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/hover-card/translations.json';
 import uiTranslations from '@/i18n/ui.json';
@@ -136,6 +135,26 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics dos previews vivos ─────────────────────────────────────────────
+//
+// Todo preview vivo desta página é o produto consumindo o próprio componente.
+// `trigger_label` carrega id ESTÁVEL, nunca o texto do gatilho: traduzido, o
+// mesmo evento chegaria ao GA4 partido em três.
+function trackHoverCard(open: boolean, triggerId: string, location: string): void {
+  if (open) {
+    track('hover_card_open', {
+      component: 'hover-card',
+      trigger_label: triggerId,
+      location,
+    });
+  } else {
+    track('hover_card_close', {
+      component: 'hover-card',
+      location,
+    });
+  }
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -223,13 +242,12 @@ const codeCompUserProfile = `<HoverCard :open-delay="500" :close-delay="200">
     <a href="/users/joana">@joana</a>
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="nds-cluster" data-spacing="sm">
-      <Avatar>
-        <AvatarImage src="/joana.jpg" alt="" />
+    <div class="nds-cluster" data-spacing="sm" data-align="start">
+      <Avatar aria-hidden="true">
         <AvatarFallback>JS</AvatarFallback>
       </Avatar>
-      <div class="nds-stack">
-        <p class="nds-font-medium nds-text-body">Joana Silva</p>
+      <div class="nds-stack" data-spacing="xs">
+        <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
         <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
       </div>
     </div>
@@ -242,11 +260,11 @@ const codeCompLinkPreview = `<HoverCard :open-delay="500" :close-delay="200">
   </HoverCardTrigger>
   <HoverCardContent>
     <div class="nds-stack" data-spacing="sm">
-      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
-        <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center;">D</span>
+      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm" data-align="start">
+        <span class="nds-icon nds-rounded-sm nds-bg-muted" aria-hidden="true">D</span>
         <span>design-system.dev</span>
       </div>
-      <p class="nds-font-medium">Guia de overlays acessíveis</p>
+      <p class="nds-text-body nds-font-medium nds-leading-none">Guia de overlays acessíveis</p>
     </div>
   </HoverCardContent>
 </HoverCard>`;
@@ -257,14 +275,16 @@ const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
       type="button"
       class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
     >
-      WCAG 2.2 AA
+      WCAG 2.2
     </button>
   </HoverCardTrigger>
   <HoverCardContent>
-    <p class="nds-font-medium nds-text-body">WCAG 2.2 AA</p>
-    <p class="nds-text-caption nds-text-muted-foreground">
-      Web Content Accessibility Guidelines 2.1 — nível AA.
-    </p>
+    <div class="nds-stack" data-spacing="xs">
+      <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2</p>
+      <p class="nds-text-caption nds-text-muted-foreground">
+        Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
+      </p>
+    </div>
   </HoverCardContent>
 </HoverCard>`;
 
@@ -274,17 +294,15 @@ const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
       type="button"
       class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
     >
-      LCP 1.8s
+      3,42%
     </button>
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
-      <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-      <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+    <div class="nds-stack" data-spacing="xs">
+      <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
+      <p class="nds-text-h4 nds-font-semibold">3,42%</p>
+      <p class="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos</p>
     </div>
-    <p class="nds-text-caption nds-text-muted-foreground">
-      Tempo até o maior elemento visível. Bom: &lt;2.5s · Ruim: &gt;4s.
-    </p>
   </HoverCardContent>
 </HoverCard>`;
 
@@ -404,166 +422,59 @@ const a11yCritCols = computed(() => ({
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
-      <div
-        class="nds-grid nds-w-full nds-min-h-40"
-        data-cols="2"
-        data-spacing="lg"
-        style="--grid-min: 16rem; contain: layout"
-      >
-        <!-- User profile -->
-        <div
-          class="nds-stack nds-min-h-25"
-          data-spacing="sm"
-          style="contain: layout; position: relative"
-        >
-          <p
-            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
-            v-html="DOMPurify.sanitize(tContent('demonstration.labels.userProfile'))"
-          />
-          <HoverCard
-            :open-delay="50"
-            :close-delay="50"
-          >
-            <HoverCardTrigger as-child>
-              <a
-                href="#joana"
-                class="nds-text-primary nds-hover-underline"
-              >@joana</a>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <div
-                class="nds-cluster"
-                data-spacing="sm"
-              >
-                <Avatar>
-                  <AvatarImage
-                    src=""
-                    alt=""
-                  />
-                  <AvatarFallback>JS</AvatarFallback>
-                </Avatar>
-                <div class="nds-stack">
-                  <p class="nds-font-medium nds-text-body">
-                    Joana Silva
-                  </p>
-                  <p class="nds-text-caption nds-text-muted-foreground">
-                    Designer · 142 seguidores
-                  </p>
-                </div>
-              </div>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
+    <!--
+      O exemplo é o MESMO do Playground da story (`hover-card.stories.ts`): UMA
+      menção dentro de uma frase. Os quatro gatilhos que moravam aqui repetiam
+      as variantes que já têm seção própria — a página passava a ensinar uma
+      coisa enquanto a story exercitava outra.
 
-        <!-- Link preview -->
-        <div
-          class="nds-stack nds-min-h-25"
-          data-spacing="sm"
-          style="contain: layout; position: relative"
+      O gatilho fica DENTRO da frase de propósito: é o cerco de texto que
+      dispensa o alvo em linha do mínimo de 24px da WCAG 2.5.8. As esperas são
+      as do Playground (150/100), curtas porque quem abre a seção quer ver o
+      cartão, não cronometrar 600ms.
+    -->
+    <DocsDemonstration :title="tContent('demonstration.title')">
+      <p
+        class="nds-text-body nds-max-w-sm nds-min-h-50"
+        style="contain: layout; position: relative"
+      >
+        {{ tContent('demonstration.sentenceBefore') }}
+        <HoverCard
+          :open-delay="150"
+          :close-delay="100"
+          @update:open="(open: boolean) => trackHoverCard(open, 'user-profile', 'docs_demo')"
         >
-          <p
-            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
-            v-html="DOMPurify.sanitize(tContent('demonstration.labels.linkPreview'))"
-          />
-          <HoverCard
-            :open-delay="50"
-            :close-delay="50"
-          >
-            <HoverCardTrigger as-child>
-              <a
-                href="#link"
-                class="nds-text-primary nds-hover-underline"
-              >design-system.dev</a>
-            </HoverCardTrigger>
-            <HoverCardContent>
+          <HoverCardTrigger as-child>
+            <a
+              href="#joana"
+              class="nds-text-primary nds-font-medium nds-hover-underline"
+            >{{ tContent('demonstration.mention') }}</a>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <div
+              class="nds-cluster"
+              data-spacing="sm"
+              data-align="start"
+            >
+              <Avatar aria-hidden="true">
+                <AvatarFallback>JS</AvatarFallback>
+              </Avatar>
               <div
                 class="nds-stack"
-                data-spacing="sm"
+                data-spacing="xs"
               >
-                <div
-                  class="nds-cluster nds-text-caption nds-text-muted-foreground"
-                  data-spacing="sm"
-                >
-                  <span
-                    class="nds-icon nds-rounded-sm nds-bg-muted"
-                    style="display: inline-flex; align-items: center; justify-content: center;"
-                  >D</span>
-                  <span>design-system.dev</span>
-                </div>
-                <p class="nds-font-medium">
-                  Guia de overlays acessíveis
+                <p class="nds-text-body nds-font-medium nds-leading-none">
+                  {{ tContent('variants.items.userProfile.cardName') }}
+                </p>
+                <p class="nds-text-caption nds-text-muted-foreground">
+                  {{ tContent('variants.items.userProfile.cardMeta') }}
                 </p>
               </div>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
-
-        <!-- Definition -->
-        <div
-          class="nds-stack nds-min-h-25"
-          data-spacing="sm"
-          style="contain: layout; position: relative"
-        >
-          <p
-            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
-            v-html="DOMPurify.sanitize(tContent('demonstration.labels.definitionTooltip'))"
-          />
-          <HoverCard
-            :open-delay="50"
-            :close-delay="50"
-          >
-            <HoverCardTrigger as-child>
-              <a
-                href="#wcag"
-                class="nds-text-primary nds-hover-underline"
-              >WCAG 2.2</a>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p class="nds-font-medium nds-text-body">
-                WCAG 2.2
-              </p>
-              <p class="nds-text-caption nds-text-muted-foreground">
-                Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
-              </p>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
-
-        <!-- Metric -->
-        <div
-          class="nds-stack nds-min-h-25"
-          data-spacing="sm"
-          style="contain: layout; position: relative"
-        >
-          <p
-            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
-            v-html="DOMPurify.sanitize(tContent('demonstration.labels.metricExplainer'))"
-          />
-          <HoverCard
-            :open-delay="50"
-            :close-delay="50"
-          >
-            <HoverCardTrigger as-child>
-              <a
-                href="#metric"
-                class="nds-text-primary nds-hover-underline"
-              >3,42%</a>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p class="nds-text-caption nds-text-muted-foreground">
-                Conversão (últimos 30d)
-              </p>
-              <p class="nds-text-h4 nds-font-semibold">
-                3,42%
-              </p>
-              <p class="nds-text-caption nds-text-muted-foreground">
-                Cliques no CTA / usuários únicos.
-              </p>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
-      </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+        {{ tContent('demonstration.sentenceAfter') }}
+      </p>
     </DocsDemonstration>
 
     <!-- ── Anatomia ─────────────────────────────────────────────── -->
@@ -644,61 +555,174 @@ const a11yCritCols = computed(() => ({
         { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!-- VIVOS nos quatro, e FECHADOS: a §15 pede componente, não imitação em
+           markup. O defeito do primeiro "evite" é o gatilho — `<span>` em vez de
+           `<a>` —, e é mantido de propósito: sem href, sem papel de link,
+           inalcançável por toque e por teclado. É a lição da legenda. -->
       <template #do-preview-0>
         <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-20"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
-          <div
-            class="nds-text-body nds-stack"
-            data-spacing="xs"
+          <HoverCard
+            :open-delay="150"
+            :close-delay="100"
+            @update:open="(open: boolean) => trackHoverCard(open, 'par1-do', 'docs_do_dont')"
           >
-            <div
-              class="nds-text-primary nds-underline"
-            >
-              @joana
-            </div>
-            <div class="nds-text-caption nds-text-muted-foreground">
-              + link para /users/joana
-            </div>
-          </div>
+            <HoverCardTrigger as-child>
+              <a
+                href="#joana"
+                class="nds-text-primary nds-font-medium nds-hover-underline"
+              >{{ tContent('demonstration.mention') }}</a>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+                data-align="start"
+              >
+                <Avatar aria-hidden="true">
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <p class="nds-text-body nds-font-medium nds-leading-none">
+                    {{ tContent('variants.items.userProfile.cardName') }}
+                  </p>
+                  <p class="nds-text-caption nds-text-muted-foreground">
+                    {{ tContent('variants.items.userProfile.cardMeta') }}
+                  </p>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </template>
       <template #dont-preview-0>
         <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-20"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
-          <div class="nds-text-body">
-            <div
-              class="nds-text-primary nds-underline"
-            >
-              @joana
-            </div>
-            <div class="nds-text-caption nds-text-muted-foreground nds-italic">
-              apenas hover (touch users perdem)
-            </div>
-          </div>
+          <HoverCard
+            :open-delay="150"
+            :close-delay="100"
+            @update:open="(open: boolean) => trackHoverCard(open, 'par1-dont', 'docs_do_dont')"
+          >
+            <HoverCardTrigger as-child>
+              <span
+                class="nds-text-body nds-font-medium"
+              >{{ tContent('demonstration.mention') }}</span>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+                data-align="start"
+              >
+                <Avatar aria-hidden="true">
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <p class="nds-text-body nds-font-medium nds-leading-none">
+                    {{ tContent('variants.items.userProfile.cardName') }}
+                  </p>
+                  <p class="nds-text-caption nds-text-muted-foreground">
+                    {{ tContent('variants.items.userProfile.cardMeta') }}
+                  </p>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </template>
+      <!-- A diferença aqui é SENTIDA, não lida: 500ms exige intenção, 0ms abre
+           a cada passada de cursor. `openDelay={0}` em texto mostrava o valor
+           sem mostrar o efeito. -->
       <template #do-preview-1>
         <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
-          <div class="nds-text-body nds-font-mono">
-            openDelay={{ '{500}' }}
-          </div>
+          <HoverCard
+            :open-delay="500"
+            :close-delay="200"
+            @update:open="(open: boolean) => trackHoverCard(open, 'par2-do', 'docs_do_dont')"
+          >
+            <HoverCardTrigger as-child>
+              <a
+                href="#joana"
+                class="nds-text-primary nds-font-medium nds-hover-underline"
+              >{{ tContent('demonstration.mention') }}</a>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+                data-align="start"
+              >
+                <Avatar aria-hidden="true">
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <p class="nds-text-body nds-font-medium nds-leading-none">
+                    {{ tContent('variants.items.userProfile.cardName') }}
+                  </p>
+                  <p class="nds-text-caption nds-text-muted-foreground">
+                    {{ tContent('variants.items.userProfile.cardMeta') }}
+                  </p>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </template>
       <template #dont-preview-1>
         <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
-          <div class="nds-text-body nds-font-mono">
-            openDelay={{ '{0}' }}
-          </div>
+          <HoverCard
+            :open-delay="0"
+            :close-delay="200"
+            @update:open="(open: boolean) => trackHoverCard(open, 'par2-dont', 'docs_do_dont')"
+          >
+            <HoverCardTrigger as-child>
+              <a
+                href="#joana"
+                class="nds-text-primary nds-font-medium nds-hover-underline"
+              >{{ tContent('demonstration.mention') }}</a>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+                data-align="start"
+              >
+                <Avatar aria-hidden="true">
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <p class="nds-text-body nds-font-medium nds-leading-none">
+                    {{ tContent('variants.items.userProfile.cardName') }}
+                  </p>
+                  <p class="nds-text-caption nds-text-muted-foreground">
+                    {{ tContent('variants.items.userProfile.cardMeta') }}
+                  </p>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </template>
     </DocsDoDont>
@@ -717,24 +741,88 @@ const a11yCritCols = computed(() => ({
       :use-when-label="tNav('common.useWhen')"
       component-slug="hover-card"
     >
+      <!-- Vivos e FECHADOS: o cartão é conteúdo sob demanda, e aberto aqui
+           cobriria a seção seguinte com um painel flutuante. -->
       <template #variant-preview-0>
+        <!-- Esperas PADRÃO (600/300) — é o que esta variante documenta, e um
+             valor de conveniência aqui mentiria sobre o produto. -->
         <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
-          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-            openDelay=600 / closeDelay=300
-          </div>
+          <HoverCard
+            @update:open="(open: boolean) => trackHoverCard(open, 'default', 'docs_variantes')"
+          >
+            <HoverCardTrigger as-child>
+              <a
+                href="#joana"
+                class="nds-text-primary nds-font-medium nds-hover-underline"
+              >@joana</a>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+                data-align="start"
+              >
+                <Avatar aria-hidden="true">
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <p class="nds-text-body nds-font-medium nds-leading-none">
+                    {{ tContent('variants.items.userProfile.cardName') }}
+                  </p>
+                  <p class="nds-text-caption nds-text-muted-foreground">
+                    {{ tContent('variants.items.userProfile.cardMeta') }}
+                  </p>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </template>
       <template #variant-preview-1>
         <div
-          style="contain: layout"
-          class="nds-w-full nds-min-h-16"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-40"
         >
-          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-            openDelay=500 / closeDelay=200
-          </div>
+          <HoverCard
+            :open-delay="500"
+            :close-delay="200"
+            @update:open="(open: boolean) => trackHoverCard(open, 'with-delay', 'docs_variantes')"
+          >
+            <HoverCardTrigger as-child>
+              <a
+                href="#joana"
+                class="nds-text-primary nds-font-medium nds-hover-underline"
+              >@joana</a>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+                data-align="start"
+              >
+                <Avatar aria-hidden="true">
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <p class="nds-text-body nds-font-medium nds-leading-none">
+                    {{ tContent('variants.items.userProfile.cardName') }}
+                  </p>
+                  <p class="nds-text-caption nds-text-muted-foreground">
+                    {{ tContent('variants.items.userProfile.cardMeta') }}
+                  </p>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </template>
       <template #variant-preview-2>
@@ -745,31 +833,32 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
+            @update:open="(open: boolean) => trackHoverCard(open, 'user-profile', 'docs_variantes')"
           >
             <HoverCardTrigger as-child>
               <a
                 href="#joana"
-                class="nds-text-primary nds-hover-underline"
+                class="nds-text-primary nds-font-medium nds-hover-underline"
               >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div
                 class="nds-cluster"
                 data-spacing="sm"
+                data-align="start"
               >
-                <Avatar>
-                  <AvatarImage
-                    src=""
-                    alt=""
-                  />
+                <Avatar aria-hidden="true">
                   <AvatarFallback>JS</AvatarFallback>
                 </Avatar>
-                <div class="nds-stack">
-                  <p class="nds-font-medium nds-text-body">
-                    Joana Silva
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
+                  <p class="nds-text-body nds-font-medium nds-leading-none">
+                    {{ tContent('variants.items.userProfile.cardName') }}
                   </p>
                   <p class="nds-text-caption nds-text-muted-foreground">
-                    Designer · 142 seguidores
+                    {{ tContent('variants.items.userProfile.cardMeta') }}
                   </p>
                 </div>
               </div>
@@ -785,12 +874,13 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
+            @update:open="(open: boolean) => trackHoverCard(open, 'link-preview', 'docs_variantes')"
           >
             <HoverCardTrigger as-child>
               <a
                 href="#link"
-                class="nds-text-primary nds-hover-underline"
-              >design-system.dev</a>
+                class="nds-text-primary nds-font-medium nds-hover-underline"
+              >{{ tContent('variants.items.linkPreview.cardDomain') }}</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div
@@ -800,15 +890,17 @@ const a11yCritCols = computed(() => ({
                 <div
                   class="nds-cluster nds-text-caption nds-text-muted-foreground"
                   data-spacing="sm"
+                  data-align="start"
                 >
                   <span
+                    aria-hidden="true"
                     class="nds-icon nds-rounded-sm nds-bg-muted"
                     style="display: inline-flex; align-items: center; justify-content: center;"
                   >D</span>
-                  <span>design-system.dev</span>
+                  <span>{{ tContent('variants.items.linkPreview.cardDomain') }}</span>
                 </div>
-                <p class="nds-font-medium">
-                  Guia de overlays acessíveis
+                <p class="nds-text-body nds-font-medium nds-leading-none">
+                  {{ tContent('variants.items.linkPreview.cardTitle') }}
                 </p>
               </div>
             </HoverCardContent>
@@ -816,6 +908,8 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-4>
+        <!-- Gatilho que NÃO navega é botão sem moldura, com sublinhado
+             pontilhado: as classes zeram o cromo nativo sem uma linha inline. -->
         <div
           style="contain: layout; position: relative"
           class="nds-w-full nds-min-h-40"
@@ -823,22 +917,28 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
+            @update:open="(open: boolean) => trackHoverCard(open, 'definition-tooltip', 'docs_variantes')"
           >
             <HoverCardTrigger as-child>
               <button
                 type="button"
                 class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
               >
-                WCAG 2.2 AA
+                {{ tContent('variants.items.definitionTooltip.cardTerm') }}
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="nds-font-medium nds-text-body">
-                WCAG 2.2 AA
-              </p>
-              <p class="nds-text-caption nds-text-muted-foreground">
-                Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
-              </p>
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
+                <p class="nds-text-body nds-font-medium nds-leading-none">
+                  {{ tContent('variants.items.definitionTooltip.cardTerm') }}
+                </p>
+                <p class="nds-text-caption nds-text-muted-foreground">
+                  {{ tContent('variants.items.definitionTooltip.cardMeaning') }}
+                </p>
+              </div>
             </HoverCardContent>
           </HoverCard>
         </div>
@@ -851,30 +951,31 @@ const a11yCritCols = computed(() => ({
           <HoverCard
             :open-delay="50"
             :close-delay="50"
+            @update:open="(open: boolean) => trackHoverCard(open, 'metric-explainer', 'docs_variantes')"
           >
             <HoverCardTrigger as-child>
               <button
                 type="button"
                 class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
               >
-                LCP 1.8s
+                3,42%
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
               <div
-                class="nds-cluster"
-                data-align="baseline"
-                data-justify="between"
-                data-spacing="sm"
+                class="nds-stack"
+                data-spacing="xs"
               >
-                <p class="nds-text-body nds-font-medium">
-                  Largest Contentful Paint
+                <p class="nds-text-caption nds-text-muted-foreground">
+                  {{ tContent('variants.items.metricExplainer.cardMetric') }}
                 </p>
-                <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+                <p class="nds-text-h4 nds-font-semibold">
+                  3,42%
+                </p>
+                <p class="nds-text-caption nds-text-muted-foreground">
+                  {{ tContent('variants.items.metricExplainer.cardFormula') }}
+                </p>
               </div>
-              <p class="nds-text-caption nds-text-muted-foreground">
-                Tempo até o maior elemento visível ser renderizado. Bom: &lt;2.5s · Ruim: &gt;4s.
-              </p>
             </HoverCardContent>
           </HoverCard>
         </div>

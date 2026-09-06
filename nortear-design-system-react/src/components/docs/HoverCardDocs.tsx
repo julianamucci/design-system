@@ -4,7 +4,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -138,6 +138,29 @@ export function HoverCardDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
+  // ─── Analytics dos previews vivos ───────────────────────────────────────────
+  //
+  // Todo preview vivo desta pagina e o produto consumindo o proprio componente.
+  // `trigger_label` carrega id ESTAVEL, nunca o texto do gatilho: traduzido, o
+  // mesmo evento chegaria ao GA4 partido em tres.
+  const trackHoverCard = useCallback(
+    (open: boolean, triggerId: string, location: string) => {
+      if (open) {
+        track("hover_card_open", {
+          component: "hover-card",
+          trigger_label: triggerId,
+          location,
+        });
+      } else {
+        track("hover_card_close", {
+          component: "hover-card",
+          location,
+        });
+      }
+    },
+    []
+  );
+
   // ─── Code strings ───────────────────────────────────────────────────────────
 
   const codeImport = `import {
@@ -164,6 +187,75 @@ export function HoverCardDocs() {
   <HoverCardContent>...</HoverCardContent>
 </HoverCard>`;
 
+  const codeUserProfile = `<HoverCard openDelay={500} closeDelay={200}>
+  <HoverCardTrigger asChild>
+    <a href="/users/joana">@joana</a>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div className="nds-cluster" data-spacing="sm" data-align="start">
+      <Avatar aria-hidden="true">
+        <AvatarFallback>JS</AvatarFallback>
+      </Avatar>
+      <div className="nds-stack" data-spacing="xs">
+        <p className="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
+        <p className="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
+      </div>
+    </div>
+  </HoverCardContent>
+</HoverCard>`;
+
+  const codeLinkPreview = `<HoverCard openDelay={500} closeDelay={200}>
+  <HoverCardTrigger asChild>
+    <a href="https://design-system.dev">design-system.dev</a>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div className="nds-stack" data-spacing="sm">
+      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm" data-align="start">
+        <span aria-hidden="true" className="nds-icon nds-rounded-sm nds-bg-muted">D</span>
+        <span>design-system.dev</span>
+      </div>
+      <p className="nds-text-body nds-font-medium nds-leading-none">Guia de overlays acessíveis</p>
+    </div>
+  </HoverCardContent>
+</HoverCard>`;
+
+  const codeDefinition = `<HoverCard openDelay={400} closeDelay={150}>
+  <HoverCardTrigger asChild>
+    <button
+      type="button"
+      className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+    >
+      WCAG 2.2
+    </button>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div className="nds-stack" data-spacing="xs">
+      <p className="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2</p>
+      <p className="nds-text-caption nds-text-muted-foreground">
+        Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
+      </p>
+    </div>
+  </HoverCardContent>
+</HoverCard>`;
+
+  const codeMetric = `<HoverCard openDelay={400} closeDelay={150}>
+  <HoverCardTrigger asChild>
+    <button
+      type="button"
+      className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
+    >
+      3,42%
+    </button>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div className="nds-stack" data-spacing="xs">
+      <p className="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
+      <p className="nds-text-h4 nds-font-semibold">3,42%</p>
+      <p className="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos</p>
+    </div>
+  </HoverCardContent>
+</HoverCard>`;
+
   const interfaceCode = `// HoverCard (base-ui/preview-card)
 interface HoverCardProps {
   open?: boolean;
@@ -188,6 +280,76 @@ interface HoverCardContentProps {
     payload: "Payload",
   };
 
+  // ─── Cartoes dos previews vivos ─────────────────────────────────────────────
+  //
+  // Mesmo markup da fixture do Playground: `data-spacing="xs"` no `nds-stack` e
+  // `data-align="start"` no cluster. Sem os dois o espaco entre nome e subtitulo
+  // vira 16px em vez de 4px.
+  //
+  // O texto sai das chaves da variante a que o cartao pertence — literal aqui
+  // aparecia em portugues no `en` e no `es`.
+
+  const profileCard = (
+    <div className="nds-cluster" data-spacing="sm" data-align="start">
+      <Avatar aria-hidden="true">
+        <AvatarFallback>JS</AvatarFallback>
+      </Avatar>
+      <div className="nds-stack" data-spacing="xs">
+        <p className="nds-text-body nds-font-medium nds-leading-none">
+          {tContent("variants.items.userProfile.cardName")}
+        </p>
+        <p className="nds-text-caption nds-text-muted-foreground">
+          {tContent("variants.items.userProfile.cardMeta")}
+        </p>
+      </div>
+    </div>
+  );
+
+  const linkCard = (
+    <div className="nds-stack" data-spacing="sm">
+      <div
+        className="nds-cluster nds-text-caption nds-text-muted-foreground"
+        data-spacing="sm"
+        data-align="start"
+      >
+        <span
+          aria-hidden="true"
+          className="nds-icon nds-rounded-sm nds-bg-muted"
+          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+        >
+          D
+        </span>
+        <span>{tContent("variants.items.linkPreview.cardDomain")}</span>
+      </div>
+      <p className="nds-text-body nds-font-medium nds-leading-none">
+        {tContent("variants.items.linkPreview.cardTitle")}
+      </p>
+    </div>
+  );
+
+  const definitionCard = (
+    <div className="nds-stack" data-spacing="xs">
+      <p className="nds-text-body nds-font-medium nds-leading-none">
+        {tContent("variants.items.definitionTooltip.cardTerm")}
+      </p>
+      <p className="nds-text-caption nds-text-muted-foreground">
+        {tContent("variants.items.definitionTooltip.cardMeaning")}
+      </p>
+    </div>
+  );
+
+  const metricCard = (
+    <div className="nds-stack" data-spacing="xs">
+      <p className="nds-text-caption nds-text-muted-foreground">
+        {tContent("variants.items.metricExplainer.cardMetric")}
+      </p>
+      <p className="nds-text-h4 nds-font-semibold">3,42%</p>
+      <p className="nds-text-caption nds-text-muted-foreground">
+        {tContent("variants.items.metricExplainer.cardFormula")}
+      </p>
+    </div>
+  );
+
   return (
     <DocsPageLayout
       navGroups={navGroups}
@@ -203,119 +365,37 @@ interface HoverCardContentProps {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
+      {/*
+        O exemplo é o MESMO do Playground da story (`hover-card.stories.tsx`):
+        UMA menção dentro de uma frase. Os quatro gatilhos que moravam aqui
+        repetiam as variantes que já têm seção própria — a página passava a
+        ensinar uma coisa enquanto a story exercitava outra.
+
+        O gatilho fica DENTRO da frase de propósito: é o cerco de texto que
+        dispensa o alvo em linha do mínimo de 24px da WCAG 2.5.8. As esperas
+        são as do Playground (150/100), curtas porque quem abre a seção quer
+        ver o cartão, não cronometrar 600ms.
+      */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div
-          className="nds-grid nds-w-full nds-min-h-40"
-          data-cols="2"
-          data-spacing="lg"
-          style={{ "--grid-min": "16rem", contain: "layout" } as React.CSSProperties}
+        <p
+          className="nds-text-body nds-max-w-sm nds-min-h-50"
+          style={{ contain: "layout", position: "relative" }}
         >
-          {/* Profile preview */}
-          <div
-            className="nds-stack nds-min-h-25"
-            data-spacing="sm"
-            style={{ contain: "layout", position: "relative" }}
+          {tContent("demonstration.sentenceBefore")}{" "}
+          <HoverCard
+            openDelay={150}
+            closeDelay={100}
+            onOpenChange={(open) => trackHoverCard(open, "user-profile", "docs_demo")}
           >
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.userProfile"))}
-            </p>
-            <HoverCard openDelay={50} closeDelay={50}>
-              <HoverCardTrigger asChild>
-                <a href="#joana" className="nds-text-primary nds-hover-underline">
-                  @joana
-                </a>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                <div className="nds-cluster" data-spacing="sm">
-                  <Avatar>
-                    <AvatarImage src="" alt="" />
-                    <AvatarFallback>JS</AvatarFallback>
-                  </Avatar>
-                  <div className="nds-stack">
-                    <p className="nds-font-medium nds-text-body">Joana Silva</p>
-                    <p className="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-
-          {/* Link preview */}
-          <div
-            className="nds-stack nds-min-h-25"
-            data-spacing="sm"
-            style={{ contain: "layout", position: "relative" }}
-          >
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.linkPreview"))}
-            </p>
-            <HoverCard openDelay={50} closeDelay={50}>
-              <HoverCardTrigger asChild>
-                <a href="#link" className="nds-text-primary nds-hover-underline">
-                  design-system.dev
-                </a>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                <div className="nds-stack" data-spacing="sm">
-                  <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
-                    <span className="nds-icon nds-rounded-sm nds-bg-muted" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>D</span>
-                    <span>design-system.dev</span>
-                  </div>
-                  <p className="nds-font-medium">Guia de overlays acessíveis</p>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-
-          {/* Definition */}
-          <div
-            className="nds-stack nds-min-h-25"
-            data-spacing="sm"
-            style={{ contain: "layout", position: "relative" }}
-          >
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.definitionTooltip"))}
-            </p>
-            <HoverCard openDelay={50} closeDelay={50}>
-              <HoverCardTrigger asChild>
-                <a href="#wcag" className="nds-text-primary nds-hover-underline">
-                  WCAG 2.2
-                </a>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                <p className="nds-font-medium nds-text-body">WCAG 2.2</p>
-                <p className="nds-text-caption nds-text-muted-foreground">
-                  Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
-                </p>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-
-          {/* Metric */}
-          <div
-            className="nds-stack nds-min-h-25"
-            data-spacing="sm"
-            style={{ contain: "layout", position: "relative" }}
-          >
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.metricExplainer"))}
-            </p>
-            <HoverCard openDelay={50} closeDelay={50}>
-              <HoverCardTrigger asChild>
-                <a href="#metric" className="nds-text-primary nds-hover-underline">
-                  3,42%
-                </a>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                <p className="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
-                <p className="nds-text-h4 nds-font-semibold">3,42%</p>
-                <p className="nds-text-caption nds-text-muted-foreground">
-                  Cliques no CTA / usuários únicos.
-                </p>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-        </div>
+            <HoverCardTrigger asChild>
+              <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                {tContent("demonstration.mention")}
+              </a>
+            </HoverCardTrigger>
+            <HoverCardContent>{profileCard}</HoverCardContent>
+          </HoverCard>{" "}
+          {tContent("demonstration.sentenceAfter")}
+        </p>
       </DocsDemonstration>
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
@@ -414,16 +494,41 @@ interface HoverCardContentProps {
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // VIVO nos dois lados, e FECHADO: a §15 pede componente, não
+            // imitação em markup. O defeito do "evite" é o gatilho — `<span>`
+            // em vez de `<a>` —, então ele é mantido de propósito: sem href,
+            // sem papel de link, inalcançável por toque e por teclado. É
+            // exatamente a lição da legenda.
             doPreview: (
-              <div className="nds-text-body nds-stack" data-spacing="xs">
-                <div className="nds-text-primary nds-underline">@joana</div>
-                <div className="nds-text-caption nds-text-muted-foreground">+ link para /users/joana</div>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+                <HoverCard
+                  openDelay={150}
+                  closeDelay={100}
+                  onOpenChange={(open) => trackHoverCard(open, "par1-do", "docs_do_dont")}
+                >
+                  <HoverCardTrigger asChild>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      {tContent("demonstration.mention")}
+                    </a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>{profileCard}</HoverCardContent>
+                </HoverCard>
               </div>
             ),
             dontPreview: (
-              <div className="nds-text-body">
-                <div className="nds-text-primary nds-underline">@joana</div>
-                <div className="nds-text-caption nds-text-muted-foreground nds-italic">apenas hover (touch users perdem)</div>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+                <HoverCard
+                  openDelay={150}
+                  closeDelay={100}
+                  onOpenChange={(open) => trackHoverCard(open, "par1-dont", "docs_do_dont")}
+                >
+                  <HoverCardTrigger asChild>
+                    <span className="nds-text-body nds-font-medium">
+                      {tContent("demonstration.mention")}
+                    </span>
+                  </HoverCardTrigger>
+                  <HoverCardContent>{profileCard}</HoverCardContent>
+                </HoverCard>
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
@@ -432,11 +537,40 @@ interface HoverCardContentProps {
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // A diferença entre os dois é SENTIDA, não lida: 500ms exige
+            // intenção, 0ms abre a cada passada. Escrever `openDelay={0}` em
+            // texto mostrava o valor sem mostrar o efeito.
             doPreview: (
-              <div className="nds-text-body nds-font-mono">openDelay={`{500}`}</div>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+                <HoverCard
+                  openDelay={500}
+                  closeDelay={200}
+                  onOpenChange={(open) => trackHoverCard(open, "par2-do", "docs_do_dont")}
+                >
+                  <HoverCardTrigger asChild>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      {tContent("demonstration.mention")}
+                    </a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>{profileCard}</HoverCardContent>
+                </HoverCard>
+              </div>
             ),
             dontPreview: (
-              <div className="nds-text-body nds-font-mono">openDelay={`{0}`}</div>
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+                <HoverCard
+                  openDelay={0}
+                  closeDelay={200}
+                  onOpenChange={(open) => trackHoverCard(open, "par2-dont", "docs_do_dont")}
+                >
+                  <HoverCardTrigger asChild>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      {tContent("demonstration.mention")}
+                    </a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>{profileCard}</HoverCardContent>
+                </HoverCard>
+              </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
             dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
@@ -459,9 +593,19 @@ interface HoverCardContentProps {
             name: tContent("variants.items.default"),
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
+            // Vivo e FECHADO, com as esperas PADRÃO (600/300) — é o que esta
+            // variante documenta, e um valor de conveniência aqui mentiria
+            // sobre o que o leitor sente no produto.
             preview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                openDelay=600 / closeDelay=300
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+                <HoverCard
+                  onOpenChange={(open) => trackHoverCard(open, "default", "docs_variantes")}
+                >
+                  <HoverCardTrigger asChild>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>{profileCard}</HoverCardContent>
+                </HoverCard>
               </div>
             ),
           },
@@ -471,8 +615,17 @@ interface HoverCardContentProps {
             description: stripHtml(tContent("variants.styles.withDelay")),
             code: codeWithDelay,
             preview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                openDelay=500 / closeDelay=200
+              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+                <HoverCard
+                  openDelay={500}
+                  closeDelay={200}
+                  onOpenChange={(open) => trackHoverCard(open, "with-delay", "docs_variantes")}
+                >
+                  <HoverCardTrigger asChild>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>{profileCard}</HoverCardContent>
+                </HoverCard>
               </div>
             ),
           },
@@ -481,41 +634,18 @@ interface HoverCardContentProps {
             name: tContent("variants.items.userProfile.name"),
             description: tContent("variants.items.userProfile.description"),
             useWhen: tContent("variants.items.userProfile.use"),
-            code: `<HoverCard openDelay={500} closeDelay={200}>
-  <HoverCardTrigger asChild>
-    <a href="/users/joana">@joana</a>
-  </HoverCardTrigger>
-  <HoverCardContent>
-    <div className="nds-cluster" data-spacing="sm">
-      <Avatar>
-        <AvatarImage src="/joana.jpg" alt="" />
-        <AvatarFallback>JS</AvatarFallback>
-      </Avatar>
-      <div className="nds-stack">
-        <p className="nds-font-medium nds-text-body">Joana Silva</p>
-        <p className="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-      </div>
-    </div>
-  </HoverCardContent>
-</HoverCard>`,
+            code: codeUserProfile,
             preview: (
               <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
-                <HoverCard openDelay={50} closeDelay={50}>
+                <HoverCard
+                  openDelay={50}
+                  closeDelay={50}
+                  onOpenChange={(open) => trackHoverCard(open, "user-profile", "docs_variantes")}
+                >
                   <HoverCardTrigger asChild>
-                    <a href="#joana" className="nds-text-primary nds-hover-underline">@joana</a>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
                   </HoverCardTrigger>
-                  <HoverCardContent>
-                    <div className="nds-cluster" data-spacing="sm">
-                      <Avatar>
-                        <AvatarImage src="" alt="" />
-                        <AvatarFallback>JS</AvatarFallback>
-                      </Avatar>
-                      <div className="nds-stack">
-                        <p className="nds-font-medium nds-text-body">Joana Silva</p>
-                        <p className="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-                      </div>
-                    </div>
-                  </HoverCardContent>
+                  <HoverCardContent>{profileCard}</HoverCardContent>
                 </HoverCard>
               </div>
             ),
@@ -525,35 +655,20 @@ interface HoverCardContentProps {
             name: tContent("variants.items.linkPreview.name"),
             description: tContent("variants.items.linkPreview.description"),
             useWhen: tContent("variants.items.linkPreview.use"),
-            code: `<HoverCard openDelay={500} closeDelay={200}>
-  <HoverCardTrigger asChild>
-    <a href="https://design-system.dev">design-system.dev</a>
-  </HoverCardTrigger>
-  <HoverCardContent>
-    <div className="nds-stack" data-spacing="sm">
-      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
-        <span className="nds-icon nds-rounded-sm nds-bg-muted" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>D</span>
-        <span>design-system.dev</span>
-      </div>
-      <p className="nds-font-medium">Guia de overlays acessíveis</p>
-    </div>
-  </HoverCardContent>
-</HoverCard>`,
+            code: codeLinkPreview,
             preview: (
               <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
-                <HoverCard openDelay={50} closeDelay={50}>
+                <HoverCard
+                  openDelay={50}
+                  closeDelay={50}
+                  onOpenChange={(open) => trackHoverCard(open, "link-preview", "docs_variantes")}
+                >
                   <HoverCardTrigger asChild>
-                    <a href="#link" className="nds-text-primary nds-hover-underline">design-system.dev</a>
+                    <a href="#link" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      {tContent("variants.items.linkPreview.cardDomain")}
+                    </a>
                   </HoverCardTrigger>
-                  <HoverCardContent>
-                    <div className="nds-stack" data-spacing="sm">
-                      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
-                        <span className="nds-icon nds-rounded-sm nds-bg-muted" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>D</span>
-                        <span>design-system.dev</span>
-                      </div>
-                      <p className="nds-font-medium">Guia de overlays acessíveis</p>
-                    </div>
-                  </HoverCardContent>
+                  <HoverCardContent>{linkCard}</HoverCardContent>
                 </HoverCard>
               </div>
             ),
@@ -563,39 +678,25 @@ interface HoverCardContentProps {
             name: tContent("variants.items.definitionTooltip.name"),
             description: tContent("variants.items.definitionTooltip.description"),
             useWhen: tContent("variants.items.definitionTooltip.use"),
-            code: `<HoverCard openDelay={400} closeDelay={150}>
-  <HoverCardTrigger asChild>
-    <button
-      type="button"
-      className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-    >
-      WCAG 2.2 AA
-    </button>
-  </HoverCardTrigger>
-  <HoverCardContent>
-    <p className="nds-font-medium nds-text-body">WCAG 2.2 AA</p>
-    <p className="nds-text-caption nds-text-muted-foreground">
-      Web Content Accessibility Guidelines 2.1 — nível AA.
-    </p>
-  </HoverCardContent>
-</HoverCard>`,
+            code: codeDefinition,
+            // Gatilho que NÃO navega é botão sem moldura, com sublinhado
+            // pontilhado — as classes zeram o cromo nativo sem uma linha inline.
             preview: (
               <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
-                <HoverCard openDelay={50} closeDelay={50}>
+                <HoverCard
+                  openDelay={50}
+                  closeDelay={50}
+                  onOpenChange={(open) => trackHoverCard(open, "definition-tooltip", "docs_variantes")}
+                >
                   <HoverCardTrigger asChild>
                     <button
                       type="button"
                       className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
                     >
-                      WCAG 2.2 AA
+                      {tContent("variants.items.definitionTooltip.cardTerm")}
                     </button>
                   </HoverCardTrigger>
-                  <HoverCardContent>
-                    <p className="nds-font-medium nds-text-body">WCAG 2.2 AA</p>
-                    <p className="nds-text-caption nds-text-muted-foreground">
-                      Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
-                    </p>
-                  </HoverCardContent>
+                  <HoverCardContent>{definitionCard}</HoverCardContent>
                 </HoverCard>
               </div>
             ),
@@ -605,45 +706,23 @@ interface HoverCardContentProps {
             name: tContent("variants.items.metricExplainer.name"),
             description: tContent("variants.items.metricExplainer.description"),
             useWhen: tContent("variants.items.metricExplainer.use"),
-            code: `<HoverCard openDelay={400} closeDelay={150}>
-  <HoverCardTrigger asChild>
-    <button
-      type="button"
-      className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-    >
-      LCP 1.8s
-    </button>
-  </HoverCardTrigger>
-  <HoverCardContent>
-    <div className="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
-      <p className="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-      <span className="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
-    </div>
-    <p className="nds-text-caption nds-text-muted-foreground">
-      Tempo até o maior elemento visível. Bom: &lt;2.5s · Ruim: &gt;4s.
-    </p>
-  </HoverCardContent>
-</HoverCard>`,
+            code: codeMetric,
             preview: (
               <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
-                <HoverCard openDelay={50} closeDelay={50}>
+                <HoverCard
+                  openDelay={50}
+                  closeDelay={50}
+                  onOpenChange={(open) => trackHoverCard(open, "metric-explainer", "docs_variantes")}
+                >
                   <HoverCardTrigger asChild>
                     <button
                       type="button"
                       className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
                     >
-                      LCP 1.8s
+                      3,42%
                     </button>
                   </HoverCardTrigger>
-                  <HoverCardContent>
-                    <div className="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
-                      <p className="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-                      <span className="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
-                    </div>
-                    <p className="nds-text-caption nds-text-muted-foreground">
-                      Tempo até o maior elemento visível ser renderizado. Bom: &lt;2.5s · Ruim: &gt;4s.
-                    </p>
-                  </HoverCardContent>
+                  <HoverCardContent>{metricCard}</HoverCardContent>
                 </HoverCard>
               </div>
             ),

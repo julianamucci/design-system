@@ -17,7 +17,10 @@
         "linkPreview": "Preview de link externo",
         "definitionTooltip": "Definição contextual de termo",
         "metricExplainer": "Explicação de métrica em dashboard"
-      }
+      },
+      "mention": "@joana",
+      "sentenceBefore": "Comentário de",
+      "sentenceAfter": "há 2 horas."
     },
     "anatomy": {
       "title": "Anatomia",
@@ -140,22 +143,30 @@
         "userProfile": {
           "name": "Perfil de usuário",
           "description": "Trigger em <code>@username</code> revela cartão com avatar, nome, papel e métrica curta (ex.: seguidores). O link permanece navegável por clique e por teclado.",
-          "use": "Menções em feeds, comentários e listas onde o nome é o ponto de entrada mas a página de perfil é a fonte primária. Sempre forneça caminho alternativo (link clicável) para usuários touch."
+          "use": "Menções em feeds, comentários e listas onde o nome é o ponto de entrada mas a página de perfil é a fonte primária. Sempre forneça caminho alternativo (link clicável) para usuários touch.",
+          "cardName": "Joana Silva",
+          "cardMeta": "Designer · 142 seguidores"
         },
         "linkPreview": {
           "name": "Preview de link",
           "description": "Cabeçalho com favicon + URL truncada, título do destino e descrição curta. Reduz cliques exploratórios ao revelar metadados antes da navegação.",
-          "use": "Links externos em artigos, documentação e mensageria. Evite em listas densas (excesso de hovers vira ruído); use <code>openDelay</code> ≥500ms."
+          "use": "Links externos em artigos, documentação e mensageria. Evite em listas densas (excesso de hovers vira ruído); use <code>openDelay</code> ≥500ms.",
+          "cardDomain": "design-system.dev",
+          "cardTitle": "Guia de overlays acessíveis"
         },
         "definitionTooltip": {
           "name": "Definição de termo",
           "description": "Texto disparador com sublinhado pontilhado abre cartão com o termo em destaque e a definição em 1-2 frases. Complementa o glossário sem tirar o usuário do contexto.",
-          "use": "Termos técnicos, siglas (ex.: <code>WCAG 2.2 AA</code>) e jargões em prosa longa. Sempre tenha um glossário ou página dedicada como alternativa de acesso."
+          "use": "Termos técnicos, siglas (ex.: <code>WCAG 2.2 AA</code>) e jargões em prosa longa. Sempre tenha um glossário ou página dedicada como alternativa de acesso.",
+          "cardTerm": "WCAG 2.2",
+          "cardMeaning": "Web Content Accessibility Guidelines: padrão internacional de acessibilidade para conteúdo web."
         },
         "metricExplainer": {
           "name": "Métrica explicada",
           "description": "Valor numérico (ex.: <code>LCP 1.8s</code>) dispara cartão com nome completo da métrica, valor com cor semântica e descrição dos limiares (bom/ruim).",
-          "use": "Dashboards e relatórios com KPIs, indicadores de performance e métricas técnicas que precisam de contexto sem poluir a visualização principal."
+          "use": "Dashboards e relatórios com KPIs, indicadores de performance e métricas técnicas que precisam de contexto sem poluir a visualização principal.",
+          "cardMetric": "Conversão (últimos 30d)",
+          "cardFormula": "Cliques no CTA / usuários únicos"
         }
       },
       "styles": {
@@ -457,7 +468,10 @@
         "linkPreview": "External link preview",
         "definitionTooltip": "Contextual term definition",
         "metricExplainer": "Dashboard metric explainer"
-      }
+      },
+      "mention": "@joana",
+      "sentenceBefore": "Comment by",
+      "sentenceAfter": "2 hours ago."
     },
     "anatomy": {
       "title": "Anatomy",
@@ -580,22 +594,30 @@
         "userProfile": {
           "name": "User profile",
           "description": "Trigger on <code>@username</code> reveals a card with avatar, name, role and a short metric (e.g. followers). The link stays navigable by click and keyboard.",
-          "use": "Mentions in feeds, comments and lists where the name is the entry point but the profile page is the primary source. Always provide an alternative path (clickable link) for touch users."
+          "use": "Mentions in feeds, comments and lists where the name is the entry point but the profile page is the primary source. Always provide an alternative path (clickable link) for touch users.",
+          "cardName": "Joana Silva",
+          "cardMeta": "Designer · 142 followers"
         },
         "linkPreview": {
           "name": "Link preview",
           "description": "Header with favicon + truncated URL, destination title and short description. Reduces exploratory clicks by revealing metadata before navigation.",
-          "use": "External links in articles, documentation and messaging. Avoid in dense lists (too many hovers become noise); use <code>openDelay</code> ≥500ms."
+          "use": "External links in articles, documentation and messaging. Avoid in dense lists (too many hovers become noise); use <code>openDelay</code> ≥500ms.",
+          "cardDomain": "design-system.dev",
+          "cardTitle": "Accessible overlays guide"
         },
         "definitionTooltip": {
           "name": "Term definition",
           "description": "Trigger text with dotted underline opens a card with the highlighted term and the definition in 1-2 sentences. Complements the glossary without pulling the user out of context.",
-          "use": "Technical terms, acronyms (e.g. <code>WCAG 2.2 AA</code>) and jargon in long prose. Always have a glossary or dedicated page as an alternative access path."
+          "use": "Technical terms, acronyms (e.g. <code>WCAG 2.2 AA</code>) and jargon in long prose. Always have a glossary or dedicated page as an alternative access path.",
+          "cardTerm": "WCAG 2.2",
+          "cardMeaning": "Web Content Accessibility Guidelines: the international standard for web content accessibility."
         },
         "metricExplainer": {
           "name": "Metric explainer",
           "description": "Numeric value (e.g. <code>LCP 1.8s</code>) triggers a card with the full metric name, the value with semantic color, and the threshold description (good/poor).",
-          "use": "Dashboards and reports with KPIs, performance indicators and technical metrics that need context without cluttering the main visualization."
+          "use": "Dashboards and reports with KPIs, performance indicators and technical metrics that need context without cluttering the main visualization.",
+          "cardMetric": "Conversion (last 30d)",
+          "cardFormula": "CTA clicks / unique users"
         }
       },
       "styles": {
@@ -897,7 +919,10 @@
         "linkPreview": "Preview de enlace externo",
         "definitionTooltip": "Definición contextual de término",
         "metricExplainer": "Explicación de métrica en dashboard"
-      }
+      },
+      "mention": "@joana",
+      "sentenceBefore": "Comentario de",
+      "sentenceAfter": "hace 2 horas."
     },
     "anatomy": {
       "title": "Anatomía",
@@ -1020,22 +1045,30 @@
         "userProfile": {
           "name": "Perfil de usuario",
           "description": "Trigger en <code>@username</code> revela una tarjeta con avatar, nombre, rol y una métrica corta (ej.: seguidores). El enlace sigue siendo navegable por clic y por teclado.",
-          "use": "Menciones en feeds, comentarios y listas donde el nombre es el punto de entrada pero la página de perfil es la fuente primaria. Provee siempre una ruta alternativa (enlace clicable) para usuarios touch."
+          "use": "Menciones en feeds, comentarios y listas donde el nombre es el punto de entrada pero la página de perfil es la fuente primaria. Provee siempre una ruta alternativa (enlace clicable) para usuarios touch.",
+          "cardName": "Joana Silva",
+          "cardMeta": "Diseñadora · 142 seguidores"
         },
         "linkPreview": {
           "name": "Preview de enlace",
           "description": "Cabecera con favicon + URL truncada, título del destino y descripción corta. Reduce clics exploratorios al revelar metadatos antes de la navegación.",
-          "use": "Enlaces externos en artículos, documentación y mensajería. Evita en listas densas (demasiados hovers se vuelven ruido); usa <code>openDelay</code> ≥500ms."
+          "use": "Enlaces externos en artículos, documentación y mensajería. Evita en listas densas (demasiados hovers se vuelven ruido); usa <code>openDelay</code> ≥500ms.",
+          "cardDomain": "design-system.dev",
+          "cardTitle": "Guía de overlays accesibles"
         },
         "definitionTooltip": {
           "name": "Definición de término",
           "description": "Texto disparador con subrayado punteado abre una tarjeta con el término destacado y la definición en 1-2 frases. Complementa el glosario sin sacar al usuario del contexto.",
-          "use": "Términos técnicos, siglas (ej.: <code>WCAG 2.2 AA</code>) y jerga en prosa larga. Ten siempre un glosario o página dedicada como ruta alternativa de acceso."
+          "use": "Términos técnicos, siglas (ej.: <code>WCAG 2.2 AA</code>) y jerga en prosa larga. Ten siempre un glosario o página dedicada como ruta alternativa de acceso.",
+          "cardTerm": "WCAG 2.2",
+          "cardMeaning": "Web Content Accessibility Guidelines: estándar internacional de accesibilidad para contenido web."
         },
         "metricExplainer": {
           "name": "Métrica explicada",
           "description": "Valor numérico (ej.: <code>LCP 1.8s</code>) dispara una tarjeta con el nombre completo de la métrica, el valor con color semántico y la descripción de los umbrales (bueno/malo).",
-          "use": "Dashboards y reportes con KPIs, indicadores de rendimiento y métricas técnicas que necesitan contexto sin saturar la visualización principal."
+          "use": "Dashboards y reportes con KPIs, indicadores de rendimiento y métricas técnicas que necesitan contexto sin saturar la visualización principal.",
+          "cardMetric": "Conversión (últimos 30d)",
+          "cardFormula": "Clics en el CTA / usuarios únicos"
         }
       },
       "styles": {

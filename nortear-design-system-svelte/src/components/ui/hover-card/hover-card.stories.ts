@@ -77,7 +77,11 @@ const meta: Meta = {
     closeDelay: 100,
     defaultOpen: false,
     triggerLabel: '@joana',
-    variant: 'default',
+    // O Playground abre no cartão de PERFIL, como nas outras quatro stacks — e
+    // é esse exemplo que a Demonstração da docs page repete (guideline 08 §15).
+    // A variante `default` continua existindo para a story de Variantes, que é
+    // onde a espera padrão de 600ms/300ms é o assunto.
+    variant: 'userProfile',
   },
 };
 

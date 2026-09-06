@@ -50,7 +50,7 @@ const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger, Button
 
 const CARTAO_PERFIL = `
   <div class="nds-cluster" data-spacing="sm" data-align="start">
-    <div class="nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted" aria-hidden="true"></div>
+    <div class="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium" data-align="center" data-justify="center" aria-hidden="true">JS</div>
     <div class="nds-stack" data-spacing="xs">
       <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
       <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>

@@ -83,13 +83,16 @@ export const Playground: Story = {
   render: (args) => ({
     props: { ...args },
     template: `
-      <p class="nds-text-body nds-max-w-sm">
+      <p
+        class="nds-text-body nds-max-w-sm nds-min-h-50"
+        style="contain: layout; position: relative"
+      >
         Comentário de
         <span ndsHoverCard (openChange)="onOpenChange($event)">
           <a
             ndsHoverCardTrigger
             href="/users/joana"
-            class="nds-text-primary nds-font-medium"
+            class="nds-text-primary nds-font-medium nds-hover-underline"
             [openDelay]="openDelay"
             [closeDelay]="closeDelay"
           >{{ triggerLabel }}</a>

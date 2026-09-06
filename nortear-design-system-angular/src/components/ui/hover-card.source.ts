@@ -60,7 +60,7 @@ import { NDS_AVATAR } from '@/components/ui/avatar';
         <a
           ndsHoverCardTrigger
           href="/users/joana"
-          class="nds-text-primary nds-font-medium"${atrasos ? `\n          ${atrasos}` : ''}
+          class="nds-text-primary nds-font-medium nds-hover-underline"${atrasos ? `\n          ${atrasos}` : ''}
         >${triggerLabel}</a>
 
         <ng-template ndsHoverCardContent${position ? ` ${position}` : ''}>${CARTAO_PERFIL}

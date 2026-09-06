@@ -61,7 +61,27 @@
   border-radius: var(--radius);
   box-shadow: var(--elevation-xl);
 
-  transform-origin: var(--transform-origin, var(--reka-hover-card-content-transform-origin, center));
+  /* A cadeia tem de citar as TRÊS libs, e faltava a do Svelte — com um nome que
+   * a analogia erraria.
+   *
+   * Cada lib publica a origem com o seu prefixo: base-ui em `--transform-origin`
+   * (react), reka em `--reka-…` (vue), bits em `--bits-…` (svelte). No bits o
+   * equivalente do hover-card NÃO se chama hover-card: é `link-preview`, e é ele
+   * que o `hover-card-content.svelte` importa (`LinkPreview as
+   * HoverCardPrimitive`). O nome sai de `getFloatingContentCSSVars("link-preview")`
+   * em `bits/link-preview/components/link-preview-content.svelte:74`. Escrever
+   * `--bits-hover-card-…` por simetria com tooltip e popover produziria uma
+   * variável que não existe — e `center` é fallback válido, então nada reprovaria.
+   *
+   * Quem não tem lib cai em `center`: só o VANILLA, que não anima a entrada. O
+   * radix-ng (angular) publica `--transform-origin` no positioner e custom
+   * property herda, então resolve o primeiro degrau, o mesmo do base-ui.
+   *
+   * Sem o degrau do bits, só o SVELTE perdia a origem direcional — o cartão
+   * crescia do centro em vez de crescer do gatilho, em silêncio. Mesmo defeito
+   * que tooltip e popover carregavam; continua aberto em dropdown-menu,
+   * navigation-menu e select. */
+  transform-origin: var(--transform-origin, var(--reka-hover-card-content-transform-origin, var(--bits-link-preview-content-transform-origin, center)));
 }
 
 /*

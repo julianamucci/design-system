@@ -305,6 +305,26 @@ interface AnalyticsEvents {
     location?: string;
   };
 
+  /**
+   * Disparado quando um HoverCard abre.
+   *
+   * `trigger_label` é id ESTÁVEL do gatilho, nunca o texto dele: o conteúdo
+   * compartilhado documentava `label` com "texto do trigger", e texto traduzido
+   * parte o mesmo evento em um valor por idioma no GA4.
+   */
+  hover_card_open: {
+    component: string;
+    trigger_label?: string;
+    location?: string;
+  };
+
+  /** Disparado quando um HoverCard fecha. */
+  hover_card_close: {
+    component: string;
+    reason?: string;
+    location?: string;
+  };
+
   /** Disparado quando um Popover fecha. */
   popover_close: {
     component: string;
