@@ -6665,6 +6665,70 @@ function auditSnippetEmSlotDeProsa(slug) {
   return violations;
 }
 
+/**
+ * O CÓDIGO do snippet muda com o idioma de quem lê.
+ *
+ * As chaves `*Code` existem nos três idiomas, e a tradução varreu tudo que era
+ * texto — inclusive o nome das variáveis. O resultado é o mesmo exemplo
+ * publicando três códigos: `cabecalho` em pt-BR, `header` em en, `encabezado`
+ * em es. Duas pessoas lendo a mesma página em línguas diferentes copiam
+ * variáveis diferentes para o mesmo componente, e a regra da casa é que código
+ * se escreve em inglês.
+ *
+ * O `identificador_pt` não alcança isto: ele itera as STACKS e lê os arquivos
+ * de `src/`. Aqui o código é DADO — mora dentro de uma string de JSON —, e
+ * portão que lê código não abre conteúdo.
+ *
+ * A verificação é uma COMPARAÇÃO, não um vocabulário: extrai os identificadores
+ * declarados em cada idioma e cobra que sejam os mesmos. Sem lista de palavras
+ * não há morfologia para inundar — e ela pega o espanhol, que nenhuma lista de
+ * português pegaria. Comentário e literal de texto ficam de fora por
+ * construção: só entram nomes atrás de `const`/`let`/`var`/`function`, e esses
+ * SÃO para diferir entre idiomas.
+ */
+function auditCodigoTraduzidoEmSnippet(slug) {
+  const violations = [];
+  const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const raw = readFile(contentFile);
+  if (!raw) return violations;
+  let json = null;
+  try { json = JSON.parse(raw); } catch { return violations; }
+  if (!json || !json['pt-BR']) return violations;
+
+  const declaracoes = (texto) =>
+    [...String(texto).matchAll(/\b(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g)].map((m) => m[1]);
+
+  const caminhos = [];
+  const walk = (obj, prefixo) => {
+    for (const chave of Object.keys(obj || {})) {
+      const valor = obj[chave];
+      const caminho = prefixo ? `${prefixo}.${chave}` : chave;
+      if (valor && typeof valor === 'object') { walk(valor, caminho); continue; }
+      if (typeof valor === 'string' && caminho.includes('Code')) caminhos.push(caminho);
+    }
+  };
+  walk(json['pt-BR'], '');
+
+  const rel = relative(ROOT, contentFile).split('\\').join('/');
+  for (const caminho of caminhos) {
+    const em = (locale) => caminho.split('.').reduce((o, k) => (o == null ? o : o[k]), json[locale]);
+    const porIdioma = ['pt-BR', 'en', 'es'].map((locale) => {
+      const valor = em(locale);
+      return valor == null ? null : declaracoes(valor);
+    });
+    // Idioma faltando é assunto de outra regra — aqui só compara o que existe.
+    if (porIdioma.some((d) => d === null)) continue;
+    const assinaturas = porIdioma.map((d) => d.join(','));
+    if (new Set(assinaturas).size === 1) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug, stack: 'shared',
+      file: rel, line: 0, rule: 'codigo_traduzido_em_snippet',
+      message: `\`${caminho}\` publica código diferente por idioma — pt-BR declara [${assinaturas[0] || 'nada'}], en [${assinaturas[1] || 'nada'}], es [${assinaturas[2] || 'nada'}]. Comentário e texto de tela traduzem; nome de variável não, e código se escreve em inglês`,
+    });
+  }
+  return violations;
+}
+
 function auditSeo(slug) {
   const violations = [];
 
@@ -6769,6 +6833,7 @@ function runAudit(slug, category) {
       ...auditQuality(alvo),
       ...auditTraducaoRecortada(alvo),
       ...auditSnippetEmSlotDeProsa(alvo),
+      ...auditCodigoTraduzidoEmSnippet(alvo),
       ...auditSourceSemTeste(alvo),
     ],
     seo: auditSeo,
@@ -6786,6 +6851,7 @@ function runAudit(slug, category) {
     ...auditSeo(slug),
     ...auditTraducaoRecortada(slug),
     ...auditSnippetEmSlotDeProsa(slug),
+    ...auditCodigoTraduzidoEmSnippet(slug),
     ...auditSourceSemTeste(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
