@@ -21,7 +21,7 @@ const meta: Meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          'Overlay flutuante ativado por clique, com auto-flip por colisão, role=dialog e foco gerenciado. Sempre forneça PopoverTitle para acessibilidade.',
+          'Overlay flutuante ativado por clique, com auto-flip por colisão, role=dialog e foco gerenciado. O painel sempre tem nome acessível: título visível, ou aria-label quando o conteúdo é livre.',
       },
     },
   },

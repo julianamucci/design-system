@@ -48,7 +48,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para conteúdo contextual interativo — formulários curtos, filtros, seleção de cor.",
-        "item2": "Sempre forneça <code>PopoverTitle</code> — leitores de tela anunciam ao abrir o popover.",
+        "item2": "O painel sempre tem nome acessível — título visível, ou <code>aria-label</code> quando o conteúdo é livre.",
         "item3": "Não use para ações críticas ou destrutivas — use <code>AlertDialog</code>.",
         "item4": "Ative com clique, nunca com hover — para hover use <code>HoverCard</code> ou <code>Tooltip</code>."
       },
@@ -114,7 +114,7 @@
       },
       "do": {
         "title": "Use quando",
-        "item1": "Há conteúdo interativo contextual sem necessidade de modal",
+        "item1": "Há conteúdo interativo contextual que a pessoa resolve sem sair da página",
         "item2": "Um formulário curto pode ser preenchido inline",
         "item3": "Filtros ou seleções precisam de espaço próprio sem trocar de tela",
         "item4": "Configurações rápidas devem ficar próximas ao trigger"
@@ -331,7 +331,7 @@
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> aplicado automaticamente ao <code>PopoverContent</code>",
-        "item2": "<code>aria-labelledby</code> vinculado ao <code>PopoverTitle</code> quando presente",
+        "item2": "<code>aria-labelledby</code> aponta para o título quando há um; sem título visível, o nome vem de <code>aria-label</code>",
         "item3": "<code>aria-describedby</code> vinculado à <code>PopoverDescription</code> quando presente",
         "item4": "Foco move para o primeiro elemento focável ao abrir",
         "item5": "<code>Escape</code> fecha o popover e retorna foco ao trigger",
@@ -339,8 +339,8 @@
       },
       "keyboard": {
         "title": "Navegação por Teclado",
-        "tab": "Move foco entre elementos focáveis dentro do popover",
-        "shiftTab": "Move foco em sentido inverso",
+        "tab": "Percorre os elementos focáveis do painel; a partir do último, sai e segue a ordem da página. No modo modal volta ao primeiro.",
+        "shiftTab": "Percorre em sentido inverso; a partir do primeiro, sai do painel. No modo modal vai ao último.",
         "escape": "Fecha o popover e retorna foco ao trigger",
         "enter": "Ativa o trigger ou elemento focado",
         "space": "Ativa o trigger quando é botão"
@@ -348,13 +348,13 @@
       "aria": {
         "title": "Atributos ARIA",
         "role": "<code>role=\"dialog\"</code> no <code>PopoverContent</code>",
-        "labelledBy": "<code>aria-labelledby</code> aponta para o <code>PopoverTitle</code>",
+        "labelledBy": "<code>aria-labelledby</code> aponta para o título; sem título, o nome vem de <code>aria-label</code>",
         "describedBy": "<code>aria-describedby</code> aponta para a <code>PopoverDescription</code>",
         "expanded": "<code>aria-expanded</code> no trigger reflete o estado open/closed"
       },
       "screenReader": {
         "title": "Leitor de Tela",
-        "open": "Anuncia o título e o tipo \"diálogo\" ao abrir",
+        "open": "Anuncia o nome do painel e o tipo \"diálogo\" ao abrir",
         "describe": "Lê a descrição em sequência ao título",
         "close": "Anuncia o retorno ao trigger ao fechar com Escape"
       }
@@ -426,7 +426,7 @@
         },
         "item4": {
           "action": "Tab dentro do popover",
-          "result": "Move foco entre elementos focáveis internos",
+          "result": "Percorre os focáveis internos e, a partir do último, sai do painel — o padrão é não-modal",
           "priority": "medium"
         }
       },
@@ -437,7 +437,7 @@
         "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.2 AA)",
         "item3": "Focus ring visível em todos os elementos focáveis",
         "item4": "role=\"dialog\" presente no PopoverContent",
-        "item5": "aria-labelledby aponta para PopoverTitle quando presente"
+        "item5": "O painel tem nome acessível: aria-labelledby quando há título, aria-label quando o conteúdo é livre"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -531,7 +531,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for contextual interactive content — short forms, filters, color picker.",
-        "item2": "Always provide <code>PopoverTitle</code> — screen readers announce it on open.",
+        "item2": "The panel always has an accessible name — a visible title, or <code>aria-label</code> when the content is free.",
         "item3": "Don't use for critical or destructive actions — use <code>AlertDialog</code>.",
         "item4": "Activate with click, never with hover — for hover use <code>HoverCard</code> or <code>Tooltip</code>."
       },
@@ -597,7 +597,7 @@
       },
       "do": {
         "title": "Use when",
-        "item1": "There is contextual interactive content without need for a modal",
+        "item1": "There is contextual interactive content the person handles without leaving the page",
         "item2": "A short form can be filled inline",
         "item3": "Filters or selections need their own space without changing screens",
         "item4": "Quick settings should stay close to the trigger"
@@ -814,7 +814,7 @@
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> applied automatically to the <code>PopoverContent</code>",
-        "item2": "<code>aria-labelledby</code> linked to <code>PopoverTitle</code> when present",
+        "item2": "<code>aria-labelledby</code> points to the title when there is one; with no visible title, the name comes from <code>aria-label</code>",
         "item3": "<code>aria-describedby</code> linked to <code>PopoverDescription</code> when present",
         "item4": "Focus moves to the first focusable element on open",
         "item5": "<code>Escape</code> closes the popover and returns focus to trigger",
@@ -822,8 +822,8 @@
       },
       "keyboard": {
         "title": "Keyboard Navigation",
-        "tab": "Moves focus between focusable elements inside the popover",
-        "shiftTab": "Moves focus in reverse",
+        "tab": "Walks the panel’s focusable elements; from the last one it leaves and follows the page order. In modal mode it returns to the first.",
+        "shiftTab": "Walks them in reverse; from the first one it leaves the panel. In modal mode it goes to the last.",
         "escape": "Closes the popover and returns focus to trigger",
         "enter": "Activates trigger or focused element",
         "space": "Activates trigger when it's a button"
@@ -831,13 +831,13 @@
       "aria": {
         "title": "ARIA Attributes",
         "role": "<code>role=\"dialog\"</code> on the <code>PopoverContent</code>",
-        "labelledBy": "<code>aria-labelledby</code> points to <code>PopoverTitle</code>",
+        "labelledBy": "<code>aria-labelledby</code> points to the title; with no title, the name comes from <code>aria-label</code>",
         "describedBy": "<code>aria-describedby</code> points to <code>PopoverDescription</code>",
         "expanded": "<code>aria-expanded</code> on trigger reflects open/closed state"
       },
       "screenReader": {
         "title": "Screen Reader",
-        "open": "Announces the title and \"dialog\" role on open",
+        "open": "Announces the panel name and the \"dialog\" type on open",
         "describe": "Reads the description after the title",
         "close": "Announces return to trigger when closed with Escape"
       }
@@ -909,7 +909,7 @@
         },
         "item4": {
           "action": "Tab inside the popover",
-          "result": "Moves focus between internal focusable elements",
+          "result": "Walks the inner focusables and, from the last one, leaves the panel — the default is non-modal",
           "priority": "medium"
         }
       },
@@ -920,7 +920,7 @@
         "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.2 AA)",
         "item3": "Visible focus ring on all focusable elements",
         "item4": "role=\"dialog\" present on PopoverContent",
-        "item5": "aria-labelledby points to PopoverTitle when present"
+        "item5": "The panel has an accessible name: aria-labelledby when there is a title, aria-label when the content is free"
       },
       "visual": {
         "title": "Visual Regression",
@@ -1014,7 +1014,7 @@
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para contenido contextual interactivo — formularios cortos, filtros, selector de color.",
-        "item2": "Provee siempre <code>PopoverTitle</code> — los lectores de pantalla lo anuncian al abrir.",
+        "item2": "El panel siempre tiene nombre accesible — título visible, o <code>aria-label</code> cuando el contenido es libre.",
         "item3": "No uses para acciones críticas o destructivas — usa <code>AlertDialog</code>.",
         "item4": "Activa con clic, nunca con hover — para hover usa <code>HoverCard</code> o <code>Tooltip</code>."
       },
@@ -1080,7 +1080,7 @@
       },
       "do": {
         "title": "Usa cuando",
-        "item1": "Hay contenido interactivo contextual sin necesidad de modal",
+        "item1": "Hay contenido interactivo contextual que la persona resuelve sin salir de la página",
         "item2": "Un formulario corto puede llenarse inline",
         "item3": "Filtros o selecciones necesitan su propio espacio sin cambiar de pantalla",
         "item4": "Configuraciones rápidas deben quedar cerca del trigger"
@@ -1297,7 +1297,7 @@
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> aplicado automáticamente al <code>PopoverContent</code>",
-        "item2": "<code>aria-labelledby</code> vinculado al <code>PopoverTitle</code> cuando está presente",
+        "item2": "<code>aria-labelledby</code> apunta al título cuando lo hay; sin título visible, el nombre viene de <code>aria-label</code>",
         "item3": "<code>aria-describedby</code> vinculado a <code>PopoverDescription</code> cuando está presente",
         "item4": "El foco se mueve al primer elemento focalizable al abrir",
         "item5": "<code>Escape</code> cierra el popover y devuelve el foco al trigger",
@@ -1305,8 +1305,8 @@
       },
       "keyboard": {
         "title": "Navegación por Teclado",
-        "tab": "Mueve el foco entre elementos focalizables dentro del popover",
-        "shiftTab": "Mueve el foco en sentido inverso",
+        "tab": "Recorre los elementos enfocables del panel; desde el último sale y sigue el orden de la página. En modo modal vuelve al primero.",
+        "shiftTab": "Los recorre en sentido inverso; desde el primero sale del panel. En modo modal va al último.",
         "escape": "Cierra el popover y devuelve el foco al trigger",
         "enter": "Activa el trigger o elemento focalizado",
         "space": "Activa el trigger cuando es botón"
@@ -1314,13 +1314,13 @@
       "aria": {
         "title": "Atributos ARIA",
         "role": "<code>role=\"dialog\"</code> en el <code>PopoverContent</code>",
-        "labelledBy": "<code>aria-labelledby</code> apunta a <code>PopoverTitle</code>",
+        "labelledBy": "<code>aria-labelledby</code> apunta al título; sin título, el nombre viene de <code>aria-label</code>",
         "describedBy": "<code>aria-describedby</code> apunta a <code>PopoverDescription</code>",
         "expanded": "<code>aria-expanded</code> en el trigger refleja el estado open/closed"
       },
       "screenReader": {
         "title": "Lector de Pantalla",
-        "open": "Anuncia el título y el rol \"diálogo\" al abrir",
+        "open": "Anuncia el nombre del panel y el tipo \"diálogo\" al abrir",
         "describe": "Lee la descripción en secuencia tras el título",
         "close": "Anuncia el regreso al trigger al cerrar con Escape"
       }
@@ -1392,7 +1392,7 @@
         },
         "item4": {
           "action": "Tab dentro del popover",
-          "result": "Mueve el foco entre elementos focalizables internos",
+          "result": "Recorre los enfocables internos y, desde el último, sale del panel — el valor por defecto es no modal",
           "priority": "medium"
         }
       },
@@ -1403,7 +1403,7 @@
         "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.2 AA)",
         "item3": "Anillo de foco visible en todos los elementos focalizables",
         "item4": "role=\"dialog\" presente en el PopoverContent",
-        "item5": "aria-labelledby apunta a PopoverTitle cuando está presente"
+        "item5": "El panel tiene nombre accesible: aria-labelledby cuando hay título, aria-label cuando el contenido es libre"
       },
       "visual": {
         "title": "Regresión Visual",

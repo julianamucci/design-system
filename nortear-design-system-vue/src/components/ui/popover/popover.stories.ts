@@ -25,7 +25,7 @@ const meta = {
       source: { transform: popoverSource },
       description: {
         component:
-          'Popover é um overlay flutuante ativado por clique, renderizado em portal com role=dialog. Sempre forneça PopoverTitle para a11y. Use para conteúdo interativo curto — formulários, filtros, configurações contextuais.',
+          'Popover é um overlay flutuante ativado por clique, renderizado em portal com role=dialog. O painel sempre tem nome acessível: título visível, ou aria-label quando o conteúdo é livre. Use para conteúdo interativo curto — formulários, filtros, configurações contextuais.',
       },
     },
   },
