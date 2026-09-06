@@ -18,7 +18,20 @@
         "share": "Compartilhar link",
         "saveButton": "Salvar",
         "deleteButton": "Excluir",
-        "shareButton": "Compartilhar"
+        "shareButton": "Compartilhar",
+        "longBalloonDont": "Clique aqui para salvar o documento e voltar à tela inicial.",
+        "apiTokenLabel": "Token de API",
+        "apiTokenHelp": "Ajuda sobre Token de API",
+        "apiTokenHint": "Gere em Configurações › Acesso › Tokens",
+        "lcpHelp": "O que é LCP",
+        "lcpHint": "Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.",
+        "lcpValue": "1,8 s",
+        "shareHint": "Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo",
+        "lcpLabel": "LCP",
+        "sideTop": "Top",
+        "sideRight": "Right",
+        "sideBottom": "Bottom",
+        "sideLeft": "Left"
       }
     },
     "anatomy": {
@@ -41,7 +54,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use APENAS para informação complementar — nunca para conteúdo obrigatório.",
-        "item2": "<code>TooltipProvider</code> é obrigatório no root da app — sem ele, tooltips não aparecem.",
+        "item2": "O provedor fica uma única vez no root da aplicação — é ele que governa o atraso de abertura. Onde a camada de comportamento trabalha por contexto, sem provedor o balão não aparece.",
         "item3": "Para conteúdo interativo, use <code>Popover</code>; para preview rico, use <code>HoverCard</code>.",
         "item4": "Em botões icon-only, o <code>aria-label</code> no botão é obrigatório — o Tooltip é complementar, não substitui."
       },
@@ -190,7 +203,7 @@
       "hover": {
         "label": "Hover",
         "trigger": "mouseenter no trigger",
-        "behavior": "Mouse sobre o trigger — abre após <code>delay</code> do Provider."
+        "behavior": "Mouse sobre o trigger — abre depois do atraso do provedor."
       },
       "focus": {
         "label": "Focus",
@@ -359,7 +372,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o atraso de abertura, a exibição por foco além do ponteiro, o descarte por Escape, o posicionamento ancorado e a ligação por <code>aria-describedby</code> vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-tooltip-*</code>. Trocar a camada de comportamento não muda o desenho.",
-      "item2": "<strong>TooltipProvider obrigatório</strong> — colocar no root da app uma única vez. Sem ele, tooltips simplesmente não aparecem.",
+      "item2": "<strong>Provedor no root</strong> — uma única vez, no root da aplicação. Ele governa o atraso de abertura e a espera compartilhada: enquanto o grupo está quente, o balão vizinho abre na hora. Onde a camada de comportamento trabalha por contexto, o provedor é obrigatório e sem ele o balão não aparece; onde não trabalha, ele é opcional e o que se perde é só a espera compartilhada.",
       "item3": "<strong>Não-interativo</strong> — Tooltip é texto descritivo apenas. Para conteúdo clicável use Popover ou HoverCard.",
       "item4": "<strong>Mobile</strong> — sem hover, o tooltip não aparece em touch. Botão icon-only deve ter <code>aria-label</code> próprio."
     },
@@ -473,7 +486,20 @@
         "share": "Share link",
         "saveButton": "Save",
         "deleteButton": "Delete",
-        "shareButton": "Share"
+        "shareButton": "Share",
+        "longBalloonDont": "Click here to save the document and go back to the home screen.",
+        "apiTokenLabel": "API token",
+        "apiTokenHelp": "Help with API token",
+        "apiTokenHint": "Generate it under Settings › Access › Tokens",
+        "lcpHelp": "What is LCP",
+        "lcpHint": "Largest Contentful Paint — time until the largest visible element is rendered.",
+        "lcpValue": "1.8 s",
+        "shareHint": "Creates a read-only public link — anyone with the link can see the content",
+        "lcpLabel": "LCP",
+        "sideTop": "Top",
+        "sideRight": "Right",
+        "sideBottom": "Bottom",
+        "sideLeft": "Left"
       }
     },
     "anatomy": {
@@ -496,7 +522,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use ONLY for supplementary information — never for required content.",
-        "item2": "<code>TooltipProvider</code> is required at app root — without it, tooltips don't appear.",
+        "item2": "The provider sits once at the app root — it governs the opening delay. Where the behaviour layer works by context, without a provider the tooltip never appears.",
         "item3": "For interactive content, use <code>Popover</code>; for rich preview, use <code>HoverCard</code>.",
         "item4": "On icon-only buttons, the button's <code>aria-label</code> is required — Tooltip is supplementary, doesn't replace it."
       },
@@ -645,7 +671,7 @@
       "hover": {
         "label": "Hover",
         "trigger": "mouseenter on the trigger",
-        "behavior": "Mouse over trigger — opens after Provider <code>delay</code>."
+        "behavior": "Mouse over the trigger — opens after the provider delay."
       },
       "focus": {
         "label": "Focus",
@@ -814,7 +840,7 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the open delay, showing on focus as well as on pointer, dismissal by Escape, anchored positioning and the <code>aria-describedby</code> link come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-tooltip-*</code> classes. Swapping the behaviour layer does not change the design.",
-      "item2": "<strong>TooltipProvider required</strong> — place at app root once. Without it, tooltips simply don't appear.",
+      "item2": "<strong>Provider at the root</strong> — once, at the app root. It governs the opening delay and the shared wait: while the group is warm, a neighbouring tooltip opens instantly. Where the behaviour layer works by context the provider is required and without it the tooltip never appears; where it does not, the provider is optional and all that is lost is the shared wait.",
       "item3": "<strong>Non-interactive</strong> — Tooltip is descriptive text only. For clickable content use Popover or HoverCard.",
       "item4": "<strong>Mobile</strong> — without hover, tooltip doesn't appear on touch. Icon-only button must have its own <code>aria-label</code>."
     },
@@ -928,7 +954,20 @@
         "share": "Compartir enlace",
         "saveButton": "Guardar",
         "deleteButton": "Eliminar",
-        "shareButton": "Compartir"
+        "shareButton": "Compartir",
+        "longBalloonDont": "Haz clic aquí para guardar el documento y volver a la pantalla inicial.",
+        "apiTokenLabel": "Token de API",
+        "apiTokenHelp": "Ayuda sobre el token de API",
+        "apiTokenHint": "Genéralo en Configuración › Acceso › Tokens",
+        "lcpHelp": "Qué es LCP",
+        "lcpHint": "Largest Contentful Paint — tiempo hasta que se renderiza el elemento visible más grande.",
+        "lcpValue": "1,8 s",
+        "shareHint": "Crea un enlace público de solo lectura — cualquiera con el enlace ve el contenido",
+        "lcpLabel": "LCP",
+        "sideTop": "Top",
+        "sideRight": "Right",
+        "sideBottom": "Bottom",
+        "sideLeft": "Left"
       }
     },
     "anatomy": {
@@ -951,7 +990,7 @@
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa SOLO para información complementaria — nunca para contenido obligatorio.",
-        "item2": "<code>TooltipProvider</code> es obligatorio en el root de la app — sin él, los tooltips no aparecen.",
+        "item2": "El proveedor vive una sola vez en el root de la aplicación — es él quien gobierna el retraso de apertura. Donde la capa de comportamiento trabaja por contexto, sin proveedor el globo no aparece.",
         "item3": "Para contenido interactivo, usa <code>Popover</code>; para vista previa rica, usa <code>HoverCard</code>.",
         "item4": "En botones icon-only, el <code>aria-label</code> del botón es obligatorio — el Tooltip es complementario, no sustituye."
       },
@@ -1100,7 +1139,7 @@
       "hover": {
         "label": "Hover",
         "trigger": "mouseenter en el trigger",
-        "behavior": "Mouse sobre el trigger — abre tras el <code>delay</code> del Provider."
+        "behavior": "Mouse sobre el trigger — abre tras el retraso del proveedor."
       },
       "focus": {
         "label": "Focus",
@@ -1269,7 +1308,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el retraso de apertura, la aparición por foco además del puntero, el descarte por Escape, el posicionamiento anclado y el vínculo por <code>aria-describedby</code> vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-tooltip-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
-      "item2": "<strong>TooltipProvider obligatorio</strong> — colocar en el root de la app una sola vez. Sin él, los tooltips simplemente no aparecen.",
+      "item2": "<strong>Proveedor en el root</strong> — una sola vez, en el root de la aplicación. Gobierna el retraso de apertura y la espera compartida: mientras el grupo está caliente, el globo vecino abre al instante. Donde la capa de comportamiento trabaja por contexto el proveedor es obligatorio y sin él el globo no aparece; donde no, es opcional y lo único que se pierde es la espera compartida.",
       "item3": "<strong>No interactivo</strong> — el Tooltip es solo texto descriptivo. Para contenido clicable usa Popover o HoverCard.",
       "item4": "<strong>Móvil</strong> — sin hover, el tooltip no aparece en touch. El botón icon-only debe tener su propio <code>aria-label</code>."
     },
