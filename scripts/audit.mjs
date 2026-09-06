@@ -6351,6 +6351,80 @@ function auditQuality(slug) {
  * caracteres e a descrição por volta de 155 — passar disso não é penalidade, é
  * a frase sendo cortada no meio para quem procura.
  */
+/**
+ * Texto de tela RECORTADO de um texto traduzido.
+ *
+ * Quatro ocorrências em dois componentes, todas achadas por leitura humana e
+ * nenhuma por portão, o que é o motivo desta regra existir:
+ *
+ *   · `rotuloVago()` no popover do angular — `stripHtml(t(…)).split(' ')[0]`,
+ *     para derivar o rótulo vago do anti-exemplo. A legenda prometia "Clique
+ *     aqui" e o preview mostrava a primeira palavra de OUTRA chave: um verbo
+ *     truncado, que não é rótulo vago, é outro defeito.
+ *   · `codesFrom()` no popover do angular — extraía as tags `<code>` da
+ *     DESCRIÇÃO em prosa da composição para montar a lista de opções do filtro.
+ *   · `primeiraFrase()` no hover-card do angular — cortava a descrição da
+ *     variante no primeiro ponto final para virar resumo do cartão.
+ *   · `t('usage.scenarios.item1.s')` no hover-card do angular — célula de tabela
+ *     de cenários usada como rótulo de interface.
+ *
+ * A assinatura é sempre a mesma e é o que a regra procura: o texto que aparece
+ * na tela não é uma CHAVE, é o recorte de outra. Some com isso a garantia que o
+ * conteúdo compartilhado dá — quem reescreve a descrição não tem como saber que
+ * mudou um rótulo, o TypeScript não vê, o teste não vê, e o resultado continua
+ * sendo uma string plausível. Foi assim que uma legenda passou meses prometendo
+ * uma coisa e o preview mostrando outra.
+ *
+ * A cirurgia precisa cair no RESULTADO da tradução. A primeira versão desta
+ * varredura olhava uma janela depois da chamada e acusava `key.charAt(0) +
+ * key.slice(1)` — cirurgia sobre a CHAVE, que é identificador de código e não
+ * texto de ninguém. Quatro dos nove achados eram isso.
+ *
+ * Duas formas, porque as quatro ocorrências se dividiam entre elas: cirurgia
+ * encadeada na chamada, e variável que recebe a tradução e é recortada logo
+ * adiante. O nome da variável entra por busca de texto, não por regex montado:
+ * `new RegExp` com escape em string é onde esta campanha tropeçou quatro vezes.
+ */
+function auditTraducaoRecortada(slug) {
+  const violations = [];
+  const METODOS = ['split', 'slice', 'substring', 'substr', 'indexOf', 'match', 'charAt'];
+  const DIRETO = /\b(?:t|tContent|tNav|tStore)\s*\([^()]*\)[\s)]*\.(split|slice|substring|substr|indexOf|match|charAt)\s*\(/g;
+  const ATRIB = /\b(?:const|let|var)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*[^;]*\b(?:t|tContent|tNav|tStore)\s*\(/g;
+
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+      const linhaDe = (i) => content.slice(0, i).split('\n').length;
+      const acusar = (index, trecho) => violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: rel, line: linhaDe(index), rule: 'traducao_recortada',
+        message: `texto de tela recortado de uma tradução (${trecho}) — o que aparece na tela tem de ser uma CHAVE, não o pedaço de outra: quem reescrever o texto de origem muda este rótulo sem saber, e nada reprova`,
+      });
+
+      let m;
+      DIRETO.lastIndex = 0;
+      while ((m = DIRETO.exec(content)) !== null) {
+        acusar(m.index, m[0].replace(/\s+/g, ' ').slice(0, 60));
+      }
+      ATRIB.lastIndex = 0;
+      while ((m = ATRIB.exec(content)) !== null) {
+        const nome = m[1];
+        const janela = content.slice(m.index, m.index + 400);
+        for (const metodo of METODOS) {
+          if (janela.includes(nome + '.' + metodo + '(')) {
+            acusar(m.index, nome + '.' + metodo + '(…)');
+            break;
+          }
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 function auditSeo(slug) {
   const violations = [];
 
@@ -6462,6 +6536,7 @@ function runAudit(slug, category) {
     ...auditAnalytics(slug),
     ...auditQuality(slug),
     ...auditSeo(slug),
+    ...auditTraducaoRecortada(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
     ...auditSnippetSemLastro(slug),
