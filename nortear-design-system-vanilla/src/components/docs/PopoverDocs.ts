@@ -1073,7 +1073,7 @@ export function createPopoverDescription(options?: PopoverPartOptions): HTMLElem
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: t('props.extensibilityCode'),
+          extensibilityCode: t('props.extensibilityCode'),
         });
       }
 

@@ -599,7 +599,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: t('props.extensibilityCode'),
+          extensibilityCode: t('props.extensibilityCode'),
         });
       }
 

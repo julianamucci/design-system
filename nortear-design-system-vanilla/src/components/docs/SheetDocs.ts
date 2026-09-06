@@ -875,7 +875,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: t('props.extensibilityCode'),
+          extensibilityCode: t('props.extensibilityCode'),
         });
       }
 

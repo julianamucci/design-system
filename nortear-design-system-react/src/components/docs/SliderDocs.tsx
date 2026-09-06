@@ -780,7 +780,7 @@ interface SliderProps {
         ]}
         interfaceCode={interfaceCode}
         extensibilityTitle={tContent("props.extensibilityTitle")}
-        extensibilityNotes={tContent("props.extensibilityCode")}
+        extensibilityCode={tContent("props.extensibilityCode")}
       />
 
       {/* ── Tokens ────────────────────────────────────────────────── */}

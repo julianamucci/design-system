@@ -743,7 +743,7 @@ export function createNavigationMenu(
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes:
+          extensibilityCode:
             t('props.extensibilityCode') +
             '\n\n// Cada painel abre numa <div> própria, ancorada ao seu gatilho — não há\n// um viewport único compartilhado entre eles, nem indicador deslizante\n// acompanhando qual gatilho está aberto. A transição é a do painel, e não a\n// de uma caixa que muda de tamanho entre um gatilho e o vizinho.',
         });

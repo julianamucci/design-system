@@ -742,7 +742,7 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: t('props.extensibilityCode'),
+          extensibilityCode: t('props.extensibilityCode'),
         });
       }
 

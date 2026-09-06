@@ -679,7 +679,7 @@ import { Bold } from "lucide-react";`;
         ]}
         interfaceCode={interfaceCode}
         extensibilityTitle={tContent("props.extensibilityTitle")}
-        extensibilityNotes={tContent("props.extensibilityCode")}
+        extensibilityCode={tContent("props.extensibilityCode")}
       />
 
       {/* ── Tokens ────────────────────────────────────────────────── */}

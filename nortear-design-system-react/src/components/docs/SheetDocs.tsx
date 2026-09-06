@@ -956,7 +956,7 @@ export function SheetDocs() {
           },
         ]}
         extensibilityTitle={tContent("props.extensibilityTitle")}
-        extensibilityNotes={tContent("props.extensibilityCode")}
+        extensibilityCode={tContent("props.extensibilityCode")}
       />
 
       <DocsTokens

@@ -863,7 +863,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     ]}
     interfaceCode={interfaceCode}
     extensibilityTitle={$tStore('props.extensibilityTitle')}
-    extensibilityNotes={$tStore('props.extensibilityCode')}
+    extensibilityCode={$tStore('props.extensibilityCode')}
   />
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->

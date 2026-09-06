@@ -531,7 +531,7 @@ export function createResizablePanel(
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes:
+          extensibilityCode:
             t('props.extensibilityCode') +
             '\n\n// NOTA: a factory não persiste tamanhos — não há autoSaveId nem id por\n// painel. Para guardar o layout entre sessões, escute onLayout e grave o\n// array de tamanhos você mesmo.',
         });

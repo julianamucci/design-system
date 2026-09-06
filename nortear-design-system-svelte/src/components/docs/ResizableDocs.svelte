@@ -545,7 +545,7 @@ interface HandleProps {
     ]}
     interfaceCode={interfaceCode}
     extensibilityTitle={$tStore('props.extensibilityTitle')}
-    extensibilityNotes={$tStore('props.extensibilityCode')}
+    extensibilityCode={$tStore('props.extensibilityCode')}
   />
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->

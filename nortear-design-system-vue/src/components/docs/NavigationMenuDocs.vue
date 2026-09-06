@@ -1080,7 +1080,7 @@ const a11yCritCols = computed(() => ({
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
-      :extensibility-notes="tContent('props.extensibilityCode')"
+      :extensibility-code="tContent('props.extensibilityCode')"
     />
 
     <!-- ── Tokens ───────────────────────────────────────────────── -->

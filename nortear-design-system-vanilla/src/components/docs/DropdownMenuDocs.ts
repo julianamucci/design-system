@@ -653,7 +653,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: t('props.extensibilityCode'),
+          extensibilityCode: t('props.extensibilityCode'),
         });
       }
 

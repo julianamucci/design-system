@@ -731,7 +731,7 @@ export function createMenubar(
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes:
+          extensibilityCode:
             t('props.extensibilityCode') +
             '\n\n// NOTA Nortear: o factory custom não possui MenubarSub/SubTrigger/SubContent.\n// Para hierarquia, prefira reorganizar os menus em estrutura plana, ou utilize\n// as stacks React/Vue/Svelte que possuem submenu via base-ui/reka-ui/bits-ui.',
         });

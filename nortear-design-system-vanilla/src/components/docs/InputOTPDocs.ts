@@ -624,7 +624,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes:
+          extensibilityCode:
             t('props.extensibilityCode') +
             '\n\n// NOTA Nortear: props pattern, value, onChange e autoFocus do contrato\n// React/Vue/Svelte não existem no factory custom. Use onValueChange/onComplete\n// e ajuste o filtro de paste para suportar alfanumérico.',
         });
