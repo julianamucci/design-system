@@ -6598,6 +6598,73 @@ function auditTraducaoRecortada(slug) {
   return violations;
 }
 
+/**
+ * Chave `*Code` entregue a um slot de PROSA.
+ *
+ * Os containers de seção têm dois slots para o mesmo assunto: um que
+ * renderiza bloco de código e outro que renderiza texto por `innerHTML`. Passar
+ * o snippet pelo segundo não quebra nada — ele aparece, sem realce, com as
+ * quebras de linha colapsadas, como um parágrafo. Compila, passa no lint, passa
+ * no axe, e o único jeito de ver é abrir a página e reparar.
+ *
+ * A verificação é NEGATIVA de propósito: em vez de exigir que a chave caia num
+ * slot chamado `*Code` — o que reprovaria um `snippet={…}` legítimo —, ela
+ * acusa a chave caindo em nome com vocabulário de prosa. Falso positivo aqui
+ * custa mais que falso negativo, porque portão que despeja backlog ensina a
+ * ignorar o portão.
+ */
+function auditSnippetEmSlotDeProsa(slug) {
+  const violations = [];
+  const PROSA = /(notes?|descriptions?|captions?|texts?|labels?|titles?|summary|hint|body)$/i;
+
+  // Um por sintaxe de stack. Todos capturam (1) o nome do destino e (2) a chave.
+  const FORMAS = [
+    // react/svelte:  extensibilityNotes={tContent("props.extensibilityCode")}
+    /([A-Za-z][\w-]*)\s*=\s*\{[^{}]*\bt(?:Content|Store|Nav)?\s*\(\s*['"]([^'"]*Code)['"]/g,
+    // vue:           :extensibility-notes="tContent('props.extensibilityCode')"
+    /:([A-Za-z][\w-]*)\s*=\s*"[^"]*\bt(?:Content|Store|Nav)?\s*\(\s*'([^']*Code)'/g,
+    // angular:       [extensibilityNotes]="t('props.extensibilityCode')"
+    /\[([A-Za-z][\w-]*)\]\s*=\s*"[^"]*\bt(?:Content|Store|Nav)?\s*\(\s*'([^']*Code)'/g,
+    // vanilla:       extensibilityNotes: t('props.extensibilityCode')
+    /([A-Za-z][\w-]*)\s*:\s*[^,;{}]*\bt(?:Content|Store|Nav)?\s*\(\s*['"]([^'"]*Code)['"]/g,
+  ];
+
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      // Comentário fora: o docblock que EXPLICA a regra cita os dois nomes, e
+      // portão que casa palavra solta mede prosa — já reprovou um comentário
+      // nesta casa.
+      const content = stripComments(bruto);
+      const rel = relative(ROOT, file);
+      const vistos = new Set();
+
+      for (const forma of FORMAS) {
+        forma.lastIndex = 0;
+        let m;
+        while ((m = forma.exec(content)) !== null) {
+          const destino = m[1];
+          const chave = m[2];
+          const camel = destino.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+          if (!PROSA.test(camel)) continue;
+          const assinatura = `${camel}:${chave}`;
+          if (vistos.has(assinatura)) continue;
+          vistos.add(assinatura);
+          violations.push({
+            category: 'quality', severity: 'high', slug, stack,
+            file: rel, line: content.slice(0, m.index).split('\n').length,
+            rule: 'snippet_em_slot_de_prosa',
+            message: `\`${chave}\` é snippet e está sendo entregue a \`${destino}\`, que renderiza PROSA — o código sai sem realce e com as quebras de linha colapsadas, como um parágrafo. O container tem o slot de código ao lado; nada reprova porque a página compila e renderiza`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 function auditSeo(slug) {
   const violations = [];
 
@@ -6701,6 +6768,7 @@ function runAudit(slug, category) {
     quality: (alvo) => [
       ...auditQuality(alvo),
       ...auditTraducaoRecortada(alvo),
+      ...auditSnippetEmSlotDeProsa(alvo),
       ...auditSourceSemTeste(alvo),
     ],
     seo: auditSeo,
@@ -6717,6 +6785,7 @@ function runAudit(slug, category) {
     ...auditQuality(slug),
     ...auditSeo(slug),
     ...auditTraducaoRecortada(slug),
+    ...auditSnippetEmSlotDeProsa(slug),
     ...auditSourceSemTeste(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
