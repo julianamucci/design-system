@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';
 import { createButton, createButtonIcon, type ButtonIconKind } from '@/components/ui/button';
+import { createKbd } from '@/components/ui/kbd';
 import uiTranslations from '@/i18n/ui.json';
 import tooltipTranslations from '@shared/content/tooltip/translations.json';
 
@@ -163,13 +164,26 @@ function demoIconButton(kind: ButtonIconKind, ariaLabel: string): HTMLButtonElem
   });
 }
 
-function makeIconButton(ariaLabel: string): HTMLButtonElement {
-  return createButton({
-    variant: 'outline',
-    size: 'icon',
-    'aria-label': ariaLabel,
-    children: createButtonIcon('download'),
-  });
+/**
+ * Conteúdo do balão que traz um atalho: o rótulo e as duas teclas.
+ *
+ * O `content` da fábrica aceita elemento já montado — o caminho documentado na
+ * própria página —, e aceita UM. O invólucro sai do layout com
+ * `display: contents` para que rótulo e teclas sejam itens de flex do próprio
+ * balão, com o mesmo respiro que as outras quatro stacks têm ali.
+ *
+ * E é a tecla que aciona `.nds-tooltip-content:has([data-slot="kbd"])`, a regra
+ * da folha compartilhada que encurta o respiro à direita. Sem `<kbd>` o balão
+ * era a string "Salvar (Ctrl+S)": a variante que existe para demonstrar o
+ * atalho não demonstrava o tratamento do atalho.
+ */
+function buildShortcutContent(label: string): HTMLElement {
+  const wrapper = document.createElement('span');
+  wrapper.style.display = 'contents';
+  const labelText = document.createElement('span');
+  labelText.textContent = label;
+  wrapper.append(labelText, createKbd({ text: 'Ctrl' }), createKbd({ text: 'S' }));
+  return wrapper;
 }
 
 // tooltip_view usa o callback onShow da factory: dispara quando o tooltip é
@@ -184,35 +198,33 @@ function trackTooltipView(location: string, triggerId: string): () => void {
     track('tooltip_view', { component: 'tooltip', trigger_id: triggerId, location });
 }
 
+// A forma canônica é o gatilho SÓ DE ÍCONE — é ele que precisa do balão, porque
+// não tem rótulo visível. Aqui a variante era um botão de texto, e mostrava um
+// caso em que o balão é o menos necessário.
 function buildDefaultTooltip(): HTMLElement {
-  const trigger = createButton({
-    variant: 'outline',
-    label: t('demonstration.labels.saveButton'),
-    'aria-label': t('demonstration.labels.saveButton'),
-  });
   return createTooltip({
-    trigger,
-    content: t('demonstration.labels.save'),
+    trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
+    content: t('demonstration.labels.saveButton'),
     side: 'top',
     onShow: trackTooltipView('docs_variantes', 'default'),
   });
 }
 
 function buildWithShortcutTooltip(): HTMLElement {
-  const trigger = makeIconButton(t('demonstration.labels.saveButton'));
   return createTooltip({
-    trigger,
-    content: t('demonstration.labels.save'),
+    trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
+    content: buildShortcutContent(t('demonstration.labels.saveButton')),
     side: 'bottom',
     onShow: trackTooltipView('docs_variantes', 'withShortcut'),
   });
 }
 
 function buildLongTextTooltip(): HTMLElement {
+  // Gatilho de TEXTO: o rótulo visível já é o nome acessível, e um `aria-label`
+  // ao lado dele é redundância que as outras stacks não têm.
   const trigger = createButton({
     variant: 'outline',
     label: t('demonstration.labels.shareButton'),
-    'aria-label': t('demonstration.labels.shareButton'),
   });
   return createTooltip({
     trigger,
@@ -479,23 +491,32 @@ createTooltip({
         });
 
       case 'variantes': {
-        const codeDefault = `const trigger = createButton({
-  variant: 'outline',
-  label: 'Salvar',
-  'aria-label': 'Salvar',
-});
-
-createTooltip({ trigger, content: 'Salvar', side: 'top' });`;
-
-        const codeShortcut = `// Botão icon-only mantém aria-label obrigatório
+        const codeDefault = `// Botão icon-only: o nome acessível é dele, e o balão só reforça.
 const trigger = createButton({
   variant: 'outline',
   size: 'icon',
   'aria-label': 'Salvar',
-  children: iconSvg,
+  children: createButtonIcon('save'),
 });
 
-createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
+createTooltip({ trigger, content: 'Salvar', side: 'top' });`;
+
+        const codeShortcut = `const trigger = createButton({
+  variant: 'outline',
+  size: 'icon',
+  'aria-label': 'Salvar',
+  children: createButtonIcon('save'),
+});
+
+// A tecla entra como ELEMENTO, nunca como HTML em string. É o <kbd> que aciona
+// a regra da folha que encurta o respiro à direita do balão.
+const conteudo = document.createElement('span');
+conteudo.style.display = 'contents';
+const texto = document.createElement('span');
+texto.textContent = 'Salvar';
+conteudo.append(texto, createKbd({ text: 'Ctrl' }), createKbd({ text: 'S' }));
+
+createTooltip({ trigger, content: conteudo, side: 'bottom' });`;
 
         const codeLong = `createTooltip({
   trigger,
@@ -505,7 +526,8 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
 });`;
 
         const codeSides = `for (const side of ['top', 'right', 'bottom', 'left'] as const) {
-  const trigger = createButton({ variant: 'outline', label: side, 'aria-label': side });
+  // Gatilho de texto dispensa aria-label: o rótulo visível já nomeia o botão.
+  const trigger = createButton({ variant: 'outline', label: side });
   const el = createTooltip({ trigger, content: \`Tooltip \${side}\`, side });
   grid.appendChild(el);
 }`;
@@ -526,7 +548,8 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
           ];
 
           for (const { side, label } of sides) {
-            const trigger = createButton({ variant: 'outline', label, 'aria-label': label });
+            // Sem `aria-label`: o rótulo visível já nomeia o botão.
+            const trigger = createButton({ variant: 'outline', label });
             const el = createTooltip({
               trigger,
               content: `Tooltip ${label}`,
@@ -592,21 +615,32 @@ for (const acao of acoes) {
   variant: 'outline',
   size: 'icon',
   'aria-label': 'Salvar',
-  children: createButtonIcon('download'),
+  children: createButtonIcon('save'),
 });
 
-createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
+// Rótulo e teclas como irmãos: o invólucro sai do layout com
+// \`display: contents\` e o balão trata os três como itens seus.
+const conteudo = document.createElement('span');
+conteudo.style.display = 'contents';
+const texto = document.createElement('span');
+texto.textContent = 'Salvar';
+conteudo.append(texto, createKbd({ text: 'Ctrl' }), createKbd({ text: 'S' }));
 
+createTooltip({ trigger, content: conteudo, side: 'bottom' });`;
+
+        // Os rótulos saem de chave, como no preview ao lado: cravados em
+        // português, o leitor em inglês ou espanhol via um preview traduzido e,
+        // embaixo, um código que descrevia outra tela.
         const codeFormHelp = `const help = createButton({
   variant: 'outline',
   size: 'icon-sm',
-  'aria-label': 'Ajuda sobre Token de API',
+  'aria-label': '${t('demonstration.labels.apiTokenHelp')}',
   label: '?',
 });
 
 createTooltip({
   trigger: help,
-  content: 'Gere em Configurações › Acesso › Tokens',
+  content: '${t('demonstration.labels.apiTokenHint')}',
   side: 'right',
   class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
@@ -614,13 +648,13 @@ createTooltip({
         const codeMetric = `const help = createButton({
   variant: 'outline',
   size: 'icon-sm',
-  'aria-label': 'O que é LCP',
+  'aria-label': '${t('demonstration.labels.lcpHelp')}',
   label: 'i',
 });
 
 createTooltip({
   trigger: help,
-  content: 'Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.',
+  content: '${t('demonstration.labels.lcpHint')}',
   side: 'top',
   class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
@@ -651,15 +685,9 @@ createTooltip({
         }
 
         function buildIconShortcutPreview(): HTMLElement {
-          const trigger = createButton({
-            variant: 'outline',
-            size: 'icon',
-            'aria-label': t('demonstration.labels.saveButton'),
-            children: createButtonIcon('download'),
-          });
           return createTooltip({
-            trigger,
-            content: t('demonstration.labels.save'),
+            trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
+            content: buildShortcutContent(t('demonstration.labels.saveButton')),
             side: 'bottom',
             onShow: trackTooltipView('docs_composicoes', 'iconButtonWithShortcut'),
           });

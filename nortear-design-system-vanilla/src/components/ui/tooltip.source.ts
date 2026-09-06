@@ -98,18 +98,24 @@ export function tooltipSourceWith(fixas: TooltipSnippetOptions): SourceTransform
 }
 
 /**
- * Os quatro lados lado a lado — a story que documenta o posicionamento mostra
- * um balão por lado, e um snippet de um balão só não diria o que ela diz.
+ * Os quatro lados juntos — a story que documenta o posicionamento mostra um
+ * balão por lado, e um snippet de um balão só não diria o que ela diz.
+ *
+ * A grade é a da story, 2×2: quatro balões numa linha só se sobrepõem, porque
+ * os de `left` e `right` abrem justamente para dentro do vizinho. O que fica
+ * de fora é a moldura do canvas (altura mínima e `contain`), que existe para o
+ * Storybook e não para quem consome o componente.
  */
 export function tooltipLadosSnippet(): string {
   return snippet(
     [importing('tooltip', 'createTooltip'), importing('button', 'createButton')].join('\n'),
     `const grade = document.createElement('div');
-grade.className = 'nds-cluster';
-grade.dataset.spacing = 'lg';
+grade.className = 'nds-grid nds-w-full nds-p-8';
+grade.dataset.cols = '2';
+grade.dataset.spacing = 'xl';
 
 for (const side of ['top', 'right', 'bottom', 'left'] as const) {
-  const gatilho = createButton({ variant: 'outline', label: side });
+  const gatilho = createButton({ variant: 'outline', label: side, 'aria-label': side });
   grade.appendChild(createTooltip({ trigger: gatilho, content: \`Tooltip \${side}\`, side }));
 }`,
     appendLine('grade'),

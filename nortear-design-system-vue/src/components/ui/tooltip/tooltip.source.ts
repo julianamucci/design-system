@@ -318,7 +318,7 @@ export function actionsTooltipBarSource(): string {
           'aria-label="Ações do documento"',
           'class="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-p-1"',
           'data-align="center"',
-          'data-spacing="xs"',
+          'data-spacing="sm"',
         ],
         actions
           .map((acao) =>
@@ -337,9 +337,14 @@ export function actionsTooltipBarSource(): string {
 /**
  * Os quatro lados de posicionamento.
  *
- * O de cima sai SEM `side`: é o padrão, e a ausência é a própria lição — o
- * balão nasce em cima sem que ninguém peça. Perto da borda da tela o
- * posicionador troca para o lado oposto em vez de sair do campo de visão.
+ * Os quatro declaram `side`, o de cima inclusive: a story escreve `side="top"`
+ * no primeiro balão, e snippet que omite o que a story renderiza ensina outra
+ * tela. Perto da borda o posicionador troca para o lado oposto em vez de sair
+ * do campo de visão.
+ *
+ * O `aria-label` repete o rótulo visível porque é o que a story tem — aqui os
+ * quatro gatilhos se chamam pelo próprio lado, e o painel Code publica a
+ * composição que está na tela, não uma variação dela.
  */
 export function tooltipQuatroLadosSource(): string {
   const lados = ['top', 'right', 'bottom', 'left'];
@@ -353,8 +358,8 @@ export function tooltipQuatroLadosSource(): string {
           .map((side) =>
             balao({
               root: ['default-open'],
-              trigger: triggerText(side, 'size="sm"'),
-              content: [attr('side', side, 'top')],
+              trigger: triggerText(side, `size="sm" aria-label="${side}"`),
+              content: [`side="${side}"`],
               contentText: `Tooltip ${side}`,
             }),
           )

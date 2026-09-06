@@ -155,6 +155,9 @@ describe('transforms das stories de composição', () => {
     expect(saida.match(/<TooltipProvider>/g)).toHaveLength(1);
     expect(saida).toContain('role="toolbar"');
     expect(saida).toContain('aria-label="Ações do documento"');
+    // O respiro é o da story: publicar `xs` desenhava uma barra mais apertada
+    // do que a que está na tela logo acima do painel.
+    expect(saida).toContain('data-spacing="sm"');
     // Dentro de uma barra o botão perde o contorno próprio.
     expect(saida).toContain('<Button variant="ghost" size="icon" aria-label="Excluir">');
     expect(saida).toContain(
@@ -162,15 +165,18 @@ describe('transforms das stories de composição', () => {
     );
   });
 
-  it('os quatro lados aparecem juntos, e o de cima dispensa a declaração', () => {
+  it('os quatro lados aparecem juntos, cada um declarando o seu', () => {
     const saida = tooltipQuatroLadosSource();
     expect(saida.match(/<Tooltip default-open>/g)).toHaveLength(4);
-    for (const side of ['right', 'bottom', 'left']) {
+    // `top` inclusive: a story escreve os quatro, e o painel Code publica o que
+    // ela renderiza. Omitir o padrão ensinava uma composição que não existe.
+    for (const side of ['top', 'right', 'bottom', 'left']) {
       expect(saida).toContain(`<TooltipContent side="${side}">Tooltip ${side}</TooltipContent>`);
+      // A tag INTEIRA: asserção por pedaço já aprovou markup errado nesta casa.
+      expect(saida).toContain(
+        `<Button variant="outline" size="sm" aria-label="${side}">${side}</Button>`,
+      );
     }
-    // O padrão não se escreve: a ausência é a lição de que o balão nasce em cima.
-    expect(saida).not.toContain('side="top"');
-    expect(saida).toContain('<TooltipContent>Tooltip top</TooltipContent>');
     expect(saida).toContain('<div class="nds-grid nds-p-8" data-spacing="xl" data-cols="2">');
   });
 });

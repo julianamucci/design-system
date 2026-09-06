@@ -364,62 +364,79 @@ interface TooltipTriggerProps {
     ]}
   />
 
+  <!-- A moldura é a das outras stacks: cluster centrado com altura mínima, e
+       `contain: layout` para o balão em portal não empurrar a página. Sem ela o
+       par nascia colado à borda e o balão saía do quadro do preview. -->
   {#snippet doPair1()}
     <TooltipProvider delayDuration={400}>
-      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-do', o)}>
-        <TooltipTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
-              <Save aria-hidden="true" class="nds-icon" />
-            </Button>
-          {/snippet}
-        </TooltipTrigger>
-        <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
-      </Tooltip>
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-do', o)}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
+                <Save aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{$tStore('demonstration.labels.save')}</TooltipContent>
+        </Tooltip>
+      </div>
     </TooltipProvider>
   {/snippet}
   {#snippet dontPair1()}
     <TooltipProvider delayDuration={400}>
-      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-dont', o)}>
-        <TooltipTrigger>
-          {#snippet child({ props })}
-            <!-- Anti-pattern didático (tooltip no lugar do rótulo); aria-label
-                 invisível mantém o botão nomeado para o axe sem mudar o visual. -->
-            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
-              <Save aria-hidden="true" class="nds-icon" />
-            </Button>
-          {/snippet}
-        </TooltipTrigger>
-        <TooltipContent>{$tStore('demonstration.labels.saveButton')}</TooltipContent>
-      </Tooltip>
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-dont', o)}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <!-- Anti-pattern didático (tooltip no lugar do rótulo); aria-label
+                   invisível mantém o botão nomeado para o axe sem mudar o visual. -->
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
+                <Save aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{$tStore('demonstration.labels.saveButton')}</TooltipContent>
+        </Tooltip>
+      </div>
     </TooltipProvider>
   {/snippet}
   {#snippet doPair2()}
     <TooltipProvider delayDuration={400}>
-      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-do', o)}>
-        <TooltipTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
-              <Save aria-hidden="true" class="nds-icon" />
-            </Button>
-          {/snippet}
-        </TooltipTrigger>
-        <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
-      </Tooltip>
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-do', o)}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
+                <Save aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <!-- Texto puro: aqui a lição é o TAMANHO da mensagem. A tecla marcada
+               com <kbd> é assunto da variante `withShortcut`. -->
+          <TooltipContent side="bottom">{$tStore('demonstration.labels.save')}</TooltipContent>
+        </Tooltip>
+      </div>
     </TooltipProvider>
   {/snippet}
   {#snippet dontPair2()}
     <TooltipProvider delayDuration={400}>
-      <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-dont', o)}>
-        <TooltipTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
-              <Save aria-hidden="true" class="nds-icon" />
-            </Button>
-          {/snippet}
-        </TooltipTrigger>
-        <TooltipContent>{$tStore('demonstration.labels.longBalloonDont')}</TooltipContent>
-      </Tooltip>
+      <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
+        <!-- Vivo de propósito: a lição é o TAMANHO do balão, e só renderizado
+             ele mostra o que o texto longo faz. O limite de largura é o mesmo
+             das outras stacks — sem ele o balão estica numa linha só e a lição
+             desaparece. -->
+        <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-dont', o)}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
+                <Save aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent side="bottom" class="nds-max-w-xs">{$tStore('demonstration.labels.longBalloonDont')}</TooltipContent>
+        </Tooltip>
+      </div>
     </TooltipProvider>
   {/snippet}
 
@@ -562,15 +579,15 @@ interface TooltipTriggerProps {
         useWhen: $tStore('variants.compositions.formFieldHelp.use'),
         code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
-    <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
+    <label for="api-token" class="nds-text-body nds-font-medium">${$tStore('demonstration.labels.apiTokenLabel')}</label>
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
-          <Button variant="outline" size="icon-sm" aria-label="Ajuda sobre Token de API" {...props}>?</Button>
+          <Button variant="outline" size="icon-sm" aria-label="${$tStore('demonstration.labels.apiTokenHelp')}" {...props}>?</Button>
         {/snippet}
       </TooltipTrigger>
       <TooltipContent side="right" class="nds-max-w-xs">
-        Gere em Configurações › Acesso › Tokens
+        ${$tStore('demonstration.labels.apiTokenHint')}
       </TooltipContent>
     </Tooltip>
   </div>
@@ -585,19 +602,19 @@ interface TooltipTriggerProps {
         useWhen: $tStore('variants.compositions.metricDescription.use'),
         code: `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
-    <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
+    <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">${$tStore('demonstration.labels.lcpLabel')}</p>
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
-          <Button variant="outline" size="icon-sm" aria-label="O que é LCP" {...props}>i</Button>
+          <Button variant="outline" size="icon-sm" aria-label="${$tStore('demonstration.labels.lcpHelp')}" {...props}>i</Button>
         {/snippet}
       </TooltipTrigger>
       <TooltipContent side="top" class="nds-max-w-xs">
-        Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+        ${$tStore('demonstration.labels.lcpHint')}
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="nds-text-h3 nds-m-0">1,8 s</p>
+  <p class="nds-text-h3 nds-m-0">${$tStore('demonstration.labels.lcpValue')}</p>
 </div>`,
         preview: compMetric,
       },

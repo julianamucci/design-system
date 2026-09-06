@@ -261,35 +261,39 @@ const codeCompIconShortcut = `<Tooltip>
   </TooltipContent>
 </Tooltip>`;
 
-const codeCompFormHelp = `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+// Os snippets mostram os MESMOS rótulos do preview ao lado. Cravados em
+// português, o leitor em inglês ou espanhol via um preview traduzido e, embaixo,
+// um código que descrevia outra tela. Como o texto vem de chave, o snippet é
+// `computed`: uma constante avaliaria uma vez e ficaria presa ao idioma inicial.
+const codeCompFormHelp = computed(() => `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
-    <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
+    <label for="api-token" class="nds-text-body nds-font-medium">${tContent('demonstration.labels.apiTokenLabel')}</label>
     <Tooltip>
       <TooltipTrigger as-child>
-        <Button variant="outline" size="icon-sm" aria-label="Ajuda sobre Token de API">?</Button>
+        <Button variant="outline" size="icon-sm" aria-label="${tContent('demonstration.labels.apiTokenHelp')}">?</Button>
       </TooltipTrigger>
       <TooltipContent side="right" class="nds-max-w-xs">
-        Gere em Configurações › Acesso › Tokens
+        ${tContent('demonstration.labels.apiTokenHint')}
       </TooltipContent>
     </Tooltip>
   </div>
   <input id="api-token" type="text" class="nds-input" placeholder="sk-..." />
-</div>`;
+</div>`);
 
-const codeCompMetric = `<div class="nds-stack" data-spacing="xs">
+const codeCompMetric = computed(() => `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
-    <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
+    <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">${tContent('demonstration.labels.lcpLabel')}</p>
     <Tooltip>
       <TooltipTrigger as-child>
-        <Button variant="outline" size="icon-sm" aria-label="O que é LCP">i</Button>
+        <Button variant="outline" size="icon-sm" aria-label="${tContent('demonstration.labels.lcpHelp')}">i</Button>
       </TooltipTrigger>
-      <TooltipContent side="top" class="nds-max-w-xs">
-        Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+      <TooltipContent side="top" class="nds-max-w-xs nds-whitespace-normal">
+        ${tContent('demonstration.labels.lcpHint')}
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="nds-text-h3 nds-m-0">1,8 s</p>
-</div>`;
+  <p class="nds-text-h3 nds-m-0">${tContent('demonstration.labels.lcpValue')}</p>
+</div>`);
 
 const codeCompSides = `<div class="nds-grid nds-w-full" data-cols="4" data-spacing="xl">
   <Tooltip v-for="s in ['top','right','bottom','left']" :key="s">
@@ -334,14 +338,14 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.formFieldHelp.name'),
     description: tContent('variants.compositions.formFieldHelp.description'),
     useWhen: tContent('variants.compositions.formFieldHelp.use'),
-    code: codeCompFormHelp,
+    code: codeCompFormHelp.value,
   },
   {
     trackId: 'metricDescription',
     name: tContent('variants.compositions.metricDescription.name'),
     description: tContent('variants.compositions.metricDescription.description'),
     useWhen: tContent('variants.compositions.metricDescription.use'),
-    code: codeCompMetric,
+    code: codeCompMetric.value,
   },
 ]);
 
@@ -691,13 +695,13 @@ const a11yCritCols = computed(() => ({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label="Salvar"
+                  :aria-label="tContent('demonstration.labels.saveButton')"
                 >
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                Salvar
+                {{ tContent('demonstration.labels.saveButton') }}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -714,13 +718,13 @@ const a11yCritCols = computed(() => ({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label="Salvar"
+                  :aria-label="tContent('demonstration.labels.saveButton')"
                 >
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                Salvar
+                {{ tContent('demonstration.labels.saveButton') }}
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
               </TooltipContent>
@@ -821,13 +825,13 @@ const a11yCritCols = computed(() => ({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label="Salvar"
+                  :aria-label="tContent('demonstration.labels.saveButton')"
                 >
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                Salvar
+                {{ tContent('demonstration.labels.saveButton') }}
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
               </TooltipContent>

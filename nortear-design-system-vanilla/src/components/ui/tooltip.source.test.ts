@@ -94,4 +94,17 @@ describe('tooltipLadosSnippet', () => {
     expect(code).toContain('createTooltip({ trigger: gatilho');
     expect(code).not.toContain('grid.style');
   });
+
+  it('publica a MESMA moldura da story, e o gatilho que ela renderiza', () => {
+    const code = tooltipLadosSnippet();
+    // A story monta uma grade 2×2; o snippet ensinava um cluster em linha.
+    expect(code).toContain("grade.className = 'nds-grid nds-w-full nds-p-8';");
+    expect(code).toContain("grade.dataset.cols = '2';");
+    expect(code).toContain("grade.dataset.spacing = 'xl';");
+    expect(code).not.toContain('nds-cluster');
+    // A linha INTEIRA: asserção por pedaço já aprovou markup errado nesta casa.
+    expect(code).toContain(
+      "const gatilho = createButton({ variant: 'outline', label: side, 'aria-label': side });",
+    );
+  });
 });

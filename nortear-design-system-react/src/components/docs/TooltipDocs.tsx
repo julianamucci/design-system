@@ -587,8 +587,8 @@ interface TooltipContentProps {
                   />
                   <TooltipContent>
                     <span>{labelSaveBtn}</span>
-                    <kbd className="nds-kbd">Ctrl</kbd>
-                    <kbd className="nds-kbd">S</kbd>
+                    <kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>
+                    <kbd className="nds-kbd" data-slot="kbd">S</kbd>
                   </TooltipContent>
                 </Tooltip>
               ),
@@ -686,8 +686,8 @@ interface TooltipContentProps {
                   />
                   <TooltipContent>
                     <span>{labelSaveBtn}</span>
-                    <kbd className="nds-kbd">Ctrl</kbd>
-                    <kbd className="nds-kbd">S</kbd>
+                    <kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>
+                    <kbd className="nds-kbd" data-slot="kbd">S</kbd>
                   </TooltipContent>
                 </Tooltip>
               ),

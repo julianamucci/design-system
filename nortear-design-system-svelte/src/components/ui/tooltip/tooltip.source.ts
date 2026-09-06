@@ -7,11 +7,16 @@
  */
 import { attrs, svelteSnippet } from '@/lib/story-source';
 
-/** Nome do componente e caminho do módulo de cada ícone usado nas stories. */
+/**
+ * Nome do componente e caminho do módulo de cada ícone usado nas stories.
+ *
+ * `compartilhar` (Share2) saiu: o único gatilho que compartilhava virou botão
+ * de TEXTO na variante `longText`, e ali não entra ícone nenhum — a entrada
+ * ficou inalcançável no mesmo passo, sem que nada reprovasse.
+ */
 const ICONS = {
   salvar: ['Save', 'save'],
   excluir: ['Trash2', 'trash-2'],
-  compartilhar: ['Share2', 'share-2'],
 } as const;
 
 type IconKey = keyof typeof ICONS;
