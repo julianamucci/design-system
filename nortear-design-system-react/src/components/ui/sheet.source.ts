@@ -288,7 +288,7 @@ import { Label } from "@/components/ui/label";`,
     sheet(
       '',
       '',
-      `${header(TITLE, 'Refine os resultados por categoria, preço e disponibilidade.')}
+      `${header()}
     <SheetBody>
       <form
         className="nds-stack"
@@ -303,10 +303,6 @@ import { Label } from "@/components/ui/label";`,
           <Label htmlFor="filtro-minimo">Preço mínimo</Label>
           <Input id="filtro-minimo" type="number" defaultValue="100" />
         </div>
-        <div className="nds-stack" data-spacing="xs">
-          <Label htmlFor="filtro-maximo">Preço máximo</Label>
-          <Input id="filtro-maximo" type="number" defaultValue="2000" />
-        </div>
       </form>
     </SheetBody>
 ${footer()}`,
@@ -319,6 +315,11 @@ ${footer()}`,
  * Navegação secundária. A `<nav>` nomeada mora dentro do corpo, e o painel não
  * tem rodapé: aqui não há decisão a confirmar — escolher um destino já fecha o
  * painel por si.
+ *
+ * Os destinos são LINKS, e não botões: quem navega por marcos espera links
+ * dentro de um `<nav>`, e um botão não abre em nova aba nem mostra o destino na
+ * barra de status. São as CINCO seções que o conteúdo compartilhado descreve —
+ * quatro botões documentavam uma composição que não existe.
  */
 export function sheetNavigationSource(): string {
   return jsxSnippet(
@@ -333,24 +334,32 @@ export function sheetNavigationSource(): string {
     )}
 ${IMPORT_BUTTON}
 
-const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações"];`,
+const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações", "Faturas"];`,
     `<Sheet>
   <SheetTrigger render={<Button variant="outline" />}>
     Abrir menu
   </SheetTrigger>
   <SheetContent side="left">
     <SheetHeader>
-      <SheetTitle>Navegação</SheetTitle>
+      <SheetTitle>Menu</SheetTitle>
       <SheetDescription>
-        Acesse as seções principais do aplicativo.
+        Navegue entre as áreas do sistema.
       </SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <nav className="nds-stack" data-spacing="xs" aria-label="Seções">
+      <nav
+        className="nds-stack"
+        data-spacing="xs"
+        aria-label="Navegação secundária"
+      >
         {SECOES.map((secao) => (
-          <Button key={secao} variant="ghost">
+          <a
+            key={secao}
+            href="#"
+            className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
+          >
             {secao}
-          </Button>
+          </a>
         ))}
       </nav>
     </SheetBody>

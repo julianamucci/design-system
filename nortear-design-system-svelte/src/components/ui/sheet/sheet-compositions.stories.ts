@@ -42,9 +42,9 @@ export const AdvancedFilters: Story = {
     open: true,
     side: 'right',
     variant: 'withForm',
-    triggerLabel: 'Filtros avançados',
+    triggerLabel: 'Abrir filtros',
     title: 'Filtros avançados',
-    description: 'Refine os resultados configurando os filtros abaixo.',
+    description: 'Configure os filtros para refinar os resultados.',
     actionLabel: 'Aplicar filtros',
     cancelLabel: 'Cancelar',
   },
@@ -63,7 +63,11 @@ export const AdvancedFilters: Story = {
     await expect(panel).toBeVisible();
     await expect(panel).toHaveAttribute('aria-modal', 'true');
     await expect(panel).toHaveAccessibleName(/Filtros avançados/i);
-    await expect(within(panel).getByLabelText(/Nome/i)).toBeVisible();
+    // Categoria e Preço mínimo: são os DOIS campos que o conteúdo compartilhado
+    // documenta. Esta story renderizava Nome e Email, que não são composição
+    // nenhuma — e a asserção por `/Nome/i` passava justamente por isso.
+    const rotulos = [...panel.querySelectorAll('label')].map((el) => el.textContent?.trim());
+    await expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
   },
 };
 

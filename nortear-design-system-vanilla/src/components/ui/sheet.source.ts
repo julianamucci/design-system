@@ -92,15 +92,24 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
+/**
+ * Fileira de ações — as TRÊS que `variants.compositions.bottomPanel` documenta.
+ *
+ * Escritas uma a uma, e não por laço: a destrutiva é a última e a única com a
+ * variante que a anuncia, e um laço de rótulos apagaria justamente essa
+ * diferença. Antes eram seis rótulos inventados aqui, todos `outline`.
+ */
 function bodyActions(): Body {
   return {
     imports: [importing('button', 'createButton')],
     block: `const corpo = document.createElement('div');
 corpo.className = 'nds-cluster';
 corpo.dataset.spacing = 'md';
-for (const rotulo of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar']) {
-  corpo.appendChild(createButton({ variant: 'outline', label: rotulo }));
-}`,
+corpo.append(
+  createButton({ variant: 'outline', label: 'Compartilhar' }),
+  createButton({ variant: 'outline', label: 'Duplicar' }),
+  createButton({ variant: 'destructive', label: 'Excluir' }),
+);`,
   };
 }
 
@@ -108,12 +117,13 @@ function bodyNavigation(): Body {
   return {
     imports: [],
     // A lista de links é um marco: sem nome, o leitor de tela anuncia
-    // "navegação" e mais nada.
+    // "navegação" e mais nada. O nome é o do conteúdo compartilhado, e as
+    // seções são as CINCO que ele descreve.
     block: `const corpo = document.createElement('nav');
 corpo.className = 'nds-stack';
 corpo.dataset.spacing = 'sm';
-corpo.setAttribute('aria-label', 'Seções');
-for (const rotulo of ['Dashboard', 'Projetos', 'Equipe', 'Configurações']) {
+corpo.setAttribute('aria-label', 'Navegação secundária');
+for (const rotulo of ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas']) {
   const link = document.createElement('a');
   link.href = '#';
   link.className = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
@@ -129,19 +139,22 @@ function bodyForm(): Body {
     // `createFormField` é quem fecha o par rótulo ↔ controle e gera o id que
     // falta. Um `<label>` cru com um `<input>` cru pareceria igual e não faria
     // nenhuma das duas coisas.
+    //
+    // Os DOIS campos que `variants.compositions.advancedFilters` documenta: um
+    // terceiro campo aqui ensinaria um filtro que a docs page não mostra.
     block: `const corpo = document.createElement('form');
 corpo.className = 'nds-stack';
 corpo.dataset.spacing = 'sm';
 corpo.append(
   createFormField({ label: 'Categoria', input: createInput({ value: 'Eletrônicos' }) }),
   createFormField({ label: 'Preço mínimo', input: createInput({ type: 'number', value: '100' }) }),
-  createFormField({ label: 'Preço máximo', input: createInput({ type: 'number', value: '500' }) }),
 );`,
   };
 }
 
 /**
- * Corpo da composição de edição de perfil — dois campos, como o preview.
+ * Corpo da composição de edição de perfil — TRÊS campos, como o preview: Nome,
+ * Nome de usuário e Bio, na ordem do conteúdo compartilhado.
  *
  * Separado de `bodyForm` porque o assunto é outro: lá são filtros de uma
  * listagem, aqui são dados de uma pessoa, e o snippet de cada composição tem de

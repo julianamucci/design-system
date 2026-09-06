@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 import * as sheetSource from './sheet.source';
 import {
   sheetAdvancedFiltersSource,
+  sheetBottomPanelSource,
   sheetCloseButtonHiddenSource,
   sheetClosedSource,
   sheetControlledSource,
   sheetLongScrollBodySource,
   sheetOpenSource,
   sheetPlaygroundSource,
+  sheetProfileEditSource,
   sheetSecondaryNavigationSource,
   sheetSideBottomSource,
   sheetSideLeftSource,
@@ -109,14 +111,14 @@ describe('sheetPlaygroundSource', () => {
 });
 
 /**
- * Os doze construtores e a story que cada um serve.
+ * Os quatorze construtores e a story que cada um serve.
  *
  * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
  * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
  * sair calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde
  * 28 exports saíram do alcance e a suíte seguiu verde medindo menos.
  *
- * NENHUMA das doze stories fica sem construtor próprio. As quatro direções
+ * NENHUMA das quatorze stories fica sem construtor próprio. As quatro direções
  * chegaram perto de compartilhar um — o markup é o mesmo, muda `side` e o
  * título —, mas o painel Code é por story: um construtor comum publicaria
  * `side="right"` embaixo do painel que entra pela esquerda.
@@ -161,6 +163,16 @@ const CONSTRUCTORS: Array<{
     story: 'Compositions/SecondaryNavigation',
     build: sheetSecondaryNavigationSource,
   },
+  {
+    name: 'sheetProfileEditSource',
+    story: 'Compositions/ProfileEdit',
+    build: sheetProfileEditSource,
+  },
+  {
+    name: 'sheetBottomPanelSource',
+    story: 'Compositions/BottomPanel',
+    build: sheetBottomPanelSource,
+  },
 ];
 
 describe('cobertura das quatro stories', () => {
@@ -192,7 +204,7 @@ describe('cobertura das quatro stories', () => {
       expect(code.match(/<nds-sheet[ >]/g)).toHaveLength(1);
       expect(code.match(/<\/nds-sheet>/g)).toHaveLength(1);
 
-      // O par que dá nome e descrição acessíveis ao diálogo. Vale para os doze:
+      // O par que dá nome e descrição acessíveis ao diálogo. Vale para os quatorze:
       // não há painel deste design system sem título.
       expect(code).toMatch(/<h2 ndsSheetTitle>[^<]+<\/h2>/);
       expect(code).toMatch(/<p ndsSheetDescription>[^<]+<\/p>/);
@@ -361,7 +373,44 @@ describe('composições', () => {
     expect(code).toContain(
       '<nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">',
     );
-    expect(code.match(/<a href="#/g)).toHaveLength(4);
+    // CINCO seções: é a lista que `variants.compositions.secondaryNavigation`
+    // descreve. Esta asserção já afirmou quatro, guardando verde um snippet que
+    // documentava uma composição que não existe.
+    expect(code.match(/<a href="#/g)).toHaveLength(5);
+    for (const secao of ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas']) {
+      expect(code).toContain(`>${secao}</a>`);
+    }
+  });
+
+  it('sheetProfileEditSource liga a confirmação ao form pelo id, e traz os três campos', () => {
+    // O rodapé mora FORA do corpo rolável: o botão não está dentro do `form`, e
+    // só o atributo `form` os liga. Sem ele, o Enter num campo — como a maioria
+    // envia formulário curto — não chega a lugar nenhum.
+    const code = sheetProfileEditSource();
+    expect(code).toContain('<form id="perfil-form" class="nds-grid" data-spacing="md">');
+    expect(code).toContain(
+      '<button ndsButton type="submit" form="perfil-form">Salvar alterações</button>',
+    );
+    // Por ÍNDICE: a ordem é a do conteúdo compartilhado, e o campo do meio já
+    // saiu de um snippet sem que nada reprovasse.
+    const rotulos = [...code.matchAll(/<label ndsLabel for="[^"]*">([^<]*)<\/label>/g)].map(
+      (m) => m[1],
+    );
+    expect(rotulos).toEqual(['Nome', 'Nome de usuário', 'Bio']);
+  });
+
+  it('sheetBottomPanelSource abre embaixo, com três ações e um rodapé só de saída', () => {
+    const code = sheetBottomPanelSource();
+    expect(code).toContain('<ng-template ndsSheetContent side="bottom">');
+    expect(code).toContain('<div class="nds-cluster" data-spacing="md">');
+    // As TRÊS ações do conteúdo compartilhado, com a destrutiva por último e
+    // sozinha na variante que a anuncia.
+    expect(code).toContain('<button ndsButton variant="outline">Compartilhar</button>');
+    expect(code).toContain('<button ndsButton variant="outline">Duplicar</button>');
+    expect(code).toContain('<button ndsButton variant="destructive">Excluir</button>');
+    // A decisão é a ação clicada: não há confirmação a repetir no rodapé.
+    expect(code).toContain('<button ndsSheetClose ndsButton variant="outline">Fechar</button>');
+    expect(code).not.toContain('Aplicar filtros');
   });
 
   it('sheetSecondaryNavigationSource não tem rodapé — a lista de links É a ação', () => {

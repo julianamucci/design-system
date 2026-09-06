@@ -291,6 +291,14 @@ describe('transforms das stories de composição', () => {
     // O rótulo se liga ao campo pelo id, e não por proximidade visual.
     expect(output).toContain('<Label htmlFor="filtro-categoria">Categoria</Label>');
     expect(output).toContain('<Input id="filtro-categoria" defaultValue="Eletrônicos" />');
+    // Os DOIS campos que o conteúdo compartilhado define, e nada mais: o
+    // terceiro campo do snippet não existia no conteúdo nem na docs page.
+    expect(output).toContain('<Label htmlFor="filtro-minimo">Preço mínimo</Label>');
+    expect(output).not.toContain('Preço máximo');
+    const rotulos = [...output.matchAll(/<Label htmlFor="[^"]*">([^<]*)<\/Label>/g)].map(
+      (m) => m[1],
+    );
+    expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
     // Campo que o exemplo usa é campo que o exemplo importa.
     expect(output).toContain('import { Input } from "@/components/ui/input";');
     expect(output).toContain('import { Label } from "@/components/ui/label";');
@@ -299,11 +307,20 @@ describe('transforms das stories de composição', () => {
   it('a navegação secundária abre à esquerda e não tem rodapé', () => {
     const output = sheetNavigationSource();
     expect(output).toContain('<SheetContent side="left">');
-    // A `<nav>` nomeada é o que separa uma lista de botões de uma navegação.
-    expect(output).toContain('<nav className="nds-stack" data-spacing="xs" aria-label="Seções">');
+    // A `<nav>` nomeada é o que separa uma lista de links de uma navegação.
+    expect(output).toContain('aria-label="Navegação secundária"');
+    // As CINCO seções do conteúdo compartilhado, e destinos que são LINKS:
+    // quatro botões `ghost` documentavam uma composição que não existe.
+    expect(output).toContain(
+      'const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações", "Faturas"];',
+    );
+    expect(output).toContain('<a\n            key={secao}\n            href="#"');
+    expect(output).not.toContain('<Button key={secao} variant="ghost">');
     // Escolher um destino já fecha o painel: não há decisão a confirmar.
     expect(output).not.toContain('SheetFooter');
     expect(output).toContain(`${TRIGGER_TAG}\n    Abrir menu\n  </SheetTrigger>`);
+    // O painel se nomeia pelo conteúdo compartilhado, não por um título solto.
+    expect(output).toContain('<SheetTitle>Menu</SheetTitle>');
   });
 
   it('quem confirma a edição de perfil é o envio do formulário', () => {

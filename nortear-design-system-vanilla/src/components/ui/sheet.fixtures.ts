@@ -28,6 +28,28 @@ export function makeBody(text: string = SHEET_BODY_TEXT): HTMLElement {
 }
 
 /**
+ * Rodapé só de SAÍDA — um botão, e ele fecha o painel.
+ *
+ * É o rodapé do painel inferior de ações: a decisão já foi tomada no corpo, e
+ * repetir uma confirmação aqui diria que falta um passo que não existe. Separado
+ * de `makeFooter` porque aquele monta sempre o PAR, e um `actionLabel` vazio
+ * deixaria um botão sem nome acessível em vez de nenhum botão.
+ */
+export function makeExitFooter(exitLabel: string): HTMLElement {
+  const exit = createButton({ variant: 'outline', label: exitLabel });
+  const footer = document.createElement('div');
+  footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'md';
+  footer.appendChild(exit);
+  // A factory não expõe um botão de fechar componível: quem fecha por fora é o
+  // overlay, e é ele que o botão do rodapé aciona.
+  exit.addEventListener('click', () => {
+    document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
+  });
+  return footer;
+}
+
+/**
  * Rodapé de duas ações — cancelar à esquerda, ação principal à direita.
  *
  * Com `fecharAoClicar`, os dois botões passam a fechar o painel. A factory não

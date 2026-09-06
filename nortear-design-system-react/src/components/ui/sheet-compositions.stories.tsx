@@ -54,6 +54,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Lista do conteúdo compartilhado. `t()` devolve o valor cru e o achatamento
+ * preserva o array inteiro; a checagem existe porque chave ausente volta como o
+ * próprio caminho, e um `.map` sobre string renderizaria letra por letra.
+ */
+function listFromContent(t: (key: string) => string, key: string): string[] {
+  const value = t(key) as unknown;
+  return Array.isArray(value) ? (value as string[]) : [];
+}
+
 export const AdvancedFilters: Story = {
   parameters: {
     docs: {
@@ -67,55 +77,69 @@ export const AdvancedFilters: Story = {
       },
     },
   },
-  render: () => (
-    <Sheet defaultOpen>
-      <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
-      <SheetContent side="right">
-        <SheetHeader>
-          <SheetTitle>Filtros avançados</SheetTitle>
-          <SheetDescription>
-            Refine os resultados por categoria, preço e disponibilidade.
-          </SheetDescription>
-        </SheetHeader>
-        <SheetBody>
-          {/* `nds-stack` com `sm` fora e `xs` no par rótulo ↔ campo: é o ritmo
-              do Vanilla, referência de markup da casa, e o mesmo que o snippet
-              ao lado ensina. */}
-          <form
-            className="nds-stack"
-            data-spacing="sm"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <div className="nds-stack" data-spacing="xs">
-              <Label htmlFor="filter-category">Categoria</Label>
-              <Input id="filter-category" defaultValue="Eletrônicos" />
-            </div>
-            <div className="nds-stack" data-spacing="xs">
-              <Label htmlFor="filter-min">Preço mínimo</Label>
-              <Input id="filter-min" type="number" defaultValue="100" />
-            </div>
-            <div className="nds-stack" data-spacing="xs">
-              <Label htmlFor="filter-max">Preço máximo</Label>
-              <Input id="filter-max" type="number" defaultValue="2000" />
-            </div>
-          </form>
-        </SheetBody>
-        <SheetFooter>
-          <SheetClose render={<Button type="button" variant="outline" />}>
-            Cancelar
-          </SheetClose>
-          <Button>Aplicar filtros</Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
-  ),
+  render: () => {
+    // Todo texto do preview sai do conteúdo compartilhado: cravado aqui, ele
+    // divergia da docs page sem que nada acusasse — foi assim que esta story
+    // acumulou um terceiro campo que o conteúdo nunca definiu.
+    const { t } = useTranslation(sheetTranslations);
+    return (
+      <Sheet defaultOpen>
+        <SheetTrigger render={<Button variant="outline" />}>
+          {t("demonstration.labels.trigger")}
+        </SheetTrigger>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>{t("demonstration.labels.title")}</SheetTitle>
+            <SheetDescription>{t("demonstration.labels.description")}</SheetDescription>
+          </SheetHeader>
+          <SheetBody>
+            {/* `nds-stack` com `sm` fora e `xs` no par rótulo ↔ campo: é o ritmo
+                do Vanilla, referência de markup da casa, e o mesmo que o snippet
+                ao lado ensina. */}
+            <form
+              className="nds-stack"
+              data-spacing="sm"
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <div className="nds-stack" data-spacing="xs">
+                <Label htmlFor="filter-category">
+                  {t("variants.compositions.advancedFilters.fieldCategory")}
+                </Label>
+                <Input
+                  id="filter-category"
+                  defaultValue={t("variants.compositions.advancedFilters.categoryValue")}
+                />
+              </div>
+              <div className="nds-stack" data-spacing="xs">
+                <Label htmlFor="filter-min">
+                  {t("variants.compositions.advancedFilters.fieldMinPrice")}
+                </Label>
+                <Input id="filter-min" type="number" defaultValue="100" />
+              </div>
+            </form>
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose render={<Button type="button" variant="outline" />}>
+              {t("demonstration.labels.cancel")}
+            </SheetClose>
+            <Button>{t("demonstration.labels.apply")}</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    );
+  },
   play: async () => {
     const panel = await waitForPortal("dialog");
-    await expect(panel).toHaveAccessibleName(/Filtros avançados/i);
-    const field = within(panel).getByLabelText(/Categoria/i);
-    await expect(field).toBeVisible();
+    await expect(panel).toHaveAccessibleName();
+
+    // Os DOIS campos do conteúdo compartilhado. A contagem é a asserção: o
+    // rótulo vem do idioma corrente e mudaria a cada seleção, mas quantos
+    // campos a composição tem não muda com o idioma.
+    const fields = [...panel.querySelectorAll("input")];
+    await expect(fields).toHaveLength(2);
+    for (const field of fields) await expect(field).toHaveAccessibleName();
   },
 };
 
@@ -132,31 +156,60 @@ export const SecondaryNavigation: Story = {
       },
     },
   },
-  render: () => (
-    <Sheet defaultOpen>
-      <SheetTrigger render={<Button variant="outline" />}>Abrir menu</SheetTrigger>
-      <SheetContent side="left">
-        <SheetHeader>
-          <SheetTitle>Navegação</SheetTitle>
-          <SheetDescription>Acesse as seções principais do aplicativo.</SheetDescription>
-        </SheetHeader>
-        <SheetBody>
-          <nav className="nds-stack" data-spacing="xs" aria-label="Seções">
-            {["Dashboard", "Projetos", "Equipe", "Configurações"].map((label) => (
-              <Button key={label} variant="ghost">
-                {label}
-              </Button>
-            ))}
-          </nav>
-        </SheetBody>
-      </SheetContent>
-    </Sheet>
-  ),
+  render: () => {
+    const { t } = useTranslation(sheetTranslations);
+    const sections = listFromContent(t, "variants.compositions.secondaryNavigation.items");
+    return (
+      <Sheet defaultOpen>
+        <SheetTrigger render={<Button variant="outline" />}>
+          {t("variants.compositions.secondaryNavigation.trigger")}
+        </SheetTrigger>
+        <SheetContent side="left">
+          <SheetHeader>
+            <SheetTitle>
+              {t("variants.compositions.secondaryNavigation.panelTitle")}
+            </SheetTitle>
+            <SheetDescription>
+              {t("variants.compositions.secondaryNavigation.panelDescription")}
+            </SheetDescription>
+          </SheetHeader>
+          <SheetBody>
+            {/* Destinos são LINKS, não botões `ghost`: quem navega por marcos
+                espera links dentro de um `<nav>`, e o nome do marco vem do
+                conteúdo compartilhado — a página já tem outra navegação, e dois
+                marcos sem nome distinto ficam indistinguíveis. */}
+            <nav
+              className="nds-stack"
+              data-spacing="xs"
+              aria-label={t("variants.compositions.secondaryNavigation.navLabel")}
+            >
+              {sections.map((label) => (
+                <a
+                  key={label}
+                  href="#"
+                  className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent"
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </SheetBody>
+        </SheetContent>
+      </Sheet>
+    );
+  },
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "left");
     const nav = within(panel).getByRole("navigation");
     await expect(nav).toBeVisible();
+    // O marco leva nome próprio, e o nome sai do conteúdo — por isso a asserção
+    // é a EXISTÊNCIA do nome, e não o texto, que muda com o idioma.
+    await expect(nav).toHaveAccessibleName();
+    // As CINCO seções que o conteúdo compartilhado descreve: com quatro, a
+    // story documentava uma composição que não existe.
+    const links = within(nav).getAllByRole("link");
+    await expect(links).toHaveLength(5);
   },
 };
 
@@ -275,32 +328,53 @@ export const BottomPanel: Story = {
       },
     },
   },
-  render: () => (
-    <Sheet defaultOpen>
-      <SheetTrigger render={<Button variant="outline" />}>Abrir ações</SheetTrigger>
-      <SheetContent side="bottom">
-        <SheetHeader>
-          <SheetTitle>Ações rápidas</SheetTitle>
-          <SheetDescription>
-            Escolha uma das ações disponíveis para este item.
-          </SheetDescription>
-        </SheetHeader>
-        <SheetBody>
-          <div className="nds-cluster" data-spacing="md">
-            <Button variant="outline">Compartilhar</Button>
-            <Button variant="outline">Duplicar</Button>
-            <Button variant="destructive">Excluir</Button>
-          </div>
-        </SheetBody>
-        <SheetFooter>
-          <SheetClose render={<Button variant="outline" />}>Fechar</SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
-  ),
+  render: () => {
+    const { t } = useTranslation(sheetTranslations);
+    const actions = listFromContent(t, "variants.compositions.bottomPanel.actions");
+    return (
+      <Sheet defaultOpen>
+        <SheetTrigger render={<Button variant="outline" />}>
+          {t("variants.compositions.bottomPanel.trigger")}
+        </SheetTrigger>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>{t("variants.compositions.bottomPanel.panelTitle")}</SheetTitle>
+            <SheetDescription>
+              {t("variants.compositions.bottomPanel.panelDescription")}
+            </SheetDescription>
+          </SheetHeader>
+          <SheetBody>
+            <div className="nds-cluster" data-spacing="md">
+              {/* A destrutiva é a ÚLTIMA, e a única com a variante que a
+                  anuncia: três botões destrutivos lado a lado tirariam o peso
+                  justamente de quem precisa dele. */}
+              {actions.map((label, index) => (
+                <Button
+                  key={label}
+                  variant={index === actions.length - 1 ? "destructive" : "outline"}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose render={<Button variant="outline" />}>
+              {t("variants.compositions.bottomPanel.close")}
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    );
+  },
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "bottom");
-    await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
+    await expect(panel).toHaveAccessibleName();
+    // As TRÊS ações do conteúdo, no corpo — o rodapé fica fora dele e traz só
+    // a saída, que é o que separa esta composição da que confirma.
+    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]');
+    await expect(body).not.toBeNull();
+    await expect(within(body!).getAllByRole("button")).toHaveLength(3);
   },
 };

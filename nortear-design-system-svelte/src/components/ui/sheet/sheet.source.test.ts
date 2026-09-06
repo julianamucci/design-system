@@ -104,12 +104,17 @@ describe('transforms das stories de composição', () => {
     const saida = sheetFiltersAvancadosSource();
     expect(saida).toContain('<SheetBody>');
     expect(saida).toContain('import { Input } from "@/components/ui/input";');
-    expect(saida).toContain('<Label for="sheet-nome">Nome</Label>');
+    expect(saida).toContain('<Label for="sheet-categoria">Categoria</Label>');
+    expect(saida).toContain('<Input id="sheet-categoria" value="Eletrônicos" />');
     // Empilhamento, e não grade: é o que a folha compartilhada define para
     // formulário de painel, e o que o Vanilla renderiza.
     expect(saida).toContain('<form class="nds-stack" data-spacing="sm">');
     expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
     expect(saida).not.toContain('nds-grid');
+    // Por ÍNDICE: são os DOIS campos que o conteúdo compartilhado documenta. O
+    // snippet ensinava Nome e Email, que não são composição nenhuma.
+    const rotulos = [...saida.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
+    expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
   });
 
   it('a navegação secundária publica as CINCO seções e o marco com nome', () => {

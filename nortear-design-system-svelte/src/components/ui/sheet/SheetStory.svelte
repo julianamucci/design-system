@@ -90,22 +90,27 @@
 
           {#if variant === 'withForm'}
             <!-- Empilhamento, e não grade: é o que a folha compartilhada define
-                 para formulário de painel, e o que o Vanilla renderiza. -->
+                 para formulário de painel, e o que o Vanilla renderiza.
+
+                 Os campos são os de `variants.compositions.advancedFilters`:
+                 Categoria e Preço mínimo. Aqui moravam Nome e Email, que o
+                 conteúdo compartilhado não descreve em composição nenhuma — a
+                 story renderizava um formulário e a docs page, outro. -->
             <SheetBody>
               <form class="nds-stack" data-spacing="sm">
                 <div class="nds-stack" data-spacing="xs">
-                  <Label for="sheet-story-nome">Nome</Label>
-                  <Input id="sheet-story-nome" value="Maria Silva" />
+                  <Label for="sheet-story-categoria">Categoria</Label>
+                  <Input id="sheet-story-categoria" value="Eletrônicos" />
                 </div>
                 <div class="nds-stack" data-spacing="xs">
-                  <Label for="sheet-story-email">Email</Label>
-                  <Input id="sheet-story-email" type="email" value="maria@exemplo.com" />
+                  <Label for="sheet-story-minimo">Preço mínimo</Label>
+                  <Input id="sheet-story-minimo" type="number" value="100" />
                 </div>
               </form>
             </SheetBody>
           {:else if variant === 'profileForm'}
             <!-- Três campos, na ordem das outras stacks: Nome, Nome de usuário,
-                 Bio. O `withForm` genérico tem dois, e a edição de perfil
+                 Bio. O formulário de filtros tem dois, e a edição de perfil
                  perdia o do meio enquanto os dois dividiam o mesmo corpo. -->
             <SheetBody>
               <form class="nds-stack" data-spacing="sm">

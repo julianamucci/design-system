@@ -172,13 +172,35 @@ describe('transforms das stories de estado', () => {
 });
 
 describe('transforms das stories de composição', () => {
+  it('as QUATRO composições abrem por um gatilho, como as stories ao lado', () => {
+    // Esta stack era a única cujas composições não tinham gatilho — nem na
+    // story, nem no snippet. `default-open` fica porque é o que a regressão
+    // visual e o axe alcançam; o gatilho entra porque é o que se escreve.
+    for (const build of [
+      sheetFiltersAvancadosSource,
+      sheetEditPerfilSource,
+      sheetNavigationSecundariaSource,
+      sheetBottomPanelSource,
+    ]) {
+      const saida = build();
+      expect(saida).toContain('<Sheet default-open>');
+      expect(saida).toContain('<SheetTrigger as-child>');
+      expect(saida).toMatch(/<Button variant="outline">[^<]+<\/Button>\n {4}<\/SheetTrigger>/);
+      expect(saida).toContain('  SheetTrigger,\n');
+    }
+  });
+
   it('o corpo rolável é SheetBody, e ele é o que segura o rodapé', () => {
     const saida = sheetFiltersAvancadosSource();
     expect(saida).toContain('<SheetBody>');
     expect(saida).toContain('  SheetBody,\n');
-    expect(saida).toContain('<Input id="cat" default-value="Componentes" />');
+    expect(saida).toContain('<Input id="cat" default-value="Eletrônicos" />');
     // O rótulo se liga ao campo pelo id, e não por proximidade visual.
     expect(saida).toContain('<Label for="cat">Categoria</Label>');
+    // Os DOIS campos que o conteúdo compartilhado documenta, por ÍNDICE: o
+    // snippet publicava três, e nenhum deles era esse par.
+    const rotulos = [...saida.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
+    expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
     // Empilhamento, e não grade: é o que a folha compartilhada define para
     // formulário de painel, e o que o Vanilla renderiza.
     expect(saida).toContain('<div class="nds-stack" data-spacing="sm">');
@@ -208,8 +230,12 @@ describe('transforms das stories de composição', () => {
       '<nav class="nds-stack" data-spacing="xs" aria-label="Navegação secundária">',
     );
     expect(saida).not.toContain('SheetFooter');
-    // Sem botão nenhum, o import do Button seria import morto no exemplo.
-    expect(saida).not.toContain('@/components/ui/button');
+    // O único botão do exemplo é o GATILHO — e ele existe, como nas outras
+    // quatro stacks. Enquanto as composições daqui nasciam só com
+    // `default-open`, o painel aparecia sem nada que explicasse como se abre.
+    expect(saida).toContain('<SheetTrigger as-child>');
+    expect(saida).toContain('<Button variant="outline">Abrir menu</Button>');
+    expect(saida).toContain('@/components/ui/button');
   });
 
   it('a navegação secundária lista as CINCO seções, na ordem do conteúdo', () => {

@@ -88,16 +88,20 @@ function panelBody(body: Body): string {
   if (body === 'formulario') {
     // Empilhamento, e não grade: é o que a folha compartilhada define para
     // formulário de painel, e o que o Vanilla renderiza.
+    //
+    // Os campos são os de `variants.compositions.advancedFilters` — Categoria e
+    // Preço mínimo. Aqui moravam Nome e Email, que o conteúdo não descreve em
+    // composição nenhuma: o snippet ensinava um formulário e a docs page, outro.
     return `
     <SheetBody>
       <form class="nds-stack" data-spacing="sm">
         <div class="nds-stack" data-spacing="xs">
-          <Label for="sheet-nome">Nome</Label>
-          <Input id="sheet-nome" value="Maria Silva" />
+          <Label for="sheet-categoria">Categoria</Label>
+          <Input id="sheet-categoria" value="Eletrônicos" />
         </div>
         <div class="nds-stack" data-spacing="xs">
-          <Label for="sheet-email">Email</Label>
-          <Input id="sheet-email" type="email" value="maria@exemplo.com" />
+          <Label for="sheet-minimo">Preço mínimo</Label>
+          <Input id="sheet-minimo" type="number" value="100" />
         </div>
       </form>
     </SheetBody>
@@ -267,9 +271,12 @@ export function sheetFiltersAvancadosSource(): string {
   return panel({
     open: true,
     body: 'formulario',
-    triggerLabel: 'Filtros avançados',
+    // O gatilho diz o que o clique FAZ, e o título diz onde a pessoa chegou:
+    // repetir "Filtros avançados" nos dois apagava a diferença. Os dois textos
+    // são os de `demonstration.labels`, como nas outras stacks.
+    triggerLabel: 'Abrir filtros',
     title: 'Filtros avançados',
-    description: 'Refine os resultados configurando os filtros abaixo.',
+    description: 'Configure os filtros para refinar os resultados.',
   });
 }
 

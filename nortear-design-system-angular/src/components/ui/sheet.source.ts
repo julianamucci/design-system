@@ -30,10 +30,12 @@
  *
  * Os textos saem do MESMO `translations.json` que a story usa; ler dali, e não
  * repetir literal, é o que impede o snippet de ensinar um rótulo que a
- * demonstração não mostra mais. As duas composições são a exceção declarada:
+ * demonstração não mostra mais. As QUATRO composições são a exceção declarada:
  * elas escrevem os próprios textos dentro da story, e o snippet os repete como
  * estão — copiar de `translations.json` ali inventaria uma sincronia que a
- * story não tem.
+ * story não tem. O que elas repetem é conferido contra o conteúdo compartilhado
+ * no `sheet.source.test.ts`: cinco seções no menu, três ações no painel
+ * inferior, três campos no perfil, dois campos nos filtros.
  */
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
@@ -461,7 +463,81 @@ export function sheetSecondaryNavigationSource(): string {
             <a href="#projetos" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
             <a href="#equipe" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
             <a href="#configuracoes" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
+            <a href="#faturas" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Faturas</a>
           </nav>
+        </div>`,
+    }),
+  );
+}
+
+/**
+ * Edição de perfil: três campos no corpo e o par descartar ↔ confirmar no
+ * rodapé.
+ *
+ * Quem confirma é o `type="submit"` ligado ao `form` pelo id — o rodapé mora
+ * FORA do corpo rolável, então o botão não está dentro do formulário e só o
+ * atributo o alcança. Um `(click)` solto deixaria de fora o Enter no campo, que
+ * é como a maioria envia um formulário curto.
+ */
+export function sheetProfileEditSource(): string {
+  return example(
+    [SHEET_IMPORT, BUTTON_IMPORT, INPUT_IMPORT, LABEL_IMPORT],
+    '...NDS_SHEET, NdsButton, NdsInput, NdsLabel',
+    sheetMarkup({
+      rootAttrs: ' [defaultOpen]="true"',
+      triggerLabel: 'Editar perfil',
+      title: 'Editar perfil',
+      description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+      body: `        <div ndsSheetBody>
+          <form id="perfil-form" class="nds-grid" data-spacing="md">
+            <div class="nds-grid" data-spacing="xs">
+              <label ndsLabel for="perfil-nome">Nome</label>
+              <input ndsInput id="perfil-nome" value="Juliana Mucci" />
+            </div>
+            <div class="nds-grid" data-spacing="xs">
+              <label ndsLabel for="perfil-usuario">Nome de usuário</label>
+              <input ndsInput id="perfil-usuario" value="@julianamucci" />
+            </div>
+            <div class="nds-grid" data-spacing="xs">
+              <label ndsLabel for="perfil-bio">Bio</label>
+              <input ndsInput id="perfil-bio" value="Designer de sistemas em São Paulo" />
+            </div>
+          </form>
+        </div>`,
+      footer: `        <div ndsSheetFooter>
+          <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
+          <button ndsButton type="submit" form="perfil-form">Salvar alterações</button>
+        </div>`,
+    }),
+  );
+}
+
+/**
+ * Painel inferior: uma fileira de ações no corpo, no lugar de formulário.
+ *
+ * O rodapé só oferece a SAÍDA — a decisão já foi tomada no corpo, e repetir uma
+ * confirmação aqui diria que falta um passo que não existe. A destrutiva vem
+ * por último e é a única com a variante que a anuncia.
+ */
+export function sheetBottomPanelSource(): string {
+  return example(
+    [SHEET_IMPORT, BUTTON_IMPORT],
+    '...NDS_SHEET, NdsButton',
+    sheetMarkup({
+      rootAttrs: ' [defaultOpen]="true"',
+      contentAttrs: ' side="bottom"',
+      triggerLabel: 'Abrir ações',
+      title: 'Ações rápidas',
+      description: 'Escolha uma das ações disponíveis para este item.',
+      body: `        <div ndsSheetBody>
+          <div class="nds-cluster" data-spacing="md">
+            <button ndsButton variant="outline">Compartilhar</button>
+            <button ndsButton variant="outline">Duplicar</button>
+            <button ndsButton variant="destructive">Excluir</button>
+          </div>
+        </div>`,
+      footer: `        <div ndsSheetFooter>
+          <button ndsSheetClose ndsButton variant="outline">Fechar</button>
         </div>`,
     }),
   );

@@ -294,12 +294,20 @@ ${header(
   );
 }
 
-/** Campos empilhados dentro do corpo rolável, com rótulo ligado ao campo. */
-function field(id: string, label: string, value: string, recuo: number): string {
+/**
+ * Campos empilhados dentro do corpo rolável, com rótulo ligado ao campo.
+ *
+ * `type` entra só quando NÃO é texto: `text` é o padrão do elemento, e
+ * escrevê-lo apagaria a informação de que existe um padrão. O parâmetro existe
+ * porque o preço é numérico no preview — sem ele o snippet ensinaria um campo
+ * de texto ao lado de um campo de número.
+ */
+function field(id: string, label: string, value: string, recuo: number, type?: string): string {
   const p = ' '.repeat(recuo);
+  const tipo = type ? ` type="${type}"` : '';
   return `${p}<div class="nds-stack" data-spacing="xs">
 ${p}  <Label for="${id}">${label}</Label>
-${p}  <Input id="${id}" default-value="${value}" />
+${p}  <Input id="${id}"${tipo} default-value="${value}" />
 ${p}</div>`;
 }
 
@@ -307,6 +315,13 @@ ${p}</div>`;
  * Filtros avançados: o caso canônico do painel direito. `SheetBody` é o que
  * separa o corpo rolável do rodapé fixo — sem ele o rodapé rola junto e as
  * ações sobem para fora de alcance.
+ *
+ * As QUATRO composições levam gatilho, aqui e nas stories. Elas nasceram sem —
+ * só `default-open`, e o painel aparecia sem nada que explicasse como se abre —,
+ * e é a única stack em que isso acontecia: as outras quatro sempre renderizaram
+ * o gatilho ao lado do painel aberto. `default-open` fica porque é o que a
+ * regressão visual e o axe alcançam; o gatilho entra porque é o que a pessoa
+ * escreve.
  */
 export function sheetFiltersAvancadosSource(): string {
   return vueSnippet(
@@ -318,17 +333,18 @@ export function sheetFiltersAvancadosSource(): string {
       'SheetFooter',
       'SheetHeader',
       'SheetTitle',
+      'SheetTrigger',
     ])}
 ${BUTTON}
 ${FIELD}`,
     `<Sheet default-open>
+${TRIGGER('Abrir filtros')}
   <SheetContent>
 ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
     <SheetBody>
       <div class="nds-stack" data-spacing="sm">
-${field('cat', 'Categoria', 'Componentes', 8)}
-${field('status', 'Status', 'Estável', 8)}
-${field('lang', 'Idioma', 'Português', 8)}
+${field('cat', 'Categoria', 'Eletrônicos', 8)}
+${field('min', 'Preço mínimo', '100', 8, 'number')}
       </div>
     </SheetBody>
 ${footer('Cancelar', 'Aplicar filtros', 4)}
@@ -351,10 +367,12 @@ export function sheetEditPerfilSource(): string {
       'SheetFooter',
       'SheetHeader',
       'SheetTitle',
+      'SheetTrigger',
     ])}
 ${BUTTON}
 ${FIELD}`,
     `<Sheet default-open>
+${TRIGGER('Editar perfil')}
   <SheetContent>
 ${header(
   'Editar perfil',
@@ -389,14 +407,17 @@ export function sheetNavigationSecundariaSource(): string {
       `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">${section}</a>`,
   ).join('\n');
   return vueSnippet(
-    importing([
+    `${importing([
       'SheetBody',
       'SheetContent',
       'SheetDescription',
       'SheetHeader',
       'SheetTitle',
-    ]),
+      'SheetTrigger',
+    ])}
+${BUTTON}`,
     `<Sheet default-open>
+${TRIGGER('Abrir menu')}
   <SheetContent side="left">
 ${header('Menu', 'Navegue entre as áreas do sistema.', 4)}
     <SheetBody>
@@ -429,9 +450,11 @@ export function sheetBottomPanelSource(): string {
       'SheetFooter',
       'SheetHeader',
       'SheetTitle',
+      'SheetTrigger',
     ])}
 ${BUTTON}`,
     `<Sheet default-open>
+${TRIGGER('Abrir ações')}
   <SheetContent side="bottom">
 ${header('Ações rápidas', 'Escolha uma das ações disponíveis para este item.', 4)}
     <SheetBody>

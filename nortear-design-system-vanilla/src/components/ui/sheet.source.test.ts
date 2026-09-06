@@ -57,7 +57,9 @@ describe('sheetSnippet', () => {
     expect(form).toContain('createFormField({ label:');
 
     const navigation = sheetSnippet({ body: 'navigation' });
-    expect(navigation).toContain("corpo.setAttribute('aria-label', 'Seções');");
+    expect(navigation).toContain(
+      "corpo.setAttribute('aria-label', 'Navegação secundária');",
+    );
 
     const paragrafos = sheetSnippet({ body: 'paragraphs', paragrafos: 8 });
     expect(paragrafos).toContain('i <= 8');
@@ -114,6 +116,55 @@ describe('paridade entre snippet e preview', () => {
     // O corpo de filtros tem outros campos: trocar um pelo outro é o defeito
     // que esta composição existe para não repetir.
     expect(code).not.toContain('Categoria');
+  });
+
+  it('dá aos filtros os DOIS campos que o conteúdo compartilhado documenta', () => {
+    const code = sheetSnippet({ body: 'form' });
+    const filters = CONTENT.variants.compositions.advancedFilters;
+    expect(code).toContain(
+      `createFormField({ label: '${filters.fieldCategory}', input: createInput({ value: '${filters.categoryValue}' }) }),`,
+    );
+    expect(code).toContain(`createFormField({ label: '${filters.fieldMinPrice}',`);
+    // O terceiro campo era invenção do snippet: nem o conteúdo nem a docs page
+    // o descrevem.
+    expect(code).not.toContain('Preço máximo');
+    // `\x27` no lugar da aspa simples: o portão `identificador_pt_novo` descasca
+    // literal de texto por PAREAMENTO de aspas, e não descasca regex — uma aspa
+    // ímpar aqui inverte a paridade do arquivo inteiro daqui para baixo, e nomes
+    // dentro de strings passam a contar como código. Medido nesta rodada.
+    const labels = [...code.matchAll(/createFormField\(\{ label: \x27([^\x27]*)\x27/g)].map(
+      (m) => m[1],
+    );
+    expect(labels).toEqual([filters.fieldCategory, filters.fieldMinPrice]);
+  });
+
+  it('dá ao painel inferior as TRÊS ações, com a destrutiva por último', () => {
+    const code = sheetSnippet({ body: 'actions' });
+    const [share, duplicate, remove] = CONTENT.variants.compositions.bottomPanel.actions;
+    expect(code).toContain(`createButton({ variant: 'outline', label: '${share}' }),`);
+    expect(code).toContain(`createButton({ variant: 'outline', label: '${duplicate}' }),`);
+    // Só a última leva a variante que anuncia o peso: três destrutivas lado a
+    // lado tirariam o peso justamente de quem precisa dele.
+    expect(code).toContain(`createButton({ variant: 'destructive', label: '${remove}' }),`);
+    // A fileira inteira, e não três substrings soltas: eram SEIS rótulos
+    // inventados aqui, e uma asserção por rótulo teria passado com os outros
+    // três ainda de pé.
+    const row = [
+      'corpo.append(',
+      `  createButton({ variant: 'outline', label: '${share}' }),`,
+      `  createButton({ variant: 'outline', label: '${duplicate}' }),`,
+      `  createButton({ variant: 'destructive', label: '${remove}' }),`,
+      ');',
+    ].join('\n');
+    expect(code).toContain(row);
+  });
+
+  it('dá ao menu as CINCO seções que o conteúdo compartilhado descreve', () => {
+    const code = sheetSnippet({ body: 'navigation' });
+    const nav = CONTENT.variants.compositions.secondaryNavigation;
+    expect(code).toContain(`corpo.setAttribute('aria-label', '${nav.navLabel}');`);
+    const sections = nav.items.map((item) => `'${item}'`).join(', ');
+    expect(code).toContain(`for (const rotulo of [${sections}]) {`);
   });
 });
 

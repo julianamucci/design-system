@@ -76,6 +76,9 @@ export const AdvancedFilters: Story = {
     components: sharedComponents,
     template: `
       <Sheet default-open>
+        <SheetTrigger as-child>
+          <Button variant="outline">Abrir filtros</Button>
+        </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Filtros avançados</SheetTitle>
@@ -85,15 +88,11 @@ export const AdvancedFilters: Story = {
             <div class="nds-stack" data-spacing="sm">
               <div class="nds-stack" data-spacing="xs">
                 <Label for="cat">Categoria</Label>
-                <Input id="cat" defaultValue="Componentes" />
+                <Input id="cat" defaultValue="Eletrônicos" />
               </div>
               <div class="nds-stack" data-spacing="xs">
-                <Label for="status">Status</Label>
-                <Input id="status" defaultValue="Estável" />
-              </div>
-              <div class="nds-stack" data-spacing="xs">
-                <Label for="lang">Idioma</Label>
-                <Input id="lang" defaultValue="Português" />
+                <Label for="min">Preço mínimo</Label>
+                <Input id="min" type="number" defaultValue="100" />
               </div>
             </div>
           </SheetBody>
@@ -112,6 +111,10 @@ export const AdvancedFilters: Story = {
     await expect(panel).toHaveAccessibleName(/Filtros avançados/i);
     const aplicar = within(panel).getByRole('button', { name: /Aplicar filtros/i });
     await expect(aplicar).toBeVisible();
+    // Categoria e Preço mínimo: são os DOIS campos que o conteúdo compartilhado
+    // documenta. Esta story mostrava três, e nenhum deles era esse par.
+    const rotulos = [...panel.querySelectorAll('label')].map((el) => el.textContent?.trim());
+    await expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
   },
 };
 
@@ -128,6 +131,9 @@ export const ProfileEdit: Story = {
     components: sharedComponents,
     template: `
       <Sheet default-open>
+        <SheetTrigger as-child>
+          <Button variant="outline">Editar perfil</Button>
+        </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Editar perfil</SheetTitle>
@@ -183,6 +189,9 @@ export const SecondaryNavigation: Story = {
     components: sharedComponents,
     template: `
       <Sheet default-open>
+        <SheetTrigger as-child>
+          <Button variant="outline">Abrir menu</Button>
+        </SheetTrigger>
         <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Menu</SheetTitle>
@@ -229,6 +238,9 @@ export const BottomPanel: Story = {
     components: sharedComponents,
     template: `
       <Sheet default-open>
+        <SheetTrigger as-child>
+          <Button variant="outline">Abrir ações</Button>
+        </SheetTrigger>
         <SheetContent side="bottom">
           <SheetHeader>
             <SheetTitle>Ações rápidas</SheetTitle>
