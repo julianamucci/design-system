@@ -127,6 +127,23 @@ describe('variantes', () => {
       expect(fn()).toContain('<Tooltip defaultOpen>');
     }
   });
+
+  // O snippet do texto longo ensinava o botão de salvar com um ícone enquanto a
+  // story `LongText` ao lado renderizava o botão de compartilhar — a mesma
+  // distância entre painel e preview que já custou a variante do gatilho, e as
+  // outras quatro stacks todas do lado da story. Quem lê copia o snippet.
+  it('a de texto longo traz o gatilho de texto da story, não o de ícone', () => {
+    const saida = tooltipTextLongSource();
+    expect(saida).toContain(
+      '<TooltipTrigger\n      render={(props) => <Button {...props} variant="outline">Compartilhar</Button>}\n    />',
+    );
+    expect(saida).toContain(
+      'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
+    );
+    // O ícone sai junto do gatilho: import sobrando é código que não compila
+    // na mão de quem copia.
+    expect(saida).not.toContain('import { Save } from "lucide-react";');
+  });
 });
 
 describe('estados', () => {

@@ -135,12 +135,14 @@ ${triggerIcon()}
  */
 export function tooltipTextLongSource(): string {
   return jsxSnippet(
-    IMPORT_DEFAULT,
+    IMPORT_TOOLTIP,
     withProvider(
       `  <Tooltip defaultOpen>
-${triggerIcon()}
-    <TooltipContent>
-      Salva as alterações do documento atual e mantém você na mesma tela.
+    <TooltipTrigger
+      render={(props) => <Button {...props} variant="outline">Compartilhar</Button>}
+    />
+    <TooltipContent side="bottom">
+      Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo
     </TooltipContent>
   </Tooltip>`,
     ),
