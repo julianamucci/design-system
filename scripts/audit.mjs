@@ -6072,6 +6072,64 @@ function auditQuality(slug) {
     { id: 'estados', label: 'states', has: (pt) => hasKeys(pt.states?.items) || hasKeys(pt.states) },
   ];
 
+  // As listas do conteúdo que são numeradas (`item1`, `item2`, …) e viram
+  // lista ou tabela na docs page. É esta forma que a página consegue encurtar
+  // sem que nada reprove — as listas de chave NOMEADA (`states.closed`,
+  // `accessibility.aria.role`) ficam de fora de propósito: lá o nome da chave
+  // aparece no código que a renderiza, e chave esquecida some da lista sem
+  // deixar um índice máximo para comparar. Cobrir aquela forma pede outra
+  // medida, não esta.
+  const LISTAS_NUMERADAS = [
+    'usage.guidelines', 'usage.scenarios', 'usage.do', 'usage.dont',
+    'accessibility.items', 'testes.functional', 'testes.accessibility',
+    'testes.visual', 'notes',
+  ];
+  const noPorCaminho = (raiz, caminho) => {
+    let no = raiz;
+    for (const parte of caminho.split('.')) no = no?.[parte];
+    return no && typeof no === 'object' ? no : null;
+  };
+  const indicesDe = (no) =>
+    Object.keys(no).filter((k) => /^item\d+$/.test(k)).map((k) => Number(k.slice(4)))
+      .sort((a, b) => a - b);
+  const escapaRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  const contentFileSlug = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const conteudoSlug = existsSync(contentFileSlug)
+    ? (JSON.parse(readFile(contentFileSlug) || '{}') ?? null)
+    : null;
+
+  // 0. Buraco no índice de uma lista numerada.
+  //
+  // Vale para o conteúdo, não para uma stack — por isso roda antes do laço e
+  // sai como `shared`. O motivo é o helper que DERIVA a lista do dicionário:
+  // ele para no primeiro índice ausente, então `item1, item2, item4` renderiza
+  // dois e some com o quarto, em silêncio. Hoje a varredura dá zero nos três
+  // idiomas; a regra existe para que continue dando, porque a adoção do helper
+  // pelas outras quatro stacks depende disso.
+  if (conteudoSlug) {
+    for (const [locale, dicionario] of Object.entries(conteudoSlug)) {
+      for (const caminho of LISTAS_NUMERADAS) {
+        const no = noPorCaminho(dicionario, caminho);
+        if (!no) continue;
+        const indices = indicesDe(no);
+        if (!indices.length) continue;
+        const posicao = indices.findIndex((n, i) => n !== i + 1);
+        if (posicao === -1) continue;
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack: 'shared',
+          file: relative(ROOT, contentFileSlug), rule: 'lista_com_buraco_no_indice',
+          message:
+            `${locale} · ${caminho} pula de item${indices[posicao - 1] ?? 0} para ` +
+            `item${indices[posicao]} — quem deriva a lista do dicionário para no buraco ` +
+            (indices.length - posicao === 1
+              ? 'e some com o seguinte'
+              : `e some com os ${indices.length - posicao} seguintes`),
+        });
+      }
+    }
+  }
+
   for (const stack of STACKS) {
     const { ui, docs } = filesForSlug(slug, stack);
 
@@ -6142,6 +6200,63 @@ function auditQuality(slug) {
               message: `id="${id}" existe na página mas ${label} está vazio — seção placeholder`,
             });
           }
+        }
+
+        // 1c. Lista mais curta que o conteúdo.
+        //
+        // `content_without_section` mede SEÇÃO; dentro dela ninguém contava
+        // item. A página que cita `item1..item5` à mão continua citando cinco
+        // quando o conteúdo passa a ter seis, e o sexto simplesmente não
+        // existe para quem lê — sem erro, sem aviso, em três idiomas de uma
+        // vez. Medido em 2026-09-06: 47 listas nesta situação, sendo 11 de
+        // critério de teste (o Chart tem 11 critérios funcionais e três stacks
+        // mostram 6).
+        //
+        // O caminho contrário — página citando chave que não existe — não
+        // precisa de regra: `t()` devolve o próprio caminho da chave, então o
+        // defeito aparece escrito na tela.
+        //
+        // EXCLUSÃO DECLARADA: a página que não cita o caminho nenhuma vez fica
+        // de fora, porque não dá para distinguir "esqueceu a lista" de "esta
+        // stack não tem esta lista". Quem cobra a seção inteira ausente é
+        // `content_without_section`, logo acima.
+        for (const caminho of LISTAS_NUMERADAS) {
+          const no = noPorCaminho(ptBr, caminho);
+          if (!no) continue;
+          const total = indicesDe(no).length;
+          if (!total) continue;
+          if (!content.includes(caminho)) continue;
+
+          const p = escapaRegex(caminho);
+          // Derivada do dicionário: varre `item{i}` até faltar, então não tem
+          // como encurtar por esquecimento — é o que esta regra quer premiar.
+          if (new RegExp(`(itemsFromDict|listFromDict)\\([^)]*['"\`]${p}['"\`]`).test(content)) continue;
+
+          let renderizado = 0;
+          // Interpolada: `${caminho}.item${i}` alimentada por um array literal.
+          if (new RegExp(`${p}\\.item\\$\\{i\\}`).test(content)) {
+            const lista = content.match(new RegExp(`\\[([\\d,\\s]+)\\][^\\n]{0,200}${p}`, 's'));
+            if (lista) {
+              renderizado = Math.max(
+                ...lista[1].split(',').map((n) => Number(n.trim())).filter(Number.isFinite),
+              );
+            }
+          } else {
+            const citacoes = new RegExp(`${p}\\.item(\\d+)`, 'g');
+            let m;
+            while ((m = citacoes.exec(content))) renderizado = Math.max(renderizado, Number(m[1]));
+          }
+          if (!renderizado || renderizado >= total) continue;
+
+          violations.push({
+            category: 'quality', severity: 'high', slug, stack,
+            file: relative(ROOT, file), rule: 'lista_mais_curta_que_o_conteudo',
+            message:
+              `${caminho} tem ${total} itens no conteúdo e a página renderiza ${renderizado} — ` +
+              (total - renderizado === 1
+                ? 'o último não existe para quem lê'
+                : `os ${total - renderizado} últimos não existem para quem lê`),
+          });
         }
       }
     }
