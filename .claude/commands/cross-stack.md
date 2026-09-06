@@ -25,6 +25,22 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 Exceção: quando a divergência for de **API de framework** (nome de prop, forma de composição, sintaxe de evento), não há fonte de verdade — cada lib tem a sua. Registre em `patches.md` em vez de "alinhar".
 
+**O que este instrumento NÃO enxerga, e é o ponto cego natural dele.** Ele
+compara as implementações entre si e trata o conteúdo compartilhado como a
+especificação — nunca pergunta se a especificação está certa. Uma afirmação
+errada, implementada fielmente cinco vezes, é **maximamente consistente**: o
+relatório sai verde justamente porque o erro é perfeito.
+
+Medido no popover em 2026-09-06: as cinco stacks diziam "sempre forneça título"
+com a mesma vírgula, enquanto o código já tinha fixado o contrário (o painel
+precisa de NOME — título visível ou `aria-label`) e a própria página ensinava o
+oposto três seções abaixo. Duas passagens de `cross-stack` — a de medição e a de
+verificação — não tinham como ver.
+
+Corolário para o relatório: consistência entre as cinco **não é** evidência de
+fidelidade ao código. Quando as cinco concordam, a pergunta que sobra é para a
+`quality` (§3a2, "a afirmação ainda bate com o código?"), não para este passo.
+
 ---
 
 ## Fontes de Referência

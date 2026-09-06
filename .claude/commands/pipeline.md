@@ -308,6 +308,26 @@ Conteúdo compartilhado renderiza nas cinco: duas skills editando o mesmo
 `translations.json` em paralelo é a colisão que já apagou override alheio nesta
 casa. A skill que achar defeito ali **reporta e não edita**.
 
+**E ao aplicar essa correção, você varre o arquivo inteiro pela afirmação
+errada — nos três idiomas.** A instrução existia só na `quality`
+(§Passo 4, "varra TODAS as chaves pela afirmação errada"), e a tabela acima tira
+a caneta dela justamente neste arquivo: a regra ficava em quem não edita, e quem
+edita não a tinha. Medido no popover em 2026-09-06 — uma passagem de `fix`
+corrigiu `doDont.pair1`, que dizia "sempre forneça título", e deixou a MESMA
+afirmação de pé em `usage.guidelines.item2`, sob o título "Guidelines
+Obrigatórias", que renderiza acima. A página passou a se contradizer com os
+papéis trocados, nos três idiomas, e nenhum portão viu.
+
+Três verificações antes de fechar a edição:
+
+1. `grep` da afirmação corrigida no `translations.json` inteiro — a frase costuma
+   estar em duas ou três chaves, e `seo.*` entra na varredura;
+2. as chaves irmãs que falam do mesmo assunto continuam concordando
+   (`usage.guidelines` × `doDont` × `variants.styles` × `notes`);
+3. a mesma frase fora do conteúdo compartilhado — `description.component` de
+   `*.stories.*` guarda cópias antigas, e no popover duas stacks carregavam a
+   frase errada onde as outras três não tinham descrição nenhuma.
+
 ---
 
 ### Sequência `content`

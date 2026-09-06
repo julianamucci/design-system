@@ -69,6 +69,8 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | **Guardas de regra escrita** | nove regras que viviam só no CLAUDE.md e passaram a ter detector. Todas verdes hoje — são guarda de regressão, e cada uma já custou caro uma vez: `emoji_in_translation` (glifo de status no conteúdo, que a docs page já renderiza como pill+ícone — setas de prosa não contam), `seo_title_suffix` (`· Design System` no JSON, que `useSeoEffect` já acrescenta), `fixed_height_on_text_primitive` (altura fixa na raiz de primitivo com texto, WCAG 1.4.4 — ícone, indicador e medida da lib headless são exceção), `gtag_direct_call`, `vue_locale_from_store` (locale de Pinia já derrubou docs page em runtime), `ga4_in_preview_head` (o iframe registrou 863 de 863 page_view em `/iframe.html`), `measurement_id_committed` (repositório público), `theme_channel_missing` (só react/vue/svelte: o renderer html re-roda sozinho), `code_in_component_guideline` (só as 04–10 de cada stack; as transversais podem ilustrar regra) |
 | `source_sem_teste` | `<slug>.source.*` sem `<slug>.source.test.ts`. **Em fix-mode, ESCREVA o teste** — é correção mecânica com julgamento local, não item para relatar. São duas camadas sobre o painel Code e elas não se substituem: o `source-snippets.test.ts` de cada stack varre todos os construtores e prova coerência de IMPORT (1129 casos no angular, 3303 no react); este prova que o snippet ensina o CERTO. A distância apareceu duas vezes numa campanha só — no popover o preview mudou e o snippet seguiu ensinando a forma antiga; no hover-card o snippet do angular prometia `Limpar`/`Aplicar` e o preview mostrava `Salvar`. Quem lê copia o snippet, não o preview. Modelo: `nortear-design-system-angular/src/components/ui/hover-card.source.test.ts`. O mínimo a afirmar: devolve o componente que se ESCREVE (sem `args.`, sem `data-slot=`, sem binding de story), OMITE o que já é padrão, imprime o que difere com o valor dos controls, e guarda a lição do componente quando houver. Cuidado medido: asserção por substring casa onde não devia — `not.toContain('align=')` reprovou por causa do `data-align="start"` do cartão, que é markup correto; afirme sobre a TAG. 234 achados em 79 componentes hoje |
 | `traducao_recortada` | texto de tela RECORTADO de um texto traduzido — `t(…).split(' ')[0]`, `.slice(0, 40)`, primeira frase de uma `description`. O que aparece na tela tem de ser uma CHAVE, não o pedaço de outra: quem reescreve o texto de origem muda o rótulo sem saber, o TypeScript não vê, o teste não vê, e o resultado continua sendo uma string plausível. Quatro ocorrências em dois componentes nesta campanha, todas achadas por leitura humana e nenhuma por portão — uma delas fez uma legenda prometer "Clique aqui" por meses enquanto o preview mostrava um verbo truncado. **Ao corrigir, crie a chave explícita** no namespace de quem a usa; derivar de prosa não é reuso, é acoplamento invisível. Cirurgia sobre a CHAVE (`key.charAt(0) + key.slice(1)`) não conta — é identificador de código |
+| `lista_mais_curta_que_o_conteudo` | a docs page cita `item1..itemN` à mão e o conteúdo tem mais — os últimos não existem para quem lê, nos três idiomas de uma vez. 47 na primeira varredura (react 15, svelte 13, vue 12, angular 6, vanilla 1); o Chart mostrava 6 de 11 critérios funcionais em três stacks. **Em fix-mode, acrescente as linhas que faltam** — é mecânico. Quem DERIVA a lista do dicionário (`itemsFromDict`/`listFromDict`) fica fora da regra por construção, e é o comportamento a imitar quando a página for tocada de qualquer jeito |
+| `lista_com_buraco_no_indice` | numeração de lista com salto (`item1, item2, item4`) no conteúdo compartilhado. Quem deriva a lista do dicionário PARA no primeiro índice ausente e some com os seguintes, em silêncio. Verde hoje nos três idiomas — é guarda, e o que ela protege é a adoção do helper pelas outras quatro stacks |
 | `manager_head_de_outra_stack` | o `manager-head.html` de uma stack anuncia OUTRA. É por stack, nasce de cópia, e cópia sem revisão aqui não quebra nada — só mente para buscador e link compartilhado, em toda página do Storybook publicado. Medido em 2026-09-05: o do Angular era o do Vanilla palavra por palavra ("componentes Vanilla TS", `keywords` com "vanilla" duas vezes). Nenhuma varredura de vocabulário alcança, porque nenhuma palavra ERRADA foi escrita — errado é o arquivo em que ela está; a verificação é de pertencimento (nomeia a própria, não nomeia alheia). `vanilla` é exceção pelos dois lados: o CSS `.nds-*` é "vanilla CSS" em qualquer stack |
 | `dodont_preview_sem_componente` | o Do & Don't mostra IMITAÇÃO em markup estático onde outras stacks instanciam o componente. A seção é obrigatória, os previews são código como qualquer outro, e o conteúdo compartilhado só traz a LEGENDA — sem spec, cada stack inventa o próprio par. O `pipeline.md` já chamava isto de "buraco recorrente", mas no contrato do context-cache, que é spec para CONSTRUIR e é apagado a cada rodada; nunca virou verificação. Nada mais alcança: o contrato de docs page cobra preview VAZIO e desalinhado, e imitação bem construída passa nos dois. **Ao corrigir, siga a guideline 08 §15** — toda seção com exemplo traz componente VIVO, e o "don't" também. Dois cuidados que o tooltip já pagou: anti-padrão que seria violação real de axe (botão icon-only sem nome) mantém o `aria-label` e passa a lição para o CONTEÚDO; e a lição que depende de tamanho (texto longo no balão) só existe renderizada. Detecção por janela a partir do marcador de preview, seguindo um nível de indireção — o preview costuma chamar um helper local. 51 componentes hoje |
 | `demonstration_labels_divergent` | stacks usando conjuntos diferentes de `demonstration.labels.*` — a Demonstração está mostrando outro exemplo. OPT-IN por componente (`DEMO_PARIDADE_EXIGIDA` no `audit.mjs`): ligada para todos são 38 componentes, e portão que despeja backlog ensina a ser ignorado. Ao alinhar a Demonstração de um componente, acrescente o slug ao conjunto. **A Demonstração traz o MESMO exemplo do Playground da story** — guideline 08 §15 |
@@ -586,6 +588,46 @@ Inspecione cada stack em **uma única passagem** por arquivo (não releia).
 **3a. Seção `testes` em translations.json**:
 - `functional` ≥4 itens, `accessibility` ≥4 itens, `visual` ≥4 itens
 - Prioridades `"high"`/`"medium"` não localizadas
+
+> Repare no que este passo mede: itens **no conteúdo**. Se a docs page cita
+> `item1..item6` à mão e o conteúdo tem onze, o `≥4` passa folgado e os cinco
+> últimos não existem para quem lê. Quem cobra isso é
+> `lista_mais_curta_que_o_conteudo`, no Passo 0 — 47 listas na primeira
+> varredura, o Chart mostrando 6 de 11 critérios funcionais em três stacks.
+
+**3a2. "Quando e como usar" — a afirmação ainda bate com o código?**
+
+Esta seção passou a existir para a `quality` em 2026-09-06, e o motivo é uma
+falha medida: o conteúdo do popover mandava *"Sempre forneça PopoverTitle"* em
+`usage.guidelines.item2`, sob o título "Guidelines Obrigatórias", enquanto o
+`doDont.pair1` — três seções abaixo, e corrigido numa passagem anterior de
+`fix` — já ensinava o oposto, que o painel precisa de NOME (título visível **ou**
+`aria-label`), e a seção de variantes documentava o painel sem título como a
+variante PADRÃO. A página proibia a própria variante padrão, nos três idiomas.
+
+Nada viu, e não foi desatenção: `usage.*` e `doDont` não aparecem em skill
+nenhuma como coisa a verificar. O que existe cobre a RENDERIZAÇÃO da seção
+(`dodont_preview_sem_componente` cobra preview vivo; `docs-sections` cobra o
+container; o schema cobra a chave existir), nunca o que ela afirma. Foi por
+isso que o Do & Don't acabou corrigido: os olhos chegaram lá por um achado de
+preview estático, e a contradição estava no enquadramento. O que não estava,
+não foi visto.
+
+Trate como o 3d, que é o único formato que já provou funcionar aqui — abra a
+fonte de verdade e confirme o fato, linha por linha:
+
+| o que ler | contra o quê |
+|---|---|
+| cada `usage.guidelines.item*` | a folha `docs/shared/styles/nds/<slug>.css` e o docblock do primitivo do Vanilla |
+| cada linha de `usage.scenarios` | os componentes citados na coluna "Alternativa" — a recomendação envelhece quando o alternativo ganha ou perde capacidade |
+| `usage.do.*` / `usage.dont.*` | a lista de props: "sem necessidade de X" vira falso no dia em que X passa a ser prop deste componente (foi o caso de `modal`) |
+
+E uma leitura de coerência interna, que é barata e pega o defeito acima sem
+abrir código nenhum: **a mesma afirmação não pode aparecer negada em outra
+seção do mesmo arquivo.** Cruze `usage.guidelines` com `doDont`,
+`variants.styles`, `notes` e `accessibility.items`. Contradição entre duas
+seções da mesma página é sempre defeito de uma delas — e a que está certa
+costuma ser a que foi tocada por último, não a que está mais acima.
 
 **3b. Acessibilidade na docs page**:
 - Documenta navegação por teclado
