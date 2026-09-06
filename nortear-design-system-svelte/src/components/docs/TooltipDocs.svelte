@@ -10,9 +10,7 @@
   import Save from '@lucide/svelte/icons/save';
   import Trash2 from '@lucide/svelte/icons/trash-2';
   import Share2 from '@lucide/svelte/icons/share-2';
-  import HelpCircle from '@lucide/svelte/icons/circle-question-mark';
-  import Info from '@lucide/svelte/icons/info';
-  import { locale, useTranslation } from '@/lib/i18n';
+      import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
 
@@ -166,7 +164,7 @@
       </Button>
     {/snippet}
   </TooltipTrigger>
-  <TooltipContent>Salvar item</TooltipContent>
+  <TooltipContent>Salvar</TooltipContent>
 </Tooltip>`;
 
   const codeWithShortcut = `<Tooltip>
@@ -187,13 +185,11 @@
   const codeLongText = `<Tooltip>
   <TooltipTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" size="icon" aria-label="Compartilhar link" {...props}>
-        <Share2 aria-hidden="true" class="nds-icon" />
-      </Button>
+      <Button variant="outline" {...props}>Compartilhar</Button>
     {/snippet}
   </TooltipTrigger>
-  <TooltipContent>
-    Compartilhe o link público desta página com qualquer pessoa.
+  <TooltipContent side="bottom">
+    Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo
   </TooltipContent>
 </Tooltip>`;
 
@@ -255,7 +251,7 @@ interface TooltipTriggerProps {
     <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma fonte,
          dois lugares. A barra de três ações que morava aqui virou a composição
          `actionBar`, que é o que ela sempre foi. -->
-    <TooltipProvider delayDuration={200}>
+    <TooltipProvider delayDuration={400}>
       <div class="nds-cluster nds-w-full nds-min-h-30" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; position: relative">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'save', o)}>
           <TooltipTrigger>
@@ -369,21 +365,21 @@ interface TooltipTriggerProps {
   />
 
   {#snippet doPair1()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-do', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
+            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
-        <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+        <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   {/snippet}
   {#snippet dontPair1()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-dont', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
@@ -394,37 +390,35 @@ interface TooltipTriggerProps {
             </Button>
           {/snippet}
         </TooltipTrigger>
-        <TooltipContent>Salvar</TooltipContent>
+        <TooltipContent>{$tStore('demonstration.labels.saveButton')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   {/snippet}
   {#snippet doPair2()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-do', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
+            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
-        <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+        <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   {/snippet}
   {#snippet dontPair2()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-dont', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
+            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
-        <TooltipContent>
-          Clique aqui para salvar o documento atual no servidor — pode demorar alguns segundos dependendo do tamanho.
-        </TooltipContent>
+        <TooltipContent>{$tStore('demonstration.labels.longBalloonDont')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   {/snippet}
@@ -452,7 +446,7 @@ interface TooltipTriggerProps {
         name: $tStore('variants.items.positioningSides.name'),
         description: $tStore('variants.items.positioningSides.description'),
         useWhen: $tStore('variants.items.positioningSides.use'),
-        code: `<div class="nds-grid nds-w-full" data-spacing="xl" style="place-items: center">
+        code: `<div class="nds-grid nds-w-full" data-cols="4" data-spacing="xl" style="place-items: center">
   {#each ['top','right','bottom','left'] as s}
     <Tooltip>
       <TooltipTrigger>
@@ -470,31 +464,31 @@ interface TooltipTriggerProps {
   />
 
   {#snippet variantDefault()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'default', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
+            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
-        <TooltipContent>Salvar item</TooltipContent>
+        <TooltipContent>{$tStore('demonstration.labels.saveButton')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   {/snippet}
   {#snippet variantWithShortcut()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'withShortcut', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
+            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
         <TooltipContent>
-          <span>Salvar</span>
+          <span>{$tStore('demonstration.labels.saveButton')}</span>
           <kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>
           <kbd data-slot="kbd" class="nds-kbd">S</kbd>
         </TooltipContent>
@@ -502,18 +496,14 @@ interface TooltipTriggerProps {
     </TooltipProvider>
   {/snippet}
   {#snippet variantLongText()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'longText', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label="Compartilhar link" {...props}>
-              <Share2 aria-hidden="true" class="nds-icon" />
-            </Button>
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.shareButton')}</Button>
           {/snippet}
         </TooltipTrigger>
-        <TooltipContent>
-          Compartilhe o link público desta página com qualquer pessoa.
-        </TooltipContent>
+        <TooltipContent side="bottom">{$tStore('demonstration.labels.shareHint')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   {/snippet}
@@ -576,13 +566,11 @@ interface TooltipTriggerProps {
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
-          <Button variant="outline" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
-            <HelpCircle aria-hidden="true" />
-          </Button>
+          <Button variant="outline" size="icon-sm" aria-label="Ajuda sobre Token de API" {...props}>?</Button>
         {/snippet}
       </TooltipTrigger>
       <TooltipContent side="right" class="nds-max-w-xs">
-        Cole o token gerado em Configurações &gt; Integrações.
+        Gere em Configurações › Acesso › Tokens
       </TooltipContent>
     </Tooltip>
   </div>
@@ -601,9 +589,7 @@ interface TooltipTriggerProps {
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
-          <Button variant="outline" size="icon" aria-label="O que é LCP" {...props}>
-            <Info aria-hidden="true" />
-          </Button>
+          <Button variant="outline" size="icon-sm" aria-label="O que é LCP" {...props}>i</Button>
         {/snippet}
       </TooltipTrigger>
       <TooltipContent side="top" class="nds-max-w-xs">
@@ -611,7 +597,7 @@ interface TooltipTriggerProps {
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="nds-text-h3 nds-m-0">1.8s</p>
+  <p class="nds-text-h3 nds-m-0">1,8 s</p>
 </div>`,
         preview: compMetric,
       },
@@ -619,17 +605,17 @@ interface TooltipTriggerProps {
   />
 
   {#snippet compIconShortcut()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'iconButtonWithShortcut', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
+            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
         <TooltipContent>
-          <span>Salvar</span>
+          <span>{$tStore('demonstration.labels.saveButton')}</span>
           <kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>
           <kbd data-slot="kbd" class="nds-kbd">S</kbd>
         </TooltipContent>
@@ -677,21 +663,17 @@ interface TooltipTriggerProps {
   {/snippet}
 
   {#snippet compFormHelp()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
-          <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">Token de API</label>
+          <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">{$tStore('demonstration.labels.apiTokenLabel')}</label>
           <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'formFieldHelp', o)}>
             <TooltipTrigger>
               {#snippet child({ props })}
-                <Button variant="outline" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
-                  <HelpCircle aria-hidden="true" class="nds-icon" />
-                </Button>
+                <Button variant="outline" size="icon-sm" aria-label={$tStore('demonstration.labels.apiTokenHelp')} {...props}>?</Button>
               {/snippet}
             </TooltipTrigger>
-            <TooltipContent side="right" class="nds-max-w-xs">
-              Cole o token gerado em Configurações &gt; Integrações.
-            </TooltipContent>
+            <TooltipContent side="right" class="nds-max-w-xs">{$tStore('demonstration.labels.apiTokenHint')}</TooltipContent>
           </Tooltip>
         </div>
         <input
@@ -705,62 +687,58 @@ interface TooltipTriggerProps {
   {/snippet}
 
   {#snippet compMetric()}
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={400}>
       <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">{$tStore('demonstration.labels.lcpLabel')}</p>
           <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'metricDescription', o)}>
             <TooltipTrigger>
               {#snippet child({ props })}
-                <Button variant="outline" size="icon" aria-label="O que é LCP" {...props}>
-                  <Info aria-hidden="true" class="nds-icon" />
-                </Button>
+                <Button variant="outline" size="icon-sm" aria-label={$tStore('demonstration.labels.lcpHelp')} {...props}>i</Button>
               {/snippet}
             </TooltipTrigger>
-            <TooltipContent side="top" class="nds-max-w-xs">
-              Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
-            </TooltipContent>
+            <TooltipContent side="top" class="nds-max-w-xs">{$tStore('demonstration.labels.lcpHint')}</TooltipContent>
           </Tooltip>
         </div>
-        <p class="nds-text-h3 nds-m-0">1.8s</p>
+        <p class="nds-text-h3 nds-m-0">{$tStore('demonstration.labels.lcpValue')}</p>
       </div>
     </TooltipProvider>
   {/snippet}
 
   {#snippet variantPositioningSides()}
-    <TooltipProvider delayDuration={0}>
-      <div class="nds-grid nds-w-full nds-min-h-40" data-spacing="xl" style="contain: layout; place-items: center">
+    <TooltipProvider delayDuration={400}>
+      <div class="nds-grid nds-w-full nds-min-h-40" data-cols="4" data-spacing="xl" style="contain: layout; place-items: center">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-top', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
-              <Button variant="outline" {...props}>Top</Button>
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.sideTop')}</Button>
             {/snippet}
           </TooltipTrigger>
-          <TooltipContent side="top">Tooltip top</TooltipContent>
+          <TooltipContent side="top">Tooltip {$tStore('demonstration.labels.sideTop')}</TooltipContent>
         </Tooltip>
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-right', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
-              <Button variant="outline" {...props}>Right</Button>
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.sideRight')}</Button>
             {/snippet}
           </TooltipTrigger>
-          <TooltipContent side="right">Tooltip right</TooltipContent>
+          <TooltipContent side="right">Tooltip {$tStore('demonstration.labels.sideRight')}</TooltipContent>
         </Tooltip>
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-bottom', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
-              <Button variant="outline" {...props}>Bottom</Button>
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.sideBottom')}</Button>
             {/snippet}
           </TooltipTrigger>
-          <TooltipContent side="bottom">Tooltip bottom</TooltipContent>
+          <TooltipContent side="bottom">Tooltip {$tStore('demonstration.labels.sideBottom')}</TooltipContent>
         </Tooltip>
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-left', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
-              <Button variant="outline" {...props}>Left</Button>
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.sideLeft')}</Button>
             {/snippet}
           </TooltipTrigger>
-          <TooltipContent side="left">Tooltip left</TooltipContent>
+          <TooltipContent side="left">Tooltip {$tStore('demonstration.labels.sideLeft')}</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>

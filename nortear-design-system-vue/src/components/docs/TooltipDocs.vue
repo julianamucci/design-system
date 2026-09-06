@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
-import { Save, Trash2, Share2, HelpCircle, Info } from 'lucide-vue-next';
+import { Save, Trash2, Share2 } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/tooltip/translations.json';
 import uiTranslations from '@/i18n/ui.json';
@@ -200,12 +200,10 @@ const codeWithShortcut = `<Tooltip>
 
 const codeLongText = `<Tooltip>
   <TooltipTrigger as-child>
-    <Button variant="outline" size="icon" aria-label="Info">
-      <Info aria-hidden="true" />
-    </Button>
+    <Button variant="outline">Compartilhar</Button>
   </TooltipTrigger>
-  <TooltipContent class="nds-max-w-xs">
-    Texto longo que ocupa até o tamanho máximo e quebra naturalmente.
+  <TooltipContent side="bottom" class="nds-max-w-xs">
+    Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo
   </TooltipContent>
 </Tooltip>`;
 
@@ -268,12 +266,10 @@ const codeCompFormHelp = `<div class="nds-stack nds-w-full nds-max-w-sm" data-sp
     <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger as-child>
-        <Button variant="outline" size="icon" aria-label="Ajuda sobre Token de API">
-          <HelpCircle aria-hidden="true" />
-        </Button>
+        <Button variant="outline" size="icon-sm" aria-label="Ajuda sobre Token de API">?</Button>
       </TooltipTrigger>
       <TooltipContent side="right" class="nds-max-w-xs">
-        Cole o token gerado em Configurações &gt; Integrações.
+        Gere em Configurações › Acesso › Tokens
       </TooltipContent>
     </Tooltip>
   </div>
@@ -285,19 +281,17 @@ const codeCompMetric = `<div class="nds-stack" data-spacing="xs">
     <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger as-child>
-        <Button variant="outline" size="icon" aria-label="O que é LCP">
-          <Info aria-hidden="true" />
-        </Button>
+        <Button variant="outline" size="icon-sm" aria-label="O que é LCP">i</Button>
       </TooltipTrigger>
       <TooltipContent side="top" class="nds-max-w-xs">
         Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="nds-text-h3 nds-m-0">1.8s</p>
+  <p class="nds-text-h3 nds-m-0">1,8 s</p>
 </div>`;
 
-const codeCompSides = `<div class="nds-grid nds-w-full" data-spacing="xl" style="place-items: center">
+const codeCompSides = `<div class="nds-grid nds-w-full" data-cols="4" data-spacing="xl">
   <Tooltip v-for="s in ['top','right','bottom','left']" :key="s">
     <TooltipTrigger as-child>
       <Button variant="outline">{{ s }}</Button>
@@ -448,7 +442,8 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <TooltipProvider :delay-duration="50">
+  <!-- Mesmo atraso que o snippet da Importação publica: 400ms. -->
+  <TooltipProvider :delay-duration="400">
     <DocsPageLayout
       :nav-groups="navGroups"
       :active-section="activeSection"
@@ -485,7 +480,8 @@ const a11yCritCols = computed(() => ({
                 <Save aria-hidden="true" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <!-- `top` é o default do Playground, e a demonstração é o mesmo exemplo. -->
+            <TooltipContent side="top">
               {{ tContent('demonstration.labels.save') }}
             </TooltipContent>
           </Tooltip>
@@ -567,8 +563,8 @@ const a11yCritCols = computed(() => ({
       <DocsDoDont
         :title="tContent('doDont.title')"
         :pairs="[
-          { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-          { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+          { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+          { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
         ]"
       >
         <template #do-preview-0>
@@ -583,13 +579,13 @@ const a11yCritCols = computed(() => ({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label="Salvar"
+                  :aria-label="tContent('demonstration.labels.saveButton')"
                 >
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                Salvar (Ctrl+S)
+                {{ tContent('demonstration.labels.save') }}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -614,7 +610,7 @@ const a11yCritCols = computed(() => ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                Salvar
+                {{ tContent('demonstration.labels.saveButton') }}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -631,15 +627,15 @@ const a11yCritCols = computed(() => ({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label="Salvar"
+                  :aria-label="tContent('demonstration.labels.saveButton')"
                 >
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
+              <!-- Texto puro: aqui a lição é o TAMANHO da mensagem. A tecla
+                   marcada com <Kbd> é assunto da variante `withShortcut`. -->
               <TooltipContent side="bottom">
-                Salvar
-                <Kbd>Ctrl</Kbd>
-                <Kbd>S</Kbd>
+                {{ tContent('demonstration.labels.save') }}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -660,7 +656,7 @@ const a11yCritCols = computed(() => ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom" class="nds-max-w-xs">
-                Clique aqui para salvar o documento e voltar à tela inicial.
+                {{ tContent('demonstration.labels.longBalloonDont') }}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -740,19 +736,17 @@ const a11yCritCols = computed(() => ({
           >
             <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'longText', open)">
               <TooltipTrigger as-child>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  aria-label="Info"
-                >
-                  <Save aria-hidden="true" />
+                <!-- Botão de texto: o rótulo visível já é o nome acessível,
+                     então nada de `aria-label`. Mesmo exemplo do construtor. -->
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.shareButton') }}
                 </Button>
               </TooltipTrigger>
               <TooltipContent
                 side="bottom"
                 class="nds-max-w-xs"
               >
-                Texto longo que ocupa até o tamanho máximo e quebra naturalmente em múltiplas linhas sem ser um parágrafo.
+                {{ tContent('demonstration.labels.shareHint') }}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -761,46 +755,47 @@ const a11yCritCols = computed(() => ({
           <div
             style="contain: layout; place-items: center"
             class="nds-grid nds-w-full nds-min-h-40"
+            data-cols="4"
             data-spacing="xl"
           >
             <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-top', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
-                  Top
+                  {{ tContent('demonstration.labels.sideTop') }}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top">
-                Tooltip top
+                Tooltip {{ tContent('demonstration.labels.sideTop') }}
               </TooltipContent>
             </Tooltip>
             <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-right', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
-                  Right
+                  {{ tContent('demonstration.labels.sideRight') }}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">
-                Tooltip right
+                Tooltip {{ tContent('demonstration.labels.sideRight') }}
               </TooltipContent>
             </Tooltip>
             <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-bottom', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
-                  Bottom
+                  {{ tContent('demonstration.labels.sideBottom') }}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                Tooltip bottom
+                Tooltip {{ tContent('demonstration.labels.sideBottom') }}
               </TooltipContent>
             </Tooltip>
             <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-left', open)">
               <TooltipTrigger as-child>
                 <Button variant="outline">
-                  Left
+                  {{ tContent('demonstration.labels.sideLeft') }}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="left">
-                Tooltip left
+                Tooltip {{ tContent('demonstration.labels.sideLeft') }}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -887,22 +882,24 @@ const a11yCritCols = computed(() => ({
                 <label
                   for="api-token-vue-comp"
                   class="nds-text-body nds-font-medium"
-                >Token de API</label>
+                >{{ tContent('demonstration.labels.apiTokenLabel') }}</label>
                 <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'formFieldHelp', open)">
                   <TooltipTrigger as-child>
+                    <!-- Glifo de texto, não ícone: é o que o conteúdo descreve
+                         e o que o vanilla, referência de markup, renderiza. -->
                     <Button
                       variant="outline"
-                      size="icon"
-                      aria-label="Ajuda sobre Token de API"
+                      size="icon-sm"
+                      :aria-label="tContent('demonstration.labels.apiTokenHelp')"
                     >
-                      <HelpCircle aria-hidden="true" />
+                      ?
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent
                     side="right"
                     class="nds-max-w-xs"
                   >
-                    Cole o token gerado em Configurações &gt; Integrações.
+                    {{ tContent('demonstration.labels.apiTokenHint') }}
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -932,28 +929,28 @@ const a11yCritCols = computed(() => ({
                 data-spacing="sm"
               >
                 <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
-                  LCP
+                  {{ tContent('demonstration.labels.lcpLabel') }}
                 </p>
                 <Tooltip @update:open="(open: boolean) => rastrearTooltip('docs_composicoes', 'metricDescription', open)">
                   <TooltipTrigger as-child>
                     <Button
                       variant="outline"
-                      size="icon"
-                      aria-label="O que é LCP"
+                      size="icon-sm"
+                      :aria-label="tContent('demonstration.labels.lcpHelp')"
                     >
-                      <Info aria-hidden="true" />
+                      i
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent
                     side="top"
                     class="nds-max-w-xs nds-whitespace-normal"
                   >
-                    Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+                    {{ tContent('demonstration.labels.lcpHint') }}
                   </TooltipContent>
                 </Tooltip>
               </div>
               <p class="nds-text-h3 nds-m-0">
-                1.8s
+                {{ tContent('demonstration.labels.lcpValue') }}
               </p>
             </div>
           </div>

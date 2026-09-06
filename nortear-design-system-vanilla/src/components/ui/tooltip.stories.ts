@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
 import { balaoDe, clearPortal } from './tooltip.fixtures';
-import { createButton } from './button';
-import { tooltipSource } from './tooltip.source';
+import { createButton, createButtonIcon } from './button';
+import { tooltipSourceWith } from './tooltip.source';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type TooltipArgs = {
-  triggerLabel: string;
+  triggerAriaLabel: string;
   content: string;
   side: 'top' | 'bottom' | 'left' | 'right';
   defaultOpen: boolean;
@@ -21,12 +21,19 @@ const meta: Meta<TooltipArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createTooltipDocs), source: { transform: tooltipSource } },
+    docs: {
+      page: withAutoDocsTab(createTooltipDocs),
+      // O gatilho é SÓ DE ÍCONE, e o snippet acompanha: sem rótulo visível
+      // (`label: ''`), com `size: 'icon'` e com o nome acessível vindo do
+      // control. Sem as opções fixas o painel Code publicaria um botão de texto
+      // que não é o que a story monta.
+      source: { transform: tooltipSourceWith({ triggerSize: 'icon', triggerLabel: '' }) },
+    },
   },
   argTypes: {
-    triggerLabel: {
+    triggerAriaLabel: {
       control: 'text',
-      description: 'Texto/aria-label do botão trigger.',
+      description: 'Nome acessível do botão de ícone que dispara o balão.',
       table: { type: { summary: 'string' } },
     },
     content: {
@@ -47,7 +54,7 @@ const meta: Meta<TooltipArgs> = {
     },
   },
   args: {
-    triggerLabel: 'Salvar',
+    triggerAriaLabel: 'Salvar',
     content: 'Salvar (Ctrl+S)',
     side: 'top',
     defaultOpen: false,
@@ -73,10 +80,15 @@ export const Playground: Story = {
     container.className = 'nds-cluster nds-w-full nds-min-h-50';
     container.dataset.justify = 'center';
 
+    // Botão SÓ DE ÍCONE, o mesmo exemplo que a Demonstração da docs page monta
+    // — guideline 08 §15: uma fonte, dois lugares. O `aria-label` é PRÓPRIO do
+    // botão e não vem do balão: em touch não há hover, e sem ele o gatilho
+    // ficaria anônimo.
     const trigger = createButton({
       variant: 'outline',
-      label: args.triggerLabel,
-      'aria-label': args.triggerLabel,
+      size: 'icon',
+      'aria-label': args.triggerAriaLabel,
+      children: createButtonIcon('save'),
     });
 
     container.appendChild(
@@ -92,7 +104,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="tooltip"]')!;
     const trigger = canvas.getByRole('button', {
-      name: new RegExp(args.triggerLabel, 'i'),
+      name: new RegExp(args.triggerAriaLabel, 'i'),
     });
 
     await step('O markup é o do design system, não um elemento inventado', async () => {
@@ -103,7 +115,7 @@ export const Playground: Story = {
     await step('O gatilho tem nome acessível próprio', async () => {
       // O Tooltip é complementar: em touch não há hover, e sem o aria-label o
       // botão ficaria anônimo para quem não usa mouse.
-      await expect(trigger).toHaveAttribute('aria-label', args.triggerLabel);
+      await expect(trigger).toHaveAttribute('aria-label', args.triggerAriaLabel);
     });
 
     await step('Fechado, não há describedby apontando para o vazio', async () => {

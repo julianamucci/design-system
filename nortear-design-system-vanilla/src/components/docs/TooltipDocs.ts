@@ -3,7 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createTooltip } from '@/components/ui/tooltip';
+import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';
 import { createButton, createButtonIcon, type ButtonIconKind } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import tooltipTranslations from '@shared/content/tooltip/translations.json';
@@ -41,7 +41,78 @@ function screenReaderItems(): string[] {
       ?.accessibility?.screenReader ?? {},
   );
 }
-const { t, subscribe } = createTranslation(tooltipTranslations as Record<string, unknown>);
+// As opções de `createTooltip` e de `createTooltipProvider` são da FÁBRICA
+// desta stack — não existem na API das outras quatro, então a descrição delas
+// não cabe no conteúdo compartilhado. O lugar sancionado é o override por
+// locale no call site (CLAUDE.md, "Cross-stack translation strategy", item 3).
+//
+// Antes disto, sete descrições eram literal em português dentro de uma tabela
+// que troca de idioma, e duas delas eram PIORES: `toPlainText(t(…)) + ' cauda
+// em português'` entregava ao leitor em inglês a frase em inglês seguida da
+// continuação em português, na mesma célula. E a chave compartilhada de `side`
+// promete auto-flip por colisão, que é verdade nas outras quatro e falso aqui:
+// nesta fábrica a posição escolhida é a final.
+const LOCAL_OVERRIDES = {
+  'pt-BR': {
+    'props.local.trigger.description':
+      'Elemento que ativa o balão por ponteiro ou foco. O aria-describedby é escrito enquanto o balão existe e retirado quando ele sai.',
+    'props.local.content.description':
+      'Texto do balão. String vira textContent — o caminho seguro para dado de fora; marcação (uma tecla em <kbd>, uma palavra em <strong>) entra como elemento já montado.',
+    'props.local.side.description':
+      'Lado preferido de abertura em relação ao gatilho. Sai no markup como data-side. A posição é fixa: não há reposicionamento automático por colisão.',
+    'props.local.delayDuration.description':
+      'Espera em ms entre o ponteiro entrar no gatilho e o balão abrir. Ajusta um balão em particular; dentro de um grupo, o padrão vem do provedor. O foco abre na hora, sem espera: quem chega por teclado não tem como parar em cima.',
+    'props.local.onShow.description':
+      'Avisado quando o balão é de fato exibido, depois da espera. É o gancho de analítica: contar a intenção de hover contaria também quem só atravessou o gatilho.',
+    'props.local.providerDelayDuration.description':
+      'Espera padrão de todos os balões criados pelo grupo. Cada balão pode sobrescrevê-la na própria chamada.',
+    'props.local.skipDelayDuration.description':
+      'Janela, depois de um balão fechar, em que o próximo do grupo abre na hora. É o que faz percorrer uma barra de ícones parecer um movimento só. Zero desliga.',
+    'import.local.secondaryDescription': 'Espera compartilhada por grupo e marcação no conteúdo:',
+    'accessibility.local.escape.description':
+      'Fecha o balão; o foco fica onde está: sair do gatilho é papel do Tab, não do Escape.',
+  },
+  en: {
+    'props.local.trigger.description':
+      'Element that opens the balloon on pointer or focus. The aria-describedby is written while the balloon exists and removed when it goes away.',
+    'props.local.content.description':
+      'Balloon text. A string becomes textContent — the safe path for outside data; markup (a key in <kbd>, a word in <strong>) comes in as a ready-made element.',
+    'props.local.side.description':
+      'Preferred opening side relative to the trigger. It reaches the markup as data-side. The position is fixed: there is no automatic repositioning on collision.',
+    'props.local.delayDuration.description':
+      'Wait in ms between the pointer entering the trigger and the balloon opening. It tunes one balloon in particular; inside a group the default comes from the provider. Focus opens it right away, with no wait: whoever arrives by keyboard has no way to rest on top of it.',
+    'props.local.onShow.description':
+      'Called when the balloon is actually shown, after the wait. It is the analytics hook: counting hover intent would also count whoever merely crossed the trigger.',
+    'props.local.providerDelayDuration.description':
+      'Default wait for every balloon the group creates. Each balloon can override it in its own call.',
+    'props.local.skipDelayDuration.description':
+      'Window, after one balloon closes, in which the next one in the group opens right away. It is what makes running along an icon bar feel like a single movement. Zero turns it off.',
+    'import.local.secondaryDescription': 'Shared wait across a group, and markup in the content:',
+    'accessibility.local.escape.description':
+      'Closes the balloon; the focus stays where it is: leaving the trigger is the Tab key’s job, not Escape’s.',
+  },
+  es: {
+    'props.local.trigger.description':
+      'Elemento que activa el globo por puntero o foco. El aria-describedby se escribe mientras el globo existe y se retira cuando desaparece.',
+    'props.local.content.description':
+      'Texto del globo. Una cadena se vuelve textContent — el camino seguro para datos externos; el marcado (una tecla en <kbd>, una palabra en <strong>) entra como elemento ya montado.',
+    'props.local.side.description':
+      'Lado preferido de apertura respecto al disparador. Sale en el marcado como data-side. La posición es fija: no hay reposicionamiento automático por colisión.',
+    'props.local.delayDuration.description':
+      'Espera en ms entre la entrada del puntero en el disparador y la apertura del globo. Ajusta un globo en particular; dentro de un grupo, el valor por defecto viene del proveedor. El foco abre de inmediato, sin espera: quien llega por teclado no puede detenerse encima.',
+    'props.local.onShow.description':
+      'Avisado cuando el globo se muestra de hecho, después de la espera. Es el gancho de analítica: contar la intención de hover contaría también a quien solo atravesó el disparador.',
+    'props.local.providerDelayDuration.description':
+      'Espera por defecto de todos los globos creados por el grupo. Cada globo puede sobrescribirla en su propia llamada.',
+    'props.local.skipDelayDuration.description':
+      'Ventana, después de que un globo cierra, en la que el siguiente del grupo abre de inmediato. Es lo que hace que recorrer una barra de iconos parezca un solo movimiento. Cero lo desactiva.',
+    'import.local.secondaryDescription': 'Espera compartida por grupo y marcado en el contenido:',
+    'accessibility.local.escape.description':
+      'Cierra el globo; el foco se queda donde está: salir del disparador es tarea del Tab, no del Escape.',
+  },
+};
+
+const { t, subscribe } = createTranslation(tooltipTranslations as Record<string, unknown>, LOCAL_OVERRIDES);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -145,8 +216,8 @@ function buildLongTextTooltip(): HTMLElement {
   });
   return createTooltip({
     trigger,
-    content: t('demonstration.labels.share'),
-    side: 'top',
+    content: t('demonstration.labels.shareHint'),
+    side: 'bottom',
     class: 'nds-max-w-xs nds-whitespace-normal',
     onShow: trackTooltipView('docs_variantes', 'longText'),
   });
@@ -278,11 +349,17 @@ export function createTooltipDocs(): HTMLElement {
             // O MESMO exemplo do Playground da story — guideline 08 §15. Uma
             // fonte, dois lugares. A barra de três ações que morava aqui virou a
             // composição `actionBar`, que é o que ela sempre foi.
+            //
+            // `side: 'top'` é o padrão da fábrica e o do Playground, e a espera
+            // vem de um GRUPO com 400 ms — o mesmo valor que o snippet da seção
+            // Importação publica. A demonstração ensina o caminho recomendado,
+            // então ela usa o provedor mesmo com um balão só.
+            const group = createTooltipProvider({ delayDuration: 400 });
             wrap.appendChild(
-              createTooltip({
+              group.createTooltip({
                 trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
                 content: t('demonstration.labels.save'),
-                side: 'bottom',
+                side: 'top',
                 onShow: trackTooltipView('docs_demo', 'save'),
               }),
             );
@@ -369,7 +446,7 @@ export function createTooltipDocs(): HTMLElement {
               // Vivo de propósito: a lição é o TAMANHO do balão, e só
               // renderizado ele mostra o que o texto longo faz.
               dontPreviewFactory: () =>
-                buildDoDont('pair2-dont', 'Clique aqui para salvar o documento e voltar à tela inicial.'),
+                buildDoDont('pair2-dont', t('demonstration.labels.longBalloonDont')),
             },
           ],
         });
@@ -378,7 +455,7 @@ export function createTooltipDocs(): HTMLElement {
           title: t('import.title'),
           componentSlug: 'tooltip',
           code: `import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';`,
-          secondaryDescription: 'Espera compartilhada por grupo e marcação no conteúdo:',
+          secondaryDescription: t('import.local.secondaryDescription'),
           secondaryCode: `// Uma barra de ícones: quem já parou uma vez não espera de novo no vizinho.
 const { createTooltip: comEspera } = createTooltipProvider({
   delayDuration: 300,
@@ -422,8 +499,8 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
 
         const codeLong = `createTooltip({
   trigger,
-  content: 'Esta ação salva todas as alterações localmente e sincroniza com o servidor.',
-  side: 'top',
+  content: 'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
+  side: 'bottom',
   class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
 
@@ -442,10 +519,10 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
           grid.style.placeItems = 'center';
 
           const sides: Array<{ side: 'top' | 'bottom' | 'left' | 'right'; label: string }> = [
-            { side: 'top',    label: 'Top'    },
-            { side: 'right',  label: 'Right'  },
-            { side: 'bottom', label: 'Bottom' },
-            { side: 'left',   label: 'Left'   },
+            { side: 'top',    label: t('demonstration.labels.sideTop')    },
+            { side: 'right',  label: t('demonstration.labels.sideRight')  },
+            { side: 'bottom', label: t('demonstration.labels.sideBottom') },
+            { side: 'left',   label: t('demonstration.labels.sideLeft')   },
           ];
 
           for (const { side, label } of sides) {
@@ -529,7 +606,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
 
 createTooltip({
   trigger: help,
-  content: 'Cole o token gerado em Configurações > Integrações.',
+  content: 'Gere em Configurações › Acesso › Tokens',
   side: 'right',
   class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
@@ -577,12 +654,12 @@ createTooltip({
           const trigger = createButton({
             variant: 'outline',
             size: 'icon',
-            'aria-label': 'Salvar',
+            'aria-label': t('demonstration.labels.saveButton'),
             children: createButtonIcon('download'),
           });
           return createTooltip({
             trigger,
-            content: 'Salvar (Ctrl+S)',
+            content: t('demonstration.labels.save'),
             side: 'bottom',
             onShow: trackTooltipView('docs_composicoes', 'iconButtonWithShortcut'),
           });
@@ -600,19 +677,19 @@ createTooltip({
 
           const label = document.createElement('label');
           label.className = 'nds-text-body nds-font-medium';
-          label.textContent = 'Token de API';
+          label.textContent = t('demonstration.labels.apiTokenLabel');
           label.htmlFor = 'api-token-bc-comp';
 
           const help = createButton({
             variant: 'outline',
             size: 'icon-sm',
-            'aria-label': 'Ajuda sobre Token de API',
+            'aria-label': t('demonstration.labels.apiTokenHelp'),
             label: '?',
           });
 
           const tooltip = createTooltip({
             trigger: help,
-            content: 'Cole o token gerado em Configurações > Integrações.',
+            content: t('demonstration.labels.apiTokenHint'),
             side: 'right',
             onShow: trackTooltipView('docs_composicoes', 'formFieldHelp'),
             class: 'nds-max-w-xs nds-whitespace-normal',
@@ -642,18 +719,18 @@ createTooltip({
 
           const title = document.createElement('p');
           title.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider';
-          title.textContent = 'LCP';
+          title.textContent = t('demonstration.labels.lcpLabel');
 
           const help = createButton({
             variant: 'outline',
             size: 'icon-sm',
-            'aria-label': 'O que é LCP',
+            'aria-label': t('demonstration.labels.lcpHelp'),
             label: 'i',
           });
 
           const tooltip = createTooltip({
             trigger: help,
-            content: 'Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.',
+            content: t('demonstration.labels.lcpHint'),
             side: 'top',
             onShow: trackTooltipView('docs_composicoes', 'metricDescription'),
             class: 'nds-max-w-xs nds-whitespace-normal',
@@ -663,7 +740,7 @@ createTooltip({
 
           const value = document.createElement('p');
           value.className = 'nds-text-h3 nds-m-0';
-          value.textContent = '1.8s';
+          value.textContent = t('demonstration.labels.lcpValue');
 
           root.append(headerRow, value);
           return root;
@@ -768,20 +845,20 @@ export function createTooltipProvider(
               title: 'createTooltip(options)',
               cols: propsCols,
               items: [
-                { name: 'trigger',       type: 'HTMLElement',                         defaultValue: '—',     required: 'Sim', description: 'Elemento que ativa o balão por ponteiro ou foco. O aria-describedby é escrito enquanto o balão existe e retirado quando ele sai.' },
-                { name: 'content',       type: 'string | HTMLElement',                defaultValue: '—',     required: 'Sim', description: 'Texto do balão. String vira textContent — o caminho seguro para dado de fora; marcação (uma tecla em <kbd>, uma palavra em <strong>) entra como elemento já montado.' },
-                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' Sai no markup como data-side. A posição é fixa: não há reposicionamento automático por colisão.' },
-                { name: 'delayDuration', type: 'number',                              defaultValue: '300',   required: 'Não', description: toPlainText(t('props.table.delay.description')) + ' Ajusta um balão em particular; dentro de um grupo, o padrão vem do provedor. O foco abre na hora, sem espera: quem chega por teclado não tem como parar em cima.' },
-                { name: 'onShow',        type: '() => void',                          defaultValue: '—',     required: 'Não', description: 'Avisado quando o balão é de fato exibido, depois da espera. É o gancho de analítica: contar a intenção de hover contaria também quem só atravessou o gatilho.' },
-                { name: 'class',         type: 'string',                              defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.className.description')) },
+                { name: 'trigger',       type: 'HTMLElement',                         defaultValue: '—',     required: tNav('common.yes'), description: t('props.local.trigger.description') },
+                { name: 'content',       type: 'string | HTMLElement',                defaultValue: '—',     required: tNav('common.yes'), description: t('props.local.content.description') },
+                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: tNav('common.no'),  description: t('props.local.side.description') },
+                { name: 'delayDuration', type: 'number',                              defaultValue: '300',   required: tNav('common.no'),  description: t('props.local.delayDuration.description') },
+                { name: 'onShow',        type: '() => void',                          defaultValue: '—',     required: tNav('common.no'),  description: t('props.local.onShow.description') },
+                { name: 'class',         type: 'string',                              defaultValue: '—',     required: tNav('common.no'),  description: toPlainText(t('props.table.className.description')) },
               ],
             },
             {
               title: 'createTooltipProvider(options?)',
               cols: propsCols,
               items: [
-                { name: 'delayDuration',     type: 'number', defaultValue: '300', required: 'Não', description: 'Espera padrão de todos os balões criados pelo grupo. Cada balão pode sobrescrevê-la na própria chamada.' },
-                { name: 'skipDelayDuration', type: 'number', defaultValue: '300', required: 'Não', description: 'Janela, depois de um balão fechar, em que o próximo do grupo abre na hora. É o que faz percorrer uma barra de ícones parecer um movimento só. Zero desliga.' },
+                { name: 'delayDuration',     type: 'number', defaultValue: '300', required: tNav('common.no'), description: t('props.local.providerDelayDuration.description') },
+                { name: 'skipDelayDuration', type: 'number', defaultValue: '300', required: tNav('common.no'), description: t('props.local.skipDelayDuration.description') },
               ],
             },
           ],
@@ -829,7 +906,7 @@ export function createTooltipProvider(
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',       description: toPlainText(t('accessibility.keyboard.tab'))      },
-            { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape'))   + ' O foco fica onde está: sair do gatilho é papel do Tab, não do Escape.' },
+            { key: 'Esc',       description: t('accessibility.local.escape.description') },
             { key: 'Shift+Tab', description: toPlainText(t('accessibility.keyboard.shiftTab')) },
           ],
         });

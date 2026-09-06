@@ -20,7 +20,6 @@ import { NDS_TOOLTIP } from '@/components/ui/tooltip';
 import { NdsButton } from '@/components/ui/button';
 import { NdsInput } from '@/components/ui/input';
 import { NdsLabel } from '@/components/ui/label';
-import { NdsCard, NdsCardContent, NdsCardHeader, NdsCardTitle } from '@/components/ui/card';
 import uiTranslations from '@/i18n/ui.json';
 import tooltipTranslations from '@shared/content/tooltip/translations.json';
 
@@ -32,7 +31,6 @@ import {
   NdsDocsWhenToUse,
   NdsDocsDoDont,
   NdsDocsImport,
-  NdsDocsVariants,
   NdsDocsCompositions,
   NdsDocsStates,
   NdsDocsProps,
@@ -237,18 +235,26 @@ const VARIANT_CODE = {
     >Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo</ng-template
   >
 </span>`,
-  positioningSides: `@for (lado of ['top', 'right', 'bottom', 'left']; track lado) {
+  positioningSides: `@for (lado of lados(); track lado.side) {
   <span ndsTooltip>
-    <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="lado">
-      {{ lado }}
+    <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="lado.label">
+      {{ lado.label }}
     </button>
 
-    <ng-template ndsTooltipContent [side]="lado">Tooltip {{ lado }}</ng-template>
+    <ng-template ndsTooltipContent [side]="lado.side">Tooltip {{ lado.side }}</ng-template>
   </span>
 }`,
 };
 
-const COMPOSITION_CODE = {
+// Os snippets das composições saem de FUNÇÃO, e não de constante de módulo: os
+// dois últimos mostram textos que o preview renderiza a partir do conteúdo
+// compartilhado, e constante congelaria o idioma da primeira leitura. Quem
+// chama é o `compositionItems`, que já depende de `dict()`.
+function buildCompositionCode(): Record<
+  'actionBar' | 'iconButtonWithShortcut' | 'formFieldHelp' | 'metricDescription',
+  string
+> {
+  return {
   actionBar: `<div ndsTooltipProvider [delay]="400" [skipDelay]="200" class="nds-cluster">
   @for (acao of acoes; track acao.id) {
     <span ndsTooltip>
@@ -270,47 +276,50 @@ const COMPOSITION_CODE = {
     ><kbd class="nds-kbd" data-slot="kbd">S</kbd
   ></ng-template>
 </span>`,
-  formFieldHelp: `<div class="nds-cluster" data-spacing="sm">
-  <label ndsLabel for="token-api">Token da API</label>
+  formFieldHelp: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+  <div class="nds-cluster" data-spacing="sm">
+    <label ndsLabel for="token-api">${t('demonstration.labels.apiTokenLabel')}</label>
 
-  <span ndsTooltip>
-    <button
-      ndsTooltipTrigger
-      ndsButton
-      variant="outline"
-      size="icon-sm"
-      aria-label="Onde encontrar o token da API"
-    >
-      <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
-    </button>
+    <span ndsTooltip>
+      <button
+        ndsTooltipTrigger
+        ndsButton
+        variant="outline"
+        size="icon-sm"
+        aria-label="${t('demonstration.labels.apiTokenHelp')}"
+      >?</button>
 
-    <ng-template ndsTooltipContent side="right"
-      >Gere em Configurações › Acesso › Tokens</ng-template
-    >
-  </span>
-</div>
-
-<input ndsInput id="token-api" placeholder="ndsk_..." />`,
-  metricDescription: `<div ndsCard class="nds-p-4">
-  <div ndsCardHeader>
-    <div class="nds-cluster" data-spacing="sm">
-      <span ndsCardTitle>LCP</span>
-
-      <span ndsTooltip>
-        <button ndsTooltipTrigger ndsButton variant="outline" size="icon-sm" aria-label="O que é LCP">
-          <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
-        </button>
-
-        <ng-template ndsTooltipContent>LCP — Largest Contentful Paint</ng-template>
-      </span>
-    </div>
+      <ng-template ndsTooltipContent side="right"
+        >${t('demonstration.labels.apiTokenHint')}</ng-template
+      >
+    </span>
   </div>
 
-  <div ndsCardContent>
-    <p class="nds-text-h3 nds-m-0">1,8 s</p>
-  </div>
+  <input ndsInput id="token-api" placeholder="ndsk_..." />
 </div>`,
-};
+  metricDescription: `<div class="nds-stack" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="sm">
+    <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
+      ${t('demonstration.labels.lcpLabel')}
+    </p>
+
+    <span ndsTooltip>
+      <button
+        ndsTooltipTrigger
+        ndsButton
+        variant="outline"
+        size="icon-sm"
+        aria-label="${t('demonstration.labels.lcpHelp')}"
+      >i</button>
+
+      <ng-template ndsTooltipContent>${t('demonstration.labels.lcpHint')}</ng-template>
+    </span>
+  </div>
+
+  <p class="nds-text-h3 nds-m-0">${t('demonstration.labels.lcpValue')}</p>
+</div>`,
+  };
+}
 
 @Component({
   selector: 'nds-tooltip-docs',
@@ -318,10 +327,9 @@ const COMPOSITION_CODE = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ...NDS_TOOLTIP, NdsButton, NdsInput, NdsLabel,
-    NdsCard, NdsCardContent, NdsCardHeader, NdsCardTitle, NgTemplateOutlet,
+    ...NDS_TOOLTIP, NdsButton, NdsInput, NdsLabel, NgTemplateOutlet,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
-    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
+    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport,
     NdsDocsCompositions, NdsDocsStates, NdsDocsProps, NdsDocsTokens,
     NdsDocsAccessibility, NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics,
     NdsDocsTestes,
@@ -386,51 +394,17 @@ const COMPOSITION_CODE = {
       </svg>
     </ng-template>
 
-    <ng-template #tplIconeAjuda>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-        class="nds-icon nds-shrink-0"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-        <path d="M12 17h.01" />
-      </svg>
-    </ng-template>
-
-    <ng-template #tplIconeInfo>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-        class="nds-icon nds-shrink-0"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 16v-4" />
-        <path d="M12 8h.01" />
-      </svg>
-    </ng-template>
-
-    <!-- Do & Don't: os quatro quadros são TEXTO, não componente vivo.
-         O "don't" do primeiro par é justamente um botão sem nome acessível —
-         renderizá-lo de verdade colocaria uma violação de button-name dentro
-         da própria página que ensina a evitá-la. -->
+    <!-- Do & Don't: os quatro quadros são componente VIVO, e não texto — o
+         leitor passa o ponteiro e vê o balão que cada quadro defende ou
+         desaconselha. O "don't" do primeiro par carrega aria-label mesmo
+         sendo anti-padrão: sem ele o botão icon-only não teria nome acessível
+         e a própria página que ensina a evitá-lo reprovaria em button-name. A
+         lição vive no CONTEÚDO do balão. -->
     <ng-template #tplDoDont1Do>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
         <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair1-do', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
-            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+            <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
           <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.save') }}</ng-template>
         </span>
@@ -444,7 +418,7 @@ const COMPOSITION_CODE = {
              só repete o rótulo em vez de acrescentar. -->
         <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair1-dont', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
-            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+            <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
           <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.saveButton') }}</ng-template>
         </span>
@@ -455,7 +429,7 @@ const COMPOSITION_CODE = {
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
         <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair2-do', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
-            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+            <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
           <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.save') }}</ng-template>
         </span>
@@ -467,9 +441,9 @@ const COMPOSITION_CODE = {
              ele mostra o que o texto longo faz. -->
         <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair2-dont', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
-            <svg ndsButtonIcon kind="download" aria-hidden="true"></svg>
+            <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
-          <ng-template ndsTooltipContent side="bottom">Clique aqui para salvar o documento e voltar à tela inicial.</ng-template>
+          <ng-template ndsTooltipContent side="bottom">{{ t('demonstration.labels.longBalloonDont') }}</ng-template>
         </span>
       </div>
     </ng-template>
@@ -519,13 +493,13 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplVarLados>
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
-        @for (side of lados; track side) {
-          <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'positioningSides-' + side, $event)">
-            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="side">
-              {{ side }}
+      <div class="nds-grid nds-w-full nds-min-h-40" data-cols="4" data-spacing="xl">
+        @for (lado of lados(); track lado.side) {
+          <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'positioningSides-' + lado.side, $event)">
+            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="lado.label">
+              {{ lado.label }}
             </button>
-            <ng-template ndsTooltipContent [side]="side">Tooltip {{ side }}</ng-template>
+            <ng-template ndsTooltipContent [side]="lado.side">Tooltip {{ lado.side }}</ng-template>
           </span>
         }
       </div>
@@ -596,46 +570,50 @@ const COMPOSITION_CODE = {
     <ng-template #tplCompCampo>
       <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
-          <label ndsLabel for="tooltip-token-api">{{ rotuloCampo() }}</label>
+          <label ndsLabel for="tooltip-token-api">{{ t('demonstration.labels.apiTokenLabel') }}</label>
           <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'formFieldHelp', $event)">
+            <!-- Glifo de texto, e não ícone: é o que as outras quatro mostram
+                 neste cartão, e um "?" desenhado dispensa entrada nova no mapa
+                 de ícones de botão. Quem nomeia o botão é o aria-label. -->
             <button
               ndsTooltipTrigger
               ndsButton
               variant="outline"
               size="icon-sm"
-              [attr.aria-label]="rotuloCampo()"
+              [attr.aria-label]="t('demonstration.labels.apiTokenHelp')"
             >
-              <ng-container [ngTemplateOutlet]="tplIconeAjuda" />
+              ?
             </button>
-            <ng-template ndsTooltipContent side="right">{{ ajudaCampo() }}</ng-template>
+            <ng-template ndsTooltipContent side="right">{{ t('demonstration.labels.apiTokenHint') }}</ng-template>
           </span>
         </div>
         <input ndsInput id="tooltip-token-api" placeholder="ndsk_..." />
       </div>
     </ng-template>
 
+    <!-- Sem cartão: a composição é a MÉTRICA com balão de explicação, e as
+         outras quatro stacks a mostram solta. O cartão daqui era moldura extra
+         que nenhuma outra tinha. -->
     <ng-template #tplCompMetrica>
-      <div ndsCard class="nds-p-4 nds-w-full nds-max-w-xs">
-        <div ndsCardHeader>
-          <div class="nds-cluster" data-spacing="sm">
-            <span ndsCardTitle>LCP</span>
-            <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'metricDescription', $event)">
-              <button
-                ndsTooltipTrigger
-                ndsButton
-                variant="outline"
-                size="icon-sm"
-                [attr.aria-label]="metricaRotulo()"
-              >
-                <ng-container [ngTemplateOutlet]="tplIconeInfo" />
-              </button>
-              <ng-template ndsTooltipContent>{{ metricaTexto() }}</ng-template>
-            </span>
-          </div>
+      <div class="nds-stack" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
+            {{ t('demonstration.labels.lcpLabel') }}
+          </p>
+          <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'metricDescription', $event)">
+            <button
+              ndsTooltipTrigger
+              ndsButton
+              variant="outline"
+              size="icon-sm"
+              [attr.aria-label]="t('demonstration.labels.lcpHelp')"
+            >
+              i
+            </button>
+            <ng-template ndsTooltipContent>{{ t('demonstration.labels.lcpHint') }}</ng-template>
+          </span>
         </div>
-        <div ndsCardContent>
-          <p class="nds-text-h3 nds-m-0">1,8 s</p>
-        </div>
+        <p class="nds-text-h3 nds-m-0">{{ t('demonstration.labels.lcpValue') }}</p>
       </div>
     </ng-template>
 
@@ -644,7 +622,7 @@ const COMPOSITION_CODE = {
          desta página compartilharem uma espera só. -->
     <nds-docs-page-layout
       ndsTooltipProvider
-      [delay]="300"
+      [delay]="400"
       [navGroups]="navGroups()"
       [activeSection]="activeSection()"
       componentSlug="tooltip"
@@ -663,8 +641,17 @@ const COMPOSITION_CODE = {
           <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma
                fonte, dois lugares. A barra de três ações que morava aqui virou
                a composição actionBar, que é o que ela sempre foi. Sem crase
-               aqui: o template inteiro é um template literal, e crase o encerra. -->
-          <div class="nds-cluster" data-spacing="sm" data-justify="center">
+               aqui: o template inteiro é um template literal, e crase o encerra.
+
+               A moldura é a mesma das outras quatro: largura cheia, altura
+               mínima para o balão caber sem empurrar a página, e centragem nos
+               dois eixos. -->
+          <div
+            class="nds-cluster nds-w-full nds-min-h-30"
+            data-justify="center"
+            data-align="center"
+            data-spacing="lg"
+          >
             <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'save', $event)">
               <button
                 ndsTooltipTrigger
@@ -707,12 +694,17 @@ const COMPOSITION_CODE = {
           language="ts"
         />
 
-        <nds-docs-variants
+        <!-- O container de COMPOSIÇÕES com id="variantes", como nas outras
+             quatro: é ele que monta a linha "Quando usar:" a partir do campo
+             useWhen, e a variante de posicionamento tem esse texto no conteúdo
+             compartilhado. Com o container de Variantes a página montava a
+             mesma linha na mão, com marcação escrita à unha. -->
+        <nds-docs-compositions
           [title]="t('variants.title')"
           [items]="variantItems()"
+          [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="tooltip"
           id="variantes"
-          language="html"
         />
 
         <nds-docs-compositions
@@ -794,8 +786,22 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   protected readonly importCodeButton = IMPORT_CODE_BUTTON;
   protected readonly tokensCode = TOKENS_CODE;
 
-  /** Os quatro lados, para o exemplo de posicionamento. */
-  protected readonly lados = ['top', 'right', 'bottom', 'left'] as const;
+  /**
+   * Os quatro lados, para o exemplo de posicionamento.
+   *
+   * O rótulo do gatilho é texto de tela e sai de chave, como o resto da página;
+   * o valor do atributo continua minúsculo, porque ele é da API e não se
+   * traduz.
+   */
+  protected readonly lados = computed(() => {
+    dict();
+    return [
+      { side: 'top'    as const, label: t('demonstration.labels.sideTop')    },
+      { side: 'right'  as const, label: t('demonstration.labels.sideRight')  },
+      { side: 'bottom' as const, label: t('demonstration.labels.sideBottom') },
+      { side: 'left'   as const, label: t('demonstration.labels.sideLeft')   },
+    ];
+  });
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -957,39 +963,16 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   });
 
   /**
-   * Texto longo do exemplo.
+   * Texto longo do balão da variante de texto longo.
    *
-   * Sai da própria descrição do componente, e não de uma frase escrita aqui:
-   * literal em português apareceria igual nas versões en e es da página. É
-   * comprida o bastante para a quebra acontecer, que é o que a variante mostra.
+   * Ele saía de `t('description')` — a descrição do COMPONENTE, texto escrito
+   * para quem LÊ a página. Recortada para dentro do balão, ela fazia o exemplo
+   * exibir a explicação em vez do exemplo. Agora vem da chave de preview
+   * `demonstration.labels.shareHint`, que é a mesma que as outras stacks leem.
    */
   protected readonly textoLongo = computed(() => {
     dict();
-    return toPlainText(t('description'));
-  });
-
-  // Os três textos abaixo saem da entrada da composição no conteúdo
-  // compartilhado. Não existe chave dedicada ao rótulo do campo nem ao nome do
-  // botão de ajuda, e inventá-la em português deixaria a página trilíngue com
-  // um pedaço só em pt-BR.
-  protected readonly rotuloCampo = computed(() => {
-    dict();
-    return toPlainText(t('variants.compositions.formFieldHelp.name'));
-  });
-
-  protected readonly ajudaCampo = computed(() => {
-    dict();
-    return toPlainText(t('variants.compositions.formFieldHelp.description'));
-  });
-
-  protected readonly metricaRotulo = computed(() => {
-    dict();
-    return toPlainText(t('variants.compositions.metricDescription.name'));
-  });
-
-  protected readonly metricaTexto = computed(() => {
-    dict();
-    return toPlainText(t('variants.compositions.metricDescription.description'));
+    return t('demonstration.labels.shareHint');
   });
 
   protected readonly variantItems = computed(() => {
@@ -1018,13 +1001,10 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
       },
       {
         name: t('variants.items.positioningSides.name'),
-        // Mesmo formato que o container de Composições monta para o `useWhen`:
-        // a seção de Variantes não tem esse campo, e o texto de "quando usar"
-        // do conteúdo compartilhado não pode simplesmente sumir.
-        description:
-          `${t('variants.items.positioningSides.description')}<br><br>` +
-          `<strong>${tNav('common.useWhen')}</strong> ` +
-          `${t('variants.items.positioningSides.use')}`,
+        description: t('variants.items.positioningSides.description'),
+        // Quem monta a linha "Quando usar:" é o container — a concatenação de
+        // `<br><br><strong>` que morava aqui duplicava, à mão, o que ele já faz.
+        useWhen: t('variants.items.positioningSides.use'),
         code: VARIANT_CODE.positioningSides,
         trackId: 'positioningSides',
         preview: this.tplVarLados(),
@@ -1034,6 +1014,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
 
   protected readonly compositionItems = computed(() => {
     dict();
+    const code = buildCompositionCode();
     const mapa: {
       key: 'iconButtonWithShortcut' | 'actionBar' | 'formFieldHelp' | 'metricDescription';
       tpl: TemplateRef<unknown>;
@@ -1047,7 +1028,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
       name: t(`variants.compositions.${key}.name`),
       description: t(`variants.compositions.${key}.description`),
       useWhen: t(`variants.compositions.${key}.use`),
-      code: COMPOSITION_CODE[key],
+      code: code[key],
       trackId: key,
       preview: tpl,
     }));

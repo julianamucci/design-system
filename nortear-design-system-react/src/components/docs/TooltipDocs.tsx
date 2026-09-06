@@ -13,7 +13,9 @@ import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import tooltipTranslations from "@shared/content/tooltip/translations.json";
-import { Save, Trash2, Share2, HelpCircle, Info } from "lucide-react";
+// A ajuda das composições é GLIFO de texto (`?` / `i`), não ícone lucide: é o
+// que o conteúdo descreve ('Ícone "?"') e o que o vanilla renderiza.
+import { Save, Trash2, Share2 } from "lucide-react";
 
 import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
 import { DocsPageLayout }    from "@/components/docs/shared/sections/DocsPageLayout";
@@ -197,15 +199,6 @@ export function TooltipDocs() {
   </TooltipContent>
 </Tooltip>`;
 
-  const codeLongText = `<Tooltip>
-  <TooltipTrigger asChild>
-    <Button variant="outline">Compartilhar</Button>
-  </TooltipTrigger>
-  <TooltipContent side="bottom">
-    Cria um link público com permissão de leitura — qualquer pessoa com o link pode visualizar.
-  </TooltipContent>
-</Tooltip>`;
-
   const interfaceCode = `// TooltipProvider (base-ui/tooltip)
 interface TooltipProviderProps {
   delay?: number; // default 0 (ms)
@@ -241,9 +234,75 @@ interface TooltipContentProps {
   const labelSaveBtn = tContent("demonstration.labels.saveButton");
   const labelDeleteBtn = tContent("demonstration.labels.deleteButton");
   const labelShareBtn = tContent("demonstration.labels.shareButton");
+  const labelLongBalloonDont = tContent("demonstration.labels.longBalloonDont");
+  const labelShareHint = tContent("demonstration.labels.shareHint");
+  const labelLcp = tContent("demonstration.labels.lcpLabel");
+  const sideLabels: Record<"top" | "right" | "bottom" | "left", string> = {
+    top: tContent("demonstration.labels.sideTop"),
+    right: tContent("demonstration.labels.sideRight"),
+    bottom: tContent("demonstration.labels.sideBottom"),
+    left: tContent("demonstration.labels.sideLeft"),
+  };
+  const labelApiToken = tContent("demonstration.labels.apiTokenLabel");
+  const labelApiTokenHelp = tContent("demonstration.labels.apiTokenHelp");
+  const labelApiTokenHint = tContent("demonstration.labels.apiTokenHint");
+  const labelLcpHelp = tContent("demonstration.labels.lcpHelp");
+  const labelLcpHint = tContent("demonstration.labels.lcpHint");
+  const labelLcpValue = tContent("demonstration.labels.lcpValue");
+
+  // Snippets que mostram os MESMOS rótulos dos previews — texto de exemplo sai
+  // de chave também aqui, senão o código publicado descreve outra tela.
+  const codeLongText = `<Tooltip>
+  <TooltipTrigger asChild>
+    <Button variant="outline">${labelShareBtn}</Button>
+  </TooltipTrigger>
+  <TooltipContent side="bottom">
+    ${labelShareHint}
+  </TooltipContent>
+</Tooltip>`;
+
+  const codeFormFieldHelp = `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+  <div className="nds-cluster" data-spacing="sm">
+    <label htmlFor="api-token" className="nds-text-body nds-font-medium">${labelApiToken}</label>
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <Button {...props} variant="outline" size="icon-sm" aria-label="${labelApiTokenHelp}">
+            ?
+          </Button>
+        )}
+      />
+      <TooltipContent side="right" className="nds-max-w-xs">
+        ${labelApiTokenHint}
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <input id="api-token" type="text" className="nds-input" placeholder="sk-..." />
+</div>`;
+
+  const codeMetricDescription = `<div className="nds-stack" data-spacing="xs">
+  <div className="nds-cluster" data-spacing="sm">
+    <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">${labelLcp}</p>
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <Button {...props} variant="outline" size="icon-sm" aria-label="${labelLcpHelp}">
+            i
+          </Button>
+        )}
+      />
+      <TooltipContent side="top" className="nds-max-w-xs nds-whitespace-normal">
+        ${labelLcpHint}
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <p className="nds-text-h3 nds-m-0">${labelLcpValue}</p>
+</div>`;
 
   return (
-    <TooltipProvider delay={0}>
+    // 400 ms é o mesmo atraso que o snippet da Importação publica — a página
+    // demonstra o Provider que ela ensina a montar.
+    <TooltipProvider delay={400}>
       <DocsPageLayout
         navGroups={navGroups}
         activeSection={activeId}
@@ -264,7 +323,7 @@ interface TooltipContentProps {
               Playground exercita. A barra de três ações que morava aqui virou a
               composição `actionBar`, que é o que ela sempre foi. */}
           <div
-            className="nds-cluster nds-min-h-30"
+            className="nds-cluster nds-w-full nds-min-h-30"
             data-justify="center"
             data-align="center"
             data-spacing="lg"
@@ -445,11 +504,9 @@ interface TooltipContentProps {
                         </Button>
                       )}
                     />
-                    <TooltipContent side="bottom">
-                      <span>{labelSaveBtn}</span>
-                      <kbd className="nds-kbd">Ctrl</kbd>
-                      <kbd className="nds-kbd">S</kbd>
-                    </TooltipContent>
+                    {/* Texto puro: o atalho entre parênteses já vem no rótulo.
+                        O `<kbd>` é assunto da variante `withShortcut`. */}
+                    <TooltipContent side="bottom">{labelSave}</TooltipContent>
                   </Tooltip>
                 </div>
               ),
@@ -472,7 +529,7 @@ interface TooltipContentProps {
                     />
                     
                     <TooltipContent side="bottom" className="nds-max-w-xs">
-                      Clique aqui para salvar o documento e voltar à tela inicial.
+                      {labelLongBalloonDont}
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -550,13 +607,7 @@ interface TooltipContentProps {
                       </Button>
                     )}
                   />
-                  <TooltipContent side="bottom">
-                    {locale === "en"
-                      ? "Creates a public link with read-only access — anyone with the link can view."
-                      : locale === "es"
-                      ? "Crea un enlace público con acceso de solo lectura — cualquiera con el enlace puede ver."
-                      : "Cria um link público com permissão de leitura — qualquer pessoa com o link pode visualizar."}
-                  </TooltipContent>
+                  <TooltipContent side="bottom">{labelShareHint}</TooltipContent>
                 </Tooltip>
               ),
             },
@@ -565,30 +616,32 @@ interface TooltipContentProps {
               name: tContent("variants.items.positioningSides.name"),
               description: tContent("variants.items.positioningSides.description"),
               useWhen: tContent("variants.items.positioningSides.use"),
-              code: `<div className="nds-grid nds-w-full" data-spacing="xl" style={{ placeItems: "center" }}>
+              code: `const sideLabels = { top: "${sideLabels.top}", right: "${sideLabels.right}", bottom: "${sideLabels.bottom}", left: "${sideLabels.left}" };
+
+<div className="nds-grid nds-w-full" data-cols="4" data-spacing="xl" style={{ placeItems: "center" }}>
   {(["top", "right", "bottom", "left"] as const).map((side) => (
     <Tooltip key={side}>
       <TooltipTrigger
         render={(props) => (
-          <Button {...props} variant="outline">{side}</Button>
+          <Button {...props} variant="outline">{sideLabels[side]}</Button>
         )}
       />
-      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
+      <TooltipContent side={side}>Tooltip {sideLabels[side]}</TooltipContent>
     </Tooltip>
   ))}
 </div>`,
               preview: (
-                <div className="nds-grid nds-w-full nds-min-h-40" data-spacing="xl" style={{ contain: "layout", placeItems: "center" }}>
+                <div className="nds-grid nds-w-full nds-min-h-40" data-cols="4" data-spacing="xl" style={{ contain: "layout", placeItems: "center" }}>
                   {(["top", "right", "bottom", "left"] as const).map((side) => (
                     <Tooltip key={side} onOpenChange={rastrearTooltip("docs_variantes", `positioningSides-${side}`)}>
                       <TooltipTrigger
                         render={(props) => (
                           <Button {...props} variant="outline">
-                            {side.charAt(0).toUpperCase() + side.slice(1)}
+                            {sideLabels[side]}
                           </Button>
                         )}
                       />
-                      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
+                      <TooltipContent side={side}>Tooltip {sideLabels[side]}</TooltipContent>
                     </Tooltip>
                   ))}
                 </div>
@@ -699,29 +752,12 @@ interface TooltipContentProps {
               name: tContent("variants.compositions.formFieldHelp.name"),
               description: tContent("variants.compositions.formFieldHelp.description"),
               useWhen: tContent("variants.compositions.formFieldHelp.use"),
-              code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
-  <div className="nds-cluster" data-spacing="sm">
-    <label htmlFor="api-token" className="nds-text-body nds-font-medium">Token de API</label>
-    <Tooltip>
-      <TooltipTrigger
-        render={(props) => (
-          <Button {...props} variant="outline" size="icon" aria-label="Ajuda sobre Token de API">
-            <HelpCircle aria-hidden="true" />
-          </Button>
-        )}
-      />
-      <TooltipContent side="right" className="nds-max-w-xs">
-        Cole o token gerado em Configurações &gt; Integrações.
-      </TooltipContent>
-    </Tooltip>
-  </div>
-  <input id="api-token" type="text" className="nds-input" placeholder="sk-..." />
-</div>`,
+              code: codeFormFieldHelp,
               preview: (
                 <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style={{ alignItems: "flex-start" }}>
                   <div className="nds-cluster" data-spacing="sm">
                     <label htmlFor="api-token-react-comp" className="nds-text-body nds-font-medium">
-                      {locale === "en" ? "API Token" : locale === "es" ? "Token de API" : "Token de API"}
+                      {labelApiToken}
                     </label>
                     <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "formFieldHelp")}>
                       <TooltipTrigger
@@ -729,25 +765,15 @@ interface TooltipContentProps {
                           <Button
                             {...props}
                             variant="outline"
-                            size="icon"
-                            aria-label={
-                              locale === "en"
-                                ? "Help about API Token"
-                                : locale === "es"
-                                ? "Ayuda sobre Token de API"
-                                : "Ajuda sobre Token de API"
-                            }
+                            size="icon-sm"
+                            aria-label={labelApiTokenHelp}
                           >
-                            <HelpCircle aria-hidden="true" />
+                            ?
                           </Button>
                         )}
                       />
                       <TooltipContent side="right" className="nds-max-w-xs">
-                        {locale === "en"
-                          ? "Paste the token generated in Settings > Integrations."
-                          : locale === "es"
-                          ? "Pega el token generado en Ajustes > Integraciones."
-                          : "Cole o token gerado em Configurações > Integrações."}
+                        {labelApiTokenHint}
                       </TooltipContent>
                     </Tooltip>
                   </div>
@@ -765,57 +791,30 @@ interface TooltipContentProps {
               name: tContent("variants.compositions.metricDescription.name"),
               description: tContent("variants.compositions.metricDescription.description"),
               useWhen: tContent("variants.compositions.metricDescription.use"),
-              code: `<div className="nds-stack" data-spacing="xs">
-  <div className="nds-cluster" data-spacing="sm">
-    <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
-    <Tooltip>
-      <TooltipTrigger
-        render={(props) => (
-          <Button {...props} variant="outline" size="icon" aria-label="O que é LCP">
-            <Info aria-hidden="true" />
-          </Button>
-        )}
-      />
-      <TooltipContent side="top" className="nds-max-w-xs">
-        Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
-      </TooltipContent>
-    </Tooltip>
-  </div>
-  <p className="nds-text-h3 nds-m-0">1.8s</p>
-</div>`,
+              code: codeMetricDescription,
               preview: (
                 <div className="nds-stack" data-spacing="xs" style={{ alignItems: 'flex-start' }}>
                   <div className="nds-cluster" data-spacing="sm">
-                    <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
+                    <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">{labelLcp}</p>
                     <Tooltip onOpenChange={rastrearTooltip("docs_composicoes", "metricDescription")}>
                       <TooltipTrigger
                         render={(props) => (
                           <Button
                             {...props}
                             variant="outline"
-                            size="icon"
-                            aria-label={
-                              locale === "en"
-                                ? "What is LCP"
-                                : locale === "es"
-                                ? "Qué es LCP"
-                                : "O que é LCP"
-                            }
+                            size="icon-sm"
+                            aria-label={labelLcpHelp}
                           >
-                            <Info aria-hidden="true" />
+                            i
                           </Button>
                         )}
                       />
                       <TooltipContent side="top" className="nds-max-w-xs nds-whitespace-normal">
-                        {locale === "en"
-                          ? "Largest Contentful Paint — time until the largest visible element is rendered."
-                          : locale === "es"
-                          ? "Largest Contentful Paint — tiempo hasta que el elemento visible más grande se renderiza."
-                          : "Largest Contentful Paint — tempo até o maior elemento visível ser renderizado."}
+                        {labelLcpHint}
                       </TooltipContent>
                     </Tooltip>
                   </div>
-                  <p className="nds-text-h3 nds-m-0">1.8s</p>
+                  <p className="nds-text-h3 nds-m-0">{labelLcpValue}</p>
                 </div>
               ),
             },
