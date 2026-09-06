@@ -34,7 +34,7 @@
         "react": "<Accordion defaultValue={[\"item-1\"]}>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vue": "<Accordion type=\"single\" default-value=\"item-1\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "svelte": "<Accordion type=\"single\" bind:value>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
-        "vanilla": "const acordeao = createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  items: [\n    { value: 'item-1', trigger: 'Título', content: 'Conteúdo' },\n  ],\n});",
+        "vanilla": "const accordion = createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  items: [\n    { value: 'item-1', trigger: 'Título', content: 'Conteúdo' },\n  ],\n});",
         "angular": "<div ndsAccordion defaultValue=\"item-1\">\n  <div ndsAccordionItem value=\"item-1\">\n    <button ndsAccordionTrigger>Título</button>\n    <div ndsAccordionContent>Conteúdo</div>\n  </div>\n</div>"
       }
     },
@@ -1192,7 +1192,7 @@
         "react": "<Accordion defaultValue={[\"item-1\"]}>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vue": "<Accordion type=\"single\" default-value=\"item-1\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "svelte": "<Accordion type=\"single\" bind:value>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
-        "vanilla": "const acordeon = createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  items: [\n    { value: 'item-1', trigger: 'Título', content: 'Contenido' },\n  ],\n});",
+        "vanilla": "const accordion = createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  items: [\n    { value: 'item-1', trigger: 'Título', content: 'Contenido' },\n  ],\n});",
         "angular": "<div ndsAccordion defaultValue=\"item-1\">\n  <div ndsAccordionItem value=\"item-1\">\n    <button ndsAccordionTrigger>Título</button>\n    <div ndsAccordionContent>Contenido</div>\n  </div>\n</div>"
       }
     },

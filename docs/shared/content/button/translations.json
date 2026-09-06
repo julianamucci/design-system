@@ -35,7 +35,7 @@
         "angular": "<button ndsButton>              <!-- Elemento <button> nativo -->\n  <svg ndsButtonIcon kind=\"plus\"></svg>   <!-- Ícone (opcional) -->\n  Label                         <!-- Texto da ação -->\n</button>",
         "vue": "<Button variant=\"default\" size=\"default\">  <!-- Elemento <button> nativo -->\n  <Plus aria-hidden=\"true\" />             <!-- Ícone (opcional) -->\n  Label                                   <!-- Texto da ação -->\n</Button>",
         "svelte": "<Button variant=\"default\" size=\"default\">  <!-- Elemento <button> nativo -->\n  <Plus aria-hidden=\"true\" />             <!-- Ícone (opcional) -->\n  Label                                   <!-- Texto da ação -->\n</Button>",
-        "vanilla": "import { createButton, createButtonIcon } from '@/components/ui/button';\n\nconst botao = createButton({ variant: 'default', size: 'default' });  // Elemento <button> nativo\nbotao.appendChild(createButtonIcon('plus'));                          // Ícone (opcional)\n\nconst rotulo = document.createElement('span');\nrotulo.textContent = 'Salvar';                          // Texto da ação\nbotao.appendChild(rotulo);"
+        "vanilla": "import { createButton, createButtonIcon } from '@/components/ui/button';\n\nconst button = createButton({ variant: 'default', size: 'default' });  // Elemento <button> nativo\nbutton.appendChild(createButtonIcon('plus'));                          // Ícone (opcional)\n\nconst label = document.createElement('span');\nlabel.textContent = 'Salvar';                          // Texto da ação\nbutton.appendChild(label);"
       }
     },
     "usage": {
@@ -935,7 +935,7 @@
         "angular": "<button ndsButton>              <!-- Elemento <button> nativo -->\n  <svg ndsButtonIcon kind=\"plus\"></svg>   <!-- Icono (opcional) -->\n  Label                         <!-- Texto de la acción -->\n</button>",
         "vue": "<Button variant=\"default\" size=\"default\">  <!-- Elemento <button> nativo -->\n  <Plus aria-hidden=\"true\" />             <!-- Icono (opcional) -->\n  Label                                   <!-- Texto de la acción -->\n</Button>",
         "svelte": "<Button variant=\"default\" size=\"default\">  <!-- Elemento <button> nativo -->\n  <Plus aria-hidden=\"true\" />             <!-- Icono (opcional) -->\n  Label                                   <!-- Texto de la acción -->\n</Button>",
-        "vanilla": "import { createButton, createButtonIcon } from '@/components/ui/button';\n\nconst boton = createButton({ variant: 'default', size: 'default' });  // Elemento <button> nativo\nboton.appendChild(createButtonIcon('plus'));                          // Icono (opcional)\n\nconst etiqueta = document.createElement('span');\netiqueta.textContent = 'Guardar';                          // Texto de la acción\nboton.appendChild(etiqueta);"
+        "vanilla": "import { createButton, createButtonIcon } from '@/components/ui/button';\n\nconst button = createButton({ variant: 'default', size: 'default' });  // Elemento <button> nativo\nbutton.appendChild(createButtonIcon('plus'));                          // Icono (opcional)\n\nconst label = document.createElement('span');\nlabel.textContent = 'Guardar';                          // Texto de la acción\nbutton.appendChild(label);"
       }
     },
     "usage": {

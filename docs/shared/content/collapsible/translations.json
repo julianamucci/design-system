@@ -32,7 +32,7 @@
         "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- conteúdo colapsável -->\n  </div>\n</nds-collapsible>",
         "vue": "<Collapsible v-model:open=\"aberto\">\n  <CollapsibleTrigger as-child>\n    <Button variant=\"ghost\">Exibir detalhes</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- conteúdo colapsável -->\n  </CollapsibleContent>\n</Collapsible>",
         "svelte": "<Collapsible bind:open={aberto}>\n  <CollapsibleTrigger class=\"nds-button nds-button-ghost\">Exibir detalhes</CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- conteúdo colapsável -->\n  </CollapsibleContent>\n</Collapsible>",
-        "vanilla": "import { createCollapsible } from '@/components/ui/collapsible';\n\nconst painel = document.createElement('div');   // Conteúdo colapsável\n\nconst bloco = createCollapsible({\n  trigger: 'Exibir detalhes',      // Texto ou elemento do gatilho\n  content: painel,\n  defaultOpen: false,\n  onOpenChange: (aberto) => { /* … */ },\n});\n\nbloco.setOpen(true);          // Controle externo do estado\ndocument.body.appendChild(bloco);"
+        "vanilla": "import { createCollapsible } from '@/components/ui/collapsible';\n\nconst panel = document.createElement('div');   // Conteúdo colapsável\n\nconst block = createCollapsible({\n  trigger: 'Exibir detalhes',      // Texto ou elemento do gatilho\n  content: panel,\n  defaultOpen: false,\n  onOpenChange: (aberto) => { /* … */ },\n});\n\nblock.setOpen(true);          // Controle externo do estado\ndocument.body.appendChild(block);"
       }
     },
     "usage": {
@@ -806,7 +806,7 @@
         "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- contenido colapsable -->\n  </div>\n</nds-collapsible>",
         "vue": "<Collapsible v-model:open=\"abierto\">\n  <CollapsibleTrigger as-child>\n    <Button variant=\"ghost\">Mostrar detalles</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- contenido colapsable -->\n  </CollapsibleContent>\n</Collapsible>",
         "svelte": "<Collapsible bind:open={abierto}>\n  <CollapsibleTrigger class=\"nds-button nds-button-ghost\">Mostrar detalles</CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- contenido colapsable -->\n  </CollapsibleContent>\n</Collapsible>",
-        "vanilla": "import { createCollapsible } from '@/components/ui/collapsible';\n\nconst panel = document.createElement('div');   // Contenido colapsable\n\nconst bloque = createCollapsible({\n  trigger: 'Mostrar detalles',      // Texto o elemento del disparador\n  content: panel,\n  defaultOpen: false,\n  onOpenChange: (abierto) => { /* … */ },\n});\n\nbloque.setOpen(true);          // Control externo del estado\ndocument.body.appendChild(bloque);"
+        "vanilla": "import { createCollapsible } from '@/components/ui/collapsible';\n\nconst panel = document.createElement('div');   // Contenido colapsable\n\nconst block = createCollapsible({\n  trigger: 'Mostrar detalles',      // Texto o elemento del disparador\n  content: panel,\n  defaultOpen: false,\n  onOpenChange: (abierto) => { /* … */ },\n});\n\nblock.setOpen(true);          // Control externo del estado\ndocument.body.appendChild(block);"
       }
     },
     "usage": {
