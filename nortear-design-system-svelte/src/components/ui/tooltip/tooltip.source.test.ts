@@ -76,9 +76,24 @@ describe('tooltipSource', () => {
     expect(tooltipSource('', { args: { triggerLabel: 'Excluir' } })).toContain(
       'import Trash2 from "@lucide/svelte/icons/trash-2";',
     );
-    expect(tooltipSource('', { args: { variant: 'longText' } })).toContain(
-      'import Share2 from "@lucide/svelte/icons/share-2";',
+  });
+
+  it('o texto longo tem gatilho de TEXTO, sem ícone e sem import órfão', () => {
+    const saida = tooltipSource('', {
+      args: {
+        variant: 'longText',
+        triggerLabel: 'Compartilhar',
+        contentText: 'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
+      },
+    });
+    // A tag INTEIRA: asserção por pedaço já aprovou markup errado nesta campanha.
+    expect(saida).toContain('        <Button variant="outline" {...props}>Compartilhar</Button>');
+    expect(saida).toContain(
+      '\n      Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo\n    ',
     );
+    // Import órfão é código que não compila na mão de quem copia.
+    expect(saida).not.toContain('@lucide/svelte/icons');
+    expect(saida).not.toContain('aria-label');
   });
 
   it('o nome acessível do gatilho vem do control, e não do balão', () => {

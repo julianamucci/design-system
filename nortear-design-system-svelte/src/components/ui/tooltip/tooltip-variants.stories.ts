@@ -125,9 +125,8 @@ export const LongText: Story = {
     ...baseArgs,
     variant: 'longText',
     triggerLabel: 'Compartilhar',
-    ariaLabel: 'Compartilhar link',
     contentText:
-      'Compartilhe o link público desta página com qualquer pessoa — o conteúdo pode ser visualizado sem login.',
+      'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
   },
   parameters: { covers: ['visual.item4'] },
   play: async ({ canvasElement, step }) => {

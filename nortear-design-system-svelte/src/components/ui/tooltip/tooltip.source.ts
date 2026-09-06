@@ -35,9 +35,13 @@ const IMPORT = `import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";`;
 
-/** O ícone do gatilho sai da ação que ele representa, como nas demonstrações. */
-function triggerIcon(variant: string, triggerLabel: string): IconKey {
-  if (variant === 'longText') return 'compartilhar';
+/**
+ * O ícone do gatilho sai da ação que ele representa, como nas demonstrações.
+ * `longText` não tem ícone: ali o gatilho é de TEXTO, e o rótulo visível já é
+ * o nome acessível — um `aria-label` diferente dele quebraria a WCAG 2.5.3.
+ */
+function triggerIcon(variant: string, triggerLabel: string): IconKey | null {
+  if (variant === 'longText') return null;
   return /excluir|delete|eliminar/i.test(triggerLabel) ? 'excluir' : 'salvar';
 }
 
@@ -61,21 +65,30 @@ function balaoBody(variant: string, contentText: string): string {
 
 /** Monta a composição inteira: Provider, raiz, gatilho e balão. */
 function montar(options: {
-  icone: IconKey;
+  icone: IconKey | null;
   ariaLabel: string;
+  triggerLabel?: string;
   provider: string;
   root: string;
   content: string;
   body: string;
   state?: string;
 }): string {
-  const [name, caminho] = ICONS[options.icone];
+  const icone = options.icone ? ICONS[options.icone] : null;
   const script = [
-    `${IMPORT}\nimport ${name} from "@lucide/svelte/icons/${caminho}";`,
+    icone ? `${IMPORT}\nimport ${icone[0]} from "@lucide/svelte/icons/${icone[1]}";` : IMPORT,
     options.state ?? '',
   ]
     .filter(Boolean)
     .join('\n\n');
+
+  // Gatilho de texto não leva ícone nem `aria-label`: seria import órfão na mão
+  // de quem copia, e nome acessível competindo com o rótulo visível.
+  const gatilho = icone
+    ? `<Button variant="outline" size="icon" aria-label="${options.ariaLabel}" {...props}>
+          <${icone[0]} aria-hidden="true" class="nds-size-4" />
+        </Button>`
+    : `<Button variant="outline" {...props}>${options.triggerLabel ?? ''}</Button>`;
 
   return svelteSnippet(
     script,
@@ -83,9 +96,7 @@ function montar(options: {
   <Tooltip${options.root}>
     <TooltipTrigger>
       {#snippet child({ props })}
-        <Button variant="outline" size="icon" aria-label="${options.ariaLabel}" {...props}>
-          <${name} aria-hidden="true" class="nds-size-4" />
-        </Button>
+        ${gatilho}
       {/snippet}
     </TooltipTrigger>
     <TooltipContent${options.content}>${options.body}</TooltipContent>
@@ -118,6 +129,7 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
   return montar({
     icone: triggerIcon(variant, triggerLabel),
     ariaLabel,
+    triggerLabel,
     // A espera é decisão do Provider, que a compartilha entre os vizinhos.
     provider: attrs(delayDuration ? `delayDuration={${delayDuration}}` : ''),
     root: '',

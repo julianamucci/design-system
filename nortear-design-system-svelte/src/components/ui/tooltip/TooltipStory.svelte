@@ -8,7 +8,6 @@
   import { Button } from '@/components/ui/button';
   import Save from '@lucide/svelte/icons/save';
   import Trash2 from '@lucide/svelte/icons/trash-2';
-  import Share2 from '@lucide/svelte/icons/share-2';
 
   type Side = 'top' | 'bottom' | 'left' | 'right';
   type Align = 'start' | 'center' | 'end';
@@ -51,15 +50,20 @@
         <Tooltip bind:open>
           <TooltipTrigger>
             {#snippet child({ props })}
-              <Button variant="outline" size="icon" aria-label={ariaLabel} {...props}>
-                {#if variant === 'longText'}
-                  <Share2 aria-hidden="true" class="nds-size-4" />
-                {:else if triggerLabel.toLowerCase().includes('excluir') || triggerLabel.toLowerCase().includes('delete') || triggerLabel.toLowerCase().includes('eliminar')}
-                  <Trash2 aria-hidden="true" class="nds-size-4" />
-                {:else}
-                  <Save aria-hidden="true" class="nds-size-4" />
-                {/if}
-              </Button>
+              {#if variant === 'longText'}
+                <!-- Gatilho de TEXTO: o rótulo visível já é o nome acessível, e
+                     um aria-label diferente dele quebraria a WCAG 2.5.3
+                     (Label in Name). -->
+                <Button variant="outline" {...props}>{triggerLabel}</Button>
+              {:else}
+                <Button variant="outline" size="icon" aria-label={ariaLabel} {...props}>
+                  {#if triggerLabel.toLowerCase().includes('excluir') || triggerLabel.toLowerCase().includes('delete') || triggerLabel.toLowerCase().includes('eliminar')}
+                    <Trash2 aria-hidden="true" class="nds-size-4" />
+                  {:else}
+                    <Save aria-hidden="true" class="nds-size-4" />
+                  {/if}
+                </Button>
+              {/if}
             {/snippet}
           </TooltipTrigger>
           <TooltipContent {side} {align} {sideOffset}>
