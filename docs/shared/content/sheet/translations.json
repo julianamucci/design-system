@@ -50,7 +50,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para painéis laterais em desktop — filtros avançados, configurações, navegação secundária.",
-        "item2": "Forneça sempre <code>SheetTitle</code> e <code>SheetDescription</code> — obrigatórios para acessibilidade.",
+        "item2": "Dê sempre título e descrição ao painel — é o título que nomeia o diálogo para quem usa leitor de tela, e sem ele o painel abre sem nome acessível.",
         "item3": "Para mobile com gesto de arrastar, use <code>Drawer</code> em vez de Sheet.",
         "item4": "Botões do footer alinhados à direita: Cancelar (outline) + ação primária."
       },
@@ -168,7 +168,7 @@
       },
       "styles": {
         "right": "Desliza da direita — o padrão para desktop, com largura limitada para o conteúdo abaixo continuar visível.",
-        "left": "Desliza da esquerda — <code>side=\"left\"</code>, ideal para navegação secundária.",
+        "left": "Desliza da esquerda — ideal para navegação secundária.",
         "top": "Desliza do topo — ocupa a altura que o conteúdo pedir.",
         "bottom": "Desliza de baixo — equivalente ao Drawer, mas sem o gesto de arrastar."
       },
@@ -176,7 +176,7 @@
       "compositions": {
         "advancedFilters": {
           "name": "Filtros avançados",
-          "description": "Painel <code>side=\"right\"</code> com formulário de filtros no body e ações <code>Cancelar</code> + ação primária no footer. Caso canônico do Sheet em desktop.",
+          "description": "Painel com formulário de filtros no body e ações <code>Cancelar</code> + ação primária no footer. Caso canônico do Sheet em desktop.",
           "use": "Refinamento de listagens longas (catálogo, busca, relatórios) sem trocar de página. Mantenha o trigger próximo aos resultados que serão filtrados.",
           "fieldCategory": "Categoria",
           "fieldMinPrice": "Preço mínimo",
@@ -184,7 +184,7 @@
         },
         "secondaryNavigation": {
           "name": "Navegação secundária",
-          "description": "Painel <code>side=\"left\"</code> com lista de links como conteúdo principal. Substitui menus permanentes em layouts compactos.",
+          "description": "Painel com um <code>&lt;nav&gt;</code> de links como conteúdo principal. Substitui menus permanentes em layouts compactos.",
           "use": "Menus de área administrativa, navegação entre seções secundárias do app, drill-down de hierarquias profundas que não cabem no header.",
           "trigger": "Abrir menu",
           "panelTitle": "Menu",
@@ -200,7 +200,7 @@
         },
         "profileEdit": {
           "name": "Edição de perfil",
-          "description": "Painel <code>side=\"right\"</code> com um <code>form</code> no body: cada campo é um par <code>Label</code> + <code>Input</code>, e o footer traz descartar + confirmar. A confirmação é o envio do formulário, não um botão solto.",
+          "description": "Painel com um <code>form</code> no body: cada campo é um par <code>Label</code> + <code>Input</code>, e o footer traz descartar + confirmar. A confirmação é o envio do formulário, não um botão solto.",
           "use": "Edição de poucos campos relacionados sem tirar a pessoa da listagem que ela estava lendo. Passando de um punhado de campos, a edição merece página própria.",
           "trigger": "Editar perfil",
           "panelTitle": "Editar perfil",
@@ -215,7 +215,7 @@
         },
         "bottomPanel": {
           "name": "Painel inferior",
-          "description": "Painel <code>side=\"bottom\"</code> com uma fileira de <code>Button</code> no body, no lugar de formulário. Mesmo desenho do Drawer em telas pequenas, sem o gesto de arrastar.",
+          "description": "Painel com uma fileira de <code>Button</code> no body, no lugar de formulário. Mesmo desenho do Drawer em telas pequenas, sem o gesto de arrastar.",
           "use": "Folha de ações sobre um item de lista em tela estreita. Quando arrastar para fechar faz parte da interação esperada, o componente é o Drawer.",
           "trigger": "Abrir ações",
           "panelTitle": "Ações rápidas",
@@ -234,7 +234,7 @@
       "longScrollBody": {
         "label": "Body com scroll interno",
         "trigger": "Conteúdo excede a altura do painel",
-        "behavior": "Painel <code>side=\"right\"</code> com corpo longo (termos de uso, formulário extenso) que rola internamente enquanto o footer permanece fixo."
+        "behavior": "Painel com corpo longo (termos de uso, formulário extenso) que rola internamente enquanto o footer permanece fixo."
       },
       "closed": {
         "label": "Closed",
@@ -420,7 +420,7 @@
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a modalidade do overlay, a retenção do foco enquanto aberto, o bloqueio da rolagem de fundo, o fechamento por Escape e o retorno do foco ao gatilho vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-sheet-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>É um diálogo, não um painel decorativo</strong> — o painel toma o foco, prende a navegação por teclado dentro dele enquanto está aberto e devolve o foco ao gatilho ao fechar. É daí que vem a obrigatoriedade de título e descrição: sem eles o diálogo abre sem nome acessível.",
       "item3": "<strong>O lado é do painel, não do conjunto</strong> — de onde ele entra é decisão do painel que está sendo aberto, e não um modo global. Onde a opção mora no código varia por stack; a tabela de propriedades da página mostra a forma desta.",
-      "item4": "<strong>Largura padrão</strong> — em <code>side=\"right\"</code>/<code>\"left\"</code>: 75% da largura da tela, com teto de 24rem. Para painéis maiores, redefina <code>--sheet-width</code> e <code>--sheet-max-width</code>. Uma classe de largura não resolve: a regra de lado é mais específica que qualquer utilitário, e custom property não disputa especificidade."
+      "item4": "<strong>Largura padrão</strong> — em : 75% da largura da tela, com teto de 24rem. Para painéis maiores, redefina <code>--sheet-width</code> e <code>--sheet-max-width</code>. Uma classe de largura não resolve: a regra de lado é mais específica que qualquer utilitário, e custom property não disputa especificidade."
     },
     "analytics": {
       "title": "Analytics",
@@ -573,7 +573,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for side panels on desktop — advanced filters, settings, secondary navigation.",
-        "item2": "Always provide <code>SheetTitle</code> and <code>SheetDescription</code> — required for accessibility.",
+        "item2": "Always give the panel a title and a description — the title is what names the dialog for screen reader users, and without it the panel opens with no accessible name.",
         "item3": "For mobile with drag gesture, use <code>Drawer</code> instead of Sheet.",
         "item4": "Footer buttons aligned right: Cancel (outline) + primary action."
       },
@@ -691,7 +691,7 @@
       },
       "styles": {
         "right": "Slides in from the right — the desktop default, with a bounded width so the content underneath stays visible.",
-        "left": "Slides from left — <code>side=\"left\"</code>, ideal for secondary navigation.",
+        "left": "Slides from left — ideal for secondary navigation.",
         "top": "Slides in from the top — takes whatever height the content asks for.",
         "bottom": "Slides in from the bottom — the same as Drawer, without the drag gesture."
       },
@@ -699,7 +699,7 @@
       "compositions": {
         "advancedFilters": {
           "name": "Advanced filters",
-          "description": "<code>side=\"right\"</code> panel with a filters form in the body and <code>Cancel</code> + primary action in the footer. Canonical Sheet use case on desktop.",
+          "description": "Panel with a filters form in the body and <code>Cancel</code> + primary action in the footer. Canonical Sheet use case on desktop.",
           "use": "Refining long lists (catalog, search, reports) without leaving the page. Keep the trigger close to the results being filtered.",
           "fieldCategory": "Category",
           "fieldMinPrice": "Minimum price",
@@ -707,7 +707,7 @@
         },
         "secondaryNavigation": {
           "name": "Secondary navigation",
-          "description": "<code>side=\"left\"</code> panel with a list of links as main content. Replaces permanent menus in compact layouts.",
+          "description": "Panel with a <code>&lt;nav&gt;</code> of links as its main content. Replaces permanent menus in compact layouts.",
           "use": "Admin area menus, navigation between secondary app sections, drill-down for deep hierarchies that don't fit in the header.",
           "trigger": "Open menu",
           "panelTitle": "Menu",
@@ -723,7 +723,7 @@
         },
         "profileEdit": {
           "name": "Profile editing",
-          "description": "<code>side=\"right\"</code> panel with a <code>form</code> in the body: each field is a <code>Label</code> + <code>Input</code> pair, and the footer carries discard + confirm. Confirming submits the form rather than firing a loose button.",
+          "description": "Panel with a <code>form</code> in the body: each field is a <code>Label</code> + <code>Input</code> pair, and the footer carries discard + confirm. Confirming submits the form rather than firing a loose button.",
           "use": "Editing a few related fields without pulling the person away from the list they were reading. Past a handful of fields, editing deserves its own page.",
           "trigger": "Edit profile",
           "panelTitle": "Edit profile",
@@ -738,7 +738,7 @@
         },
         "bottomPanel": {
           "name": "Bottom panel",
-          "description": "<code>side=\"bottom\"</code> panel with a row of <code>Button</code> in the body instead of a form. Same layout as the Drawer on small screens, without the drag gesture.",
+          "description": "Panel with a row of <code>Button</code> in the body instead of a form. Same layout as the Drawer on small screens, without the drag gesture.",
           "use": "Action sheet over a list item on a narrow screen. When dragging to dismiss is part of the expected interaction, the component is the Drawer.",
           "trigger": "Open actions",
           "panelTitle": "Quick actions",
@@ -757,7 +757,7 @@
       "longScrollBody": {
         "label": "Body with internal scroll",
         "trigger": "Content exceeds the panel height",
-        "behavior": "<code>side=\"right\"</code> panel with long body content (terms of use, lengthy form) that scrolls internally while the footer stays fixed."
+        "behavior": "Panel with long body content (terms of use, lengthy form) that scrolls internally while the footer stays fixed."
       },
       "closed": {
         "label": "Closed",
@@ -943,7 +943,7 @@
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the modal overlay, keeping focus inside while open, locking background scroll, closing on Escape and returning focus to the trigger come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-sheet-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>It is a dialog, not a decorative panel</strong> — the panel takes focus, keeps keyboard navigation inside itself while open, and returns focus to the trigger on close. That is where the title and description requirement comes from: without them the dialog opens with no accessible name.",
       "item3": "<strong>The side belongs to the panel, not to the set</strong> — where it enters from is a decision of the panel being opened, not a global mode. Where that option lives in code varies per stack; the properties table on this page shows this one.",
-      "item4": "<strong>Default width</strong> — on <code>side=\"right\"</code>/<code>\"left\"</code>: 75% of the viewport width, capped at 24rem. For wider panels, redefine <code>--sheet-width</code> and <code>--sheet-max-width</code>. A width utility class will not do it: the side rule is more specific than any utility, and custom properties do not compete on specificity."
+      "item4": "<strong>Default width</strong> — on : 75% of the viewport width, capped at 24rem. For wider panels, redefine <code>--sheet-width</code> and <code>--sheet-max-width</code>. A width utility class will not do it: the side rule is more specific than any utility, and custom properties do not compete on specificity."
     },
     "analytics": {
       "title": "Analytics",
@@ -1096,7 +1096,7 @@
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para paneles laterales en desktop — filtros avanzados, configuración, navegación secundaria.",
-        "item2": "Provee siempre <code>SheetTitle</code> y <code>SheetDescription</code> — obligatorios para accesibilidad.",
+        "item2": "Dale siempre al panel un título y una descripción — el título es lo que nombra el diálogo para quien usa lector de pantalla, y sin él el panel abre sin nombre accesible.",
         "item3": "Para móvil con gesto de arrastre, usa <code>Drawer</code> en vez de Sheet.",
         "item4": "Botones del pie alineados a la derecha: Cancelar (outline) + acción primaria."
       },
@@ -1214,7 +1214,7 @@
       },
       "styles": {
         "right": "Se desliza desde la derecha — el estándar para escritorio, con ancho acotado para que el contenido de abajo siga visible.",
-        "left": "Desliza desde la izquierda — <code>side=\"left\"</code>, ideal para navegación secundaria.",
+        "left": "Desliza desde la izquierda — ideal para navegación secundaria.",
         "top": "Se desliza desde arriba — ocupa la altura que pida el contenido.",
         "bottom": "Se desliza desde abajo — equivalente a Drawer, pero sin el gesto de arrastrar."
       },
@@ -1222,7 +1222,7 @@
       "compositions": {
         "advancedFilters": {
           "name": "Filtros avanzados",
-          "description": "Panel <code>side=\"right\"</code> con formulario de filtros en el body y acciones <code>Cancelar</code> + acción primaria en el footer. Caso canónico del Sheet en desktop.",
+          "description": "Panel con formulario de filtros en el body y acciones <code>Cancelar</code> + acción primaria en el footer. Caso canónico del Sheet en desktop.",
           "use": "Refinamiento de listas largas (catálogo, búsqueda, reportes) sin salir de la página. Mantén el trigger cerca de los resultados que se filtrarán.",
           "fieldCategory": "Categoría",
           "fieldMinPrice": "Precio mínimo",
@@ -1230,7 +1230,7 @@
         },
         "secondaryNavigation": {
           "name": "Navegación secundaria",
-          "description": "Panel <code>side=\"left\"</code> con lista de enlaces como contenido principal. Sustituye menús permanentes en layouts compactos.",
+          "description": "Panel con un <code>&lt;nav&gt;</code> de enlaces como contenido principal. Sustituye menús permanentes en layouts compactos.",
           "use": "Menús de área administrativa, navegación entre secciones secundarias del app, drill-down de jerarquías profundas que no caben en el header.",
           "trigger": "Abrir menú",
           "panelTitle": "Menú",
@@ -1246,7 +1246,7 @@
         },
         "profileEdit": {
           "name": "Edición de perfil",
-          "description": "Panel <code>side=\"right\"</code> con un <code>form</code> en el body: cada campo es un par <code>Label</code> + <code>Input</code>, y el footer trae descartar + confirmar. La confirmación es el envío del formulario, no un botón suelto.",
+          "description": "Panel con un <code>form</code> en el body: cada campo es un par <code>Label</code> + <code>Input</code>, y el footer trae descartar + confirmar. La confirmación es el envío del formulario, no un botón suelto.",
           "use": "Edición de pocos campos relacionados sin sacar a la persona de la lista que estaba leyendo. Pasando de un puñado de campos, la edición merece página propia.",
           "trigger": "Editar perfil",
           "panelTitle": "Editar perfil",
@@ -1261,7 +1261,7 @@
         },
         "bottomPanel": {
           "name": "Panel inferior",
-          "description": "Panel <code>side=\"bottom\"</code> con una fila de <code>Button</code> en el body, en lugar de formulario. Mismo diseño del Drawer en pantallas pequeñas, sin el gesto de arrastrar.",
+          "description": "Panel con una fila de <code>Button</code> en el body, en lugar de formulario. Mismo diseño del Drawer en pantallas pequeñas, sin el gesto de arrastrar.",
           "use": "Hoja de acciones sobre un ítem de lista en pantalla estrecha. Cuando arrastrar para cerrar es parte de la interacción esperada, el componente es el Drawer.",
           "trigger": "Abrir acciones",
           "panelTitle": "Acciones rápidas",
@@ -1280,7 +1280,7 @@
       "longScrollBody": {
         "label": "Body con scroll interno",
         "trigger": "El contenido excede la altura del panel",
-        "behavior": "Panel <code>side=\"right\"</code> con cuerpo largo (términos de uso, formulario extenso) que hace scroll internamente mientras el footer permanece fijo."
+        "behavior": "Panel con cuerpo largo (términos de uso, formulario extenso) que hace scroll internamente mientras el footer permanece fijo."
       },
       "closed": {
         "label": "Closed",
@@ -1466,7 +1466,7 @@
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la modalidad del overlay, la retención del foco mientras está abierto, el bloqueo del desplazamiento de fondo, el cierre por Escape y el retorno del foco al disparador vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-sheet-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Es un diálogo, no un panel decorativo</strong> — el panel toma el foco, mantiene la navegación por teclado dentro de él mientras está abierto y devuelve el foco al disparador al cerrar. De ahí viene la obligatoriedad de título y descripción: sin ellos el diálogo abre sin nombre accesible.",
       "item3": "<strong>El lado es del panel, no del conjunto</strong> — desde dónde entra es decisión del panel que se abre, no un modo global. Dónde vive esa opción en el código varía por stack; la tabla de propiedades de la página muestra la de esta.",
-      "item4": "<strong>Ancho por defecto</strong> — en <code>side=\"right\"</code>/<code>\"left\"</code>: 75% del ancho de la pantalla, con tope de 24rem. Para paneles más grandes, redefine <code>--sheet-width</code> y <code>--sheet-max-width</code>. Una clase de ancho no lo resuelve: la regla de lado es más específica que cualquier utilidad, y las custom properties no compiten por especificidad."
+      "item4": "<strong>Ancho por defecto</strong> — en : 75% del ancho de la pantalla, con tope de 24rem. Para paneles más grandes, redefine <code>--sheet-width</code> y <code>--sheet-max-width</code>. Una clase de ancho no lo resuelve: la regla de lado es más específica que cualquier utilidad, y las custom properties no compiten por especificidad."
     },
     "analytics": {
       "title": "Analytics",
