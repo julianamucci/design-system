@@ -175,6 +175,13 @@ Fase F (serial):
 
 `.pipeline-context/<slug>.md` deve conter, além do inventário técnico (categoria, variantes, tamanhos, props, tokens, lista de arquivos das 5 stacks):
 
+**Os dois arquivos do painel Code entram na lista, e a ausência deles era um furo
+medido.** `<slug>.source.<ext>` e `<slug>.source.test.ts` faziam parte de nenhum
+contrato — nem da tabela de artefatos do `_dev-shared.md`, nem daqui — e o
+resultado foi 234 construtores sem teste em 79 componentes, com o angular em 3 de
+82. Componente novo nascia com o `transform` inline na story, que não é
+importável e portanto não é testável. Portão: `source_sem_teste`.
+
 **Spec de exemplos — obrigatória.** Uma lista fechada de qual conteúdo cada demo, story e composição renderiza, derivada de `demonstration.*` e `variants.*` do `translations.json`:
 
 - para cada story a criar: nome exportado, **o ARQUIVO em que ela mora**, chave de tradução dos rótulos, e estado inicial (aberto/fechado, selecionado, disabled)

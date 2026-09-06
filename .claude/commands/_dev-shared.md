@@ -89,6 +89,41 @@ Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/
 | `<slug>-states.stories.<ext>` | Uma story por SITUAÇÃO em que ele pode estar |
 | `<slug>-compositions.stories.<ext>` | Uma story por MODO DE USO, com o componente montado por fora |
 | `<Slug>Docs.<ext>` | Docs page completa com todas as 16 seções |
+| `<slug>.source.<ext>` | O `transform` do painel Code, em MÓDULO — não inline na story |
+| `<slug>.source.test.ts` | Asserção de comportamento do snippet (ver abaixo) |
+
+**As duas últimas linhas entraram em 2026-09-06, e a ausência delas era o furo.**
+A tabela tinha seis linhas, as cinco dev-skills a leem antes de criar arquivo, e
+nenhuma delas mencionava o construtor de snippet nem o teste. O que existia era a
+instrução "declare `docs.source.transform` na Playground" — que convida a uma
+função inline: sem módulo, sem teste, sem nada para afirmar. Medido no dia: **234
+construtores sem teste em 79 componentes**, e o angular com 3 de 82.
+
+Por que em MÓDULO e não inline: `transform` inline não é importável, então
+nenhum teste o alcança, e o painel Code passa a ser a única superfície do
+componente sem verificação nenhuma. É também o que permite a outra stack copiar a
+forma.
+
+Por que o TESTE, se já existe o `source-snippets.test.ts`: são camadas
+diferentes. A varredura genérica prova que o snippet **importa o que usa** — 1129
+casos no angular, 3303 no react. Ela não prova que o snippet **ensina o certo**.
+Essa distância apareceu duas vezes numa só campanha: no popover o preview mudou e
+o snippet continuou ensinando a forma antiga; no hover-card o snippet do angular
+prometia `Limpar`/`Aplicar` enquanto o preview mostrava um botão `Salvar`. Quem
+lê copia o snippet, não o preview.
+
+O que o teste afirma, no mínimo — o do `hover-card` do angular é o modelo:
+
+- devolve o componente que se ESCREVE, não o `template` da story: sem `args.`,
+  sem `data-slot=`, sem binding que só existe dentro da story
+- **omite o que já é padrão**. Repetir valor padrão no snippet ensina ruído, e
+  some com a informação de que existe um padrão
+- imprime o que difere do padrão, com o valor que veio dos controls
+- guarda a lição do componente quando houver uma: no hover-card, que o gatilho
+  continua um link navegável, porque um snippet ensinando `<span>` ali ensinaria
+  a versão que quebra para quem usa toque
+
+Portão: `source_sem_teste` no `audit.mjs`.
 
 **O arquivo é o que decide o grupo da barra lateral**, porque o `title` sai dele.
 Story no arquivo errado aparece no lugar errado do menu, e isso não quebra teste
