@@ -6220,17 +6220,29 @@ function auditQuality(slug) {
         // de fora, porque não dá para distinguir "esqueceu a lista" de "esta
         // stack não tem esta lista". Quem cobra a seção inteira ausente é
         // `content_without_section`, logo acima.
+        // Comentário fora ANTES de contar. A regra conta citação literal de
+        // `caminho.itemN`, e comentário é texto como outro qualquer para um
+        // regex. Medido em 2026-09-06 no tooltip do angular: a ÚNICA ocorrência
+        // de `notes.item` no arquivo estava num comentário que explicava por que
+        // um `.slice(1)` antigo tinha saído — e a regra concluiu "a página
+        // renderiza 1 de 4", com severidade high, sobre uma página que renderiza
+        // as quatro. É a mesma família do portão de nome acessível que reprovou
+        // num comentário explicando por que `region` fora recusado.
+        const semComentario = stripComments(content);
         for (const caminho of LISTAS_NUMERADAS) {
           const no = noPorCaminho(ptBr, caminho);
           if (!no) continue;
           const total = indicesDe(no).length;
           if (!total) continue;
-          if (!content.includes(caminho)) continue;
+          if (!semComentario.includes(caminho)) continue;
 
           const p = escapaRegex(caminho);
           // Derivada do dicionário: varre `item{i}` até faltar, então não tem
           // como encurtar por esquecimento — é o que esta regra quer premiar.
-          if (new RegExp(`(itemsFromDict|listFromDict)\\([^)]*['"\`]${p}['"\`]`).test(content)) continue;
+          // `stringsFromDict` faltava nesta lista, e é a que o tooltip do angular
+          // usa. Helper derivado do dicionário que não esteja nomeado aqui some do
+          // radar, e a página passa a ser medida como se citasse item por item.
+          if (new RegExp(`(itemsFromDict|listFromDict|stringsFromDict)\\([^)]*['"\`]${p}['"\`]`).test(semComentario)) continue;
 
           let renderizado = 0;
           // Interpolada: `${caminho}.item${i}` alimentada por um array literal.
@@ -6244,7 +6256,7 @@ function auditQuality(slug) {
           } else {
             const citacoes = new RegExp(`${p}\\.item(\\d+)`, 'g');
             let m;
-            while ((m = citacoes.exec(content))) renderizado = Math.max(renderizado, Number(m[1]));
+            while ((m = citacoes.exec(semComentario))) renderizado = Math.max(renderizado, Number(m[1]));
           }
           if (!renderizado || renderizado >= total) continue;
 
