@@ -7,6 +7,12 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
+import {
+  sheetSideBottomSource,
+  sheetSideLeftSource,
+  sheetSideRightSource,
+  sheetSideTopSource,
+} from './sheet.source';
 
 const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
 
@@ -77,6 +83,10 @@ export const Right: Story = {
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item2', 'visual.item1'],
     docs: {
+      // O lado é o assunto da story e nenhum control o descreve: sem transform
+      // o painel Code imprimiria `[side]="side"`, um binding que só resolve
+      // dentro da story.
+      source: { transform: sheetSideRightSource },
       description: {
         story:
           'Padrão para desktop — desliza da direita e ocupa 75% da largura, com teto de 24rem. ' +
@@ -101,6 +111,7 @@ export const Left: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: sheetSideLeftSource },
       description: {
         story:
           'Desliza da esquerda. Mesma medida do right, do outro lado — é a direção da ' +
@@ -124,6 +135,7 @@ export const Left: Story = {
 export const Top: Story = {
   parameters: {
     docs: {
+      source: { transform: sheetSideTopSource },
       description: {
         story:
           'Desliza do topo e ocupa a largura inteira, com altura definida pelo conteúdo. ' +
@@ -148,6 +160,7 @@ export const Bottom: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: sheetSideBottomSource },
       description: {
         story:
           'Desliza de baixo — o mesmo desenho do Drawer, sem o gesto de arrastar. ' +

@@ -6,6 +6,13 @@ import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
+import {
+  sheetCloseButtonHiddenSource,
+  sheetClosedSource,
+  sheetControlledSource,
+  sheetLongScrollBodySource,
+  sheetOpenSource,
+} from './sheet.source';
 
 const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
 
@@ -49,6 +56,10 @@ export const Closed: Story = {
     // variantes. Aqui o que se vê é o painel ausente: uma declaração deslocada,
     // que fazia o auditor contar como verificada uma foto que ninguém tira.
     docs: {
+      // Sem transform o painel Code imprimiria `{{ rotuloGatilho }}` e as
+      // outras props que a story injeta para trazer o conteúdo trilíngue —
+      // andaime, não componente.
+      source: { transform: sheetClosedSource },
       description: {
         story:
           'Estado inicial. O painel não está no DOM, e o gatilho anuncia que existe um ' +
@@ -96,6 +107,7 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: {
     docs: {
+      source: { transform: sheetOpenSource },
       description: {
         story:
           'Aberto por defaultOpen, sem estado externo nenhum. O foco entra no painel e o ' +
@@ -156,6 +168,7 @@ export const LongScrollBody: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: sheetLongScrollBodySource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
@@ -249,6 +262,7 @@ export const LongScrollBody: Story = {
 export const WithCloseButtonHidden: Story = {
   parameters: {
     docs: {
+      source: { transform: sheetCloseButtonHiddenSource },
       description: {
         story:
           'Sem o X do canto. Só faz sentido quando o rodapé já oferece uma saída explícita — ' +
@@ -300,6 +314,11 @@ export const WithCloseButtonHidden: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // O snippet ensina SINAL, e a story renderiza um campo comum: o renderer
+      // do Storybook monta um objeto de props, onde `isOpen = true` basta. Num
+      // componente de verdade quem agenda o redesenho é a escrita no sinal — a
+      // tela é a mesma, o que se escreve não.
+      source: { transform: sheetControlledSource },
       description: {
         story:
           'Estado do lado de fora. O componente não decide nada sozinho: abre quando o valor ' +

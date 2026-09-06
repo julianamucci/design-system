@@ -6,6 +6,10 @@ import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import {
+  sheetAdvancedFiltersSource,
+  sheetSecondaryNavigationSource,
+} from './sheet.source';
 
 // As duas composições que o conteúdo compartilhado documenta
 // (`variants.compositions`): filtros avançados à direita e navegação secundária
@@ -42,6 +46,7 @@ type Story = StoryObj;
 export const AdvancedFilters: Story = {
   parameters: {
     docs: {
+      source: { transform: sheetAdvancedFiltersSource },
       description: {
         story:
           'Sheet à direita com filtros avançados em formulário. O título nomeia a ação, a ' +
@@ -104,6 +109,7 @@ export const AdvancedFilters: Story = {
 export const SecondaryNavigation: Story = {
   parameters: {
     docs: {
+      source: { transform: sheetSecondaryNavigationSource },
       description: {
         story:
           'Sheet à esquerda como menu de navegação secundária — itens clicáveis dentro do ' +
