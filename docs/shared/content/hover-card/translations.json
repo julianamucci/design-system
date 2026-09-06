@@ -12,12 +12,6 @@
     },
     "demonstration": {
       "title": "Demonstração",
-      "labels": {
-        "userProfile": "Preview de perfil de usuário",
-        "linkPreview": "Preview de link externo",
-        "definitionTooltip": "Definição contextual de termo",
-        "metricExplainer": "Explicação de métrica em dashboard"
-      },
       "mention": "@joana",
       "sentenceBefore": "Comentário de",
       "sentenceAfter": "há 2 horas."
@@ -463,12 +457,6 @@
     },
     "demonstration": {
       "title": "Demonstration",
-      "labels": {
-        "userProfile": "User profile preview",
-        "linkPreview": "External link preview",
-        "definitionTooltip": "Contextual term definition",
-        "metricExplainer": "Dashboard metric explainer"
-      },
       "mention": "@joana",
       "sentenceBefore": "Comment by",
       "sentenceAfter": "2 hours ago."
@@ -914,12 +902,6 @@
     },
     "demonstration": {
       "title": "Demostración",
-      "labels": {
-        "userProfile": "Preview de perfil de usuario",
-        "linkPreview": "Preview de enlace externo",
-        "definitionTooltip": "Definición contextual de término",
-        "metricExplainer": "Explicación de métrica en dashboard"
-      },
       "mention": "@joana",
       "sentenceBefore": "Comentario de",
       "sentenceAfter": "hace 2 horas."

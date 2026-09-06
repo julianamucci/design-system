@@ -5,7 +5,7 @@
     HoverCardTrigger,
     HoverCardContent,
   } from '@/components/ui/hover-card';
-  import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+  import { Avatar, AvatarFallback } from '@/components/ui/avatar';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -579,7 +579,7 @@ interface HoverCardContentProps {
       <HoverCard onOpenChange={(o: boolean) => trackHoverCard(o, 'default', 'docs_variantes')}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#joana" class="nds-text-primary nds-font-medium nds-hover-underline" {...props}>@joana</a>
+            <a href="#joana" class="nds-text-primary nds-font-medium nds-hover-underline" {...props}>{$tStore('demonstration.mention')}</a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent side="bottom" align="start">
@@ -597,7 +597,7 @@ interface HoverCardContentProps {
       >
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#joana" class="nds-text-primary nds-font-medium nds-hover-underline" {...props}>@joana</a>
+            <a href="#joana" class="nds-text-primary nds-font-medium nds-hover-underline" {...props}>{$tStore('demonstration.mention')}</a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent side="bottom" align="start">
@@ -611,7 +611,6 @@ interface HoverCardContentProps {
   {#snippet profileCard()}
     <div class="nds-cluster" data-spacing="sm" data-align="start">
       <Avatar>
-        <AvatarImage src="" alt="" />
         <AvatarFallback>JS</AvatarFallback>
       </Avatar>
       <div class="nds-stack" data-spacing="xs">
@@ -634,7 +633,7 @@ interface HoverCardContentProps {
       >
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#joana" class="nds-text-primary nds-font-medium nds-hover-underline" {...props}>@joana</a>
+            <a href="#joana" class="nds-text-primary nds-font-medium nds-hover-underline" {...props}>{$tStore('demonstration.mention')}</a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent side="bottom" align="start">

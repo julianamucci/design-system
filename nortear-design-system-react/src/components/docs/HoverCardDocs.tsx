@@ -210,9 +210,9 @@ export function HoverCardDocs() {
   </HoverCardTrigger>
   <HoverCardContent>
     <div className="nds-stack" data-spacing="sm">
-      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm" data-align="start">
-        <span aria-hidden="true" className="nds-icon nds-rounded-sm nds-bg-muted">D</span>
-        <span>design-system.dev</span>
+      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs" data-align="center">
+        <span aria-hidden="true" className="nds-rounded-sm nds-bg-muted nds-px-1">D</span>
+        <span className="nds-truncate">design-system.dev</span>
       </div>
       <p className="nds-text-body nds-font-medium nds-leading-none">Guia de overlays acessíveis</p>
     </div>
@@ -249,8 +249,10 @@ export function HoverCardDocs() {
   </HoverCardTrigger>
   <HoverCardContent>
     <div className="nds-stack" data-spacing="xs">
-      <p className="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
-      <p className="nds-text-h4 nds-font-semibold">3,42%</p>
+      <div className="nds-cluster" data-spacing="sm" data-justify="between" data-align="baseline">
+        <p className="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+        <span className="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
+      </div>
       <p className="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos</p>
     </div>
   </HoverCardContent>
@@ -309,17 +311,13 @@ interface HoverCardContentProps {
     <div className="nds-stack" data-spacing="sm">
       <div
         className="nds-cluster nds-text-caption nds-text-muted-foreground"
-        data-spacing="sm"
-        data-align="start"
+        data-spacing="xs"
+        data-align="center"
       >
-        <span
-          aria-hidden="true"
-          className="nds-icon nds-rounded-sm nds-bg-muted"
-          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-        >
+        <span aria-hidden="true" className="nds-rounded-sm nds-bg-muted nds-px-1">
           D
         </span>
-        <span>{tContent("variants.items.linkPreview.cardDomain")}</span>
+        <span className="nds-truncate">{tContent("variants.items.linkPreview.cardDomain")}</span>
       </div>
       <p className="nds-text-body nds-font-medium nds-leading-none">
         {tContent("variants.items.linkPreview.cardTitle")}
@@ -340,10 +338,12 @@ interface HoverCardContentProps {
 
   const metricCard = (
     <div className="nds-stack" data-spacing="xs">
-      <p className="nds-text-caption nds-text-muted-foreground">
-        {tContent("variants.items.metricExplainer.cardMetric")}
-      </p>
-      <p className="nds-text-h4 nds-font-semibold">3,42%</p>
+      <div className="nds-cluster" data-spacing="sm" data-justify="between" data-align="baseline">
+        <p className="nds-text-body nds-font-medium">
+          {tContent("variants.items.metricExplainer.cardMetric")}
+        </p>
+        <span className="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
+      </div>
       <p className="nds-text-caption nds-text-muted-foreground">
         {tContent("variants.items.metricExplainer.cardFormula")}
       </p>
@@ -523,7 +523,7 @@ interface HoverCardContentProps {
                   onOpenChange={(open) => trackHoverCard(open, "par1-dont", "docs_do_dont")}
                 >
                   <HoverCardTrigger asChild>
-                    <span className="nds-text-body nds-font-medium">
+                    <span className="nds-text-primary nds-font-medium nds-hover-underline">
                       {tContent("demonstration.mention")}
                     </span>
                   </HoverCardTrigger>
@@ -602,7 +602,9 @@ interface HoverCardContentProps {
                   onOpenChange={(open) => trackHoverCard(open, "default", "docs_variantes")}
                 >
                   <HoverCardTrigger asChild>
-                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      {tContent("demonstration.mention")}
+                    </a>
                   </HoverCardTrigger>
                   <HoverCardContent>{profileCard}</HoverCardContent>
                 </HoverCard>
@@ -622,7 +624,9 @@ interface HoverCardContentProps {
                   onOpenChange={(open) => trackHoverCard(open, "with-delay", "docs_variantes")}
                 >
                   <HoverCardTrigger asChild>
-                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      {tContent("demonstration.mention")}
+                    </a>
                   </HoverCardTrigger>
                   <HoverCardContent>{profileCard}</HoverCardContent>
                 </HoverCard>
@@ -643,7 +647,9 @@ interface HoverCardContentProps {
                   onOpenChange={(open) => trackHoverCard(open, "user-profile", "docs_variantes")}
                 >
                   <HoverCardTrigger asChild>
-                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+                    <a href="#joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      {tContent("demonstration.mention")}
+                    </a>
                   </HoverCardTrigger>
                   <HoverCardContent>{profileCard}</HoverCardContent>
                 </HoverCard>

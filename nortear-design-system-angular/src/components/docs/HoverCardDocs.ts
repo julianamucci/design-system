@@ -400,20 +400,18 @@ const VARIANT_CODE = {
          aqui cobriria a seção seguinte com um painel flutuante. Passe o cursor
          (ou o Tab) sobre a menção para abrir. -->
     <ng-template #tplVarDefault>
-      <p class="nds-text-body">
-        {{ t('demonstration.labels.userProfile') }}:
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('default', 'docs_variantes', $event)">
           <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
         </span>
-      </p>
+      </div>
     </ng-template>
 
     <ng-template #tplVarWithDelay>
-      <p class="nds-text-body">
-        {{ t('demonstration.labels.userProfile') }}:
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('with-delay', 'docs_variantes', $event)">
           <a
             ndsHoverCardTrigger
@@ -426,24 +424,22 @@ const VARIANT_CODE = {
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
         </span>
-      </p>
+      </div>
     </ng-template>
 
     <ng-template #tplVarUserProfile>
-      <p class="nds-text-body">
-        {{ t('usage.scenarios.item1.s') }}
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('user-profile', 'docs_variantes', $event)">
           <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
         </span>
-      </p>
+      </div>
     </ng-template>
 
     <ng-template #tplVarLinkPreview>
-      <p class="nds-text-body">
-        {{ t('variants.items.linkPreview.name') }}:
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('link-preview', 'docs_variantes', $event)">
           <a
             ndsHoverCardTrigger
@@ -463,14 +459,15 @@ const VARIANT_CODE = {
             </div>
           </ng-template>
         </span>
-      </p>
+      </div>
     </ng-template>
 
     <ng-template #tplVarDefinition>
-      <p class="nds-text-body">
-        {{ t('variants.items.definitionTooltip.name') }}:
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('definition-tooltip', 'docs_variantes', $event)">
-          <button ndsHoverCardTrigger [class]="classesGatilhoBotao">WCAG 2.2 AA</button>
+          <button ndsHoverCardTrigger [class]="classesGatilhoBotao">
+            {{ t('variants.items.definitionTooltip.cardTerm') }}
+          </button>
           <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <p class="nds-text-body nds-font-medium nds-leading-none">
@@ -482,12 +479,11 @@ const VARIANT_CODE = {
             </div>
           </ng-template>
         </span>
-      </p>
+      </div>
     </ng-template>
 
     <ng-template #tplVarMetric>
-      <p class="nds-text-body">
-        {{ t('variants.items.metricExplainer.name') }}:
+      <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('metric-explainer', 'docs_variantes', $event)">
           <button ndsHoverCardTrigger [class]="classesGatilhoBotao">3,42%</button>
           <ng-template ndsHoverCardContent>
@@ -506,7 +502,7 @@ const VARIANT_CODE = {
             </div>
           </ng-template>
         </span>
-      </p>
+      </div>
     </ng-template>
 
     <!-- O cartão de perfil é reaproveitado por três exemplos — um template só. -->

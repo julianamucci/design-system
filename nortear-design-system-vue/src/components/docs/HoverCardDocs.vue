@@ -260,9 +260,9 @@ const codeCompLinkPreview = `<HoverCard :open-delay="500" :close-delay="200">
   </HoverCardTrigger>
   <HoverCardContent>
     <div class="nds-stack" data-spacing="sm">
-      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm" data-align="start">
-        <span class="nds-icon nds-rounded-sm nds-bg-muted" aria-hidden="true">D</span>
-        <span>design-system.dev</span>
+      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs" data-align="center">
+        <span class="nds-rounded-sm nds-bg-muted nds-px-1" aria-hidden="true">D</span>
+        <span class="nds-truncate">design-system.dev</span>
       </div>
       <p class="nds-text-body nds-font-medium nds-leading-none">Guia de overlays acessíveis</p>
     </div>
@@ -299,8 +299,10 @@ const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
   </HoverCardTrigger>
   <HoverCardContent>
     <div class="nds-stack" data-spacing="xs">
-      <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
-      <p class="nds-text-h4 nds-font-semibold">3,42%</p>
+      <div class="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
+        <p class="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+        <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
+      </div>
       <p class="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos</p>
     </div>
   </HoverCardContent>
@@ -551,8 +553,8 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <!-- VIVOS nos quatro, e FECHADOS: a §15 pede componente, não imitação em
@@ -612,7 +614,7 @@ const a11yCritCols = computed(() => ({
           >
             <HoverCardTrigger as-child>
               <span
-                class="nds-text-body nds-font-medium"
+                class="nds-text-primary nds-font-medium nds-hover-underline"
               >{{ tContent('demonstration.mention') }}</span>
             </HoverCardTrigger>
             <HoverCardContent>
@@ -757,7 +759,7 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#joana"
                 class="nds-text-primary nds-font-medium nds-hover-underline"
-              >@joana</a>
+              >{{ tContent('demonstration.mention') }}</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div
@@ -798,7 +800,7 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#joana"
                 class="nds-text-primary nds-font-medium nds-hover-underline"
-              >@joana</a>
+              >{{ tContent('demonstration.mention') }}</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div
@@ -839,7 +841,7 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#joana"
                 class="nds-text-primary nds-font-medium nds-hover-underline"
-              >@joana</a>
+              >{{ tContent('demonstration.mention') }}</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div
@@ -889,15 +891,14 @@ const a11yCritCols = computed(() => ({
               >
                 <div
                   class="nds-cluster nds-text-caption nds-text-muted-foreground"
-                  data-spacing="sm"
-                  data-align="start"
+                  data-spacing="xs"
+                  data-align="center"
                 >
                   <span
                     aria-hidden="true"
-                    class="nds-icon nds-rounded-sm nds-bg-muted"
-                    style="display: inline-flex; align-items: center; justify-content: center;"
+                    class="nds-rounded-sm nds-bg-muted nds-px-1"
                   >D</span>
-                  <span>{{ tContent('variants.items.linkPreview.cardDomain') }}</span>
+                  <span class="nds-truncate">{{ tContent('variants.items.linkPreview.cardDomain') }}</span>
                 </div>
                 <p class="nds-text-body nds-font-medium nds-leading-none">
                   {{ tContent('variants.items.linkPreview.cardTitle') }}
@@ -966,12 +967,17 @@ const a11yCritCols = computed(() => ({
                 class="nds-stack"
                 data-spacing="xs"
               >
-                <p class="nds-text-caption nds-text-muted-foreground">
-                  {{ tContent('variants.items.metricExplainer.cardMetric') }}
-                </p>
-                <p class="nds-text-h4 nds-font-semibold">
-                  3,42%
-                </p>
+                <div
+                  class="nds-cluster"
+                  data-spacing="sm"
+                  data-justify="between"
+                  data-align="baseline"
+                >
+                  <p class="nds-text-body nds-font-medium">
+                    {{ tContent('variants.items.metricExplainer.cardMetric') }}
+                  </p>
+                  <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
+                </div>
                 <p class="nds-text-caption nds-text-muted-foreground">
                   {{ tContent('variants.items.metricExplainer.cardFormula') }}
                 </p>
