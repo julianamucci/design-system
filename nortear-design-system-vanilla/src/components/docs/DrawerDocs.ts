@@ -54,6 +54,46 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+/**
+ * `base.item1`, `base.item2`, … enquanto o dicionário os tiver.
+ *
+ * Total cravado à mão é a causa, não o sintoma: esta página renderizava 7 dos 9
+ * critérios funcionais e 7 dos 8 de acessibilidade porque o conteúdo cresceu e
+ * o `[1, 2, 3, 4, 5, 6, 7]` não. Trocar um número por outro repete o defeito na
+ * próxima frase escrita; quem conta é o dicionário.
+ *
+ * A parada usa o contrato do `t()` desta stack: chave ausente volta como a
+ * própria chave. Os NOMES dos dois helpers são os que a casa já usa, e isso não
+ * é gosto: o `lista_mais_curta_que_o_conteudo` reconhece a derivação por uma
+ * lista de nomes, e helper fora dela cai no ramo de citação literal, não acha
+ * nenhuma e PULA — silêncio que se lê como "conferido".
+ */
+function numberedItems(base: string): string[] {
+  const items: string[] = [];
+  for (let i = 1; ; i++) {
+    const key = `${base}.item${i}`;
+    if (t(key) === key) break;
+    items.push(t(key));
+  }
+  return items;
+}
+
+/** Mesma varredura, para itens que são objeto com campos fixos. */
+function itemsFromDict<K extends string>(
+  base: string,
+  fields: readonly K[],
+): Record<K, string>[] {
+  const rows: Record<K, string>[] = [];
+  for (let i = 1; ; i++) {
+    const sonda = `${base}.item${i}.${fields[0]}`;
+    if (t(sonda) === sonda) break;
+    const row = {} as Record<K, string>;
+    for (const f of fields) row[f] = t(`${base}.item${i}.${f}`);
+    rows.push(row);
+  }
+  return rows;
+}
+
 type DrawerDemoOptions = {
   triggerLabel: string;
   title: string;
@@ -220,7 +260,7 @@ export function createDrawerDocs(): HTMLElement {
       case 'anatomia':
         return createDocsAnatomy({
           title: t('anatomy.title'),
-          items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
+          items: numberedItems('anatomy').map(item => DOMPurify.sanitize(item)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -230,7 +270,7 @@ export function createDrawerDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
+            items: numberedItems('usage.guidelines').map(item => DOMPurify.sanitize(item)),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -239,11 +279,7 @@ export function createDrawerDocs(): HTMLElement {
               use: t('usage.scenarios.cols.use'),
               alternative: t('usage.scenarios.cols.alternative'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
-              s: t(`usage.scenarios.item${i}.s`),
-              u: t(`usage.scenarios.item${i}.u`),
-              a: t(`usage.scenarios.item${i}.a`),
-            })),
+            items: itemsFromDict('usage.scenarios', ['s', 'u', 'a']),
           },
           uxWriting: {
             title: t('usage.uxWriting.title'),
@@ -262,11 +298,11 @@ export function createDrawerDocs(): HTMLElement {
           },
           do: {
             title: t('usage.do.title'),
-            items: [1, 2, 3, 4].map(i => t(`usage.do.item${i}`)),
+            items: numberedItems('usage.do'),
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [1, 2, 3, 4].map(i => t(`usage.dont.item${i}`)),
+            items: numberedItems('usage.dont'),
           },
         });
 
@@ -303,13 +339,13 @@ export function createDrawerDocs(): HTMLElement {
               doPreviewFactory: () => buildDrawerDemo({
                 triggerLabel: 'Abrir mobile',
                 title: 'Filtros',
-                description: 'Mobile-first com swipe-to-close.',
+                description: 'Mobile-first com arraste para dispensar.',
                 cancelLabel: 'Cancelar',
                 actionLabel: 'Aplicar',
                 side: 'bottom',
               }),
               dontPreviewFactory: () => buildDrawerDemo({
-                triggerLabel: 'Aninhamento ❌',
+                triggerLabel: 'Abrir drawer aninhado',
                 title: 'Drawer aninhado',
                 description: 'Não aninhe drawers.',
                 cancelLabel: 'Cancelar',
@@ -362,7 +398,7 @@ const longBody = document.createElement('div');
 longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
 longBody.dataset.spacing = 'sm';
 // Sem altura própria: o corpo do painel já rola dentro do teto de altura dele.
-for (let i = 1; i <= 30; i++) {
+for (let i = 1; i <= 12; i++) {
   const p = document.createElement('p');
   p.textContent = \`Parágrafo \${i}: termos longos para garantir scroll interno.\`;
   longBody.appendChild(p);
@@ -449,7 +485,11 @@ const drawer = createDrawer({
                 const longBody = document.createElement('div');
                 longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
                 longBody.dataset.spacing = 'sm';
-                for (let i = 1; i <= 30; i++) {
+                // Doze parágrafos, e não trinta: é a régua das outras stacks, e o
+                // exemplo só precisa passar da altura do painel para mostrar que o
+                // corpo rola sozinho. Vinte a mais não provam nada e fazem a prévia
+                // desta página divergir das demais.
+                for (let i = 1; i <= 12; i++) {
                   const p = document.createElement('p');
                   p.textContent = `Parágrafo ${i}: termos longos para garantir scroll interno.`;
                   longBody.appendChild(p);
@@ -750,7 +790,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
           screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
+          items: numberedItems('accessibility.items').map(item => DOMPurify.sanitize(item)),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab/Shift+Tab', description: t('accessibility.keyboard.tab')    },
@@ -773,7 +813,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
       case 'notas':
         return createDocsNotes({
           title: t('notes.title'),
-          items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
+          items: numberedItems('notes').map(item => ({ title: '', content: DOMPurify.sanitize(item) })),
         });
 
       case 'analytics':
@@ -813,10 +853,10 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
-              action: t(`testes.functional.item${i}.action`),
-              result: t(`testes.functional.item${i}.result`),
-              priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
+            items: itemsFromDict('testes.functional', ['action', 'result', 'priority']).map(r => ({
+              action: r.action,
+              result: r.result,
+              priority: priorityLabel(r.priority),
             })),
           },
           accessibility: {
@@ -826,8 +866,8 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
-              criterion: t(`testes.accessibility.item${i}`),
+            items: numberedItems('testes.accessibility').map(criterion => ({
+              criterion,
               level: 'AA',
               how: '—',
             })),
@@ -838,9 +878,9 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
-              story: t(`testes.visual.item${i}.story`),
-              priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
+            items: itemsFromDict('testes.visual', ['story', 'priority']).map(r => ({
+              story: r.story,
+              priority: priorityLabel(r.priority),
             })),
           },
         });

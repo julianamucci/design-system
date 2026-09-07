@@ -124,8 +124,16 @@ import { attachDrawerSwipe, type DrawerSwipeDirection } from '@shared/primitives
 /** Borda por onde o painel entra. */
 export type DrawerDirection = 'bottom' | 'top' | 'left' | 'right';
 
-/** Caminho que fechou o painel — o vocabulário que o analytics do produto usa. */
-export type DrawerCloseReason = 'escape' | 'overlay' | 'close-button' | 'action';
+/**
+ * Caminho que fechou o painel — o vocabulário que o analytics do produto usa.
+ *
+ * As quatro palavras são as da stack de referência, e a lista é fechada de
+ * propósito: `reason` vira dimensão no GA4, e uma stack com um quinto valor
+ * parte o mesmo evento em duas leituras. A tradução do vocabulário DA LIB para
+ * este é o que `drawerCloseReason` faz — e a lib daqui tem oito motivos, contra
+ * os quatro que o design system reconhece.
+ */
+export type DrawerCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
 
 /**
  * Traduz o motivo do primitivo para o vocabulário do design system.
@@ -149,8 +157,17 @@ export function drawerCloseReason(motivo: RdxDialogOpenChangeReason): DrawerClos
       return 'overlay';
     case 'close-press':
       return 'close-button';
+    // Soltar o painel para fora da tela é a mesma decisão de "saí do painel sem
+    // decidir nada" que o clique no véu, e a stack de referência já o mapeia
+    // assim. Motivo próprio para o arraste criaria uma dimensão que só duas
+    // stacks preencheriam.
+    case 'swipe':
+      return 'overlay';
+    // Sobram `imperative-action`, `trigger-press` e `none`: os três são o painel
+    // recolhido por CÓDIGO, não por vontade de quem usa — `api` no vocabulário
+    // do design system. Antes tudo isto caía num `action` que só existia aqui.
     default:
-      return 'action';
+      return 'api';
   }
 }
 

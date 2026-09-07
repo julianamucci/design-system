@@ -109,6 +109,25 @@
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+  /**
+   * Critério da WCAG que cada frase de `testes.accessibility` cobre.
+   *
+   * A lista compartilhada é de FRASES, não uma tabela de critério/nível: o
+   * número mora no texto de cada uma e a coluna o repete. Índice sem entrada
+   * cai em travessão em vez de sumir da tabela — quem chega depois aparece,
+   * mesmo antes de alguém lhe atribuir um critério.
+   */
+  const NIVEL_WCAG: Record<number, string> = {
+    1: 'AA',
+    2: '4.1.2',
+    3: '4.1.2',
+    4: '2.1.2',
+    5: '2.1.1',
+    6: '1.4.3',
+    7: '2.1.1',
+    8: '2.5.7',
+  };
+
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
     medium: 'common.medium',
@@ -117,6 +136,47 @@
 
   function localPriority(raw: string, tNav: (k: string) => string): string {
     return tNav(priorityKeyMap[raw] ?? 'common.high');
+  }
+
+  /**
+   * `base.item1`, `base.item2`, … enquanto o dicionário os tiver.
+   *
+   * Total cravado à mão é a causa, não o sintoma: esta página renderizava 7 dos
+   * 9 critérios funcionais e 7 dos 8 de acessibilidade porque o conteúdo
+   * cresceu e o `[1, 2, 3, 4, 5, 6, 7]` não. Trocar um número por outro repete
+   * o defeito na próxima frase escrita; quem conta é o dicionário.
+   *
+   * A parada usa o contrato do `t()` desta stack: chave ausente volta como a
+   * própria chave. Os NOMES dos dois helpers são os que a casa já usa, e isso
+   * não é gosto: o `lista_mais_curta_que_o_conteudo` reconhece a derivação por
+   * uma lista de nomes, e helper fora dela cai no ramo de citação literal, não
+   * acha nenhuma e PULA — silêncio que se lê como "conferido".
+   */
+  function numberedItems(tFn: (key: string) => string, base: string): string[] {
+    const items: string[] = [];
+    for (let i = 1; ; i++) {
+      const key = `${base}.item${i}`;
+      if (tFn(key) === key) break;
+      items.push(tFn(key));
+    }
+    return items;
+  }
+
+  /** Mesma varredura, para itens que são objeto com campos fixos. */
+  function itemsFromDict<K extends string>(
+    tFn: (key: string) => string,
+    base: string,
+    fields: readonly K[],
+  ): Record<K, string>[] {
+    const rows: Record<K, string>[] = [];
+    for (let i = 1; ; i++) {
+      const sonda = `${base}.item${i}.${fields[0]}`;
+      if (tFn(sonda) === sonda) break;
+      const row = {} as Record<K, string>;
+      for (const f of fields) row[f] = tFn(`${base}.item${i}.${f}`);
+      rows.push(row);
+    }
+    return rows;
   }
 
   // ─── Code strings ────────────────────────────────────────────────────────────
@@ -167,7 +227,6 @@ interface DrawerProps {
   direction?: 'bottom' | 'top' | 'left' | 'right';
   modal?: boolean;
   dismissible?: boolean;
-  shouldScaleBackground?: boolean;
   children?: Snippet;
 }
 
@@ -203,6 +262,14 @@ interface TriggerProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
+  <!--
+    Título e descrição dos quatro painéis são TEXTO DE EXEMPLO, e por isso não
+    saem de `title`/`description`: aquelas duas chaves descrevem o COMPONENTE
+    para quem lê a página, e usá-las aqui fazia os quatro painéis se chamarem
+    "Drawer" e se descreverem com o parágrafo de abertura da própria página. O
+    exemplo é o mesmo da stack de referência; o que muda entre os painéis é a
+    direção, e quem a anuncia é o rótulo do gatilho.
+  -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="contain: layout">
       <Drawer direction="bottom">
@@ -213,8 +280,8 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>{$tStore('title')}</DrawerTitle>
-            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+            <DrawerTitle>Editar perfil</DrawerTitle>
+            <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <Button>OK</Button>
@@ -235,8 +302,8 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>{$tStore('title')}</DrawerTitle>
-            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+            <DrawerTitle>Editar perfil</DrawerTitle>
+            <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <Button>OK</Button>
@@ -257,8 +324,8 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>{$tStore('title')}</DrawerTitle>
-            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+            <DrawerTitle>Editar perfil</DrawerTitle>
+            <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <Button>OK</Button>
@@ -279,8 +346,8 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>{$tStore('title')}</DrawerTitle>
-            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+            <DrawerTitle>Editar perfil</DrawerTitle>
+            <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <Button>OK</Button>
@@ -298,17 +365,7 @@ interface TriggerProps {
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
     title={$tStore('anatomy.title')}
-    items={[
-      $tStore('anatomy.item1'),
-      $tStore('anatomy.item2'),
-      $tStore('anatomy.item3'),
-      $tStore('anatomy.item4'),
-      $tStore('anatomy.item5'),
-      $tStore('anatomy.item6'),
-      $tStore('anatomy.item7'),
-      $tStore('anatomy.item8'),
-      $tStore('anatomy.item9'),
-    ]}
+    items={numberedItems($tStore, 'anatomy')}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
   />
@@ -318,13 +375,7 @@ interface TriggerProps {
     title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
-      items: [
-        stripHtml($tStore('usage.guidelines.item1')),
-        stripHtml($tStore('usage.guidelines.item2')),
-        stripHtml($tStore('usage.guidelines.item3')),
-        stripHtml($tStore('usage.guidelines.item4')),
-        stripHtml($tStore('usage.guidelines.item5')),
-      ],
+      items: numberedItems($tStore, 'usage.guidelines').map(stripHtml),
     }}
     scenarios={{
       title: $tStore('usage.scenarios.title'),
@@ -333,13 +384,7 @@ interface TriggerProps {
         use: $tStore('usage.scenarios.cols.use'),
         alternative: $tStore('usage.scenarios.cols.alternative'),
       },
-      items: [
-        { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
-        { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
-        { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
-        { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
-        { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: $tStore('usage.scenarios.item5.a') },
-      ],
+      items: itemsFromDict($tStore, 'usage.scenarios', ['s', 'u', 'a']),
     }}
     uxWriting={{
       title: $tStore('usage.uxWriting.title'),
@@ -358,21 +403,11 @@ interface TriggerProps {
     }}
     do={{
       title: $tStore('usage.do.title'),
-      items: [
-        $tStore('usage.do.item1'),
-        $tStore('usage.do.item2'),
-        $tStore('usage.do.item3'),
-        $tStore('usage.do.item4'),
-      ],
+      items: numberedItems($tStore, 'usage.do'),
     }}
     dont={{
       title: $tStore('usage.dont.title'),
-      items: [
-        $tStore('usage.dont.item1'),
-        $tStore('usage.dont.item2'),
-        $tStore('usage.dont.item3'),
-        $tStore('usage.dont.item4'),
-      ],
+      items: numberedItems($tStore, 'usage.dont'),
     }}
   />
 
@@ -684,10 +719,10 @@ interface TriggerProps {
       </form>
     </DrawerBody>
     <DrawerFooter>
-      <Button>Salvar alterações</Button>
       <DrawerClose>
         {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
       </DrawerClose>
+      <Button>Salvar alterações</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -710,10 +745,10 @@ interface TriggerProps {
       <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
-      <Button variant="destructive">Remover</Button>
       <DrawerClose>
         {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
       </DrawerClose>
+      <Button variant="destructive">Remover</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -746,10 +781,10 @@ interface TriggerProps {
             </form>
           </DrawerBody>
           <DrawerFooter>
-            <Button>Salvar alterações</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>Salvar alterações</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -767,10 +802,10 @@ interface TriggerProps {
             <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button variant="destructive">Remover</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button variant="destructive">Remover</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -840,15 +875,7 @@ interface TriggerProps {
     screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
-    items={[
-      $tStore('accessibility.items.item1'),
-      $tStore('accessibility.items.item2'),
-      $tStore('accessibility.items.item3'),
-      $tStore('accessibility.items.item4'),
-      $tStore('accessibility.items.item5'),
-      $tStore('accessibility.items.item6'),
-      $tStore('accessibility.items.item7'),
-    ]}
+    items={numberedItems($tStore, 'accessibility.items')}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab / Shift+Tab', description: $tStore('accessibility.keyboard.tab')    },
@@ -871,13 +898,7 @@ interface TriggerProps {
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
     title={$tStore('notes.title')}
-    items={[
-      { title: '', content: $tStore('notes.item1') },
-      { title: '', content: $tStore('notes.item2') },
-      { title: '', content: $tStore('notes.item3') },
-      { title: '', content: $tStore('notes.item4') },
-      { title: '', content: $tStore('notes.item5') },
-    ]}
+    items={numberedItems($tStore, 'notes').map((content) => ({ title: '', content }))}
   />
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
@@ -905,11 +926,13 @@ interface TriggerProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
-        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
-        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
-        priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
-      })),
+      items: itemsFromDict($tStore, 'testes.functional', ['action', 'result', 'priority']).map(
+        (r) => ({
+          action: toPlainText(r.action),
+          result: toPlainText(r.result),
+          priority: localPriority(r.priority, $tNavStore),
+        }),
+      ),
     }}
     accessibility={{
       title: $tStore('testes.accessibility.title'),
@@ -918,15 +941,11 @@ interface TriggerProps {
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [
-        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',     how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '4.1.2',  how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '4.1.2',  how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '2.1.2',  how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '2.1.1',  how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item6')), level: '1.4.3',  how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item7')), level: '2.1.1',  how: '—' },
-      ],
+      items: numberedItems($tStore, 'testes.accessibility').map((frase, i) => ({
+        criterion: toPlainText(frase),
+        level: NIVEL_WCAG[i + 1] ?? '—',
+        how: '—',
+      })),
     }}
     visual={{
       title: $tStore('testes.visual.title'),
@@ -934,9 +953,9 @@ interface TriggerProps {
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5].map((i) => ({
-        story: $tStore(`testes.visual.item${i}.story`),
-        priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
+      items: itemsFromDict($tStore, 'testes.visual', ['story', 'priority']).map((r) => ({
+        story: r.story,
+        priority: localPriority(r.priority, $tNavStore),
       })),
     }}
   />

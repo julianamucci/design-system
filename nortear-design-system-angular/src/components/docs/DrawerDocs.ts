@@ -47,10 +47,16 @@ import {
  * Rótulos de ação que o conteúdo compartilhado do Drawer não traz.
  *
  * O bloco `demonstration.labels` deste slug só tem as quatro direções — não há
- * "confirmar", "excluir" nem rótulo de campo, que os exemplos de formulário e
- * de confirmação destrutiva precisam. Entram por override, o mecanismo que este
- * projeto reserva para rótulos e nomes de prop, e ficam nos três idiomas para
- * não plantar literal em português na página.
+ * gatilho, título, descrição, saída, rótulo de campo nem corpo de exemplo, que
+ * os exemplos de formulário, de confirmação destrutiva e de rolagem precisam.
+ * O do Sheet tem o bloco inteiro; o do Drawer é a lacuna. Entram por override,
+ * o mecanismo que este projeto reserva para rótulos e nomes de prop, e ficam
+ * nos três idiomas para não plantar literal em português na página.
+ *
+ * O que eles SUBSTITUEM importa mais que o que eles são: sem estes rótulos, o
+ * texto de tela saía das células "Use" da tabela de UX Writing e dos parágrafos
+ * de `variants.styles.*`. Texto que ensina COMO escrever virava o que está
+ * escrito, e uma revisão de conteúdo mudava calada o exemplo vivo.
  *
  * Exportado porque a story de composições monta os MESMOS exemplos: uma segunda
  * tabela de textos divergiria da primeira na revisão de conteúdo seguinte.
@@ -60,19 +66,40 @@ export const LABELS_DRAWER: TranslationOverrides = {
   'pt-BR': {
     'demonstration.labels.confirm': 'Salvar alterações',
     'demonstration.labels.destroy': 'Excluir',
+    'demonstration.labels.trigger': 'Editar perfil',
+    'demonstration.labels.title': 'Editar perfil',
+    'demonstration.labels.description': 'Atualize seus dados.',
+    'demonstration.labels.cancel': 'Cancelar',
     'demonstration.labels.fieldName': 'Nome',
+    'demonstration.labels.fieldEmail': 'E-mail',
+    'demonstration.labels.scrollBody':
+      'Termos longos, para o corpo do painel passar da altura visível e rolar sozinho.',
     'demonstration.labels.destroyMessage': 'Você pode desfazer esta ação nos próximos 30 dias.',
   },
   en: {
     'demonstration.labels.confirm': 'Save changes',
     'demonstration.labels.destroy': 'Delete',
+    'demonstration.labels.trigger': 'Edit profile',
+    'demonstration.labels.title': 'Edit profile',
+    'demonstration.labels.description': 'Update your details.',
+    'demonstration.labels.cancel': 'Cancel',
     'demonstration.labels.fieldName': 'Name',
+    'demonstration.labels.fieldEmail': 'Email',
+    'demonstration.labels.scrollBody':
+      'Long terms, so the panel body exceeds the visible height and scrolls on its own.',
     'demonstration.labels.destroyMessage': 'You can undo this action within the next 30 days.',
   },
   es: {
     'demonstration.labels.confirm': 'Guardar cambios',
     'demonstration.labels.destroy': 'Eliminar',
+    'demonstration.labels.trigger': 'Editar perfil',
+    'demonstration.labels.title': 'Editar perfil',
+    'demonstration.labels.description': 'Actualiza tus datos.',
+    'demonstration.labels.cancel': 'Cancelar',
     'demonstration.labels.fieldName': 'Nombre',
+    'demonstration.labels.fieldEmail': 'Correo electrónico',
+    'demonstration.labels.scrollBody':
+      'Términos largos, para que el cuerpo del panel supere la altura visible y se desplace solo.',
     'demonstration.labels.destroyMessage': 'Puedes deshacer esta acción en los próximos 30 días.',
   },
 };
@@ -333,8 +360,14 @@ const COMPOSITION_CODE = {
     </div>
 
     <div ndsDrawerBody class="nds-stack" data-spacing="sm">
-      <label ndsLabel for="perfil-nome">Nome</label>
-      <input ndsInput id="perfil-nome" name="nome" />
+      <div class="nds-stack" data-spacing="xs">
+        <label ndsLabel for="perfil-nome">Nome</label>
+        <input ndsInput id="perfil-nome" name="nome" value="Maria Souza" />
+      </div>
+      <div class="nds-stack" data-spacing="xs">
+        <label ndsLabel for="perfil-email">E-mail</label>
+        <input ndsInput id="perfil-email" name="email" type="email" value="maria@exemplo.com" />
+      </div>
     </div>
 
     <div ndsDrawerFooter>
@@ -524,21 +557,46 @@ const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
 
     <ng-template #tplCompFormulario>
       <nds-drawer>
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ t('usage.uxWriting.table.title.good') }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">
+          {{ t('demonstration.labels.trigger') }}
+        </button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ t('usage.uxWriting.table.title.good') }}</h3>
-            <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
+            <h3 ndsDrawerTitle>{{ t('demonstration.labels.title') }}</h3>
+            <p ndsDrawerDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
 
+          <!--
+            DOIS campos, e ambos preenchidos: é o formulário que a stack de
+            referência mostra, e é o que as play das outras stacks afirmam
+            procurando o campo de e-mail pelo rótulo. Com um campo só, a
+            composição "Com formulário" mostrava menos formulário do que a
+            frase que a descreve.
+          -->
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
-            <label ndsLabel for="docs-drawer-nome">{{ t('demonstration.labels.fieldName') }}</label>
-            <input ndsInput id="docs-drawer-nome" name="nome" />
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="docs-drawer-nome">{{ t('demonstration.labels.fieldName') }}</label>
+              <input ndsInput id="docs-drawer-nome" name="nome" value="Maria Souza" />
+            </div>
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="docs-drawer-email">{{ t('demonstration.labels.fieldEmail') }}</label>
+              <input
+                ndsInput
+                id="docs-drawer-email"
+                name="email"
+                type="email"
+                value="maria@exemplo.com"
+              />
+            </div>
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ t('usage.uxWriting.table.close.good') }}</button>
-            <button ndsButton (click)="aoConfirmar('composicoes')">{{ t('demonstration.labels.confirm') }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">
+              {{ t('demonstration.labels.cancel') }}
+            </button>
+            <button ndsButton (click)="aoConfirmar('composicoes', 'docs_composicoes')">
+              {{ t('demonstration.labels.confirm') }}
+            </button>
           </div>
         </ng-template>
       </nds-drawer>
@@ -554,8 +612,14 @@ const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ t('usage.uxWriting.table.close.good') }}</button>
-            <button ndsButton variant="destructive" (click)="aoConfirmar('destrutiva')">
+            <button ndsDrawerClose ndsButton variant="outline">
+              {{ t('demonstration.labels.cancel') }}
+            </button>
+            <button
+              ndsButton
+              variant="destructive"
+              (click)="aoConfirmar('destrutiva', 'docs_composicoes')"
+            >
               {{ t('demonstration.labels.destroy') }}
             </button>
           </div>
@@ -594,15 +658,22 @@ const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
                     {{ d.name }}
                   </button>
 
+                  <!--
+                    Título e descrição do painel são TEXTO DE EXEMPLO. Saíam de
+                    demonstration.labels.DIREÇÃO e de variants.styles.DIREÇÃO,
+                    isto é: o painel se chamava "Bottom — drawer mobile padrão" e se
+                    descrevia com um parágrafo sobre posição, borda e cantos. Quem
+                    anuncia a direção é a legenda acima e o rótulo do gatilho.
+                  -->
                   <ng-template ndsDrawerContent>
                     <div ndsDrawerHeader>
-                      <h3 ndsDrawerTitle>{{ d.label }}</h3>
-                      <p ndsDrawerDescription>{{ d.estilo }}</p>
+                      <h3 ndsDrawerTitle>{{ t('demonstration.labels.title') }}</h3>
+                      <p ndsDrawerDescription>{{ t('demonstration.labels.description') }}</p>
                     </div>
 
                     <div ndsDrawerFooter>
                       <button ndsDrawerClose ndsButton variant="outline">
-                        {{ t('usage.uxWriting.table.close.good') }}
+                        {{ t('demonstration.labels.cancel') }}
                       </button>
                     </div>
                   </ng-template>
@@ -740,8 +811,11 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   /**
    * As quatro direções, derivadas do conteúdo — nunca contadas à mão.
-   * `name` é o rótulo curto da variante, `label` a legenda da demonstração e
-   * `estilo` a descrição de como o painel se comporta naquela direção.
+   * `name` é o rótulo curto da variante e `label` a legenda da demonstração.
+   *
+   * `variants.styles.<direção>` NÃO entra aqui: é o parágrafo que a seção
+   * Variantes usa para explicar posição, borda e cantos, e ele servia de
+   * descrição acessível do painel da demonstração.
    */
   protected readonly direcoes = computed(() => {
     dict();
@@ -749,14 +823,20 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       key,
       name: t(`variants.items.${key}`),
       label: stripHtml(t(`demonstration.labels.${key}`)),
-      estilo: stripHtml(t(`variants.styles.${key}`)),
     }));
   });
 
-  /** Corpo longo do exemplo de rolagem — texto vindo do próprio conteúdo. */
+  /**
+   * Corpo longo do exemplo de rolagem.
+   *
+   * O texto é de EXEMPLO, e não `variants.items.withScroll.use`: aquela chave
+   * responde "quando usar esta variante" para quem lê a página, e repeti-la doze
+   * vezes fazia o painel exibir a própria recomendação como se fosse o termo que
+   * ele pede para ler.
+   */
   protected readonly paragrafosLongos = computed(() => {
     dict();
-    const base = stripHtml(t('variants.items.withScroll.use'));
+    const base = stripHtml(t('demonstration.labels.scrollBody'));
     return Array.from({ length: 12 }, (_, i) => ({ id: `p-${i}`, text: `${i + 1}. ${base}` }));
   });
 
@@ -791,13 +871,21 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
     });
   }
 
-  /** Ação primária do rodapé das composições. */
-  protected aoConfirmar(qual: string): void {
+  /**
+   * Ação primária do rodapé das composições.
+   *
+   * A seção vem do TEMPLATE, e não de uma constante aqui: `location` responde de
+   * onde saiu o clique, e as três chamadas desta página mandavam `docs_demo` —
+   * inclusive esta, que nasce nas Composições. Componente vivo fora da
+   * Demonstração é clique tão real quanto o de dentro dela, e com um valor só
+   * `location`, `section_id` e `data-track-id` deixam de cruzar no GA4.
+   */
+  protected aoConfirmar(qual: string, secao: string): void {
     track('dialog_confirm', {
       component: 'drawer',
       action: 'confirm',
       label: qual,
-      location: 'docs_demo',
+      location: secao,
     });
   }
 
@@ -811,12 +899,12 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly anatomyItems = computed(() => {
     const d = dict();
-    return itemsFromDict(d, 'anatomy');
+    return numberedItems(d, 'anatomy');
   });
 
   protected readonly guidelines = computed(() => {
     const d = dict();
-    return { title: t('usage.guidelines.title'), items: itemsFromDict(d, 'usage.guidelines') };
+    return { title: t('usage.guidelines.title'), items: numberedItems(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
@@ -828,7 +916,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
         use: t('usage.scenarios.cols.use'),
         alternative: t('usage.scenarios.cols.alternative'),
       },
-      items: rowsFromDict(d, 'usage.scenarios', ['s', 'u', 'a']).map((r) => ({
+      items: itemsFromDict(d, 'usage.scenarios', ['s', 'u', 'a']).map((r) => ({
         s: toPlainText(r.s),
         u: toPlainText(r.u),
         a: toPlainText(r.a),
@@ -859,12 +947,12 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itemsFromDict(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itemsFromDict(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -1063,7 +1151,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     const d = dict();
-    return itemsFromDict(d, 'accessibility.items');
+    return numberedItems(d, 'accessibility.items');
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -1105,7 +1193,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     const d = dict();
-    return itemsFromDict(d, 'notes').map((content) => ({ title: '', content }));
+    return numberedItems(d, 'notes').map((content) => ({ title: '', content }));
   });
 
   protected readonly analyticsCols = computed(() => {
@@ -1151,7 +1239,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
         result: tNav('common.expectedResult'),
         priority: tNav('common.priority'),
       },
-      items: rowsFromDict(d, 'testes.functional', ['action', 'result', 'priority']).map((r) => ({
+      items: itemsFromDict(d, 'testes.functional', ['action', 'result', 'priority']).map((r) => ({
         action: toPlainText(r.action),
         result: toPlainText(r.result),
         priority: priorityLabel(r.priority),
@@ -1176,7 +1264,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       5: { level: '2.4.3', how: 'Storybook Test' },
       6: { level: '1.4.3', how: 'axe-core (color-contrast)' },
     };
-    const frases = itemsFromDict(d, 'testes.accessibility');
+    const frases = numberedItems(d, 'testes.accessibility');
     return {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
@@ -1195,7 +1283,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       title: t('testes.visual.title'),
       description: t('testes.visual.description'),
       cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
-      items: rowsFromDict(d, 'testes.visual', ['story', 'priority']).map((r) => ({
+      items: itemsFromDict(d, 'testes.visual', ['story', 'priority']).map((r) => ({
         story: toPlainText(r.story),
         priority: priorityLabel(r.priority),
       })),
@@ -1254,15 +1342,25 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-/** `base.item1`, `base.item2`, … enquanto existirem — nunca contados à mão. */
-function itemsFromDict(d: Record<string, string>, base: string): string[] {
+/**
+ * `base.item1`, `base.item2`, … enquanto existirem — nunca contados à mão.
+ *
+ * Os NOMES dos dois helpers são os que a casa já usa, e isso não é gosto: o
+ * `lista_mais_curta_que_o_conteudo` reconhece a derivação por uma LISTA DE
+ * NOMES, e helper fora dela cai no ramo de citação literal, não acha nenhuma e
+ * PULA — silêncio que se lê como "conferido". Enquanto se chamavam
+ * `itemsFromDict`/`rowsFromDict`, as três listas em forma de tabela desta
+ * página (cenários, critérios funcionais e regressão visual) estavam fora do
+ * radar do portão.
+ */
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const out: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) out.push(d[`${base}.item${i}`]);
   return out;
 }
 
 /** Mesma varredura, para itens que são objeto com campos fixos. */
-function rowsFromDict<K extends string>(
+function itemsFromDict<K extends string>(
   d: Record<string, string>,
   base: string,
   fields: readonly K[],

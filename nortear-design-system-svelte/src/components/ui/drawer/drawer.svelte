@@ -12,8 +12,10 @@
 	 *
 	 * O mecanismo desta stack: o primitivo compõe o Dialog da lib de baixo, que
 	 * prende o foco, trava a rolagem e escreve `aria-modal="true"` sozinho — por
-	 * isso o `DrawerContent` daqui não o escreve. Não existe modo não-modal
-	 * nessa lib: o painel é sempre modal.
+	 * isso o `DrawerContent` daqui não o escreve. O modo não-modal EXISTE nessa
+	 * lib — ela publica `modal` com padrão `true` —, e ele chega ao primitivo por
+	 * `restProps`, como nas outras stacks; o padrão do design system é modal, que
+	 * é coisa diferente de não haver alternativa.
 	 *
 	 * Diverge do Sheet em quatro pontos deliberados: aqui existe gesto de
 	 * arrastar (extra de ponteiro, nunca o único caminho — WCAG 2.5.7), existe
@@ -36,12 +38,26 @@
 	 * do design system é `true`; quem precisar do comportamento do primitivo
 	 * ainda pode passar `autoFocus={false}`.
 	 */
+	/**
+	 * `shouldScaleBackground` e `activeSnapPoint` NÃO são declarados aqui, e a
+	 * ausência é a decisão.
+	 *
+	 * Os dois são capacidade da lib de gestos, e o design system não os tem: a
+	 * stack de referência não escala o fundo da página e não expõe pontos de
+	 * parada intermediários — o motor de arraste compartilhado deixou os dois de
+	 * fora de propósito, porque ponto de parada é capacidade que só o ponteiro
+	 * alcança (WCAG 2.5.7) e a escala do fundo é enfeite que nenhuma stack liga.
+	 * Ligar `shouldScaleBackground` por padrão aqui dava ao painel desta stack um
+	 * comportamento que ele não tem em nenhuma outra.
+	 *
+	 * Quem precisar de um dos dois ainda pode passá-lo: `restProps` os carrega
+	 * até a lib. O que muda é o PADRÃO, que volta a ser o dela — e o dela é o
+	 * mesmo do design system.
+	 */
 	let {
-		shouldScaleBackground = true,
 		autoFocus = true,
 		dismissible = true,
 		open = $bindable(false),
-		activeSnapPoint = $bindable(null),
 		...restProps
 	}: DrawerPrimitive.RootProps = $props();
 
@@ -67,10 +83,8 @@
 </script>
 
 <DrawerPrimitive.Root
-	{shouldScaleBackground}
 	{autoFocus}
 	{dismissible}
 	bind:open
-	bind:activeSnapPoint
 	{...restProps}
 />

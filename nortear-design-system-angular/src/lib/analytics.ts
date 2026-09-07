@@ -296,11 +296,18 @@ interface AnalyticsEvents {
     location?: string;
   };
 
-  /** Disparado ao fechar o Drawer por qualquer caminho. */
+  /**
+   * Disparado ao fechar o Drawer por qualquer caminho.
+   *
+   * O vocabulário de `reason` é o do design system, não o da lib desta stack:
+   * arrastar o painel para fora fecha por `overlay` (para quem usa, é a mesma
+   * decisão de "saí sem decidir nada" do clique no véu) e o fechamento por
+   * código é `api`. Motivo novo aqui vira dimensão nova no GA4.
+   */
   drawer_close: {
     component: 'drawer';
     label?: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'action';
+    reason: 'escape' | 'overlay' | 'close-button' | 'api';
     location?: string;
   };
 
